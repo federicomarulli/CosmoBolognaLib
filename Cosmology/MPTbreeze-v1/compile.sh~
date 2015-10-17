@@ -1,0 +1,2 @@
+gfortran -m32 -O3 -o mptbreeze MPTbreeze.f ~/Cuba-4.2/libcuba.a -lm
+

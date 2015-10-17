@@ -1,0 +1,120 @@
+from libcpp.string cimport string
+from libcpp cimport bool
+from libcpp cimport vector
+from cython.operator cimport dereference as deref
+
+cdef extern from "<vector>" namespace "std":
+    cdef cppclass vector[T]:
+        cppclass iterator:
+            T operator*()
+            iterator operator++()
+            bint operator==(iterator)
+            bint operator!=(iterator)
+        vector()
+        void push_back(T&)
+        T& operator[](int)
+        T& at(int)
+        iterator begin()
+        iterator end()
+    
+
+cdef extern from "c++/4.8/memory" namespace "std":
+  cdef cppclass shared_ptr[T]:
+    shared_ptr() except+
+    shared_ptr(T *) except+
+    shared_ptr(const shared_ptr&) except+ 
+    long use_count()
+    T operator*()
+
+cdef extern from "Func.h" namespace "cosmobl":
+   cdef double xi_from_Pk(double , vector[double] , vector[double] , double , double , double , bool , double ) 
+
+cdef extern from "Cosmology.h" namespace "cosmobl":
+  cdef cppclass Cosmology:
+    Cosmology ()
+    Cosmology (double, double, double, double, int, double, double, double, double, double, double , double , double , int , string, bool) except +  
+    double Omega_matter ()  
+    double Omega_baryon () 
+    double Omega_neutrinos () 	
+    double massless_neutrinos () 	
+    int massive_neutrinos () 	
+    double Omega_DE () 		
+    double Omega_radiation () 	
+    double Omega_k () 		
+    double Omega_CDM () 		
+    double H0 () 			
+    double hh ()			
+    double t_H () 			
+    double D_H () 			
+    double sigma8 () 		
+    double scalar_amp () 		
+    double n_spec () 		
+    double w0 () 			
+    double wa () 			
+    double RhoZero () 		
+    double fNL () 			
+    int type_NG () 			
+    double Pk0_EH () 		
+    double Pk0_CAMB () 		
+    double Pk0_MPTbreeze () 	
+    double Pk0_CLASS () 		
+    string model () 		
+    bool unit () 			
+    void print_parameters () 
+    
+    void set_Omega (double)
+    void set_OmegaB (double)
+    void set_OmegaM (double ) 
+    void set_OmegaDE (double )
+    void set_OmegaNu (double , double , int )
+    void set_H0 (double ) 
+    void set_sigma8 (double )
+    void set_w0 (double )  
+    void set_wa (double ) 
+
+    double OmegaM (double &)
+    double OmegaDE (double &)
+    double OmegaR (double &)
+    double OmegaK (double &)
+    double Omega (double &)
+  
+    double Rho (double &, double &, bool );  
+    double DeltaR (double &, double &);  
+    double w_CPL (double &);
+    double f_DE (double &);
+    double EE (double &);
+    double HH (double &);
+    double gg (double &);   
+    double DD (double &);   
+    double lookback_time (double &); 
+    double cosmic_time (double &); 
+    double EE2 (double &);
+    double qq (double &);
+    double Hdot (double &);
+    double z_acc (); 
+    double z_eq ();
+    double Mag_Volume_limited (double &, double &)
+    double Lum_bol (double &, double &)  
+    double Redshift (double &, double &, double &, double) 
+    double Redshift_LCDM (double, double &, double &, bool , double ) 
+    double Redshift (double &, double &, double &, string &, string &, double &) 
+    double Redshift_time (double &, double &, double &)
+    double deltac (double &)
+ #   double Deltavir(double &) 
+    double D_C(double)
+    double D_C_LCDM(double)
+    double D_M (double &)
+    double D_A (double &) 
+    double D_L (double &) 
+    double D_V (double &)
+    double Volume (double &, double &, double &) 
+    double Volume (double &)
+    double max_redshift (double &, double &, double &) 
+    double dV_dZdOmega (double &, bool )  
+    double rs_EH (double )
+    double rs_CAMB ()
+    void Pk_0 (string , double , string , double , double , bool , double , string) 
+    double Pk (double , string , bool , double , string , int , double , double , bool , double , string ) 
+    double xi_DM (double , string , double , string , bool , int , double , double , double , bool , double , string ) 
+    double xi_DM_DeWiggle(double, double , double , string , bool , double , double , double , double )
+
