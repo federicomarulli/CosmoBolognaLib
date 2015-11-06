@@ -3,7 +3,7 @@ F = gfortran
 
 FLAGS0 = -std=c++11 -fopenmp
 
-FLAGS = -O3 -unroll -ftree-loop-distribution -Wall -Wextra -pedantic #-floop-nest-optimize -floop-parallelize-all 
+FLAGS = -O3 -unroll -Wall -Wextra -pedantic 
 
 dir_H = $(PWD)/Headers/Lib/
 dir_O = $(PWD)/Headers/Objects/
