@@ -34,11 +34,10 @@ int main () {
   // ---------------- set the redshifts to be converted into comoving distances ------------
   // ---------------------------------------------------------------------------------------
 
-  vector<double> redshift;
   int step = 1e6;
   double z_min = 0.1;
   double z_max = 2.;
-  cosmobl::fill_linear(redshift, step, z_min, z_max);
+  vector<double> redshift = cosmobl::linear_bin_vector<double>(step, z_min, z_max);
 
   time_t start, end;
   double diffT, D_C;
