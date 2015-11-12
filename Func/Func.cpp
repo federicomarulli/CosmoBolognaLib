@@ -449,7 +449,7 @@ double cosmobl::interpolated (double _xx, vector<double> xx, vector<double> yy, 
 // ============================================================================
 
 
-double cosmobl::interpolated_2D (double _x1, double _x2, vector<double> x1, vector<double> x2, vector<vector<double>> yy, string type, int nPt)
+double cosmobl::interpolated_2D (double _x1, double _x2, vector<double> x1, vector<double> x2, vector<vector<double> > yy, string type, int nPt)
 {
   VecDoub X1(x1.size()), X2(x2.size());
   MatDoub YY(x1.size(),x2.size());  
@@ -506,7 +506,7 @@ void cosmobl::checkIO (string file, bool isInput)
 // ============================================================================
 
 
-void cosmobl::invert_matrix (vector<vector<double>> mat, vector<vector<double>> &mat_inv, double prec)
+void cosmobl::invert_matrix (vector<vector<double> > mat, vector<vector<double> > &mat_inv, double prec)
 {
   int n = mat.size();
   cout << n << endl;
@@ -552,7 +552,7 @@ void cosmobl::invert_matrix (vector<vector<double>> mat, vector<vector<double>> 
 // ============================================================================
 
 
-void cosmobl::invert_matrix (vector<vector<double>> mat, vector<vector<double>> &mat_inv, int i1, int i2, double prec)
+void cosmobl::invert_matrix (vector<vector<double> > mat, vector<vector<double> > &mat_inv, int i1, int i2, double prec)
 {
   int n = i2-i1;
   int s;

@@ -84,7 +84,7 @@ double cosmobl::multipole_xi4 (int indexR, vector<double> mu, vector< vector<dou
 // ============================================================================
 
 
-double cosmobl::error_multipole_xi0 (int indexR, vector<double> mu, vector<vector<double>> error) 
+double cosmobl::error_multipole_xi0 (int indexR, vector<double> mu, vector<vector<double> > error) 
 {
   double bin = mu[1]-mu[0];
   double err = 0.;
@@ -99,7 +99,7 @@ double cosmobl::error_multipole_xi0 (int indexR, vector<double> mu, vector<vecto
 // ============================================================================
 
 
-double cosmobl::error_multipole_xi2 (int indexR, vector<double> mu, vector<vector<double>> error) 
+double cosmobl::error_multipole_xi2 (int indexR, vector<double> mu, vector<vector<double> > error) 
 {
   double bin = mu[1]-mu[0];
   double err = 0.;
@@ -114,7 +114,7 @@ double cosmobl::error_multipole_xi2 (int indexR, vector<double> mu, vector<vecto
 // ============================================================================
 
 
-double cosmobl::error_multipole_xi4 (int indexR, vector<double> mu, vector<vector<double>> error) 
+double cosmobl::error_multipole_xi4 (int indexR, vector<double> mu, vector<vector<double> > error) 
 {
   double bin = mu[1]-mu[0];
   double err = 0.;
@@ -129,7 +129,7 @@ double cosmobl::error_multipole_xi4 (int indexR, vector<double> mu, vector<vecto
 // ============================================================================
 
 
-double cosmobl::multipole_xi0 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double>> xi, double &delta_s) 
+double cosmobl::multipole_xi0 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double> > xi, double &delta_s) 
 {
   double xi0 = 0.;
   int Nbin = 0;
@@ -153,7 +153,7 @@ double cosmobl::multipole_xi0 (double &ss, vector<double> rp, vector<double> pi,
 // ============================================================================
 
 
-double cosmobl::multipole_xi2 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double>> xi, double &delta_s) 
+double cosmobl::multipole_xi2 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double> > xi, double &delta_s) 
 {
   double xi2 = 0.;
   int Nbin = 0;
@@ -177,7 +177,7 @@ double cosmobl::multipole_xi2 (double &ss, vector<double> rp, vector<double> pi,
 // ============================================================================
 
 
-double cosmobl::multipole_xi4 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double>> xi, double &delta_s) 
+double cosmobl::multipole_xi4 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double> > xi, double &delta_s) 
 {
   double xi4 = 0.;
   int Nbin = 0;
@@ -201,7 +201,7 @@ double cosmobl::multipole_xi4 (double &ss, vector<double> rp, vector<double> pi,
 // ============================================================================
 
 
-double cosmobl::error_multipole_xi0 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double>> error, double &delta_s) 
+double cosmobl::error_multipole_xi0 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double> > error, double &delta_s) 
 {
   double err = 0.;
   int Nbin = 0;
@@ -225,7 +225,7 @@ double cosmobl::error_multipole_xi0 (double &ss, vector<double> rp, vector<doubl
 // ============================================================================
 
 
-double cosmobl::error_multipole_xi2 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double>> error, double &delta_s) 
+double cosmobl::error_multipole_xi2 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double> > error, double &delta_s) 
 {
   double err = 0.;
   int Nbin = 0;
@@ -249,7 +249,7 @@ double cosmobl::error_multipole_xi2 (double &ss, vector<double> rp, vector<doubl
 // ============================================================================
 
 
-double cosmobl::error_multipole_xi4 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double>> error, double &delta_s) 
+double cosmobl::error_multipole_xi4 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double> > error, double &delta_s) 
 {
   double err = 0.;
   int Nbin = 0;

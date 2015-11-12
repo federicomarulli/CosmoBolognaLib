@@ -247,7 +247,7 @@ void cosmobl::Catalogue::MinMax_var (Var var_name, vector<double> &Lim, bool er)
 // ============================================================================
 
 
-void cosmobl::Catalogue::MinMax_var (vector<Var> var_name, vector<vector<double>> &Lim, bool er)
+void cosmobl::Catalogue::MinMax_var (vector<Var> var_name, vector<vector<double> > &Lim, bool er)
 {
   if (er) Lim.erase(Lim.begin(),Lim.end());
 
@@ -522,7 +522,7 @@ double cosmobl::Catalogue::angsep_xyz (int i, shared_ptr<Object> obj)
 // ============================================================================
 
 
-shared_ptr<Catalogue> cosmobl::Catalogue::smooth (double gridsize, __attribute__((unused)) vector<Var> vars, int SUB)
+shared_ptr<Catalogue> cosmobl::Catalogue::smooth (double gridsize, vector<Var> vars, int SUB)
 {
   shared_ptr<Catalogue> cat {new Catalogue(*this)};
   
