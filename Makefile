@@ -3,11 +3,12 @@ F = gfortran
 
 FLAGS0 = -std=c++11 -fopenmp
 
-FLAGS = -O3 -unroll -Wall -Wextra -pedantic 
+FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wno-unused-parameter
 
 dir_H = $(PWD)/Headers/Lib/
 dir_O = $(PWD)/Headers/Objects/
 dir_EH = $(PWD)/Cosmology/EH/
+dir_Python = $(PWD)/Python/
 
 HH = $(dir_H)*.h
 
@@ -16,12 +17,15 @@ FLAGS_FFTW = -lfftw3 -lfftw3_omp
 FLAGS_GSL = -lgsl -lgslcblas -lm
 FLAGS_LINK = -shared
 
+PFLAGS = -I/usr/include/python2.7 
+
+
 ES = so
 
-varDIR = -DSYS=\"Linux\"
+Dvar = -DLINUX
 
 ifeq ($(SYS),MAC)
-	varDIR = -DSYS=\"MAC\" 
+	Dvar = -DMAC
 	FLAGS0 = -std=c++11 -fopenmp
 	FLAGS_FFTW = -lfftw3 
 	FLAGS_LINK = -dynamiclib -undefined suppress -flat_namespace
@@ -72,27 +76,27 @@ endef
 
 ALL:
 	$(call colorecho, "\n"Compiling the library: libFUNC... "\n")
-	make -j3 libFUNC
+	make -j4 libFUNC
 	$(call colorecho, "\n"Compiling the library: libSTAT... "\n")
-	make -j3 libSTAT
+	make -j4 libSTAT
 	$(call colorecho, "\n"Compiling the library: libCOSM... "\n")
-	make -j3 libCOSM
+	make -j4 libCOSM
 	$(call colorecho, "\n"Compiling the library: libCM... "\n")
-	make -j3 libCM
+	make -j4 libCM
 	$(call colorecho, "\n"Compiling the library: libCAT... "\n")
-	make -j3 libCAT
+	make -j4 libCAT
 	$(call colorecho, "\n"Compiling the library: libLN... "\n")
-	make -j3 libLN
+	make -j4 libLN
 	$(call colorecho, "\n"Compiling the library: libRANDOM... "\n")
-	make -j3 libRANDOM
+	make -j4 libRANDOM
 	$(call colorecho, "\n"Compiling the library: libTWOP... "\n")
-	make -j3 libTWOP
+	make -j4 libTWOP
 	$(call colorecho, "\n"Compiling the library: libMTWOP... "\n")
-	make -j3 libMTWOP
+	make -j4 libMTWOP
 	$(call colorecho, "\n"Compiling the library: libTHREEP... "\n")
-	make -j3 libTHREEP
+	make -j4 libTHREEP
 	$(call colorecho, "\n"Compiling the library: libGLOB... "\n")
-	make -j3 libGLOB
+	make -j4 libGLOB
 
 libFUNC: $(OBJ_FUNC) $(PWD)/Makefile
 	$(C) $(FLAGS_LINK) -o $(PWD)/libFUNC.$(ES) $(OBJ_FUNC) $(FLAGS_GSL) -lgomp
@@ -140,16 +144,43 @@ CLASSpy:
 	cd $(PWD)/Cosmology/classgal_v1/python/ ; python setup.py install --user
 
 MPTbreeze:
-	cd $(PWD)/Cosmology/MPTbreeze-v1 ; ./compile.sh && cd ../.. 
+	cd $(PWD)/Cosmology/MPTbreeze-v1 ; ./compile.sh && cd ../..
 
-python:
-	cd $(PWD)/Python/CosmoBolognaLib/ ; python setup.py install --user
+allExamples:
+	$(call colorecho, "\n"Compiling the example code: vector.cpp ... "\n")
+	cd $(PWD)/Examples/vectors ; make && cd ../..
+	$(call colorecho, "\n"Compiling the example code: distances.cpp ... "\n")
+	cd $(PWD)/Examples/distances ; make && cd ../..
+	$(call colorecho, "\n"Compiling the example code: fsigma8.cpp ... "\n")
+	cd $(PWD)/Examples/fsigma8 ; make && cd ../..
+	$(call colorecho, "\n"Compiling the example code: 2pt.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make 2pt && cd ../..
+	$(call colorecho, "\n"Compiling the example code: 2pt_jackknife.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_jackknife && cd ../..
+	$(call colorecho, "\n"Compiling the example code: 3pt.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make 3pt && cd ../..
+
+python: $(OBJ_FUNC) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(dir_Python)CBL_wrap.o
+	g++ -shared $(OBJ_FUNC) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(dir_Python)CBL_wrap.o $(FLAGS_GSL) -o $(HOME)/.local/lib/python2.7/site-packages/_CosmoBolognaLib.so -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lRANDOM -lTWOP -lMTWOP -lTHREEP -lGLOB
+	cp $(dir_Python)CosmoBolognaLib.py* $(HOME)/.local/lib/python2.7/site-packages/
+
+cleanExamples:
+	cd $(PWD)/Examples/vectors ; make clean && cd ../..
+	cd $(PWD)/Examples/distances ; make clean && cd ../..
+	cd $(PWD)/Examples/fsigma8 ; make clean && cd ../..
+	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../..
+
+cleanpy:
+	rm -f $(PWD)/Python/*~ $(PWD)/Python/CBL_wrap.o $(PWD)/Python/CBL_wrap.cxx $(PWD)/Python/CosmoBolognaLib.py
+	rm -f $(PWD)/Python/Lib/*~ $(PWD)/Python/Lib/*.o $(PWD)/Python/Lib/*.cxx $(PWD)/Python/Lib/*.py
+
+purgepy:
+	make cleanpy
+	rm -f $(HOME)/.local/lib/python2.7/site-packages/*CosmoBolognaLib* 
 
 clean:
+	make cleanExamples
 	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_FUNC)*~ $(dir_STAT)Prior/*~ $(dir_STAT)Chi2/*~ $(dir_STAT)MCMC/*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_RANDOM)*~ $(dir_TWOP)*~ $(dir_MTWOP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_H)*~ $(dir_O)*~ $(PWD)/\#* $(dir_FUNC)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_RANDOM)\#* $(dir_TWOP)\#* $(dir_MTWOP)\#* $(dir_THREEP)\#* $(dir_GLOB)\#* $(dir_H)\#* $(dir_O)\#* $(PWD)/Doc/WARNING_LOGFILE*
-	cd $(PWD)/Python/CosmoBolognaLib ; python setup.py clean
-	cd $(PWD)/Python/CosmoBolognaLib/ ; rm -rf CosmoBolognaLib.cpp external.cpp build Cosmology/Lib
-	cd $(PWD)/Cosmology/classgal_v1/python/ ; python setup.py clean --all
 
 purge:
 	make clean
@@ -157,6 +188,7 @@ purge:
 
 purgeALL:
 	make purge
+	make cleanpy
 	rm -rf Cosmology/grid_SigmaM/* ;
 	rm -rf Cosmology/Tables/* ;
 	rm -rf Cosmology/table_dc/* ;
@@ -173,13 +205,13 @@ purgeALL:
 #################################################################### 
 
 
-$(dir_FUNC)Func.o: $(dir_FUNC)Func.cpp $(HH) $(PWD)/Makefile
-	$(C) $(FLAGST) $(varDIR) -c -fPIC $(FLAGS_INC) -I$(dir_FUNC) $(dir_FUNC)Func.cpp -o $(dir_FUNC)Func.o
+$(dir_FUNC)Func.o: $(dir_FUNC)Func.cpp # $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) -I$(dir_FUNC) $(dir_FUNC)Func.cpp -o $(dir_FUNC)Func.o
 
-$(dir_FUNC)FuncXi.o: $(dir_FUNC)FuncXi.cpp $(HH) $(PWD)/Makefile 
+$(dir_FUNC)FuncXi.o: $(dir_FUNC)FuncXi.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_FUNC) $(dir_FUNC)FuncXi.cpp -o $(dir_FUNC)FuncXi.o
 
-$(dir_FUNC)FuncMultipoles.o: $(dir_FUNC)FuncMultipoles.cpp $(HH) $(PWD)/Makefile 
+$(dir_FUNC)FuncMultipoles.o: $(dir_FUNC)FuncMultipoles.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_FUNC) $(dir_FUNC)FuncMultipoles.cpp -o $(dir_FUNC)FuncMultipoles.o
 
 $(dir_FUNC)conv.o: $(dir_FUNC)conv.f90 
@@ -189,53 +221,53 @@ $(dir_FUNC)conv.o: $(dir_FUNC)conv.f90
 #################################################################### 
 
 
-$(dir_STAT)Prior/Prior.o: $(dir_STAT)Prior/Prior.cpp $(HH) $(PWD)/Makefile 
+$(dir_STAT)Prior/Prior.o: $(dir_STAT)Prior/Prior.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_STAT) $(dir_STAT)Prior/Prior.cpp -o $(dir_STAT)Prior/Prior.o
 
-$(dir_STAT)Chi2/Chi2.o: $(dir_STAT)Chi2/Chi2.cpp $(HH) $(PWD)/Makefile 
+$(dir_STAT)Chi2/Chi2.o: $(dir_STAT)Chi2/Chi2.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_STAT) $(dir_STAT)Chi2/Chi2.cpp -o $(dir_STAT)Chi2/Chi2.o
 
-$(dir_STAT)MCMC/MCMC.o: $(dir_STAT)MCMC/MCMC.cpp $(HH) $(PWD)/Makefile 
+$(dir_STAT)MCMC/MCMC.o: $(dir_STAT)MCMC/MCMC.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_STAT) $(dir_STAT)MCMC/MCMC.cpp -o $(dir_STAT)MCMC/MCMC.o
 
 
 #################################################################### 
 
 
-$(dir_COSM)Cosmology.o: $(dir_COSM)Cosmology.cpp $(HH) $(PWD)/Makefile
+$(dir_COSM)Cosmology.o: $(dir_COSM)Cosmology.cpp # $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)Cosmology.cpp -o $(dir_COSM)Cosmology.o
 
-$(dir_COSM)MassFunction.o: $(dir_COSM)MassFunction.cpp $(HH) $(PWD)/Makefile 
+$(dir_COSM)MassFunction.o: $(dir_COSM)MassFunction.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)MassFunction.cpp -o $(dir_COSM)MassFunction.o
 
-$(dir_COSM)SizeFunction.o: $(dir_COSM)SizeFunction.cpp $(HH) $(PWD)/Makefile 
+$(dir_COSM)SizeFunction.o: $(dir_COSM)SizeFunction.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)SizeFunction.cpp -o $(dir_COSM)SizeFunction.o
 
-$(dir_COSM)PkXi.o: $(dir_COSM)PkXi.cpp $(HH) $(PWD)/Makefile 
+$(dir_COSM)PkXi.o: $(dir_COSM)PkXi.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)PkXi.cpp -o $(dir_COSM)PkXi.o
 
-$(dir_COSM)PkXizSpace.o: $(dir_COSM)PkXizSpace.cpp $(HH) $(PWD)/Makefile 
+$(dir_COSM)PkXizSpace.o: $(dir_COSM)PkXizSpace.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)PkXizSpace.cpp -o $(dir_COSM)PkXizSpace.o
 
-$(dir_COSM)Bias.o: $(dir_COSM)Bias.cpp $(HH) $(PWD)/Makefile 
+$(dir_COSM)Bias.o: $(dir_COSM)Bias.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)Bias.cpp -o $(dir_COSM)Bias.o
 
-$(dir_COSM)RSD.o: $(dir_COSM)RSD.cpp $(HH) $(PWD)/Makefile 
+$(dir_COSM)RSD.o: $(dir_COSM)RSD.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)RSD.cpp -o $(dir_COSM)RSD.o
 
-$(dir_COSM)Sigma.o: $(dir_COSM)Sigma.cpp $(HH) $(PWD)/Makefile 
+$(dir_COSM)Sigma.o: $(dir_COSM)Sigma.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)Sigma.cpp -o $(dir_COSM)Sigma.o
 
-$(dir_COSM)Velocities.o: $(dir_COSM)Velocities.cpp $(HH) $(PWD)/Makefile 
+$(dir_COSM)Velocities.o: $(dir_COSM)Velocities.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)Velocities.cpp -o $(dir_COSM)Velocities.o
 
-$(dir_COSM)MassGrowth.o: $(dir_COSM)MassGrowth.cpp $(HH) $(PWD)/Makefile 
+$(dir_COSM)MassGrowth.o: $(dir_COSM)MassGrowth.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)MassGrowth.cpp -o $(dir_COSM)MassGrowth.o
 
-$(dir_COSM)NG.o: $(dir_COSM)NG.cpp $(HH) $(PWD)/Makefile 
+$(dir_COSM)NG.o: $(dir_COSM)NG.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)NG.cpp -o $(dir_COSM)NG.o
 
-$(dir_COSM)BAO.o: $(dir_COSM)BAO.cpp $(HH) $(PWD)/Makefile 
+$(dir_COSM)BAO.o: $(dir_COSM)BAO.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)BAO.cpp -o $(dir_COSM)BAO.o
 
 $(dir_EH)power_whu.o: $(dir_EH)power_whu.cpp $(dir_EH)power_whu.h
@@ -245,17 +277,17 @@ $(dir_EH)power_whu.o: $(dir_EH)power_whu.cpp $(dir_EH)power_whu.h
 #################################################################### 
 
 
-$(dir_CM)ChainMesh.o: $(dir_CM)ChainMesh.cpp $(HH) $(PWD)/Makefile 
+$(dir_CM)ChainMesh.o: $(dir_CM)ChainMesh.cpp # $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_CM) -I$(dir_EH) $(dir_CM)ChainMesh.cpp -o $(dir_CM)ChainMesh.o
 
 
 #################################################################### 
 
 
-$(dir_CAT)Catalogue.o: $(dir_CAT)Catalogue.cpp $(HH) $(PWD)/Makefile
+$(dir_CAT)Catalogue.o: $(dir_CAT)Catalogue.cpp # $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_CAT) -I$(dir_EH) -I$(dir_O) $(dir_CAT)Catalogue.cpp -o $(dir_CAT)Catalogue.o
 
-$(dir_CAT)ChainMesh_Catalogue.o: $(dir_CAT)ChainMesh_Catalogue.cpp $(HH) $(PWD)/Makefile
+$(dir_CAT)ChainMesh_Catalogue.o: $(dir_CAT)ChainMesh_Catalogue.cpp # $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_CAT) -I$(dir_EH) -I$(dir_O) $(dir_CAT)ChainMesh_Catalogue.cpp -o $(dir_CAT)ChainMesh_Catalogue.o
 
 
@@ -351,3 +383,11 @@ $(dir_GLOB)Func.o: $(dir_GLOB)Func.cpp $(HH) $(PWD)/Makefile
 $(dir_GLOB)SubSample.o: $(dir_GLOB)SubSample.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_GLOB) -I$(dir_EH) -I$(dir_O) $(dir_GLOB)SubSample.cpp -o $(dir_GLOB)SubSample.o
 
+
+#################################################################### 
+
+
+$(dir_Python)CBL_wrap.o: $(dir_Python)CBL.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Compiling the python wrapper. It may take a few minutes ... "\n")
+	swig -python -c++ $(dir_Python)CBL.i
+	$(C) $(FLAGST) -Wno-uninitialized $(PFLAGS) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) -I$(dir_O) $(dir_Python)CBL_wrap.cxx -o $(dir_Python)CBL_wrap.o

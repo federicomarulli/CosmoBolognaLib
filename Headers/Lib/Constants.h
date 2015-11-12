@@ -286,10 +286,10 @@ namespace cosmobl {
      */
   
     /// directory where the CosmoBolognaLib are stored
-    extern const string DirCosmo;
+    extern string DirCosmo;
     
     /// local directory of the main code
-    extern const string DirLoc;
+    extern string DirLoc;
     
     /**
      *  @} */

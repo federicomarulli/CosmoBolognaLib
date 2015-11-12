@@ -389,8 +389,7 @@ namespace cosmobl {
 	double fact = (m_unit) ? 1. : m_hh;
 	double lgk = log10(kk/fact);
 
-	double err = -1, lgPkK = -1;  
-	cosmobl::interpolation_extrapolation(lgk, m_lgkk, m_lgPk, "Linear",- 1, &lgPkK, &err);
+	double lgPkK = cosmobl::interpolated(lgk, m_lgkk, m_lgPk, "Linear",- 1);
 
 	return pow(10.,lgPkK)*pow(cosmobl::WW(kk*m_rr)*kk,2)/pow(fact,m_n_spec); 
       }
@@ -419,8 +418,7 @@ namespace cosmobl {
 	double fact = (m_unit) ? 1. : m_hh;
 	double lgk = log10(kk/fact);
 
-	double err = -1, lgPkK = -1;  
-	cosmobl::interpolation_extrapolation(lgk, m_lgkk, m_lgPk, "Linear", -1, &lgPkK, &err);
+	double lgPkK = cosmobl::interpolated(lgk, m_lgkk, m_lgPk, "Linear", -1);
 	double rr = cosmobl::Radius(m_mass, m_rho);
 
 	return pow(10.,lgPkK)*pow(cosmobl::WW(kk*rr)*kk,2)/pow(fact,m_n_spec); 
@@ -682,8 +680,7 @@ namespace cosmobl {
 
 	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
 
-	double err = -1, lgPkK = -1;  
-	cosmobl::interpolation_extrapolation(lgk, m_lgkk, m_lgPk, "Linear", -1, &lgPkK, &err);
+	double lgPkK = cosmobl::interpolated(lgk, m_lgkk, m_lgPk, "Linear", -1);
 
 	return pow(cosm.linear_growth_rate(m_redshift, kk),2)*pow(10.,lgPkK)/pow(fact, m_n_spec)*pow(cosmobl::WW(kk*m_rr),2);  
       }
@@ -769,8 +766,7 @@ namespace cosmobl {
 
 	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
  
-	double err = -1, lgPkK = -1;  
-	cosmobl::interpolation_extrapolation(lgk, m_lgkk, m_lgPk, "Linear", -1, &lgPkK, &err);
+	double lgPkK = cosmobl::interpolated(lgk, m_lgkk, m_lgPk, "Linear", -1);
 
 	return pow(cosm.linear_growth_rate(m_redshift, kk),2)*pow(10.,lgPkK)/pow(fact, m_n_spec)*(1.-pow(cosmobl::WW(kk*m_rr),2));  
       }
@@ -843,8 +839,7 @@ namespace cosmobl {
 	double fact = (m_unit) ? 1. : m_hh;
 	double lgk = log10(kk/fact);
 
-	double err = -1, lgPkK = -1;  
-	cosmobl::interpolation_extrapolation(lgk, m_lgkk, m_lgPk, "Linear", -1, &lgPkK, &err);
+	double lgPkK = cosmobl::interpolated(lgk, m_lgkk, m_lgPk, "Linear", -1);
 
 	return pow(10.,lgPkK); 
       }

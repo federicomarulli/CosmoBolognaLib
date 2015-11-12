@@ -126,10 +126,7 @@ double cosmobl::converted_xi (double &RR, double &redshift, vector<double> rr, v
       lgXi.push_back(log10(Xi[i]));
     }
 
-  double lgXI, ERR; 
-  interpolation_extrapolation (lgRR, lgrr, lgXi, "Poly", 4, &lgXI, &ERR);
-
-  return pow(10.,lgXI);
+  return pow(10., interpolated(lgRR, lgrr, lgXi, "Poly", 4));
 }
 
 
@@ -145,8 +142,5 @@ double cosmobl::converted_xi (double &RP, double &PI, double &redshift, vector<d
   double _RP = (direction) ? RP*fDA : RP/fDA;
   double _PI = (direction) ? PI*fH : PI/fH;
 
-  double XI = -1.; 
-  interpolation_extrapolation_2D (_RP, _PI, rp, pi, Xi, "Poly", 4, &XI);
-
-  return XI;
+  return interpolated_2D(_RP, _PI, rp, pi, Xi, "Poly", 4);
 }

@@ -73,12 +73,12 @@ namespace cosmobl {
 
     // number of pairs
     vector<double> m_gg_log, m_rr_log, m_gr_log, m_gg_lin, m_rr_lin, m_gr_lin;
-    vector< vector<double> > m_gg_2d, m_rr_2d, m_gr_2d, m_gg_slog, m_rr_slog, m_gr_slog,
+    vector<vector<double> > m_gg_2d, m_rr_2d, m_gr_2d, m_gg_slog, m_rr_slog, m_gr_slog,
       m_gg_coslog, m_rr_coslog, m_gr_coslog, m_gg_coslin, m_rr_coslin, m_gr_coslin;
      
     // measured correlation functions
     vector<double> m_rad_log, m_xi_log, m_error_xi_log, m_rad_lin, m_xi_lin, m_error_xi_lin, m_cos_lin; // 1D
-    vector< vector<double> > m_xi_2d_lin, m_error_xi_2d_lin, m_xi_2d_loglin, m_error_xi_2d_loglin,
+    vector<vector<double> > m_xi_2d_lin, m_error_xi_2d_lin, m_xi_2d_loglin, m_error_xi_2d_loglin,
       m_xi_coslog, m_error_xi_coslog, m_xi_coslin, m_error_xi_coslin; // 2D
 
     // projected correlation function
@@ -134,7 +134,7 @@ namespace cosmobl {
     void count_pairs_direct (Catalogue &, Catalogue &); 
 
     // create a chain mesh
-    void create_chain_mesh (Catalogue &, vector<double>, double &, double &, double &, vector<double> &, vector< vector< vector<double> > > &, bool cross=0, bool order=0);
+    void create_chain_mesh (Catalogue &, vector<double>, double &, double &, double &, vector<double> &, vector<vector< vector<double> > > &, bool cross=0, bool order=0);
 
 
     // ==========================================
@@ -142,14 +142,14 @@ namespace cosmobl {
     // ==========================================
 
     // write/read the number of pairs
-    void write_pairs (vector<double> &, vector<double> &, vector< vector<double> > &, vector< vector<double> > &, vector< vector<double> > &, vector< vector<double> > &, string &, string &);
-    void read_pairs (vector<double> &, vector<double> &, vector< vector<double> > &, vector< vector<double> > &, vector< vector<double> > &, vector< vector<double> > &, vector<string> &, string &);
+    void write_pairs (vector<double> &, vector<double> &, vector<vector<double> > &, vector<vector<double> > &, vector<vector<double> > &, vector<vector<double> > &, string &, string &);
+    void read_pairs (vector<double> &, vector<double> &, vector<vector<double> > &, vector<vector<double> > &, vector<vector<double> > &, vector<vector<double> > &, const vector<string> &, string &);
 
 
     /* ======== Alfonso Veropalumbo ======== */
     // write/read the number of pairs for the angular correlation function
     void write_pairs (vector<double> &, vector<double> &, string &, string &);
-    void read_pairs (vector<double> &, vector<double> &,  vector<string> &, string &);
+    void read_pairs (vector<double> &, vector<double> &, const vector<string> &, string &);
 
   
   public :
@@ -212,7 +212,7 @@ namespace cosmobl {
     
     // write the outputs
     void write_xi (string &, int rank=0);
-    void write_xi (vector< vector<double> > &, string &, int rank=0);
+    void write_xi (vector<vector<double> > &, string &, int rank=0);
 
     
     /* ======== Alfonso Veropalumbo ======== */
@@ -223,9 +223,9 @@ namespace cosmobl {
 
     // count pairs when Catalogue is subsampld in regions
     void count_pairs_regions (shared_ptr<Catalogue> , ChainMesh_Catalogue &, vector<shared_ptr<Pairs> >, bool, bool tcount=0);
-
+ 
     // measure the error with Catalogue subsampling
-    void measure_xi (string, string, string, bool, int nSamples=0., vector<string> dir_input_pairs={}, int count_gg=1, int count_rr=1, int count_gr=1, bool doGR=1, string suffix="NULL", bool tcount=0);
+   void measure_xi (string, string, string, bool, int nSamples=0., const vector<string>& dir_input_pairs=vector<string>(), int count_gg=1, int count_rr=1, int count_gr=1, bool doGR=1, string suffix="NULL", bool tcount=0);
     
     void measure_xi (string dir_output_pairs, string dir_output_pairs_subSamples, string dir_output_covariance, string suffix="NULL", bool tcount=0) // to measure the 2pt correlation function and the covariance matrix with jackknife
     {
@@ -237,7 +237,7 @@ namespace cosmobl {
       measure_xi(dir_output_pairs, "NULL", dir_output_covariance, 1, 0., {}, 1, 1, 1, 1, "NULL", tcount);
     }
 
-    void measure_xi (vector<string> dir_input_pairs, string dir_output_covariance, string suffix="NULL") // to read the 2pt correlation function and the covariance matrix with jackknife
+    void measure_xi (const vector<string>& dir_input_pairs, string dir_output_covariance, string suffix="NULL") // to read the 2pt correlation function and the covariance matrix with jackknife
     {
       measure_xi("NULL", "NULL", dir_output_covariance, 1, 0., dir_input_pairs, 0, 0, 0, 1, suffix, 0);
     }
@@ -247,7 +247,7 @@ namespace cosmobl {
       measure_xi(dir_output_pairs,  dir_output_pairs_subSamples, dir_output_covariance, 0, nSamples, {}, 1, 1, 1, 1, suffix, tcount);
     }
 
-    void measure_xi (vector<string> dir_input_pairs, string dir_output_covariance, int nSamples, string suffix="NULL") // to read the 2pt correlation function and the covariance matrix with bootstrap
+    void measure_xi (const vector<string>& dir_input_pairs, string dir_output_covariance, int nSamples, string suffix="NULL") // to read the 2pt correlation function and the covariance matrix with bootstrap
     {
       measure_xi("NULL", "NULL", dir_output_covariance, 0, nSamples, dir_input_pairs, 0, 0, 0, 1, suffix, 0);
     }
@@ -257,23 +257,23 @@ namespace cosmobl {
     void get_covariance (string &, bool &, string suffix="NULL");
     
     // Pairs
-    void set_gg_pairs (vector<double>, vector<double>, vector< vector<double> >, vector< vector<double> >, vector< vector<double> >, vector< vector<double> >);
-    void set_rr_pairs (vector<double>, vector<double>, vector< vector<double> >, vector< vector<double> >, vector< vector<double> >, vector< vector<double> >);
-    void set_gr_pairs (vector<double>, vector<double>, vector< vector<double> >, vector< vector<double> >, vector< vector<double> >, vector< vector<double> >);
+    void set_gg_pairs (vector<double>, vector<double>, vector<vector<double> >, vector<vector<double> >, vector<vector<double> >, vector<vector<double> >);
+    void set_rr_pairs (vector<double>, vector<double>, vector<vector<double> >, vector<vector<double> >, vector<vector<double> >, vector<vector<double> >);
+    void set_gr_pairs (vector<double>, vector<double>, vector<vector<double> >, vector<vector<double> >, vector<vector<double> >, vector<vector<double> >);
 
     void write_pairs_subSamples(vector<shared_ptr<Pairs> > , int, string &, string &);
      
-    void read_pairs_subSamples (vector<shared_ptr<Pairs> > , int, vector<string> &, string &);
+    void read_pairs_subSamples (vector<shared_ptr<Pairs> > , int, const vector<string> &, string &);
     void write_xi_Mocks (string);
     void measure_projected_xi_Mocks (double, string);
 
     // measure the angular correlation function
-    void measure_wtheta (string dir_output_pairs="NULL", vector<string> dir_input_pairs={}, int count_gg=1, int count_rr=1, int count_gr=1, bool doGR=1, bool tcount=0);
+    void measure_wtheta (string dir_output_pairs="NULL", const vector<string>& dir_input_pairs=vector<string>(), int count_gg=1, int count_rr=1, int count_gr=1, bool doGR=1, bool tcount=0);
     void measure_wtheta (string dir_output_pairs, bool tcount)
     {
       measure_wtheta(dir_output_pairs, {}, 1, 1, 1, 1, tcount);
     };
-    void measure_wtheta (vector<string> dir_input_pairs, bool tcount)
+    void measure_wtheta (const vector<string>& dir_input_pairs, bool tcount)
     {
       measure_wtheta("NULL", dir_input_pairs, 0, 0, 0, 1, tcount);
     };
@@ -287,7 +287,7 @@ namespace cosmobl {
     double Error (double &, double &, double &);
 
     // estimeate the full covariance matrix for the 1D correlation function
-    void measure_covariance_1D (vector<string> &, vector<double> &, vector< vector<double> > &, string file_out="NULL");
+    void measure_covariance_1D (vector<string> &, vector<double> &, vector<vector<double> > &, string file_out="NULL");
 
     // measure the projected correlation function
     void measure_projected_xi (double &, string &);
@@ -443,20 +443,18 @@ namespace cosmobl {
     void set_nGal (int nGal) { m_nGal = nGal; }
     void set_nRan (int nRan) { m_nRan = nRan; }
     
-    void set_coordinates (vector<double>, vector<double>, vector<double>);
-    void set_weight (vector<double>);
     void set_rad_log (vector<double>);
     void set_xi_log (vector<double>);
     void set_error_xi_log (vector<double>);
     void set_rad_lin (vector<double>);
     void set_xi_lin (vector<double>);
     void set_error_xi_lin (vector<double>);
-    void set_error_xi_2d_lin (vector< vector<double> >);
-    void set_error_xi_2d_loglin (vector< vector<double> >);
-    void set_error_xi_coslog (vector< vector<double> >);
-    void set_error_xi_coslin (vector< vector<double> >);
+    void set_error_xi_2d_lin (vector<vector<double> >);
+    void set_error_xi_2d_loglin (vector<vector<double> >);
+    void set_error_xi_coslog (vector<vector<double> >);
+    void set_error_xi_coslin (vector<vector<double> >);
     void set_error_proj (vector<double>);
-    void set_correlations (vector<double>, vector<double>, vector< vector<double> >, vector< vector<double> >, vector< vector<double> >, vector< vector<double> >);
+    void set_correlations (vector<double>, vector<double>, vector<vector<double> >, vector<vector<double> >, vector<vector<double> >, vector<vector<double> >);
  
     void set_xi_real_log (vector<double>);
     void set_xi_real_lin (vector<double>);

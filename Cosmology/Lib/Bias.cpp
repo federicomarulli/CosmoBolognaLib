@@ -38,7 +38,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::Cosmology::bias_halo (double &Mass, double &redshift, string &author, string &method_SS, string output_root, double Delta, double kk, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::bias_halo (double Mass, double redshift, string author, string method_SS, string output_root, double Delta, double kk, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
 {
   double SSS = SSM_norm(Mass, method_SS, redshift, output_root, k_max, file_par); 
   double Sigma = sqrt(SSS); 
@@ -57,7 +57,7 @@ double cosmobl::Cosmology::bias_halo (double &Mass, double &redshift, string &au
 // =====================================================================================
 
 
-double cosmobl::Cosmology::bias_halo (double &Mass, double &Sigma, double &redshift, string &author_bias, string output_root, double Delta, double kk, int norm, double k_min, double k_max, bool GSL, double prec, string method_SS, string file_par) 
+double cosmobl::Cosmology::bias_halo (double Mass, double Sigma, double redshift, string author_bias, string output_root, double Delta, double kk, int norm, double k_min, double k_max, bool GSL, double prec, string method_SS, string file_par) 
 {
   double bias = bias_halo_generator(Sigma, redshift, author_bias, Delta); 
   
@@ -74,7 +74,7 @@ double cosmobl::Cosmology::bias_halo (double &Mass, double &Sigma, double &redsh
 // =====================================================================================
 
 
-double cosmobl::Cosmology::bias_halo_generator (double &Sigma, double &redshift, string &author, double Delta) 
+double cosmobl::Cosmology::bias_halo_generator (double Sigma, double redshift, string author, double Delta) 
 {
   double Z0 = 0.;
   double deltacz = deltac(redshift);
@@ -130,7 +130,7 @@ double cosmobl::Cosmology::bias_halo_generator (double &Sigma, double &redshift,
 // =====================================================================================
 
 
-double cosmobl::Cosmology::bias_eff (double &Mass_min, double &Mass_max, double &redshift, string &author_bias, string &author_MF, string &method_SS, string output_root, double Delta, double kk, string interpType, int Num, double stepsize, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::bias_eff (double Mass_min, double Mass_max, double redshift, string author_bias, string author_MF, string method_SS, string output_root, double Delta, double kk, string interpType, int Num, double stepsize, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
 {
   // ---------- read the grid file ---------- 
   
@@ -170,7 +170,7 @@ double cosmobl::Cosmology::bias_eff (double &Mass_min, double &Mass_max, double 
 // =====================================================================================
 
 
-double cosmobl::Cosmology::bias_eff (vector<double> MM, vector<double> MF, double &redshift, string &author_bias, string &method_SS, string output_root, double Delta, double kk, string interpType, int Num, double stepsize, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::bias_eff (vector<double> MM, vector<double> MF, double redshift, string author_bias, string method_SS, string output_root, double Delta, double kk, string interpType, int Num, double stepsize, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
 {
   // ---------- read the grid file ---------- 
   
@@ -200,7 +200,7 @@ double cosmobl::Cosmology::bias_eff (vector<double> MM, vector<double> MF, doubl
   for (unsigned int k=0; k<MM.size()-1; k++) {
     mf = MF[k];
 
-    interpolation_extrapolation(MM[k], mass, sigma, "Rat", 4, &sig, &err);
+    sig = interpolated(MM[k], mass, sigma, "Rat", 4, err);
     if (err/sig>0.1) { 
       double errs = err/sig;
       string Err = "Error in cosmobl::Cosmology::bias_eff of Bias.cpp: err/sig = " + conv(errs, par::fDP3) + "!";

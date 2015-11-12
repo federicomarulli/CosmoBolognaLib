@@ -52,7 +52,7 @@ namespace cosmobl {
    * @enum Var
    * @brief strongly typed enum class representing the catalogue variables
    */
-  enum class Var : int8_t { 
+  enum Var { 
     /// coordinate x
     _XX_ = 1, 
     /// coordinate y
@@ -103,7 +103,7 @@ namespace cosmobl {
   private :
     
     /// vector containing the objects of the catalogue
-    vector<shared_ptr<Object>> m_sample; 
+    vector<shared_ptr<Object> > m_sample; 
     
     /// vector containing the object indexes
     vector<int> m_index;      
@@ -121,7 +121,7 @@ namespace cosmobl {
      * @param sample vector of pointers to objects of type \e Object
      * @return object of class Catalogue
      */
-    Catalogue (vector<shared_ptr<Object>> sample) {
+    Catalogue (vector<shared_ptr<Object> > sample) {
       for (auto &&i : sample)
 	m_sample.push_back(move(i));
     }
@@ -144,7 +144,7 @@ namespace cosmobl {
      * @param sample vector of pointers to objects of type \e Object
      * @return none
      */
-    void add_objects (vector<shared_ptr<Object>> sample) { 
+    void add_objects (vector<shared_ptr<Object> > sample) { 
       for (auto &&i : sample)
 	m_sample.push_back(move(i));
     }
@@ -162,7 +162,7 @@ namespace cosmobl {
      * @param sample vector of pointers to objects of type \e Object
      * @return none
      */
-    void remove_objects (vector<shared_ptr<Object>> sample) {
+    void remove_objects (vector<shared_ptr<Object> > sample) {
       m_sample.erase(m_sample.begin(), m_sample.end());
       for (auto &&i : sample)
 	m_sample.push_back(move(i));
@@ -364,7 +364,7 @@ namespace cosmobl {
      * erase the vector Lim
      * @return none
      */
-    void MinMax_var (vector<Var>, vector<vector<double>> &, bool er=1);
+    void MinMax_var (vector<Var>, vector<vector<double> > &, bool er=1);
   
     /**
      * @brief get the minimum and maximum values of a variable
@@ -555,7 +555,7 @@ namespace cosmobl {
      * chain-mesh (use SUB>1 when there could be memory problems)
      * @return object of class catalogue
      */
-    shared_ptr<Catalogue> smooth (double, __attribute__((unused)) vector<Var> vars={}, int SUB=1);
+    shared_ptr<Catalogue> smooth (double, vector<Var> vars={}, int SUB=1);
 
   };
 }

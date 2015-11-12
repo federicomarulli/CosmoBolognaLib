@@ -121,12 +121,9 @@ void cosmobl::ModelTwoPointCorrelation::measure_fsigma8_KaiserLimit (Cosmology &
 
   vector<double> xi_DM;
 
-  for (unsigned int i=0; i<rad_log.size(); i++) {
-    double lgXXi = -1., Err = -1.;
-    interpolation_extrapolation(log10(rad_log[i]), lgrr, lgXi, "Linear", -1, &lgXXi, &Err);
-    xi_DM.push_back(pow(10.,lgXXi));
-  }
-
+  for (unsigned int i=0; i<rad_log.size(); i++) 
+    xi_DM.push_back(pow(10.,interpolated(log10(rad_log[i]), lgrr, lgXi, "Linear", -1)));
+ 
 
   // ----- linear Kaiser model for the monopole xi(s) ----- 
 
@@ -238,16 +235,16 @@ void cosmobl::ModelTwoPointCorrelation::measure_fsigma8_bsigma8 (Cosmology &cosm
       xi[i-m_lim_index_fit[0]].push_back(m_TwoP->xi_2d_lin(i,j));
       error_xi[i-m_lim_index_fit[0]].push_back(m_TwoP->error_xi_2d_lin(i,j));
  
-      double lgXXi, lgXXi_, lgXXi__, Err; 
+      double lgXXi, lgXXi_, lgXXi__; 
 
       if (!NL) {
 
 	double rr = sqrt(rp*rp+pi*pi);
 	double cos_i = pi/rr;
 
-	interpolation_extrapolation(log10(rr), lgrr, lgXi, "Linear", -1, &lgXXi, &Err);
-	interpolation_extrapolation(log10(rr), lgrr, lgXi_, "Linear", -1, &lgXXi_, &Err);
-	interpolation_extrapolation(log10(rr), lgrr, lgXi__, "Linear", -1, &lgXXi__, &Err);
+	lgXXi = interpolated(log10(rr), lgrr, lgXi, "Linear", -1);
+	lgXXi_ = interpolated(log10(rr), lgrr, lgXi_, "Linear", -1);
+	lgXXi__ = interpolated(log10(rr), lgrr, lgXi__, "Linear", -1);
 
 	xi_real.push_back(pow(10.,lgXXi));
 	xi_.push_back(pow(10.,lgXXi_));
@@ -274,9 +271,9 @@ void cosmobl::ModelTwoPointCorrelation::measure_fsigma8_bsigma8 (Cosmology &cosm
 	  double rr = sqrt(rp*rp+pi_new*pi_new);
 	  double cos_i = pi_new/rr;
 
-	  interpolation_extrapolation(log10(rr), lgrr, lgXi, "Linear", -1, &lgXXi, &Err);
-	  interpolation_extrapolation(log10(rr), lgrr, lgXi_, "Linear", -1, &lgXXi_, &Err);
-	  interpolation_extrapolation(log10(rr), lgrr, lgXi__, "Linear", -1, &lgXXi__, &Err);
+	  lgXXi = interpolated(log10(rr), lgrr, lgXi, "Linear", -1);
+	  lgXXi_ = interpolated(log10(rr), lgrr, lgXi_, "Linear", -1);
+	  lgXXi__ = interpolated(log10(rr), lgrr, lgXi__, "Linear", -1);
 
 	  xi_real.push_back(pow(10.,lgXXi));
 	  xi_.push_back(pow(10.,lgXXi_));

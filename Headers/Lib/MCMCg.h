@@ -36,7 +36,6 @@
 
 #include "Chi2.h"
 
-
 // ======================================================================================
 
 
@@ -90,7 +89,7 @@ namespace cosmobl {
 
       void put_limits(vector<double> &Limits) {
 	xmin = Limits[0]; 
-	xmax=Limits[1];
+	xmax = Limits[1];
       }
 
       void put_gaussian_parameter(double &mean, double &sigma) {

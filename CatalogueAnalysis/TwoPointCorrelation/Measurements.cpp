@@ -408,7 +408,7 @@ void cosmobl::TwoPointCorrelation::measure_xi (string dir_output_pairs, vector<s
 
 // measure the two-point correlation function and estimate the internal errors (i.e. jackknife or bootstrap)
 
-void cosmobl::TwoPointCorrelation::measure_xi (string dir_output_pairs, string dir_output_pairs_subSamples, string dir_output_covariance, bool doJK, int nSamples, vector<string> dir_input_pairs, int count_gg, int count_rr, int count_gr, bool doGR, string suffix, bool tcount)
+void cosmobl::TwoPointCorrelation::measure_xi (string dir_output_pairs, string dir_output_pairs_subSamples, string dir_output_covariance, bool doJK, int nSamples, const vector<string>& dir_input_pairs, int count_gg, int count_rr, int count_gr, bool doGR, string suffix, bool tcount)
 {
   if (m_data->region(0)<0 || m_random->region(0)<0)
       ErrorMsg("Error in cosmobl::TwoPointCorrelation::measure_xi of Measurements.cpp! The function set_ObjectRegion_SubBoxes has not been called!");
@@ -637,7 +637,7 @@ void cosmobl::TwoPointCorrelation::measure_xi (string dir_output_pairs, string d
 // ============================================================================
 
 
-void cosmobl::TwoPointCorrelation::measure_wtheta (string dir_output_pairs, vector<string> dir_input_pairs, int count_gg, int count_rr, int count_gr, bool doGR, bool tcount)
+void cosmobl::TwoPointCorrelation::measure_wtheta (string dir_output_pairs, const vector<string>& dir_input_pairs, int count_gg, int count_rr, int count_gr, bool doGR, bool tcount)
 {
   allocate_vectors_ACF(doGR);
 
@@ -678,12 +678,12 @@ void cosmobl::TwoPointCorrelation::measure_wtheta (string dir_output_pairs, vect
  
     m_gg_theta_log = gg.PPlog(); m_gg_theta_lin = gg.PPlin();
 
-    write_pairs (m_gg_theta_log, m_gg_theta_lin, dir_output_pairs, file);
+    write_pairs(m_gg_theta_log, m_gg_theta_lin, dir_output_pairs, file);
 
   }
 
   else if (count_gg==0) 
-    read_pairs (m_gg_theta_log, m_gg_theta_lin, dir_input_pairs, file);
+    read_pairs(m_gg_theta_log, m_gg_theta_lin, dir_input_pairs, file);
 
    
   // --- Random-Random ---
@@ -699,12 +699,12 @@ void cosmobl::TwoPointCorrelation::measure_wtheta (string dir_output_pairs, vect
 
     m_rr_theta_log = rr.PPlog(); m_rr_theta_lin = rr.PPlin();
 
-    write_pairs (m_rr_theta_log, m_rr_theta_lin, dir_output_pairs, file);
+    write_pairs(m_rr_theta_log, m_rr_theta_lin, dir_output_pairs, file);
 
   }
 
   else if (count_rr==0)
-    read_pairs (m_rr_theta_log, m_rr_theta_lin, dir_input_pairs, file);
+    read_pairs(m_rr_theta_log, m_rr_theta_lin, dir_input_pairs, file);
   
 
   // --- Object-Random ---
@@ -722,12 +722,12 @@ void cosmobl::TwoPointCorrelation::measure_wtheta (string dir_output_pairs, vect
 
       m_gr_theta_log = gr.PPlog(); m_gr_theta_lin = gr.PPlin();
 
-      write_pairs (m_gr_theta_log, m_gr_theta_lin, dir_output_pairs, file);
+      write_pairs(m_gr_theta_log, m_gr_theta_lin, dir_output_pairs, file);
 
     }
 
     else if (count_gr==0)
-      read_pairs (m_gr_theta_log, m_gr_theta_lin, dir_input_pairs, file);
+      read_pairs(m_gr_theta_log, m_gr_theta_lin, dir_input_pairs, file);
 
   }
 

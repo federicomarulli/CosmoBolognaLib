@@ -49,17 +49,11 @@ namespace cosmobl {
    *  This class is used to define the prior
    */
   class Prior {
-      
-  protected:
-      
-    typedef double(*prior_func) (double, void *, vector<double>);
-
-    prior_func func;
-    vector<double> prior_func_pars;
-    double xmin, xmax;
 
   public:
 
+    typedef double(*prior_func) (double, void *, vector<double>);
+    
     Prior () {
       xmin = -1.e30;
       xmax = -1.e30;
@@ -84,6 +78,13 @@ namespace cosmobl {
         
     void put_func_parameters (prior_func, vector<double>);
 
+    
+  protected:
+      
+    prior_func func;
+    vector<double> prior_func_pars;
+    double xmin, xmax;
+    
   };
 }
 

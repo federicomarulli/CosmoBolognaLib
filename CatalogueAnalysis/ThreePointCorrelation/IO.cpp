@@ -65,7 +65,7 @@ void cosmobl::ThreePointCorrelation::write_triplets (vector<double> &TT, string 
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::read_triplets (vector<double> &TT, vector<string> &dir, string file) 
+void cosmobl::ThreePointCorrelation::read_triplets (vector<double> &TT, const vector<string>& dir, string file) 
 {
   for (unsigned int dd=0; dd<dir.size(); dd++) {
 

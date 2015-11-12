@@ -7,7 +7,7 @@
 
 using namespace cosmobl;
 
-const string par::DirCosmo = DIRCOSMO, par::DirLoc = DIRL;
+string par::DirCosmo = DIRCOSMO, par::DirLoc = DIRL;
 
 
 int main () {

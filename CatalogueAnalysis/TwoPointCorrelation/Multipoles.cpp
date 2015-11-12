@@ -92,23 +92,18 @@ void cosmobl::TwoPointCorrelation::measure_multipoles_xirmu (double rApprox)
 
   Erase(rad_linE, lll);
   Erase_lines(xi_coslinE, lll);
-  
-  double val = -1.;
 
+  
   for (unsigned int i=0; i<xi_coslogR.size(); i++) 
     if (rad_logR[i]<rApprox)
-      for (unsigned int j=0; j<xi_coslogR[i].size(); j++) {
-	interpolation_extrapolation_2D (rad_logR[i], cos_linR1[j], rad_logE, cos_linR1, xi_coslogE, "Poly", 4, &val);
-	xi_coslogR[i][j] = val;
-      }
-
+      for (unsigned int j=0; j<xi_coslogR[i].size(); j++) 
+	xi_coslogR[i][j] = interpolated_2D(rad_logR[i], cos_linR1[j], rad_logE, cos_linR1, xi_coslogE, "Poly", 4);
+	
   for (unsigned int i=0; i<xi_coslinR.size(); i++) 
     if (rad_linR[i]<rApprox)
-      for (unsigned int j=0; j<xi_coslinR[i].size(); j++) {
-	interpolation_extrapolation_2D (rad_linR[i], cos_linR2[j], rad_linE, cos_linR2, xi_coslinE, "Poly", 4, &val);
-	xi_coslinR[i][j] = val;
-      }
-
+      for (unsigned int j=0; j<xi_coslinR[i].size(); j++) 
+	xi_coslinR[i][j] = interpolated_2D(rad_linR[i], cos_linR2[j], rad_linE, cos_linR2, xi_coslinE, "Poly", 4);
+     
 
   // ---------------------------------------------------
   // ---- measure the multipoles of the correlation ----
@@ -147,8 +142,6 @@ void cosmobl::TwoPointCorrelation::measure_multipoles_xirppi (int step_cos)
 
   erase_multipoles ();
 
-  double val = -1.;
-
   
   // -----------------------------
   // ---- eliminate null bins ----
@@ -180,11 +173,9 @@ void cosmobl::TwoPointCorrelation::measure_multipoles_xirppi (int step_cos)
       double rp = m_rad_log[i]*sqrt(1.-cos_lin[j]*cos_lin[j]);
       double pi = m_rad_log[i]*cos_lin[j];
       
-      interpolation_extrapolation_2D (rp, pi, rad_linR1, rad_linR2, xi_2d_linR, "Poly", 4, &val);
-      m_xi_coslog_interp[i][j] = val;
+      m_xi_coslog_interp[i][j] = interpolated_2D(rp, pi, rad_linR1, rad_linR2, xi_2d_linR, "Poly", 4);
 
-      interpolation_extrapolation_2D (rp, pi, rad_linR3, rad_linR4, error_xi_2d_linR, "Poly", 4, &val);
-      error_m_xi_coslog_interp[i][j] = val;
+      error_m_xi_coslog_interp[i][j] = interpolated_2D(rp, pi, rad_linR3, rad_linR4, error_xi_2d_linR, "Poly", 4);
     }
   
   
@@ -198,11 +189,9 @@ void cosmobl::TwoPointCorrelation::measure_multipoles_xirppi (int step_cos)
       double rp = m_rad_lin[i]*sqrt(1.-cos_lin[j]*cos_lin[j]);
       double pi = m_rad_lin[i]*cos_lin[j];
 
-      interpolation_extrapolation_2D (rp, pi, rad_linR1, rad_linR2, xi_2d_linR, "Poly", 4, &val);
-      xi_coslin_interp[i][j] = val;
+      xi_coslin_interp[i][j] = interpolated_2D(rp, pi, rad_linR1, rad_linR2, xi_2d_linR, "Poly", 4);
 
-      interpolation_extrapolation_2D (rp, pi, rad_linR3, rad_linR4, error_xi_2d_linR, "Poly", 4, &val);
-      error_xi_coslin_interp[i][j] = val;
+      error_xi_coslin_interp[i][j] = interpolated_2D(rp, pi, rad_linR3, rad_linR4, error_xi_2d_linR, "Poly", 4);
     }
 
 

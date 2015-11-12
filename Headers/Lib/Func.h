@@ -42,8 +42,14 @@
 #include <unistd.h>
 #include <random>
 #include <omp.h>
+
+#ifdef LINUX
 #include "sys/types.h"
 #include "sys/sysinfo.h"
+#endif
+
+using namespace std;
+
 
 /// @cond GSLinc
 #include <gsl/gsl_errno.h>
@@ -89,6 +95,8 @@
 
 
 #include "Constants.h"
+
+using namespace std;
 
 
 // ============================================================================================
@@ -303,7 +311,7 @@ namespace cosmobl {
   double DoubleSwap (double);
   
   /**
-   *  @brief 1D interpolation/extrapolation
+   *  @brief 1D interpolation
    *
    *  @param [in] _xx the point where the input function will be
    *  interpolated or extrapolated
@@ -321,41 +329,80 @@ namespace cosmobl {
    *
    *  @param [in] nPt number of points used in the polynomial,
    *  diagonal rational and barycentric rational interpolations
-   *  
-   *  @param [out] val the interpolated or extrapolated value of the
-   *  input function
    *
    *  @param [out] err the estimated error in the interpolation or
    *  extrapolation
    *
-   *  @return none
+   *  @return the interpolated value of the input function
+   *
+   *  @warning if _xx is outside the range of the input vector xx, the
+   *  returned value is the extrapolation
    */
-  void interpolation_extrapolation (double, vector<double>, vector<double>, string, int, double *, double *);
+  double interpolated (double, vector<double>, vector<double>, string, int, double &);
   
-  /**
-   *  @brief compute the first derivative of a given function
-   *  @param _x1 the point x1 where to compute the derivative
-   *  @param _x2 the point x2 where to compute the derivative
-   *  @param x1 vector containing the set of data x1
-   *  @param x2 vector containing the set of data x2
-   *  @param yy vector containing the function, y(x)
+   /**
+   *  @brief 1D interpolation
    *
-   *  @param interpType type the method used to interpolate or
-   *  extrapolate: "Linear" &rarr; linear interpolation; "Poly" &rarr;
-   *  polynomial interpolation; "Spline" &rarr; cubic spline
-   *  interpolation; "Rat" &rarr; diagonal rational function
-   *  interpolation; "BaryRat" &rarr; barycentric rational
-   *  interpolation
+   *  @param [in] _xx the point where the input function will be
+   *  interpolated
    *
-   *  @param nPt number of points used in the polynomial,
+   *  @param [in] xx vector containing the binned values of x
+   *
+   *  @param [in] yy vector containing the binned values of the
+   *  function, y(x), to be interpolated or extrapolated
+   *
+   *  @param [in] type the method used to interpolate or extrapolate:
+   *  "Linear" &rarr; linear interpolation; "Poly" &rarr; polynomial
+   *  interpolation; "Spline" &rarr; cubic spline interpolation; "Rat"
+   *  &rarr; diagonal rational function interpolation; "BaryRat"
+   *  &rarr; barycentric rational interpolation
+   *
+   *  @param [in] nPt number of points used in the polynomial,
    *  diagonal rational and barycentric rational interpolations
-   *  
-   *  @param [out] val the interpolated or extrapolated value of the
+   *
+   *  @return the interpolated or extrapolated value of the
    *  input function
    *
-   *  @return none
+   *  @warning if _xx is outside the range of the input vector xx, the
+   *  returned value is the extrapolation
    */
-  void interpolation_extrapolation_2D (double, double, vector<double>, vector<double>, vector<vector<double>>, string, int, double *);
+  double interpolated (double, vector<double>, vector<double>, string, int);
+  
+  /**
+   *  @brief 2D interpolation
+   *
+   *  @param [in] _x1 the point in the first dimension where the input
+   *  function will be interpolated
+   *
+   *  @param [in] _x2 the point in the second dimension where the
+   *  input function will be interpolated
+   *
+   *  @param [in] x1 vector containing the binned values of x in the
+   *  first dimension
+   *
+   *  @param [in] x2 vector containing the binned values of x in the
+   *  second dimension
+   *
+   *  @param [in] yy vector containing the binned values of the
+   *  function, y(x), to be interpolated or extrapolated
+   *
+   *  @param [in] type the method used to interpolate or extrapolate:
+   *  "Linear" &rarr; linear interpolation; "Poly" &rarr; polynomial
+   *  interpolation; "Spline" &rarr; cubic spline interpolation; "Rat"
+   *  &rarr; diagonal rational function interpolation; "BaryRat"
+   *  &rarr; barycentric rational interpolation
+   *
+   *  @param [in] nPt number of points used in the polynomial,
+   *  diagonal rational and barycentric rational interpolations
+   *
+   *  @return the interpolated or extrapolated value of the
+   *  input function
+   *
+   *  @warning if _x1 and/or _x2 are outside the range of the input
+   *  vectors x1 and/or x2, the returned value is the extrapolatation
+   *
+   */
+  double interpolated_2D (double, double, vector<double>, vector<double>, vector<vector<double> >, string, int);
   
   /**
    *  @brief check if a file can be opened
@@ -479,8 +526,6 @@ namespace cosmobl {
 
   /// @cond glob
   void gauleg (const double, const double, double *, double *, const int);
-
-  double func_BiasKernel_GSL (double, void *);
   /// @endcond
 
   ///@}
@@ -685,7 +730,7 @@ namespace cosmobl {
    *  @return none
    */
   template <typename T> 
-    void SubMatrix (vector<T> &xx, vector<T> &yy, vector<vector<T>> &Mat, T val) 
+    void SubMatrix (vector<T> &xx, vector<T> &yy, vector<vector<T> > &Mat, T val) 
     { 
       vector<int> line, column;
 
@@ -730,7 +775,7 @@ namespace cosmobl {
    *  dimensions are equal
    */
   template <typename T> 
-    bool isDimEqual (vector<vector<T>> mat1, vector<vector<T>> mat2) 
+    bool isDimEqual (vector<vector<T> > mat1, vector<vector<T> > mat2) 
     {
       bool is = (mat1.size()==mat2.size()) ? 1 : 0;
       if (is) 
@@ -952,7 +997,7 @@ namespace cosmobl {
    *  @param [in] prec the precision required 
    *  @return none
    */
-  void invert_matrix (vector<vector<double>>, vector<vector<double>> &, double prec=1.e-10); 
+  void invert_matrix (vector<vector<double> >, vector<vector<double> > &, double prec=1.e-10); 
 
   /**
    *  @brief method to invert a matrix using tge GSL
@@ -963,7 +1008,7 @@ namespace cosmobl {
    *  @param [in] prec the precision required 
    *  @return none
    */
-  void invert_matrix (vector<vector<double>>, vector<vector<double>> &, int, int, double prec=1.e-10); 
+  void invert_matrix (vector<vector<double> >, vector<vector<double> > &, int, int, double prec=1.e-10); 
 
   /**
    *  @brief method to invert a 'small' matrix 
@@ -1164,7 +1209,7 @@ namespace cosmobl {
    *  @warning pp is not used, it is necessary only for GSL operations
    */
   template <typename T> 
-    T Pol2 (T xx, __attribute__((unused)) void *pp, vector<double> par)
+    T Pol2 (T xx, void *pp, vector<double> par)
     {
       return par[0]*pow(xx,2)+par[1]*xx+par[2];
     }
@@ -1237,7 +1282,7 @@ namespace cosmobl {
    *  function template
    */
   template <typename T> 
-    T identity (__attribute__((unused)) T xx, __attribute__((unused)) void *pp, __attribute__((unused)) vector<double> par)
+    T identity (T xx, void *pp, vector<double> par)
     {
       return 1;
     }
@@ -1252,7 +1297,7 @@ namespace cosmobl {
    *  @warning pp is not used, it is necessary only for GSL operations
    */
   template <typename T> 
-    T gaussian (T xx, __attribute__((unused)) void *pp, vector<double> par)
+    T gaussian (T xx, void *pp, vector<double> par)
     {
       T gauss = 1./(par[1]*sqrt(2.*par::pi))*exp(-pow(xx-par[0],2)/(2.*par[1]*par[1]));
       return (par.size()==2) ? gauss : gauss*par[2];
@@ -2288,7 +2333,7 @@ namespace cosmobl {
    *
    *  @return error on xi<SUB>0</SUB>(s)
    */
-  double error_multipole_xi0 (int, vector<double>, vector<vector<double>>);
+  double error_multipole_xi0 (int, vector<double>, vector<vector<double> >);
 
   /**
    *  @brief error on xi<SUB>2</SUB>(s) from &xi;(r,&mu;)
@@ -2303,7 +2348,7 @@ namespace cosmobl {
    *
    *  @return error on xi<SUB>2</SUB>(s)
    */
-  double error_multipole_xi2 (int, vector<double>, vector<vector<double>>);
+  double error_multipole_xi2 (int, vector<double>, vector<vector<double> >);
 
   /**
    *  @brief error on xi<SUB>4</SUB>(s) from &xi;(r,&mu;)
@@ -2318,7 +2363,7 @@ namespace cosmobl {
    *
    *  @return error on xi<SUB>4</SUB>(s)
    */
-  double error_multipole_xi4 (int, vector<double>, vector<vector<double>>);
+  double error_multipole_xi4 (int, vector<double>, vector<vector<double> >);
 
   /**
    *  @brief xi<SUB>0</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -2332,7 +2377,7 @@ namespace cosmobl {
    *  @param delta_s bin size 
    *  @return xi<SUB>0</SUB>(s)
    */
-  double multipole_xi0 (double &, vector<double>, vector<double>, vector<vector<double>>, double &);
+  double multipole_xi0 (double &, vector<double>, vector<double>, vector<vector<double> >, double &);
 
   /**
    *  @brief xi<SUB>2</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -2346,7 +2391,7 @@ namespace cosmobl {
    *  @param delta_s bin size 
    *  @return xi<SUB>2</SUB>(s)
    */
-  double multipole_xi2 (double &, vector<double>, vector<double>, vector<vector<double>>, double &);
+  double multipole_xi2 (double &, vector<double>, vector<double>, vector<vector<double> >, double &);
 
   /**
    *  @brief xi<SUB>4</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -2360,7 +2405,7 @@ namespace cosmobl {
    *  @param delta_s bin size 
    *  @return xi<SUB>4</SUB>(s)
    */
-  double multipole_xi4 (double &, vector<double>, vector<double>, vector<vector<double>>, double &);
+  double multipole_xi4 (double &, vector<double>, vector<double>, vector<vector<double> >, double &);
 
   /**
    *  @brief error on xi<SUB>0</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -2372,7 +2417,7 @@ namespace cosmobl {
    *  @param delta_s bin size 
    *  @return error on xi<SUB>0</SUB>(s)
    */
-  double error_multipole_xi0 (double &, vector<double>, vector<double>, vector<vector<double>>, double &);
+  double error_multipole_xi0 (double &, vector<double>, vector<double>, vector<vector<double> >, double &);
 
   /**
    *  @brief error on xi<SUB>2</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -2384,7 +2429,7 @@ namespace cosmobl {
    *  @param delta_s bin size 
    *  @return error on xi<SUB>2</SUB>(s)
    */
-  double error_multipole_xi2 (double &, vector<double>, vector<double>, vector<vector<double>>, double &);
+  double error_multipole_xi2 (double &, vector<double>, vector<double>, vector<vector<double> >, double &);
 
   /**
    *  @brief error on xi<SUB>4</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -2396,7 +2441,7 @@ namespace cosmobl {
    *  @param delta_s bin size 
    *  @return error on xi<SUB>4</SUB>(s)
    */
-  double error_multipole_xi4 (double &, vector<double>, vector<double>, vector<vector<double>>, double &);
+  double error_multipole_xi4 (double &, vector<double>, vector<double>, vector<vector<double> >, double &);
 
   /// @cond glob
   /**

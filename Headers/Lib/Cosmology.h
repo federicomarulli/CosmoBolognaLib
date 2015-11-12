@@ -176,7 +176,7 @@ namespace cosmobl {
      *
      *  @return file_grid name of the file where the grid is stored
      */
-    string create_grid_sigmaM (string &, double &, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., double k_max=100., string file_par="NULL");         
+    string create_grid_sigmaM (string, double, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., double k_max=100., string file_par="NULL");         
 
     /**
      *  @brief auxiliary function to compute the mass function
@@ -203,7 +203,7 @@ namespace cosmobl {
      *
      *  @return the mass function, d&Phi;/dM=dn(M)/dM
      */
-    double MF_generator (double &, double &, double &, double &, string &, double Delta=200.); 
+    double MF_generator (double, double, double, double, string, double Delta=200.); 
 
     /**
      *  @brief auxiliary function to compute the halo bias
@@ -221,7 +221,7 @@ namespace cosmobl {
      *
      *  @return the halo bias
      */
-    double bias_halo_generator (double &, double &, string &, double Delta=200.);    
+    double bias_halo_generator (double, double, string, double Delta=200.);    
 
 
     /**
@@ -860,7 +860,7 @@ namespace cosmobl {
      *
      *  @return &Omega;<SUB>M</SUB>
      */
-    double OmegaM (double &); 
+    double OmegaM (double); 
 
     /**
      *  @brief the dark energy density at a given redshift
@@ -869,7 +869,7 @@ namespace cosmobl {
      *
      *  @return &Omega;<SUB>DE</SUB>
      */
-    double OmegaDE (double &);
+    double OmegaDE (double);
 
     /**
      *  @brief the radiation density at a given redshift
@@ -878,7 +878,7 @@ namespace cosmobl {
      *
      *  @return &Omega;<SUB>rad</SUB>
      */
-    double OmegaR (double &);
+    double OmegaR (double);
 
     /**
      *  @brief the density of curvature energy at a given redshift
@@ -887,7 +887,7 @@ namespace cosmobl {
      *
      *  @return &Omega;<SUB>k</SUB>
      */
-    double OmegaK (double &);
+    double OmegaK (double);
 
     /**
      *  @brief the cosmic density at a given redshift
@@ -896,7 +896,7 @@ namespace cosmobl {
      *
      *  @return &Omega;
      */
-    double Omega (double &);
+    double Omega (double);
 
     /**
      *  @brief the mean cosmic density
@@ -913,7 +913,7 @@ namespace cosmobl {
      *
      *  @return &rho;<SUB>mean</SUB>: the mean cosmic density [Msun*Mpc^-3(*h^2)]
      */
-    double Rho (double &, double &, bool unit1=1);  
+    double Rho (double, double, bool unit1=1);  
 
     /**
      *  @brief the overdensity within a sphere of radius R
@@ -929,7 +929,7 @@ namespace cosmobl {
      *  @return &Delta;<SUB>R</SUB>: the overdensity within a sphere
      *  of radius R
      */
-    double DeltaR (double &, double &);  
+    double DeltaR (double, double);  
 
     /**
      *  @brief the DE equation of state in the CPL parameterisation,
@@ -940,7 +940,7 @@ namespace cosmobl {
      *  @return w: the DE equation of state in the CPL
      *  parameterisation
      */
-    double w_CPL (double &);
+    double w_CPL (double);
 
     /**
      *  @brief auxiliary function used to compute the Hubble function
@@ -953,21 +953,21 @@ namespace cosmobl {
      *
      *  @return f<SUB>DE</SUB>
      */
-    double f_DE (double &);
+    double f_DE (double);
    
     /**
      *  @brief auxiliary function used to compute the Hubble function
      *  @param redshift redshift
      *  @return E=H/H<SUB>0</SUB> 
      */
-    double EE (double &);
+    double EE (double);
    
     /**
      *  @brief the Hubble function
      *  @param redshift redshift
      *  @return H
      */
-    double HH (double &);
+    double HH (double);
  
     /**
      *  @brief auxiliary function used to estimate the linear growth
@@ -975,14 +975,14 @@ namespace cosmobl {
      *  @param redshift redshift
      *  @return g
      */
-    double gg (double &);   
+    double gg (double);   
 
     /**
      *  @brief the linear growth factor at a given redshift
      *  @param redshift redshift
      *  @return D
      */
-    double DD (double &);   
+    double DD (double);   
 
 
     /**
@@ -990,14 +990,14 @@ namespace cosmobl {
      *  @param redshift redshift
      *  @return t<SUB>lookback</SUB> [Gyr]
      */
-    double lookback_time (double &); 
+    double lookback_time (double); 
 
     /**
      *  @brief cosmic time at a given redshift
      *  @param redshift redshift
      *  @return t<SUB>cosmic</SUB> [Gyr]
      */
-    double cosmic_time (double &); 
+    double cosmic_time (double); 
 
     /**
      *  @brief auxiliary function used to compute the deceleration
@@ -1008,21 +1008,21 @@ namespace cosmobl {
      *  @param redshift redshift
      *  @return E<SUB>2</SUB>
      */
-    double EE2 (double &);
+    double EE2 (double);
     
     /**
      *  @brief the deceleration parameter at a given redshift
      *  @param redshift redshift
      *  @return q
      */
-    double qq (double &);
+    double qq (double);
 
     /**
      *  @brief derivative of the Hubble function at a given redshift
      *  @param redshift redshift
      *  @return dH/dz
      */
-    double Hdot (double &);
+    double Hdot (double);
 
     /**
      *  @brief redshift at which the Universe begins to accelerate 
@@ -1052,7 +1052,7 @@ namespace cosmobl {
      *  @param mag_lim magnitude limit
      *  @return z<SUB>acc</SUB>
      */
-    double Mag_Volume_limited (double &, double &);
+    double Mag_Volume_limited (double, double);
 
     /**
      *  @brief bolometric luminosity
@@ -1060,7 +1060,7 @@ namespace cosmobl {
      *  @param flux flux
      *  @return L<SUB>bol</SUB>
      */
-    double Lum_bol (double &, double &);  
+    double Lum_bol (double, double);  
 
     /**
      *  @brief redshift at a given comoving distance
@@ -1078,7 +1078,7 @@ namespace cosmobl {
      *
      *  @return redshift
      */
-    double Redshift (double &, double &, double &, double prec = 0.0001); 
+    double Redshift (double, double, double, double prec = 0.0001); 
 
     /**
      *  @brief redshift at a given comoving distance
@@ -1113,7 +1113,7 @@ namespace cosmobl {
      *  @warning wrong redshift interval limits do not lead to an
      *  error, but just slow down the computation
      */
-    double Redshift_LCDM (double, double &, double &, bool go_fast=1, double prec=0.0001); 
+    double Redshift_LCDM (double, double, double, bool go_fast=1, double prec=0.0001); 
 
     /**
      *  @brief redshift at a given wf
@@ -1140,7 +1140,7 @@ namespace cosmobl {
      *
      *  @return redshift
      */
-    double Redshift (double &, double &, double &, string &, double &, string output_root="test"); 
+    double Redshift (double, double, double, string, double, string output_root="test"); 
 
     /**
      *  @brief redshift at a given cosmic time
@@ -1149,7 +1149,7 @@ namespace cosmobl {
      *  @param z2_guess maximum redshift used to search the redshift
      *  @return redshift
      */
-    double Redshift_time (double &, double &, double &);
+    double Redshift_time (double, double, double);
 
     /**
      *  @brief spherical collapse density threshold at a given
@@ -1160,7 +1160,7 @@ namespace cosmobl {
      *  @param redshift redshift
      *  @return &delta;<SUB>c</SUB>
      */
-    double deltac (double &); 
+    double deltac (double); 
  
     /**
      *  @brief virial overdensity
@@ -1169,7 +1169,7 @@ namespace cosmobl {
      *  @param redshift redshift
      *  @return &Delta;<SUB>vir</SUB>
      */
-    double Deltavir(double &); 
+    double Deltavir(double); 
 
     ///@}
     
@@ -1187,7 +1187,7 @@ namespace cosmobl {
      *  @param redshift redshift
      *  @return D<SUB>C</SUB>
      */
-    double D_C (double &);  
+    double D_C (double);  
 
     /**
      *  @brief the comoving line-of-sight distance at a given redshift
@@ -1238,7 +1238,7 @@ namespace cosmobl {
      *  negligible; it does not work for non-standard dark energy or
      *  non-flat models
      */
-    double D_C_LCDM (double &);  
+    double D_C_LCDM (double);  
 
 
     // table of redshift -- comoving line-of-sight distance
@@ -1258,28 +1258,28 @@ namespace cosmobl {
      *  @param [out] dc vector of comoving line-of-sight distances
      *  @return none
      */
-    void D_C_table (string &, double &, double &, int &, vector<double> &, vector<double> &);
+    void D_C_table (string, double, double, int, vector<double> &, vector<double> &);
 
     /**
      *  @brief the comoving transverse distance at a given redshift
      *  @param redshift redshift
      *  @return D<SUB>M</SUB>
      */
-    double D_M (double &);
+    double D_M (double);
 
     /**
      *  @brief the angular diameter distance at a given redshift
      *  @param redshift redshift
      *  @return D<SUB>A</SUB>
      */
-    double D_A (double &); 
+    double D_A (double); 
   
     /**
      *  @brief the luminosity distance at a given redshift
      *  @param redshift redshift
      *  @return D<SUB>L</SUB>
      */
-    double D_L (double &); 
+    double D_L (double); 
   
     /**
      *  @brief the average distance at a given redshift, used to
@@ -1287,7 +1287,7 @@ namespace cosmobl {
      *  @param redshift redshift
      *  @return D<SUB>V</SUB>
      */
-    double D_V (double &);
+    double D_V (double);
   
     /**
      *  @brief the distance at a given redshift. Distance available are:
@@ -1300,7 +1300,7 @@ namespace cosmobl {
      *  @param distance_type the type of distance to return 
      *  @return Distance
      */
-    double Distance (double &, string );
+    double Distance (double, string);
 
     /**
      *  @brief comoving volume for a given redshift range and sky area
@@ -1313,7 +1313,7 @@ namespace cosmobl {
      *  @param Area sky area
      *  @return comoving volume
      */
-    double Volume (double &, double &, double &); 
+    double Volume (double, double, double); 
 
     /**
      *  @brief total comoving volume from z=0 to z
@@ -1325,7 +1325,7 @@ namespace cosmobl {
      *  @param zz redshift
      *  @return comoving volume
      */
-    double Volume (double &);
+    double Volume (double);
   
     /**
      *  @brief maximum redshift for a given volume, sky area and minimum redshift
@@ -1334,7 +1334,7 @@ namespace cosmobl {
      *  @param z_min minimum redshift
      *  @return redshift
      */
-    double max_redshift (double &, double &, double &); 
+    double max_redshift (double, double, double); 
 
     /**
      *  @brief the derivative of the comoving volume,
@@ -1345,7 +1345,7 @@ namespace cosmobl {
      *
      *  @return d<SUP>2</SUP>V/(dz*d&Omega;)
      */
-    double dV_dZdOmega (double &, bool &); 
+    double dV_dZdOmega (double, bool); 
 
     ///@}
 
@@ -1410,7 +1410,7 @@ namespace cosmobl {
      *
      *  @return the mass function, d&Phi;/dM=dn(M)/dM
      */
-    double mass_function (double &, double &, string &, string &, string output_root="test", double Delta=200., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double mass_function (double, double, string, string, string output_root="test", double Delta=200., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief the mass function of dark matter haloes (filaments and
@@ -1467,7 +1467,7 @@ namespace cosmobl {
      *
      *  @return the mass function, d&Phi;/dM=dn(M)/dM
      */
-    double mass_function_fast (double &, double &, string &, string &, string output_root="test", double Delta=200., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
+    double mass_function_fast (double, double, string, string, string output_root="test", double Delta=200., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
 
     /**
      *  @brief the mass function of dark matter haloes (filaments and
@@ -1530,7 +1530,7 @@ namespace cosmobl {
      *
      *  @return the mass function, d&Phi;/dM=dn(M)/dM
      */
-    double mass_function (double &, double &, double &, double &, string &, string output_root="test", double Delta=200., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string method_SS="CAMB", string file_par="NULL"); 
+    double mass_function (double, double, double, double, string, string output_root="test", double Delta=200., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string method_SS="CAMB", string file_par="NULL"); 
     
     /**
      *  @brief number of dark matter haloes per steradian or square
@@ -1582,7 +1582,7 @@ namespace cosmobl {
      *  @return n<SUB>haloes</SUB>: the number density of dark matter
      *  haloes (per steradian or square degree)
      */
-    double n_haloes (double &, double &, double &, double &, bool &, string &, string &, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., double k_max=100., string file_par="NULL");
+    double n_haloes (double, double, double, double, bool, string, string, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., double k_max=100., string file_par="NULL");
 
     /**
      *  @brief minimum halo mass, given the number of haloes in a
@@ -1641,7 +1641,7 @@ namespace cosmobl {
      *
      *  @return minimum halo mass
      */
-    double MhaloMin (int &, double &, bool &, double &, double &, double &, double &, double &, string &, string &, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., double k_max=100., string file_par="NULL");
+    double MhaloMin (int, double, bool, double, double, double, double, double, string, string, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., double k_max=100., string file_par="NULL");
 
     ///@}
 
@@ -1665,7 +1665,7 @@ namespace cosmobl {
      *  (Giocoli et al. 2012)
      *  @return p(w): differential distribution 
      */
-    double pw (double &, double &, string &); 
+    double pw (double, double, string); 
 
     /**
      *  @brief formation probability
@@ -1694,7 +1694,7 @@ namespace cosmobl {
      *
      *  @return p(z): formation probability
      */
-    double pz (double &, double &, double &, double &, string &, string &, string output_root="test"); 
+    double pz (double, double, double, double, string, string, string output_root="test"); 
 
     /**
      *  @brief cumulative distribution 
@@ -1710,7 +1710,7 @@ namespace cosmobl {
      *  (Giocoli et al. 2012)
      *  @return P(w): cumulative distribution
      */
-    double cumPw (double &, double &, string &); 
+    double cumPw (double, double, string); 
     
     /**
      *  @brief median formation w     
@@ -1722,7 +1722,7 @@ namespace cosmobl {
      *  @param [out] wf vector of w(f)
      *  @return none
      */
-    void medianwf (double &, string &, vector<double> &); 
+    void medianwf (double, string, vector<double> &); 
 
     /**
      *  @brief median formation z 
@@ -1741,7 +1741,6 @@ namespace cosmobl {
      *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
      *
      *  @param [out] zf vector of z(f)
-     *
      *      
      *  @param output_root output_root of the parameter file used to
      *  compute the power spectrum and &sigma;(mass); it can be any
@@ -1749,7 +1748,7 @@ namespace cosmobl {
      *
      *  @return none
      */
-    void medianzf (double &, double &, double &, string &, string &, vector<double> &, string output_root="test"); 
+    void medianzf (double, double, double, string, string, vector<double> &, string output_root="test"); 
   
     /**
      *  @brief rescaled variable w as in Lacey and Coles 1993
@@ -1777,7 +1776,7 @@ namespace cosmobl {
      *
      *  @return the conditional variable w
      */
-    double wf (double &, double &, double &, double &, string &, string output_root="test"); 
+    double wf (double, double, double, double, string, string output_root="test"); 
 
     /**
      *  @brief the unevolved mass function
@@ -1786,7 +1785,7 @@ namespace cosmobl {
      *  @param mass_accr mass accreted
      *  @return the unevolved mass function
      */
-    double unevolved_mass_function (double &); 
+    double unevolved_mass_function (double); 
 
     /**
      *  @brief compute te halo concentration
@@ -1817,7 +1816,7 @@ namespace cosmobl {
      *  @param sigma8 &sigma;<SUB>8</SUB>: the power spectrum normalization
      *  @return A<SUB>s</SUB>
      */
-    double As (double &); 
+    double As (double); 
 
     /**
      *  @brief unnormalized power spectrum
@@ -1830,7 +1829,7 @@ namespace cosmobl {
      *
      *  @return P<SUB>unnormalized</SUB>
      */
-    double Pk_UnNorm (double &, double &, string &); // unnormalized power spectrum
+    double Pk_UnNorm (double, double, string); // unnormalized power spectrum
 
     /**
      *  @brief run CAMB [http://camb.info/]
@@ -1855,7 +1854,7 @@ namespace cosmobl {
      *
      *  @return none
      */
-    void run_CAMB (bool &, double &, string output_root="test", double k_max=100., string file_par="NULL"); 
+    void run_CAMB (bool, double, string output_root="test", double k_max=100., string file_par="NULL"); 
 
     /**
      *  @brief write or read the table where the power spectrum is
@@ -1890,7 +1889,7 @@ namespace cosmobl {
      *
      *  @return none
      */
-    void Table_PkCodes (string &, bool &, vector<double> &, vector<double> &, double &, string output_root="test", double k_max=100., string file_par="NULL"); 
+    void Table_PkCodes (string, bool, vector<double> &, vector<double> &, double, string output_root="test", double k_max=100., string file_par="NULL"); 
   
     /**
      *  @brief normalization of the power spectrum
@@ -1926,7 +1925,7 @@ namespace cosmobl {
      *
      *  @return none
      */
-    void Pk_0 (string &, double &, string output_root="test", double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
+    void Pk_0 (string, double, string output_root="test", double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
 
     /**
      *  @brief normalized power spectrum
@@ -1971,7 +1970,7 @@ namespace cosmobl {
      *
      *  @return P(k)
      */
-    double Pk (double &, string &, bool &, double &, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
+    double Pk (double, string, bool, double, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
 
     /**
      *  @brief the unnormalized mass variance, &sigma;<SUP>2</SUP>(R)
@@ -1998,7 +1997,7 @@ namespace cosmobl {
      *
      *  @return unnormalized &sigma;<SUP>2</SUP>(R)
      */
-    double SSR (double &, string &, double &, string output_root="test", double k_max=100., string file_par="NULL"); 
+    double SSR (double, string, double, string output_root="test", double k_max=100., string file_par="NULL"); 
  
     /**
      *  @brief the mass variance, &sigma;<SUP>2</SUP>(R)
@@ -2025,7 +2024,7 @@ namespace cosmobl {
      *
      *  @return unnormalized &sigma;<SUP>2</SUP>(R)
      */
-    double SSR_norm (double &, string &, double &, string output_root="test", double k_max=100., string file_par="NULL"); 
+    double SSR_norm (double, string, double, string output_root="test", double k_max=100., string file_par="NULL"); 
 
     /**
      *  @brief the unnormalized mass variance, &sigma;<SUP>2</SUP>(M)
@@ -2052,7 +2051,7 @@ namespace cosmobl {
      *
      *  @return unnormalized &sigma;<SUP>2</SUP>(M)
      */
-    double SSM (double &, string &, double &, string output_root="test", double k_max=100., string file_par="NULL"); 
+    double SSM (double, string, double, string output_root="test", double k_max=100., string file_par="NULL"); 
 
     /**
      *  @brief the mass variance, &sigma;<SUP>2</SUP>(M)
@@ -2079,7 +2078,7 @@ namespace cosmobl {
      *
      *  @return &sigma;<SUP>2</SUP>(M)
      */
-    double SSM_norm (double &, string &, double &, string output_root="test", double k_max=100., string file_par="NULL"); 
+    double SSM_norm (double, string, double, string output_root="test", double k_max=100., string file_par="NULL"); 
  
     /**
      *  @brief the nth-order derivative of the mass variance,
@@ -2116,7 +2115,7 @@ namespace cosmobl {
      *
      *  @return d<SUP>n</SUP>&sigma;<SUP>2</SUP>(R)/dR<SUP>n</SUP>
      */
-    double dnSR (int, double &, string &, double &, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., double k_max=100., string file_par="NULL"); 
+    double dnSR (int nd, double RR, string method_Pk, double redshift, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., double k_max=100., string file_par="NULL"); 
 
     /**
      *  @brief the derivative of the mass variance,
@@ -2153,7 +2152,7 @@ namespace cosmobl {
      *
      *  @return d&sigma;<SUP>2</SUP>(M)/dM
      */
-    double dnSM (__attribute__((unused)) int nd, double &MM, string &method_Pk, double &redshift, string output_root="test", __attribute__((unused)) string interpType="Linear", __attribute__((unused)) int Num=-1, __attribute__((unused)) double stepsize=100., double k_max=100., string file_par="NULL"); 
+    double dnSM (int nd, double MM, string method_Pk, double redshift, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., double k_max=100., string file_par="NULL"); 
 
     ///@}
 
@@ -2210,7 +2209,7 @@ namespace cosmobl {
      *  averaged (monopole) of the two-point correlation function of
      *  dark matter
      */
-    double xi_DM (double &, string &, double &, string output_root="test", bool NL=1, int norm=-1, double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double xi_DM (double, string, double, string output_root="test", bool NL=1, int norm=-1, double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief the dark matter two-point correlation function, de-wiggled (see e.g. Anderson et al 2014)
@@ -2227,7 +2226,7 @@ namespace cosmobl {
      *
      *  @param sigma_NL the non linear BAO damping
      *
-     *  @param Model output_root of the parameter file used to compute
+     *  @param output_root output_root of the parameter file used to compute
      *  the power spectrum and &sigma;(mass); it can be any name
      *
      *  @param norm 0 &rarr; don't normalize the power spectrum; 1
@@ -2308,7 +2307,7 @@ namespace cosmobl {
      *
      *  @return none
      */
-    void get_xi (vector<double> &, vector<double> &, string &, double &, string output_root="test", bool xiType=0, double k_star=-1., bool xiNL=0, int norm=-1, double r_min=0.1, double r_max=150., double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    void get_xi (vector<double> &, vector<double> &, string, double, string output_root="test", bool xiType=0, double k_star=-1., bool xiNL=0, int norm=-1, double r_min=0.1, double r_max=150., double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL");
   
     /**
      *  @brief get the barred dark matter correlation functions
@@ -2369,7 +2368,7 @@ namespace cosmobl {
      *
      *  @return none
      */
-    void get_barred_xi (vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, string &method_Pk, double &redshift, bool xiType=0, __attribute__((unused)) double k_star=-1., bool xiNL=0, int norm=-1, double r_min=0.1, double r_max=150., __attribute__((unused)) double k_min=0., __attribute__((unused)) double k_max=100., __attribute__((unused)) double aa=0., bool GSL=1, __attribute__((unused)) double prec=1.e-2, __attribute__((unused)) string file_par="NULL");
+    void get_barred_xi (vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, string method_Pk, double redshift, bool xiType=0, double k_star=-1., bool xiNL=0, int norm=-1, double r_min=0.1, double r_max=150., double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief the dark matter projected correlation function
@@ -2422,7 +2421,7 @@ namespace cosmobl {
      *  @return w<SUB>p,DM</SUB>(&theta;): the projected correlation
      *  function of dark matter
      */
-    double wp_DM (double &, string &, double &, string output_root="test", int norm=-1, double r_min=1.e-3, double r_max=350., double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double wp_DM (double, string, double, string output_root="test", int norm=-1, double r_min=1.e-3, double r_max=350., double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief the k<SUB>*</SUB> parameter 
@@ -2452,7 +2451,7 @@ namespace cosmobl {
      *
      *  @return k<SUB>*</SUB>
      */
-    double k_star (string &, double &, string output_root="test", double k_max=100., string file_par="NULL"); 
+    double k_star (string, double, string output_root="test", double k_max=100., string file_par="NULL"); 
 
 
     /**
@@ -2509,7 +2508,7 @@ namespace cosmobl {
      *
      *  @return &sigma;<SUB>R</SUB>: the dark matter rms mass fluctuation
      */
-    double sigmaR_DM (double &, int &, string &, double &, string output_root="test", bool NL=1, int norm=-1, double r_min=1.e-3, double r_max=350., double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
+    double sigmaR_DM (double, int, string, double, string output_root="test", bool NL=1, int norm=-1, double r_min=1.e-3, double r_max=350., double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
 
     /**
      *  @brief the dark matter rms mass fluctuation within 8 Mpc/h
@@ -2550,7 +2549,7 @@ namespace cosmobl {
      *  @return &sigma;<SUB>8</SUB>: the dark matter rms mass
      *  fluctuation within 8 Mpc/h
      */
-    double sigma8_Pk (string &, double &, string output_root="test", bool NL=0, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
+    double sigma8_Pk (string, double, string output_root="test", bool NL=0, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
 
     /**
      *  @brief bias of dark matter haloes
@@ -2597,7 +2596,7 @@ namespace cosmobl {
      *
      *  @return b<SUB>halo</SUB>: the dark matter bias
      */
-    double bias_halo (double &, double &, string &, string &, string output_root="test", double Delta=200., double kk=-1., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
+    double bias_halo (double, double, string, string, string output_root="test", double Delta=200., double kk=-1., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
 
     /**
      *  @brief bias of dark matter haloes
@@ -2646,7 +2645,7 @@ namespace cosmobl {
      *
      *  @return b<SUB>halo</SUB>: the dark matter bias
      */
-    double bias_halo (double &, double &, double &, string &, string output_root="test", double Delta=200., double kk=-1., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string method_SS="CAMB", string file_par="NULL");
+    double bias_halo (double, double, double, string, string output_root="test", double Delta=200., double kk=-1., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string method_SS="CAMB", string file_par="NULL");
   
     /**
      *  @brief effective bias of dark matter haloes
@@ -2711,7 +2710,7 @@ namespace cosmobl {
      *
      *  @return b<SUB>eff</SUB>: the effective dark matter bias
      */
-    double bias_eff (double &, double &, double &, string &, string &, string &, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double bias_eff (double, double, double, string, string, string, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
  
     /**
      *  @brief effective bias of dark matter haloes
@@ -2767,7 +2766,7 @@ namespace cosmobl {
      *
      *  @return b<SUB>eff</SUB>: the effective dark matter bias
      */
-    double bias_eff (vector<double>, vector<double>, double &, string &, string &, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double bias_eff (vector<double>, vector<double>, double, string, string, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     ///@}
 
@@ -2783,7 +2782,7 @@ namespace cosmobl {
      *  @param kk wave vector module
      *  @return f: the linear growth rate
      */
-    double linear_growth_rate (double &, double kk=-1.);
+    double linear_growth_rate (double, double kk=-1.);
 
     /**
      *  @brief f*&sigma;<SUB>8</SUB>: the linear growth rate times
@@ -2822,7 +2821,7 @@ namespace cosmobl {
      *
      *  @return f*&sigma;<SUB>8</SUB>
      */
-    double fsigma8 (double &, string &, string output_root="test", double kk=-1., bool NL=0, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double fsigma8 (double, string, string output_root="test", double kk=-1., bool NL=0, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief the specific growth rate &beta;
@@ -2832,7 +2831,7 @@ namespace cosmobl {
      *  @return &beta;=f/b, where f is the linear growth rate and b is
      *  the bias
      */
-    double beta (double &, double &, double kk=-1.);
+    double beta (double, double, double kk=-1.);
 
     /**
      *  @brief the error on the specific growth rate &beta;
@@ -2843,7 +2842,7 @@ namespace cosmobl {
      *  @return error on &beta;=f/b, where f is the linear growth rate
      *  and b is the bias
      */
-    double error_beta (double &, double &, double &, double kk=-1.);
+    double error_beta (double, double, double, double kk=-1.);
 
     /**
      *  @brief the error on the specific growth rate &beta;
@@ -2909,7 +2908,7 @@ namespace cosmobl {
      *  @return &beta;=f/b, where f is the linear growth rate and b is
      *  the bias
      */
-    double beta (double &, double &, double &, string &, string &, string &, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double beta (double, double, double, string, string, string, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief the specific growth rate &beta;
@@ -2977,7 +2976,7 @@ namespace cosmobl {
      *  @return error on &beta;=f/b, where f is the linear growth rate and b is
      *  the bias
      */
-    double error_beta (double &, double &, double &, string &, string &, string &, double &, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
+    double error_beta (double, double, double, string, string, string, double, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
   
     /**
      *  @brief the specific growth rate &beta;
@@ -3034,7 +3033,7 @@ namespace cosmobl {
      *  @return &beta;=f/b, where f is the linear growth rate and b is
      *  the bias
      */
-    double beta (vector<double>, vector<double>, double &, string &, string &, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double beta (vector<double>, vector<double>, double, string, string, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief the error on the specific growth rate &beta;
@@ -3093,7 +3092,7 @@ namespace cosmobl {
      *  @return error on &beta;=f/b, where f is the linear growth rate and b is
      *  the bias
      */
-    double error_beta (vector<double>, vector<double>, double &, string &, string &, double &, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double error_beta (vector<double>, vector<double>, double, string, string, double, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
  
     /**
      *  @brief the error on the specific growth rate &beta; from
@@ -3164,7 +3163,7 @@ namespace cosmobl {
      *  @return error on &beta;=f/b, where f is the linear growth rate
      *  and b is the bias
      */
-    double error_beta_measured (double &, double &, double &, double &, double &, string &, string &, string &, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
+    double error_beta_measured (double, double, double, double, double, string, string, string, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
 
     /**
      *  @brief the normalized quadrupole Q
@@ -3229,7 +3228,7 @@ namespace cosmobl {
      *
      *  @return Q: the normalized quadrupole
      */
-    double quadrupole (double &, double &, double &, string &, string &, string &, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
+    double quadrupole (double, double, double, string, string, string, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
 
     /**
      *  @brief the normalized quadrupole Q
@@ -3285,7 +3284,7 @@ namespace cosmobl {
      *
      *  @return Q: the normalized quadrupole 
      */
-    double quadrupole (vector<double>, vector<double>, double &, string &, string &, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double quadrupole (vector<double>, vector<double>, double, string, string, string output_root="test", double Delta=200., double kk=-1., string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief the mean square bulk flow
@@ -3323,7 +3322,7 @@ namespace cosmobl {
      *
      *  @return the mean square bulk flow
      */
-    double square_bulk_flow (double &, double &, string &, double &, string output_root="test", double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double square_bulk_flow (double, double, string, double, string output_root="test", double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief the mean square bulk flow
@@ -3341,7 +3340,7 @@ namespace cosmobl {
      *
      *  @return the mean square bulk flow
      */
-    double square_bulk_flow_Table (double &, double &, vector<double>, vector<double>, double &); 
+    double square_bulk_flow_Table (double, double, vector<double>, vector<double>, double); 
 
     /**
      *  @brief the mean square velocity dispersion
@@ -3379,7 +3378,7 @@ namespace cosmobl {
      *
      *  @return the mean square velocity dispersion
      */
-    double square_velocity_dispersion (double &, double &, string &, double &, string output_root="test", double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double square_velocity_dispersion (double, double, string, double, string output_root="test", double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
     
     /**
      *  @brief the Cosmic Mach Number
@@ -3409,7 +3408,7 @@ namespace cosmobl {
      *
      *  @return the Cosmic Mach Number
      */
-    double CMN (double &, double &, string &, double &, string output_root="test", double k_max=100., string file_par="NULL");
+    double CMN (double, double, string, double, string output_root="test", double k_max=100., string file_par="NULL");
 
     /**
      *  @brief the hierarchical moments S<SUB>n</SUB>
@@ -3447,7 +3446,7 @@ namespace cosmobl {
      *  @return the hierarchical moments, S<SUB>n</SUB>, given by the
      *  perturbation theory
      */
-    double Sn_PT (int, double &, string &, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., double k_max=100., string file_par="NULL");
+    double Sn_PT (int, double, string, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., double k_max=100., string file_par="NULL");
   
     /**
      *  @brief the deprojected hierarchical moments &Sigma;<SUB>n</SUB>
@@ -3485,7 +3484,7 @@ namespace cosmobl {
      *  @return the deprojected hierarchical moments,
      *  &Sigma;<SUB>n</SUB>, given by the perturbation theory
      */
-    double Sigman_PT (int, double &, string &, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100, double k_max=100., string file_par="NULL");
+    double Sigman_PT (int, double, string, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100, double k_max=100., string file_par="NULL");
     
     /**
      *  @brief 1D monopole in the Kaiser limit
@@ -3679,7 +3678,7 @@ namespace cosmobl {
      *
      *  @return &xi;<SUB>*</SUB>
      */
-    double xi_star (double &, double &, string output_root="test", double k_star=-1., double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double xi_star (double, double, string output_root="test", double k_star=-1., double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
   
     /**
      *  @brief the function &xi;<SUB>g,nw</SUB>(s) of the Chuang &
@@ -3716,7 +3715,7 @@ namespace cosmobl {
      *
      *  @return &xi;<SUB>g,nw</SUB>(s)
      */
-    double xisnl_gnw (double &, double &, double &, double &, double &, double &, vector<double>, vector<double>, vector<double>, vector<double>, string output_root="test");
+    double xisnl_gnw (double, double, double, double, double, double, vector<double>, vector<double>, vector<double>, vector<double>, string output_root="test");
  
     /**
      *  @brief the function &xi;<SUB>g,BAO</SUB>(s) of the Chuang &
@@ -3762,7 +3761,7 @@ namespace cosmobl {
      *
      *  @return &xi;<SUB>g,BAO</SUB>(s)
      */
-    double xis_gBAO (double &, double &, double &, double &, double &, vector<double>, vector<double>, vector<double>, vector<double>, string output_root="test", double k_star=-1., double x_min=-3000., double x_max=3000., int step_x=500);
+    double xis_gBAO (double, double, double, double, double, vector<double>, vector<double>, vector<double>, vector<double>, string output_root="test", double k_star=-1., double x_min=-3000., double x_max=3000., int step_x=500);
  
     /**
      *  @brief 2D correlation function, &xi;(r<SUB>p</SUB>,&pi;),
@@ -3869,7 +3868,7 @@ namespace cosmobl {
      *
      *  @return &xi;(r<SUB>p</SUB>,&pi;)
      */
-    double xi2D_CW (double &, double &pi, double &, double &, double &, double &, double &, double &, double &, double &, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, string output_root="test", bool BAO=1, bool xiType=0, double k_star=-1, bool xiNL=0, double r_min=0.1, double r_max=150., double v_min=-3000., double v_max=3000., int step_v=500, double k_min=0., double k_max=100., double x_min=-3000., double x_max=3000., int step_x=500, double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double xi2D_CW (double, double, double, double, double, double, double, double, double, double, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, string output_root="test", bool BAO=1, bool xiType=0, double k_star=-1, bool xiNL=0, double r_min=0.1, double r_max=150., double v_min=-3000., double v_max=3000., int step_v=500, double k_min=0., double k_max=100., double x_min=-3000., double x_max=3000., int step_x=500, double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     ///@}
 
@@ -3894,7 +3893,7 @@ namespace cosmobl {
      *     
      *  @return r<SUB>s</SUB>
      */
-    double rs (string &, double T_CMB=par::TCMB);
+    double rs (string, double T_CMB=par::TCMB);
 
     /**
      *  @brief the sound horizon at the drag epoch predicted by
@@ -3938,7 +3937,7 @@ namespace cosmobl {
      *
      *  @return y<SUB>s</SUB>
      */
-    double ys (double &, string &, double T_CMB=par::TCMB);
+    double ys (double, string, double T_CMB=par::TCMB);
   
     /**
      *  @brief the acoustic parameter 
@@ -3950,7 +3949,7 @@ namespace cosmobl {
      *  @param redshift redshift
      *  @return the acoustic parameter 
      */
-    double Az (double &);
+    double Az (double);
 
     ///@}
 
@@ -3995,7 +3994,7 @@ namespace cosmobl {
      *
      *  @return A<SUB>m</SUB>
      */
-    double Am (string &, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
+    double Am (string, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL"); 
 
     /**
      *  @brief the potential spectral amplitude 
@@ -4032,7 +4031,7 @@ namespace cosmobl {
      *
      *  @return the potential spectral amplitude
      */
-    double potential_spectral_amplitude (string &, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double potential_spectral_amplitude (string, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief the bispectrum
@@ -4071,7 +4070,7 @@ namespace cosmobl {
      *
      *  @return the potential spectral amplitude
      */
-    double bispectrum (vector<double> kk, string &, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double bispectrum (vector<double> kk, string, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
     
     /**
      *  @brief auxiliary function to estimate cosmological quantities
@@ -4113,7 +4112,7 @@ namespace cosmobl {
      *
      *  @return mrk
      */
-    double mrk (double &, double &, string &, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double mrk (double, double, string, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief auxiliary function to estimate cosmological quantities
@@ -4155,12 +4154,12 @@ namespace cosmobl {
      *
      *  @return frk
      */
-    double frk (double &, double &, string &, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double frk (double, double, string, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /// @cond TEST_NG
     double bias_kernel (double, void *); 
 
-    double frk_test (double &, double &, string &, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double frk_test (double, double, string, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
     /// @endcond
 
 
@@ -4203,7 +4202,7 @@ namespace cosmobl {
      *
      *  @return bias correction
      */
-    double bias_correction (double &, double &, string &, string  output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double bias_correction (double, double, string, string  output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief the skewness
@@ -4242,7 +4241,7 @@ namespace cosmobl {
      *
      *  @return skewness
      */
-    double skewness (double &, string &, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double skewness (double, string, string output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief the derivative of the skewness, ds/dM
@@ -4281,7 +4280,7 @@ namespace cosmobl {
      *
      *  @return derivative of the skewness
      */
-    double dskewnessdM (double &, string &, string  output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double dskewnessdM (double, string, string  output_root="test", int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     /**
      *  @brief correction to the halo mass in non-Gaussian cosmologies
@@ -4329,7 +4328,7 @@ namespace cosmobl {
      *
      *  @return bias correction
      */
-    double MF_correction (double &, double &, string &, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
+    double MF_correction (double, double, string, string output_root="test", string interpType="Linear", int Num=-1, double stepsize=100., int norm=-1, double k_min=0., double k_max=100., bool GSL=1, double prec=1.e-2, string file_par="NULL");
 
     ///@}
 
@@ -4345,7 +4344,7 @@ namespace cosmobl {
      *  @author Tommaso Ronconi
      *  @author tommaso.ronconi@studio.unibo.it
      *
-     *  @param radius
+     *  @param R the radius of the sphere
      *  
      *  @return volume of the sphere
      */

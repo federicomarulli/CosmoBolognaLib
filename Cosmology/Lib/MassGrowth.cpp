@@ -45,7 +45,7 @@ using namespace cosmobl;
 
 // Differential rescaled and generalized formation redshift distribution
 
-double cosmobl::Cosmology::pw (double &ww, double &ff, string &author) 
+double cosmobl::Cosmology::pw (double ww, double ff, string author) 
 {
   if (author=="NS") {
     if (ff<0.5) cout <<"Warning you are calling pw function for NS with f = "<<ff<<endl;
@@ -65,7 +65,7 @@ double cosmobl::Cosmology::pw (double &ww, double &ff, string &author)
 
 // Probability that a halo of a given mass m0 at redshift z0 make a mass fraction f at redshift z
 
-double cosmobl::Cosmology::pz (double &m0, double &z0, double &frac, double &redshift, string &author_model, string &method_SS, string output_root)
+double cosmobl::Cosmology::pz (double m0, double z0, double frac, double redshift, string author_model, string method_SS, string output_root)
 {
   double zero = 0.;
   double dcz0 = deltac(z0)/DD(z0)*DD(zero);
@@ -92,7 +92,7 @@ double cosmobl::Cosmology::pz (double &m0, double &z0, double &frac, double &red
 
 // Cumulative rescaled and generalized formation redshift distribution
  
-double cosmobl::Cosmology::cumPw (double &ww, double &ff, string &author)
+double cosmobl::Cosmology::cumPw (double ww, double ff, string author)
 {
   if(author=="NS"){
     if(ff<0.5) cout <<"Warning you are calling cumPw function for NS with f = "<<ff<<endl;
@@ -113,7 +113,7 @@ double cosmobl::Cosmology::cumPw (double &ww, double &ff, string &author)
 // =====================================================================================
 
 
-void cosmobl::Cosmology::medianwf (double &ff, string &author_model, vector<double> &wf)
+void cosmobl::Cosmology::medianwf (double ff, string author_model, vector<double> &wf)
 {
   wf.resize(3);
 
@@ -128,17 +128,13 @@ void cosmobl::Cosmology::medianwf (double &ff, string &author_model, vector<doub
       Pw[i] = F1+F2;
     }
     string type = "Poly";
-    double wfmed, wfinf, wfsup, err;
-    interpolation_extrapolation (0.5,Pw,ww,type,5,&wfmed,&err);
-    interpolation_extrapolation (0.25,Pw,ww,type,5,&wfinf,&err);
-    interpolation_extrapolation (0.75,Pw,ww,type,5,&wfsup,&err);
-    wf[2] = wfinf;
-    wf[1] = wfmed;
-    wf[0] = wfsup;
+    wf[2] = interpolated(0.5, Pw, ww, type, 5);
+    wf[1] = interpolated(0.25, Pw, ww, type, 5);
+    wf[0] = interpolated(0.75, Pw, ww, type, 5);
   }
 
   if (author_model=="GTS") {
-    double alpha = 0.815*exp(-2*ff*ff*ff)/pow(ff,0.707);
+    double alpha = 0.815*exp(-2*ff*ff*ff)/pow(ff, 0.707);
     wf[2] = sqrt(2.*log(4.*alpha-(alpha-1.)));
     wf[1] = sqrt(2.*log(alpha+1.));
     wf[0] = sqrt(2.*log(alpha/0.75-(alpha-1.)));
@@ -152,7 +148,7 @@ void cosmobl::Cosmology::medianwf (double &ff, string &author_model, vector<doub
 // Conditional variable w = \delta_c(zf) - \delta_c(z)/\sqrt(s(fm)-s(m))
 // we recall that \delta_c(z) = delta_c0(z)/D+(z)
 
-double cosmobl::Cosmology::wf (double &mm, double &redshift, double &ff, double &zf, string &method_SS, string output_root)
+double cosmobl::Cosmology::wf (double mm, double redshift, double ff, double zf, string method_SS, string output_root)
 {
   double zero = 0.;
   double deltacz = deltac(redshift)/DD(redshift)*DD(zero);
@@ -168,7 +164,7 @@ double cosmobl::Cosmology::wf (double &mm, double &redshift, double &ff, double 
 
 // with this routine you can estimate the redshift from w given the parent halo mass (at z=z_0), z_0 and its assembled fraction f
 
-double cosmobl::Cosmology::Redshift (double &mm, double &redshift, double &ff, string &method_SS, double &wwf, string output_root)
+double cosmobl::Cosmology::Redshift (double mm, double redshift, double ff, string method_SS, double wwf, string output_root)
 {
   int const nn = 128;
   vector<double> lzi = linear_bin_vector(nn, 0., 1.7);
@@ -178,22 +174,22 @@ double cosmobl::Cosmology::Redshift (double &mm, double &redshift, double &ff, s
   double mf = mm*ff;
   double SSf = SSM_norm(mf, method_SS, redshift, output_root); 
   double dd = wwf*sqrt(SSf-SS) + dc0;
+  
   vector<double> dci(nn);
+
   for (int i=0; i<nn; i++) {
     double zi = -1 + pow(10.,lzi[i]);
     dci[i] = deltac(zi)/DD(zi)*DD(zero);
   }
-  string type = "Poly";
-  double lZZi,err;
-  interpolation_extrapolation (dd, dci, lzi, type, 5, &lZZi, &err);
-  return -1.+pow(10.,lZZi);
+  
+  return -1.+pow(10.,interpolated(dd, dci, lzi, "Poly", 5));
 }
 
 
 // =====================================================================================
 
 
-void cosmobl::Cosmology::medianzf (double &ff, double &mass, double &z0, string &author_model, string &method_SS, vector<double> &zf, string output_root)
+void cosmobl::Cosmology::medianzf (double ff, double mass, double z0, string author_model, string method_SS, vector<double> &zf, string output_root)
 {
   vector<double> wf;
   zf.resize(3);
@@ -217,12 +213,8 @@ double cosmobl::Cosmology::concentration (double Vmax, double Rmax)
   for (int i=0; i<nn; i++)
     // reset 200 for the spherical collapse model
     yyi[i] = 200./3.*pow(xxi[i],3.)/(log(1.+xxi[i])-xxi[i]/(1.+xxi[i]))-14.426*pow(Vmax/Rmax/m_H0,2.);
-
-  string type = "Poly";
-  double cci, err, null = 0.;
   
-  interpolation_extrapolation (null, yyi, xxi, type, 5, &cci, &err);
- 
-  return cci;  
+  double null = 0.;
+  return interpolated(null, yyi, xxi, "Poly", 5);
 }
 

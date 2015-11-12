@@ -62,7 +62,7 @@ namespace cosmobl {
      *  @brief default destructor
      *  @return none
      */
-    ~Object () {}
+    virtual ~Object () {}
 
     /**
      *  @brief get the member \e m_xx
@@ -197,7 +197,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_xx (__attribute__((unused)) double xx) { cosmobl::ErrorMsg ("Error in set_xx() of Objech.h!"); }
+    virtual void set_xx (double xx) { cosmobl::ErrorMsg ("Error in set_xx() of Objech.h!"); }
 
     /**
      *  @brief set the member \e m_yy
@@ -205,7 +205,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_yy (__attribute__((unused)) double yy) { cosmobl::ErrorMsg ("Error in set_yy() of Objech.h!"); }
+    virtual void set_yy (double yy) { cosmobl::ErrorMsg ("Error in set_yy() of Objech.h!"); }
 
     /**
      *  @brief set the member \e m_zz
@@ -213,7 +213,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_zz (__attribute__((unused)) double zz) { cosmobl::ErrorMsg ("Error in set_zz() of Objech.h!"); }
+    virtual void set_zz (double zz) { cosmobl::ErrorMsg ("Error in set_zz() of Objech.h!"); }
 
     /**
      *  @brief set the member \e m_vx
@@ -221,7 +221,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_vx (__attribute__((unused)) double vx) { cosmobl::ErrorMsg ("Error in set_vx() of Objech.h!"); }
+    virtual void set_vx (double vx) { cosmobl::ErrorMsg ("Error in set_vx() of Objech.h!"); }
   
     /**
      *  @brief set the member \e m_vy
@@ -229,7 +229,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_vy (__attribute__((unused)) double vy) { cosmobl::ErrorMsg ("Error in set_vy() of Objech.h!"); }
+    virtual void set_vy (double vy) { cosmobl::ErrorMsg ("Error in set_vy() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_vz
@@ -237,7 +237,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_vz (__attribute__((unused)) double vz) { cosmobl::ErrorMsg ("Error in set_vz() of Objech.h!"); }
+    virtual void set_vz (double vz) { cosmobl::ErrorMsg ("Error in set_vz() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_dc
@@ -245,7 +245,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_dc (__attribute__((unused)) double dc) { cosmobl::ErrorMsg ("Error in set_dc() of Objech.h!"); }
+    virtual void set_dc (double dc) { cosmobl::ErrorMsg ("Error in set_dc() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_ra
@@ -253,7 +253,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_ra (__attribute__((unused)) double ra) { cosmobl::ErrorMsg ("Error in set_ra() of Objech.h!"); }
+    virtual void set_ra (double ra) { cosmobl::ErrorMsg ("Error in set_ra() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_dec
@@ -261,7 +261,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_dec (__attribute__((unused)) double dec) { cosmobl::ErrorMsg ("Error in set_dec() of Objech.h!"); }
+    virtual void set_dec (double dec) { cosmobl::ErrorMsg ("Error in set_dec() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_redshift
@@ -269,7 +269,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_redshift (__attribute__((unused)) double redshift) { cosmobl::ErrorMsg ("Error in set_redshift() of Objech.h!"); }
+    virtual void set_redshift (double redshift) { cosmobl::ErrorMsg ("Error in set_redshift() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_weight
@@ -277,7 +277,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_weight (__attribute__((unused)) double weight) { cosmobl::ErrorMsg ("Error in set_weight() of Objech.h!"); }
+    virtual void set_weight (double weight) { cosmobl::ErrorMsg ("Error in set_weight() of Objech.h!"); }
 
     /**
      *  @brief set the member \e m_region
@@ -285,7 +285,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_region (__attribute__((unused)) long region) { cosmobl::ErrorMsg ("Error in set_region() of Objech.h!"); }
+    virtual void set_region (long region) { cosmobl::ErrorMsg ("Error in set_region() of Objech.h!"); }
 
     /**
      *  @brief set the member \e m_mass
@@ -293,7 +293,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_mass (__attribute__((unused)) double mass) { cosmobl::ErrorMsg ("Error in set_mass() of Objech.h!"); }
+    virtual void set_mass (double mass) { cosmobl::ErrorMsg ("Error in set_mass() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_magnitude
@@ -301,7 +301,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_magnitude (__attribute__((unused)) double magnitude) { cosmobl::ErrorMsg ("Error in set_magnitude() of Objech.h!"); }  
+    virtual void set_magnitude (double magnitude) { cosmobl::ErrorMsg ("Error in set_magnitude() of Objech.h!"); }  
     
     /**
      *  @brief set the member \e m_richness
@@ -309,7 +309,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_richness (__attribute__((unused)) double richness) { cosmobl::ErrorMsg ("Error in set_richness() of Objech.h!"); }  
+    virtual void set_richness (double richness) { cosmobl::ErrorMsg ("Error in set_richness() of Objech.h!"); }  
     
     /**
      *  @brief set the member \e m_generic
@@ -317,7 +317,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_generic (__attribute__((unused)) double generic) { cosmobl::ErrorMsg ("Error in set_generic() of Objech.h!"); }  
+    virtual void set_generic (double generic) { cosmobl::ErrorMsg ("Error in set_generic() of Objech.h!"); }  
     
     /**
      *  @brief set the member \e m_radius
@@ -325,7 +325,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_radius (__attribute__((unused)) double radius) { cosmobl::ErrorMsg ("Error in set_radius() of Objech.h!"); }
+    virtual void set_radius (double radius) { cosmobl::ErrorMsg ("Error in set_radius() of Objech.h!"); }
 
   };
 }

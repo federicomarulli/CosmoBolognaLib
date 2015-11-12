@@ -321,14 +321,13 @@ double cosmobl::multipoles (double rr, void *pp, vector<double> par)
   int step_cos = 3000;
   vector<double> cos_lin = linear_bin_vector(step_cos, cos_min, cos_max);
 
-  double rp, pi, val = -1.;
+  double rp, pi;
   vector< vector<double> > xi_cos(1);
 
   for (unsigned int i=0; i<cos_lin.size(); i++) {
     rp = rr*sqrt(1.-cos_lin[i]*cos_lin[i]);
     pi = rr*cos_lin[i];
-    interpolation_extrapolation_2D (rp, pi, vec.rp, vec.pi, Xi/*XiR*/, "Linear", -1, &val);
-    xi_cos[0].push_back(val);
+    xi_cos[0].push_back(interpolated_2D(rp, pi, vec.rp, vec.pi, Xi/*XiR*/, "Linear", -1));
   }
 
 

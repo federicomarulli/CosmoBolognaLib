@@ -76,7 +76,7 @@ double cosmobl::volume (double &boxSize, int &frac, double &Bord, double &mean_r
 {
   double redshift_min, redshift_max;
   double boxSide = boxSize/double(frac);
-  redshift_range (mean_redshift, boxSide, real_cosm, &redshift_min, &redshift_max);
+  redshift_range(mean_redshift, boxSide, real_cosm, &redshift_min, &redshift_max);
   redshift_min += Bord;
   redshift_max -= Bord;
   double Lmin = real_cosm.D_C(redshift_min);
@@ -167,7 +167,7 @@ void cosmobl::create_mocks (vector<double> xx, vector<double> yy, vector<double>
 
   double redshift_min = -1., redshift_max = -1.;
   double boxSide = boxSize/double(frac);
-  redshift_range (mean_redshift, boxSide, real_cosm, &redshift_min, &redshift_max);
+  redshift_range(mean_redshift, boxSide, real_cosm, &redshift_min, &redshift_max);
   
   double Lmin = real_cosm.D_C(redshift_min);
   double Lmax = real_cosm.D_C(redshift_max);
@@ -197,9 +197,9 @@ void cosmobl::create_mocks (vector<double> xx, vector<double> yy, vector<double>
 
     // ------- divide the box in sub-boxes ------- 
 
-    int subx = min(int(XX*fact1),int(shift.size()-1));
-    int suby = min(int(YY*fact1),int(shift.size()-1));
-    int subz = min(int(ZZ*fact1),int(shift.size()-1));
+    int subx = min(int(XX*fact1), int(shift.size()-1));
+    int suby = min(int(YY*fact1), int(shift.size()-1));
+    int subz = min(int(ZZ*fact1), int(shift.size()-1));
 
 
     // ------- rescale the coordinates ------- 
@@ -241,7 +241,7 @@ void cosmobl::create_mocks (vector<double> xx, vector<double> yy, vector<double>
 
   // ------- add redshift-space distortions ------- 
 
-  if (REAL==0) coord_zSpace (ra_temp, dec_temp, red_temp, xx_temp, yy_temp, zz_temp, vx_temp, vy_temp, vz_temp, sigmaV, real_cosm, mean_redshift, redshift_min, redshift_max, idum);
+  if (REAL==0) coord_zSpace(ra_temp, dec_temp, red_temp, xx_temp, yy_temp, zz_temp, vx_temp, vy_temp, vz_temp, sigmaV, real_cosm, mean_redshift, redshift_min, redshift_max, idum);
 
 
   // ------- cut the borders of the box ------- 

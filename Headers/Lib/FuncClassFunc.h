@@ -59,9 +59,7 @@ namespace cosmobl {
   
       double operator() (double XX) 
       {
-	double YG, err;
-	interpolation_extrapolation(XX,xg,yg,interpType,Num,&YG,&err);
-	return YG;
+	return interpolated(XX, xg, yg, interpType, Num);
       }
     };
 
@@ -82,13 +80,10 @@ namespace cosmobl {
   
       double operator() (const double &XX) 
       {
-	double fx_interp = 0., err = -1;
-	interpolation_extrapolation(XX,xx,fx,"Poly",4,&fx_interp,&err); 
-  
 	vector<double> par(2); par[0] = 0.; par[1] = sigma;
 	vector<double> pp;
 
-	return fx_interp*gaussian(xX-XX, &pp, par);
+	return interpolated(XX, xx, fx, "Poly", 4)*gaussian(xX-XX, &pp, par);
       }
     };
 
@@ -110,8 +105,7 @@ namespace cosmobl {
       { 
 	double lgk = log10(kk);
 
-	double err = -1, lgPkK = -1;  
-	interpolation_extrapolation(lgk,lgkk,lgPk,"Linear",-1,&lgPkK,&err);
+	double lgPkK = interpolated(lgk, lgkk, lgPk, "Linear", -1);
 
 	double Int = pow(10.,lgPkK)*sin(kk*rr)*kk/rr;
 
@@ -137,8 +131,7 @@ namespace cosmobl {
       { 
 	double lgr = log10(rr);
 
-	double err = -1, lgxiR = -1;
-	interpolation_extrapolation(lgr,lgrr,lgxi,"Linear",-1,&lgxiR,&err);
+	double lgxiR = interpolated(lgr, lgrr, lgxi, "Linear", -1);
 
 	return pow(10.,lgxiR)*sin(rr*kk)*rr/kk;
       }
@@ -160,10 +153,7 @@ namespace cosmobl {
 
       double operator() (double rrr) 
       { 
-	double err = -1, xiR = -1;
-	interpolation_extrapolation(rrr,rr,xi,"Linear",-1,&xiR,&err);
-
-	return xiR/sqrt(rrr*rrr-rp*rp)*rrr;
+	return interpolated(rrr, rr, xi, "Linear", -1)/sqrt(rrr*rrr-rp*rp)*rrr;
       }
 
     };
@@ -184,8 +174,7 @@ namespace cosmobl {
   
       double operator() (const double &rad) 
       {
-	double xiR = 0., err = -1;
-	interpolation_extrapolation(rad,rr,xi,"Poly",4,&xiR,&err); 
+	double xiR = interpolated(rad, rr, xi, "Poly", 4); 
 
 	return (3.-2.25*rad/RR+0.1875*pow(rad/RR,3))*rad*rad*xiR;
       }
@@ -207,8 +196,7 @@ namespace cosmobl {
   
       double operator() (const double &rad) 
       {
-	double wpR = 0., err = -1;
-	interpolation_extrapolation(rad,rp,wp,"Poly",4,&wpR,&err); 
+	double wpR = interpolated(rad, rp, wp, "Poly", 4); 
 
 	double xx = rad/RR, gg;
 	if (xx<=2) 
@@ -238,8 +226,7 @@ namespace cosmobl {
       {
 	double lgr = log10(rr);
 
-	double err = -1, lgxiR = -1;
-	interpolation_extrapolation(lgr,lgrr,lgxi,"Linear",-1,&lgxiR,&err);
+	double lgxiR = interpolated(lgr, lgrr, lgxi, "Linear", -1);
     
 	return (type==0) ? pow(10.,lgxiR)*pow(rr,2) : pow(10.,lgxiR)*pow(rr,4);
       }
@@ -267,9 +254,7 @@ namespace cosmobl {
       {
 	if (XX[0]>Max(xg) || XX[0] <Min(xg)) return 1.e30;
 
-	double YG, err;
-	interpolation_extrapolation(XX[0],xg,yg,interpType,Num,&YG,&err);
-	return YG;
+	return interpolated(XX[0], xg, yg, interpType, Num);
       }
     };
 
@@ -292,10 +277,8 @@ namespace cosmobl {
       {
 	if (XX[0]>Max(x1g) || XX[0] <Min(x1g)) {return 1.e30;}
 	if (XX[1]>Max(x2g) || XX[1] <Min(x2g)) return 1.e30;
-
-	double YG = -1.;
-	interpolation_extrapolation_2D(XX[0], XX[1], x1g, x2g, yg, interpType, Num, &YG);
-	return YG;
+	
+	return interpolated_2D(XX[0], XX[1], x1g, x2g, yg, interpType, Num);
       }
     };
 

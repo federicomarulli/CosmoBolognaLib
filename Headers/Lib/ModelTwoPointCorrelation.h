@@ -93,17 +93,6 @@ namespace cosmobl {
 
 
     // ======================================================================
-    // ============== methods to model two-point correlations  ==============
-    // ======================================================================
-
-    // fit the z-space correlation function with a double power-law function
-    void fit_xi_dpl (vector<double>, vector<double> &, string &, string file_cov="NULL", string dir_in="NULL");
-
-    // fit the projected correlation function
-    void fit_projected_xi (vector<double>, vector<double> &, string &, Cosmology &, double &, bool &, vector<string>, string file_cov="NULL", string dir_in="NULL", double median_redshift=-1, double median_magnitude=-1, double median_lgMass=-1);
-
-
-    // ======================================================================
     // ============== methods to model clustering anisotropies ==============
     // ======================================================================
 
@@ -119,18 +108,6 @@ namespace cosmobl {
     // compute the effective multipoles of the model (non-)linear xi(rp,pi) using the measured xi(r) 
     void compute_effective_multipoles_modelXiMeasured (vector<double> &, vector<double> &, vector<double> &, vector<double> &, vector<double> &, vector<double> &, double &, double &, Cosmology &, double &, bool &, int &, double &, string &, double &, int &, bool bias_nl=0, double bA=0., double v_min=-3000., double v_max=3000., int step_v=500);
   
-    // measure the chi2, given beta, modelling xi(s)/xi(r) at large scales
-    double chi2_beta_KaiserLimit (vector<double>, double &, Cosmology &, double &, int &, double &, string &, int &, double &, string &); 
-
-    // measure the chi2, given beta, modelling the linear xi(rp,pi)
-    double chi2_beta (vector<double>, double &, int &, Cosmology &, double &, int &, double &, string &, int &, double &, string &); 
-
-    // measure the chi2, given beta and sigma12, modelling the non-linear xi(rp,pi)
-    double chi2_beta_sigma12 (double &, int &, int &, Cosmology &, double &, int &, double &, string &, int &, double &, double &, string &, string &);
-
-    // write the chi2 map
-    void write_chi2 (string &, double &, double &, vector<int> &, int &, double &);
-
     // measure beta, modelling xi(s)/xi(r) at large scales
     void measure_beta_KaiserLimit_XiMeasured (int &, double &, string &, double &, double beta_guess=1.);
 
@@ -147,7 +124,7 @@ namespace cosmobl {
     void measure_fsigma8_KaiserLimit (Cosmology &, double &, string &, double &, string &, int &, double fsigma8_guess=1., bool xiType=0, double k_star=-1., bool xiNL=0, int norm=-1, double r_min=0.1, double r_max=150., double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL", int rank=0);
 
     // measure f*sigma8 and bias*sigma8 (and sigma12) modelling xi(rp,pi) with the dispersion model
-    void measure_fsigma8_bsigma8 (Cosmology &, string &, double &, string &, int &, int &, bool &, vector<vector<double>>, vector<double>, bool bias_nl=0, bool xiType=0, double k_star=-1., bool xiNL=0, double v_min=-3000., double v_max=3000., int step_v=500, int norm=-1, double r_min=0.1, double r_max=150., double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL", int rank=0);
+    void measure_fsigma8_bsigma8 (Cosmology &, string &, double &, string &, int &, int &, bool &, vector<vector<double> >, vector<double>, bool bias_nl=0, bool xiType=0, double k_star=-1., bool xiNL=0, double v_min=-3000., double v_max=3000., int step_v=500, int norm=-1, double r_min=0.1, double r_max=150., double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2, string file_par="NULL", int rank=0);
 
     // expected error on beta (from Bianchi et al. 2012)
     double relative_error_beta_catalogue (double &, double &, double &, bool proj=0, bool NL=0); 
@@ -168,7 +145,6 @@ namespace cosmobl {
     // store a table for SM and gnuplot
     void write_map (vector< vector<double> >, string &, int rank=0);
   
-
     // minimum mass of the host DM haloes, estimed from the mean 2PCF bias
     double MhaloMin (Cosmology &, double &, double &, double &, string &, string &, string &, string &, double &, double &, double &, double &, bool proj=0, bool NL=0);
 

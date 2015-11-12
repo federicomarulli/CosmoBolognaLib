@@ -318,7 +318,7 @@ namespace cosmobl {
    *
    *  @return none
    */
-  void coord_zSpace (vector<double> &ra, vector<double> &dec, vector<double> &redshift, vector<double> &xx, vector<double> &yy, vector<double> &zz, vector<double> vx, vector<double> vy, vector<double> vz, double &sigmaV, Cosmology &real_cosm, double &mean_redshift, __attribute__((unused)) double &redshift_min, __attribute__((unused)) double &redshift_max, int &idum);
+  void coord_zSpace (vector<double> &ra, vector<double> &dec, vector<double> &redshift, vector<double> &xx, vector<double> &yy, vector<double> &zz, vector<double> vx, vector<double> vy, vector<double> vz, double &sigmaV, Cosmology &real_cosm, double &mean_redshift, double &redshift_min, double &redshift_max, int &idum);
 
 
   /**

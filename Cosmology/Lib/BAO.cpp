@@ -42,7 +42,7 @@ using namespace cosmobl;
 
 // Sound horizon at drag epoch
 
-double cosmobl::Cosmology::rs (string &method_Pk, double T_CMB)
+double cosmobl::Cosmology::rs (string method_Pk, double T_CMB)
 {
   if (method_Pk=="EisensteinHu") 
     return rs_EH(T_CMB);
@@ -96,7 +96,7 @@ double cosmobl::Cosmology::rs_CAMB ()
 
 // Fiducial cosmology independent ratio rs/DV (rs,DV [Mpc])
 
-double cosmobl::Cosmology::ys (double &redshift, string &method_Pk, double T_CMB)
+double cosmobl::Cosmology::ys (double redshift, string method_Pk, double T_CMB)
 {
   return rs(method_Pk, T_CMB)/((m_unit) ? D_V(redshift)/m_hh : D_V(redshift));
 }
@@ -106,7 +106,7 @@ double cosmobl::Cosmology::ys (double &redshift, string &method_Pk, double T_CMB
 
 // Acoustic parameter (see Eisenstein 2005)
 
-double cosmobl::Cosmology::Az (double &redshift)
+double cosmobl::Cosmology::Az (double redshift)
 {
   return ((m_unit) ? D_V(redshift)/m_hh : D_V(redshift))*1.e2*sqrt(m_Omega_matter*m_hh*m_hh)/(par::cc*redshift);
 }

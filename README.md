@@ -6,3 +6,9 @@ Please have a look at the example codes in CosmoBolognaLib/Examples/ that show h
 
 The full documentation is provided here: 
 [CBL documentation](http://apps.difa.unibo.it/files/people/federico.marulli3/CosmoBolognaLib/Doc/html/index.html)
+
+
+--- Versions ---
+
+V1.0 first version of the CosmoBolognaLib uploaded on github
+V1.1 full python wrapper with swig; some minor bug fixed

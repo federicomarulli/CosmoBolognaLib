@@ -55,7 +55,7 @@ namespace cosmobl {
    *  ThreePointCorrelation </EM>. It is used to measure the
    *  three-point correlation function.
    */
-  class ThreePointCorrelation : TwoPointCorrelation {
+  class ThreePointCorrelation : public TwoPointCorrelation {
 
   private :
 
@@ -92,7 +92,7 @@ namespace cosmobl {
 
     // write and read the number of triplets
     void write_triplets (vector<double> &, string &, string);
-    void read_triplets (vector<double> &, vector<string> &, string);
+    void read_triplets (vector<double> &, const vector<string>&, string);
 
 
   public :
@@ -127,7 +127,7 @@ namespace cosmobl {
     // ==========================================================================
 
     // measure the 3-point correlation function
-    void measure_Q (string dir_output_triplets="NULL", string dir_output_2pt="NULL", vector<string> dir_input_triplets={}, int count_ggg=1, int count_rrr=1, int count_ggr=1, int count_grr=1, bool tcount=0);
+    void measure_Q (string dir_output_triplets="NULL", string dir_output_2pt="NULL", const vector<string>& dir_input_triplets=vector<string>(), int count_ggg=1, int count_rrr=1, int count_ggr=1, int count_grr=1, bool tcount=0);
     void measure_Q (string dir_output_triplets, string dir_output_2pt, bool tcount)
     {
       measure_Q(dir_output_triplets, dir_output_2pt, {}, 1, 1, 1, 1, tcount);
@@ -137,10 +137,10 @@ namespace cosmobl {
       measure_Q("NULL", "NULL", dir_input_triplets, 0, 0, 0, 0, tcount);
     };
 
-    void measure_Q_TEST (string dir_output_triplets="NULL", string dir_output_2pt="NULL", vector<string> dir_input_triplets={}, bool count=1, bool tcount=0);
+    void measure_Q_TEST (string dir_output_triplets="NULL", string dir_output_2pt="NULL", const vector<string>& dir_input_triplets=vector<string>(), bool count=1, bool tcount=0);
     
     
-    void measure_Q_ang (string dir_output_triplets="NULL", string dir_output_2pt="NULL", vector<string> dir_input_triplets={}, int count_ggg=1, int count_rrr=1, int count_ggr=1, int count_grr=1, bool tcount=0);
+    void measure_Q_ang (string dir_output_triplets="NULL", string dir_output_2pt="NULL", const vector<string>& dir_input_triplets=vector<string>(), int count_ggg=1, int count_rrr=1, int count_ggr=1, int count_grr=1, bool tcount=0);
     void measure_Q_ang (string dir_output_triplets, string dir_output_2pt, bool tcount)
     {
       measure_Q_ang(dir_output_triplets, dir_output_2pt, {}, 1, 1, 1, 1, tcount);

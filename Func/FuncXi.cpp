@@ -45,8 +45,7 @@ double cosmobl::glob::func_xi_GSL (double kk, void *params)
   
   double lgk = log10(kk);
   
-  double err = -1, lgPkK = -1;  
-  interpolation_extrapolation(lgk,pp->lgkk,pp->lgPk,"Linear",-1,&lgPkK,&err);
+  double lgPkK = interpolated(lgk, pp->lgkk, pp->lgPk, "Linear", -1);
     
   double Int = pow(10.,lgPkK)*sin(kk*pp->rr)*kk/pp->rr;
 
@@ -64,9 +63,8 @@ double cosmobl::glob::func_SSM_GSL (double kk, void *params)
   double fact = (pp->unit) ? 1. : pp->hh;
   double lgk = log10(kk/fact);
   
-  double err = -1, lgPkK = -1;  
-  interpolation_extrapolation(lgk,pp->lgkk,pp->lgPk,"Linear",-1,&lgPkK,&err);
-  double rr = Radius(pp->mass,pp->rho);
+  double lgPkK = interpolated(lgk, pp->lgkk, pp->lgPk, "Linear", -1);
+  double rr = Radius(pp->mass, pp->rho);
 
   return pow(10.,lgPkK)*pow(WW(kk*rr)*kk,2)/pow(fact,pp->n_spec); 
 }
@@ -331,10 +329,7 @@ double cosmobl::barred_xi_direct (double RR, vector<double> rr, vector<double> x
     Int += xi[i]*pow(rr[i],2)*bin;
   }
 
-  double Xi_, Err;
-  interpolation_extrapolation(RR,rr,xi_,"Linear",-1,&Xi_,&Err);
-
-  return Xi_;
+  return interpolated(RR, rr, xi_, "Linear", -1);
 }
 
 
@@ -365,10 +360,7 @@ double cosmobl::barred_xi__direct (double RR, vector<double> rr, vector<double> 
     Int += xi[i]*pow(rr[i],4)*bin;
   }
 
-  double Xi__, Err;
-  interpolation_extrapolation(RR,rr,xi__,"Linear",-1,&Xi__,&Err);
- 
-  return Xi__;
+  return interpolated(RR, rr, xi__, "Linear", -1);
 }
 
 
@@ -491,15 +483,14 @@ double cosmobl::xi2D_lin_model (double rp, double pi, double beta, double bias, 
   double xiR__ = (index>-1) ? xi__[index] : -1.;
 
   if (xiR<0) {
-    double err = -1.;
-    interpolation_extrapolation(rr,rad_real,xi_real,"Linear",-1,&xiR,&err);
-    interpolation_extrapolation(rr,rad_real,xi_,"Linear",-1,&xiR_,&err);
-    interpolation_extrapolation(rr,rad_real,xi__,"Linear",-1,&xiR__,&err);
+    xiR = interpolated(rr, rad_real, xi_real, "Linear", -1);
+    xiR_ = interpolated(rr, rad_real, xi_, "Linear", -1);
+    xiR__ = interpolated(rr, rad_real, xi__, "Linear", -1);
   }
 
-  if (bias_nl) bias *= b_nl(rr,bA);
+  if (bias_nl) bias *= b_nl(rr, bA);
     
-  double bias2 = pow(bias,2);
+  double bias2 = pow(bias, 2);
   xiR *= bias2;
   xiR_ *= bias2;
   xiR__ *= bias2;
@@ -586,13 +577,12 @@ double cosmobl::xi2D_model (double rp, double pi, double beta, double bias, doub
     double xiR__ = (index>-1) ? xi__[index] : -1.;
     
     if (xiR<0) {
-      double err = -1.;
-      interpolation_extrapolation(rr,rad_real,xi_real,"Linear",-1,&xiR,&err);
-      interpolation_extrapolation(rr,rad_real,xi_,"Linear",-1,&xiR_,&err);
-      interpolation_extrapolation(rr,rad_real,xi__,"Linear",-1,&xiR__,&err);
+      xiR = interpolated(rr, rad_real, xi_real, "Linear", -1);
+      xiR_ = interpolated(rr, rad_real, xi_, "Linear", -1);
+      xiR__ = interpolated(rr, rad_real, xi__, "Linear", -1);
     }
     
-    if (bias_nl) bias *= b_nl(rr,bA);
+    if (bias_nl) bias *= b_nl(rr, bA);
 
     xi2D += xi2D_lin_model(beta, bias, xiR, xiR_, xiR__, P_2(cos), P_4(cos))*f_v(vel,sigma12,FV)*delta_v;
   

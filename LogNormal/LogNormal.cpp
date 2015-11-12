@@ -167,12 +167,9 @@ void cosmobl::LogNormal::generate_LogNormal_mock (double &rmin, string &dir, int
 	for (int k=0; k<nzp; k++) {
 	  double kz = zfact*k;
 	  double kk = pow(kx*kx+ky*ky+kz*kz, 0.5);
-	  double Pkk, err;
-
 	  long int kindex = k+nzp*(j+ny*i);
-
-	  interpolation_extrapolation(kk, kG, PkG, "Poly", 4, &Pkk, &err);
-	  ppkk[kindex][0] = Pkk/VV;
+	  
+	  ppkk[kindex][0] = interpolated(kk, kG, PkG, "Poly", 4)/VV;
 	}
       }
     }

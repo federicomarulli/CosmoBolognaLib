@@ -68,10 +68,10 @@ namespace cosmobl {
     vector<long> m_Label;
 
     /// index list of internal use
-    vector<vector<long>> m_List_index;
+    vector<vector<long> > m_List_index;
 
     /// Min,Max limits of variable(s) used for the chain-mesh
-    vector<vector<double>> m_Lim;
+    vector<vector<double> > m_Lim;
 
     /// Max-Min of variable(s) used for the chain-mesh
     vector<double> m_Delta;
@@ -119,8 +119,8 @@ namespace cosmobl {
     void index_to_inds(long, vector<long> &, vector<long> &);
     long inds_to_index(vector<long> &);
 
-    void create_chain_mesh (vector<vector<double>> &, double &, long nMIN=0, long nMAX=300);
-    void create_chain_mesh_m2 (vector<vector<double>> &);
+    void create_chain_mesh (vector<vector<double> > &, double &, long nMIN=0, long nMAX=300);
+    void create_chain_mesh_m2 (vector<vector<double> > &);
 
     void get_searching_region (double, double r_min = -1); 
     vector<long> close_objects (vector<double>, long ii=-1); 

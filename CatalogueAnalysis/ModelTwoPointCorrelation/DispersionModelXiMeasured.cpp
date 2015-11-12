@@ -113,8 +113,6 @@ void cosmobl::ModelTwoPointCorrelation::compute_multipoles_modelXiMeasured (vect
   xi2_log.erase(xi2_log.begin(), xi2_log.end());
   xi4_log.erase(xi4_log.begin(), xi4_log.end());
  
-  double val = -1.;
-
 
   // -------------------------------------------------------------------------------
   // ---- compute xi(rp,pi) with the dispersion model, using the measured xi(r) ----
@@ -162,9 +160,7 @@ void cosmobl::ModelTwoPointCorrelation::compute_multipoles_modelXiMeasured (vect
     for (unsigned int j=0; j<cos_lin.size(); j++) {
       double rp = rad_log[i]*sqrt(1.-cos_lin[j]*cos_lin[j]);
       double pi = rad_log[i]*cos_lin[j];
-      
-      interpolation_extrapolation_2D (rp, pi, rad_linR1, rad_linR2, XiR, "Linear", 400, &val);
-      xi_coslog_interp[i][j] = val;
+      xi_coslog_interp[i][j] = interpolated_2D(rp, pi, rad_linR1, rad_linR2, XiR, "Linear", 400);
     }
   }
 
@@ -177,9 +173,7 @@ void cosmobl::ModelTwoPointCorrelation::compute_multipoles_modelXiMeasured (vect
     for (unsigned int j=0; j<cos_lin.size(); j++) {
       double rp = rad_linR1[i]*sqrt(1.-cos_lin[j]*cos_lin[j]);
       double pi = rad_linR1[i]*cos_lin[j];
-      
-      interpolation_extrapolation_2D (rp, pi, rad_linR1, rad_linR2, XiR, "Linear", -1, &val);
-      xi_coslin_interp[i][j] = val;
+      xi_coslin_interp[i][j] = interpolated_2D(rp, pi, rad_linR1, rad_linR2, XiR, "Linear", -1);
     }
   
   
@@ -284,14 +278,14 @@ void cosmobl::ModelTwoPointCorrelation::measure_beta_KaiserLimit_XiMeasured (int
   // ----- estimate xi(s)/xi(r) ----- 
 
   vector<double> ratio, error_ratio;
-  double XiR, ErrXiR, Err; 
+  double XiR, ErrXiR; 
   
   for (unsigned int i=0; i<rad_lin.size(); i++) {
-    interpolation_extrapolation(rad_lin[i],rad_real_lin,xi_real_lin,"Poly",4,&XiR,&Err);
-    interpolation_extrapolation(rad_lin[i],rad_real_lin,error_xi_real_lin,"Poly",4,&ErrXiR,&Err);
+    XiR = interpolated(rad_lin[i], rad_real_lin, xi_real_lin, "Poly", 4);
+    ErrXiR = interpolated(rad_lin[i], rad_real_lin, error_xi_real_lin, "Poly", 4);
    
     double RR = xi_lin[i]/XiR;
-    double ER = sqrt(pow(error_xi_lin[i]/xi_lin[i],2)+pow(ErrXiR/XiR,2))*RR;
+    double ER = sqrt(pow(error_xi_lin[i]/xi_lin[i], 2)+pow(ErrXiR/XiR, 2))*RR;
 
     ratio.push_back(RR);
     error_ratio.push_back(ER);
@@ -391,14 +385,13 @@ void cosmobl::ModelTwoPointCorrelation::measure_beta_XiMeasured (int &CHI, int &
       xi[i-m_lim_index_fit[0]].push_back(m_TwoP->xi_2d_lin(i,j));
       error_xi[i-m_lim_index_fit[0]].push_back(m_TwoP->error_xi_2d_lin(i,j));
 
-      double Xi, Err; interpolation_extrapolation(rr,rad_real_lin,xi_real_lin_extr,"Poly",4,&Xi,&Err);
-      xi_real.push_back(Xi);
+      xi_real.push_back(interpolated(rr, rad_real_lin, xi_real_lin_extr, "Poly", 4));
 
-      xi_.push_back(barred_xi_direct(rr,rad_real_lin,xi_real_lin_extr,rApp,r0,gamma));
-      xi__.push_back(barred_xi__direct(rr,rad_real_lin,xi_real_lin_extr,rApp,r0,gamma));
+      xi_.push_back(barred_xi_direct(rr, rad_real_lin, xi_real_lin_extr, rApp, r0, gamma));
+      xi__.push_back(barred_xi__direct(rr, rad_real_lin, xi_real_lin_extr, rApp, r0, gamma));
       
-      //xi_.push_back(barred_xi_(rr,rad_real_lin,xi_real_lin_extr,rApp,r0,gamma));
-      //xi__.push_back(barred_xi__(rr,rad_real_lin,xi_real_lin_extr,rApp,r0,gamma));
+      //xi_.push_back(barred_xi_(rr, rad_real_lin, xi_real_lin_extr, rApp, r0, gamma));
+      //xi__.push_back(barred_xi__(rr, rad_real_lin, xi_real_lin_extr, rApp, r0, gamma));
 
       P2.push_back(P_2(cos_i));
       P4.push_back(P_4(cos_i));
@@ -516,14 +509,13 @@ void cosmobl::ModelTwoPointCorrelation::measure_beta_sigma12_DispersionModel_XiM
 	double rr = sqrt(rp*rp+pi_new*pi_new);
 	double cos_i = pi_new/rr;
 	
-	double Xi, Err; interpolation_extrapolation(rr,rad_real_lin,xi_real_lin_extr,"Poly",4,&Xi,&Err);
-	xi_real.push_back(Xi);
+	xi_real.push_back(interpolated(rr, rad_real_lin, xi_real_lin_extr, "Poly", 4));
 	
-	xi_.push_back(barred_xi_direct(rr,rad_real_lin,xi_real_lin_extr,rApp,r0,gamma));
-	xi__.push_back(barred_xi__direct(rr,rad_real_lin,xi_real_lin_extr,rApp,r0,gamma));
+	xi_.push_back(barred_xi_direct(rr, rad_real_lin, xi_real_lin_extr, rApp, r0, gamma));
+	xi__.push_back(barred_xi__direct(rr, rad_real_lin, xi_real_lin_extr, rApp, r0, gamma));
 	
-	//xi_.push_back(barred_xi_(rr,rad_real_lin,xi_real_lin_extr,rApp,r0,gamma));
-	//xi__.push_back(barred_xi__(rr,rad_real_lin,xi_real_lin_extr,rApp,r0,gamma));
+	//xi_.push_back(barred_xi_(rr, rad_real_lin, xi_real_lin_extr, rApp, r0, gamma));
+	//xi__.push_back(barred_xi__(rr, rad_real_lin, xi_real_lin_extr, rApp, r0, gamma));
 	
 	P2.push_back(P_2(cos_i));
 	P4.push_back(P_4(cos_i));
@@ -730,14 +722,13 @@ void cosmobl::ModelTwoPointCorrelation::measure_beta_sigma12_DispersionModel_XiM
 	double rr = sqrt(Rp*Rp+pi_new*pi_new);
 	double cos_i = pi_new/rr;
 
-	double Xi, Err; interpolation_extrapolation(rr,rad_real_lin,xi_real_lin_extr,"Poly",4,&Xi,&Err);
-	xi_real.push_back(Xi);
+	xi_real.push_back(interpolated(rr, rad_real_lin, xi_real_lin_extr, "Poly", 4));
 	
-	xi_.push_back(barred_xi_direct(rr,rad_real_lin,xi_real_lin_extr,rApp,r0,gamma));
-	xi__.push_back(barred_xi__direct(rr,rad_real_lin,xi_real_lin_extr,rApp,r0,gamma));
+	xi_.push_back(barred_xi_direct(rr, rad_real_lin, xi_real_lin_extr, rApp, r0, gamma));
+	xi__.push_back(barred_xi__direct(rr, rad_real_lin, xi_real_lin_extr, rApp, r0, gamma));
 	
-	//xi_.push_back(barred_xi_(rr,rad_real_lin,xi_real_lin_extr,rApp,r0,gamma));
-	//xi__.push_back(barred_xi__(rr,rad_real_lin,xi_real_lin_extr,rApp,r0,gamma));
+	//xi_.push_back(barred_xi_(rr, rad_real_lin, xi_real_lin_extr, rApp, r0, gamma));
+	//xi__.push_back(barred_xi__(rr, rad_real_lin, xi_real_lin_extr, rApp, r0, gamma));
 	
 	P2.push_back(P_2(cos_i));
 	P4.push_back(P_4(cos_i));

@@ -98,20 +98,19 @@ vector< shared_ptr<Object> > cosmobl::ChainMesh_Catalogue::object_list (shared_p
 {
   vector<shared_ptr<Object> > obj_list;
 
-  vector<double> center=object->coords();
+  vector<double> center = object->coords();
   int center_indx = pos_to_index(center);
 
-  int j, k;
-
   for (unsigned int i=0; i<m_search_region.size(); i++) {
-    k = min(max(m_search_region[i]+center_indx, (long)0), m_nCell_tot-1);
-    j = m_Label[k];
+    int k = min(max(m_search_region[i]+center_indx, (long)0), m_nCell_tot-1);
+    int j = m_Label[k];
 
     while (j>-1 && j>=ii) {
       obj_list.push_back(m_catalogue->object(j));
       j = m_List[j];
     }
-
+    
   }
+  
   return obj_list;
 }

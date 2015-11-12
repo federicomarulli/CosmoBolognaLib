@@ -55,7 +55,13 @@ namespace cosmobl {
   class Pairs {
 
   public:
- 
+    
+    /**
+     *  @brief default destructor
+     *  @return none
+     */
+    virtual ~Pairs() {}
+
     /**
      *  @brief get the private member \e m_nlog
      *  @return the number of logarithmic bins, or an error message if
@@ -97,7 +103,7 @@ namespace cosmobl {
      *  @return the number of pairs in the i-th logarithmic bin, or an
      *  error message if the derived object does not have this member
      */
-    virtual double PPlog (__attribute__((unused)) int i) { cosmobl::ErrorMsg("Error in Pairs::PPlog() of Pairs.h!"); return 0; }
+    virtual double PPlog (int i) { cosmobl::ErrorMsg("Error in Pairs::PPlog() of Pairs.h!"); return 0; }
 
     /**
      *  @brief get the private member \e m_PPlin[i]
@@ -105,7 +111,7 @@ namespace cosmobl {
      *  @return the number of pairs in the i-th linear bin, or an
      *  error message if the derived object does not have this member
      */
-    virtual double PPlin (__attribute__((unused)) int i) { cosmobl::ErrorMsg("Error in Pairs::PPlin() of Pairs.h!"); return 0; }
+    virtual double PPlin (int i) { cosmobl::ErrorMsg("Error in Pairs::PPlin() of Pairs.h!"); return 0; }
 
     /**
      *  @brief get the private member \e m_PPlog
@@ -134,7 +140,7 @@ namespace cosmobl {
      *  parallel to the line-of-sight, or an error message if the
      *  derived object does not have this member
      */
-    virtual double PP2d (__attribute__((unused)) int i, __attribute__((unused)) int j) { cosmobl::ErrorMsg("Error in Pairs::PP2d() of Pairs.h!"); return 0; }
+    virtual double PP2d (int i, int j) { cosmobl::ErrorMsg("Error in Pairs::PP2d() of Pairs.h!"); return 0; }
 
     /**
      *  @brief get the private member \e m_PPslog[i][j]
@@ -147,7 +153,7 @@ namespace cosmobl {
      *  logarithmic bin parallel to the line-of-sight, or an error
      *  message if the derived object does not have this member
      */
-    virtual double PPslog (__attribute__((unused)) int i, __attribute__((unused)) int j) { cosmobl::ErrorMsg("Error in Pairs::PPslog() of Pairs.h!"); return 0; }     
+    virtual double PPslog (int i, int j) { cosmobl::ErrorMsg("Error in Pairs::PPslog() of Pairs.h!"); return 0; }     
 
     /**
      *  @brief get the private member \e m_PPcoslog[i][j]
@@ -157,7 +163,7 @@ namespace cosmobl {
      *  and in the j-th linear angular bin in cos(&theta;), or an
      *  error message if the derived object does not have this member
      */
-    virtual double PPcoslog (__attribute__((unused)) int i, __attribute__((unused)) int j) { cosmobl::ErrorMsg("Error in Pairs::PPcoslog() of Pairs.h!"); return 0; }
+    virtual double PPcoslog (int i, int j) { cosmobl::ErrorMsg("Error in Pairs::PPcoslog() of Pairs.h!"); return 0; }
 
     /**
      *  @brief get the private member \e m_PPcoslin[i][j]
@@ -167,7 +173,7 @@ namespace cosmobl {
      *  in the j-th linear angular bin in cos(&theta;), or an error
      *  message if the derived object does not have this member
      */
-    virtual double PPcoslin (__attribute__((unused)) int i, __attribute__((unused)) int j) { cosmobl::ErrorMsg("Error in Pairs::PPcoslin() of Pairs.h!"); return 0; }
+    virtual double PPcoslin (int i, int j) { cosmobl::ErrorMsg("Error in Pairs::PPcoslin() of Pairs.h!"); return 0; }
    
     /**
      *  @brief get the private member \e m_PP2d
@@ -176,7 +182,7 @@ namespace cosmobl {
      *  to the line-of-sight, or an error message if the derived
      *  object does not have this member
      */
-    virtual vector<vector<double>> PP2d() { cosmobl::ErrorMsg("Error in Pairs::PP2d() of Pairs.h!"); vector<vector<double>> PP; return PP; }
+    virtual vector<vector<double> > PP2d() { cosmobl::ErrorMsg("Error in Pairs::PP2d() of Pairs.h!"); vector<vector<double> > PP; return PP; }
    
     /**
      *  @brief get the private member \e m_PPslog
@@ -185,7 +191,7 @@ namespace cosmobl {
      *  parallel to the line-of-sight, or an error message if the
      *  derived object does not have this member
      */
-    virtual vector<vector<double>> PPslog() { cosmobl::ErrorMsg("Error in Pairs::PPslog() of Pairs.h!"); vector<vector<double>> PP; return PP; }
+    virtual vector<vector<double> > PPslog() { cosmobl::ErrorMsg("Error in Pairs::PPslog() of Pairs.h!"); vector<vector<double> > PP; return PP; }
 
     /**
      *  @brief get the private member \e m_PPcoslog
@@ -193,7 +199,7 @@ namespace cosmobl {
      *  bins in r and linear angular bins in cos(&theta;), or an error
      *  message if the derived object does not have this member
      */
-    virtual vector<vector<double>> PPcoslog() { cosmobl::ErrorMsg("Error in Pairs::PPcoslog() of Pairs.h!"); vector<vector<double>> PP; return PP; }
+    virtual vector<vector<double> > PPcoslog() { cosmobl::ErrorMsg("Error in Pairs::PPcoslog() of Pairs.h!"); vector<vector<double> > PP; return PP; }
 
     /**
      *  @brief get the private member \e m_PPcoslin
@@ -201,7 +207,7 @@ namespace cosmobl {
      *  in r and linear angular bins in cos(&theta;), or an error
      *  message if the derived object does not have this member
      */
-    virtual vector<vector<double>> PPcoslin() { cosmobl::ErrorMsg("Error in Pairs::PPcoslin() of Pairs.h!"); vector<vector<double>> PP; return PP; }
+    virtual vector<vector<double> > PPcoslin() { cosmobl::ErrorMsg("Error in Pairs::PPcoslin() of Pairs.h!"); vector<vector<double> > PP; return PP; }
 
     /**
      *  @brief set the private member \e m_PPlog[i]
@@ -210,7 +216,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_PPlog (__attribute__((unused)) int i, __attribute__((unused)) double pp) { cosmobl::ErrorMsg("Error in Pairs::PPlog() of Pairs.h!"); }
+    virtual void set_PPlog (int i, double pp) { cosmobl::ErrorMsg("Error in Pairs::PPlog() of Pairs.h!"); }
 
     /**
      *  @brief set the private member \e m_PPlin[i]
@@ -219,7 +225,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_PPlin (__attribute__((unused)) int i, __attribute__((unused)) double pp) { cosmobl::ErrorMsg("Error in Pairs::PPlin() of Pairs.h!"); }
+    virtual void set_PPlin (int i, double pp) { cosmobl::ErrorMsg("Error in Pairs::PPlin() of Pairs.h!"); }
 
     /**
      *  @brief set the private member \e m_PP2d[i][j]
@@ -231,7 +237,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_PP2d (__attribute__((unused)) int i, __attribute__((unused)) int j, __attribute__((unused)) double pp) { cosmobl::ErrorMsg("Error in Pairs::PP2d() of Pairs.h!"); }
+    virtual void set_PP2d (int i, int j, double pp) { cosmobl::ErrorMsg("Error in Pairs::PP2d() of Pairs.h!"); }
 
     /**
      *  @brief get the private member \e m_PPslog[i][j]
@@ -243,7 +249,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does not
      *  have this member
      */
-    virtual void set_PPslog (__attribute__((unused)) int i, __attribute__((unused)) int j, __attribute__((unused)) double pp) { cosmobl::ErrorMsg("Error in Pairs::PPslog() of Pairs.h!"); }     
+    virtual void set_PPslog (int i, int j, double pp) { cosmobl::ErrorMsg("Error in Pairs::PPslog() of Pairs.h!"); }     
 
     /**
      *  @brief get the private member \e m_PPcoslog[i][j]
@@ -253,7 +259,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does not
      *  have this member
      */
-    virtual void set_PPcoslog (__attribute__((unused)) int i, __attribute__((unused)) int j, __attribute__((unused)) double pp) { cosmobl::ErrorMsg("Error in Pairs::PPcoslog() of Pairs.h!"); }
+    virtual void set_PPcoslog (int i, int j, double pp) { cosmobl::ErrorMsg("Error in Pairs::PPcoslog() of Pairs.h!"); }
 
     /**
      *  @brief get the private member \e m_PPcoslin[i][j]
@@ -263,7 +269,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_PPcoslin (__attribute__((unused)) int i, __attribute__((unused)) int j, __attribute__((unused)) double pp) { cosmobl::ErrorMsg("Error in Pairs::PPcoslin() of Pairs.h!"); }
+    virtual void set_PPcoslin (int i, int j, double pp) { cosmobl::ErrorMsg("Error in Pairs::PPcoslin() of Pairs.h!"); }
     
     /**
      *  @brief sum the number of pairs
@@ -272,7 +278,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void sum (__attribute__((unused)) shared_ptr<Pairs> pp, __attribute__((unused)) double ww=1) { cosmobl::ErrorMsg("Error in Pairs::sum() of Pairs.h!"); }
+    virtual void sum (shared_ptr<Pairs> pp, double ww=1) { cosmobl::ErrorMsg("Error in Pairs::sum() of Pairs.h!"); }
 
     /**
      *  @brief estimate the distance between two objects and update
@@ -282,7 +288,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void put (__attribute__((unused)) shared_ptr<Object> obj1, __attribute__((unused)) shared_ptr<Object> obj2) { cosmobl::ErrorMsg("Error in Pairs::put() of Pairs.h!"); }
+    virtual void put (shared_ptr<Object> obj1, shared_ptr<Object> obj2) { cosmobl::ErrorMsg("Error in Pairs::put() of Pairs.h!"); }
 
     /**
      *  @brief estimate the distance between two objects and update
@@ -292,7 +298,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void put_log (__attribute__((unused)) shared_ptr<Object> obj1, __attribute__((unused)) shared_ptr<Object> obj2) { cosmobl::ErrorMsg("Error in Pairs::put_log() of Pairs.h!"); }
+    virtual void put_log (shared_ptr<Object> obj1, shared_ptr<Object> obj2) { cosmobl::ErrorMsg("Error in Pairs::put_log() of Pairs.h!"); }
 
   };
 
@@ -504,16 +510,16 @@ namespace cosmobl {
     vector<double> m_PPlin;
 
     /// the number of pairs in linear bins both perpendicular and parallel to the line-of-sight
-    vector<vector<double>> m_PP2d;
+    vector<vector<double> > m_PP2d;
 
     /// the number of pairs in linear bins perpendicular to the line-of-sight, and in logarithmic bins parallel to the line-of-sight
-    vector<vector<double>> m_PPslog;
+    vector<vector<double> > m_PPslog;
 
     /// the number of pairs in logarithmic bins in r and linear angular bins in cos(&theta;)
-    vector<vector<double>> m_PPcoslog;
+    vector<vector<double> > m_PPcoslog;
 
     /// the number of pairs in linear bins in r and linear angular bins in cos(&theta;)
-    vector<vector<double>> m_PPcoslin;
+    vector<vector<double> > m_PPcoslin;
 
   
   public:
@@ -654,7 +660,7 @@ namespace cosmobl {
      *  perpendicular to the line-of-sight, and linear bins parallel
      *  to the line-of-sight
      */
-    vector<vector<double>> PP2d() { return m_PP2d; }
+    vector<vector<double> > PP2d() { return m_PP2d; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPslog
@@ -662,21 +668,21 @@ namespace cosmobl {
      *  perpendicular to the line-of-sight, and in logarithmic bins
      *  parallel to the line-of-sight
      */
-    vector<vector<double>> PPslog() { return m_PPslog; }
+    vector<vector<double> > PPslog() { return m_PPslog; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPcoslog
      *  @return a matrix containing the number of pairs in logarithmic
      *  bins in r and linear angular bins in cos(&theta;)
      */
-    vector<vector<double>> PPcoslog() { return m_PPcoslog; }
+    vector<vector<double> > PPcoslog() { return m_PPcoslog; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPcoslin
      *  @return a matrix containing the number of pairs in linear bins
      *  in r and linear angular bins in cos(&theta;)
      */
-    vector<vector<double>> PPcoslin() { return m_PPcoslin; }
+    vector<vector<double> > PPcoslin() { return m_PPcoslin; }
 
     /**
      *  @brief set the private member Pairs3D::m_PPlog[i]

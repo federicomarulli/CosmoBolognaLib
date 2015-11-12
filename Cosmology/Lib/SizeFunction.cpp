@@ -19,7 +19,7 @@
  ********************************************************************/
 
 /**
- *  @file Cosmology/Lib/MassFunction.cpp
+ *  @file Cosmology/Lib/SizeFunction.cpp
  *
  *  @brief Methods of the class Cosmology used to model the mass
  *  function
@@ -29,7 +29,7 @@
  *
  *  @authors Federico Marulli, Tommaso Ronconi
  *
- *  @authors federico.marulli3@unbo.it, tommaso.ronconi@studio.unibo.i
+ *  @authors federico.marulli3@unbo.it, tommaso.ronconi@studio.unibo.it
  */
 
 #include "Cosmology.h"
@@ -88,16 +88,16 @@ double cosmobl::Cosmology::f_nu (double SS, double del_v, double del_c)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::size_function (double R, double zz, double rho_vm, double del_v, double del_c, string method_Pk, string output_root, string interpType, int Num, double stepsize, double kmax, string file_par)
+double cosmobl::Cosmology::size_function (double R, double redshift, double rho_vm, double del_v, double del_c, string method_Pk, string output_root, string interpType, int Num, double stepsize, double k_max, string file_par)
 {
   double Z0 = 0.;
   double zero = 0.;
   double RR = R/r_rL(rho_vm);
-  double sigmaR = sqrt(SSR_norm(RR, method_Pk, zero, output_root, kmax, file_par));
-  double sigmaRz = sigmaR*DD(zz)/DD(Z0);
+  double sigmaR = sqrt(SSR_norm(RR, method_Pk, zero, output_root, k_max, file_par));
+  double sigmaRz = sigmaR*DD(redshift)/DD(Z0);
   double SSSR = sigmaRz*sigmaRz;
 	
-  double Dln_SigmaR = dnSR(1, RR, method_Pk, zz, output_root, interpType, Num, stepsize, kmax, file_par)*(RR/(2.*SSSR))*DD(zz)/DD(Z0);
+  double Dln_SigmaR = dnSR(1, RR, method_Pk, redshift, output_root, interpType, Num, stepsize, k_max, file_par)*(RR/(2.*SSSR))*DD(redshift)/DD(Z0);
 
   return f_nu(sigmaRz, del_v, del_c)/VolS(R)*fabs(Dln_SigmaR);
 }

@@ -62,7 +62,7 @@ namespace cosmobl {
     shared_ptr<Catalogue> m_random;
     
     /// cector containing pointers to the LogNormal realizations
-    vector<shared_ptr<Catalogue>> m_LNCat;  
+    vector<shared_ptr<Catalogue> > m_LNCat;  
 
     /// 0 &rarr; the input is a cosmology; 1 &rarr; the input is &xi;(r)
     bool m_withxi;

@@ -39,7 +39,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::Cosmology::square_bulk_flow (double &rr, double &k_int_min, string &method_Pk, double &redshift, string output_root, double k_min, double k_max, bool GSL, double prec, string file_par) 
+double cosmobl::Cosmology::square_bulk_flow (double rr, double k_int_min, string method_Pk, double redshift, string output_root, double k_min, double k_max, bool GSL, double prec, string file_par) 
 {
   double bulk = -1.;
   Pk_0(method_Pk, redshift, output_root, k_min, k_max, GSL, prec, file_par); 
@@ -74,7 +74,7 @@ double cosmobl::Cosmology::square_bulk_flow (double &rr, double &k_int_min, stri
 // =====================================================================================
 
 
-double cosmobl::Cosmology::square_bulk_flow_Table (double &rr, double &k_int_min, vector<double> lgkk, vector<double> lgPk, double &redshift) 
+double cosmobl::Cosmology::square_bulk_flow_Table (double rr, double k_int_min, vector<double> lgkk, vector<double> lgPk, double redshift) 
 {
   cosmobl::classfunc::func_V2_Table func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit, lgkk, lgPk, rr, redshift);
   
@@ -88,7 +88,7 @@ double cosmobl::Cosmology::square_bulk_flow_Table (double &rr, double &k_int_min
 // =====================================================================================
 
 
-double cosmobl::Cosmology::square_velocity_dispersion (double &rr, double &k_int_min, string &method_Pk, double &redshift, string output_root, double k_min, double k_max, bool GSL, double prec, string file_par) 
+double cosmobl::Cosmology::square_velocity_dispersion (double rr, double k_int_min, string method_Pk, double redshift, string output_root, double k_min, double k_max, bool GSL, double prec, string file_par) 
 {
   double sigma2 = -1.;
   Pk_0(method_Pk, redshift, output_root, k_min, k_max, GSL, prec, file_par); 
@@ -123,7 +123,7 @@ double cosmobl::Cosmology::square_velocity_dispersion (double &rr, double &k_int
 // =====================================================================================
 
 
-double cosmobl::Cosmology::CMN (double &rr, double &k_int_min, string &method_Pk, double &redshift, string output_root, double k_max, string file_par) 
+double cosmobl::Cosmology::CMN (double rr, double k_int_min, string method_Pk, double redshift, string output_root, double k_max, string file_par) 
 {
   double CMN = -1000.; 
   

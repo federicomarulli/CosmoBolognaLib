@@ -7,7 +7,7 @@
 using namespace cosmobl;
 
 // define the two global variables containing the names of the CosmoBolognaLib and current directories
-const string par::DirCosmo = DIRCOSMO, par::DirLoc = DIRL;
+string par::DirCosmo = DIRCOSMO, par::DirLoc = DIRL;
 
 
 int main () {

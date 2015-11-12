@@ -394,57 +394,66 @@ double cosmobl::DoubleSwap (double d)
 // ============================================================================
 
 
-void cosmobl::interpolation_extrapolation (double _xx, vector<double> xx, vector<double> yy, string type, int nPt, double *val, double *err)
+double cosmobl::interpolated (double _xx, vector<double> xx, vector<double> yy, string type, int nPt, double &err)
 {
   if (xx.size()!=yy.size()) 
-    ErrorMsg("Error in interpolation_extrapolation of Func.cpp)!");
+    ErrorMsg("Error in interpolated of Func.cpp)!");
 
   VecDoub XX(xx.size()), YY(yy.size());
   for (int i=0; i<XX.size(); i++) {
     XX[i] = xx[i];
     YY[i] = yy[i];
   }
-
+  
   if (type=="Linear") {
     Linear_interp func (XX, YY);
-    *val = func.interp(_xx);
+    return func.interp(_xx);
   }
 
   else if (type=="Poly") {
     Poly_interp func (XX, YY, nPt);
-    *val = func.interp(_xx);
-    *err = func.dy;
+    err = func.dy;
+    return func.interp(_xx);
   }
 
   else if (type=="Spline") {
     Spline_interp func (XX, YY);
-    *val = func.interp(_xx); 
+    return func.interp(_xx); 
   }
 
   else if (type=="Rat") {
     Rat_interp func (XX, YY, nPt);
-    *val = func.interp(_xx);
-    *err = func.dy;
+    err = func.dy;
+    return func.interp(_xx);
   }
 
   else if (type=="BaryRat") {
     BaryRat_interp func (XX, YY, nPt);
-    *val = func.interp(_xx);
+    return func.interp(_xx);
   }
 
   else 
-    ErrorMsg("Error in interpolation_extrapolation of Func.cpp: the value of string 'type' is not permitted!"); 
+    ErrorMsg("Error in interpolated of Func.cpp: the value of string 'type' is not permitted!");
+
+  return -1;
+}
+
+
+double cosmobl::interpolated (double _xx, vector<double> xx, vector<double> yy, string type, int nPt)
+{
+  double err = -1.;
+  return interpolated(_xx, xx, yy, type, nPt, err);
 }
 
 
 // ============================================================================
 
 
-void cosmobl::interpolation_extrapolation_2D (double _x1, double _x2, vector<double> x1, vector<double> x2, vector<vector<double>> yy, string interpType, int nPt, double *val)
+double cosmobl::interpolated_2D (double _x1, double _x2, vector<double> x1, vector<double> x2, vector<vector<double>> yy, string type, int nPt)
 {
   VecDoub X1(x1.size()), X2(x2.size());
   MatDoub YY(x1.size(),x2.size());  
-  if (yy.size()!=x1.size() || yy[0].size()!=x2.size()) ErrorMsg("Error in interpolation_extrapolation_2D of Func.cpp!"); 
+  if (yy.size()!=x1.size() || yy[0].size()!=x2.size()) ErrorMsg("Error in interpolated_2D of Func.cpp!"); 
 
   for (unsigned int i=0; i<x1.size(); i++) X1[i] = x1[i];
   for (unsigned int i=0; i<x2.size(); i++) X2[i] = x2[i];
@@ -452,23 +461,25 @@ void cosmobl::interpolation_extrapolation_2D (double _x1, double _x2, vector<dou
     for (unsigned int j=0; j<x2.size(); j++) 
       YY[i][j] = yy[i][j];
 
-  if (interpType=="Linear") {
-    Bilin_interp func(X1,X2,YY);
-    *val = func.interp(_x1,_x2);
+  if (type=="Linear") {
+    Bilin_interp func(X1, X2, YY);
+    return func.interp(_x1,_x2);
   }
 
-  else if (interpType=="Poly") {
-    Poly2D_interp func(X1,X2,YY,nPt,nPt);
-    *val = func.interp(_x1,_x2);
+  else if (type=="Poly") {
+    Poly2D_interp func(X1, X2, YY, nPt, nPt);
+    return func.interp(_x1,_x2);
   }
 
-  else if (interpType=="Spline") {
-    Spline2D_interp func(X1,X2,YY);
-    *val = func.interp(_x1,_x2); 
+  else if (type=="Spline") {
+    Spline2D_interp func(X1, X2, YY);
+    return func.interp(_x1,_x2); 
   }
 
   else 
-    ErrorMsg("Error in interpolation_extrapolation_2D of Func.cpp: the value of string 'interpType' is not permitted!"); 
+    ErrorMsg("Error in interpolated_2D of Func.cpp: the value of string 'type' is not permitted!");
+
+  return -1;
 }
 
 
@@ -901,11 +912,7 @@ void cosmobl::check_EnvVar (string Var)
 
 int cosmobl::used_memory (int type)
 {
-  if (strcmp(SYS, "MAC") == 0) {
-    WarningMsg("Attention: used_memory of Func.cpp works only on Linux systems");
-    return 1;
-  }
-  
+#ifdef LINUX
   int memory = -1;
 
   string mem;
@@ -930,6 +937,13 @@ int cosmobl::used_memory (int type)
   fin.clear(); fin.close();
   
   return memory;
+
+#else 
+  WarningMsg("Attention: used_memory of Func.cpp works only on Linux systems");
+  return 1;
+
+#endif
+  
 }
 
 
@@ -938,11 +952,7 @@ int cosmobl::used_memory (int type)
 
 int cosmobl::check_memory (double frac, bool exit, string func, int type)
 {
-  if (strcmp(SYS, "MAC") == 0) {
-    WarningMsg("Attention: check_memory of Func.cpp works only on Linux systems");
-    return 1;
-  }
-  
+#ifdef LINUX
   struct sysinfo memInfo;
   sysinfo (&memInfo);
   
@@ -958,8 +968,14 @@ int cosmobl::check_memory (double frac, bool exit, string func, int type)
     if (exit) ErrorMsg(Err);
     else { WarningMsg(Err); return 0; }
   }
-
   return 1;
+  
+#else
+  WarningMsg("Attention: check_memory of Func.cpp works only on Linux systems");
+  return 1;
+  
+#endif
+  
 }
 
   
@@ -1069,7 +1085,7 @@ void cosmobl::random_numbers (int nRan, int idum, vector<double> xx, vector<doub
   double xx_min = Min(xx)*0.999;
   double xx_max = Max(xx)*1.001;
   double delta_xx = xx_max-xx_min;
-  double Fx, err, num1, num2;
+  double num1, num2;
 
   int step = 1000;
   double delta_bin = (xx_max-xx_min)/step;
@@ -1077,10 +1093,9 @@ void cosmobl::random_numbers (int nRan, int idum, vector<double> xx, vector<doub
   vector<double> xx_interp, fx_interp;
   
   for (int i=0; i<step; i++) {
-    interpolation_extrapolation(XXB, xx, fx, "Poly", 4, &Fx, &err); 
     
     xx_interp.push_back(XXB);
-    fx_interp.push_back(Fx);
+    fx_interp.push_back(interpolated(XXB, xx, fx, "Poly", 4));
     
     XXB += delta_bin;
   }
@@ -1266,11 +1281,8 @@ void cosmobl::bin_function_2D (string file_grid, double func(double *, size_t, v
 double cosmobl::func_grid_lin (double xx, void *params)
 {
   struct cosmobl::glob::STR_grid *pp = (struct cosmobl::glob::STR_grid *) params;
- 
-  double err = -1, yy = -1;  
-  interpolation_extrapolation(xx,pp->_xx,pp->_yy,"Linear",-1,&yy,&err);
-    
-  return yy;
+
+  return interpolated(xx, pp->_xx, pp->_yy, "Linear", -1);
 }
 
 
@@ -1281,13 +1293,9 @@ double cosmobl::func_grid_loglin (double xx, void *params)
 {
   struct cosmobl::glob::STR_grid *pp = (struct cosmobl::glob::STR_grid *) params;
  
-  double err = -1, yy = -1;  
-
   double lgx = log10(xx);
 
-  interpolation_extrapolation(lgx,pp->_xx,pp->_yy,"Linear",-1,&yy,&err);
-    
-  return yy;
+  return interpolated(lgx, pp->_xx, pp->_yy, "Linear", -1);
 }
 
 
@@ -1298,13 +1306,9 @@ double cosmobl::func_grid_log (double xx, void *params)
 {
   struct cosmobl::glob::STR_grid *pp = (struct cosmobl::glob::STR_grid *) params;
  
-  double err = -1, yy = -1;  
-
   double lgx = log10(xx);
 
-  interpolation_extrapolation(lgx,pp->_xx,pp->_yy,"Linear",-1,&yy,&err);
-
-  return pow(10.,yy);
+  return pow(10., interpolated(lgx, pp->_xx, pp->_yy, "Linear", -1));
 }
 
 
@@ -1314,11 +1318,8 @@ double cosmobl::func_grid_log (double xx, void *params)
 double cosmobl::func_grid_lin_2D (double *xx, __attribute__((unused)) size_t dim, void *params)
 {
   struct cosmobl::glob::STR_grid_2D *pp = (struct cosmobl::glob::STR_grid_2D *) params;
- 
-  double yy = -1;  
-  interpolation_extrapolation_2D(xx[0],xx[1],pp->_xx1,pp->_xx2,pp->_yy,"Linear",-1,&yy);
-    
-  return yy;
+   
+  return interpolated_2D(xx[0], xx[1], pp->_xx1, pp->_xx2, pp->_yy, "Linear", -1);
 }
 
 
@@ -1329,14 +1330,10 @@ double cosmobl::func_grid_loglin_2D (double *xx, __attribute__((unused)) size_t 
 {
   struct cosmobl::glob::STR_grid_2D *pp = (struct cosmobl::glob::STR_grid_2D *) params;
  
-  double yy = -1;  
-
   double lgx1 = log10(xx[0]);
   double lgx2 = log10(xx[1]);
 
-  interpolation_extrapolation_2D(lgx1,lgx2,pp->_xx1,pp->_xx2,pp->_yy,"Linear",-1,&yy);
-  
-  return yy;
+  return interpolated_2D(lgx1, lgx2, pp->_xx1, pp->_xx2, pp->_yy, "Linear", -1);
 }
 
 
@@ -1346,15 +1343,11 @@ double cosmobl::func_grid_loglin_2D (double *xx, __attribute__((unused)) size_t 
 double cosmobl::func_grid_log_2D (double *xx, __attribute__((unused)) size_t dim, void *params)
 {
   struct cosmobl::glob::STR_grid_2D *pp = (struct cosmobl::glob::STR_grid_2D *) params;
- 
-  double yy = -1;  
 
   double lgx1 = log10(xx[0]);
   double lgx2 = log10(xx[1]);
 
-  interpolation_extrapolation_2D(lgx1,lgx2,pp->_xx1,pp->_xx2,pp->_yy,"Linear",-1,&yy);
-
-  return pow(10.,yy);
+  return pow(10., interpolated_2D(lgx1, lgx2, pp->_xx1, pp->_xx2, pp->_yy, "Linear", -1));
 }
 
 /// @endcond
@@ -1441,11 +1434,10 @@ void cosmobl::fill_distr (vector<double> var, vector<double> prob, double ntot, 
   for (int i=0; i<ntot; i++) {
     bool go_on = 0;
     while (go_on==0) {
-      double V = minVar+deltaVar*ran1.doub();
-      double p = 2*deltaP*ran2.doub()+minP;
-      double p2, errP;
-      interpolation_extrapolation(V, var, prob, "Spline", 3, &p2, &errP);
-      if (abs(p-p2)/p2<=0.01) {out_Var.push_back(V); go_on=1;}
+      double VV = minVar+deltaVar*ran1.doub();
+      double pp = 2*deltaP*ran2.doub()+minP;
+      double p2 = interpolated(VV, var, prob, "Spline", 3);
+      if (abs(pp-p2)/p2<=0.01) { out_Var.push_back(VV); go_on = 1; }
     }
   
   }
@@ -1532,9 +1524,7 @@ void cosmobl::fill_distr (int nRan, vector<double> &xx, vector<double> &fx, vect
 
   for (int i=0; i<nRan; i++) {
     double pp = ran.doub();
-    double err, VV;
-    interpolation_extrapolation(pp, Fx, new_x, "Poly", 4, &VV, &err);
-    varRandom.push_back(VV);
+    varRandom.push_back(interpolated(pp, Fx, new_x, "Poly", 4));
   }
 
 }
@@ -1704,7 +1694,7 @@ void cosmobl::distribution (vector<double> &xx, vector<double> &fx, vector<doubl
   if (xx.size()>0 || fx.size()>0 || FF.size()<=0 || nbin<=0) ErrorMsg("Error in distribution of Func.cpp!");
 
   ofstream fout;
-  if (file_out!="NULL") { fout.open (file_out.c_str()); checkIO (file_out,0); }
+  if (file_out!="NULL") { fout.open (file_out.c_str()); checkIO(file_out,0); }
   
   double minFF = (V1>-1.e29) ? V1 : Min(FF)*0.9999;
   double maxFF = (V2>-1.e29) ? V2 : Max(FF)*1.0001;

@@ -53,35 +53,11 @@ namespace cosmobl {
    */
   class Chi2 {
 
-  protected:
-
+  public:
+    
     typedef double(*model_1D) (double, void *, vector<double>);
     typedef double(*model_2D) (double, double, void *, vector<double>);
-
-
-    // ----- data -----
-    int m_dim;
-    vector<double> m_xx, m_yy, m_fx1D, m_df1D;
-    vector<vector<double> > m_fx2D, m_df2D, m_covinv;
-
-    // ----- model & parameters -----
-    model_1D m_func1D;                   // 1D model
-    model_2D m_func2D;                   // 2D model
-    void *m_params;                      // model parameters
-    vector<vector<double>> m_par_limits; // prior limits on the model parameters
-    bool m_ptype;                        // m_ptype = 0 -> fitPar[fitPar.size()-1] = i ; m_ptype = 1 -> fitPar[fitPar.size()-1] = index++
-    int m_min1, m_max1, m_min2, m_max2;  // limits in the fitted function
-    int m_fit_type;                      // fit type: 0 -> diagonal chi^2, 1 -> diagonal log(chi^2), 2 -> full covariance chi^2 
-
-    // ----- chi2 grid ----- 
-    vector<double> m_bestfit;            // best-fit parameters
-    vector<vector<double>> m_grid_par;   // parameter grid   
-    vector<double> m_chi2_grid;          // chi2 estimated at the parameter grid       
-    double m_lnorm;                      // likelihood normalization
-
-
-  public:
-
+    
     Chi2 (vector<double> xx, vector<double> fx1D, vector<double> df1D, model_1D func1D, void *params, bool ptype=1, int fit_type=0)
       : m_dim(1), m_xx(xx), m_fx1D(fx1D), m_df1D(df1D), m_func1D(func1D), m_params(params), m_ptype(ptype), m_min1(0), m_max1(fx1D.size()), m_fit_type(fit_type) 
       {
@@ -138,6 +114,29 @@ namespace cosmobl {
     void single_par_pdf (int, vector<double> &, vector<double> &, bool Likelihood=1, bool norm=0);
 
     void contour_2par (int, int, string, bool norm=0);
+
+    
+  protected:
+
+    // ----- data -----
+    int m_dim;
+    vector<double> m_xx, m_yy, m_fx1D, m_df1D;
+    vector<vector<double> > m_fx2D, m_df2D, m_covinv;
+
+    // ----- model & parameters -----
+    model_1D m_func1D;                   // 1D model
+    model_2D m_func2D;                   // 2D model
+    void *m_params;                      // model parameters
+    vector<vector<double> > m_par_limits; // prior limits on the model parameters
+    bool m_ptype;                        // m_ptype = 0 -> fitPar[fitPar.size()-1] = i ; m_ptype = 1 -> fitPar[fitPar.size()-1] = index++
+    int m_min1, m_max1, m_min2, m_max2;  // limits in the fitted function
+    int m_fit_type;                      // fit type: 0 -> diagonal chi^2, 1 -> diagonal log(chi^2), 2 -> full covariance chi^2 
+
+    // ----- chi2 grid ----- 
+    vector<double> m_bestfit;            // best-fit parameters
+    vector<vector<double> > m_grid_par;   // parameter grid   
+    vector<double> m_chi2_grid;          // chi2 estimated at the parameter grid       
+    double m_lnorm;                      // likelihood normalization
 
   };
 }

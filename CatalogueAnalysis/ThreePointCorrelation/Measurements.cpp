@@ -43,7 +43,7 @@ using namespace cosmobl;
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::measure_Q (string dir_output_triplets, string dir_output_2pt, vector<string> dir_input_triplets, int count_ggg, int count_rrr, int count_ggr, int count_grr, bool tcount) 
+void cosmobl::ThreePointCorrelation::measure_Q (string dir_output_triplets, string dir_output_2pt, const vector<string> &dir_input_triplets, int count_ggg, int count_rrr, int count_ggr, int count_grr, bool tcount) 
 {   
   allocate_vectors_zeta();
 
@@ -218,8 +218,7 @@ void cosmobl::ThreePointCorrelation::measure_Q (string dir_output_triplets, stri
   }
     
   vector<double> values_interp(m_nbins+2, 0.), xi_real_lin(m_nbins+2, 0.);
-  double err = -1, log_xi_real_lin;
-
+  
   values_interp[0] = log10(m_side_s);
   values_interp[1] = log10(m_side_u*m_side_s);
 
@@ -238,8 +237,7 @@ void cosmobl::ThreePointCorrelation::measure_Q (string dir_output_triplets, stri
   ofstream fout (file_2pt.c_str()); checkIO(file_2pt, 0);
 
   for (size_t i=0; i<values_interp.size(); i++) {
-    interpolation_extrapolation(values_interp[i], log_r, log_xi_log, "Linear", -1, &log_xi_real_lin, &err);
-    xi_real_lin[i] = pow(10.,log_xi_real_lin)-1.;
+    xi_real_lin[i] = pow(10., interpolated(values_interp[i], log_r, log_xi_log, "Linear", -1))-1.;
     //cout << pow(10.,values_interp[i]) << " --- " << xi_real_lin[i] << endl;
     fout << pow(10.,values_interp[i]) << "     " << xi_real_lin[i] << endl;
   }
@@ -262,7 +260,7 @@ void cosmobl::ThreePointCorrelation::measure_Q (string dir_output_triplets, stri
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::measure_Q_TEST (string dir_output_triplets, string dir_output_2pt, vector<string> dir_input_triplets, bool count, bool tcount) 
+void cosmobl::ThreePointCorrelation::measure_Q_TEST (string dir_output_triplets, string dir_output_2pt, const vector<string>& dir_input_triplets, bool count, bool tcount) 
 {
 
   allocate_vectors_zeta();
@@ -408,8 +406,7 @@ void cosmobl::ThreePointCorrelation::measure_Q_TEST (string dir_output_triplets,
   }
     
   vector<double> values_interp(m_nbins+2, 0.), xi_real_lin(m_nbins+2, 0.);
-  double err = -1, log_xi_real_lin;
-
+  
   values_interp[0] = log10(m_side_s);
   values_interp[1] = log10(m_side_u*m_side_s);
 
@@ -428,8 +425,7 @@ void cosmobl::ThreePointCorrelation::measure_Q_TEST (string dir_output_triplets,
   ofstream fout (file_2pt.c_str()); checkIO(file_2pt, 0);
 
   for (size_t i=0; i<values_interp.size(); i++) {
-    interpolation_extrapolation(values_interp[i], log_r, log_xi_log, "Linear", -1, &log_xi_real_lin, &err);
-    xi_real_lin[i] = pow(10.,log_xi_real_lin)-1.;
+    xi_real_lin[i] = pow(10., interpolated(values_interp[i], log_r, log_xi_log, "Linear", -1))-1.;
     //cout << pow(10.,values_interp[i]) << " --- " << xi_real_lin[i] << endl;
     fout << pow(10.,values_interp[i]) << "     " << xi_real_lin[i] << endl;
   }
@@ -452,7 +448,7 @@ void cosmobl::ThreePointCorrelation::measure_Q_TEST (string dir_output_triplets,
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::measure_Q_ang (string dir_output_triplets, string dir_output_2pt, vector<string> dir_input_triplets, int count_ggg, int count_rrr, int count_ggr, int count_grr, bool tcount) 
+void cosmobl::ThreePointCorrelation::measure_Q_ang (string dir_output_triplets, string dir_output_2pt, const vector<string>& dir_input_triplets, int count_ggg, int count_rrr, int count_ggr, int count_grr, bool tcount) 
 {
 
   allocate_vectors_zeta();
@@ -631,8 +627,7 @@ void cosmobl::ThreePointCorrelation::measure_Q_ang (string dir_output_triplets, 
   }
 
   vector<double> values_interp(m_nbins+2, 0.), xi_real_lin(m_nbins+2, 0.);
-  double err = -1, log_xi_real_lin;
-
+  
   values_interp[0] = log10(m_side_s);
   values_interp[1] = log10(m_side_u*m_side_s);
 
@@ -651,8 +646,7 @@ void cosmobl::ThreePointCorrelation::measure_Q_ang (string dir_output_triplets, 
   ofstream fout (file_2pt.c_str()); checkIO(file_2pt, 0);
 
   for (size_t i=0; i<values_interp.size(); i++) {
-    interpolation_extrapolation(values_interp[i], log_r, log_xi_log, "Linear", -1, &log_xi_real_lin, &err);
-    xi_real_lin[i] = pow(10.,log_xi_real_lin)-1.;
+    xi_real_lin[i] = pow(10., interpolated(values_interp[i], log_r, log_xi_log, "Linear", -1))-1.;
     //cout << pow(10.,values_interp[i]) << " --- " << xi_real_lin[i] << endl;
     fout << pow(10.,values_interp[i]) << "     " << xi_real_lin[i] << endl;
   }

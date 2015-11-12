@@ -60,6 +60,12 @@ namespace cosmobl {
   public:
 
     /**
+     *  @brief default destructor
+     *  @return none
+     */
+    virtual ~Triplets() {}
+    
+    /**
      *  @brief get the private member \e m_binsize
      *  @return the bin size, or an error message if the
      *  derived object does not have this member
@@ -93,7 +99,7 @@ namespace cosmobl {
      *  @return the number of triplets in the i-th angular bin, or an
      *  error message if the derived object does not have this member
      */
-    virtual double TT (__attribute__((unused)) int i) { cosmobl::ErrorMsg("Error in Triplets::TT() of Triplets.h!"); return 0; }
+    virtual double TT (int i) { cosmobl::ErrorMsg("Error in Triplets::TT() of Triplets.h!"); return 0; }
 
     /**
      *  @brief get the private member \e m_TT
@@ -110,7 +116,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void sum (__attribute__((unused)) shared_ptr<Triplets> tt, __attribute__((unused)) double ww=1.) { cosmobl::ErrorMsg("Error in Triplets::sum() of Triplets.h!"); }
+    virtual void sum (shared_ptr<Triplets> tt, double ww=1.) { cosmobl::ErrorMsg("Error in Triplets::sum() of Triplets.h!"); }
 
     /**
      *  @brief estimate the distance between two objects and update
@@ -122,7 +128,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void put (__attribute__((unused)) double &r12, __attribute__((unused)) double &r13, __attribute__((unused)) double &r23, __attribute__((unused)) double ww=1.)
+    virtual void put (double &r12, double &r13, double &r23, double ww=1.)
     { cosmobl::ErrorMsg("Error in Triplets::put() of Triplets.h!"); }
 
     /**
@@ -134,7 +140,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void put (__attribute__((unused)) shared_ptr<Object> obj1, __attribute__((unused)) shared_ptr<Object> obj2, __attribute__((unused)) shared_ptr<Object> obj3)
+    virtual void put (shared_ptr<Object> obj1, shared_ptr<Object> obj2, shared_ptr<Object> obj3)
     { cosmobl::ErrorMsg("Error in Triplets::put() of Triplets.h!"); }
     
   };

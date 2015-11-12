@@ -98,7 +98,7 @@ void cosmobl::TwoPointCorrelation::write_pairs (vector<double> &PP, vector<doubl
 // ============================================================================
 
 
-void cosmobl::TwoPointCorrelation::read_pairs (vector<double> &PP, vector<double> &PP_lin, vector< vector<double> > &PP_2d, vector< vector<double> > &PP_slog, vector< vector<double> > &PP_coslog, vector< vector<double> > &PP_coslin, vector<string> &dir, string &file) 
+void cosmobl::TwoPointCorrelation::read_pairs (vector<double> &PP, vector<double> &PP_lin, vector< vector<double> > &PP_2d, vector< vector<double> > &PP_slog, vector< vector<double> > &PP_coslog, vector< vector<double> > &PP_coslin, const vector<string> &dir, string &file) 
 {
   if (dir.size()==0)
     ErrorMsg ("Error in cosmobl::TwoPointCorrelation::read_pairs of IO.cpp! dir.size()=0!");
@@ -588,7 +588,7 @@ void cosmobl::TwoPointCorrelation::write_pairs (vector<double> &PP, vector<doubl
 // ============================================================================
 
 
-void cosmobl::TwoPointCorrelation::read_pairs (vector<double> &PP, vector<double> &PP_lin, vector<string> &dir, string &file) 
+void cosmobl::TwoPointCorrelation::read_pairs (vector<double> &PP, vector<double> &PP_lin, const vector<string> &dir, string &file) 
 {
   for (unsigned int dd=0; dd<dir.size(); dd++) {
   
@@ -728,7 +728,7 @@ void cosmobl::TwoPointCorrelation::write_pairs_subSamples (vector<shared_ptr<Pai
 // ============================================================================
 
 
-void cosmobl::TwoPointCorrelation::read_pairs_subSamples (vector<shared_ptr<Pairs>> pp, int nRegions, vector<string> &dir, string &file)
+void cosmobl::TwoPointCorrelation::read_pairs_subSamples (vector<shared_ptr<Pairs>> pp, int nRegions, const vector<string> &dir, string &file)
 {
 
   for (unsigned int dd=0; dd<dir.size(); dd++) {

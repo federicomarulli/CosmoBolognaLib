@@ -12,7 +12,7 @@ dirHO = $(dirLib)Headers/Objects/
 dirNum = $(DIR)Numerical/
 dirEH = $(dirLib)Cosmology/EH/
 
-FLAGS_LIB = -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC -lCOSM
+FLAGS_LIB = -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC -lCOSM 
 FLAGS_INC = -I$(dirH) -I$(dirHO) -I$(dirNum) -I$(dirEH) 
 
 OBJ = distances.o 

@@ -47,8 +47,7 @@ double cosmobl::Cosmology::xi0_Kaiser (double rad, double f_sigma8, double bias_
   vector<double> rr, Xi;
   get_xi(rr, Xi, method_Pk, redshift, output_root, xiType, k_star, xiNL, norm, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
   
-  double err = -1, XiR = -1;  
-  interpolation_extrapolation(rad,rr,Xi,"Linear",-1,&XiR,&err);
+  double XiR = interpolated(rad, rr, Xi, "Linear", -1);
 
   return xi_ratio(f_sigma8, bias_sigma8)*XiR*pow(bias_sigma8/sigma8_Pk(method_Pk, redshift, output_root),2);
 }
@@ -98,7 +97,7 @@ double cosmobl::Cosmology::xi2D_DispersionModel (double rp, double pi, double f_
 // =====================================================================================
 
 
-double cosmobl::Cosmology::xi_star (double &rr, double &redshift, string output_root, double k_star, double k_min, double k_max, bool GSL, double prec, string file_par) 
+double cosmobl::Cosmology::xi_star (double rr, double redshift, string output_root, double k_star, double k_min, double k_max, bool GSL, double prec, string file_par) 
 {
   string method_Pk1 = "EisensteinHu"; 
   string method_Pk2 = "CAMB";
@@ -118,7 +117,7 @@ double cosmobl::Cosmology::xi_star (double &rr, double &redshift, string output_
 // =====================================================================================
 
 
-double cosmobl::Cosmology::xisnl_gnw (double &rp, double &pi, double &f_sigma8, double &bias_sigma8, double &bA, double &redshift, vector<double> rr, vector<double> Xi, vector<double> Xi_, vector<double> Xi__, string output_root)
+double cosmobl::Cosmology::xisnl_gnw (double rp, double pi, double f_sigma8, double bias_sigma8, double bA, double redshift, vector<double> rr, vector<double> Xi, vector<double> Xi_, vector<double> Xi__, string output_root)
 {
   string method_Pk = "EisensteinHu";
   
@@ -129,7 +128,7 @@ double cosmobl::Cosmology::xisnl_gnw (double &rp, double &pi, double &f_sigma8, 
 // =====================================================================================
 
 
-double cosmobl::Cosmology::xis_gBAO (double &rp, double &pi, double &f_sigma8, double &bias_sigma8, double &redshift, vector<double> rr, vector<double> Xi, vector<double> Xi_, vector<double> Xi__, string output_root, double k_star, double x_min, double x_max, int step_x)
+double cosmobl::Cosmology::xis_gBAO (double rp, double pi, double f_sigma8, double bias_sigma8, double redshift, vector<double> rr, vector<double> Xi, vector<double> Xi_, vector<double> Xi__, string output_root, double k_star, double x_min, double x_max, int step_x)
 {
   if (m_sigma8<0) ErrorMsg("Error in cosmobl::Cosmology::xis_gBAO of PkXi_zSpace.cpp!");
 
@@ -160,7 +159,7 @@ double cosmobl::Cosmology::xis_gBAO (double &rp, double &pi, double &f_sigma8, d
 // =====================================================================================
 
 
-double cosmobl::Cosmology::xi2D_CW (double &rp, double &pi, double &beta, double &bias_lin, double &bA, double &sigmav0, double &cmu, double &cs1, double &cs2, double &redshift, vector<double> rr1, vector<double> Xi1, vector<double> rr2, vector<double> Xi2, vector<double> Xi1_, vector<double> Xi1__, vector<double> Xi2_, vector<double> Xi2__, string output_root, bool BAO, bool xiType, double k_star, bool xiNL, double r_min, double r_max, double v_min, double v_max, int step_v, double k_min, double k_max, double x_min, double x_max, int step_x, double aa, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::xi2D_CW (double rp, double pi, double beta, double bias_lin, double bA, double sigmav0, double cmu, double cs1, double cs2, double redshift, vector<double> rr1, vector<double> Xi1, vector<double> rr2, vector<double> Xi2, vector<double> Xi1_, vector<double> Xi1__, vector<double> Xi2_, vector<double> Xi2__, string output_root, bool BAO, bool xiType, double k_star, bool xiNL, double r_min, double r_max, double v_min, double v_max, int step_v, double k_min, double k_max, double x_min, double x_max, int step_x, double aa, bool GSL, double prec, string file_par)
 {
   if (rr1.size()==0) {
     string method_Pk1 = "EisensteinHu"; 

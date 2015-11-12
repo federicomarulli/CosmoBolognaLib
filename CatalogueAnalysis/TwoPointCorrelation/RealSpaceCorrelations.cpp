@@ -96,13 +96,13 @@ void cosmobl::TwoPointCorrelation::compute_real_space_xi_deprojected (double &pi
   string file_deproj2 = dir+"xi_deprojected_lin";
   ofstream fout_deproj2 (file_deproj2.c_str()); checkIO(file_deproj2,0);
   
-  double err = -1, log_xi_real_lin;
+  double log_xi_real_lin;
 
   for (int i=0; i<nlinMax; i++) {
     double log_rr = log10(m_rad_lin[i]);
     m_rad_real_lin[i] = m_rad_lin[i];
 
-    interpolation_extrapolation(log_rr,log_rr_log,log_xi_real_log,"Linear",-1,&log_xi_real_lin,&err);
+    log_xi_real_lin = interpolated(log_rr, log_rr_log, log_xi_real_log, "Linear", -1);
     m_xi_real_lin[i] = pow(10.,log_xi_real_lin);
 
     fout_deproj2 <<pow(10.,log_rr)<<"   "<<m_xi_real_lin[i]<<"   -1"<<endl; // check!!!
