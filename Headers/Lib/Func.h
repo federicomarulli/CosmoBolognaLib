@@ -115,13 +115,6 @@ using namespace std;
  *  distances using the class cosmobl::Cosmology
  */
 /**
- *  @example distances.py 
- *
- *  This example shows how to convert redshifts into comoving
- *  distances using the class cosmobl::Cosmology. The CosmoBolognaLib
- *  are included as a module, using a Python wrapper 
- */
-/**
  *  @example fsigma8.cpp
  *
  *  This example shows how to estimate f*sigma8(z=1) using the class
@@ -147,7 +140,21 @@ using namespace std;
  * This example shows how to measure the three-point correlation
  * function using the class cosmobl::ThreePointCorrelation
  */
-
+/**
+ *  @example distances.py 
+ *
+ *  This example shows how to convert redshifts into comoving
+ *  distances using the class cosmobl::Cosmology. The CosmoBolognaLib
+ *  are included as a module, using a Python wrapper 
+ */
+/**
+ *  @example clustering_model.py
+ *
+ *  This example shows how to compute power spectrum and two point
+ *  correlation function models using the class
+ *  cosmobl::Cosmology. The CosmoBolognaLib are included as a module,
+ *  using a Python wrapper
+ */
 
 /**
  *  @brief The namespace of the CosmoBolognaLib 

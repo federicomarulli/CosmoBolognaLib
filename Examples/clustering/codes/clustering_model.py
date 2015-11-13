@@ -1,5 +1,5 @@
 # =======================================================================
-# How to compute power spectrum and two point correlation function models
+# How to compute power spectrum and two-point correlation function models
 # =======================================================================
 
 

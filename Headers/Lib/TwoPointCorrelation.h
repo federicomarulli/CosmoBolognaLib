@@ -147,6 +147,7 @@ namespace cosmobl {
 
 
     /* ======== Alfonso Veropalumbo ======== */
+
     // write/read the number of pairs for the angular correlation function
     void write_pairs (vector<double> &, vector<double> &, string &, string &);
     void read_pairs (vector<double> &, vector<double> &, const vector<string> &, string &);
@@ -170,7 +171,7 @@ namespace cosmobl {
     // ====================================================================
 
     // set the parameters used to measure the correlation function
-    void setParameters (double &, double &, double &, double &, double &, bool ANG=0);
+    void setParameters (double, double, double, double, double, bool ANG=0);
 
     // vector allocation and inizialization
     void allocate_vectors_xi (bool &);
@@ -211,7 +212,7 @@ namespace cosmobl {
     };
     
     // write the outputs
-    void write_xi (string &, int rank=0);
+    void write_xi (string, int rank=0);
     void write_xi (vector<vector<double> > &, string &, int rank=0);
 
     

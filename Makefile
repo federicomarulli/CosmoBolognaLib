@@ -205,13 +205,13 @@ purgeALL:
 #################################################################### 
 
 
-$(dir_FUNC)Func.o: $(dir_FUNC)Func.cpp # $(HH) $(PWD)/Makefile
+$(dir_FUNC)Func.o: $(dir_FUNC)Func.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) -I$(dir_FUNC) $(dir_FUNC)Func.cpp -o $(dir_FUNC)Func.o
 
-$(dir_FUNC)FuncXi.o: $(dir_FUNC)FuncXi.cpp # $(HH) $(PWD)/Makefile 
+$(dir_FUNC)FuncXi.o: $(dir_FUNC)FuncXi.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_FUNC) $(dir_FUNC)FuncXi.cpp -o $(dir_FUNC)FuncXi.o
 
-$(dir_FUNC)FuncMultipoles.o: $(dir_FUNC)FuncMultipoles.cpp # $(HH) $(PWD)/Makefile 
+$(dir_FUNC)FuncMultipoles.o: $(dir_FUNC)FuncMultipoles.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_FUNC) $(dir_FUNC)FuncMultipoles.cpp -o $(dir_FUNC)FuncMultipoles.o
 
 $(dir_FUNC)conv.o: $(dir_FUNC)conv.f90 
@@ -221,53 +221,53 @@ $(dir_FUNC)conv.o: $(dir_FUNC)conv.f90
 #################################################################### 
 
 
-$(dir_STAT)Prior/Prior.o: $(dir_STAT)Prior/Prior.cpp # $(HH) $(PWD)/Makefile 
+$(dir_STAT)Prior/Prior.o: $(dir_STAT)Prior/Prior.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_STAT) $(dir_STAT)Prior/Prior.cpp -o $(dir_STAT)Prior/Prior.o
 
-$(dir_STAT)Chi2/Chi2.o: $(dir_STAT)Chi2/Chi2.cpp # $(HH) $(PWD)/Makefile 
+$(dir_STAT)Chi2/Chi2.o: $(dir_STAT)Chi2/Chi2.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_STAT) $(dir_STAT)Chi2/Chi2.cpp -o $(dir_STAT)Chi2/Chi2.o
 
-$(dir_STAT)MCMC/MCMC.o: $(dir_STAT)MCMC/MCMC.cpp # $(HH) $(PWD)/Makefile 
+$(dir_STAT)MCMC/MCMC.o: $(dir_STAT)MCMC/MCMC.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_STAT) $(dir_STAT)MCMC/MCMC.cpp -o $(dir_STAT)MCMC/MCMC.o
 
 
 #################################################################### 
 
 
-$(dir_COSM)Cosmology.o: $(dir_COSM)Cosmology.cpp # $(HH) $(PWD)/Makefile
+$(dir_COSM)Cosmology.o: $(dir_COSM)Cosmology.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)Cosmology.cpp -o $(dir_COSM)Cosmology.o
 
-$(dir_COSM)MassFunction.o: $(dir_COSM)MassFunction.cpp # $(HH) $(PWD)/Makefile 
+$(dir_COSM)MassFunction.o: $(dir_COSM)MassFunction.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)MassFunction.cpp -o $(dir_COSM)MassFunction.o
 
-$(dir_COSM)SizeFunction.o: $(dir_COSM)SizeFunction.cpp # $(HH) $(PWD)/Makefile 
+$(dir_COSM)SizeFunction.o: $(dir_COSM)SizeFunction.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)SizeFunction.cpp -o $(dir_COSM)SizeFunction.o
 
-$(dir_COSM)PkXi.o: $(dir_COSM)PkXi.cpp # $(HH) $(PWD)/Makefile 
+$(dir_COSM)PkXi.o: $(dir_COSM)PkXi.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)PkXi.cpp -o $(dir_COSM)PkXi.o
 
-$(dir_COSM)PkXizSpace.o: $(dir_COSM)PkXizSpace.cpp # $(HH) $(PWD)/Makefile 
+$(dir_COSM)PkXizSpace.o: $(dir_COSM)PkXizSpace.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)PkXizSpace.cpp -o $(dir_COSM)PkXizSpace.o
 
-$(dir_COSM)Bias.o: $(dir_COSM)Bias.cpp # $(HH) $(PWD)/Makefile 
+$(dir_COSM)Bias.o: $(dir_COSM)Bias.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)Bias.cpp -o $(dir_COSM)Bias.o
 
-$(dir_COSM)RSD.o: $(dir_COSM)RSD.cpp # $(HH) $(PWD)/Makefile 
+$(dir_COSM)RSD.o: $(dir_COSM)RSD.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)RSD.cpp -o $(dir_COSM)RSD.o
 
-$(dir_COSM)Sigma.o: $(dir_COSM)Sigma.cpp # $(HH) $(PWD)/Makefile 
+$(dir_COSM)Sigma.o: $(dir_COSM)Sigma.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)Sigma.cpp -o $(dir_COSM)Sigma.o
 
-$(dir_COSM)Velocities.o: $(dir_COSM)Velocities.cpp # $(HH) $(PWD)/Makefile 
+$(dir_COSM)Velocities.o: $(dir_COSM)Velocities.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)Velocities.cpp -o $(dir_COSM)Velocities.o
 
-$(dir_COSM)MassGrowth.o: $(dir_COSM)MassGrowth.cpp # $(HH) $(PWD)/Makefile 
+$(dir_COSM)MassGrowth.o: $(dir_COSM)MassGrowth.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)MassGrowth.cpp -o $(dir_COSM)MassGrowth.o
 
-$(dir_COSM)NG.o: $(dir_COSM)NG.cpp # $(HH) $(PWD)/Makefile 
+$(dir_COSM)NG.o: $(dir_COSM)NG.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)NG.cpp -o $(dir_COSM)NG.o
 
-$(dir_COSM)BAO.o: $(dir_COSM)BAO.cpp # $(HH) $(PWD)/Makefile 
+$(dir_COSM)BAO.o: $(dir_COSM)BAO.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_COSM) -I$(dir_EH) $(dir_COSM)BAO.cpp -o $(dir_COSM)BAO.o
 
 $(dir_EH)power_whu.o: $(dir_EH)power_whu.cpp $(dir_EH)power_whu.h
@@ -277,17 +277,17 @@ $(dir_EH)power_whu.o: $(dir_EH)power_whu.cpp $(dir_EH)power_whu.h
 #################################################################### 
 
 
-$(dir_CM)ChainMesh.o: $(dir_CM)ChainMesh.cpp # $(HH) $(PWD)/Makefile 
+$(dir_CM)ChainMesh.o: $(dir_CM)ChainMesh.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_CM) -I$(dir_EH) $(dir_CM)ChainMesh.cpp -o $(dir_CM)ChainMesh.o
 
 
 #################################################################### 
 
 
-$(dir_CAT)Catalogue.o: $(dir_CAT)Catalogue.cpp # $(HH) $(PWD)/Makefile
+$(dir_CAT)Catalogue.o: $(dir_CAT)Catalogue.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_CAT) -I$(dir_EH) -I$(dir_O) $(dir_CAT)Catalogue.cpp -o $(dir_CAT)Catalogue.o
 
-$(dir_CAT)ChainMesh_Catalogue.o: $(dir_CAT)ChainMesh_Catalogue.cpp # $(HH) $(PWD)/Makefile
+$(dir_CAT)ChainMesh_Catalogue.o: $(dir_CAT)ChainMesh_Catalogue.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) -I$(dir_CAT) -I$(dir_EH) -I$(dir_O) $(dir_CAT)ChainMesh_Catalogue.cpp -o $(dir_CAT)ChainMesh_Catalogue.o
 
 

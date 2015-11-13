@@ -50,7 +50,7 @@ cosmobl::TwoPointCorrelation::TwoPointCorrelation (shared_ptr<Catalogue> data, s
 // ============================================================================
 
 
-void cosmobl::TwoPointCorrelation::setParameters (double &rMIN, double &rMAX, double &logbinSize, double &binSize, double &cosSize, bool ANG)
+void cosmobl::TwoPointCorrelation::setParameters (double rMIN, double rMAX, double logbinSize, double binSize, double cosSize, bool ANG)
 { 
   if (rMIN<1.e-30) ErrorMsg("Error in cosmobl::TwoPointCorrelation::setParameters of Init.cpp: rMIN must be >0!");
 

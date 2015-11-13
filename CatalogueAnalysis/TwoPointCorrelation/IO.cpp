@@ -175,7 +175,7 @@ void cosmobl::TwoPointCorrelation::read_pairs (vector<double> &PP, vector<double
 // ============================================================================
 
 
-void cosmobl::TwoPointCorrelation::write_xi (string &dir_out, int rank) 
+void cosmobl::TwoPointCorrelation::write_xi (string dir_out, int rank) 
 {    
   // ---------------------------------------------------
   // ---- check if the vector dimensions is correct ----
