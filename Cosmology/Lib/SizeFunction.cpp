@@ -39,7 +39,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::Cosmology::VolS (double R)
+double cosmobl::Cosmology::VolS (const double R) const
 {
   return 4./3.*par::pi*pow(R,3);
 }
@@ -48,7 +48,7 @@ double cosmobl::Cosmology::VolS (double R)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::deltav (double rho_vm)
+double cosmobl::Cosmology::deltav (const double rho_vm) const
 {
   return 1.594*(1. - pow((rho_vm),(-1./1.594)));
 }
@@ -57,7 +57,7 @@ double cosmobl::Cosmology::deltav (double rho_vm)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::r_rL (double rho_vm)
+double cosmobl::Cosmology::r_rL (const double rho_vm) const
 {
   return pow(rho_vm, -1./3.);
 }
@@ -66,7 +66,7 @@ double cosmobl::Cosmology::r_rL (double rho_vm)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::f_nu (double SS, double del_v, double del_c)
+double cosmobl::Cosmology::f_nu (const double SS, const double del_v, const double del_c) const
 {	
   double radnu = fabs(del_v)/SS;
   double nu = pow(radnu, 2.);
@@ -88,7 +88,7 @@ double cosmobl::Cosmology::f_nu (double SS, double del_v, double del_c)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::size_function (double R, double redshift, double rho_vm, double del_v, double del_c, string method_Pk, string output_root, string interpType, int Num, double stepsize, double k_max, string file_par)
+double cosmobl::Cosmology::size_function (const double R, const double redshift, const double rho_vm, const double del_v, const double del_c, const string method_Pk, const string output_root, const string interpType, const int Num, const double stepsize, const double k_max, const string file_par) const
 {
   double Z0 = 0.;
   double zero = 0.;

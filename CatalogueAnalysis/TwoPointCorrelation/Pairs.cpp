@@ -38,7 +38,7 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-void cosmobl::Pairs2D::sum (shared_ptr<Pairs> pp, double ww) 
+void cosmobl::Pairs2D::sum (const shared_ptr<Pairs> pp, const double ww) 
 {
   if (m_nlog != pp->nlog() || m_nlin != pp->nlin()) 
     cosmobl::ErrorMsg("Error in cosmobl::Pairs2D::sum of Pairs.cpp: dimension problems!");
@@ -54,7 +54,7 @@ void cosmobl::Pairs2D::sum (shared_ptr<Pairs> pp, double ww)
 // ============================================================================================
 
 
-void cosmobl::Pairs2D::put (shared_ptr<Object> obj1, shared_ptr<Object> obj2) 
+void cosmobl::Pairs2D::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2) 
 {
   double x1 = obj1->xx(), y1 = obj1->yy(), z1 = obj1->zz(), w1 = obj1->weight();
   double x2 = obj2->xx(), y2 = obj2->yy(), z2 = obj2->zz(), w2 = obj2->weight();
@@ -84,7 +84,7 @@ void cosmobl::Pairs2D::put (shared_ptr<Object> obj1, shared_ptr<Object> obj2)
 // ============================================================================================
 
 
-void cosmobl::Pairs3D::sum (shared_ptr<Pairs> pp, double ww) 
+void cosmobl::Pairs3D::sum (const shared_ptr<Pairs> pp, const double ww) 
 {    
   if (m_nlog != pp->nlog() || m_nlin != pp->nlin() || m_ncos != pp->ncos()) 
     cosmobl::ErrorMsg("Error in cosmobl::Pairs3D::sum of Pairs.cpp: dimension problems!");
@@ -122,7 +122,7 @@ void cosmobl::Pairs3D::sum (shared_ptr<Pairs> pp, double ww)
 // ============================================================================================
 
 
-void cosmobl::Pairs3D::put_log (shared_ptr<Object> obj1, shared_ptr<Object> obj2) 
+void cosmobl::Pairs3D::put_log (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2) 
 {
   double x1 = obj1->xx(), y1 = obj1->yy(), z1 = obj1->zz(), w1 = obj1->weight(); 
   double x2 = obj2->xx(), y2 = obj2->yy(), z2 = obj2->zz(), w2 = obj2->weight(); 
@@ -147,7 +147,7 @@ void cosmobl::Pairs3D::put_log (shared_ptr<Object> obj1, shared_ptr<Object> obj2
 // ============================================================================================
 
 
-void cosmobl::Pairs3D::put (shared_ptr<Object> obj1, shared_ptr<Object> obj2) 
+void cosmobl::Pairs3D::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2) 
 {
   double x1 = obj1->xx(), y1 = obj1->yy(), z1 = obj1->zz(), w1 = obj1->weight(), ra1 = obj1->ra(), dec1 = obj1->dec(), d1 = obj1->dc(); 
   double x2 = obj2->xx(), y2 = obj2->yy(), z2 = obj2->zz(), w2 = obj2->weight(), ra2 = obj2->ra(), dec2 = obj2->dec(), d2 = obj2->dc(); 

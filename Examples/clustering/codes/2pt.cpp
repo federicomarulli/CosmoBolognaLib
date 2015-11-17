@@ -62,9 +62,9 @@ int main () {
     data_obj.push_back(gal);
   }
   fin.close();
-  
-  shared_ptr<Catalogue> catalogue(new Catalogue{data_obj});
 
+  shared_ptr<Catalogue> catalogue(new Catalogue{data_obj});
+  
 
   // ---------------------------------------------------------------------------------------------------------
   // ---------------- construct the random catalogue and create the object 'random_catalogue' ----------------
@@ -74,9 +74,11 @@ int main () {
 
   int nRandom = (int)catalogue->nObjects()*N_R;
 
-  auto random_catalogue = random_catalogue_box(catalogue, nRandom, dir_random_cat);
-  
+  auto random_catalogue = random_catalogue_box(catalogue, nRandom);
 
+  random_catalogue->write_coords(dir_random_cat+"random.dat");
+
+  
   // ----------------------------------------------------------------------------
   // ---------------- measure the two-point correlation function ----------------
   // ----------------------------------------------------------------------------
@@ -99,7 +101,7 @@ int main () {
   
   // store the output data
   TwoP.write_xi(dir_output);
-
+  
   return 0;
 }
 

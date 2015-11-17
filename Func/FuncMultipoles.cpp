@@ -39,7 +39,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::multipole_xi0 (int indexR, vector<double> mu, vector< vector<double> > xi) 
+double cosmobl::multipole_xi0 (const int indexR, const vector<double> mu, const vector< vector<double> > xi) 
 {
   double bin = mu[1]-mu[0];
   double xi0 = 0.;
@@ -54,7 +54,7 @@ double cosmobl::multipole_xi0 (int indexR, vector<double> mu, vector< vector<dou
 // ============================================================================
 
 
-double cosmobl::multipole_xi2 (int indexR, vector<double> mu, vector< vector<double> > xi) 
+double cosmobl::multipole_xi2 (const int indexR, const vector<double> mu, const vector< vector<double> > xi) 
 {
   double bin = mu[1]-mu[0];
   double xi2 = 0.;
@@ -69,7 +69,7 @@ double cosmobl::multipole_xi2 (int indexR, vector<double> mu, vector< vector<dou
 // ============================================================================
 
 
-double cosmobl::multipole_xi4 (int indexR, vector<double> mu, vector< vector<double> > xi) 
+double cosmobl::multipole_xi4 (const int indexR, const vector<double> mu, const vector< vector<double> > xi) 
 {
   double bin = mu[1]-mu[0];
   double xi4 = 0.;
@@ -84,7 +84,7 @@ double cosmobl::multipole_xi4 (int indexR, vector<double> mu, vector< vector<dou
 // ============================================================================
 
 
-double cosmobl::error_multipole_xi0 (int indexR, vector<double> mu, vector<vector<double> > error) 
+double cosmobl::error_multipole_xi0 (const int indexR, const vector<double> mu, const vector<vector<double> > error) 
 {
   double bin = mu[1]-mu[0];
   double err = 0.;
@@ -99,7 +99,7 @@ double cosmobl::error_multipole_xi0 (int indexR, vector<double> mu, vector<vecto
 // ============================================================================
 
 
-double cosmobl::error_multipole_xi2 (int indexR, vector<double> mu, vector<vector<double> > error) 
+double cosmobl::error_multipole_xi2 (const int indexR, const vector<double> mu, const vector<vector<double> > error) 
 {
   double bin = mu[1]-mu[0];
   double err = 0.;
@@ -114,7 +114,7 @@ double cosmobl::error_multipole_xi2 (int indexR, vector<double> mu, vector<vecto
 // ============================================================================
 
 
-double cosmobl::error_multipole_xi4 (int indexR, vector<double> mu, vector<vector<double> > error) 
+double cosmobl::error_multipole_xi4 (const int indexR, const vector<double> mu, const vector<vector<double> > error) 
 {
   double bin = mu[1]-mu[0];
   double err = 0.;
@@ -129,7 +129,7 @@ double cosmobl::error_multipole_xi4 (int indexR, vector<double> mu, vector<vecto
 // ============================================================================
 
 
-double cosmobl::multipole_xi0 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double> > xi, double &delta_s) 
+double cosmobl::multipole_xi0 (const double ss, const vector<double> rp, const vector<double> pi, const vector<vector<double> > xi, const double delta_s) 
 {
   double xi0 = 0.;
   int Nbin = 0;
@@ -153,7 +153,7 @@ double cosmobl::multipole_xi0 (double &ss, vector<double> rp, vector<double> pi,
 // ============================================================================
 
 
-double cosmobl::multipole_xi2 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double> > xi, double &delta_s) 
+double cosmobl::multipole_xi2 (const double ss, const vector<double> rp, const vector<double> pi, const vector<vector<double> > xi, const double delta_s) 
 {
   double xi2 = 0.;
   int Nbin = 0;
@@ -177,7 +177,7 @@ double cosmobl::multipole_xi2 (double &ss, vector<double> rp, vector<double> pi,
 // ============================================================================
 
 
-double cosmobl::multipole_xi4 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double> > xi, double &delta_s) 
+double cosmobl::multipole_xi4 (const double ss, const vector<double> rp, const vector<double> pi, const vector<vector<double> > xi, const double delta_s) 
 {
   double xi4 = 0.;
   int Nbin = 0;
@@ -201,7 +201,7 @@ double cosmobl::multipole_xi4 (double &ss, vector<double> rp, vector<double> pi,
 // ============================================================================
 
 
-double cosmobl::error_multipole_xi0 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double> > error, double &delta_s) 
+double cosmobl::error_multipole_xi0 (const double ss, const vector<double> rp, const vector<double> pi, const vector<vector<double> > error, const double delta_s) 
 {
   double err = 0.;
   int Nbin = 0;
@@ -225,7 +225,7 @@ double cosmobl::error_multipole_xi0 (double &ss, vector<double> rp, vector<doubl
 // ============================================================================
 
 
-double cosmobl::error_multipole_xi2 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double> > error, double &delta_s) 
+double cosmobl::error_multipole_xi2 (const double ss, const vector<double> rp, const vector<double> pi, const vector<vector<double> > error, const double delta_s) 
 {
   double err = 0.;
   int Nbin = 0;
@@ -249,7 +249,7 @@ double cosmobl::error_multipole_xi2 (double &ss, vector<double> rp, vector<doubl
 // ============================================================================
 
 
-double cosmobl::error_multipole_xi4 (double &ss, vector<double> rp, vector<double> pi, vector<vector<double> > error, double &delta_s) 
+double cosmobl::error_multipole_xi4 (const double ss, const vector<double> rp, const vector<double> pi, const vector<vector<double> > error, const double delta_s) 
 {
   double err = 0.;
   int Nbin = 0;
@@ -345,7 +345,7 @@ double cosmobl::multipoles (double rr, void *pp, vector<double> par)
 // ============================================================================
 
 
-double cosmobl::multipole_xi0_model (double beta, double xi_real) 
+double cosmobl::multipole_xi0_model (const double beta, const double xi_real) 
 { 
   return xi_ratio(beta)*xi_real;
 }
@@ -354,7 +354,7 @@ double cosmobl::multipole_xi0_model (double beta, double xi_real)
 // ============================================================================
 
 
-double cosmobl::multipole_xi0_model (double f_sigma8, double bias_sigma8, double sigma8z, double xi_DM) 
+double cosmobl::multipole_xi0_model (const double f_sigma8, const double bias_sigma8, const double sigma8z, const double xi_DM) 
 { 
   return xi_ratio(f_sigma8,bias_sigma8)*xi_DM*pow(bias_sigma8/sigma8z,2);
 }
@@ -364,7 +364,7 @@ double cosmobl::multipole_xi0_model (double f_sigma8, double bias_sigma8, double
 
 /// @cond glob
 
-double cosmobl::multipole_xi0_model (__attribute__((unused)) double xx, void *pp, vector<double> par) 
+double cosmobl::multipole_xi0_model (double xx, void *pp, vector<double> par) 
 { 
   // xx is not used!
 
@@ -380,7 +380,7 @@ double cosmobl::multipole_xi0_model (__attribute__((unused)) double xx, void *pp
 // ============================================================================
 
 
-double cosmobl::multipole_xi2_model (double beta, double xi_real, double xi_) 
+double cosmobl::multipole_xi2_model (const double beta, const double xi_real, const double xi_) 
 { 
   return (4./3.*beta+4./7.*beta*beta)*(xi_real-xi_);
 }
@@ -389,7 +389,7 @@ double cosmobl::multipole_xi2_model (double beta, double xi_real, double xi_)
 // ============================================================================
 
 
-double cosmobl::multipole_xi4_model (double beta, double xi_real, double xi_, double xi__) 
+double cosmobl::multipole_xi4_model (const double beta, const double xi_real, const double xi_, const double xi__) 
 { 
   return (8./35.*beta*beta)*(xi_real+2.5*xi_-3.5*xi__);
 }

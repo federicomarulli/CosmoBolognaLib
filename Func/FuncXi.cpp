@@ -74,7 +74,7 @@ double cosmobl::glob::func_SSM_GSL (double kk, void *params)
 // =====================================================================================
 
 
-double cosmobl::xi_from_Pk (double &rr, vector<double> lgkk, vector<double> lgPk, double k_min, double k_max, double aa, bool GSL, double prec) 
+double cosmobl::xi_from_Pk (const double rr, const vector<double> lgkk, const vector<double> lgPk, const double k_min, const double k_max, const double aa, const bool GSL, const double prec) 
 { 
   double Int = -1.;
   
@@ -116,9 +116,9 @@ double cosmobl::xi_from_Pk (double &rr, vector<double> lgkk, vector<double> lgPk
 // =====================================================================================
 
 
-double cosmobl::xi_from_Pk (double &rr, string &file, int c1, int c2, double k_min, double k_max, double aa, bool GSL, double prec) 
+double cosmobl::xi_from_Pk (const double rr, const string file, const int c1, const int c2, const double k_min, const double k_max, const double aa, const bool GSL, const double prec) 
 {
-  c1 --; c2 --;
+  int C1 = c1-1, C2 = c2-1;
 
   ifstream fin (file.c_str()); checkIO (file,1); 
   
@@ -130,9 +130,9 @@ double cosmobl::xi_from_Pk (double &rr, string &file, int c1, int c2, double k_m
     stringstream ss(line);
     vector<double> cc;
     while (ss>>AA) cc.push_back(AA);
-    if (c1<int(cc.size()) && c2<int(cc.size())) {
-      KK = cc[c1];
-      PK = cc[c2];
+    if (C1<int(cc.size()) && C2<int(cc.size())) {
+      KK = cc[C1];
+      PK = cc[C2];
       if (KK>0 && PK>0) {
 	lgkk.push_back(log10(KK));
 	lgPk.push_back(log10(PK));
@@ -148,7 +148,7 @@ double cosmobl::xi_from_Pk (double &rr, string &file, int c1, int c2, double k_m
 // ============================================================================
 
 
-double cosmobl::Pk_from_xi (double &kk, vector<double> lgrr, vector<double> lgxi, double r_min, double r_max) 
+double cosmobl::Pk_from_xi (const double kk, const vector<double> lgrr, const vector<double> lgxi, const double r_min, const double r_max) 
 {
   cosmobl::classfunc::func_Pk func (lgrr, lgxi, kk);
     
@@ -162,9 +162,9 @@ double cosmobl::Pk_from_xi (double &kk, vector<double> lgrr, vector<double> lgxi
 // ============================================================================
 
 
-double cosmobl::Pk_from_xi (double &kk, string &file,  int c1, int c2, double r_min, double r_max) 
+double cosmobl::Pk_from_xi (const double kk, const string file, const  int c1, const int c2, const double r_min, const double r_max) 
 {
-  c1 --; c2 --;
+  int C1 = c1-1, C2 = c2-1;
 
   ifstream fin (file.c_str()); checkIO (file,1); 
   
@@ -176,9 +176,9 @@ double cosmobl::Pk_from_xi (double &kk, string &file,  int c1, int c2, double r_
     stringstream ss(line);
     vector<double> cc;
     while (ss>>aa) cc.push_back(aa);
-    if (c1<int(cc.size()) && c2<int(cc.size())) {
-      RR = cc[c1];
-      XI = cc[c2];
+    if (C1<int(cc.size()) && C2<int(cc.size())) {
+      RR = cc[C1];
+      XI = cc[C2];
       if (RR>0 && XI>0) {
 	lgrr.push_back(log10(RR));
 	lgxi.push_back(log10(XI));
@@ -194,7 +194,7 @@ double cosmobl::Pk_from_xi (double &kk, string &file,  int c1, int c2, double r_
 // ============================================================================
 
 
-double cosmobl::wp (double &rp, vector<double> rr, vector<double> xi, double r_max) 
+double cosmobl::wp (const double rp, const vector<double> rr, const vector<double> xi, const double r_max) 
 {
   cosmobl::classfunc::func_wp func (rr, xi, rp);
   
@@ -207,7 +207,7 @@ double cosmobl::wp (double &rp, vector<double> rr, vector<double> xi, double r_m
 // ============================================================================
 
 
-double cosmobl::wp (double &rp, string &file, double r_max) 
+double cosmobl::wp (const double rp, const string file, const double r_max) 
 {
   ifstream fin (file.c_str()); checkIO (file,1); 
   
@@ -227,7 +227,7 @@ double cosmobl::wp (double &rp, string &file, double r_max)
 // ============================================================================
 
 
-double cosmobl::sigmaR (double &RR, int &corrType, vector<double> rr, vector<double> corr) 
+double cosmobl::sigmaR (const double RR, const int corrType, const vector<double> rr, const vector<double> corr) 
 {
   double sigmaR = -1;
 
@@ -255,7 +255,7 @@ double cosmobl::sigmaR (double &RR, int &corrType, vector<double> rr, vector<dou
 // ============================================================================
 
 
-double cosmobl::xi_projected_powerlaw (double rp, double r0, double gamma) 
+double cosmobl::xi_projected_powerlaw (const double rp, const double r0, const double gamma) 
 {
   return rp*pow(r0/rp,gamma)*exp(gammln(0.5))*exp(gammln((gamma-1.)*0.5))/exp(gammln(gamma*0.5));
 }
@@ -264,7 +264,7 @@ double cosmobl::xi_projected_powerlaw (double rp, double r0, double gamma)
 // ============================================================================
 
 
-double cosmobl::xi_ratio (double beta)
+double cosmobl::xi_ratio (const double beta)
 { 
   return 1.+2./3.*beta+0.2*beta*beta;
 }
@@ -273,7 +273,7 @@ double cosmobl::xi_ratio (double beta)
 // ============================================================================
 
 
-double cosmobl::xi_ratio (double f_sigma8, double bias_sigma8)
+double cosmobl::xi_ratio (const double f_sigma8, const double bias_sigma8)
 { 
   return (bias_sigma8!=0) ? 1.+2./3.*f_sigma8/bias_sigma8+0.2*pow(f_sigma8/bias_sigma8,2) : -1.e30;
 }
@@ -283,7 +283,7 @@ double cosmobl::xi_ratio (double f_sigma8, double bias_sigma8)
 
 /// @cond glob
 
-double cosmobl::xi_ratio (__attribute__((unused)) double xx, __attribute__((unused)) void *pp, vector<double> par) 
+double cosmobl::xi_ratio (double xx, void *pp, vector<double> par) 
 { 
   if (par.size()==2) return xi_ratio(par[0]);
   
@@ -297,7 +297,7 @@ double cosmobl::xi_ratio (__attribute__((unused)) double xx, __attribute__((unus
 // ============================================================================
 
 
-double cosmobl::error_xi_ratio (double beta, double error_beta) 
+double cosmobl::error_xi_ratio (const double beta, const double error_beta) 
 { 
   return (2./3.+0.4*beta)*error_beta;
 }
@@ -306,7 +306,7 @@ double cosmobl::error_xi_ratio (double beta, double error_beta)
 // ============================================================================
 
 
-double cosmobl::barred_xi_direct (double RR, vector<double> rr, vector<double> xi, double rAPP, double r0, double gamma) 
+double cosmobl::barred_xi_direct (const double RR, const vector<double> rr, const vector<double> xi, const double rAPP, const double r0, const double gamma) 
 { 
   vector<double> xi_;
 
@@ -336,7 +336,7 @@ double cosmobl::barred_xi_direct (double RR, vector<double> rr, vector<double> x
 // ============================================================================
 
 
-double cosmobl::barred_xi__direct (double RR, vector<double> rr, vector<double> xi, double rAPP, double r0, double gamma) 
+double cosmobl::barred_xi__direct (const double RR, const vector<double> rr, const vector<double> xi, const double rAPP, const double r0, const double gamma) 
 { 
   vector<double> xi__;
 
@@ -367,7 +367,7 @@ double cosmobl::barred_xi__direct (double RR, vector<double> rr, vector<double> 
 // ============================================================================
 
 
-double cosmobl::barred_xi_ (double RR, vector<double> rr, vector<double> xi, double rApp, double r0, double gamma) 
+double cosmobl::barred_xi_ (const double RR, const vector<double> rr, const vector<double> xi, const double rApp, const double r0, const double gamma) 
 {   
   vector<double> log_r, log_xi;
 
@@ -390,7 +390,7 @@ double cosmobl::barred_xi_ (double RR, vector<double> rr, vector<double> xi, dou
 // ============================================================================
 
 
-double cosmobl::barred_xi__ (double RR, vector<double> rr, vector<double> xi, double rApp, double r0, double gamma) 
+double cosmobl::barred_xi__ (const double RR, const vector<double> rr, const vector<double> xi, const double rApp, const double r0, const double gamma) 
 {   
   vector<double> log_r, log_xi;
 
@@ -455,16 +455,16 @@ double cosmobl::xi2D_lin_model (double rp, double pi, void *pp, vector<double> p
 // ============================================================================
 
 
-double cosmobl::xi2D_lin_model (double beta, double bias, double xi_real, double xi_, double xi__, double P_2, double P_4)
+double cosmobl::xi2D_lin_model (const double beta, const double bias, const double xi_real, const double xi_, const double xi__, const double P_2, const double P_4)
 {
-  double bias2 = pow(bias,2);
-  xi_real *= bias2;
-  xi_ *= bias2;
-  xi__ *= bias2;
+  double bias2 = bias*bias;
+  double Xi_real = xi_real * bias2;
+  double Xi_ = xi_ * bias2;
+  double Xi__ = xi__ * bias2;
 
-  double xi_0 = multipole_xi0_model(beta, xi_real);
-  double xi_2 = multipole_xi2_model(beta, xi_real, xi_);
-  double xi_4 = multipole_xi4_model(beta, xi_real, xi_, xi__);
+  double xi_0 = multipole_xi0_model(beta, Xi_real);
+  double xi_2 = multipole_xi2_model(beta, Xi_real, Xi_);
+  double xi_4 = multipole_xi4_model(beta, Xi_real, Xi_, Xi__);
 
   return xi_0+xi_2*P_2+xi_4*P_4; 
 }
@@ -473,7 +473,7 @@ double cosmobl::xi2D_lin_model (double beta, double bias, double xi_real, double
 // ============================================================================
 
 
-double cosmobl::xi2D_lin_model (double rp, double pi, double beta, double bias, vector<double> rad_real, vector<double> xi_real, vector<double> xi_, vector<double> xi__, int index, bool bias_nl, double bA)
+double cosmobl::xi2D_lin_model (const double rp, const double pi, const double beta, const double bias, const vector<double> rad_real, const vector<double> xi_real, const vector<double> xi_, const vector<double> xi__, const int index, const bool bias_nl, const double bA)
 { 
   double rr = sqrt(rp*rp+pi*pi);
   double cos = pi/rr;
@@ -488,9 +488,10 @@ double cosmobl::xi2D_lin_model (double rp, double pi, double beta, double bias, 
     xiR__ = interpolated(rr, rad_real, xi__, "Linear", -1);
   }
 
-  if (bias_nl) bias *= b_nl(rr, bA);
+  double Bias = bias;
+  if (bias_nl) Bias *= b_nl(rr, bA);
     
-  double bias2 = pow(bias, 2);
+  double bias2 = Bias*Bias;
   xiR *= bias2;
   xiR_ *= bias2;
   xiR__ *= bias2;
@@ -507,7 +508,7 @@ double cosmobl::xi2D_lin_model (double rp, double pi, double beta, double bias, 
 
 /// @cond glob
 
-double cosmobl::xi2D_model (__attribute__((unused)) double rp, __attribute__((unused)) double pi, void *pp, vector<double> par)
+double cosmobl::xi2D_model (double rp, double pi, void *pp, vector<double> par)
 { 
   if (par.size()<3) {
     string Err = "Error in xi2D_model! par.size() = " + conv(par.size(),par::fINT) + "!";
@@ -556,7 +557,7 @@ double cosmobl::xi2D_model (__attribute__((unused)) double rp, __attribute__((un
 // ============================================================================
 
 
-double cosmobl::xi2D_model (double rp, double pi, double beta, double bias, double sigma12, vector<double> rad_real, vector<double> xi_real, vector<double> xi_, vector<double> xi__, double var, int FV, int index, bool bias_nl, double bA, double v_min, double v_max, int step_v)
+double cosmobl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const vector<double> rad_real, const vector<double> xi_real, const vector<double> xi_, const vector<double> xi__, const double var, const int FV, int index, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
 {
   double delta_v = (v_max-v_min)/step_v;
 
@@ -581,10 +582,11 @@ double cosmobl::xi2D_model (double rp, double pi, double beta, double bias, doub
       xiR_ = interpolated(rr, rad_real, xi_, "Linear", -1);
       xiR__ = interpolated(rr, rad_real, xi__, "Linear", -1);
     }
-    
-    if (bias_nl) bias *= b_nl(rr, bA);
 
-    xi2D += xi2D_lin_model(beta, bias, xiR, xiR_, xiR__, P_2(cos), P_4(cos))*f_v(vel,sigma12,FV)*delta_v;
+    double Bias = bias;
+    if (bias_nl) Bias *= b_nl(rr, bA);
+
+    xi2D += xi2D_lin_model(beta, Bias, xiR, xiR_, xiR__, P_2(cos), P_4(cos))*f_v(vel, sigma12, FV)*delta_v;
   
     vel += delta_v;
     if (index>-1) index ++;
@@ -597,7 +599,7 @@ double cosmobl::xi2D_model (double rp, double pi, double beta, double bias, doub
 // ============================================================================
 
 
-double cosmobl::f_v (double &vel, double &sigma12, int &FV) 
+double cosmobl::f_v (const double vel, const double sigma12, const int FV) 
 {
   if (FV==0) return 1./(sigma12*sqrt(2.))*exp(-sqrt(2.)*fabs(vel)/sigma12); // exponential
   
@@ -608,7 +610,7 @@ double cosmobl::f_v (double &vel, double &sigma12, int &FV)
 // ============================================================================
 
 
-double cosmobl::f_v (double &vel, double &rp, double &pi, double &var, double &sigmav0, double &cmu, double &cs1, double &cs2)
+double cosmobl::f_v (const double vel, const double rp, const double pi, const double var, const double sigmav0, const double cmu, const double cs1, const double cs2)
 {
   
   double sp = sqrt(pow(rp,2)+pow(pi-vel*var,2));
@@ -623,7 +625,7 @@ double cosmobl::f_v (double &vel, double &rp, double &pi, double &var, double &s
 // ============================================================================
 
 
-double cosmobl::f_star (double &xx, double &f_g, double &k_star) 
+double cosmobl::f_star (const double xx, const double f_g, const double k_star) 
 {
   double sigma_star = sqrt((4.*f_g+2.*f_g*f_g)/(k_star*k_star));
   
@@ -634,7 +636,7 @@ double cosmobl::f_star (double &xx, double &f_g, double &k_star)
 // ============================================================================
 
 
-double cosmobl::b_nl (double &rr, double &bA, double bB, double bC)
+double cosmobl::b_nl (const double rr, const double bA, const double bB, const double bC)
 {
   double FF = 1./(1.+pow(rr/bB,bC));
   

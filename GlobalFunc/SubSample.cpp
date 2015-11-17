@@ -38,7 +38,7 @@ using namespace cosmobl;
 // ============================================================================
 
 
-void cosmobl::set_ObjectRegion_SubBoxes (shared_ptr<Catalogue> data, shared_ptr<Catalogue> random, int &nx, int &ny, int &nz)
+void cosmobl::set_ObjectRegion_SubBoxes (shared_ptr<Catalogue> data, shared_ptr<Catalogue> random, const int nx, const int ny, const int nz)
 {
   vector<double> Lim;
   data->MinMax_var(Var::_XX_, Lim, 0);
@@ -77,7 +77,7 @@ void cosmobl::set_ObjectRegion_SubBoxes (shared_ptr<Catalogue> data, shared_ptr<
 // ============================================================================
 
 
-void cosmobl::set_ObjectRegion_mangle (shared_ptr<Catalogue> data, shared_ptr<Catalogue> random, int &nSamples, string &polygonfile, string &dir)
+void cosmobl::set_ObjectRegion_mangle (shared_ptr<Catalogue> data, shared_ptr<Catalogue> random, const int nSamples, const string polygonfile, const string dir)
 {
   string temp_dir = dir+"temp/";
   string mangle_dir = par::DirCosmo+"/CatalogueAnalysis/RandomCatalogue/mangle/";

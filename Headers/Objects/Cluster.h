@@ -75,7 +75,7 @@ namespace cosmobl {
      *  @param weight weight
      *  @return object of class Cluster
      */
-    Cluster (double xx, double yy, double zz, double mass=-1.e30, double richness=-1.e30, double weight=1.) 
+    Cluster (const double xx, const double yy, const double zz, const double mass=-1.e30, const double richness=-1.e30, const double weight=1.) 
       : GenericObject(xx, yy, zz, weight), m_mass(mass), m_richness(richness) {}
 
     /** @brief constructor that uses observed coordinates
@@ -88,7 +88,7 @@ namespace cosmobl {
      *  @param weight weight
      *  @return object of class Cluster
      */
-    Cluster (double ra, double dec, double redshift, Cosmology &cosm, double mass=-1.e30, double richness=-1.e30, double weight=1.) 
+    Cluster (const double ra, const double dec, const double redshift, const Cosmology &cosm, const double mass=-1.e30, const double richness=-1.e30, const double weight=1.) 
       : GenericObject(ra, dec, redshift, cosm, weight), m_mass(mass), m_richness(richness) {}
   
     /** @brief default destructor
@@ -100,25 +100,25 @@ namespace cosmobl {
     /** @brief get the protected member Cluster::m_mass
      *  @return the mass of the cluster
      */
-    double mass () { return m_mass; }
+    double mass () const /*override*/ { return m_mass; }
 
     /** @brief get the protected member Cluster::m_richness
      *  @return the richness of the cluster
      */
-    double richness () { return m_richness; }
+    double richness () const /*override*/ { return m_richness; }
 
 
     /** @brief set the protected member Cluster::m_mass
      *  @param mass the mass of the cluster
      *  @return none
      */
-    void set_mass (double mass) { m_mass = mass; }
+    void set_mass (const double mass) /*override*/ { m_mass = mass; }
 
     /** @brief set the protected member Cluster::m_richness
      *  @param richness the richness of the cluster
      *  @return none
      */
-    void set_richness (double richness) { m_richness = richness; }
+    void set_richness (const double richness) /*override*/ { m_richness = richness; }
 
   };
 }

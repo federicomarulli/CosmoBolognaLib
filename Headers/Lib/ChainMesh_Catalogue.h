@@ -51,7 +51,9 @@ namespace cosmobl {
    */
   class ChainMesh_Catalogue : public ChainMesh
   {
+    
   private:
+    
     /// pointer to catalogue used for the chain-mesh
     shared_ptr<Catalogue> m_catalogue;
 
@@ -75,7 +77,7 @@ namespace cosmobl {
      *  @param rmax the maximum separation
      *  @return none
      */
-    void set_par (double &, shared_ptr<Catalogue>, double &);
+    void set_par (const double, shared_ptr<Catalogue>, const double);
 
     /**
      *  @brief constructor 
@@ -84,29 +86,29 @@ namespace cosmobl {
      *  @param rmax the maximum separation
      *  @return object of class ChainMesh_Catalogue
      */
-    ChainMesh_Catalogue (double &, shared_ptr<Catalogue>, double &);
+    ChainMesh_Catalogue (const double, shared_ptr<Catalogue>, const double);
 
     /**
      *  @brief order the catalogue according to the input vector
      *	@param order vector used to order the catalogue
      *	@return none
      */
-    void get_order (vector<int> &);
+    void get_order (vector<int> &) const;
 
     /**
-     *  @brief return list of objects close to the input
+     *  @brief get list of objects close to the input
      *	@param object the center object
      *	@param ii -1 &rarr; takes all close objects; ii > -1 &rarr;
      *	takes only objects of index > ii
      *	@return vector of close objects
      */
-    vector<shared_ptr<Object> > object_list(shared_ptr<Object>, int ii=-1);
+    vector<shared_ptr<Object> > object_list (shared_ptr<Object>, const int ii=-1);
 
     /**
-     *  @brief return the internal variable m_catalogue
+     *  @brief get the internal variable m_catalogue
      *	@return the internal variable m_catalogue
      */
-    shared_ptr<Catalogue> catalogue() { return m_catalogue; }
+    shared_ptr<Catalogue> catalogue () const { return m_catalogue; }
   };
 
 }

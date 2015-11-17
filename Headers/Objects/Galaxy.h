@@ -75,7 +75,7 @@ namespace cosmobl {
      *  @param weight weight
      *  @return object of class Galaxy
      */
-    Galaxy (double xx, double yy, double zz, double mass=-1.e30, double magnitude=-1.e30, double weight=1.) 
+    Galaxy (const double xx, const double yy, const double zz, const double mass=-1.e30, const double magnitude=-1.e30, const double weight=1.) 
       : GenericObject(xx, yy, zz, weight), m_mass(mass), m_magnitude(magnitude) {}
 
     /** @brief constructor that uses observed coordinates
@@ -88,7 +88,7 @@ namespace cosmobl {
      *  @param weight weight
      *  @return object of class Galaxy
      */
-    Galaxy (double ra, double dec, double redshift, Cosmology &cosm, double mass=-1.e30, double magnitude=-1.e30, double weight=1.) 
+    Galaxy (const double ra, const double dec, const double redshift, const Cosmology &cosm, const double mass=-1.e30, const double magnitude=-1.e30, const double weight=1.) 
       : GenericObject(ra, dec, redshift, cosm, weight), m_mass(mass), m_magnitude(magnitude) {}
 
     /** @brief default destructor
@@ -100,24 +100,24 @@ namespace cosmobl {
     /** @brief get the protected member Galaxy::m_mass
      *  @return the mass of the galaxy
      */
-    double mass () { return m_mass; }
+    double mass () const /*override*/ { return m_mass; }
 
     /** @brief get the protected member Galaxy::m_magnitude
      *  @return the magnitude of the galaxy
      */
-    double magnitude () { return m_magnitude; }
+    double magnitude () const /*override*/ { return m_magnitude; }
 
     /** @brief set the protected member Galaxy::m_mass
      *  @param mass the mass of the galaxy
      *  @return none
      */
-    void set_mass (double mass) { m_mass = mass; } 
+    void set_mass (const double mass) /*override*/ { m_mass = mass; } 
 
     /** @brief set the protected member Galaxy::m_magnitude
      *  @param magnitude the magnitude of the galaxy
      *  @return none
      */
-    void set_magnitude (double magnitude) { m_magnitude = magnitude; }
+    void set_magnitude (const double magnitude) /*override*/ { m_magnitude = magnitude; }
 
   };
 }

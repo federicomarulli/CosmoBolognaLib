@@ -40,7 +40,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::Cosmology::SSR (double RR, string method_Pk, double redshift, string output_root, double kmax, string file_par) 
+double cosmobl::Cosmology::SSR (const double RR, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
 {
   double SS = -1;
 
@@ -76,7 +76,7 @@ double cosmobl::Cosmology::SSR (double RR, string method_Pk, double redshift, st
 // =====================================================================================
 
 
-double cosmobl::Cosmology::SSR_norm (double RR, string method_Pk, double redshift, string output_root, double kmax, string file_par) 
+double cosmobl::Cosmology::SSR_norm (const double RR, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
 {
   double fact = 1.;
 
@@ -93,7 +93,7 @@ double cosmobl::Cosmology::SSR_norm (double RR, string method_Pk, double redshif
 // =====================================================================================
 
 
-double cosmobl::Cosmology::dnSR (__attribute__((unused)) int nd, double RR, string method_Pk, double redshift, string output_root, __attribute__((unused)) string interpType, __attribute__((unused)) int Num, __attribute__((unused)) double stepsize, double kmax, string file_par) 
+double cosmobl::Cosmology::dnSR (const int nd, const double RR, const string method_Pk, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
 {
   double dR = RR*1.e-7;
   double RRR = RR+dR;
@@ -109,7 +109,7 @@ double cosmobl::Cosmology::dnSR (__attribute__((unused)) int nd, double RR, stri
 // =====================================================================================
 
 
-double cosmobl::Cosmology::SSM (double MM, string method_Pk, double redshift, string output_root, double kmax, string file_par) 
+double cosmobl::Cosmology::SSM (const double MM, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
 {
   double SS = -1;
 
@@ -151,7 +151,7 @@ double cosmobl::Cosmology::SSM (double MM, string method_Pk, double redshift, st
 // =====================================================================================
 
 
-double cosmobl::Cosmology::SSM_norm (double MM, string method_Pk, double redshift, string output_root, double kmax, string file_par) 
+double cosmobl::Cosmology::SSM_norm (const double MM, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
 {
   double fact = 1.;
 
@@ -170,7 +170,7 @@ double cosmobl::Cosmology::SSM_norm (double MM, string method_Pk, double redshif
 // =====================================================================================
 
 
-double cosmobl::Cosmology::dnSM (__attribute__((unused)) int nd, double MM, string method_Pk, double redshift, string output_root, __attribute__((unused)) string interpType, __attribute__((unused)) int Num, __attribute__((unused)) double stepsize, double kmax, string file_par) 
+double cosmobl::Cosmology::dnSM (const int nd, const double MM, const string method_Pk, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
 {
  
   double dM = MM*1.e-7;
@@ -197,7 +197,7 @@ double cosmobl::Cosmology::dnSM (__attribute__((unused)) int nd, double MM, stri
 // =====================================================================================
 
 
-string cosmobl::Cosmology::create_grid_sigmaM (string method_SS, double redshift, string output_root, string interpType, int Num, double stepsize, double kmax, string file_par) 
+string cosmobl::Cosmology::create_grid_sigmaM (const string method_SS, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
 { 
   string norm = (m_sigma8>0) ? "_sigma8"+conv(m_sigma8,par::fDP3) : "_scalar_amp"+conv(m_scalar_amp,par::ee3);
   string dir_grid = par::DirCosmo+"Cosmology/grid_SigmaM/unit"+conv(m_unit,par::fINT)+"/";

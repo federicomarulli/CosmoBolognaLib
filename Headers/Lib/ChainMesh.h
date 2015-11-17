@@ -79,7 +79,7 @@ namespace cosmobl {
     /// number of cell(s) for variable(s) 
     vector<long> m_nCell;
 
-    /// the list of cell around a generic center
+    /// the list of cell around a generic centre
     vector<long> m_search_region;
 
     /// the total number of cells
@@ -105,7 +105,7 @@ namespace cosmobl {
      *  @param nDim the number of dimensions
      *  @return none
      */
-    void set_par (double &, long);
+    void set_par (const double, const long);
 
     /**
      *  @brief constructor 
@@ -113,21 +113,29 @@ namespace cosmobl {
      *  @param nDim the number of dimensions
      *  @return object of class ChainMesh
      */
-    ChainMesh(double &, long);
-
-    long pos_to_index(vector<double> &);
-    void index_to_inds(long, vector<long> &, vector<long> &);
-    long inds_to_index(vector<long> &);
-
-    void create_chain_mesh (vector<vector<double> > &, double &, long nMIN=0, long nMAX=300);
-    void create_chain_mesh_m2 (vector<vector<double> > &);
-
-    void get_searching_region (double, double r_min = -1); 
-    vector<long> close_objects (vector<double>, long ii=-1); 
-
-    vector<long> get_list (long);
+    ChainMesh (double const, long const);
     
-    long nCell() { return m_nCell_tot; }
+    /**
+     *  @brief get the private member ChainMesh::m_nCell_tot
+     *  @return total number of cells 
+     */
+    long nCell() const { return m_nCell_tot; }
+    
+    long pos_to_index (const vector<double>) const;
+    
+    long inds_to_index (const vector<long>) const;
+    
+    void index_to_inds (const long, const vector<long>, vector<long> &) const;
+
+    void create_chain_mesh (const vector<vector<double> >, const double , const long nMIN=0, const long nMAX=300);
+    
+    void create_chain_mesh_m2 (const vector<vector<double> >);
+
+    void get_searching_region (const double, const double r_min = -1);
+    
+    vector<long> close_objects (vector<double>, long ii=-1) const; 
+
+    vector<long> get_list (const long) const;
 
   };
 
@@ -163,7 +171,7 @@ namespace cosmobl {
      *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
      *  @return none
      */
-    void set_par (double &, vector<double> &, double &, long nMIN=0, long nMAX=300);
+    void set_par (const double, const vector<double>, const double, const long nMIN=0, const long nMAX=300);
 
     /**
      *  @brief constructor 
@@ -174,7 +182,7 @@ namespace cosmobl {
      *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
      *  @return object of the class ChainMesh1D
      */
-    ChainMesh1D (double &, vector<double> &, double &, long nMIN=0, long nMAX=300);
+    ChainMesh1D (const double, const vector<double>, const double, const long nMIN=0, const long nMAX=300);
   };
 
   /**
@@ -210,7 +218,7 @@ namespace cosmobl {
      *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
      *  @return none
      */
-    void set_par (double &, vector<double> &, vector<double> &, double &, long nMIN=0, long nMAX=300);
+    void set_par (const double, const vector<double>, const vector<double>, const double, const long nMIN=0, const long nMAX=300);
 
     /**
      *  @brief constructor 
@@ -222,7 +230,7 @@ namespace cosmobl {
      *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
      *  @return object of the class ChainMesh2D
      */
-    ChainMesh2D (double &, vector<double> &, vector<double> &, double &, long nMIN=0, long nMAX=300);
+    ChainMesh2D (const double, const vector<double>, const vector<double>, const double, const long nMIN=0, const long nMAX=300);
   };
 
   /**
@@ -260,7 +268,7 @@ namespace cosmobl {
      *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
      *  @return none
      */
-    void set_par (double &, vector<double> &, vector<double> &, vector<double> &, double &, long nMIN=0, long nMAX=300);
+    void set_par (const double, const vector<double>, const vector<double>, const vector<double>, const double, const long nMIN=0, const long nMAX=300);
 
     /**
      *  @brief constructor 
@@ -273,7 +281,7 @@ namespace cosmobl {
      *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
      *  @return object of the class ChainMesh3D
      */
-    ChainMesh3D (double &, vector<double> &, vector<double> &, vector<double> &, double &, long nMIN=0, long nMAX=300);
+    ChainMesh3D (const double, const vector<double>, const vector<double>, const vector<double>, const double, const long nMIN=0, const long nMAX=300);
   };
 
 }

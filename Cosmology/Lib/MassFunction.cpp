@@ -39,7 +39,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::Cosmology::mass_function (double Mass, double redshift, string author, string method_SS, string output_root, double Delta, string interpType, int Num, double stepsize, int norm, double k_min, double k_max, bool GSL, double prec, string file_par) 
+double cosmobl::Cosmology::mass_function (const double Mass, const double redshift, const string author, const string method_SS, const string output_root, const double Delta, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   double fact = (m_unit) ? 1 : m_hh;
   double MASS = Mass*fact;
@@ -60,7 +60,7 @@ double cosmobl::Cosmology::mass_function (double Mass, double redshift, string a
 // =====================================================================================
 
 
-double cosmobl::Cosmology::mass_function_fast (double Mass, double redshift, string author, string method_SS, string output_root, double Delta, string interpType, int Num, double stepsize, int norm, double k_min, double k_max, bool GSL, double prec, string file_par) 
+double cosmobl::Cosmology::mass_function_fast (const double Mass, const double redshift, const string author, const string method_SS, const string output_root, const double Delta, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   double fact = (m_unit) ? 1 : m_hh;
   double MASS = Mass*fact;
@@ -98,7 +98,7 @@ double cosmobl::Cosmology::mass_function_fast (double Mass, double redshift, str
 // =====================================================================================
 
 
-double cosmobl::Cosmology::mass_function (double Mass, double Sigma, double Dln_Sigma, double redshift, string author_MF, string output_root, double Delta, string interpType, int Num, double stepsize, int norm, double k_min, double k_max, bool GSL, double prec, string method_SS, string file_par) 
+double cosmobl::Cosmology::mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string author_MF, const string output_root, const double Delta, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string method_SS, const string file_par) 
 {
   double fact = (m_unit) ? 1 : m_hh;
   double MASS = Mass*fact;
@@ -114,7 +114,7 @@ double cosmobl::Cosmology::mass_function (double Mass, double Sigma, double Dln_
 // =====================================================================================
 
 
-double cosmobl::Cosmology::MF_generator (double Mass, double Sigma, double Dln_Sigma, double redshift, string author, double Delta) 
+double cosmobl::Cosmology::MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string author, const double Delta) 
 { 
   double Z0 = 0.;
   double deltacz = deltac(redshift);
@@ -235,14 +235,14 @@ double cosmobl::Cosmology::MF_generator (double Mass, double Sigma, double Dln_S
 // =====================================================================================
 
 
-double cosmobl::Cosmology::n_haloes (double Mass_min, double Mass_max, double z_min, double z_max, bool angle_rad, string author_MF, string method_SS, string output_root, string interpType, int Num, double stepsize, double k_max, string file_par)
+double cosmobl::Cosmology::n_haloes (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const string author_MF, const string method_SS, const string output_root, const string interpType, const int Num, const double stepsize, const double k_max, const string file_par) 
 {
 
   // ---------- read the grid file ---------- 
 
   double zero = 0.;
   string file_grid = create_grid_sigmaM (method_SS,zero,output_root,interpType,Num,stepsize,k_max,file_par);
-  ifstream fin (file_grid.c_str()); checkIO (file_grid,1); 
+  ifstream fin(file_grid.c_str()); checkIO (file_grid,1); 
   
   double Mass, Sigma, Dln_Sigma;
   vector<double> mass, sigma, dlnsigma;
@@ -280,7 +280,7 @@ double cosmobl::Cosmology::n_haloes (double Mass_min, double Mass_max, double z_
 // =====================================================================================
 
 
-double cosmobl::Cosmology::MhaloMin (int n_halo, double Area, bool angle_rad, double z_min, double z_max, double Mmax, double lgM1_guess, double lgM2_guess, string author_MF, string method_SS, string output_root, string interpType, int Num, double stepsize, double k_max, string file_par)
+double cosmobl::Cosmology::MhaloMin (const int n_halo, const double Area, const bool angle_rad, const double z_min, const double z_max, const double Mmax, const double lgM1_guess, const double lgM2_guess, const string author_MF, const string method_SS, const string output_root, const string interpType, const int Num, const double stepsize, const double k_max, const string file_par) const
 {
   cosmobl::classfunc::func_MhaloMin func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit, n_halo, Area, angle_rad, z_min, z_max, Mmax, author_MF, method_SS, output_root, interpType, Num, stepsize, k_max, file_par);
   
@@ -294,7 +294,7 @@ double cosmobl::Cosmology::MhaloMin (int n_halo, double Area, bool angle_rad, do
 // =====================================================================================
 
 
-double cosmobl::Cosmology::unevolved_mass_function (double mass_accr)
+double cosmobl::Cosmology::unevolved_mass_function (const double mass_accr) const
 {
   double aa = -0.8;
   double mm = mass_accr/aa; // mass_accr = m/M

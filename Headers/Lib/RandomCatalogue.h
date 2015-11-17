@@ -56,7 +56,7 @@ namespace cosmobl {
    *  &rArr; all objects are selected)
    *  @return an object of class Catalogue
    */
-  shared_ptr<Catalogue> random_catalogue_fromFile (vector<string>, double nSub=1.1); 
+  shared_ptr<Catalogue> random_catalogue_fromFile (const vector<string>, const double nSub=1.1); 
 
   /**
    *  @brief read a random catalogue with polar coordinates [ra, dec,
@@ -70,17 +70,15 @@ namespace cosmobl {
    *  @param fact conversion factor
    *  @return an object of class Catalogue
    */
-  shared_ptr<Catalogue> random_catalogue_radecred_fromFile (string &, double &, double &, Cosmology &, double nSub=1.1, double fact=1.); 
+  shared_ptr<Catalogue> random_catalogue_radecred_fromFile (const string, const double, const double, const Cosmology &, const double nSub=1.1, const double fact=1.); 
   
   /**
    *  @brief create a random catalogue in a box
    *  @param catalogue object of class Catalogue
    *  @param nRandom number of random objects
-   *  @param dir vector containing the directories where the random
-   *  catalogues are stored
    *  @return an object of class Catalogue
    */
-  shared_ptr<Catalogue> random_catalogue_box (shared_ptr<Catalogue>, int &, string &);
+  shared_ptr<Catalogue> random_catalogue_box (const shared_ptr<Catalogue>, const int);
 
   /**
    *  @brief create a random catalogue in a box
@@ -107,7 +105,7 @@ namespace cosmobl {
    *
    *  @return an object of class Catalogue
    */
-  shared_ptr<Catalogue> warped_random_catalogue (Cosmology &, Cosmology &, string &, string &, double &, double &);
+  shared_ptr<Catalogue> warped_random_catalogue (const Cosmology &, const Cosmology &, const string, const string, const double, const double);
 
   /**
    *  @brief create a random catalogue in a cone
@@ -119,8 +117,6 @@ namespace cosmobl {
    *  @param [in] cosm object of class Cosmology 
    *
    *  @param [in] Angle angle of the cone 
-   *
-   *  @param [in] dir the directory where the random catalogue is stored
    *
    *  @param [in] step_redshift the number of steps in redshift used to
    *  redshift distribution of the random object; if step_redshift=0
@@ -140,7 +136,7 @@ namespace cosmobl {
    *  @param [in] idum the random seed
    *  @return an object of class Catalogue
    */
-  shared_ptr<Catalogue> random_catalogue_cone (shared_ptr<Catalogue>, int &, Cosmology &, double &, string &, int &, vector<double>, vector<double> &, vector<double> &, int idum=13);
+  shared_ptr<Catalogue> random_catalogue_cone (const shared_ptr<Catalogue>, const int, const Cosmology &, const double, const int, const vector<double>, vector<double> &, vector<double> &, const int idum=13);
 
   /**
    *  @brief create a random catalogue for a mock sample (with polar
@@ -196,15 +192,14 @@ namespace cosmobl {
    *  
    *  @return none
    */
-  void random_redshift_distribution (shared_ptr<Catalogue> random, shared_ptr<Catalogue> data, string &dir_random, int nbin, bool convolution, double sigma); 
-
+  void random_redshift_distribution (const shared_ptr<Catalogue> random, const shared_ptr<Catalogue> data, const string dir_random, const int nbin, const bool convolution, const double sigma);
 
   /// @cond extrandom
-  shared_ptr<Catalogue> random_catalogue_mock_cone (shared_ptr<Catalogue>, int &, Cosmology &, string &, int &, vector<double>);
+  shared_ptr<Catalogue> random_catalogue_mock_cone (const shared_ptr<Catalogue>, const int, const Cosmology &, const string, const int, vector<double>);
 
-  shared_ptr<Catalogue> random_catalogue_VIPERS (int &, Cosmology &, string &, int &, vector<double> &, vector<double> &, vector<double> &, vector<double>, bool, string, string, string, int idum=13); 
+  shared_ptr<Catalogue> random_catalogue_VIPERS (const int, const Cosmology &, const string, const int, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const bool, string, const string, const string, const int idum=13); 
 
-  shared_ptr<Catalogue> random_sdss_angular_distribution (int &, string &, string &, bool veto=0); 
+  shared_ptr<Catalogue> random_sdss_angular_distribution (const int, const string, const string, const bool veto=0); 
   /// @endcond
   
   ///@}

@@ -175,7 +175,7 @@ namespace cosmobl {
    *  @param msg string containing the warning message
    *  @return none
    */
-  inline void WarningMsg (string msg) { cerr << par::col_blue << msg << cosmobl::par::col_default << endl; }
+  inline void WarningMsg (const string msg) { cerr << par::col_blue << msg << cosmobl::par::col_default << endl; }
 
   /**
    *  @brief error message
@@ -183,7 +183,7 @@ namespace cosmobl {
    *  @return none
    *  @warning this function terminates the programs
    */
-  inline void ErrorMsg (string msg) { cerr << par::col_red << msg << cosmobl::par::col_default << endl; exit(1); }
+  inline void ErrorMsg (const string msg) { cerr << par::col_red << msg << cosmobl::par::col_default << endl; exit(1); }
   
   /**
    *  @brief produce a beep using the software totem
@@ -216,7 +216,7 @@ namespace cosmobl {
    *  @warning the default value for any double variable in the
    *  CosmoBolognaLib should be set to -1.e30
    */
-  inline bool isSet (double var) 
+  inline bool isSet (const double var) 
   {
     return (var>-9.e29) ? 1 : 0;
   }
@@ -231,7 +231,7 @@ namespace cosmobl {
    *  @warning the default value for any double variable in the
    *  CosmoBolognaLib should be set to -1.e30
    */
-  inline bool isSet (vector<double> vect) 
+  inline bool isSet (const vector<double> vect) 
   {
     bool is = 1;
     int ind = 0;
@@ -246,11 +246,10 @@ namespace cosmobl {
    *  @param fact output format 
    *  @return a string containing T
    */
-  template <typename T> string conv (T val, const char *fact) {
+  template <typename T> string conv (const T val, const char *fact) {
     char VAL[20]; sprintf (VAL, fact, val); 
     return string(VAL);
   }
-  
   
   /**
    *  @brief the nearest integer
@@ -258,7 +257,7 @@ namespace cosmobl {
    *  @return the integer value nearest to val
    */
   template <typename T> 
-    int nint (T val) 
+    int nint (const T val) 
     {
       return (val<0) ? val-0.5 : val+0.5;
     }
@@ -270,7 +269,7 @@ namespace cosmobl {
    *  -1.e30
    */
   template <typename T> 
-    T Log (T val) 
+    T Log (const T val) 
     {
       return (val>0) ? log10(val) : -1.e30;
     }
@@ -280,42 +279,42 @@ namespace cosmobl {
    *  @param s a short variable
    *  @return the converted variable s
    */
-  short ShortSwap (short);
+  short ShortSwap (const short);
 
   /**
    *  @brief endian conversion of an integer variable
    *  @param i an integer variable
    *  @return the converted variable i
    */
-  int IntSwap (int);
+  int IntSwap (const int);
 
   /**
    *  @brief endian conversion of a long integer variable
    *  @param i a long integer variable
    *  @return the converted variable i
    */
-  long LongSwap (long);
+  long LongSwap (const long);
 
   /**
    *  @brief endian conversion of a long long integer variable
    *  @param i a long long integer variable
    *  @return the converted variable i
    */
-  long long LongLongSwap (long long);
+  long long LongLongSwap (const long long);
 
   /**
    *  @brief endian conversion of a float variable
    *  @param f a flot variable
    *  @return the converted variable f
    */
-  float FloatSwap (float);
+  float FloatSwap (const float);
 
   /**
    *  @brief endian conversion of a double variable
    *  @param d a double variable
    *  @return the converted variable d
    */
-  double DoubleSwap (double);
+  double DoubleSwap (const double);
   
   /**
    *  @brief 1D interpolation
@@ -345,7 +344,7 @@ namespace cosmobl {
    *  @warning if _xx is outside the range of the input vector xx, the
    *  returned value is the extrapolation
    */
-  double interpolated (double, vector<double>, vector<double>, string, int, double &);
+  double interpolated (const double, const vector<double>, const vector<double>, const string, const int, double &);
   
    /**
    *  @brief 1D interpolation
@@ -373,7 +372,7 @@ namespace cosmobl {
    *  @warning if _xx is outside the range of the input vector xx, the
    *  returned value is the extrapolation
    */
-  double interpolated (double, vector<double>, vector<double>, string, int);
+  double interpolated (const double, const vector<double>, const vector<double>, const string, const int);
   
   /**
    *  @brief 2D interpolation
@@ -409,7 +408,7 @@ namespace cosmobl {
    *  vectors x1 and/or x2, the returned value is the extrapolatation
    *
    */
-  double interpolated_2D (double, double, vector<double>, vector<double>, vector<vector<double> >, string, int);
+  double interpolated_2D (const double, const double, const vector<double>, const vector<double>, const vector<vector<double> >, const string, const int);
   
   /**
    *  @brief check if a file can be opened
@@ -418,7 +417,7 @@ namespace cosmobl {
    *  &rarr; the file is open for output operations
    *  @return none
    */
-  void checkIO (string file, bool isInput);
+  void checkIO (const string, const bool);
 
   /**
    *  @brief convert a map from a gnuplot file to a SM file 
@@ -426,21 +425,21 @@ namespace cosmobl {
    *  @param file_sm output SM file  
    *  @return none
    */
-  void convert_map_gnuplot_sm (string &file_gnu, string &file_sm);
+  void convert_map_gnuplot_sm (const string, const string);
 
   /**
    *  @brief set evironment variables
    *  @param Var vector containing the evironment variables to be set
    *  @return none
    */
-  void set_EnvVar (vector<string> Var);
+  void set_EnvVar (const vector<string>);
 
   /**
    *  @brief check if an environment variable exists
    *  @param Var the evironment variable to be checked
    *  @return none
    */
-  void check_EnvVar (string Var); 
+  void check_EnvVar (const string); 
 
   /**
    *  @brief get the memory used by current process in kB
@@ -453,7 +452,7 @@ namespace cosmobl {
    *  @return the Physical (RAM) or Virtual Memory used by current
    *  process in kB
    */
-  int used_memory (int);
+  int used_memory (const int);
 
   /**
    *  @brief check if the memory used by current process is larger
@@ -475,42 +474,11 @@ namespace cosmobl {
    *
    *  @return 0 &rarr; memory problems; 1 &rarr; no memory problems 
    */
-  int check_memory (double, bool exit=1, string func="", int type=1);
+  int check_memory (const double, const bool exit=1, const string func="", const int type=1);
   
 
   // ============================================================================================
 
-  /**
-   *  @brief check if a file can be opened
-   *  @param file the file name
-   *  @param isInput 1 &rarr; the file is open for input operations; 0
-   *  &rarr; the file is open for output operations
-   *  @return none
-   */
-  void checkIO (string, bool);
-
-  /**
-   *  @brief convert a map from a gnuplot file to a SM file 
-   *  @param file_gnu input gnuplot file
-   *  @param file_sm output SM file  
-   *  @return none
-   */
-  void convert_map_gnuplot_sm (string &, string &);
-
-  /**
-   *  @brief set evironment variables
-   *  @param Var vector containing the evironment variables to be set
-   *  @return none
-   */
-  void set_EnvVar (vector<string>);
-
-  // check if an environment variable exists
-  /**
-   *  @brief check if an environment variable exists
-   *  @param Var the evironment variable to be checked
-   *  @return none
-   */
-  void check_EnvVar (string); 
   
   /**
    *  @brief extract a set of random numbers with a given probability
@@ -526,7 +494,7 @@ namespace cosmobl {
    *  @param [in] n_max the maximum number of the output set
    *  @return none
    */
-  void random_numbers (int, int, vector<double>, vector<double>, vector<double> &, double n_min=-1.e30, double n_max=1.e30);
+  void random_numbers (const int, const int, const vector<double>, const vector<double>, vector<double> &, const double n_min=-1.e30, const double n_max=1.e30);
 
 
   /* ======== Cosimo Fedeli ======== */
@@ -552,7 +520,7 @@ namespace cosmobl {
    *  @return none
    */
   template <typename T> 
-    void print (vector<T> vect) 
+    void print (const vector<T> vect) 
     {
       for (auto &&i : vect) cout << i << endl;
     }
@@ -564,7 +532,7 @@ namespace cosmobl {
    *  @return none
    */
   template <typename T> 
-    void print (vector<T> vect1, vector<T> vect2) 
+    void print (const vector<T> vect1, const vector<T> vect2) 
     {
       if (vect1.size()!=vect2.size()) ErrorMsg("Error in print of Func.h!");
       for (unsigned int i=0; i<vect1.size(); i++) cout <<vect1[i]<<"   "<<vect2[i]<<endl;
@@ -576,7 +544,7 @@ namespace cosmobl {
    *  @return none
    */
   template <typename T> 
-    void print (vector< vector<T> > mat) 
+    void print (const vector<vector<T> > mat) 
     {
       for (unsigned int i=0; i<mat.size(); i++) {
 	for (unsigned int j=0; j<mat[i].size(); j++) 
@@ -591,7 +559,7 @@ namespace cosmobl {
    *  @return the minimum element of the vector vect
    */
   template <typename T> 
-    T Min (vector<T> vect) 
+    T Min (const vector<T> vect) 
     {
       if (vect.size()==0) ErrorMsg("Error in function Min of Func.h: vect.size=0!");
       return *min_element(vect.begin(), vect.end());
@@ -603,7 +571,7 @@ namespace cosmobl {
    *  @return the maximum element of the vector vect
    */
   template <typename T> 
-    T Max (vector<T> vect) 
+    T Max (const vector<T> vect) 
     {
       if (vect.size()==0) ErrorMsg("Error in function Max of Func.h: vect.size=0!");
       return *max_element(vect.begin(), vect.end());
@@ -612,17 +580,16 @@ namespace cosmobl {
   /**
    *  @brief get the unique elements of a vector
    *  @param [in] vect_in a vector
-   *  @param [out] vect_out vector containing the unique elements of
-   *  the input vector vect_in
-   *  @return none
+   *  @return vector containing the unique elements of the input
+   *  vector vect_in
    */
   template <typename T> 
-    void different_elements (vector<T> vect_in, vector<T> &vect_out) 
+    vector<T> different_elements (const vector<T> vect_in) 
     { 
-      sort (vect_in.begin(),vect_in.end());
-      typename vector<T>::iterator it = unique (vect_in.begin(),vect_in.end()); 
+      sort(vect_in.begin(), vect_in.end());
+      typename vector<T>::iterator it = unique (vect_in.begin(), vect_in.end()); 
       vect_in.resize(it-vect_in.begin());    
-      vect_out = vect_in;
+      return vect_in;
     }
 
   /**
@@ -632,10 +599,10 @@ namespace cosmobl {
    *  vect_in
    */
   template <typename T> 
-    int N_different_elements (vector<T> vect) 
+    int N_different_elements (const vector<T> vect) 
     { 
       sort (vect.begin(),vect.end());
-      typename vector<T>::iterator it = unique (vect.begin(),vect.end()); 
+      typename vector<T>::iterator it = unique (vect.begin(), vect.end()); 
       vect.resize(it-vect.begin());    
       return vect.size();
     }
@@ -688,7 +655,7 @@ namespace cosmobl {
    *  @return none
    */
   template <typename T> 
-    void Erase_lines (vector< vector<T> > &Mat, vector<int> ll) 
+    void Erase_lines (vector<vector<T> > &Mat, vector<int> ll) 
     {
       for (auto &&i : ll)
 	if (i>=int(Mat.size())) ErrorMsg("Error in Erase_lines of Func.h!");
@@ -707,7 +674,7 @@ namespace cosmobl {
    *  @return none
    */
   template <typename T> 
-    void Erase_columns (vector< vector<T> > &Mat, vector<int> col) 
+    void Erase_columns (vector<vector<T> > &Mat, vector<int> col) 
     {
       for (auto &&i : col)
 	for (auto &&j : Mat)
@@ -769,7 +736,7 @@ namespace cosmobl {
    *  dimensions are equal
    */
   template <typename T> 
-    bool isDimEqual (vector<T> vect1, vector<T> vect2) 
+    bool isDimEqual (const vector<T> vect1, const vector<T> vect2) 
     {
       return (vect1.size()==vect2.size()) ? 1 : 0;
     }
@@ -782,7 +749,7 @@ namespace cosmobl {
    *  dimensions are equal
    */
   template <typename T> 
-    bool isDimEqual (vector<vector<T> > mat1, vector<vector<T> > mat2) 
+    bool isDimEqual (const vector<vector<T> > mat1, const vector<vector<T> > mat2) 
     {
       bool is = (mat1.size()==mat2.size()) ? 1 : 0;
       if (is) 
@@ -802,7 +769,7 @@ namespace cosmobl {
    *  @return none
    */
   template <typename T> 
-    void checkDim (vector<T> vect, int val, string vector) 
+    void checkDim (const vector<T> vect, const int val, const string vector) 
     {
       if (int(vect.size())<=val) {
 	string Err = "Error in checkDim of Func.h! The dimension of: " + vector + " is:" + conv(vect.size(),par::fINT) + " <= " + conv(val,par::fINT) + "!";
@@ -821,7 +788,7 @@ namespace cosmobl {
    *  @return none
    */
   template <typename T> 
-    void checkDim (vector<T> mat, int i, int j, string matrix) 
+    void checkDim (const vector<T> mat, const int i, const int j, const string matrix) 
     {
       if (int(mat.size())<=i) {
 	string Err = "Error in checkDim of Func.h! The dimension of: " + matrix + " is:" + conv(mat.size(),par::fINT) + " <= " + conv(i,par::fINT) + "!";
@@ -844,7 +811,7 @@ namespace cosmobl {
    *  @return none
    */
   template <typename T> 
-    vector<T> linear_bin_vector (size_t nn, T min, T max)
+    vector<T> linear_bin_vector (const size_t nn, const T min, const T max)
     {
       vector<T> vv(nn);
       for (size_t i = 0; i<nn; i++)
@@ -861,7 +828,7 @@ namespace cosmobl {
    *  @return none
    */
   template <typename T> 
-    vector<T> logarithmic_bin_vector (size_t nn, T min, T max)
+    vector<T> logarithmic_bin_vector (const size_t nn, const T min, const T max)
     {
       vector<T> vv(nn);
       for (size_t i=0; i<nn; i++)
@@ -922,7 +889,7 @@ namespace cosmobl {
    *  @param dim dimension of the two vectors 
    *  @return none
    */
-  void sort_2vectors (vector<double>::iterator, vector<double>::iterator, int);
+  void sort_2vectors (vector<double>::iterator, vector<double>::iterator, const int);
 
   /**
    *  @brief sort the elements of a vectors, and the elements of two
@@ -934,7 +901,7 @@ namespace cosmobl {
    *  @param dim dimension of the three vectors 
    *  @return none
    */
-  void sort_3vectors (vector<double>::iterator, vector<double>::iterator, vector<double>::iterator, int);
+  void sort_3vectors (vector<double>::iterator, vector<double>::iterator, vector<double>::iterator, const int);
 
   /**
    *  @brief sort the elements of a vectors, and the elements of three
@@ -947,7 +914,7 @@ namespace cosmobl {
    *  @param dim dimension of the four vectors 
    *  @return none
    */
-  void sort_4vectors (vector<double>::iterator, vector<double>::iterator, vector<double>::iterator, vector<double>::iterator, int);
+  void sort_4vectors (vector<double>::iterator, vector<double>::iterator, vector<double>::iterator, vector<double>::iterator, const int);
 
   /**
    *  @brief matrix multiplication
@@ -958,9 +925,9 @@ namespace cosmobl {
    *  @param Mat2 STL vector of vectors, i.e. a matrix
    *  @return Mat1*Mat2
    */
-  inline vector< vector<double> > operator * (const vector< vector<double> > &Mat1, const vector< vector<double> > &Mat2)
+  inline vector<vector<double> > operator * (const vector<vector<double> > &Mat1, const vector<vector<double> > &Mat2)
   {   
-    vector< vector<double> > MatP(Mat1.size(), vector<double>(Mat2[0].size(),0.));
+    vector<vector<double> > MatP(Mat1.size(), vector<double>(Mat2[0].size(),0.));
   
     for (unsigned int i=0; i<Mat1.size(); i++) 
       for (unsigned int j=0; j<Mat2[0].size(); j++) {
@@ -1004,7 +971,7 @@ namespace cosmobl {
    *  @param [in] prec the precision required 
    *  @return none
    */
-  void invert_matrix (vector<vector<double> >, vector<vector<double> > &, double prec=1.e-10); 
+  void invert_matrix (const vector<vector<double> >, vector<vector<double> > &, const double prec=1.e-10); 
 
   /**
    *  @brief method to invert a matrix using tge GSL
@@ -1015,7 +982,7 @@ namespace cosmobl {
    *  @param [in] prec the precision required 
    *  @return none
    */
-  void invert_matrix (vector<vector<double> >, vector<vector<double> > &, int, int, double prec=1.e-10); 
+  void invert_matrix (const vector<vector<double> >, vector<vector<double> > &, const int, const int, const double prec=1.e-10); 
 
   /**
    *  @brief method to invert a 'small' matrix 
@@ -1024,7 +991,7 @@ namespace cosmobl {
    *  @param [in] prec the precision required 
    *  @return none
    */
-  void invert_small_matrix (vector< vector<double> >, vector< vector<double> > &, double prec=1.e-10);
+  void invert_small_matrix (const vector<vector<double> >, vector<vector<double> > &, const double prec=1.e-10);
 
   /**
    *  @brief compute the covariance matrix
@@ -1034,7 +1001,7 @@ namespace cosmobl {
    *  to n-1/n (for Jackknife)
    *  @return none
    */
-  void covariance_matrix (vector< vector<double> >, vector< vector<double> > &, bool JK = 0);
+  void covariance_matrix (const vector<vector<double> >, vector<vector<double> > &, const bool JK = 0);
 
   /**
    *  @brief compute the covariance matrix
@@ -1044,16 +1011,16 @@ namespace cosmobl {
    *  @param [out] cov the output covariance matrix
    *  @return none
    */
-  void covariance_matrix (vector<string>, vector<double> &, vector<double> &, vector< vector<double> > &);
+  void covariance_matrix (const vector<string>, vector<double> &, vector<double> &, vector<vector<double> > &);
 
 
   /* ======== Alfonso Veropalumbo ======== */
 
   // read and invert the covariance matrix
-  void read_cov (string, vector< vector<double> > &, vector<vector<double> > &, int, int);
+  void read_cov (const string, vector<vector<double> > &, vector<vector<double> > &, const int, const int);
 
   // fill a vector from a given distribution 
-  void fill_distr (vector<double> &, double &, vector<double> &,vector<double> &,double &,vector<double> &);
+  void fill_distr (vector<double> &, double &, vector<double> &, vector<double> &, double &, vector<double> &);
   void fill_distr (vector<double>, vector<double>, double, vector<double> &);
   void fill_distr (int, vector<double> &, vector<double> &, vector<double> &, double &, double &, int);
 
@@ -1078,7 +1045,7 @@ namespace cosmobl {
    *  @return the average of vect
    */
   template <typename T> 
-    T Average (vector<T> vect) 
+    T Average (const vector<T> vect) 
     {
       T aver = 0;
       if (vect.size()>0) 
@@ -1093,7 +1060,7 @@ namespace cosmobl {
    *  @return the weighted average of vect
    */
   template <typename T> 
-    T Average (vector<T> vect, vector<T> weight) 
+    T Average (const vector<T> vect, const vector<T> weight) 
     {
       if (vect.size()!=weight.size()) ErrorMsg("Error in Average of Func.h");
       T aver = 0;
@@ -1112,7 +1079,7 @@ namespace cosmobl {
    *  @return &sigma;
    */
   template <typename T> 
-    T Sigma (vector<T> vect) 
+    T Sigma (const vector<T> vect) 
     {
       T aver = Average(vect);
       T sigma = 0.;
@@ -1194,7 +1161,7 @@ namespace cosmobl {
    *  @param [out] curt the kurtosis
    *  @return none
    */
-  void Moment(vector<double>, double *, double *, double *, double *, double *, double *);
+  void Moment (const vector<double>, double &, double &, double &, double &, double &, double &);
 
   ///@}
 
@@ -1317,7 +1284,7 @@ namespace cosmobl {
    *  @return the Maxwellian distribution, P(vel)
    */
   template <typename T> 
-    T maxwellian_distr (T vel, T sigma) 
+    T maxwellian_distr (const T vel, const T sigma) 
     {
       return sqrt(54./par::pi)*pow(vel/sigma,2)*exp(-1.5*pow(vel/sigma,2))/sigma;
     }
@@ -1330,7 +1297,7 @@ namespace cosmobl {
    *  @return the power-law function: (x/x<SUB>0</SUB>)<SUP>&gamma;</SUP>
    */
   template <typename T> 
-    T powerlaw (T xx, T x0, T gamma)
+    T powerlaw (const T xx, const T x0, const T gamma)
     {
       return pow(xx/x0,-gamma);
     }
@@ -1344,7 +1311,7 @@ namespace cosmobl {
    *  @return the double power-law function
    */
   template <typename T> 
-    T double_powerlaw (T xx, T x0, T alpha, T beta) 
+    T double_powerlaw (const T xx, const T x0, const T alpha, const T beta) 
     {
       return pow(2.,beta-alpha)/(pow(xx/x0,alpha)*pow(1.+xx/x0,beta-alpha));
     }
@@ -1355,7 +1322,7 @@ namespace cosmobl {
    *  @return the top-hat window function
    */
   template <typename T> 
-    T WW (T kR) 
+    T WW (const T kR) 
     {
       return 3.*(sin(kR)-kR*cos(kR))/pow(kR,3);
     }
@@ -1367,7 +1334,7 @@ namespace cosmobl {
    *  @return the radius
    */
   template <typename T> 
-    T Radius (T Mass, T Rho) 
+    T Radius (const T Mass, const T Rho) 
     {
       return pow(3.*Mass/(4.*par::pi*Rho),1./3.); 
     }
@@ -1379,7 +1346,7 @@ namespace cosmobl {
    *  @return the mass
    */
   template <typename T> 
-    T Mass (T RR, T Rho) 
+    T Mass (const T RR, const T Rho) 
     {
       return 4./3.*par::pi*Rho*pow(RR,3);
     }
@@ -1394,7 +1361,7 @@ namespace cosmobl {
    *  @return the radial velocity
    */
   template <typename T> 
-    T radial_velocity (T vx, T vy, T vz, T ra, T dec)
+    T radial_velocity (const T vx, const T vy, const T vz, const T ra, const T dec)
     {
       return vx*cos(dec)*sin(ra)+vy*cos(dec)*cos(ra)+vz*sin(dec);
     }
@@ -1405,7 +1372,7 @@ namespace cosmobl {
    *  @return P<SUB>2</SUB>
    */
   template <typename T> 
-    T P_2 (T x) 
+    T P_2 (const T x) 
     {
       return (3.*x*x-1.)*0.5;
     }
@@ -1416,7 +1383,7 @@ namespace cosmobl {
    *  @return P<SUB>4</SUB>
    */
   template <typename T> 
-    T P_4 (T x) 
+    T P_4 (const T x) 
     {
       return (35.*x*x*x*x-30.*x*x+3.)*0.125;
     }
@@ -1427,7 +1394,7 @@ namespace cosmobl {
    *  @return P<SUB>6</SUB>
    */
   template <typename T> 
-    T P_6 (T x) 
+    T P_6 (const T x) 
     {
       return (231.*x*x*x*x*x*x-315.*x*x*x*x+105.*x*x-5.)*0.0625;
     }
@@ -1457,7 +1424,7 @@ namespace cosmobl {
    *  @param [out] err vector containing the Poisson errors
    *  @return none
    */
-  void measure_var_function (vector<double>, int &, double &, double &, double &, vector<double> &, vector<double> &, vector<double> &);
+  void measure_var_function (const vector<double>, const int, const double, const double, const double, vector<double> &, vector<double> &, vector<double> &);
 
   /**
    *  @brief fit a given set of data with a quadratic function 
@@ -1469,7 +1436,7 @@ namespace cosmobl {
    *  @param [out] CC the best-fit parameter C
    *  @return none
    */ 
-  void quad_fit (vector<double>, vector<double>, vector<double>, double *, double *, double *);
+  void quad_fit (const vector<double>, const vector<double>, const vector<double>, double &, double &, double &);
 
   /**
    *  @brief fit a given set of data with a Gaussian function 
@@ -1479,7 +1446,7 @@ namespace cosmobl {
    *  @param [out] sigma the best-fit value of &sigma;
    *  @return none
    */
-  void gaussian_fit (vector<double>, vector<double>, double *, double *);
+  void gaussian_fit (const vector<double>, const vector<double>, double &, double &);
 
   /**
    *  @brief convolve a given set of data with a Gaussian function
@@ -1489,7 +1456,7 @@ namespace cosmobl {
    *  @param sigma &sigma;
    *  @return the Gaussian convolution
    */
-  double gaussian_convolution (vector<double>, vector<double>, double &, double &);
+  double gaussian_convolution (const vector<double>, const vector<double>, const double, const double);
 
   /**
    *  @brief derive and store the number distribution of a given
@@ -1512,7 +1479,7 @@ namespace cosmobl {
    *  @param [in] sigma &sigma; of the Gaussian kernel
    *  @return none
    */
-  void distribution (vector<double> &, vector<double> &, vector<double>, vector<double>, int, bool linear=1, string file_out="NULL", double fact=1., double V1=-1.e30, double V2=-1.e30, bool bin_type=1, bool conv=0, double sigma=0);
+  void distribution (vector<double> &, vector<double> &, const vector<double>, const vector<double>, const int, const bool linear=1, const string file_out="NULL", const double fact=1., const double V1=-1.e30, const double V2=-1.e30, const bool bin_type=1, const bool conv=0, const double sigma=0);
 
   /**
    *  @brief simple Monte Carlo integration of f(x)
@@ -1521,7 +1488,7 @@ namespace cosmobl {
    *  @param x2 maximum limit of the integral
    *  @return \f$\int_{x1}^{x2} f(x)dx\f$
    */
-  double MC_Int (double func(double), double x1, double x2); 
+  double MC_Int (double func(const double), const double x1, const double x2); 
 
   /**
    *  @brief simple Monte Carlo integration of f(x,A)
@@ -1531,7 +1498,7 @@ namespace cosmobl {
    *  @param x2 maximum limit of the integral
    *  @return \f$\int_{x1}^{x2} f(x)dx\f$
    */
-  double MC_Int (double func(double, double AA), double AA, double x1, double x2); 
+  double MC_Int (double func(const double, const double AA), const double AA, const double x1, double x2); 
   
   /**
    *  @brief simple Monte Carlo integration of f(x,A,B,C,D,E)
@@ -1545,7 +1512,7 @@ namespace cosmobl {
    *  @param x2 maximum limit of the integral
    *  @return \f$\int_{x1}^{x2} f(x,A,B,C,D,E)dx\f$
    */
-  double MC_Int (double func(double, double AA, double BB, double CC, double DD, double EE), double AA, double BB, double CC, double DD, double EE, double x1, double x2); 
+  double MC_Int (double func(const double, const double AA, const double BB, const double CC, const double DD, const double EE), const double AA, const double BB, const double CC, const double DD, const double EE, const double x1, const double x2); 
 
   // ============================================================================================
  
@@ -1568,7 +1535,7 @@ namespace cosmobl {
    *  @param stepsize the binning size
    *  @return the first derivative of the function y(x)
    */
-  double D1 (double, vector<double>, vector<double>, string, int, double);
+  double D1 (const double, const vector<double>, const vector<double>, const string, const int, const double);
 
   /**
    *  @brief compute the second derivative of a given function
@@ -1589,7 +1556,7 @@ namespace cosmobl {
    *  @param stepsize the binning size
    *  @return the second derivative of the function y(x)
    */
-  double D2 (double, vector<double>, vector<double>, string, int, double);
+  double D2 (const double, const vector<double>, const vector<double>, const string, const int, const double);
 
   /**
    *  @brief compute the n-th order derivative of a given function
@@ -1611,7 +1578,7 @@ namespace cosmobl {
    *  @param stepsize the binning size
    *  @return the nd derivative of the function y(x)
    */
-  double Deriv (int, double, vector<double>, vector<double>, string, int Num=-1, double stepsize=1.);
+  double Deriv (const int, const double, const vector<double>, const vector<double>, const string, const int Num=-1, const double stepsize=1.);
 
   /**
    *  @brief compute the n-th order derivative of a given function
@@ -1632,7 +1599,7 @@ namespace cosmobl {
    *  @param stepsize the binning size
    *  @return the nd derivative of the function y(x)
    */
-  template<typename T> double Deriv(int nd, double XX, T &Func, string interpType, int Num=-1, double stepsize=1.) {
+  template<typename T> double Deriv(const int nd, const double XX, const T &Func, const string interpType, const int Num=-1, const double stepsize=1.) {
     double err = -1.;
     double DD = dfridr(Func, XX, stepsize, err);
       
@@ -1667,39 +1634,39 @@ namespace cosmobl {
   /**
    *  @brief create a 1D grid given an input function
    *  @param file_grid the file with the input function
-   *  @param func the input function
-   *  @param par the function parameters
-   *  @param bin the number of bins in the grid
-   *  @param x_min the minimum limit of the grid
-   *  @param x_max the maximum limit of the grid
-   *  @param binning the binning type: it can be "lin", "loglin" or
+   *  @param [in] func the input function
+   *  @param [in] par the function parameters
+   *  @param [in] bin the number of bins in the grid
+   *  @param [in] x_min the minimum limit of the grid
+   *  @param [in] x_max the maximum limit of the grid
+   *  @param [in] binning the binning type: it can be "lin", "loglin" or
    *  "log"
-   *  @param xx vector containing the grid points
-   *  @param yy vector containing the values of the function at the
+   *  @param [in,out] xx vector containing the grid points
+   *  @param [in,out] yy vector containing the values of the function at the
    *  grid points
    *  @return none
    */
-  void bin_function (string, double func(double, void*), void *, int, double, double, string, vector<double> &, vector<double> &);
+  void bin_function (const string, double func(double, void*), void *, const int, const double, const double, const string, vector<double> &, vector<double> &);
 
   /**
    *  @brief create a 2D grid given an input function
-   *  @param file_grid the file with the input function
-   *  @param func the input function
-   *  @param par the function parameters
-   *  @param bin the number of bins in the grid
-   *  @param x1_min the minimum limit of the grid in one direction
-   *  @param x1_max the maximum limit of the grid in one direction
-   *  @param x2_min the minimum limit of the grid in one direction
-   *  @param x2_max the maximum limit of the grid in one direction
-   *  @param binning the binning type: it can be "lin", "loglin" or
+   *  @param [in] file_grid the file with the input function
+   *  @param [in] func the input function
+   *  @param [in] par the function parameters
+   *  @param [in] bin the number of bins in the grid
+   *  @param [in] x1_min the minimum limit of the grid in one direction
+   *  @param [in] x1_max the maximum limit of the grid in one direction
+   *  @param [in] x2_min the minimum limit of the grid in one direction
+   *  @param [in] x2_max the maximum limit of the grid in one direction
+   *  @param [in] binning the binning type: it can be "lin", "loglin" or
    *  "log"
-   *  @param xx1 vector containing the grid points in one direction
-   *  @param xx2 vector containing the grid points in one direction
-   *  @param yy vector containing the values of the function at the
+   *  @param [in,out] xx1 vector containing the grid points in one direction
+   *  @param [in,out] xx2 vector containing the grid points in one direction
+   *  @param [in,out] yy vector containing the values of the function at the
    *  grid points
    *  @return none
    */
-  void bin_function_2D (string, double func(double *, size_t, void *), void *, int, double, double, double, double, string, vector<double> &, vector<double> &, vector< vector<double> > &);
+  void bin_function_2D (const string, double func(double *, size_t, void *), void *, const int, const double, const double, const double, const double, const string, vector<double> &, vector<double> &, vector<vector<double> > &);
 
   /// @cond glob
   double func_grid_lin (double, void *);
@@ -1739,7 +1706,7 @@ namespace cosmobl {
    *  @param [out] dd the comoving distance
    *  @return none
    */
-  void polar_coord (double, double, double, double *, double *, double *); 
+  void polar_coord (const double, const double, const double, double &, double &, double &); 
 
   /**
    *  @brief conversion from polar coordinates to Cartesian
@@ -1753,7 +1720,7 @@ namespace cosmobl {
    *  @param [out] ZZ the Cartesian coordinate z
    *  @return none
    */
-  void cartesian_coord (double, double, double, double *, double *, double *);
+  void cartesian_coord (const double, const double, const double, double &, double &, double &);
 
   /**
    *  @brief conversion from Cartesian coordinates to polar
@@ -1767,7 +1734,7 @@ namespace cosmobl {
    *  @param [out] dd vector containing the comoving distances
    *  @return none
    */
-  void polar_coord (vector<double>, vector<double>, vector<double>, vector<double> &, vector<double> &, vector<double> &); 
+  void polar_coord (const vector<double>, const vector<double>, const vector<double>, vector<double> &, vector<double> &, vector<double> &); 
 
   /**
    *  @brief conversion from polar coordinates to Cartesian
@@ -1781,7 +1748,7 @@ namespace cosmobl {
    *  @param [out] ZZ vector containing the Cartesian coordinates z
    *  @return none
    */
-  void cartesian_coord (vector<double>, vector<double>, vector<double>, vector<double> &, vector<double> &, vector<double> &);
+  void cartesian_coord (const vector<double>, const vector<double>, const vector<double>, vector<double> &, vector<double> &, vector<double> &);
 
   /**
    *  @brief the Euclidean distance in 3D relative to the origin
@@ -1859,7 +1826,7 @@ namespace cosmobl {
 
 
   // ============================================================================================
-
+  
   
   /**
    *  @name Functions to model the correlation function
@@ -1895,7 +1862,7 @@ namespace cosmobl {
    *
    *  @return the two-point correlation function, &xi;(r)
    */
-  double xi_from_Pk (double &, vector<double>, vector<double>, double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2);
+  double xi_from_Pk (const double, const vector<double>, const vector<double>, const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=1, const double prec=1.e-2);
 
   /**
    *  @brief the two-point correlation function computed from the
@@ -1927,7 +1894,7 @@ namespace cosmobl {
    *
    *  @return the two-point correlation function, &xi;(r)
    */
-  double xi_from_Pk (double &, string &, int c1=1, int c2=2, double k_min=0., double k_max=100., double aa=0., bool GSL=1, double prec=1.e-2);
+  double xi_from_Pk (const double, const string, const int c1=1, const int c2=2, const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=1, const double prec=1.e-2);
 
   /**
    *  @brief the power spectrum computed from the Fourier transform of
@@ -1949,7 +1916,7 @@ namespace cosmobl {
    *
    *  @return the power spectrum, P(k)
    */
-  double Pk_from_xi (double &, vector<double>, vector<double>, double r_min=0.03, double r_max=100.); 
+  double Pk_from_xi (const double, const vector<double>, const vector<double>, const double r_min=0.03, const double r_max=100.); 
 
   /**
    *  @brief the power spectrum computed from the Fourier transform of
@@ -1974,7 +1941,7 @@ namespace cosmobl {
    *
    *  @return the power spectrum, P(k)
    */
-  double Pk_from_xi (double &, string &, int c1=1, int c2=2, double r_min=0.03, double r_max=100.); 
+  double Pk_from_xi (const double, const string, const int c1=1, const int c2=2, const double r_min=0.03, const double r_max=100.); 
 
   namespace glob {
     /// @cond glob
@@ -2006,7 +1973,7 @@ namespace cosmobl {
    *
    *  @return the projected correlation function, w(r<SUB>p</SUB>)
    */
-  double wp (double &, vector<double>, vector<double>, double r_max=100.); 
+  double wp (const double, const vector<double>, const vector<double>, const double r_max=100.); 
 
   /**
    *  @brief the projected two-point correlation function
@@ -2031,7 +1998,7 @@ namespace cosmobl {
    *  @return the projected correlation function,
    *  w<SUB>p</SUB>(r<SUB>p</SUB>)
    */
-  double wp (double &, string &, double r_max=100.); 
+  double wp (const double, const string, const double r_max=100.); 
 
   /**
    *  @brief the rms mass fluctuation within a given radius
@@ -2073,7 +2040,7 @@ namespace cosmobl {
    *
    *  @return &sigma;<SUB>R</SUB>: the rms mass fluctuation within a radius R [Mpc/h] 
    */
-  double sigmaR (double &, int &, vector<double>, vector<double>);
+  double sigmaR (const double, const int, const vector<double>, const vector<double>);
 
   /**
    *  @brief the projected correlation function,
@@ -2090,7 +2057,7 @@ namespace cosmobl {
    *  @return the projected correlation function
    *  w<SUB>p</SUB>(r<SUB>p</SUB>)
    */
-  double xi_projected_powerlaw (double, double, double); 
+  double xi_projected_powerlaw (const double, const double, const double); 
 
   /**
    *  @brief the ratio between the redshift-space and real-space
@@ -2107,7 +2074,7 @@ namespace cosmobl {
    *
    *  @return &xi;(s)/&xi;(r)
    */
-  double xi_ratio (double);                         
+  double xi_ratio (const double);                         
 
   /**
    *  @brief the ratio between the redshift-space and real-space
@@ -2125,7 +2092,7 @@ namespace cosmobl {
    *
    *  @return &xi;(s)/&xi;(r)
    */
-  double xi_ratio (double, double);                
+  double xi_ratio (const double, const double);                
 
   /// @cond glob
   /**
@@ -2162,7 +2129,7 @@ namespace cosmobl {
    *
    *  @return &delta;[&xi;(s)/&xi;(r)]
    */
-  double error_xi_ratio (double, double); 
+  double error_xi_ratio (const double, const double); 
 
   /**
    *  @brief the barred correlation function
@@ -2191,7 +2158,7 @@ namespace cosmobl {
    *
    *  @return \f$ \overline{\xi}(r) \f$
    */
-  double barred_xi_direct (double, vector<double>, vector<double>, double rAPP=0., double r0=-1., double gamma=1.); 
+  double barred_xi_direct (const double, const vector<double>, const vector<double>, const double rAPP=0., const double r0=-1., const double gamma=1.); 
 
   /**
    *  @brief the double barred correlation function
@@ -2220,7 +2187,7 @@ namespace cosmobl {
    *
    *  @return \f$ \overline{\overline{\xi}}(r) \f$
    */
-  double barred_xi__direct (double, vector<double>, vector<double>, double rAPP=0., double r0=-1., double gamma=1.); 
+  double barred_xi__direct (const double, const vector<double>, const vector<double>, const double rAPP=0., const double r0=-1., const double gamma=1.); 
 
   /**
    *  @brief the barred correlation function
@@ -2247,7 +2214,7 @@ namespace cosmobl {
    *
    *  @return \f$ \overline{\xi}(r) \f$
    */
-  double barred_xi_ (double, vector<double>, vector<double>, double rAPP=0., double r0=-1., double gamma=1.); 
+  double barred_xi_ (const double, const vector<double>, const vector<double>, const double rAPP=0., const double r0=-1., const double gamma=1.); 
 
   /**
    *  @brief the double barred correlation function
@@ -2274,7 +2241,7 @@ namespace cosmobl {
    *
    *  @return \f$ \overline{\overline{\xi}}(r) \f$
    */
-  double barred_xi__ (double, vector<double>, vector<double>, double rAPP=0., double r0=-1., double gamma=1.); 
+  double barred_xi__ (const double, const vector<double>, const vector<double>, const double rAPP=0., const double r0=-1., const double gamma=1.); 
 
   /**
    *  @brief xi<SUB>0</SUB>(s) from &xi;(r,&mu;)
@@ -2291,7 +2258,7 @@ namespace cosmobl {
    *
    *  @return xi<SUB>0</SUB>(s)
    */
-  double multipole_xi0 (int, vector<double>, vector< vector<double> >);
+  double multipole_xi0 (const int, const vector<double>, const vector<vector<double> >);
   
   /**
    *  @brief xi<SUB>2</SUB>(s) from &xi;(r,&mu;)
@@ -2308,7 +2275,7 @@ namespace cosmobl {
    *
    *  @return xi<SUB>2</SUB>(s)
    */
-  double multipole_xi2 (int, vector<double>, vector< vector<double> >);
+  double multipole_xi2 (const int, const vector<double>, const vector<vector<double> >);
  
   /**
    *  @brief xi<SUB>4</SUB>(s) from &xi;(r,&mu;)
@@ -2325,7 +2292,7 @@ namespace cosmobl {
    *
    *  @return xi<SUB>4</SUB>(s)
    */
-  double multipole_xi4 (int, vector<double>, vector< vector<double> >);
+  double multipole_xi4 (const int, const vector<double>, const vector<vector<double> >);
   
   /**
    *  @brief error on xi<SUB>0</SUB>(s) from &xi;(r,&mu;)
@@ -2340,7 +2307,7 @@ namespace cosmobl {
    *
    *  @return error on xi<SUB>0</SUB>(s)
    */
-  double error_multipole_xi0 (int, vector<double>, vector<vector<double> >);
+  double error_multipole_xi0 (const int, const vector<double>, const vector<vector<double> >);
 
   /**
    *  @brief error on xi<SUB>2</SUB>(s) from &xi;(r,&mu;)
@@ -2355,7 +2322,7 @@ namespace cosmobl {
    *
    *  @return error on xi<SUB>2</SUB>(s)
    */
-  double error_multipole_xi2 (int, vector<double>, vector<vector<double> >);
+  double error_multipole_xi2 (const int, const vector<double>, const vector<vector<double> >);
 
   /**
    *  @brief error on xi<SUB>4</SUB>(s) from &xi;(r,&mu;)
@@ -2370,7 +2337,7 @@ namespace cosmobl {
    *
    *  @return error on xi<SUB>4</SUB>(s)
    */
-  double error_multipole_xi4 (int, vector<double>, vector<vector<double> >);
+  double error_multipole_xi4 (const int, const vector<double>, const vector<vector<double> >);
 
   /**
    *  @brief xi<SUB>0</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -2384,7 +2351,7 @@ namespace cosmobl {
    *  @param delta_s bin size 
    *  @return xi<SUB>0</SUB>(s)
    */
-  double multipole_xi0 (double &, vector<double>, vector<double>, vector<vector<double> >, double &);
+  double multipole_xi0 (const double, const vector<double>, const vector<double>, const vector<vector<double> >, const double);
 
   /**
    *  @brief xi<SUB>2</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -2398,7 +2365,7 @@ namespace cosmobl {
    *  @param delta_s bin size 
    *  @return xi<SUB>2</SUB>(s)
    */
-  double multipole_xi2 (double &, vector<double>, vector<double>, vector<vector<double> >, double &);
+  double multipole_xi2 (const double, const vector<double>, const vector<double>, const vector<vector<double> >, const double);
 
   /**
    *  @brief xi<SUB>4</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -2412,7 +2379,7 @@ namespace cosmobl {
    *  @param delta_s bin size 
    *  @return xi<SUB>4</SUB>(s)
    */
-  double multipole_xi4 (double &, vector<double>, vector<double>, vector<vector<double> >, double &);
+  double multipole_xi4 (const double, const vector<double>, const vector<double>, const vector<vector<double> >, const double);
 
   /**
    *  @brief error on xi<SUB>0</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -2424,7 +2391,7 @@ namespace cosmobl {
    *  @param delta_s bin size 
    *  @return error on xi<SUB>0</SUB>(s)
    */
-  double error_multipole_xi0 (double &, vector<double>, vector<double>, vector<vector<double> >, double &);
+  double error_multipole_xi0 (const double, const vector<double>, const vector<double>, const vector<vector<double> >, const double);
 
   /**
    *  @brief error on xi<SUB>2</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -2436,7 +2403,7 @@ namespace cosmobl {
    *  @param delta_s bin size 
    *  @return error on xi<SUB>2</SUB>(s)
    */
-  double error_multipole_xi2 (double &, vector<double>, vector<double>, vector<vector<double> >, double &);
+  double error_multipole_xi2 (const double, const vector<double>, const vector<double>, const vector<vector<double> >, const double);
 
   /**
    *  @brief error on xi<SUB>4</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -2448,7 +2415,7 @@ namespace cosmobl {
    *  @param delta_s bin size 
    *  @return error on xi<SUB>4</SUB>(s)
    */
-  double error_multipole_xi4 (double &, vector<double>, vector<double>, vector<vector<double> >, double &);
+  double error_multipole_xi4 (const double, const vector<double>, const vector<double>, const vector<vector<double> >, const double);
 
   /// @cond glob
   /**
@@ -2476,7 +2443,7 @@ namespace cosmobl {
    *
    *  @return the multipole &xi;<SUB>0</SUB>
    */
-  double multipole_xi0_model (double, double);
+  double multipole_xi0_model (const double, const double);
 
   /**
    *  @brief the model multipole &xi;<SUB>0</SUB> of the two-point
@@ -2493,7 +2460,7 @@ namespace cosmobl {
    *
    *  @return the multipole &xi;<SUB>0</SUB>
    */
-  double multipole_xi0_model (double, double, double, double);
+  double multipole_xi0_model (const double, const double, const double, const double);
 
   /// @cond glob
   /**
@@ -2522,7 +2489,7 @@ namespace cosmobl {
    *
    *  @return the multipole &xi;<SUB>2</SUB>
    */
-  double multipole_xi2_model (double, double, double); 
+  double multipole_xi2_model (const double, const double, const double); 
 
   /**
    *  @brief the model multipole &xi;<SUB>4</SUB> of the two-point
@@ -2539,7 +2506,7 @@ namespace cosmobl {
    *
    *  @return the multipole &xi;<SUB>4</SUB>
    */
-  double multipole_xi4_model (double, double, double, double);
+  double multipole_xi4_model (const double, const double, const double, const double);
 
   /// @cond glob
   // theoretical model for the linear xi(rp,pi)
@@ -2567,7 +2534,7 @@ namespace cosmobl {
    *
    *  @return &xi;(r<SUB>p</SUB>,&pi;)
    */
-  double xi2D_lin_model (double, double, double, double, double, double, double);
+  double xi2D_lin_model (const double, const double, const double, const double, const double, const double, const double);
 
   /**
    *  @brief the linear dispersion model for
@@ -2604,7 +2571,7 @@ namespace cosmobl {
    *
    *  @return &xi;(r<SUB>p</SUB>,&pi;)
    */
-  double xi2D_lin_model (double, double, double, double, vector<double>, vector<double>, vector<double>, vector<double>, int index=-1, bool bias_nl=0, double bA=0.);
+  double xi2D_lin_model (const double, const double, const double, const double, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const int index=-1, const bool bias_nl=0, const double bA=0.);
 
   /// @cond glob
   // dispersion model for xi(rp,pi)
@@ -2660,7 +2627,7 @@ namespace cosmobl {
    *
    *  @return &xi;(r<SUB>p</SUB>,&pi;)
    */
-  double xi2D_model (double, double, double, double, double, vector<double>, vector<double>, vector<double>, vector<double>, double, int, int index=-1, bool bias_nl=0, double bA=0., double v_min=-3000., double v_max=3000., int step_v=500);
+  double xi2D_model (const double, const double, const double, const double, const double, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const double, const int, int index=-1, const bool bias_nl=0, const double bA=0., const double v_min=-3000., const double v_max=3000., const int step_v=500);
 
 
   /**
@@ -2670,7 +2637,7 @@ namespace cosmobl {
    *  @param FV 0 &rArr; exponential; &rArr; 1 gaussian 
    *  @return f(v)
    */
-  double f_v (double &, double &, int &);
+  double f_v (const double, const double, const int);
 
   /**
    *  @brief pairwise velocity distribution
@@ -2693,7 +2660,7 @@ namespace cosmobl {
    *
    *  @return f(v)
    */
-  double f_v (double &, double &, double &, double &, double &, double &, double &, double &);
+  double f_v (const double, const double, const double, const double, const double, const double, const double, const double);
 
   /**
    *  @brief velocity distribution used to model BAO
@@ -2706,7 +2673,7 @@ namespace cosmobl {
    *
    *  @return f<SUB>*</SUB>
    */
-  double f_star (double &, double &, double &);
+  double f_star (const double, const double, const double);
 
   /**
    *  @brief a possible parameterization of the non-linear bias
@@ -2722,7 +2689,7 @@ namespace cosmobl {
    *
    *  @return b(r)
    */
-  double b_nl (double &, double &, double bB=10., double bC=4.);
+  double b_nl (const double, const double, const double bB=10., const double bC=4.);
 
   /**
    *  @brief estimated relative error on \f$\beta=f/b\f$
@@ -2742,7 +2709,7 @@ namespace cosmobl {
    *  @param density the galaxy density, n
    *  @return \f$\delta\beta/\beta\f$
    */
-  double relative_error_beta (double &, double &, double &); 
+  double relative_error_beta (const double, const double, const double); 
 
   ///@}
 
@@ -2768,7 +2735,7 @@ namespace cosmobl {
     struct STR_grid_2D
     {
       vector<double> _xx1, _xx2;
-      vector< vector<double> > _yy;
+      vector<vector<double> > _yy;
     };
 
     struct STR_xi0_model

@@ -37,12 +37,9 @@ using namespace cosmobl;
 
 // =====================================================================================
 
-/* ======== Alfonso Veropalumbo ======== */
-
-
 // Sound horizon at drag epoch
 
-double cosmobl::Cosmology::rs (string method_Pk, double T_CMB)
+double cosmobl::Cosmology::rs (const string method_Pk, const double T_CMB) const
 {
   if (method_Pk=="EisensteinHu") 
     return rs_EH(T_CMB);
@@ -58,7 +55,7 @@ double cosmobl::Cosmology::rs (string method_Pk, double T_CMB)
 
 // Sound horizon at drag epoch (Eisentein & Hu 1998, Section 2.1)
 
-double cosmobl::Cosmology::rs_EH (double T_CMB)
+double cosmobl::Cosmology::rs_EH (const double T_CMB) const
 {
   double Om0h2 = m_Omega_matter*pow(m_hh,2);
   double Ombh2 = m_Omega_baryon*pow(m_hh,2);
@@ -82,7 +79,7 @@ double cosmobl::Cosmology::rs_EH (double T_CMB)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::rs_CAMB ()
+double cosmobl::Cosmology::rs_CAMB () const
 {
   double wcb= m_Omega_matter*pow(m_hh,2);
   double wb= m_Omega_baryon*pow(m_hh,2);
@@ -96,7 +93,7 @@ double cosmobl::Cosmology::rs_CAMB ()
 
 // Fiducial cosmology independent ratio rs/DV (rs,DV [Mpc])
 
-double cosmobl::Cosmology::ys (double redshift, string method_Pk, double T_CMB)
+double cosmobl::Cosmology::ys (const double redshift, const string method_Pk, const double T_CMB) const
 {
   return rs(method_Pk, T_CMB)/((m_unit) ? D_V(redshift)/m_hh : D_V(redshift));
 }
@@ -106,7 +103,7 @@ double cosmobl::Cosmology::ys (double redshift, string method_Pk, double T_CMB)
 
 // Acoustic parameter (see Eisenstein 2005)
 
-double cosmobl::Cosmology::Az (double redshift)
+double cosmobl::Cosmology::Az (const double redshift) const
 {
   return ((m_unit) ? D_V(redshift)/m_hh : D_V(redshift))*1.e2*sqrt(m_Omega_matter*m_hh*m_hh)/(par::cc*redshift);
 }

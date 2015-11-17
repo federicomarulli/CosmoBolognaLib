@@ -39,10 +39,8 @@ using namespace cosmobl;
 
 // =====================================================================================
 
-/* ======== Cosimo Fedeli ======== */
 
-
-double cosmobl::Cosmology::Am (string method_Pk, string output_root, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::Am (const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   double kk = 1.e-4;
   bool NL = 0;
@@ -54,7 +52,7 @@ double cosmobl::Cosmology::Am (string method_Pk, string output_root, int norm, d
 // =====================================================================================
 
 
-double cosmobl::Cosmology::potential_spectral_amplitude (string method_Pk, string output_root, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::potential_spectral_amplitude (const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par)
 {
   return 2.78548e-14 * gsl_pow_2(m_Omega_matter) * Am(method_Pk, output_root, norm, k_min, k_max, GSL, prec, file_par);
 }
@@ -63,7 +61,7 @@ double cosmobl::Cosmology::potential_spectral_amplitude (string method_Pk, strin
 // =====================================================================================
 
 
-double cosmobl::Cosmology::bispectrum (vector<double> kk, string method_Pk, string output_root, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::bispectrum (const vector<double> kk, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par)
 {
   double bs = 0.0;
 
@@ -111,7 +109,7 @@ double cosmobl::Cosmology::bispectrum (vector<double> kk, string method_Pk, stri
 // =====================================================================================
 
 
-double cosmobl::Cosmology::mrk (double kk, double mass, string method_Pk, string output_root, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::mrk (const double kk, const double mass, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   double xx = kk * Radius(mass, m_RhoZero);
 
@@ -171,7 +169,7 @@ double cosmobl::Cosmology::bias_kernel (double xx, void *params)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::frk_test (double kk, double mass, string method_Pk, string output_root, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::frk_test (const double kk, const double mass, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par)
 {
   cosmobl::glob::GSL_f_pars pp;
   struct cosmobl::glob::GSL_f_pars *ppp = &pp;
@@ -219,7 +217,7 @@ double cosmobl::Cosmology::frk_test (double kk, double mass, string method_Pk, s
 
 /// @cond glob
 
-double cosmobl::glob::bias_kernel2 (double xx, void *params)
+double cosmobl::glob::bias_kernel2 (const double xx, void *params)
 {
   struct cosmobl::glob::STR_NG *pp = (struct cosmobl::glob::STR_NG *) params;
   
@@ -266,7 +264,7 @@ double cosmobl::glob::bias_kernel2 (double xx, void *params)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::frk (double kk, double mass, string method_Pk, string output_root, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::frk (const double kk, const double mass, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par)
 {
   string dir_grid = par::DirCosmo+"Cosmology/grid_NG/bias_kernel/unit"+conv(m_unit,par::fINT)+"/";
   string MK = "mkdir -p "+dir_grid; if (system (MK.c_str())) {};
@@ -343,7 +341,7 @@ double cosmobl::Cosmology::frk (double kk, double mass, string method_Pk, string
 
 /// @cond glob
 
-double cosmobl::glob::GSL_bias_kernel_wrapper (double xx, void *params) 
+double cosmobl::glob::GSL_bias_kernel_wrapper (const double xx, void *params) 
 {
   cosmobl::glob::GSL_f_pars *pp = (cosmobl::glob::GSL_f_pars *)params;
   return pp->pt_Cosmology->bias_kernel(xx,params);
@@ -354,7 +352,7 @@ double cosmobl::glob::GSL_bias_kernel_wrapper (double xx, void *params)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::bias_correction (double kk, double mass, string method_Pk, string output_root, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::bias_correction (const double kk, const double mass, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   return m_fNL * 0.8 * frk(kk, mass, method_Pk, output_root, norm, k_min, k_max, GSL, prec, file_par) / mrk(kk, mass, method_Pk, output_root, norm, k_min, k_max, GSL, prec, file_par);
 }
@@ -364,10 +362,10 @@ double cosmobl::Cosmology::bias_correction (double kk, double mass, string metho
 
 /// @cond glob
 
-double cosmobl::glob::skewness_kernel (double *kk, __attribute__((unused)) size_t dim, void *params)
+double cosmobl::glob::skewness_kernel (double *kk, size_t dim, void *params)
 {
   struct cosmobl::glob::STR_NG *pp = (struct cosmobl::glob::STR_NG *) params;
-
+  
   Cosmology cosm (pp->Omega_matter, pp->Omega_baryon, pp->Omega_neutrinos, pp->massless_neutrinos, pp->massive_neutrinos, pp->Omega_DE, pp->Omega_radiation, pp->hh, pp->scalar_amp, pp->n_spec, pp->w0, pp->wa, pp->fNL, pp->type_NG, pp->output_root, pp->unit);
 
   int ni = 16;
@@ -410,7 +408,7 @@ double cosmobl::glob::skewness_kernel (double *kk, __attribute__((unused)) size_
 
 
 
-double cosmobl::Cosmology::skewness (double mass, string method_Pk, string output_root, int norm, double k_min, double k_max, bool GSL, double prec, string file_par) 
+double cosmobl::Cosmology::skewness (const double mass, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   string dir_grid = par::DirCosmo+"Cosmology/grid_NG/skewness_kernel/unit"+conv(m_unit,par::fINT)+"/";
   string MK = "mkdir -p "+dir_grid; if (system (MK.c_str())) {};
@@ -504,7 +502,7 @@ double cosmobl::Cosmology::skewness (double mass, string method_Pk, string outpu
 // =====================================================================================
 
 
-double cosmobl::Cosmology::dskewnessdM (double mass, string method_Pk, string output_root, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::dskewnessdM (const double mass, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   double dlogm = 0.1;
   double mInf = 6.0, mSup = 16.0;
@@ -547,7 +545,7 @@ double cosmobl::Cosmology::dskewnessdM (double mass, string method_Pk, string ou
 // =====================================================================================
 
 
-double cosmobl::Cosmology::MF_correction (double mass, double redshift, string method_Pk, string output_root, string interpType, int Num, double stepsize, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::MF_correction (const double mass, const double redshift, const string method_Pk, const string output_root, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   double dc = deltac(redshift)*sqrt(0.8);
   double gf = DD(redshift);

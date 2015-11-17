@@ -75,7 +75,7 @@ namespace cosmobl {
      *  @param weight weight
      *  @return object of class Mock
      */
-    Mock (double xx, double yy, double zz, double vx=-1.e30, double vy=-1.e30, double vz=-1.e30, double mass=-1.e30, double generic=-1.e30, double weight=1.) 
+    Mock (const double xx, const double yy, const double zz, const double vx=-1.e30, const double vy=-1.e30, const double vz=-1.e30, const double mass=-1.e30, const double generic=-1.e30, const double weight=1.) 
       : Halo(xx, yy, zz, vx, vy, vz, mass, weight), m_generic(generic) {}
 
     /** @brief constructor that uses observed coordinates
@@ -91,7 +91,7 @@ namespace cosmobl {
      *  @param weight weight
      *  @return object of class Mock
      */
-    Mock (double ra, double dec, double redshift, Cosmology &cosm, double vx=-1.e30, double vy=-1.e30, double vz=-1.e30, double mass=-1.e30, double generic=-1.e30, double weight=1.) 
+    Mock (const double ra, const double dec, const double redshift, const Cosmology &cosm, const double vx=-1.e30, const double vy=-1.e30, const double vz=-1.e30, const double mass=-1.e30, const double generic=-1.e30, const double weight=1.) 
       : Halo(ra, dec, redshift, cosm, vx, vy, vz, mass, weight), m_generic(generic) {}
 
     /** @brief default destructor
@@ -102,13 +102,13 @@ namespace cosmobl {
     /** @brief get the protected member Mock::m_generic
      *  @return the generic variable of the mock object
      */
-    double generic ()  { return m_generic; }
+    double generic () const /*override*/ { return m_generic; }
 
     /** @brief set the protected member Mock::m_generic
      *  @param generic the generic variable of the mock object
      *  @return none
      */
-    void set_generic (double generic)  { m_generic = generic; }
+    void set_generic (const double generic) /*override*/ { m_generic = generic; }
 
   };
 }

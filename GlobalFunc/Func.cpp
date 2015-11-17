@@ -39,7 +39,7 @@ using namespace cosmobl;
 // ============================================================================
 
 
-void cosmobl::redshift_range (double &mean_redshift, double &boxSide, Cosmology &real_cosm, double *redshift_min, double *redshift_max) 
+void cosmobl::redshift_range (const double mean_redshift, const double boxSide, Cosmology &real_cosm, double &redshift_min, double &redshift_max) 
 {
   cout <<"I'm computing the redshift range..."<<endl; 
 
@@ -60,23 +60,23 @@ void cosmobl::redshift_range (double &mean_redshift, double &boxSide, Cosmology 
     dist = fabs(LL-boxSide);
     if (dist<dist_min) {
       dist_min = dist;
-      *redshift_min = zz1;
-      *redshift_max = zz2; 
+      redshift_min = zz1;
+      redshift_max = zz2; 
     }			
     zz1 += delta_z;
   }	
-  cout <<"z1 = "<<*redshift_min<<"; z2 = "<<*redshift_max<<" (L_subBox = "<<real_cosm.D_C(*redshift_max)-real_cosm.D_C(*redshift_min)<<" ~ "<<boxSide<<")"<<endl;  
+  cout <<"z1 = "<<redshift_min<<"; z2 = "<<redshift_max<<" (L_subBox = "<<real_cosm.D_C(redshift_max)-real_cosm.D_C(redshift_min)<<" ~ "<<boxSide<<")"<<endl;  
 }
 
 
 // ============================================================================
 
 
-double cosmobl::volume (double &boxSize, int &frac, double &Bord, double &mean_redshift, Cosmology &real_cosm)
+double cosmobl::volume (const double boxSize, const int frac, const double Bord, const double mean_redshift, Cosmology &real_cosm)
 {
   double redshift_min, redshift_max;
   double boxSide = boxSize/double(frac);
-  redshift_range(mean_redshift, boxSide, real_cosm, &redshift_min, &redshift_max);
+  redshift_range(mean_redshift, boxSide, real_cosm, redshift_min, redshift_max);
   redshift_min += Bord;
   redshift_max -= Bord;
   double Lmin = real_cosm.D_C(redshift_min);
@@ -88,9 +88,9 @@ double cosmobl::volume (double &boxSize, int &frac, double &Bord, double &mean_r
 // ============================================================================
 
 
-void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<double> &redshift, vector<double> &xx, vector<double> &yy, vector<double> &zz, vector<double> vx, vector<double> vy, vector<double> vz, double &sigmaV, Cosmology &real_cosm, double &mean_redshift, double &redshift_min, double &redshift_max, int &idum) 
+void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<double> &redshift, vector<double> &xx, vector<double> &yy, vector<double> &zz, const vector<double> vx, const vector<double> vy, const vector<double> vz, const double sigmaV, Cosmology &real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int idum) 
 {
-  if (ra.size()==0) ErrorMsg("Error in coord_zSpace of GlobalFunc.cpp!");
+  if (ra.size()==0) ErrorMsg("Error in coord_zSpace of GlobalFunc.cpp: ra.size()=0!");
   
 
   // ----- real-space --> redshift-space -----
@@ -158,7 +158,7 @@ void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<doub
 // ============================================================================
 
 
-void cosmobl::create_mocks (vector<double> xx, vector<double> yy, vector<double> zz, vector<double> vx, vector<double> vy, vector<double> vz, vector<double> var1, vector<double> var2, vector<double> var3, string &output_dir, double &boxSize, int &frac, double &Bord, double &mean_redshift, Cosmology &real_cosm, int &REAL, double &sigmaV, int &idum, double *Volume) 
+void cosmobl::create_mocks (const vector<double> xx, const vector<double> yy, const vector<double> zz,  const vector<double> vx, const vector<double> vy, const vector<double> vz, const vector<double> var1, const vector<double> var2, const vector<double> var3, const string output_dir, const double boxSize, const int frac, const double Bord, const double mean_redshift, Cosmology &real_cosm, const int REAL, const double sigmaV, const int idum, double &Volume) 
 {   
   cout <<endl<<"I'm creating the mock files..."<<endl;
 
@@ -167,7 +167,7 @@ void cosmobl::create_mocks (vector<double> xx, vector<double> yy, vector<double>
 
   double redshift_min = -1., redshift_max = -1.;
   double boxSide = boxSize/double(frac);
-  redshift_range(mean_redshift, boxSide, real_cosm, &redshift_min, &redshift_max);
+  redshift_range(mean_redshift, boxSide, real_cosm, redshift_min, redshift_max);
   
   double Lmin = real_cosm.D_C(redshift_min);
   double Lmax = real_cosm.D_C(redshift_max);
@@ -180,8 +180,7 @@ void cosmobl::create_mocks (vector<double> xx, vector<double> yy, vector<double>
   }
   
   double fact1 = 1./(boxSize/double(frac)), fact2 = boxSize/double(frac)*0.5;
-  vector<double> ra, dec, red, 
-    xx_temp, yy_temp, zz_temp, vx_temp, vy_temp, vz_temp, vr_temp, var1_temp, var2_temp, var3_temp;
+  vector<double> ra, dec, red, xx_temp, yy_temp, zz_temp;
   vector<int> subCube_temp, subCube;
 
   
@@ -190,9 +189,6 @@ void cosmobl::create_mocks (vector<double> xx, vector<double> yy, vector<double>
     double XX = xx[i];
     double YY = yy[i];
     double ZZ = zz[i];
-    double Vx = vx[i];
-    double Vy = vy[i];
-    double Vz = vz[i];
 
 
     // ------- divide the box in sub-boxes ------- 
@@ -214,12 +210,6 @@ void cosmobl::create_mocks (vector<double> xx, vector<double> yy, vector<double>
     xx_temp.push_back(XX);
     yy_temp.push_back(YY);
     zz_temp.push_back(ZZ);
-    vx_temp.push_back(Vx);
-    vy_temp.push_back(Vy);
-    vz_temp.push_back(Vz);
-    var1_temp.push_back(var1[i]);
-    var2_temp.push_back(var2[i]);
-    var3_temp.push_back(var3[i]);
     subCube_temp.push_back(subx*frac*frac+suby*frac+subz);	
 
   }
@@ -240,8 +230,8 @@ void cosmobl::create_mocks (vector<double> xx, vector<double> yy, vector<double>
 
 
   // ------- add redshift-space distortions ------- 
-
-  if (REAL==0) coord_zSpace(ra_temp, dec_temp, red_temp, xx_temp, yy_temp, zz_temp, vx_temp, vy_temp, vz_temp, sigmaV, real_cosm, mean_redshift, redshift_min, redshift_max, idum);
+  
+  if (REAL==0) coord_zSpace(ra_temp, dec_temp, red_temp, xx_temp, yy_temp, zz_temp, vx, vy, vz, sigmaV, real_cosm, mean_redshift, redshift_min, redshift_max, idum);
 
 
   // ------- cut the borders of the box ------- 
@@ -251,21 +241,23 @@ void cosmobl::create_mocks (vector<double> xx, vector<double> yy, vector<double>
   Lmin = real_cosm.D_C(redshift_min);
   Lmax = real_cosm.D_C(redshift_max);
   double Lnew = (Lmax-Lmin)*0.5;
-  *Volume = pow(Lmax-Lmin,3.);
+  Volume = pow(Lmax-Lmin,3.);
   if (Lnew<0) ErrorMsg("Error in create_mocks of GlobalFunc.h!");
-  cout <<redshift_min<<" < z < "<<redshift_max<<" --> L = "<<Lnew*2.<<" --> Volume = "<<*Volume<<endl;
+  cout <<redshift_min<<" < z < "<<redshift_max<<" --> L = "<<Lnew*2.<<" --> Volume = "<<Volume<<endl;
 
+  vector<double> vx_new, vy_new, vz_new, var1_new, var2_new, var3_new;
+  
   for (unsigned int i=0; i<xx_temp.size(); i++)
     if (-Lnew<xx_temp[i] && xx_temp[i]<Lnew && Lmin<yy_temp[i] && yy_temp[i]<Lmax && -Lnew<zz_temp[i] && zz_temp[i]<Lnew) {
       ra.push_back(ra_temp[i]);
       dec.push_back(dec_temp[i]);
       red.push_back(red_temp[i]);
-      vx.push_back(vx_temp[i]);
-      vy.push_back(vy_temp[i]);
-      vz.push_back(vz_temp[i]);
-      var1.push_back(var1_temp[i]);
-      var2.push_back(var2_temp[i]);
-      var3.push_back(var3_temp[i]);
+      vx_new.push_back(vx[i]);
+      vy_new.push_back(vy[i]);
+      vz_new.push_back(vz[i]);
+      var1_new.push_back(var1[i]);
+      var2_new.push_back(var2[i]);
+      var3_new.push_back(var3[i]);
       subCube.push_back(subCube_temp[i]);	
     }
 
@@ -284,7 +276,7 @@ void cosmobl::create_mocks (vector<double> xx, vector<double> yy, vector<double>
 
     for (unsigned int i=0; i<ra.size(); i++) 
       if (subCube[i]==cub) {
-	fout <<ra[i]<<"   "<<dec[i]<<"   "<<red[i]<<"   "<<vx[i]<<"   "<<vy[i]<<"   "<<vz[i]<<"   "<<var1[i]<<"   "<<var2[i]<<"   "<<var3[i]<<endl;
+	fout <<ra[i]<<"   "<<dec[i]<<"   "<<red[i]<<"   "<<vx_new[i]<<"   "<<vy_new[i]<<"   "<<vz_new[i]<<"   "<<var1_new[i]<<"   "<<var2_new[i]<<"   "<<var3_new[i]<<endl;
 	nTOT ++;
       }
     fout.clear(); fout.close(); cout <<"I wrote the file: "<<file_out<<endl;

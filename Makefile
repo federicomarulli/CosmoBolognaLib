@@ -76,27 +76,27 @@ endef
 
 ALL:
 	$(call colorecho, "\n"Compiling the library: libFUNC... "\n")
-	make -j4 libFUNC
+	make -j3 libFUNC
 	$(call colorecho, "\n"Compiling the library: libSTAT... "\n")
-	make -j4 libSTAT
+	make -j3 libSTAT
 	$(call colorecho, "\n"Compiling the library: libCOSM... "\n")
-	make -j4 libCOSM
+	make -j3 libCOSM
 	$(call colorecho, "\n"Compiling the library: libCM... "\n")
-	make -j4 libCM
+	make -j3 libCM
 	$(call colorecho, "\n"Compiling the library: libCAT... "\n")
-	make -j4 libCAT
+	make -j3 libCAT
 	$(call colorecho, "\n"Compiling the library: libLN... "\n")
-	make -j4 libLN
+	make -j3 libLN
 	$(call colorecho, "\n"Compiling the library: libRANDOM... "\n")
-	make -j4 libRANDOM
+	make -j3 libRANDOM
 	$(call colorecho, "\n"Compiling the library: libTWOP... "\n")
-	make -j4 libTWOP
+	make -j3 libTWOP
 	$(call colorecho, "\n"Compiling the library: libMTWOP... "\n")
-	make -j4 libMTWOP
+	make -j3 libMTWOP
 	$(call colorecho, "\n"Compiling the library: libTHREEP... "\n")
-	make -j4 libTHREEP
+	make -j3 libTHREEP
 	$(call colorecho, "\n"Compiling the library: libGLOB... "\n")
-	make -j4 libGLOB
+	make -j3 libGLOB
 
 libFUNC: $(OBJ_FUNC) $(PWD)/Makefile
 	$(C) $(FLAGS_LINK) -o $(PWD)/libFUNC.$(ES) $(OBJ_FUNC) $(FLAGS_GSL) -lgomp

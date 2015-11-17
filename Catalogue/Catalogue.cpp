@@ -38,7 +38,7 @@ using namespace cosmobl;
 // ============================================================================
 
 
-int cosmobl::Catalogue::Nregion ()
+int cosmobl::Catalogue::Nregion () const
 { 
   vector<int> regions; 
   for (int i=0; i<nObjects(); i++) regions.push_back(m_sample[i]->region()); 
@@ -52,7 +52,7 @@ int cosmobl::Catalogue::Nregion ()
 // ============================================================================
 
 
-vector<long> cosmobl::Catalogue::get_region_list ()
+vector<long> cosmobl::Catalogue::get_region_list () const
 { 
   vector<long> regions; 
   for (int i=0; i<nObjects(); i++) regions.push_back(m_sample[i]->region()); 
@@ -66,7 +66,7 @@ vector<long> cosmobl::Catalogue::get_region_list ()
 // ============================================================================
 
 
-vector<double> cosmobl::Catalogue::var (Var var_name) 
+vector<double> cosmobl::Catalogue::var (Var var_name) const
 {
   vector<double> vv(m_sample.size(), 0.);
   
@@ -151,7 +151,7 @@ vector<double> cosmobl::Catalogue::var (Var var_name)
 // ============================================================================
 
 
-void cosmobl::Catalogue::set_var (Var var_name, vector<double> _var)
+void cosmobl::Catalogue::set_var (const Var var_name, const vector<double> _var)
 {
   if (m_sample.size()!=_var.size()) ErrorMsg ("Error in cosmobl::Catalogue::set_var of Catalogue.cpp: different sizes!");
   
@@ -235,10 +235,9 @@ void cosmobl::Catalogue::set_var (Var var_name, vector<double> _var)
 // ============================================================================
 
 
-void cosmobl::Catalogue::MinMax_var (Var var_name, vector<double> &Lim, bool er)
+void cosmobl::Catalogue::MinMax_var (const Var var_name, vector<double> &Lim, const bool er) const
 {
   if (er) Lim.erase(Lim.begin(), Lim.end());
-
   Lim.push_back(Min(var(var_name))); 
   Lim.push_back(Max(var(var_name)));
 }
@@ -247,7 +246,7 @@ void cosmobl::Catalogue::MinMax_var (Var var_name, vector<double> &Lim, bool er)
 // ============================================================================
 
 
-void cosmobl::Catalogue::MinMax_var (vector<Var> var_name, vector<vector<double> > &Lim, bool er)
+void cosmobl::Catalogue::MinMax_var (const vector<Var> var_name, vector<vector<double> > &Lim, const bool er) const
 {
   if (er) Lim.erase(Lim.begin(),Lim.end());
 
@@ -259,7 +258,7 @@ void cosmobl::Catalogue::MinMax_var (vector<Var> var_name, vector<vector<double>
 // ============================================================================
 
 
-vector<double> cosmobl::Catalogue::MinMax_var (Var var_name)
+vector<double> cosmobl::Catalogue::MinMax_var (const Var var_name) const
 {
   vector<double> Lim; 
 
@@ -272,7 +271,7 @@ vector<double> cosmobl::Catalogue::MinMax_var (Var var_name)
 // ============================================================================
 
 
-void cosmobl::Catalogue::stats_var (Var var_name, vector<double> &stats)
+void cosmobl::Catalogue::stats_var (const Var var_name, vector<double> &stats) const
 {
   stats.erase(stats.begin(), stats.end());
   stats.resize(4);
@@ -290,7 +289,7 @@ void cosmobl::Catalogue::stats_var (Var var_name, vector<double> &stats)
 // ============================================================================
 
 
-void cosmobl::Catalogue::stats_var (vector<Var> var_name, vector< vector<double> > &stats)
+void cosmobl::Catalogue::stats_var (const vector<Var> var_name, vector<vector<double> > &stats) const
 {
   stats.erase(stats.begin(),stats.end());
 
@@ -307,7 +306,7 @@ void cosmobl::Catalogue::stats_var (vector<Var> var_name, vector< vector<double>
 // ============================================================================
 
 
-void cosmobl::Catalogue::var_distr (Var var_name, vector<double> &_var, vector<double> &dist, int nbin, bool linear, string file_out, double Volume, bool norm, double V1, double V2, bool bin_type, bool convolution, double sigma)
+void cosmobl::Catalogue::var_distr (const Var var_name, vector<double> &_var, vector<double> &dist, const int nbin, const bool linear, const string file_out, const double Volume, const bool norm, const double V1, const double V2, const bool bin_type, const bool convolution, const double sigma) const
 { 
   distribution(_var, dist, var(var_name), var(Var::_WEIGHT_), nbin, linear, file_out, (norm) ? Volume*weightedN() : Volume, V1, V2, bin_type, convolution, sigma);
 }
@@ -316,7 +315,7 @@ void cosmobl::Catalogue::var_distr (Var var_name, vector<double> &_var, vector<d
 // ============================================================================
 
 
-void cosmobl::Catalogue::computeComovingCoordinates (Cosmology &cosm)
+void cosmobl::Catalogue::computeComovingCoordinates (const Cosmology &cosm)
 {
   double red, xx, yy, zz;
 
@@ -325,7 +324,7 @@ void cosmobl::Catalogue::computeComovingCoordinates (Cosmology &cosm)
     red = redshift(i);
     m_sample[i]->set_dc(cosm.D_C(red));
     
-    cartesian_coord(ra(i), dec(i), dc(i), &xx, &yy, &zz);
+    cartesian_coord(ra(i), dec(i), dc(i), xx, yy, zz);
     
     m_sample[i]->set_xx(xx); 
     m_sample[i]->set_yy(yy); 
@@ -342,7 +341,7 @@ void cosmobl::Catalogue::computePolarCoordinates ()
   double ra, dec, dc;
 
   for (int i=0; i<nObjects(); i++) {
-    polar_coord(xx(i), yy(i), zz(i), &ra, &dec, &dc);
+    polar_coord(xx(i), yy(i), zz(i), ra, dec, dc);
     m_sample[i]->set_ra(ra); 
     m_sample[i]->set_dec(dec); 
     m_sample[i]->set_dc(dc);
@@ -352,12 +351,12 @@ void cosmobl::Catalogue::computePolarCoordinates ()
 // ============================================================================
 
 
-void cosmobl::Catalogue::computePolarCoordinates (Cosmology &cosm, double z1, double z2)
+void cosmobl::Catalogue::computePolarCoordinates (const Cosmology &cosm, const double z1, const double z2)
 {
   double ra, dec, dc;
 
   for (int i=0; i<nObjects(); i++) {
-    polar_coord(xx(i), yy(i), zz(i), &ra, &dec, &dc);
+    polar_coord(xx(i), yy(i), zz(i), ra, dec, dc);
     m_sample[i]->set_ra(ra); 
     m_sample[i]->set_dec(dec); 
     m_sample[i]->set_dc(dc);
@@ -394,14 +393,14 @@ void cosmobl::Catalogue::restoreComovingCoordinates ()
 // ============================================================================
 
 
-void cosmobl::Catalogue::Order (vector<int> vv) 
+void cosmobl::Catalogue::Order (const vector<int> vv) 
 {
   int nObj = m_sample.size();
 
   if (int(vv.size())!=nObj) ErrorMsg("Error in cosmobl::Catalogue::Order!");
  
   vector<shared_ptr<Object>> obj(nObj);
-
+  
   m_index.resize(nObj);
   
   for (unsigned int i=0; i<vv.size(); i++) {
@@ -434,7 +433,7 @@ void cosmobl::Catalogue::Order ()
 // ============================================================================
 
 
-double cosmobl::Catalogue::weightedN () 
+double cosmobl::Catalogue::weightedN () const
 {
   double nn = 0.;
   for (unsigned int i=0; i<m_sample.size(); i++)
@@ -446,7 +445,7 @@ double cosmobl::Catalogue::weightedN ()
 // ============================================================================
 
 
-void cosmobl::Catalogue::write_coords (string &cat) 
+void cosmobl::Catalogue::write_coords (const string cat) const
 {
   ofstream fout(cat.c_str()); checkIO(cat, 0);
  
@@ -461,7 +460,7 @@ void cosmobl::Catalogue::write_coords (string &cat)
 // ============================================================================
 
 
-void cosmobl::Catalogue::write_obs_coords (string &cat) 
+void cosmobl::Catalogue::write_obs_coords (const string cat) const 
 {
   ofstream fout(cat.c_str()); checkIO(cat, 0);
 
@@ -476,7 +475,7 @@ void cosmobl::Catalogue::write_obs_coords (string &cat)
 // ============================================================================
 
 
-shared_ptr<Catalogue> cosmobl::Catalogue::cut (Var var_name, double &down, double &up, bool excl)
+shared_ptr<Catalogue> cosmobl::Catalogue::cut (const Var var_name, const double down, const double up, const bool excl)
 {
   vector<shared_ptr<Object> > objects;
   vector<double> vvar = var(var_name);
@@ -500,7 +499,7 @@ shared_ptr<Catalogue> cosmobl::Catalogue::cut (Var var_name, double &down, doubl
 // ============================================================================
 
 
-double cosmobl::Catalogue::distance (int i, shared_ptr<Object> obj)
+double cosmobl::Catalogue::distance (const int i, shared_ptr<Object> obj) const
 {
   return sqrt((m_sample[i]->xx()-obj->xx())*(m_sample[i]->xx()-obj->xx())+
 	      (m_sample[i]->yy()-obj->yy())*(m_sample[i]->yy()-obj->yy())+
@@ -511,7 +510,7 @@ double cosmobl::Catalogue::distance (int i, shared_ptr<Object> obj)
 // ============================================================================
 
 
-double cosmobl::Catalogue::angsep_xyz (int i, shared_ptr<Object> obj)
+double cosmobl::Catalogue::angsep_xyz (const int i, shared_ptr<Object> obj) const
 { 
   return 2.*asin(0.5*sqrt((m_sample[i]->xx()-obj->xx())*(m_sample[i]->xx()-obj->xx())+
 			  (m_sample[i]->yy()-obj->yy())*(m_sample[i]->yy()-obj->yy())+
@@ -522,7 +521,7 @@ double cosmobl::Catalogue::angsep_xyz (int i, shared_ptr<Object> obj)
 // ============================================================================
 
 
-shared_ptr<Catalogue> cosmobl::Catalogue::smooth (double gridsize, vector<Var> vars, int SUB)
+shared_ptr<Catalogue> cosmobl::Catalogue::smooth (const double gridsize, const vector<Var> vars, const int SUB)
 {
   shared_ptr<Catalogue> cat {new Catalogue(*this)};
   
@@ -614,7 +613,8 @@ shared_ptr<Catalogue> cosmobl::Catalogue::smooth (double gridsize, vector<Var> v
     }
     
   }
-
+  
   shared_ptr<Catalogue> cat_new(new Catalogue{sample});
   return cat_new;
 }
+

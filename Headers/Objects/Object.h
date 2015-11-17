@@ -69,21 +69,21 @@ namespace cosmobl {
      *  @return the coordinate x of the derived object, or an error
      *  message if the derived object does not have this member
      */
-    virtual double xx () { cosmobl::ErrorMsg ("Error in xx() of Objech.h!"); return 0; }
+    virtual double xx () const { cosmobl::ErrorMsg ("Error in xx() of Objech.h!"); return 0; }
 
     /**
      *  @brief get the member \e m_yy
      *  @return the coordinate y of the derived object, or an error
      *  message if the derived object does not have this member
      */
-    virtual double yy () { cosmobl::ErrorMsg ("Error in yy() of Objech.h!"); return 0; }
+    virtual double yy () const { cosmobl::ErrorMsg ("Error in yy() of Objech.h!"); return 0; }
 
     /**
      *  @brief get the member \e m_zz
      *  @return the coordinate z of the derived object, or an error
      *  message if the derived object does not have this member
      */
-    virtual double zz () { cosmobl::ErrorMsg ("Error in zz() of Objech.h!"); return 0; }
+    virtual double zz () const { cosmobl::ErrorMsg ("Error in zz() of Objech.h!"); return 0; }
 
     /**
      *  @brief get the member \e m_vx
@@ -91,7 +91,7 @@ namespace cosmobl {
      *  derived object, or an error message if the derived object does
      *  not have this member
      */
-    virtual double vx () { cosmobl::ErrorMsg ("Error in vx() of Objech.h!"); return 0; }
+    virtual double vx () const { cosmobl::ErrorMsg ("Error in vx() of Objech.h!"); return 0; }
     
     /**
      *  @brief get the member \e m_vy
@@ -99,7 +99,7 @@ namespace cosmobl {
      *  derived object, or an error message if the derived object does
      *  not have this member
      */
-    virtual double vy () { cosmobl::ErrorMsg ("Error in vy() of Objech.h!"); return 0; }
+    virtual double vy () const { cosmobl::ErrorMsg ("Error in vy() of Objech.h!"); return 0; }
     
     /**
      *  @brief get the member \e m_vz
@@ -107,89 +107,89 @@ namespace cosmobl {
      *  derived object, or an message if the derived object does not
      *  have this member
      */
-    virtual double vz () { cosmobl::ErrorMsg ("Error in vz() of Objech.h!"); return 0; }
+    virtual double vz () const { cosmobl::ErrorMsg ("Error in vz() of Objech.h!"); return 0; }
     
     /**
      *  @brief get the member \e m_dc
      *  @return the comoving distance of the derived object, or an
      *  error message if the derived object does not have this member
      */
-    virtual double dc () { cosmobl::ErrorMsg ("Error in dc() of Objech.h!"); return 0; }
+    virtual double dc () const { cosmobl::ErrorMsg ("Error in dc() of Objech.h!"); return 0; }
     
     /**
      *  @brief get the member \e m_ra
      *  @return the Right Ascension of the derived object, or an error
      *  message if the derived object does not have this member
      */
-    virtual double ra () { cosmobl::ErrorMsg ("Error in ra() of Objech.h!"); return 0; }
+    virtual double ra () const { cosmobl::ErrorMsg ("Error in ra() of Objech.h!"); return 0; }
     
     /**
      *  @brief get the member \e m_dec
      *  @return the Declination of the derived object, or an error
      *  message if the derived object does not have this member
      */
-    virtual double dec () { cosmobl::ErrorMsg ("Error in dec() of Objech.h!"); return 0; }
+    virtual double dec () const { cosmobl::ErrorMsg ("Error in dec() of Objech.h!"); return 0; }
     
     /**
      *  @brief get the member \e m_redshift
      *  @return the redshift of the derived object, or an error
      *  message if the derived object does not have this member
      */
-    virtual double redshift () { cosmobl::ErrorMsg ("Error in redshift() of Objech.h!"); return 0; }
+    virtual double redshift () const { cosmobl::ErrorMsg ("Error in redshift() of Objech.h!"); return 0; }
     
     /**
      *  @brief get the member \e m_weight
      *  @return the weight of the derived object, or an error message
      *  if the derived object does not have this member
      */
-    virtual double weight () { cosmobl::ErrorMsg ("Error in weight() of Objech.h!"); return 0; }
+    virtual double weight () const { cosmobl::ErrorMsg ("Error in weight() of Objech.h!"); return 0; }
 
     /**
      *  @brief get the member \e m_region
      *  @return the index of the subRegion in which the object is located
      */
-    virtual long region () { cosmobl::ErrorMsg ("Error in region() of Objech.h!"); return 0; }
+    virtual long region () const { cosmobl::ErrorMsg ("Error in region() of Objech.h!"); return 0; }
 
     /**
      *  @brief get the member \e m_mass
      *  @return the mass of the derived object, or an error message if
      *  the derived object does not have this member
      */
-    virtual double mass () { cosmobl::ErrorMsg ("Error in mass() of Objech.h!"); return 0; }
+    virtual double mass () const { cosmobl::ErrorMsg ("Error in mass() of Objech.h!"); return 0; }
     
     /**
      *  @brief get the member \e m_magnitude
      *  @return the magnitude of the derived object, or an error
      *  message if the derived object does not have this member
      */
-    virtual double magnitude () { cosmobl::ErrorMsg ("Error in magnitude() of Objech.h!"); return 0; }  
+    virtual double magnitude () const { cosmobl::ErrorMsg ("Error in magnitude() of Objech.h!"); return 0; }  
     
     /**
      *  @brief get the member \e m_richness
      *  @return the richness of the derived object, or an error
      *  message if the derived object does not have this member
      */
-    virtual double richness () { cosmobl::ErrorMsg ("Error in richness() of Objech.h!"); return 0; }  
+    virtual double richness () const { cosmobl::ErrorMsg ("Error in richness() of Objech.h!"); return 0; }  
     
     /**
      *  @brief get the member \e m_generic
      *  @return the generic variable of the derived object, or an
      *  error message if the derived object does not have this member
      */
-    virtual double generic () { cosmobl::ErrorMsg ("Error in generic() of Objech.h!"); return 0; }  
+    virtual double generic () const { cosmobl::ErrorMsg ("Error in generic() of Objech.h!"); return 0; }  
     
     /**
      *  @brief get the member \e m_radius
      *  @return the radius of the derived object, or an
      *  error message if the derived object does not have this member
      */
-    virtual double radius () { cosmobl::ErrorMsg ("Error in radius() of Objech.h!"); return 0; }
+    virtual double radius () const { cosmobl::ErrorMsg ("Error in radius() of Objech.h!"); return 0; }
 
     /**
      *  @brief get the object coordinates
      *  @return a vector containing the object coordinates
      */
-    virtual vector<double> coords () { cosmobl::ErrorMsg ("Error in generic() of Objech.h!"); vector<double> cc; return cc;}
+    virtual vector<double> coords () const { cosmobl::ErrorMsg ("Error in generic() of Objech.h!"); vector<double> cc; return cc;}
 
     /**
      *  @brief set the member \e m_xx
@@ -197,7 +197,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_xx (double xx) { cosmobl::ErrorMsg ("Error in set_xx() of Objech.h!"); }
+    virtual void set_xx (const double xx) { cosmobl::ErrorMsg ("Error in set_xx() of Objech.h!"); }
 
     /**
      *  @brief set the member \e m_yy
@@ -205,7 +205,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_yy (double yy) { cosmobl::ErrorMsg ("Error in set_yy() of Objech.h!"); }
+    virtual void set_yy (const double yy) { cosmobl::ErrorMsg ("Error in set_yy() of Objech.h!"); }
 
     /**
      *  @brief set the member \e m_zz
@@ -213,7 +213,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_zz (double zz) { cosmobl::ErrorMsg ("Error in set_zz() of Objech.h!"); }
+    virtual void set_zz (const double zz) { cosmobl::ErrorMsg ("Error in set_zz() of Objech.h!"); }
 
     /**
      *  @brief set the member \e m_vx
@@ -221,7 +221,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_vx (double vx) { cosmobl::ErrorMsg ("Error in set_vx() of Objech.h!"); }
+    virtual void set_vx (const double vx) { cosmobl::ErrorMsg ("Error in set_vx() of Objech.h!"); }
   
     /**
      *  @brief set the member \e m_vy
@@ -229,7 +229,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_vy (double vy) { cosmobl::ErrorMsg ("Error in set_vy() of Objech.h!"); }
+    virtual void set_vy (const double vy) { cosmobl::ErrorMsg ("Error in set_vy() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_vz
@@ -237,7 +237,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_vz (double vz) { cosmobl::ErrorMsg ("Error in set_vz() of Objech.h!"); }
+    virtual void set_vz (const double vz) { cosmobl::ErrorMsg ("Error in set_vz() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_dc
@@ -245,7 +245,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_dc (double dc) { cosmobl::ErrorMsg ("Error in set_dc() of Objech.h!"); }
+    virtual void set_dc (const double dc) { cosmobl::ErrorMsg ("Error in set_dc() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_ra
@@ -253,7 +253,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_ra (double ra) { cosmobl::ErrorMsg ("Error in set_ra() of Objech.h!"); }
+    virtual void set_ra (const double ra) { cosmobl::ErrorMsg ("Error in set_ra() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_dec
@@ -261,7 +261,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_dec (double dec) { cosmobl::ErrorMsg ("Error in set_dec() of Objech.h!"); }
+    virtual void set_dec (const double dec) { cosmobl::ErrorMsg ("Error in set_dec() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_redshift
@@ -269,7 +269,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_redshift (double redshift) { cosmobl::ErrorMsg ("Error in set_redshift() of Objech.h!"); }
+    virtual void set_redshift (const double redshift) { cosmobl::ErrorMsg ("Error in set_redshift() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_weight
@@ -277,7 +277,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_weight (double weight) { cosmobl::ErrorMsg ("Error in set_weight() of Objech.h!"); }
+    virtual void set_weight (const double weight) { cosmobl::ErrorMsg ("Error in set_weight() of Objech.h!"); }
 
     /**
      *  @brief set the member \e m_region
@@ -285,7 +285,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_region (long region) { cosmobl::ErrorMsg ("Error in set_region() of Objech.h!"); }
+    virtual void set_region (const long region) { cosmobl::ErrorMsg ("Error in set_region() of Objech.h!"); }
 
     /**
      *  @brief set the member \e m_mass
@@ -293,7 +293,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_mass (double mass) { cosmobl::ErrorMsg ("Error in set_mass() of Objech.h!"); }
+    virtual void set_mass (const double mass) { cosmobl::ErrorMsg ("Error in set_mass() of Objech.h!"); }
     
     /**
      *  @brief set the member \e m_magnitude
@@ -301,7 +301,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_magnitude (double magnitude) { cosmobl::ErrorMsg ("Error in set_magnitude() of Objech.h!"); }  
+    virtual void set_magnitude (const double magnitude) { cosmobl::ErrorMsg ("Error in set_magnitude() of Objech.h!"); }  
     
     /**
      *  @brief set the member \e m_richness
@@ -309,7 +309,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_richness (double richness) { cosmobl::ErrorMsg ("Error in set_richness() of Objech.h!"); }  
+    virtual void set_richness (const double richness) { cosmobl::ErrorMsg ("Error in set_richness() of Objech.h!"); }  
     
     /**
      *  @brief set the member \e m_generic
@@ -317,7 +317,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_generic (double generic) { cosmobl::ErrorMsg ("Error in set_generic() of Objech.h!"); }  
+    virtual void set_generic (const double generic) { cosmobl::ErrorMsg ("Error in set_generic() of Objech.h!"); }  
     
     /**
      *  @brief set the member \e m_radius
@@ -325,7 +325,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void set_radius (double radius) { cosmobl::ErrorMsg ("Error in set_radius() of Objech.h!"); }
+    virtual void set_radius (const double radius) { cosmobl::ErrorMsg ("Error in set_radius() of Objech.h!"); }
 
   };
 }

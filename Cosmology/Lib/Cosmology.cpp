@@ -38,7 +38,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-cosmobl::Cosmology::Cosmology (string model, bool unit)  
+cosmobl::Cosmology::Cosmology (const string model, const bool unit)  
   : m_model(model), m_unit(unit)
 {       
   m_Omega_matter = 0.27;  
@@ -69,7 +69,7 @@ cosmobl::Cosmology::Cosmology (string model, bool unit)
 // =====================================================================================
 
 
-cosmobl::Cosmology::Cosmology (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, string model, bool unit)
+cosmobl::Cosmology::Cosmology (const double Omega_matter, const double Omega_baryon, const double Omega_neutrinos, const double massless_neutrinos, const int massive_neutrinos, const double Omega_DE, const double Omega_radiation, const double hh, const double scalar_amp, const double n_spec, const double w0, const double wa, const double fNL, const int type_NG, const string model, const bool unit)
   : m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_sigma8(-1.), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_model(model), m_unit(unit)              
 {
   if (m_Omega_matter==0) ErrorMsg("Error in cosmobl::Cosmology::Cosmology of Cosmology.cpp: Omega_matter=0!");
@@ -87,7 +87,7 @@ cosmobl::Cosmology::Cosmology (double Omega_matter, double Omega_baryon, double 
 // =====================================================================================
 
 
-double cosmobl::Cosmology::w_CPL (double redshift) 
+double cosmobl::Cosmology::w_CPL (const double redshift) const 
 {
   return m_w0+m_wa*redshift/(1.+redshift);
 }
@@ -96,8 +96,10 @@ double cosmobl::Cosmology::w_CPL (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::f_DE (double redshift) // CPL parameterisation (see e.g. Bassett & Hlozek 2010)
+double cosmobl::Cosmology::f_DE (const double redshift) const
 {
+  // CPL parameterisation (see e.g. Bassett & Hlozek 2010)
+  
   return pow((1.+redshift),3.*(1.+m_w0+m_wa))*exp(-3.*m_wa*redshift/(1.+redshift)); 
   
   /*
@@ -111,7 +113,7 @@ double cosmobl::Cosmology::f_DE (double redshift) // CPL parameterisation (see e
 // =====================================================================================
 
 
-double cosmobl::Cosmology::EE (double redshift)
+double cosmobl::Cosmology::EE (const double redshift) const
 {
   return sqrt(m_Omega_matter*pow((1.+redshift),3)+m_Omega_DE*f_DE(redshift)+m_Omega_k*pow((1.+redshift),2)+m_Omega_radiation*pow(1.+redshift,4));
 }
@@ -120,7 +122,7 @@ double cosmobl::Cosmology::EE (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::HH (double redshift) 
+double cosmobl::Cosmology::HH (const double redshift) const 
 {
   return m_H0*EE(redshift);
 }
@@ -129,30 +131,30 @@ double cosmobl::Cosmology::HH (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::OmegaM (double redshift) 
+double cosmobl::Cosmology::OmegaM (const double redshift) const
 {
   return m_Omega_matter/EE2(redshift)*1./(1.+redshift);
   //return pow(m_H0/HH(redshift),2)*m_Omega_matter*pow(1.+redshift,3);
 }
 
-double cosmobl::Cosmology::OmegaDE (double redshift) 
+double cosmobl::Cosmology::OmegaDE (const double redshift) const 
 {
   if (m_wa!=0) ErrorMsg("Error in cosmobl::Cosmology::OmegaDE of Cosmology.cpp: w_a!=0 -> work in progress...");
 
   return m_Omega_DE/EE2(redshift)*pow(1./(1.+redshift),1.-3.*m_w0);
 } 
 
-double cosmobl::Cosmology::OmegaR (double redshift) 
+double cosmobl::Cosmology::OmegaR (const double redshift) const 
 {
   return m_Omega_radiation/EE2(redshift);
 } 
 
-double cosmobl::Cosmology::OmegaK (double redshift) 
+double cosmobl::Cosmology::OmegaK (const double redshift) const 
 {
   return m_Omega_k/EE2(redshift)*pow(1./(1.+redshift),2);
 } 
 
-double cosmobl::Cosmology::Omega (double redshift) 
+double cosmobl::Cosmology::Omega (const double redshift) const 
 {
   if (m_wa!=0) ErrorMsg("Error in cosmobl::Cosmology::Omega of Cosmology.cpp: w_a!=0 -> work in progress...");
 
@@ -164,7 +166,7 @@ double cosmobl::Cosmology::Omega (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::gg (double redshift) 
+double cosmobl::Cosmology::gg (const double redshift) const 
 {
   return 2.5*OmegaM(redshift)*pow(pow(OmegaM(redshift),4./7.)-(1.-OmegaM(redshift))+(1.+OmegaM(redshift)*0.5)*(1.+((1.-OmegaM(redshift))/70.)),-1.);
 }
@@ -173,7 +175,7 @@ double cosmobl::Cosmology::gg (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::DD (double redshift) 
+double cosmobl::Cosmology::DD (const double redshift) const 
 {
   // by Carroll, Press, & Turner 1992
   //return 5.*OmegaM(redshift)/(2*(1+redshift))/(1./70.+209./140.*OmegaM(redshift)-pow(OmegaM(redshift),2)/140.+pow(OmegaM(redshift),4./7.)); 
@@ -186,7 +188,7 @@ double cosmobl::Cosmology::DD (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::D_C (double redshift)
+double cosmobl::Cosmology::D_C (const double redshift) const 
 {
   if (redshift<0) ErrorMsg ("Error in cosmobl::Cosmology::D_C of Cosmology.cpp: redshift have to be >=0!");
   
@@ -238,15 +240,15 @@ double cosmobl::Cosmology::D_C (double redshift)
 // =====================================================================================
 
 
-void cosmobl::Cosmology::D_C_table (string file_table, double z_min, double z_max, int step, vector<double> &Redshift, vector<double> &dc)
+void cosmobl::Cosmology::D_C_table (const string file_table, const double z_min, const double z_max, const int step, vector<double> &Redshift, vector<double> &dc) const
 {
-  file_table = par::DirCosmo+"Cosmology/table_dc/"+file_table;
+  string File_table = par::DirCosmo+"Cosmology/table_dc/"+file_table;
  
   ifstream fin;
-  fin.open (file_table.c_str());
+  fin.open (File_table.c_str());
   if (!fin) {
 
-    ofstream fout (file_table.c_str()); checkIO (file_table,0); 
+    ofstream fout (File_table.c_str()); checkIO (File_table,0); 
     
     double delta_z = (z_max-z_min)/step;
     double z1 = z_min;
@@ -258,11 +260,11 @@ void cosmobl::Cosmology::D_C_table (string file_table, double z_min, double z_ma
       z1 = z2; z2 += delta_z;
     }
     
-    fout.clear(); fout.close(); cout <<"I wrote the file: "<<file_table<<endl;
+    fout.clear(); fout.close(); cout <<"I wrote the file: "<<File_table<<endl;
   }
   fin.clear(); fin.close();
   
-  fin.open(file_table.c_str());
+  fin.open(File_table.c_str());
   double Red, DC;
   while (fin >>Red>>DC) {
     Redshift.push_back(Red);
@@ -275,7 +277,7 @@ void cosmobl::Cosmology::D_C_table (string file_table, double z_min, double z_ma
 // =====================================================================================
 
 
-double cosmobl::Cosmology::D_M (double redshift) 
+double cosmobl::Cosmology::D_M (const double redshift) const 
 {
   if (m_Omega_k>1.e-10) 
     return m_D_H/sqrt(m_Omega_k)*sinh(sqrt(m_Omega_k)*D_C(redshift)/m_D_H);
@@ -291,7 +293,7 @@ double cosmobl::Cosmology::D_M (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::D_A (double redshift) 
+double cosmobl::Cosmology::D_A (const double redshift) const 
 {
   return D_M(redshift)/(1.+redshift);
 }
@@ -300,7 +302,7 @@ double cosmobl::Cosmology::D_A (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::D_L (double redshift) 
+double cosmobl::Cosmology::D_L (const double redshift) const 
 {
   return (1.+redshift)*D_M(redshift);
 }
@@ -309,7 +311,7 @@ double cosmobl::Cosmology::D_L (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::D_V (double redshift)
+double cosmobl::Cosmology::D_V (const double redshift) const 
 {
   return pow(pow(D_M(redshift),2)*par::cc*redshift/HH(redshift),1./3.);
 }
@@ -318,7 +320,7 @@ double cosmobl::Cosmology::D_V (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::Distance (double redshift, string distance_type)
+double cosmobl::Cosmology::Distance (const double redshift, const string distance_type) const 
 {
   if (distance_type=="DC")
     return D_C(redshift);
@@ -348,7 +350,7 @@ double cosmobl::Cosmology::Distance (double redshift, string distance_type)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::lookback_time (double redshift)
+double cosmobl::Cosmology::lookback_time (const double redshift) const 
 {
   cosmobl::classfunc::E_inv2 func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
 
@@ -362,7 +364,7 @@ double cosmobl::Cosmology::lookback_time (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::cosmic_time (double redshift)
+double cosmobl::Cosmology::cosmic_time (const double redshift) const
 {
   cosmobl::classfunc::E_inv3 func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_model);
   
@@ -379,7 +381,7 @@ double cosmobl::Cosmology::cosmic_time (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::EE2 (double redshift) // see e.g. de Araujo 2005
+double cosmobl::Cosmology::EE2 (const double redshift) const // see e.g. de Araujo 2005
 {
   double aa = 1./(1.+redshift);
   return m_Omega_radiation+m_Omega_matter*aa+m_Omega_k*aa*aa+m_Omega_DE*pow(aa,1.-3.*m_w0);
@@ -390,7 +392,7 @@ double cosmobl::Cosmology::EE2 (double redshift) // see e.g. de Araujo 2005
 // =====================================================================================
 
 
-double cosmobl::Cosmology::qq (double redshift)
+double cosmobl::Cosmology::qq (const double redshift) const
 {
   if (m_wa!=0) ErrorMsg("Error in cosmobl::Cosmology::qq of Cosmology.cpp: w_a!=0 -> work in progress...");
 
@@ -402,7 +404,7 @@ double cosmobl::Cosmology::qq (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::Hdot (double redshift)
+double cosmobl::Cosmology::Hdot (const double redshift) const
 {
   return -pow(HH(redshift),2)*(1.+qq(redshift));
 }
@@ -411,7 +413,7 @@ double cosmobl::Cosmology::Hdot (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::z_acc ()
+double cosmobl::Cosmology::z_acc () const
 {
   if (m_wa!=0) ErrorMsg("Error in cosmobl::Cosmology::z_acc of Cosmology.cpp: w_a!=0 -> work in progress...");
   
@@ -425,7 +427,7 @@ double cosmobl::Cosmology::z_acc ()
 // =====================================================================================
 
 
-double cosmobl::Cosmology::z_eq ()
+double cosmobl::Cosmology::z_eq () const
 {
   if (m_wa!=0) ErrorMsg("Error in cosmobl::Cosmology::z_eq of Cosmology.cpp: w_a!=0 -> work in progress...");
   return pow(m_Omega_DE/m_Omega_matter,-1./(3.*m_w0))-1.;
@@ -435,7 +437,7 @@ double cosmobl::Cosmology::z_eq ()
 // =====================================================================================
 
 
-double cosmobl::Cosmology::Mag_Volume_limited (double z_max, double mag_lim)
+double cosmobl::Cosmology::Mag_Volume_limited (const double z_max, const double mag_lim) const
 {
   return (mag_lim-5.*log10(D_L(z_max)))-25.;
 }
@@ -444,7 +446,7 @@ double cosmobl::Cosmology::Mag_Volume_limited (double z_max, double mag_lim)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::Lum_bol (double redshift, double flux) 
+double cosmobl::Cosmology::Lum_bol (const double redshift, const double flux) const 
 {
   return 4.*par::pi*flux*pow(D_L(redshift),2);
 }
@@ -453,11 +455,12 @@ double cosmobl::Cosmology::Lum_bol (double redshift, double flux)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::Redshift (double d_c, double z1_guess, double z2_guess, double prec) 
+double cosmobl::Cosmology::Redshift (const double d_c, const double z1_guess, const double z2_guess, const double prec) const
 {
-  if (prec<1.e-5) {
+  double Prec = prec;
+  if (Prec<1.e-5) {
     WarningMsg("Attention in cosmobl::Cosmology::Redshift of Cosmology.cpp: prec has been set to 1.e-5");
-    prec = 1.e-5;
+    Prec = 1.e-5;
   }
 
   double redshift = -1.;
@@ -507,67 +510,69 @@ double cosmobl::Cosmology::Redshift (double d_c, double z1_guess, double z2_gues
 // =====================================================================================
 
 
-double cosmobl::Cosmology::Redshift_LCDM (double d_c, double z1_guess, double z2_guess, bool go_fast, double prec) 
+double cosmobl::Cosmology::Redshift_LCDM (const double d_c, const double z1_guess, const double z2_guess, const bool go_fast, const double prec) const 
 {
   if (m_model!="LCDM") 
     ErrorMsg("Error in cosmobl::Cosmology::Redshift_LDCM of Cosmology.cpp: this"
 	     " method works only for a LambdaCDM universe");
 
-  if (prec<1.e-5) {
+  double Prec = prec;
+  if (Prec<1.e-5) {
     WarningMsg("Attention in cosmobl::Cosmology::Redshift_LDCM of Cosmology.cpp: prec"
 	       " has been set to 1.e-5");
-    prec = 1.e-5;
+    Prec = 1.e-5;
   }
 
   double fact = 1./(par::cc/100.); // factor to convert [Mpc/h] into [c/H0]
-
-  d_c *= fact; // [Mpc/h] -> [c/H0]
+  
+  double D_c = d_c * fact; // [Mpc/h] -> [c/H0]
 
 
   // first interval definition: based on user definition and cosmology
 
-  double z0 = max(max(z1_guess, d_c), 4./pow(sqrt(m_Omega_matter)*d_c-2.,2)-1.); // z is always > than these two numbers
+  double z0 = max(max(z1_guess, D_c), 4./pow(sqrt(m_Omega_matter)*D_c-2.,2)-1.); // z is always > than these two numbers
 
-  double z1 = (d_c<2.) ? min(z2_guess, 4./pow(d_c-2.,2)-1.) : z2_guess; // z is always < than this number, but valid only when d_c<2
+  double z1 = (D_c<2.) ? min(z2_guess, 4./pow(D_c-2.,2)-1.) : z2_guess; // z is always < than this number, but valid only when d_c<2
   
   z1 = max(z1, z0);
 
 
   // choice of the method
 
-  double (Cosmology::*DC)(double) = (go_fast) ? &Cosmology::D_C_LCDM : &Cosmology::D_C;
+  function<double(double)> DC = (go_fast) ? bind(&Cosmology::D_C_LCDM, this, std::placeholders::_1) : bind(&Cosmology::D_C, this, std::placeholders::_1);
 
-
+  
   // interval check: needs z0<=z and z1>=z
 
-  double d0 = (this->*DC)(z0)*fact;
-  if (d0>d_c) {
-    z0 = d_c/d0*z0/EE(z0);
-    d0 = (this->*DC)(z0)*fact;
+  double d0 = DC(z0)*fact;
+  
+  if (d0>D_c) {
+    z0 = D_c/d0*z0/EE(z0);
+    d0 = DC(z0)*fact;
   }
 
-  double d1 = (this->*DC)(z1)*fact;
-  if (d1<d_c) {
-    z1 = EE(z1)*d_c/d1*z1;
-    d1 = (this->*DC)(z1)*fact;
+  double d1 = DC(z1)*fact;
+  if (d1<D_c) {
+    z1 = EE(z1)*D_c/d1*z1;
+    d1 = DC(z1)*fact;
   }
-
+ 
 
   // calculation
 
   double diffz = z1-z0;
   double diffd = d1-d0;
-  double prec2 = 2.*prec; // prec is the tolerance on the result, prec2 on the interval length
+  double prec2 = 2.*Prec; // prec is the tolerance on the result, prec2 on the interval length
  
   while (diffz>prec2 && diffd>0.) {
-    z1 = z0+(d_c-d0)*(diffz/diffd); // given the shape this estimate is always > z
-    d1 = (this->*DC)(z1)*fact;
-    z0 = z0+EE(z0)*(d_c-d0); // given the shape this estimate is always < z
-    d0 = (this->*DC)(z0)*fact;
+    z1 = z0+(D_c-d0)*(diffz/diffd); // given the shape this estimate is always > z
+    d1 = DC(z1)*fact;
+    z0 = z0+EE(z0)*(D_c-d0); // given the shape this estimate is always < z
+    d0 = DC(z0)*fact;
     diffz = z1-z0;
     diffd = d1-d0;
   }
-
+  
   return 0.5*(z0+z1);
 }
 
@@ -575,7 +580,7 @@ double cosmobl::Cosmology::Redshift_LCDM (double d_c, double z1_guess, double z2
 // =====================================================================================
 
 
-double cosmobl::Cosmology::Redshift_time (double time, double z1_guess, double z2_guess) 
+double cosmobl::Cosmology::Redshift_time (const double time, const double z1_guess, const double z2_guess) const 
 {
   if (m_model!="LCDM") ErrorMsg("Error in cosmobl::Cosmology::Redshift_time of Cosmology.cpp: model!=LCDM -> Work in progress...");
 
@@ -590,7 +595,7 @@ double cosmobl::Cosmology::Redshift_time (double time, double z1_guess, double z
 // =====================================================================================
   
 
-double cosmobl::Cosmology::Volume (double z1, double z2, double Area) 
+double cosmobl::Cosmology::Volume (const double z1, const double z2, const double Area) const 
 {
   double Area_steradians = Area/pow(180./par::pi,2);
 
@@ -603,7 +608,7 @@ double cosmobl::Cosmology::Volume (double z1, double z2, double Area)
 /* Alfonso Veropalumbo */
 
 // Total Comoving volume from z=0 to z, all sky (Hogg 2000, Eq 29)
-double cosmobl::Cosmology::Volume (double zz) 
+double cosmobl::Cosmology::Volume (const double zz) const 
 {
   double DDMM = D_M(zz);
 
@@ -621,7 +626,7 @@ double cosmobl::Cosmology::Volume (double zz)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::max_redshift (double Volume, double Area, double z_min)
+double cosmobl::Cosmology::max_redshift (const double Volume, const double Area, const double z_min) const
 {
   cosmobl::classfunc::func_V func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit, z_min, Area, Volume);
   return zbrent (func, z_min, 10., 1.e-9);
@@ -631,7 +636,7 @@ double cosmobl::Cosmology::max_redshift (double Volume, double Area, double z_mi
 // =====================================================================================
 
 
-double cosmobl::Cosmology::dV_dZdOmega (double redshift, bool angle_rad) 
+double cosmobl::Cosmology::dV_dZdOmega (const double redshift, const bool angle_rad) const 
 {
   // angle_rad: 1 -> Omega in steradians; 0 -> Omega in square degrees
   double conv = (angle_rad) ? 1. : 3282.80635; 
@@ -643,7 +648,7 @@ double cosmobl::Cosmology::dV_dZdOmega (double redshift, bool angle_rad)
 // =====================================================================================
   
 
-double cosmobl::Cosmology::deltac (double redshift) 
+double cosmobl::Cosmology::deltac (const double redshift) const 
 { 
   return 1.686*(1.+0.012299*log10(OmegaM(redshift))); 
 }
@@ -652,7 +657,7 @@ double cosmobl::Cosmology::deltac (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::Rho (double Omega_matter, double Omega_neutrinos, bool unit1)    
+double cosmobl::Cosmology::Rho (const double Omega_matter, const double Omega_neutrinos, const bool unit1) const  
 {
   double fact = (m_unit && unit1) ? 1. : m_hh*m_hh;
 
@@ -664,7 +669,7 @@ double cosmobl::Cosmology::Rho (double Omega_matter, double Omega_neutrinos, boo
 // =====================================================================================
 
 
-double cosmobl::Cosmology::DeltaR (double Delta_crit, double redshift)    
+double cosmobl::Cosmology::DeltaR (const double Delta_crit, const double redshift) const 
 {
   return Delta_crit/OmegaM(redshift);
 }
@@ -673,7 +678,7 @@ double cosmobl::Cosmology::DeltaR (double Delta_crit, double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::D_C_LCDM (double redshift) 
+double cosmobl::Cosmology::D_C_LCDM (const double redshift) const 
 {  
   if (m_model!="LCDM" || (1.-m_Omega_matter-m_Omega_DE)>1.e-30 || fabs(m_Omega_k)>1.e-30) 
     ErrorMsg("Error in cosmobl::Cosmology::D_C_LCDM of Cosmology.cpp: this method"
@@ -701,7 +706,7 @@ double cosmobl::Cosmology::D_C_LCDM (double redshift)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::elf_dz (double phi) 
+double cosmobl::Cosmology::elf_dz (const double phi) const 
 {
   int jj = round(phi/M_PI);
   double phi0 = phi-jj*M_PI;
@@ -735,7 +740,7 @@ double cosmobl::Cosmology::elf_dz (double phi)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::acn_dz (double cc) 
+double cosmobl::Cosmology::acn_dz (const double cc) const 
 {
   double pp = 1.;
   double xx = cc*cc;
@@ -755,7 +760,7 @@ double cosmobl::Cosmology::acn_dz (double cc)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::asn_dz (double ss) 
+double cosmobl::Cosmology::asn_dz (const double ss) const 
 {
   //double yA = 0.034856757;
   double yA = 0.153532;
@@ -781,7 +786,7 @@ double cosmobl::Cosmology::asn_dz (double ss)
 // =====================================================================================
 
 
-double cosmobl::Cosmology::serf_dz (double yy) 
+double cosmobl::Cosmology::serf_dz (const double yy) const 
 {
   return (1.+yy*(0.32216878+yy*(0.18693909+yy*(0.12921048+yy*(0.097305732+yy*(0.077131543+yy*0.063267775+yy*(0.053185339+yy*(0.045545557+yy*0.039573617))))))));
 }

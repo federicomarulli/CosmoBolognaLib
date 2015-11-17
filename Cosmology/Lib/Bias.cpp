@@ -38,7 +38,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::Cosmology::bias_halo (double Mass, double redshift, string author, string method_SS, string output_root, double Delta, double kk, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::bias_halo (const double Mass, const double redshift, const string author, const string method_SS, const string output_root, const double Delta, const double kk, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   double SSS = SSM_norm(Mass, method_SS, redshift, output_root, k_max, file_par); 
   double Sigma = sqrt(SSS); 
@@ -57,7 +57,7 @@ double cosmobl::Cosmology::bias_halo (double Mass, double redshift, string autho
 // =====================================================================================
 
 
-double cosmobl::Cosmology::bias_halo (double Mass, double Sigma, double redshift, string author_bias, string output_root, double Delta, double kk, int norm, double k_min, double k_max, bool GSL, double prec, string method_SS, string file_par) 
+double cosmobl::Cosmology::bias_halo (const double Mass, const double Sigma, const double redshift, const string author_bias, const string output_root, const double Delta, const double kk, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string method_SS, const string file_par) 
 {
   double bias = bias_halo_generator(Sigma, redshift, author_bias, Delta); 
   
@@ -74,7 +74,7 @@ double cosmobl::Cosmology::bias_halo (double Mass, double Sigma, double redshift
 // =====================================================================================
 
 
-double cosmobl::Cosmology::bias_halo_generator (double Sigma, double redshift, string author, double Delta) 
+double cosmobl::Cosmology::bias_halo_generator (const double Sigma, const double redshift, const string author, const double Delta) const
 {
   double Z0 = 0.;
   double deltacz = deltac(redshift);
@@ -130,7 +130,7 @@ double cosmobl::Cosmology::bias_halo_generator (double Sigma, double redshift, s
 // =====================================================================================
 
 
-double cosmobl::Cosmology::bias_eff (double Mass_min, double Mass_max, double redshift, string author_bias, string author_MF, string method_SS, string output_root, double Delta, double kk, string interpType, int Num, double stepsize, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::bias_eff (const double Mass_min, const double Mass_max, const double redshift, const string author_bias, const string author_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   // ---------- read the grid file ---------- 
   
@@ -170,7 +170,7 @@ double cosmobl::Cosmology::bias_eff (double Mass_min, double Mass_max, double re
 // =====================================================================================
 
 
-double cosmobl::Cosmology::bias_eff (vector<double> MM, vector<double> MF, double redshift, string author_bias, string method_SS, string output_root, double Delta, double kk, string interpType, int Num, double stepsize, int norm, double k_min, double k_max, bool GSL, double prec, string file_par)
+double cosmobl::Cosmology::bias_eff (const vector<double> MM, const vector<double> MF, const double redshift, const string author_bias, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   // ---------- read the grid file ---------- 
   

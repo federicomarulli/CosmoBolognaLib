@@ -37,6 +37,7 @@
 #include "ChainMesh.h"
 #include "Object.h"
 #include "GenericObject.h"
+#include "RandomObject.h"
 #include "Halo.h"
 #include "Mock.h"
 #include "Galaxy.h"
@@ -103,7 +104,7 @@ namespace cosmobl {
   private :
     
     /// vector containing the objects of the catalogue
-    vector<shared_ptr<Object> > m_sample; 
+    vector<shared_ptr<Object> > m_sample;
     
     /// vector containing the object indexes
     vector<int> m_index;      
@@ -118,14 +119,14 @@ namespace cosmobl {
   
     /**
      * @brief constructor 
-     * @param sample vector of pointers to objects of type \e Object
+     * @param sample vector of objects of type \e Object
      * @return object of class Catalogue
      */
     Catalogue (vector<shared_ptr<Object> > sample) {
       for (auto &&i : sample)
 	m_sample.push_back(move(i));
     }
-  
+    
     /**
      * @brief default destructor
      * @return none
@@ -138,7 +139,7 @@ namespace cosmobl {
      * @return none
      */
     void add_object (shared_ptr<Object> object) { m_sample.push_back(move(object)); }
-
+    
     /**
      * @brief add some objects to the catalogue
      * @param sample vector of pointers to objects of type \e Object
@@ -173,147 +174,147 @@ namespace cosmobl {
      * @param i the object index
      * @return the coordinate x of the i-th object 
      */
-    double xx (int i) { return m_sample[i]->xx(); };
+    double xx (const int i) const { return m_sample[i]->xx(); };
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_yy
      * @param i the object index
      * @return the coordinate y of the i-th object 
      */
-    double yy (int i) { return m_sample[i]->yy(); };
+    double yy (const int i) const { return m_sample[i]->yy(); };
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_zz
      * @param i the object index
      * @return the coordinate z of the i-th object 
      */
-    double zz (int i) { return m_sample[i]->zz(); };
+    double zz (const int i) const { return m_sample[i]->zz(); };
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_vx
      * @param i the object index
      * @return the velocity along the x direction of the i-th object
      */
-    double vx (int i) { return m_sample[i]->vx(); };
+    double vx (const int i) const { return m_sample[i]->vx(); };
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_vy
      * @param i the object index
      * @return the velocity along the y direction of the i-th object
      */
-    double vy (int i) { return m_sample[i]->vy(); };
+    double vy (const int i) const { return m_sample[i]->vy(); };
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_vz
      * @param i the object index
      * @return the velocity along the z direction of the i-th object
      */
-    double vz (int i) { return m_sample[i]->vz(); }; 
+    double vz (const int i) const { return m_sample[i]->vz(); }; 
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_dc
      * @param i the object index
      * @return the comoving distance of the i-th object
      */
-    double dc (int i) { return m_sample[i]->dc(); };
+    double dc (const int i) const { return m_sample[i]->dc(); };
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_ra
      * @param i the object index
      * @return the Right Ascension of the i-th object
      */
-    double ra (int i) { return m_sample[i]->ra(); };
+    double ra (const int i) const { return m_sample[i]->ra(); };
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_dec
      * @param i the object index
      * @return the Declination of the i-th object
      */
-    double dec (int i) { return m_sample[i]->dec(); };
+    double dec (const int i) const { return m_sample[i]->dec(); };
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_redshift
      * @param i the object index
      * @return the redshift of the i-th object
      */
-    double redshift (int i) { return m_sample[i]->redshift(); };
+    double redshift (const int i) const { return m_sample[i]->redshift(); };
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_weight
      * @param i the object index
      * @return the weight of the i-th object
      */
-    double weight (int i) { return m_sample[i]->weight(); };
+    double weight (const int i) const { return m_sample[i]->weight(); };
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_region
      * @param i the object index
      * @return the index of the region of the i-th object
      */
-    long region (int i) { return m_sample[i]->region(); };
+    long region (const int i) const { return m_sample[i]->region(); };
 
     /**
      * @brief get the total number of region the Catalogues is divided
      * @return the total number of regions
      */
-    int Nregion ();
+    int Nregion () const;
 
     /**
      * @brief get the list of regions in which the Catalogue is
      divided     
      * @return the list of regions of regions
      */
-    vector<long> get_region_list ();
+    vector<long> get_region_list () const;
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_mass
      * @param i the object index
      * @return the mass of the i-th object
      */
-    double mass (int i) { return m_sample[i]->mass(); }
+    double mass (const int i) const { return m_sample[i]->mass(); }
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_magnitude
      * @param i the object index
      * @return the magnitude of the i-th object
      */
-    double magnitude (int i) { return m_sample[i]->magnitude(); }
+    double magnitude (const int i) const { return m_sample[i]->magnitude(); }
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_richness
      * @param i the object index
      * @return the richness of the i-th object
      */
-    double richness (int i) { return m_sample[i]->richness(); }
+    double richness (const int i) const { return m_sample[i]->richness(); }
 
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_generic
      * @param i the object index
      * @return generic properties of the i-th object
      */
-    double generic (int i) { return m_sample[i]->generic(); }
+    double generic (const int i) const { return m_sample[i]->generic(); }
 
       /**
      * @brief get the protected member Catalogue::m_sample[i]->m_radius
      * @param i the object index
      * @return radius of the i-th object
      */
-    double radius (int i) { return m_sample[i]->radius(); }
+    double radius (const int i) const { return m_sample[i]->radius(); }
   
     /**
      * @brief get the values of the object variables  
      * @param var_name the variable name
      * @return the vector of the variable Var
      */
-    vector<double> var (Var);
+    vector<double> var (const Var) const;
 
     /**
      * @brief get the i-th object of the catalogue
      * @param i the object index
      * @return pointer to an object of the catalogue
      */
-    shared_ptr<Object> object (int i) { return m_sample[i]; }
-
+    shared_ptr<Object> object (const int i) const { return m_sample[i]; }
+    
     /**
      * @brief get the X, Y, Z coordinates of the i-th object of the
      * catalogue
@@ -321,7 +322,7 @@ namespace cosmobl {
      * @param i the object index
      * @return vector containing the three coordinates
      */
-    vector<double> coordinates (int i) { return m_sample[i]->coords(); }
+    vector<double> coordinates (const int i) const { return m_sample[i]->coords(); }
   
     /**
      * @brief set a private variable
@@ -329,20 +330,20 @@ namespace cosmobl {
      * @param _var vector of variables
      * @return none
      */
-    void set_var (Var, vector<double>); 
+    void set_var (const Var, const vector<double>); 
 
     /**
      * @brief get the number of objects of the catalogue
      * @return the number of objects
      */
-    int nObjects () { return m_sample.size(); }
+    int nObjects () const { return m_sample.size(); }
 
     /**
      * @brief change the number of objects of the catalogue
      * @param newN the new number of objects
      * @return none
      */
-    void resize (int newN) { m_sample.resize(newN); }
+    void resize (const int newN) { m_sample.resize(newN); }
 
     /**
      * @brief get the minimum and maximum values of a variable
@@ -353,7 +354,7 @@ namespace cosmobl {
      * erase the vector Lim
      * @return none
      */
-    void MinMax_var (Var, vector<double> &, bool er=1);
+    void MinMax_var (const Var, vector<double> &, const bool er=1) const;
 
     /**
      * @brief get the minimum and maximum values of a variable
@@ -364,7 +365,7 @@ namespace cosmobl {
      * erase the vector Lim
      * @return none
      */
-    void MinMax_var (vector<Var>, vector<vector<double> > &, bool er=1);
+    void MinMax_var (const vector<Var>, vector<vector<double> > &, const bool er=1) const;
   
     /**
      * @brief get the minimum and maximum values of a variable
@@ -372,7 +373,7 @@ namespace cosmobl {
      * @return 2 dimensional vector containing the minimum and
      * maximum values of the variable
      */
-    vector<double> MinMax_var (Var);
+    vector<double> MinMax_var (const Var) const;
 
     /**
      * @brief get the mean, the median, the standard deviation, and
@@ -384,7 +385,7 @@ namespace cosmobl {
      * the third and first quartiles of the variable
      * @return none
      */
-    void stats_var (Var, vector<double> &);
+    void stats_var (const Var, vector<double> &) const;
 
     /**
      * @brief get the mean, the median, the standard deviation, and
@@ -397,7 +398,7 @@ namespace cosmobl {
      * variable 
      * @return none
      */
-    void stats_var (vector<Var>, vector< vector<double> > &);
+    void stats_var (const vector<Var>, vector<vector<double> > &) const;
   
     /**
      * @brief get the distribution of a variable
@@ -419,13 +420,13 @@ namespace cosmobl {
      * gaussian function used to convolve the distribution
      * @return none
      */
-    void var_distr (Var, vector<double> &, vector<double> &, int, bool linear=1, string file_out="NULL", double Volume=1., bool norm=0, double V1=-1.e30, double V2=-1.e30, bool bin_type=1, bool convolution=0, double sigma=0.);
+    void var_distr (const Var, vector<double> &, vector<double> &, const int, const bool linear=1, const string file_out="NULL", const double Volume=1., const bool norm=0, const double V1=-1.e30, const double V2=-1.e30, const bool bin_type=1, const bool convolution=0, const double sigma=0.) const;
     
     /**
      * @brief get the total weight of the objects of the catalogue
      * @return the total weight
      */
-    double weightedN ();
+    double weightedN () const;
 
     /**
      * @brief compute the comoving coordinates (x, y, z) using (ra,
@@ -433,7 +434,7 @@ namespace cosmobl {
      * @param cosm object of class Cosmology
      * @return none
     */
-    void computeComovingCoordinates (Cosmology &); 
+    void computeComovingCoordinates (const Cosmology &); 
 
     /**
      * @brief compute the polar coordinates (ra, dec, dc) using
@@ -450,7 +451,7 @@ namespace cosmobl {
      * @param z2 the maximum redshift used in the computation
      * @return none
      */
-    void computePolarCoordinates (Cosmology &, double z1=0., double z2=1.); 
+    void computePolarCoordinates (const Cosmology &, const double z1=0., const double z2=1.); 
 
     /**
      * @brief normalize (x, y, z) (i.e. &rarr; (x/dc, y/dc, z/dc))
@@ -469,7 +470,7 @@ namespace cosmobl {
      * @param vv vector used to order the catalogue
      * @return none
     */
-    void Order (vector<int>); 
+    void Order (const vector<int>); 
 
     /**
      * @brief restore the original vector (i.e. the opposite of
@@ -484,7 +485,7 @@ namespace cosmobl {
      * @param cat the name of the file
      * @return none
      */
-    void write_coords (string &);
+    void write_coords (const string) const;
 
     /**
      * @brief write the polar coordinates of the catalogue in an
@@ -492,38 +493,34 @@ namespace cosmobl {
      * @param cat the name of the file
      * @return none
     */
-    void write_obs_coords (string &);
+    void write_obs_coords (const string) const;
 
     /**
      * @brief get the distrance between the i-th object of the
      * catalogue and another object
-     *
      * @param i the object index
      * @param obj pointer to an object
-     *
      * @return distance between the i-th object of the catalogue and
      * the object obj
     */
-    double distance (int, shared_ptr<Object>);
+    double distance (const int, shared_ptr<Object>) const;
     
     /**
      * @brief get the angular distrance between the i-th object of the
      * catalogue and another object
-     *
      * @param i the object index
      * @param obj pointer to an object
-     *
      * @return distance between the i-th object of the catalogue and
      * the object obj
     */
-    double angsep_xyz (int, shared_ptr<Object>);
+    double angsep_xyz (const int, shared_ptr<Object>) const;
     
     /**
      * @brief overloading of the += operator, to sum two catalogues
      * @param cc object of class Catalogue 
      * @return object of class catalogue
     */
-    Catalogue operator += (const shared_ptr<Catalogue> cc)
+    Catalogue operator += (shared_ptr<Catalogue> cc)
     {    
       for (auto &&i : cc->m_sample)
 	m_sample.push_back(move(i));
@@ -540,7 +537,7 @@ namespace cosmobl {
      * &rarr; creates a subcatalogue outside down-up;
      * @return object of class catalogue
     */
-    shared_ptr<Catalogue> cut (Var, double &, double &, bool excl=0);
+    shared_ptr<Catalogue> cut (const Var, const double, const double, const bool excl=0);
 
     /**
      * @brief create a smoothed version of the catalogue
@@ -555,7 +552,7 @@ namespace cosmobl {
      * chain-mesh (use SUB>1 when there could be memory problems)
      * @return object of class catalogue
      */
-    shared_ptr<Catalogue> smooth (double, vector<Var> vars={}, int SUB=1);
+    shared_ptr<Catalogue> smooth (const double, const vector<Var> vars={}, const int SUB=1);
 
   };
 }

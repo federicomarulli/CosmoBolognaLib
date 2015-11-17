@@ -59,16 +59,16 @@ void cosmobl::MCMC::start_process (int idum, double logstep, int niter, int nsub
 
   vector<double> temp(niter,0);
 
-  m_par.erase(m_par.begin(),m_par.end()); m_par.resize(m_npar,temp);
-  m_chi2.erase(m_chi2.begin(),m_chi2.end()); m_chi2.resize(niter,0);
-  m_accept.erase(m_accept.begin(),m_accept.end()); m_accept.resize(niter,0);
+  m_par.erase(m_par.begin(), m_par.end()); m_par.resize(m_npar, temp);
+  m_chi2.erase(m_chi2.begin(), m_chi2.end()); m_chi2.resize(niter, 0);
+  m_accept.erase(m_accept.begin(), m_accept.end()); m_accept.resize(niter, 0);
 
   cosmobl::glob::State state;
   state.m_par = start;
 
-  cosmobl::glob::Plog plog(chi,m_prior);
+  cosmobl::glob::Plog plog(chi, m_prior);
 
-  cosmobl::glob::Proposal propose(idum,logstep);
+  cosmobl::glob::Proposal propose(idum, logstep);
    
   double acc = 1.;
 
@@ -81,7 +81,7 @@ void cosmobl::MCMC::start_process (int idum, double logstep, int niter, int nsub
 
 
   for (int i=1; i<niter; i++) {
-    acc = mcmc_step(nsubiter,state,plog,propose);
+    acc = mcmc_step(nsubiter, state, plog, propose);
     for (int j=0; j<m_npar; j++) m_par[j][i] = state.m_par[j]; 
     m_chi2[i] = -2*state.m_plog;
     m_accept[i] = acc;
@@ -89,9 +89,10 @@ void cosmobl::MCMC::start_process (int idum, double logstep, int niter, int nsub
   
   cout << "Accepted "<< 100*Average(m_accept) << "%" << endl;
   for (int i=0; i<m_npar; i++) {
-    vector<double> err(2,0);
-    Quartile(m_par[i],err[0],start[i],err[1]);
-    cout << start[i] << " - " << fabs(err[0]-start[i]) << " + " << fabs(err[1]-start[i]) << endl;
+    double ss = 0., err1 = 0., err2 = 0.;
+    Quartile(m_par[i], err1, ss, err2);
+    start[i] = ss;
+    cout << start[i] << " - " << fabs(err1-start[i]) << " + " << fabs(err2-start[i]) << endl;
   }
    
 }

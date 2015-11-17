@@ -119,7 +119,7 @@ namespace cosmobl {
      *  @param nLN number of lognormal realizations
      *  @return object of class LogNormal
      */
-    LogNormal (shared_ptr<Catalogue> data, shared_ptr<Catalogue> random, int nLN) : m_nLN(nLN), m_data(data), m_random(random)
+    LogNormal (const shared_ptr<Catalogue> data, const shared_ptr<Catalogue> random, const int nLN) : m_nLN(nLN), m_data(data), m_random(random)
     {
       m_LNCat.resize(m_nLN);
     }
@@ -130,7 +130,7 @@ namespace cosmobl {
      *  @param random input random catalogue
      *  @return none
      */
-    void setCatalogues (shared_ptr<Catalogue>, shared_ptr<Catalogue>);
+    void setCatalogues (const shared_ptr<Catalogue>, const shared_ptr<Catalogue>);
     
     /**
      *  @brief set the starting two-point correlation function
@@ -138,7 +138,7 @@ namespace cosmobl {
      *  @param xi input two-point correlation function
      *  @return none
      */
-    void setParameters_from_xi (vector<double> &, vector<double> &);
+    void setParameters_from_xi (const vector<double>, const vector<double>);
 
     /**
      *  @brief set the parameters to compute a prediction of &xi;(r)
@@ -150,8 +150,28 @@ namespace cosmobl {
      *  @param model the cosmological model used to compute distances
      *  @return none
      */
-    void setParameters_from_model (shared_ptr<Cosmology>, double &, bool Real=1, string author="CAMB", bool NL=0, string model="LCDM");
+    void setParameters_from_model (const shared_ptr<Cosmology>, const double, const bool Real=1, const string author="CAMB", const bool NL=0, const string model="LCDM");
+    
+    /**
+     *  @brief set the total number of realizations
+     *  @param nLN the number of realizations
+     *  @return none
+     */
+    void set_nLN (const int);
+    
+    /**
+     *  @brief get the private member LogNormal::m_nLN
+     *  @return the number of LogNormal realizations
+     */
+    int nLN () { return m_nLN; }
 
+    /**
+     *  @brief get the private member LogNormal::m_LNCat[i]
+     *  @param i index of the LogNormal realization
+     *  @return the i-th LogNormal realization
+     */
+    shared_ptr<Catalogue> LNCat (const int i) { return m_LNCat[i]; }
+    
     /**
      *  @brief generate the LogNormal mock catalogues
      *  @param rmin the cell size in comoving coordinates
@@ -161,27 +181,8 @@ namespace cosmobl {
      *  LogNormal realizations
      *  @return none
      */
-    void generate_LogNormal_mock (double &, string &, int start=0, string filename="lognormal_");
-
-    /**
-     *  @brief return the number of LogNormal realizations
-     *  @return the number of LogNormal realizations
-     */
-    int nLN () { return m_nLN; }
-
-    /**
-     *  @brief return the i-th LogNormal realization
-     *  @param i index of the LogNormal realization
-     *  @return the i-th LogNormal realization
-     */
-    shared_ptr<Catalogue> LNCat (int i) { return m_LNCat[i]; }
-
-    /**
-     *  @brief set the total number of realizations
-     *  @param nLN the number of realizations
-     *  @return none
-     */
-    void set_nLN (int &);
+    void generate_LogNormal_mock (const double, const string, const int start=0, const string filename="lognormal_");
+    
   };
 }
 

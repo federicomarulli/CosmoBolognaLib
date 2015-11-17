@@ -38,7 +38,7 @@ using namespace cosmobl;
 // ============================================================================
 
 
-shared_ptr<Catalogue> cosmobl::random_catalogue_fromFile (vector<string> file, double nSub) 
+shared_ptr<Catalogue> cosmobl::random_catalogue_fromFile (const vector<string> file, const double nSub) 
 {
   cout <<"I'm reading the random catalogue..."<<endl;
 
@@ -83,7 +83,7 @@ shared_ptr<Catalogue> cosmobl::random_catalogue_fromFile (vector<string> file, d
 // ============================================================================
 
 
-shared_ptr<Catalogue> cosmobl::random_catalogue_radecred_fromFile (string &file_in, double &z_min, double &z_max, Cosmology &cosm, double nSub, double fact) 
+shared_ptr<Catalogue> cosmobl::random_catalogue_radecred_fromFile (const string file_in, const double z_min, const double z_max, const Cosmology &cosm, const double nSub, const double fact) 
 {      
   cout <<"I'm reading the random catalogue: "<<file_in<<"..."<<endl;
   
@@ -134,7 +134,7 @@ shared_ptr<Catalogue> cosmobl::random_catalogue_radecred_fromFile (string &file_
 // ============================================================================
 
 
-shared_ptr<Catalogue> cosmobl::random_catalogue_box (shared_ptr<Catalogue> catalogue, int &nRandom, string &dir)
+shared_ptr<Catalogue> cosmobl::random_catalogue_box (const shared_ptr<Catalogue> catalogue, const int nRandom)
 {
   // ------ create the random catalogue ------ 
   
@@ -173,17 +173,6 @@ shared_ptr<Catalogue> cosmobl::random_catalogue_box (shared_ptr<Catalogue> catal
 
   random_catalogue->add_objects(data_random);
 
-  
-  // ------ store the random catalogue ------ 
-
-  string MK = "mkdir -p "+dir;
-  if (system(MK.c_str())) {};
-  
-  string file_out = dir+"random_catalogue";
-  ofstream fout (file_out.c_str()); checkIO (file_out,0);
-  for (int i=0; i<random_catalogue->nObjects(); i++) fout <<random_X[i]<<"   "<<random_Y[i]<<"   "<<random_Z[i]<<endl;
-  fout.clear(); fout.close(); cout <<"I wrote the file "<<file_out<<endl;
-
   return random_catalogue;
 }
 
@@ -191,7 +180,7 @@ shared_ptr<Catalogue> cosmobl::random_catalogue_box (shared_ptr<Catalogue> catal
 // ============================================================================
 
 
-shared_ptr<Catalogue> cosmobl::warped_random_catalogue (Cosmology &real_cosm, Cosmology &test_cosm, string &dir_in, string &dir_out, double &Zguess_min, double &Zguess_max)
+shared_ptr<Catalogue> cosmobl::warped_random_catalogue (const Cosmology &real_cosm, const Cosmology &test_cosm, const string dir_in, const string dir_out, const double Zguess_min, const double Zguess_max)
 {  
   cout <<"I'm creating a random catalogue..."<<endl;
 
@@ -241,18 +230,6 @@ shared_ptr<Catalogue> cosmobl::warped_random_catalogue (Cosmology &real_cosm, Co
   }
 
   random_catalogue->add_objects(data_random);
-
-  
-  // ------ store the random catalogue ------ 
-  
-  string MK = "mkdir -p "+dir_out;
-  if (system(MK.c_str())) {};
-
-  string file_out = dir_out+"random_catalogue"; 
-  ofstream fout (file_out.c_str()); checkIO (file_out,0);
-  for (size_t i=0; i<random_X.size(); i++) 
-    fout <<random_X[i]<<"   "<<random_Y[i]<<"   "<<random_Z[i]<<endl;
-  fout.clear(); fout.close(); cout <<"I wrote the file "<<file_out<<endl;
   
   return random_catalogue;
 }
@@ -261,7 +238,7 @@ shared_ptr<Catalogue> cosmobl::warped_random_catalogue (Cosmology &real_cosm, Co
 // ============================================================================
 
 
-shared_ptr<Catalogue> cosmobl::random_catalogue_cone (shared_ptr<Catalogue> catalogue, int &nRandom, Cosmology &cosm, double &Angle, string &dir, int &step_redshift, vector<double> redshift, vector<double> &dc, vector<double> &convol, int idum)
+shared_ptr<Catalogue> cosmobl::random_catalogue_cone (const shared_ptr<Catalogue> catalogue, const int nRandom, const Cosmology &cosm, const double Angle, const int step_redshift, const vector<double> redshift, vector<double> &dc, vector<double> &convol, const int idum)
 {
   cout <<"I'm creating a random catalogue..."<<endl;
   
@@ -366,14 +343,6 @@ shared_ptr<Catalogue> cosmobl::random_catalogue_cone (shared_ptr<Catalogue> cata
   }
 
   random_catalogue->add_objects(data_random);
-  
-
-  string file_out = dir+"random_catalogue";
-  ofstream fout (file_out.c_str()); checkIO (file_out,0);
-  for (int i=0; i<int(random_X.size()); i++) 
-    fout <<random_X[i]<<"   "<<random_Y[i]<<"   "<<random_Z[i]<<endl;
-  fout.clear(); fout.close(); cout <<"I wrote the file "<<file_out<<endl;
-  cout <<"...done (with "<<random_X.size()<<" objects)"<<endl;
 
   return random_catalogue;
 }
@@ -500,7 +469,7 @@ shared_ptr<Catalogue> cosmobl::random_catalogue_mock (shared_ptr<Catalogue> cata
 
 /// @cond extrandom
 
-shared_ptr<Catalogue> cosmobl::random_catalogue_mock_cone (shared_ptr<Catalogue> catalogue, int &nRandom, Cosmology &cosm, string &dir, int &step_redshift, vector<double> redshift)
+shared_ptr<Catalogue> cosmobl::random_catalogue_mock_cone (const shared_ptr<Catalogue> catalogue, const int nRandom, const Cosmology &cosm, const string dir, const int step_redshift, vector<double> redshift)
 {
   cout <<"I'm creating a random catalogue..."<<endl;
 
@@ -637,7 +606,7 @@ shared_ptr<Catalogue> cosmobl::random_catalogue_mock_cone (shared_ptr<Catalogue>
 // ============================================================================
 
 
-shared_ptr<Catalogue> cosmobl::random_catalogue_VIPERS (int &nRandom, Cosmology &cosm, string &dir_out, int &step_redshift, vector<double> &dc, vector<double> &convol, vector<double> &lim, vector<double> redshift, bool venice, string file_random, string mask, string dir_venice, int idum) 
+shared_ptr<Catalogue> cosmobl::random_catalogue_VIPERS (const int nRandom, const Cosmology &cosm, const string dir_out, const int step_redshift, const vector<double> dc, const vector<double> convol, const vector<double> lim, const vector<double> redshift, const bool venice, string file_random, const string mask, const string dir_venice, const int idum) 
 {
   cout <<"I'm creating a random catalogue..."<<endl;
 
@@ -775,14 +744,6 @@ shared_ptr<Catalogue> cosmobl::random_catalogue_VIPERS (int &nRandom, Cosmology 
   
   random_catalogue->add_objects(data_random);
 
-  
-  string file_out = dir_out+"random_catalogue";
-  ofstream fout (file_out.c_str()); checkIO (file_out,0);
-  for (int i=0; i<nRan; i++) 
-    fout <<random_X[i]<<"   "<<random_Y[i]<<"   "<<random_Z[i]<<"   "<<random_ra[i]*(180./par::pi)<<"   "<<random_dec[i]*(180./par::pi)<<"   "<<random_redshift[i]<<endl;
-  fout.clear(); fout.close(); cout <<"I wrote the file "<<file_out<<endl;
-  cout <<"...done (with "<<random_X.size()<<" objects)"<<endl;
-  
   if (system ("rm -f temp")) {};
   
   return random_catalogue;
@@ -794,7 +755,7 @@ shared_ptr<Catalogue> cosmobl::random_catalogue_VIPERS (int &nRandom, Cosmology 
 
 /* ======== Alfonso Veropalumbo ======== */
 
-void cosmobl::random_redshift_distribution (shared_ptr<Catalogue> random, shared_ptr<Catalogue> data, string &dir_random, int nbin, bool convolution, double sigma)
+void cosmobl::random_redshift_distribution (const shared_ptr<Catalogue> random, const shared_ptr<Catalogue> data, const string dir_random, const int nbin, const bool convolution, const double sigma)
 {
   if (random->nObjects()==0) ErrorMsg("Error in random_redshift_distribution of RandomCatalogue.cpp: random nObject=0!");
 
@@ -829,7 +790,7 @@ void cosmobl::random_redshift_distribution (shared_ptr<Catalogue> random, shared
 // ============================================================================
 
 
-shared_ptr<Catalogue> cosmobl::random_sdss_angular_distribution (int &nRandom, string &out_dir, string &chunk_list, bool veto)
+shared_ptr<Catalogue> cosmobl::random_sdss_angular_distribution (const int nRandom, const string out_dir, const string chunk_list, const bool veto)
 {
   shared_ptr<Catalogue> random_catalogue (new Catalogue);
 
@@ -949,8 +910,7 @@ shared_ptr<Catalogue> cosmobl::random_sdss_angular_distribution (int &nRandom, s
   }
   fin.clear(); fin.close();
 
-  nRandom = random_ra.size();
-  random_catalogue->resize(nRandom);
+  random_catalogue->resize(random_ra.size());
  
   random_catalogue->set_var(Var::_RA_,random_ra);
   random_catalogue->set_var(Var::_DEC_,random_dec);

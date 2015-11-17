@@ -5,6 +5,7 @@
 %{
 #include "../../Headers/Objects/Object.h"
 #include "../../Headers/Objects/GenericObject.h"
+#include "../../Headers/Objects/RandomObject.h"
 #include "../../Headers/Objects/Halo.h"
 #include "../../Headers/Objects/Mock.h"
 #include "../../Headers/Objects/Galaxy.h"

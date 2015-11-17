@@ -37,7 +37,7 @@ using namespace cosmobl;
 // ============================================================================
 
 
-void cosmobl::LogNormal::setCatalogues (shared_ptr<Catalogue> data, shared_ptr<Catalogue> random)
+void cosmobl::LogNormal::setCatalogues (const shared_ptr<Catalogue> data, const shared_ptr<Catalogue> random)
 {
   m_data = data;
   m_random = random;
@@ -47,7 +47,7 @@ void cosmobl::LogNormal::setCatalogues (shared_ptr<Catalogue> data, shared_ptr<C
 // ============================================================================
 
 
-void cosmobl::LogNormal::setParameters_from_xi (vector<double> &rr, vector<double> &xi) 
+void cosmobl::LogNormal::setParameters_from_xi (const vector<double> rr, const vector<double> xi) 
 {
   // TBD: add parameters for extrapolation
   m_rmodel = rr;
@@ -59,7 +59,7 @@ void cosmobl::LogNormal::setParameters_from_xi (vector<double> &rr, vector<doubl
 // ============================================================================
 
 
-void cosmobl::LogNormal::setParameters_from_model (shared_ptr<Cosmology> cosmology, double &bias, bool Real, string author, bool NL, string model)
+void cosmobl::LogNormal::setParameters_from_model (const shared_ptr<Cosmology> cosmology, const double bias, const bool Real, const string author, const bool NL, const string model)
 { 
   m_cosmology = cosmology;
   m_bias = bias;
@@ -74,7 +74,7 @@ void cosmobl::LogNormal::setParameters_from_model (shared_ptr<Cosmology> cosmolo
 // ============================================================================
 
 
-void cosmobl::LogNormal::generate_LogNormal_mock (double &rmin, string &dir, int start, string filename)
+void cosmobl::LogNormal::generate_LogNormal_mock (const double rmin, const string dir, const int start, const string filename)
 { 
   if (m_nLN==0)  
     ErrorMsg("Error in cosmobl::LogNormal::generate_LogNormal_mock of LogNormal.cpp, set number of LN realization first!");
@@ -304,7 +304,7 @@ void cosmobl::LogNormal::generate_LogNormal_mock (double &rmin, string &dir, int
 // ============================================================================
 
 
-void cosmobl::LogNormal::set_nLN (int &nLN)
+void cosmobl::LogNormal::set_nLN (const int nLN)
 { 
   m_nLN = nLN;
   m_LNCat.erase(m_LNCat.begin(),m_LNCat.end());

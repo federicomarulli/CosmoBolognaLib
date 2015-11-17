@@ -100,13 +100,13 @@ namespace cosmobl {
      *  @param densContr density contrast
      *  @param parentID identification number of the parent void
      *  @param treeLevel hierarchy level
-     *  @param child number of children
+     *  @param child number of childrens
      *  @param rho0 central density
      *  @param rho0Norm normalized core density
      *  @param weight weight
      *  @return object of class Void
      */
-    Void (double xx, double yy, double zz, double volNorm=-1.e30, double radius=-1.e30, double volume=-1.e30, int ID=-1e4, double densContr=-1.e30, int parentID=-1e4, int treeLevel=-1e4, int child=-1e4, double rho0=-1.e30, double rho0Norm=-1.e30, double weight = 1.)
+    Void (const double xx, const double yy, const double zz, const double volNorm=-1.e30, const double radius=-1.e30, const double volume=-1.e30, const int ID=-1e4, const double densContr=-1.e30, const int parentID=-1e4, const int treeLevel=-1e4, const int child=-1e4, const double rho0=-1.e30, const double rho0Norm=-1.e30, const double weight = 1.)
       : GenericObject(xx, yy, zz, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
 
     /**
@@ -119,82 +119,82 @@ namespace cosmobl {
     /** @brief get the protected member Void::m_volNorm
      *  @return the normalized volume of the void
      */
-    double volNorm () { return m_volNorm; }
+    double volNorm () const { return m_volNorm; }
 
     /** @brief get the protected member Void::m_radius
      *  @return the radius of the spherical void [Mpc/h]
      */
-    double radius () { return m_radius; }
+    double radius () const { return m_radius; }
 
     /** @brief get the protected member Void::m_volume
      *  @return the volume of the void [(Mpc/h)^3]
      */
-    double volume () { return m_volume; }
+    double volume () const { return m_volume; }
 
     /** @brief get the protected member Void::m_ID
      *  @return the identification number of the void
      */
-    int ID () { return m_ID; }
+    int ID () const { return m_ID; }
 
     /** @brief get the protected member Void::m_densContr
      *  @return the density contrast between the void and the Universe
      */
-    double densContr () { return m_densContr; }
+    double densContr () const { return m_densContr; }
 
     /** @brief get the protected member Void::m_parentID
      *  @return the identification number of the parent void
      */
-    int parentID () { return m_parentID; }
+    int parentID () const { return m_parentID; }
 
     /** @brief get the protected member Void::m_treeLevel
      *  @return the hierarchy level of the void
      */
-    int treeLevel () { return m_treeLevel; }
+    int treeLevel () const { return m_treeLevel; }
 
     /** @brief get the protected member Void::m_child
      *  @return the number of children of the void
      */
-    int child () { return m_child; }
+    int child () const { return m_child; }
 
     /** @brief get the protected member Void::m_rho0
      *  @return the central density of the void
      */
-    double rho0 () { return m_rho0; }
+    double rho0 () const { return m_rho0; }
 
     /** @brief get the protected member Void::m_rho0Norm
      *  @return the normalized core density of the void
      */
-    double rho0Norm () { return m_rho0Norm; }
+    double rho0Norm () const { return m_rho0Norm; }
 
     /** @brief set the protected member Void::m_volNorm
      *  @param volNorm the normalized volume of the void
      *  @return none
      */
-    void set_volNorm (double volNorm) { m_volNorm = volNorm; }
+    void set_volNorm (const double volNorm) { m_volNorm = volNorm; }
 	
     /** @brief get the protected member Void::m_radius
      *  @param radius the radius of the spherical void [Mpc/h]
      *  @return none
      */
-    void set_radius (double radius) { m_radius = radius; }
+    void set_radius (const double radius) { m_radius = radius; }
 	
     /** @brief get the protected member Void::m_volume
      *  @param volume the volume of the void [(Mpc/h)^3]
      *  @return none
      */
-    void set_volume (double volume) { m_volume = volume; }
+    void set_volume (const double volume) { m_volume = volume; }
 	
     /** @brief get the protected member Void::m_ID
      *  @param ID the identification number of the void
      *  @return none
      */
-    void set_ID (int ID) { m_ID = ID; } 
+    void set_ID (const int ID) { m_ID = ID; } 
 	
     /** @brief get the protected member Void::m_densContr
      *  @param densContr the density contrast between the void and the Universe
      *  @return none
      */
-    void set_densContr (double densContr) { m_densContr = densContr; }
+    void set_densContr (const double densContr) { m_densContr = densContr; }
 	
     /** @brief get the protected member Void::m_parentID
      *  @param parentID the identification number of the parent void
@@ -218,13 +218,13 @@ namespace cosmobl {
      *  @param rho0 the central density of the void
      *  @return none
      */
-    void set_rho0 (double rho0) { m_rho0 = rho0; }
+    void set_rho0 (const double rho0) { m_rho0 = rho0; }    
 	
     /** @brief get the protected member Void::m_rho0Norm
      *  @param rho0Norm the normalized core density of the void
      *  @return none
      */
-    void set_rho0Norm (double rho0Norm) { m_rho0Norm = rho0Norm; }
+    void set_rho0Norm (const double rho0Norm) { m_rho0Norm = rho0Norm; }
 
   };
 }
