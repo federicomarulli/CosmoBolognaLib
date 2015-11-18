@@ -250,6 +250,7 @@ shared_ptr<Catalogue> cosmobl::random_catalogue_cone (const shared_ptr<Catalogue
   double D_min = cosm.D_C(redshift_min);
   double D_max = cosm.D_C(redshift_max);
 
+  
   vector<double> DD;
  
   default_random_engine gen;
@@ -298,7 +299,7 @@ shared_ptr<Catalogue> cosmobl::random_catalogue_cone (const shared_ptr<Catalogue
   // from the convolvolution of N(D_C)
 
   else if (step_redshift==0) 
-    random_numbers (nRandom, idum, dc, convol, DD, D_min, D_max);
+    random_numbers(nRandom, idum, dc, convol, DD, D_min, D_max);
 
   else ErrorMsg("Error in random_catalogue_cone of RandomCatalogue.cpp!");
 
@@ -306,7 +307,7 @@ shared_ptr<Catalogue> cosmobl::random_catalogue_cone (const shared_ptr<Catalogue
   double XX, ZZ;
 
   double rMax = cosm.D_C(redshift_max)*tan(Angle);
-
+  
   double Dm = Min(DD)*0.999;
   double DM = Max(DD)*1.001;
 

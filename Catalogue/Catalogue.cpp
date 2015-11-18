@@ -445,14 +445,14 @@ double cosmobl::Catalogue::weightedN () const
 // ============================================================================
 
 
-void cosmobl::Catalogue::write_coords (const string cat) const
+void cosmobl::Catalogue::write_comoving_coordinates (const string file_output) const
 {
-  ofstream fout(cat.c_str()); checkIO(cat, 0);
+  ofstream fout(file_output.c_str()); checkIO(file_output, 0);
  
   for (int i=0; i<nObjects(); i++) 
-    fout << xx(i) << " " << yy(i) << " " << zz(i) << endl;
+    fout << xx(i) << "   " << yy(i) << "   " << zz(i) << endl;
 
-  cout <<"I wrote the file: "<<cat<<endl;
+  cout << "I wrote the file: " << file_output << endl;
   fout.clear(); fout.close();
 }
 
@@ -460,14 +460,35 @@ void cosmobl::Catalogue::write_coords (const string cat) const
 // ============================================================================
 
 
-void cosmobl::Catalogue::write_obs_coords (const string cat) const 
+void cosmobl::Catalogue::write_obs_coordinates (const string file_output) const 
 {
-  ofstream fout(cat.c_str()); checkIO(cat, 0);
+  ofstream fout(file_output.c_str()); checkIO(file_output, 0);
 
-  for (int i=0; i<nObjects(); i++)
-    fout << ra(i) << " " << dec(i) << " " << redshift(i) << " " << dc(i) << endl;
+  if (!isSet(ra(0)) || !isSet(dec(0)) || !isSet(redshift(0)) || !isSet(dc(0)))
+    ErrorMsg("Error in cosmobl::Catalogue::write_obs_coords of Catalogue.cpp! Polar coordinates are not set!");
   
-  cout <<"I wrote the file: "<<cat<<endl;
+  for (int i=0; i<nObjects(); i++) 
+    fout << ra(i) << "   " << dec(i) << "   " << redshift(i) << "   " << dc(i) << endl;
+  
+  cout << "I wrote the file: " << file_output << endl;
+  fout.clear(); fout.close();
+}
+
+
+// ============================================================================
+
+
+void cosmobl::Catalogue::write_coordinates (const string file_output) const 
+{
+  ofstream fout(file_output.c_str()); checkIO(file_output, 0);
+
+  if (!isSet(ra(0)) || !isSet(dec(0)) || !isSet(redshift(0)) || !isSet(dc(0)))
+    ErrorMsg("Error in cosmobl::Catalogue::write_obs_coords of Catalogue.cpp! Polar coordinates are not set!");
+  
+  for (int i=0; i<nObjects(); i++) 
+    fout << xx(i) << "   " << yy(i) << "   " << zz(i) << "   " << ra(i) << "   " << dec(i) << "   " << redshift(i) << "   " << dc(i) << endl;
+  
+  cout << "I wrote the file: " << file_output << endl;
   fout.clear(); fout.close();
 }
 

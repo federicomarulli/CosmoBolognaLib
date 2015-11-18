@@ -76,8 +76,6 @@ int main () {
 
   auto random_catalogue = random_catalogue_box(catalogue, nRandom);
 
-  random_catalogue->write_coords(dir_random_cat+"random.dat");
-
   
   // ----------------------------------------------------------------------------
   // ---------------- measure the two-point correlation function ----------------

@@ -224,7 +224,7 @@ namespace cosmobl {
      * @return the Right Ascension of the i-th object
      */
     double ra (const int i) const { return m_sample[i]->ra(); };
-
+    
     /**
      * @brief get the protected member Catalogue::m_sample[i]->m_dec
      * @param i the object index
@@ -480,20 +480,28 @@ namespace cosmobl {
     void Order ();  
     
     /**
-     * @brief write the comoving coordinates of the catalogue in an
+     * @brief write the comoving coordinates of the catalogue to an
      * output file
-     * @param cat the name of the file
+     * @param file_output the name of the output file
      * @return none
      */
-    void write_coords (const string) const;
+    void write_comoving_coordinates (const string) const;
 
     /**
-     * @brief write the polar coordinates of the catalogue in an
+     * @brief write the polar coordinates of the catalogue to an
      * output file
-     * @param cat the name of the file
+     * @param file_output the name of the output file
      * @return none
     */
-    void write_obs_coords (const string) const;
+    void write_obs_coordinates (const string) const;
+
+    /**
+     * @brief write both the comoving and polar coordinates of the
+     * catalogue to an output file
+     * @param file_output the name of the output file
+     * @return none
+    */
+    void write_coordinates (const string) const;
 
     /**
      * @brief get the distrance between the i-th object of the

@@ -294,7 +294,7 @@ void cosmobl::LogNormal::generate_LogNormal_mock (const double rmin, const strin
 
     m_LNCat[nn] = p_cat;
      
-    m_LNCat[nn]->write_coords(cat);
+    m_LNCat[nn]->write_comoving_coordinates(cat);
     
   }
 

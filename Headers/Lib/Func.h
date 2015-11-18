@@ -234,8 +234,8 @@ namespace cosmobl {
   inline bool isSet (const vector<double> vect) 
   {
     bool is = 1;
-    int ind = 0;
-    while (is && ind<int(vect.size()))
+    size_t ind = 0;
+    while (is && ind<vect.size())
       if (vect[ind++]<-9.e29) is = 0;
     return is;
   }
