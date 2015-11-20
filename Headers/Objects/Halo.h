@@ -109,46 +109,46 @@ namespace cosmobl {
     /** @brief get the protected member Halo::m_vx
      *  @return the halo peculiar velocity along the x direction
      */
-    double vx () const /*override*/ { return m_vx; }
+    double vx () const override { return m_vx; }
 
     /** @brief get the protected member Halo::m_vy
      *  @return the halo peculiar velocity along the y direction
      */
-    double vy () const /*override*/ { return m_vy; }
+    double vy () const override { return m_vy; }
 
     /** @brief get the protected member Halo::m_vz
      *  @return the halo peculiar velocity along the z direction
      */
-    double vz () const /*override*/ { return m_vz; }
+    double vz () const override { return m_vz; }
 
     /** @brief get the protected member Halo::m_mass
      *  @return the mass of the halo
      */
-    double mass () const /*override*/ { return m_mass; }
+    double mass () const override { return m_mass; }
 
     /** @brief set the protected member Halo::m_vx
      *  @param vx the the halo peculiar velocity along the x direction
      *  @return none
      */
-    void set_vx (const double vx) /*override*/ { m_vx = vx; }
+    void set_vx (const double vx) override { m_vx = vx; }
     
     /** @brief set the protected member Halo::m_vy
      *  @param vy the the halo peculiar velocity along the y direction
      *  @return none
      */
-    void set_vy (const double vy) /*override*/ { m_vy = vy; }
+    void set_vy (const double vy) override { m_vy = vy; }
 
     /** @brief set the protected member Halo::m_vz
      *  @param vz the the halo peculiar velocity along the z direction
      *  @return none
      */
-    void set_vz (const double vz) /*override*/ { m_vz = vz; }
+    void set_vz (const double vz) override { m_vz = vz; }
 
     /** @brief set the protected member Halo::m_mass
      *  @param mass the mass of the halo
      *  @return none
      */
-    void set_mass (const double mass) /*override*/ { m_mass = mass; }
+    void set_mass (const double mass) override { m_mass = mass; }
 
   };
 }

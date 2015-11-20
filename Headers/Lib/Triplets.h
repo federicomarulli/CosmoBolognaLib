@@ -63,35 +63,35 @@ namespace cosmobl {
      *  @brief default destructor
      *  @return none
      */
-    virtual ~Triplets() {}
+    virtual ~Triplets () {}
     
     /**
      *  @brief get the private member \e m_binsize
      *  @return the bin size, or an error message if the
      *  derived object does not have this member
      */
-    virtual double binsize () { cosmobl::ErrorMsg("Error in Triplets::binsize() of Triplets.h!"); return 0; }
+    virtual double binsize () const { cosmobl::ErrorMsg("Error in Triplets::binsize() of Triplets.h!"); return 0; }
 
     /**
      *  @brief get the private member \e m_side_s
      *  @return the size of r12, or an error message if the
      *  derived object does not have this member
      */
-    virtual double side_s () { cosmobl::ErrorMsg("Error in Triplets::side_s() of Triplets.h!"); return 0; }
+    virtual double side_s () const { cosmobl::ErrorMsg("Error in Triplets::side_s() of Triplets.h!"); return 0; }
 
     /**
      *  @brief get the private member \e m_side_u
      *  @return the ratio r13/r12, or an error message if the
      *  derived object does not have this member
      */
-    virtual double side_u () { cosmobl::ErrorMsg("Error in Triplets::side_u() of Triplets.h!"); return 0; }
+    virtual double side_u () const { cosmobl::ErrorMsg("Error in Triplets::side_u() of Triplets.h!"); return 0; }
 
     /**
      *  @brief get the private member \e m_perc_increase
      *  @return the ratio &Delta;r12/r12=&Delta;r13/r13, or an error
      *  message if the derived object does not have this member
      */
-    virtual double perc_increase () { cosmobl::ErrorMsg("Error in Triplets::perc_increase() of Triplets.h!"); return 0; }
+    virtual double perc_increase () const { cosmobl::ErrorMsg("Error in Triplets::perc_increase() of Triplets.h!"); return 0; }
 
     /**
      *  @brief get the private member \e m_TT[i]
@@ -99,7 +99,7 @@ namespace cosmobl {
      *  @return the number of triplets in the i-th angular bin, or an
      *  error message if the derived object does not have this member
      */
-    virtual double TT (int i) { cosmobl::ErrorMsg("Error in Triplets::TT() of Triplets.h!"); return 0; }
+    virtual double TT (const int i) const { cosmobl::ErrorMsg("Error in Triplets::TT() of Triplets.h!"); return 0; }
 
     /**
      *  @brief get the private member \e m_TT
@@ -107,7 +107,7 @@ namespace cosmobl {
      *  bins, or an error message if the derived object does not have
      *  this member
      */
-    virtual vector<double> TT () { cosmobl::ErrorMsg("Error in Triplets::TT() of Triplets.h!"); vector<double> TT; return TT;}
+    virtual vector<double> TT () const { cosmobl::ErrorMsg("Error in Triplets::TT() of Triplets.h!"); vector<double> TT; return TT;}
   
     /**
      *  @brief sum the number of triplets
@@ -116,7 +116,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void sum (shared_ptr<Triplets> tt, double ww=1.) { cosmobl::ErrorMsg("Error in Triplets::sum() of Triplets.h!"); }
+    virtual void sum (const shared_ptr<Triplets> tt, const double ww=1.) { cosmobl::ErrorMsg("Error in Triplets::sum() of Triplets.h!"); }
 
     /**
      *  @brief estimate the distance between two objects and update
@@ -128,7 +128,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void put (double &r12, double &r13, double &r23, double ww=1.)
+    virtual void put (const double r12, const double r13, const double r23, const double ww=1.)
     { cosmobl::ErrorMsg("Error in Triplets::put() of Triplets.h!"); }
 
     /**
@@ -140,7 +140,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    virtual void put (shared_ptr<Object> obj1, shared_ptr<Object> obj2, shared_ptr<Object> obj3)
+    virtual void put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, const shared_ptr<Object> obj3)
     { cosmobl::ErrorMsg("Error in Triplets::put() of Triplets.h!"); }
     
   };
@@ -199,7 +199,7 @@ namespace cosmobl {
      *  @param perc_increase the ratio &Delta;r12/r12=&Delta;r13/r13
      *  @return object of class Triplets2D
      */
-    Triplets2D (string type_binning, double binsize, double side_s, double side_u, double perc_increase) 
+    Triplets2D (string const type_binning, const double binsize, const double side_s, const double side_u, const double perc_increase) 
       : m_type_binning(type_binning), m_binsize(binsize), m_side_s(side_s), m_side_u(side_u), m_perc_increase(perc_increase)
     {
       if (type_binning=="ang")
@@ -212,38 +212,38 @@ namespace cosmobl {
      *  @brief get the protected member Triplets2D::m_binsize
      *  @return the bin size
      */
-    double binsize () { return m_binsize; }
+    double binsize () const override { return m_binsize; }
 
     /**
      *  @brief get the protected member Triplets2D::m_side_s
      *  @return the size of r12
      */
-    double side_s () { return m_side_s; }
+    double side_s () const override { return m_side_s; }
 
     /**
      *  @brief get the protected member Triplets2D::m_side_u
      *  @return the ratio r13/r12
      */
-    double side_u () { return m_side_u; }
+    double side_u () const override { return m_side_u; }
 
     /**
      *  @brief get the protected member Triplets2D::m_perc_increase
      *  @return the ratio &Delta;r12/r12=&Delta;r13/r13
      */    
-    double perc_increase() { return m_perc_increase; }
+    double perc_increase () const override { return m_perc_increase; }
 
     /**
      *  @brief get the private member Triplets2D::m_TT[i]
      *  @param i the bin index
      *  @return the number of triplets in the i-th bin
      */
-    double TT (int i) { return m_TT[i]; }
+    double TT (const int i) const override { return m_TT[i]; }
 
     /**
      *  @brief get the private member Triplets2D::m_TT
      *  @return the vector containing the number of triplets
      */
-    vector<double> TT() { return m_TT; }
+    vector<double> TT () const override { return m_TT; }
   
     /**
      *  @brief sum the number of triplets
@@ -251,7 +251,7 @@ namespace cosmobl {
      *  @param ww the weight
      *  @return none
      */
-    void sum (shared_ptr<Triplets>, double ww=1);
+    void sum (const shared_ptr<Triplets>, const double ww=1) override;
 
     /**
      *  @brief estimate the distance between three objects and update
@@ -262,7 +262,7 @@ namespace cosmobl {
      *  @param ww total weight
      *  @return none
      */
-    void put (double &, double &, double &, double ww=1.);
+    void put (const double, const double, const double, const double ww=1.) override;
     
     /**
      *  @brief estimate the distance between three objects and update
@@ -272,7 +272,7 @@ namespace cosmobl {
      *  @param obj3 pointer to an object of class Object
      *  @return none
      */
-    void put (shared_ptr<Object>, shared_ptr<Object>, shared_ptr<Object>);
+    void put (const shared_ptr<Object>, const shared_ptr<Object>, const shared_ptr<Object>) override;
   };
 
 
@@ -328,7 +328,7 @@ namespace cosmobl {
      *  @param perc_increase the ratio &Delta;r12/r12=&Delta;r13/r13
      *  @return object of class Triplets3D
      */
-    Triplets3D (string type_binning, double binsize, double side_s, double side_u, double perc_increase) 
+    Triplets3D (const string type_binning, const double binsize, const double side_s, const double side_u, const double perc_increase) 
       : m_type_binning(type_binning), m_binsize(binsize), m_side_s(side_s), m_side_u(side_u), m_perc_increase(perc_increase)
     {
       if (type_binning=="ang")
@@ -341,38 +341,38 @@ namespace cosmobl {
      *  @brief get the protected member Triplets3D::m_binsize
      *  @return the bin size
      */ 
-    double binsize () { return m_binsize; }
+    double binsize () const override { return m_binsize; }
 
     /**
      *  @brief get the protected member Triplets3D::m_side_s
      *  @return the size of r12
      */
-    double side_s () { return m_side_s; }
+    double side_s () const override { return m_side_s; }
 
     /**
      *  @brief get the protected member Triplets3D::m_side_u
      *  @return the ratio r13/r12
      */
-    double side_u () { return m_side_u; }
+    double side_u () const override { return m_side_u; }
 
     /**
      *  @brief get the protected member Triplets3D::m_perc_increase
      *  @return the ratio &Delta;r12/r12=&Delta;r13/r13
      */    
-    double perc_increase() { return m_perc_increase; }
+    double perc_increase () const override { return m_perc_increase; }
 
     /**
      *  @brief get the private member Triplets3D::m_TT[i]
      *  @param i the bin index
      *  @return the number of triplets in the i-th bin
      */
-    double TT (int i) { return m_TT[i]; }
+    double TT (const int i) const override { return m_TT[i]; }
 
     /**
      *  @brief get the private member Triplets3D::m_TT
      *  @return the vector containing the number of triplets
      */
-    vector<double> TT() { return m_TT; }
+    vector<double> TT () const override { return m_TT; }
   
     /**
      *  @brief sum the number of triplets
@@ -380,7 +380,7 @@ namespace cosmobl {
      *  @param ww the weight
      *  @return none
      */
-    void sum (shared_ptr<Triplets>, double ww=1);
+    void sum (const shared_ptr<Triplets>, const double ww=1) override;
 
     /**
      *  @brief estimate the distance between three objects and update
@@ -391,7 +391,7 @@ namespace cosmobl {
      *  @param ww total weight
      *  @return none
      */
-    void put (double &, double &, double &, double ww=1.);
+    void put (const double, const double, const double, const double ww=1.) override;
     
     /**
      *  @brief estimate the distance between three objects and update
@@ -401,7 +401,7 @@ namespace cosmobl {
      *  @param obj3 pointer to an object of class Object
      *  @return none
      */
-    void put (shared_ptr<Object>, shared_ptr<Object>, shared_ptr<Object>);
+    void put (const shared_ptr<Object>, const shared_ptr<Object>, const shared_ptr<Object>) override;
   };
 }
 

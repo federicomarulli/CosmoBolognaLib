@@ -42,7 +42,7 @@ using namespace cosmobl;
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::write_triplets (vector<double> &TT, string &dir, string file) 
+void cosmobl::ThreePointCorrelation::write_triplets (const vector<double> TT, const string dir, const string file) 
 {  
   string MK = "mkdir -p "+dir;
   if (system (MK.c_str())) {};
@@ -65,7 +65,7 @@ void cosmobl::ThreePointCorrelation::write_triplets (vector<double> &TT, string 
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::read_triplets (vector<double> &TT, const vector<string>& dir, string file) 
+void cosmobl::ThreePointCorrelation::read_triplets (vector<double> TT, const vector<string> dir, const string file) 
 {
   for (unsigned int dd=0; dd<dir.size(); dd++) {
 
@@ -93,7 +93,7 @@ void cosmobl::ThreePointCorrelation::read_triplets (vector<double> &TT, const ve
 // ============================================================================
  
   
-void cosmobl::ThreePointCorrelation::write_Q (string &dir) 
+void cosmobl::ThreePointCorrelation::write_Q (const string dir) 
 {    
   
   // number of objects

@@ -100,25 +100,25 @@ namespace cosmobl {
     /** @brief get the protected member Cluster::m_mass
      *  @return the mass of the cluster
      */
-    double mass () const /*override*/ { return m_mass; }
+    double mass () const override { return m_mass; }
 
     /** @brief get the protected member Cluster::m_richness
      *  @return the richness of the cluster
      */
-    double richness () const /*override*/ { return m_richness; }
+    double richness () const override { return m_richness; }
 
 
     /** @brief set the protected member Cluster::m_mass
      *  @param mass the mass of the cluster
      *  @return none
      */
-    void set_mass (const double mass) /*override*/ { m_mass = mass; }
+    void set_mass (const double mass) override { m_mass = mass; }
 
     /** @brief set the protected member Cluster::m_richness
      *  @param richness the richness of the cluster
      *  @return none
      */
-    void set_richness (const double richness) /*override*/ { m_richness = richness; }
+    void set_richness (const double richness) override { m_richness = richness; }
 
   };
 }

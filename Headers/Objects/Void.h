@@ -94,8 +94,8 @@ namespace cosmobl {
      *  @param yy comoving coordinate
      *  @param zz comoving coordinate
      *  @param volNorm normalized volume
-     *  @param radius radius [Mpc/h]
-     *  @param volume volume [(Mpc/h)^3]
+     *  @param radius radius 
+     *  @param volume volume 
      *  @param ID identification number
      *  @param densContr density contrast
      *  @param parentID identification number of the parent void
@@ -122,12 +122,12 @@ namespace cosmobl {
     double volNorm () const { return m_volNorm; }
 
     /** @brief get the protected member Void::m_radius
-     *  @return the radius of the spherical void [Mpc/h]
+     *  @return the radius of the spherical void 
      */
     double radius () const { return m_radius; }
 
     /** @brief get the protected member Void::m_volume
-     *  @return the volume of the void [(Mpc/h)^3]
+     *  @return the volume of the void 
      */
     double volume () const { return m_volume; }
 

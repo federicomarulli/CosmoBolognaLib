@@ -43,7 +43,7 @@ using namespace cosmobl;
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::measure_Q (string dir_output_triplets, string dir_output_2pt, const vector<string> &dir_input_triplets, int count_ggg, int count_rrr, int count_ggr, int count_grr, bool tcount) 
+void cosmobl::ThreePointCorrelation::measure_Q (const string dir_output_triplets, const string dir_output_2pt, const vector<string> &dir_input_triplets, const int count_ggg, const int count_rrr, const int count_ggr, const int count_grr, const bool tcount) 
 {   
   allocate_vectors_zeta();
 
@@ -59,17 +59,17 @@ void cosmobl::ThreePointCorrelation::measure_Q (string dir_output_triplets, stri
  
   double cell_size = rMAX2*0.1;
   
-  ChainMesh_Catalogue lkList_data_rMAX1, lkList_data_rMAX2, lkList_random_rMAX1, lkList_random_rMAX2;
+  ChainMesh_Catalogue ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2;
   
   if (count_ggg==1 || count_ggr==1) {
-    lkList_data_rMAX1.set_par(cell_size, m_data, rMAX2);
-    lkList_data_rMAX1.get_searching_region(rMAX1);
-    lkList_data_rMAX2.set_par(cell_size, m_data, rMAX2);
+    ChainMesh_data_rMAX1.set_par(cell_size, m_data, rMAX2);
+    ChainMesh_data_rMAX1.get_searching_region(rMAX1);
+    ChainMesh_data_rMAX2.set_par(cell_size, m_data, rMAX2);
   }
   if (count_rrr==1 || count_grr==1) {
-    lkList_random_rMAX1.set_par(cell_size, m_random, rMAX2);
-    lkList_random_rMAX1.get_searching_region(rMAX1);
-    lkList_random_rMAX2.set_par(cell_size, m_random, rMAX2);
+    ChainMesh_random_rMAX1.set_par(cell_size, m_random, rMAX2);
+    ChainMesh_random_rMAX1.get_searching_region(rMAX1);
+    ChainMesh_random_rMAX2.set_par(cell_size, m_random, rMAX2);
   }
 
   // ----------- count the number of triplets ----------- 
@@ -85,7 +85,7 @@ void cosmobl::ThreePointCorrelation::measure_Q (string dir_output_triplets, stri
 
     Triplets3D ggg {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     
-    count_triplets(m_data, lkList_data_rMAX1, lkList_data_rMAX2, ggg, 1, tcount);
+    count_triplets(m_data, ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ggg, 1, tcount);
 
     m_ggg = ggg.TT();
 
@@ -106,7 +106,7 @@ void cosmobl::ThreePointCorrelation::measure_Q (string dir_output_triplets, stri
 
     Triplets3D rrr {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
 
-    count_triplets(m_random, lkList_random_rMAX1, lkList_random_rMAX2, rrr, 1, tcount);
+    count_triplets(m_random, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2, rrr, 1, tcount);
 
     m_rrr = rrr.TT();
 
@@ -129,9 +129,9 @@ void cosmobl::ThreePointCorrelation::measure_Q (string dir_output_triplets, stri
     Triplets3D ggr2 {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     Triplets3D ggr3 {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     
-    count_triplets(m_data, lkList_data_rMAX1, lkList_random_rMAX2, ggr1, 1, tcount);
-    count_triplets(m_data, lkList_random_rMAX1, lkList_data_rMAX2, ggr2, 1, tcount);
-    count_triplets(m_random, lkList_data_rMAX1, lkList_data_rMAX2, ggr3, 1, tcount);
+    count_triplets(m_data, ChainMesh_data_rMAX1, ChainMesh_random_rMAX2, ggr1, 1, tcount);
+    count_triplets(m_data, ChainMesh_random_rMAX1, ChainMesh_data_rMAX2, ggr2, 1, tcount);
+    count_triplets(m_random, ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ggr3, 1, tcount);
 
     for (size_t i=0; i<m_ggr.size(); i++) m_ggr[i] = ggr1.TT()[i]+ggr2.TT()[i]+ggr3.TT()[i];
 
@@ -154,9 +154,9 @@ void cosmobl::ThreePointCorrelation::measure_Q (string dir_output_triplets, stri
     Triplets3D grr2 {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     Triplets3D grr3 {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     
-    count_triplets(m_random, lkList_random_rMAX1, lkList_data_rMAX2, grr1, 1, tcount);
-    count_triplets(m_random, lkList_data_rMAX1, lkList_random_rMAX2, grr2, 1, tcount);
-    count_triplets(m_data, lkList_random_rMAX1, lkList_random_rMAX2, grr3, 1, tcount);
+    count_triplets(m_random, ChainMesh_random_rMAX1, ChainMesh_data_rMAX2, grr1, 1, tcount);
+    count_triplets(m_random, ChainMesh_data_rMAX1, ChainMesh_random_rMAX2, grr2, 1, tcount);
+    count_triplets(m_data, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2, grr3, 1, tcount);
 
     for (size_t i=0; i<m_grr.size(); i++) m_grr[i] = grr1.TT()[i]+grr2.TT()[i]+grr3.TT()[i];
 
@@ -259,8 +259,9 @@ void cosmobl::ThreePointCorrelation::measure_Q (string dir_output_triplets, stri
 
 // ============================================================================
 
+/// @cond TEMP_TEST
 
-void cosmobl::ThreePointCorrelation::measure_Q_TEST (string dir_output_triplets, string dir_output_2pt, const vector<string>& dir_input_triplets, bool count, bool tcount) 
+void cosmobl::ThreePointCorrelation::measure_Q_TEST (const string dir_output_triplets, const string dir_output_2pt, const vector<string>& dir_input_triplets, const bool count, const bool tcount) 
 {
 
   allocate_vectors_zeta();
@@ -277,15 +278,15 @@ void cosmobl::ThreePointCorrelation::measure_Q_TEST (string dir_output_triplets,
  
   double cell_size = rMAX2*0.1;
   
-  ChainMesh_Catalogue lkList_data_rMAX1, lkList_data_rMAX2, lkList_random_rMAX1, lkList_random_rMAX2;
+  ChainMesh_Catalogue ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2;
 
   if (count) {
-    lkList_data_rMAX1.set_par(cell_size, m_data, rMAX2);
-    lkList_data_rMAX1.get_searching_region(rMAX1);
-    lkList_data_rMAX2.set_par(cell_size, m_data, rMAX2);
-    lkList_random_rMAX1.set_par(cell_size, m_random, rMAX2);
-    lkList_random_rMAX1.get_searching_region(rMAX1);
-    lkList_random_rMAX2.set_par(cell_size, m_random, rMAX2);
+    ChainMesh_data_rMAX1.set_par(cell_size, m_data, rMAX2);
+    ChainMesh_data_rMAX1.get_searching_region(rMAX1);
+    ChainMesh_data_rMAX2.set_par(cell_size, m_data, rMAX2);
+    ChainMesh_random_rMAX1.set_par(cell_size, m_random, rMAX2);
+    ChainMesh_random_rMAX1.get_searching_region(rMAX1);
+    ChainMesh_random_rMAX2.set_par(cell_size, m_random, rMAX2);
   }
 
   
@@ -301,7 +302,7 @@ void cosmobl::ThreePointCorrelation::measure_Q_TEST (string dir_output_triplets,
     Triplets3D ggg {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     Triplets3D ggr {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
 
-    count_triplets_gg(ggg, ggr, lkList_data_rMAX1, lkList_data_rMAX2, lkList_random_rMAX2, 1, tcount);
+    count_triplets_gg(ggg, ggr, ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX2, 1, tcount);
 
     m_ggg = ggg.TT();
     
@@ -314,7 +315,7 @@ void cosmobl::ThreePointCorrelation::measure_Q_TEST (string dir_output_triplets,
     Triplets3D rrg {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     Triplets3D rrr {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
 
-    count_triplets_rr(rrg, rrr, lkList_random_rMAX1, lkList_data_rMAX2, lkList_random_rMAX2, 1, tcount);
+    count_triplets_rr(rrg, rrr, ChainMesh_random_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX2, 1, tcount);
     
     m_rrr = rrr.TT();
     
@@ -327,7 +328,7 @@ void cosmobl::ThreePointCorrelation::measure_Q_TEST (string dir_output_triplets,
     Triplets3D grg {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     Triplets3D grr {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
 
-    count_triplets_gr(grg, grr, lkList_random_rMAX1, lkList_data_rMAX2, lkList_random_rMAX2, 1, tcount);
+    count_triplets_gr(grg, grr, ChainMesh_random_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX2, 1, tcount);
 
 
     // --- Random-Object-Object and Random-Object-Random ---
@@ -337,7 +338,7 @@ void cosmobl::ThreePointCorrelation::measure_Q_TEST (string dir_output_triplets,
     Triplets3D rgg {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     Triplets3D rgr {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
 
-    count_triplets_rg(rgg, rgr, lkList_data_rMAX1, lkList_data_rMAX2, lkList_random_rMAX2, 1, tcount);
+    count_triplets_rg(rgg, rgr, ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX2, 1, tcount);
 
     for (size_t i=0; i<m_ggr.size(); i++) m_ggr[i] = ggr.TT()[i] + grg.TT()[i] + rgg.TT()[i];
     for (size_t i=0; i<m_grr.size(); i++) m_grr[i] = grr.TT()[i] + rrg.TT()[i] + rgr.TT()[i];
@@ -448,7 +449,7 @@ void cosmobl::ThreePointCorrelation::measure_Q_TEST (string dir_output_triplets,
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::measure_Q_ang (string dir_output_triplets, string dir_output_2pt, const vector<string>& dir_input_triplets, int count_ggg, int count_rrr, int count_ggr, int count_grr, bool tcount) 
+void cosmobl::ThreePointCorrelation::measure_Q_ang (const string dir_output_triplets, const string dir_output_2pt, const vector<string>& dir_input_triplets, const int count_ggg, const int count_rrr, const int count_ggr, const int count_grr, const bool tcount) 
 {
 
   allocate_vectors_zeta();
@@ -466,15 +467,15 @@ void cosmobl::ThreePointCorrelation::measure_Q_ang (string dir_output_triplets, 
   double cell_size1 = rMAX1*0.1;
   double cell_size2 = rMAX2*0.1;
   
-  ChainMesh_Catalogue lkList_data_rMAX1, lkList_data_rMAX2, lkList_random_rMAX1, lkList_random_rMAX2;
+  ChainMesh_Catalogue ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2;
 
   if (count_ggg==1 || count_ggr==1) {
-    lkList_data_rMAX1.set_par(cell_size1, m_data, rMAX1);
-    lkList_data_rMAX2.set_par(cell_size2, m_data, rMAX2);
+    ChainMesh_data_rMAX1.set_par(cell_size1, m_data, rMAX1);
+    ChainMesh_data_rMAX2.set_par(cell_size2, m_data, rMAX2);
   }
   if (count_rrr==1 || count_grr==1) {
-    lkList_random_rMAX1.set_par(cell_size1, m_random, rMAX1);
-    lkList_random_rMAX2.set_par(cell_size2, m_random, rMAX2);
+    ChainMesh_random_rMAX1.set_par(cell_size1, m_random, rMAX1);
+    ChainMesh_random_rMAX2.set_par(cell_size2, m_random, rMAX2);
   }
 
   
@@ -491,7 +492,7 @@ void cosmobl::ThreePointCorrelation::measure_Q_ang (string dir_output_triplets, 
 
     Triplets3D ggg {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     
-    count_triplets(m_data, lkList_data_rMAX1, lkList_data_rMAX2, ggg, 0, tcount);
+    count_triplets(m_data, ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ggg, 0, tcount);
 
     m_ggg = ggg.TT();
 
@@ -512,7 +513,7 @@ void cosmobl::ThreePointCorrelation::measure_Q_ang (string dir_output_triplets, 
 
     Triplets3D rrr {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
 
-    count_triplets(m_random, lkList_random_rMAX1, lkList_random_rMAX2, rrr, 0, tcount);
+    count_triplets(m_random, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2, rrr, 0, tcount);
 
     m_rrr = rrr.TT();
 
@@ -535,9 +536,9 @@ void cosmobl::ThreePointCorrelation::measure_Q_ang (string dir_output_triplets, 
     Triplets3D ggr2 {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     Triplets3D ggr3 {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     
-    count_triplets(m_data, lkList_data_rMAX1, lkList_random_rMAX2, ggr1, 0, tcount);
-    count_triplets(m_data, lkList_random_rMAX1, lkList_data_rMAX2, ggr2, 0, tcount);
-    count_triplets(m_random, lkList_data_rMAX1, lkList_data_rMAX2, ggr3, 0, tcount);
+    count_triplets(m_data, ChainMesh_data_rMAX1, ChainMesh_random_rMAX2, ggr1, 0, tcount);
+    count_triplets(m_data, ChainMesh_random_rMAX1, ChainMesh_data_rMAX2, ggr2, 0, tcount);
+    count_triplets(m_random, ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ggr3, 0, tcount);
 
     for (size_t i=0; i<m_ggr.size(); i++) m_ggr[i] = ggr1.TT()[i]+ggr2.TT()[i]+ggr3.TT()[i];
 
@@ -560,9 +561,9 @@ void cosmobl::ThreePointCorrelation::measure_Q_ang (string dir_output_triplets, 
     Triplets3D grr2 {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     Triplets3D grr3 {m_type_binning, m_binsize, m_side_s, m_side_u, m_perc_increase};
     
-    count_triplets(m_random, lkList_random_rMAX1, lkList_data_rMAX2, grr1, 0, tcount);
-    count_triplets(m_random, lkList_data_rMAX1, lkList_random_rMAX2, grr2, 0, tcount);
-    count_triplets(m_data, lkList_random_rMAX1, lkList_random_rMAX2, grr3, 0, tcount);
+    count_triplets(m_random, ChainMesh_random_rMAX1, ChainMesh_data_rMAX2, grr1, 0, tcount);
+    count_triplets(m_random, ChainMesh_data_rMAX1, ChainMesh_random_rMAX2, grr2, 0, tcount);
+    count_triplets(m_data, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2, grr3, 0, tcount);
 
     for (size_t i=0; i<m_grr.size(); i++) m_grr[i] = grr1.TT()[i]+grr2.TT()[i]+grr3.TT()[i];
 
@@ -665,11 +666,13 @@ void cosmobl::ThreePointCorrelation::measure_Q_ang (string dir_output_triplets, 
   
 }
 
+/// @endcond
+
 
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::count_triplets (shared_ptr<Catalogue> cat1, ChainMesh_Catalogue &lkList_rMAX1, ChainMesh_Catalogue &lkList_rMAX2, Triplets &tt, bool do3D, bool tcount) 
+void cosmobl::ThreePointCorrelation::count_triplets (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh_rMAX2, Triplets &tt, const bool do3D, const bool tcount) 
 {
   time_t start; time (&start);
   
@@ -682,8 +685,8 @@ void cosmobl::ThreePointCorrelation::count_triplets (shared_ptr<Catalogue> cat1,
   if (!do3D) ErrorMsg("Work in progres...");
   //double (Catalogue::*Dist)(int, shared_ptr<Object>) = (do3D) ? &Catalogue::distance : &Catalogue::angsep_xyz;
 
-  shared_ptr<Catalogue> cat2 = lkList_rMAX1.catalogue();
-  shared_ptr<Catalogue> cat3 = lkList_rMAX2.catalogue();
+  shared_ptr<Catalogue> cat2 = ChainMesh_rMAX1.catalogue();
+  shared_ptr<Catalogue> cat3 = ChainMesh_rMAX2.catalogue();
 
   int tid = 0;
 #pragma omp parallel private(tid)
@@ -699,7 +702,7 @@ void cosmobl::ThreePointCorrelation::count_triplets (shared_ptr<Catalogue> cat1,
     for (int i=0; i<nObj; i++) { // loop on the objects of the catalogue
     
       // get the indexes of the objects at r12
-      vector<long> close_objects12 = lkList_rMAX1.close_objects(cat1->coordinates(i), -1);
+      vector<long> close_objects12 = ChainMesh_rMAX1.close_objects(cat1->coordinates(i), -1);
     
       for (auto &&j : close_objects12) { // loop on the objects at r12 
 
@@ -708,7 +711,7 @@ void cosmobl::ThreePointCorrelation::count_triplets (shared_ptr<Catalogue> cat1,
 	if (m_side_s*(1-m_perc_increase)<r12 && r12<m_side_s*(1+m_perc_increase)) {
 
 	  // get the indexes of objects at r13
-	  vector<long> close_objects13 = lkList_rMAX2.close_objects(cat1->coordinates(i), -1);
+	  vector<long> close_objects13 = ChainMesh_rMAX2.close_objects(cat1->coordinates(i), -1);
 	
 	  for (auto &&k : close_objects13) { // loop on the objects at r13
 
@@ -748,7 +751,7 @@ void cosmobl::ThreePointCorrelation::count_triplets (shared_ptr<Catalogue> cat1,
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::count_triplets_gg (Triplets &GGG, Triplets &GGR, ChainMesh_Catalogue &lkList_rMAX1,  ChainMesh_Catalogue &lkList1_rMAX2, ChainMesh_Catalogue &lkList2_rMAX2, bool do3D, bool tcount) 
+void cosmobl::ThreePointCorrelation::count_triplets_gg (Triplets &GGG, Triplets &GGR, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh1_rMAX2, const ChainMesh_Catalogue &ChainMesh2_rMAX2, const bool do3D, const bool tcount) 
 {
   time_t start; time (&start);
   
@@ -764,7 +767,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_gg (Triplets &GGG, Triplets 
   
   for (int i=0; i<nObj; i++) { // loop on the objects of the catalogue    
 
-    vector<long> close_objects12 = lkList_rMAX1.close_objects(m_data->coordinates(i), -1);
+    vector<long> close_objects12 = ChainMesh_rMAX1.close_objects(m_data->coordinates(i), -1);
 
     for (auto &&j : close_objects12) { // loop on the objects at r12 
 
@@ -775,7 +778,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_gg (Triplets &GGG, Triplets 
 	
 	// ----- GGG -----
 	
-	vector<long> close_objects13_GGG = lkList1_rMAX2.close_objects(m_data->coordinates(i), -1);      
+	vector<long> close_objects13_GGG = ChainMesh1_rMAX2.close_objects(m_data->coordinates(i), -1);      
 	
 	for (auto &&k : close_objects13_GGG) { 
 
@@ -794,7 +797,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_gg (Triplets &GGG, Triplets 
 
 	// ----- GGR -----
 	
-	vector<long> close_objects13_GGR = lkList2_rMAX2.close_objects(m_data->coordinates(i), -1);      
+	vector<long> close_objects13_GGR = ChainMesh2_rMAX2.close_objects(m_data->coordinates(i), -1);      
 	
 	for (auto &&k : close_objects13_GGR) {
 
@@ -834,7 +837,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_gg (Triplets &GGG, Triplets 
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::count_triplets_rr (Triplets &RRG, Triplets &RRR, ChainMesh_Catalogue &lkList_rMAX1,  ChainMesh_Catalogue &lkList1_rMAX2, ChainMesh_Catalogue &lkList2_rMAX2, bool do3D, bool tcount) 
+void cosmobl::ThreePointCorrelation::count_triplets_rr (Triplets &RRG, Triplets &RRR, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh1_rMAX2, const ChainMesh_Catalogue &ChainMesh2_rMAX2, const bool do3D, const bool tcount) 
 {
   time_t start; time (&start);
   
@@ -850,7 +853,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_rr (Triplets &RRG, Triplets 
   
   for (int i=0; i<nObj; i++) { // loop on the objects of the catalogue    
 
-    vector<long> close_objects12 = lkList_rMAX1.close_objects(m_random->coordinates(i), -1);
+    vector<long> close_objects12 = ChainMesh_rMAX1.close_objects(m_random->coordinates(i), -1);
 
     for (auto &&j : close_objects12) {
 
@@ -861,7 +864,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_rr (Triplets &RRG, Triplets 
 
 	// ----- RRG -----
 	
-	vector<long> close_objects13_RRG = lkList1_rMAX2.close_objects(m_random->coordinates(i), -1);      
+	vector<long> close_objects13_RRG = ChainMesh1_rMAX2.close_objects(m_random->coordinates(i), -1);      
 	
 	for (auto &&k : close_objects13_RRG) {
 
@@ -880,7 +883,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_rr (Triplets &RRG, Triplets 
 
 	// ----- RRR -----
 	
-	vector<long> close_objects13_RRR = lkList2_rMAX2.close_objects(m_random->coordinates(i), -1);      
+	vector<long> close_objects13_RRR = ChainMesh2_rMAX2.close_objects(m_random->coordinates(i), -1);      
 	
 	for (auto &&k : close_objects13_RRR) {
 
@@ -920,7 +923,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_rr (Triplets &RRG, Triplets 
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::count_triplets_gr (Triplets &GRG, Triplets &GRR, ChainMesh_Catalogue &lkList_rMAX1,  ChainMesh_Catalogue &lkList1_rMAX2, ChainMesh_Catalogue &lkList2_rMAX2, bool do3D, bool tcount) 
+void cosmobl::ThreePointCorrelation::count_triplets_gr (Triplets &GRG, Triplets &GRR, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh1_rMAX2, const ChainMesh_Catalogue &ChainMesh2_rMAX2, const bool do3D, const bool tcount) 
 {
   time_t start; time (&start);
   
@@ -936,7 +939,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_gr (Triplets &GRG, Triplets 
   
   for (int i=0; i<nObj; i++) { // loop on the objects of the catalogue    
 
-    vector<long> close_objects12 = lkList_rMAX1.close_objects(m_data->coordinates(i), -1);
+    vector<long> close_objects12 = ChainMesh_rMAX1.close_objects(m_data->coordinates(i), -1);
 
     for (auto &&j : close_objects12) {
 
@@ -947,7 +950,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_gr (Triplets &GRG, Triplets 
 
 	// ----- GRG -----
 	
-	vector<long> close_objects13_GRG = lkList1_rMAX2.close_objects(m_data->coordinates(i), -1);      
+	vector<long> close_objects13_GRG = ChainMesh1_rMAX2.close_objects(m_data->coordinates(i), -1);      
 	
 	for (auto &&k : close_objects13_GRG) {
 
@@ -966,7 +969,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_gr (Triplets &GRG, Triplets 
 
 	// ----- GRR -----
 	
-	vector<long> close_objects13_GRR = lkList2_rMAX2.close_objects(m_data->coordinates(i), -1);      
+	vector<long> close_objects13_GRR = ChainMesh2_rMAX2.close_objects(m_data->coordinates(i), -1);      
 	
 	for (auto &&k : close_objects13_GRR) {
 
@@ -1006,7 +1009,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_gr (Triplets &GRG, Triplets 
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::count_triplets_rg (Triplets &RGG, Triplets &RGR, ChainMesh_Catalogue &lkList_rMAX1,  ChainMesh_Catalogue &lkList1_rMAX2, ChainMesh_Catalogue &lkList2_rMAX2, bool do3D, bool tcount) 
+void cosmobl::ThreePointCorrelation::count_triplets_rg (Triplets &RGG, Triplets &RGR, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh1_rMAX2, const ChainMesh_Catalogue &ChainMesh2_rMAX2, const bool do3D, const bool tcount) 
 {
   time_t start; time (&start);
   
@@ -1022,7 +1025,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_rg (Triplets &RGG, Triplets 
   
   for (int i=0; i<nObj; i++) { // loop on the objects of the catalogue    
 
-    vector<long> close_objects12 = lkList_rMAX1.close_objects(m_random->coordinates(i), -1);
+    vector<long> close_objects12 = ChainMesh_rMAX1.close_objects(m_random->coordinates(i), -1);
 
     for (auto &&j : close_objects12) {
       
@@ -1033,7 +1036,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_rg (Triplets &RGG, Triplets 
 
 	// ----- RGG -----
 	
-	vector<long> close_objects13_RGG = lkList1_rMAX2.close_objects(m_random->coordinates(i), -1);      
+	vector<long> close_objects13_RGG = ChainMesh1_rMAX2.close_objects(m_random->coordinates(i), -1);      
 	
 	for (auto &&k : close_objects13_RGG) {
 
@@ -1052,7 +1055,7 @@ void cosmobl::ThreePointCorrelation::count_triplets_rg (Triplets &RGG, Triplets 
 
 	// ----- RGR -----
 	
-	vector<long> close_objects13_RGR = lkList2_rMAX2.close_objects(m_random->coordinates(i), -1);      
+	vector<long> close_objects13_RGR = ChainMesh2_rMAX2.close_objects(m_random->coordinates(i), -1);      
 	
 	for (auto &&k : close_objects13_RGR) {
 
@@ -1087,4 +1090,3 @@ void cosmobl::ThreePointCorrelation::count_triplets_rg (Triplets &RGG, Triplets 
 
   cout.unsetf(ios::fixed); cout.unsetf(ios::showpoint); cout.precision(6);
 }
-

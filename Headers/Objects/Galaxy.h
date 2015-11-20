@@ -100,24 +100,24 @@ namespace cosmobl {
     /** @brief get the protected member Galaxy::m_mass
      *  @return the mass of the galaxy
      */
-    double mass () const /*override*/ { return m_mass; }
+    double mass () const override { return m_mass; }
 
     /** @brief get the protected member Galaxy::m_magnitude
      *  @return the magnitude of the galaxy
      */
-    double magnitude () const /*override*/ { return m_magnitude; }
+    double magnitude () const override { return m_magnitude; }
 
     /** @brief set the protected member Galaxy::m_mass
      *  @param mass the mass of the galaxy
      *  @return none
      */
-    void set_mass (const double mass) /*override*/ { m_mass = mass; } 
+    void set_mass (const double mass) override { m_mass = mass; } 
 
     /** @brief set the protected member Galaxy::m_magnitude
      *  @param magnitude the magnitude of the galaxy
      *  @return none
      */
-    void set_magnitude (const double magnitude) /*override*/ { m_magnitude = magnitude; }
+    void set_magnitude (const double magnitude) override { m_magnitude = magnitude; }
 
   };
 }

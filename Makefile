@@ -10,7 +10,7 @@ dir_O = $(PWD)/Headers/Objects/
 dir_EH = $(PWD)/Cosmology/EH/
 dir_Python = $(PWD)/Python/
 
-HH = $(dir_H)*.h
+HH = $(dir_H)*.h $(dir_O)*.h
 
 FLAGS_INC = -I$(dir_H) -isystem $(HOME)/Numerical/
 FLAGS_FFTW = -lfftw3 -lfftw3_omp

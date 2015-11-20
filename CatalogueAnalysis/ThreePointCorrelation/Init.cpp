@@ -42,7 +42,7 @@ using namespace cosmobl;
 // ============================================================================
 
 
-void cosmobl::ThreePointCorrelation::setParameters3p (double &side_s, double &side_u, double &perc_increase, string &type_binning, int &nbins)
+void cosmobl::ThreePointCorrelation::setParameters3p (const double side_s, const double side_u, const double perc_increase, const string type_binning, const int nbins)
 {
   m_side_s = side_s;
   m_side_u = side_u;

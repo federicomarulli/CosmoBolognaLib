@@ -102,13 +102,13 @@ namespace cosmobl {
     /** @brief get the protected member Mock::m_generic
      *  @return the generic variable of the mock object
      */
-    double generic () const /*override*/ { return m_generic; }
+    double generic () const override { return m_generic; }
 
     /** @brief set the protected member Mock::m_generic
      *  @param generic the generic variable of the mock object
      *  @return none
      */
-    void set_generic (const double generic) /*override*/ { m_generic = generic; }
+    void set_generic (const double generic) override { m_generic = generic; }
 
   };
 }

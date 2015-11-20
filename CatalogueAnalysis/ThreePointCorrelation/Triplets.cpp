@@ -41,7 +41,7 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-void cosmobl::Triplets2D::sum (shared_ptr<Triplets> tt, double ww) 
+void cosmobl::Triplets2D::sum (const shared_ptr<Triplets> tt, const double ww)  
 {
   if (fabs(m_binsize-tt->binsize())>1.e-30)
     cosmobl::ErrorMsg("Error in cosmobl::Triplets2D::sum of Triplets.cpp: dimension problems!");
@@ -54,7 +54,7 @@ void cosmobl::Triplets2D::sum (shared_ptr<Triplets> tt, double ww)
 // ============================================================================================
 
 
-void cosmobl::Triplets2D::put (double &r12, double &r13, double &r23, double ww) 
+void cosmobl::Triplets2D::put (const double r12, const double r13, const double r23, const double ww)  
 {
   int klin = -1;
   
@@ -78,7 +78,7 @@ void cosmobl::Triplets2D::put (double &r12, double &r13, double &r23, double ww)
 // ============================================================================================
 
 
-void cosmobl::Triplets2D::put (shared_ptr<Object> obj1, shared_ptr<Object> obj2, shared_ptr<Object> obj3) 
+void cosmobl::Triplets2D::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, const shared_ptr<Object> obj3) 
 {
   double x1 = obj1->xx(), y1 = obj1->yy(), z1 = obj1->zz(), w1 = obj1->weight();
   double x2 = obj2->xx(), y2 = obj2->yy(), z2 = obj2->zz(), w2 = obj2->weight();
@@ -112,7 +112,7 @@ void cosmobl::Triplets2D::put (shared_ptr<Object> obj1, shared_ptr<Object> obj2,
 // ============================================================================================
 
 
-void cosmobl::Triplets3D::sum (shared_ptr<Triplets> tt, double ww) 
+void cosmobl::Triplets3D::sum (const shared_ptr<Triplets> tt, const double ww)  
 {
   if (fabs(m_binsize-tt->binsize())>1.e-30) 
     cosmobl::ErrorMsg("Error in cosmobl::Triplets3D::sum of Triplets.cpp: dimension problems!");
@@ -126,7 +126,7 @@ void cosmobl::Triplets3D::sum (shared_ptr<Triplets> tt, double ww)
 // ============================================================================================
 
 
-void cosmobl::Triplets3D::put (double &r12, double &r13, double &r23, double ww) 
+void cosmobl::Triplets3D::put (const double r12, const double r13, const double r23, const double ww) 
 {
   int klin = -1;
 
@@ -150,7 +150,7 @@ void cosmobl::Triplets3D::put (double &r12, double &r13, double &r23, double ww)
 // ============================================================================================
 
 
-void cosmobl::Triplets3D::put (shared_ptr<Object> obj1, shared_ptr<Object> obj2, shared_ptr<Object> obj3) 
+void cosmobl::Triplets3D::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, const shared_ptr<Object> obj3) 
 {
   double x1 = obj1->xx(), y1 = obj1->yy(), z1 = obj1->zz(), w1 = obj1->weight();
   double x2 = obj2->xx(), y2 = obj2->yy(), z2 = obj2->zz(), w2 = obj2->weight();

@@ -390,55 +390,55 @@ namespace cosmobl {
      *  @brief get the protected member Pairs2D::m_nlog
      *  @return the number of logarithmic bins
      */
-    int nlog () const /*override*/ { return m_nlog; }
+    int nlog () const override { return m_nlog; }
 
     /**
      *  @brief get the protected member Pairs2D::m_nlin
      *  @return the number of linear bins
      */
-    int nlin () const /*override*/ { return m_nlin; }
+    int nlin () const override { return m_nlin; }
 
     /**
      *  @brief get the protected member Pairs2D::m_thetaMin
      *  @return the minimum value of the angle &theta; used to count
      *  the number of pairs
      */
-    double thetaMin () const /*override*/ { return m_thetaMin; }
+    double thetaMin () const override { return m_thetaMin; }
 
     /**
      *  @brief get the protected member Pairs2D::m_thetaMax
      *  @return the maximum value of the angle &theta; used to count
      *  the number of pairs
      */    
-    double thetaMax () const /*override*/ { return m_thetaMax; }
+    double thetaMax () const override { return m_thetaMax; }
 
     /**
      *  @brief get the private member Pairs2D::m_PPlog[i]
      *  @param i the bin index
      *  @return the number of pairs in the i-th logarithmic bin
      */
-    double PPlog (const int i) const /*override*/ { return m_PPlog[i]; }
+    double PPlog (const int i) const override { return m_PPlog[i]; }
 
     /**
      *  @brief get the private member Pairs2D::m_PPlin[i]
      *  @param i the bin index
      *  @return the number of pairs in the i-th linear bin
      */
-    double PPlin (const int i) const /*override*/ { return m_PPlin[i]; }
+    double PPlin (const int i) const override { return m_PPlin[i]; }
 
     /**
      *  @brief get the private member Pairs2D::m_PPlog
      *  @return the vector containing the number of pairs in
      *  logarithmic bins
      */
-    vector<double> PPlog () const /*override*/ { return m_PPlog; }
+    vector<double> PPlog () const override { return m_PPlog; }
 
     /**
      *  @brief get the private member Pairs2D::m_PPlin
      *  @return the vector containing the number of pairs in linear
      *  bins
      */
-    vector<double> PPlin () const /*override*/ { return m_PPlin; }
+    vector<double> PPlin () const override { return m_PPlin; }
 
     /**
      *  @brief set the private member Pairs2D::m_PPlog[i]
@@ -447,7 +447,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    void set_PPlog (const int i, const double pp) /*override*/ { m_PPlog[i] = pp; }
+    void set_PPlog (const int i, const double pp) override { m_PPlog[i] = pp; }
 
     /**
      *  @brief set the private member Pairs2D::m_PPlin[i]
@@ -456,7 +456,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    void set_PPlin (const int i, const double pp) /*override*/ { m_PPlin[i] = pp; }
+    void set_PPlin (const int i, const double pp) override { m_PPlin[i] = pp; }
     
     /**
      *  @brief sum the number of pairs
@@ -464,7 +464,7 @@ namespace cosmobl {
      *  @param ww the weight
      *  @return none
      */
-    void sum (const shared_ptr<Pairs>, const double ww=1);
+    void sum (const shared_ptr<Pairs>, const double ww=1) override;
 
     /**
      *  @brief estimate the distance between two objects and update
@@ -473,7 +473,7 @@ namespace cosmobl {
      *  @param obj2 pointer to an object of class Object
      *  @return none
      */
-    void put (const shared_ptr<Object>, const shared_ptr<Object>);
+    void put (const shared_ptr<Object>, const shared_ptr<Object>) override;
   
   };
 
@@ -572,45 +572,45 @@ namespace cosmobl {
      *  @brief get the private member Pairs3D::m_nlog
      *  @return the number of logarithmic bins
      */
-    int nlog () const /*override*/ { return m_nlog; }
+    int nlog () const override { return m_nlog; }
     
     /**
      *  @brief get the private member Pairs3D::m_nlin
      *  @return the number of linear bins
      */
-    int nlin () const /*override*/ { return m_nlin; }
+    int nlin () const override { return m_nlin; }
 
     /**
      *  @brief get the private member Pairs3D::m_ncos
      *  @return the number of angular bins
      */
-    int ncos () const /*override*/ { return m_ncos; }
+    int ncos () const override { return m_ncos; }
 
     /**
      *  @brief get the private member Pairs3D::m_rMin
      *  @return the minimum separation used to count pairs
      */
-    double rMin () const /*override*/ { return m_rMin; }
+    double rMin () const override { return m_rMin; }
 
     /**
      *  @brief get the private member Pairs3D::m_rMax
      *  @return the maximum separation used to count pairs
      */
-    double rMax () const /*override*/ { return m_rMax; }
+    double rMax () const override { return m_rMax; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPlog[i]
      *  @param i the bin index
      *  @return the number of pairs in the i-th logarithmic bin
      */
-    double PPlog (const int i) const /*override*/ { return m_PPlog[i]; }
+    double PPlog (const int i) const override { return m_PPlog[i]; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPlin[i]
      *  @param i the bin index
      *  @return the number of pairs in the i-th linear bin
      */
-    double PPlin (const int i) const /*override*/ { return m_PPlin[i]; }
+    double PPlin (const int i) const override { return m_PPlin[i]; }
 
     /**
      *  @brief get the private member Pairs3D::m_PP2d[i][j]
@@ -622,7 +622,7 @@ namespace cosmobl {
      *  perpendicular to the line-of-sight, and in the j-th linear bin
      *  parallel to the line-of-sight
      */
-    double PP2d (const int i, const int j) const /*override*/ { return m_PP2d[i][j]; }
+    double PP2d (const int i, const int j) const override { return m_PP2d[i][j]; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPslog[i][j]
@@ -634,7 +634,7 @@ namespace cosmobl {
      *  perpendicular to the line-of-sight, and in the j-th
      *  logarithmic bin parallel to the line-of-sight
      */
-    double PPslog (const int i, const int j) const /*override*/ { return m_PPslog[i][j]; }     
+    double PPslog (const int i, const int j) const override { return m_PPslog[i][j]; }     
 
     /**
      *  @brief get the private member Pairs3D::m_PPcoslog[i][j]
@@ -643,7 +643,7 @@ namespace cosmobl {
      *  @return the number of pairs in the i-th logarithmic bin in r,
      *  and in the j-th linear angular bin in cos(&theta;)
      */
-    double PPcoslog (const int i, const int j) const /*override*/ { return m_PPcoslog[i][j]; }
+    double PPcoslog (const int i, const int j) const override { return m_PPcoslog[i][j]; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPcoslin[i][j]
@@ -652,21 +652,21 @@ namespace cosmobl {
      *  @return the number of pairs in the i-th linear bin in r, and
      *  in the j-th linear angular bin in cos(&theta;)
      */
-    double PPcoslin (const int i, const int j) const /*override*/ { return m_PPcoslin[i][j]; }   
+    double PPcoslin (const int i, const int j) const override { return m_PPcoslin[i][j]; }   
   
     /**
      *  @brief get the private member Pairs3D::m_PPlog
      *  @return the vector containing the number of pairs in
      *  logarithmic bins
      */
-    vector<double> PPlog () const /*override*/ { return m_PPlog; }
+    vector<double> PPlog () const override { return m_PPlog; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPlin
      *  @return the vector containing the number of pairs in linear
      *  bins
      */
-    vector<double> PPlin () const /*override*/ { return m_PPlin; }
+    vector<double> PPlin () const override { return m_PPlin; }
 
     /**
      *  @brief get the private member Pairs3D::m_PP2d
@@ -674,7 +674,7 @@ namespace cosmobl {
      *  perpendicular to the line-of-sight, and linear bins parallel
      *  to the line-of-sight
      */
-    vector<vector<double> > PP2d () const /*override*/ { return m_PP2d; }
+    vector<vector<double> > PP2d () const override { return m_PP2d; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPslog
@@ -682,21 +682,21 @@ namespace cosmobl {
      *  perpendicular to the line-of-sight, and in logarithmic bins
      *  parallel to the line-of-sight
      */
-    vector<vector<double> > PPslog () const /*override*/ { return m_PPslog; }
+    vector<vector<double> > PPslog () const override { return m_PPslog; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPcoslog
      *  @return a matrix containing the number of pairs in logarithmic
      *  bins in r and linear angular bins in cos(&theta;)
      */
-    vector<vector<double> > PPcoslog () const /*override*/ { return m_PPcoslog; }
+    vector<vector<double> > PPcoslog () const override { return m_PPcoslog; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPcoslin
      *  @return a matrix containing the number of pairs in linear bins
      *  in r and linear angular bins in cos(&theta;)
      */
-    vector<vector<double> > PPcoslin () const /*override*/ { return m_PPcoslin; }
+    vector<vector<double> > PPcoslin () const override { return m_PPcoslin; }
 
     /**
      *  @brief set the private member Pairs3D::m_PPlog[i]
@@ -705,7 +705,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    void set_PPlog (const int i, const double pp) /*override*/ { m_PPlog[i] = pp; }
+    void set_PPlog (const int i, const double pp) override { m_PPlog[i] = pp; }
 
     /**
      *  @brief set the private member Pairs3D::m_PPlin[i]
@@ -714,7 +714,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    void set_PPlin (const int i, const double pp) /*override*/ { m_PPlin[i] = pp; }
+    void set_PPlin (const int i, const double pp) override { m_PPlin[i] = pp; }
 
     /**
      *  @brief set the private member Pairs3D::m_PP2d[i][j]
@@ -726,7 +726,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    void set_PP2d (const int i, const int j, const double pp) /*override*/ { m_PP2d[i][j] = pp; }
+    void set_PP2d (const int i, const int j, const double pp) override { m_PP2d[i][j] = pp; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPslog[i][j]
@@ -738,7 +738,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    void set_PPslog (const int i, const int j, const double pp) /*override*/ {m_PPslog[i][j] = pp; }     
+    void set_PPslog (const int i, const int j, const double pp) override {m_PPslog[i][j] = pp; }     
 
     /**
      *  @brief get the private member Pairs3D::m_PPcoslog[i][j]
@@ -748,7 +748,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    void set_PPcoslog (const int i, const int j, const double pp) /*override*/ { m_PPcoslog[i][j] = pp; }
+    void set_PPcoslog (const int i, const int j, const double pp) override { m_PPcoslog[i][j] = pp; }
 
     /**
      *  @brief get the private member Pairs3D::m_PPcoslin[i][j]
@@ -758,7 +758,7 @@ namespace cosmobl {
      *  @return none, or an error message if the derived object does
      *  not have this member
      */
-    void set_PPcoslin (const int i, const int j, const double pp) /*override*/ { m_PPcoslin[i][j] = pp; }
+    void set_PPcoslin (const int i, const int j, const double pp) override { m_PPcoslin[i][j] = pp; }
     
     /**
      *  @brief sum the number of pairs
@@ -766,7 +766,7 @@ namespace cosmobl {
      *  @param ww the weight
      *  @return none
      */
-    void sum (const shared_ptr<Pairs>, const double ww=1);
+    void sum (const shared_ptr<Pairs>, const double ww=1) override;
 
     /**
      *  @brief estimate the distance between two objects and update
@@ -775,7 +775,7 @@ namespace cosmobl {
      *  @param obj2 pointer to an object of class Object
      *  @return none
      */
-    void put (const shared_ptr<Object>, const shared_ptr<Object>);
+    void put (const shared_ptr<Object>, const shared_ptr<Object>) override;
     
     /**
      *  @brief estimate the distance between two objects and update
@@ -784,7 +784,7 @@ namespace cosmobl {
      *  @param obj2 pointer to an object of class Object
      *  @return none
      */
-    void put_log (const shared_ptr<Object>, const shared_ptr<Object>);
+    void put_log (const shared_ptr<Object>, const shared_ptr<Object>) override;
   };
 }
 

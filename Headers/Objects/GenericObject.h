@@ -150,58 +150,58 @@ namespace cosmobl {
     /** @brief get the protected member GenericObject::m_xx
      *  @return the coordinate x of the object
      */
-    double xx () const /*override*/ { return m_xx; }
+    double xx () const override { return m_xx; }
     
     /** @brief get the protected member GenericObject::m_yy
      *  @return the coordinate y of the object
      */
-    double yy () const /*override*/ { return m_yy; }
+    double yy () const override { return m_yy; }
     
     /** @brief get the protected member GenericObject::m_zz
      *  @return the coordinate z of the object
      */
-    double zz () const /*override*/ { return m_zz; }
+    double zz () const override { return m_zz; }
     
     /** @brief get the protected member GenericObject::m_dc
      *  @return the comoving distance of the object
      */
-    double dc () const /*override*/ { return m_dc; }
+    double dc () const override { return m_dc; }
     
     /** @brief get the protected member GenericObject::m_ra
      *  @return the Right Ascension of the object
      */
-    double ra () const /*override*/ { return m_ra; } 
+    double ra () const override { return m_ra; } 
     
     /** @brief get the protected member GenericObject::m_dec
      *  @return the Declination of the object
      */
-    double dec () const /*override*/ { return m_dec; }
+    double dec () const override { return m_dec; }
     
     /** @brief get the protected member GenericObject::m_redshift
      *  @return the redshift of the object
      */
-    double redshift () const /*override*/ { return m_redshift; }
+    double redshift () const override { return m_redshift; }
     
     /** @brief get the protected member GenericObject::m_weight
      *  @return the weight of the object
      */
-    double weight () const /*override*/ { return m_weight; }
+    double weight () const override { return m_weight; }
 
     /** @brief get the protected member GenericObject::m_region
      *  @return the index of the subRegion in which the object is located
      */
-    long region () const /*override*/ { return m_region; }
+    long region () const override { return m_region; }
 
     /** @brief get the object coordinates
      *  @return a vector containing the object coordinates
      */
-    vector<double> coords () const /*override*/ { return {m_xx, m_yy, m_zz}; }
+    vector<double> coords () const override { return {m_xx, m_yy, m_zz}; }
     
     /** @brief set the protected member GenericObject::m_xx
      *  @param xx the coordinate x of the object
      *  @return none
      */
-    void set_xx (const double xx) /*override*/ { m_xx = xx; }
+    void set_xx (const double xx) override { m_xx = xx; }
  
     /** @brief set the protected member GenericObject::m_yy
      *  @param yy the coordinate y of the object
@@ -213,43 +213,43 @@ namespace cosmobl {
      *  @param zz the coordinate z of the object
      *  @return none
      */
-    void set_zz (const double zz) /*override*/ { m_zz = zz; }
+    void set_zz (const double zz) override { m_zz = zz; }
     
     /** @brief set the protected member GenericObject::m_ra
      *  @param ra the Right Ascension of the object
      *  @return none
      */
-    void set_ra (const double ra) /*override*/ { m_ra = ra; }
+    void set_ra (const double ra) override { m_ra = ra; }
     
     /** @brief set the protected member GenericObject::m_dec
      *  @param dec the Declination of the object
      *  @return none
      */
-    void set_dec (const double dec) /*override*/ { m_dec = dec; }
+    void set_dec (const double dec) override { m_dec = dec; }
     
     /** @brief set the protected member GenericObject::m_redshift
      *  @param redshift the redshift of the object
      *  @return none
      */
-    void set_redshift (const double redshift) /*override*/ { m_redshift = redshift; }
+    void set_redshift (const double redshift) override { m_redshift = redshift; }
     
     /** @brief set the protected member GenericObject::m_dc
      *  @param dc the comoving distance of the object
      *  @return none
      */
-    void set_dc (const double dc) /*override*/ { m_dc = dc; }
+    void set_dc (const double dc) override { m_dc = dc; }
     
     /** @brief set the protected member GenericObject::m_weight
      *  @param weight the weight of the object
      *  @return none
      */
-    void set_weight (const double weight) /*override*/ { m_weight = weight; }
+    void set_weight (const double weight) override { m_weight = weight; }
 
     /** @brief set the protected member GenericObject::m_region
      *  @param region the index of the subRegion in which the object is located
      *  @return none
      */
-    void set_region (const long region) /*override*/ { m_region = region; }
+    void set_region (const long region) override { m_region = region; }
 
   };
   
