@@ -1,0 +1,1 @@
+emacs ../Headers/Lib/Chain.h ../Headers/Lib/Chi2.h ../Headers/Lib/Model.h ../Headers/Lib/Parameter.h ../Headers/Lib/Prior.h ../Headers/Lib/Likelihood.h Chain.cpp Chi2.cpp Model.cpp Parameter.cpp Prior.cpp Likelihood.cpp &

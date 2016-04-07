@@ -1,0 +1,27 @@
+# Ad hoc folder for untracked files
+untracked
+
+# Build products
+*build/*
+*.o
+
+# Output directory
+output/*
+
+# Compressed files
+*.tar
+*.tar.*
+*.zip
+*.tgz
+*.log
+*.log.*
+*.sig
+
+# Binary files
+fftlog
+fftlog-f90
+libiomp*
+
+# Valgrind related files
+*.supp
+*.dSYM
