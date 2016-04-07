@@ -1,1 +1,0 @@
-emacs ../Headers/Lib/Catalogue.h ../Headers/Lib/ChainMesh_Catalogue.h Catalogue.cpp ChainMesh_Catalogue.cpp ../Headers/Objects/*.h &

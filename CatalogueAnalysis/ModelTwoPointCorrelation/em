@@ -1,1 +1,0 @@
-emacs ../../Headers/Lib/ModelTwoPointCorrelation.h ../../Headers/Lib/ModelTwoPointClassFunc.h Init.cpp IO.cpp DispersionModelXiMeasured.cpp DispersionModel.cpp HaloHost.cpp &
