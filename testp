@@ -1,0 +1,28 @@
+#!/bin/bash
+
+make &&
+make allExamples &&
+
+make purgepy &&
+make python &&
+cd Examples/vectors && ./vectors && cd ../.. &&
+cd Examples/randomNumbers && ./randomNumbers && cd ../.. &&
+cd Examples/distances && ./distances && python distances.py && cd ../.. &&
+cd Examples/covsample && ./covsample && cd ../.. &&
+cd Examples/fsigma8 && ./fsigma8 && cd ../.. &&
+cd Examples/statistics/codes && ./prior && python prior.py && cd ../../.. &&
+cd Examples/catalogue && ./catalogue && cd ../.. &&
+cd Examples/clustering/codes && ./2pt_monopole && ./2pt_2D && ./2pt_jackknife && ./2pt_projected_jackknife && ./modelBias_2pt_projected && ./3pt && python 2pt_monopole.py && python 2pt_model.py && cd ../../.. &&
+
+make purgepy && 
+make python2 &&
+cd Examples/vectors && ./vectors && cd ../.. &&
+cd Examples/randomNumbers && ./randomNumbers && cd ../.. &&
+cd Examples/distances && ./distances && python distances.py && cd ../.. &&
+cd Examples/covsample && ./covsample && cd ../.. &&
+cd Examples/fsigma8 && ./fsigma8 && cd ../.. &&
+cd Examples/statistics/codes && ./prior && python prior.py && cd ../../.. &&
+cd Examples/catalogue && ./catalogue && cd ../.. &&
+cd Examples/clustering/codes && ./2pt_monopole && ./2pt_2D && ./2pt_jackknife && ./2pt_projected_jackknife && ./modelBias_2pt_projected && ./3pt && python 2pt_monopole.py && python 2pt_model.py && cd ../../.. && 
+
+make doc && emacs Doc/WARNING_LOGFILE 

@@ -138,8 +138,8 @@ void cosmobl::twopt::TwoPointCorrelation_deprojected::measureJackknife (const st
     ww.push_back(data[i]->fx());
 
     if (dir_output_ResampleXi != par::defaultString && dir_output_ResampleXi != "") {
-      string filename = "xi_deprojected_Jackknife_"+conv(i,par::fINT);
-      data[i]->write(dir_output_ResampleXi, filename, "rp", "xi_deprojected", 0);
+      string file = "xi_deprojected_Jackknife_"+conv(i,par::fINT)+".dat";
+      data[i]->write(dir_output_ResampleXi, file, "rp", "xi_deprojected", 0);
     }
   }
 
@@ -163,9 +163,9 @@ void cosmobl::twopt::TwoPointCorrelation_deprojected::measureBootstrap (const in
   
   vector<shared_ptr<Data> > data;
   vector<shared_ptr<pairs::Pair> > dd_regions, rr_regions, dr_regions;
-  count_allPairs_region (dd_regions, rr_regions, dr_regions, TwoPType::_2D_Cartesian_, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr,  tcount);
+  count_allPairs_region (dd_regions, rr_regions, dr_regions, TwoPType::_2D_Cartesian_, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount);
 
-  shared_ptr<Pair> dd_cart = move(Pair::Create(m_dd->pairType(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2()));
+  shared_ptr<Pair> dd_cart = move(Pair::Create(m_dd->pairType(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2(), m_dd->angularUnits(), m_dd->angularWeight()));
 
   auto data_cart = (count_dr>-1) ? LandySzalayEstimatorTwoP(m_dd, m_rr, m_dr, m_data->weightedN(), m_random->weightedN()) : NaturalEstimatorTwoP(m_dd, m_rr, m_data->weightedN(), m_random->weightedN());
 
@@ -180,8 +180,8 @@ void cosmobl::twopt::TwoPointCorrelation_deprojected::measureBootstrap (const in
   for (size_t i=0; i<data.size(); i++) {
     ww.push_back(data[i]->fx());
     if (dir_output_ResampleXi != par::defaultString && dir_output_ResampleXi !="") {
-      string filename = "xi_deprojected_Bootstrap_"+conv(i, par::fINT);
-      data[i]->write(dir_output_ResampleXi, filename, "rp", "xi_deprojected", 0);
+      string file = "xi_deprojected_Bootstrap_"+conv(i, par::fINT)+".dat";
+      data[i]->write(dir_output_ResampleXi, file, "rp", "xi_deprojected", 0);
     }
   }
   covariance_matrix(ww, covariance, 0);

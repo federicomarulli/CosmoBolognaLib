@@ -50,9 +50,10 @@ namespace cosmobl {
   ///@{
 
   /**
-   * @brief overloading of the + operator, to sum two catalogues
-   * @param cc object of class Catalogue 
-   * @return object of class catalogue
+   *  @brief overloading of the + operator, to sum two catalogues
+   *  @param c1 object of class Catalogue
+   *  @param c2 object of class Catalogue
+   *  @return object of class catalogue
    */
   inline catalogue::Catalogue operator + (const catalogue::Catalogue &c1, const catalogue::Catalogue &c2)
     {
@@ -403,11 +404,10 @@ namespace cosmobl {
    *  @brief set the object region in angular SubBoxes
    *  @param data input data catalogue
    *  @param random random catalogue
-   *  @param nRa side fraction used to divide the box in the ra direction 
-   *  @param nDec side fraction used to divide the box in the dec direction 
+   *  @param Cell_size size of the cell in degrees
    *  @return none
    */
-  void set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nRa, const int nDec);
+  void set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalogue &random, const double Cell_size);
 
   /**
    *  @brief set the object region in sub-regions using mangle
@@ -419,6 +419,14 @@ namespace cosmobl {
    *  @return none
    */
   void set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nSamples, const string polygonfile, const string dir);
+
+  /**
+   *  @brief check if the subdivision process produced the correct results
+   *  @param data input data catalogue
+   *  @param random random catalogue
+   *  @return none
+   */
+  void check_regions (catalogue::Catalogue &data, catalogue::Catalogue &random);
 
   ///@}
 }

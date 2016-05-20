@@ -170,7 +170,7 @@ namespace cosmobl {
 	: m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(-1.), m_weight(weight), m_region(-1)
 	{ 
 	  m_dc = cosm.D_C(m_redshift); 
-	  cosmobl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz); 
+	  cosmobl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
 	}
 
       /**

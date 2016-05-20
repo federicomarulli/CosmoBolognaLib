@@ -183,7 +183,6 @@ shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation_multipoles::MultipolesTwoP(
 
   for_each( error.begin(), error.end(), [] (double &vv) { vv = sqrt(vv); } );
   return move(unique_ptr<Data1D>(new Data1D(rad,xil,error)));
-
 }
 
 
@@ -245,31 +244,31 @@ void cosmobl::twopt::TwoPointCorrelation_multipoles::measureJackknife (const str
   else
     data = XiJackknife(dd_regions, rr_regions);
 
-  vector<vector<double> > ww,covariance;
-  for(size_t i=0;i<data.size();i++){
+  vector<vector<double> > ww, covariance;
+  for (size_t i=0; i<data.size(); i++) {
     ww.push_back(data[i]->fx());
-    if (dir_output_ResampleXi != par::defaultString){
-      string filename = dir_output_ResampleXi+"xi_multipoles_Jackknife_"+conv(i,par::fINT);
-      ofstream fout(filename.c_str());
-      fout.clear(); fout.close();
-
+    
+    if (dir_output_ResampleXi != par::defaultString) {
+      string file = dir_output_ResampleXi+"xi_multipoles_Jackknife_"+conv(i,par::fINT)+".dat";
+      ErrorMsg("Work in progress in cosmobl::twopt::TwoPointCorrelation_multipoles::measureJackknife of TwoPointCorrelation_multipoles.cpp...");
     }
   }
 
-  covariance_matrix(ww,covariance,1);
-  m_dataset = MultipolesTwoP(data_polar->xx(),data_polar->yy(),data_polar->fxy(),data_polar->error_fxy());
+  covariance_matrix(ww, covariance, 1);
+  m_dataset = MultipolesTwoP(data_polar->xx(), data_polar->yy(), data_polar->fxy(), data_polar->error_fxy());
   m_dataset->set_covariance_fx(covariance);
 
 }
+
 
 // ============================================================================================
 
 
 void cosmobl::twopt::TwoPointCorrelation_multipoles::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_ResampleXi, const int count_dd, const int count_rr, const int count_dr, const bool tcount)
 {
-  if (dir_output_ResampleXi != par::defaultString){
+  if (dir_output_ResampleXi != par::defaultString) {
     string mkdir = "mkdir -p "+dir_output_ResampleXi;
-    if(system(mkdir.c_str())){}
+    if (system(mkdir.c_str())) {}
   }
   vector<shared_ptr<Data> > data;
   vector<shared_ptr<pairs::Pair> > dd_regions, rr_regions, dr_regions;
@@ -282,14 +281,13 @@ void cosmobl::twopt::TwoPointCorrelation_multipoles::measureBootstrap (const int
   else
     data = XiBootstrap(nMocks, dd_regions, rr_regions);
 
-  vector<vector<double> > ww,covariance;
-  for(size_t i=0;i<data.size();i++){
+  vector<vector<double> > ww, covariance;
+  for (size_t i=0; i<data.size(); i++) {
     ww.push_back(data[i]->fx());
+    
     if (dir_output_ResampleXi != par::defaultString){
-      string filename = dir_output_ResampleXi+"xi_multipoles_Bootstrap_"+conv(i,par::fINT);
-      ofstream fout(filename.c_str());
-      fout.clear(); fout.close();
-
+      string file = dir_output_ResampleXi+"xi_multipoles_Bootstrap_"+conv(i,par::fINT)+".dat";
+      ErrorMsg("Work in progress in cosmobl::twopt::TwoPointCorrelation_multipoles::measureBootstrap of TwoPointCorrelation_multipoles.cpp...");
     }
   }
   covariance_matrix(ww,covariance,0);
@@ -298,13 +296,44 @@ void cosmobl::twopt::TwoPointCorrelation_multipoles::measureBootstrap (const int
   m_dataset->set_covariance_fx(covariance);
 }
 
+
 // ============================================================================================
 
 
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_multipoles::XiJackknife(const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
+vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_multipoles::XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
 {
   vector<shared_ptr<Data> > data;
-  auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd,rr);
+  auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd, rr);
+  
+  for (size_t i=0; i<data2d.size(); i++)
+    data.push_back(move(MultipolesTwoP(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
+  
+  return data;
+}
+
+
+// ============================================================================================
+
+
+vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_multipoles::XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
+{
+  vector<shared_ptr<Data> > data;
+  auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd, rr, dr);
+
+  for (size_t i=0; i<data2d.size(); i++)
+    data.push_back(move(MultipolesTwoP(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
+  
+  return data;
+}
+
+
+// ============================================================================================
+
+
+vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_multipoles::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
+{
+  vector<shared_ptr<Data> > data;
+  auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks, dd, rr);
   for (size_t i=0;i<data2d.size();i++){
     data.push_back(move(MultipolesTwoP(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
   }
@@ -314,39 +343,14 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_multipoles::XiJack
 // ============================================================================================
 
 
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_multipoles::XiJackknife(const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
+vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_multipoles::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
 {
   vector<shared_ptr<Data> > data;
-  auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd,rr,dr);
-  for (size_t i=0;i<data2d.size();i++){
+  auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks, dd, rr, dr);
+
+  for (size_t i=0; i<data2d.size(); i++)
     data.push_back(move(MultipolesTwoP(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
-  }
-  return data;
-}
-
-// ============================================================================================
-
-
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_multipoles::XiBootstrap(const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
-{
-  vector<shared_ptr<Data> > data;
-  auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks,dd,rr);
-  for (size_t i=0;i<data2d.size();i++){
-    data.push_back(move(MultipolesTwoP(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
-  }
-  return data;
-}
-
-// ============================================================================================
-
-
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_multipoles::XiBootstrap(const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
-{
-  vector<shared_ptr<Data> > data;
-  auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks,dd,rr,dr);
-  for (size_t i=0;i<data2d.size();i++){
-    data.push_back(move(MultipolesTwoP(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
-  }
+  
   return data;
 }
 

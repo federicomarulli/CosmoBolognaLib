@@ -51,8 +51,9 @@ int main () {
   // ----------------------------------------------------------------
 
   double N_R = 1.; // random/object ratio
+  
   Catalogue random_catalogue {_createRandom_box_, catalogue, N_R};
-  random_catalogue.computePolarCoordinates(cosmology);
+  //random_catalogue.computePolarCoordinates(cosmology);
 
 
   // --------------------------------------------------------------------------------------------
@@ -72,7 +73,7 @@ int main () {
 
   auto TwoP = TwoPointCorrelation::Create(TwoPType::_1D_projected_, catalogue, random_catalogue, _logarithmic_, rMin, rMax, nbins, shift, rMin, rMax, nbins, shift, piMax_integral);
 
-  TwoP->measure(ErrorType::_Poisson_, dir_output,{dir_output});
+  TwoP->measure(ErrorType::_Poisson_, dir_output, {dir_output});
   TwoP->write(dir_output, "wp");
 
   
@@ -85,10 +86,10 @@ int main () {
   double bias_value = 1.2; // guess value for the bias
 
   vector<double> bias_limits = {0.8, 3.}; 
-  Prior bias_prior { PriorType::_IdentityPrior_, bias_limits }; // flat prior for the bias
- 
+  Prior bias_prior { PriorType::_IdentityPrior_, bias_limits[0], bias_limits[1] }; // flat prior for the bias
+  
   int nChains = 100;    // number of chains
-  int chain_size = 200; // size of the chains
+  int chain_size = 1000; // size of the chains
 
   vector<double> fit_limits = {10., 40.}; // limits of the fit
 

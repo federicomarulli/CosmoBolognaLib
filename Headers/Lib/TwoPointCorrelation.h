@@ -676,11 +676,13 @@ namespace cosmobl {
        *  @param nbins number of bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double Min, const double Max, const int nbins, const double shift);
+      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double Min, const double Max, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
 
       /**
        *  @brief static factory used to construct two-point correlation
@@ -700,11 +702,13 @@ namespace cosmobl {
        *  @param binSize the bin size
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double Min, const double Max, const double binSize, const double shift);
+      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double Min, const double Max, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
 
        /**
        *  @brief static factory used to construct two-point correlation
@@ -746,11 +750,14 @@ namespace cosmobl {
        *
        *  @param shift_D2 shift parameter in the second dimension,
        *  i.e. the radial shift is binSize*shift
+       * 
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2);
+      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
 
       /**
        *  @brief static factory used to construct two-point correlation
@@ -793,10 +800,13 @@ namespace cosmobl {
        *  @param shift_D2 shift parameter in the second dimension,
        *  i.e. the radial shift is binSize*shift
        *
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
+       *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2);
+      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
       
        /**
        *  @brief static factory used to construct two-point correlation
@@ -838,10 +848,13 @@ namespace cosmobl {
        *
        *  @param piMax_integral upper limits of the integral
        *
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
+       *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const double piMax_integral=50.);
+      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const double piMax_integral=50., const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
 
       /**
        *  @brief static factory used to construct two-point correlation
@@ -883,10 +896,13 @@ namespace cosmobl {
        *
        *  @param piMax_integral upper limits of the integral
        *
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
+       *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const double piMax_integral=50.);
+      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const double piMax_integral=50., const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
 
       ///@}
 
@@ -1138,8 +1154,8 @@ namespace cosmobl {
        *  @param rank cpu index (for MPI usage)
        *  @return none
        */
-      virtual void write (const string dir=par::defaultString, const string file=par::defaultString, const int rank=0) const = 0;
-    
+      virtual void write (const string dir, const string file, const int rank=0) const = 0;
+      
       ///@}
 
     
@@ -1157,7 +1173,7 @@ namespace cosmobl {
        *  @param nRandom number of random points
        *  @return the Poisson error
        */
-      double PoissonError (const double dd, const double rr, const double dr, const double nData, const double nRandom) const;
+      double PoissonError (const double dd, const double rr, const double dr, const int nData, const int nRandom) const;
     
       ///@}
 

@@ -290,10 +290,12 @@ namespace cosmobl {
        *  @param shift_pi shift parameter in the parallel
        *  separation, i.e. the radial shift is binSize*shift
        *  @param piMax_integral upper limits of the integral
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class TwoPointCorrelation_projected
        */
-      TwoPointCorrelation_projected (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const double piMax_integral)
-	: TwoPointCorrelation2D_cartesian(data, random, binType_rp, rpMin, rpMax, nbins_rp, shift_rp, _linear_, piMin, piMax, nbins_pi, shift_pi)
+      TwoPointCorrelation_projected (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const double piMax_integral, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: TwoPointCorrelation2D_cartesian(data, random, binType_rp, rpMin, rpMax, nbins_rp, shift_rp, _linear_, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight)
 	{ m_twoPType = _1D_projected_; m_piMax_integral = piMax_integral; }
       
       /**
@@ -318,10 +320,13 @@ namespace cosmobl {
        *  @param binSize_pi bin size in the parallel separation
        *  @param shift_pi shift parameter in the parallel
        *  separation, i.e. the radial shift is binSize*shift
+       *  @param piMax_integral upper limits of the integral
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class TwoPointCorrelation2D_projected
        */
-      TwoPointCorrelation_projected (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const double piMax_integral)
-	: TwoPointCorrelation2D_cartesian(data, random, binType_rp, rpMin, rpMax, binSize_rp, shift_rp, _linear_, piMin, piMax, binSize_pi, shift_pi)
+      TwoPointCorrelation_projected (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const double piMax_integral, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: TwoPointCorrelation2D_cartesian(data, random, binType_rp, rpMin, rpMax, binSize_rp, shift_rp, _linear_, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight)
 	{ m_twoPType = _1D_projected_; m_piMax_integral = piMax_integral; }
       
       /**

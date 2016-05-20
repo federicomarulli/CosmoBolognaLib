@@ -46,6 +46,7 @@ cosmobl::statistics::Prior::Prior ()
   m_xmax = par::defaultDouble;
   m_func = &identity<double>;  
 
+  set_inverse_cumulative_distribution();
 }
 
 
@@ -67,6 +68,7 @@ cosmobl::statistics::Prior::Prior (const cosmobl::statistics::PriorType priorTyp
   m_prior_max_prob = 1./m_prior_normalization;
 
   set_discrete_values(discrete_values);
+  set_inverse_cumulative_distribution();
 }
 
 
@@ -82,7 +84,7 @@ cosmobl::statistics::Prior::Prior (const cosmobl::statistics::PriorType priorTyp
     m_xmax = Max(Limits);
   }
 
-  if (priorType == statistics::PriorType::_GaussianPrior_){
+  if (priorType == statistics::PriorType::_GaussianPrior_) {
 
    m_func = &gaussian<double>;
    set_parameters(prior_params);
@@ -97,12 +99,13 @@ cosmobl::statistics::Prior::Prior (const cosmobl::statistics::PriorType priorTyp
    else if ( m_prior_func_pars[0] < m_xmin)
      m_prior_max_prob = (*this)(m_xmin);
   }
-  else if(priorType == statistics::PriorType::_PoissonPrior_){
-    set_func_parameters(&poisson<double>,prior_params);
-  }
+  else if (priorType == statistics::PriorType::_PoissonPrior_)
+    set_func_parameters(&poisson<double>, prior_params);
+  
   else 
     ErrorMsg("Error in Prior constructor of Prior.cpp. No such type of prior");
 
+  set_inverse_cumulative_distribution();
   set_discrete_values(discrete_values);
 }
 
@@ -123,8 +126,9 @@ cosmobl::statistics::Prior::Prior (const cosmobl::statistics::PriorType priorTyp
   }
 
   set_func_parameters(func, prior_params);
-
   set_discrete_values(discrete_values);
+
+  set_inverse_cumulative_distribution();
 }
 
 // =====================================================================================
@@ -272,4 +276,66 @@ double cosmobl::statistics::Prior::sample (const int seed)
   }
 
   return apply_discrete(value);
+}
+
+
+// =====================================================================================
+
+
+vector<double> cosmobl::statistics::Prior::sample_vector (const int nvalues)
+{
+  vector<double> values;
+
+  time_t seed; time(&seed);
+  default_random_engine generator(seed);
+  uniform_real_distribution<double> distribution(0.0,1.0);
+
+  for(int i=0; i< nvalues;i++){
+    double value;
+    bool done=0;
+
+    while (!done){
+      double random = distribution(generator);
+      value = (m_xmax-m_xmin)*random+m_xmin;
+      double prob = (*this)(value);
+      if(prob > distribution(generator)*m_prior_max_prob)
+	done = 1;
+    }
+    values.push_back(apply_discrete(value));
+  }
+
+  return values;
+
+}
+
+
+// =====================================================================================
+
+
+void cosmobl::statistics::Prior::set_inverse_cumulative_distribution () 
+{
+  int nn = (m_xmax-m_xmin)/0.001;
+
+  vector<double> xx = linear_bin_vector(nn, m_xmin, m_xmax);
+  vector<double> fx(nn,0), FX(nn,0);
+
+  for(int i=0;i<nn;i++)
+    fx[i] = (*this)(xx[i]);
+
+  classfunc::func_grid_GSL ff(xx,fx,"Spline");
+  double norm = ff.integrate_qag(m_xmin,m_xmax);
+
+  for(int i=0;i<nn;i++)
+    FX[i] = ff.integrate_qag(m_xmin,xx[i])/norm;
+
+  m_prior_inverse_cumulative = make_shared<classfunc::func_grid_GSL>(FX,xx,"Spline");
+}
+
+
+// =====================================================================================
+
+
+double cosmobl::statistics::Prior::sample (const double prob)
+{
+  return apply_discrete(m_prior_inverse_cumulative->operator()(prob));
 }

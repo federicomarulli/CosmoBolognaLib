@@ -86,7 +86,7 @@ void cosmobl::threept::ThreePointCorrelation_comoving_reduced::measure (const st
   ofstream fout (file_2pt.c_str()); checkIO(file_2pt, 0);
  
   for (size_t i=0; i<values_interp.size(); i++) {
-    xi_real_lin[i] = pow(10., interpolated(values_interp[i], log_r, log_xi, "Linear", -1))-1.;
+    xi_real_lin[i] = pow(10., interpolated(values_interp[i], log_r, log_xi, "Linear"))-1.;
     //cout << pow(10.,values_interp[i]) << " --- " << xi_real_lin[i] << endl;
     fout << pow(10.,values_interp[i]) << "     " << xi_real_lin[i] << endl;
   }

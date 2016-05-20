@@ -94,7 +94,6 @@ void cosmobl::twopt::TwoPointCorrelation1D::read_pairs (shared_ptr<pairs::Pair> 
 
 void cosmobl::twopt::TwoPointCorrelation1D::write_pairs (const vector<shared_ptr<pairs::Pair> > PP, const string dir, const string file) const 
 {  
-
   int nRegions = m_data->get_region_list().size();
   string MK = "mkdir -p "+dir; if (system (MK.c_str())) {};
   
@@ -111,7 +110,6 @@ void cosmobl::twopt::TwoPointCorrelation1D::write_pairs (const vector<shared_ptr
       for (int r1=0; r1<PP[index]->nbins(); r1++)
 	if(PP[index]->PP1D(r1)>0)
 	  fout << i << " " << j << " " << r1 << " " << setprecision(5) << PP[index]->PP1D(r1) << endl;
-
     }
   }
 
@@ -124,10 +122,9 @@ void cosmobl::twopt::TwoPointCorrelation1D::write_pairs (const vector<shared_ptr
 
 void cosmobl::twopt::TwoPointCorrelation1D::read_pairs (vector<shared_ptr<pairs::Pair> > PP, const vector<string> dir, const string file) const
 {
-
-  //int nRegions = 0.5*(-1+sqrt(1+PP.size()*8));
   int nRegions = m_data->get_region_list().size();
-  for (unsigned int dd=0; dd<dir.size(); dd++) {
+
+  for (size_t dd=0; dd<dir.size(); dd++) {
 
     string ff = dir[dd]+file; 
     cout << "I'm reading the pair file: " << ff << endl;
@@ -140,9 +137,9 @@ void cosmobl::twopt::TwoPointCorrelation1D::read_pairs (vector<shared_ptr<pairs:
       index = I*nRegions-(I-1)*I/2+J-I;
       PP[index]->add_PP1D(bin1,pairs);
     }
+    
     fin.clear(); fin.close(); cout << "I read the file " << ff << endl;
   }
-
 }
 
 
@@ -151,23 +148,19 @@ void cosmobl::twopt::TwoPointCorrelation1D::read_pairs (vector<shared_ptr<pairs:
 
 shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation1D::NaturalEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const int nRandom)
 {
-  vector<double> rad, xi, error;
-  rad.resize(m_dd->nbins()); xi.resize(m_dd->nbins()); error.resize(m_dd->nbins());
+  vector<double> rad(m_dd->nbins()), xi(m_dd->nbins(), -1.), error(m_dd->nbins(), 1000.);
   
-  double norm = double(nRandom)*double(nRandom-1)/(nData*double(nData-1));
+  double norm = double(nRandom)*double(nRandom-1)/(double(nData)*double(nData-1));
 
   for (int i=0; i<dd->nbins(); i++) {
-  
+
     rad[i] = dd->scale(i);
-    xi[i] = -1.;
-    error[i] = 1000.;
     
     if (dd->PP1D(i)>0 && rr->PP1D(i)>0) {
-      
       xi[i] = max(-1., norm*dd->PP1D(i)/rr->PP1D(i)-1.);
-
       error[i] = PoissonError(dd->PP1D(i), rr->PP1D(i), 0, nData, nRandom); 
     }
+    
   }
 
   return move(unique_ptr<Data1D>(new Data1D(rad, xi, error)));
@@ -179,28 +172,22 @@ shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation1D::NaturalEstimatorTwoP (co
 
 shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation1D::LandySzalayEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const int nRandom)
 {
-  vector<double> rad, xi, error;
-  rad.resize(m_dd->nbins()); xi.resize(m_dd->nbins()); error.resize(m_dd->nbins());
+  vector<double> rad(m_dd->nbins()), xi(m_dd->nbins(), -1.), error(m_dd->nbins(), 1000.);
   
-  double norm = double(nRandom)*double(nRandom-1)/(nData*double(nData-1));
-  double norm1 = double(nRandom-1)/nData;
-
+  double norm1 = double(nRandom)*double(nRandom-1)/(double(nData)*double(nData-1));
+  double norm2 = double(nRandom-1)/double(nData);
+  
   for (int i=0; i<dd->nbins(); i++) {
   
     rad[i] = dd->scale(i);
-    xi[i] = -1.;
-    error[i] = 1000.;
     
     if (dd->PP1D(i)>0 && rr->PP1D(i)>0) {
-      
-      xi[i] = max(-1., norm*dd->PP1D(i)/rr->PP1D(i)-norm1*dr->PP1D(i)/rr->PP1D(i)+1.);
-
+      xi[i] = max(-1., norm1*dd->PP1D(i)/rr->PP1D(i)-norm2*dr->PP1D(i)/rr->PP1D(i)+1.);
       error[i] = PoissonError(dd->PP1D(i), rr->PP1D(i), dr->PP1D(i), nData, nRandom); 
     }
   }
 
-  return move(unique_ptr<Data1D>(new Data1D(rad,xi,error)));
-
+  return move(unique_ptr<Data1D>(new Data1D(rad, xi, error)));
 }
 
 
@@ -215,8 +202,8 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiJackknife (co
   vector<shared_ptr<Data> > data;
 
   for (int i=0; i<nRegions; i++) {
-    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin(), m_dd->sMax(), m_dd->nbins(), m_dd->shift());
-    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin(), m_rr->sMax(), m_rr->nbins(), m_rr->shift());
+    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin(), m_dd->sMax(), m_dd->nbins(), m_dd->shift(), m_dd->angularUnits(), m_dd->angularWeight());
+    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin(), m_rr->sMax(), m_rr->nbins(), m_rr->shift(), m_rr->angularUnits(), m_rr->angularWeight());
 
     double nData_SS = m_data->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 1);
     double nRandom_SS = m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 1);
@@ -255,9 +242,9 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiJackknife (co
   vector<shared_ptr<Data> > data;
 
   for (int i=0; i<nRegions; i++) {
-    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin(), m_dd->sMax(), m_dd->nbins(), m_dd->shift());
-    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin(), m_rr->sMax(), m_rr->nbins(), m_rr->shift());
-    auto dr_SS = Pair::Create(m_dr->pairType(), m_dr->sMin(), m_dr->sMax(), m_dr->nbins(), m_dr->shift());
+    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin(), m_dd->sMax(), m_dd->nbins(), m_dd->shift(), m_dd->angularUnits(), m_dd->angularWeight());
+    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin(), m_rr->sMax(), m_rr->nbins(), m_rr->shift(), m_rr->angularUnits(), m_rr->angularWeight());
+    auto dr_SS = Pair::Create(m_dr->pairType(), m_dr->sMin(), m_dr->sMax(), m_dr->nbins(), m_dr->shift(), m_dr->angularUnits(), m_dr->angularWeight());
 
     double nData_SS = m_data->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 1);
     double nRandom_SS = m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 1);
@@ -280,10 +267,9 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiJackknife (co
     }
 
     data.push_back(move(LandySzalayEstimatorTwoP(dd_SS, rr_SS, dr_SS, nData_SS, nRandom_SS)));
-
   }
+  
   return data;
-
 }
 
 
@@ -305,11 +291,11 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiBootstrap (co
 
   uniform_int_distribution<int> uni(0, nRegions-1);
   default_random_engine rng;
-  int val=3; //See Norberg et al. 2009
+  int val=1; //See Norberg et al. 2009
 
   for (int i=0; i<nMocks; i++) {
-    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin(), m_dd->sMax(), m_dd->nbins(), m_dd->shift());
-    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin(), m_rr->sMax(), m_rr->nbins(), m_rr->shift());
+    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin(), m_dd->sMax(), m_dd->nbins(), m_dd->shift(), m_dd->angularUnits(), m_dd->angularWeight());
+    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin(), m_rr->sMax(), m_rr->nbins(), m_rr->shift(), m_rr->angularUnits(), m_rr->angularWeight());
 
     double nData_SS=0, nRandom_SS=0;
 
@@ -343,7 +329,7 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiBootstrap (co
 // ============================================================================
 
 
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiBootstrap(const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
+vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
 {
   vector<long> region_list = m_data->get_region_list();
   int nRegions = region_list.size();
@@ -358,12 +344,12 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiBootstrap(con
 
   uniform_int_distribution<int> uni(0, nRegions-1);
   default_random_engine rng;
-  int val=3; //See Norberg et al. 2009
+  int val = 1; // see Norberg et al. 2009
 
   for(int i=0;i<nMocks;i++){
-    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin(), m_dd->sMax(), m_dd->nbins(), m_dd->shift());
-    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin(), m_rr->sMax(), m_rr->nbins(), m_rr->shift());
-    auto dr_SS = Pair::Create(m_dr->pairType(), m_dr->sMin(), m_dr->sMax(), m_dr->nbins(), m_dr->shift());
+    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin(), m_dd->sMax(), m_dd->nbins(), m_dd->shift(), m_dd->angularUnits(), m_dd->angularWeight());
+    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin(), m_rr->sMax(), m_rr->nbins(), m_rr->shift(), m_rr->angularUnits(), m_rr->angularWeight());
+    auto dr_SS = Pair::Create(m_dr->pairType(), m_dr->sMin(), m_dr->sMax(), m_dr->nbins(), m_dr->shift(), m_dr->angularUnits(), m_dr->angularWeight());
 
     double nData_SS=0, nRandom_SS=0;
 
@@ -390,6 +376,6 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiBootstrap(con
 
     data.push_back(move(LandySzalayEstimatorTwoP(dd_SS, rr_SS, dr_SS, nData_SS, nRandom_SS)));
   }
+  
   return data;
-
 }

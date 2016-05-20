@@ -47,11 +47,11 @@ using namespace twopt;
 
 void cosmobl::twopt::TwoPointCorrelation1D_filtered::set_parameters (const binType binType, const double rMin, const double rMax, const int nbins) 
 {
-  vector<double> rc,wc,error;
+  vector<double> rc, wc, error;
  
-  rc = linear_bin_vector(nbins,rMin,rMax);
-  wc.resize(nbins,0);
-  error.resize(nbins,0);
+  rc = linear_bin_vector(nbins, rMin, rMax);
+  wc.resize(nbins, 0);
+  error.resize(nbins, 0);
 
   m_dataset->set_xx(rc);
   m_dataset->set_fx(wc);
@@ -66,11 +66,11 @@ void cosmobl::twopt::TwoPointCorrelation1D_filtered::set_parameters (const binTy
 {
   int nbins = (rMax-rMin)/binSize;
 
-  vector<double> rc,wc,error;
+  vector<double> rc, wc, error;
 
-  rc = linear_bin_vector(nbins,rMin,rMax);
-  wc.resize(nbins,0);
-  error.resize(nbins,0);
+  rc = linear_bin_vector(nbins, rMin, rMax);
+  wc.resize(nbins, 0);
+  error.resize(nbins, 0);
 
   m_dataset->set_xx(rc);
   m_dataset->set_fx(wc);
@@ -95,12 +95,11 @@ void cosmobl::twopt::TwoPointCorrelation1D_filtered::measure (const ErrorType er
   vector<double> wc = m_dataset->fx();
   vector<double> error_wc = m_dataset->error_fx();
 
-  for(size_t i=0; i<rc.size();i++){
-    for(size_t j=0;j<rad.size();j++){
+  for (size_t i=0; i<rc.size(); i++) 
+    for (size_t j=0; j<rad.size(); j++) {
       wc[i] += rad[j]*rad[j]*binSize*xi[j]*Filter(rad[j],rc[i]);
       error_wc[i] += pow(rad[j]*rad[j]*binSize*error_xi[j]*Filter(rad[j],rc[i]),2);
     }
-  }
 
   for_each( error_wc.begin(), error_wc.end(), [] (double &vv) { vv = sqrt(vv);} );
 
@@ -113,7 +112,7 @@ void cosmobl::twopt::TwoPointCorrelation1D_filtered::measure (const ErrorType er
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation1D_filtered::read(const string dir, const string file) 
+void cosmobl::twopt::TwoPointCorrelation1D_filtered::read (const string dir, const string file) 
 {
   m_dataset->read(dir+file);
 }

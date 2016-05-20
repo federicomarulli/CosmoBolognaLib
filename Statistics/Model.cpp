@@ -38,7 +38,7 @@ using namespace cosmobl;
 // ======================================================================================
 
 
-cosmobl::statistics::Model::Model (const vector<statistics::Parameter> parameters, const shared_ptr<void> model_parameters)
+cosmobl::statistics::Model::Model (const vector<Parameter> parameters, const shared_ptr<void> model_parameters)
   : m_model_parameters(model_parameters)
 {
   for(size_t i=0;i<parameters.size();i++)
@@ -52,7 +52,7 @@ cosmobl::statistics::Model::Model (const vector<statistics::Parameter> parameter
 // ======================================================================================
 
 
-double cosmobl::statistics::Model::update_parameters (const double new_parameter)
+double cosmobl::statistics::Model::update_parameter (const double new_parameter)
 {
   double parameter;
 
@@ -92,3 +92,22 @@ vector<double> cosmobl::statistics::Model::update_parameters (const vector<doubl
   return parameters;
 }
 
+// ======================================================================================
+
+
+void cosmobl::statistics::Model::set_chains (const int nchains, const int chain_size)
+{
+  for (unsigned int i=0; i<m_npar; i++) 
+    m_parameters[i]->set_chains(nchains, chain_size);
+}
+
+
+// ======================================================================================
+
+
+void cosmobl::statistics::Model::set_random_number_generator (const default_random_engine generator)
+{
+  m_generator = generator;
+  uniform_real_distribution<double> distribution(0.,1.);
+  m_random_numbers = bind(distribution,m_generator);
+}

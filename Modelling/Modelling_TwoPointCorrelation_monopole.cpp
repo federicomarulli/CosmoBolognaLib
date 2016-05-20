@@ -74,7 +74,7 @@ void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::fit_bias (const
     ErrorMsg("Error in fit_bias of ModellingTwoPointCorrelation1D_monopole, no such type of likelihood");
 
   statistics::Likelihood lik(m_data,m_model,func);
-  lik.sample(nChains, chain_size); 
+  lik.sample(nChains, chain_size,1.); 
   string dir_output_file=dir_output+"monopole_bias_xmin="+conv(m_data->x_down(),par::fDP1)+"_xmax="+conv(m_data->x_up(),par::fDP1)+"_"+LikelihoodType;
   lik.write_chain(dir_output_file, start, stop, thin);
 

@@ -2,6 +2,7 @@
 
 from setuptools import setup, Extension
 import os
+import platform
 
 from distutils.sysconfig import get_config_vars
 
@@ -28,7 +29,16 @@ include_dirs = [dirLib, dirH, dirO, dirM, dirEH, dirNumerical]
 
 libraries = ["gomp", "gsl", "gslcblas", "m", "fftw3", "fftw3_omp"]
 
+if platform.system()=='Darwin':
+    FLAGS=['-arch','x86_64',"-std=c++11", "-fopenmp", "-w"]
+    FLAGSL=['-arch','x86_64',"-Wl,-rpath,CosmoBolognaLib/", "-LCosmoBolognaLib/"]
+    libraries = ["gomp", "gsl", "gslcblas", "m", "fftw3"]
+
 sources = ["CBL_wrap.cxx",
+           dirLib+"Func/Data1D_collection.cpp",
+           dirLib+"Func/Data1D.cpp",
+           dirLib+"Func/Data2D.cpp",
+           dirLib+"Func/Data.cpp",
            dirLib+"Func/Func.cpp",
            dirLib+"Func/FuncXi.cpp",
            dirLib+"Func/FuncMultipoles.cpp",
@@ -36,10 +46,6 @@ sources = ["CBL_wrap.cxx",
            dirLib+"Func/Field3D.cpp",
            dirLib+"Statistics/Chi2.cpp",
            dirLib+"Statistics/Chain.cpp",
-           dirLib+"Statistics/Data1D_collection.cpp",
-           dirLib+"Statistics/Data1D.cpp",
-           dirLib+"Statistics/Data2D.cpp",
-           dirLib+"Statistics/Data.cpp",
            dirLib+"Statistics/Likelihood.cpp",
            dirLib+"Statistics/Model.cpp",
            dirLib+"Statistics/Parameter.cpp",
@@ -105,7 +111,7 @@ CosmoBolognaLib = Extension(  "_CosmoBolognaLib",
                               extra_link_args      = FLAGSL )
 
 setup(  name             = "CosmoBolognaLib",
-        version          = "1.14",
+        version          = "2.0",
         description      = "C++ libraries for cosmological calculations",
         long_description = readme(),
         author           = "Federico Marulli",

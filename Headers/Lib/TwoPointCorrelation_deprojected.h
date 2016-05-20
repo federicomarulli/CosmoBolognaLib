@@ -282,10 +282,12 @@ namespace cosmobl {
        *  @param shift_pi shift parameter in the parallel
        *  separation, i.e. the radial shift is binSize*shift
        *  @param piMax_integral upper limits of the integral
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class TwoPointCorrelation_deprojected
        */
-      TwoPointCorrelation_deprojected (catalogue::Catalogue data, catalogue::Catalogue random, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const double piMax_integral)
-	: TwoPointCorrelation_projected(data, random, _logarithmic_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, piMax_integral)
+      TwoPointCorrelation_deprojected (catalogue::Catalogue data, catalogue::Catalogue random, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const double piMax_integral, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: TwoPointCorrelation_projected(data, random, _logarithmic_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, piMax_integral, angularUnits, angularWeight)
 	{ m_twoPType = _1D_deprojected_; }
       
       /**
@@ -309,10 +311,12 @@ namespace cosmobl {
        *  @param shift_pi shift parameter in the parallel
        *  separation, i.e. the radial shift is binSize*shift
        *  @param piMax_integral upper limits of the integral
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class TwoPointCorrelation_2D_deprojected
        */
-      TwoPointCorrelation_deprojected (catalogue::Catalogue data, catalogue::Catalogue random, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const double piMax_integral)
-	: TwoPointCorrelation_projected(data, random, _logarithmic_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, piMax_integral)
+      TwoPointCorrelation_deprojected (catalogue::Catalogue data, catalogue::Catalogue random, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const double piMax_integral, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: TwoPointCorrelation_projected(data, random, _logarithmic_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, piMax_integral, angularUnits, angularWeight)
 	{ m_twoPType = _1D_deprojected_; }
       
       /**

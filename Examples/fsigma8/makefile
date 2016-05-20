@@ -5,13 +5,12 @@ FLAGS = -O3 -std=c++11
 dirLib = $(PWD)/../../
 dirH = $(dirLib)Headers/Lib/
 dirHO = $(dirLib)Headers/Objects/
-dirNum = $(PWD)/../../../Numerical/
 dirEH = $(dirLib)External/EH/
 
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
 FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC -lCOSM
-FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirHO) -I$(dirNum) -I$(dirEH) 
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirEH) -isystem $(HOME)/Numerical/ 
 
 OBJ = fsigma8.o 
 
@@ -25,7 +24,7 @@ fsigma8: $(OBJ)
 	$(CC) $(OBJ) -o fsigma8 $(FLAGS_LIB) 
 
 clean:
-	rm *.o fsigma8 *~ \#* temp* core* -f
+	rm -f *.o fsigma8 *~ \#* temp* core*
 
 fsigma8.o: fsigma8.cpp makefile $(dirLib)*.$(ES)
 	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c fsigma8.cpp 

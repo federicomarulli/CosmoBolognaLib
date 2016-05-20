@@ -15,3 +15,5 @@ V1.0 first version of the CosmoBolognaLib uploaded on github
 V1.1 full python wrapper using SWIG; minor bugs fixed
 
 V2.0 general restructure, many new classes and examples added 
+
+V2.1 new examples added, minor bugs fixed

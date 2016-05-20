@@ -189,10 +189,12 @@ namespace cosmobl {
        *  @param nbins number of bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class TwoPointCorrelation1D_angular
        */
-      TwoPointCorrelation1D_angular (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double thetaMin, const double thetaMax, const int nbins, const double shift)
-	: TwoPointCorrelation1D(data, random) { m_twoPType = _1D_angular_; set_parameters(binType, thetaMin, thetaMax, nbins, shift); }
+      TwoPointCorrelation1D_angular (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: TwoPointCorrelation1D(data, random) { m_twoPType = _1D_angular_; set_parameters(binType, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight); }
 
       /**
        *  @brief constructor
@@ -207,10 +209,12 @@ namespace cosmobl {
        *  @param binSize the bin size
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class TwoPointCorrelation1D_angular
        */
-      TwoPointCorrelation1D_angular (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double thetaMin, const double thetaMax, const double binSize, const double shift)
-	: TwoPointCorrelation1D(data, random) { m_twoPType = _1D_angular_; set_parameters(binType, thetaMin, thetaMax, binSize, shift); }
+      TwoPointCorrelation1D_angular (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: TwoPointCorrelation1D(data, random) { m_twoPType = _1D_angular_; set_parameters(binType, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight); }
 
       /**
        *  @brief default destructor
@@ -235,9 +239,11 @@ namespace cosmobl {
        *  @param nbins number of bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return none
        */
-      void set_parameters (const binType binType, const double thetaMin, const double thetaMax, const int nbins, const double shift);
+      void set_parameters (const binType binType, const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
 
       /**
        *  @brief set the binning parameters
@@ -248,9 +254,11 @@ namespace cosmobl {
        *  @param binSize the bin size
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return none
        */
-      void set_parameters (const binType binType, const double thetaMin, const double thetaMax, const double binSize, const double shift);
+      void set_parameters (const binType binType, const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
 
       ///@}
 

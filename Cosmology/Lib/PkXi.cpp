@@ -50,6 +50,35 @@ double cosmobl::Cosmology::As (const double sigma8) const
 // =====================================================================================
 
 
+string cosmobl::Cosmology::Pk_output_file (const string code, const bool NL, const double redshift, const bool run, const string output_root, const double k_max, const string file_par)
+{
+  string dir_loc = fullpath(par::DirLoc);
+  string dir_cosmo = fullpath(par::DirCosmo);
+   
+  string sdir;
+  if (NL==0) sdir = "output_linear/";
+  else if (NL==1) sdir= "output_nonlinear/";
+  else ErrorMsg("Error in cosmobl::Cosmology::Table_PkCodes of PkXi.cpp!");
+  sdir += "h"+conv(m_hh,par::fDP3)+"_OmB"+conv(m_Omega_baryon,par::fDP3)+"_OmCDM"+conv(m_Omega_CDM,par::fDP3)+"_OmL"+conv(m_Omega_DE,par::fDP3)+"_OmN"+conv(m_Omega_neutrinos,par::fDP3)+"_Z"+conv(redshift,par::fDP3)+"_scalar_amp"+conv(m_scalar_amp,par::ee3)+"_n"+conv(m_n_spec,par::fDP3)+"/";
+
+  string dir = dir_cosmo+"External/"+code+"/";
+  string dirC = dir_cosmo+"External/CAMB/";
+  if (chdir (dirC.c_str())) {};
+
+  string dir_output = dir+sdir+"pk.dat";
+
+  if (run) {
+    vector<double> lgkk, lgPk;
+    Table_PkCodes(code, NL, lgkk, lgPk, redshift, output_root, k_max, file_par);   
+  }
+
+  return dir_output;
+}
+
+
+// =====================================================================================
+
+
 double cosmobl::Cosmology::Pk_UnNorm (const double kk, const double redshift, const string method_Pk) const
 { 
   double Pk = -1.;
@@ -75,13 +104,13 @@ void cosmobl::Cosmology::run_CAMB (const bool NL, const double redshift, const s
   string File_par = file_par;
 
   if (File_par==par::defaultString) {
-
+    
     // --------------------------------------------------------------------------
     // --------- set the cosmological parameters in the file params.ini ---------
     // --------------------------------------------------------------------------
 
     string file_par_default = dir+"params.ini";
-    string File_par = dir+"params_"+output_root+".ini";
+    File_par = dir+"params_"+output_root+".ini";
   
     string CP = "cp "+file_par_default+" "+File_par; if (system (CP.c_str())) {};
 
@@ -113,7 +142,6 @@ void cosmobl::Cosmology::run_CAMB (const bool NL, const double redshift, const s
   if (chdir (dir.c_str())) {};
 
   string Camb = "./camb "+File_par;
-  cout <<"---> "<<Camb<<endl;
   if (system (Camb.c_str())) {};
 
   string RM = "rm -f "+File_par+" "+output_root+"_params.ini "+output_root+"_transfer_out.dat "+output_root+"_matterpower.dat"; 
@@ -302,7 +330,7 @@ void cosmobl::Cosmology::Table_PkCodes (const string code, const bool NL, vector
       
       for (unsigned int i=0; i<lgkk.size(); i++)
 	if (lgm<lgkk[i] && lgkk[i]<lgM) 
-	  lgPk[i] = interpolated(lgkk[i], lgkkM, lgPkM, "Linear", -1);
+	  lgPk[i] = interpolated(lgkk[i], lgkkM, lgPkM, "Linear");
     }
   }
 
@@ -503,7 +531,7 @@ double cosmobl::Cosmology::Pk (const double kk, const string method_Pk, const bo
     vector<double> lgkk, lgPk;
     Table_PkCodes (method_Pk, NL, lgkk, lgPk, redshift, output_root, k_max, file_par);
 
-    double lgPK = interpolated(lgk, lgkk, lgPk, "Linear", -1);
+    double lgPK = interpolated(lgk, lgkk, lgPk, "Linear");
 
     double PP0 = -1.;
     if (method_Pk=="CAMB") PP0 = m_Pk0_CAMB;
@@ -514,6 +542,38 @@ double cosmobl::Cosmology::Pk (const double kk, const string method_Pk, const bo
   }
 
   else { ErrorMsg("Error in cosmobl::Cosmology::Pk of PkXi.cpp: method_Pk is wrong!"); return 0; }
+
+}
+
+
+// =====================================================================================
+
+
+void cosmobl::Cosmology::Pk_Kaiser_multipoles (vector<double> &Pk0, vector<double> &Pk2, vector<double> &Pk4, const vector<double> kk, const string method_Pk, const bool NL, const double redshift, const double bias, const double sigma_NL, const string output_root, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par)
+{ 
+  vector<double> Pk_arr;
+  size_t nbin_k = kk.size();
+  double f = linear_growth_rate(redshift);
+
+  if(sigma_NL==0){
+    for(size_t i=0;i<nbin_k;i++)
+      Pk_arr.push_back(Pk(kk[i],method_Pk,NL,redshift,output_root,norm,k_min,k_max,GSL,prec,file_par));
+  }
+  else{
+    for(size_t i=0;i<nbin_k;i++)
+      Pk_arr.push_back(Pk_DeWiggle(kk[i], redshift, sigma_NL , output_root, norm, k_min, k_max, prec));
+  }
+
+  vector<vector<double> > Pk_multipoles = cosmobl::Pkl_Kaiser({0,2,4}, kk, Pk_arr, bias, f);
+
+  Pk0.erase(Pk0.begin(),Pk0.end());
+  Pk2.erase(Pk2.begin(),Pk2.end());
+  Pk4.erase(Pk4.begin(),Pk4.end());
+  for(size_t i=0;i<nbin_k;i++){
+    Pk0.push_back(Pk_multipoles[0][i]);
+    Pk2.push_back(Pk_multipoles[1][i]);
+    Pk4.push_back(Pk_multipoles[2][i]);
+  }
 
 }
 
@@ -609,7 +669,7 @@ double cosmobl::Cosmology::xi_DM (const double rr, const string method_Pk, const
   }
 
 
-  else {  //USE FFTLOG
+  else { // using FFTLOG
 
     if (method_Pk=="EisensteinHu") 
 	ErrorMsg("Error in xi_DM of Cosmology, EisensteinHu method only works with GSL integration");
@@ -617,7 +677,7 @@ double cosmobl::Cosmology::xi_DM (const double rr, const string method_Pk, const
     else if (method_Pk=="CAMB" || method_Pk=="MPTbreeze-v1" || method_Pk=="classgal_v1") {
       vector<double> r,xi;
       Table_XiCodes (method_Pk, NL, r, xi, redshift, output_root, k_max, file_par);
-      Int = interpolated(rr,r,xi,"Spline",3);
+      Int = interpolated(rr, r, xi, "Spline");
     }
 
     else ErrorMsg("Error in cosmobl::Cosmology::xi_DM of PkXi.cpp: method_Pk is wrong!");
@@ -640,7 +700,7 @@ double cosmobl::Cosmology::xi_DM (const double rr, const string method_Pk, const
 // =====================================================================================
 
 
-double cosmobl::Cosmology::wp_DM (const double rp, const string method_Pk, const double redshift, const string output_root, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+double cosmobl::Cosmology::wp_DM (const double rp, const string method_Pk, const double redshift, const string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
 {
   int Norm = norm;
   if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
@@ -654,7 +714,7 @@ double cosmobl::Cosmology::wp_DM (const double rp, const string method_Pk, const
 
   string dir = par::DirCosmo+"Cosmology/Tables/"+mDir+"/"+method_Pk+"/h"+conv(m_hh,par::fDP3)+"_OmB"+conv(m_Omega_baryon,par::fDP3)+"_OmCDM"+conv(m_Omega_CDM,par::fDP3)+"_OmL"+conv(m_Omega_DE,par::fDP3)+"_OmN"+conv(m_Omega_neutrinos,par::fDP3)+"_Z"+conv(redshift,par::fDP3)+"_scalar_amp"+conv(m_scalar_amp,par::ee3)+"_n"+conv(m_n_spec,par::fDP3)+"/";
   
-  string file_table = dir+"xi_DM.dat";
+  string file_table = (NL) ? dir+"xiDM_NL.dat" : dir+"xiDM_Lin.dat";
   ifstream fin;
   fin.open(file_table.c_str());
   
@@ -679,7 +739,7 @@ double cosmobl::Cosmology::wp_DM (const double rp, const string method_Pk, const
     int index = 0;
     while (index<int(rad.size())) {
       RR = rad[index];
-      XI = xi_DM(rad[index], method_Pk, redshift, output_root, 1, Norm, k_min, k_max, aa, GSL, prec, file_par);
+      XI = xi_DM(rad[index], method_Pk, redshift, output_root, NL, Norm, k_min, k_max, aa, GSL, prec, file_par);
       fout <<RR<<"   "<<XI<<endl;
       cout <<"xi("<<RR<<") = "<<XI<<endl;
       rr.push_back(RR);
@@ -733,7 +793,7 @@ double cosmobl::Cosmology::sigmaR_DM (const double RR, const int corrType, const
     int index = 0;
     while (index<int(rad.size())) {
       RRR = rad[index];
-      XI = (corrType==1) ? xi_DM(rad[index], method_Pk, redshift, output_root, NL, norm, k_min, k_max, aa, GSL, prec, file_par) : wp_DM(rad[index], method_Pk, redshift, output_root, norm, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
+      XI = (corrType==1) ? xi_DM(rad[index], method_Pk, redshift, output_root, NL, norm, k_min, k_max, aa, GSL, prec, file_par) : wp_DM(rad[index], method_Pk, redshift, output_root, NL, norm, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
       fout <<RRR<<"   "<<XI<<endl;
       cout <<"xi("<<RRR<<") = "<<XI<<endl;
       rr.push_back(RRR);
@@ -1131,3 +1191,258 @@ double cosmobl::Cosmology::xi_DM_DeWiggle (const double rr, const double redshif
 
   return xi_from_Pk(rr, kk, PkM, k_min, k_max, aa, 1, prec);
 }
+
+
+// =====================================================================================
+
+
+vector<vector<double> > cosmobl::Cosmology::get_XiMonopole_covariance(const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod)
+{
+  int nbins_k = kk.size();
+  vector<double> r = linear_bin_vector(nbins,rMin,rMax);
+  vector<vector<double>> covariance(nbins,vector<double>(nbins,0));
+  double dr=r[1]-r[0];
+
+  vector<vector<double>> sigma2 = cosmobl::sigma2_k(nn, Volume,kk,{Pk0},{0});
+  vector<vector<double>> jr(nbins,vector<double>(nbins_k,0));
+
+  for(size_t j=0;j<r.size();j++){
+     for(size_t i=0;i<kk.size();i++){
+        jr[j][i] = jl_distance_average(kk[i], 0, r[j]-dr, r[j]+dr);
+     }
+  }
+
+  if (IntegrationMethod==0) //Perform trapezoid integration
+  { 
+     vector<double> integrand(kk.size(),0);
+
+     for (int i=0;i<nbins;i++){
+        for (int j=i;j<nbins;j++){
+           for(int ii=0;ii<nbins_k;ii++){
+              integrand[ii] =kk[ii]*kk[ii]*sigma2[0][ii]*jr[i][ii]*jr[j][ii]; 
+           }
+
+           double Int = trapezoid_integration(kk,integrand);
+
+           Int = Int/(2.*par::pi*par::pi);
+           covariance[i][j] = Int;
+           covariance[j][i] = Int;
+        }
+     }
+  }
+  else if (IntegrationMethod==1) //Perform integration with GSL
+  {
+     cosmobl::glob::STR_covariance_XiMultipoles_integrand params;
+     int limit_size = 1000;
+
+     gsl_function Func;
+     Func.function = &covariance_XiMultipoles_integrand;
+     Func.params = &params;
+
+     double k_min=1.e-4;
+     double k_max = 1.e0; 
+     double prec = 1.e-2;
+
+     classfunc::func_grid_GSL s2(kk,sigma2[0],"Spline");
+     params.s2 = &s2;
+
+     for (int i=0;i<nbins;i++){
+        classfunc::func_grid_GSL jl1r1(kk,jr[i],"Spline");
+        for (int j=i;j<nbins;j++){
+           classfunc::func_grid_GSL jl2r2(kk,jr[j],"Spline");
+           params.jl1r1 = &jl1r1;
+           params.jl2r2 = &jl2r2;
+
+           double Int = GSL_integrate_qag(Func,k_min,k_max,prec,limit_size,6);
+           Int = Int/(2.*par::pi*par::pi);
+           covariance[i][j] = Int;
+           covariance[j][i] = Int;
+           jl2r2.free();
+        } 
+        jl1r1.free();
+     }
+     s2.free();
+  }  
+
+  return covariance;
+
+}
+
+
+// =====================================================================================
+
+
+vector<vector<double> > cosmobl::Cosmology::get_XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod)
+{
+  int n_leg = 3;
+  int nbins_k = kk.size();
+  vector<double> r = linear_bin_vector(nbins, rMin, rMax);
+  vector<vector<double>> covariance(n_leg*nbins, vector<double>(n_leg*nbins, 0));
+
+  vector<vector<double>> sigma2 = cosmobl::sigma2_k(nn, Volume, kk, {Pk0, Pk2, Pk4}, {0,2,4});
+  double dr = r[1]-r[0];
+
+  vector<vector<vector<double> >> jr(n_leg, vector<vector<double>>(nbins, vector<double>(nbins_k, 0)));
+
+  for (int ll=0; ll<n_leg; ll++)
+    for (size_t j=0; j<r.size(); j++)
+      for (size_t i=0; i<kk.size(); i++)
+	jr[ll][j][i] = jl_distance_average(kk[i], ll*2, r[j]-dr, r[j]+dr);
+
+  if (IntegrationMethod==0) { // perform trapezoid integration
+  
+    vector<double> integrand(kk.size(), 0);
+
+    for (int l1=0; l1<n_leg; l1++) {
+      for (int l2=l1; l2<n_leg; l2++) {
+	int index = l2+n_leg*l1;
+	for (int i=0; i<nbins; i++) {
+	  for (int j=i; j<nbins; j++) {
+	    for(int ii=0; ii<nbins_k; ii++) {
+	      integrand[ii] = kk[ii]*kk[ii]*sigma2[index][ii]*jr[l1][i][ii]*jr[l2][j][ii]; 
+	    }
+
+	    double Int = trapezoid_integration(kk, integrand);
+ 
+	    Int = Int/(2.*par::pi*par::pi);
+	    covariance[i+nbins*l1][j+nbins*l2] = Int;
+	    covariance[j+nbins*l1][i+nbins*l2] = Int;
+	    covariance[i+nbins*l2][j+nbins*l1] = Int;
+	    covariance[j+nbins*l2][i+nbins*l1] = Int;
+
+	  }
+	}
+      }
+    }
+  }
+  
+  else if (IntegrationMethod==1) // perform integration with GSL
+  {
+    cosmobl::glob::STR_covariance_XiMultipoles_integrand params;
+    int limit_size = 1000;
+
+    gsl_function Func;
+    Func.function = &covariance_XiMultipoles_integrand;
+    Func.params = &params;
+
+    double k_min = 1.e-4;
+    double k_max = 1.e0; 
+    double prec = 1.e-2;
+
+    for (int l1=0; l1<n_leg; l1++) {
+      for (int l2=l1; l2<n_leg; l2++) {
+	int index = l2+n_leg*l1;
+	classfunc::func_grid_GSL s2(kk, sigma2[index], "Spline");
+	params.s2 = &s2;
+
+	for (int i=0; i<nbins; i++) {
+	  classfunc::func_grid_GSL jl1r1(kk, jr[l1][i], "Spline");
+	  for (int j=i;j<nbins;j++){
+	    classfunc::func_grid_GSL jl2r2(kk, jr[l2][j], "Spline");
+	    params.jl1r1 = &jl1r1;
+	    params.jl2r2 = &jl2r2;
+
+	    double Int = GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6);
+	    Int = Int/(2.*par::pi*par::pi);
+	    covariance[i+nbins*l1][j+nbins*l2] = Int;
+	    covariance[j+nbins*l1][i+nbins*l2] = Int;
+	    covariance[i+nbins*l2][j+nbins*l1] = Int;
+	    covariance[j+nbins*l2][i+nbins*l1] = Int;
+	    //cout << l1 << " " <<l2 << " " << i << " " << j << " " << Int << endl;
+	    jl2r2.free();
+	  }
+	  jl1r1.free();
+	}
+	s2.free();
+      }  
+    }
+  }
+
+  return covariance;
+}
+
+
+// =====================================================================================
+
+
+vector<vector<double> > cosmobl::Cosmology::get_XiMultipoles (const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod)
+{
+  int nbins_k = kk.size();
+  vector<double> r = linear_bin_vector(nbins,rMin,rMax);
+  double f0 = 1./(2.*par::pi*par::pi), f2 = -1./(2.*par::pi*par::pi), f4 =1./(2.*par::pi*par::pi); 
+
+  vector<double> xi0(nbins,0), xi2(nbins,0), xi4(nbins,0);
+
+  vector<vector<double> > j0_vec(nbins,vector<double>(nbins_k,0)), j2_vec(nbins,vector<double>(nbins_k,0)), j4_vec(nbins,vector<double>(nbins_k,0));
+
+  for(size_t i=0;i<r.size();i++){
+     for(size_t j=0;j<kk.size();j++){
+        double xx = kk[j]*r[i];
+        j0_vec[i][j] = j0(xx); 
+        j2_vec[i][j] = j2(xx); 
+        j4_vec[i][j] = j4(xx); 
+     }
+  }
+
+  if (IntegrationMethod==0) //Perform trapezoid integration
+  { 
+
+     for (int i=0;i<nbins;i++){
+        
+        vector<double> i0(kk.size(),0), i2(kk.size(),0), i4(kk.size(),0);
+
+        for(int j=0;j<nbins_k;j++){
+           double xx = kk[j]*r[i];
+           i0[j] =kk[j]*kk[j]*Pk0[j]*j0(xx); 
+           i2[j] =kk[j]*kk[j]*Pk2[j]*j2(xx); 
+           i4[j] =kk[j]*kk[j]*Pk4[j]*j4(xx); 
+        }
+
+        xi0[i] = trapezoid_integration(kk,i0)*f0;
+        xi2[i] = trapezoid_integration(kk,i2)*f2;
+        xi4[i] = trapezoid_integration(kk,i4)*f4;
+     }
+
+  }
+  else if (IntegrationMethod==1) //Perform integration with GSL
+  {
+     cosmobl::glob::STR_XiMultipoles_integrand params;
+     int limit_size = 1000;
+
+     gsl_function Func;
+     Func.function = &XiMultipoles_integrand;
+     Func.params = &params;
+
+     double k_min=1.e-4;
+     double k_max = 1.e2; 
+     double prec = 1.e-3;
+
+     classfunc::func_grid_GSL Pk0_interp(kk,Pk0,"Spline");
+     classfunc::func_grid_GSL Pk2_interp(kk,Pk2,"Spline");
+     classfunc::func_grid_GSL Pk4_interp(kk,Pk4,"Spline");
+     for (int i=0;i<nbins;i++){
+        params.r = r[i];
+        
+        params.Pkl = &Pk0_interp;
+        params.l = 0;
+        xi0[i] = GSL_integrate_qag(Func,k_min,k_max,prec,limit_size,6)*f0;
+
+        params.Pkl = &Pk2_interp;
+        params.l = 2;
+        xi2[i] = GSL_integrate_qag(Func,k_min,k_max,prec,limit_size,6)*f2;
+
+        params.Pkl = &Pk4_interp;
+        params.l = 4;
+        xi4[i] = GSL_integrate_qag(Func,k_min,k_max,prec,limit_size,6)*f4;
+
+     }
+
+     Pk0_interp.free();
+     Pk2_interp.free();
+     Pk4_interp.free();  
+
+  }
+
+  return {xi0,xi2,xi4};
+}
+

@@ -132,7 +132,7 @@ void cosmobl::statistics::Likelihood::minimize (const double parameter, const un
 
   GSLfunction_1D_1 func(ff, fixed_parameters);
   func.minimize(new_parameter, max_iter, new_min, new_max);
-  m_model->update_parameters(new_parameter);
+  m_model->update_parameter(new_parameter);
   cout << "Done" << endl;
 }
 
@@ -189,7 +189,7 @@ void cosmobl::statistics::Likelihood::minimize (const vector<double> parameters,
 // ============================================================================================
 
 
-double cosmobl::statistics::Likelihood::sample (const int nchains, const int chain_size)
+double cosmobl::statistics::Likelihood::sample (const int nchains, const int chain_size, const int seed)
 {
   cout << "Sampling the likelihood!" << endl;
   
@@ -206,14 +206,15 @@ double cosmobl::statistics::Likelihood::sample (const int nchains, const int cha
     pp[i]->set_chains(m_nchains, m_chain_size);
 
   default_random_engine generator;
-  generator.seed(time(NULL));
+  generator.seed(seed);
+
   uniform_real_distribution<double> distribution(0.,1.);
   uniform_int_distribution<int> idist(0.,m_nchains-1);
 
   auto random_number = bind(distribution,generator);
   auto kchain = bind(idist,generator);
 
-  double gzpar=2;
+  double gzpar=4;
   double zmin = 1./gzpar;
   double zmax = gzpar;
 
@@ -230,7 +231,7 @@ double cosmobl::statistics::Likelihood::sample (const int nchains, const int cha
   for (int i=0; i<m_nchains; i++) {
     vector<double> starting_parameters(m_model->npar());
     for (size_t j=0; j<pp.size(); j++) {
-      starting_parameters[j] = (pp[j]->isFreezed()) ? pp[j]->value() : pp[j]->random_value();
+      starting_parameters[j] = (pp[j]->isFreezed()) ? pp[j]->value() : pp[j]->prior()->sample(random_number());
       pp[j]->set_value(starting_parameters[j]);
       pp[j]->chain(i)->set_chain_value(0,starting_parameters[j]);
       prior_probs[i] *= pp[j]->PriorProbability(starting_parameters[j]);

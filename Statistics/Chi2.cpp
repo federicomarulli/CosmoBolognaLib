@@ -38,13 +38,13 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-double cosmobl::statistics::chi2_1D_model_1par (double model_parameters, const shared_ptr<void> fixed_parameters)
+double cosmobl::statistics::chi2_1D_model_1par (double model_parameter, const shared_ptr<void> fixed_parameters)
 {  
   shared_ptr<Data> data = static_pointer_cast<STR_params>(fixed_parameters)->data;
   shared_ptr<Model> model = static_pointer_cast<STR_params>(fixed_parameters)->model;
 
-  model_parameters = model->update_parameters(model_parameters);
-  vector<double> pars = {model_parameters};
+  model_parameter = model->update_parameter(model_parameter);
+  vector<double> pars = {model_parameter};
 
   vector<double> computed_model(data->ndata(),0);
   for (int i=data->x_down(); i< data->x_up(); i++)
@@ -83,13 +83,13 @@ double cosmobl::statistics::chi2_1D_model_npar (vector<double> model_parameters,
 // ============================================================================================
 
 
-double cosmobl::statistics::chi2_1D_error_1par (double model_parameters, const shared_ptr<void> fixed_parameters)
+double cosmobl::statistics::chi2_1D_error_1par (double model_parameter, const shared_ptr<void> fixed_parameters)
 {  
   shared_ptr<Data> data = static_pointer_cast<STR_params>(fixed_parameters)->data;
   shared_ptr<Model> model = static_pointer_cast<STR_params>(fixed_parameters)->model;
 
-  model_parameters = model->update_parameters(model_parameters);
-  vector<double> pars = {model_parameters};
+  model_parameter = model->update_parameter(model_parameter);
+  vector<double> pars = {model_parameter};
 
   double c2 = 0;
   
@@ -122,13 +122,13 @@ double cosmobl::statistics::chi2_1D_error_npar (vector<double> model_parameters,
 // ============================================================================================
 
 
-double cosmobl::statistics::chi2_1D_covariance_1par (double model_parameters, const shared_ptr<void> fixed_parameters)
+double cosmobl::statistics::chi2_1D_covariance_1par (double model_parameter, const shared_ptr<void> fixed_parameters)
 {
   shared_ptr<Data> data = static_pointer_cast<STR_params>(fixed_parameters)->data;
   shared_ptr<Model> model = static_pointer_cast<STR_params>(fixed_parameters)->model;
 
-  model_parameters = model->update_parameters(model_parameters);
-  vector<double> pars = {model_parameters};
+  model_parameter = model->update_parameter(model_parameter);
+  vector<double> pars = {model_parameter};
 
   vector<double> computed_model(data->ndata(),0);
   for (int i=data->x_down(); i< data->x_up(); i++)
@@ -171,12 +171,12 @@ double cosmobl::statistics::chi2_1D_covariance_npar (vector<double> model_parame
 // ============================================================================================
 
 
-double cosmobl::statistics::chi2_2D_error_1par (double model_parameters, const shared_ptr<void> fixed_parameters)
+double cosmobl::statistics::chi2_2D_error_1par (double model_parameter, const shared_ptr<void> fixed_parameters)
 {  
   shared_ptr<Data> data = static_pointer_cast<STR_params>(fixed_parameters)->data;
   shared_ptr<Model> model = static_pointer_cast<STR_params>(fixed_parameters)->model;
 
-  vector<double> pars = {model_parameters};
+  vector<double> pars = {model_parameter};
   pars = model->update_parameters(pars);
 
   double c2 = 0;

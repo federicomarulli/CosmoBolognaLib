@@ -41,32 +41,27 @@ using namespace cosmobl;
 
 void cosmobl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nx, const int ny, const int nz)
 {
-  vector<double> Lim;
-  data.MinMax_var(catalogue::Var::_X_, Lim, 0);
-  data.MinMax_var(catalogue::Var::_Y_, Lim, 0);
-  data.MinMax_var(catalogue::Var::_Z_, Lim, 0);
-
-  double Cell_X = (Lim[1]-Lim[0])/nx;
-  double Cell_Y = (Lim[3]-Lim[2])/ny;
-  double Cell_Z = (Lim[5]-Lim[4])/nz;
+  double Cell_X = (data.Max(catalogue::Var::_X_)-data.Min(catalogue::Var::_X_))/nx;
+  double Cell_Y = (data.Max(catalogue::Var::_Y_)-data.Min(catalogue::Var::_Y_))/ny;
+  double Cell_Z = (data.Max(catalogue::Var::_Z_)-data.Min(catalogue::Var::_Z_))/nz;
 
 #pragma omp parallel num_threads(omp_get_max_threads())
   {
     
 #pragma omp for schedule(static, 2) 
     for (int i=0; i<data.nObjects(); i++) {
-      int i1 = min(int((data.xx(i)-Lim[0])/Cell_X), nx-1);
-      int j1 = min(int((data.yy(i)-Lim[2])/Cell_Y), ny-1);
-      int z1 = min(int((data.zz(i)-Lim[4])/Cell_Z), nz-1);
+      int i1 = min(int((data.xx(i)-data.Min(catalogue::Var::_X_))/Cell_X), nx-1);
+      int j1 = min(int((data.yy(i)-data.Min(catalogue::Var::_Y_))/Cell_Y), ny-1);
+      int z1 = min(int((data.zz(i)-data.Min(catalogue::Var::_Z_))/Cell_Z), nz-1);
       int index = z1+nz*(j1+ny*i1);
       data.catalogue_object(i)->set_region(index);
     }
 
 #pragma omp for schedule(static, 2) 
     for (int i=0; i<random.nObjects(); i++) {
-      int i1 = min(int((random.xx(i)-Lim[0])/Cell_X), nx-1);
-      int j1 = min(int((random.yy(i)-Lim[2])/Cell_Y), ny-1);
-      int z1 = min(int((random.zz(i)-Lim[4])/Cell_Z), nz-1);
+      int i1 = min(int((random.xx(i)-data.Min(catalogue::Var::_X_))/Cell_X), nx-1);
+      int j1 = min(int((random.yy(i)-data.Min(catalogue::Var::_Y_))/Cell_Y), ny-1);
+      int z1 = min(int((random.zz(i)-data.Min(catalogue::Var::_Z_))/Cell_Z), nz-1);
       int index = z1+nz*(j1+ny*i1);
       random.catalogue_object(i)->set_region(index);
     }
@@ -166,33 +161,116 @@ void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Ca
 // ============================================================================
 
 
-void cosmobl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nRa, const int nDec)
+void cosmobl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalogue &random, const double Cell_size)
 {
   vector<double> Lim;
-  data.MinMax_var(catalogue::Var::_RA_, Lim, 0);
-  data.MinMax_var(catalogue::Var::_Dec_, Lim, 0);
+  
+  double Cell_sz = radians(Cell_size);
 
-  double Cell_Ra = (Lim[1]-Lim[0])/nRa;
-  double Cell_Dec = (Lim[3]-Lim[2])/nDec;
+  vector<double> data_x = data.var(catalogue::Var::_RA_);
+  vector<double> data_y = data.var(catalogue::Var::_Dec_);
 
+  vector<double> random_x = random.var(catalogue::Var::_RA_);
+  vector<double> random_y = random.var(catalogue::Var::_Dec_);
+
+  for (int i=0; i<data.nObjects(); i++)
+    data_x[i] *= cos(data_y[i]);
+
+  for (int i=0; i<random.nObjects(); i++)
+    random_x[i] *= cos(random_y[i]);
+
+  Lim.push_back(Min(data_x));
+  Lim.push_back(Max(data_x));
+
+  Lim.push_back(Min(data_y));
+  Lim.push_back(Max(data_y));
+
+  const int nDec = (Lim[3]-Lim[2])/Cell_sz;
+
+  vector<double> cell_size_x(nDec);
+  vector<int> n_cells_x(nDec);
+  vector<vector<int>> cells;
+  int n = 0;
+
+  for (int i=0; i<nDec; i++) {
+    
+    double cd = Lim[2]+(i+0.5)*Cell_sz;
+    n_cells_x[i] = ceil((Lim[1]-Lim[0])*cos(cd)/Cell_sz);
+    cell_size_x[i] = (Lim[1]-Lim[0])/n_cells_x[i];
+
+    vector<int> vv(n_cells_x[i]);
+    for (int j=0; j<n_cells_x[i]; j++) {
+      vv[j] = n;
+      n ++;
+    }
+    
+    cells.push_back(vv);
+  }
+
+  
 #pragma omp parallel num_threads(omp_get_max_threads())
   {
     
 #pragma omp for schedule(static, 2) 
     for (int i=0; i<data.nObjects(); i++) {
-      int i1 = min(int((data.ra(i)-Lim[0])/Cell_Ra), nRa-1);
-      int j1 = min(int((data.dec(i)-Lim[2])/Cell_Dec), nDec-1);
-      int index = j1+nDec*i1;
-      data.catalogue_object(i)->set_region(index);
+      int j1 = min(int((data_y[i]-Lim[2])/Cell_sz), nDec-1);
+      int i1 = min(int((data_x[i]-Lim[0])/cell_size_x[j1]), n_cells_x[j1]-1);
+      data.catalogue_object(i)->set_region(cells[j1][i1]);
     }
 
 #pragma omp for schedule(static, 2) 
     for (int i=0; i<random.nObjects(); i++) {
-      int i1 = min(int((random.ra(i)-Lim[0])/Cell_Ra), nRa-1);
-      int j1 = min(int((random.dec(i)-Lim[2])/Cell_Dec), nDec-1);
-      int index =j1+nDec*i1;;
-      random.catalogue_object(i)->set_region(index);
+      int j1 = min(int((random_y[i]-Lim[2])/Cell_sz), nDec-1);
+      int i1 = min(int((random_x[i]-Lim[0])/cell_size_x[j1]), n_cells_x[j1]-1);
+      random.catalogue_object(i)->set_region(cells[j1][i1]);
     }
   }
+
+  cosmobl::check_regions(data, random);
 }
 
+
+// ============================================================================
+
+
+void cosmobl::check_regions (catalogue::Catalogue &data, catalogue::Catalogue &random)
+{
+  vector<long> data_regions = data.get_region_list();
+  vector<long> random_regions = random.get_region_list();
+  
+  // check if data and random catalogues have the same number of regions
+  if (data_regions.size() != random_regions.size()) 
+    ErrorMsg("Error in check_regions of Subsample.cpp, data and random have different number of regions");
+  
+  // check if data and random catalogues have the same regions
+  int nRegions = data_regions.size();
+  for (int i=0; i<nRegions; i++)
+    if (data_regions[i] != random_regions[i])
+      ErrorMsg("Error in check_regions of Subsample.cpp, data and random have regions");
+  
+  // check if regions are consecutives and starting from 0
+  bool cons = 1;
+  for (int i=0; i<nRegions; i++) 
+    if (data_regions[i]!=i)
+      cons = 0;
+  
+  // make regions 
+  if (!cons) {
+    map<long, long> regions;
+    for (long i=0; i<nRegions; i++)
+      regions[data_regions[i]] = i;
+      
+    for (int i=0; i<data.nObjects(); i++) {
+      long region = data.catalogue_object(i)->region();
+      auto search = regions.find(region);
+      data.catalogue_object(i)->set_region(search->second);
+    }
+      
+    for (int i=0; i<random.nObjects(); i++) {
+      long region = random.catalogue_object(i)->region();
+      auto search = regions.find(region);
+      random.catalogue_object(i)->set_region(search->second);
+    } 
+  }
+
+}

@@ -45,7 +45,7 @@ double cosmobl::glob::func_xi_GSL (double kk, void *params)
   
   double lgk = log10(kk);
   
-  double lgPkK = interpolated(lgk, pp->lgkk, pp->lgPk, "Linear", -1);
+  double lgPkK = interpolated(lgk, pp->lgkk, pp->lgPk, "Linear");
     
   double Int = pow(10.,lgPkK)*sin(kk*pp->rr)*kk/pp->rr;
 
@@ -63,7 +63,7 @@ double cosmobl::glob::func_SSM_GSL (double kk, void *params)
   double fact = (pp->unit) ? 1. : pp->hh;
   double lgk = log10(kk/fact);
   
-  double lgPkK = interpolated(lgk, pp->lgkk, pp->lgPk, "Linear", -1);
+  double lgPkK = interpolated(lgk, pp->lgkk, pp->lgPk, "Linear");
   double rr = Radius(pp->mass, pp->rho);
 
   return pow(10.,lgPkK)*pow(TopHat_WF(kk*rr)*kk,2)/pow(fact,pp->n_spec); 
@@ -329,7 +329,7 @@ double cosmobl::barred_xi_direct (const double RR, const vector<double> rr, cons
     Int += xi[i]*pow(rr[i],2)*bin;
   }
 
-  return interpolated(RR, rr, xi_, "Linear", -1);
+  return interpolated(RR, rr, xi_, "Linear");
 }
 
 
@@ -360,7 +360,7 @@ double cosmobl::barred_xi__direct (const double RR, const vector<double> rr, con
     Int += xi[i]*pow(rr[i],4)*bin;
   }
 
-  return interpolated(RR, rr, xi__, "Linear", -1);
+  return interpolated(RR, rr, xi__, "Linear");
 }
 
 
@@ -485,9 +485,9 @@ double cosmobl::xi2D_lin_model (const double rp, const double pi, const double b
   double xiR__ = (index>-1) ? xi__[index] : -1.;
 
   if (xiR<0) {
-    xiR = interpolated(rr, rad_real, xi_real, "Linear", -1);
-    xiR_ = interpolated(rr, rad_real, xi_, "Linear", -1);
-    xiR__ = interpolated(rr, rad_real, xi__, "Linear", -1);
+    xiR = interpolated(rr, rad_real, xi_real, "Linear");
+    xiR_ = interpolated(rr, rad_real, xi_, "Linear");
+    xiR__ = interpolated(rr, rad_real, xi__, "Linear");
   }
 
   double Bias = bias;
@@ -580,9 +580,9 @@ double cosmobl::xi2D_model (const double rp, const double pi, const double beta,
     double xiR__ = (index>-1) ? xi__[index] : -1.;
     
     if (xiR<0) {
-      xiR = interpolated(rr, rad_real, xi_real, "Linear", -1);
-      xiR_ = interpolated(rr, rad_real, xi_, "Linear", -1);
-      xiR__ = interpolated(rr, rad_real, xi__, "Linear", -1);
+      xiR = interpolated(rr, rad_real, xi_real, "Linear");
+      xiR_ = interpolated(rr, rad_real, xi_, "Linear");
+      xiR__ = interpolated(rr, rad_real, xi__, "Linear");
     }
 
     double Bias = bias;
@@ -644,16 +644,3 @@ double cosmobl::b_nl (const double rr, const double bA, const double bB, const d
   
   return pow(rr,bA*FF);
 }
-
-
-// ============================================================================
-
-
-double cosmobl::Pl_integrand(const double mu, void *parameters)
-{
-  struct cosmobl::glob::STR_Pl_integrand *pp = (struct cosmobl::glob::STR_Pl_integrand *) parameters;
-  int l = pp->l;
-  vector<double> mmu = pp->mu;
-  vector<double> Pmu = pp->Pmu;
-  return interpolated(mu,mmu,Pmu,"Spline",3)*gsl_sf_legendre_Pl(l,mu);
-} 

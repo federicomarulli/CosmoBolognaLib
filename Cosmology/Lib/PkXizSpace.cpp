@@ -47,9 +47,9 @@ double cosmobl::Cosmology::xi0_Kaiser (const double rad, const double f_sigma8, 
   vector<double> rr, Xi;
   get_xi(rr, Xi, method_Pk, redshift, output_root, xiType, k_star, xiNL, norm, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
   
-  double XiR = interpolated(rad, rr, Xi, "Linear", -1);
+  double XiR = interpolated(rad, rr, Xi, "Linear");
 
-  return xi_ratio(f_sigma8, bias_sigma8)*XiR*pow(bias_sigma8/sigma8_Pk(method_Pk, redshift, output_root),2);
+  return xi_ratio(f_sigma8, bias_sigma8)*XiR*pow(bias_sigma8/sigma8_Pk(method_Pk, redshift, output_root), 2);
 }
 
 

@@ -39,7 +39,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::Cosmology::mass_function (const double Mass, const double redshift, const string author, const string method_SS, const string output_root, const double Delta, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
+double cosmobl::Cosmology::mass_function (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root, const double Delta, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   double fact = (m_unit) ? 1 : m_hh;
   double MASS = Mass*fact;
@@ -49,9 +49,9 @@ double cosmobl::Cosmology::mass_function (const double Mass, const double redshi
   double Sigma = sqrt(SSS);
   double Dln_Sigma = dnSM(1, MASS, method_SS, zero, output_root, interpType, Num, stepsize, k_max, file_par)*(MASS/(2.*SSS));
 
-  double MF = MF_generator(MASS, Sigma, Dln_Sigma, redshift, author, Delta)*pow(fact,4.);
+  double MF = MF_generator(MASS, Sigma, Dln_Sigma, redshift, author_MF, Delta)*pow(fact, 4.);
 
-  if (m_fNL!=0) MF *= MF_correction(MASS, redshift, author, output_root, interpType, Num, stepsize, norm, k_min, k_max, GSL, prec, file_par);
+  if (m_fNL!=0) MF *= MF_correction(MASS, redshift, author_MF, output_root, interpType, Num, stepsize, norm, k_min, k_max, GSL, prec, file_par);
 
   return MF;
 }
@@ -60,7 +60,7 @@ double cosmobl::Cosmology::mass_function (const double Mass, const double redshi
 // =====================================================================================
 
 
-double cosmobl::Cosmology::mass_function_fast (const double Mass, const double redshift, const string author, const string method_SS, const string output_root, const double Delta, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
+double cosmobl::Cosmology::mass_function_fast (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root, const double Delta, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
 {
   double fact = (m_unit) ? 1 : m_hh;
   double MASS = Mass*fact;
@@ -69,7 +69,7 @@ double cosmobl::Cosmology::mass_function_fast (const double Mass, const double r
   // ---------- read the grid file ---------- 
   
   double zero = 0.;
-  string file_grid = create_grid_sigmaM (method_SS, zero, output_root, interpType, Num, stepsize, k_max);
+  string file_grid = create_grid_sigmaM(method_SS, zero, output_root, interpType, Num, stepsize, k_max);
   ifstream fin (file_grid.c_str()); checkIO (file_grid,1); 
 
   double MMass, Sigma, Dln_Sigma;
@@ -83,10 +83,10 @@ double cosmobl::Cosmology::mass_function_fast (const double Mass, const double r
 
   // ---------- compute the MF ---------- 
    
-  double sig = interpolated(MASS, mass, sigma, "Rat", 4);
-  double dlsig = interpolated(MASS, mass, dln_sigma, "Rat", 4);
-
-  double MF = MF_generator(MASS, sig, dlsig, redshift, author, Delta)*pow(fact,4.);
+  double sig = interpolated(MASS, mass, sigma, "Steffen");
+  double dlsig = interpolated(MASS, mass, dln_sigma, "Steffen");
+  
+  double MF = MF_generator(MASS, sig, dlsig, redshift, author_MF, Delta)*pow(fact, 4.);
   if (std::isnan(MF)) { string Err = "Error in cosmobl::Cosmology::mass_function_fast of MassFunction.cpp: MF = " + conv(MF,par::fDP3) + "!"; ErrorMsg(Err); }
 
   if (m_fNL!=0) MF *= MF_correction(MASS, redshift, method_SS, output_root, interpType, Num, stepsize, norm, k_min, k_max, GSL, prec, file_par);
@@ -114,30 +114,29 @@ double cosmobl::Cosmology::mass_function (const double Mass, const double Sigma,
 // =====================================================================================
 
 
-double cosmobl::Cosmology::MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string author, const double Delta) 
+double cosmobl::Cosmology::MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string author_MF, const double Delta) 
 { 
-  double Z0 = 0.;
   double deltacz = deltac(redshift);
-  double sigmaz = Sigma*DD(redshift)/DD(Z0);
-
-  double RHO = Rho(m_Omega_matter,m_Omega_neutrinos); 
-
+  double sigmaz = Sigma*DD(redshift)/DD(0.);
+  
+  double RHO = Rho(m_Omega_matter, m_Omega_neutrinos); 
+  
   double dndm = -1.;
   
-  if (author=="PS") // Press-Schechter
+  if (author_MF=="PS") // Press-Schechter
     dndm = sqrt(2./par::pi)*RHO/(Mass*Mass)*deltacz/sigmaz*fabs(Dln_Sigma)*exp(-(deltacz*deltacz)*0.5/(sigmaz*sigmaz));
    
-  if (author=="ST") { // Sheth-Tormen
+  if (author_MF=="ST") { // Sheth-Tormen
     double aa = 0.707;
     double qq = 0.3;
     double AA = 0.3222;
     dndm = AA*sqrt(2.*aa/par::pi)*RHO/(Mass*Mass)*deltacz/sigmaz*(1+pow(sigmaz/(sqrt(aa)*deltacz),2.*qq))*fabs(Dln_Sigma)*exp(-(aa*deltacz*deltacz)*0.5/(sigmaz*sigmaz));
   }
   
-  if (author=="Jenkins") // Jenkins et al. (2001)
+  if (author_MF=="Jenkins") // Jenkins et al. (2001)
     dndm = 0.315*exp(-pow(fabs(log(1./sigmaz)+0.61),3.8))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
   
-  if (author=="Warren") { // Warren et al. (2006) 
+  if (author_MF=="Warren") { // Warren et al. (2006) 
     double AA = 0.7234;
     double aa = 1.625;
     double bb = 0.2538;
@@ -145,7 +144,7 @@ double cosmobl::Cosmology::MF_generator (const double Mass, const double Sigma, 
     dndm = AA*(pow(sigmaz,-aa)+bb)*exp(-cc/(sigmaz*sigmaz))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
   }
   
-  if (author=="Reed") { // Reed et al. (2007) 
+  if (author_MF=="Reed") { // Reed et al. (2007) 
     double aa = 0.707;
     double cc = 1.08;
     double pp = 0.3;
@@ -157,12 +156,12 @@ double cosmobl::Cosmology::MF_generator (const double Mass, const double Sigma, 
     dndm = Fatt*RHO/(Mass*Mass)*deltacz/sigmaz*(1+pow(sigmaz*sigmaz/(aa*deltacz*deltacz),pp)+0.6*G1+0.4*G2)*fabs(Dln_Sigma)*exp(-(cc*aa*deltacz*deltacz)*0.5/(sigmaz*sigmaz)-(0.03/pow(n_eff+3.,2)*pow(deltacz/sigmaz,0.6)));
   }
 
-  if (author=="Pan") { // Pan (2007)
+  if (author_MF=="Pan") { // Pan (2007)
     double alpha = 0.435; // check!!!
     dndm = 4.*alpha/sqrt(2.*par::pi)*RHO/(Mass*Mass)*deltacz/pow(sigmaz,2.*alpha)*fabs(Dln_Sigma)*exp(-(deltacz*deltacz)*0.5/pow(sigmaz,4.*alpha));
   }
 
-  if (author=="ShenH") { // halo MF by Shen et al. (2006) // check!!!
+  if (author_MF=="ShenH") { // halo MF by Shen et al. (2006) // check!!!
     double alpha = -0.55;
     double beta = -0.56;
     double ni = pow(deltacz/sigmaz,2);
@@ -170,7 +169,7 @@ double cosmobl::Cosmology::MF_generator (const double Mass, const double Sigma, 
     dndm = ni_fni*RHO/(Mass*Mass)*fabs(Dln_Sigma)*2;
   }
   
-  if (author=="ShenF") { // filaments MF by Shen et al. (2006) // check!!!
+  if (author_MF=="ShenF") { // filaments MF by Shen et al. (2006) // check!!!
     double alpha = -0.28;
     double beta = -0.012;
     double ni = pow(deltacz/sigmaz,2);
@@ -178,7 +177,7 @@ double cosmobl::Cosmology::MF_generator (const double Mass, const double Sigma, 
     dndm = ni_fni*RHO/(Mass*Mass)*fabs(Dln_Sigma)*2;
   }
 
-  if (author=="ShenS") { // sheets MF by Shen et al. (2006) // check!!!
+  if (author_MF=="ShenS") { // sheets MF by Shen et al. (2006) // check!!!
     double alpha = -0.61;
     double beta = 0.45;
     double ni = pow(deltacz/sigmaz,2);
@@ -186,9 +185,9 @@ double cosmobl::Cosmology::MF_generator (const double Mass, const double Sigma, 
     dndm = fabs(ni_fni*RHO/(Mass*Mass)*fabs(Dln_Sigma)*2); // check!!!
   }
 
-  if (author=="Tinker") { // Tinker et al. (2008)
+  if (author_MF=="Tinker") { // Tinker et al. (2008)
 
-    if (redshift>2) WarningMsg("Attention: the Tinker mass function has been tested for z<~2!");
+    //if (redshift>2) WarningMsg("Attention: the Tinker mass function has been tested for z<~2!");
 
     double A0, a0, b0, c0;
 
@@ -203,31 +202,36 @@ double cosmobl::Cosmology::MF_generator (const double Mass, const double Sigma, 
     else if (Delta==3200) {A0 = 0.260; a0 = 2.66; b0 = 1.41; c0 = 2.44;}
     else {
       A0 = (Delta<1600) ? 0.1*log10(Delta)-0.05 : 0.26;
-      a0 = 1.43+pow(log10(Delta)-2.3,1.5);
+      a0 = 1.43+pow(max(log10(Delta)-2.3,0.),1.5); // check!!!
       b0 = 1.+pow(log10(Delta)-1.6,-1.5);
-      c0 = (log10(Delta)>2.35) ? 1.2+pow(log10(Delta)-2.35,1.6) : 1.2; // check!!!
+      c0 = 1.2+pow(max(log10(Delta)-2.35,0.),1.6); // check!!!
     }
 
-    double alpha = pow(10.,-pow(0.75/log10(Delta/75.),1.2));
+    double alpha = pow(10.,-pow(max(0.75/log10(Delta/75.),0.),1.2)); // check!!!
     double AA = A0*pow(1.+redshift,-0.14);
     double aa = a0*pow(1.+redshift,-0.06);
     double bb = b0*pow(1.+redshift,-alpha);
     double cc = c0;
-   
+
     dndm = AA*(pow(sigmaz/bb,-aa)+1.)*exp(-cc/(sigmaz*sigmaz))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
   }
 
-  if (author=="Angulo_FOF") { // FOF MF by Angulo et al. (2012)
-    double ff = 0.201*pow(2.08/sigmaz,1.7)*exp(-1.172/(sigmaz*sigmaz));
-    dndm = RHO/(Mass*Mass)*(-Dln_Sigma)*ff;
+  if (author_MF=="Crocce") { // by Crocce et al. (2010)
+    double AA = 0.58*pow(1.+redshift,-0.13);
+    double aa = 1.37*pow(1.+redshift,-0.15);
+    double bb = 0.3*pow(1.+redshift,-0.084);
+    double cc = 1.036*pow(1.+redshift,-0.024);
+    return AA*(pow(sigmaz,-aa)+bb)*exp(-cc*pow(sigmaz,-2))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
   }
-
-  if (author=="Angulo_Sub") { // SUBFIND MF by Angulo et al. (2012)
-    double ff = 0.265*pow(1.675/sigmaz,1.9)*exp(-1.4/(sigmaz*sigmaz));
-    dndm = RHO/(Mass*Mass)*(-Dln_Sigma)*ff;
-  }
+  
+  if (author_MF=="Angulo_FOF") // FOF MF by Angulo et al. (2012)
+    return 0.201*pow(2.08/sigmaz,1.7)*exp(-1.172/(sigmaz*sigmaz))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
+ 
+  if (author_MF=="Angulo_Sub") // SUBFIND MF by Angulo et al. (2012)
+    return 0.265*pow(1.675/sigmaz,1.9)*exp(-1.4/(sigmaz*sigmaz))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
 
   if (dndm<0) ErrorMsg("Error in cosmobl::Cosmology::MF of MassFunction.cpp!");
+
   return dndm;  
 }
 

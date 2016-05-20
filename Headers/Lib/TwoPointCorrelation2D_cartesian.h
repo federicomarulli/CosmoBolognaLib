@@ -201,10 +201,12 @@ namespace cosmobl {
 	 *  separation
 	 *  @param shift_pi shift parameter in the parallel
 	 *  separation, i.e. the radial shift is binSize*shift
+	 *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
 	 *  @return object of class TwoPointCorrelation2D_cartesian
 	 */
-	TwoPointCorrelation2D_cartesian (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const binType binType_pi, const double piMin, const double piMax, const int nbins_pi, const double shift_pi)
-	  : TwoPointCorrelation2D(data, random) { m_twoPType = _2D_Cartesian_; set_parameters(binType_rp, rpMin, rpMax, nbins_rp, shift_rp, binType_pi, piMin, piMax, nbins_pi, shift_pi); }
+	TwoPointCorrelation2D_cartesian (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const binType binType_pi, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	  : TwoPointCorrelation2D(data, random) { m_twoPType = _2D_Cartesian_; set_parameters(binType_rp, rpMin, rpMax, nbins_rp, shift_rp, binType_pi, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight); }
 
 	/**
 	 *  @brief constructor
@@ -230,10 +232,12 @@ namespace cosmobl {
 	 *  @param binSize_pi bin size in the parallel separation
 	 *  @param shift_pi shift parameter in the parallel
 	 *  separation, i.e. the radial shift is binSize*shift
+	 *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
 	 *  @return object of class TwoPointCorrelation2D_cartesian
 	 */
-	TwoPointCorrelation2D_cartesian (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const binType binType_pi, const double piMin, const double piMax, const double binSize_pi, const double shift_pi)
-	  : TwoPointCorrelation2D(data, random) { m_twoPType = _2D_Cartesian_; set_parameters(binType_rp, rpMin, rpMax, binSize_rp, shift_rp, binType_pi, piMin, piMax, binSize_pi, shift_pi); }
+	TwoPointCorrelation2D_cartesian (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const binType binType_pi, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	  : TwoPointCorrelation2D(data, random) { m_twoPType = _2D_Cartesian_; set_parameters(binType_rp, rpMin, rpMax, binSize_rp, shift_rp, binType_pi, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight); }
 
 	/**
 	 *  @brief default destructor
@@ -271,9 +275,11 @@ namespace cosmobl {
 	 *  separation
 	 *  @param shift_pi shift parameter in the parallel
 	 *  separation, i.e. the radial shift is binSize*shift
+	 *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
 	 *  @return object of class TwoPointCorrelation2D_cartesian
 	 */
-	void set_parameters (const binType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const binType binType_pi, const double piMin, const double piMax, const int nbins_pi, const double shift_pi);
+	void set_parameters (const binType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const binType binType_pi, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
 
 	/**
 	 *  @brief set the binning parameters
@@ -295,9 +301,11 @@ namespace cosmobl {
 	 *  @param binSize_pi bin size in the parallel separation
 	 *  @param shift_pi shift parameter in the parallel
 	 *  separation, i.e. the radial shift is binSize*shift
+	 *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
 	 *  @return none
 	 */
-	void set_parameters (const binType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const binType binType_pi, const double piMin, const double piMax, const double binSize_pi, const double shift_pi);
+	void set_parameters (const binType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const binType binType_pi, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
 
 	///@}
 

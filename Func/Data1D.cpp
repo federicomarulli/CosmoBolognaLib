@@ -91,6 +91,7 @@ cosmobl::Data1D::Data1D (const vector<double> x, const vector<double> fx, const 
   find_index(m_x, xMin, xMax, m_x_down, m_x_up);
 }
 
+
 // ======================================================================================
 
 
@@ -123,7 +124,6 @@ vector<double> cosmobl::Data1D::fx () const
 }  
 
 
-
 // ======================================================================================
 
 
@@ -138,7 +138,6 @@ vector<double> cosmobl::Data1D::error_fx () const
   else
     return m_error_fx;
 }  
-
 
 
 // ======================================================================================
@@ -159,8 +158,6 @@ vector<vector<double> > cosmobl::Data1D::covariance_fx () const
   else
     return m_covariance_fx;
 }  
-
-
 
 
 // ======================================================================================
@@ -206,7 +203,7 @@ void cosmobl::Data1D::set_covariance_fx (const string filename)
     stringstream ss(line);
     vector<double> num; double NN = -1.e30;
     while (ss>>NN) num.push_back(NN);
-    if (num.size()==3 && num[2]>-1.e29){
+    if (num.size()>=3 && num[2]>-1.e29){
       m_covariance_fx[i].push_back(num[2]);
     }
     else {i++; m_covariance_fx.push_back(vv);}
@@ -215,9 +212,17 @@ void cosmobl::Data1D::set_covariance_fx (const string filename)
   m_covariance_fx.erase(m_covariance_fx.end()-1, m_covariance_fx.end());
   fin.clear(); fin.close();
 
-  
   for(size_t i=0;i<m_covariance_fx.size();i++)
     m_error_fx.push_back(sqrt(m_covariance_fx[i][i]));
+
+  vector<vector<double> > cov = covariance_fx(),icov;
+  invert_matrix(cov,icov);
+
+  m_inverse_covariance_fx.resize(m_covariance_fx.size(),vector<double>(m_covariance_fx.size(),0));
+
+  for(int i=x_down();i<x_up();i++)
+    for(int j=x_down();j<x_up();j++)
+      m_inverse_covariance_fx[i][j] = icov[i-x_down()][j-x_down()];
 
 }
 
@@ -243,6 +248,7 @@ void cosmobl::Data1D::read (const string input_file)
 {
   ifstream fin(input_file.c_str());
   string line;
+  getline(fin, line);
 
   while (getline(fin, line)) {
     stringstream ss(line); double NUM;

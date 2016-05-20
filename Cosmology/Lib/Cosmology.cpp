@@ -42,7 +42,7 @@ cosmobl::Cosmology::Cosmology (const double Omega_matter, const double Omega_bar
   : m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_sigma8(-1.), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_model(model), m_unit(unit)              
 {
   if (m_Omega_matter==0) ErrorMsg("Error in cosmobl::Cosmology::Cosmology of Cosmology.cpp: Omega_matter=0!");
- 
+
   m_Omega_k = 1.-m_Omega_matter-m_Omega_radiation-m_Omega_DE;
   m_Omega_CDM = m_Omega_matter-m_Omega_baryon-m_Omega_neutrinos;
   m_H0 = (m_unit) ? 100. : 100.*m_hh;
@@ -354,7 +354,7 @@ double cosmobl::Cosmology::D_C (const double redshift) const
     fin.clear(); fin.close();
 
     double err = -1.;
-    Dc = interpolated(redshift, Redshift, dc, "Rat", 4, err);
+    Dc = interpolated(redshift, Redshift, dc, "Rat");
     
     if (err/Dc>0.1) {
       string Err = "Error in cosmobl::Cosmology::D_C of Cosmology.cpp: " + conv(redshift,par::fDP3) + "   " + conv(Redshift.size(),par::fINT) + "   " + conv(dc.size(),par::fINT);
@@ -628,7 +628,7 @@ double cosmobl::Cosmology::Redshift (const double d_c, const double z1_guess, co
     fin.clear(); fin.close();
     
     double err = -1;
-    redshift = interpolated(d_c, dc, Redshift, "Rat", 4, err);
+    redshift = interpolated(d_c, dc, Redshift, "Rat");
     if (err/redshift>0.1) ErrorMsg("Error in cosmobl::Cosmology::Redshift of Cosmology.cpp!");
   }
   

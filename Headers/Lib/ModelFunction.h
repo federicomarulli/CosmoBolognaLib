@@ -64,10 +64,7 @@ namespace cosmobl {
       double r_min;
       double r_max;
 
-      vector<double> r;
-      vector<double> xi;
-      string type;
-      int nPt;
+      shared_ptr<classfunc::func_grid_GSL> func_xi;
 
       double pi_max;
 
@@ -86,6 +83,34 @@ namespace cosmobl {
     double xi0_bias(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
     double xi0_bias_cosmology(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
+
+    double xi_alpha_B(double r, shared_ptr<void> parameters, vector<double> model_parameters);
+
+    double xi_alpha_B_poly(double r, shared_ptr<void> parameters, vector<double> model_parameters);
+
+    double xi0_alpha_bias(double r, shared_ptr<void> parameters, vector<double> model_parameters);
+
+    double xi0_alpha_bias_cosmology(double r, shared_ptr<void> parameters, vector<double> model_parameters);
+
+    vector<double> wp_bias_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters); 
+
+    vector<double> wp_bias_cosmology_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters); 
+
+    vector<double> xi_bias_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters); 
+
+    vector<double> xi_bias_cosmology_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters); 
+
+    vector<double> xi0_bias_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters); 
+
+    vector<double> xi0_bias_cosmology_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters); 
+
+    vector<double> xi_alpha_B_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters);
+
+    vector<double> xi_alpha_B_poly_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters);
+
+    vector<double> xi0_alpha_bias_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters);
+
+    vector<double> xi0_alpha_bias_cosmology_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters);
 
   }
 }

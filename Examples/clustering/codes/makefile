@@ -6,13 +6,12 @@ dirLib = $(PWD)/../../../
 dirH = $(dirLib)Headers/Lib/
 dirHO = $(dirLib)Headers/Objects/
 dirHM = $(dirLib)Headers/Models/
-dirNum = $(PWD)/../../../../Numerical/
 dirEH = $(dirLib)External/EH/
 
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
 FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lTWOP -lTHREEP -lMODEL -lGLOB
-FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirNum) -I$(dirEH) 
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirEH) -isystem $(HOME)/Numerical/ 
 
 OBJ1 = 2pt_monopole.o
 OBJ2 = 2pt_2D.o
@@ -46,7 +45,7 @@ modelBias_2pt_projected: $(OBJ6)
 	$(CC) $(OBJ6) -o modelBias_2pt_projected $(FLAGS_LIB) 
 
 clean:
-	rm *.o 2pt_monopole 2pt_2D 2pt_jackknife 3pt 2pt_projected_jackknife modelBias_2pt_projected *~ \#* temp* core* -f
+	rm -f *.o 2pt_monopole 2pt_2D 2pt_jackknife 3pt 2pt_projected_jackknife modelBias_2pt_projected *~ \#* temp* core*
 
 
 2pt_monopole.o: 2pt_monopole.cpp makefile $(dirLib)*.$(ES)

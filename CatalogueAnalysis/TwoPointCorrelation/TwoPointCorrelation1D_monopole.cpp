@@ -45,32 +45,32 @@ using namespace twopt;
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation1D_monopole::set_parameters (const binType binType, const double rMin, const double rMax, const int nbins, const double shift) 
+void cosmobl::twopt::TwoPointCorrelation1D_monopole::set_parameters (const binType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight) 
 {
-  m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, rMin, rMax, nbins, shift))
-    : move(Pair::Create(_comoving_lin_, rMin, rMax, nbins, shift));
+  m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
+    : move(Pair::Create(_comoving_lin_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
   
-  m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, rMin, rMax, nbins, shift))
-    : move(Pair::Create(_comoving_lin_, rMin, rMax, nbins, shift));
+  m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
+    : move(Pair::Create(_comoving_lin_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
   
-  m_dr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, rMin, rMax, nbins, shift))
-    : move(Pair::Create(_comoving_lin_, rMin, rMax, nbins, shift));
+  m_dr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
+    : move(Pair::Create(_comoving_lin_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation1D_monopole::set_parameters (const binType binType, const double rMin, const double rMax, const double binSize, const double shift)
+void cosmobl::twopt::TwoPointCorrelation1D_monopole::set_parameters (const binType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight)
 {
-  m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, rMin, rMax, binSize, shift))
-    : move(Pair::Create(_comoving_lin_, rMin, rMax, binSize, shift));
+  m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
+    : move(Pair::Create(_comoving_lin_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
   
-  m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, rMin, rMax, binSize, shift))
-    : move(Pair::Create(_comoving_lin_, rMin, rMax, binSize, shift));
+  m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
+    : move(Pair::Create(_comoving_lin_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
   
-  m_dr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, rMin, rMax, binSize, shift))
-    : move(Pair::Create(_comoving_lin_, rMin, rMax, binSize, shift));
+  m_dr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
+    : move(Pair::Create(_comoving_lin_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
 }
 
 
@@ -165,7 +165,7 @@ void cosmobl::twopt::TwoPointCorrelation1D_monopole::measureJackknife (const str
   for (int i=0; i<nRegions; i++) {
 
     if (dir_output_JackknifeXi !=par::defaultString && dir_output_JackknifeXi!="") {
-      string file = "xi_Jackknife_"+conv(i, par::fINT);
+      string file = "xi_Jackknife_"+conv(i, par::fINT)+".dat";
       data_SS[i]->write(dir_output_JackknifeXi, file, "rad", "xi", 0);
     }
 
@@ -209,7 +209,7 @@ void cosmobl::twopt::TwoPointCorrelation1D_monopole::measureBootstrap (const int
   for (int i=0; i<nMocks; i++) {
 
      if (dir_output_BootstrapXi!=par::defaultString && dir_output_BootstrapXi!="") {
-      string file = "xi_Bootstrap_"+conv(i, par::fINT);
+      string file = "xi_Bootstrap_"+conv(i, par::fINT)+".dat";
       data_SS[i]->write(dir_output_BootstrapXi, file, "rad", "xi", 0);
     }
 

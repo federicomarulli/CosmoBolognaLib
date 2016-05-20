@@ -175,8 +175,8 @@ double cosmobl::Cosmology::bias_eff (const vector<double> MM, const vector<doubl
   // ---------- read the grid file ---------- 
   
   double zero = 0.;
-  string file_grid = create_grid_sigmaM (method_SS, zero, output_root, interpType, Num, stepsize, k_max, file_par);
-  ifstream fin (file_grid.c_str()); checkIO (file_grid,1); 
+  string file_grid = create_grid_sigmaM(method_SS, zero, output_root, interpType, Num, stepsize, k_max, file_par);
+  ifstream fin(file_grid.c_str()); checkIO(file_grid, 1); 
   
   double Mass, Sigma, Dln_Sigma;
   vector<double> mass, sigma;
@@ -197,13 +197,13 @@ double cosmobl::Cosmology::bias_eff (const vector<double> MM, const vector<doubl
   
   double Bias_eff = 0., Norm = 0.;
   double mf, sig, err = -1;
-  for (unsigned int k=0; k<MM.size()-1; k++) {
+  
+  for (size_t k=0; k<MM.size()-1; k++) {
     mf = MF[k];
-
-    sig = interpolated(MM[k], mass, sigma, "Rat", 4, err);
+    sig = interpolated(MM[k], mass, sigma, "Linear");
+    
     if (err/sig>0.1) { 
-      double errs = err/sig;
-      string Err = "Error in cosmobl::Cosmology::bias_eff of Bias.cpp: err/sig = " + conv(errs, par::fDP3) + "!";
+      string Err = "Error in cosmobl::Cosmology::bias_eff of Bias.cpp: err/sig = " + conv(err/sig, par::fDP3) + "!";
       ErrorMsg(Err);
     } 
 

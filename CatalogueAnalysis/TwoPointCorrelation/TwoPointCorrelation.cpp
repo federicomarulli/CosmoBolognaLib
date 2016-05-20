@@ -46,10 +46,10 @@ using namespace twopt;
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType, const double Min, const double Max, const int nbins, const double shift)
+shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType, const double Min, const double Max, const int nbins, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight)
 {
-  if (type==_1D_monopole_) return move(unique_ptr<TwoPointCorrelation1D_monopole>(new TwoPointCorrelation1D_monopole(data, random, binType, Min, Max, nbins, shift)));
-  else if (type==_1D_angular_) return move(unique_ptr<TwoPointCorrelation1D_angular>(new TwoPointCorrelation1D_angular(data, random, binType, Min, Max, nbins, shift)));
+  if (type==_1D_monopole_) return move(unique_ptr<TwoPointCorrelation1D_monopole>(new TwoPointCorrelation1D_monopole(data, random, binType, Min, Max, nbins, shift, angularUnits, angularWeight)));
+  else if (type==_1D_angular_) return move(unique_ptr<TwoPointCorrelation1D_angular>(new TwoPointCorrelation1D_angular(data, random, binType, Min, Max, nbins, shift, angularUnits, angularWeight)));
   
   else ErrorMsg("Error in cosmobl::twopt::TwoPointCorrelation::Create of TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!");
   
@@ -60,10 +60,10 @@ shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (con
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType, const double Min, const double Max, const double binSize, const double shift)
+shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType, const double Min, const double Max, const double binSize, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight)
 {
-  if (type==_1D_monopole_) return move(unique_ptr<TwoPointCorrelation1D_monopole>(new TwoPointCorrelation1D_monopole(data, random, binType, Min, Max, binSize, shift)));
-  else if (type==_1D_angular_) return move(unique_ptr<TwoPointCorrelation1D_angular>(new TwoPointCorrelation1D_angular(data, random, binType, Min, Max, binSize, shift)));
+  if (type==_1D_monopole_) return move(unique_ptr<TwoPointCorrelation1D_monopole>(new TwoPointCorrelation1D_monopole(data, random, binType, Min, Max, binSize, shift, angularUnits, angularWeight)));
+  else if (type==_1D_angular_) return move(unique_ptr<TwoPointCorrelation1D_angular>(new TwoPointCorrelation1D_angular(data, random, binType, Min, Max, binSize, shift, angularUnits, angularWeight)));
  
   else ErrorMsg("Error in cosmobl::twopt::TwoPointCorrelation::Create of TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!!");
   
@@ -74,11 +74,11 @@ shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (con
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2)
+shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordUnits angularUnits, function<double(double)> angularWeight)
 {
-  if (type==_2D_Cartesian_) return move(unique_ptr<TwoPointCorrelation2D_cartesian>(new TwoPointCorrelation2D_cartesian(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, binType_D2, Min_D2, Max_D2, nbins_D2, shift_D2)));
+  if (type==_2D_Cartesian_) return move(unique_ptr<TwoPointCorrelation2D_cartesian>(new TwoPointCorrelation2D_cartesian(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, binType_D2, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight)));
 
-  else if (type==_2D_polar_) return move(unique_ptr<TwoPointCorrelation2D_polar>(new TwoPointCorrelation2D_polar(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, binType_D2, Min_D2, Max_D2, nbins_D2, shift_D2)));
+  else if (type==_2D_polar_) return move(unique_ptr<TwoPointCorrelation2D_polar>(new TwoPointCorrelation2D_polar(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, binType_D2, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight)));
 
   else ErrorMsg("Error in cosmobl::twopt::TwoPointCorrelation::Create of TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!!");
   
@@ -89,11 +89,11 @@ shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (con
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2)
+shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordUnits angularUnits, function<double(double)> angularWeight)
 {
-  if (type==_2D_Cartesian_) return move(unique_ptr<TwoPointCorrelation2D_cartesian>(new TwoPointCorrelation2D_cartesian(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, binType_D2, Min_D2, Max_D2, binSize_D2, shift_D2)));
+  if (type==_2D_Cartesian_) return move(unique_ptr<TwoPointCorrelation2D_cartesian>(new TwoPointCorrelation2D_cartesian(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, binType_D2, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight)));
 
-  else if (type==_2D_polar_) return move(unique_ptr<TwoPointCorrelation2D_polar>(new TwoPointCorrelation2D_polar(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, binType_D2, Min_D2, Max_D2, binSize_D2, shift_D2)));
+  else if (type==_2D_polar_) return move(unique_ptr<TwoPointCorrelation2D_polar>(new TwoPointCorrelation2D_polar(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, binType_D2, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight)));
 
   else ErrorMsg("Error in cosmobl::twopt::TwoPointCorrelation::Create of TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!!");
   
@@ -104,15 +104,15 @@ shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (con
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const double piMax_integral)
+shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const double piMax_integral, const CoordUnits angularUnits, function<double(double)> angularWeight)
 {
-  if (type==_1D_projected_) return move(unique_ptr<TwoPointCorrelation_projected>(new TwoPointCorrelation_projected(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, piMax_integral)));
+  if (type==_1D_projected_) return move(unique_ptr<TwoPointCorrelation_projected>(new TwoPointCorrelation_projected(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, piMax_integral, angularUnits, angularWeight)));
 
-  else if (type==_1D_deprojected_) return move(unique_ptr<TwoPointCorrelation_deprojected>(new TwoPointCorrelation_deprojected(data, random, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, piMax_integral)));
+  else if (type==_1D_deprojected_) return move(unique_ptr<TwoPointCorrelation_deprojected>(new TwoPointCorrelation_deprojected(data, random, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, piMax_integral, angularUnits, angularWeight)));
 
-  else if (type==_1D_multipoles_) return move(unique_ptr<TwoPointCorrelation_multipoles>(new TwoPointCorrelation_multipoles(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2)));
+  else if (type==_1D_multipoles_) return move(unique_ptr<TwoPointCorrelation_multipoles>(new TwoPointCorrelation_multipoles(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight)));
 
-  else if (type==_1D_wedges_) return move(unique_ptr<TwoPointCorrelation_wedges>(new TwoPointCorrelation_wedges(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2)));
+  else if (type==_1D_wedges_) return move(unique_ptr<TwoPointCorrelation_wedges>(new TwoPointCorrelation_wedges(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight)));
 
   else ErrorMsg("Error in cosmobl::twopt::TwoPointCorrelation::Create of TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!!");
   
@@ -123,15 +123,15 @@ shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (con
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const double piMax_integral)
+shared_ptr<TwoPointCorrelation> cosmobl::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const double piMax_integral, const CoordUnits angularUnits, function<double(double)> angularWeight)
 {
-  if (type==_1D_projected_) return move(unique_ptr<TwoPointCorrelation_projected>(new TwoPointCorrelation_projected(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, piMax_integral)));
+  if (type==_1D_projected_) return move(unique_ptr<TwoPointCorrelation_projected>(new TwoPointCorrelation_projected(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, piMax_integral, angularUnits, angularWeight)));
 
-  else if (type==_1D_deprojected_) return move(unique_ptr<TwoPointCorrelation_deprojected>(new TwoPointCorrelation_deprojected(data, random, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, piMax_integral)));
+  else if (type==_1D_deprojected_) return move(unique_ptr<TwoPointCorrelation_deprojected>(new TwoPointCorrelation_deprojected(data, random, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, piMax_integral, angularUnits, angularWeight)));
 
-  else if (type==_1D_multipoles_) return move(unique_ptr<TwoPointCorrelation_multipoles>(new TwoPointCorrelation_multipoles(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2)));
+  else if (type==_1D_multipoles_) return move(unique_ptr<TwoPointCorrelation_multipoles>(new TwoPointCorrelation_multipoles(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight)));
 
-  else if (type==_1D_wedges_) return move(unique_ptr<TwoPointCorrelation_wedges>(new TwoPointCorrelation_wedges(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2)));
+  else if (type==_1D_wedges_) return move(unique_ptr<TwoPointCorrelation_wedges>(new TwoPointCorrelation_wedges(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight)));
 
   else ErrorMsg("Error in cosmobl::twopt::TwoPointCorrelation::Create of TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!!");
   
@@ -170,8 +170,8 @@ void cosmobl::twopt::TwoPointCorrelation::count_pairs (const shared_ptr<Catalogu
     // if (tid == 0) cout << "Number of threads = " << omp_get_num_threads() << endl;
     
     // internal object used by each thread to handle pairs
-    shared_ptr<Pair> pp_thread = (pp->pairDim()==_1D_) ? move(Pair::Create(pp->pairType(), pp->sMin(), pp->sMax(), pp->nbins(), pp->shift()))
-      : move(Pair::Create(pp->pairType(), pp->sMin_D1(), pp->sMax_D1(), pp->nbins_D1(), pp->shift_D1(), pp->sMin_D2(), pp->sMax_D2(), pp->nbins_D2(), pp->shift_D2()));
+    shared_ptr<Pair> pp_thread = (pp->pairDim()==_1D_) ? move(Pair::Create(pp->pairType(), pp->sMin(), pp->sMax(), pp->nbins(), pp->shift(), pp->angularUnits(), pp->angularWeight()))
+      : move(Pair::Create(pp->pairType(), pp->sMin_D1(), pp->sMax_D1(), pp->nbins_D1(), pp->shift_D1(), pp->sMin_D2(), pp->sMax_D2(), pp->nbins_D2(), pp->shift_D2(), pp->angularUnits(), pp->angularWeight()));
     
     
     // parallelized loop
@@ -184,9 +184,9 @@ void cosmobl::twopt::TwoPointCorrelation::count_pairs (const shared_ptr<Catalogu
       // (i.e. objects inside the close cells of the chain-mesh)
       vector<long> close_objects = ChM.close_objects(cat1->coordinates(i), (cross) ? -1 : (long)i);
       
-      for (auto &&j : close_objects) // loop on the nearby objects
+      for (auto &&j : close_objects) // loop on the nearby objects 
 	pp_thread->put(cat1->catalogue_object(i), cat2->catalogue_object(j)); // estimate the distance between the two objects and update the pair count
-            
+      
       // estimate the computational time and update the time count
       time_t end_temp; time (&end_temp); double diff_temp = difftime(end_temp, start);
       if (tcount && tid==0) { cout << "\r..." << float(i)*fact_count << "% completed (" << diff_temp << " seconds)\r"; cout.flush(); }    
@@ -255,7 +255,7 @@ void cosmobl::twopt::TwoPointCorrelation::count_allPairs (const TwoPType type, c
 
   string file;
   
-  cout << endl << par::col_green << "data-data" << par::col_default << endl;
+  if (count_dd>0) cout << endl << par::col_green << "data-data" << par::col_default << endl;
 
   file = "dd.dat";
  
@@ -266,7 +266,7 @@ void cosmobl::twopt::TwoPointCorrelation::count_allPairs (const TwoPType type, c
   else if (count_dd==0) read_pairs(m_dd, dir_input_pairs, file);
   
   
-  cout << endl << par::col_green << "random-random" << par::col_default << endl;
+  if (count_rr>0) cout << endl << par::col_green << "random-random" << par::col_default << endl;
 
   file = "rr.dat";
  
@@ -277,7 +277,7 @@ void cosmobl::twopt::TwoPointCorrelation::count_allPairs (const TwoPType type, c
   else if (count_rr==0) read_pairs(m_rr, dir_input_pairs, file);
 
   
-  cout << endl << par::col_green << "data-random" << par::col_default << endl;
+  if (count_dr>0) cout << endl << par::col_green << "data-random" << par::col_default << endl;
 
   file = "dr.dat";
  
@@ -304,21 +304,12 @@ void cosmobl::twopt::TwoPointCorrelation::count_allPairs (const TwoPType type, c
 // ============================================================================
 
 
-double TwoPointCorrelation::PoissonError (const double dd, const double rr, const double dr, double nData, double nRandom) const
+double TwoPointCorrelation::PoissonError (const double dd, const double rr, const double dr, const int nData, const int nRandom) const
 {
-  double normDD = 2./(nData*(nData-1.));
-  double normRR = 2./(nRandom*(nRandom-1.));
-  double normDR = 1./(nData*nRandom);
-
-  return sqrt(pow(normDD/normRR*(sqrt(dd)/rr-dd/(rr*rr)*sqrt(rr)),2)+pow(2.*normDR/normRR*(sqrt(dr)/rr-dr/(rr*rr)*sqrt(rr)),2));
+  double norm1 = double(nRandom)*double(nRandom-1)/(double(nData)*double(nData-1));
+  double norm2 = double(nRandom-1)/double(nData);
   
-  /*
-  double DDn = dd*normDD;
-  double RRn = rr*normRR;
-  double DRn = dr*normDR;
-  double xi = max(-0.999,DDn/RRn-2.*DRn/RRn+1.); // check!!!
-  return sqrt(1.+xi)/rr*normDD/normRR;
-  */
+  return sqrt(pow(norm1*sqrt(dd)/rr,2)+pow(norm2*sqrt(dr)/rr,2)+pow((norm1*dd-norm2*dr)*pow(rr,-1.5),2));
 }
 
 
@@ -352,8 +343,8 @@ void cosmobl::twopt::TwoPointCorrelation::count_pairs_region (const shared_ptr<C
     vector<shared_ptr<Pair> > pp_thread(pp_regions.size());
 
     for (size_t i=0; i<pp_regions.size(); i++) 
-      pp_thread[i] = (pp->pairDim()==_1D_) ? move(Pair::Create(pp->pairType(), pp->sMin(), pp->sMax(), pp->nbins(), pp->shift()))
-	: move(Pair::Create(pp->pairType(), pp->sMin_D1(), pp->sMax_D1(), pp->nbins_D1(), pp->shift_D1(), pp->sMin_D2(), pp->sMax_D2(), pp->nbins_D2(), pp->shift_D2()));
+      pp_thread[i] = (pp->pairDim()==_1D_) ? move(Pair::Create(pp->pairType(), pp->sMin(), pp->sMax(), pp->nbins(), pp->shift(), pp->angularUnits(), pp->angularWeight()))
+	: move(Pair::Create(pp->pairType(), pp->sMin_D1(), pp->sMax_D1(), pp->nbins_D1(), pp->shift_D1(), pp->sMin_D2(), pp->sMax_D2(), pp->nbins_D2(), pp->shift_D2(), pp->angularUnits(), pp->angularWeight()));
     
     int nRegions = cat1->Nregion();
     
@@ -468,11 +459,11 @@ void cosmobl::twopt::TwoPointCorrelation::count_allPairs_region (vector<shared_p
 
   for (int i=0; i<nP; i++) {
 
-    dd_regions.push_back((m_dd->pairDim()==_1D_) ? move(Pair::Create(m_dd->pairType(), m_dd->sMin(), m_dd->sMax(), m_dd->nbins(), m_dd->shift())) : move(Pair::Create(m_dd->pairType(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2())));
+    dd_regions.push_back((m_dd->pairDim()==_1D_) ? move(Pair::Create(m_dd->pairType(), m_dd->sMin(), m_dd->sMax(), m_dd->nbins(), m_dd->shift(), m_dd->angularUnits(), m_dd->angularWeight())) : move(Pair::Create(m_dd->pairType(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2(), m_dd->angularUnits(), m_dd->angularWeight())));
     
-    rr_regions.push_back((m_rr->pairDim()==_1D_) ? move(Pair::Create(m_rr->pairType(), m_rr->sMin(), m_rr->sMax(), m_rr->nbins(), m_rr->shift())) : move(Pair::Create(m_rr->pairType(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2())));
+    rr_regions.push_back((m_rr->pairDim()==_1D_) ? move(Pair::Create(m_rr->pairType(), m_rr->sMin(), m_rr->sMax(), m_rr->nbins(), m_rr->shift(), m_rr->angularUnits(), m_rr->angularWeight())) : move(Pair::Create(m_rr->pairType(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2(), m_rr->angularUnits(), m_rr->angularWeight())));
 
-    dr_regions.push_back((m_dr->pairDim()==_1D_) ? move(Pair::Create(m_dr->pairType(), m_dr->sMin(), m_dr->sMax(), m_dr->nbins(), m_dr->shift())) : move(Pair::Create(m_dr->pairType(), m_dr->sMin_D1(), m_dr->sMax_D1(), m_dr->nbins_D1(), m_dr->shift_D1(), m_dr->sMin_D2(), m_dr->sMax_D2(), m_dr->nbins_D2(), m_dr->shift_D2())));
+    dr_regions.push_back((m_dr->pairDim()==_1D_) ? move(Pair::Create(m_dr->pairType(), m_dr->sMin(), m_dr->sMax(), m_dr->nbins(), m_dr->shift(), m_dr->angularUnits(), m_dr->angularWeight())) : move(Pair::Create(m_dr->pairType(), m_dr->sMin_D1(), m_dr->sMax_D1(), m_dr->nbins_D1(), m_dr->shift_D1(), m_dr->sMin_D2(), m_dr->sMax_D2(), m_dr->nbins_D2(), m_dr->shift_D2(), m_dr->angularUnits(), m_dr->angularWeight())));
 
   }
 

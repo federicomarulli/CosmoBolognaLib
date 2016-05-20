@@ -244,20 +244,28 @@ namespace cosmobl {
      *
      *  @param redshift redshift
      *
-     *  @param author author(s) who proposed the mass function; valid
+     *  @param author_MF author(s) who proposed the mass function; valid
      *  authors are: PS (Press & Schechter), ST (Sheth & Tormen),
      *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
      *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
      *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
      *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-     *  al. 2008), Angulo_FOF (FOF MF by Angulo et al. 2012),
-     *  Angulo_Sub (SUBFIND MF by Angulo et al. 2012)
+     *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+     *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+     *  al. 2012)
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *
      *  @return the mass function, d&Phi;/dM=dn(M)/dM
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
-    double MF_generator (const double, const double, const double, const double, const string, const double Delta=200.); 
+    double MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string author_MF, const double Delta=200.); 
 
     /**
      *  @brief auxiliary function to compute the halo bias
@@ -271,9 +279,16 @@ namespace cosmobl {
      *  2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the correction
      *  of Warren 2004), Tinker (Tinker et al. 2010)
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *
      *  @return the halo bias
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double bias_halo_generator (const double, const double, const string, const double Delta=200.) const;    
 
@@ -347,7 +362,7 @@ namespace cosmobl {
      *  @return sn<SUP>-1</SUP>(s|m)
      *
      *  @warning this method works only for a fixed value of the shape
-     *  parameter m=(2+3<SUP>0.5</SUP>))/4; the argument s must be in
+     *  parameter m=(2+3<SUP>0.5</SUP>)/4; the argument s must be in
      *  the range 0<s<1
      */
     double asn_dz (const double) const;
@@ -472,8 +487,8 @@ namespace cosmobl {
      *  @brief get the private member Cosmology::m_Omega_matter
      *
      *  @return &Omega;<SUB>M</SUB>: the matter density, i.e. the
-     *  density of baryons, cold dark matter, and massive neutrinos (in units of
-     *  the critical density)
+     *  density of baryons, cold dark matter, and massive neutrinos
+     *  (in units of the critical density)
      */
     double Omega_matter () const { return m_Omega_matter; }; 
 
@@ -684,6 +699,7 @@ namespace cosmobl {
       cout << "Omega_k = " << m_Omega_k << endl; 
       cout << "Omega_CDM = " << m_Omega_CDM << endl;
       cout << "h = " << m_hh << endl;
+      cout << "scalar_amp " << m_scalar_amp << endl;
       cout << "n_spec = " << m_n_spec << endl;
       cout << "w0 = " << m_w0 << endl;
       cout << "wa = " << m_wa << endl;
@@ -1238,7 +1254,7 @@ namespace cosmobl {
      *  @param redshift redshift
      *  @return &Delta;<SUB>vir</SUB>
      */
-    double Deltavir(const double) const; 
+    double Deltavir (const double redshift) const; 
 
     ///@}
     
@@ -1432,14 +1448,15 @@ namespace cosmobl {
      *
      *  @param redshift redshift
      *
-     *  @param author author(s) who proposed the mass function; valid
-     *  authors are: PS (Press&Schechter), ST (Sheth&Tormen), Jenkins
-     *  (Jenkins et al. 2001), Warren (Warren et al. 2006), Reed,
-     *  (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by Shen et
-     *  al. 2006), ShenF (filaments MF by Shen et al. 2006), ShenS
-     *  (sheets MF by Shen et al. 2006), Tinker (Tinker et al. 2008),
-     *  Angulo_FOF (FOF MF by Angulo et al. 2012), Angulo_Sub (SUBFIND
-     *  MF by Angulo et al. 2012)
+     *  @param author_MF author(s) who proposed the mass function; valid
+     *  authors are: PS (Press & Schechter), ST (Sheth & Tormen),
+     *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
+     *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
+     *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
+     *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
+     *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+     *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+     *  al. 2012)
      *
      *  @param method_SS method used to compute the power spectrum and
      *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
@@ -1450,7 +1467,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *
      *  @param interpType method to interpolate the power spectrum
      *
@@ -1478,8 +1496,14 @@ namespace cosmobl {
      *  ignoring the cosmological parameters of the object
      *
      *  @return the mass function, d&Phi;/dM=dn(M)/dM
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
-    double mass_function (const double, const double, const string, const string, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+    double mass_function (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
 
     /**
      *  @brief the mass function of dark matter haloes (filaments and
@@ -1489,14 +1513,15 @@ namespace cosmobl {
      *
      *  @param redshift redshift
      *
-     *  @param author author(s) who proposed the mass function; valid
-     *  authors are: PS (Press&Schechter), ST (Sheth&Tormen), Jenkins
-     *  (Jenkins et al. 2001), Warren (Warren et al. 2006), Reed,
-     *  (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by Shen et
-     *  al. 2006), ShenF (filaments MF by Shen et al. 2006), ShenS
-     *  (sheets MF by Shen et al. 2006), Tinker (Tinker et al. 2008),
-     *  Angulo_FOF (FOF MF by Angulo et al. 2012), Angulo_Sub (SUBFIND
-     *  MF by Angulo et al. 2012)
+     *  @param author_MF author(s) who proposed the mass function; valid
+     *  authors are: PS (Press & Schechter), ST (Sheth & Tormen),
+     *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
+     *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
+     *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
+     *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
+     *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+     *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+     *  al. 2012)
      *
      *  @param method_SS method used to compute the power spectrum and
      *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
@@ -1507,7 +1532,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *
      *  @param interpType method to interpolate the power spectrum
      *
@@ -1535,8 +1561,14 @@ namespace cosmobl {
      *  ignoring the cosmological parameters of the object
      *
      *  @return the mass function, d&Phi;/dM=dn(M)/dM
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
-    double mass_function_fast (const double, const double, const string, const string, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
+    double mass_function_fast (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
 
     /**
      *  @brief the mass function of dark matter haloes (filaments and
@@ -1552,20 +1584,22 @@ namespace cosmobl {
      *
      *  @param redshift redshift
      *
-     *  @param author_MF author(s) who proposed the mass function; valid
-     *  authors are: PS (Press&Schechter), ST (Sheth&Tormen), Jenkins
-     *  (Jenkins et al. 2001), Warren (Warren et al. 2006), Reed,
-     *  (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by Shen et
-     *  al. 2006), ShenF (filaments MF by Shen et al. 2006), ShenS
-     *  (sheets MF by Shen et al. 2006), Tinker (Tinker et al. 2008),
-     *  Angulo_FOF (FOF MF by Angulo et al. 2012), Angulo_Sub (SUBFIND
-     *  MF by Angulo et al. 2012)
+     *  @param author_MF author(s) who proposed the mass function;
+     *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
+     *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
+     *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
+     *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
+     *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
+     *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+     *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+     *  al. 2012)
      * 
      *  @param output_root output_root of the parameter file used to
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *
      *  @param interpType method to interpolate the power spectrum
      *
@@ -1598,6 +1632,12 @@ namespace cosmobl {
      *  ignoring the cosmological parameters of the object
      *
      *  @return the mass function, d&Phi;/dM=dn(M)/dM
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double mass_function (const double, const double, const double, const double, const string, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string method_SS="CAMB", const string file_par=par::defaultString); 
     
@@ -1622,8 +1662,9 @@ namespace cosmobl {
      *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
      *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
      *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-     *  al. 2008), Angulo_FOF (FOF MF by Angulo et al. 2012),
-     *  Angulo_Sub (SUBFIND MF by Angulo et al. 2012)
+     *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+     *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+     *  al. 2012)
      *
      *  @param method_SS method used to compute the power spectrum and
      *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
@@ -1676,14 +1717,15 @@ namespace cosmobl {
      *  @param lgM2_guess logarithm of the maximum mass used by the
      *  root finder
      *  
-     *  @param author_MF author(s) who proposed the mass function; valid
-     *  authors are: PS (Press&Schechter), ST (Sheth&Tormen), Jenkins
-     *  (Jenkins et al. 2001), Warren (Warren et al. 2006), Reed,
-     *  (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by Shen et
-     *  al. 2006), ShenF (filaments MF by Shen et al. 2006), ShenS
-     *  (sheets MF by Shen et al. 2006), Tinker (Tinker et al. 2008),
-     *  Angulo_FOF (FOF MF by Angulo et al. 2012), Angulo_Sub (SUBFIND
-     *  MF by Angulo et al. 2012)
+     *  @param author_MF author(s) who proposed the mass function;
+     *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
+     *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
+     *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
+     *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
+     *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
+     *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+     *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+     *  al. 2012)
      *
      *  @param method_SS method used to compute the power spectrum and
      *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
@@ -1901,6 +1943,33 @@ namespace cosmobl {
     double Pk_UnNorm (const double, const double, const string) const; // unnormalized power spectrum
 
     /**
+     *  @brief return the path to the power spectrum output
+     *
+     *  @param code method used to compute the power spectrum
+     * 
+     *  @param NL 0 &rarr; linear power spectrum; 1 &rarr; non-linear
+     *  power spectrum
+     * 
+     *  @param redshift the redshift
+     *
+     *  @param run true &rarr; write or read the table where the dark
+     *  matter power spectrum is stored
+     *
+     *  @param output_root output_root of the parameter file used to
+     *  compute the power spectrum; it can be any name
+     *
+     *  @param k_max the maximum wave vector module up to which the
+     *  power spectrum is computed
+     *
+     *  @param file_par name of the parameter file; if a parameter
+     *  file is provided (i.e. file_par!=NULL), it will use be used,
+     *  ignoring the cosmological parameters of the object
+     *
+     *  @return the path to the power spectrum output
+     */
+    string Pk_output_file (const string code, const bool NL, const double redshift, const bool run=0, const string output_root="test", const double k_max=100., const string file_par=par::defaultString);
+
+    /**
      *  @brief run CAMB [http://camb.info/]
      *  
      *  this function runs CAMB [http://camb.info/], after editing the parameter file
@@ -2069,6 +2138,61 @@ namespace cosmobl {
      *  @return P(k)
      */
     double Pk (const double, const string, const bool, const double, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
+
+    /**
+     *  @brief return power spectrum first three multipoles using linear kaiser model
+     *
+     *  this function provides the power spectrum P(k); it can use
+     *  either CAMB, CLASS, MPTbreeze or the analytic
+     *  approximation by Eisenstein & Hu
+     *
+     *  @param method_Pk method used to compute the power spectrum; valid
+     *  choices for method_Pk are: CAMB [http://camb.info/], classgal_v1
+     *  [http://class-code.net/], MPTbreeze-v1
+     *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+     *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+     *
+     *  @param Pk0 the monopole of the power spectrum
+     *
+     *  @param Pk2 the quadrupole of the power spectrum
+     *
+     *  @param Pk4 the hexadecapole of the power spectrum
+     *
+     *  @param kk the scale at which compute the power spectrum
+     *
+     *  @param NL 0 &rarr; linear power spectrum; 1 &rarr; non-linear power
+     *  spectrum
+     *
+     *  @param redshift redshift
+     * 
+     *  @param bias the linear bias
+     *
+     *  @param sigma_NL the BAO damping parameter
+     *
+     *  @param output_root output_root of the parameter file used to
+     *  compute the power spectrum; it can be any name
+     *
+     *  @param norm 0 &rarr; don't normalize the power spectrum; 1 &rarr;
+     *  normalize the power spectrum
+     *
+     *  @param k_min minimum wave vector module up to which the power
+     *  spectrum is computed
+     *
+     *  @param k_max maximum wave vector module up to which the power
+     *  spectrum is computed
+     *
+     *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr; the
+     *  GSL libraries are used
+     *
+     *  @param prec accuracy of the GSL integration 
+     *
+     *  @param file_par name of the parameter file; if a parameter
+     *  file is provided (i.e. file_par!=NULL), it will be used,
+     *  ignoring the cosmological parameters of the object
+     *
+     *  @return none
+     */
+    void Pk_Kaiser_multipoles (vector<double> &, vector<double> &, vector<double> &, const vector<double>, const string, const bool, const double, const double, const double sigma_NL = 0., const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
 
     /**
      *  @brief the dark matter power spectrum, de-wiggled (see e.g. Anderson et al 2014)
@@ -2524,6 +2648,9 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
+     *  @param NL 0 &rarr; linear power spectrum; 1 &rarr; non-linear power
+     *  spectrum
+     *
      *  @param norm 0 &rarr; don't normalize the power spectrum; 1 &rarr;
      *  normalize the power spectrum
      *
@@ -2554,7 +2681,7 @@ namespace cosmobl {
      *  @return w<SUB>p,DM</SUB>(&theta;): the projected correlation
      *  function of dark matter
      */
-    double wp_DM (const double, const string, const double, const string output_root="test", const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+    double wp_DM (const double, const string, const double, const string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
 
     /**
      *  @brief the k<SUB>*</SUB> parameter 
@@ -2705,7 +2832,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *  
      *  @param kk wave vector module
      *
@@ -2728,6 +2856,12 @@ namespace cosmobl {
      *  used, ignoring the cosmological parameters of the object
      *
      *  @return b<SUB>halo</SUB>: the dark matter bias
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double bias_halo (const double, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
 
@@ -2749,7 +2883,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *  
      *  @param kk wave vector module
      *
@@ -2777,6 +2912,12 @@ namespace cosmobl {
      *  used, ignoring the cosmological parameters of the object
      *
      *  @return b<SUB>halo</SUB>: the dark matter bias
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double bias_halo (const double, const double, const double, const string, const string output_root="test", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string method_SS="CAMB", const string file_par=par::defaultString);
   
@@ -2800,8 +2941,9 @@ namespace cosmobl {
      *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
      *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
      *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-     *  al. 2008), Angulo_FOF (FOF MF by Angulo et al. 2012),
-     *  Angulo_Sub (SUBFIND MF by Angulo et al. 2012)
+     *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+     *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+     *  al. 2012)
      *
      *  @param method_SS method used to compute the power spectrum and
      *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
@@ -2812,7 +2954,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *  
      *  @param kk wave vector module
      *
@@ -2842,6 +2985,12 @@ namespace cosmobl {
      *  used, ignoring the cosmological parameters of the object
      *
      *  @return b<SUB>eff</SUB>: the effective dark matter bias
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double bias_eff (const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
  
@@ -2868,7 +3017,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *  
      *  @param kk wave vector module
      *
@@ -2898,6 +3048,12 @@ namespace cosmobl {
      *  used, ignoring the cosmological parameters of the object
      *
      *  @return b<SUB>eff</SUB>: the effective dark matter bias
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double bias_eff (const vector<double>, const vector<double>, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
 
@@ -2997,8 +3153,9 @@ namespace cosmobl {
      *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
      *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
      *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-     *  al. 2008), Angulo_FOF (FOF MF by Angulo et al. 2012),
-     *  Angulo_Sub (SUBFIND MF by Angulo et al. 2012)
+     *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+     *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+     *  al. 2012)
      *
      *  @param method_SS method used to compute the power spectrum and
      *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
@@ -3009,7 +3166,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *  
      *  @param kk wave vector module
      *
@@ -3040,6 +3198,12 @@ namespace cosmobl {
      *
      *  @return &beta;=f/b, where f is the linear growth rate and b is
      *  the bias
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double beta (const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
 
@@ -3063,8 +3227,9 @@ namespace cosmobl {
      *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
      *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
      *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-     *  al. 2008), Angulo_FOF (FOF MF by Angulo et al. 2012),
-     *  Angulo_Sub (SUBFIND MF by Angulo et al. 2012)
+     *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+     *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+     *  al. 2012)
      *
      *  @param method_SS method used to compute the power spectrum and
      *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
@@ -3077,7 +3242,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *  
      *  @param kk wave vector module
      *
@@ -3108,6 +3274,12 @@ namespace cosmobl {
      *
      *  @return error on &beta;=f/b, where f is the linear growth rate and b is
      *  the bias
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double error_beta (const double, const double, const double, const string, const string, const string, const double, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
   
@@ -3134,7 +3306,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *  
      *  @param kk wave vector module
      *
@@ -3165,6 +3338,12 @@ namespace cosmobl {
      *
      *  @return &beta;=f/b, where f is the linear growth rate and b is
      *  the bias
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double beta (const vector<double>, const vector<double>, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
 
@@ -3193,7 +3372,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *  
      *  @param kk wave vector module
      *
@@ -3224,6 +3404,12 @@ namespace cosmobl {
      *
      *  @return error on &beta;=f/b, where f is the linear growth rate and b is
      *  the bias
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double error_beta (const vector<double>, const vector<double>, const double, const string, const string, const double, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
  
@@ -3252,8 +3438,9 @@ namespace cosmobl {
      *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
      *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
      *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-     *  al. 2008), Angulo_FOF (FOF MF by Angulo et al. 2012),
-     *  Angulo_Sub (SUBFIND MF by Angulo et al. 2012)
+     *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+     *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+     *  al. 2012)
      *
      *  @param method_SS method used to compute the power spectrum and
      *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
@@ -3264,7 +3451,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *  
      *  @param kk wave vector module
      *
@@ -3295,6 +3483,12 @@ namespace cosmobl {
      *
      *  @return error on &beta;=f/b, where f is the linear growth rate
      *  and b is the bias
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double error_beta_measured (const double, const double, const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
 
@@ -3318,8 +3512,9 @@ namespace cosmobl {
      *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
      *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
      *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-     *  al. 2008), Angulo_FOF (FOF MF by Angulo et al. 2012),
-     *  Angulo_Sub (SUBFIND MF by Angulo et al. 2012)
+     *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+     *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+     *  al. 2012)
      *
      *  @param method_SS method used to compute the power spectrum and
      *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
@@ -3330,7 +3525,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *  
      *  @param kk wave vector module
      *
@@ -3360,6 +3556,12 @@ namespace cosmobl {
      *  used, ignoring the cosmological parameters of the object
      *
      *  @return Q: the normalized quadrupole
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double quadrupole (const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
 
@@ -3386,7 +3588,8 @@ namespace cosmobl {
      *  compute the power spectrum and &sigma;(mass); it can be any
      *  name
      *
-     *  @param Delta &Delta;: the overdensity
+     *  @param Delta &Delta;: the overdensity, defined as the mean
+     *  interior density relative to the background
      *  
      *  @param kk wave vector module
      *
@@ -3415,7 +3618,13 @@ namespace cosmobl {
      *  parameter file is provided (i.e. file_par!=NULL), it will be
      *  used, ignoring the cosmological parameters of the object
      *
-     *  @return Q: the normalized quadrupole 
+     *  @return Q: the normalized quadrupole
+     *
+     *  @warning the input parameter &Delta; is used only in the
+     *  Tinker mass function; it is the background overdensity, not
+     *  the critical overdensity &Delta;<SUB>crit</SUB>; the function
+     *  cosmobl::Cosmology::DeltaR can be used to convert
+     *  &Delta;<SUB>crit</SUB> into &Delta;
      */
     double quadrupole (const vector<double>, const vector<double>, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
 
@@ -4575,6 +4784,18 @@ namespace cosmobl {
 
     ///@}
 
+    /**
+     *  @name Functions to estimate the multipoles/wedges covariance matrix
+     */
+    ///@{
+
+    vector<vector<double>> get_XiMonopole_covariance(const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod=1);
+
+    vector<vector<double>> get_XiMultipoles(const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
+
+    vector<vector<double>> get_XiMultipoles_covariance(const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
+
+    ///@}
   };
 
 

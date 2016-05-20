@@ -45,30 +45,30 @@ using namespace twopt;
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation2D_polar::set_parameters (const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu) 
+void cosmobl::twopt::TwoPointCorrelation2D_polar::set_parameters (const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits, function<double(double)> angularWeight) 
 {
   if (binType_rad==_logarithmic_) {
     if (binType_mu==_logarithmic_) {
-      m_dd = move(Pair::Create(_comovingPolar_loglog_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu));
-      m_rr = move(Pair::Create(_comovingPolar_loglog_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu));
-      m_dr = move(Pair::Create(_comovingPolar_loglog_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu));
+      m_dd = move(Pair::Create(_comovingPolar_loglog_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight));
+      m_rr = move(Pair::Create(_comovingPolar_loglog_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight));
+      m_dr = move(Pair::Create(_comovingPolar_loglog_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight));
     }
     else {
-      m_dd = move(Pair::Create(_comovingPolar_loglin_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu));
-      m_rr = move(Pair::Create(_comovingPolar_loglin_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu));
-      m_dr = move(Pair::Create(_comovingPolar_loglin_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu));
+      m_dd = move(Pair::Create(_comovingPolar_loglin_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight));
+      m_rr = move(Pair::Create(_comovingPolar_loglin_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight));
+      m_dr = move(Pair::Create(_comovingPolar_loglin_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight));
     }
   }
   else {
     if (binType_mu==_logarithmic_) {
-      m_dd = move(Pair::Create(_comovingPolar_linlog_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu));
-      m_rr = move(Pair::Create(_comovingPolar_linlog_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu));
-      m_dr = move(Pair::Create(_comovingPolar_linlog_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu));
+      m_dd = move(Pair::Create(_comovingPolar_linlog_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight));
+      m_rr = move(Pair::Create(_comovingPolar_linlog_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight));
+      m_dr = move(Pair::Create(_comovingPolar_linlog_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight));
     }
     else {
-      m_dd = move(Pair::Create(_comovingPolar_linlin_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu));
-      m_rr = move(Pair::Create(_comovingPolar_linlin_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu));
-      m_dr = move(Pair::Create(_comovingPolar_linlin_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu));
+      m_dd = move(Pair::Create(_comovingPolar_linlin_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight));
+      m_rr = move(Pair::Create(_comovingPolar_linlin_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight));
+      m_dr = move(Pair::Create(_comovingPolar_linlin_, rMin, rMax, nbins_rad, shift_rad, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight));
     }
   }
 }
@@ -77,30 +77,30 @@ void cosmobl::twopt::TwoPointCorrelation2D_polar::set_parameters (const binType 
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation2D_polar::set_parameters (const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu)
+void cosmobl::twopt::TwoPointCorrelation2D_polar::set_parameters (const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits, function<double(double)> angularWeight)
 {
   if (binType_rad==_logarithmic_) {
     if (binType_mu==_logarithmic_) {
-      m_dd = move(Pair::Create(_comovingPolar_loglog_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu));
-      m_rr = move(Pair::Create(_comovingPolar_loglog_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu));
-      m_dr = move(Pair::Create(_comovingPolar_loglog_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu));
+      m_dd = move(Pair::Create(_comovingPolar_loglog_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight));
+      m_rr = move(Pair::Create(_comovingPolar_loglog_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight));
+      m_dr = move(Pair::Create(_comovingPolar_loglog_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight));
     }
     else {
-      m_dd = move(Pair::Create(_comovingPolar_loglin_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu));
-      m_rr = move(Pair::Create(_comovingPolar_loglin_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu));
-      m_dr = move(Pair::Create(_comovingPolar_loglin_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu));
+      m_dd = move(Pair::Create(_comovingPolar_loglin_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight));
+      m_rr = move(Pair::Create(_comovingPolar_loglin_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight));
+      m_dr = move(Pair::Create(_comovingPolar_loglin_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight));
     }
   }
   else {
     if (binType_mu==_logarithmic_) {
-      m_dd = move(Pair::Create(_comovingPolar_linlog_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu));
-      m_rr = move(Pair::Create(_comovingPolar_linlog_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu));
-      m_dr = move(Pair::Create(_comovingPolar_linlog_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu));
+      m_dd = move(Pair::Create(_comovingPolar_linlog_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight));
+      m_rr = move(Pair::Create(_comovingPolar_linlog_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight));
+      m_dr = move(Pair::Create(_comovingPolar_linlog_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight));
     }
     else {
-      m_dd = move(Pair::Create(_comovingPolar_linlin_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu));
-      m_rr = move(Pair::Create(_comovingPolar_linlin_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu));
-      m_dr = move(Pair::Create(_comovingPolar_linlin_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu));
+      m_dd = move(Pair::Create(_comovingPolar_linlin_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight));
+      m_rr = move(Pair::Create(_comovingPolar_linlin_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight));
+      m_dr = move(Pair::Create(_comovingPolar_linlin_, rMin, rMax, binSize_rad, shift_rad, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight));
     }
   }
 }
@@ -121,7 +121,7 @@ void cosmobl::twopt::TwoPointCorrelation2D_polar::read(const string dir, const s
 void cosmobl::twopt::TwoPointCorrelation2D_polar::write (const string dir, const string file, const int rank) const 
 {
   checkDim(m_dataset->xx(), m_dd->nbins_D1(), "rad"); checkDim(m_dataset->yy(), m_dd->nbins_D2(), "mu");
-  m_dataset->write(dir, file, "r", "mu", "xi", rank);
+  m_dataset->write(dir, file, "r", "mu", "xi", true, rank);
 }
 
 
@@ -198,7 +198,7 @@ void cosmobl::twopt::TwoPointCorrelation2D_polar::measureJackknife (const string
   for (int i=0; i<nRegions; i++) {
 
     if (dir_output_JackknifeXi !=par::defaultString) {
-      string file = "xi_Jackknife_"+conv(i, par::fINT);
+      string file = "xi_Jackknife_"+conv(i, par::fINT)+".dat";
       data_SS[i]->write(dir_output_JackknifeXi, file, "r", "mu", "xi", 0);
     }
 
@@ -254,7 +254,7 @@ void cosmobl::twopt::TwoPointCorrelation2D_polar::measureBootstrap (const int nM
   for (int i=0; i<nMocks; i++) {
 
     if (dir_output_BootstrapXi!=par::defaultString) {
-      string file = "xi_Bootstrap_"+conv(i, par::fINT);
+      string file = "xi_Bootstrap_"+conv(i, par::fINT)+".dat";
       data_SS[i]->write(dir_output_BootstrapXi, file, "r", "mu", "xi", 0);
     }
 

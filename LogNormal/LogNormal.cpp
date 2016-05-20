@@ -88,16 +88,14 @@ void cosmobl::LogNormal::generate_LogNormal_mock (const double rmin, const strin
 
   
   // compute the visibility mask
-  vector<double> Lim, stat;
-  m_random->MinMax_var(Var::_X_,Lim, 0);
-  m_random->MinMax_var(Var::_Y_,Lim, 0);
-  m_random->MinMax_var(Var::_Z_,Lim, 0);
   
-  double DeltaX = (Lim[1]-Lim[0]); 
-  double DeltaY = (Lim[3]-Lim[2]); 
-  double DeltaZ = (Lim[5]-Lim[4]); 
+  double DeltaX = (m_random->Max(Var::_X_)-m_random->Min(Var::_X_)); 
+  double DeltaY = (m_random->Max(Var::_Y_)-m_random->Min(Var::_Y_)); 
+  double DeltaZ = (m_random->Max(Var::_Z_)-m_random->Min(Var::_Z_)); 
 
-  int nTot =m_random->nObjects();
+  int nTot = m_random->nObjects();
+  
+  vector<double> stat;
   m_data->stats_var(Var::_Redshift_, stat);
 
   int nx = DeltaX/m_rmin;
@@ -136,9 +134,9 @@ void cosmobl::LogNormal::generate_LogNormal_mock (const double rmin, const strin
   }
 
   for (int i=0;i<nTot; i++) {
-    int i1 = min(int((m_random->xx(i)-Lim[0])/xmin),nx-1);
-    int j1 = min(int((m_random->yy(i)-Lim[2])/ymin),ny-1);
-    int z1 = min(int((m_random->zz(i)-Lim[4])/zmin),nz-1);
+    int i1 = min(int((m_random->xx(i)-m_random->Min(Var::_X_))/xmin), nx-1);
+    int j1 = min(int((m_random->yy(i)-m_random->Min(Var::_Y_))/ymin), ny-1);
+    int z1 = min(int((m_random->zz(i)-m_random->Min(Var::_Z_))/zmin), nz-1);
     long int index = z1+nz*(j1+ny*i1);
     grid[index] += 1./nTot;
   }
@@ -151,11 +149,11 @@ void cosmobl::LogNormal::generate_LogNormal_mock (const double rmin, const strin
     double beta = ff/m_bias;
     double fact = pow(m_bias,2);
     fact = (m_Real) ? fact : fact*(1+2.*beta/3.+0.2*beta*beta);
-    cout << fact << " " << pow(m_bias,2) << endl;
+    cout << fact << "   " << pow(m_bias,2) << endl;
 
     for (size_t i=0; i<kG.size(); i++) {
       kG[i] = pow(10,kG[i]);
-      PkG.push_back(fact*m_cosmology->Pk(kG[i],m_author,m_NL,stat[0],m_model));
+      PkG.push_back(fact*m_cosmology->Pk(kG[i], m_author, m_NL, stat[0], m_model));
     }
 
     double xfact = 2*par::pi/(nx*xmin);
@@ -171,7 +169,7 @@ void cosmobl::LogNormal::generate_LogNormal_mock (const double rmin, const strin
 	  double kk = pow(kx*kx+ky*ky+kz*kz, 0.5);
 	  long int kindex = k+nzp*(j+ny*i);
 	  
-	  ppkk[kindex][0] = interpolated(kk, kG, PkG, "Poly", 4)/VV;
+	  ppkk[kindex][0] = interpolated(kk, kG, PkG, "Poly")/VV;
 	}
       }
     }
@@ -282,9 +280,9 @@ void cosmobl::LogNormal::generate_LogNormal_mock (const double rmin, const strin
 	  int no = distribution(generator);
 
 	  for (int nnoo = 0; nnoo<no; nnoo++) {
-	    double XX = xmin*(i+ran(gen))+Lim[0];
-	    double YY = ymin*(j+ran(gen))+Lim[2];
-	    double ZZ = zmin*(k+ran(gen))+Lim[4];
+	    double XX = xmin*(i+ran(gen))+m_random->Min(Var::_X_);
+	    double YY = ymin*(j+ran(gen))+m_random->Min(Var::_Y_);
+	    double ZZ = zmin*(k+ran(gen))+m_random->Min(Var::_Z_);
 	    shared_ptr<Galaxy> SMP(new Galaxy(XX, YY, ZZ, 1.));
 	    mock_sample.push_back(SMP);
 	  }

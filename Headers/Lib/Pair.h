@@ -118,13 +118,13 @@ namespace cosmobl {
        *  @brief set the binning parameters given the number of bins
        *  @return none
        */
-      virtual void set_parameters_nbins () = 0;
+      virtual void m_set_parameters_nbins () = 0;
   
       /**
        *  @brief set the binning parameters given the bin size
        *  @return none
        */
-      virtual void set_parameters_binSize () = 0;
+      virtual void m_set_parameters_binSize () = 0;
   
       ///@}
 
@@ -136,6 +136,14 @@ namespace cosmobl {
               
       /// pair type
       PairType m_pairType;
+
+      /// angular units
+      CoordUnits m_angularUnits;
+  
+      /// angular weight function
+      function<double(double)> m_angularWeight;
+      
+      /// 
 
       
     public:
@@ -149,13 +157,13 @@ namespace cosmobl {
        *  @brief default constuctor
        *  @return object of class Pair
        */
-      Pair () {}
+      Pair () = default;
 
       /**
        *  @brief default destructor
        *  @return none
        */
-      virtual ~Pair () {}
+      virtual ~Pair () = default;
     
       /**
        *  @brief static factory used to construct pairs of any type
@@ -170,10 +178,12 @@ namespace cosmobl {
        *  @param nbins number of bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *
        *  @return a pointer to an object of class Pair of a given type
        */
-      static shared_ptr<Pair> Create (const PairType type, const double Min, const double Max, const int nbins, const double shift);
+      static shared_ptr<Pair> Create (const PairType type, const double Min, const double Max, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
 
       /**
        *  @brief static factory used to construct pairs of any type
@@ -188,10 +198,12 @@ namespace cosmobl {
        *  @param binSize the bin size
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *
        *  @return a pointer to an object of class Pair of a given type
        */
-      static shared_ptr<Pair> Create (const PairType type, const double Min, const double Max, const double binSize, const double shift);
+      static shared_ptr<Pair> Create (const PairType type, const double Min, const double Max, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
 
       /**
        *  @brief static factory used to construct pairs of any type
@@ -217,10 +229,12 @@ namespace cosmobl {
        *  @param nbins_D2 number of bins in the second direction
        *  @param shift_D2 shift parameter in the second direction,
        *  i.e. the radial shift is binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *
        *  @return a pointer to an object of class Pair of a given type
        */
-      static shared_ptr<Pair> Create (const PairType type, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2);
+      static shared_ptr<Pair> Create (const PairType type, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
 
       /**
        *  @brief static factory used to construct pairs of any type
@@ -246,10 +260,12 @@ namespace cosmobl {
        *  @param binSize_D2 the bin size in the second direction
        *  @param shift_D2 shift parameter in the second direction,
        *  i.e. the radial shift is binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *
        *  @return a pointer to an object of class Pair of a given type
        */
-      static shared_ptr<Pair> Create (const PairType type, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2);
+      static shared_ptr<Pair> Create (const PairType type, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
       
       ///@}
 
@@ -270,7 +286,19 @@ namespace cosmobl {
        *  @return the pair type
        */
       PairType pairType () const { return m_pairType; }
-      
+
+      /**
+       *  @brief get the angular units
+       *  @return the angular units
+       */
+      CoordUnits angularUnits () { return m_angularUnits; }
+
+      /**
+       *  @brief get the m_angularWeight function
+       *  @return the m_angularWeight function 
+       */
+      function<double(double)> angularWeight () { return m_angularWeight; }
+       
       /**
        *  @brief get the member m_scale[i]
        *  @param i the bin index

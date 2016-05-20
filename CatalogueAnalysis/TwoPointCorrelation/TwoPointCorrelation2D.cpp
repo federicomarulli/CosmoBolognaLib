@@ -164,7 +164,7 @@ shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation2D::NaturalEstimatorTwoP (co
   xi.resize(m_dd->nbins_D1(),vector<double>(m_dd->nbins_D2(),0));
   error.resize(m_dd->nbins_D1(),vector<double>(m_dd->nbins_D2(),0));
 
-  double norm = double(nRandom)*double(nRandom-1)/(nData*double(nData-1));
+  double norm = double(nRandom)*double(nRandom-1)/(double(nData)*double(nData-1));
 
   for (int i=0; i<dd->nbins_D1(); i++) {
     scale_D1[i] = dd->scale_D1(i);
@@ -200,8 +200,8 @@ shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation2D::LandySzalayEstimatorTwoP
   xi.resize(m_dd->nbins_D1(),vector<double>(m_dd->nbins_D2(),0));
   error.resize(m_dd->nbins_D1(),vector<double>(m_dd->nbins_D2(),0));
   
-  double norm = double(nRandom)*double(nRandom-1)/(nData*double(nData-1));
-  double norm1 = double(nRandom-1)/nData;
+  double norm1 = double(nRandom)*double(nRandom-1)/(double(nData)*double(nData-1));
+  double norm2 = double(nRandom-1)/double(nData);
 
   for (int i=0; i<dd->nbins_D1(); i++) {
     scale_D1[i] = dd->scale_D1(i);
@@ -213,7 +213,7 @@ shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation2D::LandySzalayEstimatorTwoP
 
       if (dd->PP2D(i,j)>0 && rr->PP2D(i,j)>0) {
 
-	xi[i][j] = max(-1., norm*dd->PP2D(i,j)/rr->PP2D(i,j)-norm1*dr->PP2D(i,j)/rr->PP2D(i,j)+1.);
+	xi[i][j] = max(-1., norm1*dd->PP2D(i,j)/rr->PP2D(i,j)-norm2*dr->PP2D(i,j)/rr->PP2D(i,j)+1.);
 
 	error[i][j]= PoissonError(dd->PP2D(i,j), rr->PP2D(i,j), dr->PP2D(i,j),nData,nRandom); 
       }
@@ -235,8 +235,8 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation2D::XiJackknife(con
   vector<shared_ptr<Data> > data;
 
   for(int i=0;i<nRegions;i++){
-    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2());
-    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2());
+    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2(), m_dd->angularUnits(), m_dd->angularWeight());
+    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2(), m_rr->angularUnits(), m_rr->angularWeight());
 
     double nData_SS = m_data->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 1);
     double nRandom_SS = m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 1);
@@ -278,9 +278,9 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation2D::XiJackknife(con
 
   for(int i=0;i<nRegions;i++){
 
-    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2());
-    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2());
-    auto dr_SS = Pair::Create(m_dr->pairType(), m_dr->sMin_D1(), m_dr->sMax_D1(), m_dr->nbins_D1(), m_dr->shift_D1(), m_dr->sMin_D2(), m_dr->sMax_D2(), m_dr->nbins_D2(), m_dr->shift_D2());
+    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2(), m_dd->angularUnits(), m_dd->angularWeight());
+    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2(), m_rr->angularUnits(), m_rr->angularWeight());
+    auto dr_SS = Pair::Create(m_dr->pairType(), m_dr->sMin_D1(), m_dr->sMax_D1(), m_dr->nbins_D1(), m_dr->shift_D1(), m_dr->sMin_D2(), m_dr->sMax_D2(), m_dr->nbins_D2(), m_dr->shift_D2(), m_dr->angularUnits(), m_dr->angularWeight());
 
     double nData_SS = m_data->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 1);
     double nRandom_SS = m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 1);
@@ -338,10 +338,10 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation2D::XiBootstrap(con
   int val=3; //See Norberg et al. 2009
 
   for(int i=0;i<nMocks;i++){
-    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2());
-    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2());
-
-    double nData_SS=0, nRandom_SS=0;
+    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2(), m_dd->angularUnits(), m_dd->angularWeight());
+    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2(), m_rr->angularUnits(), m_rr->angularWeight());
+    
+    double nData_SS = 0., nRandom_SS = 0.;
 
     vector<int> w(nRegions, 0);
     for (int n=0; n<val*nRegions; n++)
@@ -393,9 +393,9 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation2D::XiBootstrap(con
   int val=3; //See Norberg et al. 2009
 
   for(int i=0;i<nMocks;i++){
-    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2());
-    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2());
-    auto dr_SS = Pair::Create(m_dr->pairType(), m_dr->sMin_D1(), m_dr->sMax_D1(), m_dr->nbins_D1(), m_dr->shift_D1(), m_dr->sMin_D2(), m_dr->sMax_D2(), m_dr->nbins_D2(), m_dr->shift_D2());
+    auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2(), m_dd->angularUnits(), m_dd->angularWeight());
+    auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2(), m_rr->angularUnits(), m_rr->angularWeight());
+    auto dr_SS = Pair::Create(m_dr->pairType(), m_dr->sMin_D1(), m_dr->sMax_D1(), m_dr->nbins_D1(), m_dr->shift_D1(), m_dr->sMin_D2(), m_dr->sMax_D2(), m_dr->nbins_D2(), m_dr->shift_D2(), m_dr->angularUnits(), m_dr->angularWeight());
 
     double nData_SS=0, nRandom_SS=0;
 

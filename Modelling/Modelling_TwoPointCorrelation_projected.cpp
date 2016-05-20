@@ -76,7 +76,7 @@ void cosmobl::modelling::Modelling_TwoPointCorrelation_projected::fit_bias (cons
     ErrorMsg("Error in fit_bias of Modelling_TwoPointCorrelation1D_projected, no such type of likelihood");
 
   statistics::Likelihood lik(m_data,m_model,func);
-  lik.sample(nChains, chain_size); 
+  lik.sample(nChains, chain_size, 1); 
   string dir_output_file=dir_output+"projected_bias_xmin="+conv(m_data->x_down(),par::fDP1)+"_xmax="+conv(m_data->x_up(),par::fDP1)+"_"+LikelihoodType;
   lik.write_chain(dir_output_file, start, stop, thin);
 

@@ -66,13 +66,13 @@ namespace cosmobl {
        *  @brief set the binning parameters given the number of bins
        *  @return none
        */
-      virtual void set_parameters_nbins () = 0;
+      virtual void m_set_parameters_nbins () = 0;
   
       /**
        *  @brief set the binning parameters given the bin size
        *  @return none
        */
-      virtual void set_parameters_binSize () = 0;
+      virtual void m_set_parameters_binSize () = 0;
   
       ///@}
 
@@ -110,28 +110,30 @@ namespace cosmobl {
       ///@{
 
       /**
-       *  @brief default constuctor
+       *  @brief default constructor
        *  @return object of class Pair1D
        */
       Pair1D () : m_binSize_inv(1.), m_nbins(50), m_shift(0.5)
-	{ m_pairDim = _1D_; }
+	{ m_pairDim = _1D_; m_angularUnits = _radians_; m_angularWeight = nullptr; }
 
       /**
-       *  @brief constuctor
-       *  @param binSize the bin size
+       *  @brief constructor
+       *  @param binSize bin size
        *  @param nbins number of bins
        *  @param shift radial shift used to centre the output bins 
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D
        */
-      Pair1D (const double binSize, const int nbins, const double shift)
+      Pair1D (const double binSize, const int nbins, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight=nullptr)
 	: m_binSize_inv(1./binSize), m_nbins(nbins), m_shift(shift)
-      { m_pairDim = _1D_; m_PP1D.resize(m_nbins+1, 0.); }
+      { m_pairDim = _1D_; m_PP1D.resize(m_nbins+1, 0.); m_angularUnits = angularUnits; m_angularWeight = angularWeight; }
     
       /**
        *  @brief default destructor
        *  @return none
        */
-      virtual ~Pair1D () {}
+      virtual ~Pair1D () = default;
 
       ///@}
 
@@ -264,13 +266,13 @@ namespace cosmobl {
        *  @brief set the binning parameters given the number of bins
        *  @return none
        */
-      virtual void set_parameters_nbins () = 0;
+      virtual void m_set_parameters_nbins () = 0;
   
       /**
        *  @brief set the binning parameters given the bin size
        *  @return none
        */
-      virtual void set_parameters_binSize () = 0;
+      virtual void m_set_parameters_binSize () = 0;
   
       ///@}
 
@@ -299,13 +301,13 @@ namespace cosmobl {
       ///@{
 
       /**
-       *  @brief default constuctor
+       *  @brief default constructor
        *  @return object of class Pair1D_angular
        */
       Pair1D_angular () : m_thetaMin(0.1), m_thetaMax(50.) {} 
 
       /**
-       *  @brief constuctor
+       *  @brief constructor
        *  @param thetaMin minimum value of the angle &theta; used to count
        *  the pairs
        *  @param thetaMax maximum value of the angle &theta; used to count
@@ -313,13 +315,15 @@ namespace cosmobl {
        *  @param nbins number of bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D_angular
        */
-      Pair1D_angular (const double thetaMin, const double thetaMax, const int nbins, const double shift)
-	: Pair1D(1., nbins, shift), m_thetaMin(thetaMin), m_thetaMax(thetaMax) {}
+      Pair1D_angular (const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D(1., nbins, shift, angularUnits, angularWeight), m_thetaMin(thetaMin), m_thetaMax(thetaMax) {}
   
       /**
-       *  @brief constuctor
+       *  @brief constructor
        *  @param thetaMin minimum value of the angle &theta; used to count
        *  the pairs
        *  @param thetaMax maximum value of the angle &theta; used to count
@@ -327,10 +331,12 @@ namespace cosmobl {
        *  @param binSize size of the bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D_angular
        */
-      Pair1D_angular (const double thetaMin, const double thetaMax, const double binSize, const double shift)
-	: Pair1D(binSize, 50, shift), m_thetaMin(thetaMin), m_thetaMax(thetaMax) {}
+      Pair1D_angular (const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), m_thetaMin(thetaMin), m_thetaMax(thetaMax) {}
   
       /**
        *  @brief default destructor
@@ -389,13 +395,13 @@ namespace cosmobl {
        *  @brief set the binning parameters given the number of bins
        *  @return none
        */
-      void set_parameters_nbins () override;
+      void m_set_parameters_nbins () override;
     
       /**
        *  @brief set the binning parameters given the bin size
        *  @return none
        */
-      void set_parameters_binSize () override;
+      void m_set_parameters_binSize () override;
 
       ///@}
   
@@ -407,13 +413,13 @@ namespace cosmobl {
       ///@{
 
       /**
-       *  @brief default constuctor
+       *  @brief default constructor
        *  @return object of class Pair1D_angular_lin
        */
       Pair1D_angular_lin () { m_pairType = _angular_lin_; } 
 
       /**
-       *  @brief constuctor
+       *  @brief constructor
        *  @param thetaMin minimum value of the angle &theta; used to count
        *  the pairs
        *  @param thetaMax maximum value of the angle &theta; used to count
@@ -421,14 +427,16 @@ namespace cosmobl {
        *  @param nbins number of bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D_angular_lin
        */
-      Pair1D_angular_lin (const double thetaMin, const double thetaMax, const int nbins, const double shift)
-	: Pair1D_angular(thetaMin, thetaMax, nbins, shift)
-	{ m_pairType = _angular_lin_; set_parameters_nbins(); m_PP1D.resize(m_nbins+1, 0.); }
+      Pair1D_angular_lin (const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D_angular(thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight)
+	{ m_pairType = _angular_lin_; m_set_parameters_nbins(); m_PP1D.resize(m_nbins+1, 0.); }
   
       /**
-       *  @brief constuctor
+       *  @brief constructor
        *  @param thetaMin minimum value of the angle &theta; used to count
        *  the pairs
        *  @param thetaMax maximum value of the angle &theta; used to count
@@ -436,11 +444,13 @@ namespace cosmobl {
        *  @param binSize size of the bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D_angular
        */
-      Pair1D_angular_lin (const double thetaMin, const double thetaMax, const double binSize, const double shift)
-	: Pair1D_angular(thetaMin, thetaMax, binSize, shift)
-	{ m_pairType = _angular_lin_; set_parameters_binSize(); m_PP1D.resize(m_nbins+1, 0.); } 
+      Pair1D_angular_lin (const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D_angular(thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight)
+	{ m_pairType = _angular_lin_; m_set_parameters_binSize(); m_PP1D.resize(m_nbins+1, 0.); } 
   
       /**
        *  @brief default destructor
@@ -495,13 +505,13 @@ namespace cosmobl {
        *  @brief set the binning parameters given the number of bins
        *  @return none
        */
-      void set_parameters_nbins () override;
+      void m_set_parameters_nbins () override;
     
       /**
        *  @brief set the binning parameters given the bin size
        *  @return none
        */
-      void set_parameters_binSize () override;
+      void m_set_parameters_binSize () override;
 
       ///@}
   
@@ -513,13 +523,13 @@ namespace cosmobl {
       ///@{
 
       /**
-       *  @brief default constuctor
+       *  @brief default constructor
        *  @return object of class Pair1D_angular_log
        */
       Pair1D_angular_log () { m_pairType = _angular_log_; } 
 
       /**
-       *  @brief constuctor
+       *  @brief constructor
        *  @param thetaMin minimum value of the angle &theta; used to count
        *  the pairs
        *  @param thetaMax maximum value of the angle &theta; used to count
@@ -527,14 +537,16 @@ namespace cosmobl {
        *  @param nbins number of bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D_angular_log
        */
-      Pair1D_angular_log (const double thetaMin, const double thetaMax, const int nbins, const double shift)
-	: Pair1D_angular(thetaMin, thetaMax, nbins, shift)
-	{ m_pairType = _angular_log_; set_parameters_nbins(); m_PP1D.resize(m_nbins+1, 0.); }
+      Pair1D_angular_log (const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D_angular(thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight)
+	{ m_pairType = _angular_log_; m_set_parameters_nbins(); m_PP1D.resize(m_nbins+1, 0.); }
   
       /**
-       *  @brief constuctor
+       *  @brief constructor
        *  @param thetaMin minimum value of the angle &theta; used to count
        *  the pairs
        *  @param thetaMax maximum value of the angle &theta; used to count
@@ -542,11 +554,13 @@ namespace cosmobl {
        *  @param binSize size of the bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D_angular
        */
-      Pair1D_angular_log (const double thetaMin, const double thetaMax, const double binSize, const double shift)
-	: Pair1D_angular(thetaMin, thetaMax, binSize, shift)
-	{ m_pairType = _angular_log_; set_parameters_binSize(); m_PP1D.resize(m_nbins+1, 0.); } 
+      Pair1D_angular_log (const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D_angular(thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight)
+	{ m_pairType = _angular_log_; m_set_parameters_binSize(); m_PP1D.resize(m_nbins+1, 0.); } 
   
       /**
        *  @brief default destructor
@@ -601,13 +615,13 @@ namespace cosmobl {
        *  @brief set the binning parameters given the number of bins
        *  @return none
        */
-      virtual void set_parameters_nbins () = 0;
+      virtual void m_set_parameters_nbins () = 0;
   
       /**
        *  @brief set the binning parameters given the bin size
        *  @return none
        */
-      virtual void set_parameters_binSize () = 0;
+      virtual void m_set_parameters_binSize () = 0;
   
       ///@}
       
@@ -636,40 +650,44 @@ namespace cosmobl {
       ///@{
 
       /**
-       *  @brief default constuctor
+       *  @brief default constructor
        *  @return object of class Pair1D_comoving
        */
       Pair1D_comoving () : m_rMin(0.1), m_rMax(50.) {} 
     
       /**
-       *  @brief constuctor
+       *  @brief constructor
        *  @param rMin minimum separation used to count the pairs
        *  @param rMax maximum separation used to count the pairs
        *  @param nbins number of bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D_comoving
        */
-      Pair1D_comoving (const double rMin, const double rMax, const int nbins, const double shift)
-	: Pair1D(1., nbins, shift), m_rMin(rMin), m_rMax(rMax) {} 
+      Pair1D_comoving (const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D(1., nbins, shift, angularUnits, angularWeight), m_rMin(rMin), m_rMax(rMax) {} 
   
       /**
-       *  @brief constuctor
+       *  @brief constructor
        *  @param rMin minimum separation used to count the pairs
        *  @param rMax maximum separation used to count the pairs
        *  @param binSize size of the bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D_comoving
        */
-      Pair1D_comoving (const double rMin, const double rMax, const double binSize, const double shift)
-	: Pair1D(binSize, 50, shift), m_rMin(rMin), m_rMax(rMax) {} 
+      Pair1D_comoving (const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), m_rMin(rMin), m_rMax(rMax) {} 
   
       /**
        *  @brief default destructor
        *  @return none
        */
-      virtual ~Pair1D_comoving () {}
+      virtual ~Pair1D_comoving () = default;
 
       ///@}
 
@@ -721,13 +739,13 @@ namespace cosmobl {
        *  @brief set the binning parameters given the number of bins
        *  @return none
        */
-      void set_parameters_nbins () override;
+      void m_set_parameters_nbins () override;
     
       /**
        *  @brief set the binning parameters given the bin size
        *  @return none
        */
-      void set_parameters_binSize () override;
+      void m_set_parameters_binSize () override;
 
       ///@}
   
@@ -739,42 +757,46 @@ namespace cosmobl {
       ///@{
 
       /**
-       *  @brief default constuctor
+       *  @brief default constructor
        *  @return object of class Pair1D_comoving_lin
        */
       Pair1D_comoving_lin () { m_pairType = _comoving_lin_; } 
 
       /**
-       *  @brief constuctor
+       *  @brief constructor
        *  @param rMin minimum separation used to count the pairs
        *  @param rMax maximum separation used to count the pairs
        *  @param nbins number of bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D_comoving_lin
        */
-      Pair1D_comoving_lin (const double rMin, const double rMax, const int nbins, const double shift)
-	: Pair1D_comoving(rMin, rMax, nbins, shift)
-	{ m_pairType = _comoving_lin_; set_parameters_nbins(); m_PP1D.resize(m_nbins+1, 0.); }
+      Pair1D_comoving_lin (const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D_comoving(rMin, rMax, nbins, shift, angularUnits, angularWeight)
+	{ m_pairType = _comoving_lin_; m_set_parameters_nbins(); m_PP1D.resize(m_nbins+1, 0.); }
   
       /**
-       *  @brief constuctor
+       *  @brief constructor
        *  @param rMin minimum separation used to count the pairs
        *  @param rMax maximum separation used to count the pairs
        *  @param binSize size of the bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D_comoving
        */
-      Pair1D_comoving_lin (const double rMin, const double rMax, const double binSize, const double shift)
-	: Pair1D_comoving(rMin, rMax, binSize, shift)
-	{ m_pairType = _comoving_lin_; set_parameters_binSize(); m_PP1D.resize(m_nbins+1, 0.); } 
+      Pair1D_comoving_lin (const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D_comoving(rMin, rMax, binSize, shift, angularUnits, angularWeight)
+	{ m_pairType = _comoving_lin_; m_set_parameters_binSize(); m_PP1D.resize(m_nbins+1, 0.); } 
   
       /**
        *  @brief default destructor
        *  @return none
        */
-      ~Pair1D_comoving_lin () {}
+      ~Pair1D_comoving_lin () = default;
 
       ///@}
   
@@ -823,13 +845,13 @@ namespace cosmobl {
        *  @brief set the binning parameters given the number of bins
        *  @return none
        */
-      void set_parameters_nbins () override;
+      void m_set_parameters_nbins () override;
     
       /**
        *  @brief set the binning parameters given the bin size
        *  @return none
        */
-      void set_parameters_binSize () override;
+      void m_set_parameters_binSize () override;
 
       ///@}
   
@@ -841,42 +863,46 @@ namespace cosmobl {
       ///@{
 
       /**
-       *  @brief default constuctor
+       *  @brief default constructor
        *  @return object of class Pair1D_comoving_log
        */
       Pair1D_comoving_log () { m_pairType = _comoving_log_; }
       
       /**
-       *  @brief constuctor
+       *  @brief constructor
        *  @param rMin minimum separation used to count the pairs
        *  @param rMax maximum separation used to count the pairs
        *  @param nbins number of bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D_comoving_log
        */
-      Pair1D_comoving_log (const double rMin, const double rMax, const int nbins, const double shift)
-	: Pair1D_comoving(rMin, rMax, nbins, shift)
-	{ m_pairType = _comoving_log_; set_parameters_nbins(); m_PP1D.resize(m_nbins+1, 0.); }
+      Pair1D_comoving_log (const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D_comoving(rMin, rMax, nbins, shift, angularUnits, angularWeight)
+	{ m_pairType = _comoving_log_; m_set_parameters_nbins(); m_PP1D.resize(m_nbins+1, 0.); }
   
       /**
-       *  @brief constuctor
+       *  @brief constructor
        *  @param rMin minimum separation used to count the pairs
        *  @param rMax maximum separation used to count the pairs
        *  @param binSize size of the bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
        *  @return object of class Pair1D_comoving
        */
-      Pair1D_comoving_log (const double rMin, const double rMax, const double binSize, const double shift)
-	: Pair1D_comoving(rMin, rMax, binSize, shift)
-	{ m_pairType = _comoving_log_; set_parameters_binSize(); m_PP1D.resize(m_nbins+1, 0.); } 
+      Pair1D_comoving_log (const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D_comoving(rMin, rMax, binSize, shift, angularUnits, angularWeight)
+	{ m_pairType = _comoving_log_; m_set_parameters_binSize(); m_PP1D.resize(m_nbins+1, 0.); } 
   
       /**
        *  @brief default destructor
        *  @return none
        */
-      ~Pair1D_comoving_log () {}
+      ~Pair1D_comoving_log () = default;
 
       ///@}
   

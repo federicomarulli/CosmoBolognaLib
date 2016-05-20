@@ -130,12 +130,13 @@ namespace cosmobl {
 	 *  @param value: parameter value
 	 *  @param pmin lower value for the parameter
 	 *  @param pmax upper value for the parameter
+	 *  @param freeze: 0 &rarr; parameter is not fixed; 1 &rarr; parameter is fixed
 	 *  @param discrete_values discrete values for the parameter
 	 *  @param name: parameter name
 	 *
 	 *  @return object of class Parameter
 	 */
-	Parameter(const double value, const double pmin, const double pmax, vector<double> discrete_values = {}, const string name="parameter");
+	Parameter(const double value, const double pmin, const double pmax, const bool freeze=0, const vector<double> discrete_values = {}, const string name="parameter");
 
 	/**
 	 *  @brief default constructor
@@ -145,12 +146,13 @@ namespace cosmobl {
 	 *  @param prior_params parameters of the prior function	
 	 *  @param Limits vector containing lower and upper 
 	 *  value for the parameter
+	 *  @param freeze: 0 &rarr; parameter is not fixed; 1 &rarr; parameter is fixed
 	 *  @param discrete_values discrete values for the parameter
 	 *  @param name: parameter name
 	 *
 	 *  @return object of class Parameter
 	 */
-	Parameter(const double value, const PriorType priorType, const vector<double> prior_params, const vector<double> Limits = {}, const vector<double> discrete_values = {}, const string name="parameter");
+	Parameter(const double value, const PriorType priorType, const vector<double> prior_params, const vector<double> Limits = {}, const bool freeze=0, const vector<double> discrete_values = {}, const string name="parameter");
 
 	/**
 	 *  @brief default constructor
@@ -160,23 +162,25 @@ namespace cosmobl {
 	 *  @param prior_params parameters of the prior function or discrete
 	 *  list of values for discrete prior
 	 *  @param Limits limits of the prior 
+	 *  @param freeze: 0 &rarr; parameter is not fixed; 1 &rarr; parameter is fixed
 	 *  @param discrete_values discrete values for the parameter
 	 *  @param name: parameter name
 	 *
 	 *  @return object of class Parameter
 	 */
-	Parameter(const double value, const prior_func func, const vector<double> prior_params, const vector<double> Limits = {}, const vector<double> discrete_values = {}, const string name="parameter");
+	Parameter(const double value, const prior_func func, const vector<double> prior_params, const vector<double> Limits = {}, const bool freeze=0, const vector<double> discrete_values = {}, const string name="parameter");
 
 	/**
 	 *  @brief default constructor
 	 * 
 	 *  @param value: parameter value
 	 *  @param prior: prior for the parameter 
+	 *  @param freeze: 0 &rarr; parameter is not fixed; 1 &rarr; parameter is fixed
 	 *  @param name: parameter name
 	 *
 	 *  @return object of class Parameter
 	 */
-	Parameter(const double value, const Prior prior, string name="parameter");
+	Parameter(const double value, const Prior prior, const bool freeze=0, string name="parameter");
 
 	/**
 	 *  @brief default destructor
@@ -396,6 +400,7 @@ namespace cosmobl {
 	 *
 	 */
 	double random_value() const; 
+
     };
   }
 }

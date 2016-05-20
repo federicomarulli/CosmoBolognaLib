@@ -141,19 +141,20 @@ namespace cosmobl {
 	void minimize (const vector<double> parameters, const unsigned int max_iter=100, const double tol=1.e-6); 
 
 	/**
-	 *  @brief function that samples likelihood, using
-	 *  Metropolis-Hastings algorithm on uni-dimensional parameter
-	 *  space, and stores chain parameters.       
-	 *  @param nchains number of chains to sample the parameter space 
-	 *  @param chain_size number of step in each chain 
-	 *  @return averace acceptance ratio
-	 */
-	double sample (const int nchains, const int chain_size);
-
-	/**
 	 *  @brief function that samples likelihood, using stretch-move
 	 *  algorithm on n-dimensional parameter space, and stores chain
 	 *  parameters.
+	 *  @param nchains number of chains to sample the parameter space 
+	 *  @param chain_size number of step in each chain 
+	 *  @param seed the seed for random number generator
+	 *  @return averace acceptance ratio
+	 */
+	double sample (const int nchains, const int chain_size, const int seed);
+
+	/**
+	 *  @brief function that samples likelihood, using
+	 *  Metropolis-Hastings algorithm on uni-dimensional parameter
+	 *  space, and stores chain parameters.       
 	 *  @param nchains number of chains to sample the parameter space 
 	 *  @param chain_size number of step in each chain 
 	 *  @param shift  percentage shift for proposed parameter 

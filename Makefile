@@ -14,18 +14,18 @@ dir_H = $(addprefix $(PWD)/,$(Dir_H))
 dir_O = $(addprefix $(PWD)/,$(Dir_O))
 dir_M = $(addprefix $(PWD)/,$(Dir_M))
 dir_EH = $(addprefix $(PWD)/,$(Dir_EH))
+dir_PYLIB =  $(HOME)/.local/lib/python2.7/site-packages/
 
 dir_Python = $(PWD)/Python/
 
 HH = $(dir_H)*.h $(dir_O)*.h $(dir_M)*.h
 
-FLAGS_INC = -I$(dir_H) -I$(dir_O) -I$(dir_M) -I$(dir_EH) -isystem $(HOME)/Numerical/ -I$(HOME)/include/ 
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dir_H) -I$(dir_O) -I$(dir_M) -I$(dir_EH) -isystem $(HOME)/Numerical/ 
 FLAGS_FFTW = -lfftw3 -lfftw3_omp
 FLAGS_GSL = -lgsl -lgslcblas -lm -L$(HOME)/lib 
 FLAGS_LINK = -shared
 
 PFLAGS = -I/usr/include/python2.7 
-
 
 ES = so
 
@@ -37,6 +37,9 @@ ifeq ($(SYS),MAC)
 	FLAGS_FFTW = -lfftw3 
 	FLAGS_LINK = -dynamiclib -undefined suppress -flat_namespace
         ES = dylib
+	dir_PYLIB = $(HOME)/Library/Python/2.7/lib/python/site-packages/
+	FLAGS_PY = -L/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -ldl
+
 endif
 
 FLAGST = $(FLAGS0) $(FLAGS)
@@ -87,7 +90,7 @@ OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $
 OBJ_LN = $(dir_LN)LogNormal.o
 OBJ_TWOP = $(dir_TWOP)Pair.o $(dir_TWOP)TwoPointCorrelation.o $(dir_TWOP)TwoPointCorrelation1D.o $(dir_TWOP)TwoPointCorrelation1D_monopole.o $(dir_TWOP)TwoPointCorrelation1D_angular.o $(dir_TWOP)TwoPointCorrelation2D.o $(dir_TWOP)TwoPointCorrelation2D_cartesian.o $(dir_TWOP)TwoPointCorrelation2D_polar.o $(dir_TWOP)TwoPointCorrelation_projected.o $(dir_TWOP)TwoPointCorrelation_deprojected.o $(dir_TWOP)TwoPointCorrelation_multipoles.o $(dir_TWOP)TwoPointCorrelation_wedges.o $(dir_TWOP)TwoPointCorrelation1D_filtered.o
 OBJ_THREEP = $(dir_THREEP)Triplet.o $(dir_THREEP)ThreePointCorrelation.o $(dir_THREEP)ThreePointCorrelation_angular_connected.o $(dir_THREEP)ThreePointCorrelation_angular_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_connected.o $(dir_THREEP)ThreePointCorrelation_comoving_reduced.o 
-OBJ_MODEL = $(dir_MODEL)ModelFunction.o $(dir_MODEL)ModelBias.o $(dir_MODEL)Modelling.o $(dir_MODEL)Modelling_TwoPointCorrelation.o $(dir_MODEL)Modelling_TwoPointCorrelation_monopole.o $(dir_MODEL)Modelling_TwoPointCorrelation_projected.o $(dir_MODEL)Modelling_TwoPointCorrelation_deprojected.o 
+OBJ_MODEL = $(dir_MODEL)ModelFunction.o $(dir_MODEL)ModelBias.o $(dir_MODEL)ModelBAO.o $(dir_MODEL)Modelling.o $(dir_MODEL)Modelling_TwoPointCorrelation.o $(dir_MODEL)Modelling_TwoPointCorrelation_monopole.o $(dir_MODEL)Modelling_TwoPointCorrelation_projected.o $(dir_MODEL)Modelling_TwoPointCorrelation_deprojected.o 
 OBJ_GLOB = $(dir_GLOB)FuncCosmology.o $(dir_GLOB)Func.o $(dir_GLOB)SubSample.o
 
 OBJ_CBL = $(OBJ_FUNC) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL) $(OBJ_GLOB)
@@ -186,31 +189,35 @@ fftlog-f90:
 
 allExamples:
 	$(call colorecho, "\n"Compiling the example code: vector.cpp ... "\n")
-	cd $(PWD)/Examples/vectors ; make && cd ../..
+	cd $(PWD)/Examples/vectors ; make
+	$(call colorecho, "\n"Compiling the example code: randomNumbers.cpp ... "\n")
+	cd $(PWD)/Examples/randomNumbers ; make 
 	$(call colorecho, "\n"Compiling the example code: distances.cpp ... "\n")
-	cd $(PWD)/Examples/distances ; make && cd ../..
+	cd $(PWD)/Examples/distances ; make 
 	$(call colorecho, "\n"Compiling the example code: covsample.cpp ... "\n")
-	cd $(PWD)/Examples/cov_sample ; make && cd ../..
+	cd $(PWD)/Examples/covsample ; make 
 	$(call colorecho, "\n"Compiling the example code: fsigma8.cpp ... "\n")
-	cd $(PWD)/Examples/fsigma8 ; make && cd ../..
-	$(call colorecho, "\n"Compiling the example code: prior.cpp ... "\n"	)
-	cd $(PWD)/Examples/statistics/codes ; make prior && cd ../..
+	cd $(PWD)/Examples/fsigma8 ; make 
+	$(call colorecho, "\n"Compiling the example code: prior.cpp ... "\n")
+	cd $(PWD)/Examples/statistics/codes ; make prior
+	$(call colorecho, "\n"Compiling the example code: catalogue.cpp ... "\n")
+	cd $(PWD)/Examples/catalogue ; make catalogue 
 	$(call colorecho, "\n"Compiling the example code: 2pt_monopole.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 2pt_monopole && cd ../..
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_monopole
 	$(call colorecho, "\n"Compiling the example code: 2pt_2D.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 2pt_2D && cd ../..
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_2D
 	$(call colorecho, "\n"Compiling the example code: 2pt_jackknife.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 2pt_jackknife && cd ../..
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_jackknife
 	$(call colorecho, "\n"Compiling the example code: 2pt_projected_jackknife.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 2pt_projected_jackknife && cd ../..
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_projected_jackknife
 	$(call colorecho, "\n"Compiling the example code: modelBias_2pt_projected.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make modelBias_2pt_projected && cd ../..
+	cd $(PWD)/Examples/clustering/codes ; make modelBias_2pt_projected
 	$(call colorecho, "\n"Compiling the example code: 3pt.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 3pt && cd ../..
+	cd $(PWD)/Examples/clustering/codes ; make 3pt
 
 python: $(OBJ_CBL) $(dir_Python)CBL_wrap.o
-	g++ -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(HOME)/.local/lib/python2.7/site-packages/_CosmoBolognaLib.$(ES) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp
-	cp $(dir_Python)CosmoBolognaLib.py* $(HOME)/.local/lib/python2.7/site-packages/
+	$(C) -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(dir_PYLIB)_CosmoBolognaLib.so $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY)
+	cp $(dir_Python)CosmoBolognaLib.py* $(dir_PYLIB)
 
 python2: $(dir_Python)CBL_wrap.cxx $(dir_Python)CBL.i $(dir_Python)setup.py $(HH) $(PWD)/Makefile
 	$(call colorecho, "\n"Compiling the python wrapper. It may take a few minutes ... "\n")
@@ -245,10 +252,12 @@ doct:
 
 cleanExamples:
 	cd $(PWD)/Examples/vectors ; make clean && cd ../..
+	cd $(PWD)/Examples/randomNumbers ; make clean && cd ../..
 	cd $(PWD)/Examples/distances ; make clean && cd ../..
-	cd $(PWD)/Examples/cov_sample ; make clean && cd ../..
+	cd $(PWD)/Examples/covsample ; make clean && cd ../..
 	cd $(PWD)/Examples/fsigma8 ; make clean && cd ../..
 	cd $(PWD)/Examples/statistics/codes ; make clean && cd ../..
+	cd $(PWD)/Examples/catalogue ; make clean && cd ../
 	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../..
 	rm -rf $(PWD)/Examples/clustering/output/*
 
@@ -265,26 +274,28 @@ purgepy:
 
 clean:
 	make cleanExamples
-	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_FUNC)*~ $(dir_STAT)/*~ $(dir_STAT)/*~  $(dir_STAT)/*~ $(dir_STAT)/*~ $(dir_STAT)/*~ $(dir_STAT)/*~ $(dir_STAT)/*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_TWOP)*~ $(dir_MODEL)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_H)*~ $(dir_O)*~ $(dir_M)*~ $(PWD)/\#* $(dir_FUNC)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_MODEL)\#* $(dir_THREEP)\#* $(dir_GLOB)\#* $(dir_H)\#* $(dir_O)\#* $(dir_M)\#* $(PWD)/Doc/WARNING_LOGFILE*
+	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_FUNC)*~ $(dir_STAT)/*~ $(dir_STAT)/*~  $(dir_STAT)/*~ $(dir_STAT)/*~ $(dir_STAT)/*~ $(dir_STAT)/*~ $(dir_STAT)/*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_TWOP)*~ $(dir_MODEL)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_H)*~ $(dir_O)*~ $(dir_M)*~ $(PWD)/\#* $(dir_FUNC)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_MODEL)\#* $(dir_THREEP)\#* $(dir_GLOB)\#* $(dir_H)\#* $(dir_O)\#* $(dir_M)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
 
 purge:
 	make clean
-	rm -f *.$(ES) test temp*
+	rm -f *.$(ES) temp*
 
 purgeALL:
 	make purge
 	make cleanpy
 	rm -rf Cosmology/Tables/* ;
-	rm -rf External/grid_SigmaM/* ;
-	rm -rf External/table_dc/* ;
-	rm -rf External/EisensteinHu/output_linear/* ;
+	cd External/CAMB ; make clean ; cd .. ;
 	rm -rf External/CAMB/output_linear/* ;
 	rm -rf External/CAMB/output_nonlinear/* ;
-	rm -rf External/grid_NG/* ;
-	rm -rf External/MPTbreeze-v1/output_linear/* ;
-	rm -rf External/MPTbreeze-v1/output_nonlinear/* ;
+	cd External/classgal_v1/ ; make clean ; cd .. ;
 	rm -rf External/classgal_v1/output_linear/* ;
 	rm -rf External/classgal_v1/output_nonlinear/* ;
+	rm -rf External/EH/*.o External/EH/*~ ;
+	cd External/fftlog-f90-master/ ; make clean ; cd .. ;
+	cd External/mangle/src ; make clean ; cd .. ;
+	rm -rf External/MPTbreeze-v1/*~ ;
+	rm -rf External/MPTbreeze-v1/output_linear/* ;
+	rm -rf External/MPTbreeze-v1/output_nonlinear/* ;
 
 
 #################################################################### 
@@ -488,6 +499,9 @@ $(dir_MODEL)ModelFunction.o: $(dir_MODEL)ModelFunction.cpp $(HH) $(PWD)/Makefile
 
 $(dir_MODEL)ModelBias.o: $(dir_MODEL)ModelBias.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)ModelBias.cpp -o $(dir_MODEL)ModelBias.o
+
+$(dir_MODEL)ModelBAO.o: $(dir_MODEL)ModelBAO.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)ModelBAO.cpp -o $(dir_MODEL)ModelBAO.o
 
 $(dir_MODEL)Modelling.o: $(dir_MODEL)Modelling.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)Modelling.cpp -o $(dir_MODEL)Modelling.o

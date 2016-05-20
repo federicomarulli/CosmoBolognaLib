@@ -101,7 +101,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const Catalogue& cat)
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType type, const vector<double> ra, const vector<double> dec, const vector<double> redshift, const Cosmology &cosm, const CoordUnit inputUnits, vector<double> weight)
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType type, const vector<double> ra, const vector<double> dec, const vector<double> redshift, const Cosmology &cosm, const CoordUnits inputUnits, vector<double> weight)
 {
   // conversion of coordinate units into radiants
   vector<double> RA(ra.size()), DEC(dec.size());
@@ -161,7 +161,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType type, const vector<strin
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType type, const vector<string> file, const Cosmology &cosm, const int col_RA, const int col_Dec, const int col_redshift, const int col_Weight, const CoordUnit inputUnits, const double nSub, const double fact) 
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType type, const vector<string> file, const Cosmology &cosm, const int col_RA, const int col_Dec, const int col_redshift, const int col_Weight, const CoordUnits inputUnits, const double nSub, const double fact) 
 { 
   default_random_engine gen;
   uniform_real_distribution<float> ran(0., 1.);
@@ -173,7 +173,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType type, const vector<strin
     string file_in = file[dd];
     cout << "I'm reading the catalogue: " << file_in << endl;
     ifstream finr (file_in.c_str()); checkIO(file_in, 1);
-  
+
     while (getline(finr, line)) {
       if (ran(gen)<nSub) {
 	stringstream ss(line);
@@ -224,7 +224,7 @@ vector<long> cosmobl::catalogue::Catalogue::get_region_list () const
 
 
 vector<double> cosmobl::catalogue::Catalogue::var (Var var_name) const
-{
+{ 
   vector<double> vv(m_sample.size(), 0.);
   
   switch (var_name) {
@@ -392,42 +392,6 @@ void cosmobl::catalogue::Catalogue::set_var (const Var var_name, const vector<do
 // ============================================================================
 
 
-void cosmobl::catalogue::Catalogue::MinMax_var (const Var var_name, vector<double> &Lim, const bool er) const
-{
-  if (er) Lim.erase(Lim.begin(), Lim.end());
-  Lim.push_back(Min(var(var_name))); 
-  Lim.push_back(Max(var(var_name)));
-}
-
-
-// ============================================================================
-
-
-void cosmobl::catalogue::Catalogue::MinMax_var (const vector<Var> var_name, vector<vector<double> > &Lim, const bool er) const
-{
-  if (er) Lim.erase(Lim.begin(),Lim.end());
-
-  for (unsigned int i=0; i<var_name.size(); i++) 
-    Lim.push_back(MinMax_var(var_name[i]));
-}
-
-
-// ============================================================================
-
-
-vector<double> cosmobl::catalogue::Catalogue::MinMax_var (const Var var_name) const
-{
-  vector<double> Lim; 
-
-  Lim.push_back(Min(var(var_name))); Lim.push_back(Max(var(var_name)));
-
-  return Lim;
-}
-
-
-// ============================================================================
-
-
 void cosmobl::catalogue::Catalogue::stats_var (const Var var_name, vector<double> &stats) const
 {
   stats.erase(stats.begin(), stats.end());
@@ -436,10 +400,8 @@ void cosmobl::catalogue::Catalogue::stats_var (const Var var_name, vector<double
   stats[0] = Average(var(var_name)); 
   stats[2] = Sigma(var(var_name));
   
-  double first, third;
-  Quartile(var(var_name), stats[1], first, third);
-  
-  stats[3] = third-first;
+  stats[1] = Quartile(var(var_name))[1];
+  stats[3] = Quartile(var(var_name))[2]-Quartile(var(var_name))[0];
 }
 
 
@@ -463,16 +425,16 @@ void cosmobl::catalogue::Catalogue::stats_var (const vector<Var> var_name, vecto
 // ============================================================================
 
 
-void cosmobl::catalogue::Catalogue::var_distr (const Var var_name, vector<double> &_var, vector<double> &dist, const int nbin, const bool linear, const string file_out, const double Volume, const bool norm, const double V1, const double V2, const bool bin_type, const bool convolution, const double sigma) const
-{ 
-  distribution(_var, dist, var(var_name), var(Var::_Weight_), nbin, linear, file_out, (norm) ? Volume*weightedN() : Volume, V1, V2, bin_type, convolution, sigma);
+void cosmobl::catalogue::Catalogue::var_distr (const Var var_name, vector<double> &_var, vector<double> &dist, vector<double> &err, const int nbin, const bool linear, const string file_out, const double Volume, const bool norm, const double V1, const double V2, const bool bin_type, const bool convolution, const double sigma) const
+{
+  distribution(_var, dist, err, var(var_name), var(Var::_Weight_), nbin, linear, file_out, (norm) ? Volume*weightedN() : Volume, V1, V2, bin_type, convolution, sigma);
 }
 
 
 // ============================================================================
 
 
-void cosmobl::catalogue::Catalogue::computeComovingCoordinates (const Cosmology &cosm, const CoordUnit inputUnits)
+void cosmobl::catalogue::Catalogue::computeComovingCoordinates (const Cosmology &cosm, const CoordUnits inputUnits)
 {
   double red, xx, yy, zz;
 
@@ -506,7 +468,7 @@ void cosmobl::catalogue::Catalogue::computeComovingCoordinates (const Cosmology 
 // ============================================================================
 
 
-void cosmobl::catalogue::Catalogue::computePolarCoordinates (const CoordUnit outputUnits)
+void cosmobl::catalogue::Catalogue::computePolarCoordinates (const CoordUnits outputUnits)
 {
   double ra, dec, dc;
 
@@ -551,7 +513,7 @@ void cosmobl::catalogue::Catalogue::computePolarCoordinates (const CoordUnit out
 // ============================================================================
 
 
-void cosmobl::catalogue::Catalogue::computePolarCoordinates (const Cosmology &cosm, const double z1, const double z2, const CoordUnit outputUnits)
+void cosmobl::catalogue::Catalogue::computePolarCoordinates (const Cosmology &cosm, const double z1, const double z2, const CoordUnits outputUnits)
 {
   double ra, dec, dc;
 
@@ -794,22 +756,17 @@ shared_ptr<Catalogue> cosmobl::catalogue::Catalogue::smooth (const double gridsi
   // ----------------------------------------------------------------------------
 
   cout <<"Please wait, I'm subdividing the catalogue in "<<pow(SUB, 3)<<" sub-catalogues..."<<endl;
-  
-  vector<double> Lim;
-  cat->MinMax_var(Var::_X_, Lim, 0);
-  cat->MinMax_var(Var::_Y_, Lim, 0);
-  cat->MinMax_var(Var::_Z_, Lim, 0);
-
+ 
   int nx = SUB, ny = SUB, nz = SUB;
   
-  double Cell_X = (Lim[1]-Lim[0])/nx;
-  double Cell_Y = (Lim[3]-Lim[2])/ny;
-  double Cell_Z = (Lim[5]-Lim[4])/nz;
+  double Cell_X = (Max(Var::_X_)-Min(Var::_X_))/nx;
+  double Cell_Y = (Max(Var::_Y_)-Min(Var::_Y_))/ny;
+  double Cell_Z = (Max(Var::_Z_)-Min(Var::_Z_))/nz;
 
   for (int i=0; i<cat->nObjects(); i++) {
-    int i1 = min(int((cat->xx(i)-Lim[0])/Cell_X), nx-1);
-    int j1 = min(int((cat->yy(i)-Lim[2])/Cell_Y), ny-1);
-    int z1 = min(int((cat->zz(i)-Lim[4])/Cell_Z), nz-1);
+    int i1 = min(int((cat->xx(i)-Min(Var::_X_))/Cell_X), nx-1);
+    int j1 = min(int((cat->yy(i)-Min(Var::_Y_))/Cell_Y), ny-1);
+    int z1 = min(int((cat->zz(i)-Min(Var::_Z_))/Cell_Z), nz-1);
     int index = z1+nz*(j1+ny*i1);
     cat->catalogue_object(i)->set_region(index);
   }
@@ -917,12 +874,7 @@ double cosmobl::catalogue::Catalogue::weightedN_condition (const Var var_name, c
 
 ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double cell_size, const int interpolation_type, const double kernel_radius, const bool useMass) const
 {
-  vector<double> Lim;
-  MinMax_var(Var::_X_, Lim, 0);
-  MinMax_var(Var::_Y_, Lim, 0);
-  MinMax_var(Var::_Z_, Lim, 0);
-
-  ScalarField3D density(cell_size, Lim[0], Lim[1], Lim[2],  Lim[3], Lim[4], Lim[5]);
+  ScalarField3D density(cell_size, Min(Var::_X_), Max(Var::_X_), Min(Var::_Y_), Max(Var::_Y_), Min(Var::_Z_), Max(Var::_Z_));
 
   double deltaX = density.deltaX();
   double deltaY = density.deltaY();
@@ -935,9 +887,9 @@ ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double cell_si
   double VolumeCell_inv = pow(deltaX*deltaY*deltaZ,-1);
 
   for(int i=0;i<nObjects();i++){
-    int i1 = min(int((xx(i)-Lim[0])/deltaX),nx-1);
-    int j1 = min(int((yy(i)-Lim[2])/deltaY),ny-1);
-    int k1 = min(int((zz(i)-Lim[4])/deltaZ),nz-1);
+    int i1 = min(int((xx(i)-Min(Var::_X_))/deltaX),nx-1);
+    int j1 = min(int((yy(i)-Min(Var::_Y_))/deltaY),ny-1);
+    int k1 = min(int((zz(i)-Min(Var::_Z_))/deltaZ),nz-1);
 
     double w = (useMass) ? mass(i)*VolumeCell_inv : VolumeCell_inv;
 
@@ -948,17 +900,17 @@ ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double cell_si
       double dx_samecell, dy_samecell, dz_samecell;
       int dx_index, dy_index, dz_index;
 
-      dx_samecell = (xx(i)-(i1*deltaX+Lim[0]))/deltaX;
-      dy_samecell = (yy(i)-(j1*deltaY+Lim[2]))/deltaY;
-      dz_samecell = (zz(i)-(k1*deltaZ+Lim[4]))/deltaZ;
+      dx_samecell = (xx(i)-(i1*deltaX+Min(Var::_X_)))/deltaX;
+      dy_samecell = (yy(i)-(j1*deltaY+Min(Var::_Y_)))/deltaY;
+      dz_samecell = (zz(i)-(k1*deltaZ+Min(Var::_Z_)))/deltaZ;
 
       dx_index = (dx_samecell <0.5) ? -1 : 1 ;
       dy_index = (dy_samecell <0.5) ? -1 : 1 ;
       dz_index = (dz_samecell <0.5) ? -1 : 1 ;
       
-      dx_samecell = (dx_samecell <0.5) ? (xx(i)+0.5*deltaX-(i1*deltaX+Lim[0]))/deltaX: 1-(xx(i)-0.5*deltaX-(i1*deltaX+Lim[0]))/deltaX;
-      dy_samecell = (dy_samecell <0.5) ? (yy(i)+0.5*deltaY-(j1*deltaY+Lim[2]))/deltaY: 1-(yy(i)-0.5*deltaY-(j1*deltaY+Lim[2]))/deltaY;
-      dz_samecell = (dz_samecell <0.5) ? (zz(i)+0.5*deltaZ-(k1*deltaZ+Lim[4]))/deltaZ: 1-(zz(i)-0.5*deltaZ-(k1*deltaZ+Lim[4]))/deltaZ;
+      dx_samecell = (dx_samecell <0.5) ? (xx(i)+0.5*deltaX-(i1*deltaX+Min(Var::_X_)))/deltaX: 1-(xx(i)-0.5*deltaX-(i1*deltaX+Min(Var::_X_)))/deltaX;
+      dy_samecell = (dy_samecell <0.5) ? (yy(i)+0.5*deltaY-(j1*deltaY+Min(Var::_Y_)))/deltaY: 1-(yy(i)-0.5*deltaY-(j1*deltaY+Min(Var::_Y_)))/deltaY;
+      dz_samecell = (dz_samecell <0.5) ? (zz(i)+0.5*deltaZ-(k1*deltaZ+Min(Var::_Z_)))/deltaZ: 1-(zz(i)-0.5*deltaZ-(k1*deltaZ+Min(Var::_Z_)))/deltaZ;
       
       if(dx_samecell<0 || dy_samecell<0 || dz_samecell<0){
 	cout << dx_index << " " <<  dx_samecell << " " <<dy_index << " " << dy_samecell << " " <<dz_index << " " << dz_samecell << endl;

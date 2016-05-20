@@ -44,7 +44,7 @@ void cosmobl::Vmax_DC_distribution (vector<double> &dc, vector<double> &nObj, co
 
   Ran ran(idum);
 
-  vector<double> dc_Vmax, ww;
+  vector<double> err, dc_Vmax, ww;
   double Volume, zz;
 
   for (unsigned int i=0; i<D_C.size(); i++) { 
@@ -66,7 +66,7 @@ void cosmobl::Vmax_DC_distribution (vector<double> &dc, vector<double> &nObj, co
 
   bool linear = 1;
   
-  distribution(dc, nObj, dc_Vmax, ww, nbin, linear, file_Vmax, fact, dc1, dc2);
+  distribution(dc, nObj, err, dc_Vmax, ww, nbin, linear, file_Vmax, fact, dc1, dc2);
 }
 
 
@@ -127,7 +127,7 @@ double cosmobl::converted_xi (const double RR, const double redshift, const vect
       lgXi.push_back(log10(Xi[i]));
     }
 
-  return pow(10., interpolated(lgRR, lgrr, lgXi, "Poly", 4));
+  return pow(10., interpolated(lgRR, lgrr, lgXi, "Poly"));
 }
 
 
@@ -143,5 +143,5 @@ double cosmobl::converted_xi (const double RP, const double PI, const double red
   double _RP = (direction) ? RP*fDA : RP/fDA;
   double _PI = (direction) ? PI*fH : PI/fH;
 
-  return interpolated_2D(_RP, _PI, rp, pi, Xi, "Poly", 4);
+  return interpolated_2D(_RP, _PI, rp, pi, Xi, "Poly");
 }

@@ -52,8 +52,7 @@ void cosmobl::statistics::Chain::Statistics (const int max, const int min)
   m_mean = Average(values);
   m_std = Sigma(values);
 
-  double a;
-  Quartile(values, a, m_median, a);
+  m_median = Quartile(values)[1];
 }
 
 
@@ -62,6 +61,6 @@ void cosmobl::statistics::Chain::Statistics (const int max, const int min)
 
 void cosmobl::statistics::Chain::ComputeDistribution (const int nbin)
 {
-  vector<double> ww(m_values.size(),1);
-  distribution(m_var, m_dist, m_values, ww, nbin);
+  vector<double> ww(m_values.size(),1), err;
+  distribution(m_var, m_dist, err, m_values, ww, nbin);
 }

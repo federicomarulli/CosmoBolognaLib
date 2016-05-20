@@ -128,9 +128,9 @@ void cosmobl::Cosmology::medianwf (const double ff, const string author_model, v
       Pw[i] = F1+F2;
     }
     string type = "Poly";
-    wf[2] = interpolated(0.5, Pw, ww, type, 5);
-    wf[1] = interpolated(0.25, Pw, ww, type, 5);
-    wf[0] = interpolated(0.75, Pw, ww, type, 5);
+    wf[2] = interpolated(0.5, Pw, ww, type);
+    wf[1] = interpolated(0.25, Pw, ww, type);
+    wf[0] = interpolated(0.75, Pw, ww, type);
   }
 
   if (author_model=="GTS") {
@@ -182,7 +182,7 @@ double cosmobl::Cosmology::Redshift (const double mm, const double redshift, con
     dci[i] = deltac(zi)/DD(zi)*DD(zero);
   }
   
-  return -1.+pow(10.,interpolated(dd, dci, lzi, "Poly", 5));
+  return -1.+pow(10.,interpolated(dd, dci, lzi, "Poly"));
 }
 
 
@@ -215,6 +215,6 @@ double cosmobl::Cosmology::concentration (const double Vmax, const double Rmax) 
     yyi[i] = 200./3.*pow(xxi[i],3.)/(log(1.+xxi[i])-xxi[i]/(1.+xxi[i]))-14.426*pow(Vmax/Rmax/m_H0,2.);
   
   double null = 0.;
-  return interpolated(null, yyi, xxi, "Poly", 5);
+  return interpolated(null, yyi, xxi, "Poly");
 }
 

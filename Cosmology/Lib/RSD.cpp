@@ -94,8 +94,8 @@ double cosmobl::Cosmology::linear_growth_rate (const double redshift, const doub
     
     double mu;
 
-    if (kk<0.001) mu = interpolated(log10(kk), lgKK, MU, "Poly", 2);
-    else if (0.001<=kk && kk<=0.5) mu = interpolated(log10(kk), lgKK, MU, "Poly", 4);
+    if (kk<0.001) mu = interpolated(log10(kk), lgKK, MU, "Poly");
+    else if (0.001<=kk && kk<=0.5) mu = interpolated(log10(kk), lgKK, MU, "Poly");
 
     else mu = pow(1-fnu, alpha0); 
     

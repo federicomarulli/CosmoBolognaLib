@@ -47,7 +47,12 @@ namespace cosmobl {
 
   namespace statistics {
 
+    typedef function<double() > random_numbers;
+
     typedef function<double(double,  shared_ptr<void> , vector<double>)> model_function_1D;
+
+    typedef function< vector<double>(vector<double> ,  shared_ptr<void> , vector<double>)> model_function_1D_vector;
+
     typedef function<double(double, double, shared_ptr<void> , vector<double>)> model_function_2D;
 
     /**
@@ -59,123 +64,152 @@ namespace cosmobl {
      */
     class Model {
 
-      protected:
+    protected:
 
-	/// number of model parameters
-	unsigned int m_npar;
+      /// number of model parameters
+      unsigned int m_npar;
 
-	/// the effective number of model parameters
-	unsigned int m_npar_eff;
+      /// the effective number of model parameters
+      unsigned int m_npar_eff;
 
-	/// function parameters
-	vector<shared_ptr<Parameter> > m_parameters;
+      /// function parameters
+      vector<shared_ptr<Parameter> > m_parameters;
 
-	/// fixed parameters of the model
-	shared_ptr<void> m_model_parameters;
+      /// fixed parameters of the model
+      shared_ptr<void> m_model_parameters;
 
-	/// 0 &rarr; 1D functon; 1 &rarr; 2D function
-	bool m_2d;
+      /// 0 &rarr; 1D functon; 1 &rarr; 2D function
+      bool m_2d;
+
+      /// Random number generator
+      default_random_engine m_generator;
+
+      /// Random number distribution;
+      uniform_real_distribution<double> distribution;
+
+      random_numbers m_random_numbers;
 
 
-      public:
 
-	/**
-	 *  @name Constructors/destructors
-	 */
-	///@{ 
+    public:
 
-	/**
-	 *  @brief default constructor
-	 *
-	 *  @return object of class Model
-	 */
-	Model () {}
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{ 
 
-	/**
-	 *  @brief constructor
-	 *
-	 *  @param parameters list of parameters for the model
-	 *  @param model_parameters fixed parameters of the model
-	 *
-	 *  @return object of class Model
-	 */
-	Model (const vector<Parameter> parameters, const shared_ptr<void> model_parameters);
+      /**
+       *  @brief default constructor
+       *
+       *  @return object of class Model
+       */
+      Model () {}
 
-	/**
-	 *  @brief default destructor
-	 *
-	 *  @return none
-	 */
-	virtual ~Model() {}
+      /**
+       *  @brief constructor
+       *
+       *  @param parameters list of parameters for the model
+       *  @param model_parameters fixed parameters of the model
+       *
+       *  @return object of class Model
+       */
+      Model (const vector<Parameter> parameters, const shared_ptr<void> model_parameters);
 
-	///@}
+      /**
+       *  @brief default destructor
+       *
+       *  @return none
+       */
+      virtual ~Model() {}
 
-	virtual double operator () (const double xx) = 0;
+      ///@}
 
-	virtual double operator () (const double xx, const vector<double> pars) = 0;
+      virtual double operator () (const double xx) = 0;
 
-	virtual double operator () (const double xx, const double yy) = 0;
+      virtual double operator () (const double xx, const vector<double> pars) = 0;
 
-	virtual double operator () (const double xx, const double yy, const vector<double> pars) = 0;
+      virtual vector<double> operator () (const vector<double> xx) = 0;
 
-	/**
-	 *  @brief Return the private member m_npar
-	 *
-	 *  @return the number of parameters
-	 */
-	unsigned int npar() { return m_npar; }
+      virtual vector<double> operator () (const vector<double> xx, const vector<double> pars) = 0;
 
-	/**
-	 *  @brief Return the private member m_npar_eff
-	 *
-	 *  @return the number of effective parameters (freeze == 0)
-	 */
-	unsigned int npar_eff ()
-	{
-	  m_npar_eff = 0;
-	  for(auto &&pp : m_parameters)
-	    m_npar_eff = (pp->isFreezed()) ? m_npar_eff : m_npar_eff+1;
+      virtual double operator () (const double xx, const double yy) = 0;
 
-	  return m_npar_eff;
-	}
+      virtual double operator () (const double xx, const double yy, const vector<double> pars) = 0;
 
-	/**
-	 *  @brief Return the provate variable m_2d;
-	 *
-	 *  @return the number of model variables 
-	 */
-	bool dimension () { return m_2d; }
+      /**
+       *  @brief Return the private member m_npar
+       *
+       *  @return the number of parameters
+       */
+      unsigned int npar() { return m_npar; }
 
-	/**
-	 *  @brief Return the i-th element of the method m_parameters
-	 *
-	 *  @param i: the i-th parameter of the model
-	 *
-	 *  @return the i-th parameter of the model
-	 */
-	shared_ptr<Parameter> parameter(const int i) { return m_parameters[i]; }
+      /**
+       *  @brief Return the private member m_npar_eff
+       *
+       *  @return the number of effective parameters (freeze == 0)
+       */
+      unsigned int npar_eff ()
+      {
+	m_npar_eff = 0;
+	for(auto &&pp : m_parameters)
+	  m_npar_eff = (pp->isFreezed()) ? m_npar_eff : m_npar_eff+1;
 
-	/**
-	 *  @brief Return the private method m_parameters
-	 *
-	 *  @return the parameters of the model
-	 */
-	vector<shared_ptr<Parameter> > parameters () { return m_parameters; }
+	return m_npar_eff;
+      }
 
-	/**
-	 *  @brief Update parameter and return the current parameter values
-	 *
-	 *  @return the values of model parameters
-	 */
-	double update_parameters(const double); 
+      /**
+       *  @brief Return the provate variable m_2d;
+       *
+       *  @return the number of model variables 
+       */
+      bool dimension () { return m_2d; }
 
-	/**
-	 *  @brief Update parameters and return a vector containing the
-	 *  current parameter values
-	 *
-	 *  @return the values of model parameters
-	 */
-	vector<double> update_parameters (const vector<double>); 
+      /**
+       *  @brief Return the i-th element of the method m_parameters
+       *
+       *  @param i: the i-th parameter of the model
+       *
+       *  @return the i-th parameter of the model
+       */
+      shared_ptr<Parameter> parameter(const int i) { return m_parameters[i]; }
+
+      /**
+       *  @brief Return the private method m_parameters
+       *
+       *  @return the parameters of the model
+       */
+      vector<shared_ptr<Parameter> > parameters () { return m_parameters; }
+
+      /**
+       *  @brief Update one parameter and return the current parameter
+       *  values
+       *  @param new_parameter the new parameter
+       *  @return the value of model parameter
+       */
+      double update_parameter (const double new_parameter); 
+
+      /**
+       *  @brief Update parameters and return a vector containing the
+       *  current parameter values
+       *  @param new_parameters the new parameters
+       *  @return the values of model parameters
+       */
+      vector<double> update_parameters (const vector<double> new_parameters); 
+
+      /**
+       *  @brief set the chains for likelihood analysis
+       *  @param nchains the number of chains
+       *  @param chain_size the chain size
+       *  @return none
+       */
+      void set_chains (const int nchains, const int chain_size);
+	
+      /**
+       *  @brief set the random_number generator
+       *  @param generator the random numbers generator
+       *  @return none
+       */
+      void set_random_number_generator (const default_random_engine generator);
     };
 
 
@@ -188,79 +222,110 @@ namespace cosmobl {
      */
     class Model1D : public Model {
 
-      protected:
+    protected:
 
-	/// model: functional form for the 1D model
-	model_function_1D m_model;
+      /// model: functional form for the 1D model
+      model_function_1D m_model;
 
-      public:
+      model_function_1D_vector m_model_vector;
 
-	/**
-	 *  @name Constructors/destructors
-	 */
-	///@{ 
+    public:
 
-	/**
-	 *  @brief default constructor
-	 *
-	 * return object of class Model1D
-	 */
-	Model1D () : Model() { m_2d=0; }
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{ 
 
-	/**
-	 *  @brief default constructor
-	 *
-	 *  @param parameters: list of model parameters
-	 *  @param model_parameters: list of fixed model parameters
-	 *  @param model: model function
-	 *
-	 * return object of class Model1D
-	 */
-	Model1D (const vector<Parameter> parameters, const shared_ptr<void> model_parameters, const model_function_1D model) :
-	  Model(parameters, model_parameters), m_model(model) { m_2d = 0; }
+      /**
+       *  @brief default constructor
+       *
+       * return object of class Model1D
+       */
+      Model1D () : Model() { m_2d=0; }
 
-	/**
-	 *  @brief default destructor
-	 *
-	 *  @return none
-	 */
-	~Model1D () {}
+      /**
+       *  @brief default constructor
+       *
+       *  @param parameters: list of model parameters
+       *  @param model_parameters: list of fixed model parameters
+       *  @param model: model function
+       *
+       * return object of class Model1D
+       */
+      Model1D (const vector<Parameter> parameters, const shared_ptr<void> model_parameters, const model_function_1D model) :
+      Model(parameters, model_parameters), m_model(model) { m_2d = 0; }
 
-	///@}
+      /**
+       *  @brief default destructor
+       *
+       *  @return none
+       */
+      ~Model1D () {}
 
-	/**
-	 *  @brief evaluate the model for the value xx
-	 *
-	 *  @param xx: the variable position
-	 * 
-	 *  @return the value of the model at xx
-	 */
-	double operator () (const double xx)
+      ///@}
+
+      /**
+       *  @brief evaluate the model for the value xx
+       *
+       *  @param xx: the variable position
+       * 
+       *  @return the value of the model at xx
+       */
+      double operator () (const double xx)
+      {
+	vector<double> parameters;
+	for (auto &&p : m_parameters)
+	  parameters.push_back(p->value());
+	return m_model(xx, m_model_parameters, parameters);
+      }
+
+      /**
+       *  @brief evaluate the model for the value xx
+       *
+       *  @param xx the variable position
+       *  @param parameters vector containing the model parameters
+       * 
+       *  @return the value of the model at xx
+       */
+      double operator () (const double xx, const vector<double> parameters)
+      {
+	return m_model(xx, m_model_parameters, parameters);
+      }
+	
+      /**
+       *  @brief evaluate the model for the value xx
+       *
+       *  @param xx: the variable position vector
+       * 
+       *  @return the value of the model at xx
+       */
+      vector<double> operator () (const vector<double> xx)
 	{
 	  vector<double> parameters;
 	  for (auto &&p : m_parameters)
 	    parameters.push_back(p->value());
-	  return m_model(xx, m_model_parameters, parameters);
+	  return m_model_vector(xx, m_model_parameters, parameters);
 	}
 
-	/**
-	 *  @brief evaluate the model for the value xx
-	 *
-	 *  @param xx the variable position
-	 *  @param parameters vector containing the model parameters
-	 * 
-	 *  @return the value of the model at xx
-	 */
-	double operator () (const double xx, const vector<double> parameters)
+      /**
+       *  @brief evaluate the model for the value xx
+       *
+       *  @param xx the variable position vector
+       *
+       *  @param parameters vector containing the model parameters
+       * 
+       *  @return the value of the model at xx
+       */
+      vector<double> operator () (const vector<double> xx, const vector<double> parameters)
 	{
-	  return m_model(xx, m_model_parameters, parameters);
+	  return m_model_vector(xx, m_model_parameters, parameters);
 	}
 
-	double operator () (const double xx, const double yy)
-	{ cosmobl::ErrorMsg("Error in Model::operator() of Model1D.h!"); return 0; }
+      double operator () (const double xx, const double yy)
+      { cosmobl::ErrorMsg("Error in Model::operator() of Model1D.h!"); return 0; }
 
-	double operator () (const double xx, const double yy, const vector<double> pars)
-	{ cosmobl::ErrorMsg("Error in Model::operator() of Model1D.h!"); return 0; }
+      double operator () (const double xx, const double yy, const vector<double> pars)
+      { cosmobl::ErrorMsg("Error in Model::operator() of Model1D.h!"); return 0; }
     };
 
 
@@ -273,83 +338,90 @@ namespace cosmobl {
      */
     class Model2D : public Model{
 
-      protected:
+    protected:
 
-	/// the functional form for the 2D model
-	model_function_2D m_model;
+      /// the functional form for the 2D model
+      model_function_2D m_model;
 
-      public:
-	/**
-	 *  @name Constructors/destructors
-	 */
-	///@{ 
+    public:
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{ 
 
-	/** 
-	 *  @brief default constructor
-	 *
-	 * return object of class Model2D
-	 */
-	Model2D () : Model() { m_2d = 1; } 
+      /** 
+       *  @brief default constructor
+       *
+       * return object of class Model2D
+       */
+      Model2D () : Model() { m_2d = 1; } 
 
-	/** 
-	 *  @brief default constructor
-	 *
-	 *  @param parameters: list of model parameters
-	 *  @param model_parameters: list of fixed model parameters
-	 *  @param model: model function
-	 *
-	 * return object of class Model2D
-	 */
-	Model2D (vector<Parameter> parameters, shared_ptr<void> model_parameters, model_function_2D model)
-	  : Model(parameters,model_parameters), m_model(model) { m_2d = 1; }
+      /** 
+       *  @brief default constructor
+       *
+       *  @param parameters: list of model parameters
+       *  @param model_parameters: list of fixed model parameters
+       *  @param model: model function
+       *
+       * return object of class Model2D
+       */
+      Model2D (vector<Parameter> parameters, shared_ptr<void> model_parameters, model_function_2D model)
+	: Model(parameters,model_parameters), m_model(model) { m_2d = 1; }
 
-	/**
-	 *  @brief default destructor
-	 *
-	 * return none
-	 */
-	~Model2D () {}
+      /**
+       *  @brief default destructor
+       *
+       * return none
+       */
+      ~Model2D () {}
 
-	///@}
+      ///@}
 
 
-	/**
-	 *  @brief evaluate the model at the values x and y
-	 *
-	 *  @param xx the x variable
-	 *  @param yy the y variable
-	 * 
-	 *  @return the value of the model at x,y
-	 */
-	double operator () (const double xx, const double yy)
-	{
-	  vector<double> parameters;
-	  for (auto &&p : m_parameters)
-	    parameters.push_back(p->value());
+      /**
+       *  @brief evaluate the model at the values x and y
+       *
+       *  @param xx the x variable
+       *  @param yy the y variable
+       * 
+       *  @return the value of the model at x,y
+       */
+      double operator () (const double xx, const double yy)
+      {
+	vector<double> parameters;
+	for (auto &&p : m_parameters)
+	  parameters.push_back(p->value());
 
-	  return m_model(xx, yy, m_model_parameters, parameters);
-	}
+	return m_model(xx, yy, m_model_parameters, parameters);
+      }
 
-	/**
-	 *  @brief evaluate the model for the values x and y, using given
-	 *  parameters
-	 *
-	 *  @param xx the x variable
-	 *  @param yy the y variable
-	 *  @param parameters the model parameters
-	 * 
-	 *  @return the value of the model at xx
-	 */  
-	double operator () (const double xx, const double yy, const vector<double> parameters)
-	{
-	  return m_model(xx, yy, m_model_parameters, parameters);
-	}
+      /**
+       *  @brief evaluate the model for the values x and y, using given
+       *  parameters
+       *
+       *  @param xx the x variable
+       *  @param yy the y variable
+       *  @param parameters the model parameters
+       * 
+       *  @return the value of the model at xx
+       */  
+      double operator () (const double xx, const double yy, const vector<double> parameters)
+      {
+	return m_model(xx, yy, m_model_parameters, parameters);
+      }
 
-	virtual double operator () (const double xx)
-	{ cosmobl::ErrorMsg("Error in Model::operator() of Model2D.h!"); return 0; }
+      virtual double operator () (const double xx)
+      { cosmobl::ErrorMsg("Error in Model::operator() of Model2D.h!"); return 0; }
 
-	virtual double operator () (const double xx, const vector<double> pars)
-	{ cosmobl::ErrorMsg("Error in Model::operator() of Model2D.h!"); return 0; }
+      virtual double operator () (const double xx, const vector<double> pars)
+      { cosmobl::ErrorMsg("Error in Model::operator() of Model2D.h!"); return 0; }
+
+      virtual vector<double> operator () (const vector<double> xx)
+      { cosmobl::ErrorMsg("Error in Model::operator() of Model2D.h!"); return {}; }
+
+      virtual vector<double> operator () (const vector<double> xx, const vector<double> pars)
+      { cosmobl::ErrorMsg("Error in Model::operator() of Model2D.h!"); return {}; }
+
     };
   }
 }

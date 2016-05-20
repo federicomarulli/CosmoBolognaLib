@@ -267,11 +267,12 @@ vector<long> cosmobl::ChainMesh::close_objects (const vector<double> centre, con
   if (long(centre.size()) != m_nDim) ErrorMsg("Error in ChainMesh::get_list : point must have same dimensions of the chain-mesh");
 
    long centre_indx = pos_to_index(centre);
-  
+   
    for (unsigned long i=0; i<m_search_region.size(); i++) {
+
      long k = min(max(m_search_region[i]+centre_indx, (long)0), m_nCell_tot-1);
      long j = m_Label[k];
-     
+
      while (j>-1 && j>=ii) {
        list.push_back(j);
        j = m_List[j];

@@ -338,10 +338,11 @@ namespace cosmobl {
        *  @param rank cpu index (for MPI usage)
        *  @return none
        */
-      virtual void write (const string dir=par::defaultString, const string file=par::defaultString, const int rank=0) const
-      {ErrorMsg("Error in write() of TwoPointCorrelation.h");}	
+      virtual void write (const string dir, const string file, const int rank=0) const
+      { ErrorMsg("Error in write() of TwoPointCorrelation.h"); }	
 
       ///@}
+      
     };
   }
 }

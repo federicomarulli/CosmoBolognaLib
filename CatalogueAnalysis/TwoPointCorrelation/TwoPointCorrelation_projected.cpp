@@ -48,7 +48,7 @@ using namespace twopt;
 
 shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation_projected::ProjectedTwoP (const vector<double> rp, const vector<double> pi, const vector<vector<double> > xi, const vector<vector<double> > error_xi)
 {
-  vector<double> ww,error;
+  vector<double> ww, error;
 
   ww.resize(0); ww.resize(rp.size(), 0.);
   error.resize(0); error.resize(rp.size(), 0.);
@@ -72,7 +72,7 @@ shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation_projected::ProjectedTwoP (c
 
   for_each( error.begin(), error.end(), [] (double &vv) { vv = sqrt(vv);} );
 
-  return move(unique_ptr<Data1D> (new Data1D(rp,ww,error)));
+  return move(unique_ptr<Data1D>(new Data1D(rp, ww, error)));
 
 }
 
@@ -160,8 +160,8 @@ void cosmobl::twopt::TwoPointCorrelation_projected::measureJackknife (const stri
     ww.push_back(data[i]->fx());
 
     if (dir_output_ResampleXi != par::defaultString && dir_output_ResampleXi != "") {
-      string filename = "xi_projected_Jackkknife_"+conv(i, par::fINT);
-      data[i]->write(dir_output_ResampleXi, filename, "rp", "xi_projected", 0);
+      string file = "xi_projected_Jackkknife_"+conv(i, par::fINT)+".dat";
+      data[i]->write(dir_output_ResampleXi, file, "rp", "xi_projected", 0);
     }
   }
 
@@ -198,8 +198,8 @@ void cosmobl::twopt::TwoPointCorrelation_projected::measureBootstrap (const int 
   for (size_t i=0; i<data.size(); i++) {
     ww.push_back(data[i]->fx());
     if (dir_output_ResampleXi != par::defaultString){
-      string filename = "xi_projected_Bootstrap_"+conv(i, par::fINT);
-      data[i]->write(dir_output_ResampleXi, filename, "rp", "xi_projected", 0);
+      string file = "xi_projected_Bootstrap_"+conv(i, par::fINT)+".dat";
+      data[i]->write(dir_output_ResampleXi, file, "rp", "xi_projected", 0);
     }
   }
   covariance_matrix(ww, covariance, 0);
