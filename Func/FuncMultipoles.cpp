@@ -776,7 +776,7 @@ vector<vector<double>> cosmobl::Xi024_AP (const double alpha_perpendicular, cons
 
   vector<double> xi0_new, xi2_new, xi4_new;
 
-  if ((alpha_perpendicular-1.)<1.e-30 && (alpha_parallel-1.)<1.e-30)
+  if ((alpha_perpendicular)==1 && (alpha_parallel)==1)
     for (size_t i=0; i<rr.size(); i++) {
       xi0_new.push_back(xi0_interp(rr[i]));
       xi2_new.push_back(xi2_interp(rr[i]));
@@ -804,6 +804,10 @@ vector<vector<double>> cosmobl::Xi024_AP (const double alpha_perpendicular, cons
 
     }
   }
+
+  xi0_interp.free();
+  xi2_interp.free();
+  xi4_interp.free();
 
   return {xi0_new, xi2_new, xi4_new};
 }

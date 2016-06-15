@@ -150,6 +150,11 @@ using namespace std;
  *  This example shows how to menage priors
  */
 /**
+ *  @example fit_linear_relation.cpp
+ *
+ *  This example shows how to model data with linear model
+ */
+/**
  *  @example catalogue.cpp
  *
  *  This example shows how to construct a catalogue of extragalactic
@@ -159,39 +164,43 @@ using namespace std;
  * @example 2pt_monopole.cpp 
  *
  * This example shows how to measure the monopole of the two-point
- * correlation function, estimating the errors analytically
+ * correlation function
+ */
+/**
+ * @example 2pt_monopole_errors.cpp 
+ *
+ * This example shows how to measure the monopole of the two-point
+ * correlation function and estimate the errors with different methods
  */
 /**
  * @example 2pt_2D.cpp 
  *
  * This example shows how to measure the 2D two-point correlation
- * function, estimating the errors analytically, using the class
- * cosmobl::TwoPointCorrelation
+ * function
  */
 /**
- * @example 2pt_jackknife.cpp 
- *
- * This example shows how to measure the two-point correlation
- * function, estimating the errors with the jackknife method
- */
-/**
- * @example 2pt_projected_jackknife.cpp 
+ * @example 2pt_projected.cpp 
  *
  * This example shows how to measure the projected two-point
- * correlation function, estimating the errors with the jackknife
- * method
+ * correlation function
  */
 /**
- * @example modelBias_2pt_projected.cpp
+ * @example 2pt_angular.cpp 
  *
- * This example shows how to how to model the bias from the projected
- * two-point correlation function
+ * This example shows how to measure the angular two-point correlation
+ * function
  */
 /**
  * @example 3pt.cpp 
  *
  * This example shows how to measure the three-point correlation
  * function
+ */
+/**
+ * @example modelBias_2pt_projected.cpp
+ *
+ * This example shows how to how to model the bias from the projected
+ * two-point correlation function
  */
 /**
  *  @example distances.py 
@@ -214,7 +223,7 @@ using namespace std;
  *  @example 2pt_monopole.py
  *
  *  This example shows how to compute the monopole of the two-point
- *  correlation function, estimating the errors analytically
+ *  correlation function
  */
 
 /**
@@ -274,6 +283,21 @@ namespace cosmobl {
     
   };
 
+  
+  /**
+   *  @enum CoordType
+   *  @brief the coordinate type
+   */
+  enum CoordType {
+
+    /// comoving coordinates (x, y, z)
+    _comovingCoordinates_,
+    
+    /// observed coordinates (R.A., Dec, redshift)
+    _observedCoordinates_
+    
+  };
+  
 
   /**
    *  @name Functions of generic use  
@@ -738,6 +762,20 @@ namespace cosmobl {
   double GSL_integrate_qag(gsl_function Func, const double a, const double b, const double prec=1.e-2, const int limit_size=1000, const int rule=6);
 
   /**
+   *  @brief function to integrate using GSL qag method; only works
+   *  with function defined as function<double(double)> that doesn't use
+   *  fixed parameters (useful for class members, when the external parameters could be attributes of the class)
+   *  @param func the fuction to be integrated
+   *  @param a the lower limit of the integral
+   *  @param b the upper limit of the integral
+   *  @param prec the relative error tolerance
+   *  @param limit_size the maximum size of workspace
+   *  @param rule the rule of integration
+   *  @return the definite integral of the function
+   */
+  double GSL_integrate_qag(function<double(double)> func, const double a, const double b, const double prec=1.e-2, const int limit_size=1000, const int rule=6);
+
+  /**
    *  @brief function to integrate using GSL qag method 
    *  @param Func the GSL function to be integrated
    *  @param a the lower limit of the integral
@@ -806,40 +844,52 @@ namespace cosmobl {
   /**
    *  @brief print the elements of a vector on the screen
    *  @param vect a vector
+   *  @param prec decimal precision
+   *  @param ww number of characters to be used as field width
    *  @return none
    */
   template <typename T> 
-    void print (const vector<T> vect) 
+    void print (const vector<T> vect, const int prec=4, const int ww=8) 
     {
-      for (auto &&i : vect) cout << i << endl;
+      int bp = cout.precision(); 
+      for (auto &&i : vect) cout << setprecision(prec) << setw(ww) << i << endl;
+      cout.precision(bp); 
     }
 
   /**
    *  @brief print the elements of a two vectors on the screen
    *  @param vect1 a vector
    *  @param vect2 a vector
+   *  @param prec decimal precision
+   *  @param ww number of characters to be used as field width
    *  @return none
    */
   template <typename T> 
-    void print (const vector<T> vect1, const vector<T> vect2) 
+    void print (const vector<T> vect1, const vector<T> vect2, const int prec=4, const int ww=8) 
     {
       if (vect1.size()!=vect2.size()) ErrorMsg("Error in print of Func.h!");
-      for (unsigned int i=0; i<vect1.size(); i++) cout <<vect1[i]<<"   "<<vect2[i]<<endl;
+      int bp = cout.precision(); 
+      for (size_t i=0; i<vect1.size(); i++) cout << setprecision(prec) << setw(ww) << vect1[i] << "   " << setw(ww) << vect2[i] << endl;
+      cout.precision(bp); 
     }
 
   /**
    *  @brief print the elements of a matrix on the screen
    *  @param mat a matrix (i.e. a vector of vectors)
+   *  @param prec decimal precision
+   *  @param ww number of characters to be used as field width
    *  @return none
    */
   template <typename T> 
-    void print (const vector<vector<T> > mat) 
+    void print (const vector<vector<T> > mat, const int prec=4, const int ww=8) 
     {
-      for (unsigned int i=0; i<mat.size(); i++) {
-	for (unsigned int j=0; j<mat[i].size(); j++) 
-	  cout <<mat[i][j]<<"   ";
-	cout <<endl;
+      int bp = cout.precision(); 
+      for (size_t i=0; i<mat.size(); i++) {
+	for (size_t j=0; j<mat[i].size(); j++) 
+	  cout << setprecision(prec) << setw(ww) << mat[i][j] << "   ";
+	cout << endl;
       }
+      cout.precision(bp); 
     }
 
   /**
@@ -1580,11 +1630,11 @@ namespace cosmobl {
   }
 
   /**
-   *  @brief the Identity function 
+   *  @brief the Identity function  
    *  @param xx the variable x
    *  @param pp a void pointer 
    *  @param par a vector 
-   *  @return 1
+   *  @return 1.
    *
    *  @warning pp and par are not used, but they are necessary in the
    *  function template
@@ -1592,8 +1642,38 @@ namespace cosmobl {
   template <typename T> 
     T identity (T xx, shared_ptr<void> pp, vector<double> par)
     {
-      return 1;
+      return 1.;
     }
+
+  /**
+   *  @brief the rectangular distribution 
+   *  @param xx the variable x
+   *  @param pp a void pointer 
+   *  @param par a vector containing the coefficients: par[0]=lower limix,
+   *  par[1]=upper limit;
+   *  @return the probability of x
+   *
+   *  @warning pp is not used, but they are necessary in the
+   *  function template
+   */
+  template <typename T> 
+    T rectangular (T xx, shared_ptr<void> pp, vector<double> par)
+    {
+      if (xx>par[0] && par[1]>xx)
+	return 1./(par[1]-par[0]);
+      else return 0.;
+    }
+
+
+  /**
+   *  @brief probability of the closest element to x from a list with weights 
+   *  @param xx the variable x
+   *  @param pp a void pointer 
+   *  @param par a vector containing the coefficients: 
+   *  @return the weight of closest element from a discrete list to x
+   *  @warning par is not used, it is necessary only for GSL operations
+   */
+   double closest_probability (double xx, shared_ptr<void> pp, vector<double> par);
 
   /**
    *  @brief the Gaussian function 
@@ -2081,7 +2161,7 @@ namespace cosmobl {
    *  @param angle the input angle
    *  @param inputUnits the units of the input angle
    *  @param outputUnits the units of the output angle
-   *  @param the angle in the converted units
+   *  @return the angle in the converted units
    */
   double converted_angle (const double angle, const CoordUnits inputUnits=_radians_, const CoordUnits outputUnits=_degrees_);
     
@@ -3405,6 +3485,10 @@ namespace cosmobl {
       double Pk,bias,f;
     };
 
+    struct STR_closest_probability{
+      vector<double> values;
+      vector<double> weights;
+    };
   }
 }
 

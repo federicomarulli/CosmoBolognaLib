@@ -150,6 +150,7 @@ shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation_wedges::WedgesTwoP(const ve
   int muSize = mu.size();
 
   int half = max(0, min(int(0.5/binSize), muSize));
+  half = (mu[half]<0.5) ? half+1 : half;
   
   vector<double> rad(2*rr.size(),0), wedges(2*rr.size(),0), error_wedges(2*rr.size(),0);
 
@@ -157,7 +158,7 @@ shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation_wedges::WedgesTwoP(const ve
     rad[i] = rr[i];
     rad[i+rr.size()] = rr[i];
 
-    for (int j=0; j<half+1; j++) {
+    for (int j=0; j<half; j++) {
       wedges[i] += 2*xi[i][j]*binSize;   	 	     // xi_perp
       error_wedges[i] += 2*pow(error_xi[i][j]*binSize, 2); // error[xi_perp]
     }
@@ -236,15 +237,29 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::measureJackknife (const string 
     ww.push_back(data[i]->fx());
     
     if (dir_output_ResampleXi != par::defaultString) {
-      string file = dir_output_ResampleXi+"xi_wedges_Jackknife_"+conv(i,par::fINT)+".dat";
-      ErrorMsg("Work in progress in cosmobl::twopt::TwoPointCorrelation_wedges::measureJackknife of TwoPointCorrelation_wedges.cpp...");
+      string file_out = dir_output_ResampleXi+"xi_wedges_Jackknife_"+conv(i,par::fINT)+".dat";
+
+      vector<double> rad = data[i]->xx();
+      vector<double> xiw = data[i]->fx();
+      vector<double> error = data[i]->error_fx();
+
+      checkDim(rad, m_dd->nbins_D1()*2, "rad");
+  
+      ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+
+      fout << "### rad  xi_perp  error[xi_perp]  xi_par  error[xi_par] ###" << endl;
+
+      for (int i=0; i<m_dd->nbins_D1(); i++) 
+	fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << rad[i] << "  " << setw(8) << xiw[i] << "  " << setw(8) << error[i] << "  " << setw(8) << xiw[i+m_dd->nbins_D1()] << "  " << setw(8) << error[i+m_dd->nbins_D1()] << endl;
+   
+      fout.close(); cout << endl << "I wrote the file: " << file_out << endl << endl;
     }
   }
 
   covariance_matrix(ww, covariance, 1);
 
   m_dataset = WedgesTwoP(data_polar->xx(), data_polar->yy(), data_polar->fxy(), data_polar->error_fxy());
-  m_dataset->set_covariance_fx(covariance);
+  m_dataset->set_covariance(covariance);
 
 }
 
@@ -277,13 +292,28 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::measureBootstrap (const int nMo
     
     if (dir_output_ResampleXi != par::defaultString) {
       string filename = dir_output_ResampleXi+"xi_wedges_Bootstrap_"+conv(i, par::fINT)+".dat";
-      ErrorMsg("Work in progress in cosmobl::twopt::TwoPointCorrelation_wedges::measureBootstrap of TwoPointCorrelation_wedges.cpp...");
+      string file_out = dir_output_ResampleXi+"xi_wedges_Jackknife_"+conv(i,par::fINT)+".dat";
+
+      vector<double> rad = data[i]->xx();
+      vector<double> xiw = data[i]->fx();
+      vector<double> error = data[i]->error_fx();
+
+      checkDim(rad, m_dd->nbins_D1()*2, "rad");
+  
+      ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+
+      fout << "### rad  xi_perp  error[xi_perp]  xi_par  error[xi_par] ###" << endl;
+
+      for (int i=0; i<m_dd->nbins_D1(); i++) 
+	fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << rad[i] << "  " << setw(8) << xiw[i] << "  " << setw(8) << error[i] << "  " << setw(8) << xiw[i+m_dd->nbins_D1()] << "  " << setw(8) << error[i+m_dd->nbins_D1()] << endl;
+   
+      fout.close(); cout << endl << "I wrote the file: " << file_out << endl << endl;
     }
   }
   covariance_matrix(ww, covariance, 0);
 
   m_dataset = WedgesTwoP(data_polar->xx(), data_polar->yy(), data_polar->fxy(), data_polar->error_fxy());
-  m_dataset->set_covariance_fx(covariance);
+  m_dataset->set_covariance(covariance);
 }
 
 

@@ -91,7 +91,7 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Data
        */
-      Data2D(){}
+      Data2D() : Data(cosmobl::DataType::_1D_data_) {}
    
       /**
        *  @brief static factory used to construct Data2D
@@ -104,7 +104,7 @@ namespace cosmobl {
        *  @param ymax maximun value of y to be used 
        *  @return shared pointer to an object of class Data
        */
-      Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > fxy, const double xmin=-1.e30, const double xmax=1.e30, const double ymin=-1.e30, const double ymax=1.e30); 
+      Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > fxy, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const double ymin=par::defaultDouble, const double ymax=-par::defaultDouble); 
 
       /**
        *  @brief static factory used to construct Data2D
@@ -118,7 +118,7 @@ namespace cosmobl {
        *  @param ymax maximun value of y to be used 
        *  @return shared pointer to an object of class Data
        */
-      Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > fxy, const vector< vector<double> > error_fxy, const double xmin=-1.e30, const double xmax=1.e30, const double ymin=-1.e30, const double ymax=1.e30); 
+      Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > fxy, const vector< vector<double> > error_fxy, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const double ymin=par::defaultDouble, const double ymax=-par::defaultDouble); 
 
       /**
        *  @brief default destructor
@@ -273,9 +273,10 @@ namespace cosmobl {
        *  @param input_file file containing input data in 3 columns:
        *  first column &rarr x points, second column &rarr f(x), third column &rarr 
        *  f(x) error
+       *  @param skip_nlines the header lines to be skipped
        *  @return none
        */
-      virtual void read (const string input_file=par::defaultString) override;
+      virtual void read (const string input_file=par::defaultString, const int skip_nlines=0) override;
 
       /**
        *  @brief write the measured two-point correlation

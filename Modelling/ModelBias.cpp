@@ -41,17 +41,17 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-void cosmobl::ModelBias::set_xi_parameters (const vector<double> r, const shared_ptr<Cosmology> cosmology, const double redshift, const string type, const int nPt, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+void cosmobl::ModelBias::set_xi_parameters (const vector<double> r, const shared_ptr<Cosmology> cosmology, const double redshift, const string type, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
 
   vector<double> xi(r.size(),0);
 
   for (size_t i=0; i<r.size(); i++)
-    xi[i] = cosmology->xi_DM(r[i], method, redshift, output_root, 1, norm, k_min, k_max, aa, GSL, prec, file_par);
+    xi[i] = cosmology->xi_DM(r[i], method, redshift, output_root, 1, norm, k_min, k_max, aa, 1, prec, file_par);
 
   model_parameters->func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(r,xi,type));
-  m_model_parameters = move(model_parameters);
+  m_fixed_parameters = move(model_parameters);
 
   m_model = &cosmobl::glob::xi_bias;
 }
@@ -60,7 +60,7 @@ void cosmobl::ModelBias::set_xi_parameters (const vector<double> r, const shared
 // ============================================================================================
 
 
-void cosmobl::ModelBias::set_xi_parameters_cosmology (const shared_ptr<Cosmology> cosmology, const vector<CosmoPar> cosmo_parameters, const double redshift, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+void cosmobl::ModelBias::set_xi_parameters_cosmology (const shared_ptr<Cosmology> cosmology, const vector<CosmoPar> cosmo_parameters, const double redshift, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
 
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
@@ -75,11 +75,11 @@ void cosmobl::ModelBias::set_xi_parameters_cosmology (const shared_ptr<Cosmology
   model_parameters->k_min=k_min;  
   model_parameters->k_max=k_max;
   model_parameters->aa=aa;  
-  model_parameters->GSL=GSL;
+  model_parameters->GSL=1;
   model_parameters->prec=prec; 
   model_parameters->file_par=file_par;
 
-  m_model_parameters = move(model_parameters);
+  m_fixed_parameters = move(model_parameters);
 
   m_model = &cosmobl::glob::xi_bias_cosmology;
 }
@@ -88,18 +88,18 @@ void cosmobl::ModelBias::set_xi_parameters_cosmology (const shared_ptr<Cosmology
 // ============================================================================================
 
 
-void cosmobl::ModelBias::set_wp_parameters (const vector<double> r, const shared_ptr<Cosmology> cosmology, const double redshift, const double pi_max, const string type, const int nPt, const string method, const string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+void cosmobl::ModelBias::set_wp_parameters (const vector<double> r, const shared_ptr<Cosmology> cosmology, const double redshift, const double pi_max, const string type, const string method, const string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
 
   vector<double> wp(r.size(),0);
 
   for (size_t i=0; i<r.size(); i++)
-    wp[i] = cosmology->wp_DM(r[i], method, redshift, output_root, NL, norm, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
+    wp[i] = cosmology->wp_DM(r[i], method, redshift, output_root, NL, norm, r_min, r_max, k_min, k_max, aa, 1, prec, file_par);
   
 
   model_parameters->func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(r,wp,type));
-  m_model_parameters = move(model_parameters);
+  m_fixed_parameters = move(model_parameters);
 
   m_model = &cosmobl::glob::wp_bias;
 }
@@ -108,7 +108,7 @@ void cosmobl::ModelBias::set_wp_parameters (const vector<double> r, const shared
 // ============================================================================================
 
 
-void cosmobl::ModelBias::set_wp_parameters_cosmology (const shared_ptr<Cosmology> cosmology, const vector<CosmoPar> cosmo_parameters, const double redshift, const double pi_max, const string method, const string output_root, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+void cosmobl::ModelBias::set_wp_parameters_cosmology (const shared_ptr<Cosmology> cosmology, const vector<CosmoPar> cosmo_parameters, const double redshift, const double pi_max, const string method, const string output_root, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
 
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
@@ -125,11 +125,11 @@ void cosmobl::ModelBias::set_wp_parameters_cosmology (const shared_ptr<Cosmology
   model_parameters->k_min=k_min; 
   model_parameters->k_max=k_max;
   model_parameters->aa=aa;
-  model_parameters->GSL=GSL;
+  model_parameters->GSL=1;
   model_parameters->prec=prec; 
   model_parameters->file_par=file_par;
 
-  m_model_parameters = move(model_parameters);
+  m_fixed_parameters = move(model_parameters);
 
   m_model = &cosmobl::glob::wp_bias_cosmology;
 }
@@ -138,17 +138,17 @@ void cosmobl::ModelBias::set_wp_parameters_cosmology (const shared_ptr<Cosmology
 // ============================================================================================
 
 
-void cosmobl::ModelBias::set_xi0_parameters (const vector<double> r, const shared_ptr<Cosmology> cosmology, const double redshift, const string type, const int nPt, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+void cosmobl::ModelBias::set_xi0_parameters (const vector<double> r, const shared_ptr<Cosmology> cosmology, const double redshift, const string type, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
 
   vector<double> xi(r.size(),0);
 
   for (size_t i=0; i<r.size(); i++)
-    xi[i] = cosmology->xi_DM(r[i], method, redshift, output_root, 1, norm, k_min, k_max, aa, GSL, prec, file_par);
+    xi[i] = cosmology->xi_DM(r[i], method, redshift, output_root, 1, norm, k_min, k_max, aa, 1, prec, file_par);
 
   model_parameters->func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(r,xi,type));
-  m_model_parameters = move(model_parameters);
+  m_fixed_parameters = move(model_parameters);
 
   m_model = &cosmobl::glob::xi0_bias;
 }
@@ -157,7 +157,7 @@ void cosmobl::ModelBias::set_xi0_parameters (const vector<double> r, const share
 // ============================================================================================
 
 
-void cosmobl::ModelBias::set_xi0_parameters_cosmology (const shared_ptr<Cosmology> cosmology, const vector<CosmoPar> cosmo_parameters, const double redshift, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+void cosmobl::ModelBias::set_xi0_parameters_cosmology (const shared_ptr<Cosmology> cosmology, const vector<CosmoPar> cosmo_parameters, const double redshift, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
 
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
@@ -172,11 +172,11 @@ void cosmobl::ModelBias::set_xi0_parameters_cosmology (const shared_ptr<Cosmolog
   model_parameters->k_min=k_min;  
   model_parameters->k_max=k_max;
   model_parameters->aa=aa;  
-  model_parameters->GSL=GSL;
+  model_parameters->GSL=1;
   model_parameters->prec=prec; 
   model_parameters->file_par=file_par;
 
-  m_model_parameters = move(model_parameters);
+  m_fixed_parameters = move(model_parameters);
 
   m_model = &cosmobl::glob::xi0_bias_cosmology;
 }

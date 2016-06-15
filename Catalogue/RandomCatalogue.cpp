@@ -64,7 +64,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue
     ZZ = ran(gen)*(Zmax-Zmin)+Zmin;
     m_sample.push_back(move(Object::Create(_RandomObject_, XX, YY, ZZ)));
   }
-  
+
 }
 
 
@@ -372,7 +372,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue
 
 /// @cond extrandom
 
-cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const int nRandom, const Cosmology &cosm, const string dir_out, const int step_redshift, const vector<double> dc, const vector<double> convol, const vector<double> lim, const vector<double> redshift, const bool venice, string file_random, const string mask, const string dir_venice, const int idum) 
+cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const int nRandom, const Cosmology &cosm, const string dir_out, const int step_redshift, const vector<double> dc, const vector<double> convol, const vector<double> lim, const vector<double> redshift, const vector<double> weight, const double redshift_min, const double redshift_max, const bool venice, const string where, string file_random, const string mask, const string dir_venice, const int idum) 
 {
   if (type!=_createRandom_VIPERS_) ErrorMsg("Error in cosmobl::catalogue::Catalogue::Catalogue : the random catalogue has to be of type _VIPERS_ !");
   
@@ -384,21 +384,19 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const int nRand
   // compute the redshift distribution and store
 
   vector<double> xx, fx, err;
-  double redshift_min = cosmobl::Min(redshift)*0.9999;
-  double redshift_max = cosmobl::Max(redshift)*1.0001;
   string file_nz = "file_nz";
-  distribution(xx, fx, err, redshift, {}, step_redshift, 1, file_nz, 1., redshift_min, redshift_max, 1, 1, 0.05);
+  distribution(xx, fx, err, redshift, weight, step_redshift, 1, file_nz, 1., cosmobl::Min(redshift)*0.9, cosmobl::Max(redshift)*1.1, 1, 1, 0.05);
   
     
   // construct the random catalogue using venice
   
   if (venice) {
     file_random = "temp";
-    string DO = par::DirCosmo+"External/VIPERS/"+dir_venice+"/venice -m "+mask+" -r -f inside -npart "+conv(nRandom, par::fINT)+" -o "+file_random+" -nz "+file_nz;
+    string DO = par::DirCosmo+"External/VIPERS/"+dir_venice+"/venice -m "+mask+" -r -f "+where+" -npart "+conv(nRandom, par::fINT)+" -o "+file_random+" -nz "+file_nz;
     cout << endl << "--> " << DO << endl << endl;
     if (system(DO.c_str())) {}
   }
-
+  
   ifstream fin(file_random.c_str()); checkIO(file_random, 1);
   string line;
   getline(fin, line);
@@ -408,11 +406,10 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const int nRand
   while (fin >> RA >> DEC >> REDSHIFT) 
     if (redshift_min<REDSHIFT && REDSHIFT<redshift_max && lim[0]<RA && RA<lim[1] && lim[2]<DEC && DEC<lim[3]) 
       m_sample.push_back(move(Object::Create(_RandomObject_, radians(RA), radians(DEC), REDSHIFT, cosm)));
-
+  
   computeComovingCoordinates(cosm);
   
   if (system ("rm -f file_nz temp")) {};
-  
 }
 
 /// @endcond

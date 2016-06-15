@@ -264,8 +264,9 @@ namespace cosmobl {
        *  correlation function
        *
        *  @param type the type of two-point correlation function; it
-       *  can be: _1D_monopole_, _1D_projected_, _1D_deprojected_,
-       *  _1D_multipoles_, _1D_angular_, _2D_Cartesian_, _2D_polar_
+       *  can be: \_1D_monopole\_, \_1D_projected\_,
+       *  \_1D_deprojected\_, \_1D_multipoles\_, \_1D_angular\_,
+       *  \_2D_Cartesian\_, \_2D_polar\_
        *
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
@@ -304,8 +305,9 @@ namespace cosmobl {
        *  @param dr_regions data-random pairs in the sub-regions
        *
        *  @param type the type of two-point correlation function; it
-       *  can be: _1D_monopole_, _1D_projected_, _1D_deprojected_,
-       *  _1D_multipoles_, _1D_angular_, _2D_Cartesian_, _2D_polar_
+       *  can be: \_1D_monopole\_, \_1D_projected\_,
+       *  \_1D_deprojected\_, \_1D_multipoles\_, \_1D_angular\_,
+       *  \_2D_Cartesian\_, \_2D_polar\_
        *
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
@@ -663,7 +665,7 @@ namespace cosmobl {
        *  functions of any type
        *
        *  @param type the type of two-point correlation function; it
-       *  can be: _1D_monopole_, _1D_angular_
+       *  can be: \_1D_monopole\_, \_1D_angular\_
        *
        *  @param data object of class Catalogue containing the input
        *  catalogue
@@ -689,7 +691,7 @@ namespace cosmobl {
        *  functions of any type
        *
        *  @param type the type of two-point correlation function; it
-       *  can be: _1D_monopole_, _1D_angular_
+       *  can be: \_1D_monopole\_, \_1D_angular\_
        *
        *  @param data object of class Catalogue containing the input
        *  catalogue
@@ -715,7 +717,7 @@ namespace cosmobl {
        *  functions of any type
        *
        *  @param type the type of two-point correlation function; it
-       *  can be: _2D_Cartesian_, _2D_polar_
+       *  can be: \_2D_Cartesian\_, \_2D_polar\_
        *
        *  @param data object of class Catalogue containing the input
        *  catalogue
@@ -764,7 +766,7 @@ namespace cosmobl {
        *  functions of any type
        *
        *  @param type the type of two-point correlation function; it
-       *  can be: _2D_Cartesian_, _2D_polar_
+       *  can be: \_2D_Cartesian\_, \_2D_polar\_
        *
        *  @param data object of class Catalogue containing the input
        *  catalogue
@@ -813,7 +815,8 @@ namespace cosmobl {
        *  functions of any type
        *
        *  @param type the type of two-point correlation function; it
-       *  can be: _1D_projected_, _1D_deprojected_, _1D_multipoles_
+       *  can be: \_1D_projected\_, \_1D_deprojected\_,
+       *  \_1D_multipoles\_
        *
        *  @param data object of class Catalogue containing the input
        *  catalogue
@@ -861,7 +864,8 @@ namespace cosmobl {
        *  functions of any type
        *
        *  @param type the type of two-point correlation function; it
-       *  can be: _1D_projected_, _1D_deprojected_, _1D_multipoles_
+       *  can be: \_1D_projected\_, \_1D_deprojected\_,
+       *  \_1D_multipoles\_
        *
        *  @param data object of class Catalogue containing the input
        *  catalogue

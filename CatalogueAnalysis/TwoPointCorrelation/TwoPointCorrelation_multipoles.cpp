@@ -249,14 +249,29 @@ void cosmobl::twopt::TwoPointCorrelation_multipoles::measureJackknife (const str
     ww.push_back(data[i]->fx());
     
     if (dir_output_ResampleXi != par::defaultString) {
-      string file = dir_output_ResampleXi+"xi_multipoles_Jackknife_"+conv(i,par::fINT)+".dat";
-      ErrorMsg("Work in progress in cosmobl::twopt::TwoPointCorrelation_multipoles::measureJackknife of TwoPointCorrelation_multipoles.cpp...");
+      string file_out = dir_output_ResampleXi+"xi_multipoles_Jackknife_"+conv(i,par::fINT)+".dat";
+
+      vector<double> rad = data[i]->xx();
+      vector<double> xil = data[i]->fx();
+      vector<double> error = data[i]->error_fx();
+
+      checkDim(rad, m_dd->nbins_D1()*3, "rad");
+
+      ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+
+      fout << "### rad  xi_0  error[xi_0]  xi_2  error[xi_2]  xi_4  error[xi_4] ###" << endl;
+
+      for (int i=0; i<m_dd->nbins_D1(); i++) 
+	fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << rad[i] << "  " << setw(8) << xil[i] << "  " << setw(8) << error[i] << "  " << setw(8) << xil[i+m_dd->nbins_D1()] << "  " << setw(8) << error[i+m_dd->nbins_D1()] << "  " << setw(8) << xil[i+2*m_dd->nbins_D1()] << "  " << setw(8) << error[i+2*m_dd->nbins_D1()] << endl;
+
+      fout.close(); cout << endl << "I wrote the file: " << file_out << endl << endl;
+
     }
   }
 
   covariance_matrix(ww, covariance, 1);
   m_dataset = MultipolesTwoP(data_polar->xx(), data_polar->yy(), data_polar->fxy(), data_polar->error_fxy());
-  m_dataset->set_covariance_fx(covariance);
+  m_dataset->set_covariance(covariance);
 
 }
 
@@ -287,13 +302,29 @@ void cosmobl::twopt::TwoPointCorrelation_multipoles::measureBootstrap (const int
     
     if (dir_output_ResampleXi != par::defaultString){
       string file = dir_output_ResampleXi+"xi_multipoles_Bootstrap_"+conv(i,par::fINT)+".dat";
-      ErrorMsg("Work in progress in cosmobl::twopt::TwoPointCorrelation_multipoles::measureBootstrap of TwoPointCorrelation_multipoles.cpp...");
+      string file_out = dir_output_ResampleXi+"xi_multipoles_Jackknife_"+conv(i,par::fINT)+".dat";
+
+      vector<double> rad = data[i]->xx();
+      vector<double> xil = data[i]->fx();
+      vector<double> error = data[i]->error_fx();
+
+      checkDim(rad, m_dd->nbins_D1()*3, "rad");
+
+      ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+
+      fout << "### rad  xi_0  error[xi_0]  xi_2  error[xi_2]  xi_4  error[xi_4] ###" << endl;
+
+      for (int i=0; i<m_dd->nbins_D1(); i++) 
+	fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << rad[i] << "  " << setw(8) << xil[i] << "  " << setw(8) << error[i] << "  " << setw(8) << xil[i+m_dd->nbins_D1()] << "  " << setw(8) << error[i+m_dd->nbins_D1()] << "  " << setw(8) << xil[i+2*m_dd->nbins_D1()] << "  " << setw(8) << error[i+2*m_dd->nbins_D1()] << endl;
+
+      fout.close(); cout << endl << "I wrote the file: " << file_out << endl << endl;
+
     }
   }
   covariance_matrix(ww,covariance,0);
 
   m_dataset = MultipolesTwoP(data_polar->xx(),data_polar->yy(),data_polar->fxy(),data_polar->error_fxy());
-  m_dataset->set_covariance_fx(covariance);
+  m_dataset->set_covariance(covariance);
 }
 
 

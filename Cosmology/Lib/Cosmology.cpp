@@ -74,6 +74,10 @@ double cosmobl::Cosmology::value (const CosmoPar parameter) const
     param_value = m_Omega_baryon;
     break;
 
+  case (_Omega_baryon_h2_):        
+    param_value = m_Omega_baryon*m_hh*m_hh;
+    break;
+
   case (_Omega_neutrinos_):      
     param_value = m_Omega_neutrinos;
     break;
@@ -98,6 +102,10 @@ double cosmobl::Cosmology::value (const CosmoPar parameter) const
     param_value = m_H0;
     break;
 
+  case (_hh_):
+    param_value = m_hh;
+    break;
+  
   case (_scalar_amp_):           
     param_value = m_scalar_amp;
     break;
@@ -149,6 +157,10 @@ void cosmobl::Cosmology::set_parameter (const CosmoPar parameter, const double v
     set_OmegaB(value);
     break;
 
+  case (_Omega_baryon_h2_):        
+    set_OmegaB_h2(value);
+    break;
+
   case (_Omega_neutrinos_):      
     set_OmegaNu (value, m_massless_neutrinos, m_massive_neutrinos);
     break;
@@ -171,6 +183,10 @@ void cosmobl::Cosmology::set_parameter (const CosmoPar parameter, const double v
 
   case (_H0_):
     set_H0(value); 
+    break;
+
+  case (_hh_):
+    set_hh(value); 
     break;
 
   case (_scalar_amp_):           
@@ -317,6 +333,19 @@ double cosmobl::Cosmology::DD (const double redshift) const
 // =====================================================================================
 
 
+double cosmobl::Cosmology::sigma8 (const double redshift) const 
+{
+  if(m_sigma8<0)
+    ErrorMsg("Error in sigma8 of Cosmology.cpp, sigma8 at z=0 is not set");
+
+  double zero = 0.;
+  return m_sigma8*DD(redshift)/DD(zero);
+}
+
+
+// =====================================================================================
+
+
 double cosmobl::Cosmology::D_C (const double redshift) const 
 {
   if (redshift<0) ErrorMsg ("Error in cosmobl::Cosmology::D_C of Cosmology.cpp: redshift have to be >=0!");
@@ -443,6 +472,15 @@ double cosmobl::Cosmology::D_L (const double redshift) const
 double cosmobl::Cosmology::D_V (const double redshift) const 
 {
   return pow(pow(D_M(redshift),2)*par::cc*redshift/HH(redshift),1./3.);
+}
+
+
+// =====================================================================================
+
+
+double cosmobl::Cosmology::F_AP (const double redshift) const 
+{
+  return D_M(redshift)*HH(redshift)/par::cc;
 }
 
 

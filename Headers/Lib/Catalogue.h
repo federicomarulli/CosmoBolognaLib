@@ -60,8 +60,8 @@ namespace cosmobl {
   namespace catalogue {
 
     /**
-     * @enum Var
-     * @brief the catalogue variables
+     *  @enum Var
+     *  @brief the catalogue variables
      */
     enum Var {
     
@@ -114,13 +114,14 @@ namespace cosmobl {
       _Radius_,
       
       /// generic properties
-      _Generic_,
+      _Generic_
+      
     };
 
     
     /**
-     * @enum RandomType
-     * @brief the type of random catalogue
+     *  @enum RandomType
+     *  @brief the type of random catalogue
      */
     enum RandomType {
 
@@ -145,75 +146,122 @@ namespace cosmobl {
     };
     
     /**
-     * @class Catalogue Catalogue.h "Headers/Lib/Catalogue.h"
+     *  @class Catalogue Catalogue.h "Headers/Lib/Catalogue.h"
      *
-     * @brief The class Catalogue
+     *  @brief The class Catalogue
      *
-     * This class is used to handle objects of type <EM> Catalogue
-     * </EM>
+     *  This class is used to handle objects of type <EM> Catalogue
+     *  </EM>
      */
     class Catalogue {
-
+      
     private :
-    
+      
       /// vector containing the objects of the catalogue
       vector<shared_ptr<Object> > m_sample;
-    
+      
       /// vector containing the object indexes
       vector<int> m_index;      
 
+      
     public :
-
+      
       /**
        *  @name Constructors/destructors
        */
       ///@{
     
       /**
-       * @brief default constructor
-       * @return object of class Catalogue
+       *  @brief default constructor
+       *  @return object of class Catalogue
        */
       Catalogue () = default;
 
-
       /**
-       * @brief default copy constructor
-       * @param cat object of class Catalogue
-       * @return object of class Catalogue
+       *  @brief default copy constructor
+       *  @param cat object of class Catalogue
+       *  @return object of class Catalogue
        */
-      Catalogue (const Catalogue& cat);
+      Catalogue (const Catalogue &cat)
+	: m_sample(cat.sample()), m_index(cat.index()) {}
       
       /**
-       * @brief constructor, using vectors with Cartesian coordinates
-       * @param type the object type, specified in the
-       * cosmobl::catalogue::ObjType enumeration
-       * @param xx vector containing the x coordinates
-       * @param yy vector containing the y coordinates
-       * @param zz vector containing the z coordinates
-       * @param weight vector containing the weights
-       * @return object of type catalogue
-       */
-      Catalogue (const ObjType type, const vector<double> xx, const vector<double> yy, const vector<double> zz, vector<double> weight={});
-
-      /**
-       *  @brief constructor, using vectors with polar coordinates
-       *  @param type the object type, specified in the
-       *  cosmobl::catalogue::ObjType enumeration
-       *  @param ra vector containing the Right Ascensions
-       *  @param dec vector containing the Declinations
-       *  @param redshift vector containing the redshifts
-       *  @param cosm object of class Cosmology, used to estimate comoving distances 
+       *  @brief constructor
+       *
+       *  @param objType the object type, specified in the
+       *  cosmobl::catalogue::ObjType enumeration 
+       *
+       *  @param coordType the coordinate type, specified in the
+       *  cosmobl::CoordType enumeration
+       *
+       *  @param coord1 vector containing the first coordinates, that
+       *  can be either the x comoving coordinates, or the Right
+       *  Ascensions (depending on coordtype)
+       *
+       *  @param coord2 vector containing the second coordinates, that
+       *  can be either the y comoving coordinates, or the
+       *  Declinations (depending on coordtype)
+       *
+       *  @param coord3 vector containing the third coordinates, that
+       *  can be either the z comoving coordinates, or the redshits
+       *  (depending on coordtype)
+       *
+       *  @param cosm object of class Cosmology
+       *
        *  @param inputUnits the units of the input coordinates
+       *
        *  @param weight vector containing the weights
+       *
        *  @return object of type catalogue
-       */ 
-      Catalogue (const ObjType type, const vector<double> ra, const vector<double> dec, const vector<double> redshift, const Cosmology &cosm, const CoordUnits inputUnits=_radians_, vector<double> weight={}); 
+       */
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const vector<double> weight={});
 
       /**
-       * @brief constructor, using vectors of generic objects
-       * @param object objects of class T, specified in the
-       * cosmobl::catalogue::ObjType enumeration
-       * @return objects of type Catalogue
+       *  @brief constructor, reading a file with coordinates
+       *
+       *  @param objType the object type, specified in the
+       *  cosmobl::catalogue::ObjType enumeration
+       *
+       *  @param coordType the coordinate type, specified in the
+       *  cosmobl::CoordType enumeration
+       *
+       *  @param file vector containing the files where the input
+       *  catalogues are stored
+       *
+       *  @param cosm object of class Cosmology
+       *
+       *  @param col1 column of the input file containing the first
+       *  coordinates, that can be either the x comoving coordinates,
+       *  or the Right Ascensions (depending on coordtype)
+       *
+       *  @param col2 column of the input file containing the second
+       *  coordinates, that can be either the y comoving coordinates,
+       *  or the Declinations (depending on coordtype)
+       *
+       *  @param col3 column of the input file containing the third
+       *  coordinates, that can be either the z comoving coordinates,
+       *  or the redshits (depending on coordtype)
+       *
+       *  @param colWeight column of the input file containing the
+       *  weights
+       *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param nSub the fracton of objects that will be randomly
+       *  selected (nSub=1 &rArr; all objects are selected)
+       *
+       *  @param fact the factor used to convert R.A. and Dec
+       *  coordinates, i.e. &rArr; R.A.=R.A.*fact, Dec=Dec*fact
+       *
+       *  @return an object of class Catalogue
+       */
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const Cosmology &cosm={}, const int col1=0, const int col2=1, const int col3=2, const int colWeight=-1, const CoordUnits inputUnits=_radians_, const double nSub=1.1, const double fact=1.);
+
+      /**
+       *  @brief constructor, using vectors of generic objects
+       *  @param object objects of class T, specified in the
+       *  cosmobl::catalogue::ObjType enumeration
+       *  @return objects of type Catalogue
        */ 
       template<typename T> Catalogue (vector<T> object) {
 	for (size_t i=0; i<object.size(); i++)
@@ -221,61 +269,16 @@ namespace cosmobl {
       }
 
       /**
-       * @brief constructor, using vectors of pointers to generic
-       * objects
-       * @param sample vector of objects of type \e Object, specified
-       * in the cosmobl::catalogue::ObjType enumeration
-       * @return object of class Catalogue
+       *  @brief constructor, using vectors of pointers to generic
+       *  objects
+       *  @param sample vector of objects of type \e Object, specified
+       *  in the cosmobl::catalogue::ObjType enumeration
+       *  @return object of class Catalogue
        */
       Catalogue (vector<shared_ptr<Object> > sample) {
 	for (auto &&i : sample)
 	  m_sample.push_back(move(i));
       }
-
-      /**
-       *  @brief constructor, reading a file with Cartesian coordinates
-       *  @param type the object type, specified in the
-       *  cosmobl::catalogue::ObjType enumeration
-       *  @param file vector containing the files where the input
-       *  catalogues are stored
-       *  @param col_X column of the input file containing the X
-       *  coordinates
-       *  @param col_Y column of the input file containing the Y
-       *  coordinates
-       *  @param col_Z column of the input file containing the Z
-       *  coordinates
-       *  @param col_Weight column of the input file containing the
-       *  weights
-       *  @param nSub the fracton of objects that will be randomly
-       *  selected (nSub=1 &rArr; all objects are selected)
-       *  @return an object of class Catalogue
-       */
-      Catalogue (const ObjType type, const vector<string> file, const int col_X=0, const int col_Y=1, const int col_Z=2, const int col_Weight=-1, const double nSub=1.1);
-
-      /**
-       *  @brief constructor, reading a file with polar coordinates [R.A., Dec,
-       *  redshift]
-       *  @param type the object type, specified in the
-       *  cosmobl::catalogue::ObjType enumeration
-       *  @param file vector containing the files where the input
-       *  catalogues are stored
-       *  @param cosm object of class Cosmology
-       *  @param col_RA column of the input file containing the R.A.
-       *  coordinates
-       *  @param col_Dec column of the input file containing the Dec
-       *  coordinates
-       *  @param col_redshift column of the input file containing the
-       *  redshift coordinates
-       *  @param col_Weight column of the input file containing the
-       *  weights
-       *  @param inputUnits the units of the input coordinates
-       *  @param nSub the fracton of objects that will be randomly
-       *  selected (nSub=1 &rArr; all objects are selected)
-       *  @param fact the factor used to convert R.A. and Dec
-       *  coordinates, i.e. &rArr; R.A.=R.A.*fact, Dec=Dec*fact
-       *  @return an object of class Catalogue
-       */
-      Catalogue (const ObjType type, const vector<string> file, const Cosmology &cosm, const int col_RA=0, const int col_Dec=1, const int col_redshift=2, const int col_Weight=-1, const CoordUnits inputUnits=_radians_, const double nSub=1.1, const double fact=1.);
 
       /**
        * @brief default destructor
@@ -442,7 +445,7 @@ namespace cosmobl {
 
       /// @cond extrandom
       
-      Catalogue (const RandomType type, const int nRandom, const Cosmology &cosm, const string dir_out, const int step_redshift, const vector<double> dc, const vector<double> convol, const vector<double> lim, const vector<double> redshift, const bool venice, string file_random, const string mask, const string dir_venice, const int idum=13); 
+      Catalogue (const RandomType type, const int nRandom, const Cosmology &cosm, const string dir_out, const int step_redshift, const vector<double> dc, const vector<double> convol, const vector<double> lim, const vector<double> redshift, const vector<double> weight, const double redshift_min, const double redshift_max, const bool venice, const string where, string file_random, const string mask, const string dir_venice, const int idum=13); 
       
       /// @endcond
   
@@ -450,89 +453,101 @@ namespace cosmobl {
 
     
       /**
-       *  @name Member functions used to get the protected members and thier properties
+       *  @name Member functions used to get the private members and thier properties
        */
       ///@{
-    
+
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_xx
+       *  @brief get the private member Catalogue::m_sample
+       *  @return the vector containing the objects of the catalogue
+       */
+      vector<shared_ptr<Object> > sample () const { return m_sample; };
+      
+      /**
+       *  @brief get the private member Catalogue::m_index
+       *  @return the vector containing the object indexes
+       */
+      vector<int> index () const { return m_index; };
+      
+      /**
+       * @brief get the private member Catalogue::m_sample[i]->m_xx
        * @param i the object index
        * @return the coordinate x of the i-th object 
        */
       double xx (const int i) const { return m_sample[i]->xx(); };
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_yy
+       * @brief get the private member Catalogue::m_sample[i]->m_yy
        * @param i the object index
        * @return the coordinate y of the i-th object 
        */
       double yy (const int i) const { return m_sample[i]->yy(); };
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_zz
+       * @brief get the private member Catalogue::m_sample[i]->m_zz
        * @param i the object index
        * @return the coordinate z of the i-th object 
        */
       double zz (const int i) const { return m_sample[i]->zz(); };
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_vx
+       * @brief get the private member Catalogue::m_sample[i]->m_vx
        * @param i the object index
        * @return the velocity along the x direction of the i-th object
        */
       double vx (const int i) const { return m_sample[i]->vx(); };
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_vy
+       * @brief get the private member Catalogue::m_sample[i]->m_vy
        * @param i the object index
        * @return the velocity along the y direction of the i-th object
        */
       double vy (const int i) const { return m_sample[i]->vy(); };
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_vz
+       * @brief get the private member Catalogue::m_sample[i]->m_vz
        * @param i the object index
        * @return the velocity along the z direction of the i-th object
        */
       double vz (const int i) const { return m_sample[i]->vz(); }; 
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_dc
+       * @brief get the private member Catalogue::m_sample[i]->m_dc
        * @param i the object index
        * @return the comoving distance of the i-th object
        */
       double dc (const int i) const { return m_sample[i]->dc(); };
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_ra
+       * @brief get the private member Catalogue::m_sample[i]->m_ra
        * @param i the object index
        * @return the Right Ascension of the i-th object
        */
       double ra (const int i) const { return m_sample[i]->ra(); };
     
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_dec
+       * @brief get the private member Catalogue::m_sample[i]->m_dec
        * @param i the object index
        * @return the Declination of the i-th object
        */
       double dec (const int i) const { return m_sample[i]->dec(); };
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_redshift
+       * @brief get the private member Catalogue::m_sample[i]->m_redshift
        * @param i the object index
        * @return the redshift of the i-th object
        */
       double redshift (const int i) const { return m_sample[i]->redshift(); };
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_weight
+       * @brief get the private member Catalogue::m_sample[i]->m_weight
        * @param i the object index
        * @return the weight of the i-th object
        */
       double weight (const int i) const { return m_sample[i]->weight(); };
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_region
+       * @brief get the private member Catalogue::m_sample[i]->m_region
        * @param i the object index
        * @return the index of the region of the i-th object
        */
@@ -552,35 +567,35 @@ namespace cosmobl {
       vector<long> get_region_list () const;
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_mass
+       * @brief get the private member Catalogue::m_sample[i]->m_mass
        * @param i the object index
        * @return the mass of the i-th object
        */
       double mass (const int i) const { return m_sample[i]->mass(); }
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_magnitude
+       * @brief get the private member Catalogue::m_sample[i]->m_magnitude
        * @param i the object index
        * @return the magnitude of the i-th object
        */
       double magnitude (const int i) const { return m_sample[i]->magnitude(); }
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_richness
+       * @brief get the private member Catalogue::m_sample[i]->m_richness
        * @param i the object index
        * @return the richness of the i-th object
        */
       double richness (const int i) const { return m_sample[i]->richness(); }
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_generic
+       * @brief get the private member Catalogue::m_sample[i]->m_generic
        * @param i the object index
        * @return generic properties of the i-th object
        */
       double generic (const int i) const { return m_sample[i]->generic(); }
 
       /**
-       * @brief get the protected member Catalogue::m_sample[i]->m_radius
+       * @brief get the private member Catalogue::m_sample[i]->m_radius
        * @param i the object index
        * @return radius of the i-th object
        */

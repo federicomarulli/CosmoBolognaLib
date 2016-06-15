@@ -182,7 +182,7 @@ void cosmobl::twopt::TwoPointCorrelation1D_monopole::measureJackknife (const str
   else
     m_dataset = NaturalEstimatorTwoP(m_dd, m_rr, nData, nRandom);
 
-  m_dataset->set_covariance_fx(covariance);
+  m_dataset->set_covariance(covariance);
 
 }
 
@@ -226,6 +226,6 @@ void cosmobl::twopt::TwoPointCorrelation1D_monopole::measureBootstrap (const int
   else
     m_dataset = NaturalEstimatorTwoP(m_dd, m_rr, nData, nRandom);
 
-  m_dataset->set_covariance_fx(covariance);
+  m_dataset->set_covariance(covariance);
 
 }

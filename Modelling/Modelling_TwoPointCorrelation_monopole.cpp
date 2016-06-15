@@ -55,12 +55,50 @@ cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::Modelling_TwoPointCo
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::fit_bias (const string LikelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin)
+void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::fit_bias (const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin)
 {
   m_data->set_limits(xlimits[0],xlimits[1]);
 
   ModelBias model(bias_value,bias_prior);
   model.set_xi0_parameters(m_data->xx(),m_cosmology,m_redshift);
+  m_model = make_shared<ModelBias>(model);
+  
+  statistics::Likelihood lik(m_data, m_model, likelihoodType);
+  lik.sample_stretch_move(nChains, chain_size,1.); 
+  string output_file="monopole_bias_xmin="+conv(m_data->x_down(),par::fDP1)+"_xmax="+conv(m_data->x_up(),par::fDP1);
+  lik.write_chain(dir_output, output_file, start, stop, thin);
+
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::fit_bias_cosmology(const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const vector<CosmoPar> CosmoPars, const vector<statistics::Prior> prior_CosmoPars, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin){}
+
+// ============================================================================================
+
+
+/*
+void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::fit_BAO (const string LikelihoodType, const vector<double> xlimits, const double alpha_value, const statistics::Prior alpha_prior, const string model_type, const double sigmaNL, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin)
+{
+  m_data->set_limits(xlimits[0],xlimits[1]);
+
+  vector<double> rMin = 0.5;
+  vector<double> rMax = 199.5;
+  
+  if(xlimits[0]<rMin)
+    ErrorMsg("Error in fit_BAO of Modelling_TwoPointCorrelation_monopole, increase the lower limit of the fit");
+
+  if(xlimits[1]>rMin)
+    rMax = xlimits[1]*1.5;
+
+  double delta_r = 1;
+  int nbins = (rMax-rMin)/delta_r;
+  vector<double> rr = linear_bin_vector(nbins,rMin,rMax);
+
+  ModelBAO model(bias_value,bias_prior, alpha_value, alpha_prior)
+  model.set_xi_parameters(rr, m_cosmology, m_redshift, type, "Spline", "CAMB", 0, sigmaNL, 1.e-4, 1.e1, 1);
   m_model = make_shared<ModelBias>(model);
   
   statistics::likelihood_npar func;
@@ -71,17 +109,12 @@ void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::fit_bias (const
   else if(LikelihoodType == "covariance")
     func = &statistics::likelihood_gaussian_1D_covariance_npar;
   else
-    ErrorMsg("Error in fit_bias of ModellingTwoPointCorrelation1D_monopole, no such type of likelihood");
+    ErrorMsg("Error in fit_bao of ModellingTwoPointCorrelation1D_monopole, no such type of likelihood");
 
   statistics::Likelihood lik(m_data,m_model,func);
   lik.sample(nChains, chain_size,1.); 
-  string dir_output_file=dir_output+"monopole_bias_xmin="+conv(m_data->x_down(),par::fDP1)+"_xmax="+conv(m_data->x_up(),par::fDP1)+"_"+LikelihoodType;
-  lik.write_chain(dir_output_file, start, stop, thin);
+  string output_file="monopole_BAO_xmin="+conv(m_data->x_down(),par::fDP1)+"_xmax="+conv(m_data->x_up(),par::fDP1);
+  lik.write_chain(dir_output, output_file, start, stop, thin);
 
 }
-
-
-// ============================================================================================
-
-
-void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::fit_bias_cosmology(const string LikelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const vector<CosmoPar> CosmoPars, const vector<statistics::Prior> prior_CosmoPars, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin){}
+*/

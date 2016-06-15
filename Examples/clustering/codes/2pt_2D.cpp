@@ -2,7 +2,7 @@
 // Example code: how to measure 2D two-point correlation function
 // ==============================================================
 
-#include "TwoPointCorrelation2D_cartesian.h"
+#include "TwoPointCorrelation2D.h"
 
 using namespace cosmobl;
 using namespace catalogue;
@@ -31,7 +31,7 @@ int main () {
   double w0 = -1.;   
   
   Cosmology cosmology {OmegaM, Omega_b, Omega_nu, massless_neutrinos, massive_neutrinos, OmegaL, Omega_radiation, hh, scalar_amp, n_s, w0, wa};
-
+  
   
   // ----------------------------------------------------------
   // ---------------- read the input catalogue ----------------
@@ -44,7 +44,7 @@ int main () {
   string line;
   double RA, DEC, RED;
   vector<double> ra, dec, redshift;
-  
+ 
   while (getline(fin, line)) {
     stringstream ss(line);
     ss >> RA; ss >> DEC; ss >> RED;
@@ -55,14 +55,16 @@ int main () {
   
   fin.clear(); fin.close();
   
-  Catalogue catalogue {_Galaxy_ , ra, dec, redshift, cosmology};
+  Catalogue catalogue {_Galaxy_, _observedCoordinates_, ra, dec, redshift, cosmology};
   
   
   // --------------------------------------------------------------------------------------
   // ---------------- construct the random catalogue (with cubic geometry) ---------------- 
   // -------------------------------------------------------------------------------------- 
 
-  Catalogue random_catalogue {_createRandom_box_, catalogue, 1.};
+  double N_R = 1.; // random/data ratio
+ 
+  Catalogue random_catalogue {_createRandom_box_, catalogue, N_R};
   
   
   // -----------------------------------------------------------------------------------------------
@@ -85,15 +87,16 @@ int main () {
   double piMax = 50.;    // maximum separation in the second dimension 
   int nbins_D2 = 50;     // number of bins in the second dimension
   double shift_D2 = 0.5; // spatial shift used to set the bin centre in the second dimension
-
-  // (construct the object using a static factory)
+  
+  // construct the object using a static factory
   auto xi2DCart = TwoPointCorrelation::Create(_2D_Cartesian_, catalogue, random_catalogue, _linear_, rpMin, rpMax, nbins_D1, shift_D1, _linear_, piMin, piMax, nbins_D2, shift_D2);
 
-  // (compute Poisson errors)
+  // measure the 2D correlation function and compute Poisson errors
   xi2DCart->measure(_Poisson_, dir_pairs);
-  
   xi2DCart->write(dir_output, "xi_rp_pi_linlin.dat");
+
   
   return 0;
+
 }
 

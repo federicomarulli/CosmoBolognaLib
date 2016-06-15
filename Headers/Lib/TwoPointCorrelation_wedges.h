@@ -141,9 +141,11 @@ namespace cosmobl {
 
       /**
        *  @brief measure the wedges of the two-point correlation
-       *  function, &xi;(r), estimate the covariance with Bootstrap resampling
+       *  function, &xi;(r), estimate the covariance with bootstrap
+       *  resampling
        *
-       *  @param nMocks number of mocks to be generated with bootstrap resampling
+       *  @param nMocks number of mocks to be generated with bootstrap
+       *  resampling
        *
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
@@ -400,7 +402,7 @@ namespace cosmobl {
        *  store the number of pairs (if the pairs are read from files)
        *  @param dir_output_ResampleXi output directory used to store xi from
        *  resampled catalogues
-       *  @param nMocks number of resampling to be generate with bootsrap*
+       *  @param nMocks number of resampling to be generate with bootstrap
        *  @param count_dd 1 &rarr; count the number of data-data
        *  opairs; 0 &rarr; read the number of data-data pairs from
        *  file

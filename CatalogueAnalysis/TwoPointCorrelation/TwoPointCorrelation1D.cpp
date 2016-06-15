@@ -103,7 +103,7 @@ void cosmobl::twopt::TwoPointCorrelation1D::write_pairs (const vector<shared_ptr
 
   for (int i=0; i<nRegions; i++) {
    
-    for (int j=0; j<nRegions; j++) {
+    for (int j=i; j<nRegions; j++) {
 
       int index = i*nRegions+j-(i-1)*i/2-i;
 

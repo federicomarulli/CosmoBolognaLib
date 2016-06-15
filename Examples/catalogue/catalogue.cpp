@@ -21,7 +21,7 @@ int main () {
   // ---------------- method I : construct a galaxy catalogue directly by reading an input file ----------------
   // ----------------------------------------------------------------------------------------.........----------
   
-  Catalogue catalogue1 {_Galaxy_, {file_catalogue}};
+  Catalogue catalogue1 {_Galaxy_, _comovingCoordinates_, {file_catalogue}};
 
   
   // -------------------------------------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ int main () {
   
   fin.clear();
   
-  Catalogue catalogue2 {_Galaxy_, x, y, z};
+  Catalogue catalogue2 {_Galaxy_, _comovingCoordinates_, x, y, z};
   
   
   // ------------------------------------------------------------------------------------------------------------------

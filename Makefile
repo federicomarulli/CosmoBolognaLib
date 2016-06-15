@@ -199,21 +199,25 @@ allExamples:
 	$(call colorecho, "\n"Compiling the example code: fsigma8.cpp ... "\n")
 	cd $(PWD)/Examples/fsigma8 ; make 
 	$(call colorecho, "\n"Compiling the example code: prior.cpp ... "\n")
-	cd $(PWD)/Examples/statistics/codes ; make prior
+	cd $(PWD)/Examples/statistics/codes ; make prior 
+	$(call colorecho, "\n"Compiling the example code: fit_linear_relation.cpp ... "\n")
+	cd $(PWD)/Examples/statistics/codes ; make fit_linear_relation
 	$(call colorecho, "\n"Compiling the example code: catalogue.cpp ... "\n")
 	cd $(PWD)/Examples/catalogue ; make catalogue 
 	$(call colorecho, "\n"Compiling the example code: 2pt_monopole.cpp ... "\n")
 	cd $(PWD)/Examples/clustering/codes ; make 2pt_monopole
+	$(call colorecho, "\n"Compiling the example code: 2pt_monopole_errors.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_monopole_errors
 	$(call colorecho, "\n"Compiling the example code: 2pt_2D.cpp ... "\n")
 	cd $(PWD)/Examples/clustering/codes ; make 2pt_2D
-	$(call colorecho, "\n"Compiling the example code: 2pt_jackknife.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 2pt_jackknife
-	$(call colorecho, "\n"Compiling the example code: 2pt_projected_jackknife.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 2pt_projected_jackknife
-	$(call colorecho, "\n"Compiling the example code: modelBias_2pt_projected.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make modelBias_2pt_projected
+	$(call colorecho, "\n"Compiling the example code: 2pt_projected.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_projected
+	$(call colorecho, "\n"Compiling the example code: 2pt_angular.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_angular
 	$(call colorecho, "\n"Compiling the example code: 3pt.cpp ... "\n")
 	cd $(PWD)/Examples/clustering/codes ; make 3pt
+	$(call colorecho, "\n"Compiling the example code: modelBias_2pt_projected.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make modelBias_2pt_projected
 
 python: $(OBJ_CBL) $(dir_Python)CBL_wrap.o
 	$(C) -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(dir_PYLIB)_CosmoBolognaLib.so $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY)
@@ -259,7 +263,7 @@ cleanExamples:
 	cd $(PWD)/Examples/statistics/codes ; make clean && cd ../..
 	cd $(PWD)/Examples/catalogue ; make clean && cd ../
 	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../..
-	rm -rf $(PWD)/Examples/clustering/output/*
+	rm -rf $(PWD)/Examples/statistics/output/* $(PWD)/Examples/clustering/output/*
 
 cleanpy:
 	rm -f $(PWD)/Python/*~ $(PWD)/Python/CBL_wrap.o $(PWD)/Python/CBL_wrap.cxx $(PWD)/Python/CosmoBolognaLib.py*

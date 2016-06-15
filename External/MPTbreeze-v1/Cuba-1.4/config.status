@@ -366,7 +366,7 @@ Copyright (C) 2006 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/alfonso/CosmoBolognaLib/Cosmology/MPTbreeze-v1/Cuba-1.4'
+ac_pwd='/home/PERSONALE/federico.marulli3/CosmoBolognaLib/External/MPTbreeze-v1/Cuba-1.4'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 test -n "$AWK" || AWK=awk
@@ -557,9 +557,9 @@ S["CPPFLAGS"]=""
 S["ac_ct_CC"]="gcc"
 S["EXEEXT"]=""
 S["OBJEXT"]="o"
-S["F77"]="g77"
+S["F77"]="gfortran"
 S["FFLAGS"]="-g -O2"
-S["ac_ct_F77"]="g77"
+S["ac_ct_F77"]="gfortran"
 S["RANLIB"]="ranlib"
 S["INSTALL_PROGRAM"]="${INSTALL}"
 S["INSTALL_SCRIPT"]="${INSTALL}"

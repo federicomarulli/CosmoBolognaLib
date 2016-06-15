@@ -75,115 +75,84 @@ template void cosmobl::catalogue::Catalogue::remove_objects (vector<cosmobl::cat
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType type, const vector<double> xx, const vector<double> yy, const vector<double> zz, vector<double> weight)
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const Cosmology &cosm, const CoordUnits inputUnits, const vector<double> weight)
 {
-  if (weight.size() == 0)
-    weight.resize(xx.size(), 1);
-
-  if (!(xx.size()==yy.size() && yy.size()==zz.size() && zz.size()==weight.size()))
-    ErrorMsg("Error in Catalogue::Catalogue() of Catalogue.cpp: coordinates with different dimension!"); 
-  
-  for (size_t i=0; i<xx.size(); i++)
-    m_sample.push_back(move(Object::Create(type, xx[i], yy[i], zz[i], weight[i])));
-}
-
-
-// ============================================================================
-
-
-cosmobl::catalogue::Catalogue::Catalogue (const Catalogue& cat)
-{
-  m_sample = cat.m_sample;
-  m_index = cat.m_index;
-}
-
-
-// ============================================================================
-
-
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType type, const vector<double> ra, const vector<double> dec, const vector<double> redshift, const Cosmology &cosm, const CoordUnits inputUnits, vector<double> weight)
-{
-  // conversion of coordinate units into radiants
-  vector<double> RA(ra.size()), DEC(dec.size());
-  for (size_t i=0; i<ra.size(); i++) 
-    RA[i] = (inputUnits==_radians_) ? ra[i] : radians(ra[i], inputUnits);
-  for (size_t i=0; i<dec.size(); i++) 
-    DEC[i] = (inputUnits==_radians_) ? dec[i] : radians(dec[i], inputUnits);
- 
-  // (weight=1 if weights are not used)
-  if (weight.size()==0)
-    weight.resize(RA.size(), 1);
-
   // check the vector dimensions
-  if (!(RA.size()==DEC.size() && DEC.size()==redshift.size() && redshift.size()==weight.size()))
-    ErrorMsg("Error in Catalogue::Catalogue() of Catalogue.cpp: coordinates with different dimension!"); 
-
+  if (!(coord1.size()==coord2.size() && coord2.size()==coord3.size()))
+    ErrorMsg("Error in Catalogue::Catalogue() of Catalogue.cpp: coordinates with different dimensions!"); 
+  
+  // weight[]=1, if are not used
+  vector<double> _weight = weight;
+  if (_weight.size()==0) _weight.resize(coord1.size(), 1);
+  
+  
   // include the objects in the catalogue
-  for (size_t i=0; i<RA.size(); i++)
-    m_sample.push_back(move(Object::Create(type, RA[i], DEC[i], redshift[i], cosm, weight[i])));
 
-}
-  
+  if (coordType==_comovingCoordinates_) // comoving coordinates (x, y, z)
+    for (size_t i=0; i<coord1.size(); ++i)
+      m_sample.push_back(move(Object::Create(objType, coord1[i], coord2[i], coord3[i], _weight[i])));
 
-
-// ============================================================================
-
-
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType type, const vector<string> file, const int col_X, const int col_Y, const int col_Z, const int col_Weight, const double nSub) 
-{
-  default_random_engine gen;
-  uniform_real_distribution<float> ran(0., 1.);
+  else if (coordType==_observedCoordinates_) { // observed cordinates (R.A., Dec, redshift)
     
-  string line; double XX, YY, ZZ, WW, VV;
-    
-  for (size_t dd=0; dd<file.size(); dd++) {
-
-    string file_in = file[dd];
-    cout << "I'm reading the catalogue: " << file_in << endl;
-    ifstream finr (file_in.c_str()); checkIO(file_in, 1);
-    
-    while (getline(finr, line)) {
-      if (ran(gen)<nSub) {
-	stringstream ss(line);
-	vector<double> val; while (ss>>VV) val.push_back(VV);
-	checkDim(val, col_X, "val", 0); checkDim(val, col_Y, "val", 0); checkDim(val, col_Z, "val", 0);
-	XX = val[col_X]; YY = val[col_Y]; ZZ = val[col_Z];
-	WW = (col_Weight!=-1) ? val[col_Weight] : 1.;
-        m_sample.push_back(move(Object::Create(type, XX, YY, ZZ, WW)));
-      }
+    // conversion of coordinate units into radiants, in case they are provided in different units
+    vector<double> ra(coord1.size()), dec(coord1.size());
+    for (size_t i=0; i<coord1.size(); ++i) {
+      ra[i] = (inputUnits==_radians_) ? coord1[i] : radians(coord1[i], inputUnits);
+      dec[i] = (inputUnits==_radians_) ? coord2[i] : radians(coord2[i], inputUnits);
     }
-    
-    finr.clear(); finr.close(); 
+
+    for (size_t i=0; i<ra.size(); ++i)
+      m_sample.push_back(move(Object::Create(objType, ra[i], dec[i], coord3[i], cosm, _weight[i])));
   }
+  
+  else ErrorMsg("Error in Catalogue::Catalogue() of Catalogue.cpp: coordType is not valid!");
 }
 
 
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType type, const vector<string> file, const Cosmology &cosm, const int col_RA, const int col_Dec, const int col_redshift, const int col_Weight, const CoordUnits inputUnits, const double nSub, const double fact) 
-{ 
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const Cosmology &cosm, const int col1, const int col2, const int col3, const int colWeight, const CoordUnits inputUnits, const double nSub, const double fact) 
+{
+  // parameters for random numbers used in case nSub!=1
   default_random_engine gen;
   uniform_real_distribution<float> ran(0., 1.);
- 
-  string line; double RA, DEC, ZZ, WW, VV;
+
   
-  for (size_t dd=0; dd<file.size(); dd++) {
+  // read the input catalogue files
+  
+  for (size_t dd=0; dd<file.size(); ++dd) {
 
-    string file_in = file[dd];
+    string line, file_in = file[dd];
     cout << "I'm reading the catalogue: " << file_in << endl;
-    ifstream finr (file_in.c_str()); checkIO(file_in, 1);
+    ifstream finr(file_in.c_str()); checkIO(file_in, 1);
 
-    while (getline(finr, line)) {
-      if (ran(gen)<nSub) {
+    double c1, c2, c3, WW, VV;
+
+    while (getline(finr, line)) { // read the lines
+      
+      if (ran(gen)<nSub) { // extract a subsample
+	
 	stringstream ss(line);
 	vector<double> val; while (ss>>VV) val.push_back(VV);
-	checkDim(val, col_RA, "val", 0); checkDim(val, col_Dec, "val", 0); checkDim(val, col_redshift, "val", 0);
-	RA = (inputUnits==_radians_) ? val[col_RA]*fact : radians(val[col_RA], inputUnits)*fact;
-	DEC = (inputUnits==_radians_) ? val[col_Dec]*fact : radians(val[col_Dec], inputUnits)*fact;
-	ZZ = val[col_redshift];
-	WW = (col_Weight!=-1) ? val[col_Weight] : 1.;
-	m_sample.push_back(move(Object::Create(type, RA, DEC, ZZ, cosm, WW)));
+	checkDim(val, col1, "val", 0); checkDim(val, col2, "val", 0); checkDim(val, col3, "val", 0);
+
+	if (coordType==_comovingCoordinates_) { // comoving coordinates (x, y, z)
+	  c1 = val[col1]; c2 = val[col2]; c3 = val[col3];
+	  WW = (colWeight!=-1) ? val[colWeight] : 1.;
+	  m_sample.push_back(move(Object::Create(objType, c1, c2, c3, WW)));
+	}
+
+	else if (coordType==_observedCoordinates_) { // observed coordinates (R.A., Dec, redshift)
+	  c1 = (inputUnits==_radians_) ? val[col1]*fact : radians(val[col1], inputUnits)*fact;
+	  c2 = (inputUnits==_radians_) ? val[col2]*fact : radians(val[col2], inputUnits)*fact;
+	  c3 = val[col3];
+	  WW = (colWeight!=-1) ? val[colWeight] : 1.;
+	  m_sample.push_back(move(Object::Create(objType, c1, c2, c3, cosm, WW)));
+	}
+	
+	else ErrorMsg("Error in Catalogue::Catalogue() of Catalogue.cpp: coordType is not valid!");
+	
       }
     }
     

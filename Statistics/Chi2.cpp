@@ -43,15 +43,14 @@ double cosmobl::statistics::chi2_1D_model_1par (double model_parameter, const sh
   shared_ptr<Data> data = static_pointer_cast<STR_params>(fixed_parameters)->data;
   shared_ptr<Model> model = static_pointer_cast<STR_params>(fixed_parameters)->model;
 
-  model_parameter = model->update_parameter(model_parameter);
-  vector<double> pars = {model_parameter};
+  model->set_parameter_values({model_parameter});
 
   vector<double> computed_model(data->ndata(),0);
-  for (int i=data->x_down(); i< data->x_up(); i++)
-    computed_model[i]=model->operator()(data->xx(i),pars);
+  for (int i=data->x_down(); i<data->x_up(); i++)
+    computed_model[i]=model->operator()(data->xx(i));
 
   double c2=0;
-  for (int i=data->x_down(); i< data->x_up(); i++)
+  for (int i=data->x_down(); i<data->x_up(); i++)
     c2+=pow((data->fx(i)-computed_model[i])/computed_model[i],2);
 
   return c2;
@@ -67,14 +66,14 @@ double cosmobl::statistics::chi2_1D_model_npar (vector<double> model_parameters,
   shared_ptr<Data> data = static_pointer_cast<STR_params>(fixed_parameters)->data;
   shared_ptr<Model> model = static_pointer_cast<STR_params>(fixed_parameters)->model;
 
-  model_parameters = model->update_parameters(model_parameters);
+  model->set_parameter_values(model_parameters);
 
   vector<double> computed_model(data->ndata(),0);
-  for (int i=data->x_down(); i< data->x_up(); i++)
-    computed_model[i]=model->operator()(data->xx(i),model_parameters);
+  for (int i=data->x_down(); i<data->x_up(); i++)
+    computed_model[i]=model->operator()(data->xx(i));
 
   double c2=0;
-  for (int i=data->x_down(); i< data->x_up(); i++)
+  for (int i=data->x_down(); i<data->x_up(); i++)
     c2+=pow((data->fx(i)-computed_model[i])/computed_model[i],2);
 
   return c2;
@@ -88,13 +87,12 @@ double cosmobl::statistics::chi2_1D_error_1par (double model_parameter, const sh
   shared_ptr<Data> data = static_pointer_cast<STR_params>(fixed_parameters)->data;
   shared_ptr<Model> model = static_pointer_cast<STR_params>(fixed_parameters)->model;
 
-  model_parameter = model->update_parameter(model_parameter);
-  vector<double> pars = {model_parameter};
+  model->set_parameter_values({model_parameter});
 
   double c2 = 0;
   
   for (int i=data->x_down(); i<data->x_up(); i++)
-    c2 += pow((data->fx(i)-model->operator()(data->xx(i),pars))/data->error_fx(i),2);
+    c2 += pow((data->fx(i)-model->operator()(data->xx(i)))/data->error_fx(i),2);
 
   return c2;
 }
@@ -108,12 +106,13 @@ double cosmobl::statistics::chi2_1D_error_npar (vector<double> model_parameters,
   shared_ptr<Data> data = static_pointer_cast<STR_params>(fixed_parameters)->data;
   shared_ptr<Model> model = static_pointer_cast<STR_params>(fixed_parameters)->model;
 
-  model_parameters = model->update_parameters(model_parameters);
+  model->set_parameter_values(model_parameters);
 
   double c2 = 0;
   
   for (int i=data->x_down(); i<data->x_up(); i++)
-    c2 += pow((data->fx(i)-model->operator()(data->xx(i),model_parameters))/data->error_fx(i),2);
+    c2 += pow((data->fx(i)-model->operator()(data->xx(i)))/data->error_fx(i),2);
+  
 
   return c2;
 }
@@ -127,18 +126,17 @@ double cosmobl::statistics::chi2_1D_covariance_1par (double model_parameter, con
   shared_ptr<Data> data = static_pointer_cast<STR_params>(fixed_parameters)->data;
   shared_ptr<Model> model = static_pointer_cast<STR_params>(fixed_parameters)->model;
 
-  model_parameter = model->update_parameter(model_parameter);
-  vector<double> pars = {model_parameter};
+  model->set_parameter_values({model_parameter});
 
   vector<double> computed_model(data->ndata(),0);
   for (int i=data->x_down(); i< data->x_up(); i++)
-    computed_model[i]=model->operator()(data->xx(i),pars);
+    computed_model[i]=model->operator()(data->xx(i));
 
   double c2 = 0;
   
   for (int i=data->x_down(); i<data->x_up(); i++)
     for (int j=data->x_down(); j<data->x_up(); j++)
-      c2 += (data->fx(i)-computed_model[i])*data->inverse_covariance_fx(i,j)*(data->fx(j)-computed_model[j]);    
+      c2 += (data->fx(i)-computed_model[i])*data->inverse_covariance(i,j)*(data->fx(j)-computed_model[j]);    
 
   return c2;
 }
@@ -152,17 +150,17 @@ double cosmobl::statistics::chi2_1D_covariance_npar (vector<double> model_parame
   shared_ptr<Data> data = static_pointer_cast<STR_params>(fixed_parameters)->data;
   shared_ptr<Model> model = static_pointer_cast<STR_params>(fixed_parameters)->model;
 
-  model_parameters = model->update_parameters(model_parameters);
+  model->set_parameter_values(model_parameters);
 
   vector<double> computed_model(data->ndata(),0);
   for (int i=data->x_down(); i< data->x_up(); i++)
-    computed_model[i]=model->operator()(data->xx(i),model_parameters);
+    computed_model[i]=model->operator()(data->xx(i));
 
   double c2 = 0;
   
   for (int i=data->x_down(); i<data->x_up(); i++)
     for (int j=data->x_down(); j<data->x_up(); j++)
-      c2 += (data->fx(i)-computed_model[i])*data->inverse_covariance_fx(i,j)*(data->fx(j)-computed_model[j]);
+      c2 += (data->fx(i)-computed_model[i])*data->inverse_covariance(i,j)*(data->fx(j)-computed_model[j]);
     
   return c2;
 }
@@ -176,14 +174,13 @@ double cosmobl::statistics::chi2_2D_error_1par (double model_parameter, const sh
   shared_ptr<Data> data = static_pointer_cast<STR_params>(fixed_parameters)->data;
   shared_ptr<Model> model = static_pointer_cast<STR_params>(fixed_parameters)->model;
 
-  vector<double> pars = {model_parameter};
-  pars = model->update_parameters(pars);
+  model->set_parameter_values({model_parameter});
 
   double c2 = 0;
   
   for (int i=data->x_down(); i<data->x_up(); i++)
     for (int j=data->y_down(); j<data->y_up(); j++)
-      c2 += pow((data->fxy(i,j)-model->operator()(data->xx(i),data->yy(j),pars))/data->error_fxy(i,j),2);
+      c2 += pow((data->fxy(i,j)-model->operator()(data->xx(i),data->yy(j)))/data->error_fxy(i,j),2);
     
   return c2;
 }
@@ -197,12 +194,12 @@ double cosmobl::statistics::chi2_2D_error_npar (vector<double> model_parameters,
   shared_ptr<Data> data = static_pointer_cast<STR_params>(fixed_parameters)->data;
   shared_ptr<Model> model = static_pointer_cast<STR_params>(fixed_parameters)->model;
 
-  model_parameters = model->update_parameters(model_parameters);
+  model->set_parameter_values(model_parameters);
 
   double c2 = 0;
   for (int i=data->x_down(); i<data->x_up(); i++)
     for (int j=data->y_down(); j<data->y_up(); j++)
-      c2 += pow((data->fxy(i,j)-model->operator()(data->xx(i),data->yy(j),model_parameters))/data->error_fxy(i,j),2);
+      c2 += pow((data->fxy(i,j)-model->operator()(data->xx(i),data->yy(j)))/data->error_fxy(i,j),2);
  
   return c2;
 }

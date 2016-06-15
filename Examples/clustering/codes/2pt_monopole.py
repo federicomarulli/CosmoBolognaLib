@@ -33,7 +33,7 @@ os.system("mkdir -p "+dir_output+" "+dir_pairs)
 
 print ("I'm reading the input catalogue...")
 
-catalogue = cbl.Catalogue(cbl.EnumTypes._Galaxy_, file_catalogue, cosmology)
+catalogue = cbl.Catalogue(cbl.EnumTypes._Galaxy_, cbl.EnumTypes._observedCoordinates_, file_catalogue, cosmology)
 
 
 ### construct the random catalogue (with cubic geometry) ###

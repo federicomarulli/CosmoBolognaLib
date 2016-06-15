@@ -93,6 +93,12 @@ namespace cosmobl {
        */
       virtual ~Modelling () {}
 
+      shared_ptr<Data> data () {return m_data;}
+      
+      shared_ptr<statistics::Model> model () {return m_model;}
+
+      statistics::Likelihood likelihood () {return m_likelihood;}
+
       ///@}
 
 

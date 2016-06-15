@@ -14,11 +14,12 @@ FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC -lST
 FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirEH) -isystem $(HOME)/Numerical/ 
 
 OBJ1 = 2pt_monopole.o
-OBJ2 = 2pt_2D.o
-OBJ3 = 2pt_jackknife.o
-OBJ4 = 3pt.o 
-OBJ5 = 2pt_projected_jackknife.o
-OBJ6 = modelBias_2pt_projected.o
+OBJ2 = 2pt_monopole_errors.o
+OBJ3 = 2pt_2D.o
+OBJ4 = 2pt_projected.o
+OBJ5 = 2pt_angular.o
+OBJ6 = 3pt.o
+OBJ7 = modelBias_2pt_projected.o
 
 ES = so
 
@@ -29,40 +30,45 @@ endif
 2pt_monopole: $(OBJ1) 
 	$(CC) $(OBJ1) -o 2pt_monopole $(FLAGS_LIB)
 
-2pt_2D: $(OBJ2) 
-	$(CC) $(OBJ2) -o 2pt_2D $(FLAGS_LIB)
+2pt_monopole_errors: $(OBJ2) 
+	$(CC) $(OBJ2) -o 2pt_monopole_errors $(FLAGS_LIB) 
 
-2pt_jackknife: $(OBJ3) 
-	$(CC) $(OBJ3) -o 2pt_jackknife $(FLAGS_LIB) 
+2pt_2D: $(OBJ3) 
+	$(CC) $(OBJ3) -o 2pt_2D $(FLAGS_LIB)
 
-3pt: $(OBJ4) 
-	$(CC) $(OBJ4) -o 3pt $(FLAGS_LIB) 
+2pt_projected: $(OBJ4) 
+	$(CC) $(OBJ4) -o 2pt_projected $(FLAGS_LIB) 
 
-2pt_projected_jackknife: $(OBJ5) 
-	$(CC) $(OBJ5) -o 2pt_projected_jackknife $(FLAGS_LIB) 
+2pt_angular: $(OBJ5) 
+	$(CC) $(OBJ5) -o 2pt_angular $(FLAGS_LIB) 
 
-modelBias_2pt_projected: $(OBJ6) 
-	$(CC) $(OBJ6) -o modelBias_2pt_projected $(FLAGS_LIB) 
+3pt: $(OBJ6) 
+	$(CC) $(OBJ6) -o 3pt $(FLAGS_LIB)
+
+modelBias_2pt_projected: $(OBJ7) 
+	$(CC) $(OBJ7) -o modelBias_2pt_projected $(FLAGS_LIB)
 
 clean:
-	rm -f *.o 2pt_monopole 2pt_2D 2pt_jackknife 3pt 2pt_projected_jackknife modelBias_2pt_projected *~ \#* temp* core*
+	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 3pt modelBias_2pt_projected *~ \#* temp* core*
 
 
 2pt_monopole.o: 2pt_monopole.cpp makefile $(dirLib)*.$(ES)
 	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_monopole.cpp
 
+2pt_monopole_errors.o: 2pt_monopole_errors.cpp makefile $(dirLib)*.$(ES)
+	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_monopole_errors.cpp
+
 2pt_2D.o: 2pt_2D.cpp makefile $(dirLib)*.$(ES)
 	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_2D.cpp
 
-2pt_jackknife.o: 2pt_jackknife.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_jackknife.cpp
+2pt_projected.o: 2pt_projected.cpp makefile $(dirLib)*.$(ES)
+	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_projected.cpp
+
+2pt_angular.o: 2pt_angular.cpp makefile $(dirLib)*.$(ES)
+	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_angular.cpp
 
 3pt.o: 3pt.cpp makefile $(dirLib)*.$(ES)
 	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 3pt.cpp 
 
-2pt_projected_jackknife.o: 2pt_projected_jackknife.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_projected_jackknife.cpp
-
 modelBias_2pt_projected.o: modelBias_2pt_projected.cpp makefile $(dirLib)*.$(ES)
 	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c modelBias_2pt_projected.cpp
-

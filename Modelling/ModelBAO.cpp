@@ -41,12 +41,31 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-cosmobl::ModelBAO::ModelBAO (const double bias_value, const statistics::Prior bias_prior, const double alpha_value, const statistics::Prior alpha_prior, const bool AddPoly, const vector<double> r, const vector<double> xi, const string method) : Model1D()
+void cosmobl::ModelBAO::set_xi_parameters (const vector<double> r,  const shared_ptr<Cosmology> cosmology, const double redshift, const string type, const string method, const string output_root, const bool NL, const double sigmaNL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
+{
+  auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
+
+  vector<double> xi(r.size(),0);
+
+  for (size_t i=0; i<r.size(); i++)
+    xi[i] = cosmology->xi_DM(r[i], method, redshift, output_root, 1, norm, k_min, k_max, aa, 1, prec, file_par);
+
+  model_parameters->func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(r,xi,type));
+
+  m_fixed_parameters = move(model_parameters);
+}
+
+
+// ============================================================================================
+
+
+cosmobl::ModelBAO::ModelBAO (const double bias_value, const statistics::Prior bias_prior, const double alpha_value, const statistics::Prior alpha_prior, const bool AddPoly) : Model1D()
 {
 
   if(AddPoly){
     m_npar = 5;
     m_parameters.resize(m_npar); 
+    /*
     m_parameters[0] = make_shared<statistics::Parameter>(bias_value, bias_prior, 0, "bias");
     m_parameters[1] = make_shared<statistics::Parameter>(alpha_value, alpha_prior, 0, "alpha");
 
@@ -54,6 +73,7 @@ cosmobl::ModelBAO::ModelBAO (const double bias_value, const statistics::Prior bi
     m_parameters[2] = make_shared<statistics::Parameter>(0., -1.e3, 1.e3, 0, vv, "A0");
     m_parameters[3] = make_shared<statistics::Parameter>(0., -1.e2, 1.e2, 0, vv, "A1");
     m_parameters[4] = make_shared<statistics::Parameter>(0., -1.e2, 1.e2, 0, vv, "A2");
+    */
 
     m_model = &cosmobl::glob::xi_alpha_B_poly;
     m_model_vector = &cosmobl::glob::xi_alpha_B_poly_vector;
@@ -62,18 +82,14 @@ cosmobl::ModelBAO::ModelBAO (const double bias_value, const statistics::Prior bi
   else{
     m_npar = 2;
     m_parameters.resize(m_npar); 
+    /*
     m_parameters[0] = make_shared<statistics::Parameter>(bias_value, bias_prior, 0, "bias");
     m_parameters[1] = make_shared<statistics::Parameter>(alpha_value, alpha_prior, 0, "alpha");
+    */
 
     m_model = &cosmobl::glob::xi_alpha_B;
     m_model_vector = &cosmobl::glob::xi_alpha_B_vector;
 
   }
-
-  auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
-  model_parameters->func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(r,xi,method));
-  m_model_parameters = move(model_parameters);
-
-  classfunc::func_grid_GSL f_xi (r,xi,method);
 
 }

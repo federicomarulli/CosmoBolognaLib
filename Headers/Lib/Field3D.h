@@ -33,7 +33,7 @@
 #ifndef __Field3D__
 #define __Field3D__
 
-#include "Cosmology.h"
+#include "Data.h"
 #include <fftw3.h>
 
 

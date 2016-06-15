@@ -64,10 +64,10 @@ namespace cosmobl {
       vector<double> m_error_fx;
       
       /// covariance matrix of f(x)
-      vector<vector<double> > m_covariance_fx;
+      vector<vector<double> > m_covariance;
       
       /// inverse covariance matrix of f(x)
-      vector<vector<double> > m_inverse_covariance_fx;
+      vector<vector<double> > m_inverse_covariance;
       
       ///@}
      
@@ -88,18 +88,19 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Data1D
        */
-      Data1D () {}
+      Data1D () : Data(cosmobl::DataType::_1D_data_) {}
 
       /**
        *  @brief constructor of Data1D
        *  @param input_file file containing input data in 3 columns:
        *  first column &rarr x points, second column &rarr f(x), third column &rarr 
        *  f(x) error
+       *  @param skip_nlines the header lines to be skipped
        *  @param xmin maximun value of x to be used 
        *  @param xmax maximun value of x to be used 
        *  @return object of class Data1D
        */
-      Data1D (const string input_file , const double xmin=-par::defaultDouble, const double xmax=par::defaultDouble); 
+      Data1D (const string input_file, const int skip_nlines=0, const double xmin=-par::defaultDouble, const double xmax=par::defaultDouble); 
 
       /**
        *  @brief constructor of Data1D
@@ -109,7 +110,7 @@ namespace cosmobl {
        *  @param xmax maximun value of x to be used 
        *  @return object of class Data1D
        */
-      Data1D (const vector<double> x, const vector<double> fx, const double xmin=-par::defaultDouble, const double xmax=par::defaultDouble); 
+      Data1D (const vector<double> x, const vector<double> fx, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble); 
 
       /**
        *  @brief Constructor of Data1D
@@ -120,18 +121,18 @@ namespace cosmobl {
        *  @param xmax maximun value of x to be used 
        *  @return object of class Data1D
        */
-      Data1D (const vector<double> x, const vector<double> fx, const vector<double> error_fx, const double xmin=-par::defaultDouble, const double xmax=par::defaultDouble); 
+      Data1D (const vector<double> x, const vector<double> fx, const vector<double> error_fx, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble); 
 
       /**
        *  @brief Constructor of Data1D
        *  @param x vector containing x points 
        *  @param fx vector containing f(x) 
-       *  @param covariance_fx vector containing f(x) covariance matrix 
+       *  @param covariance vector containing f(x) covariance matrix 
        *  @param xmin maximun value of x to be used 
        *  @param xmax maximun value of x to be used 
        *  @return object of class Data1D
        */
-      Data1D (const vector<double> x, const vector<double> fx, const vector<vector<double> > covariance_fx, const double xmin=-par::defaultDouble, const double xmax=par::defaultDouble);
+      Data1D (const vector<double> x, const vector<double> fx, const vector<vector<double> > covariance, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble);
 
       /**
        *  @brief default destructor
@@ -175,20 +176,21 @@ namespace cosmobl {
       double error_fx (const int i) const override { return m_error_fx[i]; } 
 
       /**
-       *  @brief return value of f(x) covariance at index i,j
+       *  @brief return the value of f(x) covariance at index i,j
        *  @param i index
        *  @param j index
-       *  @return value of the m_covariance_fx vector at position i,j
+       *  @return value of the m_covariance matrix at position i,j
        */
-      double covariance_fx (const int i, const int j) const override { return m_covariance_fx[i][j]; }
+      double covariance (const int i, const int j) const override { return m_covariance[i][j]; }
 
       /**
-       *  @brief return value of f(x) inverse_covariance at index i,j
+       *  @brief return the value of f(x) inverse_covariance at index
+       *  i,j
        *  @param i index
        *  @param j index
-       *  @return value of the m_inverse_covariance_fx vector at position i,j
+       *  @return value of the m_inverse_covariance matrix at position i,j
        */
-      double inverse_covariance_fx (const int i, const int j) const override  { return m_inverse_covariance_fx[i][j]; }
+      double inverse_covariance (const int i, const int j) const override  { return m_inverse_covariance[i][j]; }
 
       /**
        *  @brief return the x vector
@@ -212,13 +214,13 @@ namespace cosmobl {
        *  @brief return the m_covariance vector
        *  @return vector<containing the covariance matrix
        */
-      vector<vector<double> > covariance_fx () const override;
+      vector<vector<double> > covariance () const override;
 
       /**
        *  @brief return the m_inverse_covariance vector
        *  @return vector containing the inverse convariance matrix
        */
-      vector<vector<double> > inverse_covariance_fx () const override;
+      vector<vector<double> > inverse_covariance () const override;
 
       /**
        *  @brief set interval variables for x range
@@ -250,21 +252,27 @@ namespace cosmobl {
       void set_error_fx (const vector<double> error_fx) override {m_error_fx=error_fx;}
 
       /**
-       *  @brief set interval variable m_covariance_fx, reading from an input file;
+       *  @brief set interval variable m_covariance, reading from an input file;
        *  also compute inverted covariance matrix
        *  @param filename file containing the covariance matrix in the format:
        *  column 0 &rarr x<SUB>i</SUB>, column 1 &rarr x<SUB>j</SUB>, column 2 &rarr cov(x<SUB>i</SUB>,x<SUB>j</SUB>)
        *  @return none
        */
-      void set_covariance_fx (const string filename) override;
+      void set_covariance (const string filename) override;
 
       /**
-       *  @brief set interval variable m_covariance_fx,
-       *  also compute inverted covariance matrix
-       *  @param covariance_fx vector containing f(x) covariance matrix 
+       *  @brief invert the covariance matrix
        *  @return none
        */
-      void set_covariance_fx (const vector<vector<double> > covariance_fx) override; 
+      void invert_covariance() override;
+
+      /**
+       *  @brief set interval variable m_covariance,
+       *  also compute inverted covariance matrix
+       *  @param covariance vector containing f(x) covariance matrix 
+       *  @return none
+       */
+      void set_covariance (const vector<vector<double> > covariance) override; 
 
       /**
        *  @brief function that returns effective number of data between
@@ -284,9 +292,10 @@ namespace cosmobl {
        *  @param input_file file containing input data in 3 columns:
        *  first column &rarr x points, second column &rarr f(x), third
        *  column &rarr f(x) error
+       *  @param skip_nlines the header lines to be skipped
        *  @return none
        */
-      virtual void read (const string input_file=par::defaultString) override;
+      virtual void read (const string input_file=par::defaultString, const int skip_nlines=0) override;
 
       /**
        *  @brief write the measured two-point correlation

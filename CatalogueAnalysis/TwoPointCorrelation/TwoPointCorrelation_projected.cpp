@@ -168,7 +168,7 @@ void cosmobl::twopt::TwoPointCorrelation_projected::measureJackknife (const stri
   covariance_matrix(ww,covariance, 1);
 
   m_dataset = ProjectedTwoP(data_cart->xx(), data_cart->yy(), data_cart->fxy(), data_cart->error_fxy());
-  m_dataset->set_covariance_fx(covariance);
+  m_dataset->set_covariance(covariance);
 
 }
 
@@ -205,7 +205,7 @@ void cosmobl::twopt::TwoPointCorrelation_projected::measureBootstrap (const int 
   covariance_matrix(ww, covariance, 0);
 
   m_dataset = ProjectedTwoP(data_cart->xx(), data_cart->yy(), data_cart->fxy(), data_cart->error_fxy());
-  m_dataset->set_covariance_fx(covariance);
+  m_dataset->set_covariance(covariance);
 }
 
 

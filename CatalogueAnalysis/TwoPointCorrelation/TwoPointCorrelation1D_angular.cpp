@@ -165,7 +165,7 @@ void cosmobl::twopt::TwoPointCorrelation1D_angular::measureJackknife (const stri
 
   for (int i=0; i<nRegions; i++) {
 
-    if (dir_output_JackknifeXi !=par::defaultString) {
+    if (dir_output_JackknifeXi != par::defaultString) {
       string file = "xi_Jackknife_"+conv(i, par::fINT)+".dat";
       data_SS[i]->write(dir_output_JackknifeXi, file, "theta", "w", 0);
     }
@@ -183,7 +183,7 @@ void cosmobl::twopt::TwoPointCorrelation1D_angular::measureJackknife (const stri
   else
     m_dataset = NaturalEstimatorTwoP(m_dd, m_rr, nData, nRandom);
 
-  m_dataset->set_covariance_fx(covariance);
+  m_dataset->set_covariance(covariance);
 
 }
 
@@ -227,6 +227,6 @@ void cosmobl::twopt::TwoPointCorrelation1D_angular::measureBootstrap (const int 
   else
     m_dataset = NaturalEstimatorTwoP(m_dd, m_rr, nData, nRandom);
 
-  m_dataset->set_covariance_fx(covariance);
+  m_dataset->set_covariance(covariance);
 
 }

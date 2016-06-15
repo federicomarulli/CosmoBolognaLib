@@ -58,6 +58,9 @@ namespace cosmobl {
   
     /// &Omega_,<SUB>b</SUB>: the baryon density at z=0
     _Omega_baryon_,         
+    
+    /// &Omega_,<SUB>b</SUB> h<SUP>2</SUP>: the baryon density times h<SUP>2</SUP> at z=0
+    _Omega_baryon_h2_,        
 
     /// &Omega_,<SUB>&nu_,</SUB>: the density of massive neutrinos at z=0
     _Omega_neutrinos_,      
@@ -76,6 +79,9 @@ namespace cosmobl {
              
     /// H<SUB>0</SUB>: the Hubble constant at z=0 [km/sec/Mpc] 
     _H0_,
+    
+    /// h: the Hubble constant at z=0 / 100 
+    _hh_,
 
     /// A<SUB>s</SUB>: the initial scalar amplitude of the power spectrum
     _scalar_amp_,           
@@ -762,8 +768,25 @@ namespace cosmobl {
      *
      *  @return none
      */
-    void set_OmegaB (const double Omega_baryon=0.046) {
+    void set_OmegaB (const double Omega_baryon=0.046)
+    {
       m_Omega_baryon = Omega_baryon; 
+      m_Omega_CDM = m_Omega_matter-m_Omega_baryon-m_Omega_neutrinos;
+    };
+
+    /**
+     *  @brief set the value of &Omega;<SUB>b</SUB>, keeping
+     *  &Omega;<SUB>CDM</SUB>=&Omega;<SUB>M</SUB>-&Omega;<SUB>b</SUB>
+     *
+     *  @param Omega_baryonh2 &Omega;<SUB>b</SUB>h<SUP>2</SUP>:
+     *  density of baryons, (in units of the critical density) times
+     *  h<SUP>2</SUP>
+     *
+     *  @return none
+     */
+    void set_OmegaB_h2 (const double Omega_baryonh2=0.0222)
+    {
+      m_Omega_baryon = Omega_baryonh2*pow(m_hh,-2); 
       m_Omega_CDM = m_Omega_matter-m_Omega_baryon-m_Omega_neutrinos;
     };
 
@@ -776,7 +799,8 @@ namespace cosmobl {
      *
      *  @return none
      */
-    void set_OmegaM (const double Omega_matter=0.27) {
+    void set_OmegaM (const double Omega_matter=0.27)
+    {
       m_Omega_matter = Omega_matter; 
       m_Omega_k = 1.-m_Omega_matter-m_Omega_radiation-m_Omega_DE;
       m_Omega_CDM = m_Omega_matter-m_Omega_baryon-m_Omega_neutrinos;
@@ -789,7 +813,8 @@ namespace cosmobl {
      *
      *  @return none
      */
-    void set_OmegaDE (const double Omega_DE=0.73) {
+    void set_OmegaDE (const double Omega_DE=0.73)
+    {
       m_Omega_DE = Omega_DE; 
       m_Omega_k = 1.-m_Omega_matter-m_Omega_radiation-m_Omega_DE;
       m_Omega_CDM = m_Omega_matter-m_Omega_baryon-m_Omega_neutrinos;
@@ -805,7 +830,8 @@ namespace cosmobl {
      *  neutrino species
      *  @return none
      */
-    void set_OmegaNu (const double Omega_neutrinos=0., const double massless_neutrinos=3.04, const int massive_neutrinos=0) {
+    void set_OmegaNu (const double Omega_neutrinos=0., const double massless_neutrinos=3.04, const int massive_neutrinos=0)
+    {
       m_Omega_neutrinos = Omega_neutrinos; 
       m_massless_neutrinos = massless_neutrinos;
       m_massive_neutrinos = massive_neutrinos; 
@@ -818,9 +844,24 @@ namespace cosmobl {
      *  @param Omega_radiation &Omega;<SUB>rad</SUB>: the radiation density
      *  @return none
      */
-    void set_Omega_radiation (double Omega_radiation) { 
+    void set_Omega_radiation (const double Omega_radiation)
+    { 
       m_Omega_radiation = Omega_radiation;
       m_Omega_k = 1.-m_Omega_matter-m_Omega_radiation-m_Omega_DE;
+    };
+
+    /**
+     *  @brief set the value of h 
+     *
+     *  @param hh the Hubble constant H0/100
+     *  @return none
+     */
+    void set_hh (const double hh=0.7)
+    {
+      m_hh = hh; 
+      m_H0 = (m_unit) ? 100. : m_hh*100.;   
+      m_t_H = 1./m_H0; 
+      m_D_H = par::cc*m_t_H;
     };
 
     /**
@@ -830,7 +871,8 @@ namespace cosmobl {
      *
      *  @return none
      */
-    void set_H0 (const double H0=70.) {
+    void set_H0 (const double H0=70.)
+    {
       m_hh = H0/100.; 
       m_H0 = (m_unit) ? 100. : m_hh*100.;   
       m_t_H = 1./m_H0; 
@@ -928,7 +970,7 @@ namespace cosmobl {
      *
      *  @return none
      */
-    void set_unit (const bool unit=1) { m_unit = unit; }
+    void set_unit (const bool unit=1) { m_unit = unit; set_H0(100*m_hh); }
 
     ///@}
 
@@ -1046,7 +1088,15 @@ namespace cosmobl {
      *  @return E=H/H<SUB>0</SUB> 
      */
     double EE (const double redshift=0.) const;
-   
+
+     /**
+     *  @brief inverse of the auxiliary function used to compute the Hubble function
+     *  @param redshift redshift
+     *  @return 1./E=H<SUB>0</SUB>/H
+     */
+    double EE_inv (const double redshift=0.) const  
+    {return 1./EE(redshift);}
+
     /**
      *  @brief the Hubble function
      *  @param redshift redshift
@@ -1069,6 +1119,14 @@ namespace cosmobl {
      */
     double DD (const double redshift=0.) const;   
 
+    /**
+     *  @brief sigma8 at a given redshift
+     *
+     *  @param redshift redshift
+     *
+     *  @return &sigma;<SUB>8</SUB>
+     */
+    double sigma8 (const double redshift) const; 
 
     /**
      *  @brief lookback time at a given redshift
@@ -1110,6 +1168,24 @@ namespace cosmobl {
     double Hdot (const double redshift=0.) const;
 
     /**
+     *  @brief redshift at wich occurs baryon photon decoupling 
+     *
+     *  see Hu & Sugiyama (1996).
+     *
+     *  @return z<SUB>dec</SUB>
+     */
+    double z_decoupling () const;
+
+     /**
+     *  @brief redshift of drag epoch 
+     *
+     *  see Hu & Sugiyama (1996).
+     *
+     *  @return z<SUB>dec</SUB>
+     */
+    double z_drag () const;   
+
+    /**
      *  @brief redshift at which the Universe begins to accelerate 
      *
      *  see e.g. de Araujo 2005
@@ -1126,9 +1202,16 @@ namespace cosmobl {
      *  @return z<SUB>acc</SUB>
      */
     double z_eq () const;
-  
-    // Maximum absolute magnitude to have a volume limited catalogue
+
+    // Sound speed
+    double sound_speed(const double redshift, const double T_CMB=2.7255) const;
     
+    // Sound horizon integrand
+    double rs_integrand(const double redshift, const double T_CMB=2.7255) const;
+
+    // Sound horizon 
+    double rs (const double redshift, const double T_CMB=2.7255) const;
+
     /**
      *  @brief maximum absolute magnitude to have a volume-limited
      *	catalogue
@@ -1373,7 +1456,14 @@ namespace cosmobl {
      *  @return D<SUB>V</SUB>
      */
     double D_V (const double) const;
-  
+
+    /**
+     *  @brief F_AP, the ALCOCK-PACZYNSKI distortion parameter
+     *  @param redshift redshift
+     *  @return return F_AP
+     */
+    double F_AP (const double) const;
+
     /**
      *  @brief the distance at a given redshift. Distance available are:
      D<SUB>C</SUB>,D<SUB>L</SUB>,D<SUB>A</SUB>,D<SUB>V</SUB>,
@@ -1887,7 +1977,7 @@ namespace cosmobl {
      *
      *  @return the conditional variable w
      */
-    double wf (const double, const double, const double, const double, const string, const string output_root="test") const; 
+    double wf (const double mm, const double redshift, const double ff, const double zf, const string method_SS, const string output_root="test") const; 
 
     /**
      *  @brief the unevolved mass function
@@ -1896,7 +1986,7 @@ namespace cosmobl {
      *  @param mass_accr mass accreted
      *  @return the unevolved mass function
      */
-    double unevolved_mass_function (const double) const; 
+    double unevolved_mass_function (const double mass_accr) const; 
 
     /**
      *  @brief compute te halo concentration
@@ -1906,7 +1996,7 @@ namespace cosmobl {
      *  @param Rmax R<SUB>max</SUB>
      *  @return the halo concentration
      */
-    double concentration (const double, const double) const; 
+    double concentration (const double Vmax, const double Rmax) const; 
 
     ///@}
 
@@ -1924,10 +2014,26 @@ namespace cosmobl {
      *  al. 2009, Eq.3; it is valid only without massive neutrinos! 
      *  (see also Hu & Jain 2004)
      *
-     *  @param sigma8 &sigma;<SUB>8</SUB>: the power spectrum normalization
+     *  @param sigma8 &sigma;<SUB>8</SUB> the power spectrum normalization
      *  @return A<SUB>s</SUB>
      */
-    double As (const double) const; 
+    double As (const double sigma8) const; 
+
+    /**
+     *  @brief &sigma;<SUB>8</SUB>
+     *  
+     *  this function provides an approximate value of
+     *  &sigma;<SUB>8</SUB>, at a given redshift, from Aubourg et
+     *  al. 2015, eq.(32)
+     *  
+     *  @warning it is valid only without massive neutrinos!  To
+     *  account for non-zero neutrino mass authors multiplies by an
+     *  extra factor of 0.995
+     *
+     *  @param redshift the redshift
+     *  @return sigma8
+     */
+    double sigma8_interpolated (const double redshift) const; 
 
     /**
      *  @brief unnormalized power spectrum

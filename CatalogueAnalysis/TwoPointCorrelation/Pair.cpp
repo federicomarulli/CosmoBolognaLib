@@ -44,8 +44,8 @@ using namespace pairs;
 
 shared_ptr<Pair> cosmobl::pairs::Pair::Create (const PairType type, const double Min, const double Max, const int nbins, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight)
 {
-  if (type==_angular_lin_)       return move(unique_ptr<Pair1D_angular_lin>{new Pair1D_angular_lin(Min, Max, nbins, shift, angularUnits, angularWeight)});
-  else if (type==_angular_log_)  return move(unique_ptr<Pair1D_angular_log>{new Pair1D_angular_log(Min, Max, nbins, shift, angularUnits, angularWeight)});
+  if (type==_angular_lin_) return move(unique_ptr<Pair1D_angular_lin>{new Pair1D_angular_lin(Min, Max, nbins, shift, angularUnits, angularWeight)});
+  else if (type==_angular_log_) return move(unique_ptr<Pair1D_angular_log>{new Pair1D_angular_log(Min, Max, nbins, shift, angularUnits, angularWeight)});
   else if (type==_comoving_lin_) return move(unique_ptr<Pair1D_comoving_lin>{new Pair1D_comoving_lin(Min, Max, nbins, shift, angularUnits, angularWeight)});
   else if (type==_comoving_log_) return move(unique_ptr<Pair1D_comoving_log>{new Pair1D_comoving_log(Min, Max, nbins, shift, angularUnits, angularWeight)});
 

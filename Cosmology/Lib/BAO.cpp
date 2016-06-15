@@ -37,6 +37,38 @@ using namespace cosmobl;
 
 // =====================================================================================
 
+
+//redshift at wich occurs baryon photon decoupling, see Hu & Sugiyama (1996).
+double cosmobl::Cosmology::z_decoupling() const
+{
+  double ombh2 = m_Omega_baryon*m_hh*m_hh;
+  double omdmh2 = m_Omega_CDM*m_hh*m_hh;
+  double g1 = 0.0783*pow(ombh2,-0.238)/(1.+39.5*pow(ombh2,0.763));
+  double g2 = 0.560/(1+21.1*pow(ombh2,1.81));
+  double zdec = 1048*(1.+0.00124*pow(ombh2,-0.738))*(1.+g1*pow(ombh2+omdmh2,g2));
+  return zdec;
+
+}
+
+
+// =====================================================================================
+
+
+//redshift at wich occurs baryon photon decoupling, see Hu & Sugiyama (1996).
+double cosmobl::Cosmology::z_drag() const
+{
+  double wb = m_Omega_baryon*m_hh*m_hh;
+  double wm = m_Omega_matter*m_hh*m_hh;
+
+  double b1 = 0.313*pow(wm,-0.419)*(1+0.607*pow(wm,0.674));
+  double b2 = 0.238*pow(wm,0.223);
+  double zd = 1291*pow(wm,0.251)*(1+b1*pow(wb,b2))/(1+0.659*pow(wm,0.828));
+  return zd;
+}
+
+
+// =====================================================================================
+
 // Sound horizon at drag epoch
 
 double cosmobl::Cosmology::rs (const string method_Pk, const double T_CMB) const
@@ -85,7 +117,8 @@ double cosmobl::Cosmology::rs_CAMB () const
   double wb= m_Omega_baryon*pow(m_hh,2);
   double wnu = m_Omega_neutrinos*pow(m_hh,2);
 
-  return 55.154*exp(-72.3*pow(wnu+0.0006,2))/(pow(wcb,0.25351)*pow(wb,0.12807));
+  double rd =  55.154*exp(-72.3*pow(wnu+0.0006,2))/(pow(wcb,0.25351)*pow(wb,0.12807));
+  return ((m_unit) ? rd*m_hh : rd);
 }
 
 
@@ -106,4 +139,46 @@ double cosmobl::Cosmology::ys (const double redshift, const string method_Pk, co
 double cosmobl::Cosmology::Az (const double redshift) const
 {
   return ((m_unit) ? D_V(redshift)/m_hh : D_V(redshift))*1.e2*sqrt(m_Omega_matter*m_hh*m_hh)/(par::cc*redshift);
+}
+
+
+// =====================================================================================
+
+
+double cosmobl::Cosmology::sound_speed(const double redshift, const double T_CMB) const
+{
+  double R = 31500.*m_Omega_baryon*m_hh*m_hh*pow(T_CMB/2.7,-4)/(1+redshift);
+  double cs = 1./sqrt(3*(1+R));
+  return par::cc*cs;
+}
+
+
+// =====================================================================================
+// Sound horizon integrand
+
+double cosmobl::Cosmology::rs_integrand (const double a, const double T_CMB) const
+{
+  double redshift=1./a-1;
+
+  double zeq = 2.5e4*m_Omega_matter*m_hh*m_hh*pow(T_CMB/2.7,-4);
+  double a_eq = 1./(1+zeq);
+
+  double factor;
+  if(m_Omega_radiation ==0)
+    factor = sqrt(m_Omega_matter*(a+a_eq)+m_Omega_k*a*a+m_Omega_DE*f_DE(redshift)*pow(a,4));
+  else
+    factor = a*a*EE(redshift);
+
+  return sound_speed(redshift, T_CMB)/factor;
+}
+
+
+// =====================================================================================
+// Sound horizon 
+
+double cosmobl::Cosmology::rs (const double redshift, const double T_CMB) const
+{
+  function<double(double)> integrand = bind(&Cosmology::rs_integrand, this, std::placeholders::_1, T_CMB);
+  double a = 1./(1+redshift);
+  return GSL_integrate_qag(integrand,0, a)/m_H0;
 }

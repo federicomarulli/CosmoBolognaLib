@@ -74,6 +74,12 @@ namespace cosmobl {
       double m_MaxVal;
 
     public:
+
+      /**
+       * @brief default constructor
+       * @return object of class RandomNumbers
+       */
+      RandomNumbers () {};
       
       /**
        *  @brief constructor
@@ -83,9 +89,17 @@ namespace cosmobl {
        *  @return object of class RandomNumbers
        */
       RandomNumbers (const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble) {
-	set_seed(m_seed);
+	set_seed(seed);
 	set_range(MinVal, MaxVal);
       }
+
+      /**
+       *  @brief default destructor
+       *
+       *  @return none
+       */
+      ~RandomNumbers () {} 
+
 
       /**
        * @brief extract number from the distribution
@@ -141,7 +155,15 @@ namespace cosmobl {
        */
       virtual void set_discrete_values (const vector<double> values, const vector<double> weights)
       { ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }
-      
+
+      /**
+       *  @brief set the parameters for the interpolated distribution
+       *  @param values the values to be extracted
+       *  @param weights the values weights
+       *  @return none
+       */
+      virtual void set_interpolated_distribution (const vector<double> values, const vector<double> weights)
+      { ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }   
     };
 
     /**
@@ -171,12 +193,19 @@ namespace cosmobl {
        *  @return object of class UniformRandomNumbers
        */
       UniformRandomNumbers (double MinVal, const double MaxVal, const int seed) : RandomNumbers(seed, MinVal, MaxVal){
-	m_distribution = make_shared<uniform_real_distribution<double> >(uniform_real_distribution<double>(m_MinVal, m_MaxVal));
+	m_distribution = make_shared<uniform_real_distribution<double> >(uniform_real_distribution<double>(0,1));
       }
+
+      /**
+       *  @brief default destructor
+       *
+       *  @return none
+       */
+      ~UniformRandomNumbers () {} 
 
       double operator () ()
       {
-	return m_distribution->operator()(m_generator);
+	return (m_MaxVal-m_MinVal)*m_distribution->operator()(m_generator)+m_MinVal;
       }
 
     };
@@ -213,6 +242,13 @@ namespace cosmobl {
       PoissonRandomNumbers (const double mean, const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble) : RandomNumbers(seed, MinVal, MaxVal) {
 	set_mean(mean);
       }
+
+      /**
+       *  @brief default destructor
+       *
+       *  @return none
+       */
+      ~PoissonRandomNumbers () {} 
 
       /**
        *  @brief set the mean for Poisson distribution
@@ -277,6 +313,13 @@ namespace cosmobl {
 	{
 	  set_mean_sigma(mean, sigma);
 	}
+
+      /**
+       *  @brief default destructor
+       *
+       *  @return none
+       */
+      ~NormalRandomNumbers () {} 
 
       /**
        *  @brief set parameters for Normal distribution
@@ -346,6 +389,13 @@ namespace cosmobl {
 	}
 
       /**
+       *  @brief default destructor
+       *
+       *  @return none
+       */
+      ~DiscreteRandomNumbers () {} 
+
+      /**
        *  @brief set parameters for Discrete distribution
        *  @param values the values to be extracted
        *  @param weights the values weights
@@ -381,6 +431,91 @@ namespace cosmobl {
 	return m_values[m_distribution->operator()(m_generator)];
       }
     };
+
+    /**
+     *  @class DistrbutionRandomNumbers RandomNumbers.h
+     *  "Headers/Lib/RandomNumbers.h"
+     *
+     *  @brief The class DistributionRandomNumbers
+     *
+     *  The base class to generate random numbers
+     *  from a tabulated density distribution
+     *
+     */
+    class DistributionRandomNumbers : public RandomNumbers
+    {
+    protected:
+
+      /// Uniform random number generator
+      shared_ptr<UniformRandomNumbers> m_uniform_generator;
+
+      /// interpolated distribution
+      shared_ptr<classfunc::func_grid_GSL> m_distribution;
+
+    public:
+
+      /**
+       *  @brief constructor
+       *  @param xx values of the distribution
+       *  @param fx density probability function at xx 
+       *  @param interpolation_method the method to interpolate
+       *  @param seed the random number generator seed
+       *  @param MinVal lower limit of the random numbers range
+       *  @param MaxVal upper limit of the random numbers range
+       *  @return object of class RandomNumbers
+       */
+      DistributionRandomNumbers (const vector<double> xx, const vector<double> distribution_function, const string interpolation_method, const int seed) : RandomNumbers()
+	{
+	  set_interpolated_distribution(xx, distribution_function, interpolation_method);
+	  m_uniform_generator = make_shared<UniformRandomNumbers>(0., 1., seed);
+	}
+
+      /**
+       *  @brief default destructor
+       *
+       *  @return none
+       */
+      ~DistributionRandomNumbers () {} 
+
+      /**
+       *  @brief set the random number generator seed
+       *  @param seed the random number generator seed
+       *  @return none
+       */
+      void set_seed (const int seed)
+      {
+	m_uniform_generator->set_seed(seed);
+      }
+
+      /**
+       *  @brief set parameters for interpolated distribution
+       *  @param xx vector containing the values with known distribution function 
+       *  @param distribution_function vector containing the distribution function at xx 
+       *  @param interpolation_method the method of interpolation
+       *  @return none
+       */
+      void set_interpolated_distribution (const vector<double> xx, const vector<double> distribution_function, const string interpolation_method)
+      {
+	classfunc::func_grid_GSL ff(xx,distribution_function,interpolation_method);
+	double norm = ff.integrate_qag(Min(xx),Max(xx));
+
+	vector<double> FX;
+	for(size_t i=0; i<xx.size(); i++)
+	  FX.push_back(ff.integrate_qag(Min(xx),xx[i])/norm);
+
+	m_distribution = make_shared<classfunc::func_grid_GSL>(FX,xx,interpolation_method);
+      }
+
+      /**
+       * @brief extract number from the distribution
+       * @return random values
+       */
+      double operator () ()
+      {
+	return m_distribution->operator()(m_uniform_generator->operator()());
+      }
+    };
+
     
   }
 }

@@ -38,10 +38,10 @@ using namespace cosmobl;
 // ======================================================================================
 
 
-cosmobl::statistics::Model::Model (const vector<Parameter> parameters, const shared_ptr<void> model_parameters)
-  : m_model_parameters(model_parameters)
+cosmobl::statistics::Model::Model (const vector<Parameter> parameters, const shared_ptr<void> fixed_parameters)
+  : m_fixed_parameters(fixed_parameters)
 {
-  for(size_t i=0;i<parameters.size();i++)
+  for (size_t i=0; i<parameters.size(); i++)
     m_parameters.push_back(move(make_shared<Parameter>(parameters[i])));
 
   m_npar = m_parameters.size();
@@ -52,45 +52,41 @@ cosmobl::statistics::Model::Model (const vector<Parameter> parameters, const sha
 // ======================================================================================
 
 
-double cosmobl::statistics::Model::update_parameter (const double new_parameter)
-{
-  double parameter;
-
-  if (!m_parameters[0]->isFreezed()) {
-    parameter = (m_parameters[0]->prior()->isIncluded(new_parameter)) ? new_parameter : closest(new_parameter,m_parameters[0]->prior()->xmin(),m_parameters[0]->prior()->xmax());
-    m_parameters[0]->set_value(parameter);
-  }
-  
-  else
-    parameter = m_parameters[0]->value();
-  
-  m_parameters[0]->set_value(parameter);
-
-  return parameter;
+vector<double> cosmobl::statistics::Model::parameter_values ()
+{  
+  vector<double> parameters;
+  for (unsigned int i=0; i<m_npar; i++)
+    parameters.push_back(m_parameters[i]->value());
+  return parameters;
 }
 
 
 // ======================================================================================
 
 
-vector<double> cosmobl::statistics::Model::update_parameters (const vector<double> new_parameters)
+vector<double> cosmobl::statistics::Model::parameter_values_from_chain (const int chain, const int position)
 {  
   vector<double> parameters;
-  int nn = 0;
-  
-  for (unsigned int i=0; i<m_npar; i++) {
-    
-    if (!m_parameters[i]->isFreezed()) {
-      double value = (m_parameters[i]->prior()->isIncluded(new_parameters[nn])) ? new_parameters[nn] : closest(new_parameters[nn], m_parameters[i]->prior()->xmin(), m_parameters[i]->prior()->xmax());
-      m_parameters[i]->set_value(value);
-      nn ++;
-    }
 
-    parameters.push_back(m_parameters[i]->value());
-  }
-  
+  for (unsigned int i=0; i<m_npar; i++)
+    parameters.push_back(parameter(i)->chain(chain)->chain_value(position));
+
   return parameters;
 }
+
+
+// ======================================================================================
+
+
+void cosmobl::statistics::Model::set_parameter_values (const vector<double> parameter_values)
+{  
+  if (parameter_values.size() == m_npar)
+    for (unsigned int i=0; i<m_npar; i++) 
+      m_parameters[i]->set_value(parameter_values[i]);
+  else
+    ErrorMsg("Error in set_parameter_values of Model.cpp, size of parameter vector doesn't match the number of model parameters");
+}
+
 
 // ======================================================================================
 
@@ -101,13 +97,3 @@ void cosmobl::statistics::Model::set_chains (const int nchains, const int chain_
     m_parameters[i]->set_chains(nchains, chain_size);
 }
 
-
-// ======================================================================================
-
-
-void cosmobl::statistics::Model::set_random_number_generator (const default_random_engine generator)
-{
-  m_generator = generator;
-  uniform_real_distribution<double> distribution(0.,1.);
-  m_random_numbers = bind(distribution,m_generator);
-}

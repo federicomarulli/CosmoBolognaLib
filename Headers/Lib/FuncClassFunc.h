@@ -73,12 +73,19 @@ namespace cosmobl {
           const gsl_interp_type *m_type;
           gsl_interp_accel *m_acc;
           size_t m_size;
+	  double m_xmin;
+	  double m_xmax;
 
        public:
           func_grid_GSL (vector<double> _xg, vector<double> _yg, string _interpType)
           {
              m_size = _xg.size();
              m_acc = gsl_interp_accel_alloc();
+
+	     if (_xg.size() < 5 && _interpType != "Linear"){
+	       WarningMsg("Warning in constructor of func_grid_GSL: array size less than 5, setting interpolation method to Linear");
+	       _interpType="Linear";
+	     }
 
              if (_interpType=="Linear") 
                 m_type = gsl_interp_linear;
@@ -104,6 +111,8 @@ namespace cosmobl {
              else 
                 ErrorMsg("Error in interpolated of Func.cpp: the value of string 'type' is not permitted!");
 
+	     m_xmin = Min(_xg);
+	     m_xmax = Max(_xg);
              m_spline = gsl_spline_alloc (m_type, m_size); 
              gsl_spline_init (m_spline, _xg.data(), _yg.data(), m_size);
           }  
@@ -114,8 +123,19 @@ namespace cosmobl {
              gsl_interp_accel_free (m_acc);
           }
 
+	  double xmin() {return m_xmin;}
+                                        
+	  double xmax() {return m_xmax;}
+
           double operator() (double XX) 
           {
+	    
+	    if (XX<m_xmin) // perform a linear extrapolation
+	      return m_spline->y[0]+(XX-m_xmin)/(m_spline->x[1]-m_xmin)*(m_spline->y[1]-m_spline->y[0]);
+
+	    else if (XX>m_xmax) // perform a linear extrapolation
+	      return m_spline->y[m_size-2]+(XX-m_spline->x[m_size-2])/(m_xmax-m_spline->x[m_size-2])*(m_spline->y[m_size-1]-m_spline->y[m_size-2]);
+
              return gsl_spline_eval (m_spline, XX, m_acc);
           }
 

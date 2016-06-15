@@ -55,7 +55,7 @@ cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::Modelling_TwoPoin
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::fit_bias (const string LikelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin)
+void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::fit_bias (const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin)
 {
 
   m_data->set_limits(xlimits[0],xlimits[1]);
@@ -63,21 +63,11 @@ void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::fit_bias (co
   ModelBias model(bias_value,bias_prior);
   model.set_xi_parameters(m_data->xx(),m_cosmology,m_redshift);
   m_model = make_shared<ModelBias>(model);
-  
-  statistics::likelihood_npar func;
-  if(LikelihoodType == "model")
-    func = &statistics::likelihood_gaussian_1D_model_npar;
-  else if(LikelihoodType == "error")
-    func = &statistics::likelihood_gaussian_1D_error_npar;
-  else if(LikelihoodType == "covariance")
-    func = &statistics::likelihood_gaussian_1D_covariance_npar;
-  else
-    ErrorMsg("Error in fit_bias of Modelling_TwoPointCorrelation1D_deprojected, no such type of likelihood");
 
-  statistics::Likelihood lik(m_data,m_model,func);
-  lik.sample(nChains, chain_size,1.); 
-  string dir_output_file=dir_output+"deprojected_bias_xmin="+conv(m_data->x_down(),par::fDP1)+"_xmax="+conv(m_data->x_up(),par::fDP1)+"_"+LikelihoodType;
-  lik.write_chain(dir_output_file, start, stop, thin);
+  statistics::Likelihood lik(m_data, m_model, likelihoodType);
+  lik.sample_stretch_move(nChains, chain_size,1.); 
+  string output_file=dir_output+"deprojected_bias_xmin="+conv(m_data->x_down(),par::fDP1)+"_xmax="+conv(m_data->x_up(),par::fDP1);
+  lik.write_chain(dir_output, output_file, start, stop, thin);
 
 }
 
@@ -85,4 +75,4 @@ void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::fit_bias (co
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::fit_bias_cosmology(const string LikelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const vector<CosmoPar> CosmoPars, const vector<statistics::Prior> prior_CosmoPars, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin){}
+void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::fit_bias_cosmology(const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const vector<CosmoPar> CosmoPars, const vector<statistics::Prior> prior_CosmoPars, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin){}

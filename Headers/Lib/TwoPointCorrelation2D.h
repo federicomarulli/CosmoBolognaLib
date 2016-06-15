@@ -223,7 +223,7 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class TwoPointCorrelation2D
        */
-      TwoPointCorrelation2D () { m_dataset = Data::Create(dataType::_2D_data_); }
+      TwoPointCorrelation2D () { m_dataset = Data::Create(DataType::_2D_data_); }
 
       /**
        *  @brief constructor
@@ -234,7 +234,7 @@ namespace cosmobl {
        *  @return object of class TwoPointCorrelation2D
        */
       TwoPointCorrelation2D (const catalogue::Catalogue data, const catalogue::Catalogue random) 
-	: TwoPointCorrelation(data, random) { m_dataset = Data::Create(dataType::_2D_data_); }
+	: TwoPointCorrelation(data, random) { m_dataset = Data::Create(DataType::_2D_data_); }
 
       /**
        *  @brief default destructor

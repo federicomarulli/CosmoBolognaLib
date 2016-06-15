@@ -37,6 +37,16 @@ using namespace cosmobl;
 
 // ============================================================================
 
+double cosmobl::closest_probability (double xx, shared_ptr<void> pp, vector<double> par)
+{
+  shared_ptr<cosmobl::glob::STR_closest_probability> pars = static_pointer_cast<cosmobl::glob::STR_closest_probability>(pp);
+  return pars->weights[(cosmobl::index_closest(xx, pars->values))];
+}
+
+
+
+// ============================================================================
+
 
 string cosmobl::fullpath (string path, const bool isDir)
 { 
@@ -2164,6 +2174,21 @@ double cosmobl::GSL_integrate_qag (gsl_function Func, const double a, const doub
   }
   
   return Int;
+}
+
+
+// ============================================================================
+
+
+double cosmobl::GSL_integrate_qag (function<double(double)> func, const double a, const double b, const double prec, const int limit_size, const int rule)
+{
+  
+  typedef function<double(double)> fun_type;
+
+  gsl_function Func;  
+  Func.function = [](double x, void *p) { return (*static_cast<fun_type*>(p))(x); };
+  Func.params = &func;
+  return GSL_integrate_qag(Func, a, b, prec, limit_size, rule);
 }
 
 

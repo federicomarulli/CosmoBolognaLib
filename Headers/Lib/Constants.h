@@ -142,7 +142,40 @@ namespace cosmobl {
     static const char fDP6[] = "%7.6f"; 
 
     /// conversion symbol for: double -> string
+    static const char fDP7[] = "%8.7f"; 
+    
+    /// conversion symbol for: double -> string
+    static const char fDP8[] = "%9.8f"; 
+    
+    /// conversion symbol for: double -> string
+    static const char fDP9[] = "%10.9f"; 
+    
+    /// conversion symbol for: double -> string
+    static const char fDP10[] = "%11.10f"; 
+    
+    /// conversion symbol for: double -> string
     static const char ee3[] = "%4.3e";
+
+    /// conversion symbol for: double -> string
+    static const char ee4[] = "%5.4e";
+    
+    /// conversion symbol for: double -> string
+    static const char ee5[] = "%6.5e";
+
+    /// conversion symbol for: double -> string
+    static const char ee6[] = "%7.6e";
+    
+    /// conversion symbol for: double -> string
+    static const char ee7[] = "%8.7e";
+    
+    /// conversion symbol for: double -> string
+    static const char ee8[] = "%9.8e";  
+    
+    /// conversion symbol for: double -> string
+    static const char ee9[] = "%10.9e";
+
+    /// conversion symbol for: double -> string
+    static const char ee10[] = "%11.10e";
 
     /**
      *  @} */

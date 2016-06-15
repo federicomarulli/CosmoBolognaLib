@@ -38,7 +38,7 @@ using namespace cosmobl;
 // ======================================================================================
 
 
-cosmobl::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double> > fxy, const double xmin, const double xmax, const double ymin, const double ymax)
+cosmobl::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double> > fxy, const double xmin, const double xmax, const double ymin, const double ymax) : Data(cosmobl::DataType::_1D_data_)
 {
   m_x = x;
   m_y = y;
@@ -51,7 +51,7 @@ cosmobl::Data2D::Data2D (const vector<double> x, const vector<double> y, const v
 // ======================================================================================
 
 
-cosmobl::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double> > fxy, const vector<vector<double> > error_fxy, const double xmin, const double xmax, const double ymin, const double ymax)
+cosmobl::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double> > fxy, const vector<vector<double> > error_fxy, const double xmin, const double xmax, const double ymin, const double ymax) : Data(cosmobl::DataType::_1D_data_)
 {
   m_x = x;
   m_y = y;
@@ -92,7 +92,7 @@ void cosmobl::Data2D::set_limits (const double xmin, const double xmax, const do
 // ======================================================================================
 
 
-void cosmobl::Data2D::read (const string input_file)
+void cosmobl::Data2D::read (const string input_file, const int skip_nlines)
 {
   ErrorMsg("Error in cosmobl::Data2D::read : work in progress!");
   ifstream fin(input_file.c_str());

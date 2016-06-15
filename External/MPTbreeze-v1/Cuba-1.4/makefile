@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -O3 -fomit-frame-pointer -ffast-math -DHAVE_CONFIG_H -I$(common) -I. -I$(srcdir)
-F77 = g77
+F77 = gfortran
 FFLAGS = -g -O2
 LIBS = -lm
 INSTALL = /usr/bin/install -c
