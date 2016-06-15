@@ -17,3 +17,5 @@ V2.0 general restructure, many new classes and examples added
 
 V2.1 new examples added, minor bugs fixed
 V2.2 
+
+V2.2 V2.2 new examples added, some new classes to model clustering measurements

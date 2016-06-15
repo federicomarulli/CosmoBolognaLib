@@ -111,7 +111,7 @@ CosmoBolognaLib = Extension(  "_CosmoBolognaLib",
                               extra_link_args      = FLAGSL )
 
 setup(  name             = "CosmoBolognaLib",
-        version          = "2.1",
+        version          = "2.2",
         description      = "C++ libraries for cosmological calculations",
         long_description = readme(),
         author           = "Federico Marulli",
