@@ -37,7 +37,7 @@ using namespace cosmobl;
 // ============================================================================================
 
 unique_ptr<GSLfunction> cosmobl::GSLfunction::make_GSLfunction(func_1par_1 function, shared_ptr<void> function_parameters){
-    return unique_ptr<GSLfunction_1D_1>(new GSLfunction_1D_1(function,function_parameters));
+    return unique_ptr<GSLfunction_1D_1>(new GSLfunction_1D_1(function, function_parameters));
 }
 
 
@@ -45,7 +45,7 @@ unique_ptr<GSLfunction> cosmobl::GSLfunction::make_GSLfunction(func_1par_1 funct
 
 
 unique_ptr<cosmobl::GSLfunction> cosmobl::GSLfunction::make_GSLfunction(int npar, func_npar_1 function, shared_ptr<void> function_parameters){
-    return unique_ptr<GSLfunction_nD_1>(new GSLfunction_nD_1(npar,function,function_parameters));
+    return unique_ptr<GSLfunction_nD_1>(new GSLfunction_nD_1(npar, function, function_parameters));
 }
 
 
@@ -53,7 +53,7 @@ unique_ptr<cosmobl::GSLfunction> cosmobl::GSLfunction::make_GSLfunction(int npar
 
 
 unique_ptr<GSLfunction> cosmobl::GSLfunction::make_GSLfunction(func_1par_2 function, vector<double> params, shared_ptr<void> function_parameters){
-    return unique_ptr<GSLfunction_1D_2>(new GSLfunction_1D_2(function,params,function_parameters));
+    return unique_ptr<GSLfunction_1D_2>(new GSLfunction_1D_2(function, params, function_parameters));
 }
 
 
@@ -61,7 +61,7 @@ unique_ptr<GSLfunction> cosmobl::GSLfunction::make_GSLfunction(func_1par_2 funct
 
 
 unique_ptr<cosmobl::GSLfunction> cosmobl::GSLfunction::make_GSLfunction(int npar, func_npar_2 function, vector<double> params, shared_ptr<void> function_parameters){
-    return unique_ptr<GSLfunction_nD_2>(new GSLfunction_nD_2(npar,function,params,function_parameters));
+    return unique_ptr<GSLfunction_nD_2>(new GSLfunction_nD_2(npar, function, params, function_parameters));
 }
 
 

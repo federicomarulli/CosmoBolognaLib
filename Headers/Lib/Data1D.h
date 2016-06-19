@@ -275,6 +275,15 @@ namespace cosmobl {
       void set_covariance (const vector<vector<double> > covariance) override; 
 
       /**
+       *  @brief write the interval variable m_covariance on a file,
+       *  @param dir the output directory
+       *  @param file the output file
+       *  @param xname name for the x variable
+       *  @return none
+       */
+      void write_covariance(const string dir, const string file, const string xname="x") const override;
+
+      /**
        *  @brief function that returns effective number of data between
        *  defined limits
        *  @return effective number of data between defined limits

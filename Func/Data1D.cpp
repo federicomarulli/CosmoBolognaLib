@@ -303,3 +303,28 @@ void cosmobl::Data1D::set_limits (const double xmin, const double xmax)
 {
   find_index(m_x, xmin, xmax, m_x_down, m_x_up);
 }
+
+
+// ======================================================================================
+
+
+void cosmobl::Data1D::write_covariance (const string dir, const string file, const string xname) const 
+{
+  string file_out = dir+file;
+  ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+
+  fout << "# "<< xname << " " << xname << " covariance 	 correlation    index1   index2" << endl;
+
+  int cntr1 = 0,cntr2 =0;
+  for (size_t i=0; i<m_x.size(); i++) {
+    cntr2 =0;
+    for (size_t j=0; j<m_x.size(); j++) { 
+      fout << setiosflags(ios::fixed) << setprecision(10) << setw(8) << m_x[i] << "  " << setw(8) << m_x[j] << "  " << setw(8) << m_covariance[i][j] << " " << m_covariance[i][j]/sqrt(m_covariance[i][i]*m_covariance[j][j]) << " " << cntr1 << " " << cntr2 <<  endl;
+      cntr2++;
+    }
+    cntr1++;
+  }
+   
+  fout.close(); cout << endl << "I wrote the file: " << file_out << endl;
+}
+

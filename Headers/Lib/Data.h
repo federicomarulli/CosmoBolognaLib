@@ -266,6 +266,16 @@ namespace cosmobl {
       { cosmobl::ErrorMsg("Error in inverse_covariance of Data.h!"); return 0.; }
 
       /**
+       *  @brief return value of f(x) inverted covariance at index i,j
+       *  @param d the d-th dataset
+       *  @param i the i-th x element of the covariance matrix 
+       *  @param j the j-th x element of the covariance matrix 
+       *  @return value of the inverted covariance matrix for at position i,j
+       */
+      virtual double inverse_covariance (const int d, const int i, const int j) const
+      { cosmobl::ErrorMsg("Error in inverse_covariance of Data.h!"); return 0.; }
+
+      /**
        *  @brief invert the covariance matrix
        *  @return none
        */
@@ -434,6 +444,16 @@ namespace cosmobl {
        */
       virtual void set_covariance (const vector<vector<double> > covariance) 
       { cosmobl::ErrorMsg("Error in set_covariance of of Data.h!"); }
+
+      /**
+       *  @brief write the interval variable m_covariance on a file,
+       *  @param dir the output directory
+       *  @param file the output file
+       *  @param xname name for the x variable
+       *  @return none
+       */
+      virtual void write_covariance(const string dir, const string file, const string xname) const
+      { cosmobl::ErrorMsg("Error in write_covariance of of Data.h!"); }
 
       /**
        *  @brief set interval variable m_fxy

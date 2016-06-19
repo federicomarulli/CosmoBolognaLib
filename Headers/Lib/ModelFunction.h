@@ -44,15 +44,32 @@ namespace cosmobl {
 
   namespace glob{
 
+    /**
+     * @struct STR_params
+     * @brief the struct STR_params
+     *
+     * This struct contains the data
+     * and the model for the &chi;&sup2; analysis
+     */
     struct STR_twop_model{
 
+      /// cosmology
       shared_ptr<Cosmology> cosmology;
+
+      /// cosmological parameters
       vector<CosmoPar> Cpar;
 
+      /// redshift
       double redshift;
+
+      /// growth rate
       double f;
+
+      /// method to compute the dark matter power spectrum
       string method;
+
       string output_root;
+
       bool NL;
       int norm;
       double k_min;
@@ -72,44 +89,313 @@ namespace cosmobl {
 
     };
 
+    /**
+     * @brief model for the projected correlation function.
+     * Model parameter is the bias, the dark matter clustering 
+     * is computed for a given cosmology:
+     * \f$w_p(r_p)= b^2 w_p^{DM}(r)\f$.
+     *
+     * @param r the scale at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the value of the two point correlation function model
+     */
     double wp_bias(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
+    /**
+     * @brief model for the projected correlation function.
+     * Model parameters are the bias and the cosmological parameters that enters in the 
+     * theoretical clustering model for the dark matter.
+     * \f$w_p(r_p)= b^2 w_p^{DM}(r)\f$.
+     *
+     * @param r the scale at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the value of the two point correlation function model
+     */
     double wp_bias_cosmology(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
+    /**
+     * @brief model for the correlation function in real space.
+     * Model parameter is the bias, the dark matter clustering 
+     * is computed for a given cosmology:
+     * \f$\xi(r)= b^2 \xi_{DM}(r)\f$.
+     *
+     * @param r the scale at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the value of the two point correlation function model
+     */
     double xi_bias(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
+    /**
+     * @brief model for the correlation function in real space.
+     * Model parameters are the bias and the cosmological parameters
+     * that enters in the theoretical clustering model for the dark matter.
+     * \f$\xi(r)= b^2 \xi_{DM}(r)\f$.
+     *
+     * @param r the scale at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the value of the two point correlation function model
+     */
     double xi_bias_cosmology(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
+    /**
+     * @brief model for the monopole of the correlation 
+     * function in redshift space. Model parameter is the bias,
+     * the dark matter clustering is computed for a given cosmology:
+     * \f$\xi(s)= b^2 (1+2*\beta/3+\beta^2/5) \xi_{DM}(s)\f$.
+     *
+     * @param r the scale at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the value of the two point correlation function model
+     */
     double xi0_bias(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
+    /**
+     * @brief model for the monopole of the correlation 
+     * function in redshift space. 
+     * Model parameters are the bias and the cosmological parameters
+     * that enters in the theoretical clustering model for the dark matter.
+     * \f$\xi(s)= b^2 (1+2*\beta/3+\beta^2/5) \xi_{DM}(s)\f$.
+     *
+     * @param r the scale at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the value of the two point correlation function model
+     */
     double xi0_bias_cosmology(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
+    /**
+     * @brief model for the monopole of the correlation function. 
+     * Model parameters are the bias and the &alpha; &rarr; the shift of
+     * the measured two point correlation function relative
+     * to the clustering model for the fiducial cosmology.
+     * For BAO measure only. (see Anderson et al. 2015, and references therein)
+     * The dark matter clustering is computed at the fiducial cosmology:
+     * \f$\xi(s)= B^2  \xi_{DM}(\alpha s)\f$.
+     *
+     * @param r the scale at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the value of the two point correlation function model
+     */
     double xi_alpha_B(double r, shared_ptr<void> parameters, vector<double> model_parameters);
 
+    /**
+     * @brief model for the monopole of the correlation function. 
+     * Model parameters are the bias, &alpha; &rarr; the shift of
+     * the measured two point correlation function relative
+     * to the clustering model for the fiducial cosmology and coefficient
+     * of a polynomial that model systematics in the data. 
+     * For BAO measure only. (see Anderson et al. 2015, and references therein)
+     * The dark matter clustering is computed at the fiducial cosmology:
+     * \f$\xi(s)= B^2  \xi_{DM}(\alpha s)\ + A_0 + A_1/s +A_2/s^2\f$.
+     *
+     * @param r the scale at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the value of the two point correlation function model
+     */
     double xi_alpha_B_poly(double r, shared_ptr<void> parameters, vector<double> model_parameters);
 
+    /**
+     * @brief model for the monopole of the correlation 
+     * function in redshift space. 
+     * Model parameters are the bias and &alpha; &rarr; the shift of
+     * the measured two point correlation function relative
+     * to the clustering model for the fiducial cosmology.
+     * \f$\xi(s)= b^2 (1+2*\beta/3+\beta^2/5) \xi_{DM}(\alpha s)\f$.
+     *
+     * @param r the scale at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the value of the two point correlation function model
+     */
     double xi0_alpha_bias(double r, shared_ptr<void> parameters, vector<double> model_parameters);
 
+    /**
+     * @brief model for the monopole of the correlation 
+     * function in redshift space. 
+     * Model parameters are the bias, &alpha; &rarr; the shift of
+     * the measured two point correlation function relative
+     * to the clustering model for the fiducial cosmology 
+     * and the cosmological parameters that enters in the 
+     * theoretical clustering model for the dark matter.
+     * \f$\xi(s)= b^2 (1+2*\beta/3+\beta^2/5) \xi_{DM}(\alpha s)\f$.
+     *
+     * @param r the scale at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the value of the two point correlation function model
+     */
     double xi0_alpha_bias_cosmology(double r, shared_ptr<void> parameters, vector<double> model_parameters);
 
+    /**
+     * @brief model for the projected correlation function.
+     * Model parameter is the bias, the dark matter clustering 
+     * is computed for a given cosmology:
+     * \f$w_p(r_p)= b^2 w_p^{DM}(r)\f$.
+     *
+     * @param r the scales at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the values of the two point correlation function model
+     */
     vector<double> wp_bias_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
+    /**
+     * @brief model for the projected correlation function.
+     * Model parameters are the bias and the cosmological parameters that enters in the 
+     * theoretical clustering model for the dark matter.
+     * \f$w_p(r_p)= b^2 w_p^{DM}(r)\f$.
+     *
+     * @param r the scales at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the values of the two point correlation function model
+     */
     vector<double> wp_bias_cosmology_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
+    /**
+     * @brief model for the correlation function in real space.
+     * Model parameter is the bias, the dark matter clustering 
+     * is computed for a given cosmology:
+     * \f$\xi(r)= b^2 \xi_{DM}(r)\f$.
+     *
+     * @param r the scales at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the values of the two point correlation function model
+     */
     vector<double> xi_bias_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
+    /**
+     * @brief model for the correlation function in real space.
+     * Model parameters are the bias and the cosmological parameters
+     * that enters in the theoretical clustering model for the dark matter.
+     * \f$\xi(r)= b^2 \xi_{DM}(r)\f$.
+     *
+     * @param r the scales at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the values of the two point correlation function model
+     */
     vector<double> xi_bias_cosmology_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
+    /**
+     * @brief model for the monopole of the correlation 
+     * function in redshift space. Model parameter is the bias,
+     * the dark matter clustering is computed for a given cosmology:
+     * \f$\xi(s)= b^2 (1+2*\beta/3+\beta^2/5) \xi_{DM}(s)\f$.
+     *
+     * @param r the scales at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the values of the two point correlation function model
+     */
     vector<double> xi0_bias_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
+    /**
+     * @brief model for the monopole of the correlation 
+     * function in redshift space. 
+     * Model parameters are the bias and the cosmological parameters
+     * that enters in the theoretical clustering model for the dark matter.
+     * \f$\xi(s)= b^2 (1+2*\beta/3+\beta^2/5) \xi_{DM}(s)\f$.
+     *
+     * @param r the scales at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the values of the two point correlation function model
+     */
     vector<double> xi0_bias_cosmology_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
+    /**
+     * @brief model for the monopole of the correlation function. 
+     * Model parameters are the bias and the &alpha; &rarr; the shift of
+     * the measured two point correlation function relative
+     * to the clustering model for the fiducial cosmology.
+     * For BAO measure only. (see Anderson et al. 2015, and references therein)
+     * The dark matter clustering is computed at the fiducial cosmology:
+     * \f$\xi(s)= B^2  \xi_{DM}(\alpha s)\f$.
+     *
+     *
+     * @param r the scales at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the values of the two point correlation function model
+     */
     vector<double> xi_alpha_B_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters);
 
+    /**
+     * @brief model for the monopole of the correlation function. 
+     * Model parameters are the bias, &alpha; &rarr; the shift of
+     * the measured two point correlation function relative
+     * to the clustering model for the fiducial cosmology and coefficient
+     * of a polynomial that model systematics in the data. 
+     * For BAO measure only. (see Anderson et al. 2015, and references therein)
+     * The dark matter clustering is computed at the fiducial cosmology:
+     * \f$\xi(s)= B^2  \xi_{DM}(\alpha s)\ + A_0 + A_1/s +A_2/s^2\f$.
+     *
+     * @param r the scales at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the values of the two point correlation function model
+     */
     vector<double> xi_alpha_B_poly_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters);
 
+    /**
+     * @brief model for the monopole of the correlation 
+     * function in redshift space. 
+     * Model parameters are the bias and &alpha; &rarr; the shift of
+     * the measured two point correlation function relative
+     * to the clustering model for the fiducial cosmology.
+     * \f$\xi(s)= b^2 (1+2*\beta/3+\beta^2/5) \xi_{DM}(\alpha s)\f$.
+     *
+     * @param r the scales at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the values of the two point correlation function model
+     */
     vector<double> xi0_alpha_bias_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters);
 
+    /**
+     * @brief model for the monopole of the correlation 
+     * function in redshift space. 
+     * Model parameters are the bias, &alpha; &rarr; the shift of
+     * the measured two point correlation function relative
+     * to the clustering model for the fiducial cosmology 
+     * and the cosmological parameters that enters in the 
+     * theoretical clustering model for the dark matter.
+     * \f$\xi(s)= b^2 (1+2*\beta/3+\beta^2/5) \xi_{DM}(\alpha s)\f$.
+     *
+     * @param r the scales at which the model is computed
+     * @param parameters pointer to an object of type STR_twop_model
+     * @param model_parameters free parameters of the model
+     *
+     * @return the values of the two point correlation function model
+     */
     vector<double> xi0_alpha_bias_cosmology_vector(vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters);
 
   }

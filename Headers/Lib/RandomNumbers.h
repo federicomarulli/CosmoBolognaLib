@@ -457,11 +457,9 @@ namespace cosmobl {
       /**
        *  @brief constructor
        *  @param xx values of the distribution
-       *  @param fx density probability function at xx 
+       *  @param distribution_function density probability function at xx 
        *  @param interpolation_method the method to interpolate
        *  @param seed the random number generator seed
-       *  @param MinVal lower limit of the random numbers range
-       *  @param MaxVal upper limit of the random numbers range
        *  @return object of class RandomNumbers
        */
       DistributionRandomNumbers (const vector<double> xx, const vector<double> distribution_function, const string interpolation_method, const int seed) : RandomNumbers()

@@ -51,7 +51,10 @@ namespace cosmobl {
    */
   namespace statistics {
     
-    /// type of the likelihood to be used
+    /**
+     * @enum LikelihoodType
+     * @brief the type of likelihood function
+     */
     enum LikelihoodType {
 
       /// not set
@@ -70,42 +73,116 @@ namespace cosmobl {
       _UserDefinedLikelihood_
     };
 
+    /**
+     * @struct STR_likelihood_parameters
+     * @brief the struct STR_likelihood_parameters
+     *
+     * This struct contains the data
+     * and the model for the likelihood analysis
+     */
     struct STR_likelihood_parameters
     {
+      /// data containers
       shared_ptr<Data> data;
+
+      /// model to test
       shared_ptr<Model> model;
-      
+
+      /**
+       *  @brief constructor
+       *  @param _data pointers to the data container
+       *  @param _model pointers to the model 
+       *  @return object of type STR_likelihood_parameters
+       */ 
       STR_likelihood_parameters (shared_ptr<Data> _data, shared_ptr<Model> _model) :
       data(_data), model(_model) {}
     };
 
 
+    /** 
+     *  @brief function to compute the gaussian loglikelihood 
+     *  @param model_parameters the parameters of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the loglikelihood; 
+     */
     double LogLikelihood_Gaussian_1D_model (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
+
+    /** 
+     *  @brief function to compute the gaussian loglikelihood 
+     *  @param model_parameters the parameters of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the loglikelihood 
+     */
     double LogLikelihood_Gaussian_1D_error (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
+
+    /** 
+     *  @brief function to compute the gaussian loglikelihood 
+     *  @param model_parameters the parameters of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the loglikelihood 
+     */
     double LogLikelihood_Gaussian_1D_covariance (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
 
+    /** 
+     *  @brief function to compute the gaussian loglikelihood 
+     *  @param model_parameters the parameters of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the loglikelihood 
+     */
     double LogLikelihood_Gaussian_2D_model (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
+
+    /** 
+     *  @brief function to compute the gaussian loglikelihood 
+     *  model with one parameter  &chi;&sup2; 
+     *  @param model_parameters the parameters of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the loglikelihood 
+     */
     double LogLikelihood_Gaussian_2D_error (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
 
+    /**
+     * @var typedef LogLikelihood_function
+     * @brief definition of a function for computation of 
+     * the LogLikelihood
+     */
     typedef function<double(const vector<double>, const shared_ptr<void>)> LogLikelihood_function;
-
+    
+    /**
+     *  @class Likelihood Likelihood.h "Headers/Lib/Likelihood.h"
+     *
+     *  @brief The class Likelihood
+     *
+     *  This class is used to handle objects of type likelihood. It is
+     *  used for all kind of likelihood analyses, sample and minimization
+     */
     class Likelihood
     {
       
     protected:
 
+      /// data containers 
       shared_ptr<Data> m_data;
+
+      /// model to test
       shared_ptr<Model> m_model; 
 
+      /// type of the likelihood
       LikelihoodType m_likelihood_type;
 
+      /// likelihood function
       LogLikelihood_function m_log_likelihood_function;
 
+      /// number of chains
       int m_nchains;
+
+      /// size of the chains
       int m_chain_size;
-	
+
+      /// number of parameters
       bool m_npar;
 
+      /// use data covariance matrix; 0 &rarr; don't use data covariance matrix 
+      /// 1 &rarr; use data covariance matrix; 
       bool m_cov;
 
     public:
@@ -150,20 +227,68 @@ namespace cosmobl {
 
       ///@}
 
+      /**
+       * @brief evaluate the likelihood
+       *
+       * @param pp the model parameters
+       *
+       * @return none
+       */
       double operator () (vector<double> pp) 
       {	
 	shared_ptr<void> pars = make_shared<STR_likelihood_parameters>(STR_likelihood_parameters(m_data, m_model));
 	return m_log_likelihood_function(pp, pars);
       }
 
+      /**
+       * @brief set the likelihood type using the LikelihoodType object 
+       *
+       * @param likelihood_type the likelihood type, specified with the 
+       * LikelihoodType object
+       *
+       * @param cov use data covariance matrix; 0 &rarr; don't use data covariance
+       * matrix, 1 &rarr; use data covariance matrix; 
+       *
+       * @return none
+       */
       void set_likelihood_type (const LikelihoodType likelihood_type, const bool cov);
 
+      /**
+       * @brief set the data for the likelihood analysis 
+       *
+       * @param data pointer to the dataset
+       *
+       * @return none
+       */
       void set_data (shared_ptr<Data> data);
 
+      /**
+       * @brief set the model for the likelihood analysis 
+       *
+       * @param model pointer to the model
+       *
+       * @return none
+       */
       void set_model (shared_ptr<Model> model);
 
+      /**
+       * @brief set the likelihood function 
+       * according among pre-defined likelihood functions 
+       *
+       * @return none
+       */
       void set_likelihood_function ();
 
+      /**
+       * @brief set the likelihood function 
+       *
+       * @param loglikelihood_function the likelihood function
+       *
+       * @param cov use data covariance matrix; 0 &rarr; don't use data covariance
+       * matrix, 1 &rarr; use data covariance matrix; 
+       *
+       * @return none
+       */
       void set_likelihood_function (const LogLikelihood_function loglikelihood_function, const bool cov);
 
       /**

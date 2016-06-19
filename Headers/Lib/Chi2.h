@@ -51,26 +51,115 @@ namespace cosmobl {
    */
   namespace statistics {
 
+    /**
+     * @struct STR_params
+     * @brief the struct STR_params
+     *
+     * This struct contains the data
+     * and the model for the &chi;&sup2; analysis
+     */
     struct STR_params{
+
+      /// data containers
       shared_ptr<Data> data;
+
+      /// model to test
       shared_ptr<Model> model;
 
+      /**
+       *  @brief constructor
+       *  @param _data pointers to the data container
+       *  @param _model pointers to the model 
+       *  @return object of type STR_params
+       */
       STR_params(shared_ptr<Data> _data, shared_ptr<Model> _model) :
 	data(_data), model(_model) {}
     };
 
+    /**
+     * @var typedef chi2_1par
+     * @brief definition of a function for computation of 
+     * &chi;&sup2; for model with one parameter
+     */
     typedef function<double(double , shared_ptr<void>)> chi2_1par;
+
+    /**
+     * @var typedef chi2_npar
+     * @brief definition of a function for computation of 
+     * &chi;&sup2; for model with more than one parameter
+     */
     typedef function<double(vector<double> , shared_ptr<void> )> chi2_npar;
 
+    /**
+     *  @brief function that compute &chi;&sup2; statistics for
+     *  model with one parameter  &chi;&sup2; 
+     *  @param model_parameter the parameter of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the &chi;&sup2; 
+     */
+    double chi2_1D_model_1par (double model_parameter, const shared_ptr<void> fixed_parameters);
 
-    double chi2_1D_model_1par (double model_parameters, const shared_ptr<void> fixed_parameters);
-    double chi2_1D_error_1par (double model_parameters, const shared_ptr<void> fixed_parameters);
-    double chi2_1D_covariance_1par (double model_parameters, const shared_ptr<void> fixed_parameters);
-    double chi2_2D_error_1par (double model_parameters, const shared_ptr<void> fixed_parameters);
+    /**
+     *  @brief function that compute &chi;&sup2; statistics for
+     *  model with one parameter  &chi;&sup2; 
+     *  @param model_parameter the parameter of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the &chi;&sup2; 
+     */
+    double chi2_1D_error_1par (double model_parameter, const shared_ptr<void> fixed_parameters);
 
+    /**
+     *  @brief function that compute &chi;&sup2; statistics for
+     *  model with one parameter  &chi;&sup2; 
+     *  @param model_parameter the parameter of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the &chi;&sup2; 
+     */
+    double chi2_1D_covariance_1par (double model_parameter, const shared_ptr<void> fixed_parameters);
+
+    /**
+     *  @brief function that compute &chi;&sup2; statistics for
+     *  model with one parameter  &chi;&sup2; 
+     *  @param model_parameter the parameter of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the &chi;&sup2; 
+     */
+    double chi2_2D_error_1par (double model_parameter, const shared_ptr<void> fixed_parameters);
+
+    /**
+     *  @brief function that compute &chi;&sup2; statistics for
+     *  model with one parameter  &chi;&sup2; 
+     *  @param model_parameters the parameters of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the &chi;&sup2; 
+     */
     double chi2_1D_model_npar (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
+
+    /**
+     *  @brief function that compute &chi;&sup2; statistics for
+     *  model with one parameter  &chi;&sup2; 
+     *  @param model_parameters the parameters of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the &chi;&sup2; 
+     */
     double chi2_1D_error_npar (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
+
+    /**
+     *  @brief function that compute &chi;&sup2; statistics for
+     *  model with one parameter  &chi;&sup2; 
+     *  @param model_parameters the parameters of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the &chi;&sup2; 
+     */
     double chi2_1D_covariance_npar (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
+
+    /**
+     *  @brief function that compute &chi;&sup2; statistics for
+     *  model with one parameter  &chi;&sup2; 
+     *  @param model_parameters the parameters of the model
+     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @return the value of the &chi;&sup2; 
+     */
     double chi2_2D_error_npar (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
 
     /**
@@ -82,7 +171,6 @@ namespace cosmobl {
      *  used for all kind of &chi;&sup2; analyses, such as &chi;&sup2; minimisation
      *  and the estimation of confidence contours
      */
-
     class Chi2
     {
       protected:

@@ -1162,7 +1162,49 @@ namespace cosmobl {
       
       ///@}
 
-    
+      /**
+       *  @name Member functions to compute, read and write covariance matrix
+       */
+      ///@{ 
+
+      /**
+       *  @brief read the measured covariance matrix
+       *  @param dir input directory
+       *  @param file input file
+       *  @return none
+       */
+      virtual void read_covariance_matrix (const string dir, const string file)
+      { cosmobl::ErrorMsg("Error in read_covariance_matrix() of TwoPointCorrelation.h!");}
+
+      /**
+       *  @brief write the measured two-point correlation
+       *  @param dir output directory
+       *  @param file output file
+       *  @return none
+       */
+      virtual void write_covariance_matrix (const string dir, const string file) const
+      { cosmobl::ErrorMsg("Error in write_covariance_matrix() of TwoPointCorrelation.h!");}
+
+      /**
+       *  @brief compute the covariance matrix
+       *  @param xi_collection vector containing the xi to compute the covariance matrix
+       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
+       *  @return none
+       */
+      virtual void compute_covariance_matrix (vector<shared_ptr<Data>> xi_collection, bool doJK)
+      { cosmobl::ErrorMsg("Error in compute_covariance_matrix() of TwoPointCorrelation.h!");}
+
+      /**
+       *  @brief compute the covariance matrix
+       *  @param file_xi vector containing the path to the xi to compute the covariance matrix
+       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
+       *  @return none
+       */
+      virtual void compute_covariance_matrix (vector<string> file_xi, bool doJK)
+      { cosmobl::ErrorMsg("Error in compute_covariance_matrix() of TwoPointCorrelation.h!");}
+
+      ///@} 
+
       /**
        *  @name Member functions to estimate the errors
        */

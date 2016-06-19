@@ -47,10 +47,25 @@ namespace cosmobl {
 
   namespace statistics {
 
+    /**
+     * @var typedef model_function_1D
+     * @brief 1D functin that takes as an input the position as which it's computed,
+     * a pointer to fixed parameters and a vector of free parameters
+     */
     typedef function<double(double, shared_ptr<void>, vector<double>)> model_function_1D;
 
+    /**
+     * @var typedef model_function_1D_vector
+     * @brief 1D function that takes as an input the positions as which it's computed,
+     * a pointer to fixed parameters and a vector of free parameters
+     */
     typedef function< vector<double>(vector<double>, shared_ptr<void>, vector<double>)> model_function_1D_vector;
 
+    /**
+     * @var typedef model_function_2D
+     * @brief 2D function that takes as an input the positions as which it's computed,
+     * a pointer to fixed parameters and a vector of free parameters
+     */
     typedef function<double(double, double, shared_ptr<void>, vector<double>)> model_function_2D;
 
     /**

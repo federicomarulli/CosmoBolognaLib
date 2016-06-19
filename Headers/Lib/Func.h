@@ -3358,6 +3358,7 @@ namespace cosmobl {
    * @param Xi2 the 2pfc quadrupole
    * @param Xi4 the 2pfc hecadecapole
    *
+   * @return the 2pcf wedges 
    */
   vector<vector<double>> XiWedges_AP (const vector<double> mu_min, const vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const vector<double> rl, const vector<double> Xi0, const vector<double> Xi2, const vector<double> Xi4);
 

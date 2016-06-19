@@ -69,12 +69,12 @@ cosmobl::ChainMesh::ChainMesh (const double cell_size, const long nDim) : m_nDim
 // ============================================================================
 
 
-long cosmobl::ChainMesh::pos_to_index (const vector<double> centre) const
+long cosmobl::ChainMesh::pos_to_index (const vector<double> center) const
 {
   vector<long> indx(m_nDim);
 
   for (long j=0; j<m_nDim; j++)
-    indx[j] = min(long((centre[j]-m_Lim[j][0])/m_cell_size),m_nCell[j]-1);
+    indx[j] = min(long((center[j]-m_Lim[j][0])/m_cell_size),m_nCell[j]-1);
   
   long indx_tot = indx[m_nDim-1];
 
@@ -174,10 +174,10 @@ void cosmobl::ChainMesh::create_chain_mesh (const vector<vector<double> > data, 
   m_Label.resize(m_nCell_tot, -1);
   
   for (long i=0; i<nObj; i++) {
-    vector<double> centre(m_nDim);
+    vector<double> center(m_nDim);
     for (int j=0; j<m_nDim; j++)
-      centre[j] = data[j][i];
-    long indx_tot = pos_to_index(centre);
+      center[j] = data[j][i];
+    long indx_tot = pos_to_index(center);
     m_List[i] = m_Label[indx_tot];
     m_Label[indx_tot] = i;
   }
@@ -257,20 +257,20 @@ void cosmobl::ChainMesh::get_searching_region (const double r_max, const double 
 // ============================================================================
 
 
-vector<long> cosmobl::ChainMesh::close_objects (const vector<double> centre, const long ii) const
+vector<long> cosmobl::ChainMesh::close_objects (const vector<double> center, const long ii) const
 {
   // r2 != -1 ---> search in a nDim annulus from r1 to r2
-  // r2 == -1 ---> search in a nDim sphere from centre to r1
+  // r2 == -1 ---> search in a nDim sphere from center to r1
 
   vector<long> list;
   
-  if (long(centre.size()) != m_nDim) ErrorMsg("Error in ChainMesh::get_list : point must have same dimensions of the chain-mesh");
+  if (long(center.size()) != m_nDim) ErrorMsg("Error in ChainMesh::get_list : point must have same dimensions of the chain-mesh");
 
-   long centre_indx = pos_to_index(centre);
+   long center_indx = pos_to_index(center);
    
    for (unsigned long i=0; i<m_search_region.size(); i++) {
 
-     long k = min(max(m_search_region[i]+centre_indx, (long)0), m_nCell_tot-1);
+     long k = min(max(m_search_region[i]+center_indx, (long)0), m_nCell_tot-1);
      long j = m_Label[k];
 
      while (j>-1 && j>=ii) {

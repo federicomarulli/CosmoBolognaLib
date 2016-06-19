@@ -116,11 +116,49 @@ namespace cosmobl {
 
 	///@}
 
+	/**
+	 * @brief return the type of correlation function
+	 * @return the type of correlation function
+	 */
 	twopt::TwoPType twoPType () {return m_twoPType;}
 
+	/**
+	 * @brief
+	 *
+	 * @param likelihoodType the likelihood type
+	 * @param xlimits range for the fit
+	 * @param bias_value prior for the bias 
+	 * @param bias_prior prior for the bias
+	 * @param nChains number of chains
+	 * @param chain_size size of the chain
+	 * @param dir_output output directory for the chains
+	 * @param start starting position in the chains 
+	 * @param stop final position in the chains
+	 * @param thin interval of parameter in output
+	 *
+	 * @return
+	 */
 	virtual void fit_bias(const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const int nChains, const int chain_size, const string dir_output, const double start=0.5, const double stop=1, const int thin=1)
 	{ErrorMsg("Error in fit_bias of Modelling_TwoPointCorrelation.h");}
 
+	/**
+	 * @brief
+	 *
+	 * @param likelihoodType the likelihood type
+	 * @param xlimits range for the fit
+	 * @param bias_value value of the bias
+	 * @param bias_prior prior for the bias
+	 * @param CosmoPars vector containing the cosmological parameters
+	 * @param prior_CosmoPars vector containing the priors on cosmological parameters
+	 * @param nChains number of chains
+	 * @param chain_size size of the chain
+	 * @param dir_output output directory for the chains
+	 * @param start starting position in the chains
+	 * @param stop final position in the chains
+	 * @param thin interval of parameter in output
+	 *
+	 * @return
+	 */
 	virtual void fit_bias_cosmology(const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const vector<CosmoPar> CosmoPars, const vector<statistics::Prior> prior_CosmoPars, const int nChains, const int chain_size, const string dir_output, const double start=0.5, const double stop=1, const int thin=1)
 	{ErrorMsg("Error in fit_bias_cosmology of Modelling_TwoPointCorrelation.h");}
 

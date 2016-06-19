@@ -189,7 +189,7 @@ namespace cosmobl {
 	
       /**
        * @brief set prior seed
-       * @brief seed the prior seed
+       * @param seed the prior seed
        * return none
        */
       void set_prior_seed (const int seed) { m_prior->set_seed(seed); }

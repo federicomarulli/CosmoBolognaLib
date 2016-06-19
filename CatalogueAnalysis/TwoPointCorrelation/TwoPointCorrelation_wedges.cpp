@@ -379,3 +379,51 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiBootstra
   
   return data;
 }
+
+
+// ============================================================================
+
+
+void cosmobl::twopt::TwoPointCorrelation_wedges::read_covariance_matrix (const string dir, const string file)
+{
+  m_dataset->set_covariance(dir+file);
+}
+
+
+// ============================================================================
+
+
+void cosmobl::twopt::TwoPointCorrelation_wedges::write_covariance_matrix (const string dir, const string file) const
+{
+  m_dataset->write_covariance(dir, file, "r");
+}
+
+
+// ============================================================================
+
+
+void cosmobl::twopt::TwoPointCorrelation_wedges::compute_covariance_matrix (const vector<shared_ptr<Data>> xi_collection, const bool doJK)
+{
+  vector<vector<double>> xi;
+
+  for(size_t i=0;i<xi_collection.size();i++)
+    xi.push_back(xi_collection[i]->fx());
+
+  vector<vector<double> > cov_mat;
+  cosmobl::covariance_matrix(xi, cov_mat, doJK);
+  
+  m_dataset->set_covariance(cov_mat);
+}
+
+
+// ============================================================================
+
+
+void cosmobl::twopt::TwoPointCorrelation_wedges::compute_covariance_matrix (const vector<string> file_xi, const bool doJK)
+{
+  vector<double> rad, mean;
+  vector<vector<double> > cov_mat;
+
+  cosmobl::covariance_matrix (file_xi, rad, mean, cov_mat, doJK); 
+  m_dataset->set_covariance(cov_mat);
+}

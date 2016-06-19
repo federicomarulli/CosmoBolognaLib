@@ -50,6 +50,10 @@ namespace cosmobl {
    */
   namespace statistics {
 
+    /**
+     * @var typedef prior_func
+     * @brief definition of a function for the priors 
+     */
     typedef function<double(double, shared_ptr<void>, vector<double>)> prior_func;
 
     /**
@@ -200,7 +204,7 @@ namespace cosmobl {
 
       /**
        * @brief set prior seed
-       * @brief seed the prior seed
+       * @param seed the prior seed
        * return none
        */
       void set_seed (const int seed) {m_prior_random->set_seed(seed);}
@@ -282,7 +286,7 @@ namespace cosmobl {
 
       /**
        * @brief check if a value is included in the prior limits
-       *
+       * @param value the value to be checked
        * @return 0 &rarr; not included in prior range; 1 &rarr; included in prior range
        */
       bool isIncluded (const double value) const;

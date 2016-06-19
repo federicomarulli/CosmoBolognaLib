@@ -458,6 +458,46 @@ namespace cosmobl {
 
       ///@}
 
+      /**
+       *  @name Member functions to compute, read and write covariance matrix
+       */
+      ///@{ 
+
+      /**
+       *  @brief read the measured covariance matrix
+       *  @param dir input directory
+       *  @param file input file
+       *  @return none
+       */
+      virtual void read_covariance_matrix (const string dir, const string file) override;
+
+      /**
+       *  @brief write the measured two-point correlation
+       *  @param dir output directory
+       *  @param file output file
+       *  @return none
+       */
+      virtual void write_covariance_matrix (const string dir, const string file) const override;
+
+      /**
+       *  @brief compute the covariance matrix
+       *  @param xi_collection vector containing the xi to compute the covariance matrix
+       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
+       *  @return none
+       */
+      virtual void compute_covariance_matrix (vector<shared_ptr<Data>> xi_collection, bool doJK) override;
+
+      /**
+       *  @brief compute the covariance matrix
+       *  @param file_xi vector containing the path to the xi to compute the covariance matrix
+       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
+       *  @return none
+       */
+      virtual void compute_covariance_matrix (vector<string> file_xi, bool doJK) override;
+
+      ///@} 
+
+
     };
   }
 }

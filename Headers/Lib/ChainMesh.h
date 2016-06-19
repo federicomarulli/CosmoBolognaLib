@@ -79,7 +79,7 @@ namespace cosmobl {
     /// number of cell(s) for variable(s) 
     vector<long> m_nCell;
 
-    /// the list of cell around a generic centre
+    /// the list of cell around a generic center
     vector<long> m_search_region;
 
     /// the total number of cells
@@ -94,6 +94,14 @@ namespace cosmobl {
     ChainMesh () {}
 
     /**
+     *  @brief constructor 
+     *  @param cell_size double storing the cell size
+     *  @param nDim the number of dimensions
+     *  @return object of class ChainMesh
+     */
+    ChainMesh (const double cell_size, const long nDim);
+
+    /**
      *  @brief default destructor
      *  @return none
      */
@@ -105,37 +113,77 @@ namespace cosmobl {
      *  @param nDim the number of dimensions
      *  @return none
      */
-    void set_par (const double, const long);
+    void set_par (const double cell_size, const long nDim);
 
-    /**
-     *  @brief constructor 
-     *  @param cell_size double storing the cell size
-     *  @param nDim the number of dimensions
-     *  @return object of class ChainMesh
-     */
-    ChainMesh (double const, long const);
-    
     /**
      *  @brief get the private member ChainMesh::m_nCell_tot
      *  @return total number of cells 
      */
     long nCell() const { return m_nCell_tot; }
     
-    long pos_to_index (const vector<double>) const;
-    
-    long inds_to_index (const vector<long>) const;
-    
-    void index_to_inds (const long, const vector<long>, vector<long> &) const;
+    /**
+     * @brief get the index of the cell given the object coordinates
+     * @param center the object coordinates
+     * @return the cell index
+     */
+    long pos_to_index (const vector<double> center) const;
 
-    void create_chain_mesh (const vector<vector<double> >, const double , const long nMIN=0, const long nMAX=300);
-    
-    void create_chain_mesh_m2 (const vector<vector<double> >);
+    /**
+     * @brief get the unique index of the cell given the n indices
+     * @param indx vector of the indices of the nD space cell
+     * @return the cell unique index
+     */ 
+    long inds_to_index (const vector<long> indx) const;
 
-    void get_searching_region (const double, const double r_min = -1);
-    
-    vector<long> close_objects (vector<double>, long ii=-1) const; 
+    /**
+     * @brief get the n indices given the unique index
+     * @param index the unique index 
+     * @param nn the number of cells along the box axis
+     * @param indx vector of the indices of the nD space cell
+     * @return none
+     */  
+    void index_to_inds (const long index, const vector<long> nn, vector<long> &indx) const;
 
-    vector<long> get_list (const long) const;
+    /**
+     * @brief create the chain mesh
+     * @param data the vector containing the coordinate of the object 
+     * @param rMax the maximum radius, to set the interal variable m_search_region
+     * @param nMIN minimum number of cells
+     * @param nMAX maximum number of cells
+     * @return none
+     */
+    void create_chain_mesh (const vector<vector<double> > data, const double rMax, const long nMIN=0, const long nMAX=300);
+  
+    /**
+     * @brief create the chain mesh
+     * @param data the vector containing the coordinate of the object
+     * @return none
+     */
+    void create_chain_mesh_m2 (const vector<vector<double> > data);
+
+    /**
+     * @brief set the internal variable m_search_region, the list
+     * of cell around a generic center
+     * @param r_max the maximum radius
+     * @param r_min the minimum radius
+     * @return none
+     */
+    void get_searching_region (const double r_max, const double r_min = -1);
+
+    /**
+     * @brief get the indeces of the objects close to an object
+     * @param center coordinates of an object
+     * @param ii the minimum index given in output
+     * @return vector containing the index of the objects inside the cell
+     */
+    vector<long> close_objects (vector<double> center, long ii=-1) const; 
+
+    /**
+     * @brief get the index of the object inside a cell
+     * @param cell_index the cell index
+     * @return vector containing the index of the objects inside the cell
+     */
+    vector<long> get_list (const long cell_index) const;
 
   };
 
@@ -171,7 +219,7 @@ namespace cosmobl {
      *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
      *  @return none
      */
-    void set_par (const double, const vector<double>, const double, const long nMIN=0, const long nMAX=300);
+    void set_par (const double cell_size, const vector<double> xx, const double rMAX, const long nMIN=0, const long nMAX=300);
 
     /**
      *  @brief constructor 
@@ -182,7 +230,7 @@ namespace cosmobl {
      *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
      *  @return object of the class ChainMesh1D
      */
-    ChainMesh1D (const double, const vector<double>, const double, const long nMIN=0, const long nMAX=300);
+    ChainMesh1D (const double cell_size, const vector<double> xx, const double rMAX, const long nMIN=0, const long nMAX=300);
   };
 
   /**
@@ -218,7 +266,7 @@ namespace cosmobl {
      *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
      *  @return none
      */
-    void set_par (const double, const vector<double>, const vector<double>, const double, const long nMIN=0, const long nMAX=300);
+    void set_par (const double cell_size, const vector<double> xx, const vector<double> yy, const double rMAX, const long nMIN=0, const long nMAX=300);
 
     /**
      *  @brief constructor 
@@ -230,7 +278,7 @@ namespace cosmobl {
      *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
      *  @return object of the class ChainMesh2D
      */
-    ChainMesh2D (const double, const vector<double>, const vector<double>, const double, const long nMIN=0, const long nMAX=300);
+    ChainMesh2D (const double cell_size, const vector<double> xx, const vector<double> yy, const double rMAX, const long nMIN=0, const long nMAX=300);
   };
 
   /**
@@ -268,7 +316,7 @@ namespace cosmobl {
      *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
      *  @return none
      */
-    void set_par (const double, const vector<double>, const vector<double>, const vector<double>, const double, const long nMIN=0, const long nMAX=300);
+    void set_par (const double cell_size, const vector<double> xx, const vector<double> yy, const vector<double> zz, const double rMAX, const long nMIN=0, const long nMAX=300);
 
     /**
      *  @brief constructor 
@@ -281,7 +329,7 @@ namespace cosmobl {
      *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
      *  @return object of the class ChainMesh3D
      */
-    ChainMesh3D (const double, const vector<double>, const vector<double>, const vector<double>, const double, const long nMIN=0, const long nMAX=300);
+    ChainMesh3D (const double cell_size, const vector<double> xx, const vector<double> yy, const vector<double> zz, const double rMAX, const long nMIN=0, const long nMAX=300);
   };
 
 }

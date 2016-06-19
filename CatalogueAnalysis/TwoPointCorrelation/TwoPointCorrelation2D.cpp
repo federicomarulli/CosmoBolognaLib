@@ -287,7 +287,7 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation2D::XiJackknife(con
 
     vector<int> w(nRegions, 1);
     w[i] = 0;
-
+    
     for (int j=0; j<nRegions; j++) {
       for (int k=j; k<nRegions; k++) {
 	int index = j*nRegions-(j-1)*j/2+k-j;
@@ -303,7 +303,7 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation2D::XiJackknife(con
 	}
       }
     }
-
+   
     data.push_back(move(LandySzalayEstimatorTwoP(dd_SS, rr_SS, dr_SS, nData_SS, nRandom_SS)));
     /*
     for(int aa=0;aa<dd_SS->nbins_D1();aa++)

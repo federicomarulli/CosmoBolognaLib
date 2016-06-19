@@ -85,6 +85,7 @@ namespace cosmobl {
 
       /**
        *  @brief constructor of class Data1D_collection
+       *  @param n_data the number of dataset
        *  @return object of class Data1D_collection
        */
       Data1D_collection (const int n_data);
