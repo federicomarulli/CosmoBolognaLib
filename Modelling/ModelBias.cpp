@@ -41,16 +41,16 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-void cosmobl::ModelBias::set_xi_parameters (const vector<double> r, const shared_ptr<Cosmology> cosmology, const double redshift, const string type, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
+void cosmobl::ModelBias::set_xi_parameters (const vector<double> r, const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const string type, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
 
-  vector<double> xi(r.size(),0);
+  vector<double> xi(r.size(), 0);
 
   for (size_t i=0; i<r.size(); i++)
     xi[i] = cosmology->xi_DM(r[i], method, redshift, output_root, 1, norm, k_min, k_max, aa, 1, prec, file_par);
 
-  model_parameters->func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(r,xi,type));
+  model_parameters->func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(r, xi, type));
   m_fixed_parameters = move(model_parameters);
 
   m_model = &cosmobl::glob::xi_bias;
@@ -60,7 +60,7 @@ void cosmobl::ModelBias::set_xi_parameters (const vector<double> r, const shared
 // ============================================================================================
 
 
-void cosmobl::ModelBias::set_xi_parameters_cosmology (const shared_ptr<Cosmology> cosmology, const vector<CosmoPar> cosmo_parameters, const double redshift, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
+void cosmobl::ModelBias::set_xi_parameters_cosmology (const shared_ptr<cosmology::Cosmology> cosmology, const vector<cosmology::CosmoPar> cosmo_parameters, const double redshift, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
 
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
@@ -88,7 +88,7 @@ void cosmobl::ModelBias::set_xi_parameters_cosmology (const shared_ptr<Cosmology
 // ============================================================================================
 
 
-void cosmobl::ModelBias::set_wp_parameters (const vector<double> r, const shared_ptr<Cosmology> cosmology, const double redshift, const double pi_max, const string type, const string method, const string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
+void cosmobl::ModelBias::set_wp_parameters (const vector<double> r, const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const double pi_max, const string type, const string method, const string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
 
@@ -108,7 +108,7 @@ void cosmobl::ModelBias::set_wp_parameters (const vector<double> r, const shared
 // ============================================================================================
 
 
-void cosmobl::ModelBias::set_wp_parameters_cosmology (const shared_ptr<Cosmology> cosmology, const vector<CosmoPar> cosmo_parameters, const double redshift, const double pi_max, const string method, const string output_root, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
+void cosmobl::ModelBias::set_wp_parameters_cosmology (const shared_ptr<cosmology::Cosmology> cosmology, const vector<cosmology::CosmoPar> cosmo_parameters, const double redshift, const double pi_max, const string method, const string output_root, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
 
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
@@ -138,7 +138,7 @@ void cosmobl::ModelBias::set_wp_parameters_cosmology (const shared_ptr<Cosmology
 // ============================================================================================
 
 
-void cosmobl::ModelBias::set_xi0_parameters (const vector<double> r, const shared_ptr<Cosmology> cosmology, const double redshift, const string type, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
+void cosmobl::ModelBias::set_xi0_parameters (const vector<double> r, const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const string type, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
 
@@ -157,9 +157,8 @@ void cosmobl::ModelBias::set_xi0_parameters (const vector<double> r, const share
 // ============================================================================================
 
 
-void cosmobl::ModelBias::set_xi0_parameters_cosmology (const shared_ptr<Cosmology> cosmology, const vector<CosmoPar> cosmo_parameters, const double redshift, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
+void cosmobl::ModelBias::set_xi0_parameters_cosmology (const shared_ptr<cosmology::Cosmology> cosmology, const vector<cosmology::CosmoPar> cosmo_parameters, const double redshift, const string method, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
-
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
 
   model_parameters->cosmology=cosmology;
@@ -188,7 +187,7 @@ void cosmobl::ModelBias::set_xi0_parameters_cosmology (const shared_ptr<Cosmolog
 cosmobl::ModelBias::ModelBias (const double bias_value, const statistics::Prior bias_prior) : Model1D()
 {
   m_parameters.resize(1); 
-  m_parameters[0] = make_shared<statistics::Parameter>(bias_value,bias_prior,0,"bias");
+  m_parameters[0] = make_shared<statistics::Parameter>(bias_value, bias_prior, statistics::_free_, "bias");
   m_npar=m_parameters.size();
 }
 
@@ -196,16 +195,16 @@ cosmobl::ModelBias::ModelBias (const double bias_value, const statistics::Prior 
 // ============================================================================================
 
 
-cosmobl::ModelBias::ModelBias (const double bias_value, const statistics::Prior bias_prior, const vector<CosmoPar> cosmo_parameters, const vector<double> cosmo_parameters_values, const vector<statistics::Prior> cosmo_parameters_priors, const vector<string> cpar_name) : Model1D()
+cosmobl::ModelBias::ModelBias (const double bias_value, const statistics::Prior bias_prior, const vector<cosmology::CosmoPar> cosmo_parameters, const vector<double> cosmo_parameters_values, const vector<statistics::Prior> cosmo_parameters_priors, const vector<string> cpar_name) : Model1D()
 {
-
   m_npar = cosmo_parameters.size()+1;
   m_parameters.resize(m_npar); 
-  m_parameters[0] = make_shared<statistics::Parameter>(bias_value,bias_prior,0,"bias");
+  m_parameters[0] = make_shared<statistics::Parameter>(bias_value, bias_prior, statistics::_free_, "bias");
 
   for (unsigned int i=0; i<m_npar-1; i++) {
     string par_name = (cpar_name.size()!=m_npar-1) ? "par"+conv(i+1, par::fINT) : cpar_name[i];
-    m_parameters[i+1] = make_shared<statistics::Parameter>(cosmo_parameters_values[i], cosmo_parameters_priors[i],0, par_name);
+    m_parameters[i+1] = make_shared<statistics::Parameter>(cosmo_parameters_values[i], cosmo_parameters_priors[i], statistics::_free_, par_name);
   }
+
   m_npar=m_parameters.size();
 }

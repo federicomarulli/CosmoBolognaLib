@@ -41,7 +41,8 @@
 namespace cosmobl {
 
   /**
-   *  @brief The namespace of random numbers 
+   *  @brief The namespace of the functions and classes used to handle
+   *  <B> random numbers </B>
    *  
    *  The \e random namespace contains all the functions and classes
    *  used to handle random numbers
@@ -433,7 +434,7 @@ namespace cosmobl {
     };
 
     /**
-     *  @class DistrbutionRandomNumbers RandomNumbers.h
+     *  @class DistributionRandomNumbers RandomNumbers.h
      *  "Headers/Lib/RandomNumbers.h"
      *
      *  @brief The class DistributionRandomNumbers

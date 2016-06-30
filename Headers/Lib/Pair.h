@@ -44,7 +44,8 @@
 namespace cosmobl {
   
   /**
-   *  @brief The namespace of the pairs 
+   *  @brief The namespace of the functions and classes used to handle
+   *  <B> pairs of objects </B> 
    *  
    *  The \e pairs namespace contains all the functions and classes to
    *  handle pairs of objects

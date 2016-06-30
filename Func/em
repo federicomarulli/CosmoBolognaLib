@@ -1,1 +1,1 @@
-emacs ../Headers/Lib/Func.h ../Headers/Lib/Constants.h ../Headers/Lib/FuncClassFunc.h ../Headers/Lib/Chi2ClassFunc.h ../Headers/Lib/RandomNumbers.h ../Headers/Lib/Field3D.h ../Headers/Lib/Data*.h Func.cpp FuncXi.cpp FuncMultipoles.cpp Field3D.cpp Data*.cpp &
+emacs ../Headers/Lib/Func.h ../Headers/Lib/Constants.h ../Headers/Lib/FuncClassFunc.h ../Headers/Lib/Chi2ClassFunc.h ../Headers/Lib/RandomNumbers.h ../Headers/Lib/Field3D.h ../Headers/Lib/Data*.h ../Headers/Lib/GSL*.h Func.cpp FuncXi.cpp FuncMultipoles.cpp Field3D.cpp Data*.cpp GSLfunction.cpp &

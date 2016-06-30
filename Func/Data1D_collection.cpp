@@ -32,13 +32,15 @@
  */
 
 #include "Data1D_collection.h"
+
 using namespace cosmobl;
+using namespace data;
 
 
 // ======================================================================================
 
 
-cosmobl::Data1D_collection::Data1D_collection (const int ndata)
+cosmobl::data::Data1D_collection::Data1D_collection (const int ndata)
 {
   m_n_data = ndata;
   m_data.resize(ndata);
@@ -48,7 +50,7 @@ cosmobl::Data1D_collection::Data1D_collection (const int ndata)
 // ======================================================================================
 
 
-cosmobl::Data1D_collection::Data1D_collection (const vector<Data1D> data, const vector<double> x_min, const vector<double> x_max)
+cosmobl::data::Data1D_collection::Data1D_collection (const vector<Data1D> data, const vector<double> x_min, const vector<double> x_max)
 {
   m_n_data = data.size();
   m_data = data;
@@ -62,7 +64,7 @@ cosmobl::Data1D_collection::Data1D_collection (const vector<Data1D> data, const 
 // ======================================================================================
 
 
-cosmobl::Data1D_collection::Data1D_collection (const vector<Data1D> data, const vector<vector<double > > covariance_matrix, const vector<double> x_min, const vector<double> x_max)
+cosmobl::data::Data1D_collection::Data1D_collection (const vector<Data1D> data, const vector<vector<double > > covariance_matrix, const vector<double> x_min, const vector<double> x_max)
 {
   m_n_data = data.size();
   m_data = data;
@@ -76,7 +78,7 @@ cosmobl::Data1D_collection::Data1D_collection (const vector<Data1D> data, const 
 // ======================================================================================
 
       
-vector<double> cosmobl::Data1D_collection::xx () const
+vector<double> cosmobl::data::Data1D_collection::xx () const
 {
   vector<double> xx;
 
@@ -92,7 +94,7 @@ vector<double> cosmobl::Data1D_collection::xx () const
 // ======================================================================================
       
       
-vector<double> cosmobl::Data1D_collection::fx () const
+vector<double> cosmobl::data::Data1D_collection::fx () const
 {
   vector<double> fx;
 
@@ -106,7 +108,7 @@ vector<double> cosmobl::Data1D_collection::fx () const
 // ======================================================================================
       
       
-vector<double> cosmobl::Data1D_collection::error_fx () const
+vector<double> cosmobl::data::Data1D_collection::error_fx () const
 {
   vector<double> error_fx;
 
@@ -121,7 +123,7 @@ vector<double> cosmobl::Data1D_collection::error_fx () const
 // ======================================================================================
       
       
-void cosmobl::Data1D_collection::set_covariance (const string filename)
+void cosmobl::data::Data1D_collection::set_covariance (const string filename)
 {
   m_covariance_matrix.erase(m_covariance_matrix.begin(), m_covariance_matrix.end());
 
@@ -153,7 +155,7 @@ void cosmobl::Data1D_collection::set_covariance (const string filename)
 // ======================================================================================
 
 
-void cosmobl::Data1D_collection::set_covariance ()
+void cosmobl::data::Data1D_collection::set_covariance ()
 {
   m_covariance_matrix.erase( m_covariance_matrix.begin(), m_covariance_matrix.end());
   m_covariance_matrix.resize(ndata(),vector<double>(ndata(),0));
@@ -169,7 +171,7 @@ void cosmobl::Data1D_collection::set_covariance ()
 // ======================================================================================
 
 
-void cosmobl::Data1D_collection::invert_covariance()
+void cosmobl::data::Data1D_collection::invert_covariance()
 {
   vector<vector<double> > temporary_covariance(ndata_eff(),vector<double>(ndata_eff(),0)), temporary_inverted_covariance(ndata_eff(),vector<double>(ndata_eff(),0));
 
@@ -195,7 +197,7 @@ void cosmobl::Data1D_collection::invert_covariance()
 // ======================================================================================
 
 
-int cosmobl::Data1D_collection::ndata_eff () const 
+int cosmobl::data::Data1D_collection::ndata_eff () const 
 { 
   int ndata_eff = 0; 
 
@@ -209,7 +211,7 @@ int cosmobl::Data1D_collection::ndata_eff () const
 // ======================================================================================
 
 
-int cosmobl::Data1D_collection::ndata () const 
+int cosmobl::data::Data1D_collection::ndata () const 
 { 
   int ndata = 0; 
 

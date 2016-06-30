@@ -34,12 +34,13 @@
 #include "Field3D.h"
 
 using namespace cosmobl;
+using namespace data;
 
 
 // ============================================================================
 
 
-cosmobl::Field3D::Field3D (const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ)
+cosmobl::data::Field3D::Field3D (const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ)
 {
   set_parameters(deltaR, minX, maxX, minY, maxY, minZ, maxZ);
 }
@@ -48,7 +49,7 @@ cosmobl::Field3D::Field3D (const double deltaR, const double minX, const double 
 // ============================================================================
 
 
-cosmobl::Field3D::Field3D (const int nx, const int ny, const int nz, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ)
+cosmobl::data::Field3D::Field3D (const int nx, const int ny, const int nz, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ)
 {
   set_parameters(nx, ny, nz, minX, maxX, minY, maxY, minZ, maxZ);
 }
@@ -57,7 +58,7 @@ cosmobl::Field3D::Field3D (const int nx, const int ny, const int nz, const doubl
 // ============================================================================
 
 
-void cosmobl::Field3D::set_parameters(const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ)
+void cosmobl::data::Field3D::set_parameters(const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ)
 {
   m_MinX = minX;
   m_MaxX = maxX;
@@ -95,7 +96,7 @@ void cosmobl::Field3D::set_parameters(const double deltaR, const double minX, co
 // ============================================================================
 
 
-void cosmobl::Field3D::set_parameters (const int nx, const int ny, const int nz, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ)
+void cosmobl::data::Field3D::set_parameters (const int nx, const int ny, const int nz, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ)
 {
   m_MinX = minX;
   m_MaxX = maxX;
@@ -130,7 +131,7 @@ void cosmobl::Field3D::set_parameters (const int nx, const int ny, const int nz,
 // ============================================================================
 
 
-cosmobl::ScalarField3D::ScalarField3D (const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ) : Field3D(deltaR, minX, maxX, minY, maxY, minZ, maxZ) 
+cosmobl::data::ScalarField3D::ScalarField3D (const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ) : Field3D(deltaR, minX, maxX, minY, maxY, minZ, maxZ) 
 {
   m_field = fftw_alloc_real(m_nCells);
   m_field_FourierSpace = fftw_alloc_complex(m_nCells_Fourier);
@@ -148,7 +149,7 @@ cosmobl::ScalarField3D::ScalarField3D (const double deltaR, const double minX, c
 // ============================================================================
 
 
-cosmobl::ScalarField3D::ScalarField3D (const int nx, const int ny, const int nz, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ) : Field3D(nx, ny, nz, minX, maxX, minY, maxY, minZ, maxZ) 
+cosmobl::data::ScalarField3D::ScalarField3D (const int nx, const int ny, const int nz, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ) : Field3D(nx, ny, nz, minX, maxX, minY, maxY, minZ, maxZ) 
 {
   m_field = fftw_alloc_real(m_nCells);
   m_field_FourierSpace = fftw_alloc_complex(m_nCells_Fourier);
@@ -167,7 +168,7 @@ cosmobl::ScalarField3D::ScalarField3D (const int nx, const int ny, const int nz,
 // ============================================================================
 
 
-void cosmobl::ScalarField3D::FourierTransformField () 
+void cosmobl::data::ScalarField3D::FourierTransformField () 
 {
   
   for (int i=0; i<m_nCells_Fourier; i++) {
@@ -191,7 +192,7 @@ void cosmobl::ScalarField3D::FourierTransformField ()
 // ============================================================================
 
 
-void cosmobl::ScalarField3D::FourierAntiTransformField () 
+void cosmobl::data::ScalarField3D::FourierAntiTransformField () 
 {
   for (int i=0; i<m_nCells; i++)
     m_field[i] = 0;
@@ -207,7 +208,7 @@ void cosmobl::ScalarField3D::FourierAntiTransformField ()
 // ============================================================================
 
 
-void cosmobl::ScalarField3D::GaussianConvolutionField (const double kernel_size) 
+void cosmobl::data::ScalarField3D::GaussianConvolutionField (const double kernel_size) 
 {
   FourierTransformField();
 
@@ -239,7 +240,7 @@ void cosmobl::ScalarField3D::GaussianConvolutionField (const double kernel_size)
 // ============================================================================
 
 
-void cosmobl::ScalarField3D::set_ScalarField (const double value, const int i, const int j, const int k, const bool add)
+void cosmobl::data::ScalarField3D::set_ScalarField (const double value, const int i, const int j, const int k, const bool add)
 {
   m_field[inds_to_index(i,j,k)] = (add) ? m_field[inds_to_index(i,j,k)] + value : value;
 }
@@ -248,7 +249,7 @@ void cosmobl::ScalarField3D::set_ScalarField (const double value, const int i, c
 // ============================================================================
 
 
-void cosmobl::ScalarField3D::set_ScalarField_FourierSpace_real (const double value, const int i, const int j, const int k, const bool add)
+void cosmobl::data::ScalarField3D::set_ScalarField_FourierSpace_real (const double value, const int i, const int j, const int k, const bool add)
 {
   m_field_FourierSpace[inds_to_index_Fourier(i,j,k)][0] = (add) ? m_field_FourierSpace[inds_to_index_Fourier(i,j,k)][0] + value: value;
 }
@@ -257,7 +258,7 @@ void cosmobl::ScalarField3D::set_ScalarField_FourierSpace_real (const double val
 // ============================================================================
 
 
-void cosmobl::ScalarField3D::set_ScalarField_FourierSpace_complex (const double value, const int i, const int j, const int k, const bool add)
+void cosmobl::data::ScalarField3D::set_ScalarField_FourierSpace_complex (const double value, const int i, const int j, const int k, const bool add)
 {
   m_field_FourierSpace[inds_to_index_Fourier(i,j,k)][1] = (add) ? m_field_FourierSpace[inds_to_index_Fourier(i,j,k)][1] + value: value;
 }
@@ -266,7 +267,7 @@ void cosmobl::ScalarField3D::set_ScalarField_FourierSpace_complex (const double 
 // ============================================================================
 
 
-double  cosmobl::ScalarField3D::ScalarField (const int i, const int j, const int k) const 
+double  cosmobl::data::ScalarField3D::ScalarField (const int i, const int j, const int k) const 
 {
   return m_field[inds_to_index(i,j,k)];
 }
@@ -275,7 +276,7 @@ double  cosmobl::ScalarField3D::ScalarField (const int i, const int j, const int
 // ============================================================================
 
 
-double  cosmobl::ScalarField3D::ScalarField_FourierSpace_real (const int i, const int j, const int k) const 
+double  cosmobl::data::ScalarField3D::ScalarField_FourierSpace_real (const int i, const int j, const int k) const 
 {
   return m_field_FourierSpace[inds_to_index_Fourier(i,j,k)][0];
 }
@@ -284,7 +285,7 @@ double  cosmobl::ScalarField3D::ScalarField_FourierSpace_real (const int i, cons
 // ============================================================================
 
 
-double  cosmobl::ScalarField3D::ScalarField_FourierSpace_complex (const int i, const int j, const int k) const 
+double  cosmobl::data::ScalarField3D::ScalarField_FourierSpace_complex (const int i, const int j, const int k) const 
 {
   return m_field_FourierSpace[inds_to_index_Fourier(i,j,k)][1];
 }
@@ -293,7 +294,7 @@ double  cosmobl::ScalarField3D::ScalarField_FourierSpace_complex (const int i, c
 // ============================================================================
 
 
-cosmobl::VectorField3D::VectorField3D (const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ) : Field3D(deltaR, minX, maxX, minY, maxY, minZ, maxZ) 
+cosmobl::data::VectorField3D::VectorField3D (const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ) : Field3D(deltaR, minX, maxX, minY, maxY, minZ, maxZ) 
 {
   m_field.resize(3);
   
@@ -327,7 +328,7 @@ cosmobl::VectorField3D::VectorField3D (const double deltaR, const double minX, c
 // ============================================================================
 
 
-cosmobl::VectorField3D::VectorField3D (const int nx, const int ny, const int nz, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ) : Field3D(nx, ny, nz, minX, maxX, minY, maxY, minZ, maxZ) 
+cosmobl::data::VectorField3D::VectorField3D (const int nx, const int ny, const int nz, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ) : Field3D(nx, ny, nz, minX, maxX, minY, maxY, minZ, maxZ) 
 {
   m_field.resize(3);
 
@@ -362,7 +363,7 @@ cosmobl::VectorField3D::VectorField3D (const int nx, const int ny, const int nz,
 // ============================================================================
 
 
-void cosmobl::VectorField3D::FourierTransformField () 
+void cosmobl::data::VectorField3D::FourierTransformField () 
 {
 
   for(int i=0;i<m_nCells_Fourier;i++){
@@ -403,7 +404,7 @@ void cosmobl::VectorField3D::FourierTransformField ()
 // ============================================================================
 
 
-void cosmobl::VectorField3D::FourierAntiTransformField () 
+void cosmobl::data::VectorField3D::FourierAntiTransformField () 
 {
   for (int i=0; i<m_nCells; i++) {
     m_field[0][i] = 0;
@@ -431,7 +432,7 @@ void cosmobl::VectorField3D::FourierAntiTransformField ()
 // ============================================================================
 
 
-void cosmobl::VectorField3D::set_VectorField (const vector<double> value, const int i, const int j, const int k, const bool add)
+void cosmobl::data::VectorField3D::set_VectorField (const vector<double> value, const int i, const int j, const int k, const bool add)
 {
   m_field[0][inds_to_index(i,j,k)] = (add) ? m_field[0][inds_to_index(i,j,k)]+value[0]: value[0];
   m_field[1][inds_to_index(i,j,k)] = (add) ? m_field[1][inds_to_index(i,j,k)]+value[1]: value[1];
@@ -442,7 +443,7 @@ void cosmobl::VectorField3D::set_VectorField (const vector<double> value, const 
 // ============================================================================
 
 
-void cosmobl::VectorField3D::set_VectorField_FourierSpace_real(const vector<double> value, const int i, const int j, const int k, const bool add)
+void cosmobl::data::VectorField3D::set_VectorField_FourierSpace_real(const vector<double> value, const int i, const int j, const int k, const bool add)
 {
   m_field_FourierSpace[0][inds_to_index_Fourier(i,j,k)][0] = (add) ? m_field_FourierSpace[0][inds_to_index(i,j,k)][0]+value[0] : value[0];
   m_field_FourierSpace[1][inds_to_index_Fourier(i,j,k)][0] = (add) ? m_field_FourierSpace[1][inds_to_index(i,j,k)][0]+value[1] : value[1];
@@ -453,7 +454,7 @@ void cosmobl::VectorField3D::set_VectorField_FourierSpace_real(const vector<doub
 // ============================================================================
 
 
-void cosmobl::VectorField3D::set_VectorField_FourierSpace_complex(const vector<double> value, const int i, const int j, const int k, const bool add)
+void cosmobl::data::VectorField3D::set_VectorField_FourierSpace_complex(const vector<double> value, const int i, const int j, const int k, const bool add)
 {
   m_field_FourierSpace[0][inds_to_index_Fourier(i,j,k)][1] = (add) ? m_field_FourierSpace[0][inds_to_index(i,j,k)][1]+value[0] : value[0];
   m_field_FourierSpace[1][inds_to_index_Fourier(i,j,k)][1] = (add) ? m_field_FourierSpace[1][inds_to_index(i,j,k)][1]+value[1] : value[1];
@@ -464,7 +465,7 @@ void cosmobl::VectorField3D::set_VectorField_FourierSpace_complex(const vector<d
 // ============================================================================
 
 
-vector<double> cosmobl::VectorField3D::VectorField(const int i, const int j, const int k) const 
+vector<double> cosmobl::data::VectorField3D::VectorField(const int i, const int j, const int k) const 
 {
   return {m_field[0][inds_to_index(i,j,k)], m_field[1][inds_to_index(i,j,k)], m_field[2][inds_to_index(i,j,k)]};
 }
@@ -473,7 +474,7 @@ vector<double> cosmobl::VectorField3D::VectorField(const int i, const int j, con
 // ============================================================================
 
 
-vector<double> cosmobl::VectorField3D::VectorField_FourierSpace_real(const int i, const int j, const int k) const 
+vector<double> cosmobl::data::VectorField3D::VectorField_FourierSpace_real(const int i, const int j, const int k) const 
 {
   return {m_field_FourierSpace[0][inds_to_index_Fourier(i,j,k)][0], m_field_FourierSpace[1][inds_to_index_Fourier(i,j,k)][0], m_field_FourierSpace[2][inds_to_index_Fourier(i,j,k)][0]};
 }
@@ -482,7 +483,7 @@ vector<double> cosmobl::VectorField3D::VectorField_FourierSpace_real(const int i
 // ============================================================================
 
 
-vector<double> cosmobl::VectorField3D::VectorField_FourierSpace_complex(const int i, const int j, const int k) const 
+vector<double> cosmobl::data::VectorField3D::VectorField_FourierSpace_complex(const int i, const int j, const int k) const 
 {
   return {m_field_FourierSpace[0][inds_to_index_Fourier(i,j,k)][1], m_field_FourierSpace[1][inds_to_index_Fourier(i,j,k)][1], m_field_FourierSpace[2][inds_to_index_Fourier(i,j,k)][1]};
 }

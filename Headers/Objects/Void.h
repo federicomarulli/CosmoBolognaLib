@@ -137,7 +137,7 @@ namespace cosmobl {
        *  @param rho0Norm normalized core density
        *  @return object of class Void
        */
-      Void (const double ra, const double dec, const double redshift, const Cosmology &cosm, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble)
+      Void (const double ra, const double dec, const double redshift, const cosmology::Cosmology &cosm, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble)
 	: Object(ra, dec, redshift, cosm, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
     
       /**

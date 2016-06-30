@@ -5,6 +5,7 @@
 #include "TwoPointCorrelation1D_monopole.h"
 
 using namespace cosmobl;
+using namespace cosmology;
 using namespace catalogue;
 using namespace twopt;
 

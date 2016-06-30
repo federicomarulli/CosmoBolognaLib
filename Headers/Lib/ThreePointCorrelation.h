@@ -49,7 +49,8 @@
 namespace cosmobl {
   
   /**
-   *  @brief The namespace of the three-point correlation function 
+   *  @brief The namespace of the <B> three-point correlation function
+   *  </B>
    *  
    * The \e threept namespace contains all the functions and
    * classes to measure the three-point correlation function
@@ -152,7 +153,7 @@ namespace cosmobl {
        * @warning the angular three-point correlation function is not
        * implemented yet
        */
-      void count_triplets (const shared_ptr<catalogue::Catalogue> cat1, const catalogue::ChainMesh_Catalogue &ChainMesh_rMAX1, const catalogue::ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<triplets::Triplet> tt, const bool tcount=0);
+      void count_triplets (const shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChainMesh_rMAX1, const chainmesh::ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<triplets::Triplet> tt, const bool tcount=0);
 
       /**
        *  @brief count the data-data-data, random-random-random,

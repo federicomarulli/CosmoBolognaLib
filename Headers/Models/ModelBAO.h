@@ -46,7 +46,7 @@ namespace cosmobl{
 
       ~ModelBAO() {}
 
-      void set_xi_parameters (const vector<double> r,  const shared_ptr<Cosmology> cosmology, const double redshift, const string type="Poly", const string method="CAMB", const string output_root="test", const bool NL=1, const double sigmaNL=0, const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const string file_par=par::defaultString);
+      void set_xi_parameters (const vector<double> r,  const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const string type="Poly", const string method="CAMB", const string output_root="test", const bool NL=1, const double sigmaNL=0, const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const string file_par=par::defaultString);
 
   };
 }

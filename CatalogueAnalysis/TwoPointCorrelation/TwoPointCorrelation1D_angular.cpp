@@ -38,6 +38,8 @@
 
 using namespace cosmobl;
 using namespace catalogue;
+using namespace chainmesh;
+using namespace data;
 using namespace pairs;
 using namespace twopt;
 

@@ -37,16 +37,18 @@
 
 namespace cosmobl {
 
-  /**
-   *  @class Data2D Data2D.h
-   *  "Headers/Lib/Data2D.h"
-   *
-   *  @brief The class Data2D
-   *
-   *  This is the base class used to manage 2D data
-   */
-  class Data2D : public Data
-  {
+  namespace data {
+  
+    /**
+     *  @class Data2D Data2D.h
+     *  "Headers/Lib/Data2D.h"
+     *
+     *  @brief The class Data2D
+     *
+     *  This is the base class used to manage 2D data
+     */
+    class Data2D : public Data
+    {
     protected:
 
       /**
@@ -91,7 +93,7 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Data
        */
-      Data2D() : Data(cosmobl::DataType::_1D_data_) {}
+    Data2D() : Data(DataType::_1D_data_) {}
    
       /**
        *  @brief static factory used to construct Data2D
@@ -293,7 +295,9 @@ namespace cosmobl {
        */
       virtual void write (const string dir=par::defaultString, const string file=par::defaultString, const string xname="x", const string yname="y",const string fxyname="f(x,y)", const bool full=0, const int rank=0) const override;
       
-  };
+    };
 
+  }
 }
+
 #endif

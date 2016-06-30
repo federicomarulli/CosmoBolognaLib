@@ -39,7 +39,7 @@ using namespace cosmobl;
 // ============================================================================
 
 
-void cosmobl::redshift_range (const double mean_redshift, const double boxSide, Cosmology &real_cosm, double &redshift_min, double &redshift_max) 
+void cosmobl::redshift_range (const double mean_redshift, const double boxSide, cosmology::Cosmology &real_cosm, double &redshift_min, double &redshift_max) 
 {
   cout <<"I'm computing the redshift range..."<<endl; 
 
@@ -72,7 +72,7 @@ void cosmobl::redshift_range (const double mean_redshift, const double boxSide, 
 // ============================================================================
 
 
-double cosmobl::volume (const double boxSize, const int frac, const double Bord, const double mean_redshift, Cosmology &real_cosm)
+double cosmobl::volume (const double boxSize, const int frac, const double Bord, const double mean_redshift, cosmology::Cosmology &real_cosm)
 {
   double redshift_min, redshift_max;
   double boxSide = boxSize/double(frac);
@@ -88,7 +88,7 @@ double cosmobl::volume (const double boxSize, const int frac, const double Bord,
 // ============================================================================
 
 
-void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<double> &redshift, vector<double> &xx, vector<double> &yy, vector<double> &zz, const vector<double> vx, const vector<double> vy, const vector<double> vz, const double sigmaV, Cosmology &real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int idum) 
+void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<double> &redshift, vector<double> &xx, vector<double> &yy, vector<double> &zz, const vector<double> vx, const vector<double> vy, const vector<double> vz, const double sigmaV, cosmology::Cosmology &real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int idum) 
 {
   if (ra.size()==0) ErrorMsg("Error in coord_zSpace of GlobalFunc.cpp: ra.size()=0!");
   
@@ -158,7 +158,7 @@ void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<doub
 // ============================================================================
 
 
-void cosmobl::create_mocks (const vector<double> xx, const vector<double> yy, const vector<double> zz,  const vector<double> vx, const vector<double> vy, const vector<double> vz, const vector<double> var1, const vector<double> var2, const vector<double> var3, const string output_dir, const double boxSize, const int frac, const double Bord, const double mean_redshift, Cosmology &real_cosm, const int REAL, const double sigmaV, const int idum, double &Volume) 
+void cosmobl::create_mocks (const vector<double> xx, const vector<double> yy, const vector<double> zz,  const vector<double> vx, const vector<double> vy, const vector<double> vz, const vector<double> var1, const vector<double> var2, const vector<double> var3, const string output_dir, const double boxSize, const int frac, const double Bord, const double mean_redshift, cosmology::Cosmology &real_cosm, const int REAL, const double sigmaV, const int idum, double &Volume) 
 {   
   cout <<endl<<"I'm creating the mock files..."<<endl;
 

@@ -43,12 +43,6 @@
 
 namespace cosmobl {
   
-  /**
-   *  @brief The namespace of functions and classes used for modelling
-   *  
-   * The \e modelling namespace contains all the functions and classes
-   * used to model any kind of measurements
-   */
   namespace modelling {
     
     /**
@@ -87,21 +81,117 @@ namespace cosmobl {
 	 *  
 	 *  @param twop the two-point correlation function to model
 	 *
-	 *  @param redshift the redhisft of the two-point correlation
-	 *  signal
-	 *
-	 *  @param cosmology the fiducial cosmology
-	 *
 	 *  @return object of type Modelling_TwoPointCorrelation_deprojected
 	 */
-	Modelling_TwoPointCorrelation_deprojected(const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop, const double redshift, const Cosmology cosmology);
+	Modelling_TwoPointCorrelation_deprojected(const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop);
 	
 	///@}
 
-	void fit_bias(const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const int nChains, const int chain_size, const string dir_output, const double start=0.5, const double stop=1, const int thin=1) override;
+	/**
+	 * @brief set the fiducial model for dark matter 
+	 * two point correlation function
+	 *
+	 *  @return none
+	 */
+	void set_fiducial_twop() override;
 
-	void fit_bias_cosmology(const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const vector<CosmoPar> CosmoPars, const vector<statistics::Prior> prior_CosmoPars, const int nChains, const int chain_size, const string dir_output, const double start=0.5, const double stop=1, const int thin=1) override;
+	/**
+	 * @brief fit the bias of the measured
+	 * two point correlation function
+	 *
+	 * @param bias_prior prior for the bias
+	 * @param pT_bias the parameter type of the bias: it can be
+	 * either _free_ or _fixed_
+	 *
+	 * @return none
+	 */
+	void set_model_bias (const statistics::Prior bias_prior, const statistics::ParameterType pT_bias=statistics::_free_) override;
 
+	/**
+	 * @brief fit the Alcock-Paczynski effect for the two point
+	 * correlation function. 
+	 * \f$\xi(s)= b^2  \xi_{DM}(\alpha s)\f$.
+	 * &xi<SUB>DM</SUB> is computed at the fiducial cosmology.
+	 *
+	 * @param bias_prior prior for the bias
+	 *
+	 * @param alpha_prior prior for &alpha;
+	 *
+	 * @param pT_bias the parameter type of the bias: it can be
+	 * either _free_ or _fixed_
+	 *
+	 * @param pT_alpha the parameter type of &alpha;: it can be
+	 * either _free_ or _fixed_
+	 *
+	 * @return none
+	 */
+	void set_model_bias_AP_isotropic(const statistics::Prior bias_prior, const statistics::Prior alpha_prior, const statistics::ParameterType pT_bias=statistics::_free_, const statistics::ParameterType pT_alpha=statistics::_free_) override;
+
+	/**
+	 * @brief fit the Alcock-Paczynski effect for the two point
+	 * correlation function. 
+	 * \f$\xi(s)= B^2  \xi_{DM}(\alpha s)\ + A_0 + A_1/s +A_2/s^2\f$.
+	 * &xi<SUB>DM</SUB> is computed at the fiducial cosmology.
+	 * B, A<SUB>0</SUB>, A<SUB>1</SUB>, A<SUB>2</SUB> are nuisance
+	 *
+	 * @param alpha_prior the prior for &alpha;
+	 *
+	 * @param B_prior the prior for B
+	 *
+	 * @param A0_prior the prior for A0
+	 *
+	 * @param A1_prior the prior for A1
+	 *
+	 * @param A2_prior the prior for A2
+	 *
+	 * @param pT_alpha the parameter type of &alpha;: it can be
+	 * either _free_ or _fixed_
+	 *
+	 * @param pT_B the parameter type of B: it can be either _free_
+	 * or _fixed_
+	 *
+	 * @param pT_A0 the parameter type of A0: it can be either
+	 * _free_ or _fixed_
+	 *
+	 * @param pT_A1 the parameter type of A1: it can be either
+	 * _free_ or _fixed_
+	 *
+	 * @param pT_A2 the parameter type of A2: it can be either
+	 * _free_ or _fixed_
+	 *
+	 * @return none
+	 */
+	void set_model_AP_isotropic (const statistics::Prior alpha_prior, const statistics::Prior B_prior, const statistics::Prior A0_prior, const statistics::Prior A1_prior, const statistics::Prior A2_prior, const statistics::ParameterType pT_alpha=statistics::_free_, const statistics::ParameterType pT_B=statistics::_free_, const statistics::ParameterType pT_A0=statistics::_free_, const statistics::ParameterType pT_A1=statistics::_free_, const statistics::ParameterType pT_A2=statistics::_free_) override;
+
+	/**
+	 * @brief compute and write the model using the stored 
+	 * parameter values
+	 *
+	 * @param xx vector of point at which the model
+	 * is computed
+	 * @param dir_model the output directory of the model
+	 * @param file_model the name of the file
+	 *
+	 * @return none
+	 */
+	void write_model(const vector<double> xx, const string dir_model, const string file_model)
+	{ m_model->write_model(xx, dir_model, file_model); }
+
+	/**
+	 * @brief compute and write the model using the stored 
+	 * parameter values
+	 *
+	 * @param xx vector of point at which the model
+	 * is computed
+	 * @param parameters vector of parameters values
+	 * at which the model is computed
+	 * @param dir_model the output directory of the model
+	 * @param file_model the name of the file
+	 *
+	 * @return none
+	 */
+	virtual void write_model_parameters(const vector<double> xx, const vector<double> parameters, const string dir_model, const string file_model)
+	{ m_model->write_model(xx, parameters, dir_model, file_model); }
     };
   }
 }

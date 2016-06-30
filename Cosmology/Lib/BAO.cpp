@@ -39,7 +39,7 @@ using namespace cosmobl;
 
 
 //redshift at wich occurs baryon photon decoupling, see Hu & Sugiyama (1996).
-double cosmobl::Cosmology::z_decoupling() const
+double cosmobl::cosmology::Cosmology::z_decoupling() const
 {
   double ombh2 = m_Omega_baryon*m_hh*m_hh;
   double omdmh2 = m_Omega_CDM*m_hh*m_hh;
@@ -55,7 +55,7 @@ double cosmobl::Cosmology::z_decoupling() const
 
 
 //redshift at wich occurs baryon photon decoupling, see Hu & Sugiyama (1996).
-double cosmobl::Cosmology::z_drag() const
+double cosmobl::cosmology::Cosmology::z_drag() const
 {
   double wb = m_Omega_baryon*m_hh*m_hh;
   double wm = m_Omega_matter*m_hh*m_hh;
@@ -71,7 +71,7 @@ double cosmobl::Cosmology::z_drag() const
 
 // Sound horizon at drag epoch
 
-double cosmobl::Cosmology::rs (const string method_Pk, const double T_CMB) const
+double cosmobl::cosmology::Cosmology::rs (const string method_Pk, const double T_CMB) const
 {
   if (method_Pk=="EisensteinHu") 
     return rs_EH(T_CMB);
@@ -79,7 +79,7 @@ double cosmobl::Cosmology::rs (const string method_Pk, const double T_CMB) const
   else if (method_Pk=="CAMB")
     return rs_CAMB();
 
-  else { ErrorMsg("Error in cosmobl::Cosmology::rs of BAO.cpp: 'method_Pk' not allowed!"); return 0; }
+  else { ErrorMsg("Error in cosmobl::cosmology::Cosmology::rs of BAO.cpp: 'method_Pk' not allowed!"); return 0; }
 }
 
 
@@ -87,7 +87,7 @@ double cosmobl::Cosmology::rs (const string method_Pk, const double T_CMB) const
 
 // Sound horizon at drag epoch (Eisentein & Hu 1998, Section 2.1)
 
-double cosmobl::Cosmology::rs_EH (const double T_CMB) const
+double cosmobl::cosmology::Cosmology::rs_EH (const double T_CMB) const
 {
   double Om0h2 = m_Omega_matter*pow(m_hh,2);
   double Ombh2 = m_Omega_baryon*pow(m_hh,2);
@@ -111,7 +111,7 @@ double cosmobl::Cosmology::rs_EH (const double T_CMB) const
 // =====================================================================================
 
 
-double cosmobl::Cosmology::rs_CAMB () const
+double cosmobl::cosmology::Cosmology::rs_CAMB () const
 {
   double wcb= m_Omega_matter*pow(m_hh,2);
   double wb= m_Omega_baryon*pow(m_hh,2);
@@ -126,7 +126,7 @@ double cosmobl::Cosmology::rs_CAMB () const
 
 // Fiducial cosmology independent ratio rs/DV (rs,DV [Mpc])
 
-double cosmobl::Cosmology::ys (const double redshift, const string method_Pk, const double T_CMB) const
+double cosmobl::cosmology::Cosmology::ys (const double redshift, const string method_Pk, const double T_CMB) const
 {
   return rs(method_Pk, T_CMB)/((m_unit) ? D_V(redshift)/m_hh : D_V(redshift));
 }
@@ -136,7 +136,7 @@ double cosmobl::Cosmology::ys (const double redshift, const string method_Pk, co
 
 // Acoustic parameter (see Eisenstein 2005)
 
-double cosmobl::Cosmology::Az (const double redshift) const
+double cosmobl::cosmology::Cosmology::Az (const double redshift) const
 {
   return ((m_unit) ? D_V(redshift)/m_hh : D_V(redshift))*1.e2*sqrt(m_Omega_matter*m_hh*m_hh)/(par::cc*redshift);
 }
@@ -145,7 +145,7 @@ double cosmobl::Cosmology::Az (const double redshift) const
 // =====================================================================================
 
 
-double cosmobl::Cosmology::sound_speed(const double redshift, const double T_CMB) const
+double cosmobl::cosmology::Cosmology::sound_speed(const double redshift, const double T_CMB) const
 {
   double R = 31500.*m_Omega_baryon*m_hh*m_hh*pow(T_CMB/2.7,-4)/(1+redshift);
   double cs = 1./sqrt(3*(1+R));
@@ -156,7 +156,7 @@ double cosmobl::Cosmology::sound_speed(const double redshift, const double T_CMB
 // =====================================================================================
 // Sound horizon integrand
 
-double cosmobl::Cosmology::rs_integrand (const double a, const double T_CMB) const
+double cosmobl::cosmology::Cosmology::rs_integrand (const double a, const double T_CMB) const
 {
   double redshift=1./a-1;
 
@@ -176,7 +176,7 @@ double cosmobl::Cosmology::rs_integrand (const double a, const double T_CMB) con
 // =====================================================================================
 // Sound horizon 
 
-double cosmobl::Cosmology::rs (const double redshift, const double T_CMB) const
+double cosmobl::cosmology::Cosmology::rs (const double redshift, const double T_CMB) const
 {
   function<double(double)> integrand = bind(&Cosmology::rs_integrand, this, std::placeholders::_1, T_CMB);
   double a = 1./(1+redshift);

@@ -38,17 +38,19 @@
 
 namespace cosmobl {
 
-  /**
-   *  @class Data1D_collection Data1D_collection.h
-   *  "Headers/Lib/Data1D_collection.h"
-   *
-   *  @brief The class Data1D_collection
-   *
-   *  This is the base class used to manage collection
-   *  of 1D data
-   */
-  class Data1D_collection : public Data
-  {
+  namespace data {
+  
+    /**
+     *  @class Data1D_collection Data1D_collection.h
+     *  "Headers/Lib/Data1D_collection.h"
+     *
+     *  @brief The class Data1D_collection
+     *
+     *  This is the base class used to manage collection
+     *  of 1D data
+     */
+    class Data1D_collection : public Data
+    {
     protected:
 
       /**
@@ -60,10 +62,10 @@ namespace cosmobl {
       vector<Data1D> m_data;
 
       /// covariance_matrix
-     vector<vector<double> > m_covariance_matrix;
+      vector<vector<double> > m_covariance_matrix;
      
       /// inverse covariance_matrix
-     vector<vector<double> > m_inverse_covariance_matrix;
+      vector<vector<double> > m_inverse_covariance_matrix;
 
       /// members of the collection
       int m_n_data;
@@ -318,6 +320,9 @@ namespace cosmobl {
        */
       int ndataset () const 
       { return m_data.size();}  
-  };
+    };
+
+  }
 }
+
 #endif

@@ -34,52 +34,56 @@
 #ifndef __GSLfunc__
 #define __GSLfunc__
 
+
 #include "Func.h"
+
 
 namespace cosmobl {
 
-  /**
-   * @var typedef func_1par_1
-   * @brief definition of 1D function
-   * that takes as an input the value at which the function
-   * is computed and a pointer to fixed parameters
-   */
-  typedef function<double(double, shared_ptr<void>)> func_1par_1;
+  namespace glob {
+  
+    /**
+     * @var typedef func_1par_1
+     * @brief definition of 1D function
+     * that takes as an input the value at which the function
+     * is computed and a pointer to fixed parameters
+     */
+    typedef function<double (double, shared_ptr<void>)> func_1par_1;
 
-  /**
-   * @var typedef func_1par_2
-   * @brief definition of a one parameter function
-   * that takes as an input the value at which the function
-   * is computed a pointer to fixed parameters and a vector of free parameters 
-   */
-  typedef function<double(double, shared_ptr<void>, vector<double> )> func_1par_2;
+    /**
+     * @var typedef func_1par_2
+     * @brief definition of a one parameter function
+     * that takes as an input the value at which the function
+     * is computed a pointer to fixed parameters and a vector of free parameters 
+     */
+    typedef function<double (double, shared_ptr<void>, vector<double> )> func_1par_2;
 
-  /**
-   * @var typedef func_npar_1
-   * @brief definition of a one parameter function
-   * that takes as an input the values at which the function
-   * is computed and a pointer to fixed parameters
-   */
-  typedef function<double(vector<double>, shared_ptr<void>)> func_npar_1;
+    /**
+     * @var typedef func_npar_1
+     * @brief definition of a one parameter function
+     * that takes as an input the values at which the function
+     * is computed and a pointer to fixed parameters
+     */
+    typedef function<double (vector<double>, shared_ptr<void>)> func_npar_1;
 
-   /**
-   * @var typedef func_npar_2
-   * @brief definition of a one parameter function
-   * that takes as an input the values at which the function
-   * is computed a pointer to fixed parameters and a vector of free parameters 
-   */ 
-  typedef function<double(vector<double>, shared_ptr<void>, vector<double> )> func_npar_2;
+    /**
+     * @var typedef func_npar_2
+     * @brief definition of a one parameter function
+     * that takes as an input the values at which the function
+     * is computed a pointer to fixed parameters and a vector of free parameters 
+     */ 
+    typedef function<double (vector<double>, shared_ptr<void>, vector<double> )> func_npar_2;
 
-  /**
-   *  @class GSLfunction GSLfunction.h "Headers/Lib/GSLfunction.h"
-   *
-   *  @brief The class GSLfunction
-   *
-   *  This class is used to wrap object of type GSL_function, ad use them in
-   *  minimizing procedures
-   */
-  class GSLfunction{
-
+    /**
+     *  @class GSLfunction GSLfunction.h "Headers/Lib/GSLfunction.h"
+     *
+     *  @brief The class GSLfunction
+     *
+     *  This class is used to wrap object of type GSL_function, ad use them in
+     *  minimizing procedures
+     */
+    class GSLfunction
+    {    
     public:
 
       /**
@@ -94,7 +98,7 @@ namespace cosmobl {
        *  @return a pointer to an object of class GSLfunction of
        *  a given type
        */
-      static unique_ptr<GSLfunction> make_GSLfunction(func_1par_1 function , shared_ptr<void> model_parameters=NULL );
+      static unique_ptr<GSLfunction> make_GSLfunction (func_1par_1 function , shared_ptr<void> model_parameters=NULL );
 
       /**
        *  @brief static factory used to construct GSLfunction of type
@@ -110,7 +114,7 @@ namespace cosmobl {
        *  @return a pointer to an object of class GSLfunction of
        *  a given type
        */    
-      static unique_ptr<GSLfunction> make_GSLfunction(int npar, func_npar_1 function, shared_ptr<void> model_parameters=NULL);
+      static unique_ptr<GSLfunction> make_GSLfunction (int npar, func_npar_1 function, shared_ptr<void> model_parameters=NULL);
 
       /**
        *  @brief static factory used to construct GSLfunction of type
@@ -126,7 +130,7 @@ namespace cosmobl {
        *  @return a pointer to an object of class GSLfunction of
        *  a given type
        */
-      static unique_ptr<GSLfunction> make_GSLfunction(func_1par_2 function, vector<double> params, shared_ptr<void> model_parameters=NULL);
+      static unique_ptr<GSLfunction> make_GSLfunction (func_1par_2 function, vector<double> params, shared_ptr<void> model_parameters=NULL);
 
       /**
        *  @brief static factory used to construct GSLfunction of type
@@ -144,7 +148,7 @@ namespace cosmobl {
        *  @return a pointer to an object of class GSLfunction of
        *  a given type
        */    
-      static unique_ptr<GSLfunction> make_GSLfunction(int npar, func_npar_2 function, vector<double> params, shared_ptr<void> model_parameters=NULL);
+      static unique_ptr<GSLfunction> make_GSLfunction (int npar, func_npar_2 function, vector<double> params, shared_ptr<void> model_parameters=NULL);
 
       /**
        * @brief minimize the provided function using GSL procedure
@@ -160,10 +164,10 @@ namespace cosmobl {
        *
        * @return none
        */
-      virtual void minimize(double &result, int max_iter=100, double min=-1.e30, double max=1.e30)
+      virtual void minimize (double &result, int max_iter=100, double min=-1.e30, double max=1.e30)
       {cosmobl::ErrorMsg ("Error in minimize of GSLfunction!");};
       
-       /**
+      /**
        * @brief minimize the provided function using GSL procedure
        *
        * @param result store the values of the variables at which the function
@@ -175,10 +179,10 @@ namespace cosmobl {
        *
        * @return none
        */    
-      virtual void minimize(vector<double> &result, unsigned int max_iter=100, double tol=1.e-6) 
+      virtual void minimize (vector<double> &result, unsigned int max_iter=100, double tol=1.e-6) 
       {cosmobl::ErrorMsg ("Error in minimize of GSLfunction!");};
 
-       /**
+      /**
        * @brief minimize the provided function using GSL procedure
        *
        * @param result store the values of the variables at which the function
@@ -192,20 +196,20 @@ namespace cosmobl {
        *
        * @return none
        */  
-      virtual void minimize(vector<double> &result, vector<double> &step_size, unsigned int max_iter=100, double tol=1.e-6) 
+      virtual void minimize (vector<double> &result, vector<double> &step_size, unsigned int max_iter=100, double tol=1.e-6) 
       {cosmobl::ErrorMsg ("Error in minimize of GSLfunction!");};
-  };
+    };
 
-  /**
-   *  @class GSLfunction_1D_1 GSLfunction.h "Headers/Lib/GSLfunction.h"
-   *
-   *  @brief The class GSLfunction_1D_1
-   *
-   *  This class is used to wrap object of type GSL_function, ad use them in
-   *  minimizing procedures. It works with function of type func_1par_1
-   */
-  class GSLfunction_1D_1 : public GSLfunction
-  {
+    /**
+     *  @class GSLfunction_1D_1 GSLfunction.h "Headers/Lib/GSLfunction.h"
+     *
+     *  @brief The class GSLfunction_1D_1
+     *
+     *  This class is used to wrap object of type GSL_function, ad use them in
+     *  minimizing procedures. It works with function of type func_1par_1
+     */
+    class GSLfunction_1D_1 : public GSLfunction
+    {
     private:
 
       /// provided function of type func_1par_1 
@@ -236,8 +240,8 @@ namespace cosmobl {
        *
        *  @return object of class GSLfunction_1D_1
        */
-      GSLfunction_1D_1 (func_1par_1 function, shared_ptr<void> function_parameters = NULL) :
-	m_function(function), m_function_parameters(function_parameters) {}
+      GSLfunction_1D_1 (func_1par_1 function, shared_ptr<void> function_parameters=NULL) :
+      m_function(function), m_function_parameters(function_parameters) {}
 
       /**
        *  @brief default destructor
@@ -252,14 +256,14 @@ namespace cosmobl {
        * @param function function of type func_1par_1
        * return none
        */
-      void set_function(func_1par_1 function) {m_function = function;}
+      void set_function (func_1par_1 function) { m_function = function; }
 
       /**
        * @brief set the function parameters
        * @param function_parameters pointer to the function parameters
        * return none
        */
-      void set_function_parameters(shared_ptr<void> function_parameters) {m_function_parameters = function_parameters;}
+      void set_function_parameters (shared_ptr<void> function_parameters) { m_function_parameters = function_parameters; }
 
       /**
        * @brief minimize the provided function using GSL procedure
@@ -275,19 +279,19 @@ namespace cosmobl {
        *
        * @return none
        */
-      void minimize(double &result, int max_iter = 100, double min=-1.e30, double max=1.e30);
-  };
+      void minimize (double &result, int max_iter=100, double min=-1.e30, double max=1.e30);
+    };
 
-  /**
-   *  @class GSLfunction_1D_2 GSLfunction.h "Headers/Lib/GSLfunction.h"
-   *
-   *  @brief The class GSLfunction_1D_2
-   *
-   *  This class is used to wrap object of type GSL_function, ad use them in
-   *  minimizing procedures. It works with function of type func_1par_2
-   */
-  class GSLfunction_1D_2 : public GSLfunction
-  {
+    /**
+     *  @class GSLfunction_1D_2 GSLfunction.h "Headers/Lib/GSLfunction.h"
+     *
+     *  @brief The class GSLfunction_1D_2
+     *
+     *  This class is used to wrap object of type GSL_function, ad use them in
+     *  minimizing procedures. It works with function of type func_1par_2
+     */
+    class GSLfunction_1D_2 : public GSLfunction
+    {
     private:
 
       /// provided function of type func_1par_2 
@@ -323,8 +327,8 @@ namespace cosmobl {
        *
        *  @return object of class GSLfunction_1D_2
        */
-      GSLfunction_1D_2 (func_1par_2 function, vector<double> parameters, shared_ptr<void> function_parameters = NULL) :
-	m_function(function), m_parameters(parameters), m_function_parameters(function_parameters) {}
+      GSLfunction_1D_2 (func_1par_2 function, vector<double> parameters, shared_ptr<void> function_parameters=NULL) :
+      m_function(function), m_parameters(parameters), m_function_parameters(function_parameters) {}
 
       /**
        *  @brief default destructor
@@ -339,27 +343,27 @@ namespace cosmobl {
        * @param function function of type func_1par_2
        * return none
        */
-      void set_function(func_1par_2 function) {m_function = function;}
+      void set_function (func_1par_2 function) { m_function = function; }
 
       /**
        * @brief set the function parameters
        * @param parameters vector containing the function parameters
        * return none
        */
-      void set_parameters(vector<double> parameters) {m_parameters = parameters;}
+      void set_parameters (vector<double> parameters) { m_parameters = parameters; }
 
       /**
        * @brief set the function parameters
        * @param function_parameters pointer to the function parameters
        * return none
        */
-      void set_function_parameters(shared_ptr<void> function_parameters) {m_function_parameters = function_parameters;}
+      void set_function_parameters (shared_ptr<void> function_parameters) { m_function_parameters = function_parameters; }
 
       /**
        * @brief minimize the provided function using GSL procedure
        *
-       * @param result store the value of the parameter at which the function
-       * has its minimum
+       * @param result store the value of the parameter at which the
+       * function has its minimum
        *
        * @param max_iter maximum number of iteration
        *
@@ -369,19 +373,19 @@ namespace cosmobl {
        *
        * @return none
        */
-      void minimize(double &result, int max_iter = 100, double min=-1.e30, double max=1.e30);
-  };
+      void minimize (double &result, int max_iter=100, double min=-1.e30, double max=1.e30);
+    };
 
-  /**
-   *  @class GSLfunction_nD_1 GSLfunction.h "Headers/Lib/GSLfunction.h"
-   *
-   *  @brief The class GSLfunction_nD_1
-   *
-   *  This class is used to wrap object of type GSL_function, ad use them in
-   *  minimizing procedures. It works with function of type func_npar_1
-   */
-  class GSLfunction_nD_1 : public GSLfunction
-  {
+    /**
+     *  @class GSLfunction_nD_1 GSLfunction.h "Headers/Lib/GSLfunction.h"
+     *
+     *  @brief The class GSLfunction_nD_1
+     *
+     *  This class is used to wrap object of type GSL_function, ad use them in
+     *  minimizing procedures. It works with function of type func_npar_1
+     */
+    class GSLfunction_nD_1 : public GSLfunction
+    {
     private:
 
       /// number of free parameters of the function
@@ -418,8 +422,8 @@ namespace cosmobl {
        *
        *  @return object of class GSLfunction_nD_1
        */
-      GSLfunction_nD_1 (int npar, func_npar_1 function, shared_ptr<void> function_parameters = NULL) :
-	m_npar(npar), m_function(function), m_function_parameters(function_parameters) {}
+      GSLfunction_nD_1 (int npar, func_npar_1 function, shared_ptr<void> function_parameters=NULL) :
+      m_npar(npar), m_function(function), m_function_parameters(function_parameters) {}
 
       /**
        *  @brief default destructor
@@ -434,16 +438,16 @@ namespace cosmobl {
        * @param function function of type func_npar_1
        * return none
        */
-      void set_function(func_npar_1 function) {m_function = function;}
+      void set_function (func_npar_1 function) { m_function = function; }
 
       /**
        * @brief set the function parameters
        * @param function_parameters pointer to the function parameters
        * return none
        */
-      void set_function_parameters(shared_ptr<void> function_parameters) {m_function_parameters = function_parameters;}
+      void set_function_parameters (shared_ptr<void> function_parameters) { m_function_parameters = function_parameters; }
 
-       /**
+      /**
        * @brief minimize the provided function using GSL procedure
        *
        * @param result store the values of the parameters at which the function
@@ -455,7 +459,7 @@ namespace cosmobl {
        *
        * @return none
        */ 
-      void minimize(vector<double> &result, unsigned int max_iter = 100, double tol=1.e-6); 
+      void minimize (vector<double> &result, unsigned int max_iter=100, double tol=1.e-6); 
 
       /**
        * @brief minimize the provided function using GSL procedure
@@ -471,19 +475,19 @@ namespace cosmobl {
        *
        * @return none
        */  
-      void minimize(vector<double> &result, vector<double> step_size, unsigned int max_iter = 100, double tol=1.e-6); 
-  };
+      void minimize (vector<double> &result, vector<double> step_size, unsigned int max_iter=100, double tol=1.e-6); 
+    };
 
-  /**
-   *  @class GSLfunction_nD_2 GSLfunction.h "Headers/Lib/GSLfunction.h"
-   *
-   *  @brief The class GSLfunction_nD_2
-   *
-   *  This class is used to wrap object of type GSL_function, ad use them in
-   *  minimizing procedures. It works with function of type func_npar_2
-   */
-  class GSLfunction_nD_2 : public GSLfunction
-  {
+    /**
+     *  @class GSLfunction_nD_2 GSLfunction.h "Headers/Lib/GSLfunction.h"
+     *
+     *  @brief The class GSLfunction_nD_2
+     *
+     *  This class is used to wrap object of type GSL_function, ad use them in
+     *  minimizing procedures. It works with function of type func_npar_2
+     */
+    class GSLfunction_nD_2 : public GSLfunction
+    {
     private:
 
       /// number of free parameters of the function
@@ -524,8 +528,8 @@ namespace cosmobl {
        *
        *  @return object of class GSLfunction_nD_2
        */
-      GSLfunction_nD_2 (int npar, func_npar_2 function, vector<double> parameters, shared_ptr<void> function_parameters = NULL) :
-	m_npar(npar), m_function(function), m_parameters(parameters), m_function_parameters(function_parameters) {}
+      GSLfunction_nD_2 (int npar, func_npar_2 function, vector<double> parameters, shared_ptr<void> function_parameters=NULL) :
+      m_npar(npar), m_function(function), m_parameters(parameters), m_function_parameters(function_parameters) {}
 
       /**
        *  @brief default destructor
@@ -540,21 +544,21 @@ namespace cosmobl {
        * @param function function of type func_npar_2
        * return none
        */
-      void set_function(func_npar_2 function)  {m_function = function;}
+      void set_function (func_npar_2 function)  { m_function = function; }
 
       /**
        * @brief set the function parameters
        * @param parameters vector containing the function parameters
        * return none
        */
-      void set_parameters(vector<double> parameters) {m_parameters = parameters;}
+      void set_parameters (vector<double> parameters) { m_parameters = parameters; }
 
       /**
        * @brief set the function parameters
        * @param function_parameters pointer to the function parameters
        * return none
        */
-      void set_function_parameters(shared_ptr<void> function_parameters) {m_function_parameters = function_parameters;}
+      void set_function_parameters (shared_ptr<void> function_parameters) { m_function_parameters = function_parameters; }
 
       /**
        * @brief minimize the provided function using GSL procedure
@@ -568,7 +572,7 @@ namespace cosmobl {
        *
        * @return none
        */ 
-      void minimize(vector<double> &result, unsigned int max_iter = 100, double tol=1.e-6); 
+      void minimize (vector<double> &result, unsigned int max_iter=100, double tol=1.e-6); 
 
       /**
        * @brief minimize the provided function using GSL procedure
@@ -584,8 +588,10 @@ namespace cosmobl {
        *
        * @return none
        */  
-      void minimize(vector<double> &result, vector<double> step_size, unsigned int max_iter = 100, double tol=1.e-6); 
-  };
+      void minimize (vector<double> &result, vector<double> step_size, unsigned int max_iter=100, double tol=1.e-6); 
+    };
+
+  }
 }
 
 #endif

@@ -35,12 +35,11 @@ namespace cosmobl {
   
   
   /**
-   *  @brief The namespace of the global parameters and constants of
-   *  the CosmoBolognaLib
+   *  @brief The namespace of the <B> global parameters and constants
+   *  </B>
    *
-   *  The \e cosmoblpar namespace contains the global parameters and the
-   *  mathematical, physical and astronomical constants of the
-   *  CosmoBolognaLib
+   *  The \e cosmoblpar namespace contains the global parameters and
+   *  the mathematical, physical and astronomical constants
    */
   namespace par {
 

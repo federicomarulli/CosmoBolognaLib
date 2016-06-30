@@ -34,12 +34,13 @@
 
 using namespace cosmobl;
 using namespace catalogue;
+using namespace lognormal;
 
 
 // ============================================================================
 
 
-void cosmobl::LogNormal::setCatalogues (const shared_ptr<Catalogue> data, const shared_ptr<Catalogue> random)
+void cosmobl::lognormal::LogNormal::setCatalogues (const shared_ptr<Catalogue> data, const shared_ptr<Catalogue> random)
 {
   m_data = data;
   m_random = random;
@@ -49,7 +50,7 @@ void cosmobl::LogNormal::setCatalogues (const shared_ptr<Catalogue> data, const 
 // ============================================================================
 
 
-void cosmobl::LogNormal::setParameters_from_xi (const vector<double> rr, const vector<double> xi) 
+void cosmobl::lognormal::LogNormal::setParameters_from_xi (const vector<double> rr, const vector<double> xi) 
 {
   // TBD: add parameters for extrapolation
   m_rmodel = rr;
@@ -61,7 +62,7 @@ void cosmobl::LogNormal::setParameters_from_xi (const vector<double> rr, const v
 // ============================================================================
 
 
-void cosmobl::LogNormal::setParameters_from_model (const shared_ptr<Cosmology> cosmology, const double bias, const bool Real, const string author, const bool NL, const string model)
+void cosmobl::lognormal::LogNormal::setParameters_from_model (const shared_ptr<cosmology::Cosmology> cosmology, const double bias, const bool Real, const string author, const bool NL, const string model)
 { 
   m_cosmology = cosmology;
   m_bias = bias;
@@ -76,10 +77,10 @@ void cosmobl::LogNormal::setParameters_from_model (const shared_ptr<Cosmology> c
 // ============================================================================
 
 
-void cosmobl::LogNormal::generate_LogNormal_mock (const double rmin, const string dir, const int start, const string filename)
+void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, const string dir, const int start, const string filename)
 { 
   if (m_nLN==0)  
-    ErrorMsg("Error in cosmobl::LogNormal::generate_LogNormal_mock of LogNormal.cpp, set number of LN realization first!");
+    ErrorMsg("Error in cosmobl::lognormal::LogNormal::generate_LogNormal_mock of LogNormal.cpp, set number of LN realization first!");
 
   default_random_engine gen;
   uniform_real_distribution<float> ran(0., 1.);
@@ -186,7 +187,7 @@ void cosmobl::LogNormal::generate_LogNormal_mock (const double rmin, const strin
   }
   
   else 
-    ErrorMsg("Work in progres in cosmobl::LogNormal::generate_LogNormal_mock of LogNormal.cpp");
+    ErrorMsg("Work in progres in cosmobl::lognormal::LogNormal::generate_LogNormal_mock of LogNormal.cpp");
   
 
   fftw_plan xi2pk;
@@ -304,7 +305,7 @@ void cosmobl::LogNormal::generate_LogNormal_mock (const double rmin, const strin
 // ============================================================================
 
 
-void cosmobl::LogNormal::set_nLN (const int nLN)
+void cosmobl::lognormal::LogNormal::set_nLN (const int nLN)
 { 
   m_nLN = nLN;
   m_LNCat.erase(m_LNCat.begin(),m_LNCat.end());

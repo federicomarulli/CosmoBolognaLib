@@ -200,8 +200,8 @@ allExamples:
 	cd $(PWD)/Examples/fsigma8 ; make 
 	$(call colorecho, "\n"Compiling the example code: prior.cpp ... "\n")
 	cd $(PWD)/Examples/statistics/codes ; make prior 
-	$(call colorecho, "\n"Compiling the example code: fit_linear_relation.cpp ... "\n")
-	cd $(PWD)/Examples/statistics/codes ; make fit_linear_relation
+	$(call colorecho, "\n"Compiling the example code: fit.cpp ... "\n")
+	cd $(PWD)/Examples/statistics/codes ; make fit
 	$(call colorecho, "\n"Compiling the example code: catalogue.cpp ... "\n")
 	cd $(PWD)/Examples/catalogue ; make catalogue 
 	$(call colorecho, "\n"Compiling the example code: 2pt_monopole.cpp ... "\n")
@@ -216,8 +216,10 @@ allExamples:
 	cd $(PWD)/Examples/clustering/codes ; make 2pt_angular
 	$(call colorecho, "\n"Compiling the example code: 3pt.cpp ... "\n")
 	cd $(PWD)/Examples/clustering/codes ; make 3pt
-	$(call colorecho, "\n"Compiling the example code: modelBias_2pt_projected.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make modelBias_2pt_projected
+	$(call colorecho, "\n"Compiling the example code: model_2pt_projected_bias.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make model_2pt_projected_bias
+	$(call colorecho, "\n"Compiling the example code: model_2pt_monopole_bao.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make model_2pt_monopole_bao
 
 python: $(OBJ_CBL) $(dir_Python)CBL_wrap.o
 	$(C) -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(dir_PYLIB)_CosmoBolognaLib.so $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY)
@@ -244,14 +246,14 @@ python2: $(dir_Python)CBL_wrap.cxx $(dir_Python)CBL.i $(dir_Python)setup.py $(HH
 
 doc:
 	rm Doc/html/* Doc/xml/* -rf
-	doxygen .dconfig
+	doxygen Doc/dconfig
 	rm Doc/doxygen_sqlite3.db -f 
 #	python ../bin/doxy2swig2.py Doc/xml/index.xml Doc/documentation.i
 #	python ../doxy2swig/doxy2swig.py Doc/xml/index.xml Doc/documentation.i
 
 doct:
 	rm Doc/html/* Doc/xml/* -rf
-	doxygen .dconfigT
+	doxygen Doc/dconfigT
 	rm Doc/doxygen_sqlite3.db -f 
 
 cleanExamples:

@@ -37,13 +37,6 @@
 
 namespace cosmobl {
 
-  /**
-   *  @brief The namespace of functions and classes used for statistical
-   *  analysis
-   *  
-   * The \e statistic namespace contains all the functions and classes
-   * used for statistical analyis
-   */
   namespace statistics {
 
     /**

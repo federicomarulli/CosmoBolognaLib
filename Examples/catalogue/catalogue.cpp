@@ -13,8 +13,6 @@ string par::DirCosmo = DIRCOSMO, par::DirLoc = DIRL;
 int main () {
 
   string file_catalogue = "cat.dat";
-
-  ifstream fin; fin.open(file_catalogue.c_str());  checkIO(file_catalogue, 1);
   
   
   // -----------------------------------------------------------------------------------------------------------
@@ -28,6 +26,8 @@ int main () {
   // ---------------- method II : store galaxy coordinates in vectors and use them to construct the catalogue ----------------
   // -------------------------------------------------------------------------------------------------------------------------
 
+  ifstream fin; fin.open(file_catalogue.c_str());  checkIO(file_catalogue, 1);
+  
   double X, Y, Z;
   vector<double> x, y, z;
   

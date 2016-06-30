@@ -37,46 +37,50 @@
 
 namespace cosmobl {
   
-  /**
-   *  @class ModelCosmology ModelCosmology.h "Headers/Lib/ModelCosmology.h"
-   *
-   *  @brief The class ModelCosmology
-   *
-   *  This class is used to model cosmological parameters
-   */
-  class ModelCosmology : public Model
-  {
-
-  protected:
-    
-    /// number of model parameters
-    vector<cosmobl::CosmoPar> m_cosmological_parameters;
-
-    
-  public:
-    
-    /**
-     *  @name Constructors/destructors
-     */
-   ///@{ 
+  namespace modelling {
 
     /**
-     *  @brief default constructor
+     *  @class ModelCosmology ModelCosmology.h "Headers/Lib/ModelCosmology.h"
      *
-     *  @return object of class Model
-     */
-    ModelCosmology () {}
-
-    /**
-     *  @brief default destructor
+     *  @brief The class ModelCosmology
      *
-     *  @return none
+     *  This class is used to model cosmological parameters
      */
-    virtual ~Model() {}
+    class ModelCosmology : public Model
+    {
 
-    ///@}
-  };
+    protected:
+    
+      /// number of model parameters
+      vector<cosmobl::CosmoPar> m_cosmological_parameters;
 
+    
+    public:
+    
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{ 
+
+      /**
+       *  @brief default constructor
+       *
+       *  @return object of class Model
+       */
+      ModelCosmology () {}
+
+      /**
+       *  @brief default destructor
+       *
+       *  @return none
+       */
+      virtual ~Model() {}
+
+      ///@}
+    };
+
+  }
+  
 }
 
 #endif

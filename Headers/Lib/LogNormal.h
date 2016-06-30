@@ -39,151 +39,163 @@
 
 
 namespace cosmobl {
-
+  
   /**
-   *  @class LogNormal LogNormal.h "Headers/Lib/LogNormal.h"
-   *
-   *  @brief The class LogNormal
-   *
-   *  This class is used to handle objects of type <EM> lognormal
-   *  </EM>
+   *  @brief The namespace of the functions and classes used to
+   *  construct <B> log-normal mocks </B> 
+   *  
+   *  The \e lognormal namespace contains all the functions and
+   *  classes used to construct log-normal mocks
    */
-  class LogNormal {
+  namespace lognormal {
     
-  protected:
-
-    /// the number of lognormal realization to produce/read
-    int m_nLN;
-    
-    /// pointer to the input data 
-    shared_ptr<catalogue::Catalogue> m_data;
-    
-    /// pointer to the random catalogues
-    shared_ptr<catalogue::Catalogue> m_random;
-    
-    /// cector containing pointers to the LogNormal realizations
-    vector<shared_ptr<catalogue::Catalogue> > m_LNCat;  
-
-    /// 0 &rarr; the input is a cosmology; 1 &rarr; the input is &xi;(r)
-    bool m_withxi;
-
-    /// vector containing the binnend separations of the two-point corrleation function used to create the density field
-    vector<double> m_rmodel;
-    
-    /// vector containing the starting two-point correlation function used to create the density field
-    vector<double> m_ximodel;
-
-    /// approximate cell size of the density field
-    double m_rmin;
-    
-    /// bias of the lognormal density field to be realized
-    double m_bias;
-    
-    /// pointer to the fiducial cosmology
-    shared_ptr<Cosmology> m_cosmology;
-    
-    /// 0 &rarr; redshift-space (only monopole distortion); 1 &rarr; real-space
-    bool m_Real;
-    
-    /// string containing the author for the model power spectrum
-    string m_author;
-    
-    /// 0 &rarr; compute the linear power spectrum; 1 &rarr; compute the non-linear power spectrum
-    bool m_NL;
-
-    /// the cosmological model used to compute distances
-    string m_model;
-
-    
-  public:
-
     /**
-     *  @brief default constructor
-     *  @return object of class LogNormal
-     */
-    LogNormal() {};
-
-    /**
-     *  @brief default destructor
-     *  @return none
-     */
-    ~LogNormal() {};
-
-    /**
-     *  @brief constructor 
-     *  @param data input data catalogue
+     *  @class LogNormal LogNormal.h "Headers/Lib/LogNormal.h"
      *
-     *  @param random input random catalogue (should be much larger
-     *  than the random catalogue used to measure &xi;(r))
+     *  @brief The class LogNormal
      *
-     *  @param nLN number of lognormal realizations
-     *  @return object of class LogNormal
+     *  This class is used to handle objects of type <EM> lognormal
+     *  </EM>
      */
-    LogNormal (const shared_ptr<catalogue::Catalogue> data, const shared_ptr<catalogue::Catalogue> random, const int nLN) : m_nLN(nLN), m_data(data), m_random(random)
-    {
-      m_LNCat.resize(m_nLN);
-    }
+    class LogNormal {
+    
+    protected:
 
-    /**
-     *  @brief set data and random catalogues
-     *  @param data input data catalogue
-     *  @param random input random catalogue
-     *  @return none
-     */
-    void setCatalogues (const shared_ptr<catalogue::Catalogue> data, const shared_ptr<catalogue::Catalogue> random);
+      /// the number of lognormal realization to produce/read
+      int m_nLN;
     
-    /**
-     *  @brief set the starting two-point correlation function
-     *  @param rr binned comoving separation 
-     *  @param xi input two-point correlation function
-     *  @return none
-     */
-    void setParameters_from_xi (const vector<double>, const vector<double>);
+      /// pointer to the input data 
+      shared_ptr<catalogue::Catalogue> m_data;
+    
+      /// pointer to the random catalogues
+      shared_ptr<catalogue::Catalogue> m_random;
+    
+      /// cector containing pointers to the LogNormal realizations
+      vector<shared_ptr<catalogue::Catalogue> > m_LNCat;  
 
-    /**
-     *  @brief set the parameters to compute a prediction of &xi;(r)
-     *  @param cosmology the input cosmology
-     *  @param bias the bias parameter
-     *  @param Real 0 &rarr; redshift-space (only monopole distortion); 1 &rarr; real-space
-     *  @param author the method used to compute dark matter power spectrum
-     *  @param NL 0 &rarr; compute the linear power spectrum; 1 &rarr; compute the non-linear power spectrum
-     *  @param model the cosmological model used to compute distances
-     *  @return none
-     */
-    void setParameters_from_model (const shared_ptr<Cosmology>, const double, const bool Real=1, const string author="CAMB", const bool NL=0, const string model="LCDM");
-    
-    /**
-     *  @brief set the total number of realizations
-     *  @param nLN the number of realizations
-     *  @return none
-     */
-    void set_nLN (const int);
-    
-    /**
-     *  @brief get the private member LogNormal::m_nLN
-     *  @return the number of LogNormal realizations
-     */
-    int nLN () { return m_nLN; }
+      /// 0 &rarr; the input is a cosmology; 1 &rarr; the input is &xi;(r)
+      bool m_withxi;
 
-    /**
-     *  @brief get the private member LogNormal::m_LNCat[i]
-     *  @param i index of the LogNormal realization
-     *  @return the i-th LogNormal realization
-     */
-    shared_ptr<catalogue::Catalogue> LNCat (const int i) { return m_LNCat[i]; }
+      /// vector containing the binnend separations of the two-point corrleation function used to create the density field
+      vector<double> m_rmodel;
     
-    /**
-     *  @brief generate the LogNormal mock catalogues
-     *  @param rmin the cell size in comoving coordinates
-     *  @param dir the output directory
-     *  @param start the starting index of the mock to be created
-     *  @param filename the prefix of the ouput file containing the
-     *  LogNormal realizations
-     *  @return none
-     */
-    void generate_LogNormal_mock (const double, const string, const int start=0, const string filename="lognormal_");
+      /// vector containing the starting two-point correlation function used to create the density field
+      vector<double> m_ximodel;
+
+      /// approximate cell size of the density field
+      double m_rmin;
     
-  };
+      /// bias of the lognormal density field to be realized
+      double m_bias;
+    
+      /// pointer to the fiducial cosmology
+      shared_ptr<cosmology::Cosmology> m_cosmology;
+    
+      /// 0 &rarr; redshift-space (only monopole distortion); 1 &rarr; real-space
+      bool m_Real;
+    
+      /// string containing the author for the model power spectrum
+      string m_author;
+    
+      /// 0 &rarr; compute the linear power spectrum; 1 &rarr; compute the non-linear power spectrum
+      bool m_NL;
+
+      /// the cosmological model used to compute distances
+      string m_model;
+
+    
+    public:
+
+      /**
+       *  @brief default constructor
+       *  @return object of class LogNormal
+       */
+      LogNormal() {};
+
+      /**
+       *  @brief default destructor
+       *  @return none
+       */
+      ~LogNormal() {};
+
+      /**
+       *  @brief constructor 
+       *  @param data input data catalogue
+       *
+       *  @param random input random catalogue (should be much larger
+       *  than the random catalogue used to measure &xi;(r))
+       *
+       *  @param nLN number of lognormal realizations
+       *  @return object of class LogNormal
+       */
+      LogNormal (const shared_ptr<catalogue::Catalogue> data, const shared_ptr<catalogue::Catalogue> random, const int nLN) : m_nLN(nLN), m_data(data), m_random(random)
+      {
+	m_LNCat.resize(m_nLN);
+      }
+
+      /**
+       *  @brief set data and random catalogues
+       *  @param data input data catalogue
+       *  @param random input random catalogue
+       *  @return none
+       */
+      void setCatalogues (const shared_ptr<catalogue::Catalogue> data, const shared_ptr<catalogue::Catalogue> random);
+    
+      /**
+       *  @brief set the starting two-point correlation function
+       *  @param rr binned comoving separation 
+       *  @param xi input two-point correlation function
+       *  @return none
+       */
+      void setParameters_from_xi (const vector<double> rr, const vector<double> xi);
+
+      /**
+       *  @brief set the parameters to compute a prediction of &xi;(r)
+       *  @param cosmology the input cosmology
+       *  @param bias the bias parameter
+       *  @param Real 0 &rarr; redshift-space (only monopole distortion); 1 &rarr; real-space
+       *  @param author the method used to compute dark matter power spectrum
+       *  @param NL 0 &rarr; compute the linear power spectrum; 1 &rarr; compute the non-linear power spectrum
+       *  @param model the cosmological model used to compute distances
+       *  @return none
+       */
+      void setParameters_from_model (const shared_ptr<cosmology::Cosmology> cosmology, const double bias, const bool Real=1, const string author="CAMB", const bool NL=0, const string model="LCDM");
+    
+      /**
+       *  @brief set the total number of realizations
+       *  @param nLN the number of realizations
+       *  @return none
+       */
+      void set_nLN (const int nLN);
+    
+      /**
+       *  @brief get the private member LogNormal::m_nLN
+       *  @return the number of LogNormal realizations
+       */
+      int nLN () { return m_nLN; }
+
+      /**
+       *  @brief get the private member LogNormal::m_LNCat[i]
+       *  @param i index of the LogNormal realization
+       *  @return the i-th LogNormal realization
+       */
+      shared_ptr<catalogue::Catalogue> LNCat (const int i) { return m_LNCat[i]; }
+    
+      /**
+       *  @brief generate the LogNormal mock catalogues
+       *  @param rmin the cell size in comoving coordinates
+       *  @param dir the output directory
+       *  @param start the starting index of the mock to be created
+       *  @param filename the prefix of the ouput file containing the
+       *  LogNormal realizations
+       *  @return none
+       */
+      void generate_LogNormal_mock (const double, const string, const int start=0, const string filename="lognormal_");
+    
+    };
+
+  }
+
 }
 
 #endif

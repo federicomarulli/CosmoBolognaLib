@@ -5,6 +5,7 @@
 #include "Cosmology.h"
 
 using namespace cosmobl;
+using namespace cosmology;
 
 // define the two global variables containing the names of the CosmoBolognaLib and current directories
 string par::DirCosmo = DIRCOSMO, par::DirLoc = DIRL;

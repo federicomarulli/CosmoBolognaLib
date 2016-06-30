@@ -32,13 +32,15 @@
  */
 
 #include "Data1D.h"
+
 using namespace cosmobl;
+using namespace data;
 
 
 // ======================================================================================
 
 
-cosmobl::Data1D::Data1D (const string input_file, const int skip_nlines, const double xmin, const double xmax) : Data(cosmobl::DataType::_1D_data_)
+cosmobl::data::Data1D::Data1D (const string input_file, const int skip_nlines, const double xmin, const double xmax) : Data(cosmobl::data::DataType::_1D_data_)
 {
   read(input_file, skip_nlines);
   double xMin = (xmin>-par::defaultDouble) ? xmin : Min(m_x)-0.001; 
@@ -50,7 +52,7 @@ cosmobl::Data1D::Data1D (const string input_file, const int skip_nlines, const d
 // ======================================================================================
 
 
-cosmobl::Data1D::Data1D (const vector<double> x, const vector<double> fx, const double xmin, const double xmax) : Data(cosmobl::DataType::_1D_data_)
+cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, const double xmin, const double xmax) : Data(cosmobl::data::DataType::_1D_data_)
 {
   m_x = x;
   m_fx = fx;
@@ -64,7 +66,7 @@ cosmobl::Data1D::Data1D (const vector<double> x, const vector<double> fx, const 
 // ======================================================================================
 
 
-cosmobl::Data1D::Data1D (const vector<double> x, const vector<double> fx, const vector<double> error_fx, const double xmin, const double xmax) : Data(cosmobl::DataType::_1D_data_)
+cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, const vector<double> error_fx, const double xmin, const double xmax) : Data(cosmobl::data::DataType::_1D_data_)
 {
   m_x = x;
   m_fx = fx;
@@ -79,7 +81,7 @@ cosmobl::Data1D::Data1D (const vector<double> x, const vector<double> fx, const 
 // ======================================================================================
 
 
-cosmobl::Data1D::Data1D (const vector<double> x, const vector<double> fx, const vector<vector<double> > covariance, const double xmin, const double xmax) : Data(cosmobl::DataType::_1D_data_)
+cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, const vector<vector<double> > covariance, const double xmin, const double xmax) : Data(cosmobl::data::DataType::_1D_data_)
 {
   m_x = x;
   m_fx = fx;
@@ -97,7 +99,7 @@ cosmobl::Data1D::Data1D (const vector<double> x, const vector<double> fx, const 
 // ======================================================================================
 
 
-vector<double> cosmobl::Data1D::xx () const
+vector<double> cosmobl::data::Data1D::xx () const
 {
   if (isSet(m_x_down) && isSet(m_x_up)) {
     vector<double> xx;
@@ -113,7 +115,7 @@ vector<double> cosmobl::Data1D::xx () const
 // ======================================================================================
 
 
-vector<double> cosmobl::Data1D::fx () const 
+vector<double> cosmobl::data::Data1D::fx () const 
 {
   if (isSet(m_x_down) && isSet(m_x_up)) {
     vector<double> fx;
@@ -129,7 +131,7 @@ vector<double> cosmobl::Data1D::fx () const
 // ======================================================================================
 
 
-vector<double> cosmobl::Data1D::error_fx () const
+vector<double> cosmobl::data::Data1D::error_fx () const
 {
   if (isSet(m_x_down) && isSet(m_x_up)) {
     vector<double> efx;
@@ -145,7 +147,7 @@ vector<double> cosmobl::Data1D::error_fx () const
 // ======================================================================================
 
 
-vector<vector<double> > cosmobl::Data1D::covariance () const
+vector<vector<double> > cosmobl::data::Data1D::covariance () const
 {
   if (m_covariance.size() == 0)
     ErrorMsg("Error in covariance of Data1D, covariance matrix is not set");
@@ -169,7 +171,7 @@ vector<vector<double> > cosmobl::Data1D::covariance () const
 // ======================================================================================
 
 
-vector<vector<double> > cosmobl::Data1D::inverse_covariance () const
+vector<vector<double> > cosmobl::data::Data1D::inverse_covariance () const
 {
   if (m_inverse_covariance.size() == 0)
     ErrorMsg("Error in inverse_covariance of Data1D, inverted covariance matrix is not set. Run invert_covariance() first");
@@ -192,7 +194,7 @@ vector<vector<double> > cosmobl::Data1D::inverse_covariance () const
 // ======================================================================================
 
 
-void cosmobl::Data1D::invert_covariance () 
+void cosmobl::data::Data1D::invert_covariance () 
 {
   vector<vector<double> > cov = covariance(), icov;
   invert_matrix(cov, icov);
@@ -210,7 +212,7 @@ void cosmobl::Data1D::invert_covariance ()
 // ======================================================================================
 
 
-void cosmobl::Data1D::set_covariance (const string filename)
+void cosmobl::data::Data1D::set_covariance (const string filename)
 {  
   m_covariance.erase(m_covariance.begin(), m_covariance.end());
   m_error_fx.erase(m_error_fx.begin(), m_error_fx.end());
@@ -246,7 +248,7 @@ void cosmobl::Data1D::set_covariance (const string filename)
 // ======================================================================================
 
 
-void cosmobl::Data1D::set_covariance (const vector<vector<double> > covariance)
+void cosmobl::data::Data1D::set_covariance (const vector<vector<double> > covariance)
 {
   m_error_fx.erase(m_error_fx.begin(), m_error_fx.end());
   m_covariance = covariance;
@@ -259,7 +261,7 @@ void cosmobl::Data1D::set_covariance (const vector<vector<double> > covariance)
 // ======================================================================================
 
 
-void cosmobl::Data1D::read (const string input_file, const int skip_nlines)
+void cosmobl::data::Data1D::read (const string input_file, const int skip_nlines)
 {
   ifstream fin(input_file.c_str()); checkIO(input_file, 1);
   string line;
@@ -282,7 +284,7 @@ void cosmobl::Data1D::read (const string input_file, const int skip_nlines)
 // ======================================================================================
 
 
-void cosmobl::Data1D::write (const string dir, const string file, const string xname, const string fxname, const int rank) const 
+void cosmobl::data::Data1D::write (const string dir, const string file, const string xname, const string fxname, const int rank) const 
 {
   string file_out = dir+file;
   ofstream fout (file_out.c_str()); checkIO(file_out, 0);
@@ -299,7 +301,7 @@ void cosmobl::Data1D::write (const string dir, const string file, const string x
 // ======================================================================================
 
 
-void cosmobl::Data1D::set_limits (const double xmin, const double xmax)
+void cosmobl::data::Data1D::set_limits (const double xmin, const double xmax)
 {
   find_index(m_x, xmin, xmax, m_x_down, m_x_up);
 }
@@ -308,7 +310,7 @@ void cosmobl::Data1D::set_limits (const double xmin, const double xmax)
 // ======================================================================================
 
 
-void cosmobl::Data1D::write_covariance (const string dir, const string file, const string xname) const 
+void cosmobl::data::Data1D::write_covariance (const string dir, const string file, const string xname) const 
 {
   string file_out = dir+file;
   ofstream fout (file_out.c_str()); checkIO(file_out, 0);

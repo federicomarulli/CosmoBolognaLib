@@ -100,7 +100,7 @@ namespace cosmobl {
        *  @param magnitude magnitude
        *  @return object of class Galaxy
        */
-      Galaxy (const double ra, const double dec, const double redshift, const Cosmology &cosm, const double weight=1., const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
+      Galaxy (const double ra, const double dec, const double redshift, const cosmology::Cosmology &cosm, const double weight=1., const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
 	: Object(ra, dec, redshift, cosm, weight), m_mass(mass), m_magnitude(magnitude) {}
 
       /**

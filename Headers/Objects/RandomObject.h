@@ -85,7 +85,7 @@ namespace cosmobl {
        *  @param weight weight
        *  @return object of class RandomObject
        */
-      RandomObject (const double xx, const double yy, const double zz, const Cosmology &cosm, const double z1_guess, const double z2_guess, const double weight=1.) 
+      RandomObject (const double xx, const double yy, const double zz, const cosmology::Cosmology &cosm, const double z1_guess, const double z2_guess, const double weight=1.) 
 	: Object(xx, yy, zz, cosm, z1_guess, z2_guess, weight) {}
     
       /**
@@ -111,7 +111,7 @@ namespace cosmobl {
        *  @param weight weight
        *  @return object of class RandomObject
        */
-      RandomObject (const double ra, const double dec, const double redshift, const Cosmology &cosm, const double weight=1.) 
+      RandomObject (const double ra, const double dec, const double redshift, const cosmology::Cosmology &cosm, const double weight=1.) 
 	: Object(ra, dec, redshift, cosm, weight) {} 
     
     };  

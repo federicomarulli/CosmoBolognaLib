@@ -39,13 +39,13 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::Cosmology::square_bulk_flow (const double rr, const double k_int_min, const string method_Pk, const double redshift, const string output_root, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par)
+double cosmobl::cosmology::Cosmology::square_bulk_flow (const double rr, const double k_int_min, const string method_Pk, const double redshift, const string output_root, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par)
 {
   double bulk = -1.;
   Pk_0(method_Pk, redshift, output_root, k_min, k_max, GSL, prec, file_par); 
   
   if (method_Pk=="EisensteinHu") {
-    if (m_sigma8<0) ErrorMsg("Error in cosmobl::Cosmology::square_bulk_flow: sigma8 must be >0 using EisensteinHu!");
+    if (m_sigma8<0) ErrorMsg("Error in cosmobl::cosmology::Cosmology::square_bulk_flow: sigma8 must be >0 using EisensteinHu!");
     cosmobl::classfunc::func_V2 func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit, method_Pk, rr, redshift);
     Midpnt<cosmobl::classfunc::func_V2> q1(func,k_int_min,1.); 
     Midinf<cosmobl::classfunc::func_V2> q2(func,1.,1.e30);
@@ -74,7 +74,7 @@ double cosmobl::Cosmology::square_bulk_flow (const double rr, const double k_int
 // =====================================================================================
 
 
-double cosmobl::Cosmology::square_bulk_flow_Table (const double rr, const double k_int_min, const vector<double> lgkk, const vector<double> lgPk, const double redshift) const 
+double cosmobl::cosmology::Cosmology::square_bulk_flow_Table (const double rr, const double k_int_min, const vector<double> lgkk, const vector<double> lgPk, const double redshift) const 
 {
   cosmobl::classfunc::func_V2_Table func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit, lgkk, lgPk, rr, redshift);
   
@@ -88,13 +88,13 @@ double cosmobl::Cosmology::square_bulk_flow_Table (const double rr, const double
 // =====================================================================================
 
 
-double cosmobl::Cosmology::square_velocity_dispersion (const double rr, const double k_int_min, const string method_Pk, const double redshift, const string output_root, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par)
+double cosmobl::cosmology::Cosmology::square_velocity_dispersion (const double rr, const double k_int_min, const string method_Pk, const double redshift, const string output_root, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par)
 {
   double sigma2 = -1.;
   Pk_0(method_Pk, redshift, output_root, k_min, k_max, GSL, prec, file_par); 
   
   if (method_Pk=="EisensteinHu") {
-    if (m_sigma8<0) ErrorMsg("Error in cosmobl::Cosmology::square_velocity_dispersion: sigma8 must be >0 using EisensteinHu!");
+    if (m_sigma8<0) ErrorMsg("Error in cosmobl::cosmology::Cosmology::square_velocity_dispersion: sigma8 must be >0 using EisensteinHu!");
     cosmobl::classfunc::func_sigma2 func2 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit, method_Pk, rr, redshift);
     Midpnt<cosmobl::classfunc::func_sigma2> q11(func2,k_int_min,1.); 
     Midinf<cosmobl::classfunc::func_sigma2> q22(func2,1.,100.);
@@ -123,7 +123,7 @@ double cosmobl::Cosmology::square_velocity_dispersion (const double rr, const do
 // =====================================================================================
 
 
-double cosmobl::Cosmology::CMN (const double rr, const double k_int_min, const string method_Pk, const double redshift, const string output_root, const double k_max, const string file_par) const 
+double cosmobl::cosmology::Cosmology::CMN (const double rr, const double k_int_min, const string method_Pk, const double redshift, const string output_root, const double k_max, const string file_par) const 
 {
   double CMN = -1000.; 
   

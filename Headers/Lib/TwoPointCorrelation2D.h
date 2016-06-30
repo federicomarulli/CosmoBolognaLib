@@ -130,7 +130,7 @@ namespace cosmobl {
        *
        *  @return pointer to an object of type Data
        */
-      shared_ptr<Data> NaturalEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const int nRandom) override;
+      shared_ptr<data::Data> NaturalEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const int nRandom) override;
 
       /**
        *  @brief measure the xi with Poisson error using measured pairs
@@ -151,7 +151,7 @@ namespace cosmobl {
        *
        *  @return pointer to an object of type Data
        */
-      shared_ptr<Data> LandySzalayEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const int nRandom) override;
+      shared_ptr<data::Data> LandySzalayEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const int nRandom) override;
 
       /**
        *  @brief measure the jackknife resampling of the two-point correlation
@@ -163,7 +163,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      vector<shared_ptr<Data> > XiJackknife(const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr) override;
+      vector<shared_ptr<data::Data> > XiJackknife(const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr) override;
 
       /**
        *  @brief measure the jackknife resampling of the two-point correlation
@@ -177,7 +177,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      vector<shared_ptr<Data> > XiJackknife(const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr) override;
+      vector<shared_ptr<data::Data> > XiJackknife(const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr) override;
 
       /**
        *  @brief measure the bootstrap resampling of the two-point correlation
@@ -191,7 +191,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      vector<shared_ptr<Data> > XiBootstrap(const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr) override;
+      vector<shared_ptr<data::Data> > XiBootstrap(const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr) override;
 
       /**
        *  @brief measure the bootstrap resampling of the two-point correlation
@@ -207,7 +207,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      vector<shared_ptr<Data> > XiBootstrap(const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr) override;
+      vector<shared_ptr<data::Data> > XiBootstrap(const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr) override;
       
       ///@}
 
@@ -223,7 +223,7 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class TwoPointCorrelation2D
        */
-      TwoPointCorrelation2D () { m_dataset = Data::Create(DataType::_2D_data_); }
+      TwoPointCorrelation2D () { m_dataset = data::Data::Create(data::DataType::_2D_data_); }
 
       /**
        *  @brief constructor
@@ -234,7 +234,7 @@ namespace cosmobl {
        *  @return object of class TwoPointCorrelation2D
        */
       TwoPointCorrelation2D (const catalogue::Catalogue data, const catalogue::Catalogue random) 
-	: TwoPointCorrelation(data, random) { m_dataset = Data::Create(DataType::_2D_data_); }
+	: TwoPointCorrelation(data, random) { m_dataset = data::Data::Create(data::DataType::_2D_data_); }
 
       /**
        *  @brief default destructor
@@ -250,7 +250,7 @@ namespace cosmobl {
       ///@{
 
       /**
-       *  @brief get the protected member Data::m_x
+       *  @brief get the protected member m_x
        *  @return the x coordinates
        */
       vector<double> xx () const override { return m_dataset->xx(); }

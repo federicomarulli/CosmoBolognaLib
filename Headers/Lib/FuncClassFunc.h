@@ -39,10 +39,10 @@
 
 namespace cosmobl {
   
-  /** @brief The namespace of the class functions of the CosmoBolognaLib  
+  /**
+   *  @brief The namespace of all the <B> class functions </B>
    *  
-   *  The \e classfunc namespace contains all the class functions of
-   *  the CosmoBolognaLib
+   *  The \e classfunc namespace contains all the class functions
    */
   namespace classfunc {
 

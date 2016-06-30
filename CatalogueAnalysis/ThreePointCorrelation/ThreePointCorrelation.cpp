@@ -43,6 +43,7 @@
 
 using namespace cosmobl;
 using namespace catalogue;
+using namespace chainmesh;
 using namespace triplets;
 using namespace threept;
 

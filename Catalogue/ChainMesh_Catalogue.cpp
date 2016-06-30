@@ -35,12 +35,23 @@
 
 using namespace cosmobl;
 using namespace catalogue;
+using namespace chainmesh;
 
 
 // ============================================================================
 
 
-void cosmobl::catalogue::ChainMesh_Catalogue::set_par (const double cell_size, shared_ptr<Catalogue> cat, const double rmax) 
+cosmobl::chainmesh::ChainMesh_Catalogue::ChainMesh_Catalogue (const double cell_size, shared_ptr<Catalogue> cat, const double rmax)
+  : ChainMesh(cell_size, 3)
+{
+  set_par(cell_size, cat, rmax); 
+}
+
+
+// ============================================================================
+
+
+void cosmobl::chainmesh::ChainMesh_Catalogue::set_par (const double cell_size, shared_ptr<Catalogue> cat, const double rmax) 
 {
   ChainMesh::set_par(cell_size, 3);
   
@@ -64,17 +75,7 @@ void cosmobl::catalogue::ChainMesh_Catalogue::set_par (const double cell_size, s
 // ============================================================================
 
 
-cosmobl::catalogue::ChainMesh_Catalogue::ChainMesh_Catalogue(const double cell_size, shared_ptr<Catalogue> cat, const double rmax)
-  : ChainMesh(cell_size, 3)
-{
-  set_par(cell_size, cat, rmax); 
-}
-
-
-// ============================================================================
-
-
-void cosmobl::catalogue::ChainMesh_Catalogue::get_order (vector<int> &order) const
+void cosmobl::chainmesh::ChainMesh_Catalogue::get_order (vector<int> &order) const
 {
   order.erase(order.begin(),order.end());
   vector<long> Label_temp = m_Label;
@@ -99,7 +100,7 @@ void cosmobl::catalogue::ChainMesh_Catalogue::get_order (vector<int> &order) con
 // ============================================================================
 
 
-vector<shared_ptr<Object> > cosmobl::catalogue::ChainMesh_Catalogue::object_list (shared_ptr<Object> object, const int ii)
+vector<shared_ptr<Object> > cosmobl::chainmesh::ChainMesh_Catalogue::object_list (shared_ptr<Object> object, const int ii)
 {
   vector<shared_ptr<Object> > obj_list;
 

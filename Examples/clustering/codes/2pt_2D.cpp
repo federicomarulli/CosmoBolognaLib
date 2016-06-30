@@ -5,6 +5,7 @@
 #include "TwoPointCorrelation2D.h"
 
 using namespace cosmobl;
+using namespace cosmology;
 using namespace catalogue;
 using namespace twopt;
 

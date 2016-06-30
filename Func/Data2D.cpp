@@ -32,13 +32,15 @@
  */
 
 #include "Data2D.h"
+
 using namespace cosmobl;
+using namespace data;
 
 
 // ======================================================================================
 
 
-cosmobl::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double> > fxy, const double xmin, const double xmax, const double ymin, const double ymax) : Data(cosmobl::DataType::_1D_data_)
+cosmobl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double> > fxy, const double xmin, const double xmax, const double ymin, const double ymax) : Data(cosmobl::data::DataType::_1D_data_)
 {
   m_x = x;
   m_y = y;
@@ -51,7 +53,7 @@ cosmobl::Data2D::Data2D (const vector<double> x, const vector<double> y, const v
 // ======================================================================================
 
 
-cosmobl::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double> > fxy, const vector<vector<double> > error_fxy, const double xmin, const double xmax, const double ymin, const double ymax) : Data(cosmobl::DataType::_1D_data_)
+cosmobl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double> > fxy, const vector<vector<double> > error_fxy, const double xmin, const double xmax, const double ymin, const double ymax) : Data(cosmobl::data::DataType::_1D_data_)
 {
   m_x = x;
   m_y = y;
@@ -66,7 +68,7 @@ cosmobl::Data2D::Data2D (const vector<double> x, const vector<double> y, const v
 // ======================================================================================
 
 
-void cosmobl::Data2D::set_limits (const double min, const double max, const bool axis)
+void cosmobl::data::Data2D::set_limits (const double min, const double max, const bool axis)
 {
   if (axis ==0) 
     find_index(m_x, min, max, m_x_down, m_x_up);
@@ -82,7 +84,7 @@ void cosmobl::Data2D::set_limits (const double min, const double max, const bool
 // ======================================================================================
 
 
-void cosmobl::Data2D::set_limits (const double xmin, const double xmax, const double ymin, const double ymax)
+void cosmobl::data::Data2D::set_limits (const double xmin, const double xmax, const double ymin, const double ymax)
 {
   set_limits(xmax, xmin, 0);
   set_limits(ymax, ymin, 1);
@@ -92,9 +94,9 @@ void cosmobl::Data2D::set_limits (const double xmin, const double xmax, const do
 // ======================================================================================
 
 
-void cosmobl::Data2D::read (const string input_file, const int skip_nlines)
+void cosmobl::data::Data2D::read (const string input_file, const int skip_nlines)
 {
-  ErrorMsg("Error in cosmobl::Data2D::read : work in progress!");
+  ErrorMsg("Error in cosmobl::data::Data2D::read : work in progress!");
   ifstream fin(input_file.c_str());
   string line;
   fin.clear(); fin.close();
@@ -104,12 +106,12 @@ void cosmobl::Data2D::read (const string input_file, const int skip_nlines)
 // ======================================================================================
 
 
-void cosmobl::Data2D::write (const string dir, const string file, const string xname, const string yname, const string fxyname, const bool full, const int rank) const 
+void cosmobl::data::Data2D::write (const string dir, const string file, const string xname, const string yname, const string fxyname, const bool full, const int rank) const 
 {
   string file_out = dir+file;
   ofstream fout (file_out.c_str()); checkIO(file_out, 0);
 
-  fout << "### "<<xname<<"  "<<yname<<"  "<<fxyname<<"  error ###" << endl;
+  fout << "### " << xname << "  " << yname << "  " << fxyname << "  error ###" << endl;
 
   for (size_t i=0; i<m_x.size(); i++)
     for (size_t j=0; j<m_y.size(); j++) 

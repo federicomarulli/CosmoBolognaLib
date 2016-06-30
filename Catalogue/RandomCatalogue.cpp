@@ -71,7 +71,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Cosmology &real_cosm, const Cosmology &test_cosm, const string dir_in, const string dir_out, const double Zguess_min, const double Zguess_max)
+cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const cosmology::Cosmology &real_cosm, const cosmology::Cosmology &test_cosm, const string dir_in, const string dir_out, const double Zguess_min, const double Zguess_max)
 {
   if (type!=_createRandom_box_) ErrorMsg("Error in cosmobl::catalogue::Catalogue::Catalogue : the random catalogue has to be cubic!");
 
@@ -118,7 +118,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Cosmology
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const Cosmology &cosm, const int N_R, const int nbin, const bool conv, const double sigma, const int seed)
+cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const cosmology::Cosmology &cosm, const int N_R, const int nbin, const bool conv, const double sigma, const int seed)
 {
   vector<double> ra = catalogue.var(_RA_), raB = ra;
   vector<double> dec = catalogue.var(_Dec_), decB = dec;
@@ -182,7 +182,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const int nRandom, const Cosmology &cosm, const double Angle, const int step_redshift, const vector<double> redshift, vector<double> &dc, vector<double> &convol, const int idum)
+cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const int nRandom, const cosmology::Cosmology &cosm, const double Angle, const int step_redshift, const vector<double> redshift, vector<double> &dc, vector<double> &convol, const int idum)
 {
   if (type!=_createRandom_cone_) ErrorMsg("Error in cosmobl::catalogue::Catalogue::Catalogue : the random catalogue has to be conic!");
   
@@ -284,7 +284,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const int nRandom, const Cosmology &cosm, const string dir, const int step_redshift, const vector<double> redshift, vector<double> &dc, vector<double> &convol, const int idum)
+cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const int nRandom, const cosmology::Cosmology &cosm, const string dir, const int step_redshift, const vector<double> redshift, vector<double> &dc, vector<double> &convol, const int idum)
 {
   if (type!=_createRandom_mock_) ErrorMsg("Error in cosmobl::catalogue::Catalogue::Catalogue : the random catalogue has to be of type _RandomMock_ !");
   
@@ -372,7 +372,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue
 
 /// @cond extrandom
 
-cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const int nRandom, const Cosmology &cosm, const string dir_out, const int step_redshift, const vector<double> dc, const vector<double> convol, const vector<double> lim, const vector<double> redshift, const vector<double> weight, const double redshift_min, const double redshift_max, const bool venice, const string where, string file_random, const string mask, const string dir_venice, const int idum) 
+cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const int nRandom, const cosmology::Cosmology &cosm, const string dir_out, const int step_redshift, const vector<double> dc, const vector<double> convol, const vector<double> lim, const vector<double> redshift, const vector<double> weight, const double redshift_min, const double redshift_max, const bool venice, const string where, string file_random, const string mask, const string dir_venice, const int idum) 
 {
   if (type!=_createRandom_VIPERS_) ErrorMsg("Error in cosmobl::catalogue::Catalogue::Catalogue : the random catalogue has to be of type _VIPERS_ !");
   

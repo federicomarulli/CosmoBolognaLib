@@ -32,7 +32,9 @@
  */
 
 #include "Chi2.h"
+
 using namespace cosmobl;
+using namespace data;
 
 
 // ============================================================================================
@@ -47,14 +49,13 @@ double cosmobl::statistics::chi2_1D_model_1par (double model_parameter, const sh
 
   vector<double> computed_model(data->ndata(),0);
   for (int i=data->x_down(); i<data->x_up(); i++)
-    computed_model[i]=model->operator()(data->xx(i));
+    computed_model[i] = model->operator()(data->xx(i));
 
-  double c2=0;
+  double c2 = 0;
   for (int i=data->x_down(); i<data->x_up(); i++)
-    c2+=pow((data->fx(i)-computed_model[i])/computed_model[i],2);
+    c2 += pow((data->fx(i)-computed_model[i])/computed_model[i],2);
 
   return c2;
-
 }
 
 
@@ -271,7 +272,7 @@ void cosmobl::statistics::Chi2::minimize (double parameter, const chi2_1par f, c
 
   auto fixed_parameters = make_shared<STR_params>(STR_params(m_data,m_model));
 
-  GSLfunction_1D_1 func(f, fixed_parameters);
+  glob::GSLfunction_1D_1 func(f, fixed_parameters);
   func.minimize(Parameter, max_iter, Min, Max);
   cout << "Done" << endl;
 }
@@ -319,7 +320,7 @@ void cosmobl::statistics::Chi2::minimize (const vector<double> parameters, const
     }
   }
 
-  GSLfunction_nD_1 func(npar, f, fixed_parameters);
+  glob::GSLfunction_nD_1 func(npar, f, fixed_parameters);
   func.minimize(pars, step_size, max_iter, tol);
   cout << "Done" << endl;
 }

@@ -5,7 +5,7 @@
 14. Cucciati, Marulli, Cimatti, Merson, Norberg, Pozzetti, Baugh, Branchini
     Measuring galaxy environment with the synergy of future
     photometric and spectroscopic surveys
-    20161, arXiv:604.05323
+    2016, arXiv:604.05323
 
 13. Moresco, Marulli and the VIPERS team
     The VIMOS Public Extragalactic Redshift Survey (VIPERS). Exploring

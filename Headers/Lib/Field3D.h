@@ -39,457 +39,459 @@
 
 namespace cosmobl {
 
-  /**
-   *  @class Field3D Field3D.h "Headers/Lib/Field3D.h"
-   *
-   *  @brief The class Field3D
-   *
-   *  This class is used to handle objects of type <EM> Field3D
-   *  </EM>
-   */
-  class Field3D {
+  namespace data {
+  
+    /**
+     *  @class Field3D Field3D.h "Headers/Lib/Field3D.h"
+     *
+     *  @brief The class Field3D
+     *
+     *  This class is used to handle objects of type <EM> Field3D
+     *  </EM>
+     */
+    class Field3D {
     
-  protected:
+    protected:
 
-    /// number of cells along the x-axis
-    int m_nX;
+      /// number of cells along the x-axis
+      int m_nX;
 
-    /// number of cells along the y-axis
-    int m_nY;
+      /// number of cells along the y-axis
+      int m_nY;
 
-    /// number of cells along the z-axis
-    int m_nZ;
+      /// number of cells along the z-axis
+      int m_nZ;
 
-    /// number of cells along the z-axis, Fourier space
-    int m_nZF;
+      /// number of cells along the z-axis, Fourier space
+      int m_nZF;
     
-    /// number of cells
-    int m_nCells;
+      /// number of cells
+      int m_nCells;
 
-    /// number of cells, Fourier space
-    int m_nCells_Fourier;
+      /// number of cells, Fourier space
+      int m_nCells_Fourier;
 
-    /// X cell size 
-    double m_deltaX;
+      /// X cell size 
+      double m_deltaX;
 
-    /// Y cell size
-    double m_deltaY;
+      /// Y cell size
+      double m_deltaY;
 
-    /// Z cell size
-    double m_deltaZ;
+      /// Z cell size
+      double m_deltaZ;
 
-    /// lower x bound
-    double m_MinX;
+      /// lower x bound
+      double m_MinX;
 
-    /// lower y bound
-    double m_MinY;
+      /// lower y bound
+      double m_MinY;
 
-    /// lower z bound
-    double m_MinZ;
+      /// lower z bound
+      double m_MinZ;
 
-    /// upper x bound
-    double m_MaxX;
+      /// upper x bound
+      double m_MaxX;
 
-    /// upper y bound
-    double m_MaxY;
+      /// upper y bound
+      double m_MaxY;
 
-    /// upper z bound
-    double m_MaxZ;
+      /// upper z bound
+      double m_MaxZ;
 
-    /// box volume
-    double m_Volume;
+      /// box volume
+      double m_Volume;
 
-    /**
-     * @brief contract 3 indeces into one
-     *
-     * @param i index of the i-th x-axis cell
-     * @param j index of the j-th y-axis cell
-     * @param k index of the k-th z-axis cell
-     *
-     * @return k+nZ*(j+nY*i)
-     */
-    long int inds_to_index(int i, int j, int k) const {return k+m_nZ*(j+m_nY*i);} 
+      /**
+       * @brief contract 3 indeces into one
+       *
+       * @param i index of the i-th x-axis cell
+       * @param j index of the j-th y-axis cell
+       * @param k index of the k-th z-axis cell
+       *
+       * @return k+nZ*(j+nY*i)
+       */
+      long int inds_to_index(int i, int j, int k) const {return k+m_nZ*(j+m_nY*i);} 
 
-    /**
-     * @brief contract 3 indeces into one, Fourier space
-     *
-     * @param i index of the i-th x-axis cell
-     * @param j index of the j-th y-axis cell
-     * @param k index of the k-th z-axis cell
-     *
-     * @return k+nZF*(j+nY*i)
-     */
-    long int inds_to_index_Fourier(int i, int j, int k) const {return k+m_nZF*(j+m_nY*i);}
+      /**
+       * @brief contract 3 indeces into one, Fourier space
+       *
+       * @param i index of the i-th x-axis cell
+       * @param j index of the j-th y-axis cell
+       * @param k index of the k-th z-axis cell
+       *
+       * @return k+nZF*(j+nY*i)
+       */
+      long int inds_to_index_Fourier(int i, int j, int k) const {return k+m_nZF*(j+m_nY*i);}
 
-  public:
+    public:
 
-    /**
-     *  @name Constructors/destructors
-     */
-    ///@{
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{
 
-    /**
-     *  @brief default constructor
-     *  @return object of type Field3D
-     */
-    Field3D () {}
+      /**
+       *  @brief default constructor
+       *  @return object of type Field3D
+       */
+      Field3D () {}
 
-    /**
-     *  @brief constructor
-     *
-     *  @param deltaR size of the cubic cells
-     *  @param minX lower x bound
-     *  @param maxX upper x bound
-     *  @param minY lower y bound
-     *  @param maxY upper y bound
-     *  @param minZ lower z bound
-     *  @param maxZ upper z bound
-     *
-     *  @return object of type Field3D
-     */
-    Field3D (const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ);
+      /**
+       *  @brief constructor
+       *
+       *  @param deltaR size of the cubic cells
+       *  @param minX lower x bound
+       *  @param maxX upper x bound
+       *  @param minY lower y bound
+       *  @param maxY upper y bound
+       *  @param minZ lower z bound
+       *  @param maxZ upper z bound
+       *
+       *  @return object of type Field3D
+       */
+      Field3D (const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ);
 
-    /**
-     *  @brief constructor
-     *
-     *  @param nx number of x-axis cells
-     *  @param ny number of y-axis cells
-     *  @param nz number of z-axis cells
-     *  @param minX lower x bound
-     *  @param maxX upper x bound
-     *  @param minY lower y bound
-     *  @param maxY upper y bound
-     *  @param minZ lower z bound
-     *  @param maxZ upper z bound
-     *
-     *  @return object of type Field3D
-     */
-    Field3D (const int nx, const int ny, const int nz, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ);
+      /**
+       *  @brief constructor
+       *
+       *  @param nx number of x-axis cells
+       *  @param ny number of y-axis cells
+       *  @param nz number of z-axis cells
+       *  @param minX lower x bound
+       *  @param maxX upper x bound
+       *  @param minY lower y bound
+       *  @param maxY upper y bound
+       *  @param minZ lower z bound
+       *  @param maxZ upper z bound
+       *
+       *  @return object of type Field3D
+       */
+      Field3D (const int nx, const int ny, const int nz, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ);
 
-    /**
-     *  @brief default destructor
-     *  @return none
-     */
-    virtual ~Field3D() {}
+      /**
+       *  @brief default destructor
+       *  @return none
+       */
+      virtual ~Field3D() {}
 
-    ///@}
+      ///@}
 
-    /**
-     *  @brief constructor
-     *
-     *  @param deltaR size of the cubic cells
-     *  @param minX lower x bound
-     *  @param maxX upper x bound
-     *  @param minY lower y bound
-     *  @param maxY upper y bound
-     *  @param minZ lower z bound
-     *  @param maxZ upper z bound
-     *
-     *  @return none
-     */    
-    void set_parameters(const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ);
+      /**
+       *  @brief constructor
+       *
+       *  @param deltaR size of the cubic cells
+       *  @param minX lower x bound
+       *  @param maxX upper x bound
+       *  @param minY lower y bound
+       *  @param maxY upper y bound
+       *  @param minZ lower z bound
+       *  @param maxZ upper z bound
+       *
+       *  @return none
+       */    
+      void set_parameters(const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ);
 
-    /**
-     *  @brief constructor
-     *
-     *  @param nx number of x-axis cells
-     *  @param ny number of y-axis cells
-     *  @param nz number of z-axis cells
-     *  @param minX lower x bound
-     *  @param maxX upper x bound
-     *  @param minY lower y bound
-     *  @param maxY upper y bound
-     *  @param minZ lower z bound
-     *  @param maxZ upper z bound
-     *
-     *  @return none
-     */
-    void set_parameters(const int nx, const int ny, const int nz, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ);
+      /**
+       *  @brief constructor
+       *
+       *  @param nx number of x-axis cells
+       *  @param ny number of y-axis cells
+       *  @param nz number of z-axis cells
+       *  @param minX lower x bound
+       *  @param maxX upper x bound
+       *  @param minY lower y bound
+       *  @param maxY upper y bound
+       *  @param minZ lower z bound
+       *  @param maxZ upper z bound
+       *
+       *  @return none
+       */
+      void set_parameters(const int nx, const int ny, const int nz, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ);
 
-    /**
-     * @brief return the private member m_nX
-     * @return the number of cells along the x-axis 
-     */
-    int nx() const {return m_nX;}
+      /**
+       * @brief return the private member m_nX
+       * @return the number of cells along the x-axis 
+       */
+      int nx() const {return m_nX;}
 
-    /**
-     * @brief return the private member m_nY
-     * @return the number of cells along the y-axis 
-     */   
-    int ny() const {return m_nY;}
+      /**
+       * @brief return the private member m_nY
+       * @return the number of cells along the y-axis 
+       */   
+      int ny() const {return m_nY;}
 
-    /**
-     * @brief return the private member m_nZ
-     * @return the number of cells along the Z-axis 
-     */
-    int nz() const {return m_nZ;}
+      /**
+       * @brief return the private member m_nZ
+       * @return the number of cells along the Z-axis 
+       */
+      int nz() const {return m_nZ;}
 
-    /**
-     * @brief return the private member m_nZF
-     * @return the number of cells along the z-axis, Fourier space
-     */
-    int nzFourier() const {return m_nZF;}
+      /**
+       * @brief return the private member m_nZF
+       * @return the number of cells along the z-axis, Fourier space
+       */
+      int nzFourier() const {return m_nZF;}
     
-    /**
-     * @brief return the private member m_nCells
-     * @return the number of cells
-     */
-    int nCells() const {return m_nCells;}
+      /**
+       * @brief return the private member m_nCells
+       * @return the number of cells
+       */
+      int nCells() const {return m_nCells;}
 
-    /**
-     * @brief return the private member m_nCells_Fourier
-     * @return the number of cells, Fourier space
-     */
-    int nCellsFourier() const {return m_nCells_Fourier;}
+      /**
+       * @brief return the private member m_nCells_Fourier
+       * @return the number of cells, Fourier space
+       */
+      int nCellsFourier() const {return m_nCells_Fourier;}
 
-    /**
-     * @brief return the private member m_MinX
-     * @return the lower x bound 
-     */
-    double MinX() const {return m_MinX;}
+      /**
+       * @brief return the private member m_MinX
+       * @return the lower x bound 
+       */
+      double MinX() const {return m_MinX;}
 
-    /**
-     * @brief return the private member m_MinY
-     * @return the lower y bound 
-     */
-    double MinY() const {return m_MinY;}
+      /**
+       * @brief return the private member m_MinY
+       * @return the lower y bound 
+       */
+      double MinY() const {return m_MinY;}
 
-    /**
-     * @brief return the private member m_MinZ
-     * @return the lower z bound 
-     */   
-    double MinZ() const {return m_MinZ;}
+      /**
+       * @brief return the private member m_MinZ
+       * @return the lower z bound 
+       */   
+      double MinZ() const {return m_MinZ;}
 
-    /**
-     * @brief return the private member m_MaxX
-     * @return the upper x bound 
-     */                                    
-    double MaxX() const {return m_MaxX;}
+      /**
+       * @brief return the private member m_MaxX
+       * @return the upper x bound 
+       */                                    
+      double MaxX() const {return m_MaxX;}
    
-    /**
-     * @brief return the private member m_MaxY
-     * @return the upper y bound 
-     */ 
-    double MaxY() const {return m_MaxY;}
+      /**
+       * @brief return the private member m_MaxY
+       * @return the upper y bound 
+       */ 
+      double MaxY() const {return m_MaxY;}
    
-    /**
-     * @brief return the private member m_MaxZ
-     * @return the upper z bound 
-     */
-    double MaxZ() const {return m_MaxZ;}
+      /**
+       * @brief return the private member m_MaxZ
+       * @return the upper z bound 
+       */
+      double MaxZ() const {return m_MaxZ;}
    
-    /**
-     * @brief return the private member m_deltaX
-     * @return the X cell size 
-     */
-    double deltaX() const {return m_deltaX;}
+      /**
+       * @brief return the private member m_deltaX
+       * @return the X cell size 
+       */
+      double deltaX() const {return m_deltaX;}
     
-    /**
-     * @brief return the private member m_deltaY
-     * @return the Y cell size 
-     */   
-    double deltaY() const {return m_deltaY;}
+      /**
+       * @brief return the private member m_deltaY
+       * @return the Y cell size 
+       */   
+      double deltaY() const {return m_deltaY;}
     
-    /**
-     * @brief return the private member m_deltaZ
-     * @return the Z cell size
-     */
-    double deltaZ() const {return m_deltaZ;}
+      /**
+       * @brief return the private member m_deltaZ
+       * @return the Z cell size
+       */
+      double deltaZ() const {return m_deltaZ;}
 
-    /**
-     * @brief return the private member m_Volume
-     * @return the box volume 
-     */
-    double Volume() const {return m_Volume;}
+      /**
+       * @brief return the private member m_Volume
+       * @return the box volume 
+       */
+      double Volume() const {return m_Volume;}
 
-    /**
-     * @brief perform the Fourier transform on the field
-     * @return none
-     */
-    virtual void FourierTransformField ()
-    { ErrorMsg("Error in FourierTransformField of Field3D"); }
+      /**
+       * @brief perform the Fourier transform on the field
+       * @return none
+       */
+      virtual void FourierTransformField ()
+      { ErrorMsg("Error in FourierTransformField of Field3D"); }
 
-    /**
-     * @brief perform the anti-Fourier transform on the field
-     * @return none
-     */
-    virtual void FourierAntiTransformField ()
-    { ErrorMsg("Error in FourierAntiTransformField of Field3D"); }
+      /**
+       * @brief perform the anti-Fourier transform on the field
+       * @return none
+       */
+      virtual void FourierAntiTransformField ()
+      { ErrorMsg("Error in FourierAntiTransformField of Field3D"); }
 
-    /**
-     * @brief perform a smoothing of the field with a gaussian kernel
-     * @param kernel_size size of the gaussian kernel
-     * @return none
-     */
-    virtual void GaussianConvolutionField (const double kernel_size)
-    { ErrorMsg("Error in GaussianConvolutionField of Field3D"); }
+      /**
+       * @brief perform a smoothing of the field with a gaussian kernel
+       * @param kernel_size size of the gaussian kernel
+       * @return none
+       */
+      virtual void GaussianConvolutionField (const double kernel_size)
+      { ErrorMsg("Error in GaussianConvolutionField of Field3D"); }
 
-    /**
-     * @brief set the value of the scalar field
-     * 
-     * @param value value of the scalar field
-     * @param i the i-th cell along the x-axis
-     * @param j the j-th cell along the y-axis
-     * @param k the k-th cell along the z-axis
-     * @param add  1 &rarr; add to the current value; 0
-     *  &rarr; overwrite the value
-     *
-     * @return none
-     */
-    virtual void set_ScalarField (const double value, const int i, const int j, const int k, const bool add=0)
-    { ErrorMsg("Error in set_ScalarField of Field3D"); }
+      /**
+       * @brief set the value of the scalar field
+       * 
+       * @param value value of the scalar field
+       * @param i the i-th cell along the x-axis
+       * @param j the j-th cell along the y-axis
+       * @param k the k-th cell along the z-axis
+       * @param add  1 &rarr; add to the current value; 0
+       *  &rarr; overwrite the value
+       *
+       * @return none
+       */
+      virtual void set_ScalarField (const double value, const int i, const int j, const int k, const bool add=0)
+      { ErrorMsg("Error in set_ScalarField of Field3D"); }
     
-    /**
-     * @brief set the value of the vectorr field
-     * 
-     * @param value vector containing values of the vector field
-     * @param i the i-th cell along the x-axis
-     * @param j the j-th cell along the y-axis
-     * @param k the k-th cell along the z-axis
-     * @param add  1 &rarr; add to the current value; 0
-     *  &rarr; overwrite the value
-     *
-     * @return none
-     */
-    virtual void set_VectorField (const vector<double> value, const int i, const int j, const int k, const bool add=0)
-    { ErrorMsg("Error in set_Vectorield of Field3D"); }
+      /**
+       * @brief set the value of the vectorr field
+       * 
+       * @param value vector containing values of the vector field
+       * @param i the i-th cell along the x-axis
+       * @param j the j-th cell along the y-axis
+       * @param k the k-th cell along the z-axis
+       * @param add  1 &rarr; add to the current value; 0
+       *  &rarr; overwrite the value
+       *
+       * @return none
+       */
+      virtual void set_VectorField (const vector<double> value, const int i, const int j, const int k, const bool add=0)
+      { ErrorMsg("Error in set_Vectorield of Field3D"); }
 
-    /**
-     * @brief set the value of the scalar field in Fourier space, real part
-     * 
-     * @param value value of the scalar field in Fourier space, real part
-     * @param i the i-th cell along the x-axis
-     * @param j the j-th cell along the y-axis
-     * @param k the k-th cell along the z-axis
-     * @param add  1 &rarr; add to the current value; 0
-     *  &rarr; overwrite the value
-     *
-     * @return none
-     */
-    virtual void set_ScalarField_FourierSpace_real (const double value, const int i, const int j, const int k, const bool add=0)
-    { ErrorMsg("Error in set_ScalarField_FourierSpace_real of Field3D"); }
+      /**
+       * @brief set the value of the scalar field in Fourier space, real part
+       * 
+       * @param value value of the scalar field in Fourier space, real part
+       * @param i the i-th cell along the x-axis
+       * @param j the j-th cell along the y-axis
+       * @param k the k-th cell along the z-axis
+       * @param add  1 &rarr; add to the current value; 0
+       *  &rarr; overwrite the value
+       *
+       * @return none
+       */
+      virtual void set_ScalarField_FourierSpace_real (const double value, const int i, const int j, const int k, const bool add=0)
+      { ErrorMsg("Error in set_ScalarField_FourierSpace_real of Field3D"); }
     
-    /**
-     * @brief set the value of the scalar field in Fourier space, complex part
-     * 
-     * @param value value of the scalar field in Fourier space, complex part
-     * @param i the i-th cell along the x-axis
-     * @param j the j-th cell along the y-axis
-     * @param k the k-th cell along the z-axis
-     * @param add  1 &rarr; add to the current value; 0
-     *  &rarr; overwrite the value
-     *
-     * @return none
-     */
-    virtual void set_ScalarField_FourierSpace_complex (const double value, const int i, const int j, const int k, const bool add=0)
-    { ErrorMsg("Error in set_ScalarField_FourierSpace_complex of Field3D"); }
+      /**
+       * @brief set the value of the scalar field in Fourier space, complex part
+       * 
+       * @param value value of the scalar field in Fourier space, complex part
+       * @param i the i-th cell along the x-axis
+       * @param j the j-th cell along the y-axis
+       * @param k the k-th cell along the z-axis
+       * @param add  1 &rarr; add to the current value; 0
+       *  &rarr; overwrite the value
+       *
+       * @return none
+       */
+      virtual void set_ScalarField_FourierSpace_complex (const double value, const int i, const int j, const int k, const bool add=0)
+      { ErrorMsg("Error in set_ScalarField_FourierSpace_complex of Field3D"); }
 
-    /**
-     * @brief set the value of the vector field, Fourier space, real part
-     * 
-     * @param value vector containing values of the vector field,
-     * Fourier space, real part
-     * @param i the i-th cell along the x-axis
-     * @param j the j-th cell along the y-axis
-     * @param k the k-th cell along the z-axis
-     * @param add  1 &rarr; add to the current value; 0
-     *  &rarr; overwrite the value
-     *
-     * @return none
-     */
-    virtual void set_VectorField_FourierSpace_real (const vector<double> value, const int i, const int j, const int k, const bool add=0)
-    { ErrorMsg("Error in set_VectorField_FourierSpace_real of Field3D"); }
+      /**
+       * @brief set the value of the vector field, Fourier space, real part
+       * 
+       * @param value vector containing values of the vector field,
+       * Fourier space, real part
+       * @param i the i-th cell along the x-axis
+       * @param j the j-th cell along the y-axis
+       * @param k the k-th cell along the z-axis
+       * @param add  1 &rarr; add to the current value; 0
+       *  &rarr; overwrite the value
+       *
+       * @return none
+       */
+      virtual void set_VectorField_FourierSpace_real (const vector<double> value, const int i, const int j, const int k, const bool add=0)
+      { ErrorMsg("Error in set_VectorField_FourierSpace_real of Field3D"); }
 
-    /**
-     * @brief set the value of the vector field, Fourier space, complex part
-     * 
-     * @param value vector containing values of the vector field, 
-     * Fourier space, complex part
-     * @param i the i-th cell along the x-axis
-     * @param j the j-th cell along the y-axis
-     * @param k the k-th cell along the z-axis
-     * @param add  1 &rarr; add to the current value; 0
-     *  &rarr; overwrite the value
-     *
-     * @return none
-     */
-    virtual void set_VectorField_FourierSpace_complex (const vector<double> value, const int i, const int j, const int k, const bool add=0)
-    { ErrorMsg("Error in set_VectorField_FourierSpace_complex of Field3D"); }
+      /**
+       * @brief set the value of the vector field, Fourier space, complex part
+       * 
+       * @param value vector containing values of the vector field, 
+       * Fourier space, complex part
+       * @param i the i-th cell along the x-axis
+       * @param j the j-th cell along the y-axis
+       * @param k the k-th cell along the z-axis
+       * @param add  1 &rarr; add to the current value; 0
+       *  &rarr; overwrite the value
+       *
+       * @return none
+       */
+      virtual void set_VectorField_FourierSpace_complex (const vector<double> value, const int i, const int j, const int k, const bool add=0)
+      { ErrorMsg("Error in set_VectorField_FourierSpace_complex of Field3D"); }
 
-    /**
-     * @brief get the value of the scalar field
-     * 
-     * @param i the i-th cell along the x-axis
-     * @param j the j-th cell along the y-axis
-     * @param k the k-th cell along the z-axis
-     *
-     * @return the value of the vector field
-     */
-    virtual double ScalarField (const int i, const int j, const int k) const
-    { ErrorMsg("Error in Scalarield of Field3D"); double vv; return vv; }
+      /**
+       * @brief get the value of the scalar field
+       * 
+       * @param i the i-th cell along the x-axis
+       * @param j the j-th cell along the y-axis
+       * @param k the k-th cell along the z-axis
+       *
+       * @return the value of the vector field
+       */
+      virtual double ScalarField (const int i, const int j, const int k) const
+      { ErrorMsg("Error in Scalarield of Field3D"); double vv; return vv; }
 
-    /**
-     * @brief get the value of the vector field
-     * 
-     * @param i the i-th cell along the x-axis
-     * @param j the j-th cell along the y-axis
-     * @param k the k-th cell along the z-axis
-     *
-     * @return vector containing the value of the vector field
-     */
-    virtual vector<double> VectorField (const int i, const int j, const int k) const
-    { ErrorMsg("Error in VectorField of Field3D"); double vv; return {vv}; }
+      /**
+       * @brief get the value of the vector field
+       * 
+       * @param i the i-th cell along the x-axis
+       * @param j the j-th cell along the y-axis
+       * @param k the k-th cell along the z-axis
+       *
+       * @return vector containing the value of the vector field
+       */
+      virtual vector<double> VectorField (const int i, const int j, const int k) const
+      { ErrorMsg("Error in VectorField of Field3D"); double vv; return {vv}; }
 
-    /**
-     * @brief get the value of the scalar field, Fourier space, real part
-     * 
-     * @param i the i-th cell along the x-axis
-     * @param j the j-th cell along the y-axis
-     * @param k the k-th cell along the z-axis
-     *
-     * @return the value of the vector field, Fourier space, real part
-     */
-    virtual double ScalarField_FourierSpace_real (const int i, const int j, const int k) const
-    { ErrorMsg("Error in ScalarField_FourierSpace of Field3D"); double vv; return vv; }
+      /**
+       * @brief get the value of the scalar field, Fourier space, real part
+       * 
+       * @param i the i-th cell along the x-axis
+       * @param j the j-th cell along the y-axis
+       * @param k the k-th cell along the z-axis
+       *
+       * @return the value of the vector field, Fourier space, real part
+       */
+      virtual double ScalarField_FourierSpace_real (const int i, const int j, const int k) const
+      { ErrorMsg("Error in ScalarField_FourierSpace of Field3D"); double vv; return vv; }
 
-    /**
-     * @brief get the value of the scalar field, Fourier space, complex part
-     * 
-     * @param i the i-th cell along the x-axis
-     * @param j the j-th cell along the y-axis
-     * @param k the k-th cell along the z-axis
-     *
-     * @return the value of the vector field, Fourier space, complex part
-     */
-    virtual double ScalarField_FourierSpace_complex (const int i, const int j, const int k) const
-    { ErrorMsg("Error in ScalarField_FourierSpace of Field3D"); double vv; return vv; }
+      /**
+       * @brief get the value of the scalar field, Fourier space, complex part
+       * 
+       * @param i the i-th cell along the x-axis
+       * @param j the j-th cell along the y-axis
+       * @param k the k-th cell along the z-axis
+       *
+       * @return the value of the vector field, Fourier space, complex part
+       */
+      virtual double ScalarField_FourierSpace_complex (const int i, const int j, const int k) const
+      { ErrorMsg("Error in ScalarField_FourierSpace of Field3D"); double vv; return vv; }
 
-    /**
-     * @brief get the value of the vector field, Fourier space, real part
-     * 
-     * @param i the i-th cell along the x-axis
-     * @param j the j-th cell along the y-axis
-     * @param k the k-th cell along the z-axis
-     *
-     * @return vector containing the value of the vector field, Fourier space, real part
-     */
-    virtual vector<double> VectorField_FourierSpace_real (const int i, const int j, const int k) const
-    { ErrorMsg("Error in VectorField_FourierSpace of Field3D"); double vv; return {vv}; }
+      /**
+       * @brief get the value of the vector field, Fourier space, real part
+       * 
+       * @param i the i-th cell along the x-axis
+       * @param j the j-th cell along the y-axis
+       * @param k the k-th cell along the z-axis
+       *
+       * @return vector containing the value of the vector field, Fourier space, real part
+       */
+      virtual vector<double> VectorField_FourierSpace_real (const int i, const int j, const int k) const
+      { ErrorMsg("Error in VectorField_FourierSpace of Field3D"); double vv; return {vv}; }
 
-    /**
-     * @brief get the value of the vector field, Fourier space, complex part
-     * 
-     * @param i the i-th cell along the x-axis
-     * @param j the j-th cell along the y-axis
-     * @param k the k-th cell along the z-axis
-     *
-     * @return vector containing the value of the vector field, Fourier space, complex part
-     */
-    virtual vector<double> VectorField_FourierSpace_complex (const int i, const int j, const int k) const
-    { ErrorMsg("Error in VectorField_FourierSpace_complex of Field3D"); double vv; return {vv}; }
-  };
+      /**
+       * @brief get the value of the vector field, Fourier space, complex part
+       * 
+       * @param i the i-th cell along the x-axis
+       * @param j the j-th cell along the y-axis
+       * @param k the k-th cell along the z-axis
+       *
+       * @return vector containing the value of the vector field, Fourier space, complex part
+       */
+      virtual vector<double> VectorField_FourierSpace_complex (const int i, const int j, const int k) const
+      { ErrorMsg("Error in VectorField_FourierSpace_complex of Field3D"); double vv; return {vv}; }
+    };
 
-  class ScalarField3D : public Field3D{
+    class ScalarField3D : public Field3D{
     protected:
 
       /// scalar field
@@ -644,9 +646,9 @@ namespace cosmobl {
        */
       double ScalarField_FourierSpace_complex (const int i, const int j, const int k) const;
 
-  };
+    };
 
-  class VectorField3D : public Field3D{
+    class VectorField3D : public Field3D{
     protected:
 
       /// vector field
@@ -796,7 +798,10 @@ namespace cosmobl {
        */
       vector<double> VectorField_FourierSpace_complex (const int i, const int j, const int k) const;
 
-  };
+    };
+
+  }
+
 }
 
 #endif

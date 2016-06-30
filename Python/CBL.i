@@ -2,7 +2,7 @@
 
 %module CosmoBolognaLib
 
-%import "../Doc/documentation.i"
+//%import "../Doc/documentation.i"
 
 %include Lib/Func.i
 %include Lib/Stat.i

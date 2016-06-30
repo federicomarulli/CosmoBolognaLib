@@ -42,13 +42,6 @@
 
 namespace cosmobl {
 
-  /**
-   *  @brief The namespace of functions and classes used for statistical
-   *  analysis
-   *  
-   * The \e statistic namespace contains all the functions and classes
-   * used for statistical analyis
-   */
   namespace statistics {
     
     /**
@@ -83,7 +76,7 @@ namespace cosmobl {
     struct STR_likelihood_parameters
     {
       /// data containers
-      shared_ptr<Data> data;
+      shared_ptr<data::Data> data;
 
       /// model to test
       shared_ptr<Model> model;
@@ -94,7 +87,7 @@ namespace cosmobl {
        *  @param _model pointers to the model 
        *  @return object of type STR_likelihood_parameters
        */ 
-      STR_likelihood_parameters (shared_ptr<Data> _data, shared_ptr<Model> _model) :
+      STR_likelihood_parameters (shared_ptr<data::Data> _data, shared_ptr<Model> _model) :
       data(_data), model(_model) {}
     };
 
@@ -161,7 +154,7 @@ namespace cosmobl {
     protected:
 
       /// data containers 
-      shared_ptr<Data> m_data;
+      shared_ptr<data::Data> m_data;
 
       /// model to test
       shared_ptr<Model> m_model; 
@@ -205,7 +198,7 @@ namespace cosmobl {
        *  @param likelihood_type type of likelihood
        *  @return object of class Likelihood
        */
-      Likelihood (const shared_ptr<Data> data, const shared_ptr<Model> model, const LikelihoodType likelihood_type);
+      Likelihood (const shared_ptr<data::Data> data, const shared_ptr<Model> model, const LikelihoodType likelihood_type);
 
       /**
        *  @brief constructor
@@ -217,7 +210,7 @@ namespace cosmobl {
        *  @param cov 
        *  @return object of class Likelihood
        */
-      Likelihood (const shared_ptr<Data> data, const shared_ptr<Model> model, const LikelihoodType likelihood_type, const LogLikelihood_function loglikelihood_function, const bool cov);
+      Likelihood (const shared_ptr<data::Data> data, const shared_ptr<Model> model, const LikelihoodType likelihood_type, const LogLikelihood_function loglikelihood_function, const bool cov);
 
       /**
        *  @brief default destructor
@@ -260,7 +253,7 @@ namespace cosmobl {
        *
        * @return none
        */
-      void set_data (shared_ptr<Data> data);
+      void set_data (shared_ptr<data::Data> data);
 
       /**
        * @brief set the model for the likelihood analysis 

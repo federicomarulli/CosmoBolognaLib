@@ -19,7 +19,8 @@ OBJ3 = 2pt_2D.o
 OBJ4 = 2pt_projected.o
 OBJ5 = 2pt_angular.o
 OBJ6 = 3pt.o
-OBJ7 = modelBias_2pt_projected.o
+OBJ7 = model_2pt_projected_bias.o
+OBJ8 = model_2pt_monopole_bao.o
 
 ES = so
 
@@ -45,11 +46,14 @@ endif
 3pt: $(OBJ6) 
 	$(CC) $(OBJ6) -o 3pt $(FLAGS_LIB)
 
-modelBias_2pt_projected: $(OBJ7) 
-	$(CC) $(OBJ7) -o modelBias_2pt_projected $(FLAGS_LIB)
+model_2pt_projected_bias: $(OBJ7) 
+	$(CC) $(OBJ7) -o model_2pt_projected_bias $(FLAGS_LIB)
+
+model_2pt_monopole_bao: $(OBJ8) 
+	$(CC) $(OBJ8) -o model_2pt_monopole_bao $(FLAGS_LIB)
 
 clean:
-	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 3pt modelBias_2pt_projected *~ \#* temp* core*
+	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 3pt model_2pt_projected_bias model_2pt_monopole_bao *~ \#* temp* core*
 
 
 2pt_monopole.o: 2pt_monopole.cpp makefile $(dirLib)*.$(ES)
@@ -70,5 +74,8 @@ clean:
 3pt.o: 3pt.cpp makefile $(dirLib)*.$(ES)
 	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 3pt.cpp 
 
-modelBias_2pt_projected.o: modelBias_2pt_projected.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c modelBias_2pt_projected.cpp
+model_2pt_projected_bias.o: model_2pt_projected_bias.cpp makefile $(dirLib)*.$(ES)
+	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_projected_bias.cpp
+
+model_2pt_monopole_bao.o: model_2pt_monopole_bao.cpp makefile $(dirLib)*.$(ES)
+	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_monopole_bao.cpp

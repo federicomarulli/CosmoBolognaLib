@@ -69,7 +69,7 @@ namespace cosmobl {
   
       double operator() (double redshift) 
       {
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
     
 	return 1./cosm.EE(redshift);   
       }
@@ -105,7 +105,7 @@ namespace cosmobl {
   
       double operator() (double redshift) 
       {
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
     
 	return 1./(1.+redshift)/cosm.EE(redshift);   
       }
@@ -140,7 +140,7 @@ namespace cosmobl {
 
       double operator() (double aa)
       {
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, 0);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, 0);
 	double redshift = 1./aa-1.;
 	return (1.+redshift)/cosm.EE(redshift);  
       }
@@ -162,7 +162,7 @@ namespace cosmobl {
   
       double operator() (double redshift) 
       {
-	Cosmology cosm;
+	cosmology::Cosmology cosm;
 	cosm.set_w0(m_w0); cosm.set_wa(m_wa);
     
 	return (1.+cosm.w_CPL(redshift))/(1.+redshift);    
@@ -199,7 +199,7 @@ namespace cosmobl {
 
       double operator() (double redshift) 
       {
-	Cosmology cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
 
 	return cosm.D_C(redshift)-m_dd;
       }
@@ -237,7 +237,7 @@ namespace cosmobl {
 
       double operator() (double z_max) 
       {
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
     
 	return cosm.Volume(m_z_min, z_max, m_Area)-m_VV;
       }
@@ -274,7 +274,7 @@ namespace cosmobl {
 
       double operator() (double redshift) 
       {
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
 
 	return cosm.cosmic_time(redshift)-m_tt;
       }
@@ -313,7 +313,7 @@ namespace cosmobl {
 
       double operator() (double kk) 
       { 
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
 
 	if (m_method_Pk=="EisensteinHu") return cosm.Pk_UnNorm(kk, m_redshift, m_method_Pk)*pow(cosmobl::TopHat_WF(kk*m_rr)*kk,2);  
 
@@ -354,7 +354,7 @@ namespace cosmobl {
 
       double operator() (double kk) 
       { 
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
  
 	double RHO = cosm.RhoZero();
 	if (m_unit==0) { cosm.set_unit(1); RHO = cosm.Rho(m_Omega_matter, m_Omega_neutrinos); cosm.set_unit(0); }
@@ -460,7 +460,7 @@ namespace cosmobl {
 
       double operator() (double RR) 
       { 
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
 
 	return cosm.SSR_norm(RR, m_method_Pk, m_redshift, m_output_root, m_kmax, m_file_par);
       }
@@ -501,7 +501,7 @@ namespace cosmobl {
 
       double operator() (double MM) 
       { 
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
 
 	return cosm.SSM_norm(MM, m_method_Pk, m_redshift, m_output_root, m_kmax, m_file_par);
       }
@@ -541,7 +541,7 @@ namespace cosmobl {
   
       double operator() (double kk) 
       { 
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
     
 	double Int = cosm.Pk_UnNorm(kk, m_redshift, m_method_Pk)*sin(kk*m_rr)*kk/m_rr;  
     
@@ -587,7 +587,7 @@ namespace cosmobl {
   
       double operator() (double kk) 
       { 
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
     
 	string method_PkC = "CAMB";
 	string method_PkEH = "EisensteinHu";
@@ -633,7 +633,7 @@ namespace cosmobl {
 
       double operator() (double kk) 
       { 
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
 	
 	if (m_method_Pk=="EisensteinHu") 
 	  return pow(cosm.linear_growth_rate(m_redshift, kk),2)*cosm.Pk_UnNorm(kk, m_redshift, m_method_Pk)*pow(cosmobl::TopHat_WF(kk*m_rr),2);   
@@ -678,7 +678,7 @@ namespace cosmobl {
 	double fact = (m_unit) ? 1. : m_hh;
 	double lgk = log10(kk/fact);
 
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
 
 	double lgPkK = cosmobl::interpolated(lgk, m_lgkk, m_lgPk, "Linear");
 
@@ -719,7 +719,7 @@ namespace cosmobl {
 
       double operator() (double kk) 
       { 
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
     
 	if (m_method_Pk=="EisensteinHu") 
 	  return pow(cosm.linear_growth_rate(m_redshift, kk),2)*cosm.Pk_UnNorm(kk, m_redshift, m_method_Pk)*(1.-pow(cosmobl::TopHat_WF(kk*m_rr),2));   
@@ -764,7 +764,7 @@ namespace cosmobl {
 	double fact = (m_unit) ? 1. : m_hh;
 	double lgk = log10(kk/fact);
 
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
  
 	double lgPkK = cosmobl::interpolated(lgk, m_lgkk, m_lgPk, "Linear");
 
@@ -809,7 +809,7 @@ namespace cosmobl {
   
       double operator() (double lgMmin) 
       {
-	Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit);
 
 	double Mmin = pow(10.,lgMmin);
 

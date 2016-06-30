@@ -27,7 +27,7 @@ int main () {
   double scalar_amp = 2.742e-9;
   double n_s = 1;
 
-  cosmobl::Cosmology cosmology {OmegaM, Omega_b, Omega_nu, massless_neutrinos, massive_neutrinos, OmegaL, Omega_radiation, hh, scalar_amp, n_s};
+  cosmobl::cosmology::Cosmology cosmology {OmegaM, Omega_b, Omega_nu, massless_neutrinos, massive_neutrinos, OmegaL, Omega_radiation, hh, scalar_amp, n_s};
 
 
   // ---------------------------------------------------------------------------------------

@@ -97,3 +97,70 @@ void cosmobl::statistics::Model::set_chains (const int nchains, const int chain_
     m_parameters[i]->set_chains(nchains, chain_size);
 }
 
+
+// ======================================================================================
+
+
+void cosmobl::statistics::Model1D::write_model (const vector<double> xx, const string dir_model, const string file_model)
+{  
+  string file_out = dir_model+file_model;
+  ofstream fout(file_out.c_str()); checkIO(file_out,0);
+
+  for(size_t i=0; i<xx.size(); i++)
+    fout << xx[i] << " " << this->operator()(xx[i]) << endl;
+
+  fout.clear(); fout.close();
+}
+
+
+// ======================================================================================
+
+
+void cosmobl::statistics::Model1D::write_model_parameters (const vector<double> xx, const vector<double> parameters, const string dir_model, const string file_model)
+{  
+  if(parameters.size() != m_npar)
+    cosmobl::ErrorMsg("Error in write_model_parameters of Model2D, number of parameters doesn't match with internal variable m_npar");
+
+  string file_out = dir_model+file_model;
+  ofstream fout(file_out.c_str()); checkIO(file_out,0);
+
+  for(size_t i=0; i<xx.size(); i++)
+    fout << xx[i] << " " << this->operator()(xx[i], parameters) << endl;
+
+  fout.clear(); fout.close();
+}
+
+
+// ======================================================================================
+
+
+void cosmobl::statistics::Model2D::write_model (const vector<double> xx, vector<double> yy, const string dir_model, const string file_model)
+{  
+  string file_out = dir_model+file_model;
+  ofstream fout(file_out.c_str()); checkIO(file_out,0);
+
+  for(size_t i=0; i<xx.size(); i++)
+    for(size_t j=0; j<yy.size(); j++)
+      fout << xx[i] << " " << yy[j] << " " <<  this->operator()(xx[i], yy[j]) << endl;
+
+  fout.clear(); fout.close();
+}
+
+
+// ======================================================================================
+
+
+void cosmobl::statistics::Model2D::write_model_parameters (const vector<double> xx, vector<double> yy, const vector<double> parameters, const string dir_model, const string file_model)
+{  
+  if(parameters.size() != m_npar)
+    cosmobl::ErrorMsg("Error in write_model_parameters of Model2D, number of parameters doesn't match with internal variable m_npar");
+
+  string file_out = dir_model+file_model;
+  ofstream fout(file_out.c_str()); checkIO(file_out,0);
+
+  for(size_t i=0; i<xx.size(); i++)
+    for(size_t j=0; j<yy.size(); j++)
+      fout << xx[i] << " " << yy[j] << " " <<  this->operator()(xx[i], yy[j], parameters) << endl;
+
+  fout.clear(); fout.close();
+}

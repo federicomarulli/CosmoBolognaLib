@@ -41,7 +41,7 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-void cosmobl::ModelBAO::set_xi_parameters (const vector<double> r,  const shared_ptr<Cosmology> cosmology, const double redshift, const string type, const string method, const string output_root, const bool NL, const double sigmaNL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
+void cosmobl::ModelBAO::set_xi_parameters (const vector<double> r,  const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const string type, const string method, const string output_root, const bool NL, const double sigmaNL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
 
@@ -61,30 +61,30 @@ void cosmobl::ModelBAO::set_xi_parameters (const vector<double> r,  const shared
 
 cosmobl::ModelBAO::ModelBAO (const double bias_value, const statistics::Prior bias_prior, const double alpha_value, const statistics::Prior alpha_prior, const bool AddPoly) : Model1D()
 {
-
-  if(AddPoly){
+  if (AddPoly) {
     m_npar = 5;
     m_parameters.resize(m_npar); 
     /*
-    m_parameters[0] = make_shared<statistics::Parameter>(bias_value, bias_prior, 0, "bias");
-    m_parameters[1] = make_shared<statistics::Parameter>(alpha_value, alpha_prior, 0, "alpha");
+      m_parameters[0] = make_shared<statistics::Parameter>(bias_value, bias_prior, 0, "bias");
+      m_parameters[1] = make_shared<statistics::Parameter>(alpha_value, alpha_prior, 0, "alpha");
 
-    vector<double> vv={};
-    m_parameters[2] = make_shared<statistics::Parameter>(0., -1.e3, 1.e3, 0, vv, "A0");
-    m_parameters[3] = make_shared<statistics::Parameter>(0., -1.e2, 1.e2, 0, vv, "A1");
-    m_parameters[4] = make_shared<statistics::Parameter>(0., -1.e2, 1.e2, 0, vv, "A2");
+      vector<double> vv={};
+      m_parameters[2] = make_shared<statistics::Parameter>(0., -1.e3, 1.e3, 0, vv, "A0");
+      m_parameters[3] = make_shared<statistics::Parameter>(0., -1.e2, 1.e2, 0, vv, "A1");
+      m_parameters[4] = make_shared<statistics::Parameter>(0., -1.e2, 1.e2, 0, vv, "A2");
     */
 
     m_model = &cosmobl::glob::xi_alpha_B_poly;
     m_model_vector = &cosmobl::glob::xi_alpha_B_poly_vector;
 
   }
-  else{
+  
+  else {
     m_npar = 2;
     m_parameters.resize(m_npar); 
     /*
-    m_parameters[0] = make_shared<statistics::Parameter>(bias_value, bias_prior, 0, "bias");
-    m_parameters[1] = make_shared<statistics::Parameter>(alpha_value, alpha_prior, 0, "alpha");
+      m_parameters[0] = make_shared<statistics::Parameter>(bias_value, bias_prior, 0, "bias");
+      m_parameters[1] = make_shared<statistics::Parameter>(alpha_value, alpha_prior, 0, "alpha");
     */
 
     m_model = &cosmobl::glob::xi_alpha_B;

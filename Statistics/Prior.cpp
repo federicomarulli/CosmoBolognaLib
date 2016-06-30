@@ -214,7 +214,7 @@ bool cosmobl::statistics::Prior::isIncluded (const double value) const
 // =====================================================================================
 
 
-double cosmobl::statistics::Prior::sample ()
+double cosmobl::statistics::Prior::sample () const
 {
   return m_prior_random->operator()();
 }

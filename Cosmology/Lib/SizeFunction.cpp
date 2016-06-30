@@ -39,7 +39,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::Cosmology::VolS (const double R) const
+double cosmobl::cosmology::Cosmology::VolS (const double R) const
 {
   return 4./3.*par::pi*pow(R,3);
 }
@@ -48,7 +48,7 @@ double cosmobl::Cosmology::VolS (const double R) const
 // =====================================================================================
 
 
-double cosmobl::Cosmology::deltav (const double rho_vm) const
+double cosmobl::cosmology::Cosmology::deltav (const double rho_vm) const
 {
   return 1.594*(1. - pow((rho_vm),(-1./1.594)));
 }
@@ -57,7 +57,7 @@ double cosmobl::Cosmology::deltav (const double rho_vm) const
 // =====================================================================================
 
 
-double cosmobl::Cosmology::r_rL (const double rho_vm) const
+double cosmobl::cosmology::Cosmology::r_rL (const double rho_vm) const
 {
   return pow(rho_vm, -1./3.);
 }
@@ -66,7 +66,7 @@ double cosmobl::Cosmology::r_rL (const double rho_vm) const
 // =====================================================================================
 
 
-double cosmobl::Cosmology::f_nu (const double SS, const double del_v, const double del_c) const
+double cosmobl::cosmology::Cosmology::f_nu (const double SS, const double del_v, const double del_c) const
 {	
   double radnu = fabs(del_v)/SS;
   double nu = pow(radnu, 2.);
@@ -88,7 +88,7 @@ double cosmobl::Cosmology::f_nu (const double SS, const double del_v, const doub
 // =====================================================================================
 
 
-double cosmobl::Cosmology::size_function (const double R, const double redshift, const double rho_vm, const double del_v, const double del_c, const string method_Pk, const string output_root, const string interpType, const int Num, const double stepsize, const double k_max, const string file_par) const
+double cosmobl::cosmology::Cosmology::size_function (const double R, const double redshift, const double rho_vm, const double del_v, const double del_c, const string method_Pk, const string output_root, const string interpType, const int Num, const double stepsize, const double k_max, const string file_par) const
 {
   double Z0 = 0.;
   double zero = 0.;

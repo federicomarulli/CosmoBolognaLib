@@ -114,7 +114,7 @@ vector<double> cosmobl::glob::xi_bias_cosmology_vector (vector<double> r, shared
   shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
   double bias = model_parameters[0];
   for (size_t i =1; i<model_parameters.size(); i++)
-    pp->cosmology->set_parameter(pp->Cpar[i-1],model_parameters[i]);
+    pp->cosmology->set_parameter(pp->Cpar[i-1], model_parameters[i]);
 
   vector<double> xi(r.size(),0);
   for (size_t i=0; i<xi.size(); i++)
@@ -141,7 +141,7 @@ double cosmobl::glob::xi_bias (double r, shared_ptr<void> parameters, vector<dou
 vector<double> cosmobl::glob::xi_bias_vector (vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters)
 {
   shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-  double bias2 = (model_parameters[0],2);
+  double bias2 = (model_parameters[0], 2);
 
   vector<double> xi = pp->func_xi->eval_func(r);
 
@@ -263,7 +263,7 @@ double cosmobl::glob::xi_alpha_B_poly (double r, shared_ptr<void> parameters, ve
   shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
 
   double new_r = model_parameters[1]*r;
-  double poly = model_parameters[2]/(r*r)+model_parameters[3]/r+model_parameters[4];
+  double poly = model_parameters[4]/(r*r)+model_parameters[3]/r+model_parameters[2];
   
   return model_parameters[0]*pp->func_xi->operator()(new_r)+poly; 
 }
@@ -279,7 +279,7 @@ vector<double> cosmobl::glob::xi_alpha_B_poly_vector (vector<double> r, shared_p
   vector<double> xi(r.size(),0);
 
   for (size_t i=0; i<xi.size(); i++){
-    double poly = model_parameters[2]/(r[i]*r[i])+model_parameters[3]/r[i]+model_parameters[4];
+    double poly = model_parameters[3]/(r[i]*r[i])+model_parameters[3]/r[i]+model_parameters[2];
     xi[i] =model_parameters[0]*pp->func_xi->operator()(model_parameters[1]*r[i])+poly; 
   }
 

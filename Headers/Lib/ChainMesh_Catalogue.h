@@ -40,7 +40,7 @@
 
 namespace cosmobl {
 
-  namespace catalogue {
+  namespace chainmesh {
     
     /**
      *  @class ChainMesh_Catalogue ChainMesh_Catalogue.h
@@ -57,20 +57,20 @@ namespace cosmobl {
     private:
     
       /// pointer to catalogue used for the chain-mesh
-      shared_ptr<Catalogue> m_catalogue;
+      shared_ptr<catalogue::Catalogue> m_catalogue;
 
     public:
       /**
        *  @brief default constructor
        *  @return object of class ChainMesh_Catalogue
        */
-      ChainMesh_Catalogue () {}
+      ChainMesh_Catalogue () = default;
 
       /**
        *  @brief default destructor
        *  @return none
        */
-      ~ChainMesh_Catalogue () {}
+      ~ChainMesh_Catalogue () = default;
 
       /**
        *  @brief function that set parameters for the chain-mesh 
@@ -79,7 +79,7 @@ namespace cosmobl {
        *  @param rmax the maximum separation
        *  @return none
        */
-      void set_par (const double, shared_ptr<Catalogue>, const double);
+      void set_par (const double cell_size, shared_ptr<catalogue::Catalogue> cat, const double rmax);
 
       /**
        *  @brief constructor 
@@ -88,14 +88,14 @@ namespace cosmobl {
        *  @param rmax the maximum separation
        *  @return object of class ChainMesh_Catalogue
        */
-      ChainMesh_Catalogue (const double, shared_ptr<Catalogue>, const double);
+      ChainMesh_Catalogue (const double cell_size, shared_ptr<cosmobl::catalogue::Catalogue> cat, const double rmax);
 
       /**
        *  @brief order the catalogue according to the input vector
-       *	@param order vector used to order the catalogue
-       *	@return none
+       *  @param order vector used to order the catalogue
+       *  @return none
        */
-      void get_order (vector<int> &) const;
+      void get_order (vector<int> &order) const;
 
       /**
        *  @brief get list of objects close to the input
@@ -104,13 +104,13 @@ namespace cosmobl {
        *  only objects of index > ii
        *  @return vector of close objects
        */
-      vector<shared_ptr<Object> > object_list (shared_ptr<Object>, const int ii=-1);
+      vector<shared_ptr<catalogue::Object> > object_list (shared_ptr<catalogue::Object> object, const int ii=-1);
 
       /**
        *  @brief get the internal variable m_catalogue
-       *	@return the internal variable m_catalogue
+       *  @return the internal variable m_catalogue
        */
-      shared_ptr<Catalogue> catalogue () const { return m_catalogue; }
+      shared_ptr<catalogue::Catalogue> catalogue () const { return m_catalogue; }
       
     };
   }

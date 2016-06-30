@@ -39,33 +39,41 @@
 namespace cosmobl {
 
   /**
-   * @enum DataType
-   * @brief the data type
+   *  @brief The namespace of the functions and classes used to handle
+   *  <B> data </B> of any kind
+   *  
+   *  The \e data namespace contains all the main functions and
+   *  classes to handle data of any kind
    */
-  enum DataType { 
+  namespace data {
+  
+    /**
+     * @enum DataType @brief the data type
+     */
+    enum DataType { 
 
-    /// 1D dataset
-    _1D_data_,
+      /// 1D dataset
+      _1D_data_,
 
-    /// 2D dataset
-    _2D_data_,
+      /// 2D dataset
+      _2D_data_,
      
-    /// collection of 1D datasets
-    _1D_collection_data_
+      /// collection of 1D datasets
+      _1D_collection_data_
 
-  };
+    };
 
   
-  /**
-   *  @class Data Data.h
-   *  "Headers/Lib/Data.h"
-   *
-   *  @brief The class Data
-   *
-   *  This is the base class used to manage 1D-2D data
-   */
-  class Data
-  {
+    /**
+     *  @class Data Data.h
+     *  "Headers/Lib/Data.h"
+     *
+     *  @brief The class Data
+     *
+     *  This is the base class used to manage 1D-2D data
+     */
+    class Data
+    {
     protected:
 
       ///Type of data
@@ -299,8 +307,6 @@ namespace cosmobl {
        */
       virtual double error_fxy (const int i, const int j) const
       { cosmobl::ErrorMsg("Error in error_fxy of Data.h!"); return 0.; }
-
-
 
       /**
        *  @brief the x vector
@@ -683,8 +689,9 @@ namespace cosmobl {
       { cosmobl::ErrorMsg("Error in write of Data.h!"); }
 
       ///@}
-  };
+    };
 
+  }
 }
 
 #endif

@@ -108,7 +108,7 @@ namespace cosmobl {
        *  @param mass mass
        *  @return object of class Halo
        */
-      Halo (const double ra, const double dec, const double redshift, const Cosmology &cosm, const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+      Halo (const double ra, const double dec, const double redshift, const cosmology::Cosmology &cosm, const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
 	: Object(ra, dec, redshift, cosm, weight), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
 
       /**

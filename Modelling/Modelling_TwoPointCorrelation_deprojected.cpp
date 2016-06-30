@@ -41,38 +41,99 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::Modelling_TwoPointCorrelation_deprojected(const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop, const double redshift, const Cosmology cosmology)
+void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::set_fiducial_twop ()
 {
+  cout << "Setting up the fiducial two point correlation function model" << endl;
+  m_twop_parameters.fiducial_twop.erase(m_twop_parameters.fiducial_twop.begin(), m_twop_parameters.fiducial_twop.end());
 
+  if(m_twop_parameters.sigmaNL ==0){
+    for(size_t i=0; i<m_twop_parameters.model_scales.size(); i++){
+      double xi = m_twop_parameters.cosmology->xi_DM(m_twop_parameters.model_scales[i], m_twop_parameters.method, m_twop_parameters.redshift, m_twop_parameters.output_root, m_twop_parameters.NL, m_twop_parameters.norm, m_twop_parameters.k_min, m_twop_parameters.k_max, m_twop_parameters.aa, m_twop_parameters.GSL, m_twop_parameters.prec, m_twop_parameters.file_par); 
+      m_twop_parameters.fiducial_twop.push_back(xi);
+    }
+  }
+  else {
+    vector<double> kk = logarithmic_bin_vector(500, m_twop_parameters.k_min+1.e-4, m_twop_parameters.k_max), Pk;
+
+    for(size_t i=0; i<kk.size(); i++)
+      Pk.push_back(m_twop_parameters.cosmology->Pk_DeWiggle (kk[i], m_twop_parameters.redshift, m_twop_parameters.sigmaNL, m_twop_parameters.output_root, m_twop_parameters.norm, m_twop_parameters.k_min, m_twop_parameters.k_max, m_twop_parameters.aa, m_twop_parameters.prec));
+
+    m_twop_parameters.fiducial_twop = Xi0(m_twop_parameters.model_scales, kk, Pk);
+  }
+
+  m_twop_parameters.func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(m_twop_parameters.model_scales, m_twop_parameters.fiducial_twop, "Spline"));
+  cout << "Done!" << endl;
+}
+
+
+// ============================================================================================
+
+
+cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::Modelling_TwoPointCorrelation_deprojected(const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop)
+{
   m_data = twop->dataset();
-  m_cosmology = make_shared<Cosmology>(cosmology);
-  m_redshift = redshift;
-  m_twoPType = twopt::TwoPType::_1D_deprojected_;
-
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::fit_bias (const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin)
+void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::set_model_bias (const statistics::Prior bias_prior, const statistics::ParameterType pT_bias)
 {
+  set_fiducial_twop();
 
-  m_data->set_limits(xlimits[0],xlimits[1]);
+  statistics::Parameter bias(bias_prior.sample(), bias_prior, pT_bias, "bias");
 
-  ModelBias model(bias_value,bias_prior);
-  model.set_xi_parameters(m_data->xx(),m_cosmology,m_redshift);
-  m_model = make_shared<ModelBias>(model);
+  vector<statistics::Parameter> model_parameters;
+  model_parameters.push_back(bias);
 
-  statistics::Likelihood lik(m_data, m_model, likelihoodType);
-  lik.sample_stretch_move(nChains, chain_size,1.); 
-  string output_file=dir_output+"deprojected_bias_xmin="+conv(m_data->x_down(),par::fDP1)+"_xmax="+conv(m_data->x_up(),par::fDP1);
-  lik.write_chain(dir_output, output_file, start, stop, thin);
+  auto fixed_parameters = make_shared<glob::STR_twop_model>(m_twop_parameters);
 
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(model_parameters, fixed_parameters, &glob::xi_bias)); 
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::fit_bias_cosmology(const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const vector<CosmoPar> CosmoPars, const vector<statistics::Prior> prior_CosmoPars, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin){}
+void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::set_model_bias_AP_isotropic (const statistics::Prior bias_prior, const statistics::Prior alpha_prior, const statistics::ParameterType pT_bias, const statistics::ParameterType pT_alpha)
+{
+  set_fiducial_twop();
+
+  statistics::Parameter bias(bias_prior.sample(), bias_prior, pT_bias, "bias");
+  statistics::Parameter alpha(alpha_prior.sample(), alpha_prior, pT_alpha, "alpha");
+
+  vector<statistics::Parameter> model_parameters;
+  model_parameters.push_back(bias);
+  model_parameters.push_back(alpha);
+
+  auto fixed_parameters = make_shared<glob::STR_twop_model>(m_twop_parameters);
+
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(model_parameters, fixed_parameters, &glob::xi_alpha_B)); 
+}
+
+// ============================================================================================
+
+
+void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::set_model_AP_isotropic (const statistics::Prior alpha_prior, const statistics::Prior B_prior, const statistics::Prior A0_prior, const statistics::Prior A1_prior, const statistics::Prior A2_prior, const statistics::ParameterType pT_alpha, const statistics::ParameterType pT_B, const statistics::ParameterType pT_A0, const statistics::ParameterType pT_A1, const statistics::ParameterType pT_A2)
+{
+  set_fiducial_twop();
+
+  vector<statistics::Parameter> model_parameters;
+
+  statistics::Parameter alpha(alpha_prior.sample(), alpha_prior, pT_alpha, "alpha");
+  statistics::Parameter B(B_prior.sample(), B_prior, pT_B, "B");
+  statistics::Parameter A0(A0_prior.sample(), A0_prior, pT_A0, "A0");
+  statistics::Parameter A1(A1_prior.sample(), A1_prior, pT_A1, "A1");
+  statistics::Parameter A2(A2_prior.sample(), A2_prior, pT_A1, "A2");
+
+  model_parameters.push_back(B);
+  model_parameters.push_back(alpha);
+  model_parameters.push_back(A0);
+  model_parameters.push_back(A1);
+  model_parameters.push_back(A2);
+
+  auto fixed_parameters = make_shared<glob::STR_twop_model>(m_twop_parameters);
+
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(model_parameters, fixed_parameters, &glob::xi_alpha_B_poly)); 
+}

@@ -31,44 +31,50 @@
  */
 
 #include "GSLfunction.h"
+
 using namespace cosmobl;
 
 
 // ============================================================================================
 
-unique_ptr<GSLfunction> cosmobl::GSLfunction::make_GSLfunction(func_1par_1 function, shared_ptr<void> function_parameters){
-    return unique_ptr<GSLfunction_1D_1>(new GSLfunction_1D_1(function, function_parameters));
+
+unique_ptr<glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (func_1par_1 function, shared_ptr<void> function_parameters)
+{
+  return unique_ptr<glob::GSLfunction_1D_1>(new GSLfunction_1D_1(function, function_parameters));
 }
 
 
 // ============================================================================================
 
 
-unique_ptr<cosmobl::GSLfunction> cosmobl::GSLfunction::make_GSLfunction(int npar, func_npar_1 function, shared_ptr<void> function_parameters){
-    return unique_ptr<GSLfunction_nD_1>(new GSLfunction_nD_1(npar, function, function_parameters));
+unique_ptr<cosmobl::glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (int npar, func_npar_1 function, shared_ptr<void> function_parameters)
+{
+  return unique_ptr<glob::GSLfunction_nD_1>(new GSLfunction_nD_1(npar, function, function_parameters));
 }
 
 
 // ============================================================================================
 
 
-unique_ptr<GSLfunction> cosmobl::GSLfunction::make_GSLfunction(func_1par_2 function, vector<double> params, shared_ptr<void> function_parameters){
-    return unique_ptr<GSLfunction_1D_2>(new GSLfunction_1D_2(function, params, function_parameters));
+unique_ptr<glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (func_1par_2 function, vector<double> params, shared_ptr<void> function_parameters)
+{
+  return unique_ptr<glob::GSLfunction_1D_2>(new GSLfunction_1D_2(function, params, function_parameters));
 }
 
 
 // ============================================================================================
 
 
-unique_ptr<cosmobl::GSLfunction> cosmobl::GSLfunction::make_GSLfunction(int npar, func_npar_2 function, vector<double> params, shared_ptr<void> function_parameters){
-    return unique_ptr<GSLfunction_nD_2>(new GSLfunction_nD_2(npar, function, params, function_parameters));
+unique_ptr<cosmobl::glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (int npar, func_npar_2 function, vector<double> params, shared_ptr<void> function_parameters)
+{
+  return unique_ptr<glob::GSLfunction_nD_2>(new GSLfunction_nD_2(npar, function, params, function_parameters));
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::GSLfunction_1D_1::minimize(double &result, int max_iter, double min, double max)
+void cosmobl::glob::GSLfunction_1D_1::minimize(double &result, int max_iter, double min, double max)
 {
 
   int status;
@@ -78,14 +84,14 @@ void cosmobl::GSLfunction_1D_1::minimize(double &result, int max_iter, double mi
   double m = result;
 
   typedef function<double(double)> fun_type;
-  fun_type func = [&](double x){return m_function(x,m_function_parameters);};
+  fun_type func = [&](double x) { return m_function(x, m_function_parameters); };
 
   gsl_function F;
   F.function = [](double x, void* p)
-  {
-    fun_type *f = (fun_type *)p; 
-    return f->operator()(x);
-  };
+    {
+      fun_type *f = (fun_type *)p; 
+      return f->operator()(x);
+    };
 
   F.params = &func;
 
@@ -94,22 +100,22 @@ void cosmobl::GSLfunction_1D_1::minimize(double &result, int max_iter, double mi
   gsl_min_fminimizer_set (s, &F, m, min, max);
   
   do
-  {
-    iter++;
-    status = gsl_min_fminimizer_iterate (s);
-
-    m = gsl_min_fminimizer_x_minimum (s);
-    min = gsl_min_fminimizer_x_lower (s);
-    max = gsl_min_fminimizer_x_upper (s);
-
-    status 
-      = gsl_min_test_interval (min, max, 0.001, 0.0);
-
-    if (status == GSL_SUCCESS)
     {
-      printf ("-----> Converged to minimum \n");
+      iter++;
+      status = gsl_min_fminimizer_iterate (s);
+
+      m = gsl_min_fminimizer_x_minimum (s);
+      min = gsl_min_fminimizer_x_lower (s);
+      max = gsl_min_fminimizer_x_upper (s);
+
+      status 
+	= gsl_min_test_interval (min, max, 0.001, 0.0);
+
+      if (status == GSL_SUCCESS)
+	{
+	  printf ("-----> Converged to minimum \n");
+	}
     }
-  }
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_min_fminimizer_free (s);
@@ -122,7 +128,7 @@ void cosmobl::GSLfunction_1D_1::minimize(double &result, int max_iter, double mi
 // ============================================================================================
 
 
-void cosmobl::GSLfunction_1D_2::minimize(double &result, int max_iter, double min, double max)
+void cosmobl::glob::GSLfunction_1D_2::minimize(double &result, int max_iter, double min, double max)
 {
 
   int status;
@@ -132,14 +138,14 @@ void cosmobl::GSLfunction_1D_2::minimize(double &result, int max_iter, double mi
   double m = result;
 
   typedef function<double(double)> fun_type;
-  fun_type func = [&](double x){return m_function(x,m_function_parameters,m_parameters);};
+  fun_type func = [&](double x) { return m_function(x, m_function_parameters, m_parameters); };
 
   gsl_function F;
   F.function = [](double x, void* p)
-  {
-    fun_type *f = (fun_type *)p; 
-    return f->operator()(x);
-  };
+    {
+      fun_type *f = (fun_type *)p; 
+      return f->operator()(x);
+    };
 
   F.params = &func;
 
@@ -148,22 +154,22 @@ void cosmobl::GSLfunction_1D_2::minimize(double &result, int max_iter, double mi
   gsl_min_fminimizer_set (s, &F, m, min, max);
   
   do
-  {
-    iter++;
-    status = gsl_min_fminimizer_iterate (s);
-
-    m = gsl_min_fminimizer_x_minimum (s);
-    min = gsl_min_fminimizer_x_lower (s);
-    max = gsl_min_fminimizer_x_upper (s);
-
-    status 
-      = gsl_min_test_interval (min, max, 0.001, 0.0);
-
-    if (status == GSL_SUCCESS)
     {
-      printf ("-----> Converged to minimum \n");
+      iter++;
+      status = gsl_min_fminimizer_iterate (s);
+
+      m = gsl_min_fminimizer_x_minimum (s);
+      min = gsl_min_fminimizer_x_lower (s);
+      max = gsl_min_fminimizer_x_upper (s);
+
+      status 
+	= gsl_min_test_interval (min, max, 0.001, 0.0);
+
+      if (status == GSL_SUCCESS)
+	{
+	  printf ("-----> Converged to minimum \n");
+	}
     }
-  }
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_min_fminimizer_free (s);
@@ -176,7 +182,7 @@ void cosmobl::GSLfunction_1D_2::minimize(double &result, int max_iter, double mi
 // ============================================================================================
 
 
-void cosmobl::GSLfunction_nD_1::minimize(vector<double> &result, unsigned int max_iter, double tol)
+void cosmobl::glob::GSLfunction_nD_1::minimize(vector<double> &result, unsigned int max_iter, double tol)
 {
 
   const gsl_multimin_fminimizer_type *T = gsl_multimin_fminimizer_nmsimplex2rand;
@@ -201,42 +207,42 @@ void cosmobl::GSLfunction_nD_1::minimize(vector<double> &result, unsigned int ma
   
   // Create the function to minimize 
   typedef function<double(vector<double> )> fun_type;
-  fun_type func = [&](vector<double> x){return m_function(x,m_function_parameters);};
+  fun_type func = [&](vector<double> x) { return m_function(x, m_function_parameters); };
 
   // Initialize method and iterate 
 
   minex_func.n = m_npar;
   minex_func.f = [](const gsl_vector *gsl_x, void *p)
-  {
-    fun_type *f = (fun_type *)p;
-    vector<double> xx;
-    for(unsigned int i=0;i<gsl_x->size;i++)
-      xx.push_back(gsl_vector_get(gsl_x,i));
-    return f->operator()(xx);
-  };
+    {
+      fun_type *f = (fun_type *)p;
+      vector<double> xx;
+      for(unsigned int i=0;i<gsl_x->size;i++)
+	xx.push_back(gsl_vector_get(gsl_x,i));
+      return f->operator()(xx);
+    };
   minex_func.params = &func;
 
   s = gsl_multimin_fminimizer_alloc (T, m_npar);
   gsl_multimin_fminimizer_set (s, &minex_func, x, ss);
 
   do
-  {
-    iter++;
-    status = gsl_multimin_fminimizer_iterate(s);
-
-    if (status) 
-      break;
-
-    size = gsl_multimin_fminimizer_size (s);
-    
-    status = gsl_multimin_test_size (size, tol);
-
-    if (status == GSL_SUCCESS)
     {
-      printf ("-----> Converged to minimum \n");
-    }
+      iter++;
+      status = gsl_multimin_fminimizer_iterate(s);
 
-  }
+      if (status) 
+	break;
+
+      size = gsl_multimin_fminimizer_size (s);
+    
+      status = gsl_multimin_test_size (size, tol);
+
+      if (status == GSL_SUCCESS)
+	{
+	  printf ("-----> Converged to minimum \n");
+	}
+
+    }
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_vector_free(ss);
@@ -244,7 +250,7 @@ void cosmobl::GSLfunction_nD_1::minimize(vector<double> &result, unsigned int ma
 
 }
 
-void cosmobl::GSLfunction_nD_1::minimize(vector<double> &result, vector<double> step_size, unsigned int max_iter, double tol)
+void cosmobl::glob::GSLfunction_nD_1::minimize(vector<double> &result, vector<double> step_size, unsigned int max_iter, double tol)
 {
 
   const gsl_multimin_fminimizer_type *T = gsl_multimin_fminimizer_nmsimplex2;
@@ -259,7 +265,7 @@ void cosmobl::GSLfunction_nD_1::minimize(vector<double> &result, vector<double> 
   // Starting point 
   x = gsl_vector_alloc (m_npar);
   ss = gsl_vector_alloc (m_npar);
-  for(int i=0;i<m_npar;i++){
+  for(int i=0;i<m_npar;i++) {
     gsl_vector_set(x,i,result[i]);
     gsl_vector_set(ss,i,step_size[i]);
   }
@@ -267,42 +273,42 @@ void cosmobl::GSLfunction_nD_1::minimize(vector<double> &result, vector<double> 
 
   // Create the function to minimize 
   typedef function<double(vector<double> )> fun_type;
-  fun_type func = [&](vector<double> x){return m_function(x,m_function_parameters);};
+  fun_type func = [&](vector<double> x) { return m_function(x, m_function_parameters); };
 
   // Initialize method and iterate 
 
   minex_func.n = m_npar;
   minex_func.f = [](const gsl_vector *gsl_x, void *p)
-  {
-    fun_type *f = (fun_type *)p;
-    vector<double> xx;
-    for(unsigned int i=0;i<gsl_x->size;i++)
-      xx.push_back(gsl_vector_get(gsl_x,i));
-    return f->operator()(xx);
-  };
+    {
+      fun_type *f = (fun_type *)p;
+      vector<double> xx;
+      for(unsigned int i=0;i<gsl_x->size;i++)
+	xx.push_back(gsl_vector_get(gsl_x,i));
+      return f->operator()(xx);
+    };
   minex_func.params = &func;
 
   s = gsl_multimin_fminimizer_alloc (T, m_npar);
   gsl_multimin_fminimizer_set (s, &minex_func, x, ss);
 
   do
-  {
-    iter++;
-    status = gsl_multimin_fminimizer_iterate(s);
-
-    if (status) 
-      break;
-
-    size = gsl_multimin_fminimizer_size (s);
-    
-    status = gsl_multimin_test_size (size, tol);
-
-    if (status == GSL_SUCCESS)
     {
-      printf ("-----> Converged to minimum \n");
-    }
+      iter++;
+      status = gsl_multimin_fminimizer_iterate(s);
 
-  }
+      if (status) 
+	break;
+
+      size = gsl_multimin_fminimizer_size (s);
+    
+      status = gsl_multimin_test_size (size, tol);
+
+      if (status == GSL_SUCCESS)
+	{
+	  printf ("-----> Converged to minimum \n");
+	}
+
+    }
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_vector_free(ss);
@@ -314,7 +320,7 @@ void cosmobl::GSLfunction_nD_1::minimize(vector<double> &result, vector<double> 
 // ============================================================================================
 
 
-void cosmobl::GSLfunction_nD_2::minimize(vector<double> &result, unsigned int max_iter, double tol)
+void cosmobl::glob::GSLfunction_nD_2::minimize (vector<double> &result, unsigned int max_iter, double tol)
 {
 
   const gsl_multimin_fminimizer_type *T = gsl_multimin_fminimizer_nmsimplex2rand;
@@ -339,42 +345,42 @@ void cosmobl::GSLfunction_nD_2::minimize(vector<double> &result, unsigned int ma
   
   // Create the function to minimize 
   typedef function<double(vector<double> )> fun_type;
-  fun_type func = [&](vector<double> x){return m_function(x,m_function_parameters,m_parameters);};
+  fun_type func = [&](vector<double> x) { return m_function(x, m_function_parameters, m_parameters); };
 
   // Initialize method and iterate 
 
   minex_func.n = m_npar;
   minex_func.f = [](const gsl_vector *gsl_x, void *p)
-  {
-    fun_type *f = (fun_type *)p;
-    vector<double> xx;
-    for(unsigned int i=0;i<gsl_x->size;i++)
-      xx.push_back(gsl_vector_get(gsl_x,i));
-    return f->operator()(xx);
-  };
+    {
+      fun_type *f = (fun_type *)p;
+      vector<double> xx;
+      for(unsigned int i=0;i<gsl_x->size;i++)
+	xx.push_back(gsl_vector_get(gsl_x,i));
+      return f->operator()(xx);
+    };
   minex_func.params = &func;
 
   s = gsl_multimin_fminimizer_alloc (T, m_npar);
   gsl_multimin_fminimizer_set (s, &minex_func, x, ss);
 
   do
-  {
-    iter++;
-    status = gsl_multimin_fminimizer_iterate(s);
-
-    if (status) 
-      break;
-
-    size = gsl_multimin_fminimizer_size (s);
-    
-    status = gsl_multimin_test_size (size, tol);
-
-    if (status == GSL_SUCCESS)
     {
-      printf ("-----> Converged to minimum \n");
-    }
+      iter++;
+      status = gsl_multimin_fminimizer_iterate(s);
 
-  }
+      if (status) 
+	break;
+
+      size = gsl_multimin_fminimizer_size (s);
+    
+      status = gsl_multimin_test_size (size, tol);
+
+      if (status == GSL_SUCCESS)
+	{
+	  printf ("-----> Converged to minimum \n");
+	}
+
+    }
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_vector_free(ss);
@@ -382,7 +388,11 @@ void cosmobl::GSLfunction_nD_2::minimize(vector<double> &result, unsigned int ma
 
 }
 
-void cosmobl::GSLfunction_nD_2::minimize(vector<double> &result, vector<double> step_size, unsigned int max_iter, double tol)
+
+// ============================================================================================
+
+
+void cosmobl::glob::GSLfunction_nD_2::minimize (vector<double> &result, vector<double> step_size, unsigned int max_iter, double tol)
 {
 
   const gsl_multimin_fminimizer_type *T = gsl_multimin_fminimizer_nmsimplex2;
@@ -397,7 +407,7 @@ void cosmobl::GSLfunction_nD_2::minimize(vector<double> &result, vector<double> 
   // Starting point 
   x = gsl_vector_alloc (m_npar);
   ss = gsl_vector_alloc (m_npar);
-  for(int i=0;i<m_npar;i++){
+  for(int i=0;i<m_npar;i++) {
     gsl_vector_set(x,i,result[i]);
     gsl_vector_set(ss,i,step_size[i]);
   }
@@ -405,42 +415,42 @@ void cosmobl::GSLfunction_nD_2::minimize(vector<double> &result, vector<double> 
 
   // Create the function to minimize 
   typedef function<double(vector<double> )> fun_type;
-  fun_type func = [&](vector<double> x){return m_function(x,m_function_parameters,m_parameters);};
+  fun_type func = [&](vector<double> x) { return m_function(x, m_function_parameters, m_parameters); };
 
   // Initialize method and iterate 
 
   minex_func.n = m_npar;
   minex_func.f = [](const gsl_vector *gsl_x, void *p)
-  {
-    fun_type *f = (fun_type *)p;
-    vector<double> xx;
-    for(unsigned int i=0;i<gsl_x->size;i++)
-      xx.push_back(gsl_vector_get(gsl_x,i));
-    return f->operator()(xx);
-  };
+    {
+      fun_type *f = (fun_type *)p;
+      vector<double> xx;
+      for(unsigned int i=0;i<gsl_x->size;i++)
+	xx.push_back(gsl_vector_get(gsl_x,i));
+      return f->operator()(xx);
+    };
   minex_func.params = &func;
 
   s = gsl_multimin_fminimizer_alloc (T, m_npar);
   gsl_multimin_fminimizer_set (s, &minex_func, x, ss);
 
   do
-  {
-    iter++;
-    status = gsl_multimin_fminimizer_iterate(s);
-
-    if (status) 
-      break;
-
-    size = gsl_multimin_fminimizer_size (s);
-    
-    status = gsl_multimin_test_size (size, tol);
-
-    if (status == GSL_SUCCESS)
     {
-      printf ("-----> Converged to minimum \n");
-    }
+      iter++;
+      status = gsl_multimin_fminimizer_iterate(s);
 
-  }
+      if (status) 
+	break;
+
+      size = gsl_multimin_fminimizer_size (s);
+    
+      status = gsl_multimin_test_size (size, tol);
+
+      if (status == GSL_SUCCESS)
+	{
+	  printf ("-----> Converged to minimum \n");
+	}
+
+    }
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_vector_free(ss);

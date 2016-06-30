@@ -52,7 +52,8 @@
 namespace cosmobl {
 
   /**
-   *  @brief The namespace of the catalogue 
+   *  @brief The namespace of the functions and classes used to handle
+   *  <B> catalogues of astronomical sources </B>
    *  
    *  The \e catalogue namespace contains all the functions and
    *  classes used to handle catalogues of astronomical sources
@@ -214,7 +215,7 @@ namespace cosmobl {
        *
        *  @return object of type catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const vector<double> weight={});
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const vector<double> weight={});
 
       /**
        *  @brief constructor, reading a file with coordinates
@@ -250,12 +251,12 @@ namespace cosmobl {
        *  @param nSub the fracton of objects that will be randomly
        *  selected (nSub=1 &rArr; all objects are selected)
        *
-       *  @param fact the factor used to convert R.A. and Dec
-       *  coordinates, i.e. &rArr; R.A.=R.A.*fact, Dec=Dec*fact
+       *  @param fact a factor used to multiply the coordinates,
+       *  i.e. coordinate_i=coordinate_i*fact
        *
        *  @return an object of class Catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const Cosmology &cosm={}, const int col1=0, const int col2=1, const int col3=2, const int colWeight=-1, const CoordUnits inputUnits=_radians_, const double nSub=1.1, const double fact=1.);
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm={}, const int col1=0, const int col2=1, const int col3=2, const int colWeight=-1, const CoordUnits inputUnits=_radians_, const double nSub=1.1, const double fact=1.);
 
       /**
        *  @brief constructor, using vectors of generic objects
@@ -341,7 +342,7 @@ namespace cosmobl {
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
        */
-      Catalogue (const RandomType type, const Cosmology &real_cosm, const Cosmology &test_cosm, const string dir_in, const string dir_out, const double Zguess_min, const double Zguess_max);
+      Catalogue (const RandomType type, const cosmology::Cosmology &real_cosm, const cosmology::Cosmology &test_cosm, const string dir_in, const string dir_out, const double Zguess_min, const double Zguess_max);
 
       /**
        *  @brief constructor that creates a random catalogue with the
@@ -363,7 +364,7 @@ namespace cosmobl {
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
        */
-      Catalogue (const RandomType type, const Catalogue catalogue, const Cosmology &cosm, const int N_R, const int nbin, const bool conv=0, const double sigma=0., const int seed = 3213);
+      Catalogue (const RandomType type, const Catalogue catalogue, const cosmology::Cosmology &cosm, const int N_R, const int nbin, const bool conv=0, const double sigma=0., const int seed = 3213);
       
       /**
        *  @brief constructor that creates a random catalogue in a cone
@@ -401,7 +402,7 @@ namespace cosmobl {
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
        */
-      Catalogue (const RandomType type, const Catalogue catalogue, const int nRandom, const Cosmology &cosm, const double Angle, const int step_redshift, const vector<double> redshift, vector<double> &dc, vector<double> &convol, const int idum=13);
+      Catalogue (const RandomType type, const Catalogue catalogue, const int nRandom, const cosmology::Cosmology &cosm, const double Angle, const int step_redshift, const vector<double> redshift, vector<double> &dc, vector<double> &convol, const int idum=13);
       
       /**
        *  @brief constructor that creates a random catalogue for a
@@ -441,11 +442,11 @@ namespace cosmobl {
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
        */
-      Catalogue (const RandomType type, const Catalogue catalogue, const int nRandom, const Cosmology &cosm, const string dir, const int step_redshift, const vector<double> redshift, vector<double> &dc, vector<double> &convol, const int idum=13);
+      Catalogue (const RandomType type, const Catalogue catalogue, const int nRandom, const cosmology::Cosmology &cosm, const string dir, const int step_redshift, const vector<double> redshift, vector<double> &dc, vector<double> &convol, const int idum=13);
 
       /// @cond extrandom
       
-      Catalogue (const RandomType type, const int nRandom, const Cosmology &cosm, const string dir_out, const int step_redshift, const vector<double> dc, const vector<double> convol, const vector<double> lim, const vector<double> redshift, const vector<double> weight, const double redshift_min, const double redshift_max, const bool venice, const string where, string file_random, const string mask, const string dir_venice, const int idum=13); 
+      Catalogue (const RandomType type, const int nRandom, const cosmology::Cosmology &cosm, const string dir_out, const int step_redshift, const vector<double> dc, const vector<double> convol, const vector<double> lim, const vector<double> redshift, const vector<double> weight, const double redshift_min, const double redshift_max, const bool venice, const string where, string file_random, const string mask, const string dir_venice, const int idum=13); 
       
       /// @endcond
   
@@ -823,7 +824,7 @@ namespace cosmobl {
        *  @param inputUnits the units of the input coordinates
        *  @return none
        */
-      void computeComovingCoordinates (const Cosmology &cosm, const CoordUnits inputUnits=_radians_); 
+      void computeComovingCoordinates (const cosmology::Cosmology &cosm, const CoordUnits inputUnits=_radians_); 
 
       /**
        *  @brief compute the polar coordinates (R.A., Dec,
@@ -845,7 +846,7 @@ namespace cosmobl {
        *  @param outputUnits the units of the output coordinates
        *  @return none
        */
-      void computePolarCoordinates (const Cosmology &, const double z1=0., const double z2=10., const CoordUnits outputUnits=_radians_); 
+      void computePolarCoordinates (const cosmology::Cosmology &cosm, const double z1=0., const double z2=10., const CoordUnits outputUnits=_radians_); 
 
       /**
        * @brief normalize (x, y, z) (i.e. &rarr; (x/dc, y/dc, z/dc))
@@ -1000,7 +1001,7 @@ namespace cosmobl {
        * @param useMass generate the density field using the mass information
        * @return the density field
        */
-      ScalarField3D density_field (const double cell_size, const int interpolation_type=0, const double kernel_radius=0., const bool useMass=0) const;
+      data::ScalarField3D density_field (const double cell_size, const int interpolation_type=0, const double kernel_radius=0., const bool useMass=0) const;
 
       /**
        * @brief return the density field from object position
@@ -1013,7 +1014,7 @@ namespace cosmobl {
        * @param useMass generate the density field using the mass information
        * @return the density field
        */
-      ScalarField3D density_field (const double cell_size, const Catalogue mask_catalogue, const int interpolation_type = 0, const double kernel_radius=0., const bool useMass = 0) const;
+      data::ScalarField3D density_field (const double cell_size, const Catalogue mask_catalogue, const int interpolation_type = 0, const double kernel_radius=0., const bool useMass = 0) const;
       ///@}
     
     };

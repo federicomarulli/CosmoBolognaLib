@@ -34,9 +34,36 @@
 
 
 #include "Modelling.h"
-#include "ModelBias.h"
 
 using namespace cosmobl;
 
 
 // ============================================================================================
+
+
+void modelling::Modelling::sample_likelihood(const double xmin, const double xmax, const statistics::LikelihoodType likelihood_type, const int n_chains, const int chain_size, const int seed, const string dir_output, const string chain_file, const double start, const double stop, const int thin)
+{
+  m_data->set_limits(xmin, xmax);
+
+  m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, likelihood_type));
+
+  m_likelihood->sample_stretch_move(n_chains, chain_size, seed);
+
+  m_likelihood->write_chain(dir_output, chain_file, start, stop, thin);
+
+}
+
+// ============================================================================================
+
+
+
+void modelling::Modelling::sample_likelihood(const double xmin, const double xmax, const statistics::LikelihoodType likelihood_type, const statistics::LogLikelihood_function loglikelihood_function, const bool cov, const int n_chains, const int chain_size, const int seed, const string dir_output, const string chain_file, const double start, const double stop, const int thin)
+{
+  m_data->set_limits(xmin, xmax);
+
+  m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, likelihood_type, loglikelihood_function, cov));
+
+  m_likelihood->sample_stretch_move(n_chains, chain_size, seed);
+
+  m_likelihood->write_chain(dir_output, chain_file, start, stop, thin);
+}

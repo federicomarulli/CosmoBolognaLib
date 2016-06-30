@@ -41,80 +41,65 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::Modelling_TwoPointCorrelation_monopole(const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop, const double redshift, const Cosmology cosmology)
+cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::Modelling_TwoPointCorrelation_monopole (const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop)
 {
-
   m_data = twop->dataset();
-
-  m_cosmology = make_shared<Cosmology>(cosmology);
-  m_redshift = redshift;
-  m_twoPType = twopt::TwoPType::_1D_monopole_;
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::fit_bias (const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin)
+void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::set_fiducial_twop ()
 {
-  m_data->set_limits(xlimits[0],xlimits[1]);
-
-  ModelBias model(bias_value,bias_prior);
-  model.set_xi0_parameters(m_data->xx(),m_cosmology,m_redshift);
-  m_model = make_shared<ModelBias>(model);
+  cout << "Setting up the fiducial two point correlation function model" << endl;
   
-  statistics::Likelihood lik(m_data, m_model, likelihoodType);
-  lik.sample_stretch_move(nChains, chain_size,1.); 
-  string output_file="monopole_bias_xmin="+conv(m_data->x_down(),par::fDP1)+"_xmax="+conv(m_data->x_up(),par::fDP1);
-  lik.write_chain(dir_output, output_file, start, stop, thin);
+  m_twop_parameters.fiducial_twop.erase(m_twop_parameters.fiducial_twop.begin(), m_twop_parameters.fiducial_twop.end());
 
+  if (m_twop_parameters.sigmaNL ==0) {
+    for(size_t i=0; i<m_twop_parameters.model_scales.size(); i++) {
+      double xi = m_twop_parameters.cosmology->xi_DM(m_twop_parameters.model_scales[i], m_twop_parameters.method, m_twop_parameters.redshift, m_twop_parameters.output_root, m_twop_parameters.NL, m_twop_parameters.norm, m_twop_parameters.k_min, m_twop_parameters.k_max, m_twop_parameters.aa, m_twop_parameters.GSL, m_twop_parameters.prec, m_twop_parameters.file_par); 
+      m_twop_parameters.fiducial_twop.push_back(xi);
+    }
+  }
+  
+  else {
+    vector<double> kk = logarithmic_bin_vector(500, m_twop_parameters.k_min+1.e-4, m_twop_parameters.k_max), Pk;
+
+    for(size_t i=0; i<kk.size(); i++)
+      Pk.push_back(m_twop_parameters.cosmology->Pk_DeWiggle (kk[i], m_twop_parameters.redshift, m_twop_parameters.sigmaNL, m_twop_parameters.output_root, m_twop_parameters.norm, m_twop_parameters.k_min, m_twop_parameters.k_max, m_twop_parameters.aa, m_twop_parameters.prec));
+
+    m_twop_parameters.fiducial_twop = Xi0(m_twop_parameters.model_scales, kk, Pk);
+  }
+
+  m_twop_parameters.func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(m_twop_parameters.model_scales, m_twop_parameters.fiducial_twop, "Spline"));
+  
+  cout << "Done!" << endl;
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::fit_bias_cosmology(const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const vector<CosmoPar> CosmoPars, const vector<statistics::Prior> prior_CosmoPars, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin){}
-
-// ============================================================================================
-
-
-/*
-void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::fit_BAO (const string LikelihoodType, const vector<double> xlimits, const double alpha_value, const statistics::Prior alpha_prior, const string model_type, const double sigmaNL, const int nChains, const int chain_size, const string dir_output, const double start, const double stop, const int thin)
+void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::set_model_AP_isotropic (const statistics::Prior alpha_prior, const statistics::Prior B_prior, const statistics::Prior A0_prior, const statistics::Prior A1_prior, const statistics::Prior A2_prior, const statistics::ParameterType pT_alpha, const statistics::ParameterType pT_B, const statistics::ParameterType pT_A0, const statistics::ParameterType pT_A1, const statistics::ParameterType pT_A2)
 {
-  m_data->set_limits(xlimits[0],xlimits[1]);
+  set_fiducial_twop();
 
-  vector<double> rMin = 0.5;
-  vector<double> rMax = 199.5;
-  
-  if(xlimits[0]<rMin)
-    ErrorMsg("Error in fit_BAO of Modelling_TwoPointCorrelation_monopole, increase the lower limit of the fit");
+  vector<statistics::Parameter> model_parameters;
 
-  if(xlimits[1]>rMin)
-    rMax = xlimits[1]*1.5;
+  statistics::Parameter alpha(alpha_prior.sample(), alpha_prior, pT_alpha, "alpha");
+  statistics::Parameter B(B_prior.sample(), B_prior, pT_B, "B");
+  statistics::Parameter A0(A0_prior.sample(), A0_prior, pT_A0, "A0");
+  statistics::Parameter A1(A1_prior.sample(), A1_prior, pT_A1, "A1");
+  statistics::Parameter A2(A2_prior.sample(), A2_prior, pT_A1, "A2");
 
-  double delta_r = 1;
-  int nbins = (rMax-rMin)/delta_r;
-  vector<double> rr = linear_bin_vector(nbins,rMin,rMax);
+  model_parameters.push_back(B);
+  model_parameters.push_back(alpha);
+  model_parameters.push_back(A0);
+  model_parameters.push_back(A1);
+  model_parameters.push_back(A2);
 
-  ModelBAO model(bias_value,bias_prior, alpha_value, alpha_prior)
-  model.set_xi_parameters(rr, m_cosmology, m_redshift, type, "Spline", "CAMB", 0, sigmaNL, 1.e-4, 1.e1, 1);
-  m_model = make_shared<ModelBias>(model);
-  
-  statistics::likelihood_npar func;
-  if(LikelihoodType == "model")
-    func = &statistics::likelihood_gaussian_1D_model_npar;
-  else if(LikelihoodType == "error")
-    func = &statistics::likelihood_gaussian_1D_error_npar;
-  else if(LikelihoodType == "covariance")
-    func = &statistics::likelihood_gaussian_1D_covariance_npar;
-  else
-    ErrorMsg("Error in fit_bao of ModellingTwoPointCorrelation1D_monopole, no such type of likelihood");
+  auto fixed_parameters = make_shared<glob::STR_twop_model>(m_twop_parameters);
 
-  statistics::Likelihood lik(m_data,m_model,func);
-  lik.sample(nChains, chain_size,1.); 
-  string output_file="monopole_BAO_xmin="+conv(m_data->x_down(),par::fDP1)+"_xmax="+conv(m_data->x_up(),par::fDP1);
-  lik.write_chain(dir_output, output_file, start, stop, thin);
-
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(model_parameters, fixed_parameters, &glob::xi_alpha_B_poly)); 
 }
-*/

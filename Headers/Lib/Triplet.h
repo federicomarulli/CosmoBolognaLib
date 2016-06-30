@@ -47,7 +47,8 @@
 namespace cosmobl {
   
   /**
-   *  @brief The namespace of the triplets 
+   *  @brief The namespace of the functions and classes used to handle
+   *  <B> triplets of objects </B>
    *  
    *  The \e triplets namespace contains all the functions and classes
    *  to handle triplets of objects

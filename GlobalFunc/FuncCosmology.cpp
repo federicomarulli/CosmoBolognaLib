@@ -38,7 +38,7 @@ using namespace cosmobl;
 // ============================================================================
 
 
-void cosmobl::Vmax_DC_distribution (vector<double> &dc, vector<double> &nObj, const vector<double> D_C, const vector<double> zobj_min, const vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, Cosmology &cosm, const double Area, const int nObjRan, const int idum, const bool norm, const string file_Vmax, const double delta_dc_Vmax)
+void cosmobl::Vmax_DC_distribution (vector<double> &dc, vector<double> &nObj, const vector<double> D_C, const vector<double> zobj_min, const vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, cosmology::Cosmology &cosm, const double Area, const int nObjRan, const int idum, const bool norm, const string file_Vmax, const double delta_dc_Vmax)
 {
   if (dc.size()>0 || nObj.size()>0) ErrorMsg("Error in Vmax_DC_distribution of GlobalFunc_Cosmology.cpp)!");
 
@@ -73,17 +73,17 @@ void cosmobl::Vmax_DC_distribution (vector<double> &dc, vector<double> &nObj, co
 // ============================================================================================
 
 
-double cosmobl::AP_shift_r (const double redshift, const Cosmology &cosm1, const Cosmology &cosm2)
+double cosmobl::AP_shift_r (const double redshift, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2)
 {
   return cosm2.D_V(redshift)/cosm1.D_V(redshift);
 }
 
-double cosmobl::AP_shift_rp (const double redshift, const Cosmology &cosm1, const Cosmology &cosm2)
+double cosmobl::AP_shift_rp (const double redshift, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2)
 {
   return cosm1.D_A(redshift)/cosm2.D_A(redshift);
 }
 
-double cosmobl::AP_shift_pi (const double redshift, const Cosmology &cosm1, const Cosmology &cosm2)
+double cosmobl::AP_shift_pi (const double redshift, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2)
 {
   return cosm2.HH(redshift)/cosm1.HH(redshift);
 }
@@ -92,7 +92,7 @@ double cosmobl::AP_shift_pi (const double redshift, const Cosmology &cosm1, cons
 // ============================================================================================
 
 
-void cosmobl::max_separations_AP (const double Rp_max, const double Pi_max, const double redshift, const Cosmology &cosm1, const vector<Cosmology> &cosm2, double &rpM_AP, double &piM_AP, double &rM_AP) 
+void cosmobl::max_separations_AP (const double Rp_max, const double Pi_max, const double redshift, const cosmology::Cosmology &cosm1, const vector<cosmology::Cosmology> &cosm2, double &rpM_AP, double &piM_AP, double &rM_AP) 
 {
   vector<double> rp(cosm2.size()), pi(cosm2.size());
 
@@ -111,7 +111,7 @@ void cosmobl::max_separations_AP (const double Rp_max, const double Pi_max, cons
 // ============================================================================================
 
 
-double cosmobl::converted_xi (const double RR, const double redshift, const vector<double> rr, const vector<double> Xi, const Cosmology &cosm1, const Cosmology &cosm2, const bool direction) 
+double cosmobl::converted_xi (const double RR, const double redshift, const vector<double> rr, const vector<double> Xi, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2, const bool direction) 
 {
   if (RR==0) ErrorMsg("Error in converted_xi of GlobalFuncCosmology.cpp! RR must be >0!");
 
@@ -134,7 +134,7 @@ double cosmobl::converted_xi (const double RR, const double redshift, const vect
 // ============================================================================
 
 
-double cosmobl::converted_xi (const double RP, const double PI, const double redshift, const vector<double> rp, const vector<double> pi, const vector<vector<double> > Xi, const Cosmology &cosm1, const Cosmology &cosm2, const bool direction) 
+double cosmobl::converted_xi (const double RP, const double PI, const double redshift, const vector<double> rp, const vector<double> pi, const vector<vector<double> > Xi, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2, const bool direction) 
 {
   double fDA = AP_shift_rp(redshift, cosm1, cosm2);
   double fH = AP_shift_pi(redshift, cosm1, cosm2);

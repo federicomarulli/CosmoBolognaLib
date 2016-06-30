@@ -116,7 +116,7 @@ namespace cosmobl {
    *
    *  @return none
    */
-  void Vmax_DC_distribution (vector<double> &, vector<double> &, const vector<double>, const vector<double>, const vector<double>, const double, const double, const double, const double, Cosmology &, const double, const int, const int, const bool norm=1, const string file_Vmax=par::defaultString, const double delta_dc_Vmax=100.);
+  void Vmax_DC_distribution (vector<double> &, vector<double> &, const vector<double>, const vector<double>, const vector<double>, const double, const double, const double, const double, cosmology::Cosmology &, const double, const int, const int, const bool norm=1, const string file_Vmax=par::defaultString, const double delta_dc_Vmax=100.);
 
   /**
    *  @brief the Alcock-Pacinski factor used to shift comoving
@@ -131,7 +131,7 @@ namespace cosmobl {
    *  @return D<SUB>V</SUB>[cosm2]/D<SUB>V</SUB>[cosm1], where
    *  D<SUB>V</SUB> is Cosmology::D_V
    */
-  double AP_shift_r (const double, const Cosmology &, const Cosmology &);
+  double AP_shift_r (const double, const cosmology::Cosmology &, const cosmology::Cosmology &);
 
   /**
    *  @brief the Alcock-Pacinski factor used to shift comoving
@@ -146,7 +146,7 @@ namespace cosmobl {
    *  @return D<SUB>A</SUB>[cosm1]/D<SUB>A</SUB>[cosm2], where
    *  D<SUB>A</SUB> is Cosmology::D_A
    */
-  double AP_shift_rp (const double, const Cosmology &, const Cosmology &);
+  double AP_shift_rp (const double, const cosmology::Cosmology &, const cosmology::Cosmology &);
 
   /**
    *  @brief the Alcock-Pacinski factor used to shift comoving
@@ -160,7 +160,7 @@ namespace cosmobl {
    *
    *  @return H[cosm2]/H[cosm1], where H is Cosmology::HH
    */
-  double AP_shift_pi (const double, const Cosmology &, const Cosmology &);
+  double AP_shift_pi (const double, const cosmology::Cosmology &, const cosmology::Cosmology &);
 
   /**
    *  @brief the maximum comoving separations to be used for the AP
@@ -195,7 +195,7 @@ namespace cosmobl {
    * 
    *  @return none
    */
-  void max_separations_AP (const double, const double, const double, const Cosmology &, const vector<Cosmology> &, double &, double &, double &);
+  void max_separations_AP (const double, const double, const double, const cosmology::Cosmology &, const vector<cosmology::Cosmology> &, double &, double &, double &);
 
   /**
    *  @brief the 1D two-point correlation function converted from one
@@ -219,7 +219,7 @@ namespace cosmobl {
    *
    *  @return the converted two-point correlation function, &xi;(R)
    */
-  double converted_xi (const double, const double, const vector<double>, const vector<double>, const Cosmology &, const Cosmology &, const bool);
+  double converted_xi (const double, const double, const vector<double>, const vector<double>, const cosmology::Cosmology &, const cosmology::Cosmology &, const bool);
 
   /**
    *  @brief the 2D two-point correlation function converted from one
@@ -251,7 +251,7 @@ namespace cosmobl {
    *
    *  @return the converted two-point correlation function, &xi;(R<SUB>p</SUB>,&Pi;)
    */
-  double converted_xi (const double, const double, const double, const vector<double>, const vector<double>, const vector<vector<double> >, const Cosmology &, const Cosmology &, const bool); 
+  double converted_xi (const double, const double, const double, const vector<double>, const vector<double>, const vector<vector<double> >, const cosmology::Cosmology &, const cosmology::Cosmology &, const bool); 
 
   ///@}
 
@@ -273,7 +273,7 @@ namespace cosmobl {
    *  @param [out] redshift_max the maximum redshift
    *  @return none
    */
-  void redshift_range (const double, const double, Cosmology &, double &, double &); 
+  void redshift_range (const double, const double, cosmology::Cosmology &, double &, double &); 
 
   /**
    *  @brief get the volume of a simulation box
@@ -292,7 +292,7 @@ namespace cosmobl {
    *
    *  @return the volume of the simulation
    */
-  double volume (const double, const int, const double, const double, Cosmology &);
+  double volume (const double, const int, const double, const double, cosmology::Cosmology &);
 
   /**
    *  @brief convert a set of coordinates from real-space to
@@ -333,7 +333,7 @@ namespace cosmobl {
    *
    *  @return none
    */
-  void coord_zSpace (vector<double> &, vector<double> &, vector<double> &, vector<double> &, vector<double> &, vector<double> &, const vector<double>, const vector<double>, const vector<double>, const double, Cosmology &, const double, const double, const double, const int);
+  void coord_zSpace (vector<double> &, vector<double> &, vector<double> &, vector<double> &, vector<double> &, vector<double> &, const vector<double>, const vector<double>, const vector<double>, const double, cosmology::Cosmology &, const double, const double, const double, const int);
 
   /**
    *  @brief create a mock catalogue, subdividing a box into sub-boxes
@@ -387,7 +387,7 @@ namespace cosmobl {
    *
    *  @return none
    */
-  void create_mocks (const vector<double>, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const string, const double, const int, const double, const double, Cosmology &, const int, const double, const int, double &);
+  void create_mocks (const vector<double>, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const string, const double, const int, const double, const double, cosmology::Cosmology &, const int, const double, const int, double &);
 
   /**
    *  @brief set the object region in sub-boxes

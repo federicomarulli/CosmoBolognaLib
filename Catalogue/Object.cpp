@@ -57,7 +57,7 @@ shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType type, const
 // ============================================================================
 
 
-shared_ptr<Object> cosmobl::catalogue::Object::Create(const ObjType type, const double ra, const double dec, const double redshift, const Cosmology &cosm, const double weight)
+shared_ptr<Object> cosmobl::catalogue::Object::Create(const ObjType type, const double ra, const double dec, const double redshift, const cosmology::Cosmology &cosm, const double weight)
 {
   if (type==_RandomObject_) return move(unique_ptr<RandomObject>(new RandomObject(ra, dec, redshift, cosm, weight)));
   else if (type==_Mock_)    return move(unique_ptr<Mock>(new Mock(ra, dec, redshift, cosm, weight)));

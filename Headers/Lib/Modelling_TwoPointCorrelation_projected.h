@@ -42,13 +42,7 @@
 
 
 namespace cosmobl {
-  
-  /**
-   *  @brief The namespace of functions and classes used for modelling
-   *  
-   * The \e modelling namespace contains all the functions and classes
-   * used to model any kind of measurements
-   */
+
   namespace modelling {
     
     /**
@@ -89,21 +83,61 @@ namespace cosmobl {
 	 *  
 	 *  @param twop the two-point correlation function to model
 	 *
-	 *  @param redshift the redshift of the two-point correlation
-	 *  signal
-	 *
-	 *  @param cosmology the fiducial cosmology
-	 *
 	 *  @return object of type Modelling_TwoPointCorrelation_projected
 	 */
-	Modelling_TwoPointCorrelation_projected(const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop, const double redshift, const Cosmology cosmology);
+	Modelling_TwoPointCorrelation_projected(const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop);
 	
 	///@}
 
-	void fit_bias(const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const int nChains, const int chain_size, const string dir_output, const double start=0.5, const double stop=1, const int thin=1) override;
+	/**
+	 * @brief set the fiducial model for dark matter 
+	 * two point correlation function
+	 *
+	 *  @return none
+	 */
+	void set_fiducial_twop() override;
 
-	void fit_bias_cosmology(const statistics::LikelihoodType likelihoodType, const vector<double> xlimits, const double bias_value, const statistics::Prior bias_prior, const vector<CosmoPar> CosmoPars, const vector<statistics::Prior> prior_CosmoPars, const int nChains, const int chain_size, const string dir_output, const double start=0.5, const double stop=1, const int thin=1) override;
+	/**
+	 * @brief fit the bias of the measured
+	 * two point correlation function
+	 *
+	 * @param bias_prior prior for the bias
+	 * @param pT_bias the parameter type of the bias: it can be
+	 * either _free_ or _fixed_
+	 *
+	 * @return none
+	 */
+	void set_model_bias(const statistics::Prior bias_prior, const statistics::ParameterType pT_bias=statistics::_free_) override;
 
+	/**
+	 * @brief compute and write the model using the stored 
+	 * parameter values
+	 *
+	 * @param xx vector of point at which the model
+	 * is computed
+	 * @param dir_model the output directory of the model
+	 * @param file_model the name of the file
+	 *
+	 * @return none
+	 */
+	void write_model(const vector<double> xx, const string dir_model, const string file_model)
+	{ m_model->write_model(xx, dir_model, file_model); }
+
+	/**
+	 * @brief compute and write the model using the stored 
+	 * parameter values
+	 *
+	 * @param xx vector of point at which the model
+	 * is computed
+	 * @param parameters vector of parameters values
+	 * at which the model is computed
+	 * @param dir_model the output directory of the model
+	 * @param file_model the name of the file
+	 *
+	 * @return none
+	 */
+	virtual void write_model_parameters(const vector<double> xx, const vector<double> parameters, const string dir_model, const string file_model)
+	{ m_model->write_model(xx, parameters, dir_model, file_model); }
     };
   }
 }

@@ -37,16 +37,23 @@
 
 namespace cosmobl {
 
-  /**
-   *  @brief The namespace of functions and classes used for statistical
-   *  analysis
-   *  
-   * The \e statistic namespace contains all the functions and classes
-   * used for statistical analyis
-   */
-
   namespace statistics {
 
+    /**
+     * @enum ParameterType
+     * @brief the parameter type
+     */
+    enum ParameterType {
+      
+      /// fixed parameter
+      _fixed_,
+      
+      /// free parameter
+      _free_
+      
+    };
+
+  
     /**
      * @class Parameter Parameter.h "Headers/Lib/Parameter.h"
      *
@@ -67,8 +74,8 @@ namespace cosmobl {
       /// the parameter name
       string m_name;
 
-      /// 0 &rarr; parameter is not fixed; 1 &rarr; parameter is fixed
-      bool m_freeze;
+      /// the parameter type: it can be either _free_ or _fixed_
+      ParameterType m_pType;
 
       /// the parameter prior
       shared_ptr<Prior> m_prior;
@@ -110,18 +117,18 @@ namespace cosmobl {
        *
        *  @return object of class Parameter
        */
-      Parameter () {}
+      Parameter () = default;
 
       /**
        *  @brief constructor for parameter with uniform non limited prior
        *
        *  @param value parameter value
-       *  @param freeze 0 &rarr; parameter is not fixed; 1 &rarr; parameter is fixed
+       *  @param pType the parameter type: it can be either _free_ or _fixed_
        *  @param name parameter name
        *
        *  @return object of class Parameter
        */
-      Parameter (const double value, const bool freeze=0, const string name="parameter");
+      Parameter (const double value, const ParameterType pType=_free_, const string name="parameter");
 
       /**
        *  @brief constructor for parameter with uniform prior, with limits
@@ -129,12 +136,12 @@ namespace cosmobl {
        *  @param value parameter value
        *  @param xmin lower value for the parameter
        *  @param xmax upper value for the parameter
-       *  @param freeze 0 &rarr; parameter is not fixed; 1 &rarr; parameter is fixed
+       *  @param pType the parameter type: it can be either _free_ or _fixed_
        *  @param name parameter name
        *
        *  @return object of class Parameter
        */
-      Parameter (const double value, const double xmin, const double xmax, const bool freeze=0, const string name="parameter");
+      Parameter (const double value, const double xmin, const double xmax, const ParameterType pType=_free_, const string name="parameter");
 
       /**
        *  @brief constructor for parameter with a gaussian/poisson prior, with limits
@@ -145,12 +152,12 @@ namespace cosmobl {
        *  value for the parameter
        *  @param xmin lower value for the parameter
        *  @param xmax upper value for the parameter
-       *  @param freeze 0 &rarr; parameter is not fixed; 1 &rarr; parameter is fixed
+       *  @param pType the parameter type: it can be either _free_ or _fixed_
        *  @param name parameter name
        *
        *  @return object of class Parameter
        */
-      Parameter (const double value, const PriorType priorType, const vector<double> prior_params, const double xmin, const double xmax , const bool freeze=0, const string name="parameter");
+      Parameter (const double value, const PriorType priorType, const vector<double> prior_params, const double xmin, const double xmax, const ParameterType pType=_free_, const string name="parameter");
 
       /**
        *  @brief constructor for parameter with discrete distribution prior
@@ -159,197 +166,60 @@ namespace cosmobl {
        *  @param priorType the type of prior to be created
        *  @param discrete_values discrete values for the parameter
        *  @param weights weights for discrete values
-       *  @param freeze 0 &rarr; parameter is not fixed; 1 &rarr; parameter is fixed
+       *  @param pType the parameter type: it can be either _free_ or _fixed_
        *  @param name parameter name
        *
        *  @return object of class Parameter
        */
-      Parameter (const double value, const PriorType priorType, const vector<double> discrete_values, const vector<double> weights , const bool freeze=0, const string name="parameter");
+      Parameter (const double value, const PriorType priorType, const vector<double> discrete_values, const vector<double> weights, const ParameterType pType=_free_, const string name="parameter");
 
       /**
        *  @brief default constructor
        * 
        *  @param value parameter value
        *  @param prior prior for the parameter 
-       *  @param freeze 0 &rarr; parameter is not fixed; 1 &rarr; parameter is fixed
+       *  @param pType the parameter type: it can be either _free_ or _fixed_
        *  @param name parameter name
        *
        *  @return object of class Parameter
        */
-      Parameter (const double value, const Prior prior, const bool freeze=0, string name="parameter");
+      Parameter (const double value, const Prior prior, const ParameterType pType=_free_, string name="parameter");
 
       /**
        *  @brief default destructor
        *
        *  @return none
        */
-      ~Parameter () {}
+      ~Parameter () = default;
 
       ///@}
-	
+
+      
       /**
-       * @brief set prior seed
-       * @param seed the prior seed
-       * return none
+       *  @name Member functions used to get private/protected parameters
        */
-      void set_prior_seed (const int seed) { m_prior->set_seed(seed); }
+      ///@{
 
       /**
-       * @brief value of the prior at the parameter value
+       * @brief get the protected member m_value
        *
-       * @return prior value
+       * @return the value of the parameter
        */
-      double PriorProbability () const {return (isFreezed()) ? 1. : m_prior->operator()(m_value);}
+      double value () const { return m_value; }
 
       /**
-       * @brief value of the prior at a proposed value
+       * @brief get the protected member m_best_value
        *
-       * @param value proporsed parameter value
-       *
-       * @return prior value
-       */ 
-      double PriorProbability (const double value ) const {return m_prior->operator()(value);}
-
-      /**
-       * @brief set the private attribute m_value
-       *
-       * @param value parameter value
-       *
-       * @return none
-       */
-      void set_value (const double value); 
-
-      /**
-       * @brief set the private attribute m_best_value
-       *
-       * @param value parameter best value
-       *
-       * @return none
-       */
-
-      void set_best_value (const double value) {m_best_value = value;}
-
-      /**
-       * @brief set the private attribute m_name
-       *
-       * @param name parameter name
-       *
-       * @return none
-       */
-      void set_name (const string name) {m_name = name;}
-
-      /**
-       * @brief lock the parameter
-       *
-       * @param freeze 0 &rarr; parameter is not locked; 1 &rarr; parameter is locked
-       * 
-       * @return none
-       */
-      void set_freeze (const bool freeze) {m_freeze = freeze;}
-
-      /**
-       * @brief set user defined prior
-       * 
-       * @param prior user defined prior
-       * 
-       * @return none
-       */
-      void set_prior (const shared_ptr<Prior> prior) {m_prior = prior;}
-
-      /**
-       * @brief set user defined prior
-       * 
-       * @return shared pointer to an object of class Prior
-       */
-      shared_ptr<Prior> prior () const {return m_prior;}
-
-      /**
-       * @brief function that return the prior interval lenght
-       * 
-       * @return the prior interval lenght
-       */
-      double interval_size () const {return (m_prior->xmax()-m_prior->xmin());}
-
-      /**
-       * @brief get the private member m_value
-       *
-       * @return value of the parameter
-       */
-      double value () const {return m_value;}
-
-      /**
-       * @brief get the private member m_best_value
-       *
-       * @return best value of the parameter
+       * @return the best-fit value of the parameter
        */  
-      double best_value () const {return m_best_value;}
+      double best_value () const { return m_best_value; }
 
       /**
-       * @brief get the private member m_name
+       * @brief get the protected member m_name
        *
        * @return return the parameter name
        */
-      string name () const { return m_name;}
-
-      /**
-       * @brief get the private member m_freeze
-       *
-       * @return return 0 &rarr; parameter is not locked; 1 &rarr; parameter is locked
-       */
-      bool isFreezed () const { return m_freeze;}
-
-      /**
-       * @brief extract a value for the parameter from the prior
-       * @return none
-       */
-      double sample_from_prior () {return (isFreezed()) ? m_value : m_prior->sample();}
-
-      /**
-       * @brief extract values from prior 	 
-       * @param sample_size the size of the extracted sample
-       * @return none
-       */
-      vector<double> sample_from_prior (const int sample_size) {return m_prior->sample_vector(sample_size);}
-
-      /**
-       * @brief set the chains
-       *
-       * @param nchains the number of chains
-       * @param chain_size the chains size
-       *
-       * @return none
-       */
-      void set_chains (const int nchains, const int chain_size);
-
-      /**
-       * @brief set the chain values
-       *
-       * @param chain the n-th chain
-       * @param position the i-th position in the chain
-       * @param value the value for the chain
-       *
-       * @return none
-       */
-      void set_chain_value (const int chain, const int position, const double value);
-
-      /**
-       * @brief set the chains values
-       *
-       * @param position the i-th position in the chain
-       * @param values the value for the chain
-       *
-       * @return none
-       */
-      void set_chains_values (const int position, const vector<double> values);
-
-      /**
-       * @brief set the chains values from prior
-       *
-       * @param position the i-th position in the chain
-       *
-       * @return none
-       */
-      void set_chains_values_from_prior (const int position);
+      string name () const { return m_name; }
 
       /**
        * @brief get the i-th chain
@@ -365,60 +235,206 @@ namespace cosmobl {
        *
        * @return a vector containing all the chains
        */
-      vector<shared_ptr<Chain> > chains () const { return m_chains;}
-
+      vector<shared_ptr<Chain> > chains () const { return m_chains; }
+      
       /**
-       * @brief merge the chains
-       *
-       * @param max maximum step
-       * @param min minimum step
-       * @param thin pick values every thin times
-       *
-       * @return merged chain
-       */
-      shared_ptr<Chain> merge_chains (const int max = -1, const int min=-1, const int thin = 1);
-
-      /**
-       * @brief compute the 
-       *
-       * @param max maximum step
-       * @param min minimum step
-       * @param thin pick values every thin times
-       *
-       * @return merged chain
-       */
-      double chains_convergence (const int max = -1, const int min=-1, const int thin = 1);
-
-      /**
-       * @brief get the private member m_mean
+       * @brief get the protected member m_mean
        *
        * @return the mean value of the parameter
        */
       double mean () const { return m_mean; }
 
       /**
-       * @brief get the private member m_median
+       * @brief get the protected member m_median
        *
        * @return the median value of the parameter
        */   
       double median () const { return m_median; }
 
       /**
-       * @brief get the private member m_std
+       * @brief get the protected member m_std
        *
        * @return the standard deviation value of the parameter
        */
       double std () const { return m_std; }
 
       /**
-       * @brief generate a random value for the parameter in the prior
-       * range
+       * @brief get the defined prior
+       * 
+       * @return a shared pointer to an object of class Prior
+       */
+      shared_ptr<Prior> prior () const { return m_prior; }
+
+      /**
+       * @brief get the prior interval lenght
+       * 
+       * @return the prior interval lenght
+       */
+      double interval_size () const { return (m_prior->xmax()-m_prior->xmin()); }
+      
+      /**
+       * @brief get the value of the prior at the parameter value
        *
-       * @return the parameter random value
+       * @return prior value
+       */
+      double PriorProbability () const { return (isFreezed()) ? 1. : m_prior->operator()(m_value); }
+
+      /**
+       * @brief value of the prior at a proposed value
        *
+       * @param value proporsed parameter value
+       *
+       * @return prior value
+       */ 
+      double PriorProbability (const double value) const { return m_prior->operator()(value); }
+      
+      ///@}
+
+      
+      /**
+       *  @name Member functions used to set private/protected parameters
+       */
+      ///@{
+      
+      /**
+       *  @brief set prior seed
+       *  @param seed the prior seed
+       *  @return none
+       */
+      void set_prior_seed (const int seed) { m_prior->set_seed(seed); }
+
+      /**
+       *  @brief set the protected member m_value
+       *  @param value parameter value
+       *  @return none
+       */
+      void set_value (const double value); 
+
+      /**
+       *  @brief set the protected member m_best_value
+       *  @param value parameter best value
+       *  @return none
+       */
+      void set_best_value (const double value) { m_best_value = value; }
+
+      /**
+       *  @brief set the protected member m_name
+       *  @param name parameter name
+       *  @return none
+       */
+      void set_name (const string name) { m_name = name; }
+
+      /**
+       *  @brief set the protected member m_pType
+       *  @param pType the parameter type
+       *  @return none
+       */
+      void set_freeze (const ParameterType pType) { m_pType = pType; }
+
+      /**
+       *  @brief set user defined prior
+       *  @param prior user defined prior
+       *  @return none
+       */
+      void set_prior (const shared_ptr<Prior> prior) { m_prior = prior; }
+
+      /**
+       *  @brief set the chains
+       *
+       *  @param nchains the number of chains
+       *  @param chain_size the chains size
+       *
+       *  @return none
+       */
+      void set_chains (const int nchains, const int chain_size);
+
+      /**
+       *  @brief set the chain values
+       *
+       *  @param chain the n-th chain
+       *  @param position the i-th position in the chain
+       *  @param value the value for the chain
+       *
+       *  @return none
+       */
+      void set_chain_value (const int chain, const int position, const double value);
+
+      /**
+       *  @brief set the chains values
+       *
+       *  @param position the i-th position in the chain
+       *  @param values the value for the chain
+       *
+       *  @return none
+       */
+      void set_chains_values (const int position, const vector<double> values);
+
+      /**
+       *  @brief set the chains values from prior
+       *
+       *  @param position the i-th position in the chain
+       *
+       *  @return none
+       */
+      void set_chains_values_from_prior (const int position);
+      
+      ///@}
+      
+
+      /**
+       *  @name Member functions used to operate on parameters
+       */
+      ///@{
+
+      /**
+       *  @brief get the protected member m_pType
+       *  @return the parameter type
+       */
+      bool isFreezed () const { return (m_pType==_fixed_) ? 1 : 0; }
+
+      /**
+       *  @brief extract a parameter value from the prior
+       *  @return a parameter value
+       */
+      double sample_from_prior () { return (isFreezed()) ? m_value : m_prior->sample(); }
+
+      /**
+       *  @brief extract values from the prior 	 
+       *  @param sample_size the size of the extracted sample
+       *  @return a vector of values
+       */
+      vector<double> sample_from_prior (const int sample_size);
+      
+      /**
+       *  @brief merge the chains
+       *
+       *  @param max maximum step
+       *  @param min minimum step
+       *  @param thin pick values every thin times
+       *
+       *  @return the merged chain
+       */
+      shared_ptr<Chain> merge_chains (const int max = -1, const int min=-1, const int thin = 1);
+
+      /**
+       *  @brief compute the convergence 
+       *
+       *  @param max maximum step
+       *  @param min minimum step
+       *  @param thin pick values every thin times
+       *
+       *  @return the convergence
+       */
+      double chains_convergence (const int max = -1, const int min=-1, const int thin = 1);
+
+      /**
+       *  @brief generate a random parameter value in the prior range
+       *  @return the parameter random value
        */
       double random_value () const;
-	
+
+      ///@}
+      
     };
   }
 }

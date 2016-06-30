@@ -39,6 +39,7 @@
 
 using namespace cosmobl;
 using namespace catalogue;
+using namespace chainmesh;
 using namespace pairs;
 using namespace twopt;
 
@@ -146,7 +147,7 @@ void cosmobl::twopt::TwoPointCorrelation1D::read_pairs (vector<shared_ptr<pairs:
 // ============================================================================
 
 
-shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation1D::NaturalEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const int nRandom)
+shared_ptr<data::Data> cosmobl::twopt::TwoPointCorrelation1D::NaturalEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const int nRandom)
 {
   vector<double> rad(m_dd->nbins()), xi(m_dd->nbins(), -1.), error(m_dd->nbins(), 1000.);
   
@@ -163,14 +164,14 @@ shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation1D::NaturalEstimatorTwoP (co
     
   }
 
-  return move(unique_ptr<Data1D>(new Data1D(rad, xi, error)));
+  return move(unique_ptr<data::Data1D>(new data::Data1D(rad, xi, error)));
 }
 
 
 // ============================================================================
 
 
-shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation1D::LandySzalayEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const int nRandom)
+shared_ptr<data::Data> cosmobl::twopt::TwoPointCorrelation1D::LandySzalayEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const int nRandom)
 {
   vector<double> rad(m_dd->nbins()), xi(m_dd->nbins(), -1.), error(m_dd->nbins(), 1000.);
   
@@ -187,19 +188,19 @@ shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation1D::LandySzalayEstimatorTwoP
     }
   }
 
-  return move(unique_ptr<Data1D>(new Data1D(rad, xi, error)));
+  return move(unique_ptr<data::Data1D>(new data::Data1D(rad, xi, error)));
 }
 
 
 // ============================================================================
 
 
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
+vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation1D::XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
 {
   vector<long> region_list = m_data->get_region_list();
   int nRegions =  region_list.size();
 
-  vector<shared_ptr<Data> > data;
+  vector<shared_ptr<data::Data> > data;
 
   for (int i=0; i<nRegions; i++) {
     auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin(), m_dd->sMax(), m_dd->nbins(), m_dd->shift(), m_dd->angularUnits(), m_dd->angularWeight());
@@ -234,12 +235,12 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiJackknife (co
 // ============================================================================
 
 
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
+vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation1D::XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
 {
   vector<long> region_list = m_data->get_region_list();
   int nRegions =  region_list.size();
 
-  vector<shared_ptr<Data> > data;
+  vector<shared_ptr<data::Data> > data;
 
   for (int i=0; i<nRegions; i++) {
     auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->sMin(), m_dd->sMax(), m_dd->nbins(), m_dd->shift(), m_dd->angularUnits(), m_dd->angularWeight());
@@ -276,12 +277,12 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiJackknife (co
 // ============================================================================
 
 
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
+vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
 {
   vector<long> region_list = m_data->get_region_list();
   int nRegions = region_list.size();
 
-  vector<shared_ptr<Data> > data;
+  vector<shared_ptr<data::Data> > data;
   vector<double> nData_reg, nRandom_reg;
 
   for (int i=0; i<nMocks; i++) {
@@ -329,12 +330,12 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiBootstrap (co
 // ============================================================================
 
 
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
+vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
 {
   vector<long> region_list = m_data->get_region_list();
   int nRegions = region_list.size();
 
-  vector<shared_ptr<Data> > data;
+  vector<shared_ptr<data::Data> > data;
   vector<double> nData_reg, nRandom_reg;
 
   for(int i=0;i<nMocks;i++){
@@ -402,7 +403,7 @@ void cosmobl::twopt::TwoPointCorrelation1D::write_covariance_matrix (const strin
 // ============================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation1D::compute_covariance_matrix (const vector<shared_ptr<Data>> xi_collection, const bool doJK)
+void cosmobl::twopt::TwoPointCorrelation1D::compute_covariance_matrix (const vector<shared_ptr<data::Data>> xi_collection, const bool doJK)
 {
   vector<vector<double>> xi;
 

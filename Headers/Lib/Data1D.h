@@ -37,16 +37,18 @@
 
 namespace cosmobl {
 
-  /**
-   *  @class Data1D Data1D.h
-   *  "Headers/Lib/Data1D.h"
-   *
-   *  @brief The class Data1D
-   *
-   *  This is the base class used to manage 1D data
-   */
-  class Data1D : public Data
-  {
+  namespace data {
+    
+    /**
+     *  @class Data1D Data1D.h
+     *  "Headers/Lib/Data1D.h"
+     *
+     *  @brief The class Data1D
+     *
+     *  This is the base class used to manage 1D data
+     */
+    class Data1D : public Data
+    {
     protected:
 
       /**
@@ -88,7 +90,7 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Data1D
        */
-      Data1D () : Data(cosmobl::DataType::_1D_data_) {}
+      Data1D () : Data(DataType::_1D_data_) {}
 
       /**
        *  @brief constructor of Data1D
@@ -317,6 +319,8 @@ namespace cosmobl {
        */
       virtual void write (const string dir=par::defaultString, const string file=par::defaultString, const string xname="x", const string fxname="f(x)", const int rank=0) const override;
 
-  };
+    };
+
+  }
 }
 #endif

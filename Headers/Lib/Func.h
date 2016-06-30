@@ -150,9 +150,9 @@ using namespace std;
  *  This example shows how to menage priors
  */
 /**
- *  @example fit_linear_relation.cpp
+ *  @example fit.cpp
  *
- *  This example shows how to model data with linear model
+ *  This example shows how to fit a data set with a generic model
  */
 /**
  *  @example catalogue.cpp
@@ -197,10 +197,16 @@ using namespace std;
  * function
  */
 /**
- * @example modelBias_2pt_projected.cpp
+ * @example model_2pt_projected_bias.cpp
  *
- * This example shows how to how to model the bias from the projected
- * two-point correlation function
+ * This example shows how to model the projected two-point correlation
+ * function to constrain the linear bias
+ */
+/**
+ * @example model_2pt_monopole_bao.cpp
+ *
+ * This example shows how to model baryon acoustic oscillations in the
+ * monopole of the two-point correlation function
  */
 /**
  *  @example distances.py 
@@ -227,10 +233,10 @@ using namespace std;
  */
 
 /**
- *  @brief The namespace of the CosmoBolognaLib 
+ *  @brief The global namespace of the <B> \e CosmoBolognaLib </B>
  *  
- * The \e cosmobl namespace contains all the main functions and
- * classes of the CosmoBolognaLib
+ *  The \e cosmobl namespace contains all the main functions and
+ *  classes of the CosmoBolognaLib
  */
 namespace cosmobl {
 
@@ -3411,12 +3417,11 @@ namespace cosmobl {
 
 
   /**
-   *  @brief The namespace of the global classes, structures and
-   *  functions of the CosmoBolognaLib of internal auxiliary use
+   *  @brief The namespace of the functions and classes of <B>
+   *  internal auxiliary use </B>
    *  
-   *  The \e glob namespace contains all the global classes,
-   *  structures and functions structures of the CosmoBolognaLib of
-   *  internal auxiliary use
+   *  The \e glob namespace contains all classes, structures and
+   *  functions of internal auxiliary use
    */
   namespace glob {
 

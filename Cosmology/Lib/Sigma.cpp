@@ -40,7 +40,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::Cosmology::SSR (const double RR, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
+double cosmobl::cosmology::Cosmology::SSR (const double RR, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
 {
   double SS = -1;
 
@@ -76,7 +76,7 @@ double cosmobl::Cosmology::SSR (const double RR, const string method_Pk, const d
 // =====================================================================================
 
 
-double cosmobl::Cosmology::SSR_norm (const double RR, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
+double cosmobl::cosmology::Cosmology::SSR_norm (const double RR, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
 {
   double fact = 1.;
 
@@ -84,7 +84,7 @@ double cosmobl::Cosmology::SSR_norm (const double RR, const string method_Pk, co
     double RRR = 8.; // sigma_8 = sigma(8Mpc/h)
     fact = (m_sigma8*m_sigma8)/SSR(RRR, method_Pk, redshift, output_root, kmax, file_par); // normalization factor
   }
-  else if (method_Pk=="EisensteinHu") ErrorMsg("Error in cosmobl::Cosmology::SSR_norm of Sigma.cpp!");
+  else if (method_Pk=="EisensteinHu") ErrorMsg("Error in cosmobl::cosmology::Cosmology::SSR_norm of Sigma.cpp!");
   
   return SSR(RR, method_Pk, redshift, output_root, kmax, file_par)*fact;
 }
@@ -93,7 +93,7 @@ double cosmobl::Cosmology::SSR_norm (const double RR, const string method_Pk, co
 // =====================================================================================
 
 
-double cosmobl::Cosmology::dnSR (const int nd, const double RR, const string method_Pk, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
+double cosmobl::cosmology::Cosmology::dnSR (const int nd, const double RR, const string method_Pk, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
 {
   double dR = RR*1.e-7;
   double RRR = RR+dR;
@@ -109,7 +109,7 @@ double cosmobl::Cosmology::dnSR (const int nd, const double RR, const string met
 // =====================================================================================
 
 
-double cosmobl::Cosmology::SSM (const double MM, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
+double cosmobl::cosmology::Cosmology::SSM (const double MM, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
 {
   double SS = -1;
 
@@ -143,7 +143,7 @@ double cosmobl::Cosmology::SSM (const double MM, const string method_Pk, const d
     SS = 1./(2.*pow(par::pi,2))*Int;
   }
 
-  else ErrorMsg("Error in cosmobl::Cosmology::SSM of Sigma.cpp: method_Pk is wrong!");
+  else ErrorMsg("Error in cosmobl::cosmology::Cosmology::SSM of Sigma.cpp: method_Pk is wrong!");
 
   return SS;
 }
@@ -152,7 +152,7 @@ double cosmobl::Cosmology::SSM (const double MM, const string method_Pk, const d
 // =====================================================================================
 
 
-double cosmobl::Cosmology::SSM_norm (const double MM, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
+double cosmobl::cosmology::Cosmology::SSM_norm (const double MM, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
 {
   double fact = 1.;
 
@@ -162,7 +162,7 @@ double cosmobl::Cosmology::SSM_norm (const double MM, const string method_Pk, co
     double Mss = Mass(RR, RHO);
     fact = (m_sigma8*m_sigma8)/SSM(Mss, method_Pk, redshift, output_root, kmax, file_par); // normalization factor
   }
-  else if (method_Pk=="EisensteinHu") ErrorMsg("Error in cosmobl::Cosmology::SSM_norm of Sigma.cpp!");
+  else if (method_Pk=="EisensteinHu") ErrorMsg("Error in cosmobl::cosmology::Cosmology::SSM_norm of Sigma.cpp!");
 
   return SSM(MM, method_Pk, redshift, output_root, kmax, file_par)*fact;
 }
@@ -171,7 +171,7 @@ double cosmobl::Cosmology::SSM_norm (const double MM, const string method_Pk, co
 // =====================================================================================
 
 
-double cosmobl::Cosmology::dnSM (const int nd, const double MM, const string method_Pk, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
+double cosmobl::cosmology::Cosmology::dnSM (const int nd, const double MM, const string method_Pk, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
 {
  
   double dM = MM*1.e-7;
@@ -198,7 +198,7 @@ double cosmobl::Cosmology::dnSM (const int nd, const double MM, const string met
 // =====================================================================================
 
 
-string cosmobl::Cosmology::create_grid_sigmaM (const string method_SS, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
+string cosmobl::cosmology::Cosmology::create_grid_sigmaM (const string method_SS, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
 { 
   string norm = (m_sigma8>0) ? "_sigma8"+conv(m_sigma8,par::fDP3) : "_scalar_amp"+conv(m_scalar_amp,par::ee3);
   string dir_cosmo=fullpath(par::DirCosmo);

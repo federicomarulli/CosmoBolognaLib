@@ -102,7 +102,7 @@ namespace cosmobl {
        *  @param generic generic variable
        *  @return object of class Mock
        */
-      Mock (const double ra, const double dec, const double redshift, const Cosmology &cosm, const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
+      Mock (const double ra, const double dec, const double redshift, const cosmology::Cosmology &cosm, const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
 	: Halo(ra, dec, redshift, cosm, weight, vx, vy, vz, mass), m_generic(generic) {}
 
       /**

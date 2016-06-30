@@ -150,7 +150,7 @@ namespace cosmobl {
        *  @param weight weight
        *  @return object of class GenericObject
        */
-      Object (const double xx, const double yy, const double zz, const Cosmology &cosm, const double z1_guess, const double z2_guess, const double weight=1.) 
+      Object (const double xx, const double yy, const double zz, const cosmology::Cosmology &cosm, const double z1_guess, const double z2_guess, const double weight=1.) 
 	: m_xx(xx), m_yy(yy), m_zz(zz), m_dc(-1.), m_weight(weight), m_region(-1)
 	{
 	  cosmobl::polar_coord(m_xx, m_yy, m_zz, m_ra, m_dec, m_dc);
@@ -166,7 +166,7 @@ namespace cosmobl {
        *  @param weight weight
        *  @return object of class GenericObject
        */
-      Object (const double ra, const double dec, const double redshift, const Cosmology &cosm, const double weight=1.) 
+      Object (const double ra, const double dec, const double redshift, const cosmology::Cosmology &cosm, const double weight=1.) 
 	: m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(-1.), m_weight(weight), m_region(-1)
 	{ 
 	  m_dc = cosm.D_C(m_redshift); 
@@ -224,7 +224,7 @@ namespace cosmobl {
        * @param weight weight
        * @return object of a given type
        */
-      static shared_ptr<Object> Create (const ObjType type, const double ra, const double dec, const double redshift, const Cosmology &cosm, const double weight=1);
+      static shared_ptr<Object> Create (const ObjType type, const double ra, const double dec, const double redshift, const cosmology::Cosmology &cosm, const double weight=1);
     
       ///@}
 

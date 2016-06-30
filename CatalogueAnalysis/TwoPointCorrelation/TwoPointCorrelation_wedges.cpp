@@ -40,6 +40,7 @@
 
 using namespace cosmobl;
 using namespace catalogue;
+using namespace chainmesh;
 using namespace pairs;
 using namespace twopt;
 
@@ -144,7 +145,7 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::write (const string dir, const 
 // ============================================================================================
 
 
-shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation_wedges::WedgesTwoP(const vector<double> rr, const vector<double> mu, const vector<vector<double> > xi, const vector<vector<double> > error_xi)
+shared_ptr<data::Data> cosmobl::twopt::TwoPointCorrelation_wedges::WedgesTwoP(const vector<double> rr, const vector<double> mu, const vector<vector<double> > xi, const vector<vector<double> > error_xi)
 {
   double binSize = mu[1]-mu[0];
   int muSize = mu.size();
@@ -171,7 +172,7 @@ shared_ptr<Data> cosmobl::twopt::TwoPointCorrelation_wedges::WedgesTwoP(const ve
 
   for_each( error_wedges.begin(), error_wedges.end(), [] (double &vv) { vv = sqrt(vv);} );
 
-  auto data = unique_ptr<Data1D>(new Data1D(rad, wedges, error_wedges));
+  auto data = unique_ptr<data::Data1D>(new data::Data1D(rad, wedges, error_wedges));
   return move(data);
 }
 
@@ -221,7 +222,7 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::measureJackknife (const string 
     if (system(mkdir.c_str())) {}
   }
 
-  vector<shared_ptr<Data> > data;
+  vector<shared_ptr<data::Data> > data;
   vector<shared_ptr<pairs::Pair> > dd_regions, rr_regions, dr_regions;
   count_allPairs_region (dd_regions, rr_regions, dr_regions, TwoPType::_2D_polar_, dir_output_pairs,dir_input_pairs, count_dd, count_rr, count_dr,  tcount);
 
@@ -274,7 +275,7 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::measureBootstrap (const int nMo
     if (system(mkdir.c_str())) {}
   }
   
-  vector<shared_ptr<Data> > data;
+  vector<shared_ptr<data::Data> > data;
   vector<shared_ptr<pairs::Pair> > dd_regions, rr_regions, dr_regions;
   count_allPairs_region (dd_regions, rr_regions, dr_regions, TwoPType::_2D_polar_, dir_output_pairs,dir_input_pairs, count_dd, count_rr, count_dr,  tcount);
 
@@ -320,9 +321,9 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::measureBootstrap (const int nMo
 // ============================================================================================
 
 
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
+vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
 {
-  vector<shared_ptr<Data> > data;
+  vector<shared_ptr<data::Data> > data;
 
   auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd, rr);
 
@@ -336,9 +337,9 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiJackknif
 // ============================================================================================
 
 
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
+vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
 {
-  vector<shared_ptr<Data> > data;
+  vector<shared_ptr<data::Data> > data;
   
   auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd, rr, dr);
 
@@ -352,9 +353,9 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiJackknif
 // ============================================================================================
 
 
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
+vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
 {
-  vector<shared_ptr<Data> > data;
+  vector<shared_ptr<data::Data> > data;
   
   auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks, dd, rr);
 
@@ -368,9 +369,9 @@ vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiBootstra
 // ============================================================================================
 
 
-vector<shared_ptr<Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
+vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
 {
-  vector<shared_ptr<Data> > data;
+  vector<shared_ptr<data::Data> > data;
   
   auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks, dd, rr, dr);
 
@@ -402,7 +403,7 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::write_covariance_matrix (const 
 // ============================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation_wedges::compute_covariance_matrix (const vector<shared_ptr<Data>> xi_collection, const bool doJK)
+void cosmobl::twopt::TwoPointCorrelation_wedges::compute_covariance_matrix (const vector<shared_ptr<data::Data>> xi_collection, const bool doJK)
 {
   vector<vector<double>> xi;
 

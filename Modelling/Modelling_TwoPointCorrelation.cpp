@@ -44,12 +44,66 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-shared_ptr<modelling::Modelling_TwoPointCorrelation> modelling::Modelling_TwoPointCorrelation::Create (const shared_ptr<twopt::TwoPointCorrelation> twop, const double redshift, const Cosmology cosmology)
+shared_ptr<modelling::Modelling_TwoPointCorrelation> modelling::Modelling_TwoPointCorrelation::Create (const shared_ptr<twopt::TwoPointCorrelation> twop)
 {
-  if (twop->twoPType()==twopt::TwoPType::_1D_monopole_) return move(unique_ptr<Modelling_TwoPointCorrelation_monopole> (new Modelling_TwoPointCorrelation_monopole(twop, redshift, cosmology)));
-  else if (twop->twoPType()==twopt::TwoPType::_1D_projected_) return move(unique_ptr<Modelling_TwoPointCorrelation_projected> (new Modelling_TwoPointCorrelation_projected(twop, redshift, cosmology)));
-  else if (twop->twoPType()==twopt::TwoPType::_1D_deprojected_) return move(unique_ptr<Modelling_TwoPointCorrelation_deprojected> (new Modelling_TwoPointCorrelation_deprojected(twop, redshift, cosmology)));
+  if (twop->twoPType()==twopt::TwoPType::_1D_monopole_) return move(unique_ptr<Modelling_TwoPointCorrelation_monopole> (new Modelling_TwoPointCorrelation_monopole(twop)));
+  else if (twop->twoPType()==twopt::TwoPType::_1D_projected_) return move(unique_ptr<Modelling_TwoPointCorrelation_projected> (new Modelling_TwoPointCorrelation_projected(twop)));
+  else if (twop->twoPType()==twopt::TwoPType::_1D_deprojected_) return move(unique_ptr<Modelling_TwoPointCorrelation_deprojected> (new Modelling_TwoPointCorrelation_deprojected(twop)));
   else ErrorMsg("Error in cosmobl::modelling::Modelling_TwoPointCorrelation::Create of Modelling_TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!");
+
   return NULL;
 }
 
+
+// ============================================================================================
+
+
+shared_ptr<modelling::Modelling_TwoPointCorrelation> modelling::Modelling_TwoPointCorrelation::Create (const shared_ptr<data::Data> twop_dataset, const twopt::TwoPType twoPType)
+{
+  if (twoPType==twopt::TwoPType::_1D_monopole_) 
+  {
+    auto mtwop = unique_ptr<Modelling_TwoPointCorrelation_monopole> (new Modelling_TwoPointCorrelation_monopole());
+    mtwop->set_data(twop_dataset);
+    return move(mtwop);
+  }
+  else if (twoPType==twopt::TwoPType::_1D_projected_) 
+  {
+    auto mtwop = unique_ptr<Modelling_TwoPointCorrelation_projected> (new Modelling_TwoPointCorrelation_projected());
+    mtwop->set_data(twop_dataset);
+    return move(mtwop);
+  }
+  else if (twoPType==twopt::TwoPType::_1D_deprojected_) 
+  {
+    auto mtwop = unique_ptr<Modelling_TwoPointCorrelation_deprojected> (new Modelling_TwoPointCorrelation_deprojected());
+    mtwop->set_data(twop_dataset);
+    return move(mtwop);
+  }
+  else ErrorMsg("Error in cosmobl::modelling::Modelling_TwoPointCorrelation::Create of Modelling_TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!");
+
+  return NULL;
+}
+
+
+// ============================================================================================
+
+
+void modelling::Modelling_TwoPointCorrelation::set_parameters_twop_DM(const vector<double> model_scales, const cosmology::Cosmology cosmology, const double redshift, const string method, const double sigmaNL, const bool NL, const double pimax, const double r_min, const double r_max, const string output_root, const int norm, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+{
+  m_twop_parameters.model_scales = model_scales;
+  m_twop_parameters.cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  m_twop_parameters.redshift = redshift;
+  m_twop_parameters.method = method;
+  m_twop_parameters.sigmaNL = sigmaNL;
+  m_twop_parameters.NL = NL;
+  m_twop_parameters.pi_max = pimax;
+  m_twop_parameters.r_min = r_min;
+  m_twop_parameters.r_max = r_max;
+  m_twop_parameters.output_root = output_root;
+  m_twop_parameters.norm = norm;
+  m_twop_parameters.k_min = k_min;
+  m_twop_parameters.k_max = k_max;
+  m_twop_parameters.aa = aa;
+  m_twop_parameters.GSL = GSL;
+  m_twop_parameters.prec = prec;
+  m_twop_parameters.file_par = file_par;
+}

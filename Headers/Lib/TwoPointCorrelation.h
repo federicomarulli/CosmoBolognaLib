@@ -46,10 +46,11 @@
 namespace cosmobl {
   
   /**
-   *  @brief The namespace of the two-point correlation function 
+   *  @brief The namespace of the <B> two-point correlation function
+   *  </B>
    *  
-   * The \e twopt namespace contains all the functions and
-   * classes to measure the two-point correlation function
+   *  The \e twopt namespace contains all the functions and classes to
+   *  measure the two-point correlation function
    */
   namespace twopt {
 
@@ -128,7 +129,7 @@ namespace cosmobl {
       TwoPType m_twoPType;
       
       /// the dataset of the two-point correlation function
-      shared_ptr<Data> m_dataset;
+      shared_ptr<data::Data> m_dataset;
 
       ///@}
 
@@ -232,7 +233,7 @@ namespace cosmobl {
        * 
        *  @return none
        */
-      void count_pairs (const shared_ptr<catalogue::Catalogue> cat1, const catalogue::ChainMesh_Catalogue &ChM, shared_ptr<pairs::Pair> pp, const bool cross=1, const bool tcount=0);
+      void count_pairs (const shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, shared_ptr<pairs::Pair> pp, const bool cross=1, const bool tcount=0);
 
       /**
        *  @brief count the number of pairs, used for Jackknife/Bootstrap
@@ -256,7 +257,7 @@ namespace cosmobl {
        * 
        *  @return none
        */
-      void count_pairs_region (const shared_ptr<catalogue::Catalogue> cat1, const catalogue::ChainMesh_Catalogue &ChM, shared_ptr<pairs::Pair> pp, vector< shared_ptr<pairs::Pair> > pp_regions, const bool cross=1, const bool tcount=0);
+      void count_pairs_region (const shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, shared_ptr<pairs::Pair> pp, vector< shared_ptr<pairs::Pair> > pp_regions, const bool cross=1, const bool tcount=0);
 
       /**
        *  @brief count the data-data, random-random and data-random
@@ -356,7 +357,7 @@ namespace cosmobl {
        *
        *  @return pointer to an object of type Data
        */
-      virtual shared_ptr<Data> NaturalEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const int nRandom) = 0;
+      virtual shared_ptr<data::Data> NaturalEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const int nRandom) = 0;
 
       /**
        *  @brief measure the xi with Poisson error using the Landy-Szalay estimator
@@ -376,7 +377,7 @@ namespace cosmobl {
        *
        *  @return pointer to an object of type Data
        */
-      virtual shared_ptr<Data> LandySzalayEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const int nRandom) = 0;
+      virtual shared_ptr<data::Data> LandySzalayEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const int nRandom) = 0;
 
       /**
        *  @brief measure projected correlation function
@@ -391,8 +392,8 @@ namespace cosmobl {
        *
        *  @return pointer to an object of type Data
        */
-      virtual shared_ptr<Data> ProjectedTwoP (const vector<double> rp, const vector<double> pi, const vector<vector<double> > xi, const vector<vector<double> > error_xi)
-      { ErrorMsg("Error in ProjectedTwoP() of TwoPointCorrelation"); shared_ptr<Data> data; return data; }
+      virtual shared_ptr<data::Data> ProjectedTwoP (const vector<double> rp, const vector<double> pi, const vector<vector<double> > xi, const vector<vector<double> > error_xi)
+      { ErrorMsg("Error in ProjectedTwoP() of TwoPointCorrelation"); shared_ptr<data::Data> data; return data; }
 
       /**
        *  @brief measure deprojected correlation function
@@ -405,8 +406,8 @@ namespace cosmobl {
        *
        *  @return pointer to an object of type Data
        */
-      virtual shared_ptr<Data> DeProjectedTwoP(const vector<double> rp, const vector<double> ww, const vector<double> error_ww)
-      {ErrorMsg("Error in DeprojectedTwoP() of TwoPointCorrelation"); shared_ptr<Data> data; return data;}
+      virtual shared_ptr<data::Data> DeProjectedTwoP(const vector<double> rp, const vector<double> ww, const vector<double> error_ww)
+      {ErrorMsg("Error in DeprojectedTwoP() of TwoPointCorrelation"); shared_ptr<data::Data> data; return data;}
 
       /**
        *  @brief measure multipoles of the correlation function
@@ -421,8 +422,8 @@ namespace cosmobl {
        *
        *  @return pointer to an object of type Data
        */
-      virtual shared_ptr<Data> MultipolesTwoP(const vector<double> rr, const vector<double> mu, const vector<vector<double> > xi, const vector<vector<double> > error_xi)
-      {ErrorMsg("Error in MultipolesTwoP() of TwoPointCorrelation"); shared_ptr<Data> data; return data;}
+      virtual shared_ptr<data::Data> MultipolesTwoP(const vector<double> rr, const vector<double> mu, const vector<vector<double> > xi, const vector<vector<double> > error_xi)
+      {ErrorMsg("Error in MultipolesTwoP() of TwoPointCorrelation"); shared_ptr<data::Data> data; return data;}
 
       /**
        *  @brief measure wedges of the correlation function
@@ -437,8 +438,8 @@ namespace cosmobl {
        *
        *  @return pointer to an object of type Data
        */
-      virtual shared_ptr<Data> WedgesTwoP(const vector<double> rr, const vector<double> mu, const vector<vector<double> > xi, const vector<vector<double> > error_xi)
-      {ErrorMsg("Error in WedgesTwoP() of TwoPointCorrelation"); shared_ptr<Data> data; return data;}
+      virtual shared_ptr<data::Data> WedgesTwoP(const vector<double> rr, const vector<double> mu, const vector<vector<double> > xi, const vector<vector<double> > error_xi)
+      {ErrorMsg("Error in WedgesTwoP() of TwoPointCorrelation"); shared_ptr<data::Data> data; return data;}
 
 
       ///@}
@@ -578,8 +579,8 @@ namespace cosmobl {
        *
        *  @return none
        */
-      virtual vector<shared_ptr<Data> > XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
-      { cosmobl::ErrorMsg("Error in vector<shared_ptr<Data> > XiJackknife of TwoPointCorrelation.h!"); vector<shared_ptr<Data> > data; return data; }
+      virtual vector<shared_ptr<data::Data> > XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
+      { cosmobl::ErrorMsg("Error in vector<shared_ptr<data::Data> > XiJackknife of TwoPointCorrelation.h!"); vector<shared_ptr<data::Data> > data; return data; }
 
       /**
        *  @brief measure the jackknife resampling of the two-point correlation
@@ -593,8 +594,8 @@ namespace cosmobl {
        *
        *  @return none
        */
-      virtual vector<shared_ptr<Data> > XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
-      { cosmobl::ErrorMsg("Error in vector<shared_ptr<Data> > XiJackknife of TwoPointCorrelation.h!"); vector<shared_ptr<Data> > data; return data;}
+      virtual vector<shared_ptr<data::Data> > XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
+      { cosmobl::ErrorMsg("Error in vector<shared_ptr<data::Data> > XiJackknife of TwoPointCorrelation.h!"); vector<shared_ptr<data::Data> > data; return data;}
 
       /**
        *  @brief measure the bootstrap resampling of the two-point correlation
@@ -608,8 +609,8 @@ namespace cosmobl {
        *
        *  @return none
        */
-      virtual vector<shared_ptr<Data> > XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
-      { cosmobl::ErrorMsg("Error in vector<shared_ptr<Data> > XiJackknife of TwoPointCorrelation.h!"); vector<shared_ptr<Data> > data; return data;}
+      virtual vector<shared_ptr<data::Data> > XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
+      { cosmobl::ErrorMsg("Error in vector<shared_ptr<data::Data> > XiJackknife of TwoPointCorrelation.h!"); vector<shared_ptr<data::Data> > data; return data;}
 
       /**
        *  @brief measure the bootstrap resampling of the two-point correlation
@@ -625,8 +626,8 @@ namespace cosmobl {
        *
        *  @return none
        */
-      virtual vector<shared_ptr<Data> > XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
-      { cosmobl::ErrorMsg("Error in vector<shared_ptr<Data> > XiBootstrap of TwoPointCorrelation.h!"); vector<shared_ptr<Data> > data; return data;}
+      virtual vector<shared_ptr<data::Data> > XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
+      { cosmobl::ErrorMsg("Error in vector<shared_ptr<data::Data> > XiBootstrap of TwoPointCorrelation.h!"); vector<shared_ptr<data::Data> > data; return data;}
 
       ///@}
 
@@ -956,7 +957,7 @@ namespace cosmobl {
        *  @brief get the protected member dataset
        *  @return a shared pointer to the dataset
        */
-      virtual shared_ptr<Data> dataset () const { return m_dataset; }
+      virtual shared_ptr<data::Data> dataset () const { return m_dataset; }
 
       /**
        *  @brief get the x coordinates
@@ -1191,7 +1192,7 @@ namespace cosmobl {
        *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
        *  @return none
        */
-      virtual void compute_covariance_matrix (vector<shared_ptr<Data>> xi_collection, bool doJK)
+      virtual void compute_covariance_matrix (vector<shared_ptr<data::Data>> xi_collection, bool doJK)
       { cosmobl::ErrorMsg("Error in compute_covariance_matrix() of TwoPointCorrelation.h!");}
 
       /**

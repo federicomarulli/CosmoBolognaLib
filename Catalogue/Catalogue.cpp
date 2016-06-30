@@ -36,6 +36,7 @@
 
 using namespace cosmobl;
 using namespace catalogue;
+using namespace chainmesh;
 
 
 // ============================================================================
@@ -75,7 +76,7 @@ template void cosmobl::catalogue::Catalogue::remove_objects (vector<cosmobl::cat
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const Cosmology &cosm, const CoordUnits inputUnits, const vector<double> weight)
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const cosmology::Cosmology &cosm, const CoordUnits inputUnits, const vector<double> weight)
 {
   // check the vector dimensions
   if (!(coord1.size()==coord2.size() && coord2.size()==coord3.size()))
@@ -112,7 +113,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const Cosmology &cosm, const int col1, const int col2, const int col3, const int colWeight, const CoordUnits inputUnits, const double nSub, const double fact) 
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm, const int col1, const int col2, const int col3, const int colWeight, const CoordUnits inputUnits, const double nSub, const double fact) 
 {
   // parameters for random numbers used in case nSub!=1
   default_random_engine gen;
@@ -138,7 +139,9 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 	checkDim(val, col1, "val", 0); checkDim(val, col2, "val", 0); checkDim(val, col3, "val", 0);
 
 	if (coordType==_comovingCoordinates_) { // comoving coordinates (x, y, z)
-	  c1 = val[col1]; c2 = val[col2]; c3 = val[col3];
+	  c1 = val[col1]*fact;
+	  c2 = val[col2]*fact;
+	  c3 = val[col3]*fact;
 	  WW = (colWeight!=-1) ? val[colWeight] : 1.;
 	  m_sample.push_back(move(Object::Create(objType, c1, c2, c3, WW)));
 	}
@@ -403,7 +406,7 @@ void cosmobl::catalogue::Catalogue::var_distr (const Var var_name, vector<double
 // ============================================================================
 
 
-void cosmobl::catalogue::Catalogue::computeComovingCoordinates (const Cosmology &cosm, const CoordUnits inputUnits)
+void cosmobl::catalogue::Catalogue::computeComovingCoordinates (const cosmology::Cosmology &cosm, const CoordUnits inputUnits)
 {
   double red, xx, yy, zz;
 
@@ -482,7 +485,7 @@ void cosmobl::catalogue::Catalogue::computePolarCoordinates (const CoordUnits ou
 // ============================================================================
 
 
-void cosmobl::catalogue::Catalogue::computePolarCoordinates (const Cosmology &cosm, const double z1, const double z2, const CoordUnits outputUnits)
+void cosmobl::catalogue::Catalogue::computePolarCoordinates (const cosmology::Cosmology &cosm, const double z1, const double z2, const CoordUnits outputUnits)
 {
   double ra, dec, dc;
 
@@ -841,9 +844,9 @@ double cosmobl::catalogue::Catalogue::weightedN_condition (const Var var_name, c
 // ============================================================================
 
 
-ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double cell_size, const int interpolation_type, const double kernel_radius, const bool useMass) const
+data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double cell_size, const int interpolation_type, const double kernel_radius, const bool useMass) const
 {
-  ScalarField3D density(cell_size, Min(Var::_X_), Max(Var::_X_), Min(Var::_Y_), Max(Var::_Y_), Min(Var::_Z_), Max(Var::_Z_));
+  data::ScalarField3D density(cell_size, Min(Var::_X_), Max(Var::_X_), Min(Var::_Y_), Max(Var::_Y_), Min(Var::_Z_), Max(Var::_Z_));
 
   double deltaX = density.deltaX();
   double deltaY = density.deltaY();
@@ -944,11 +947,11 @@ ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double cell_si
 // ============================================================================
 
 
-ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double cell_size, const Catalogue mask_catalogue, const int interpolation_type, const double kernel_radius, const bool useMass) const
+data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double cell_size, const Catalogue mask_catalogue, const int interpolation_type, const double kernel_radius, const bool useMass) const
 {
-  ScalarField3D mask_density = mask_catalogue.density_field(cell_size, interpolation_type, 0, 0);
+  data::ScalarField3D mask_density = mask_catalogue.density_field(cell_size, interpolation_type, 0, 0);
 
-  ScalarField3D density = density_field(cell_size, interpolation_type, 10, useMass);
+  data::ScalarField3D density = density_field(cell_size, interpolation_type, 10, useMass);
 
   if (density.nx() != mask_density.nx() || density.ny() != mask_density.ny() || density.nz() != mask_density.nz())
   { ErrorMsg("Error in density_field, mask_catalogue is not correct"); } 

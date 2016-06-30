@@ -42,50 +42,87 @@
 
 namespace cosmobl {
 
-  namespace glob{
+  namespace glob {
 
     /**
-     * @struct STR_params
-     * @brief the struct STR_params
+     * @struct STR_twop_model
+     * @brief the struct STR_twop_model
      *
      * This struct contains the data
      * and the model for the &chi;&sup2; analysis
      */
-    struct STR_twop_model{
+    struct STR_twop_model {
 
       /// cosmology
-      shared_ptr<Cosmology> cosmology;
-
-      /// cosmological parameters
-      vector<CosmoPar> Cpar;
+      shared_ptr<cosmology::Cosmology> cosmology;
 
       /// redshift
       double redshift;
 
+      /// method to compute the dark matter power spectrum
+      string method;
+      
+      /// output root of the parameter file used to compute the power spectrum
+      string output_root;
+
+      /// 0 &rarr; linear power spectrum; 1 &rarr; non-linear power spectrum
+      bool NL;
+
+      /// sigmaNL damping of the wiggles in the linear power spectrum
+      double sigmaNL;
+
+      /// 0 &rarr; don't normalize the power spectrum; 1 &rarr; normalize the power spectrum
+      int norm;
+
+      ///minimum wave vector module up to which the power spectrum is computed
+      double k_min;
+
+      ///maximum wave vector module up to which the power spectrum is computed
+      double k_max;
+
+      ///parameter \e a of Eq. 24 of Anderson et al. 2012
+      double aa;
+
+      ///0 &rarr; FFTlog is used; 1 &rarr; the GSL libraries are used
+      bool GSL;
+
+      /// accuracy of the GSL integration
+      double prec;
+
+      /// name of the parameter file
+      string file_par;
+
+      /// scales at wich the fiducal model for &xi;<SUB>DM</SUB>
+      vector<double> model_scales;
+
+      /// dark matter clustering
+      vector<double> fiducial_twop;
+
+      /// pointer to func_grid_GSL class, for interpolation
+      /// of the two point correlation function
+      shared_ptr<classfunc::func_grid_GSL> func_xi;
+
+      /// upper limit of integration for the projected
+      /// correlation function
+      double pi_max;
+      
+      /// minimum separation up to which the correlation function is computed
+      double r_min;
+
+      /// maximum separation up to which the correlation function is computed
+      double r_max;
+
       /// growth rate
       double f;
 
-      /// method to compute the dark matter power spectrum
-      string method;
+      /// cosmological parameters
+      vector<cosmology::CosmoPar> Cpar;
 
-      string output_root;
-
-      bool NL;
-      int norm;
-      double k_min;
-      double k_max;
-      double aa;
-      bool GSL;
-      double prec;
-      string file_par;
-      double r_min;
-      double r_max;
-
-      shared_ptr<classfunc::func_grid_GSL> func_xi;
-
-      double pi_max;
-
-      STR_twop_model() {}
+      /**
+       * @brief default constructor
+       * @return object of type STR_twop_model
+       */
+      STR_twop_model () {}
 
     };
 
@@ -101,7 +138,7 @@ namespace cosmobl {
      *
      * @return the value of the two point correlation function model
      */
-    double wp_bias(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
+    double wp_bias (double r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
     /**
      * @brief model for the projected correlation function.
@@ -129,7 +166,7 @@ namespace cosmobl {
      *
      * @return the value of the two point correlation function model
      */
-    double xi_bias(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
+    double xi_bias (double r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
     /**
      * @brief model for the correlation function in real space.
@@ -143,7 +180,7 @@ namespace cosmobl {
      *
      * @return the value of the two point correlation function model
      */
-    double xi_bias_cosmology(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
+    double xi_bias_cosmology (double r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
     /**
      * @brief model for the monopole of the correlation 
@@ -157,7 +194,7 @@ namespace cosmobl {
      *
      * @return the value of the two point correlation function model
      */
-    double xi0_bias(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
+    double xi0_bias (double r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
     /**
      * @brief model for the monopole of the correlation 
@@ -172,7 +209,7 @@ namespace cosmobl {
      *
      * @return the value of the two point correlation function model
      */
-    double xi0_bias_cosmology(double r, shared_ptr<void> parameters, vector<double> model_parameters); 
+    double xi0_bias_cosmology (double r, shared_ptr<void> parameters, vector<double> model_parameters); 
 
     /**
      * @brief model for the monopole of the correlation function. 
@@ -189,7 +226,7 @@ namespace cosmobl {
      *
      * @return the value of the two point correlation function model
      */
-    double xi_alpha_B(double r, shared_ptr<void> parameters, vector<double> model_parameters);
+    double xi_alpha_B (double r, shared_ptr<void> parameters, vector<double> model_parameters);
 
     /**
      * @brief model for the monopole of the correlation function. 
@@ -207,7 +244,7 @@ namespace cosmobl {
      *
      * @return the value of the two point correlation function model
      */
-    double xi_alpha_B_poly(double r, shared_ptr<void> parameters, vector<double> model_parameters);
+    double xi_alpha_B_poly (double r, shared_ptr<void> parameters, vector<double> model_parameters);
 
     /**
      * @brief model for the monopole of the correlation 
