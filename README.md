@@ -20,10 +20,5 @@ V2.1 new examples added, minor bugs fixed
 V2.2 new examples added, some new classes to model clustering measurements
 
 V2.3 minor bugs fixed, documentation completed
-<<<<<<< HEAD
 
-V2.4 clustering function algorithms improved
-=======
->>>>>>> ebc3136b86501437d033e72c720875fae7ee4cc4
-
-V2.4 clustering functions improved
+V2.4 algorithms for random catalogues and clustering computation improved
