@@ -12,7 +12,7 @@ dirEH = $(dirLib)External/EH/
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
 FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC -lSTAT -lCOSM
-FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirNum) -I$(dirEH) 
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirNum) -I$(dirEH) 
 
 OBJ1 = prior.o
 OBJ2 = fit.o
@@ -30,7 +30,7 @@ fit: $(OBJ2)
 	$(CC) $(OBJ2) -o fit $(FLAGS_LIB) $(FLAGS_GSL)
 
 clean:
-	rm *.o *~ \#* temp* core* prior fit -f
+	rm -f *.o *~ \#* temp* core* prior fit
 
 prior.o: prior.cpp makefile $(dirLib)*.$(ES) 
 	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c prior.cpp

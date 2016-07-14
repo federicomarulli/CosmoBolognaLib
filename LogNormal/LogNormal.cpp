@@ -281,10 +281,11 @@ void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, 
 	  int no = distribution(generator);
 
 	  for (int nnoo = 0; nnoo<no; nnoo++) {
-	    double XX = xmin*(i+ran(gen))+m_random->Min(Var::_X_);
-	    double YY = ymin*(j+ran(gen))+m_random->Min(Var::_Y_);
-	    double ZZ = zmin*(k+ran(gen))+m_random->Min(Var::_Z_);
-	    shared_ptr<Galaxy> SMP(new Galaxy(XX, YY, ZZ, 1.));
+	    comovingCoordinates coord;
+	    coord.xx = xmin*(i+ran(gen))+m_random->Min(Var::_X_);
+	    coord.yy = ymin*(j+ran(gen))+m_random->Min(Var::_Y_);
+	    coord.zz = zmin*(k+ran(gen))+m_random->Min(Var::_Z_);
+	    shared_ptr<Galaxy> SMP(new Galaxy(coord));
 	    mock_sample.push_back(SMP);
 	  }
 

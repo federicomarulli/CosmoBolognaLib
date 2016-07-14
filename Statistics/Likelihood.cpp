@@ -465,41 +465,40 @@ void cosmobl::statistics::Likelihood::minimize_LogLikelihood (const bool usePrio
 
 // ============================================================================================
 
-
-double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, const int chain_size, const int seed)
+double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, const int chain_size, const int seed, const bool do_write_chain, const string output_dir, const string output_file)
 {
   cout << "Sampling the likelihood" << endl;
-
-  // set the likelihood type, according to data and parameters, if not yet setted
-  if (m_likelihood_type != LikelihoodType::_UserDefinedLikelihood_) 
+  // Set the likelihood type, according to data and parameters, if not yet setted
+  if(m_likelihood_type != LikelihoodType::_UserDefinedLikelihood_) 
     set_likelihood_function();
- 
-  // set seed for priors
+
+  // Set seed for priors
   random::UniformRandomNumbers prior_seeds(0, 23412432, seed);
- 
-  for (unsigned int i=0; i<m_model->npar(); i++)
+
+  for (unsigned int i=0; i< m_model->npar(); i++){
     m_model->parameter(i)->set_prior_seed(int(prior_seeds()));
+  }
 
-
-  // initialize chains
-  m_nchains = nchains;
-  m_chain_size = chain_size;
+  // Initialize chains
+  m_nchains=nchains;
+  m_chain_size=chain_size;
   vector<double> chains_index = linear_bin_vector(m_nchains, 0., m_nchains-1.);
   vector<double> chains_weights(m_nchains,1);
   random::DiscreteRandomNumbers chains(chains_index, chains_weights, int(prior_seeds()), 0, m_nchains-1);
-  
-  for (size_t i=0; i<m_model->npar(); i++) {
+
+  for (size_t i=0; i<m_model->npar(); i++){
     m_model->parameter(i)->set_chains(m_nchains, m_chain_size);
     m_model->parameter(i)->set_chains_values_from_prior(0);
   }
 
-  // initialize LogLikelihood;
+
+  // Initialize LogLikelihood;
   auto fixed_parameters = make_shared<STR_likelihood_parameters>(STR_likelihood_parameters(m_data,m_model));
 
-  vector<double> log_likelihood(m_nchains, 0);
-  vector<double> log_prior(m_nchains, 0);
-
-  for (int i=0; i<m_nchains; i++) {
+  vector<double> log_likelihood(m_nchains,0);
+  vector<double> log_prior(m_nchains,0);
+  for (int i=0;i<m_nchains;i++)
+  {
     log_likelihood[i] = m_log_likelihood_function(m_model->parameter_values_from_chain(i,0),fixed_parameters);
     log_prior[i] = LogPriorProbability(m_model->parameter_values_from_chain(i,0));
   }
@@ -507,24 +506,26 @@ double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, 
   
   // stretch-move
 
-  // sample the distribuion function g(Z), to be moved somewhere else
+  // Stretch-move
+
+  // Sample the distribuion function g(Z), to be moved somewhere else
   
-  double gzpar = 4; // User defined ?
+  double gzpar=2; // User defined ?
 
   double zmin = 1./gzpar;
   double zmax = gzpar;
-  vector<double> zz = linear_bin_vector(1000, zmin, zmax), gzz;
-  
+  vector<double> zz = linear_bin_vector(1000,zmin,zmax), gzz;
   for (auto &&zzz : zz)
     gzz.push_back(1./sqrt(zzz));
 
   random::UniformRandomNumbers MH_random(0., 1., int(prior_seeds()));
   random::DistributionRandomNumbers GZ(zz, gzz, "Spline", int(prior_seeds()));
 
-  for (int n=1; n<m_chain_size; n++) {
-    for (int i=0; i< m_nchains; i++) {
+  for (int n=1;n<m_chain_size;n++) {
+    for (int i=0; i< m_nchains; i++)
+    {
       int kk = i;
-      while (kk==i)
+      while(kk==i)
 	kk = int(chains());
         
       vector<double> parameters_i;
@@ -533,7 +534,7 @@ double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, 
       bool isIncluded = 0;
       double gen_z;
 
-      while (!isIncluded) { 
+      while(!isIncluded){
 	gen_z = GZ();
 	parameters_i = m_model->parameter_values_from_chain(i, n-1);
 	parameters_k = m_model->parameter_values_from_chain(kk, n-1);
@@ -550,31 +551,33 @@ double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, 
       double proposed_loglikelihood = m_log_likelihood_function(parameters_i, fixed_parameters);
       double proposed_prior = LogPriorProbability(parameters_i);
 
-      double lnprob = min(1.,pow(gen_z,(m_model->npar_eff()-1))*exp(proposed_loglikelihood+proposed_prior-log_likelihood[i]-log_prior[i]));
+      double lnprob = min(1.,pow(gen_z,(m_model->npar_eff()-1))*exp(proposed_loglikelihood-proposed_prior-log_likelihood[i]+log_prior[i]));
 
-      if (MH_random() < lnprob) {
+      if(MH_random() < lnprob)
+      {
 	log_prior[i] = proposed_prior;
 	log_likelihood[i] = proposed_loglikelihood;
 	for (unsigned int p=0; p<m_model->npar(); p++){
 	  m_model->parameter(p)->set_chain_value (i, n, parameters_i[p]);
 	}
       }
-      else {
+      else{
 	parameters_i = m_model->parameter_values_from_chain(i, n-1);
 	for (unsigned int p=0; p<m_model->npar(); p++)
 	  m_model->parameter(p)->set_chain_value (i, n, parameters_i[p]);
       }
 
-      double progress = double((n+1)*m_nchains+i)/(m_nchains*m_chain_size)*100;
+      double progress = double((n+1)*m_nchains)/(m_nchains*m_chain_size)*100;
       cout << setprecision(2) << setiosflags(ios::fixed) << setw(8) << progress << "% \r"; cout.flush();
     }
+
+    if (do_write_chain)
+      m_write_chain (output_dir, output_file, 0, n, 1);
   }
-  
-  cout << endl;
-    
+
   for (size_t i = 0; i< m_model->npar(); i++)
     m_model->parameter(i)->chains_convergence(m_chain_size, m_chain_size*0.5);
-  
+
   return 0;
 }
  
@@ -686,3 +689,176 @@ void cosmobl::statistics::Likelihood::write_chain (const string output_dir, cons
   fout.clear(); fout.close();
 }
 
+
+// ============================================================================================
+
+
+double cosmobl::statistics::Likelihood::sample_tabulated_likelihood (const int nstep_p1, const int nstep_p2, const string interpolation_method, const int nchains, const int chain_size, const int seed, const bool do_write_chain, const string output_dir, const string output_file)
+{
+  if(m_model->npar()!=2)
+    ErrorMsg("Error in sample tabulated_likelihood of Likelihood.cpp, it only works with 2 parameters");
+
+  cout << "Sampling tabulated likelihood" << endl;
+  
+  // Set the likelihood type, according to data and parameters, if not yet setted
+  if(m_likelihood_type != LikelihoodType::_UserDefinedLikelihood_) 
+    set_likelihood_function();
+
+  vector<double> parameter1(nstep_p1);
+  vector<double> parameter2(nstep_p2);
+  vector<vector<double> > tabulated_likelihood(nstep_p1, vector<double>(nstep_p2,0));
+
+  for(int i=0; i< nstep_p1; i++){
+    parameter1[i] = m_model->parameter(0)->prior()->xmin()+(i)*(m_model->parameter(0)->prior()->xmax()-m_model->parameter(0)->prior()->xmin())/(nstep_p1-1);
+    for(int j=0; j< nstep_p2; j++){
+      parameter2[j] = m_model->parameter(1)->prior()->xmin()+(j)*(m_model->parameter(1)->prior()->xmax()-m_model->parameter(1)->prior()->xmin())/(nstep_p2-1);
+      tabulated_likelihood[i][j] = this->operator()({parameter1[i], parameter2[j]});
+    }
+  }
+
+
+  // Set seed for priors
+  random::UniformRandomNumbers prior_seeds(0, 23412432, seed);
+
+  for (unsigned int i=0; i< m_model->npar(); i++){
+    m_model->parameter(i)->set_prior_seed(int(prior_seeds()));
+  }
+
+  // Initialize chains
+  m_nchains=nchains;
+  m_chain_size=chain_size;
+  vector<double> chains_index = linear_bin_vector(m_nchains, 0., m_nchains-1.);
+  vector<double> chains_weights(m_nchains,1);
+  random::DiscreteRandomNumbers chains(chains_index, chains_weights, int(prior_seeds()), 0, m_nchains-1);
+
+  for (size_t i=0; i<m_model->npar(); i++){
+    m_model->parameter(i)->set_chains(m_nchains, m_chain_size);
+    m_model->parameter(i)->set_chains_values_from_prior(0);
+  }
+
+
+  // Initialize LogLikelihood;
+  auto fixed_parameters = make_shared<STR_likelihood_parameters>(STR_likelihood_parameters(m_data,m_model));
+
+  vector<double> log_likelihood(m_nchains,0);
+  vector<double> log_prior(m_nchains,0);
+  for (int i=0;i<m_nchains;i++)
+  {
+    vector<double> params = m_model->parameter_values_from_chain(i,0);
+    log_likelihood[i] = interpolated_2D(params[0], params[1], parameter1, parameter2, tabulated_likelihood, interpolation_method);
+    log_prior[i] = LogPriorProbability(m_model->parameter_values_from_chain(i,0));
+  }
+
+
+  // Stretch-move
+
+  // Sample the distribuion function g(Z), to be moved somewhere else
+  
+  double gzpar=2; // User defined ?
+
+  double zmin = 1./gzpar;
+  double zmax = gzpar;
+  vector<double> zz = linear_bin_vector(1000,zmin,zmax), gzz;
+  for (auto &&zzz : zz)
+    gzz.push_back(1./sqrt(zzz));
+
+  random::UniformRandomNumbers MH_random(0., 1., int(prior_seeds()));
+  random::DistributionRandomNumbers GZ(zz, gzz, "Spline", int(prior_seeds()));
+
+  for (int n=1;n<m_chain_size;n++) {
+    for (int i=0; i< m_nchains; i++)
+    {
+      int kk = i;
+      while(kk==i)
+	kk = int(chains());
+        
+      vector<double> parameters_i;
+      vector<double> parameters_k;
+
+      bool isIncluded = 0;
+      double gen_z;
+
+      while(!isIncluded){
+	gen_z = GZ();
+	parameters_i = m_model->parameter_values_from_chain(i, n-1);
+	parameters_k = m_model->parameter_values_from_chain(kk, n-1);
+	vector<bool> included(m_model->npar());
+	for (unsigned int p=0; p<m_model->npar(); p++) {
+	  parameters_i[p] = parameters_k[p] + gen_z*(parameters_i[p]-parameters_k[p]);
+	  included[p] =  m_model->parameter(p)->prior()->isIncluded(parameters_i[p]);
+	}
+	isIncluded = accumulate(included.begin(), included.end(), 1, std::multiplies<bool>());
+      }
+
+      m_model->set_parameter_values(parameters_i);
+
+
+      double proposed_loglikelihood = interpolated_2D(parameters_i[0], parameters_i[1], parameter1, parameter2, tabulated_likelihood, interpolation_method);
+//m_log_likelihood_function(parameters_i, fixed_parameters);
+      double proposed_prior = LogPriorProbability(parameters_i);
+
+      double lnprob = min(1.,pow(gen_z,(m_model->npar_eff()-1))*exp(proposed_loglikelihood-proposed_prior-log_likelihood[i]+log_prior[i]));
+
+      if(MH_random() < lnprob)
+      {
+	log_prior[i] = proposed_prior;
+	log_likelihood[i] = proposed_loglikelihood;
+	for (unsigned int p=0; p<m_model->npar(); p++){
+	  m_model->parameter(p)->set_chain_value (i, n, parameters_i[p]);
+	}
+      }
+      else{
+	parameters_i = m_model->parameter_values_from_chain(i, n-1);
+	for (unsigned int p=0; p<m_model->npar(); p++)
+	  m_model->parameter(p)->set_chain_value (i, n, parameters_i[p]);
+      }
+
+      double progress = double((n+1)*m_nchains)/(m_nchains*m_chain_size)*100;
+      cout << setprecision(2) << setiosflags(ios::fixed) << setw(8) << progress << "% \r"; cout.flush();
+    }
+
+    if (do_write_chain)
+      m_write_chain (output_dir, output_file, 0, n, 1);
+  }
+
+  for (size_t i = 0; i< m_model->npar(); i++)
+    m_model->parameter(i)->chains_convergence(m_chain_size, m_chain_size*0.5);
+
+  return 0;
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::statistics::Likelihood::m_write_chain (const string output_dir, const string output_file, const int start, const int stop, const int thin)
+{
+  string MK = "mkdir -p "+output_dir;
+  if (system(MK.c_str())) {}
+  
+  string file = output_dir+output_file; checkIO(file,0);
+
+  ofstream fout(file.c_str());
+  int new_start = (start<0) ?  0 : start;
+  int new_stop = (start<0) ?  m_chain_size : stop;
+
+  int nn = 0;
+
+  if (m_model->npar()) {
+    vector< shared_ptr<Parameter> > pp = m_model->parameters();
+    for (int j=new_start; j<new_stop; j+=thin) {
+      for (int i=0; i<m_nchains; i++) {
+	fout << nn << " ";
+	vector<double> pars;
+	for (size_t k = 0;k<pp.size();k++) {
+	  pars.push_back(pp[k]->chain(i)->chain_value(j));
+	  fout << " " << pp[k]->chain(i)->chain_value(j) << " ";
+	}
+	fout << i << " " << j << endl;
+	nn ++;
+      }
+    }
+  }
+
+  fout.clear(); fout.close();
+}

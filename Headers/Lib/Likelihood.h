@@ -42,6 +42,13 @@
 
 namespace cosmobl {
 
+  /**
+   *  @brief The namespace of functions and classes used for statistical
+   *  analysis
+   *  
+   * The \e statistic namespace contains all the functions and classes
+   * used for statistical analyis
+   */
   namespace statistics {
     
     /**
@@ -177,6 +184,17 @@ namespace cosmobl {
       /// use data covariance matrix; 0 &rarr; don't use data covariance matrix 
       /// 1 &rarr; use data covariance matrix; 
       bool m_cov;
+
+      /**
+       *  @brief function that write sampled parameters 
+       *  @param output_dir directory of output for chains 
+       *  @param output_file file of output for chains 
+       *  @param start starting position in the chains
+       *  @param stop final position in the chains
+       *  @param thin interval of parameter in output
+       *  @return none
+       */
+      void m_write_chain (const string output_dir, const string output_file, const int start=-1, const int stop=-1, const int thin=1);
 
     public:
 
@@ -314,10 +332,31 @@ namespace cosmobl {
        *  @param nchains number of chains to sample the parameter space 
        *  @param chain_size number of step in each chain 
        *  @param seed the seed for random number generator
+       *  @param do_write_chain 0 &rarr; don't write chains at each step 
+       *  1 &rarr; write chains at each step
+       *  @param output_dir directory of output for chains 
+       *  @param output_file file of output for chains 
        *  @return averace acceptance ratio
        */
-      double sample_stretch_move (const int nchains, const int chain_size, const int seed);
+      double sample_stretch_move (const int nchains, const int chain_size, const int seed, bool do_write_chain = 0, const string output_dir=par::defaultString, const string output_file=par::defaultString);
 
+      /**
+       *  @brief function that samples likelihood, using stretch-move
+       *  algorithm on n-dimensional parameter space, and stores chain
+       *  parameters.
+       *  @param nstep_p1 number of step for the first parameter
+       *  @param nstep_p2 number of step for the second parameter
+       *  @param interpolation_method the interpolation method
+       *  @param nchains number of chains to sample the parameter space 
+       *  @param chain_size number of step in each chain 
+       *  @param seed the seed for random number generator
+       *  @param do_write_chain 0 &rarr; don't write chains at each step 
+       *  1 &rarr; write chains at each step
+       *  @param output_dir directory of output for chains 
+       *  @param output_file file of output for chains 
+       *  @return averace acceptance ratio
+       */
+      double sample_tabulated_likelihood (const int nstep_p1, const int nstep_p2, const string interpolation_method, const int nchains, const int chain_size, const int seed, bool do_write_chain = 0, const string output_dir=par::defaultString, const string output_file=par::defaultString);
       /*
        *  @brief function that samples likelihood, using
        *  Metropolis-Hastings algorithm on uni-dimensional parameter

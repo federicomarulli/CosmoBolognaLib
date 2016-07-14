@@ -57,9 +57,9 @@ int main () {
   Catalogue random_catalogue {_createRandom_box_, catalogue, N_R};
 
 
-  // --------------------------------------------------------------------------------------------
-  // ---------------- measure the monopole of the two-point correlation function ----------------
-  // --------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------
+  // ---------------- measure the projected two-point correlation function ----------------
+  // --------------------------------------------------------------------------------------
 
   // binning parameters
 
@@ -78,9 +78,9 @@ int main () {
   TwoP->write(dir_output, "wp");
 
   
-  // --------------------------------------------------------------------------------------------
-  // -------------------------- model the bias from projected 2pcf ------------------------------
-  // --------------------------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------------------------------------------------
+  // -------------------------- model the projected two-point correlation function and estimate the linear bias ------------------------------
+  // -----------------------------------------------------------------------------------------------------------------------------------------
 
   double redshift = 1.; // redshift of the sample
 
@@ -89,30 +89,21 @@ int main () {
   vector<double> bias_limits = {0.8, 3.}; 
   Prior bias_prior { PriorType::_UniformPrior_, bias_limits[0], bias_limits[1] }; // flat prior for the bias
   
-  int nChains = 100;    // number of chains
+  int nChains = 100; // number of chains
   int chain_size = 1000; // size of the chains
 
   vector<double> fit_limits = {5., 20.}; // limits of the fit
 
+  auto model_twop = Modelling_TwoPointCorrelation::Create(TwoP); // object used to mange the modelling
+
+  vector<double> model_scales = logarithmic_bin_vector(200, 0.1, 50.); // scales used
   
-  auto model_twop = Modelling_TwoPointCorrelation::Create(TwoP);
+  model_twop->set_parameters_twop_DM(model_scales, cosmology, redshift, "CAMB"); // set the model parameters
+  model_twop->set_model_bias(bias_prior); // set the prior on the bias
 
-  vector<double> model_scales = logarithmic_bin_vector(200, 0.1, 50.);
-
-  vector<string> methods(2);
-  methods[0] = "CAMB";
-  methods[1] = "MPTbreeze-v1";
-
-  bool NL = 1;
-  for(int i=0;i<methods.size();i++){
-    model_twop->set_parameters_twop_DM(model_scales, cosmology, redshift, methods[i], NL);
-    model_twop->set_model_bias(bias_prior);
-
-    string chain_file = "bias_projected_xmin=10_xmax=40_"+methods[i]+".dat";
-    model_twop->sample_likelihood(fit_limits[0], fit_limits[1], statistics::_GaussianLikelihood_Error_,  nChains, chain_size, 32113, dir_output, chain_file);
-  }
+  string chain_file = "chain.dat";
+  model_twop->sample_likelihood(fit_limits[0], fit_limits[1], statistics::_GaussianLikelihood_Error_, nChains, chain_size, 32113, dir_output, chain_file); // store the chains
   
-
   return 0;
 }
 

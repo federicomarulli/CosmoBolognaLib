@@ -3,7 +3,7 @@ F = gfortran
 
 FLAGS0 = -std=c++11 -fopenmp
 
-FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wno-unused-parameter
+FLAGS = -O3 -unroll -Wall -Wextra -pedantic
 
 Dir_H = Headers/Lib/
 Dir_O = Headers/Objects/

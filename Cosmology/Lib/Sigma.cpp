@@ -95,6 +95,8 @@ double cosmobl::cosmology::Cosmology::SSR_norm (const double RR, const string me
 
 double cosmobl::cosmology::Cosmology::dnSR (const int nd, const double RR, const string method_Pk, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
 {
+  (void)nd; (void)interpType; (void)Num; (void)stepsize; 
+
   double dR = RR*1.e-7;
   double RRR = RR+dR;
   return (SSR_norm(RRR, method_Pk, redshift, output_root, kmax, file_par)-SSR_norm(RR, method_Pk, redshift, output_root, kmax, file_par))/dR;
@@ -173,7 +175,8 @@ double cosmobl::cosmology::Cosmology::SSM_norm (const double MM, const string me
 
 double cosmobl::cosmology::Cosmology::dnSM (const int nd, const double MM, const string method_Pk, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
 {
- 
+  (void)nd; (void)interpType; (void)Num; (void)stepsize;
+  
   double dM = MM*1.e-7;
   double MMM = MM+dM;
   return (SSM_norm(MMM, method_Pk, redshift, output_root, kmax, file_par)-SSM_norm(MM, method_Pk, redshift, output_root, kmax, file_par))/dM;

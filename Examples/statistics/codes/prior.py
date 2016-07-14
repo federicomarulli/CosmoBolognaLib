@@ -16,4 +16,4 @@ psample = np.array([prior(ss) for ss in sample])
 
 plt.hist(sample, 20, normed=True)
 plt.plot(sample, psample, '.')
-plt.show()
+plt.show(block=False)

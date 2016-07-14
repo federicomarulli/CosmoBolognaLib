@@ -161,7 +161,7 @@ namespace cosmobl {
 	 *
 	 *  @return none
 	 */
-	void set_parameters_twop_DM(const vector<double> model_scales, const cosmology::Cosmology cosmology, const double redshift, const string method="CAMB", const double sigmaNL=0, const bool NL=1, const double pimax=40, const double r_min=1.e-3, const double r_max=350., const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0, const bool GSL=1, const double prec=1.e-3, const string file_par=par::defaultString);
+	void set_parameters_twop_DM (const vector<double> model_scales, const cosmology::Cosmology cosmology, const double redshift, const string method="CAMB", const double sigmaNL=0, const bool NL=1, const double pimax=40, const double r_min=1.e-3, const double r_max=350., const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0, const bool GSL=1, const double prec=1.e-3, const string file_par=par::defaultString);
 
 	/**
 	 * @brief set the fiducial model for dark matter 
@@ -184,7 +184,7 @@ namespace cosmobl {
 	 * @return none
 	 */
 	virtual void set_model_bias (const statistics::Prior bias_prior, const statistics::ParameterType pT_bias=statistics::_free_)
-	{ ErrorMsg("Error in fit_bias of Modelling_TwoPointCorrelation.h!"); }
+	{ (void)bias_prior; (void)pT_bias; ErrorMsg("Error in fit_bias of Modelling_TwoPointCorrelation.h!"); }
 
 	/**
 	 * @brief fit the Alcock-Paczynski effect for the two point
@@ -205,7 +205,7 @@ namespace cosmobl {
 	 * @return none
 	 */
 	virtual void set_model_bias_AP_isotropic(const statistics::Prior bias_prior, const statistics::Prior alpha_prior, const statistics::ParameterType pT_bias=statistics::_free_, const statistics::ParameterType pT_alpha=statistics::_free_)
-	{ ErrorMsg("Error in fit_bias_AP_isotropic of Modelling_TwoPointCorrelation.h!"); }
+	{ (void)bias_prior; (void)alpha_prior; (void)pT_bias; (void)pT_alpha; ErrorMsg("Error in fit_bias_AP_isotropic of Modelling_TwoPointCorrelation.h!"); }
 
 	/**
 	 * @brief fit the Alcock-Paczynski effect for the two point
@@ -242,8 +242,7 @@ namespace cosmobl {
 	 * @return none
 	 */
 	virtual void set_model_AP_isotropic (const statistics::Prior alpha_prior, const statistics::Prior B_prior, const statistics::Prior A0_prior, const statistics::Prior A1_prior, const statistics::Prior A2_prior, const statistics::ParameterType pT_alpha=statistics::_free_, const statistics::ParameterType pT_B=statistics::_free_, const statistics::ParameterType pT_A0=statistics::_free_, const statistics::ParameterType pT_A1=statistics::_free_, const statistics::ParameterType pT_A2=statistics::_free_)
-	{ ErrorMsg("Error in fit_AP_isotropic of Modelling_TwoPointCorrelation.h!"); }
-
+	{ (void)alpha_prior; (void)B_prior; (void)A0_prior; (void)A1_prior; (void)A2_prior; (void)pT_alpha; (void)pT_B; (void)pT_A0; (void)pT_A1; (void)pT_A2; ErrorMsg("Error in fit_AP_isotropic of Modelling_TwoPointCorrelation.h!"); }
 
     };
   }

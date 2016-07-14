@@ -41,7 +41,7 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-void cosmobl::ModelBAO::set_xi_parameters (const vector<double> r,  const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const string type, const string method, const string output_root, const bool NL, const double sigmaNL, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
+void cosmobl::ModelBAO::set_xi_parameters (const vector<double> r, const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const string type, const string method, const string output_root, const int norm, const double k_min, const double k_max, const double aa, const double prec, const string file_par)
 {
   auto model_parameters = make_shared<cosmobl::glob::STR_twop_model>(cosmobl::glob::STR_twop_model());
 
@@ -61,6 +61,8 @@ void cosmobl::ModelBAO::set_xi_parameters (const vector<double> r,  const shared
 
 cosmobl::ModelBAO::ModelBAO (const double bias_value, const statistics::Prior bias_prior, const double alpha_value, const statistics::Prior alpha_prior, const bool AddPoly) : Model1D()
 {
+  (void)bias_value; (void)bias_prior; (void)alpha_value; (void)alpha_prior;
+  
   if (AddPoly) {
     m_npar = 5;
     m_parameters.resize(m_npar); 

@@ -392,6 +392,8 @@ vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation_multipoles::
 
 void cosmobl::twopt::TwoPointCorrelation_multipoles::write (const string dir, const string file, const int rank) const 
 {
+  (void)rank;
+  
   vector<double> rad = m_dataset->xx();
   vector<double> xil = m_dataset->fx();
   vector<double> error = m_dataset->error_fx();

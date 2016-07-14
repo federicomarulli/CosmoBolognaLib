@@ -60,7 +60,7 @@ namespace cosmobl {
       /// halo peculiar velocity along the y direction
       double m_vy;
 
-      /// halo peculiar velocity along the y direction
+      /// halo peculiar velocity along the z direction
       double m_vz;
 
       /// halo mass
@@ -78,44 +78,179 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Halo
        */
-      Halo () {}
-      
+      Halo ()
+	: Object(), m_vx(par::defaultDouble), m_vy(par::defaultDouble), m_vz(par::defaultDouble), m_mass(par::defaultDouble) {}
+   
       /**
        *  @brief constructor that uses comoving coordinates
-       *  @param xx comoving coordinate
-       *  @param yy comoving coordinate
-       *  @param zz comoving coordinate
+       *
+       *  @param coord structure containing the comoving coordinates
+       *  {x, y, z}
+       *
        *  @param weight weight
-       *  @param vx peculiar velocity
-       *  @param vy peculiar velocity
-       *  @param vz peculiar velocity    
-       *  @param mass mass
+       *
+       *  @param vx halo peculiar velocity along the x direction
+       *
+       *  @param vy halo peculiar velocity along the y direction
+       *
+       *  @param vz halo peculiar velocity along the z direction
+       *
+       *  @param mass the halo mass
+       *
        *  @return object of class Halo
        */
-      Halo (const double xx, const double yy, const double zz, const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
-	: Object(xx, yy, zz, weight), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
-    
+      Halo (const comovingCoordinates coord, const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+	: Object(coord, weight), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
+      
       /**
-       *  @brief constructor that uses observed coordinates
+       *  @brief constructor that uses comoving coordinates and a
+       *  cosmological model to estimate the redshift
+       *
+       *  @param coord structure containing the comoving coordinates
+       *  {x, y, z}
+       *
+       *  @param cosm object of class Cosmology, used to estimate
+       *  comoving distances
+       *
+       *  @param z1_guess minimum prior on the redshift
+       *
+       *  @param z2_guess maximum prior on the redshift 
+       *
+       *  @param weight weight
+       *   
+       *  @param vx halo peculiar velocity along the x direction
+       *
+       *  @param vy halo peculiar velocity along the y direction
+       *
+       *  @param vz halo peculiar velocity along the z direction
+       *
+       *  @param mass the halo mass
+       *
+       *  @return object of class Halo
+       */
+      Halo (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+	: Object(coord, cosm, z1_guess, z2_guess, weight), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
+
+      /**
+       *  @brief constructor that uses observed coordinates in radians
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshift}
+       *
+       *  @param weight weight
+       *
+       *  @param vx halo peculiar velocity along the x direction
+       *
+       *  @param vy halo peculiar velocity along the y direction
+       *
+       *  @param vz halo peculiar velocity along the z direction
+       *
+       *  @param mass the halo mass
+       *
+       *  @return object of class Halo
+       */
+      Halo (const observedCoordinates coord, const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+	: Object(coord, weight), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
+      
+      /**
+       *  @brief constructor that uses observed coordinates in any
+       *  angular units
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshift}
+       *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param weight weight
+       *
+       *  @param vx halo peculiar velocity along the x direction
+       *
+       *  @param vy halo peculiar velocity along the y direction
+       *
+       *  @param vz halo peculiar velocity along the z direction
+       *
+       *  @param mass the halo mass
+       *
+       *  @return object of class Halo
+       */
+      Halo (const observedCoordinates coord, const CoordUnits inputUnits, const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+	: Object(coord, inputUnits, weight), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
+      
+      /**
+       *  @brief constructor that uses observed coordinates in radians
+       *  and a cosmological model to estimate the comoving
+       *  coordinates
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshitf}
+       *
+       *  @param cosm object of class Cosmology, used to estimate
+       *  comoving distances
+       *
+       *  @param weight weight
+       *
+       *  @param vx halo peculiar velocity along the x direction
+       *
+       *  @param vy halo peculiar velocity along the y direction
+       *
+       *  @param vz halo peculiar velocity along the z direction
+       *
+       *  @param mass the halo mass
+       *
+       *  @return object of class Halo
+       */
+      Halo (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+	: Object(coord, cosm, weight), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
+
+      /**
+       *  @brief constructor that uses observed coordinates and a
+       *  cosmological model to estimate the comoving coordinates
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshift}
+       *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param cosm object of class Cosmology, used to estimate comoving distances
+       *
+       *  @param weight weight
+       *
+       *  @param vx halo peculiar velocity along the x direction
+       *
+       *  @param vy halo peculiar velocity along the y direction
+       *
+       *  @param vz halo peculiar velocity along the z direction
+       *
+       *  @param mass the halo mass
+       *
+       *  @return object of class Halo
+       */
+      Halo (const observedCoordinates coord, const CoordUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+	: Object(coord, inputUnits, cosm, weight), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
+
+      /**
+       *  @brief constructor that uses both comoving and observed coordinates
+       *  @param xx comoving coordinate
+       *  @param yy comoving coordinate
+       *  @param zz comoving coordinate 
        *  @param ra Right Ascension
        *  @param dec Declination
        *  @param redshift redshift
-       *  @param cosm object of class Cosmology, used to estimate comoving distances
-       *  @param weight weight
-       *  @param vx peculiar velocity
-       *  @param vy peculiar velocity
-       *  @param vz peculiar velocity    
-       *  @param mass mass
+       *  @param weight weight   
+       *  @param vx halo peculiar velocity along the x direction
+       *  @param vy halo peculiar velocity along the y direction
+       *  @param vz halo peculiar velocity along the z direction
+       *  @param mass the halo mass
        *  @return object of class Halo
        */
-      Halo (const double ra, const double dec, const double redshift, const cosmology::Cosmology &cosm, const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
-	: Object(ra, dec, redshift, cosm, weight), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
-
+      Halo (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+	: Object(xx, yy, zz, ra, dec, redshift, weight), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
+      
       /**
        *  @brief default destructor
        *  @return none
        */
-      ~Halo () {}
+      ~Halo () = default;
 
       ///@}
   

@@ -329,7 +329,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void read (const string dir, const string file)
-      {ErrorMsg("Error in read() of TwoPointCorrelation1D.h");}	
+      { (void)dir; (void)file; ErrorMsg("Error in read() of TwoPointCorrelation1D.h"); }	
 
       /**
        *  @brief write the measured two-point correlation
@@ -339,7 +339,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void write (const string dir, const string file, const int rank=0) const
-      { ErrorMsg("Error in write() of TwoPointCorrelation.h"); }	
+      { (void)dir; (void)file; (void)rank; ErrorMsg("Error in write() of TwoPointCorrelation.h"); }	
 
       ///@}
 

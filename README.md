@@ -21,4 +21,4 @@ V2.2 new examples added, some new classes to model clustering measurements
 
 V2.3 minor bugs fixed, documentation completed
 
-V2.3 new examples added, minor bugs fixed
+V2.4 clustering function algorithms improved

@@ -45,7 +45,7 @@ double cosmobl::glob::func_xi_GSL (double kk, void *params)
   
   double lgk = log10(kk);
   
-  double lgPkK = interpolated(lgk, pp->lgkk, pp->lgPk, "Linear");
+  double lgPkK = interpolated(lgk, pp->lgkk, pp->lgPk, "Spline");
     
   double Int = pow(10.,lgPkK)*sin(kk*pp->rr)*kk/pp->rr;
 
@@ -284,7 +284,9 @@ double cosmobl::xi_ratio (const double f_sigma8, const double bias_sigma8)
 /// @cond glob
 
 double cosmobl::xi_ratio (double xx, shared_ptr<void> pp, vector<double> par) 
-{ 
+{
+  (void)xx; (void)pp;
+  
   if (par.size()==2) return xi_ratio(par[0]);
   
   else if (par.size()==3) return xi_ratio(par[0], par[1]);
@@ -511,7 +513,9 @@ double cosmobl::xi2D_lin_model (const double rp, const double pi, const double b
 /// @cond glob
 
 double cosmobl::xi2D_model (double rp, double pi, shared_ptr<void> pp, vector<double> par)
-{ 
+{
+  (void)rp; (void)pi;
+  
   if (par.size()<3) {
     string Err = "Error in xi2D_model! par.size() = " + conv(par.size(),par::fINT) + "!";
     ErrorMsg(Err);

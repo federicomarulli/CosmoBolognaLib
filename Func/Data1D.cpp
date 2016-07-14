@@ -44,7 +44,7 @@ cosmobl::data::Data1D::Data1D (const string input_file, const int skip_nlines, c
 {
   read(input_file, skip_nlines);
   double xMin = (xmin>-par::defaultDouble) ? xmin : Min(m_x)-0.001; 
-  double xMax = (xmin<par::defaultDouble) ? xmin : Max(m_x)+0.001; 
+  double xMax = (xmin<par::defaultDouble) ? xmax : Max(m_x)+0.001; 
   set_limits(xMin, xMax);
 }
 
@@ -57,7 +57,7 @@ cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, 
   m_x = x;
   m_fx = fx;
   double xMin = (xmin>-par::defaultDouble) ? xmin : Min(m_x)-0.001; 
-  double xMax = (xmin<par::defaultDouble) ? xmin : Max(m_x)+0.001; 
+  double xMax = (xmin<par::defaultDouble) ? xmax : Max(m_x)+0.001; 
 
   find_index(m_x, xMin, xMax, m_x_down, m_x_up);
 }
@@ -72,7 +72,7 @@ cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, 
   m_fx = fx;
   m_error_fx = error_fx;
   double xMin = (xmin>-par::defaultDouble) ? xmin : Min(m_x)-0.001; 
-  double xMax = (xmin<par::defaultDouble) ? xmin : Max(m_x)+0.001; 
+  double xMax = (xmin<par::defaultDouble) ? xmax : Max(m_x)+0.001; 
 
   find_index(m_x, xMin, xMax, m_x_down, m_x_up);
 }
@@ -87,7 +87,7 @@ cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, 
   m_fx = fx;
   m_covariance = covariance;
   double xMin = (xmin>-par::defaultDouble) ? xmin : Min(m_x)-0.001; 
-  double xMax = (xmin<par::defaultDouble) ? xmin : Max(m_x)+0.001; 
+  double xMax = (xmin<par::defaultDouble) ? xmax : Max(m_x)+0.001; 
 
   for (size_t i=0; i<m_covariance.size(); i++)
     m_error_fx.push_back(sqrt(m_covariance[i][i]));
@@ -286,6 +286,8 @@ void cosmobl::data::Data1D::read (const string input_file, const int skip_nlines
 
 void cosmobl::data::Data1D::write (const string dir, const string file, const string xname, const string fxname, const int rank) const 
 {
+  (void)rank;
+  
   string file_out = dir+file;
   ofstream fout (file_out.c_str()); checkIO(file_out, 0);
 

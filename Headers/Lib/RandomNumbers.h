@@ -137,7 +137,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_mean (const double mean)
-      { ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }
+      { (void)mean; ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }
 
       /**
        *  @brief set parameters for Normal distribution
@@ -146,7 +146,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_mean_sigma (const double mean, const double sigma)
-      { ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }
+      { (void)mean; (void)sigma; ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }
 
       /**
        *  @brief set parameters for Discrete distribution
@@ -155,7 +155,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_discrete_values (const vector<double> values, const vector<double> weights)
-      { ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }
+      { (void)values; (void)weights; ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }
 
       /**
        *  @brief set the parameters for the interpolated distribution
@@ -164,7 +164,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_interpolated_distribution (const vector<double> values, const vector<double> weights)
-      { ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }   
+      { (void)values; (void)weights; ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }   
     };
 
     /**

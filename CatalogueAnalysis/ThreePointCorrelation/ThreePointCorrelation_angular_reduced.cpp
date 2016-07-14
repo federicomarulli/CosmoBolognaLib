@@ -48,6 +48,7 @@ using namespace threept;
 
 void cosmobl::threept::ThreePointCorrelation_angular_reduced::measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const int count_ddd, const int count_rrr, const int count_ddr, const int count_drr, const bool tcount) 
 {
+  (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; 
   ErrorMsg("Work in progress...");
 }
 
@@ -57,5 +58,6 @@ void cosmobl::threept::ThreePointCorrelation_angular_reduced::measure (const str
 
 void cosmobl::threept::ThreePointCorrelation_angular_reduced::write (const string dir, const string file, const bool connected) const
 {      
+  (void)dir; (void)file; (void)connected;
   ErrorMsg("Work in progress...");
 }  

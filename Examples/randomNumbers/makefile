@@ -11,7 +11,7 @@ dirEH = $(dirLib)External/EH/
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
 FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC
-FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirHO) -I$(dirNum) -I$(dirEH) 
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirNum) -I$(dirEH) 
 
 OBJ = randomNumbers.o
 
@@ -25,7 +25,7 @@ randomNumbers: $(OBJ)
 	$(CC) $(OBJ) -o randomNumbers $(FLAGS_LIB) 
 
 clean:
-	rm *.o randomNumbers *~ \#* temp* core* -f
+	rm -f *.o randomNumbers *~ \#* temp* core*
 
 randomNumbers.o: randomNumbers.cpp makefile $(dirLib)*.$(ES)
 	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c randomNumbers.cpp 

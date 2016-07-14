@@ -149,7 +149,7 @@ namespace cosmobl {
 	    return YY;
 	  }
 
-	  double integrate_qag(const double a, const double b, const double prec=1.e-2, const int limit_size=6, const int rule = 6)
+	  double integrate_qag (const double a, const double b, const double prec=1.e-2, const int limit_size=6, const int rule=6)
 	  {
 	    function<double(double)> f = bind(&func_grid_GSL::operator(), this, std::placeholders::_1);
 	   
@@ -163,7 +163,7 @@ namespace cosmobl {
 	    return GSL_integrate_qag(Func,a, b, prec, limit_size, rule);
 	  }
 
-	  double integrate_qaws(const double a, const double b, const double alpha =0, const double beta =0, const int mu=0, const int nu =0, const double prec=1.e-2, const int limit_size=6, const int rule = 6)
+	  double integrate_qaws (const double a, const double b, const double alpha =0, const double beta =0, const int mu=0, const int nu =0, const double prec=1.e-2, const int limit_size=6)
 	  {
 	    function<double(double)> f = bind(&func_grid_GSL::operator(), this, std::placeholders::_1);
 	   
@@ -177,7 +177,7 @@ namespace cosmobl {
 	    return GSL_integrate_qaws(Func,a, b, alpha, beta, mu, nu, prec, limit_size);
 	  }
 
-	  double root(const double x_low, const double x_up, const double fx0=0, const double prec=1.e-2)
+	  double root (const double x_low, const double x_up, const double fx0=0, const double prec=1.e-2)
 	  {
 	    function<double(double)> f = bind(&func_grid_GSL::operator(), this, std::placeholders::_1);
 	   
@@ -353,7 +353,7 @@ namespace cosmobl {
       string interpType;
 
     public:
-      func_grid_minimum_1D (vector<double> _xg, vector<double> _yg, string _interpType, int _Num)
+      func_grid_minimum_1D (vector<double> _xg, vector<double> _yg, string _interpType)
 	: xg(_xg), yg(_yg), interpType(_interpType) {}  
   
       double operator() (VecDoub XX) 
@@ -375,7 +375,7 @@ namespace cosmobl {
       string interpType;
       
     public:
-      func_grid_minimum_2D (vector<double> _x1g, vector<double> _x2g, vector< vector<double> > _yg , string _interpType, int _Num)
+      func_grid_minimum_2D (vector<double> _x1g, vector<double> _x2g, vector< vector<double> > _yg , string _interpType)
 	: x1g(_x1g), x2g(_x2g), yg(_yg), interpType(_interpType) {}  
   
       double operator() (VecDoub XX) 

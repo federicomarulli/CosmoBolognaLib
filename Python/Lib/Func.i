@@ -30,7 +30,7 @@
     enum {_angular_connected_, _angular_reduced_, _comoving_connected_, _comoving_reduced_};
     enum {_GenericObject_, _RandomObject_, _Mock_, _Halo_, _Galaxy_, _Cluster_, _Void_}; 
     enum {_X_, _Y_, _Z_, _RA_, _Dec_, _Redshift_, _Dc_, _Weight_, _Mass_, _Richness_, _Magnitude_, _Vx_, Vy, Vz, _Region_, _Radius_, _Generic_};
-    enum {_createRandom_box_, _createRandom_box_RADec_, _createRandom_shuffle_, _createRandom_cone_, _createRandom_mock_, _createRandom_VIPERS_};
+    enum {_createRandom_box_, _createRandom_square_, _createRandom_shuffle_, _createRandom_cone_, _createRandom_VIPERS_};
   };
   
   string cosmobl::par::DirCosmo = "~/CosmoBolognaLib/";
@@ -168,6 +168,7 @@ static const string col_blue = "\033[0;34m";
 class EnumTypes {
  public:
   enum {_Omega_matter_LCDM_, _Omega_matter_, _Omega_baryon_, _Omega_baryon_h2_,  _Omega_neutrinos_, _massless_neutrinos_, _massive_neutrinos_, _Omega_DE_, _Omega_radiation_, _H0_, _hh_, _scalar_amp_, _n_spec_, _w0_, _wa_, _fNL_, _sigma8_};
+  enum {_radians_, _degrees_, _arcseconds_, _arcminutes_};
   enum {_1D_, _2D_}; 
   enum {_linear_, _logarithmic_};
   enum {_comovingCoordinates_, _observedCoordinates_};
@@ -181,6 +182,6 @@ class EnumTypes {
   enum {_angular_connected_, _angular_reduced_, _comoving_connected_, _comoving_reduced_};
   enum {_GenericObject_, _RandomObject_, _Mock_, _Halo_, _Galaxy_, _Cluster_, _Void_}; 
   enum {_X_, _Y_, _Z_, _RA_, _Dec_, _Redshift_, _Dc_, _Weight_, _Mass_, _Richness_, _Magnitude_, _Vx_, Vy, Vz, _Region_, _Radius_, _Generic_};
-  enum {_createRandom_box_, _createRandom_shuffle_, _createRandom_cone_, _createRandom_mock_, _createRandom_VIPERS_};
+  enum {_createRandom_box_, _createRandom_square_, _createRandom_shuffle_, _createRandom_cone_, _createRandom_VIPERS_};
 };
   

@@ -76,7 +76,7 @@ template void cosmobl::catalogue::Catalogue::remove_objects (vector<cosmobl::cat
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const cosmology::Cosmology &cosm, const CoordUnits inputUnits, const vector<double> weight)
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const cosmology::Cosmology &cosm, const vector<double> weight, const CoordUnits inputUnits)
 {
   // check the vector dimensions
   if (!(coord1.size()==coord2.size() && coord2.size()==coord3.size()))
@@ -88,37 +88,33 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
   
   
   // include the objects in the catalogue
+  
+  for (size_t i=0; i<coord1.size(); ++i) {
 
-  if (coordType==_comovingCoordinates_) // comoving coordinates (x, y, z)
-    for (size_t i=0; i<coord1.size(); ++i)
-      m_sample.push_back(move(Object::Create(objType, coord1[i], coord2[i], coord3[i], _weight[i])));
-
-  else if (coordType==_observedCoordinates_) { // observed cordinates (R.A., Dec, redshift)
-    
-    // conversion of coordinate units into radiants, in case they are provided in different units
-    vector<double> ra(coord1.size()), dec(coord1.size());
-    for (size_t i=0; i<coord1.size(); ++i) {
-      ra[i] = (inputUnits==_radians_) ? coord1[i] : radians(coord1[i], inputUnits);
-      dec[i] = (inputUnits==_radians_) ? coord2[i] : radians(coord2[i], inputUnits);
+    if (coordType==_comovingCoordinates_) { // comoving coordinates (x, y, z)
+      comovingCoordinates coord = {coord1[i], coord2[i], coord3[i]};
+      m_sample.push_back(move(Object::Create(objType, coord, _weight[i])));
     }
+    else if (coordType==_observedCoordinates_) { // observed coordinates (R.A., Dec, redshift)
+      observedCoordinates coord = {coord1[i], coord2[i], coord3[i]};   
+      m_sample.push_back(move(Object::Create(objType, coord, inputUnits, cosm, _weight[i])));
+    }
+    else ErrorMsg("Error in Catalogue::Catalogue() of Catalogue.cpp: coordType is not valid!");
 
-    for (size_t i=0; i<ra.size(); ++i)
-      m_sample.push_back(move(Object::Create(objType, ra[i], dec[i], coord3[i], cosm, _weight[i])));
   }
   
-  else ErrorMsg("Error in Catalogue::Catalogue() of Catalogue.cpp: coordType is not valid!");
 }
 
 
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm, const int col1, const int col2, const int col3, const int colWeight, const CoordUnits inputUnits, const double nSub, const double fact) 
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm, const CoordUnits inputUnits, const int col1, const int col2, const int col3, const int colWeight, const double nSub, const double fact) 
 {
   // parameters for random numbers used in case nSub!=1
   default_random_engine gen;
   uniform_real_distribution<float> ran(0., 1.);
-
+  
   
   // read the input catalogue files
   
@@ -128,7 +124,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
     cout << "I'm reading the catalogue: " << file_in << endl;
     ifstream finr(file_in.c_str()); checkIO(file_in, 1);
 
-    double c1, c2, c3, WW, VV;
+    double WW, VV;
 
     while (getline(finr, line)) { // read the lines
       
@@ -139,19 +135,21 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 	checkDim(val, col1, "val", 0); checkDim(val, col2, "val", 0); checkDim(val, col3, "val", 0);
 
 	if (coordType==_comovingCoordinates_) { // comoving coordinates (x, y, z)
-	  c1 = val[col1]*fact;
-	  c2 = val[col2]*fact;
-	  c3 = val[col3]*fact;
+	  comovingCoordinates coord;
+	  coord.xx = val[col1]*fact;
+	  coord.yy = val[col2]*fact;
+	  coord.zz = val[col3]*fact;
 	  WW = (colWeight!=-1) ? val[colWeight] : 1.;
-	  m_sample.push_back(move(Object::Create(objType, c1, c2, c3, WW)));
+	  m_sample.push_back(move(Object::Create(objType, coord, WW)));
 	}
 
 	else if (coordType==_observedCoordinates_) { // observed coordinates (R.A., Dec, redshift)
-	  c1 = (inputUnits==_radians_) ? val[col1]*fact : radians(val[col1], inputUnits)*fact;
-	  c2 = (inputUnits==_radians_) ? val[col2]*fact : radians(val[col2], inputUnits)*fact;
-	  c3 = val[col3];
+	  observedCoordinates coord;
+	  coord.ra = val[col1]*fact;
+	  coord.dec = val[col2]*fact;
+	  coord.redshift = val[col3];
 	  WW = (colWeight!=-1) ? val[colWeight] : 1.;
-	  m_sample.push_back(move(Object::Create(objType, c1, c2, c3, cosm, WW)));
+	  m_sample.push_back(move(Object::Create(objType, coord, inputUnits, cosm, WW)));
 	}
 	
 	else ErrorMsg("Error in Catalogue::Catalogue() of Catalogue.cpp: coordType is not valid!");
@@ -462,7 +460,7 @@ void cosmobl::catalogue::Catalogue::computePolarCoordinates (const CoordUnits ou
     if (outputUnits==_degrees_)
       for (int i=0; i<nObjects(); i++) {
 	m_sample[i]->set_ra(degrees(ra));
-	m_sample[i]->set_dec(degrees(dec)); 		    
+	m_sample[i]->set_dec(degrees(dec));
       }
 
     else if (outputUnits==_arcseconds_)
@@ -713,6 +711,8 @@ double cosmobl::catalogue::Catalogue::angsep_xyz (const int i, shared_ptr<Object
 
 shared_ptr<Catalogue> cosmobl::catalogue::Catalogue::smooth (const double gridsize, const vector<Var> vars, const int SUB)
 {
+  (void)vars;
+  
   shared_ptr<Catalogue> cat {new Catalogue(*this)};
   
   if (gridsize<1.e-30) return cat;
@@ -949,6 +949,8 @@ data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double c
 
 data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double cell_size, const Catalogue mask_catalogue, const int interpolation_type, const double kernel_radius, const bool useMass) const
 {
+  (void)kernel_radius;
+  
   data::ScalarField3D mask_density = mask_catalogue.density_field(cell_size, interpolation_type, 0, 0);
 
   data::ScalarField3D density = density_field(cell_size, interpolation_type, 10, useMass);

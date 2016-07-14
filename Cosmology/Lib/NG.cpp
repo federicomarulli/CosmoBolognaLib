@@ -366,6 +366,8 @@ double cosmobl::cosmology::Cosmology::bias_correction (const double kk, const do
 
 double cosmobl::glob::skewness_kernel (double *kk, size_t dim, void *params)
 {
+  (void)dim;
+  
   struct cosmobl::glob::STR_NG *pp = (struct cosmobl::glob::STR_NG *) params;
   
   Cosmology cosm (pp->Omega_matter, pp->Omega_baryon, pp->Omega_neutrinos, pp->massless_neutrinos, pp->massive_neutrinos, pp->Omega_DE, pp->Omega_radiation, pp->hh, pp->scalar_amp, pp->n_spec, pp->w0, pp->wa, pp->fNL, pp->type_NG, pp->output_root, pp->unit);

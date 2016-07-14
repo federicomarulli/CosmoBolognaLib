@@ -68,13 +68,13 @@ namespace cosmobl {
        *  @brief default constuctor
        *  @return object of class Modelling_TwoPointCorrelation_monopole
        */
-      Modelling_TwoPointCorrelation_monopole () {}
+      Modelling_TwoPointCorrelation_monopole () = default;
 
       /**
        *  @brief default destructor
        *  @return none
        */
-      virtual ~Modelling_TwoPointCorrelation_monopole () {}
+      virtual ~Modelling_TwoPointCorrelation_monopole () = default;
 
       /**
        *  @brief constructor of the ModellingTwoPointCorrelation_monopole
@@ -83,7 +83,7 @@ namespace cosmobl {
        *
        *  @return object of type Modelling_TwoPointCorrelation_monopole
        */
-      Modelling_TwoPointCorrelation_monopole(const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop);
+      Modelling_TwoPointCorrelation_monopole (const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop);
 	
       ///@}
 
@@ -93,7 +93,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      void set_fiducial_twop() override;
+      void set_fiducial_twop () override;
 
       /**
        * @brief fit the monopole of the two-point correlation function
@@ -117,8 +117,8 @@ namespace cosmobl {
        * @param pT_alpha the parameter type of &alpha;: it can be
        * either statistics::_free_ or _fixed_
        *
-       * @param pT_B the parameter type of B: it can be either statistics::_free_
-       * or _fixed_
+       * @param pT_B the parameter type of B: it can be either
+       * statistics::_free_ or _fixed_
        *
        * @param pT_A0 the parameter type of A0: it can be either
        * statistics::_free_ or _fixed_
@@ -131,7 +131,7 @@ namespace cosmobl {
        *
        * @return none
        */
-      void set_model_AP_isotropic(const statistics::Prior alpha_prior, const statistics::Prior B_prior, const statistics::Prior A0_prior, const statistics::Prior A1_prior, const statistics::Prior A2_prior, const statistics::ParameterType pT_alpha=statistics::_free_, const statistics::ParameterType pT_B=statistics::_free_, const statistics::ParameterType pT_A0=statistics::_free_, const statistics::ParameterType pT_A1=statistics::_free_, const statistics::ParameterType pT_A2=statistics::_free_) override;
+      void set_model_AP_isotropic (const statistics::Prior alpha_prior, const statistics::Prior B_prior, const statistics::Prior A0_prior, const statistics::Prior A1_prior, const statistics::Prior A2_prior, const statistics::ParameterType pT_alpha=statistics::_free_, const statistics::ParameterType pT_B=statistics::_free_, const statistics::ParameterType pT_A0=statistics::_free_, const statistics::ParameterType pT_A1=statistics::_free_, const statistics::ParameterType pT_A2=statistics::_free_) override;
 
       /**
        * @brief compute and write the model using the stored 

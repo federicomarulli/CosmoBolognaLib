@@ -125,7 +125,7 @@ void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::set_model_AP
   statistics::Parameter B(B_prior.sample(), B_prior, pT_B, "B");
   statistics::Parameter A0(A0_prior.sample(), A0_prior, pT_A0, "A0");
   statistics::Parameter A1(A1_prior.sample(), A1_prior, pT_A1, "A1");
-  statistics::Parameter A2(A2_prior.sample(), A2_prior, pT_A1, "A2");
+  statistics::Parameter A2(A2_prior.sample(), A2_prior, pT_A2, "A2");
 
   model_parameters.push_back(B);
   model_parameters.push_back(alpha);

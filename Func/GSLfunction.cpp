@@ -38,7 +38,7 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-unique_ptr<glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (func_1par_1 function, shared_ptr<void> function_parameters)
+unique_ptr<glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (const func_1par_1 function, const shared_ptr<void> function_parameters)
 {
   return unique_ptr<glob::GSLfunction_1D_1>(new GSLfunction_1D_1(function, function_parameters));
 }
@@ -47,7 +47,7 @@ unique_ptr<glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (func
 // ============================================================================================
 
 
-unique_ptr<cosmobl::glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (int npar, func_npar_1 function, shared_ptr<void> function_parameters)
+unique_ptr<cosmobl::glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (const int npar, const func_npar_1 function, const shared_ptr<void> function_parameters)
 {
   return unique_ptr<glob::GSLfunction_nD_1>(new GSLfunction_nD_1(npar, function, function_parameters));
 }
@@ -56,7 +56,7 @@ unique_ptr<cosmobl::glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunct
 // ============================================================================================
 
 
-unique_ptr<glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (func_1par_2 function, vector<double> params, shared_ptr<void> function_parameters)
+unique_ptr<glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (const func_1par_2 function, const vector<double> params, const shared_ptr<void> function_parameters)
 {
   return unique_ptr<glob::GSLfunction_1D_2>(new GSLfunction_1D_2(function, params, function_parameters));
 }
@@ -65,7 +65,7 @@ unique_ptr<glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (func
 // ============================================================================================
 
 
-unique_ptr<cosmobl::glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (int npar, func_npar_2 function, vector<double> params, shared_ptr<void> function_parameters)
+unique_ptr<cosmobl::glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunction (const int npar, const func_npar_2 function, const vector<double> params, const shared_ptr<void> function_parameters)
 {
   return unique_ptr<glob::GSLfunction_nD_2>(new GSLfunction_nD_2(npar, function, params, function_parameters));
 }
@@ -74,9 +74,8 @@ unique_ptr<cosmobl::glob::GSLfunction> cosmobl::glob::GSLfunction::make_GSLfunct
 // ============================================================================================
 
 
-void cosmobl::glob::GSLfunction_1D_1::minimize(double &result, int max_iter, double min, double max)
+void cosmobl::glob::GSLfunction_1D_1::minimize (double &result, const int max_iter, double min, double max)
 {
-
   int status;
   int iter = 0;
   const gsl_min_fminimizer_type *T;
@@ -96,20 +95,20 @@ void cosmobl::glob::GSLfunction_1D_1::minimize(double &result, int max_iter, dou
   F.params = &func;
 
   T = gsl_min_fminimizer_brent;
-  s = gsl_min_fminimizer_alloc (T);
-  gsl_min_fminimizer_set (s, &F, m, min, max);
+  s = gsl_min_fminimizer_alloc(T);
+  gsl_min_fminimizer_set(s, &F, m, min, max);
   
   do
     {
       iter++;
-      status = gsl_min_fminimizer_iterate (s);
+      status = gsl_min_fminimizer_iterate(s);
 
-      m = gsl_min_fminimizer_x_minimum (s);
-      min = gsl_min_fminimizer_x_lower (s);
-      max = gsl_min_fminimizer_x_upper (s);
+      m = gsl_min_fminimizer_x_minimum(s);
+      min = gsl_min_fminimizer_x_lower(s);
+      max = gsl_min_fminimizer_x_upper(s);
 
       status 
-	= gsl_min_test_interval (min, max, 0.001, 0.0);
+	= gsl_min_test_interval(min, max, 0.001, 0.0);
 
       if (status == GSL_SUCCESS)
 	{
@@ -118,7 +117,7 @@ void cosmobl::glob::GSLfunction_1D_1::minimize(double &result, int max_iter, dou
     }
   while (status == GSL_CONTINUE && iter < max_iter);
 
-  gsl_min_fminimizer_free (s);
+  gsl_min_fminimizer_free(s);
   
   result = m;
   
@@ -128,9 +127,8 @@ void cosmobl::glob::GSLfunction_1D_1::minimize(double &result, int max_iter, dou
 // ============================================================================================
 
 
-void cosmobl::glob::GSLfunction_1D_2::minimize(double &result, int max_iter, double min, double max)
+void cosmobl::glob::GSLfunction_1D_2::minimize (double &result, const int max_iter, double min, double max)
 {
-
   int status;
   int iter = 0;
   const gsl_min_fminimizer_type *T;
@@ -150,20 +148,20 @@ void cosmobl::glob::GSLfunction_1D_2::minimize(double &result, int max_iter, dou
   F.params = &func;
 
   T = gsl_min_fminimizer_brent;
-  s = gsl_min_fminimizer_alloc (T);
-  gsl_min_fminimizer_set (s, &F, m, min, max);
+  s = gsl_min_fminimizer_alloc(T);
+  gsl_min_fminimizer_set(s, &F, m, min, max);
   
   do
     {
       iter++;
-      status = gsl_min_fminimizer_iterate (s);
+      status = gsl_min_fminimizer_iterate(s);
 
-      m = gsl_min_fminimizer_x_minimum (s);
-      min = gsl_min_fminimizer_x_lower (s);
-      max = gsl_min_fminimizer_x_upper (s);
+      m = gsl_min_fminimizer_x_minimum(s);
+      min = gsl_min_fminimizer_x_lower(s);
+      max = gsl_min_fminimizer_x_upper(s);
 
       status 
-	= gsl_min_test_interval (min, max, 0.001, 0.0);
+	= gsl_min_test_interval(min, max, 0.001, 0.0);
 
       if (status == GSL_SUCCESS)
 	{
@@ -172,7 +170,7 @@ void cosmobl::glob::GSLfunction_1D_2::minimize(double &result, int max_iter, dou
     }
   while (status == GSL_CONTINUE && iter < max_iter);
 
-  gsl_min_fminimizer_free (s);
+  gsl_min_fminimizer_free(s);
   
   result = m;
   
@@ -182,7 +180,7 @@ void cosmobl::glob::GSLfunction_1D_2::minimize(double &result, int max_iter, dou
 // ============================================================================================
 
 
-void cosmobl::glob::GSLfunction_nD_1::minimize(vector<double> &result, unsigned int max_iter, double tol)
+void cosmobl::glob::GSLfunction_nD_1::minimize (vector<double> &result, const unsigned int max_iter, const double tol)
 {
 
   const gsl_multimin_fminimizer_type *T = gsl_multimin_fminimizer_nmsimplex2rand;
@@ -250,7 +248,11 @@ void cosmobl::glob::GSLfunction_nD_1::minimize(vector<double> &result, unsigned 
 
 }
 
-void cosmobl::glob::GSLfunction_nD_1::minimize(vector<double> &result, vector<double> step_size, unsigned int max_iter, double tol)
+
+// ============================================================================================
+
+
+void cosmobl::glob::GSLfunction_nD_1::minimize (vector<double> &result, const vector<double> step_size, const unsigned int max_iter, const double tol)
 {
 
   const gsl_multimin_fminimizer_type *T = gsl_multimin_fminimizer_nmsimplex2;
@@ -320,7 +322,7 @@ void cosmobl::glob::GSLfunction_nD_1::minimize(vector<double> &result, vector<do
 // ============================================================================================
 
 
-void cosmobl::glob::GSLfunction_nD_2::minimize (vector<double> &result, unsigned int max_iter, double tol)
+void cosmobl::glob::GSLfunction_nD_2::minimize (vector<double> &result, const unsigned int max_iter, const double tol)
 {
 
   const gsl_multimin_fminimizer_type *T = gsl_multimin_fminimizer_nmsimplex2rand;
@@ -392,7 +394,7 @@ void cosmobl::glob::GSLfunction_nD_2::minimize (vector<double> &result, unsigned
 // ============================================================================================
 
 
-void cosmobl::glob::GSLfunction_nD_2::minimize (vector<double> &result, vector<double> step_size, unsigned int max_iter, double tol)
+void cosmobl::glob::GSLfunction_nD_2::minimize (vector<double> &result, const vector<double> step_size, const unsigned int max_iter, const double tol)
 {
 
   const gsl_multimin_fminimizer_type *T = gsl_multimin_fminimizer_nmsimplex2;
@@ -441,9 +443,9 @@ void cosmobl::glob::GSLfunction_nD_2::minimize (vector<double> &result, vector<d
       if (status) 
 	break;
 
-      size = gsl_multimin_fminimizer_size (s);
+      size = gsl_multimin_fminimizer_size(s);
     
-      status = gsl_multimin_test_size (size, tol);
+      status = gsl_multimin_test_size(size, tol);
 
       if (status == GSL_SUCCESS)
 	{
@@ -454,7 +456,7 @@ void cosmobl::glob::GSLfunction_nD_2::minimize (vector<double> &result, vector<d
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_vector_free(ss);
-  gsl_multimin_fminimizer_free (s);
+  gsl_multimin_fminimizer_free(s);
 
 }
 

@@ -47,7 +47,7 @@ using namespace twopt;
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation1D_filtered::set_parameters (const binType binType, const double rMin, const double rMax, const int nbins) 
+void cosmobl::twopt::TwoPointCorrelation1D_filtered::set_parameters (const double rMin, const double rMax, const int nbins) 
 {
   vector<double> rc, wc, error;
  
@@ -64,7 +64,7 @@ void cosmobl::twopt::TwoPointCorrelation1D_filtered::set_parameters (const binTy
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation1D_filtered::set_parameters (const binType binType, const double rMin, const double rMax, const double binSize)
+void cosmobl::twopt::TwoPointCorrelation1D_filtered::set_parameters (const double rMin, const double rMax, const double binSize)
 {
   int nbins = (rMax-rMin)/binSize;
 
@@ -85,6 +85,11 @@ void cosmobl::twopt::TwoPointCorrelation1D_filtered::set_parameters (const binTy
 
 void cosmobl::twopt::TwoPointCorrelation1D_filtered::measure (const ErrorType errType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_ResampleXi, const int nMocks, const int count_dd, const int count_rr, const int count_dr, const bool tcount)
 {
+  (void)errType;
+  (void)dir_output_ResampleXi;
+  (void)nMocks;
+  WarningMsg("Attention: the parameters errType, dir_output_ReampleXi and nMocks are not used: work in progress...");
+  
   TwoPointCorrelation1D_monopole::measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount);
 
   double binSize  = 1./m_dd->binSize_inv_D1();

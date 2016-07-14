@@ -21,7 +21,7 @@
 /**
  * @file Headers/Lib/Catalogue.h
  *
- * @brief The class Catalogue 
+ * @brief The class Catalogue  
  *
  * This file defines the interface of the class Catalogue, used
  * handle catalogues of astronomical sources
@@ -126,20 +126,17 @@ namespace cosmobl {
      */
     enum RandomType {
 
-      /// random catalogue with cubic geometry (or parallelepiped)
+      /// random catalogue with cubic geometry (or parallelepiped) in comoving coordinates
       _createRandom_box_,
 
-      /// random catalogue with square geometry (or parallelepiped)
-      _createRandom_box_RADec_,   
+      /// random catalogue with square geometry in observed coordinates (R.A., Dec)
+      _createRandom_square_,   
 
-      /// random catalogue obtained with shuffling
+      /// random catalogue obtained with shuffling in observed coordinates (R.A., Dec)
       _createRandom_shuffle_,
       
       /// random catalogue with conic geometry
       _createRandom_cone_,
-
-      /// random catalogue for mocks
-      _createRandom_mock_,
 
       /// random catalogue for VIPERS
       _createRandom_VIPERS_
@@ -209,13 +206,13 @@ namespace cosmobl {
        *
        *  @param cosm object of class Cosmology
        *
-       *  @param inputUnits the units of the input coordinates
-       *
        *  @param weight vector containing the weights
+       *
+       *  @param inputUnits the units of the input coordinates
        *
        *  @return object of type catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const vector<double> weight={});
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const cosmology::Cosmology &cosm={}, const vector<double> weight={}, const CoordUnits inputUnits=_radians_);
 
       /**
        *  @brief constructor, reading a file with coordinates
@@ -229,7 +226,9 @@ namespace cosmobl {
        *  @param file vector containing the files where the input
        *  catalogues are stored
        *
-       *  @param cosm object of class Cosmology
+       *  @param cosm object of class Cosmology 
+       *
+       *  @param inputUnits the units of the input coordinates
        *
        *  @param col1 column of the input file containing the first
        *  coordinates, that can be either the x comoving coordinates,
@@ -246,8 +245,6 @@ namespace cosmobl {
        *  @param colWeight column of the input file containing the
        *  weights
        *
-       *  @param inputUnits the units of the input coordinates
-       *
        *  @param nSub the fracton of objects that will be randomly
        *  selected (nSub=1 &rArr; all objects are selected)
        *
@@ -256,7 +253,7 @@ namespace cosmobl {
        *
        *  @return an object of class Catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm={}, const int col1=0, const int col2=1, const int col3=2, const int colWeight=-1, const CoordUnits inputUnits=_radians_, const double nSub=1.1, const double fact=1.);
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const int col1=0, const int col2=1, const int col3=2, const int colWeight=-1, const double nSub=1.1, const double fact=1.);
 
       /**
        *  @brief constructor, using vectors of generic objects
@@ -329,9 +326,6 @@ namespace cosmobl {
        *
        *  @param dir_in the input directory where the original random
        *  catalogue is stored
-       *
-       *  @param dir_out the output directory where the new random
-       *  catalogue will be stored
        *     
        *  @param Zguess_min minimum redshift used to search the redshift
        *
@@ -342,111 +336,85 @@ namespace cosmobl {
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
        */
-      Catalogue (const RandomType type, const cosmology::Cosmology &real_cosm, const cosmology::Cosmology &test_cosm, const string dir_in, const string dir_out, const double Zguess_min, const double Zguess_max);
+      Catalogue (const RandomType type, const cosmology::Cosmology &real_cosm, const cosmology::Cosmology &test_cosm, const string dir_in, const double Zguess_min, const double Zguess_max);
 
       /**
-       *  @brief constructor that creates a random catalogue with the
-       *  'shuffle' method
+       *  @brief constructor that creates a random catalogue with
+       *  either the square geometry or with 'the shuffle' method
+       *
+       *  constructor that creates a random catalogue with
+       *  either the square geometry in observed coordinates (R.A.,
+       *  Dec), or with the 'shuffle' method, i.e. using the R.A. and
+       *  Dec coordinates of the input catalogue
+       *
        *  @param type the type of random catalogue, that must be set
-       *  to \_createRandom_shuffle\_
+       *  to \_createRandom_square\_ or \_createRandom_shuffle\_
+       *
        *  @param catalogue object of class Catalogue
-       *  @param cosm object of class Cosmology
+       *
        *  @param N_R fraction of random objects, i.e.
        *  N<SUB>R</SUB>=N<SUB>random</SUB>/N<SUB>objects</SUB>
-       *  @param nbin numbers of bin to obtain the redshift distribution
+       *
+       *  @param nbin number of redshift bins used to compute the
+       *  redshift distribution
+       *
+       *  @param cosm object of class Cosmology
+       *
        *  @param conv 1 &rarr; compute the Gaussian convolvolution of
        *  the distribution; 0 &rarr; do not convolve
+       *
        *  @param sigma the standard deviation, &sigma;, of the
        *  Gaussian kernel
+       *
        *  @param seed the seed for random number generation
+       *
        *  @return an object of class Catalogue
        *
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
        */
-      Catalogue (const RandomType type, const Catalogue catalogue, const cosmology::Cosmology &cosm, const int N_R, const int nbin, const bool conv=0, const double sigma=0., const int seed = 3213);
+      Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology &cosm={}, const bool conv=false, const double sigma=0., const int seed=3213);
       
       /**
        *  @brief constructor that creates a random catalogue in a cone
        *
-       *  @param [in] type the type of random catalogue, that must be
+       *  @param type the type of random catalogue, that must be
        *  set to \_createRandom_cone\_
        *
-       *  @param [in] catalogue object of class Catalogue
+       *  @param catalogue object of class Catalogue
        *
-       *  @param [in] nRandom the number of random objects
+       *  @param N_R fraction of random objects, i.e.
+       *  N<SUB>R</SUB>=N<SUB>random</SUB>/N<SUB>objects</SUB>
        *
-       *  @param [in] cosm object of class Cosmology 
+       *  @param nbin number of redshift bins used to compute the
+       *  redshift distribution
        *
-       *  @param [in] Angle angle of the cone 
+       *  @param Angle angle of the cone 
        *
-       *  @param [in] step_redshift the number of steps in redshift
-       *  used to redshift distribution of the random object; if
-       *  step_redshift=0 the redshift distribution is estimated from
-       *  the convolvolution of N(D<SUB>C</SUB>)
+       *  @param redshift vector containing the redshift of the
+       *  objects in the catalogue
        *
-       *  @param [in] redshift vector containing the redshift of the
-       *  object in the real catalogue
+       *  @param cosm object of class Cosmology 
        *
-       *  @param [out] dc vector containing the central values of the
-       *  binned comoving distances of the random objects
+       *  @param conv 1 &rarr; compute the Gaussian convolvolution of
+       *  the distribution; 0 &rarr; do not convolve
        *
-       *  @param [out] convol vector containing the central values of
-       *  the binned smoothed distribution of comoving distances of
-       *  the random objects
+       *  @param sigma the standard deviation, &sigma;, of the
+       *  Gaussian kernel
        *
-       *  @param [in] idum the random seed
+       *  @param seed the seed for random number generation
        *
        *  @return an object of class Catalogue
        *
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
        */
-      Catalogue (const RandomType type, const Catalogue catalogue, const int nRandom, const cosmology::Cosmology &cosm, const double Angle, const int step_redshift, const vector<double> redshift, vector<double> &dc, vector<double> &convol, const int idum=13);
-      
-      /**
-       *  @brief constructor that creates a random catalogue for a
-       *  mock sample (with polar coordinates [R.A., Dec, redshift])
-       *
-       *  @param [in] type the type of random catalogue, that must be
-       *  set to \_createRandom_mock\_
-       *
-       *  @param [in] catalogue object of class Catalogue
-       *
-       *  @param [in] nRandom the number of random objects
-       *
-       *  @param [in] cosm object of class Cosmology 
-       *
-       *  @param [in] dir the directory where the random catalogue is
-       *  stored
-       *
-       *  @param [in] step_redshift the number of steps in redshift
-       *  used to redshift distribution of the random object; if
-       *  step_redshift=0 the redshift distribution is estimated from
-       *  the convolvolution of N(D<SUB>C</SUB>)
-       *
-       *  @param [in] redshift vector containing the redshift of the
-       *  object in the real catalogue
-       *
-       *  @param [out] dc vector containing the central values of the
-       *  binned comoving distances of the random objects
-       *
-       *  @param [out] convol vector containing the central values of
-       *  the binned smoothed distribution of comoving distances of
-       *  the random objects
-       *
-       *  @param [in] idum the random seed
-       *
-       *  @return an object of class Catalogue
-       *
-       *  @warning the input parameter \e type is used only to make
-       *  the constructor type explicit
-       */
-      Catalogue (const RandomType type, const Catalogue catalogue, const int nRandom, const cosmology::Cosmology &cosm, const string dir, const int step_redshift, const vector<double> redshift, vector<double> &dc, vector<double> &convol, const int idum=13);
+      Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const double Angle, const vector<double> redshift, const cosmology::Cosmology &cosm={}, const bool conv=false, const double sigma=0., const int seed=3213);
 
+      
       /// @cond extrandom
       
-      Catalogue (const RandomType type, const int nRandom, const cosmology::Cosmology &cosm, const string dir_out, const int step_redshift, const vector<double> dc, const vector<double> convol, const vector<double> lim, const vector<double> redshift, const vector<double> weight, const double redshift_min, const double redshift_max, const bool venice, const string where, string file_random, const string mask, const string dir_venice, const int idum=13); 
+      Catalogue (const RandomType type, const double N_R, const cosmology::Cosmology &cosm, const int step_redshift, const vector<double> lim, const vector<double> redshift, const vector<double> weight, const double redshift_min, const double redshift_max, const bool venice, const string where, string file_random, const string mask, const string dir_venice); 
       
       /// @endcond
   
@@ -724,7 +692,7 @@ namespace cosmobl {
        * @param _var vector of variables
        * @return none
        */
-      void set_var (const Var, const vector<double>); 
+      void set_var (const Var, const vector<double> _var); 
 
       /**
        * @brief change the number of objects of the catalogue

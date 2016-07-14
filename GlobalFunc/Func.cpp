@@ -90,6 +90,8 @@ double cosmobl::volume (const double boxSize, const int frac, const double Bord,
 
 void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<double> &redshift, vector<double> &xx, vector<double> &yy, vector<double> &zz, const vector<double> vx, const vector<double> vy, const vector<double> vz, const double sigmaV, cosmology::Cosmology &real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int idum) 
 {
+  (void)redshift_min; (void)redshift_max;
+  
   if (ra.size()==0) ErrorMsg("Error in coord_zSpace of GlobalFunc.cpp: ra.size()=0!");
   
 

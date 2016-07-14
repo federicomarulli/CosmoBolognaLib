@@ -303,7 +303,10 @@ namespace cosmobl {
     _observedCoordinates_
     
   };
-  
+
+  struct comovingCoordinates { double xx; double yy; double zz; };
+  struct observedCoordinates { double ra; double dec; double redshift; };
+
 
   /**
    *  @name Functions of generic use  
@@ -568,23 +571,6 @@ namespace cosmobl {
   
 
   // ============================================================================================
-
-  
-  /**
-   *  @brief extract a set of random numbers with a given probability
-   *  distribution
-   *  @param [in] nRan the number of random numbers
-   *  @param [in] idum the random seed
-   *  @param [in] xx vector containing the set of probability
-   *  distribution data, x
-   *  @param [in] fx vector containing the set of probability
-   *  distribution data, f(x)
-   *  @param [out] nRandom vector containing the random numbers
-   *  @param [in] n_min the minimum number of the output set
-   *  @param [in] n_max the maximum number of the output set
-   *  @return none
-   */
-  void random_numbers (const int nRan, const int idum, const vector<double> xx, const vector<double> fx, vector<double> &nRandom, const double n_min=par::defaultDouble, const double n_max=-par::defaultDouble);
 
   
   /* ======== Alfonso Veropalumbo ======== */
@@ -1388,8 +1374,6 @@ namespace cosmobl {
   void read_cov (const string, vector<vector<double> > &, vector<vector<double> > &, const int, const int);
 
   // fill a vector from a given distribution 
-  void fill_distr (const vector<double>, const double, const vector<double>, vector<double> &, const double, vector<double> &);
-  void fill_distr (const vector<double>, const vector<double>, const int, vector<double> &);
   void fill_distr (const int, const vector<double>, const vector<double>, vector<double> &, const double, const double, const int);
 
   // find the vector index
@@ -1575,6 +1559,7 @@ namespace cosmobl {
   template <typename T> 
     T Pol2 (T xx, shared_ptr<void> pp, vector<double> par)
     {
+      (void)pp;
       return par[0]*pow(xx,2)+par[1]*xx+par[2];
     }
 
@@ -1648,6 +1633,7 @@ namespace cosmobl {
   template <typename T> 
     T identity (T xx, shared_ptr<void> pp, vector<double> par)
     {
+      (void)xx; (void)pp; (void)par;
       return 1.;
     }
 
@@ -1693,6 +1679,7 @@ namespace cosmobl {
   template <typename T> 
     T gaussian (T xx, shared_ptr<void> pp, vector<double> par)
     {
+      (void)pp;
       T gauss = 1./(par[1]*sqrt(2.*par::pi))*exp(-pow(xx-par[0],2)/(2.*par[1]*par[1]));
       return (par.size()==2) ? gauss : gauss*par[2];
     }
@@ -1708,6 +1695,7 @@ namespace cosmobl {
   template <typename T>
     T poisson (T xx, shared_ptr<void> pp, vector<double> par)
     {
+      (void)pp;
       T pois = exp(int(xx) * log(par[0]) - lgamma(int(xx) + 1.0) - par[0]);
       return pois;
     }

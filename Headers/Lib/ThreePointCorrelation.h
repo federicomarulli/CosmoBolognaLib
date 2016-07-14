@@ -406,7 +406,7 @@ namespace cosmobl {
        * @return none
        */
       virtual void measure (const string dir_output_triplets, const vector<string> dir_input_triplets={}, const int count_ddd=1, const int count_rrr=1, const int count_ddr=1, const int count_drr=1, const bool tcount=0)
-      { cosmobl::ErrorMsg("Error in measure() of ThreePointCorrelation.h!"); }
+      { (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; cosmobl::ErrorMsg("Error in measure() of ThreePointCorrelation.h!"); }
  
       /**
        * @brief method to measure the three-point correlation function
@@ -442,7 +442,7 @@ namespace cosmobl {
        * @return none
        */
       virtual void measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const int count_ddd=1, const int count_rrr=1, const int count_ddr=1, const int count_drr=1, const bool tcount=0)
-      { cosmobl::ErrorMsg("Error in measure() of ThreePointCorrelation.h!"); }
+      { (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; cosmobl::ErrorMsg("Error in measure() of ThreePointCorrelation.h!"); }
       
       ///@}
       
@@ -459,7 +459,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void write (const string dir, const string file) const
-      { cosmobl::ErrorMsg("Error in write() of ThreePointCorrelation.h!"); }
+      { (void)dir; (void)file; cosmobl::ErrorMsg("Error in write() of ThreePointCorrelation.h!"); }
       
       /**
        *  @brief write the measured three-point correlation
@@ -471,7 +471,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void write (const string dir, const string file, const bool connected) const
-      { cosmobl::ErrorMsg("Error in write() of ThreePointCorrelation.h!"); }
+      { (void)dir; (void)file; (void)connected; cosmobl::ErrorMsg("Error in write() of ThreePointCorrelation.h!"); }
       
       ///@}
       

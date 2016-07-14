@@ -605,7 +605,7 @@ void cosmobl::pairs::Pair1D_angular_lin::put (const shared_ptr<Object> obj1, con
 {
   double tt = (m_angularUnits==_radians_) ? angular_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()) 
 	     : converted_angle(angular_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()), _radians_, m_angularUnits);
-    
+  
   if (m_thetaMin < tt && tt < m_thetaMax) {
 
     int kk = max(0, min(int((tt-m_thetaMin)*m_binSize_inv), m_nbins));

@@ -306,7 +306,7 @@ namespace cosmobl {
        *  @return the i-th binned scale
        */
       virtual double scale (const int i) const
-      { cosmobl::ErrorMsg("Error in double scale(i) of Pair.h!"); return 0; }
+      { (void)i; cosmobl::ErrorMsg("Error in double scale(i) of Pair.h!"); return 0; }
 
       /**
        *  @brief get the member vector<double> m_scale
@@ -321,7 +321,7 @@ namespace cosmobl {
        *  @return the number of pairs in the i-th bin
        */
       virtual double PP1D (const int i) const
-      { cosmobl::ErrorMsg("Error in double PP1D(i) of Pair.h!"); return 0; }
+      { (void)i; cosmobl::ErrorMsg("Error in double PP1D(i) of Pair.h!"); return 0; }
 
       /**
        *  @brief get the member vector<double> m_PP1D
@@ -336,7 +336,7 @@ namespace cosmobl {
        *  @return the i-th binned scale in the first dimension
        */
       virtual double scale_D1 (const int i) const
-      { cosmobl::ErrorMsg("Error in double scale(i) of Pair.h!"); return 0; }
+      { (void)i; cosmobl::ErrorMsg("Error in double scale(i) of Pair.h!"); return 0; }
 
       /**
        *  @brief get the member vector<double> m_scale_D1
@@ -352,7 +352,7 @@ namespace cosmobl {
        *  @return the i-th binned scale in the second dimension
        */
       virtual double scale_D2 (const int i) const
-      { cosmobl::ErrorMsg("Error in double scale(i) of Pair.h!"); return 0; }
+      { (void)i; cosmobl::ErrorMsg("Error in double scale(i) of Pair.h!"); return 0; }
 
       /**
        *  @brief get the member vector<double> m_scale_D2
@@ -369,7 +369,7 @@ namespace cosmobl {
        *  @return the number of pairs in the i-th bin
        */
       virtual double PP2D (const int i, const int j) const
-      { cosmobl::ErrorMsg("Error in double PP2D(i,j) of Pair.h!"); return 0;}
+      { (void)i; (void)j; cosmobl::ErrorMsg("Error in double PP2D(i,j) of Pair.h!"); return 0;}
 
       /**
        *  @brief get the member vector<vector<double>> m_PP2D
@@ -504,7 +504,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_PP1D (const int i, const double pp)
-      { cosmobl::ErrorMsg("Error in set_PP1D() of Pair.h!"); }
+      { (void)i; (void)pp; cosmobl::ErrorMsg("Error in set_PP1D() of Pair.h!"); }
 
       /**
        *  @brief set the protected member Pair1D::m_PP1D[i] adding the
@@ -514,7 +514,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void add_PP1D (const int i, const double pp)
-      { cosmobl::ErrorMsg("Error in add_PP1D() of Pair.h!"); }
+      { (void)i; (void)pp; cosmobl::ErrorMsg("Error in add_PP1D() of Pair.h!"); }
       
       /**
        *  @brief set the member m_PP2D[i][j]
@@ -524,7 +524,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_PP2D (const int i, const int j, const double pp)
-      { cosmobl::ErrorMsg("Error in set_PP2D() of Pair.h!"); }
+      { (void)i; (void)j; (void)pp; cosmobl::ErrorMsg("Error in set_PP2D() of Pair.h!"); }
 
       /**
        *  @brief set the protected member Pair1D::m_PP2D[i][j] adding
@@ -535,7 +535,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void add_PP2D (const int i, const int j, const double pp)
-      { cosmobl::ErrorMsg("Error in add_PP2D() of Pair.h!"); }
+      { (void)i; (void)j; (void)pp; cosmobl::ErrorMsg("Error in add_PP2D() of Pair.h!"); }
       
       ///@}
 

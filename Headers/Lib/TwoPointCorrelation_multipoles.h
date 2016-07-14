@@ -444,7 +444,7 @@ namespace cosmobl {
        *  @return none
        */
       void read (const string dir, const string file) override
-      { ErrorMsg("Error in TwoPointCorrelation_multipoles::read of TwoPointCorrelation_multipoles.h: work in progress!"); }
+      { (void)dir; (void)file; ErrorMsg("Error in TwoPointCorrelation_multipoles::read of TwoPointCorrelation_multipoles.h: work in progress!"); }
 
       /**
        *  @brief write the multipoles of the two-point correlation

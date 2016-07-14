@@ -81,8 +81,6 @@ namespace cosmobl {
        *  catalogue
        *  @param random of class Catalogue containing the random data
        *  catalogue
-       *  @param bintype binning type: 0 &rarr; linear; 1 &rarr;
-       *  logarithmic
        *  @param rMin minimum separation used to count the pairs
        *  @param rMax maximum separation used to count the pairs
        *  @param nbins number of bins
@@ -92,9 +90,9 @@ namespace cosmobl {
        *  @param monopole_shift shift parameter, i.e. the radial shift is
        *  binSize*shift*  @return object of class TwoPointCorrelation1D_monopole
        */
-      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType bintype, const double rMin, const double rMax, const int nbins, const double monopole_rMin, const double monopole_rMax, const int monopole_nbins, const double monopole_shift)
+      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const double rMin, const double rMax, const int nbins, const double monopole_rMin, const double monopole_rMax, const int monopole_nbins, const double monopole_shift)
 	: TwoPointCorrelation1D_monopole(data, random, _linear_, monopole_rMin, monopole_rMax, monopole_nbins, monopole_shift)
-      { m_twoPType = _1D_filtered_; set_parameters(bintype, rMin, rMax, nbins); }
+      { m_twoPType = _1D_filtered_; set_parameters(rMin, rMax, nbins); }
 
        /**
        *  @brief constructor
@@ -102,8 +100,6 @@ namespace cosmobl {
        *  catalogue
        *  @param random of class Catalogue containing the random data
        *  catalogue
-       *  @param bintype binning type: 0 &rarr; linear; 1 &rarr;
-       *  logarithmic
        *  @param rMin minimum separation used to filter the xi
        *  @param rMax maximum separation used to filter the xi
        *  @param nbins the number of bins
@@ -114,9 +110,9 @@ namespace cosmobl {
        *  binSize*shift
        *  @return object of class TwoPointCorrelation1D_filtered
        */
-      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType bintype, const double rMin, const double rMax, const int nbins, const double monopole_rMin, const double monopole_rMax, const double monopole_binSize, const double monopole_shift)
+      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const double rMin, const double rMax, const int nbins, const double monopole_rMin, const double monopole_rMax, const double monopole_binSize, const double monopole_shift)
 	: TwoPointCorrelation1D_monopole(data, random, _linear_ , monopole_rMin, monopole_rMax, monopole_binSize, monopole_shift)
-      { m_twoPType = _1D_filtered_; set_parameters(bintype, rMin, rMax, nbins); }     
+      { m_twoPType = _1D_filtered_; set_parameters(rMin, rMax, nbins); }     
 
       /**
        *  @brief constructor
@@ -124,8 +120,6 @@ namespace cosmobl {
        *  catalogue
        *  @param random of class Catalogue containing the random data
        *  catalogue
-       *  @param bintype binning type: 0 &rarr; linear; 1 &rarr;
-       *  logarithmic
        *  @param rMin minimum separation used to count the pairs
        *  @param rMax maximum separation used to count the pairs
        *  @param binSize the bin size
@@ -135,9 +129,9 @@ namespace cosmobl {
        *  @param monopole_shift shift parameter, i.e. the radial shift is
        *  binSize*shift*  @return object of class TwoPointCorrelation1D_monopole
        */
-      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType bintype, const double rMin, const double rMax, const double binSize, const double monopole_rMin, const double monopole_rMax, const int monopole_nbins, const double monopole_shift)
+      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const double rMin, const double rMax, const double binSize, const double monopole_rMin, const double monopole_rMax, const int monopole_nbins, const double monopole_shift)
 	: TwoPointCorrelation1D_monopole(data, random,_linear_, monopole_rMin, monopole_rMax, monopole_nbins, monopole_shift)
-      { m_twoPType = _1D_filtered_; set_parameters(bintype, rMin, rMax, binSize); }
+      { m_twoPType = _1D_filtered_; set_parameters(rMin, rMax, binSize); }
 
        /**
        *  @brief constructor
@@ -145,8 +139,6 @@ namespace cosmobl {
        *  catalogue
        *  @param random of class Catalogue containing the random data
        *  catalogue
-       *  @param bintype binning type: 0 &rarr; linear; 1 &rarr;
-       *  logarithmic
        *  @param rMin minimum separation used to filter the xi
        *  @param rMax maximum separation used to filter the xi
        *  @param binSize the number of bins
@@ -158,9 +150,9 @@ namespace cosmobl {
        *  binSize*shift
        *  @return object of class TwoPointCorrelation1D_filtered
        */
-      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType bintype, const double rMin, const double rMax, const double binSize, const double monopole_rMin, const double monopole_rMax, const double monopole_binSize, const double monopole_shift)
+      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const double rMin, const double rMax, const double binSize, const double monopole_rMin, const double monopole_rMax, const double monopole_binSize, const double monopole_shift)
 	: TwoPointCorrelation1D_monopole(data, random, _linear_, monopole_rMin, monopole_rMax, monopole_binSize, monopole_shift)
-      { m_twoPType = _1D_filtered_; set_parameters(bintype, rMin, rMax, binSize); }     
+      { m_twoPType = _1D_filtered_; set_parameters(rMin, rMax, binSize); }     
 
       /**
        *  @brief default destructor
@@ -178,25 +170,21 @@ namespace cosmobl {
       
       /**
        *  @brief set the binning parameters
-       *  @param binType binning type: 0 &rarr; linear; 1 &rarr;
-       *  logarithmic
        *  @param rMin minimum separation used to count the pairs
        *  @param rMax maximum separation used to count the pairs
        *  @param nbins number of bins
        *  @return none
        */
-      void set_parameters (const binType binType, const double rMin, const double rMax, const int nbins);
+      void set_parameters (const double rMin, const double rMax, const int nbins);
 
       /**
        *  @brief set the binning parameters
-       *  @param binType binning type: 0 &rarr; linear; 1 &rarr;
-       *  logarithmic
        *  @param rMin minimum separation used to count the pairs
        *  @param rMax maximum separation used to count the pairs
        *  @param binSize the bin size
        *  @return none
        */
-      void set_parameters (const binType binType, const double rMin, const double rMax, const double binSize);
+      void set_parameters (const double rMin, const double rMax, const double binSize);
 
       ///@}
 

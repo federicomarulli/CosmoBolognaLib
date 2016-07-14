@@ -40,18 +40,19 @@ int main () {
   fin.clear();
   
   Catalogue catalogue2 {_Galaxy_, _comovingCoordinates_, x, y, z};
-  
+
   
   // ------------------------------------------------------------------------------------------------------------------
   // ---------------- method III : construct a vector of galaxies and add them into an empty catalogue ----------------
   // ------------------------------------------------------------------------------------------------------------------
 
   vector<shared_ptr<Object>> object;
-
+  
   fin.seekg(ios::beg);
   
   while (fin >> X >> Y >> Z) {
-    auto galaxy = make_shared<Galaxy>(X, Y, Z);
+    comovingCoordinates coord = {X, Y, Z};
+    auto galaxy = make_shared<Galaxy>(coord);
     object.emplace_back(galaxy);
   }
   

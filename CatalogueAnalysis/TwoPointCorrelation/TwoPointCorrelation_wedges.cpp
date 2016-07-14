@@ -124,6 +124,8 @@ vector<double> cosmobl::twopt::TwoPointCorrelation_wedges::errorParallel () cons
 
 void cosmobl::twopt::TwoPointCorrelation_wedges::write (const string dir, const string file, const int rank) const 
 {
+  (void)rank;
+  
   vector<double> rad = m_dataset->xx();
   vector<double> xiw = m_dataset->fx();
   vector<double> error = m_dataset->error_fx();

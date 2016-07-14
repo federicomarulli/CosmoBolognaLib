@@ -368,7 +368,7 @@ double cosmobl::multipole_xi0_model (const double f_sigma8, const double bias_si
 
 double cosmobl::multipole_xi0_model (double xx, shared_ptr<void> pp, vector<double> par) 
 { 
-  // xx is not used!
+  (void)xx;
 
   shared_ptr<cosmobl::glob::STR_xi0_model> vec = static_pointer_cast<cosmobl::glob::STR_xi0_model>(pp);
 

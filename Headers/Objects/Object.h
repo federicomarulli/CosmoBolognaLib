@@ -84,7 +84,7 @@ namespace cosmobl {
     class Object {
 
     protected:
-    
+      
       /// comoving coordinate x
       double m_xx;
     
@@ -101,7 +101,7 @@ namespace cosmobl {
       double m_dec; 
 
       /// redshift
-      double m_redshift;
+      double  m_redshift;
 
       /// comoving distance
       double m_dc;
@@ -125,49 +125,114 @@ namespace cosmobl {
        *  @return object of class Object
        */
       Object () 
-	: m_xx(par::defaultDouble), m_yy(par::defaultDouble), m_zz(par::defaultDouble), m_ra(par::defaultDouble), m_dec(par::defaultDouble), m_redshift(par::defaultDouble), m_dc(par::defaultDouble), m_weight(1.), m_region(par::defaultInt) {}
-    
+	: m_xx(par::defaultDouble), m_yy(par::defaultDouble), m_zz(par::defaultDouble), m_ra(par::defaultDouble), m_dec(par::defaultDouble), m_redshift(par::defaultDouble), m_dc(par::defaultDouble), m_weight(1.), m_region(-1) {}
+      
       /**
        *  @brief constructor that uses comoving coordinates
-       *  @param xx comoving coordinate
-       *  @param yy comoving coordinate
-       *  @param zz comoving coordinate 
+       *
+       *  @param coord structure containing the comoving coordinates
+       *  {x, y, z}
+       *
        *  @param weight weight
-       *  @return object of class GenericObject
+       *
+       *  @return object of class Object
        */
-      Object (const double xx, const double yy, const double zz, const double weight=1.) 
-	: m_xx(xx), m_yy(yy), m_zz(zz), m_ra(par::defaultDouble), m_dec(par::defaultDouble), m_redshift(par::defaultDouble), m_dc(par::defaultDouble), m_weight(weight), m_region(-1) {}
+      Object (const comovingCoordinates coord, const double weight=1.) 
+	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_ra(par::defaultDouble), m_dec(par::defaultDouble), m_redshift(par::defaultDouble), m_dc(par::defaultDouble), m_weight(weight), m_region(-1) {}
     
       /**
-       *  @brief constructor that uses comoving coordinates
-       *  @param xx comoving coordinate
-       *  @param yy comoving coordinate
-       *  @param zz comoving coordinate 
+       *  @brief constructor that uses comoving coordinates and a
+       *  cosmological model to estimate the redshift
+       *
+       *  @param coord structure containing the comoving coordinates
+       *  {x, y, z}
+       *
        *  @param cosm object of class Cosmology, used to estimate
        *  comoving distances
-       *  @param z1_guess minimum redshift used to search the redshift
-       *  @param z2_guess maximum redshift used to search the redshift
+       *
+       *  @param z1_guess minimum prior on the redshift
+       *
+       *  @param z2_guess maximum prior on the redshift 
+       *
        *  @param weight weight
-       *  @return object of class GenericObject
+       *
+       *  @return object of class Object
        */
-      Object (const double xx, const double yy, const double zz, const cosmology::Cosmology &cosm, const double z1_guess, const double z2_guess, const double weight=1.) 
-	: m_xx(xx), m_yy(yy), m_zz(zz), m_dc(-1.), m_weight(weight), m_region(-1)
+      Object (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1.) 
+	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_weight(weight), m_region(-1)
 	{
 	  cosmobl::polar_coord(m_xx, m_yy, m_zz, m_ra, m_dec, m_dc);
 	  m_redshift = cosm.Redshift(m_dc, z1_guess, z2_guess);
 	}
-    
+
       /**
-       *  @brief constructor that uses observed coordinates
-       *  @param ra Right Ascension
-       *  @param dec Declination
-       *  @param redshift redshift
-       *  @param cosm object of class Cosmology, used to estimate comoving distances
+       *  @brief constructor that uses observed coordinates in radians
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshift}
+       *
        *  @param weight weight
-       *  @return object of class GenericObject
+       *
+       *  @return object of class Object
        */
-      Object (const double ra, const double dec, const double redshift, const cosmology::Cosmology &cosm, const double weight=1.) 
-	: m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(-1.), m_weight(weight), m_region(-1)
+      Object (const observedCoordinates coord, const double weight=1.) 
+	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(-1) {}
+      
+      /**
+       *  @brief constructor that uses observed coordinates in any
+       *  angular units
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshift}
+       *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param weight weight
+       *
+       *  @return object of class Object
+       */
+      Object (const observedCoordinates coord, const CoordUnits inputUnits, const double weight=1.) 
+	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(-1) {}
+      
+      /**
+       *  @brief constructor that uses observed coordinates in radians
+       *  and a cosmological model to estimate the comoving
+       *  coordinates
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshitf}
+       *
+       *  @param cosm object of class Cosmology, used to estimate
+       *  comoving distances
+       *
+       *  @param weight weight
+       *
+       *  @return object of class Object
+       */
+      Object (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1.) 
+	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(-1)
+	{ 
+	  m_dc = cosm.D_C(m_redshift); 
+	  cosmobl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
+	}
+
+      /**
+       *  @brief constructor that uses observed coordinates and a
+       *  cosmological model to estimate the comoving coordinates
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshift}
+       *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param cosm object of class Cosmology, used to estimate comoving distances
+       *
+       *  @param weight weight
+       *
+       *  @return object of class Object
+       */
+      Object (const observedCoordinates coord, const CoordUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1.) 
+	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(-1)
 	{ 
 	  m_dc = cosm.D_C(m_redshift); 
 	  cosmobl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
@@ -182,7 +247,7 @@ namespace cosmobl {
        *  @param dec Declination
        *  @param redshift redshift
        *  @param weight weight
-       *  @return object of class GenericObject
+       *  @return object of class Object
        */
       Object (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1.) 
 	: m_xx(xx), m_yy(yy), m_zz(zz), m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(sqrt(xx*xx+yy*yy+zz*zz)), m_weight(weight), m_region(-1) {}
@@ -191,7 +256,7 @@ namespace cosmobl {
        *  @brief default destructor
        *  @return none
        */
-      virtual ~Object () {}
+      virtual ~Object () = default;
 
       ///@}
 
@@ -202,30 +267,141 @@ namespace cosmobl {
       ///@{
     
       /**
-       * @brief static factory used to construct objects of any type 
-       * @param type the object type; it can be: GenericObject,
-       * RandomObject, Mock, Halo, Galaxy, Cluster, Void
-       * @param xx comoving coordinate
-       * @param yy comoving coordinate
-       * @param zz comoving coordinate
-       * @param weight weight
-       * @return object of a given type
+       *  @brief static factory used to construct objects of any type,
+       *  providing in input comoving coordinates
+       *
+       *  @param objType the object type; it can be: GenericObject,
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *
+       *  @param coord structure containing the comoving coordinates
+       *  {x, y, z}
+       *
+       *  @param weight weight
+       *
+       *  @return object of a given type
        */
-      static shared_ptr<Object> Create (const ObjType type, const double xx, const double yy, const double zz, const double weight=1);
+      static shared_ptr<Object> Create (const ObjType objType, const comovingCoordinates coord, const double weight=1.);
+      
+      /**
+       *  @brief static factory used to construct objects of any type,
+       *  providing in input comoving coordinates and a cosmological
+       *  model to estimate the redshift
+       *
+       *  @param objType the object type; it can be: GenericObject,
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *
+       *  @param coord structure containing the comoving coordinates
+       *  {x, y, z}
+       *
+       *  @param cosm object of class Cosmology, used to estimate
+       *  comoving distances
+       *
+       *  @param z1_guess minimum prior on the redshift
+       *
+       *  @param z2_guess maximum prior on the redshift 
+       *
+       *  @param weight weight
+       *
+       *  @return object of a given type
+       */
+      static shared_ptr<Object> Create (const ObjType objType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1.);
 
       /**
-       * @brief static factory used to construct objects of any kind 
-       * @param type the object type; it can be: GenericObject,
-       * RandomObject, Mock, Halo, Galaxy, Cluster, Void
-       * @param ra Right Ascension
-       * @param dec Declination
-       * @param redshift redshift
-       * @param cosm object of class Cosmology, used to estimate comoving distances 
-       * @param weight weight
-       * @return object of a given type
+       *  @brief static factory used to construct objects of any kind,
+       *  providing in input observed coordinates in radians
+       *
+       *  @param objType the object type; it can be: GenericObject,
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshitf}
+       *
+       *  @param weight weight
+       *
+       *  @return object of a given type
        */
-      static shared_ptr<Object> Create (const ObjType type, const double ra, const double dec, const double redshift, const cosmology::Cosmology &cosm, const double weight=1);
-    
+      static shared_ptr<Object> Create (const ObjType objType, const observedCoordinates coord, const double weight=1.);
+
+      /**
+       *  @brief static factory used to construct objects of any kind,
+       *  providing in input observed coordinates in any angular units
+       *
+       *  @param objType the object type; it can be: GenericObject,
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {ra Right Ascension}
+       *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param weight weight
+       *
+       *  @return object of a given type
+       */
+      static shared_ptr<Object> Create (const ObjType objType, const observedCoordinates coord, const CoordUnits inputUnits, const double weight=1.);
+
+      /**
+       *  @brief static factory used to construct objects of any kind,
+       *  providing in input observed coordinates in radians and a
+       *  cosmological model to estimate the comoving coordinates
+       *
+       *  @param objType the object type; it can be: GenericObject,
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshitf}
+       *
+       *  @param cosm object of class Cosmology, used to estimate
+       *  comoving distances
+       *
+       *  @param weight weight
+       *
+       *  @return object of a given type
+       */
+      static shared_ptr<Object> Create (const ObjType objType, const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1.);
+
+      /**
+       *  @brief static factory used to construct objects of any kind,
+       *  providing in input observed coordinates and a cosmological
+       *  model to estimate the comoving coordinates
+       *
+       *  @param objType the object type; it can be: GenericObject,
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshitf}
+       * 
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param cosm object of class Cosmology, used to estimate
+       *  comoving distances
+       *
+       *  @param weight weight
+       *
+       *  @return object of a given type
+       */
+      static shared_ptr<Object> Create (const ObjType objType, const observedCoordinates coord, const CoordUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1.);
+
+      /**
+       *  @brief static factory used to construct objects of any kind,
+       *  providing in input both comoving and observed coordinates
+       *
+       *  @param objType the object type; it can be: GenericObject,
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *
+       *  @param xx comoving coordinate
+       *  @param yy comoving coordinate
+       *  @param zz comoving coordinate 
+       *  @param ra Right Ascension
+       *  @param dec Declination
+       *  @param redshift redshift
+       *  @param weight weight
+       *
+       *  @return object of a given type
+       *
+       */
+      static shared_ptr<Object> Create (const ObjType objType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1.);
+      
       ///@}
 
     
@@ -253,37 +429,37 @@ namespace cosmobl {
       double zz () const { return m_zz; }
 
       /**
-       *  @brief get the protected member GenericObject::m_dc
+       *  @brief get the protected member Object::m_dc
        *  @return the comoving distance of the object
        */
       double dc () const { return m_dc; }
     
       /**
-       *  @brief get the protected member GenericObject::m_ra
+       *  @brief get the protected member Object::m_ra
        *  @return the Right Ascension of the object
        */
       double ra () const { return m_ra; } 
     
       /**
-       *  @brief get the protected member GenericObject::m_dec
+       *  @brief get the protected member Object::m_dec
        *  @return the Declination of the object
        */
       double dec () const { return m_dec; }
     
       /**
-       *  @brief get the protected member GenericObject::m_redshift
+       *  @brief get the protected member Object::m_redshift
        *  @return the redshift of the object
        */
       double redshift () const { return m_redshift; }
     
       /**
-       *  @brief get the protected member GenericObject::m_weight
+       *  @brief get the protected member Object::m_weight
        *  @return the weight of the object
        */
       double weight () const { return m_weight; }
 
       /**
-       *  @brief get the protected member GenericObject::m_region
+       *  @brief get the protected member Object::m_region
        *  @return the index of the subRegion in which the object is located
        */
       long region () const { return m_region; }
@@ -362,63 +538,63 @@ namespace cosmobl {
       ///@{ 
     
       /**
-       *  @brief set the protected member GenericObject::m_xx
+       *  @brief set the protected member Object::m_xx
        *  @param xx the coordinate x of the object
        *  @return none
        */
       void set_xx (const double xx=par::defaultDouble) { m_xx = xx; }
  
       /**
-       *  @brief set the protected member GenericObject::m_yy
+       *  @brief set the protected member Object::m_yy
        *  @param yy the coordinate y of the object
        *  @return none
        */
       void set_yy (const double yy=par::defaultDouble) { m_yy = yy; }
     
       /**
-       *  @brief set the protected member GenericObject::m_zz
+       *  @brief set the protected member Object::m_zz
        *  @param zz the coordinate z of the object
        *  @return none
        */
       void set_zz (const double zz=par::defaultDouble) { m_zz = zz; }
     
       /**
-       *  @brief set the protected member GenericObject::m_ra
+       *  @brief set the protected member Object::m_ra
        *  @param ra the Right Ascension of the object
        *  @return none
        */
       void set_ra (const double ra=par::defaultDouble) { m_ra = ra; }
     
       /**
-       *  @brief set the protected member GenericObject::m_dec
+       *  @brief set the protected member Object::m_dec
        *  @param dec the Declination of the object
        *  @return none
        */
       void set_dec (const double dec=par::defaultDouble) { m_dec = dec; }
     
       /**
-       *  @brief set the protected member GenericObject::m_redshift
+       *  @brief set the protected member Object::m_redshift
        *  @param redshift the redshift of the object
        *  @return none
        */
       void set_redshift (const double redshift=par::defaultDouble) { m_redshift = redshift; }
     
       /**
-       *  @brief set the protected member GenericObject::m_dc
+       *  @brief set the protected member Object::m_dc
        *  @param dc the comoving distance of the object
        *  @return none
        */
       void set_dc (const double dc=par::defaultDouble) { m_dc = dc; }
     
       /**
-       *  @brief set the protected member GenericObject::m_weight
+       *  @brief set the protected member Object::m_weight
        *  @param weight the weight of the object
        *  @return none
        */
       void set_weight (const double weight=par::defaultDouble) { m_weight = weight; }
 
       /**
-       *  @brief set the protected member GenericObject::m_region
+       *  @brief set the protected member Object::m_region
        *  @param region the index of the subRegion in which the object is located
        *  @return none
        */
@@ -430,7 +606,7 @@ namespace cosmobl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_vx (const double vx=par::defaultDouble) { cosmobl::ErrorMsg("Error in set_vx() of Objech.h!"); }
+      virtual void set_vx (const double vx=par::defaultDouble) { (void)vx; cosmobl::ErrorMsg("Error in set_vx() of Objech.h!"); }
   
       /**
        *  @brief set the member \e m_vy
@@ -438,7 +614,7 @@ namespace cosmobl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_vy (const double vy=par::defaultDouble) { cosmobl::ErrorMsg("Error in set_vy() of Objech.h!"); }
+      virtual void set_vy (const double vy=par::defaultDouble) { (void)vy; cosmobl::ErrorMsg("Error in set_vy() of Objech.h!"); }
     
       /**
        *  @brief set the member \e m_vz
@@ -446,7 +622,7 @@ namespace cosmobl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_vz (const double vz=par::defaultDouble) { cosmobl::ErrorMsg("Error in set_vz() of Objech.h!"); }
+      virtual void set_vz (const double vz=par::defaultDouble) { (void)vz; cosmobl::ErrorMsg("Error in set_vz() of Objech.h!"); }
 
       /**
        *  @brief set the member \e m_mass
@@ -454,7 +630,7 @@ namespace cosmobl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_mass (const double mass=par::defaultDouble) { cosmobl::ErrorMsg("Error in set_mass() of Objech.h!"); }
+      virtual void set_mass (const double mass=par::defaultDouble) { (void)mass; cosmobl::ErrorMsg("Error in set_mass() of Objech.h!"); }
     
       /**
        *  @brief set the member \e m_magnitude
@@ -462,7 +638,7 @@ namespace cosmobl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_magnitude (const double magnitude=par::defaultDouble) { cosmobl::ErrorMsg("Error in set_magnitude() of Objech.h!"); }  
+      virtual void set_magnitude (const double magnitude=par::defaultDouble) { (void)magnitude; cosmobl::ErrorMsg("Error in set_magnitude() of Objech.h!"); }  
     
       /**
        *  @brief set the member \e m_richness
@@ -470,7 +646,7 @@ namespace cosmobl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_richness (const double richness=par::defaultDouble) { cosmobl::ErrorMsg("Error in set_richness() of Objech.h!"); }  
+      virtual void set_richness (const double richness=par::defaultDouble) { (void)richness; cosmobl::ErrorMsg("Error in set_richness() of Objech.h!"); }  
     
       /**
        *  @brief set the member \e m_generic
@@ -478,7 +654,7 @@ namespace cosmobl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_generic (const double generic=par::defaultDouble) { cosmobl::ErrorMsg("Error in set_generic() of Objech.h!"); }  
+      virtual void set_generic (const double generic=par::defaultDouble) { (void)generic; cosmobl::ErrorMsg("Error in set_generic() of Objech.h!"); }  
     
       /**
        *  @brief set the member \e m_radius
@@ -486,10 +662,10 @@ namespace cosmobl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_radius (const double radius=par::defaultDouble) { cosmobl::ErrorMsg("Error in set_radius() of Objech.h!"); }
+      virtual void set_radius (const double radius=par::defaultDouble) { (void)radius; cosmobl::ErrorMsg("Error in set_radius() of Objech.h!"); }
 
       ///@}
-    
+      
     };
   }
 }

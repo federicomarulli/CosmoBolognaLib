@@ -131,7 +131,7 @@ namespace cosmobl {
        *  @param nbins the number of bins
        *  @return a pointer to an object of class Triplet of a given type
        */
-      static shared_ptr<Triplet> Create (const TripletType type, const double side_s, const int side_u, const double perc_increase, const int nbins);
+      static shared_ptr<Triplet> Create (const TripletType type, const double side_s, const double side_u, const double perc_increase, const int nbins);
 
       ///@}
     
@@ -158,7 +158,7 @@ namespace cosmobl {
        *  @param i the bin index
        *  @return the i-th binned scale
        */
-      virtual double scale (const int i) const { cosmobl::ErrorMsg("Error in Triplet::scale() of Triplet.h!"); return 0; }
+      virtual double scale (const int i) const { (void)i; cosmobl::ErrorMsg("Error in Triplet::scale() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member \e m_scale
@@ -172,7 +172,7 @@ namespace cosmobl {
        *  @return the number of triplets in the i-th angular bin, or an
        *  error message if the derived object does not have this member
        */
-      virtual double TT1D (const int i) const { cosmobl::ErrorMsg("Error in Triplet::TT1D() of Triplet.h!"); return 0; }
+      virtual double TT1D (const int i) const { (void)i; cosmobl::ErrorMsg("Error in Triplet::TT1D() of Triplet.h!"); return 0; }
       
       /**
        *  @brief get the private member \e m_TT1D
@@ -187,7 +187,7 @@ namespace cosmobl {
        *  @param i the bin index in the first dimension
        *  @return the i-th binned scale
        */
-      virtual double scale_D1 (const int i) const { cosmobl::ErrorMsg("Error in Triplet::scale_D1() of Triplet.h!"); return 0; }
+      virtual double scale_D1 (const int i) const { (void)i; cosmobl::ErrorMsg("Error in Triplet::scale_D1() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member \e m_scale_D1
@@ -200,7 +200,7 @@ namespace cosmobl {
        *  @param i the bin index in the first dimension
        *  @return the i-th binned scale
        */
-      virtual double scale_D2 (const int i) const { cosmobl::ErrorMsg("Error in Triplet::scale_D2() of Triplet.h!"); return 0; }
+      virtual double scale_D2 (const int i) const { (void)i; cosmobl::ErrorMsg("Error in Triplet::scale_D2() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member \e m_scale_D2
@@ -214,7 +214,7 @@ namespace cosmobl {
        *  @param j the bin index in the second dimension
        *  @return the number of pairs in the i-th bin
        */
-      virtual double TT2D (const int i, const int j) const { cosmobl::ErrorMsg("Error in Triplet::TT2D() of Triplet.h!"); return 0; }
+      virtual double TT2D (const int i, const int j) const { (void)i; (void)j; cosmobl::ErrorMsg("Error in Triplet::TT2D() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member \e m_TT2D
@@ -356,7 +356,8 @@ namespace cosmobl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_TT1D (const int i, const double tt) { cosmobl::ErrorMsg("Error in Triplet::set_TT() of Triplet.h!"); }
+      virtual void set_TT1D (const int i, const double tt)
+      { (void)i; (void)tt; cosmobl::ErrorMsg("Error in Triplet::set_TT() of Triplet.h!"); }
 
       /**
        *  @brief set the protected member Triplet1D::m_TT1D[i] adding
@@ -366,7 +367,8 @@ namespace cosmobl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void add_TT1D (const int i, const double tt) { cosmobl::ErrorMsg("Error in Triplet::add_TT() of Triplet.h!"); }
+      virtual void add_TT1D (const int i, const double tt)
+      { (void)i; (void)tt; cosmobl::ErrorMsg("Error in Triplet::add_TT() of Triplet.h!"); }
 
       ///@}
 

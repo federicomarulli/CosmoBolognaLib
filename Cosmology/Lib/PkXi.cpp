@@ -1113,6 +1113,8 @@ void cosmobl::cosmology::Cosmology::get_xi (vector<double> &rr, vector<double> &
 
 void cosmobl::cosmology::Cosmology::get_barred_xi (vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string method_Pk, const double redshift, const bool xiType, const double k_star, const bool xiNL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par) const
 {
+  (void)k_star; (void)k_min; (void)k_max; (void)aa; (void)prec; (void)file_par;
+  
   int Norm = norm;
   if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
 
@@ -1191,6 +1193,8 @@ void cosmobl::cosmology::Cosmology::get_barred_xi (vector<double> rr, vector<dou
 
 double cosmobl::cosmology::Cosmology::Pk_DeWiggle (const double kk, const double redshift, const double sigma_NL, const string output_root, const bool norm, const double k_min, const double k_max, const double aa, const double prec)
 {
+  (void) aa;
+  
   bool NL = 0;
 
   string author1 = "CAMB";

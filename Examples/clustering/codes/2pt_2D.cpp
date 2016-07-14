@@ -43,20 +43,22 @@ int main () {
   ifstream fin(file_catalogue.c_str());  checkIO(file_catalogue, 1);
  
   string line;
-  double RA, DEC, RED;
+  double RA, DEC, REDSHIFT;
   vector<double> ra, dec, redshift;
  
   while (getline(fin, line)) {
     stringstream ss(line);
-    ss >> RA; ss >> DEC; ss >> RED;
+    ss >> RA; ss >> DEC; ss >> REDSHIFT;
     ra.push_back(RA);
     dec.push_back(DEC);
-    redshift.push_back(RED);
+    redshift.push_back(REDSHIFT);
   }
   
   fin.clear(); fin.close();
+
+  vector<double> weight (ra.size(), 1.);
   
-  Catalogue catalogue {_Galaxy_, _observedCoordinates_, ra, dec, redshift, cosmology};
+  Catalogue catalogue {_Galaxy_, _observedCoordinates_, ra, dec, redshift, cosmology, weight};
   
   
   // --------------------------------------------------------------------------------------

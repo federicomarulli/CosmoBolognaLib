@@ -29,7 +29,7 @@
     sample selections
     2015, arXiv:1505.01170
 
-9.  Sereno, Veropalumbo, Marulli, Moscardini, Cimatti
+9.  Sereno, Veropalumbo, Marulli, Covone, Moscardini, Cimatti
     New constraints on sigma8 from a joint analysis of stacked
     gravitational lensing and clustering of galaxy clusters
     2015, MNRAS, 449, 4147

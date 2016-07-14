@@ -1244,11 +1244,12 @@ namespace cosmobl {
        *  
        *  this method provides the redshift for a given comoving
        *  distance
+       *
        *  @param d_c line-of-sight comoving distance
        *
-       *  @param z1_guess minimum redshift used to search the redshift
+       *  @param z1_guess minimum prior on the redshift
        *
-       *  @param z2_guess maximum redshift used to search the redshift
+       *  @param z2_guess maximum prior on the redshift
        *
        *  @param prec precision of the computation ( prec =
        *  min(prec,1.e-5) )

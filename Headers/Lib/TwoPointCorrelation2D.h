@@ -163,7 +163,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      vector<shared_ptr<data::Data> > XiJackknife(const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr) override;
+      vector<shared_ptr<data::Data> > XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr) override;
 
       /**
        *  @brief measure the jackknife resampling of the two-point correlation
@@ -173,11 +173,11 @@ namespace cosmobl {
        *
        *  @param rr vector of random-random pairs, divider per regions
        *
-       *  @param dr vector of random-random pairs, divider per regions   *
+       *  @param dr vector of random-random pairs, divider per regions   
        *
        *  @return none
        */
-      vector<shared_ptr<data::Data> > XiJackknife(const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr) override;
+      vector<shared_ptr<data::Data> > XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr) override;
 
       /**
        *  @brief measure the bootstrap resampling of the two-point correlation
@@ -191,7 +191,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      vector<shared_ptr<data::Data> > XiBootstrap(const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr) override;
+      vector<shared_ptr<data::Data> > XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr) override;
 
       /**
        *  @brief measure the bootstrap resampling of the two-point correlation
@@ -207,7 +207,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      vector<shared_ptr<data::Data> > XiBootstrap(const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr) override;
+      vector<shared_ptr<data::Data> > XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr) override;
       
       ///@}
 
@@ -338,7 +338,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void read (const string dir, const string file)
-      { ErrorMsg("Error in read() of TwoPointCorrelation2D.h"); }	
+      { (void)dir; (void)file; ErrorMsg("Error in read() of TwoPointCorrelation2D.h"); }	
 
       /**
        *  @brief write the measured two-point correlation
@@ -348,7 +348,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void write (const string dir, const string file, const int rank=0) const
-      { ErrorMsg("Error in write() of TwoPointCorrelation2D.h"); }	
+      { (void)dir; (void)file; (void)rank; ErrorMsg("Error in write() of TwoPointCorrelation2D.h"); }	
 
       ///@}
 

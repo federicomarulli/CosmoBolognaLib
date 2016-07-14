@@ -96,8 +96,11 @@ void cosmobl::data::Data2D::set_limits (const double xmin, const double xmax, co
 
 void cosmobl::data::Data2D::read (const string input_file, const int skip_nlines)
 {
+  (void)skip_nlines;
+  
   ErrorMsg("Error in cosmobl::data::Data2D::read : work in progress!");
-  ifstream fin(input_file.c_str());
+
+  ifstream fin(input_file.c_str()); checkIO(input_file, 1);
   string line;
   fin.clear(); fin.close();
 }
@@ -108,6 +111,8 @@ void cosmobl::data::Data2D::read (const string input_file, const int skip_nlines
 
 void cosmobl::data::Data2D::write (const string dir, const string file, const string xname, const string yname, const string fxyname, const bool full, const int rank) const 
 {
+  (void)rank;
+  
   string file_out = dir+file;
   ofstream fout (file_out.c_str()); checkIO(file_out, 0);
 

@@ -240,7 +240,19 @@ void cosmobl::twopt::TwoPointCorrelation::count_allPairs (const TwoPType type, c
   
   // ----------- create the chain-mesh ----------- 
 
-  double rMAX = (type==_1D_monopole_ || type==_1D_angular_) ? m_dd->sMax() : m_dd->sMax_D1(); // check!!!
+  double rMAX;
+
+  if (type==_1D_monopole_)
+    rMAX = m_dd->sMax();
+
+  else if (type==_1D_angular_) {
+    double xx, yy, zz;
+    cartesian_coord(radians(m_dd->sMax(), m_dd->angularUnits()), radians(m_dd->sMax(), m_dd->angularUnits()), 1., xx, yy, zz);
+    rMAX = max(xx, zz);
+  }
+
+  else rMAX = m_dd->sMax_D1();
+
   
   double cell_size = rMAX*0.1; // to be optimized!!!
   

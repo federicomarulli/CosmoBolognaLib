@@ -94,14 +94,17 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Void
        */
-      Void () {}
+      Void () 
+      	: Object(), m_volNorm(par::defaultDouble), m_radius(par::defaultDouble), m_volume(par::defaultDouble), m_ID(par::defaultInt), m_densContr(par::defaultDouble), m_parentID(par::defaultInt), m_treeLevel(par::defaultInt), m_child(par::defaultInt), m_rho0(par::defaultDouble), m_rho0Norm(par::defaultDouble) {}
       
       /**
        *  @brief constructor that uses comoving coordinates
-       *  @param xx comoving coordinate
-       *  @param yy comoving coordinate
-       *  @param zz comoving coordinate
+       *
+       *  @param coord structure containing the comoving coordinates
+       *  {x, y, z}
+       *
        *  @param weight weight
+       *
        *  @param volNorm normalized volume
        *  @param radius radius 
        *  @param volume volume 
@@ -112,18 +115,161 @@ namespace cosmobl {
        *  @param child number of childrens
        *  @param rho0 central density
        *  @param rho0Norm normalized core density
+       *
        *  @return object of class Void
        */
-      Void (const double xx, const double yy, const double zz, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble)
-	: Object(xx, yy, zz, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+      Void (const comovingCoordinates coord, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(coord, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
 
       /**
-       *  @brief constructor that uses observed coordinates
-       *  @param ra Right Ascension
-       *  @param dec Declination
-       *  @param redshift comoving coordinate
+       *  @brief constructor that uses comoving coordinates and a
+       *  cosmological model to estimate the redshift
+       *
+       *  @param coord structure containing the comoving coordinates
+       *  {x, y, z}
+       *
        *  @param cosm object of class Cosmology, used to estimate
        *  comoving distances
+       *
+       *  @param z1_guess minimum prior on the redshift
+       *
+       *  @param z2_guess maximum prior on the redshift 
+       *
+       *  @param weight weight
+       *   
+       *  @param volNorm normalized volume
+       *  @param radius radius 
+       *  @param volume volume 
+       *  @param ID identification number
+       *  @param densContr density contrast
+       *  @param parentID identification number of the parent void
+       *  @param treeLevel hierarchy level
+       *  @param child number of childrens
+       *  @param rho0 central density
+       *  @param rho0Norm normalized core density
+       *
+       *  @return object of class Void
+       */
+      Void (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(coord, cosm, z1_guess, z2_guess, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+
+      /**
+       *  @brief constructor that uses observed coordinates in radians
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshift}
+       *
+       *  @param weight weight
+       *
+       *  @param volNorm normalized volume
+       *  @param radius radius 
+       *  @param volume volume 
+       *  @param ID identification number
+       *  @param densContr density contrast
+       *  @param parentID identification number of the parent void
+       *  @param treeLevel hierarchy level
+       *  @param child number of childrens
+       *  @param rho0 central density
+       *  @param rho0Norm normalized core density
+       *
+       *  @return object of class Void
+       */
+      Void (const observedCoordinates coord, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(coord, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+      
+      /**
+       *  @brief constructor that uses observed coordinates in any
+       *  angular units
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshift}
+       *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param weight weight
+       *
+       *  @param volNorm normalized volume
+       *  @param radius radius 
+       *  @param volume volume 
+       *  @param ID identification number
+       *  @param densContr density contrast
+       *  @param parentID identification number of the parent void
+       *  @param treeLevel hierarchy level
+       *  @param child number of childrens
+       *  @param rho0 central density
+       *  @param rho0Norm normalized core density
+       *
+       *  @return object of class Void
+       */
+      Void (const observedCoordinates coord, const CoordUnits inputUnits, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(coord, inputUnits, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+      
+      /**
+       *  @brief constructor that uses observed coordinates in radians
+       *  and a cosmological model to estimate the comoving
+       *  coordinates
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshitf}
+       *
+       *  @param cosm object of class Cosmology, used to estimate
+       *  comoving distances
+       *
+       *  @param weight weight
+       *
+       *  @param volNorm normalized volume
+       *  @param radius radius 
+       *  @param volume volume 
+       *  @param ID identification number
+       *  @param densContr density contrast
+       *  @param parentID identification number of the parent void
+       *  @param treeLevel hierarchy level
+       *  @param child number of childrens
+       *  @param rho0 central density
+       *  @param rho0Norm normalized core density
+       *
+       *  @return object of class Void
+       */
+      Void (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(coord, cosm, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+
+      /**
+       *  @brief constructor that uses observed coordinates and a
+       *  cosmological model to estimate the comoving coordinates
+       *
+       *  @param coord structure containing the observed coordinates
+       *  {R.A., Dec, redshift}
+       *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param cosm object of class Cosmology, used to estimate comoving distances
+       *
+       *  @param weight weight
+       *
+       *  @param volNorm normalized volume
+       *  @param radius radius 
+       *  @param volume volume 
+       *  @param ID identification number
+       *  @param densContr density contrast
+       *  @param parentID identification number of the parent void
+       *  @param treeLevel hierarchy level
+       *  @param child number of childrens
+       *  @param rho0 central density
+       *  @param rho0Norm normalized core density
+       *
+       *  @return object of class Void
+       */
+      Void (const observedCoordinates coord, const CoordUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(coord, inputUnits, cosm, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+
+      /**
+       *  @brief constructor that uses both comoving and observed coordinates
+       *  @param xx comoving coordinate
+       *  @param yy comoving coordinate
+       *  @param zz comoving coordinate 
+       *  @param ra Right Ascension
+       *  @param dec Declination
+       *  @param redshift redshift
        *  @param weight weight
        *  @param volNorm normalized volume
        *  @param radius radius 
@@ -135,16 +281,17 @@ namespace cosmobl {
        *  @param child number of childrens
        *  @param rho0 central density
        *  @param rho0Norm normalized core density
+       *
        *  @return object of class Void
        */
-      Void (const double ra, const double dec, const double redshift, const cosmology::Cosmology &cosm, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble)
-	: Object(ra, dec, redshift, cosm, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
-    
+      Void (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(xx, yy, zz, ra, dec, redshift, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+      
       /**
        *  @brief default destructor
        *  @return none
        */
-      ~Void () {}
+      ~Void () = default;
 
       ///@}
   

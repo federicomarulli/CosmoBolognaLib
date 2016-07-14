@@ -188,7 +188,7 @@ namespace cosmobl {
        *  @param i the bin index in the first dimension
        *  @return the i-th binned scale
        */
-      double scale_D1 (const int i) const override { return m_scale_D1[i]; }
+      double scale_D1 (const int i) const override { (void)i; return m_scale_D1[i]; }
 
       /**
        *  @brief get the protected member \e m_scale_D1
@@ -201,7 +201,7 @@ namespace cosmobl {
        *  @param i the bin index in the first dimension
        *  @return the i-th binned scale
        */
-      double scale_D2 (const int i) const override { return m_scale_D2[i]; }
+      double scale_D2 (const int i) const override { (void)i; return m_scale_D2[i]; }
 
       /**
        *  @brief get the protected member \e m_scale_D2
@@ -215,7 +215,7 @@ namespace cosmobl {
        *  @param j the bin index in the second dimension
        *  @return the number of pairs in the i-th bin
        */
-      double TT2D (const int i, const int j) const override { return m_TT2D[i][j]; }
+      double TT2D (const int i, const int j) const override { (void)i; (void)j; return m_TT2D[i][j]; }
 
       /**
        *  @brief get the protected member \e m_PP2D
@@ -293,7 +293,8 @@ namespace cosmobl {
        *
        *  @warning This method has not been implemented yet
        */
-      void Sum (const shared_ptr<Triplet> tt, const double ww=1) override { ErrorMsg("Work in progress..."); }
+      void Sum (const shared_ptr<Triplet> tt, const double ww=1) override
+      { (void)tt; (void)ww; ErrorMsg("Work in progress..."); }
 
       /**
        *  @brief estimate the distance between three objects and
@@ -306,7 +307,8 @@ namespace cosmobl {
        *
        *  @warning This method has not been implemented yet
        */
-      void put (const double r12, const double r13, const double r23, const double ww=1.) override { ErrorMsg("Work in progress..."); }
+      void put (const double r12, const double r13, const double r23, const double ww=1.) override
+      { (void)r12; (void)r13; (void)r23; (void)ww; ErrorMsg("Work in progress..."); }
     
       /**
        *  @brief estimate the distance between three objects and
@@ -318,7 +320,8 @@ namespace cosmobl {
        *
        *  @warning This method has not been implemented yet
        */
-      void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, const shared_ptr<catalogue::Object> obj3) override { ErrorMsg("Work in progress..."); }
+      void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, const shared_ptr<catalogue::Object> obj3) override
+      { (void)obj1; (void)obj2; (void)obj3; ErrorMsg("Work in progress..."); }
       
       ///@}
     

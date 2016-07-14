@@ -39,6 +39,7 @@ using namespace cosmobl;
 
 double cosmobl::closest_probability (double xx, shared_ptr<void> pp, vector<double> par)
 {
+  (void)par;
   shared_ptr<cosmobl::glob::STR_closest_probability> pars = static_pointer_cast<cosmobl::glob::STR_closest_probability>(pp);
   return pars->weights[(cosmobl::index_closest(xx, pars->values))];
 }
@@ -176,7 +177,10 @@ double cosmobl::degrees (const double angle, const CoordUnits inputUnits)
       
   else if (inputUnits==_arcminutes_)
     return angle/60.;
-      
+
+  else if (inputUnits==_degrees_)
+    return angle;
+  
   else 
     { ErrorMsg("Error in cosmobl::degrees of Func.cpp: inputUnits type not allowed!"); return 0; }
 }
@@ -195,6 +199,9 @@ double cosmobl::radians (const double angle, const CoordUnits inputUnits)
   
   else if (inputUnits==_arcminutes_)
     return angle/180.*par::pi/60.;
+
+  else if (inputUnits==_radians_)
+    return angle;
   
   else 
     { ErrorMsg("Error in cosmobl::radians of Func.cpp: inputUnits type not allowed!"); return 0; }
@@ -214,6 +221,9 @@ double cosmobl::arcseconds (const double angle, const CoordUnits inputUnits)
   
   else if (inputUnits==_arcminutes_)
     return angle*60.;
+
+  else if (inputUnits==_arcseconds_)
+    return angle;
       
   else 
     { ErrorMsg("Error in cosmobl::arcseconds of Func.cpp: inputUnits type not allowed!"); return 0; }
@@ -233,7 +243,10 @@ double cosmobl::arcminutes (const double angle, const CoordUnits inputUnits)
   
   else if (inputUnits==_arcseconds_)
     return angle/60.;
-      
+
+  else if (inputUnits==_arcminutes_)
+    return angle;
+
   else 
     { ErrorMsg("Error in cosmobl::arcminutes of Func.cpp: inputUnits type not allowed!"); return 0; }
 }
@@ -641,11 +654,12 @@ double cosmobl::interpolated_2D (const double _x1, const double _x2, const vecto
   else if (type=="Cubic") 
     TT = gsl_interp2d_bicubic;
 
-  gsl_interp2d *interp = gsl_interp2d_alloc(TT, size_x1, size_x2);
-
   for (size_t i=0; i<size_x1; i++)
     for (size_t j=0; j<size_x2; j++)
-      ydata[j+i*size_x2] = yy[i][j];
+      ydata[i+j*size_x1] = yy[i][j];
+
+  gsl_interp2d *interp = gsl_interp2d_alloc(TT, size_x1, size_x2);
+  gsl_interp2d_init (interp, x1.data(), x2.data(), ydata, size_x1, size_x2);
 
   double val;
   if (extr)
@@ -1212,64 +1226,6 @@ void cosmobl::convert_map_gnuplot_sm (const string file_gnu, const string file_s
 }
 
 
-// ============================================================================
-
-
-void cosmobl::random_numbers (const int nRan, const int idum, const vector<double> xx, const vector<double> fx, vector<double> &nRandom, const double n_min, const double n_max)
-{
-  vector<double> fx_temp = fx;
-  sort(fx_temp.begin(), fx_temp.end());
-  double fx_max = fx_temp[fx_temp.size()-1];
-
-  double xx_min = Min(xx)*0.999;
-  double xx_max = Max(xx)*1.001;
-  double delta_xx = xx_max-xx_min;
-  double num1, num2;
-
-  int step = 1000;
-  double delta_bin = (xx_max-xx_min)/step;
-  double XXB = xx_min;
-  vector<double> xx_interp, fx_interp;
-  
-  for (int i=0; i<step; i++) {
-    
-    xx_interp.push_back(XXB);
-    fx_interp.push_back(interpolated(XXB, xx, fx, "Poly"));
-    
-    XXB += delta_bin;
-  }
- 
-  double xx_interp_min = Min(xx_interp)*1.0001;
-  double xx_interp_max = Max(xx_interp)*0.9999;
-
-  default_random_engine generator(idum);
-  std::uniform_real_distribution<double> distribution;
-  auto ran = bind(distribution,generator);
-
-  double ddd, delta_bin_inv = 1./delta_bin;
- 
-  for (int i=0; i<nRan; i++) {
- 
-    int nTry = 0;
-
-    do {
-
-      nTry ++;
-      num1 = min(ran()*delta_xx+xx_min,xx_interp_max);
-      
-      num1 = max(xx_interp_min,num1);
-      num2 = ran()*fx_max;    
-      ddd = int((num1-xx_min)*delta_bin_inv);      
-
-    } while ((num2>fx_interp[ddd] || num1<n_min || num1>n_max) && nTry<100000);
-    
-    if (nTry==100000) ErrorMsg("Error in random_numbers of Func.cpp!");
- 
-    nRandom.push_back(num1);
-  }
-}
-
-
 // ============================================================================================
 
 
@@ -1466,6 +1422,8 @@ double cosmobl::func_grid_log (double xx, void *params)
 
 double cosmobl::func_grid_lin_2D (double *xx, size_t dim, void *params)
 {
+  (void)dim;
+  
   struct cosmobl::glob::STR_grid_2D *pp = (struct cosmobl::glob::STR_grid_2D *) params;
    
   return interpolated_2D(xx[0], xx[1], pp->_xx1, pp->_xx2, pp->_yy, "Linear");
@@ -1477,6 +1435,8 @@ double cosmobl::func_grid_lin_2D (double *xx, size_t dim, void *params)
 
 double cosmobl::func_grid_loglin_2D (double *xx, size_t dim, void *params)
 {
+  (void)dim;
+  
   struct cosmobl::glob::STR_grid_2D *pp = (struct cosmobl::glob::STR_grid_2D *) params;
  
   double lgx1 = log10(xx[0]);
@@ -1491,6 +1451,8 @@ double cosmobl::func_grid_loglin_2D (double *xx, size_t dim, void *params)
 
 double cosmobl::func_grid_log_2D (double *xx, size_t dim, void *params)
 {
+  (void)dim;
+  
   struct cosmobl::glob::STR_grid_2D *pp = (struct cosmobl::glob::STR_grid_2D *) params;
 
   double lgx1 = log10(xx[0]);
@@ -1571,92 +1533,6 @@ void cosmobl::sdss_stripe (const vector<double> eta, const vector<double> lambda
 // ============================================================================
 
 
-void cosmobl::fill_distr (const vector<double> var, const vector<double> prob, const int ntot, vector<double> &out_Var)
-{  
-  int s1 = 1242;
-  int s2 = -24323;
-
-  default_random_engine gen1(s1);
-  default_random_engine gen2(s2);
-  std::uniform_real_distribution<double> distribution;
-  auto ran1 = bind(distribution,gen1);
-  auto ran2 = bind(distribution,gen2);
-  
-  double minVar = Min(var), maxVar = Max(var);
-  double minP = Min(prob), maxP = Max(prob);
-  double deltaVar = maxVar-minVar;
-  double deltaP = maxP-minP;
-  
-  for (int i=0; i<ntot; i++) {
-    bool go_on = 0;
-    while (go_on==0) {
-      double VV = minVar+deltaVar*ran1();
-      double pp = 2*deltaP*ran2()+minP;
-      double p2 = interpolated(VV, var, prob, "Spline");
-      if (abs(pp-p2)/p2<=0.01) { out_Var.push_back(VV); go_on = 1; }
-    }
-  }
-}
-
-
-// ============================================================================
-
-
-void cosmobl::fill_distr (const vector<double> data_var, const double delta_Var, const vector<double> var, vector<double> &nObj, const double ntot, vector<double> &random_Var)
-{
-  double sum = 0.;
-  
-  for (unsigned int i=0; i<nObj.size(); i++) sum += nObj[i];
-  for (unsigned int i=0; i<nObj.size(); i++) nObj[i] = ntot*nObj[i]/sum;
-  
-  vector<double> bin_limit;
-  vector<double> occupation;
-  
-  double minVar = Min(data_var);
-  double maxVar = Max(data_var);
-  
-  bin_limit.push_back(minVar);
-  occupation.push_back(0);
-  
-  vector<double> index;
-  
-  for (size_t i=0; i<var.size(); i++)
-    if (var[i] > minVar && var[i] < maxVar) 
-      index.push_back(i);
-
-  double V1 = minVar, V2, temp = 0;
-
-  for (int i=Min(index); i<Max(index); i++) {
-  
-    V2 = V1+delta_Var;
-    bin_limit.push_back(V2);
-    V1 = V2;
-    temp += nObj[i];
-    occupation.push_back(temp);
-  
-  }
-  
-  bin_limit.push_back(maxVar);
-  occupation.push_back(ntot);
-
-  default_random_engine generator(21314);
-  std::uniform_real_distribution<double> distribution;
-  auto ran = bind(distribution,generator);
-
-  random_Var.erase(random_Var.begin(),random_Var.end());
-  
-  for (size_t i=1; i<bin_limit.size(); i++) {
-    for (int j=ceil(occupation[i-1]); j<ceil(occupation[i]); j++) {
-      temp = (bin_limit[i]-bin_limit[i-1])*ran()+bin_limit[i-1];
-      random_Var.push_back(temp);
-    }
-  }
-}
-
-
-// ============================================================================
-
-
 void cosmobl::fill_distr (const int nRan, const vector<double> xx, const vector<double> fx, vector<double> &varRandom, const double xmin, const double xmax, const int idum)
 {
   default_random_engine generator(idum);
@@ -1681,7 +1557,6 @@ void cosmobl::fill_distr (const int nRan, const vector<double> xx, const vector<
 
   for (int i=0; i<nRan; i++) 
     varRandom.push_back(ff(ran()));
-  
 }
 
 
@@ -1867,7 +1742,7 @@ void cosmobl::distribution (vector<double> &xx, vector<double> &fx, vector<doubl
   checkDim(Weight, FF.size(), "WW");
   
   for (size_t i=0; i<FF.size(); i++) 
-    gsl_histogram_accumulate (histo, FF[i], Weight[i]);
+    gsl_histogram_accumulate(histo, FF[i], Weight[i]);
   
   double x1, x2;
 

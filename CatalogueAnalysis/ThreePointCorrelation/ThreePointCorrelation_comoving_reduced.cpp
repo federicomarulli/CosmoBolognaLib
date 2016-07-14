@@ -78,7 +78,9 @@ void cosmobl::threept::ThreePointCorrelation_comoving_reduced::measure (const st
   values_interp[1] = log10(m_ddd->side_u()*m_ddd->side_s());
   
   for (int i=0; i<m_ddd->nbins(); i++) {
-    double tmp_value = (m_ddd->side_s()+((i+0.5)*m_ddd->binSize()));
+    double theta=(i+0.5)*m_ddd->binSize();
+    double tmp_value = m_ddd->side_s()*sqrt(1+(m_ddd->side_u()*m_ddd->side_u())-(2*m_ddd->side_u()*cos(theta)));
+    //double tmp_value = (m_ddd->side_s()+((i+0.5)*m_ddd->binSize()));
     values_interp[i+2] = log10(tmp_value);
   }
 

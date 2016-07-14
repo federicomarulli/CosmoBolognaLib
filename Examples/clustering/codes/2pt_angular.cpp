@@ -28,8 +28,8 @@ int main () {
 
   double N_R = 1.; // random/data ratio
   
-  Catalogue random_catalogue {_createRandom_box_, catalogue, N_R};
-
+  Catalogue random_catalogue {_createRandom_square_, catalogue, N_R, 10};
+  
 
   // --------------------------------------------------------------------------------------------
   // ---------------- measure the angular of the two-point correlation function ----------------
@@ -37,14 +37,14 @@ int main () {
 
   // binning parameters and output data
 
-  double angMin = 1.;                  // minimum angular separation 
-  double angMax = 50.;                 // maximum angular separation 
+  double angMin = 0.01;                // minimum angular separation 
+  double angMax = 1.;                  // maximum angular separation 
   int nbins = 20;                      // number of bins
   double shift = 0.5;                  // shift used to set the bin centre 
   CoordUnits angularUnits = _degrees_; // angular units
 
   string dir = par::DirLoc+"../output/";
-  string file = "xi_projected.dat";
+  string file = "xi_angular.dat";
   
 
   // measure the angular two-point correlation function

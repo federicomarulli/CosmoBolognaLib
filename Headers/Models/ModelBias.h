@@ -35,28 +35,28 @@
 
 #include "ModelFunction.h"
 
-namespace cosmobl{
+namespace cosmobl {
 
   class ModelBias : public statistics::Model1D
   {
     
   public:
     
-    ModelBias () {}
+    ModelBias () = default;
 
-    ModelBias (const double bias_value, const statistics::Prior bias_prior);
+    ModelBias(const double bias_value, const statistics::Prior bias_prior);
 
-    ModelBias (const double bias_value, const statistics::Prior bias_prior, const vector<cosmology::CosmoPar> cosmo_parameters, const vector<double> cosmo_parameters_values, const vector<statistics::Prior> cosmo_parameters_priors, const vector<string> cpar_name={});
+    ModelBias(const double bias_value, const statistics::Prior bias_prior, const vector<cosmology::CosmoPar> cosmo_parameters, const vector<double> cosmo_parameters_values, const vector<statistics::Prior> cosmo_parameters_priors, const vector<string> cpar_name={});
 
-    void set_xi_parameters (const vector<double> r,  const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const string type="Poly", const string method="CAMB", const string output_root="test", const bool NL=1, const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const string file_par=par::defaultString);
+    void set_xi_parameters (const vector<double> r,  const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const string type="Poly", const string method="CAMB", const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const string file_par=par::defaultString);
 
     void set_xi_parameters_cosmology (const shared_ptr<cosmology::Cosmology> cosmology, const vector<cosmology::CosmoPar> cosmo_parameters, const double redshift, const string method="CAMB", const string output_root="test", const bool NL=1, const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const string file_par=par::defaultString);
 
-    void set_wp_parameters (const vector<double> r, const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const double pi_max, const string type="Poly", const string method="CAMB", const string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const string file_par=par::defaultString);
+    void set_wp_parameters (const vector<double> r, const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const string type="Poly", const string method="CAMB", const string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const string file_par=par::defaultString);
 
     void set_wp_parameters_cosmology (const shared_ptr<cosmology::Cosmology> cosmology, const vector<cosmology::CosmoPar> cosmo_parameters, const double redshift, const double pi_max, const string method="CAMB", const string output_root="test", const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const string file_par=par::defaultString);
       
-    void set_xi0_parameters (const vector<double> r,  const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const string type="Poly", const string method="CAMB", const string output_root="test", const bool NL=1, const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const string file_par=par::defaultString);
+    void set_xi0_parameters (const vector<double> r,  const shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const string type="Poly", const string method="CAMB", const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const string file_par=par::defaultString);
 
     void set_xi0_parameters_cosmology (const shared_ptr<cosmology::Cosmology> cosmology, const vector<cosmology::CosmoPar> cosmo_parameters, const double redshift, const string method="CAMB", const string output_root="test", const bool NL=1, const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const string file_par=par::defaultString);
 

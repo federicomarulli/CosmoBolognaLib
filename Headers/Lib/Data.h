@@ -229,7 +229,7 @@ namespace cosmobl {
        *  @return value of the m_x vector at position i
        */
       virtual double xx (const int i) const
-      { cosmobl::ErrorMsg("Error in xx of of Data.h!"); return 0.; }
+      { (void)i; cosmobl::ErrorMsg("Error in xx of of Data.h!"); return 0.; }
 
       /**
        *  @brief return value of y at index i
@@ -237,7 +237,7 @@ namespace cosmobl {
        *  @return value of the m_y vector at position i
        */
       virtual double yy (const int i) const 
-      { cosmobl::ErrorMsg("Error in yy of of Data.h!"); return 0.; }
+      { (void)i; cosmobl::ErrorMsg("Error in yy of of Data.h!"); return 0.; }
 
       /**
        *  @brief return f(x) at index i
@@ -245,7 +245,7 @@ namespace cosmobl {
        *  @return value of the m_fx vector at position i
        */
       virtual double fx (const int i) const
-      { cosmobl::ErrorMsg("Error in fx of of Data.h!"); return 0.; }
+      { (void)i; cosmobl::ErrorMsg("Error in fx of of Data.h!"); return 0.; }
 
       /**
        *  @brief return value of f(x) error at index i
@@ -253,7 +253,7 @@ namespace cosmobl {
        *  @return value of the m_error_fx vector at position i
        */
       virtual double error_fx (const int i) const
-      { cosmobl::ErrorMsg("Error in error_fx of of Data.h!"); return 0.; }
+      { (void)i; cosmobl::ErrorMsg("Error in error_fx of of Data.h!"); return 0.; }
       
       /**
        *  @brief return the value of the f(x) covariance at index i,j
@@ -262,7 +262,7 @@ namespace cosmobl {
        *  @return value of the m_covariance matrix at position i,j
        */
       virtual double covariance (const int i, const int j) const
-      { cosmobl::ErrorMsg("Error in covariance of Data.h!"); return 0.; }
+      { (void)i; (void)j; cosmobl::ErrorMsg("Error in covariance of Data.h!"); return 0.; }
 
       /**
        *  @brief return the value of f(x) inverse_covariance at index i,j
@@ -271,7 +271,7 @@ namespace cosmobl {
        *  @return value of the m_inverse_covariance matrxi at position i,j
        */
       virtual double inverse_covariance (const int i, const int j) const
-      { cosmobl::ErrorMsg("Error in inverse_covariance of Data.h!"); return 0.; }
+      { (void)i; (void)j; cosmobl::ErrorMsg("Error in inverse_covariance of Data.h!"); return 0.; }
 
       /**
        *  @brief return value of f(x) inverted covariance at index i,j
@@ -281,7 +281,7 @@ namespace cosmobl {
        *  @return value of the inverted covariance matrix for at position i,j
        */
       virtual double inverse_covariance (const int d, const int i, const int j) const
-      { cosmobl::ErrorMsg("Error in inverse_covariance of Data.h!"); return 0.; }
+      { (void)d; (void)i; (void)j; cosmobl::ErrorMsg("Error in inverse_covariance of Data.h!"); return 0.; }
 
       /**
        *  @brief invert the covariance matrix
@@ -297,7 +297,7 @@ namespace cosmobl {
        *  @return value of the m_fxy vector at position i,j
        */
       virtual double fxy (const int i, const int j) const
-      { cosmobl::ErrorMsg("Error in fxy of Data.h!"); return 0.; }
+      { (void)i; (void)j; cosmobl::ErrorMsg("Error in fxy of Data.h!"); return 0.; }
 
       /**
        *  @brief return error on f(x,y) at index i,j
@@ -306,7 +306,7 @@ namespace cosmobl {
        *  @return value of the m_error_fxy vector at position i,j
        */
       virtual double error_fxy (const int i, const int j) const
-      { cosmobl::ErrorMsg("Error in error_fxy of Data.h!"); return 0.; }
+      { (void)i; (void)j; cosmobl::ErrorMsg("Error in error_fxy of Data.h!"); return 0.; }
 
       /**
        *  @brief the x vector
@@ -361,7 +361,7 @@ namespace cosmobl {
        *  @brief return the m_error_fx vector
        *  @return vector containing the values of fx error
        */
-      virtual vector<vector<double>> error_fxy() const 
+      virtual vector<vector<double>> error_fxy () const 
       { cosmobl::ErrorMsg("Error in error_fxy of of Data.h!"); vector<vector<double>> x; return x;}
 
       ///@}
@@ -380,7 +380,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_limits (const double min, const double max, const bool axis) 
-      { cosmobl::ErrorMsg("Error in set_limits of of Data.h!"); }
+      { (void)min; (void)max; (void)axis; cosmobl::ErrorMsg("Error in set_limits of of Data.h!"); }
 
       /**
        *  @brief set interval variables for x range
@@ -391,7 +391,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_limits (const double xmin, const double xmax, const double ymin, const double ymax) 
-      { cosmobl::ErrorMsg("Error in set_limits of of Data.h!"); }     
+      { (void)xmin; (void)xmax; (void)ymin; (void)ymax; cosmobl::ErrorMsg("Error in set_limits of of Data.h!"); }     
 
       /**
        *  @brief set interval variables for x range
@@ -400,7 +400,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_limits (const double xmin, const double xmax) 
-      { cosmobl::ErrorMsg("Error in set_limits of of Data.h!"); }
+      { (void)xmin; (void)xmax; cosmobl::ErrorMsg("Error in set_limits of of Data.h!"); }
 
       /**
        *  @brief set interval variable m_x
@@ -408,7 +408,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_xx (const vector<double> x)
-      { cosmobl::ErrorMsg("Error in set_xx of of Data.h!"); }
+      { (void)x; cosmobl::ErrorMsg("Error in set_xx of of Data.h!"); }
 
       /**
        *  @brief set interval variable m_y
@@ -416,7 +416,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_yy (const vector<double> y)
-      { cosmobl::ErrorMsg("Error in set_yy of of Data.h!"); }
+      { (void)y; cosmobl::ErrorMsg("Error in set_yy of of Data.h!"); }
 
       /**
        *  @brief set interval variable m_fx
@@ -424,7 +424,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_fx (const vector<double> fx)
-      { cosmobl::ErrorMsg("Error in set_fx of of Data.h!"); }
+      { (void)fx; cosmobl::ErrorMsg("Error in set_fx of of Data.h!"); }
 
       /**
        *  @brief set interval variable m_error_fx
@@ -432,7 +432,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_error_fx (const vector<double> error_fx)
-      { cosmobl::ErrorMsg("Error in set_error_fx of of Data.h!"); }
+      { (void)error_fx; cosmobl::ErrorMsg("Error in set_error_fx of of Data.h!"); }
 
       /**
        *  @brief set interval variable m_covariance, reading from an input file
@@ -441,7 +441,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_covariance (const string filename)
-      { cosmobl::ErrorMsg("Error in set_covariance of of Data.h!"); }
+      { (void)filename; cosmobl::ErrorMsg("Error in set_covariance of of Data.h!"); }
 
       /**
        *  @brief set interval variable m_covariance
@@ -449,7 +449,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_covariance (const vector<vector<double> > covariance) 
-      { cosmobl::ErrorMsg("Error in set_covariance of of Data.h!"); }
+      { (void)covariance; cosmobl::ErrorMsg("Error in set_covariance of of Data.h!"); }
 
       /**
        *  @brief write the interval variable m_covariance on a file,
@@ -459,7 +459,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void write_covariance(const string dir, const string file, const string xname) const
-      { cosmobl::ErrorMsg("Error in write_covariance of of Data.h!"); }
+      { (void)dir; (void)file; (void)xname; cosmobl::ErrorMsg("Error in write_covariance of of Data.h!"); }
 
       /**
        *  @brief set interval variable m_fxy
@@ -467,7 +467,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_fxy (const vector<vector<double> > fxy) 
-      { cosmobl::ErrorMsg("Error in set_fxy of of Data.h!"); }
+      { (void)fxy; cosmobl::ErrorMsg("Error in set_fxy of of Data.h!"); }
 
       /**
        *  @brief set interval variable m_error_fxy
@@ -475,7 +475,7 @@ namespace cosmobl {
        *  @return none
        */ 
       virtual void set_error_fxy (const vector<vector<double> > error_fxy)
-      { cosmobl::ErrorMsg("Error in set_error_fxy of of Data.h!"); }
+      { (void)error_fxy; cosmobl::ErrorMsg("Error in set_error_fxy of of Data.h!"); }
 
       /**
        *  @brief set interval variables for x range in the i-th dataset
@@ -485,7 +485,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_limits (const int i, const double xmin, const double xmax)
-      { ErrorMsg("Error in set_limits of Data.h"); }
+      { (void)i; (void)xmin; (void)xmax; ErrorMsg("Error in set_limits of Data.h"); }
 
       /**
        *  @brief set interval variable m_x in the i-th dataset
@@ -494,7 +494,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_xx (const int i, const vector<double> x) 
-      { ErrorMsg("Error in set_xx of Data.h"); }
+      { (void)i; (void)x; ErrorMsg("Error in set_xx of Data.h"); }
 
       /**
        *  @brief set interval variable m_fx in the i-th dataset
@@ -502,8 +502,8 @@ namespace cosmobl {
        *  @param fx vector containing f(x) values 
        *  @return none
        */
-      virtual void set_fx (const int i,const vector<double> fx) 
-      { ErrorMsg("Error in set_fx of Data.h"); }
+      virtual void set_fx (const int i, const vector<double> fx) 
+      { (void)i; (void)fx; ErrorMsg("Error in set_fx of Data.h"); }
 
       /**
        *  @brief set interval variable m_error_fx in the i-th dataset
@@ -512,28 +512,32 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_error_fx (const int i, const vector<double> error_fx)
-      { ErrorMsg("Error in set_error_fx of Data.h"); }
+      { (void)i; (void)error_fx; ErrorMsg("Error in set_error_fx of Data.h"); }
 
       /**
-       *  @brief set interval variable m_covariance,  in the i-th dataset
-       * reading from an input file; also compute inverted covariance matrix
+       *  @brief set interval variable m_covariance, in the i-th
+       *  dataset reading from an input file; also compute inverted
+       *  covariance matrix
        *  @param i index to the i-th dataset
-       *  @param filename file containing the covariance matrix in the format:
-       * column 0 &rarr x<SUB>i</SUB>, column 1 &rarr x<SUB>j</SUB>, column 2 &rarr cov(x<SUB>i</SUB>,x<SUB>j</SUB>)
+       *  @param filename file containing the covariance matrix in the
+       *  format: column 0 &rarr x<SUB>i</SUB>, column 1 &rarr
+       *  x<SUB>j</SUB>, column 2 &rarr
+       *  cov(x<SUB>i</SUB>,x<SUB>j</SUB>)
        *  @return none
        */
       virtual void set_covariance (const int i, const string filename)
-      { ErrorMsg("Error in set_covariance of Data.h"); }
+      { (void)i; (void)filename; ErrorMsg("Error in set_covariance of Data.h"); }
 
       /**
-       *  @brief set interval variable m_covariance,  in the i-th dataset
-       * reading from an input file; also compute inverted covariance matrix
+       *  @brief set interval variable m_covariance, in the i-th
+       *  dataset reading from an input file; also compute inverted
+       *  covariance matrix
        *  @param i index to the i-th dataset
        *  @param covariance vector containing f(x) covariance matrix 
        *  @return none
        */
       virtual void set_covariance (const int i, const vector<vector<double> > covariance) 
-      { ErrorMsg("Error in set_covariance of Data.h"); }
+      { (void)i; (void)covariance; ErrorMsg("Error in set_covariance of Data.h"); }
 
       /**
        *  @brief set cross-correlation between i-th and j-th datasets
@@ -543,7 +547,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_covariance (const int i, const int j, const vector<vector<double> > covariance)
-      { ErrorMsg("Error in set_covariance of Data.h"); }
+      { (void)i; (void)j; (void)covariance; ErrorMsg("Error in set_covariance of Data.h"); }
 
       /**
        *  @brief set interval variable m_covariance_matrix, from covariance matrix
@@ -581,7 +585,7 @@ namespace cosmobl {
        * @return effective number of data between defined limits
        */
       virtual int ndata_eff (const int i) const
-      { cosmobl::ErrorMsg("Error in ndata of of Data.h!"); return 0; }
+      { (void)i; cosmobl::ErrorMsg("Error in ndata of of Data.h!"); return 0; }
 
       /**
        * @brief function that returns total number of data
@@ -589,7 +593,7 @@ namespace cosmobl {
        * @return total number of data
        */
       virtual int ndata (const int i) const 
-      { cosmobl::ErrorMsg("Error in ndata aaaaaaaaaaaaa of of Data.h!"); return 0; }
+      { (void)i; cosmobl::ErrorMsg("Error in ndata of of Data.h!"); return 0; }
 
       /**
        * @brief function that returns total number of datasets
@@ -604,7 +608,7 @@ namespace cosmobl {
        *  @return the index of the first x used
        */
       virtual int x_down (const int i) const 
-      { cosmobl::ErrorMsg("Error in xx of of Data.h!"); return 0; }
+      { (void)i; cosmobl::ErrorMsg("Error in xx of of Data.h!"); return 0; }
 
       /**
        *  @brief index of the last x used in the i-th dataset
@@ -612,7 +616,7 @@ namespace cosmobl {
        *  @return the index of the last x used
        */
       virtual int x_up (const int i) const 
-      { cosmobl::ErrorMsg("Error in xx of of Data.h!"); return 0; }
+      { (void)i; cosmobl::ErrorMsg("Error in xx of of Data.h!"); return 0; }
 
       /**
        *  @brief the value of x at index j in the i-th dataset
@@ -621,7 +625,7 @@ namespace cosmobl {
        *  @return value of the x[j] in the i-th dataset
        */
       virtual double xx (const int i, const int j) const  
-      { cosmobl::ErrorMsg("Error in xx of of Data.h!"); return 0.; }
+      { (void)i; (void)j; cosmobl::ErrorMsg("Error in xx of of Data.h!"); return 0.; }
 
       /**
        *  @brief the function f(x[j]) of the i-th dataset
@@ -630,7 +634,7 @@ namespace cosmobl {
        *  @return f(x[j]) in the i-th dataset
        */
       virtual double fx (const int i, const int j) const 
-      { cosmobl::ErrorMsg("Error in fx of of Data.h!"); return 0.; }
+      { (void)i; (void)j; cosmobl::ErrorMsg("Error in fx of of Data.h!"); return 0.; }
 
       /**
        *  @brief the error on f(x[j]) of the i-th dataset
@@ -639,7 +643,7 @@ namespace cosmobl {
        *  @return the error of f(x[j]) of the i-th dataset
        */
       virtual double error_fx (const int i, const int j) const 
-      { cosmobl::ErrorMsg("Error in error_fx of of Data.h!"); return 0.; }
+      { (void)i; (void)j; cosmobl::ErrorMsg("Error in error_fx of of Data.h!"); return 0.; }
 
       ///@}
 
@@ -658,7 +662,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void read (const string input_file=par::defaultString, const int skip_nlines=0)
-      { cosmobl::ErrorMsg("Error in read of Data.h!"); }
+      { (void)input_file; (void)skip_nlines; cosmobl::ErrorMsg("Error in read of Data.h!"); }
 
       /**
        *  @brief write the measured two-point correlation
@@ -670,7 +674,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void write (const string dir, const string file, const string xname, const string fxname, const int rank=0) const
-      { cosmobl::ErrorMsg("Error in write of Data.h!"); }
+      { (void)dir; (void)file; (void)xname; (void)fxname; (void)rank; cosmobl::ErrorMsg("Error in write of Data.h!"); }
 
       /**
        *  @brief write the measured two-point correlation
@@ -686,7 +690,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void write (const string dir, const string file, const string xname, const string yname, const string fxyname, const bool full=0, const int rank=0) const
-      { cosmobl::ErrorMsg("Error in write of Data.h!"); }
+      { (void)dir; (void)file; (void)xname; (void)yname; (void)fxyname; (void)full; (void)rank; cosmobl::ErrorMsg("Error in write of Data.h!"); }
 
       ///@}
     };

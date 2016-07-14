@@ -87,7 +87,7 @@ shared_ptr<modelling::Modelling_TwoPointCorrelation> modelling::Modelling_TwoPoi
 // ============================================================================================
 
 
-void modelling::Modelling_TwoPointCorrelation::set_parameters_twop_DM(const vector<double> model_scales, const cosmology::Cosmology cosmology, const double redshift, const string method, const double sigmaNL, const bool NL, const double pimax, const double r_min, const double r_max, const string output_root, const int norm, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+void modelling::Modelling_TwoPointCorrelation::set_parameters_twop_DM (const vector<double> model_scales, const cosmology::Cosmology cosmology, const double redshift, const string method, const double sigmaNL, const bool NL, const double pimax, const double r_min, const double r_max, const string output_root, const int norm, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
 {
   m_twop_parameters.model_scales = model_scales;
   m_twop_parameters.cosmology = make_shared<cosmology::Cosmology>(cosmology);
