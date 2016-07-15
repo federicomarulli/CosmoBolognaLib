@@ -204,16 +204,44 @@ namespace cosmobl {
        *  can be either the z comoving coordinates, or the redshits
        *  (depending on coordtype)
        *
-       *  @param cosm object of class Cosmology
-       *
        *  @param weight vector containing the weights
        *
        *  @param inputUnits the units of the input coordinates
        *
+       *  @param cosm object of class Cosmology
+       *
        *  @return object of type catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const cosmology::Cosmology &cosm={}, const vector<double> weight={}, const CoordUnits inputUnits=_radians_);
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const vector<double> weight={}, const CoordUnits inputUnits=_radians_, const cosmology::Cosmology &cosm={});
 
+      /**
+       *  @brief constructor
+       *
+       *  @param objType the object type, specified in the
+       *  cosmobl::catalogue::ObjType enumeration 
+       *
+       *  @param coordType the coordinate type, specified in the
+       *  cosmobl::CoordType enumeration
+       *
+       *  @param coord1 vector containing the first coordinates, that
+       *  can be either the x comoving coordinates, or the Right
+       *  Ascensions (depending on coordtype)
+       *
+       *  @param coord2 vector containing the second coordinates, that
+       *  can be either the y comoving coordinates, or the
+       *  Declinations (depending on coordtype)
+       *
+       *  @param coord3 vector containing the third coordinates, that
+       *  can be either the z comoving coordinates, or the redshits
+       *  (depending on coordtype)
+       *
+       *  @param cosm object of class Cosmology
+       *
+       *  @return object of type catalogue
+       */
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const cosmology::Cosmology &cosm)
+	: Catalogue(objType, coordType, coord1, coord2, coord3, {}, _radians_, cosm) {}
+      
       /**
        *  @brief constructor, reading a file with coordinates
        *
@@ -225,10 +253,6 @@ namespace cosmobl {
        *
        *  @param file vector containing the files where the input
        *  catalogues are stored
-       *
-       *  @param cosm object of class Cosmology 
-       *
-       *  @param inputUnits the units of the input coordinates
        *
        *  @param col1 column of the input file containing the first
        *  coordinates, that can be either the x comoving coordinates,
@@ -251,9 +275,32 @@ namespace cosmobl {
        *  @param fact a factor used to multiply the coordinates,
        *  i.e. coordinate_i=coordinate_i*fact
        *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param cosm object of class Cosmology 
+       *
        *  @return an object of class Catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const int col1=0, const int col2=1, const int col3=2, const int colWeight=-1, const double nSub=1.1, const double fact=1.);
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1=0, const int col2=1, const int col3=2, const int colWeight=-1, const double nSub=1.1, const double fact=1., const CoordUnits inputUnits=_radians_, const cosmology::Cosmology &cosm={});
+
+      /**
+       *  @brief constructor, reading a file with coordinates
+       *
+       *  @param objType the object type, specified in the
+       *  cosmobl::catalogue::ObjType enumeration
+       *
+       *  @param coordType the coordinate type, specified in the
+       *  cosmobl::CoordType enumeration
+       *
+       *  @param file vector containing the files where the input
+       *  catalogues are stored
+       *
+       *  @param cosm object of class Cosmology 
+       *
+       *  @return an object of class Catalogue
+       */
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm)
+	: Catalogue(objType, coordType, file, 0, 1, 2, -1, 1.1, 1., _radians_, cosm) {}
 
       /**
        *  @brief constructor, using vectors of generic objects
