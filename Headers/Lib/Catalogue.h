@@ -206,13 +206,13 @@ namespace cosmobl {
        *
        *  @param weight vector containing the weights
        *
-       *  @param inputUnits the units of the input coordinates
-       *
        *  @param cosm object of class Cosmology
+       *
+       *  @param inputUnits the units of the input coordinates
        *
        *  @return object of type catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const vector<double> weight={}, const CoordUnits inputUnits=_radians_, const cosmology::Cosmology &cosm={});
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const vector<double> weight={}, const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_);
 
       /**
        *  @brief constructor
@@ -237,10 +237,12 @@ namespace cosmobl {
        *
        *  @param cosm object of class Cosmology
        *
+       *  @param inputUnits the units of the input coordinates
+       *
        *  @return object of type catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const cosmology::Cosmology &cosm)
-	: Catalogue(objType, coordType, coord1, coord2, coord3, {}, _radians_, cosm) {}
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const cosmology::Cosmology &cosm, const CoordUnits inputUnits=_radians_)
+	: Catalogue(objType, coordType, coord1, coord2, coord3, {}, cosm, inputUnits) {}
       
       /**
        *  @brief constructor, reading a file with coordinates
@@ -275,13 +277,13 @@ namespace cosmobl {
        *  @param fact a factor used to multiply the coordinates,
        *  i.e. coordinate_i=coordinate_i*fact
        *
-       *  @param inputUnits the units of the input coordinates
-       *
        *  @param cosm object of class Cosmology 
+       *
+       *  @param inputUnits the units of the input coordinates
        *
        *  @return an object of class Catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1=0, const int col2=1, const int col3=2, const int colWeight=-1, const double nSub=1.1, const double fact=1., const CoordUnits inputUnits=_radians_, const cosmology::Cosmology &cosm={});
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1=0, const int col2=1, const int col3=2, const int colWeight=-1, const double nSub=1.1, const double fact=1., const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_);
 
       /**
        *  @brief constructor, reading a file with coordinates
@@ -297,10 +299,12 @@ namespace cosmobl {
        *
        *  @param cosm object of class Cosmology 
        *
+       *  @param inputUnits the units of the input coordinates
+       *
        *  @return an object of class Catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm)
-	: Catalogue(objType, coordType, file, 0, 1, 2, -1, 1.1, 1., _radians_, cosm) {}
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm, const CoordUnits inputUnits=_radians_)
+	: Catalogue(objType, coordType, file, 0, 1, 2, -1, 1.1, 1., cosm, inputUnits) {}
 
       /**
        *  @brief constructor, using vectors of generic objects

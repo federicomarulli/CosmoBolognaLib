@@ -24,3 +24,5 @@ V2.3 minor bugs fixed, documentation completed
 V2.4 algorithms for random catalogues and clustering computation improved
 
 V2.4 
+
+V2.4 

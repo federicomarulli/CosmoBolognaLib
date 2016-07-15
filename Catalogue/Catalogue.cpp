@@ -76,7 +76,7 @@ template void cosmobl::catalogue::Catalogue::remove_objects (vector<cosmobl::cat
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const vector<double> weight, const CoordUnits inputUnits, const cosmology::Cosmology &cosm)
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const vector<double> weight, const cosmology::Cosmology &cosm, const CoordUnits inputUnits)
 { 
   // check the vector dimensions
   if (!(coord1.size()==coord2.size() && coord2.size()==coord3.size()))
@@ -109,7 +109,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1, const int col2, const int col3, const int colWeight, const double nSub, const double fact, const CoordUnits inputUnits, const cosmology::Cosmology &cosm) 
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1, const int col2, const int col3, const int colWeight, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordUnits inputUnits) 
 { 
   // parameters for random numbers used in case nSub!=1
   default_random_engine gen;
