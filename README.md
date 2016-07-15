@@ -22,7 +22,3 @@ V2.2 new examples added, some new classes to model clustering measurements
 V2.3 minor bugs fixed, documentation completed
 
 V2.4 algorithms for random catalogues and clustering computation improved
-
-V2.4 
-
-V2.4 
