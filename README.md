@@ -22,3 +22,6 @@ V2.2 new examples added, some new classes to model clustering measurements
 V2.3 minor bugs fixed, documentation completed
 
 V2.4 algorithms for random catalogues and clustering computation improved
+
+V3.0 Numerical Recipes fully substituted by GSL functions; classes to
+     measure and model two-point statistics improved
