@@ -57,16 +57,16 @@ void cosmobl::chainmesh::ChainMesh_Catalogue::set_par (const double cell_size, s
   
   m_catalogue = cat;
 
-  vector<vector<double>> data = {m_catalogue->var(Var::_X_), m_catalogue->var(Var::_Y_), m_catalogue->var(Var::_Z_)}; 
-
+  vector<vector<double>> data = { m_catalogue->var(Var::_X_), m_catalogue->var(Var::_Y_), m_catalogue->var(Var::_Z_) }; 
+  
   create_chain_mesh(data, rmax);
-
+ 
   vector<int> order;
   get_order(order);
   m_catalogue->Order(order);
 
   data.erase(data.begin(), data.end());
-  data = {m_catalogue->var(Var::_X_), m_catalogue->var(Var::_Y_), m_catalogue->var(Var::_Z_)}; 
+  data = { m_catalogue->var(Var::_X_), m_catalogue->var(Var::_Y_), m_catalogue->var(Var::_Z_) }; 
 
   create_chain_mesh(data, rmax);
 }
@@ -77,7 +77,7 @@ void cosmobl::chainmesh::ChainMesh_Catalogue::set_par (const double cell_size, s
 
 void cosmobl::chainmesh::ChainMesh_Catalogue::get_order (vector<int> &order) const
 {
-  order.erase(order.begin(),order.end());
+  order.erase(order.begin(), order.end());
   vector<long> Label_temp = m_Label;
   vector<long> List_temp = m_List;
 
@@ -91,7 +91,7 @@ void cosmobl::chainmesh::ChainMesh_Catalogue::get_order (vector<int> &order) con
 
     reverse(vv.begin(), vv.end());
     
-    for (int j=0; j<int(vv.size()); j++)
+    for (size_t j=0; j<vv.size(); j++)
       order.push_back(vv[j]);
   }
 }
@@ -107,7 +107,7 @@ vector<shared_ptr<Object> > cosmobl::chainmesh::ChainMesh_Catalogue::object_list
   vector<double> center = object->coords();
   int center_indx = pos_to_index(center);
 
-  for (unsigned int i=0; i<m_search_region.size(); i++) {
+  for (size_t i=0; i<m_search_region.size(); i++) {
     int k = min(max(m_search_region[i]+center_indx, (long)0), m_nCell_tot-1);
     int j = m_Label[k];
 

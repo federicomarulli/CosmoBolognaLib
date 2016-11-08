@@ -1,5 +1,5 @@
 /********************************************************************
- *  Copyright (C) 2010 by Federico Marulli                          *
+ *  Copyright (C) 2016 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
  *  This program is free software; you can redistribute it and/or   *
@@ -23,12 +23,12 @@
  *
  *  @brief The class Modelling
  *
- *  This file defines the interface of the class
- *  Modelling, used for modelling any kind of measurements
+ *  This file defines the interface of the class Modelling, used for
+ *  modelling any kind of measurements
  *
- *  @author Federico Marulli
+ *  @author Federico Marulli, Alfonso Veropalumbo
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
  */
 
 #ifndef __MODELLING__
@@ -44,7 +44,8 @@
 namespace cosmobl {
   
   /**
-   *  @brief The namespace of functions and classes used for modelling
+   *  @brief The namespace of the functions and classes used for <B>
+   *  modelling </B>
    *  
    * The \e modelling namespace contains all the functions and classes
    * used to model any kind of measurements
@@ -62,9 +63,9 @@ namespace cosmobl {
      *
      */
     class Modelling {
-
+      
     protected:
-    
+      
       /// input data to be modelled
       shared_ptr<data::Data> m_data;
 
@@ -73,6 +74,7 @@ namespace cosmobl {
 
       /// likelihood
       shared_ptr<statistics::Likelihood> m_likelihood;
+
       
     public:
       
@@ -113,6 +115,7 @@ namespace cosmobl {
 
       ///@}
 
+      
       /**
        * @brief set the dataset
        *
@@ -122,6 +125,7 @@ namespace cosmobl {
        */
       void set_data (const shared_ptr<data::Data> dataset) { m_data = move(dataset); }
 
+      
       /**
        * @brief set the model
        *
@@ -131,7 +135,33 @@ namespace cosmobl {
        */    
       void set_model (const shared_ptr<statistics::Model> model) { m_model = move(model); }
 
+      
+      /**
+       * @brief set the likelihood
+       *
+       * @param xmin lower bound for the fit
+       * @param xmax upper bound for the fit
+       * @param likelihood_type type of likelihood
+       *
+       * @return none
+       */
+      void set_likelihood (const double xmin, const double xmax, const statistics::LikelihoodType likelihood_type);
 
+      
+      /**
+       * @brief set the likelihood
+       *
+       * @param xmin lower bound for the fit, first dimension
+       * @param xmax upper bound for the fit, first dimension
+       * @param ymin lower bound for the fit, second dimension
+       * @param ymax upper bound for the fit, second dimension
+       * @param likelihood_type type of likelihood
+       *
+       * @return none
+       */
+      void set_likelihood (const double xmin, const double xmax, const double ymin, const double ymax, const statistics::LikelihoodType likelihood_type);
+
+      
       /**
        * @brief sample the likelihood and write
        * chains on a file
@@ -144,16 +174,42 @@ namespace cosmobl {
        * @param seed the seed for random number generation
        * @param dir_output output directory
        * @param chain_file output file
-       * @param do_write_chain 0 &rarr; do not write chains during sampling
-       * 1 &rarr; write chains during sampling
+       * @param do_write_chain 0 &rarr; do not write the chains during sampling
+       * 1 &rarr; write the chains during sampling
        * @param start starting position in the chains
        * @param stop final position in the chains
        * @param thin interval of parameter in output
        *
        * @return none
        */
-      void sample_likelihood (double xmin, double xmax,const statistics::LikelihoodType likelihood_type, const int n_chains, const int chain_size, const int seed, const string dir_output, const string chain_file, const bool do_write_chain=0, const double start=0.5, const double stop=1, const int thin=1);
+      void sample_likelihood (const double xmin, const double xmax, const statistics::LikelihoodType likelihood_type, const int n_chains, const int chain_size, const int seed, const string dir_output, const string chain_file, const bool do_write_chain=0, const double start=0.5, const double stop=1, const int thin=1);
 
+      
+      /**
+       * @brief sample the likelihood and write
+       * chains on a file
+       *
+       * @param xmin lower bound for the fit, first dimension
+       * @param xmax upper bound for the fit, first dimension
+       * @param ymin lower bound for the fit, second dimension
+       * @param ymax upper bound for the fit, second dimension
+       * @param likelihood_type type of likelihood
+       * @param n_chains number of parallel chains
+       * @param chain_size size of the chains
+       * @param seed the seed for random number generation
+       * @param dir_output output directory
+       * @param chain_file output file
+       * @param do_write_chain 0 &rarr; do not write the chains during sampling
+       * 1 &rarr; write the chains during sampling
+       * @param start starting position in the chains
+       * @param stop final position in the chains
+       * @param thin interval of parameter in output
+       *
+       * @return none
+       */
+      void sample_likelihood (const double xmin, const double xmax, const double ymin, const double ymax, const statistics::LikelihoodType likelihood_type, const int n_chains, const int chain_size, const int seed, const string dir_output, const string chain_file, const bool do_write_chain=0, const double start=0.5, const double stop=1, const int thin=1);
+
+      
       /**
        * @brief sample the likelihood and write
        * chains on a file
@@ -164,8 +220,8 @@ namespace cosmobl {
        * @param seed the seed for random number generation
        * @param dir_output output directory
        * @param chain_file output file
-       * @param do_write_chain 0 &rarr; do not write chains during sampling
-       * 1 &rarr; write chains during sampling
+       * @param do_write_chain 0 &rarr; do not write the chains during sampling
+       * 1 &rarr; write the chains during sampling
        * @param start starting position in the chains
        * @param stop final position in the chains
        * @param thin interval of parameter in output
@@ -174,9 +230,9 @@ namespace cosmobl {
        */
       void sample_likelihood (const statistics::LikelihoodType likelihood_type, const int n_chains, const int chain_size, const int seed, const string dir_output, const string chain_file, const bool do_write_chain=0, const double start=0.5, const double stop=1, const int thin=1);
 
+      
       /**
-       * @brief sample the likelihood and write
-       * chains on a file
+       * @brief sample the likelihood and write the chains on a file
        *
        * @param xmin lower bound for the fit
        * @param xmax upper bound for the fit
@@ -187,8 +243,8 @@ namespace cosmobl {
        * @param n_chains number of parallel chains
        * @param chain_size size of the chains
        * @param seed the seed for random number generation
-       * @param do_write_chain 0 &rarr; do not write chains during sampling
-       * 1 &rarr; write chains during sampling
+       * @param do_write_chain 0 &rarr; do not write the chains during sampling
+       * 1 &rarr; write the chains during sampling
        * @param dir_output output directory
        * @param chain_file output file
        * @param start starting position in the chains
@@ -197,12 +253,17 @@ namespace cosmobl {
        *
        * @return none
        */
-      void sample_likelihood (double xmin, double xmax, const statistics::LikelihoodType likelihood_type, const statistics::LogLikelihood_function loglikelihood_function, const bool cov, const int n_chains, const int chain_size, const int seed, const string dir_output, const string chain_file, const bool do_write_chain=0, const double start=0.5, const double stop=1, const int thin=1);
+      void sample_likelihood (const double xmin, const double xmax, const statistics::LikelihoodType likelihood_type, const statistics::LogLikelihood_function loglikelihood_function, const bool cov, const int n_chains, const int chain_size, const int seed, const string dir_output, const string chain_file, const bool do_write_chain=0, const double start=0.5, const double stop=1, const int thin=1);
 
+      
       /**
        * @brief sample the likelihood and write
        * chains on a file
        *
+       * @param xmin lower bound for the fit, first dimension
+       * @param xmax upper bound for the fit, first dimension
+       * @param ymin lower bound for the fit, second dimension
+       * @param ymax upper bound for the fit, second dimension
        * @param likelihood_type type of likelihood
        * @param loglikelihood_function the user-defined loglikelihood
        * function
@@ -210,10 +271,35 @@ namespace cosmobl {
        * @param n_chains number of parallel chains
        * @param chain_size size of the chains
        * @param seed the seed for random number generation
+       * @param do_write_chain 0 &rarr; do not write the chains during sampling
+       * 1 &rarr; write the chains during sampling
        * @param dir_output output directory
        * @param chain_file output file
-       * @param do_write_chain 0 &rarr; do not write chains during sampling
-       * 1 &rarr; write chains during sampling
+       * @param start starting position in the chains
+       * @param stop final position in the chains
+       * @param thin interval of parameter in output
+       *
+       * @return none
+       */
+      void sample_likelihood (const double xmin, const double xmax, const double ymin, const double ymax, const statistics::LikelihoodType likelihood_type, const statistics::LogLikelihood_function loglikelihood_function, const bool cov, const int n_chains, const int chain_size, const int seed, const string dir_output, const string chain_file, const bool do_write_chain=0, const double start=0.5, const double stop=1, const int thin=1);
+
+      
+      /**
+       * @brief sample the likelihood and write
+       * chains on a file
+       *
+       * @param likelihood_type type of likelihood
+       * @param loglikelihood_function the user-defined loglikelihood
+       * function
+       * @param cov 0 &rarr; do not use data covariance, 1 &rarr; use
+       * data covariance
+       * @param n_chains number of parallel chains
+       * @param chain_size size of the chains
+       * @param seed the seed for random number generation
+       * @param dir_output output directory
+       * @param chain_file output file
+       * @param do_write_chain 0 &rarr; do not write the chains during
+       * sampling 1 &rarr; write the chains during sampling
        * @param start starting position in the chains
        * @param stop final position in the chains
        * @param thin interval of parameter in output
@@ -222,68 +308,58 @@ namespace cosmobl {
        */
       void sample_likelihood (const statistics::LikelihoodType likelihood_type, const statistics::LogLikelihood_function loglikelihood_function, const bool cov, const int n_chains, const int chain_size, const int seed, const string dir_output, const string chain_file, const bool do_write_chain=0, const double start=0.5, const double stop=1, const int thin=1);
 
+      
       /**
-       * @brief compute and write the model using the stored parameter
-       * values
-       *
-       * @param xx vector of point at which the model is computed
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
-       *
-       * @return none
+       *  @name Member functions used to write the outputs
        */
-      virtual void write_model (const vector<double> xx, const string dir_model, const string file_model)
-      { (void)xx; (void)dir_model; (void)file_model; cosmobl::ErrorMsg("Error in write_model of Modelling.h!"); }
-	 
+      ///@{
+      
+      /**
+       *  @brief store the best-fit values of the model parameters
+       *
+       *  @param dir the output directory
+       *  @param file the output file
+       * 
+       *  @return none
+       */
+      void write_parameters (const string dir, const string file) const;
 
       /**
-       * @brief compute and write the model using the stored parameter
-       * values
+       *  @brief compute and write the model
        *
-       * @param xx vector of point at which the model is computed
-       * @param parameters vector of parameters values at which the
-       * model is computed
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
+       *  @param xx vector of points at which the model is computed
+       *  @param dir the output directory
+       *  @param file the output file
        *
-       * @return none
+       *  @param parameter vector containing input parameters used to
+       *  compute the model; if it is not provided, internal
+       *  parameters will be used
+       *
+       *  @return none
        */
-      virtual void write_model_parameters (const vector<double> xx, const vector<double> parameters, const string dir_model, const string file_model)
-      { (void)xx; (void)parameters; (void)dir_model; (void)file_model; cosmobl::ErrorMsg("Error in write_model_parameters of Modelling.h!"); }
+      virtual void write_model (const vector<double> xx, const string dir, const string file, const vector<double> parameter={}) const
+      { (void)xx; (void)dir; (void)file; (void)parameter; cosmobl::ErrorCBL("Error in write_model of Modelling.h!"); }
 
       /**
-       * @brief compute and write the model using the stored parameter
-       * values
+       *  @brief compute and write the model 
        *
-       * @param xx vector of point at which the model is computed,
-       * first axis
-       * @param yy vector of point at which the model is computed,
-       * second axis
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
+       *  @param xx vector of points at which the model is computed,
+       *  first axis
+       *  @param yy vector of points at which the model is computed,
+       *  second axis
+       *  @param dir the output directory
+       *  @param file the output file
        *
-       * @return none
+       *  @param parameter vector containing input parameters used to
+       *  compute the model; if it is not provided, internal
+       *  parameters will be used
+       *
+       *  @return none
        */
-      virtual void write_model(const vector<double> xx, const vector<double> yy, const string dir_model, const string file_model)
-      { (void)xx; (void)yy; (void)dir_model; (void)file_model; cosmobl::ErrorMsg("Error in write_model of Modelling.h!"); }
+      virtual void write_model (const vector<double> xx, const vector<double> yy, const string dir, const string file, const vector<double> parameter={}) const
+      { (void)xx; (void)yy; (void)dir; (void)file; (void)parameter; cosmobl::ErrorCBL("Error in write_model of Modelling.h!"); }
 
-      /**
-       * @brief compute and write the model using the stored parameter
-       * values
-       *
-       * @param xx vector of point at which the model is computed,
-       * first axis
-       * @param yy vector of point at which the model is computed,
-       * second axis
-       * @param parameters vector of parameters values at which the
-       * model is computed
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
-       *
-       * @return none
-       */
-      virtual void write_model_parameters(const vector<double> xx, const vector<double> yy, const vector<double> parameters, const string dir_model, const string file_model)
-      { (void)xx; (void)yy; (void)parameters; (void)dir_model; (void)file_model; cosmobl::ErrorMsg("Error in write_model_parameters of Modelling.h!"); }
+      ///@}
       
     };
   }

@@ -188,7 +188,7 @@ namespace cosmobl {
        *
        * @return none
        */
-      void measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const int count_ddd=1, const int count_rrr=1, const int count_ddr=1, const int count_drr=1, const bool tcount=0) override;
+      void measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const bool count_ddd=1, const bool count_rrr=1, const bool count_ddr=1, const bool count_drr=1, const bool tcount=0) override;
     
       ///@}
 

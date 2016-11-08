@@ -80,7 +80,7 @@ namespace cosmobl {
        * @brief default constructor
        * @return object of class RandomNumbers
        */
-      RandomNumbers () {};
+      RandomNumbers () = default;
       
       /**
        *  @brief constructor
@@ -89,7 +89,8 @@ namespace cosmobl {
        *  @param MaxVal upper limit of the random numbers range
        *  @return object of class RandomNumbers
        */
-      RandomNumbers (const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble) {
+      RandomNumbers (const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble)
+      {
 	set_seed(seed);
 	set_range(MinVal, MaxVal);
       }
@@ -99,7 +100,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      ~RandomNumbers () {} 
+      ~RandomNumbers () = default;
 
 
       /**
@@ -137,7 +138,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_mean (const double mean)
-      { (void)mean; ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }
+      { (void)mean; ErrorCBL("Error in set_parameters() of RandomNumbers.h"); }
 
       /**
        *  @brief set parameters for Normal distribution
@@ -146,7 +147,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_mean_sigma (const double mean, const double sigma)
-      { (void)mean; (void)sigma; ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }
+      { (void)mean; (void)sigma; ErrorCBL("Error in set_parameters() of RandomNumbers.h"); }
 
       /**
        *  @brief set parameters for Discrete distribution
@@ -155,7 +156,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_discrete_values (const vector<double> values, const vector<double> weights)
-      { (void)values; (void)weights; ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }
+      { (void)values; (void)weights; ErrorCBL("Error in set_parameters() of RandomNumbers.h"); }
 
       /**
        *  @brief set the parameters for the interpolated distribution
@@ -164,9 +165,11 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_interpolated_distribution (const vector<double> values, const vector<double> weights)
-      { (void)values; (void)weights; ErrorMsg("Error in set_parameters() of RandomNumbers.h"); }   
+      { (void)values; (void)weights; ErrorCBL("Error in set_parameters() of RandomNumbers.h"); }
+      
     };
 
+    
     /**
      *  @class UniformRandomNumbers RandomNumbers.h
      *  "Headers/Lib/RandomNumbers.h"
@@ -193,7 +196,8 @@ namespace cosmobl {
        *  @param seed the random number generator seed
        *  @return object of class UniformRandomNumbers
        */
-      UniformRandomNumbers (double MinVal, const double MaxVal, const int seed) : RandomNumbers(seed, MinVal, MaxVal){
+      UniformRandomNumbers (double MinVal, const double MaxVal, const int seed) : RandomNumbers(seed, MinVal, MaxVal)
+      {
 	m_distribution = make_shared<uniform_real_distribution<double> >(uniform_real_distribution<double>(0,1));
       }
 
@@ -202,7 +206,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      ~UniformRandomNumbers () {} 
+      ~UniformRandomNumbers () = default; 
 
       double operator () ()
       {
@@ -211,6 +215,7 @@ namespace cosmobl {
 
     };
 
+    
     /**
      *  @class PoissonRandomNumbers RandomNumbers.h
      *  "Headers/Lib/RandomNumbers.h"
@@ -223,6 +228,7 @@ namespace cosmobl {
      */
     class PoissonRandomNumbers : public RandomNumbers
     {
+      
     protected:
 
       /// mean
@@ -232,6 +238,7 @@ namespace cosmobl {
       shared_ptr<poisson_distribution<int> > m_distribution;
 
     public:
+      
       /**
        *  @brief constructor
        *  @param mean the Poisson distribution mean
@@ -240,7 +247,8 @@ namespace cosmobl {
        *  @param MaxVal upper limit of the random numbers range
        *  @return object of class PoissonRandomNumbers
        */
-      PoissonRandomNumbers (const double mean, const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble) : RandomNumbers(seed, MinVal, MaxVal) {
+      PoissonRandomNumbers (const double mean, const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble) : RandomNumbers(seed, MinVal, MaxVal)
+      {
 	set_mean(mean);
       }
 
@@ -249,7 +257,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      ~PoissonRandomNumbers () {} 
+      ~PoissonRandomNumbers () = default;
 
       /**
        *  @brief set the mean for Poisson distribution
@@ -277,6 +285,7 @@ namespace cosmobl {
       }
     };
 
+    
     /**
      *  @class NormalRandomNumbers RandomNumbers.h
      *  "Headers/Lib/RandomNumbers.h"
@@ -289,6 +298,7 @@ namespace cosmobl {
      */
     class NormalRandomNumbers : public RandomNumbers
     {
+      
     protected:
 
       /// mean
@@ -301,6 +311,7 @@ namespace cosmobl {
       shared_ptr<normal_distribution<double>> m_distribution;
 
     public:
+
       /**
        *  @brief constructor
        *  @param mean the Normal distribution mean
@@ -320,7 +331,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      ~NormalRandomNumbers () {} 
+      ~NormalRandomNumbers () = default;
 
       /**
        *  @brief set parameters for Normal distribution
@@ -349,7 +360,8 @@ namespace cosmobl {
 	return val;
       }
     };
-  
+
+    
     /**
      *  @class DiscreteRandomNumbers RandomNumbers.h
      *  "Headers/Lib/RandomNumbers.h"
@@ -362,8 +374,9 @@ namespace cosmobl {
      */
     class DiscreteRandomNumbers : public RandomNumbers
     {
+      
     protected:
-
+      
       /// discrete values
       vector<double> m_values;
 
@@ -394,7 +407,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      ~DiscreteRandomNumbers () {} 
+      ~DiscreteRandomNumbers () = default;
 
       /**
        *  @brief set parameters for Discrete distribution
@@ -410,7 +423,7 @@ namespace cosmobl {
 	  fill(m_weights.begin(), m_weights.end(), 1.);
 	}
 	else if (weights.size()!=values.size())
-	  ErrorMsg("Error in set_parameters of DiscreteRandomNumbers.h: value and weight vectors have different sizes!");
+	  ErrorCBL("Error in set_parameters of DiscreteRandomNumbers.h: value and weight vectors have different sizes!");
 	else {
 	  m_values = values;
 	  m_weights = weights;
@@ -431,8 +444,10 @@ namespace cosmobl {
       {
 	return m_values[m_distribution->operator()(m_generator)];
       }
+      
     };
 
+    
     /**
      *  @class DistributionRandomNumbers RandomNumbers.h
      *  "Headers/Lib/RandomNumbers.h"
@@ -445,6 +460,7 @@ namespace cosmobl {
      */
     class DistributionRandomNumbers : public RandomNumbers
     {
+
     protected:
 
       /// Uniform random number generator
@@ -474,7 +490,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      ~DistributionRandomNumbers () {} 
+      ~DistributionRandomNumbers () = default;
 
       /**
        *  @brief set the random number generator seed
@@ -496,13 +512,13 @@ namespace cosmobl {
       void set_interpolated_distribution (const vector<double> xx, const vector<double> distribution_function, const string interpolation_method)
       {
 	classfunc::func_grid_GSL ff(xx,distribution_function,interpolation_method);
-	double norm = ff.integrate_qag(Min(xx),Max(xx));
+	double norm = ff.integrate_qag(Min(xx), Max(xx));
 
 	vector<double> FX;
-	for(size_t i=0; i<xx.size(); i++)
-	  FX.push_back(ff.integrate_qag(Min(xx),xx[i])/norm);
+	for (size_t i=0; i<xx.size(); i++)
+	  FX.push_back(ff.integrate_qag(Min(xx), xx[i])/norm);
 
-	m_distribution = make_shared<classfunc::func_grid_GSL>(FX,xx,interpolation_method);
+	m_distribution = make_shared<classfunc::func_grid_GSL>(FX, xx, interpolation_method);
       }
 
       /**
@@ -514,7 +530,6 @@ namespace cosmobl {
 	return m_distribution->operator()(m_uniform_generator->operator()());
       }
     };
-
     
   }
 }

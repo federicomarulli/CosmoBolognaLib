@@ -60,8 +60,8 @@ void cosmobl::statistics::Prior::m_set_prior_normalization()
 
 cosmobl::statistics::Prior::Prior (const cosmobl::statistics::PriorType priorType, const double xmin, const double xmax, const int seed) 
 {
-  if(priorType != statistics::PriorType::_UniformPrior_)
-    ErrorMsg("Error in constructor of Prior, this constructor only allows PriorType::_UniformPrior_");
+  if (priorType != statistics::PriorType::_UniformPrior_)
+    ErrorCBL("Error in constructor of Prior, this constructor only allows PriorType::_UniformPrior_");
 
   set_uniform_prior(xmin, xmax, seed);
 }
@@ -76,20 +76,20 @@ cosmobl::statistics::Prior::Prior (const cosmobl::statistics::PriorType priorTyp
 
   if (priorType == statistics::PriorType::_GaussianPrior_) {
     if (prior_params.size() != 2)
-      ErrorMsg("Error in constructor of Prior, wrong size of prior_params. Gaussian prior needs 2 parameters, the mean and the standard deviation");
+      ErrorCBL("Error in constructor of Prior, wrong size of prior_params. Gaussian prior needs 2 parameters, the mean and the standard deviation");
 
     set_gaussian_prior(prior_params[0], prior_params[1], seed);
   }
   
   else if (priorType == statistics::PriorType::_PoissonPrior_) {
     if (prior_params.size() != 1)
-      ErrorMsg("Error in constructor of Prior, wrong size of prior_params. Poisson prior needs 1 parameter, the mean");
+      ErrorCBL("Error in constructor of Prior, wrong size of prior_params. Poisson prior needs 1 parameter, the mean");
 
     set_poisson_prior(prior_params[0], seed);
   }
   
   else 
-    ErrorMsg("Error in Prior constructor of Prior.cpp. No such type of prior");
+    ErrorCBL("Error in Prior constructor of Prior.cpp. No such type of prior");
 }
 
 
@@ -99,7 +99,7 @@ cosmobl::statistics::Prior::Prior (const cosmobl::statistics::PriorType priorTyp
 cosmobl::statistics::Prior::Prior (const cosmobl::statistics::PriorType priorType, const vector<double> discrete_values, const vector<double> weights, const int seed) 
 {
   if (priorType != statistics::PriorType::_DiscretePrior_)
-    ErrorMsg("Error in constructor of Prior, this constructor only allows PriorType::_DiscretePrior_");
+    ErrorCBL("Error in constructor of Prior, this constructor only allows PriorType::_DiscretePrior_");
 
   set_discrete_values(discrete_values, weights, seed);
 }
@@ -165,11 +165,11 @@ void cosmobl::statistics::Prior::set_poisson_prior (const double mean, const int
 
   m_prior_random = make_shared<DiscreteRandomNumbers> (DiscreteRandomNumbers(poisson_values, weights, seed, m_xmin, m_xmax));
 
-  cosmobl::glob::STR_closest_probability parameters;
+  glob::STR_closest_probability parameters;
   parameters.values = poisson_values;
   parameters.weights = weights; 
 
-  m_prior_func_fixed_pars = make_shared<cosmobl::glob::STR_closest_probability>(parameters);
+  m_prior_func_fixed_pars = make_shared<glob::STR_closest_probability>(parameters);
   m_func = &closest_probability; 
 
   m_prior_normalization = accumulate(weights.begin(), weights.end(), 0);
@@ -181,17 +181,17 @@ void cosmobl::statistics::Prior::set_poisson_prior (const double mean, const int
 
 void cosmobl::statistics::Prior::set_discrete_values (const vector<double> discrete_values, const vector<double> weights, const int seed) 
 {
-  if(discrete_values.size()==0)
-    ErrorMsg("Error in set_discrete_values of Prior. Vector of values is empty");
+  if (discrete_values.size()==0)
+    ErrorCBL("Error in set_discrete_values of Prior. Vector of values is empty");
 
   set_limits(Min(discrete_values), Max(discrete_values));
   m_prior_random = make_shared<DiscreteRandomNumbers> (DiscreteRandomNumbers(discrete_values, weights, seed, m_xmin, m_xmax));
 
-  cosmobl::glob::STR_closest_probability parameters;
+  glob::STR_closest_probability parameters;
   parameters.values = discrete_values;
   parameters.weights = weights; 
 
-  m_prior_func_fixed_pars = make_shared<cosmobl::glob::STR_closest_probability>(parameters);
+  m_prior_func_fixed_pars = make_shared<glob::STR_closest_probability>(parameters);
 
   m_func = &closest_probability; 
   m_prior_normalization = accumulate(weights.begin(), weights.end(), 0);
@@ -205,9 +205,9 @@ void cosmobl::statistics::Prior::set_discrete_values (const vector<double> discr
 bool cosmobl::statistics::Prior::isIncluded (const double value) const
 {
   if (value > m_xmin && m_xmax > value)
-    return 1;
+    return true;
   else 
-    return 0;
+    return false;
 }
 
 
@@ -235,9 +235,9 @@ double cosmobl::statistics::Prior::sample (const int seed)
 
 vector<double> cosmobl::statistics::Prior::sample_vector (const int nvalues)
 {
-
   vector<double> values;
-  for(int i=0;i<nvalues;i++)
+  
+  for (int i=0; i<nvalues; i++)
     values.push_back(sample());
 
   return values;

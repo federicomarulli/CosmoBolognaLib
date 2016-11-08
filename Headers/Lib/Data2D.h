@@ -63,10 +63,13 @@ namespace cosmobl {
       vector<double> m_y;
 
       /// f(x,y) values
-      vector<vector<double> > m_fxy;
+      vector<vector<double>> m_fxy;
 
       /// errors of f(x,y)
-      vector<vector<double> > m_error_fxy;
+      vector<vector<double>> m_error_fxy;
+
+      /// covariance of f(x,y)
+      vector<vector<double>> m_covariance_fxy;
 
       ///@}
 
@@ -75,7 +78,7 @@ namespace cosmobl {
 
       /// index of the last x data to be used
       int m_x_up;
-
+      
       /// index of the first y data to be used
       int m_y_down;
 
@@ -91,12 +94,12 @@ namespace cosmobl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Data
+       *  @return an object of class Data2D
        */
-    Data2D() : Data(DataType::_1D_data_) {}
-   
+      Data2D () { set_dataType(DataType::_2D_data_); }
+      
       /**
-       *  @brief static factory used to construct Data2D
+       *  @brief constructor used 
        *  @param x vector containing x points 
        *  @param y vector containing y points 
        *  @param fxy vector containing f(x,y) values
@@ -104,12 +107,13 @@ namespace cosmobl {
        *  @param xmax maximun value of x to be used 
        *  @param ymin maximun value of y to be used 
        *  @param ymax maximun value of y to be used 
-       *  @return shared pointer to an object of class Data
+       *  @param dataType the data type
+       *  @return an object of class Data2D
        */
-      Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > fxy, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const double ymin=par::defaultDouble, const double ymax=-par::defaultDouble); 
+      Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > fxy, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const double ymin=par::defaultDouble, const double ymax=-par::defaultDouble, const DataType dataType=DataType::_2D_data_); 
 
       /**
-       *  @brief static factory used to construct Data2D
+       *  @brief constructor used
        *  @param x vector containing x points 
        *  @param y vector containing y points 
        *  @param fxy vector containing f(x,y) values
@@ -118,97 +122,121 @@ namespace cosmobl {
        *  @param xmax maximun value of x to be used 
        *  @param ymin maximun value of y to be used 
        *  @param ymax maximun value of y to be used 
-       *  @return shared pointer to an object of class Data
+       *  @param dataType the data type
+       *  @return an object of class Data2D
        */
-      Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > fxy, const vector< vector<double> > error_fxy, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const double ymin=par::defaultDouble, const double ymax=-par::defaultDouble); 
+      Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > fxy, const vector< vector<double> > error_fxy, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const double ymin=par::defaultDouble, const double ymax=-par::defaultDouble, const DataType dataType=DataType::_2D_data_); 
 
       /**
        *  @brief default destructor
        *  @return none
        */
-      ~Data2D () {}
+      ~Data2D () = default;
 
       ///@}
 
+
+      /**
+       *  @name Member functions used to get the private members
+       */
+      ///@{
       
       /**
-       *  @brief return index of the first x used
-       *  @return int containing the index of the first x used
+       *  @brief get index of the first x used
+       *  @return the index of the first x used
        */
       int x_down () const override { return m_x_down; }
 
       /**
-       *  @brief return index of the last x used
-       *  @return int containing the index of the last x used
+       *  @brief get index of the last x used
+       *  @return the index of the last x used
        */
       int x_up () const override { return m_x_up; }
 
       /**
-       *  @brief return index of the first y used
-       *  @return int containing the index of the first y used
+       *  @brief get index of the first y used
+       *  @return the index of the first y used
        */
       int y_down () const override { return m_y_down; }
 
       /**
-       *  @brief return index of the last y used
-       *  @return int containing the index of the last y used
+       *  @brief get index of the last y used
+       *  @return the index of the last y used
        */
       int y_up () const override { return m_y_up; }
 
       /**
-       *  @brief return value of x at index i
+       *  @brief get the value of x at index i
        *  @param i index
-       *  @return value of the m_x vector at position i
+       *  @return the value of the m_x vector at position i
        */
       double xx (const int i) const override { return m_x[i]; }
 
       /**
-       *  @brief return value of y at index i
+       *  @brief get the value of y at index i
        *  @param i index
-       *  @return value of the m_y vector at position i
+       *  @return the value of the m_y vector at position i
        */
       double yy (const int i) const override { return m_y[i]; }
 
       /**
-       *  @brief return value of f(x,y) at index i,j
+       *  @brief get the value of f(x,y) at index i,j
        *  @param i index
        *  @param j index
-       *  @return value of the m_fxy vector at position i,j
+       *  @return the value of the m_fxy vector at position i,j
        */
       double fxy (const int i, const int j) const override { return m_fxy[i][j]; }
 
       /**
-       *  @brief return error on f(x,y) at index i,j
+       *  @brief get error on f(x,y) at index i,j
        *  @param i index
        *  @param j index
-       *  @return value of the m_error_fxy vector at position i,j
+       *  @return the value of the m_error_fxy vector at position i,j
        */
       double error_fxy (const int i, const int j) const override { return m_error_fxy[i][j]; }
 
       /**
-       *  @brief return the x vector
+       *  @brief get covariance on f(x,y) at index i1, i2, j1, j2
+       *  @param i1 index
+       *  @param i2 index
+       *  @param j1 index
+       *  @param j2 index
+       *  @return the value of the m_error_fxy vector at position (i1, i2), (j1, j2)
+       */
+      double covariance(const int i1, const int i2, const int j1, const int j2) const override;
+
+      /**
+       *  @brief get the x vector
        *  @return vector containing the x values
        */
       vector<double> xx () const override { return m_x; }
 
       /**
-       *  @brief return the y vector
+       *  @brief get the y vector
        *  @return vector containing the x values
        */
       vector<double> yy () const override { return m_y; }
 
       /**
-       *  @brief return the m_fx vector
+       *  @brief get the m_fx vector
        *  @return vector containing the fx values
        */
       vector<vector<double> > fxy () const override { return m_fxy; }
 
       /**
-       *  @brief return the m_error_fx vector
+       *  @brief get the m_error_fx vector
        *  @return vector containing the values of fx error
        */
       vector<vector<double> > error_fxy () const override { return m_error_fxy; }
 
+      ///@}
+
+      
+      /**
+       *  @name Member functions used to set the private members
+       */
+      ///@{
+      
       /**
        *  @brief set interval variables for x range
        *  @param min maximun value of x to be used 
@@ -257,6 +285,14 @@ namespace cosmobl {
        */ 
       void set_error_fxy (const vector<vector<double> > error_fxy) override { m_error_fxy = error_fxy; }
 
+      ///@}
+
+      
+      /**
+       *  @name Member functions for Input/Output
+       */
+      ///@{
+      
       /**
        * @brief function that returns effective number of data between
        * defined limits
@@ -270,31 +306,38 @@ namespace cosmobl {
        */
       int ndata () const override { return m_x.size()*m_y.size(); }
 
+      ///@}
+
+      
       /**
-       *  @brief read data from file
-       *  @param input_file file containing input data in 3 columns:
-       *  first column &rarr x points, second column &rarr f(x), third column &rarr 
-       *  f(x) error
+       *  @name Input/Output member functions
+       */
+      ///@{
+      
+      /**
+       *  @brief read the data
+       *  @param input_file input data file
        *  @param skip_nlines the header lines to be skipped
        *  @return none
        */
-      virtual void read (const string input_file=par::defaultString, const int skip_nlines=0) override;
+      virtual void read (const string input_file, const int skip_nlines=0) override;
 
       /**
-       *  @brief write the measured two-point correlation
+       *  @brief write the data
        *  @param dir output directory
        *  @param file output file
-       *  @param xname name for the x variable
-       *  @param yname name for the y variable
-       *  @param fxyname name for the f(x,y)
-       *  @param full 0 &rarr; simply store the data; 1 &rarr; duplicate
-       *  the data in the other three quadrands (usefull when storing
-       *  the 2D clustering)
+       *  @param header text with the variable names to be written at
+       *  the first line of the output file
+       *  @param full false &rarr; simply store the data; true &rarr;
+       *  duplicate the data in the other three quadrands (usefull
+       *  e.g. when storing the 2D correlation function)
        *  @param rank cpu index (for MPI usage)
        *  @return none
        */
-      virtual void write (const string dir=par::defaultString, const string file=par::defaultString, const string xname="x", const string yname="y",const string fxyname="f(x,y)", const bool full=0, const int rank=0) const override;
+      void write (const string dir, const string file, const string header, const bool full, const int rank=0) const;
       
+      ///@}
+
     };
 
   }

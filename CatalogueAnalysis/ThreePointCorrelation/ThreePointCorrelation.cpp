@@ -21,7 +21,8 @@
  ********************************************************************/
 
 /**
- *  @file CatalogueAnalysis/ThreePointCorrelation/ThreePointCorrelation.cpp
+ *  @file
+ *  CatalogueAnalysis/ThreePointCorrelation/ThreePointCorrelation.cpp
  *
  *  @brief Methods of the class ThreePointCorrelation used to measure
  *  the three-point correlation function
@@ -61,7 +62,7 @@ shared_ptr<ThreePointCorrelation> cosmobl::threept::ThreePointCorrelation::Creat
  
   if (type==_comoving_reduced_) return move(unique_ptr<ThreePointCorrelation_comoving_reduced>(new ThreePointCorrelation_comoving_reduced(data, random, tripletType, side_s, side_u, perc_increase, nbins)));
  
-  else ErrorMsg("Error in cosmobl::threept::ThreePointCorrelation::Create of ThreePointCorrelation.cpp: no such type of object!");
+  else ErrorCBL("Error in cosmobl::threept::ThreePointCorrelation::Create of ThreePointCorrelation.cpp: no such type of object!");
   
   return NULL;
 }
@@ -88,7 +89,7 @@ void cosmobl::threept::ThreePointCorrelation::count_triplets (const shared_ptr<C
   {
     tid = omp_get_thread_num();
     
-    // if (tid == 0) cout << "Number of threads = " << omp_get_num_threads() << endl;
+    // if (tid == 0) coutCBL << "Number of threads = " << omp_get_num_threads() << endl;
 
     // internal object used by each thread to handle triplets
     shared_ptr<Triplet> tt_thread = move(Triplet::Create(tt->tripletType(), tt->side_s(), tt->side_u(), tt->perc_increase(), tt->nbins()));
@@ -97,7 +98,7 @@ void cosmobl::threept::ThreePointCorrelation::count_triplets (const shared_ptr<C
     for (int i=0; i<nObj; i++) { // loop on the objects of the catalogue
     
       // get the indexes of the objects at r12
-      vector<long> close_objects12 = ChainMesh_rMAX1.close_objects(cat1->coordinates(i), -1);
+      vector<long> close_objects12 = ChainMesh_rMAX1.close_objects(cat1->coordinate(i), -1);
     
       for (auto &&j : close_objects12) { // loop on the objects at r12 
 
@@ -106,7 +107,7 @@ void cosmobl::threept::ThreePointCorrelation::count_triplets (const shared_ptr<C
 	if (tt_thread->side_s()*(1-tt_thread->perc_increase())<r12 && r12<tt_thread->side_s()*(1+tt_thread->perc_increase())) {
 
 	  // get the indexes of objects at r13
-	  vector<long> close_objects13 = ChainMesh_rMAX2.close_objects(cat1->coordinates(i), -1);
+	  vector<long> close_objects13 = ChainMesh_rMAX2.close_objects(cat1->coordinate(i), -1);
 	
 	  for (auto &&k : close_objects13) { // loop on the objects at r13
 
@@ -125,10 +126,10 @@ void cosmobl::threept::ThreePointCorrelation::count_triplets (const shared_ptr<C
       }
 
       time_t end_temp; time (&end_temp); double diff_temp = difftime(end_temp, start);
-      if (tcount && tid==0) { cout <<"\r..."<<float(i)*fact_count<<"% completed  ("<<diff_temp/60<<" minutes)\r"; cout.flush(); }
-      if (i==int(nObj*0.25)) cout <<".....25% completed"<<endl;
-      if (i==int(nObj*0.5)) cout <<".....50% completed"<<endl;
-      if (i==int(nObj*0.75)) cout <<".....75% completed"<<endl;
+      if (tcount && tid==0) { coutCBL <<"\r..."<<float(i)*fact_count<<"% completed  ("<<diff_temp/60<<" minutes)\r"; cout.flush(); }
+      if (i==int(nObj*0.25)) coutCBL <<".....25% completed"<<endl;
+      if (i==int(nObj*0.5)) coutCBL <<".....50% completed"<<endl;
+      if (i==int(nObj*0.75)) coutCBL <<".....75% completed"<<endl;
     }
     
 #pragma omp critical
@@ -142,8 +143,8 @@ void cosmobl::threept::ThreePointCorrelation::count_triplets (const shared_ptr<C
   
   time_t end; time (&end);
   double diff = difftime(end,start);
-  if (diff<3600) cout <<"   time spent to count the triplets: "<<diff/60<<" minutes"<<endl<<endl;
-  else cout <<"   time spent to count the triplets: "<<diff/3600<<" hours"<<endl<<endl;
+  if (diff<3600) coutCBL <<"   time spent to count the triplets: "<<diff/60<<" minutes"<<endl<<endl;
+  else coutCBL <<"   time spent to count the triplets: "<<diff/3600<<" hours"<<endl<<endl;
 
   cout.unsetf(ios::fixed); cout.unsetf(ios::showpoint); cout.precision(6); 
 }
@@ -152,7 +153,7 @@ void cosmobl::threept::ThreePointCorrelation::count_triplets (const shared_ptr<C
 // ============================================================================
 
 
-void cosmobl::threept::ThreePointCorrelation::count_allTriplets (const string dir_output_triplets, const vector<string> dir_input_triplets, const int count_ddd, const int count_rrr, const int count_ddr, const int count_drr, const bool tcount)
+void cosmobl::threept::ThreePointCorrelation::count_allTriplets (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
 {
   // ----- double chain-mesh -----
   
@@ -163,12 +164,12 @@ void cosmobl::threept::ThreePointCorrelation::count_allTriplets (const string di
   
   ChainMesh_Catalogue ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2;
   
-  if (count_ddd==1 || count_ddr==1) {
+  if (count_ddd || count_ddr) {
     ChainMesh_data_rMAX1.set_par(cell_size, m_data, rMAX2);
     ChainMesh_data_rMAX1.get_searching_region(rMAX1);
     ChainMesh_data_rMAX2.set_par(cell_size, m_data, rMAX2);
   }
-  if (count_rrr==1 || count_drr==1) {
+  if (count_rrr || count_drr) {
     ChainMesh_random_rMAX1.set_par(cell_size, m_random, rMAX2);
     ChainMesh_random_rMAX1.get_searching_region(rMAX1);
     ChainMesh_random_rMAX2.set_par(cell_size, m_random, rMAX2);
@@ -179,18 +180,18 @@ void cosmobl::threept::ThreePointCorrelation::count_allTriplets (const string di
 
   string file;
   
-  cout << endl << par::col_green << "data-data-data" << par::col_default << endl;
+  coutCBL << endl << par::col_green << "data-data-data" << par::col_default << endl;
   
   file = "ddd.dat";
   
-  if (count_ddd==1) { 
+  if (count_ddd) { 
     count_triplets(m_data, ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, m_ddd, tcount);
     if (dir_output_triplets!=par::defaultString) write_triplets(m_ddd, dir_output_triplets, file);
   } 
-  else if (count_ddd==0) read_triplets (m_ddd, dir_input_triplets, file);
+  else read_triplets (m_ddd, dir_input_triplets, file);
 
 
-  cout << endl << par::col_green << "random-random-random" << par::col_default << endl;
+  coutCBL << endl << par::col_green << "random-random-random" << par::col_default << endl;
   
   file = "rrr.dat";
   
@@ -201,11 +202,11 @@ void cosmobl::threept::ThreePointCorrelation::count_allTriplets (const string di
   else if (count_rrr==0) read_triplets (m_rrr, dir_input_triplets, file);
  
 
-  cout << endl << par::col_green << "data-data-random" << par::col_default << endl;
+  coutCBL << endl << par::col_green << "data-data-random" << par::col_default << endl;
   
   file = "ddr.dat";
   
-  if (count_ddr==1) {
+  if (count_ddr) {
 
     shared_ptr<Triplet> ddr1 = move(Triplet::Create(m_ddr->tripletType(), m_ddr->side_s(), m_ddr->side_u(), m_ddr->perc_increase(), m_ddr->nbins()));
     shared_ptr<Triplet> ddr2 = move(Triplet::Create(m_ddr->tripletType(), m_ddr->side_s(), m_ddr->side_u(), m_ddr->perc_increase(), m_ddr->nbins()));
@@ -220,14 +221,14 @@ void cosmobl::threept::ThreePointCorrelation::count_allTriplets (const string di
     if (dir_output_triplets!=par::defaultString) write_triplets (m_ddr, dir_output_triplets, file);
   } 
 
-  else if (count_ddr==0) read_triplets (m_ddr, dir_input_triplets, file);
+  else read_triplets(m_ddr, dir_input_triplets, file);
 
   
-  cout << endl << par::col_green << "data-random-random" << par::col_default << endl;
+  coutCBL << endl << par::col_green << "data-random-random" << par::col_default << endl;
   
   file = "drr.dat";
   
-  if (count_drr==1) {
+  if (count_drr) {
 
     shared_ptr<Triplet> drr1 = move(Triplet::Create(m_drr->tripletType(), m_drr->side_s(), m_drr->side_u(), m_drr->perc_increase(), m_drr->nbins()));
     shared_ptr<Triplet> drr2 = move(Triplet::Create(m_drr->tripletType(), m_drr->side_s(), m_drr->side_u(), m_drr->perc_increase(), m_drr->nbins()));
@@ -239,10 +240,10 @@ void cosmobl::threept::ThreePointCorrelation::count_allTriplets (const string di
 
     m_drr->Sum(drr1); m_drr->Sum(drr2); m_drr->Sum(drr3);
     
-    if (dir_output_triplets!=par::defaultString) write_triplets (m_drr, dir_output_triplets, file);
+    if (dir_output_triplets!=par::defaultString) write_triplets(m_drr, dir_output_triplets, file);
   } 
 
-  else if (count_drr==0) 
+  else 
     read_triplets (m_drr, dir_input_triplets, file);
 }
 
@@ -253,15 +254,15 @@ void cosmobl::threept::ThreePointCorrelation::count_allTriplets (const string di
 void cosmobl::threept::ThreePointCorrelation::write_triplets (shared_ptr<triplets::Triplet> TT, const string dir, const string file) const
 {  
   string MK = "mkdir -p "+dir;
-  if (system (MK.c_str())) {};
+  if (system (MK.c_str())) {}
   
   string file_out = dir+file;
-  ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+  ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
   for (int i=0; i<TT->nbins(); i++) 
     fout << TT->TT1D(i) << endl;
   
-  fout.clear(); fout.close(); cout << "I wrote the file " << file << endl << endl;
+  fout.clear(); fout.close(); coutCBL << "I wrote the file " << file << endl << endl;
 }
 
 
@@ -272,14 +273,14 @@ void cosmobl::threept::ThreePointCorrelation::write_triplets (shared_ptr<triplet
 void cosmobl::threept::ThreePointCorrelation::read_triplets (shared_ptr<triplets::Triplet> TT, const vector<string> dir, const string file) 
 {
  if (dir.size()==0)
-    ErrorMsg ("Error in cosmobl::twopt::TwoPointCorrelation1D::read_triplets of TwoPointCorrelation1D.cpp! dir.size()=0!");
+    ErrorCBL("Error in cosmobl::twopt::TwoPointCorrelation1D::read_triplets of TwoPointCorrelation1D.cpp! dir.size()=0!");
       
   for (size_t dd=0; dd<dir.size(); dd++) {
         
     string file_in = dir[dd]+file; 
-    cout << "I'm reading the triplet file: " << file_in << endl;
+    coutCBL << "I'm reading the triplet file: " << file_in << endl;
     
-    ifstream fin(file_in.c_str()); checkIO(file_in, 1);
+    ifstream fin(file_in.c_str()); checkIO(fin, file_in);
    
     double pp;
     for (int i=0; i<TT->nbins(); i++) {
@@ -287,7 +288,7 @@ void cosmobl::threept::ThreePointCorrelation::read_triplets (shared_ptr<triplets
       TT->add_TT1D(i, pp);
     }
     
-    fin.clear(); fin.close(); cout << "I read the file " << file_in << endl;
+    fin.clear(); fin.close(); coutCBL << "I read the file " << file_in << endl;
   }
 }
  

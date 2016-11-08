@@ -1,1 +1,1 @@
-emacs ../../Headers/Lib/Pair*.h ../../Headers/Lib/TwoPointCorrelation*.h Pair.cpp TwoPointCorrelation*.cpp &
+emacs ../../Headers/Lib/Pair*.h ../../Headers/Lib/TwoPointCorrelation*.h Pair*.cpp TwoPointCorrelation*.cpp &

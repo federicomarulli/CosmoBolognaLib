@@ -1,5 +1,5 @@
 /*******************************************************************
- *  Copyright (C) 2010 by Federico Marulli and Alfonso Veropalumbo *
+ *  Copyright (C) 2016 by Federico Marulli and Alfonso Veropalumbo *
  *  federico.marulli3@unibo.it                                     *
  *                                                                 *
  *  This program is free software; you can redistribute it and/or  *
@@ -23,8 +23,8 @@
  *
  *  @brief implementation of the function for data modelling
  *
- *  This file contains the implementation of a set of functions 
- *  to model the data
+ *  This file contains the implementation of the functions used to
+ *  model any kind of data 
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *
@@ -37,328 +37,141 @@
 // ============================================================================================
 
 
-double cosmobl::glob::wp_bias_cosmology (double r, shared_ptr<void> parameters, vector<double> model_parameters)
+double cosmobl::modelling::xi0_linear (const double rad, const shared_ptr<void> inputs, vector<double> parameter)
 {
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
+  // structure contaning the required input data
+  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(inputs);
 
-  double bias = model_parameters[0];
   
-  return bias*bias*pp->cosmology->wp_DM(r, pp->method, pp->redshift, pp->output_root, pp->NL, pp->norm, pp->r_min, pp->r_max, pp-> k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par);
-}
+  // ----- input parameters -----
 
+  // AP parameter that contains the distance information
+  double alpha = parameter[0];
 
-// ============================================================================================
-
-
-vector<double> cosmobl::glob::wp_bias_cosmology_vector (vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-
-  double bias = model_parameters[0];
-  vector<double> wp(r.size(),0);
-  for (size_t i=0; i<wp.size(); i++)
-    wp[i] =bias*bias*pp->cosmology->wp_DM(r[i], pp->method, pp->redshift, pp->output_root, pp->NL, pp->norm, pp->r_min, pp->r_max, pp-> k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par);
-
-  return wp;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::glob::wp_bias (double r, shared_ptr<void> parameters, vector<double> model_parameters)
-{  
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-  double bias = model_parameters[0];
+  // f(z)*sigma8(z)
+  double fsigma8 = parameter[1];
   
-  return bias*bias*pp->func_xi->operator()(r);
-}
+  // bias(z)*sigma8(z)
+  double bsigma8 = parameter[2];
 
+  // polynomial parameter A0 (used for BAO analyses)
+  double A0 = parameter[3];
 
-// ============================================================================================
+  // polynomial parameter A1 (used for BAO analyses)
+  double A1 = parameter[4];
 
+  // polynomial parameter A2 (used for BAO analyses)
+  double A2 = parameter[5];
 
-vector<double> cosmobl::glob::wp_bias_vector (vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-  double bias2 = pow(model_parameters[0],2);
-
-  vector<double> wp = pp->func_xi->eval_func(r);
-
-  for (size_t i=0; i<wp.size(); i++)
-    wp[i] *= bias2;
-
-  return wp;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::glob::xi_bias_cosmology (double r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-  double bias = model_parameters[0];
-  for (size_t i =1; i<model_parameters.size(); i++)
-    pp->cosmology->set_parameter(pp->Cpar[i-1],model_parameters[i]);
-
-  return bias*bias*pp->cosmology->xi_DM(r,pp->method,pp->redshift, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par);
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::glob::xi_bias_cosmology_vector (vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-  double bias = model_parameters[0];
-  for (size_t i =1; i<model_parameters.size(); i++)
-    pp->cosmology->set_parameter(pp->Cpar[i-1], model_parameters[i]);
-
-  vector<double> xi(r.size(),0);
-  for (size_t i=0; i<xi.size(); i++)
-    xi[i] = bias*bias*pp->cosmology->xi_DM(r[i],pp->method,pp->redshift, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par);
-
-  return xi;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::glob::xi_bias (double r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-  double bias = model_parameters[0];
-  return bias*bias*pp->func_xi->operator()(r);
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::glob::xi_bias_vector (vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-  double bias2 = (model_parameters[0], 2);
-
-  vector<double> xi = pp->func_xi->eval_func(r);
-
-  for (size_t i=0; i<xi.size(); i++)
-    xi[i] *= bias2;
-
-  return xi;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::glob::xi0_bias_cosmology (double r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-  double bias = model_parameters[0];
-  for (size_t i=1; i<model_parameters.size(); i++)
-    pp->cosmology->set_parameter(pp->Cpar[i-1],model_parameters[i]);
-
-  double beta = pp->cosmology->beta(pp->redshift,bias);
-  double fact = bias*bias*(1+2./3*beta+beta*beta/5);
   
-  return fact*pp->cosmology->xi_DM(r, pp->method, pp->redshift, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par);
-}
+  // ----- derived parameters -----
 
+  // rescaled radius
+  double new_rad = alpha*rad;
 
-// ============================================================================================
-
-
-vector<double> cosmobl::glob::xi0_bias_cosmology_vector (vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-  double bias = model_parameters[0];
-  for (size_t i =1; i<model_parameters.size(); i++)
-    pp->cosmology->set_parameter(pp->Cpar[i-1],model_parameters[i]);
-
-  double beta = pp->cosmology->beta(pp->redshift,bias);
-  double fact = bias*bias*(1+2./3*beta+beta*beta/5);
-
-  vector<double> xi(r.size(),0);
-
-  for (size_t i=0; i<xi.size(); i++)
-    xi[i] = fact*pp->cosmology->xi_DM(r[i],pp->method,pp->redshift, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par);
-
-  return xi;
-
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::glob::xi0_bias (double r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-
-  double bias = model_parameters[0];
-  double beta = pp->f/bias;
-  double fact = bias*bias*(1+2./3*beta+beta*beta/5);
-  return fact*pp->func_xi->operator()(r);
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::glob::xi0_bias_vector (vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-
-  double bias = model_parameters[0];
-  double beta = pp->f/bias;
-  double fact = bias*bias*(1+2./3*beta+beta*beta/5);
-
-  vector<double> xi = pp->func_xi->eval_func(r);
-
-  for (size_t i=0; i<xi.size(); i++)
-    xi[i] *= fact;
-
-  return xi;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::glob::xi_alpha_B (double r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-
-  double new_r = model_parameters[1]*r;
+  // polynomial used to marginalize over signals caused by systematics
+  // not fully taken into account (see e.g. Anderson et al. 2012, and
+  // reference therein)
+  double poly = A0+A1/rad+A2/(rad*rad);
   
-  return model_parameters[0]*pp->func_xi->operator()(new_r); 
-}
 
-
-// ============================================================================================
-
-
-vector<double> cosmobl::glob::xi_alpha_B_vector (vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
+  // return the redshift-space monopole of the two-point correlation function
+  return xi_ratio(fsigma8, bsigma8)*pow(bsigma8/pp->sigma8_z, 2)*pp->func_xi->operator()(new_rad)+poly;
   
-  vector<double> xi(r.size(), 0);
-
-  for (size_t i=0; i<xi.size(); i++)
-    xi[i] = model_parameters[0]*pp->func_xi->operator()(model_parameters[1]*r[i]); 
-
-  return xi;
 }
 
 
 // ============================================================================================
 
 
-double cosmobl::glob::xi_alpha_B_poly (double r, shared_ptr<void> parameters, vector<double> model_parameters)
+double cosmobl::modelling::xi0_linear_cosmology (const double rad, const shared_ptr<void> inputs, vector<double> parameter)
 {
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
+  // structure contaning the required input data
+  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(inputs);
 
-  double new_r = model_parameters[1]*r;
-  double poly = model_parameters[4]/(r*r)+model_parameters[3]/r+model_parameters[2];
   
-  return model_parameters[0]*pp->func_xi->operator()(new_r)+poly; 
-}
+  // ----- input parameters -----
 
+  // AP parameter that contains the distance information
+  double alpha = parameter[0];
 
-// ============================================================================================
-
-
-vector<double> cosmobl::glob::xi_alpha_B_poly_vector (vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-
-  vector<double> xi(r.size(),0);
-
-  for (size_t i=0; i<xi.size(); i++){
-    double poly = model_parameters[3]/(r[i]*r[i])+model_parameters[3]/r[i]+model_parameters[2];
-    xi[i] =model_parameters[0]*pp->func_xi->operator()(model_parameters[1]*r[i])+poly; 
-  }
-
-  return xi;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::glob::xi0_alpha_bias (double r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-
-  double bias = model_parameters[0];
-  double beta = pp->f/bias;
-  double fact = bias*bias*(1+2./3*beta+beta*beta/5);
-  double new_r = model_parameters[1]*r;
-
-  return fact*pp->func_xi->operator()(new_r); 
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::glob::xi0_alpha_bias_vector (vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-
-  double bias = model_parameters[0];
-  double beta = pp->f/bias;
-  double fact = bias*bias*(1+2./3*beta+beta*beta/5);
-
-  vector<double> xi(r.size(),0);
-
-  for (size_t i=0; i<xi.size(); i++)
-    xi[i] = fact*pp->func_xi->operator()(model_parameters[1]*r[i]); 
-
-  return xi;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::glob::xi0_alpha_bias_cosmology (double r, shared_ptr<void> parameters, vector<double> model_parameters)
-{
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-  double bias = model_parameters[0];
-  double new_r = model_parameters[1]*r;
-
-  for (size_t i =2; i<model_parameters.size(); i++)
-    pp->cosmology->set_parameter(pp->Cpar[i-2],model_parameters[i]);
-
-  double beta = pp->cosmology->beta(pp->redshift,bias);
-  double fact = bias*bias*(1+2./3*beta+beta*beta/5);
+  // f(z)*sigma8(z)
+  double fsigma8 = parameter[1];
   
-  return fact*pp->cosmology->xi_DM(new_r,pp->method,pp->redshift, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par);
+  // bias(z)*sigma8(z)
+  double bsigma8 = parameter[2];
+
+  // polynomial parameter A0 (used for BAO analyses)
+  double A0 = parameter[3];
+
+  // polynomial parameter A1 (used for BAO analyses)
+  double A1 = parameter[4];
+
+  // polynomial parameter A2 (used for BAO analyses)
+  double A2 = parameter[5];
+
+  
+  // ----- derived parameters -----
+
+  // rescaled radius
+  double new_rad = alpha*rad;
+
+  // polynomial used to marginalize over signals caused by systematics
+  // not fully taken into account (see e.g. Anderson et al. 2012, and
+  // reference therein)
+  double poly = A0+A1/rad+A2/(rad*rad);
+  
+  // set the cosmological parameters used to compute the dark matter
+  // two-point correlation function in real space
+  for (size_t i=0; i<parameter.size(); ++i)
+    pp->cosmology->set_parameter(pp->Cpar[i], parameter[i]);
+
+  
+  // return the redshift-space monopole of the two-point correlation function
+  return xi_ratio(fsigma8, bsigma8)*pp->cosmology->xi_DM(new_rad, pp->method_Pk, pp->redshift, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par)/pow(pp->sigma8_z, 2)+poly;
+  
 }
 
 
 // ============================================================================================
 
 
-vector<double> cosmobl::glob::xi0_alpha_bias_cosmology_vector (vector<double> r, shared_ptr<void> parameters, vector<double> model_parameters)
+double cosmobl::modelling::xi2D_dispersionModel (const double rp, const double pi, const shared_ptr<void> inputs, vector<double> parameter)
 {
-  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(parameters);
-  double bias = model_parameters[0];
+  // structure contaning the required input data
+  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(inputs);
 
-  for (size_t i =2; i<model_parameters.size(); i++)
-    pp->cosmology->set_parameter(pp->Cpar[i-2],model_parameters[i]);
+  
+  // ----- input parameters -----
+  
+  // AP parameter: D_A,1(z)/D_A,2(z)
+  double AP1 = parameter[0];
 
-  double beta = pp->cosmology->beta(pp->redshift,bias);
-  double fact = bias*bias*(1+2./3*beta+beta*beta/5);
+  // AP parameter: H_2(z)/H_1(z)
+  double AP2 = parameter[1];
 
-  vector<double> xi(r.size(),0);
-  for (size_t i=0; i<xi.size(); i++)
-    xi[i] = fact*pp->cosmology->xi_DM(model_parameters[1]*r[i],pp->method,pp->redshift, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par);
+  // f(z)*sigma8(z)
+  double fsigma8 = parameter[2];
+  
+  // bias(z)*sigma8(z)
+  double bsigma8 = parameter[3];
 
-  return xi;
+  // the dispersion in the pairwise random peculiar velocities
+  double sigma12 = parameter[4];
+
+  
+  // ----- derived parameters -----
+
+  // the linear bias
+  double bias = bsigma8/pp->sigma8_z;
+  
+  // the distortion parameter
+  double beta = fsigma8/bsigma8;
+
+  
+  // return the 2D correlation function in Cartesian coordinates modelled with the dispersion model
+  return xi2D_model(AP1*rp, AP2*pi, beta, bias, sigma12, pp->funcXiR, pp->funcXiR_, pp->funcXiR__, pp->var, pp->FV, pp->bias_nl, pp->bA, pp->v_min, pp->v_max, pp->step_v);
+  
 }
+
+

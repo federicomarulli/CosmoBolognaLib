@@ -58,9 +58,9 @@ double cosmobl::cosmology::Cosmology::xi0_Kaiser (const double rad, const double
 
 double cosmobl::cosmology::Cosmology::xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const string method_Pk, const double redshift, const int FV, const bool NL, vector<double> rr, vector<double> &Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root, const int index, const bool bias_nl, const double bA, const bool xiType, const double k_star, const bool xiNL, const double v_min, const double v_max, const int step_v, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par) 
 {
-  if (m_sigma8<0) { ErrorMsg("Error in cosmobl::cosmology::Cosmology::xi2D_DispersionModel of PkXi_zSpace.cpp!"); return 0; }
+  if (m_sigma8<0) return ErrorCBL("Error in cosmobl::cosmology::Cosmology::xi2D_DispersionModel of PkXi_zSpace.cpp!");
   
-  double bias = bias_sigma8/m_sigma8;
+  double bias = bias_sigma8/m_sigma8; 
   double beta = f_sigma8/bias_sigma8;
 
 
@@ -68,7 +68,7 @@ double cosmobl::cosmology::Cosmology::xi2D_DispersionModel (const double rp, con
 
   if (Xi.size()==0) {
     get_xi(rr, Xi, method_Pk, redshift, output_root, xiType, k_star, xiNL, norm, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
-    get_barred_xi(rr, Xi, Xi_, Xi__, method_Pk, redshift, xiType, k_star, xiNL, norm, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
+    get_barred_xi(rr, Xi, Xi_, Xi__, method_Pk, redshift, xiType, k_star, xiNL, norm, r_min, r_max, k_min, k_max, aa, prec, file_par);
   }
  
 
@@ -97,18 +97,21 @@ double cosmobl::cosmology::Cosmology::xi2D_DispersionModel (const double rp, con
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::xi_star (const double rr, const double redshift, const string output_root, const double k_star, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
+double cosmobl::cosmology::Cosmology::xi_star (const double rr, const double redshift, const string output_root, const double k_star, const double k_min, const double k_max, const double prec, const string file_par) 
 {
   string method_Pk1 = "EisensteinHu"; 
   string method_Pk2 = "CAMB";
 
-  Pk_0(method_Pk1, redshift, output_root, k_min, k_max, GSL, prec, file_par); 
+  Pk_0(method_Pk1, redshift, output_root, k_min, k_max, prec, file_par); 
 
   cosmobl::classfunc::func_xistar func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit, rr, redshift, output_root, m_Pk0_EH, k_max, k_star);
 
-  Midpnt<cosmobl::classfunc::func_xistar> q1(func,0.,1.e2); 
-  Midinf<cosmobl::classfunc::func_xistar> q2(func,1.e2,1.e3);
-  double Int = (rr<1) ? qromo(q1)+qromo(q2) : qromo(q1); // check!!!
+  function<double(double)> ff = bind(&cosmobl::classfunc::func_xistar::operator(), func, std::placeholders::_1);
+
+  double Int1 = GSL_integrate_qag(ff, 0., 1.e2, 1.e-3);
+  double Int2 = GSL_integrate_qag(ff, 1.e2, 1.e3, 1.e-3);
+
+  double Int = (rr<1) ? Int1+Int2 : Int1; // check!!!
 
   return 1./(2.*pow(par::pi,2))*Int; 
 }
@@ -130,7 +133,7 @@ double cosmobl::cosmology::Cosmology::xisnl_gnw (const double rp, const double p
 
 double cosmobl::cosmology::Cosmology::xis_gBAO (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double redshift, vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root, const double k_star, const double x_min, const double x_max, const int step_x)
 {
-  if (m_sigma8<0) ErrorMsg("Error in cosmobl::cosmology::Cosmology::xis_gBAO of PkXi_zSpace.cpp!");
+  if (m_sigma8<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::xis_gBAO of PkXi_zSpace.cpp!");
 
   int FV = -1;
   bool NL = 0;
@@ -166,8 +169,8 @@ double cosmobl::cosmology::Cosmology::xi2D_CW (const double rp, const double pi,
     string method_Pk2 = "CAMB";
     get_xi(rr1, Xi1, method_Pk1, redshift, output_root, xiType, k_star, xiNL, 1, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
     get_xi(rr2, Xi2, method_Pk2, redshift, output_root, xiType, k_star, xiNL, 0, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
-    get_barred_xi(rr1, Xi1, Xi1_, Xi1__, method_Pk1, redshift, xiType, k_star, xiNL, 0, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
-    get_barred_xi(rr2, Xi2, Xi2_, Xi2__, method_Pk2, redshift, xiType, k_star, xiNL, 0, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
+    get_barred_xi(rr1, Xi1, Xi1_, Xi1__, method_Pk1, redshift, xiType, k_star, xiNL, 0, r_min, r_max, k_min, k_max, aa, prec, file_par);
+    get_barred_xi(rr2, Xi2, Xi2_, Xi2__, method_Pk2, redshift, xiType, k_star, xiNL, 0, r_min, r_max, k_min, k_max, aa, prec, file_par);
   }
 
   double var = (1.+redshift)/HH(redshift);

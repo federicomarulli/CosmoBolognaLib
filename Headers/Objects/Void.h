@@ -105,6 +105,16 @@ namespace cosmobl {
        *
        *  @param weight weight
        *
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param field the field where the object has been observed
+       *
+       *  @param x_displacement the displacement along the x-axis
+       *
+       *  @param y_displacement the displacement along the y-axis
+       *
+       *  @param z_displacement the displacement along the z-axis
+       *
        *  @param volNorm normalized volume
        *  @param radius radius 
        *  @param volume volume 
@@ -118,8 +128,8 @@ namespace cosmobl {
        *
        *  @return object of class Void
        */
-      Void (const comovingCoordinates coord, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
-	: Object(coord, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+      Void (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
 
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -137,6 +147,16 @@ namespace cosmobl {
        *
        *  @param weight weight
        *   
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param field the field where the object has been observed
+       *
+       *  @param x_displacement the displacement along the x-axis
+       *
+       *  @param y_displacement the displacement along the y-axis
+       *
+       *  @param z_displacement the displacement along the z-axis
+       *
        *  @param volNorm normalized volume
        *  @param radius radius 
        *  @param volume volume 
@@ -150,8 +170,8 @@ namespace cosmobl {
        *
        *  @return object of class Void
        */
-      Void (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+      Void (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -161,6 +181,16 @@ namespace cosmobl {
        *
        *  @param weight weight
        *
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param field the field where the object has been observed
+       *
+       *  @param x_displacement the displacement along the x-axis
+       *
+       *  @param y_displacement the displacement along the y-axis
+       *
+       *  @param z_displacement the displacement along the z-axis
+       *
        *  @param volNorm normalized volume
        *  @param radius radius 
        *  @param volume volume 
@@ -174,8 +204,8 @@ namespace cosmobl {
        *
        *  @return object of class Void
        */
-      Void (const observedCoordinates coord, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
-	: Object(coord, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+      Void (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -188,6 +218,16 @@ namespace cosmobl {
        *
        *  @param weight weight
        *
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param field the field where the object has been observed
+       *
+       *  @param x_displacement the displacement along the x-axis
+       *
+       *  @param y_displacement the displacement along the y-axis
+       *
+       *  @param z_displacement the displacement along the z-axis
+       *
        *  @param volNorm normalized volume
        *  @param radius radius 
        *  @param volume volume 
@@ -201,8 +241,8 @@ namespace cosmobl {
        *
        *  @return object of class Void
        */
-      Void (const observedCoordinates coord, const CoordUnits inputUnits, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
-	: Object(coord, inputUnits, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+      Void (const observedCoordinates coord, const CoordUnits inputUnits, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -217,6 +257,16 @@ namespace cosmobl {
        *
        *  @param weight weight
        *
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param field the field where the object has been observed
+       *
+       *  @param x_displacement the displacement along the x-axis
+       *
+       *  @param y_displacement the displacement along the y-axis
+       *
+       *  @param z_displacement the displacement along the z-axis
+       *
        *  @param volNorm normalized volume
        *  @param radius radius 
        *  @param volume volume 
@@ -230,8 +280,8 @@ namespace cosmobl {
        *
        *  @return object of class Void
        */
-      Void (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
-	: Object(coord, cosm, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+      Void (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -246,6 +296,16 @@ namespace cosmobl {
        *
        *  @param weight weight
        *
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param field the field where the object has been observed
+       *
+       *  @param x_displacement the displacement along the x-axis
+       *
+       *  @param y_displacement the displacement along the y-axis
+       *
+       *  @param z_displacement the displacement along the z-axis
+       *
        *  @param volNorm normalized volume
        *  @param radius radius 
        *  @param volume volume 
@@ -259,8 +319,8 @@ namespace cosmobl {
        *
        *  @return object of class Void
        */
-      Void (const observedCoordinates coord, const CoordUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
-	: Object(coord, inputUnits, cosm, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+      Void (const observedCoordinates coord, const CoordUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
 
       /**
        *  @brief constructor that uses both comoving and observed coordinates
@@ -271,6 +331,11 @@ namespace cosmobl {
        *  @param dec Declination
        *  @param redshift redshift
        *  @param weight weight
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *  @param field the field where the object has been observed
+       *  @param x_displacement the displacement along the x-axis
+       *  @param y_displacement the displacement along the y-axis
+       *  @param z_displacement the displacement along the z-axis
        *  @param volNorm normalized volume
        *  @param radius radius 
        *  @param volume volume 
@@ -284,8 +349,8 @@ namespace cosmobl {
        *
        *  @return object of class Void
        */
-      Void (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
-	: Object(xx, yy, zz, ra, dec, redshift, weight), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
+      Void (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double volNorm=par::defaultDouble, const double radius=par::defaultDouble, const double volume=par::defaultDouble, const int ID=par::defaultInt, const double densContr=par::defaultDouble, const int parentID=par::defaultInt, const int treeLevel=par::defaultInt, const int child=par::defaultInt, const double rho0=par::defaultDouble, const double rho0Norm=par::defaultDouble) 
+	: Object(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement), m_volNorm(volNorm), m_radius(radius), m_volume(volume), m_ID(ID), m_densContr(densContr), m_parentID(parentID), m_treeLevel(treeLevel), m_child(child), m_rho0(rho0), m_rho0Norm(rho0Norm) {}
       
       /**
        *  @brief default destructor

@@ -93,7 +93,7 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class ThreePointCorrelation_angular_connected
        */
-      ThreePointCorrelation_angular_connected () { ErrorMsg("Work in progress..."); }
+      ThreePointCorrelation_angular_connected () = default;
 
       /**
        *  @brief constructor
@@ -109,13 +109,13 @@ namespace cosmobl {
        *  @return object of class ThreePointCorrelation_angular_connected
        */
       ThreePointCorrelation_angular_connected (const catalogue::Catalogue data, const catalogue::Catalogue random, const double side_s, const double side_u, const double perc_increase, const int nbins)
-	: ThreePointCorrelation(data, random) { ErrorMsg("Work in progress..."); set_parameters(side_s, side_u, perc_increase, nbins); }
+	: ThreePointCorrelation(data, random) { ErrorCBL("Error in ThreePointCorrelation_angular_connected() of ThreePointCorrelation_angular_connected.h", cosmobl::glob::ExitCode::_workInProgress_); set_parameters(side_s, side_u, perc_increase, nbins); }
 
       /**
        *  @brief default destructor
        *  @return none
        */
-      ~ThreePointCorrelation_angular_connected () {}
+      ~ThreePointCorrelation_angular_connected () = default;
 
       ///@}
 
@@ -209,7 +209,7 @@ namespace cosmobl {
        *
        * @warning This method has not been implemented yet
        */
-      void measure (const string dir_output_triplets, const vector<string> dir_input_triplets={}, const int count_ddd=1, const int count_rrr=1, const int count_ddr=1, const int count_drr=1, const bool tcount=0) override;
+      void measure (const string dir_output_triplets, const vector<string> dir_input_triplets={}, const bool count_ddd=1, const bool count_rrr=1, const bool count_ddr=1, const bool count_drr=1, const bool tcount=0) override;
     
       ///@}
 

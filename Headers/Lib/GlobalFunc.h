@@ -415,10 +415,9 @@ namespace cosmobl {
    *  @param random random catalogue
    *  @param nSamples number of sub-regions
    *  @param polygonfile name of the input file with polygons
-   *  @param dir output directories
    *  @return none
    */
-  void set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nSamples, const string polygonfile, const string dir);
+  void set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nSamples, const string polygonfile);
 
   /**
    *  @brief check if the subdivision process produced the correct results
@@ -427,6 +426,24 @@ namespace cosmobl {
    *  @return none
    */
   void check_regions (catalogue::Catalogue &data, catalogue::Catalogue &random);
+
+  ///@}
+
+  /**
+   *  @name Generic functions for density field reconstruction
+   */
+
+  ///@{
+
+  void reconstruction_fourier_space(const catalogue::Catalogue data, const catalogue::Catalogue random, const cosmology::Cosmology cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type=0);
+
+  /**
+   * @brief return a sample with objects displaced, according to the
+   * internal variables m_x_displacement, m_y_displacement, m_z_displacement 
+   * @param input_catalogue input catalogue
+   * @return the displaced catalogue
+   */
+  catalogue::Catalogue displaced_catalogue (const catalogue::Catalogue input_catalogue);
 
   ///@}
 }

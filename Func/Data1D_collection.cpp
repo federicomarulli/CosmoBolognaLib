@@ -55,8 +55,8 @@ cosmobl::data::Data1D_collection::Data1D_collection (const vector<Data1D> data, 
   m_n_data = data.size();
   m_data = data;
 
-  if(x_min.size() == x_max.size() && int(x_min.size())==m_n_data)
-    for(int i=0; i< m_n_data; i++)
+  if (x_min.size() == x_max.size() && int(x_min.size())==m_n_data)
+    for (int i=0; i<m_n_data; i++)
       m_data[i].set_limits(x_min[i], x_max[i]);
 }
 
@@ -70,7 +70,7 @@ cosmobl::data::Data1D_collection::Data1D_collection (const vector<Data1D> data, 
   m_data = data;
   m_covariance_matrix = covariance_matrix;
 
-  for(int i=0; i< m_n_data; i++)
+  for (int i=0; i<m_n_data; i++)
     m_data[i].set_limits(x_min[i], x_max[i]);
 }
 

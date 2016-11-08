@@ -11,7 +11,6 @@
 #include "Catalogue.h"
 #include "ChainMesh_Catalogue.h"
 #include "Void.h"
-
 %}
 
 %include "Object.h"
@@ -31,6 +30,8 @@
 %template(ClusterVec) vector<cosmobl::catalogue::Cluster>;
 %template(ObjectPtr) shared_ptr<cosmobl::catalogue::Object>;
 %template(VoidPtr) shared_ptr<cosmobl::catalogue::Void>;
+
+%template(Catalogueptr) shared_ptr<cosmobl::catalogue::Catalogue>;
 
 %extend cosmobl::catalogue::Catalogue
 {  
@@ -55,11 +56,11 @@
   %template(add_objects) add_objects< Cluster >;
   %template(add_objects) add_objects< Void >;
   
-  %template(remove_objects) remove_objects< RandomObject >;
-  %template(remove_objects) remove_objects< Mock >;
-  %template(remove_objects) remove_objects< Halo >;
-  %template(remove_objects) remove_objects< Galaxy >;
-  %template(remove_objects) remove_objects< Cluster >;
-  %template(remove_objects) remove_objects< Void >;
+  %template(replace_objects) replace_objects< RandomObject >;
+  %template(replace_objects) replace_objects< Mock >;
+  %template(replace_objects) replace_objects< Halo >;
+  %template(replace_objects) replace_objects< Galaxy >;
+  %template(replace_objects) replace_objects< Cluster >;
+  %template(replace_objects) replace_objects< Void >;
 }
 

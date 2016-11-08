@@ -46,8 +46,7 @@ namespace cosmobl {
      *
      *  @brief The class Data1D_collection
      *
-     *  This is the base class used to manage collection
-     *  of 1D data
+     *  This is the base class used to manage collections of 1D data
      */
     class Data1D_collection : public Data
     {
@@ -62,15 +61,16 @@ namespace cosmobl {
       vector<Data1D> m_data;
 
       /// covariance_matrix
-      vector<vector<double> > m_covariance_matrix;
+      vector<vector<double>> m_covariance_matrix;
      
       /// inverse covariance_matrix
-      vector<vector<double> > m_inverse_covariance_matrix;
+      vector<vector<double>> m_inverse_covariance_matrix;
 
-      /// members of the collection
+      /// number of members of the data collection
       int m_n_data;
 
       ///@}
+
       
     public:
 
@@ -83,7 +83,7 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Data1D
        */
-      Data1D_collection () {}
+      Data1D_collection () : Data(DataType::_1D_data_collection_) {}
 
       /**
        *  @brief constructor of class Data1D_collection
@@ -115,105 +115,112 @@ namespace cosmobl {
        *  @brief default destructor
        *  @return none
        */
-      virtual ~Data1D_collection () {}
+      virtual ~Data1D_collection () = default;
 
       ///@}
+
       
+      /**
+       *  @name Member functions used to get the private members
+       */
+      ///@{
 
       /**
-       *  @brief return index of the first x used in the i-th dataset
+       *  @brief get index of the first x used in the i-th dataset
        *  @param i the i-th dataset
-       *  @return int containing the index of the first x used
+       *  @return the index of the first x used
        */
       int x_down (const int i) const 
       { return m_data[i].x_down(); } 
 
       /**
-       *  @brief return index of the last x usedin the i-th dataset
+       *  @brief get index of the last x usedin the i-th dataset
        *  @param i the i-th dataset
-       *  @return int containing the index of the last x used
+       *  @return the index of the last x used
        */
       int x_up (const int i) const 
       { return m_data[i].x_up(); } 
 
       /**
-       *  @brief return value of x at index j in the i-th dataset
+       *  @brief get value of x at index j in the i-th dataset
        *  @param i the i-th dataset
        *  @param j index
-       *  @return value of the x vector at position j in the i-th dataset
+       *  @return the value of the x vector at position j in the i-th dataset
        */
       double xx (const int i, const int j) const 
       { return m_data[i].xx(j); }  
 
       /**
-       *  @brief return the x vector for all datasets, concatenated
-       *  @return vector containing the x values for all datasets, concatenated
+       *  @brief get the x vector for all datasets, concatenated
+       *  @return the vector containing the x values for all datasets, concatenated
        */
       vector<double> xx () const override;
 
       /**
-       *  @brief return f(x) at index j in the i-th dataset
+       *  @brief get f(x) at index j in the i-th dataset
        *  @param i the i-th dataset
        *  @param j index
-       *  @return value of the fx vector at position j in the i-th dataset
+       *  @return the value of the fx vector at position j in the i-th dataset
        */
       double fx (const int i, const int j) const
       { return m_data[i].fx(j); } 
 
       /**
-       *  @brief return the fx vector for all datasets, concatenated
-       *  @return vector containing the fx values for all datasets, concatenated
+       *  @brief get the fx vector for all datasets, concatenated
+       *  @return the vector containing the fx values for all datasets, concatenated
        */
       vector<double> fx () const override;
 
       /**
-       *  @brief return error on f(x) at index j in the i-th dataset
+       *  @brief get error on f(x) at index j in the i-th dataset
        *  @param i the i-th dataset
        *  @param j index
-       *  @return value of the error_fx vector at position j in the i-th dataset
+       *  @return the value of the error_fx vector at position j in the i-th dataset
        */
       double error_fx (const int i, const int j) const
       { return m_data[i].error_fx(j); } 
 
       /**
-       *  @brief return the error_fx vector for all datasets, concatenated
-       *  @return vector containing the error_fx values for all datasets, concatenated
+       *  @brief get the error_fx vector for all datasets, concatenated
+       *  @return the vector containing the error_fx values for all datasets, concatenated
        */
       vector<double> error_fx () const override;
 
       /**
-       *  @brief return value of f(x) covariance at index i,j
+       *  @brief get value of f(x) covariance at index i,j
        *  @param i the i-th x element of the covariance matrix
        *  @param j the j-th x element of the covariance matrix
-       *  @return value of the covariance matrix for datasets i,j at position ax1,ax2
+       *  @return the value of the covariance matrix for datasets i,j at position ax1,ax2
        */
       double covariance (const int i, const int j) const
-      {return m_covariance_matrix[i][j];}
+      { return m_covariance_matrix[i][j]; }
 
       /**
-       *  @brief invert the covariance matrix
-       *  @return none
-       */  
-      void invert_covariance() override;
-
-      /**
-       *  @brief return value of f(x) inverted covariance at index i,j
+       *  @brief get value of f(x) inverted covariance at index i,j
        *  @param i the i-th x element of the covariance matrix 
        *  @param j the j-th x element of the covariance matrix 
-       *  @return value of the inverted covariance matrix at position i,j
+       *  @return the value of the inverted covariance matrix at position i,j
        */
       double inverse_covariance (const int i, const int j) const
-      {return m_inverse_covariance_matrix[i][j];}
+      { return m_inverse_covariance_matrix[i][j]; }
 
       /**
-       *  @brief return value of f(x) inverted covariance at index i,j
+       *  @brief get value of f(x) inverted covariance at index i,j
        *  @param d the d-th dataset
        *  @param i the i-th x element of the covariance matrix 
        *  @param j the j-th x element of the covariance matrix 
-       *  @return value of the inverted covariance matrix for at position i,j
+       *  @return the value of the inverted covariance matrix for at position i,j
        */
       double inverse_covariance (const int d, const int i, const int j) const
-      {return m_data[d].inverse_covariance(i,j);}
+      { return m_data[d].inverse_covariance(i, j) ;}
+
+      ///@}
+
+      
+      /**
+       *  @name Member functions used to set the private members
+       */
+      ///@{
       
       /**
        *  @brief set interval variables for x range in the i-th dataset
@@ -223,7 +230,7 @@ namespace cosmobl {
        *  @return none
        */
       void set_limits (const int i, const double xmin, const double xmax) 
-      { m_data[i].set_limits(xmin, xmax);}
+      { m_data[i].set_limits(xmin, xmax); }
 
       /**
        *  @brief set interval variable m_x in the i-th dataset
@@ -286,6 +293,14 @@ namespace cosmobl {
       void set_covariance (const vector<vector<double> > covariance)
       { m_covariance_matrix = covariance; }
 
+      ///@}
+      
+
+      /**
+       *  @name Member functions to compute data properties
+       */
+      ///@{
+      
       /**
        * @brief function that returns effective number of data between defined limits
        * @return effective number of data between defined limits
@@ -304,7 +319,7 @@ namespace cosmobl {
        * @return effective number of data between defined limits
        */
       int ndata_eff (const int i) const
-      { return m_data[i].ndata_eff();}
+      { return m_data[i].ndata_eff(); }
 
       /**
        * @brief function that returns total number of data
@@ -312,16 +327,25 @@ namespace cosmobl {
        * @return total number of data
        */
       int ndata (const int i) const 
-      { return m_data[i].ndata();} 
+      { return m_data[i].ndata(); } 
 
       /**
        * @brief function that returns total number of datasets
        * @return total number of dataset
        */
       int ndataset () const 
-      { return m_data.size();}  
-    };
+      { return m_data.size(); }  
 
+      /**
+       *  @brief invert the covariance matrix
+       *  @return none
+       */  
+      void invert_covariance () override;
+      
+      ///@}
+      
+    };
+   
   }
 }
 

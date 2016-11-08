@@ -53,9 +53,9 @@ namespace cosmobl {
      *  This class is used to handle objects of type <EM> Pair1D
      *  </EM>.
      */
-    class Pair1D : public Pair {
-
-    private:
+    class Pair1D : public virtual Pair {
+      
+    protected:
       
       /**
        *  @name Member functions used to set the binning parameters (customized in all the derived classes) 
@@ -86,7 +86,7 @@ namespace cosmobl {
       vector<double> m_PP1D;
 
       /**
-       *  @name Binning parameters
+       *  @name binning parameters
        */
       ///@{
   
@@ -127,7 +127,12 @@ namespace cosmobl {
        */
       Pair1D (const double binSize, const int nbins, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight=nullptr)
 	: m_binSize_inv(1./binSize), m_nbins(nbins), m_shift(shift)
-      { m_pairDim = _1D_; m_PP1D.resize(m_nbins+1, 0.); m_angularUnits = angularUnits; m_angularWeight = angularWeight; }
+      {
+	m_pairDim = _1D_;
+	m_PP1D.resize(m_nbins+1, 0.);
+	m_angularUnits = angularUnits;
+	m_angularWeight = angularWeight;
+      }
     
       /**
        *  @brief default destructor
@@ -210,16 +215,24 @@ namespace cosmobl {
        *  @return none
        */
       void set_PP1D (const int i, const double pp) { checkDim(m_PP1D, i, "m_PP1D", false); m_PP1D[i] = pp; }
-
+      
       /**
-       *  @brief set the protected member Pair1D::m_PP1D[i] adding the
-       *  number of pairs
+       *  @brief set the protected member m_PP1D by adding new data
        *  @param i the bin index
-       *  @param pp the number of pairs in the bin
+       *  @param data the number of pairs in the bin
        *  @return none
        */
-      void add_PP1D (const int i, const double pp) { checkDim(m_PP1D, i, "m_PP1D", false); m_PP1D[i] += pp; }
+      void add_data1D (const int i, const vector<double> data) override;
 
+      /**
+       *  @brief set the protected member m_PP1D by adding new data
+       *  @param i the bin index
+       *  @param pair pair pointer to an object of class Pair
+       *  @param ww a multiplicative factor used for bootstrap
+       *  @return none
+       */
+      void add_data1D (const int i, const shared_ptr<pairs::Pair> pair, const double ww=1.) override;
+      
       ///@}
 
     
@@ -253,9 +266,9 @@ namespace cosmobl {
      *  This class is used to handle objects of type <EM> Pair1D_angular
      *  </EM>.
      */
-    class Pair1D_angular : public Pair1D {
+    class Pair1D_angular : public virtual Pair1D {
 
-    private:
+    protected:
       
       /**
        *  @name Member functions used to set the binning parameters (customized in all the derived classes) 
@@ -280,7 +293,7 @@ namespace cosmobl {
     protected:
   
       /**
-       *  @name Binning parameters
+       *  @name binning parameters
        */
       ///@{
 
@@ -342,7 +355,7 @@ namespace cosmobl {
        *  @brief default destructor
        *  @return none
        */
-      virtual ~Pair1D_angular () {}
+      virtual ~Pair1D_angular () = default;
 
       ///@}
   
@@ -382,9 +395,9 @@ namespace cosmobl {
      *  This class is used to handle objects of type <EM> Pair1D_angular_lin
      *  </EM>.
      */
-    class Pair1D_angular_lin : public Pair1D_angular {
+    class Pair1D_angular_lin : public virtual Pair1D_angular {
 
-    private:
+    protected:
     
       /**
        *  @name Member functions used to set the binning parameters
@@ -416,7 +429,11 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Pair1D_angular_lin
        */
-      Pair1D_angular_lin () { m_pairType = _angular_lin_; } 
+      Pair1D_angular_lin ()
+	{
+	  m_pairType = _angular_lin_;
+	  m_pairInfo = _standard_;
+	} 
 
       /**
        *  @brief constructor
@@ -432,8 +449,13 @@ namespace cosmobl {
        *  @return object of class Pair1D_angular_lin
        */
       Pair1D_angular_lin (const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
-	: Pair1D_angular(thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight)
-	{ m_pairType = _angular_lin_; m_set_parameters_nbins(); m_PP1D.resize(m_nbins+1, 0.); }
+	: Pair1D(1., nbins, shift, angularUnits, angularWeight), Pair1D_angular(thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight)
+	{
+	  m_pairType = _angular_lin_;
+	  m_pairInfo = _standard_; 
+	  m_set_parameters_nbins();
+	  m_PP1D.resize(m_nbins+1, 0.);
+	}
   
       /**
        *  @brief constructor
@@ -446,17 +468,22 @@ namespace cosmobl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_angular
+       *  @return object of class Pair1D_angular_lin
        */
       Pair1D_angular_lin (const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
-	: Pair1D_angular(thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight)
-	{ m_pairType = _angular_lin_; m_set_parameters_binSize(); m_PP1D.resize(m_nbins+1, 0.); } 
+	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), Pair1D_angular(thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight)
+	{
+	  m_pairType = _angular_lin_;
+	  m_pairInfo = _standard_; 
+	  m_set_parameters_binSize();
+	  m_PP1D.resize(m_nbins+1, 0.);
+	} 
   
       /**
        *  @brief default destructor
        *  @return none
        */
-      ~Pair1D_angular_lin () {}
+      ~Pair1D_angular_lin () = default;
       
       ///@}
   
@@ -492,9 +519,9 @@ namespace cosmobl {
      *  This class is used to handle objects of type <EM> Pair1D_angular_log
      *  </EM>.
      */
-    class Pair1D_angular_log : public Pair1D_angular {
+    class Pair1D_angular_log : public virtual Pair1D_angular {
 
-    private:
+    protected:
     
       /**
        *  @name Member functions used to set the binning parameters
@@ -526,7 +553,11 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Pair1D_angular_log
        */
-      Pair1D_angular_log () { m_pairType = _angular_log_; } 
+      Pair1D_angular_log ()
+	{
+	  m_pairType = _angular_log_;
+	  m_pairInfo = _standard_;
+	} 
 
       /**
        *  @brief constructor
@@ -542,8 +573,13 @@ namespace cosmobl {
        *  @return object of class Pair1D_angular_log
        */
       Pair1D_angular_log (const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
-	: Pair1D_angular(thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight)
-	{ m_pairType = _angular_log_; m_set_parameters_nbins(); m_PP1D.resize(m_nbins+1, 0.); }
+	: Pair1D(1., nbins, shift, angularUnits, angularWeight), Pair1D_angular(thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight)
+	{
+	  m_pairType = _angular_log_;
+	  m_pairInfo = _standard_; 
+	  m_set_parameters_nbins();
+	  m_PP1D.resize(m_nbins+1, 0.);
+	}
   
       /**
        *  @brief constructor
@@ -556,17 +592,22 @@ namespace cosmobl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_angular
+       *  @return object of class Pair1D_angular_log
        */
       Pair1D_angular_log (const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
-	: Pair1D_angular(thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight)
-	{ m_pairType = _angular_log_; m_set_parameters_binSize(); m_PP1D.resize(m_nbins+1, 0.); } 
+	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), Pair1D_angular(thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight)
+	{
+	  m_pairType = _angular_log_;
+	  m_pairInfo = _standard_; 
+	  m_set_parameters_binSize();
+	  m_PP1D.resize(m_nbins+1, 0.);
+	} 
   
       /**
        *  @brief default destructor
        *  @return none
        */
-      ~Pair1D_angular_log () {}
+      ~Pair1D_angular_log () = default;
 
       ///@}
   
@@ -602,9 +643,9 @@ namespace cosmobl {
      *  This class is used to handle objects of type <EM> Pair1D_comoving
      *  </EM>.
      */
-    class Pair1D_comoving : public Pair1D {
+    class Pair1D_comoving : public virtual Pair1D {
 
-    private:
+    protected:
       
       /**
        *  @name Member functions used to set the binning parameters (customized in all the derived classes) 
@@ -629,7 +670,7 @@ namespace cosmobl {
     protected:
   
       /**
-       *  @name Binning parameters
+       *  @name binning parameters
        */
       ///@{
 
@@ -726,9 +767,9 @@ namespace cosmobl {
      *  This class is used to handle objects of type <EM> Pair1D_comoving_lin
      *  </EM>.
      */
-    class Pair1D_comoving_lin : public Pair1D_comoving {
+    class Pair1D_comoving_lin : public virtual Pair1D_comoving {
 
-    private:
+    protected:
     
       /**
        *  @name Member functions used to set the binning parameters
@@ -760,7 +801,11 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Pair1D_comoving_lin
        */
-      Pair1D_comoving_lin () { m_pairType = _comoving_lin_; } 
+      Pair1D_comoving_lin ()
+	{
+	  m_pairType = _comoving_lin_;
+	  m_pairInfo = _standard_;
+	} 
 
       /**
        *  @brief constructor
@@ -774,8 +819,13 @@ namespace cosmobl {
        *  @return object of class Pair1D_comoving_lin
        */
       Pair1D_comoving_lin (const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
-	: Pair1D_comoving(rMin, rMax, nbins, shift, angularUnits, angularWeight)
-	{ m_pairType = _comoving_lin_; m_set_parameters_nbins(); m_PP1D.resize(m_nbins+1, 0.); }
+	: Pair1D(1., nbins, shift, angularUnits, angularWeight), Pair1D_comoving(rMin, rMax, nbins, shift, angularUnits, angularWeight)
+	{
+	  m_pairType = _comoving_lin_;
+	  m_pairInfo = _standard_; 
+	  m_set_parameters_nbins();
+	  m_PP1D.resize(m_nbins+1, 0.);
+	}
   
       /**
        *  @brief constructor
@@ -786,11 +836,16 @@ namespace cosmobl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving
+       *  @return object of class Pair1D_comoving_lin
        */
       Pair1D_comoving_lin (const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
-	: Pair1D_comoving(rMin, rMax, binSize, shift, angularUnits, angularWeight)
-	{ m_pairType = _comoving_lin_; m_set_parameters_binSize(); m_PP1D.resize(m_nbins+1, 0.); } 
+	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), Pair1D_comoving(rMin, rMax, binSize, shift, angularUnits, angularWeight)
+	{
+	  m_pairType = _comoving_lin_;
+	  m_pairInfo = _standard_; 
+	  m_set_parameters_binSize();
+	  m_PP1D.resize(m_nbins+1, 0.);
+	} 
   
       /**
        *  @brief default destructor
@@ -832,9 +887,9 @@ namespace cosmobl {
      *  This class is used to handle objects of type <EM> Pair1D_comoving_log
      *  </EM>.
      */
-    class Pair1D_comoving_log : public Pair1D_comoving {
+    class Pair1D_comoving_log : public virtual Pair1D_comoving {
 
-    private:
+    protected:
       
       /**
        *  @name Member functions used to set the binning parameters
@@ -866,7 +921,11 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Pair1D_comoving_log
        */
-      Pair1D_comoving_log () { m_pairType = _comoving_log_; }
+      Pair1D_comoving_log ()
+	{
+	  m_pairType = _comoving_log_;
+	  m_pairInfo = _standard_; 
+	}
       
       /**
        *  @brief constructor
@@ -880,8 +939,13 @@ namespace cosmobl {
        *  @return object of class Pair1D_comoving_log
        */
       Pair1D_comoving_log (const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
-	: Pair1D_comoving(rMin, rMax, nbins, shift, angularUnits, angularWeight)
-	{ m_pairType = _comoving_log_; m_set_parameters_nbins(); m_PP1D.resize(m_nbins+1, 0.); }
+	: Pair1D(1., nbins, shift, angularUnits, angularWeight), Pair1D_comoving(rMin, rMax, nbins, shift, angularUnits, angularWeight)
+	{
+	  m_pairType = _comoving_log_;
+	  m_pairInfo = _standard_; 
+	  m_set_parameters_nbins();
+	  m_PP1D.resize(m_nbins+1, 0.);
+	}
   
       /**
        *  @brief constructor
@@ -892,11 +956,16 @@ namespace cosmobl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving
+       *  @return object of class Pair1D_comoving_log
        */
       Pair1D_comoving_log (const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
-	: Pair1D_comoving(rMin, rMax, binSize, shift, angularUnits, angularWeight)
-	{ m_pairType = _comoving_log_; m_set_parameters_binSize(); m_PP1D.resize(m_nbins+1, 0.); } 
+	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), Pair1D_comoving(rMin, rMax, binSize, shift, angularUnits, angularWeight)
+	{
+	  m_pairType = _comoving_log_;
+	  m_pairInfo = _standard_; 
+	  m_set_parameters_binSize();
+	  m_PP1D.resize(m_nbins+1, 0.);
+	} 
   
       /**
        *  @brief default destructor

@@ -1,5 +1,5 @@
 /********************************************************************
- *  Copyright (C) 2010 by Federico Marulli                          *
+ *  Copyright (C) 2016 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
  *  This program is free software; you can redistribute it and/or   *
@@ -23,13 +23,12 @@
  *
  *  @brief The class Modelling_TwoPointCorrelation
  *
- *  This file defines the interface of the class
- *  Modelling, used for modelling any kind of 
- *  2pcf measurements
+ *  This file defines the interface of the class Modelling, used to
+ *  model two-point correlation functions of any kind
  *
- *  @author Federico Marulli
+ *  @author Federico Marulli, Alfonso Veropalumbo
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
  */
 
 #ifndef __MODELLING2P__
@@ -61,188 +60,285 @@ namespace cosmobl {
      */
     class Modelling_TwoPointCorrelation : public Modelling 
     {
-      protected:
+    protected:
 	
-	/// two-point correlation function type
-	twopt::TwoPType m_twoPType;
+      /// the two-point correlation function type
+      twopt::TwoPType m_twoPType;
 
-	/// container of parameters for two point model computation
-	glob::STR_twop_model m_twop_parameters;
+      /// container of parameters for two-point correlation function model computation
+      modelling::STR_twop_model m_twop_parameters;
 
-      public:
+    public:
 
-	/**
-	 *  @name Constructors/destructors
-	 */
-	///@{
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{
 
-	/**
-	 *  @brief default constuctor
-	 *  @return object of class ModellingTwoPointCorrelation
-	 */
-	Modelling_TwoPointCorrelation () {}
+      /**
+       *  @brief default constuctor
+       *  @return object of class ModellingTwoPointCorrelation
+       */
+      Modelling_TwoPointCorrelation () = default;
+	
+      /**
+       *  @brief constuctor
+       *  @param twop the two-point correlation function to model
+       *  @return object of class Modelling_TwoPointCorrelation
+       */
+      Modelling_TwoPointCorrelation (const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop)
+	{ m_data = twop->dataset(); }
+	
+      /**
+       *  @brief default destructor
+       *  @return none
+       */
+      virtual ~Modelling_TwoPointCorrelation () = default;
 
-	/**
-	 *  @brief default destructor
-	 *  @return none
-	 */
-	virtual ~Modelling_TwoPointCorrelation () {}
+      /**
+       *  @brief static factory used to construct modelling of 
+       *  two-point correlation functions of any type
+       *
+       *  @param twop the two-point correlation function to model
+       *
+       *  @return a pointer to an object of class 
+       *  Modelling_TwoPointCorrelation of a given type
+       */
+      static shared_ptr<Modelling_TwoPointCorrelation> Create (const shared_ptr<twopt::TwoPointCorrelation> twop);
 
-	/**
-	 *  @brief static factory used to construct modelling of 
-	 *  two-point correlation functions of any type
-	 *
-	 *  @param twop the two-point correlation function to model
-	 *
-	 *  @return a pointer to an object of class 
-	 *  Modelling_TwoPointCorrelation of a given type
-	 */
-	static shared_ptr<Modelling_TwoPointCorrelation> Create (const shared_ptr<twopt::TwoPointCorrelation> twop);
+      /**
+       *  @brief static factory used to construct modelling of 
+       *  two-point correlation functions of any type
+       *
+       *  @param twoPType type of the two-point correlation function
+       *
+       *  @param twop_dataset the dataset containing the two-point
+       *  correlation function to model
+       *
+       *  @return a pointer to an object of class 
+       *  Modelling_TwoPointCorrelation of a given type
+       */
+      static shared_ptr<Modelling_TwoPointCorrelation> Create (const twopt::TwoPType twoPType, const shared_ptr<data::Data> twop_dataset);
 
-	/**
-	 *  @brief static factory used to construct modelling of 
-	 *  two-point correlation functions of any type
-	 *
-	 *  @param twop_dataset the dataset containing
-	 *  the two-point correlation function to model
-	 *
-	 *  @param twoPType the type of two-point correlation function
-	 *
-	 *  @return a pointer to an object of class 
-	 *  Modelling_TwoPointCorrelation of a given type
-	 */
-	static shared_ptr<Modelling_TwoPointCorrelation> Create (const shared_ptr<data::Data> twop_dataset, const twopt::TwoPType twoPType);
-
-	///@}
-
-	/**
-	 * @brief return the type of correlation function
-	 * @return the type of correlation function
-	 */
-	twopt::TwoPType twoPType () {return m_twoPType;}
+      ///@}
 
 
-	/**
-	 * @brief set the parameters for the computation
-	 * of the dark matter two point correlation function
-	 *
-	 *  @param model_scales scales at wich the fiducal model for &xi;<SUB>DM</SUB>
-	 *  @param cosmology the cosmology used
-	 *  @param redshift redshift
-	 *  @param method method used to compute the power spectrum; valid
-	 *  choices for method_Pk are: CAMB [http://camb.info/], classgal_v1
-	 *  [http://class-code.net/], MPTbreeze-v1
-	 *  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	 *  @param sigmaNL damping of the wiggles in the linear power spectrum
-	 *  @param NL 0 &rarr; linear power spectrum; 1 &rarr; non-linear power
-	 *  spectrum
-	 *  @param pimax the upper limit of the line of sight integration
-	 *  @param r_min minimum separation up to which the
-	 *  correlation function is computed
-	 *  @param r_max maximum separation up to which the
-	 *  correlation function is computed
-	 *  @param output_root output_root of the parameter file used to
-	 *  compute the power spectrum and &sigma;(mass); it can be any
-	 *  name
-	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
-	 *  &rarr; normalize the power spectrum
-	 *  @param k_min minimum wave vector module up to which the power
-	 *  spectrum is computed
-	 *  @param k_max maximum wave vector module up to which the power
-	 *  spectrum is computed
-	 *  @param aa parameter \e a of Eq. 24 of Anderson et al. 2012
-	 *  @param GSL 0 &rarr; the FFTlog libraries are used; 1 &rarr;
-	 *  the GSL libraries are used
-	 *  @param prec accuracy of the GSL integration 
-	 *  @param file_par name of the parameter file; if a parameter
-	 *  file is provided (i.e. file_par!=NULL), it will be used,
-	 *  ignoring the cosmological parameters of the object
-	 *
-	 *  @return none
-	 */
-	void set_parameters_twop_DM (const vector<double> model_scales, const cosmology::Cosmology cosmology, const double redshift, const string method="CAMB", const double sigmaNL=0, const bool NL=1, const double pimax=40, const double r_min=1.e-3, const double r_max=350., const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0, const bool GSL=1, const double prec=1.e-3, const string file_par=par::defaultString);
+      /**
+       *  @name Member functions used to get the best-fit values of
+       *  model parameters
+       */
+      ///@{
 
-	/**
-	 * @brief set the fiducial model for dark matter 
-	 * two point correlation function
-	 *
-	 *  @return none
-	 */
-	virtual void set_fiducial_twop ()
-	{ ErrorMsg("Error in set_fiducial_twop() of Modelling_TwoPointCorrelation.h!"); }
+      /**
+       * @brief return the best-fit value of \f$\alpha\f$
+       *
+       * @return the best-fit value of \f$\alpha\f$
+       */
+      virtual double alpha_bestfit () const { return m_model->parameter(0)->value(); }
 
-	/**
-	 * @brief fit the bias of the measured
-	 * two point correlation function
-	 *
-	 * @param bias_prior prior for the bias
-	 *
-	 * @param pT_bias the parameter type of the bias: it can be
-	 * either _free_ or _fixed_
-	 *
-	 * @return none
-	 */
-	virtual void set_model_bias (const statistics::Prior bias_prior, const statistics::ParameterType pT_bias=statistics::_free_)
-	{ (void)bias_prior; (void)pT_bias; ErrorMsg("Error in fit_bias of Modelling_TwoPointCorrelation.h!"); }
+      /**
+       * @brief return the best-fit value of \f$f(z)\sigma_8(z)\f$
+       *
+       * @return the best-fit value of \f$f(z)\sigma_8(z)\f$
+       */
+      virtual double fsigma8_bestfit () const { return m_model->parameter(1)->value(); }
 
-	/**
-	 * @brief fit the Alcock-Paczynski effect for the two point
-	 * correlation function. 
-	 * \f$\xi(s)= b^2  \xi_{DM}(\alpha s)\f$.
-	 * &xi<SUB>DM</SUB> is computed at the fiducial cosmology.
-	 *
-	 * @param bias_prior prior for the bias
-	 *
-	 * @param alpha_prior prior for &alpha;
-	 *
-	 * @param pT_bias the parameter type of the bias: it can be
-	 * either _free_ or _fixed_
-	 *
-	 * @param pT_alpha the parameter type of &alpha;: it can be
-	 * either _free_ or _fixed_
-	 *
-	 * @return none
-	 */
-	virtual void set_model_bias_AP_isotropic(const statistics::Prior bias_prior, const statistics::Prior alpha_prior, const statistics::ParameterType pT_bias=statistics::_free_, const statistics::ParameterType pT_alpha=statistics::_free_)
-	{ (void)bias_prior; (void)alpha_prior; (void)pT_bias; (void)pT_alpha; ErrorMsg("Error in fit_bias_AP_isotropic of Modelling_TwoPointCorrelation.h!"); }
+      /**
+       * @brief return the best-fit value of \f$b(z)\sigma_8(z)\f$
+       *
+       * @return the best-fit value of \f$b(z)\sigma_8(z)\f$
+       */
+      virtual double bsigma8_bestfit () const { return m_model->parameter(2)->value(); }
+             
+      /**
+       * @brief return the best-fit value of \f$A_0\f$
+       *
+       * @return the best-fit value of \f$A_0\f$
+       */
+      virtual double A0_bestfit () const { return m_model->parameter(3)->value(); }
 
-	/**
-	 * @brief fit the Alcock-Paczynski effect for the two point
-	 * correlation function. 
-	 * \f$\xi(s)= B^2  \xi_{DM}(\alpha s)\ + A_0 + A_1/s +A_2/s^2\f$.
-	 * &xi<SUB>DM</SUB> is computed at the fiducial cosmology.
-	 * B, A<SUB>0</SUB>, A<SUB>1</SUB>, A<SUB>2</SUB> are nuisance
-	 *
-	 * @param alpha_prior the prior for &alpha;
-	 *
-	 * @param B_prior the prior for B
-	 *
-	 * @param A0_prior the prior for A0
-	 *
-	 * @param A1_prior the prior for A1
-	 *
-	 * @param A2_prior the prior for A2
-	 *
-	 * @param pT_alpha the parameter type of &alpha;: it can be
-	 * either _free_ or _fixed_
-	 *
-	 * @param pT_B the parameter type of B: it can be either _free_
-	 * or _fixed_
-	 *
-	 * @param pT_A0 the parameter type of A0: it can be either
-	 * _free_ or _fixed_
-	 *
-	 * @param pT_A1 the parameter type of A1: it can be either
-	 * _free_ or _fixed_
-	 *
-	 * @param pT_A2 the parameter type of A2: it can be either
-	 * _free_ or _fixed_
-	 *
-	 * @return none
-	 */
-	virtual void set_model_AP_isotropic (const statistics::Prior alpha_prior, const statistics::Prior B_prior, const statistics::Prior A0_prior, const statistics::Prior A1_prior, const statistics::Prior A2_prior, const statistics::ParameterType pT_alpha=statistics::_free_, const statistics::ParameterType pT_B=statistics::_free_, const statistics::ParameterType pT_A0=statistics::_free_, const statistics::ParameterType pT_A1=statistics::_free_, const statistics::ParameterType pT_A2=statistics::_free_)
-	{ (void)alpha_prior; (void)B_prior; (void)A0_prior; (void)A1_prior; (void)A2_prior; (void)pT_alpha; (void)pT_B; (void)pT_A0; (void)pT_A1; (void)pT_A2; ErrorMsg("Error in fit_AP_isotropic of Modelling_TwoPointCorrelation.h!"); }
+      /**
+       * @brief return the best-fit value of \f$A_1\f$
+       *
+       * @return the best-fit value of \f$A_1\f$
+       */
+      virtual double A1_bestfit () const { return m_model->parameter(4)->value(); }
+
+      /**
+       * @brief return the best-fit value of \f$A_2\f$
+       *
+       * @return the best-fit value of \f$A_2\f$
+       */
+      virtual double A2_bestfit () const { return m_model->parameter(5)->value(); }
+	
+      ///@}
+
+	
+      /**
+       * @brief return the type of correlation function
+       * @return the type of correlation function
+       */
+      twopt::TwoPType twoPType () { return m_twoPType; }
+
+	
+      /**
+       *  @brief set the parameters for the computation of the dark
+       *  matter two-point correlation function
+       *
+       *  @param fiducial_radDM scales at wich the fiducal model for
+       *  &xi;<SUB>DM</SUB> is computed
+       *
+       *  @param cosmology the cosmological model used to compute
+       *  &xi;<SUB>DM</SUB>
+       *
+       *  @param redshift redshift
+       *
+       *  @param method_Pk method used to compute the power
+       *  spectrum; valid choices for method_Pk are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param sigmaNL damping of the wiggles in the linear power spectrum
+       *
+       *  @param NL 0 &rarr; linear power spectrum; 1 &rarr;
+       *  non-linear power spectrum
+       *
+       *  @param pimax the upper limit of the line of sight integration
+       *
+       *  @param r_min minimum separation up to which the
+       *  correlation function is computed
+       *
+       *  @param r_max maximum separation up to which the
+       *  correlation function is computed
+       *  
+       *  @param output_root output_root of the parameter file used
+       *  to compute the power spectrum and &sigma;(mass); it can be
+       *  any name
+       *  
+       *  @param norm 0 &rarr; don't normalize the power spectrum; 1
+       *  &rarr; normalize the power spectrum
+       *  
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *  
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *  
+       *  @param aa parameter \e a of Eq. 24 of Anderson et al. 2012
+       *  
+       *  @param GSL 0 &rarr; the FFTlog libraries are used; 1
+       *  &rarr; the GSL libraries are used
+       *  
+       *  @param prec accuracy of the GSL integration
+       *  
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @return none
+       */
+      void set_parameters_xiDM (const vector<double> fiducial_radDM, const cosmology::Cosmology cosmology, const double redshift, const string method_Pk="CAMB", const double sigmaNL=0, const bool NL=true, const double pimax=40, const double r_min=1.e-3, const double r_max=350., const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0, const bool GSL=true, const double prec=1.e-3, const string file_par=par::defaultString);
+	
+
+      /**
+       *  @brief set the parameters for the computation of the dark
+       *  matter two-point correlation function
+       *
+       *  @param fiducial_radDM scales at wich the fiducal model for
+       *  &xi;<SUB>DM</SUB> is computed
+       *  
+       *  @param cosmology the cosmology used
+       *
+       *  @param redshift redshift
+       *
+       *  @param method_Pk method used to compute the power spectrum
+       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param sigmaNL damping of the wiggles in the linear power
+       *  spectrum
+       *
+       *  @param NL 0 &rarr; linear power spectrum; 1 &rarr;
+       *  non-linear power spectrum
+       *
+       *  @param FV 0 &rarr; exponential form for f(v); 1 &rarr;
+       *  Gaussian form for f(v); where f(v) is the velocity
+       *  distribution function
+       *
+       *  @param Xi vector of &xi;(r), the two-point correlation
+       *  function of dark matter
+       *
+       *  @param Xi_ vector of barred &xi;(r),
+       *
+       *  @param Xi__ vector of double-barred &xi;(r)
+       *
+       *  @param output_root output_root of the parameter file used
+       *  to compute the power spectrum and &sigma;(mass); it can be
+       *  any name
+       *
+       *  @param bias_nl 0 &rarr; linear bias; 1 &rarr; non-linear bias 
+       *
+       *  @param bA b<SUB>a</SUB> non-linear bias parameter
+       *
+       *  @param xiType 0 &rarr; standard; 1 &rarr; Chuang & Wang model
+       *
+       *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
+       *
+       *  @param xiNL 0 &rarr; linear power spectrum; 1 &rarr;
+       *  non-linear power spectrum
+       *
+       *  @param v_min minimum velocity used in the convolution of
+       *  the correlation function
+       *
+       *  @param v_max maximum velocity used in the convolution of
+       *  the correlation function
+       *
+       *  @param step_v number of steps used in the convolution of
+       *  the correlation function
+       *
+       *  @param norm 0 &rarr; don't normalize the power spectrum; 1 &rarr;
+       *  normalize the power spectrum
+       *
+       *  @param r_min minimum separation up to which the
+       *  correlation function is computed
+       *
+       *  @param r_max maximum separation up to which the
+       *  correlation function is computed
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param aa parameter \e a of Eq. 24 of Anderson et al. 2012
+       *
+       *  @param GSL 0 &rarr; the Numerical libraries are used; 1
+       *  &rarr; the GSL libraries are used
+       *
+       *  @param prec accuracy of the GSL integration
+       *
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @return none
+       */
+      void set_parameters_xi2D_DM (const vector<double> fiducial_radDM, const cosmology::Cosmology cosmology, const double redshift, const string method_Pk="CAMB", const double sigmaNL=0, const bool NL=true, const int FV=0, const vector<double> Xi={}, const vector<double> Xi_={}, const vector<double> Xi__={}, const string output_root="test", const bool bias_nl=false, const double bA=-1., const bool xiType=false, const double k_star=-1., const bool xiNL=false, const double v_min=-5000., const double v_max=5000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=true, const double prec=1.e-2, const string file_par=par::defaultString);
+
+	
+      /**
+       *  @brief set the fiducial model for dark matter two-point
+       *  correlation function
+       *
+       *  @return none
+       */
+      virtual void set_fiducial_xiDM () = 0;
 
     };
   }

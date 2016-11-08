@@ -19,8 +19,10 @@ OBJ3 = 2pt_2D.o
 OBJ4 = 2pt_projected.o
 OBJ5 = 2pt_angular.o
 OBJ6 = 3pt.o
-OBJ7 = model_2pt_projected_bias.o
-OBJ8 = model_2pt_monopole_bao.o
+OBJ7 = model_2pt_monopole_BAO.o
+OBJ8 = model_2pt_monopole_RSD.o
+OBJ9 = model_2pt_projected.o
+OBJ10 = model_2pt_2D.o
 
 ES = so
 
@@ -46,14 +48,20 @@ endif
 3pt: $(OBJ6) 
 	$(CC) $(OBJ6) -o 3pt $(FLAGS_LIB)
 
-model_2pt_projected_bias: $(OBJ7) 
-	$(CC) $(OBJ7) -o model_2pt_projected_bias $(FLAGS_LIB)
+model_2pt_monopole_BAO: $(OBJ7) 
+	$(CC) $(OBJ7) -o model_2pt_monopole_BAO $(FLAGS_LIB)
 
-model_2pt_monopole_bao: $(OBJ8) 
-	$(CC) $(OBJ8) -o model_2pt_monopole_bao $(FLAGS_LIB)
+model_2pt_monopole_RSD: $(OBJ8) 
+	$(CC) $(OBJ8) -o model_2pt_monopole_RSD $(FLAGS_LIB)
+
+model_2pt_projected: $(OBJ9) 
+	$(CC) $(OBJ9) -o model_2pt_projected $(FLAGS_LIB)
+
+model_2pt_2D: $(OBJ10) 
+	$(CC) $(OBJ10) -o model_2pt_2D $(FLAGS_LIB)
 
 clean:
-	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 3pt model_2pt_projected_bias model_2pt_monopole_bao *~ \#* temp* core*
+	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 3pt model_2pt_monopole_BAO model_2pt_monopole_RSD model_2pt_projected model_2pt_2D *~ \#* temp* core*
 
 
 2pt_monopole.o: 2pt_monopole.cpp makefile $(dirLib)*.$(ES)
@@ -74,8 +82,14 @@ clean:
 3pt.o: 3pt.cpp makefile $(dirLib)*.$(ES)
 	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 3pt.cpp 
 
-model_2pt_projected_bias.o: model_2pt_projected_bias.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_projected_bias.cpp
+model_2pt_monopole_BAO.o: model_2pt_monopole_BAO.cpp makefile $(dirLib)*.$(ES)
+	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_monopole_BAO.cpp
 
-model_2pt_monopole_bao.o: model_2pt_monopole_bao.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_monopole_bao.cpp
+model_2pt_monopole_RSD.o: model_2pt_monopole_RSD.cpp makefile $(dirLib)*.$(ES)
+	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_monopole_RSD.cpp
+
+model_2pt_projected.o: model_2pt_projected.cpp makefile $(dirLib)*.$(ES)
+	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_projected.cpp
+
+model_2pt_2D.o: model_2pt_2D.cpp makefile $(dirLib)*.$(ES)
+	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_2D.cpp

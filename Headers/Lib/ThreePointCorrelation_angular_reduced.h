@@ -96,8 +96,8 @@ namespace cosmobl {
        *
        *  @warning This method has not been implemented yet
        */
-      ThreePointCorrelation_angular_reduced () { ErrorMsg("Work in progress..."); }
-
+      ThreePointCorrelation_angular_reduced () = default;
+      
       /**
        *  @brief constructor
        *  @param data object of class Catalogue containing the input
@@ -114,13 +114,14 @@ namespace cosmobl {
        *  @warning This method has not been implemented yet
        */
       ThreePointCorrelation_angular_reduced (const catalogue::Catalogue data, const catalogue::Catalogue random, const double side_s, const double side_u, const double perc_increase, const int nbins)
-	: ThreePointCorrelation_angular_connected(data, random, side_s, side_u, perc_increase, nbins) { ErrorMsg("Work in progress..."); }
-
+	: ThreePointCorrelation_angular_connected(data, random, side_s, side_u, perc_increase, nbins)
+	{ ErrorCBL("Error in ThreePointCorrelation_angular_reduced() of ThreePointCorrelation_angular_reduced.h", cosmobl::glob::ExitCode::_workInProgress_); }
+      
       /**
        *  @brief default destructor
        *  @return none
        */
-      ~ThreePointCorrelation_angular_reduced () {}
+      ~ThreePointCorrelation_angular_reduced () = default;
 
       ///@}
 
@@ -165,7 +166,7 @@ namespace cosmobl {
        *
        * @warning This method has not been implemented yet 
        */
-      void measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const int count_ddd=1, const int count_rrr=1, const int count_ddr=1, const int count_drr=1, const bool tcount=0) override;
+      void measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const bool count_ddd=1, const bool count_rrr=1, const bool count_ddr=1, const bool count_drr=1, const bool tcount=0) override;
     
       ///@}
 

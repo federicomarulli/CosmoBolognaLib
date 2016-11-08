@@ -40,16 +40,17 @@ using namespace cosmobl;
 
 void cosmobl::Vmax_DC_distribution (vector<double> &dc, vector<double> &nObj, const vector<double> D_C, const vector<double> zobj_min, const vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, cosmology::Cosmology &cosm, const double Area, const int nObjRan, const int idum, const bool norm, const string file_Vmax, const double delta_dc_Vmax)
 {
-  if (dc.size()>0 || nObj.size()>0) ErrorMsg("Error in Vmax_DC_distribution of GlobalFunc_Cosmology.cpp)!");
+  if (dc.size()>0 || nObj.size()>0) ErrorCBL("Error in Vmax_DC_distribution of GlobalFunc_Cosmology.cpp)!");
 
-  Ran ran(idum);
+  default_random_engine gen(idum);
+  uniform_real_distribution<float> ran(0., 1.);
 
   vector<double> err, dc_Vmax, ww;
   double Volume, zz;
 
   for (unsigned int i=0; i<D_C.size(); i++) { 
     for (int j=0; j<nObjRan; j++) {
-      Volume = ran.doub()*cosm.Volume(zobj_min[i],zobj_max[i],Area);
+      Volume = ran(gen)*cosm.Volume(zobj_min[i],zobj_max[i],Area);
       zz = cosm.max_redshift(Volume, Area, zobj_min[i]);
       if (z_min<zz && zz<z_max) { 
 	dc_Vmax.push_back(cosm.D_C(zz));
@@ -113,7 +114,7 @@ void cosmobl::max_separations_AP (const double Rp_max, const double Pi_max, cons
 
 double cosmobl::converted_xi (const double RR, const double redshift, const vector<double> rr, const vector<double> Xi, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2, const bool direction) 
 {
-  if (RR==0) ErrorMsg("Error in converted_xi of GlobalFuncCosmology.cpp! RR must be >0!");
+  if (RR==0) ErrorCBL("Error in converted_xi of GlobalFuncCosmology.cpp! RR must be >0!");
 
   double gamma = AP_shift_r(redshift, cosm1, cosm2);
 

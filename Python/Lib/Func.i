@@ -15,6 +15,7 @@
 
   class EnumTypes {
   public:
+    enum {_error_, _IO_, _workInProgress_};
     enum {_Omega_matter_LCDM_, _Omega_matter_, _Omega_baryon_, _Omega_baryon_h2_,  _Omega_neutrinos_, _massless_neutrinos_, _massive_neutrinos_, _Omega_DE_, _Omega_radiation_, _H0_, _hh_, _scalar_amp_, _n_spec_, _w0_, _wa_, _fNL_, _sigma8_};
     enum {_radians_, _degrees_, _arcseconds_, _arcminutes_};
     enum {_1D_, _2D_}; 
@@ -25,12 +26,13 @@
     enum {_Likelihood_NotSet_, _GaussianLikelihood_Model_, _GaussianLikelihood_Error_, _GaussianLikelihood_Covariance_, _UserDefinedLikelihood_};
     enum {_angular_lin_, _angular_log_, _comoving_lin_, _comoving_log_, _comovingCartesian_linlin_, _comovingCartesian_linlog_, _comovingCartesian_loglin_, _comovingCartesian_loglog_, _comovingPolar_linlin_, _comovingPolar_linlog_, _comovingPolar_loglin_, _comovingPolar_loglog_};
     enum {_1D_monopole_, _1D_projected_, _1D_deprojected_, _1D_multipoles_, _1D_wedges_, _1D_filtered_, _1D_angular_, _2D_Cartesian_, _2D_polar_};
+    enum {_natural_, _LandySzalay_};
     enum {_Poisson_, _Jackknife_, _Bootstrap_};
     enum {_comoving_theta_, _comoving_side_};
     enum {_angular_connected_, _angular_reduced_, _comoving_connected_, _comoving_reduced_};
     enum {_GenericObject_, _RandomObject_, _Mock_, _Halo_, _Galaxy_, _Cluster_, _Void_}; 
     enum {_X_, _Y_, _Z_, _RA_, _Dec_, _Redshift_, _Dc_, _Weight_, _Mass_, _Richness_, _Magnitude_, _Vx_, Vy, Vz, _Region_, _Radius_, _Generic_};
-    enum {_createRandom_box_, _createRandom_square_, _createRandom_shuffle_, _createRandom_cone_, _createRandom_VIPERS_};
+    enum {_createRandom_box_, _createRandom_square_, _createRandom_shuffle_, _createRandom_cone_, _createRandom_MANGLE_, _createRandom_VIPERS_};
   };
   
   string cosmobl::par::DirCosmo = "~/CosmoBolognaLib/";
@@ -91,9 +93,12 @@
   static const double yr = 31557600;      
   static const string col_default = "\033[0m";
   static const string col_red = "\033[0;31m";
+  static const string col_bred = "\033[1;91m";
+  static const string col_onred = "\033[41m";
   static const string col_green = "\033[0;32m";
   static const string col_blue = "\033[0;34m";
-
+  static const string col_yellow = "\033[0;33m";
+  static const string col_purple = "\033[0;35m";
   %}
 
 %include "Func.h"
@@ -157,8 +162,12 @@ static const double TCMB = 2.72548;
 static const double yr = 31557600;      
 static const string col_default = "\033[0m";
 static const string col_red = "\033[0;31m";
+static const string col_bred = "\033[1;91m";
+static const string col_onred = "\033[41m";
 static const string col_green = "\033[0;32m";
 static const string col_blue = "\033[0;34m";
+static const string col_yellow = "\033[0;33m";
+static const string col_purple = "\033[0;35m";
 
 %template(IntVector) std::vector<int>;
 %template(DoubleVector) std::vector<double>;
@@ -167,6 +176,7 @@ static const string col_blue = "\033[0;34m";
 
 class EnumTypes {
  public:
+  enum {_error_, _IO_, _workInProgress_};
   enum {_Omega_matter_LCDM_, _Omega_matter_, _Omega_baryon_, _Omega_baryon_h2_,  _Omega_neutrinos_, _massless_neutrinos_, _massive_neutrinos_, _Omega_DE_, _Omega_radiation_, _H0_, _hh_, _scalar_amp_, _n_spec_, _w0_, _wa_, _fNL_, _sigma8_};
   enum {_radians_, _degrees_, _arcseconds_, _arcminutes_};
   enum {_1D_, _2D_}; 
@@ -177,11 +187,12 @@ class EnumTypes {
   enum {_Likelihood_NotSet_, _GaussianLikelihood_Model_, _GaussianLikelihood_Error_, _GaussianLikelihood_Covariance_, _UserDefinedLikelihood_};
   enum {_angular_lin_, _angular_log_, _comoving_lin_, _comoving_log_, _comovingCartesian_linlin_, _comovingCartesian_linlog_, _comovingCartesian_loglin_, _comovingCartesian_loglog_, _comovingPolar_linlin_, _comovingPolar_linlog_, _comovingPolar_loglin_, _comovingPolar_loglog_};
   enum {_1D_monopole_, _1D_projected_, _1D_deprojected_, _1D_multipoles_, _1D_wedges_, _1D_filtered_, _1D_angular_, _2D_Cartesian_, _2D_polar_};
+  enum {_natural_, _LandySzalay_};
   enum {_Poisson_, _Jackknife_, _Bootstrap_};
   enum {_comoving_theta_, _comoving_side_};
   enum {_angular_connected_, _angular_reduced_, _comoving_connected_, _comoving_reduced_};
   enum {_GenericObject_, _RandomObject_, _Mock_, _Halo_, _Galaxy_, _Cluster_, _Void_}; 
   enum {_X_, _Y_, _Z_, _RA_, _Dec_, _Redshift_, _Dc_, _Weight_, _Mass_, _Richness_, _Magnitude_, _Vx_, Vy, Vz, _Region_, _Radius_, _Generic_};
-  enum {_createRandom_box_, _createRandom_square_, _createRandom_shuffle_, _createRandom_cone_, _createRandom_VIPERS_};
+  enum {_createRandom_box_, _createRandom_square_, _createRandom_shuffle_, _createRandom_cone_, _createRandom_MANGLE_, _createRandom_VIPERS_};
 };
   

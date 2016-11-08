@@ -41,29 +41,29 @@ namespace cosmobl {
    *  @brief The namespace of the functions and classes used for
    *  <B> statistical analyses </B>
    *  
-   *  The \e statistic namespace contains all the functions and classes
-   *  used for statistical analyes
+   *  The \e statistic namespace contains all the functions and
+   *  classes used for statistical analyes
    */
   namespace statistics {
 
     /**
-     * @var typedef model_function_1D
-     * @brief 1D functin that takes as an input the position as which it's computed,
-     * a pointer to fixed parameters and a vector of free parameters
+     *  @brief 1D function: the inputs are the value at which the
+     *  function is computed, a pointer to a set of data used to
+     *  construct the function and a vector of free parameters
      */
     typedef function<double(double, shared_ptr<void>, vector<double>)> model_function_1D;
 
     /**
-     * @var typedef model_function_1D_vector
-     * @brief 1D function that takes as an input the positions as which it's computed,
-     * a pointer to fixed parameters and a vector of free parameters
+     *  @brief 1D function: the inputs are a vector of values at which
+     *  the function is computed, a pointer to a set of data used to
+     *  construct the function and a vector of free parameters
      */
     typedef function< vector<double>(vector<double>, shared_ptr<void>, vector<double>)> model_function_1D_vector;
 
     /**
-     * @var typedef model_function_2D
-     * @brief 2D function that takes as an input the positions as which it's computed,
-     * a pointer to fixed parameters and a vector of free parameters
+     *  @brief 2D function: the inputs are the values at which the
+     *  function is computed, a pointer to a set of data used to
+     *  construct the function and a vector of free parameters
      */
     typedef function<double(double, double, shared_ptr<void>, vector<double>)> model_function_2D;
 
@@ -72,7 +72,7 @@ namespace cosmobl {
      *
      *  @brief The class Model
      *
-     *  This class is used to define the model
+     *  This class is used to define models
      */
     class Model {
 
@@ -196,57 +196,57 @@ namespace cosmobl {
       virtual double operator () (const double xx, const double yy, const vector<double> pars) = 0;
 
       /**
-       *  @brief Return the private member m_npar
+       *  @brief return the private member m_npar
        *
        *  @return the number of parameters
        */
       unsigned int npar() { return m_npar; }
 
       /**
-       *  @brief Return the private member m_npar_eff
+       *  @brief return the private member m_npar_eff
        *
        *  @return the number of effective parameters (freeze == 0)
        */
       unsigned int npar_eff ()
       {
 	m_npar_eff = 0;
-	for(auto &&pp : m_parameters)
-	  m_npar_eff = (pp->isFreezed()) ? m_npar_eff : m_npar_eff+1;
+	for (auto &&pp : m_parameters)
+	  m_npar_eff = (pp->isFixed()) ? m_npar_eff : m_npar_eff+1;
 
 	return m_npar_eff;
       }
 
       /**
-       *  @brief Return the provate variable m_2d;
+       *  @brief return the private variable m_2d;
        *
        *  @return the number of model variables 
        */
       bool dimension () { return m_2d; }
 
       /**
-       *  @brief Return the i-th element of the method m_parameters
+       *  @brief return the i-th element of the method m_parameters
        *
-       *  @param i: the i-th parameter of the model
+       *  @param i the parameter index
        *
        *  @return the i-th parameter of the model
        */
       shared_ptr<Parameter> parameter (const int i) { return m_parameters[i]; }
 
       /**
-       *  @brief Return the private method m_parameters
+       *  @brief return the private method m_parameters
        *
        *  @return the parameters of the model
        */
       vector<shared_ptr<Parameter> > parameters () { return m_parameters; }
 
       /**
-       *  @brief Return the stored values of model parameters
+       *  @brief return the stored values of model parameters
        *  @return vector containing the stored values of model parameters
        */
       vector<double> parameter_values ();
 
       /**
-       *  @brief Return the values of model parameters in the i-th position of the n-th chain
+       *  @brief return the values of model parameters in the i-th position of the n-th chain
        *  @param chain the n-th chain
        *  @param position the i-th position in the chain
        *  @return vector containing values of model parameters
@@ -275,68 +275,40 @@ namespace cosmobl {
       shared_ptr<void> fixed_parameters () { return m_fixed_parameters; }
 
       /**
-       * @brief compute and write the model using the stored 
-       * parameter values
+       *  @brief compute and write the model
        *
-       * @param xx vector of point at which the model
-       * is computed
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
+       *  @param xx vector of points at which the model is computed
+       *  @param output_dir the output directory
+       *  @param output_file the output file
        *
-       * @return none
+       *  @param parameter vector containing input parameters used to
+       *  compute the model; if it is not provided, internal
+       *  parameters will be used
+       *
+       *  @return none
        */
-      virtual void write_model(const vector<double> xx, const string dir_model, const string file_model)
-      { (void)xx; (void)dir_model; (void)file_model; cosmobl::ErrorMsg("Error in write_model of Model.h!"); }
+      virtual void write_model (const vector<double> xx, const string output_dir, const string output_file, const vector<double> parameter={})
+      { (void)xx; (void)output_dir; (void)output_file; (void)parameter; cosmobl::ErrorCBL("Error in write_model of Model.h!");}
 
       /**
-       * @brief compute and write the model using input 
-       * parameter values
+       *  @brief compute and write the model 
        *
-       * @param xx vector of point at which the model
-       * is computed
-       * @param parameters vector of parameters values
-       * at which the model is computed
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
+       *  @param xx vector of points at which the model is computed,
+       *  first axis
+       *  @param yy vector of points at which the model is computed,
+       *  second axis
+       *  @param output_dir the output directory
+       *  @param output_file the output file
        *
-       * @return none
+       *  @param parameter vector containing input parameters used to
+       *  compute the model; if it is not provided, internal
+       *  parameters will be used
+       *
+       *  @return none
        */
-      virtual void write_model_parameters(const vector<double> xx, const vector<double> parameters, const string dir_model, const string file_model)
-      { (void)xx; (void)parameters; (void)dir_model; (void)file_model; cosmobl::ErrorMsg("Error in write_model of Model.h!"); }
-
-      /**
-       * @brief compute and write the model using the stored 
-       * parameter values
-       *
-       * @param xx vector of point at which the model
-       * is computed, first axis
-       * @param yy vector of point at which the model
-       * is computed, second axis
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
-       *
-       * @return none
-       */
-      virtual void write_model(const vector<double> xx, const vector<double> yy, const string dir_model, const string file_model)
-      { (void)xx; (void)yy; (void)dir_model; (void)file_model; cosmobl::ErrorMsg("Error in write_model of Model.h!"); }
-
-      /**
-       * @brief compute and write the model using input 
-       * parameter values
-       *
-       * @param xx vector of point at which the model is computed
-       * @param yy vector of point at which the model is computed,
-       * second axis
-       * @param parameters vector of parameters values at which the
-       * model is computed
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
-       *
-       * @return none
-       */
-      virtual void write_model_parameters(const vector<double> xx, const vector<double> yy, const vector<double> parameters, const string dir_model, const string file_model)
-      { (void)xx; (void)yy; (void)parameters; (void)dir_model; (void)file_model; cosmobl::ErrorMsg("Error in write_model of Model.h!"); }
-
+      virtual void write_model (const vector<double> xx, const vector<double> yy, const string output_dir, const string output_file, const vector<double> parameter={})
+      { (void)xx; (void)yy; (void)output_dir; (void)output_file; (void)parameter; cosmobl::ErrorCBL("Error in write_model of Model.h!");}
+      
     };
 
 
@@ -345,7 +317,7 @@ namespace cosmobl {
      *
      *  @brief The class Model1D
      *
-     *  This class is used to define the 1D model
+     *  This class is used to define 1D models
      */
     class Model1D : public Model {
 
@@ -369,7 +341,7 @@ namespace cosmobl {
        *
        * return object of class Model1D
        */
-      Model1D () : Model() { m_2d=0; }
+      Model1D () : Model() { m_2d = 0; }
       
       /**
        *  @brief constructor
@@ -431,9 +403,7 @@ namespace cosmobl {
        *  @return the value of the model at xx
        */
       vector<double> operator () (const vector<double> xx)
-	{
-	  return m_model_vector(xx, m_fixed_parameters, parameter_values());
-	}
+	{ return m_model_vector(xx, m_fixed_parameters, parameter_values()); }
 
       /**
        *  @brief evaluate the model for the values xx
@@ -445,9 +415,7 @@ namespace cosmobl {
        *  @return the value of the model at xx
        */
       vector<double> operator () (const vector<double> xx, const vector<double> parameters)
-	{
-	  return m_model_vector(xx, m_fixed_parameters, parameters);
-	}
+	{ return m_model_vector(xx, m_fixed_parameters, parameters); }
 
       /**
        *  @brief evaluate the model for the value (xx,yy)
@@ -460,48 +428,37 @@ namespace cosmobl {
        *  @return the value of the model at (xx,yy)
        */ 
       double operator () (const double xx, const double yy)
-      { (void)xx; (void)yy; cosmobl::ErrorMsg("Error in Model::operator() of Model1D.h!"); return 0; }
+      { (void)xx; (void)yy; cosmobl::ErrorCBL("Error in Model::operator() of Model1D.h!"); return 0; }
 
       /**
-       *  @brief evaluate the model for the value (xx,yy)
+       *  @brief evaluate the model for the value (xx, yy)
        *  the model uses input parameters
        *
        *  @param xx the X variable position
        *  @param yy the Y variable position
        *  @param pars vector containing the model parameters
        * 
-       *  @return the value of the model at (xx,yy)
+       *  @return the value of the model at (xx, yy)
        */
       double operator () (const double xx, const double yy, const vector<double> pars)
-      { (void)xx; (void)yy; (void)pars; cosmobl::ErrorMsg("Error in Model::operator() of Model1D.h!"); return 0; }
+      { (void)xx; (void)yy; (void)pars; cosmobl::ErrorCBL("Error in Model::operator() of Model1D.h!"); return 0; }
+
 
       /**
-       * @brief compute and write the model using the stored 
-       * parameter values
+       *  @brief compute and write the model
        *
-       * @param xx vector of point at which the model
-       * is computed
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
+       *  @param xx vector of points at which the model is computed
+       *  @param output_dir the output directory
+       *  @param output_file the output file
        *
-       * @return none
+       *  @param parameter vector containing input parameters used to
+       *  compute the model; if it is not provided, internal
+       *  parameters will be used
+       *
+       *  @return none
        */
-      void write_model(const vector<double> xx, const string dir_model, const string file_model);
+      void write_model (const vector<double> xx, const string output_dir, const string output_file, const vector<double> parameter={});
 
-      /**
-       * @brief compute and write the model using input 
-       * parameter values
-       *
-       * @param xx vector of point at which the model
-       * is computed
-       * @param parameters vector of parameters values
-       * at which the model is computed
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
-       *
-       * @return none
-       */
-      virtual void write_model_parameters(const vector<double> xx, const vector<double> parameters, const string dir_model, const string file_model);
     };
 
 
@@ -510,9 +467,9 @@ namespace cosmobl {
      *
      *  @brief The class Model2D
      *
-     *  This class is used to define the 2D model
+     *  This class is used to define 2D models
      */
-    class Model2D : public Model{
+    class Model2D : public Model {
 
     protected:
 
@@ -594,8 +551,8 @@ namespace cosmobl {
        * 
        *  @return the value of the model at xx
        */
-      virtual double operator () (const double xx)
-      { (void)xx; cosmobl::ErrorMsg("Error in Model::operator() of Model2D.h!"); return 0; }
+      double operator () (const double xx)
+      { (void)xx; cosmobl::ErrorCBL("Error in Model::operator() of Model2D.h!"); return 0; }
 
       /**
        *  @brief evaluate the model for the value xx
@@ -606,8 +563,8 @@ namespace cosmobl {
        * 
        *  @return the value of the model at xx
        */
-      virtual double operator () (const double xx, const vector<double> pars)
-      { (void)xx; (void)pars; cosmobl::ErrorMsg("Error in Model::operator() of Model2D.h!"); return 0; }
+      double operator () (const double xx, const vector<double> pars)
+      { (void)xx; (void)pars; cosmobl::ErrorCBL("Error in Model::operator() of Model2D.h!"); return 0; }
 
       /**
        *  @brief evaluate the model for the values xx
@@ -618,8 +575,8 @@ namespace cosmobl {
        * 
        *  @return the value of the model at xx
        */
-      virtual vector<double> operator () (const vector<double> xx)
-      { (void)xx; cosmobl::ErrorMsg("Error in Model::operator() of Model2D.h!"); return {}; }
+      vector<double> operator () (const vector<double> xx)
+      { (void)xx; cosmobl::ErrorCBL("Error in Model::operator() of Model2D.h!"); return {}; }
 
       /**
        *  @brief evaluate the model for the values xx
@@ -630,39 +587,27 @@ namespace cosmobl {
        * 
        *  @return the value of the model at xx
        */
-      virtual vector<double> operator () (const vector<double> xx, const vector<double> pars)
-      { (void)xx; (void)pars; cosmobl::ErrorMsg("Error in Model::operator() of Model2D.h!"); return {}; }
+      vector<double> operator () (const vector<double> xx, const vector<double> pars)
+      { (void)xx; (void)pars; cosmobl::ErrorCBL("Error in Model::operator() of Model2D.h!"); return {}; }
 
       /**
-       * @brief compute and write the model using the stored 
-       * parameter values
+       *  @brief compute and write the model 
        *
-       * @param xx vector of point at which the model is computed,
-       * first axis
-       * @param yy vector of point at which the model is computed,
-       * second axis
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
+       *  @param xx vector of points at which the model is computed,
+       *  first axis
+       *  @param yy vector of points at which the model is computed,
+       *  second axis
+       *  @param output_dir the output directory
+       *  @param output_file the output file
        *
-       * @return none
+       *  @param parameter vector containing input parameters used to
+       *  compute the model; if it is not provided, internal
+       *  parameters will be used
+       *
+       *  @return none
        */
-      virtual void write_model (const vector<double> xx, const vector<double> yy, const string dir_model, const string file_model);
+      void write_model (const vector<double> xx, const vector<double> yy, const string output_dir, const string output_file, const vector<double> parameter={});
 
-      /**
-       * @brief compute and write the model using input 
-       * parameter values
-       *
-       * @param xx vector of point at which the model is computed
-       * @param yy vector of point at which the model is computed,
-       * second axis
-       * @param parameters vector of parameters values at which the
-       * model is computed
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
-       *
-       * @return none
-       */
-      virtual void write_model_parameters (const vector<double> xx, const vector<double> yy, const vector<double> parameters, const string dir_model, const string file_model);
     };
   }
 }

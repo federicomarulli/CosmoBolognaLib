@@ -43,37 +43,35 @@ namespace cosmobl {
   namespace glob {
   
     /**
-     * @var typedef func_1par_1
-     * @brief definition of 1D function
-     * that takes as an input the value at which the function
-     * is computed and a pointer to fixed parameters
+     *  @brief 1D function: the inputs are the value at which the
+     *  function is computed and a pointer to a set of data used to
+     *  construct the function
      */
-    typedef function<double (double, shared_ptr<void>)> func_1par_1;
+    typedef function<double (const double, const shared_ptr<void>)> func_1par_1;
 
     /**
-     * @var typedef func_1par_2
-     * @brief definition of a one parameter function
-     * that takes as an input the value at which the function
-     * is computed a pointer to fixed parameters and a vector of free parameters 
+     *  @brief 1D function: the inputs are the value at which the
+     *  function is computed, a pointer to a set of data used to
+     *  construct the function, and a vector of free parameters
      */
-    typedef function<double (double, shared_ptr<void>, vector<double>)> func_1par_2;
+    typedef function<double (const double, const shared_ptr<void>, vector<double>)> func_1par_2;
 
     /**
-     * @var typedef func_npar_1
-     * @brief definition of a one parameter function
-     * that takes as an input the values at which the function
-     * is computed and a pointer to fixed parameters
+     *  @brief N dimensional function: the inputs are the values at
+     *  which the function is computed and a pointer to a set of data
+     *  used to construct the function
      */
-    typedef function<double (vector<double>, shared_ptr<void>)> func_npar_1;
+    typedef function<double (const vector<double>, const shared_ptr<void>)> func_npar_1;
 
     /**
-     * @var typedef func_npar_2
-     * @brief definition of a one parameter function
-     * that takes as an input the values at which the function
-     * is computed a pointer to fixed parameters and a vector of free parameters 
+     *  @brief N dimensional function: the inputs are the values at
+     *  which the function is computed, a pointer to a set of data
+     *  used to construct the function, and a vector of free
+     *  parameters
      */ 
-    typedef function<double (vector<double>, shared_ptr<void>, vector<double>)> func_npar_2;
+    typedef function<double (const vector<double>, const shared_ptr<void>, vector<double>)> func_npar_2;
 
+    
     /**
      *  @class GSLfunction GSLfunction.h "Headers/Lib/GSLfunction.h"
      *
@@ -165,7 +163,7 @@ namespace cosmobl {
        * @return none
        */
       virtual void minimize (double &result, const int max_iter=100, double min=-1.e30, double max=1.e30)
-      { (void)result; (void)max_iter; (void)min; (void)max; cosmobl::ErrorMsg ("Error in minimize of GSLfunction!"); };
+      { (void)result; (void)max_iter; (void)min; (void)max; cosmobl::ErrorCBL("Error in minimize of GSLfunction!"); };
       
       /**
        * @brief minimize the provided function using GSL procedure
@@ -180,7 +178,7 @@ namespace cosmobl {
        * @return none
        */    
       virtual void minimize (vector<double> &result, const unsigned int max_iter=100, const double tol=1.e-6) 
-      { (void)result; (void)max_iter; (void)tol; cosmobl::ErrorMsg ("Error in minimize of GSLfunction!"); };
+      { (void)result; (void)max_iter; (void)tol; cosmobl::ErrorCBL("Error in minimize of GSLfunction!"); };
 
       /**
        * @brief minimize the provided function using GSL procedure
@@ -197,7 +195,7 @@ namespace cosmobl {
        * @return none
        */  
       virtual void minimize (const vector<double> result, const vector<double> step_size, const unsigned int max_iter=100, const double tol=1.e-6) 
-      { (void)result; (void)step_size, (void)max_iter; (void)tol; cosmobl::ErrorMsg ("Error in minimize of GSLfunction!"); };
+      { (void)result; (void)step_size, (void)max_iter; (void)tol; cosmobl::ErrorCBL("Error in minimize of GSLfunction!"); };
     };
 
     /**

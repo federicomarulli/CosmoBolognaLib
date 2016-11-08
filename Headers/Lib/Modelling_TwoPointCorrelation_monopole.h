@@ -1,5 +1,5 @@
 /********************************************************************
- *  Copyright (C) 2010 by Federico Marulli                          *
+ *  Copyright (C) 2016 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
  *  This program is free software; you can redistribute it and/or   *
@@ -24,18 +24,19 @@
  *  @brief The class Modelling_TwoPointCorrelation_monopole
  *
  *  This file defines the interface of the class
- *  Modelling_TwoPointCorrelation_monopole, used for modelling monopole of 2pcf
+ *  Modelling_TwoPointCorrelation_monopole, used to model the monopole
+ *  of two-point correlation function
  *
- *  @author Federico Marulli
+ *  @author Federico Marulli, Alfonso Veropalumbo
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
  */
 
 #ifndef __MODELLINGMONO__
 #define __MODELLINGMONO__
 
 
-#include "Modelling_TwoPointCorrelation.h"
+#include "Modelling_TwoPointCorrelation1D.h"
 
 
 // ===================================================================================================
@@ -46,16 +47,18 @@ namespace cosmobl {
   namespace modelling {
     
     /**
-     *  @class Modelling_TwoPointCorrelation_monopole Modelling_TwoPointCorrelation_monopole.h
+     *  @class Modelling_TwoPointCorrelation_monopole
+     *  Modelling_TwoPointCorrelation_monopole.h
      *  "Headers/Lib/Modelling_TwoPointCorrelation_monopole.h"
      *
      *  @brief The class Modelling_TwoPointCorrelation_monopole
      *
-     *  This file defines the interface of the base class Modelling_TwoPointCorrelation_monopole,
-     *  used for modelling the monopole of 2pcf
+     *  This file defines the interface of the base class
+     *  Modelling_TwoPointCorrelation_monopole, used for modelling the
+     *  monopole of two-point correlation function
      *
      */
-    class Modelling_TwoPointCorrelation_monopole : public Modelling_TwoPointCorrelation {
+    class Modelling_TwoPointCorrelation_monopole : public Modelling_TwoPointCorrelation1D {
 
     public:
 
@@ -66,102 +69,258 @@ namespace cosmobl {
 
       /**
        *  @brief default constuctor
-       *  @return object of class Modelling_TwoPointCorrelation_monopole
+       *  @return object of class
+       *  Modelling_TwoPointCorrelation_monopole
        */
       Modelling_TwoPointCorrelation_monopole () = default;
 
+      /**
+       *  @brief constructor
+       *  
+       *  @param twop the two-point correlation function to model
+       *
+       *  @return object of type
+       *  Modelling_TwoPointCorrelation_monopole
+       */
+      Modelling_TwoPointCorrelation_monopole (const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop)
+	: Modelling_TwoPointCorrelation1D(twop) {}
+	
+      /**
+       *  @brief constructor
+       *  
+       *  @param twop_dataset the dataset containing the two-point
+       *  correlation function to model
+       *
+       *  @return object of type
+       *  Modelling_TwoPointCorrelation_monopole
+       */
+      Modelling_TwoPointCorrelation_monopole (const shared_ptr<data::Data> twop_dataset)
+	: Modelling_TwoPointCorrelation1D() { set_data(twop_dataset); }
+
+      
       /**
        *  @brief default destructor
        *  @return none
        */
       virtual ~Modelling_TwoPointCorrelation_monopole () = default;
-
-      /**
-       *  @brief constructor of the ModellingTwoPointCorrelation_monopole
-       *  
-       *  @param twop the two-point correlation function to model
-       *
-       *  @return object of type Modelling_TwoPointCorrelation_monopole
-       */
-      Modelling_TwoPointCorrelation_monopole (const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop);
 	
       ///@}
 
+      
       /**
-       * @brief set the fiducial model for dark matter 
-       * two point correlation function
+       *  @name Member functions used to get the best-fit values of
+       *  model parameters
+       */
+      ///@{
+
+      /**
+       * @brief return the best-fit value of \f$\alpha\f$
+       *
+       * @return the best-fit value of \f$\alpha\f$
+       */
+      double alpha_bestfit () const { return m_model->parameter(0)->value(); }
+
+      /**
+       * @brief return the best-fit value of \f$f(z)\sigma_8(z)\f$
+       *
+       * @return the best-fit value of \f$f(z)\sigma_8(z)\f$
+       */
+      double fsigma8_bestfit () const { return m_model->parameter(1)->value(); }
+
+      /**
+       * @brief return the best-fit value of \f$b(z)\sigma_8(z)\f$
+       *
+       * @return the best-fit value of \f$b(z)\sigma_8(z)\f$
+       */
+      double bsigma8_bestfit () const { return m_model->parameter(2)->value(); }
+             
+      /**
+       * @brief return the best-fit value of \f$A_0\f$
+       *
+       * @return the best-fit value of \f$A_0\f$
+       */
+      double A0_bestfit () const { return m_model->parameter(3)->value(); }
+
+      /**
+       * @brief return the best-fit value of \f$A_1\f$
+       *
+       * @return the best-fit value of \f$A_1\f$
+       */
+      double A1_bestfit () const { return m_model->parameter(4)->value(); }
+
+      /**
+       * @brief return the best-fit value of \f$A_2\f$
+       *
+       * @return the best-fit value of \f$A_2\f$
+       */
+      double A2_bestfit () const { return m_model->parameter(5)->value(); }
+      
+      ///@}
+
+      
+      /**
+       * @brief set the fiducial model for dark matter two-point
+       * correlation function
        *
        *  @return none
        */
-      void set_fiducial_twop () override;
+      virtual void set_fiducial_xiDM () override;
+
 
       /**
-       * @brief fit the monopole of the two-point correlation function
-       * taking into accout geometric distortions (i.e. the
-       * Alcock-Paczynski effect). The model used is \f$\xi(s)= B^2
-       * \xi_{DM}(\alpha s)\ + A_0 + A_1/s +A_2/s^2\f$, where
-       * \f$\xi_{DM}\f$ is computed at the fiducial cosmology, and {B,
-       * A<SUB>0</SUB>, A<SUB>1</SUB>, A<SUB>2</SUB>} are considered
-       * as nuisance parameters
+       *  @brief set the parameters to model the monopole of the
+       *  two-point correlation function in redshift space
+       * 
+       *  redshift-space distorsions are modelled in the Kaiser limit,
+       *  that is neglecting non-linearities in dynamics and bias;
+       *  specifically, the model considered is the following:
+       *  
+       *  \f$\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3} f\sigma_8
+       *  \cdot b\sigma_8 + \frac{1}{5}(f\sigma_8)^2 \right] \cdot
+       *  \xi_{\rm DM}(s)/\sigma_8^2\f$
        *
-       * @param alpha_prior the prior for &alpha;
+       *  @param fsigma8_guess guess value for the parameter
+       *  \f$f(z)\sigma_8(z)\f$
+       * 
+       *  @param fsigma8_prior prior for the parameter
+       *  \f$f(z)\sigma_8(z)\f$
        *
-       * @param B_prior the prior for B
+       *  @param fsigma8_type type of the parameter
+       *  \f$f(z)\sigma_8(z)\f$: it can be either _free_ or _fixed_
        *
-       * @param A0_prior the prior for A0
+       *  @param bsigma8_guess guess value for the parameter
+       *  \f$b(z)\sigma_8(z)\f$
        *
-       * @param A1_prior the prior for A1
+       *  @param bsigma8_prior prior for the parameter
+       *  \f$b(z)\sigma_8(z)\f$
        *
-       * @param A2_prior the prior for A2
+       *  @param bsigma8_type type of the parameter
+       *  \f$b(z)\sigma_8(z)\f$: it can be either _free_ or _fixed_
        *
-       * @param pT_alpha the parameter type of &alpha;: it can be
-       * either statistics::_free_ or _fixed_
-       *
-       * @param pT_B the parameter type of B: it can be either
-       * statistics::_free_ or _fixed_
-       *
-       * @param pT_A0 the parameter type of A0: it can be either
-       * statistics::_free_ or _fixed_
-       *
-       * @param pT_A1 the parameter type of A1: it can be either
-       * statistics::_free_ or _fixed_
-       *
-       * @param pT_A2 the parameter type of A2: it can be either
-       * statistics::_free_ or _fixed_
-       *
-       * @return none
+       *  @return none
        */
-      void set_model_AP_isotropic (const statistics::Prior alpha_prior, const statistics::Prior B_prior, const statistics::Prior A0_prior, const statistics::Prior A1_prior, const statistics::Prior A2_prior, const statistics::ParameterType pT_alpha=statistics::_free_, const statistics::ParameterType pT_B=statistics::_free_, const statistics::ParameterType pT_A0=statistics::_free_, const statistics::ParameterType pT_A1=statistics::_free_, const statistics::ParameterType pT_A2=statistics::_free_) override;
+      void set_model_Kaiser (const double fsigma8_guess, const statistics::Prior fsigma8_prior, const statistics::ParameterType fsigma8_type, const double bsigma8_guess, const statistics::Prior bsigma8_prior, const statistics::ParameterType bsigma8_type)
+      { set_model_monopole(1., {}, statistics::_fixed_, fsigma8_guess, fsigma8_prior, fsigma8_type, bsigma8_guess, bsigma8_prior, bsigma8_type, 0., {}, statistics::_fixed_, 0., {}, statistics::_fixed_, 0., {}, statistics::_fixed_); }
+
+      
+      /**
+       *  @brief overloading of the function used to set the
+       *  parameters to model the monopole of the two-point
+       *  correlation function in redshift space
+       * 
+       *  redshift-space distorsions are modelled in the Kaiser limit,
+       *  that is neglecting non-linearities in dynamics and bias;
+       *  specifically, the model considered is the following:
+       *  
+       *  \f$\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3} f\sigma_8
+       *  \cdot b\sigma_8 + \frac{1}{5}(f\sigma_8)^2 \right] \cdot
+       *  \xi_{\rm DM}(s)/\sigma_8^2\f$
+       *
+       *  inizial guess values for \f$f(z)\sigma_8(z)\f$ and
+       *  \f$b(z)\sigma_8(z)\f$ are extracted from the prior
+       *  distributions; both the two parameters are free
+       *
+       *  @param fsigma8_prior prior for the parameter
+       *  \f$f(z)\sigma_8(z)\f$
+       *
+       *  @param bsigma8_prior prior for the parameter
+       *  \f$b(z)\sigma_8(z)\f$
+       *
+       *  @return none
+       */
+      void set_model_Kaiser (const statistics::Prior fsigma8_prior, const statistics::Prior bsigma8_prior)
+      { set_model_Kaiser(par::defaultDouble, fsigma8_prior, statistics::_free_, par::defaultDouble, bsigma8_prior, statistics::_free_); }
+      
+      
+      /**
+       *  @brief set the parameter to model the monopole of the
+       *  two-point correlation function in real space, taking into
+       *  accout geometric distortions (that is the Alcock-Paczynski
+       *  effect)
+       *
+       *  the model used is the following:
+       *
+       *  \f$\xi(s)= b^2 \xi_{DM}(\alpha s)\ + A_0 + A_1/s +A_2/s^2\f$
+       *
+       *  where \f$\xi_{DM}\f$ is computed at the fiducial (fixed)
+       *  cosmology, and {\f$b\sigma_8\f$, \f$A_0\f$, \f$A_1\f$,
+       *  \f$A_2\f$} are considered as nuisance parameters
+       *
+       *  @param alpha_guess guess value for the parameter \f$\alpha\f$
+       *
+       *  @param alpha_prior prior for the parameter \f$\alpha\f$
+       *
+       *  @param alpha_type type of the parameter \f$\alpha\f$: it
+       *  can be either _free_ or _fixed_
+       *
+       *  @param bsigma8_guess guess value for the parameter
+       *  \f$b(z)\sigma_8(z)\f$
+       *
+       *  @param bsigma8_prior prior for the parameter
+       *  \f$b(z)\sigma_8(z)\f$
+       *
+       *  @param bsigma8_type type of the parameter
+       *  \f$b(z)\sigma_8(z)\f$: it can be either _free_ or _fixed_
+       *
+       *  @param A0_guess guess value for the parameter \f$A_0\f$
+       *
+       *  @param A0_prior prior for the parameter \f$A_0\f$
+       *
+       *  @param A0_type type of the parameter \f$A_0\f$: it can be
+       *  either _free_ or _fixed_
+       *
+       *  @param A1_guess guess value for the parameter \f$A_1\f$
+       *
+       *  @param A1_prior prior for the parameter \f$A_1\f$
+       *
+       *  @param A1_type type of the parameter \f$A_1\f$: it can be
+       *  either _free_ or _fixed_
+       *
+       *  @param A2_guess guess value for the parameter \f$A_2\f$
+       *
+       *  @param A2_prior prior for the parameter \f$A_2\f$
+       *
+       *  @param A2_type type of the parameter \f$A_2\f$: it can be
+       *  either _free_ or _fixed_
+       *
+       *  @return none
+       */
+      void set_model_BAO (const double alpha_guess=par::defaultDouble, const statistics::Prior alpha_prior={}, const statistics::ParameterType alpha_type=statistics::_free_, const double bsigma8_guess=par::defaultDouble, const statistics::Prior bsigma8_prior={}, const statistics::ParameterType bsigma8_type=statistics::_free_, const double A0_guess=par::defaultDouble, const statistics::Prior A0_prior={}, const statistics::ParameterType A0_type=statistics::_free_, const double A1_guess=par::defaultDouble, const statistics::Prior A1_prior={}, const statistics::ParameterType A1_type=statistics::_free_, const double A2_guess=par::defaultDouble, const statistics::Prior A2_prior={}, const statistics::ParameterType A2_type=statistics::_free_)
+      {
+	set_model_monopole(alpha_guess, alpha_prior, alpha_type, 0., {}, statistics::_fixed_, bsigma8_guess, bsigma8_prior, bsigma8_type, A0_guess, A0_prior, A0_type, A1_guess, A1_prior, A1_type, A2_guess, A2_prior, A2_type);
+      }
+
 
       /**
-       * @brief compute and write the model using the stored 
-       * parameter values
+       *  @brief overloading of the function used to set the
+       *  parameters to model the monopole of the two-point
+       *  correlation function in real space, taking into accout
+       *  geometric distortions (that is the Alcock-Paczynski effect)
        *
-       * @param xx vector of point at which the model
-       * is computed
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
+       *  the model used is the following:
        *
-       * @return none
+       *  \f$\xi(s)= b^2 \xi_{DM}(\alpha s)\ + A_0 + A_1/s +A_2/s^2\f$
+       *
+       *  where \f$\xi_{DM}\f$ is computed at the fiducial (fixed)
+       *  cosmology, and {\f$b\sigma_8\f$, \f$A_0\f$, \f$A_1\f$,
+       *  \f$A_2\f$} are considered as nuisance parameters
+       *
+       *  @param alpha_prior prior for the parameter \f$\alpha\f$
+       *
+       *  @param bsigma8_prior prior for the parameter
+       *  \f$b(z)\sigma_8(z)\f$
+       *
+       *  @param A0_prior prior for the parameter \f$A_0\f$
+       *
+       *  @param A1_prior prior for the parameter \f$A_1\f$
+       *
+       *  @param A2_prior prior for the parameter \f$A_2\f$
+       *
+       *  @return none
        */
-       void write_model(const vector<double> xx, const string dir_model, const string file_model)
-       { m_model->write_model(xx, dir_model, file_model); }
-
-      /**
-       * @brief compute and write the model using the stored 
-       * parameter values
-       *
-       * @param xx vector of point at which the model
-       * is computed
-       * @param parameters vector of parameters values
-       * at which the model is computed
-       * @param dir_model the output directory of the model
-       * @param file_model the name of the file
-       *
-       * @return none
-       */
-       virtual void write_model_parameters(const vector<double> xx, const vector<double> parameters, const string dir_model, const string file_model)
-       { m_model->write_model(xx, parameters, dir_model, file_model); }
+      void set_model_BAO (const statistics::Prior alpha_prior, const statistics::Prior bsigma8_prior, const statistics::Prior A0_prior, const statistics::Prior A1_prior, const statistics::Prior A2_prior)
+      { set_model_monopole(par::defaultDouble, alpha_prior, statistics::_free_, 0., {}, statistics::_fixed_, par::defaultDouble, bsigma8_prior, statistics::_free_, par::defaultDouble, A0_prior, statistics::_free_, par::defaultDouble, A1_prior, statistics::_free_, par::defaultDouble, A2_prior, statistics::_free_); }
+      
     };
   }
 }

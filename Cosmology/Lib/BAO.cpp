@@ -79,7 +79,8 @@ double cosmobl::cosmology::Cosmology::rs (const string method_Pk, const double T
   else if (method_Pk=="CAMB")
     return rs_CAMB();
 
-  else { ErrorMsg("Error in cosmobl::cosmology::Cosmology::rs of BAO.cpp: 'method_Pk' not allowed!"); return 0; }
+  else
+    return ErrorCBL("Error in cosmobl::cosmology::Cosmology::rs of BAO.cpp: 'method_Pk' not allowed!");
 }
 
 

@@ -35,12 +35,13 @@
 
 using namespace cosmobl;
 using namespace data;
+using namespace glob;
 
 
 // ======================================================================================
 
 
-cosmobl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double> > fxy, const double xmin, const double xmax, const double ymin, const double ymax) : Data(cosmobl::data::DataType::_1D_data_)
+cosmobl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double> > fxy, const double xmin, const double xmax, const double ymin, const double ymax, const DataType dataType) : Data(dataType)
 {
   m_x = x;
   m_y = y;
@@ -53,7 +54,7 @@ cosmobl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, c
 // ======================================================================================
 
 
-cosmobl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double> > fxy, const vector<vector<double> > error_fxy, const double xmin, const double xmax, const double ymin, const double ymax) : Data(cosmobl::data::DataType::_1D_data_)
+cosmobl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double> > fxy, const vector<vector<double> > error_fxy, const double xmin, const double xmax, const double ymin, const double ymax, const DataType dataType) : Data(dataType)
 {
   m_x = x;
   m_y = y;
@@ -77,7 +78,7 @@ void cosmobl::data::Data2D::set_limits (const double min, const double max, cons
     find_index(m_y, min, max, m_y_down, m_y_up);
   
   else
-    ErrorMsg("Error in set_limits of Data2D, unrecognized option for axis");
+    ErrorCBL("Error in set_limits of Data2D, unrecognized option for axis");
 }
 
 
@@ -86,8 +87,22 @@ void cosmobl::data::Data2D::set_limits (const double min, const double max, cons
 
 void cosmobl::data::Data2D::set_limits (const double xmin, const double xmax, const double ymin, const double ymax)
 {
-  set_limits(xmax, xmin, 0);
-  set_limits(ymax, ymin, 1);
+  set_limits(xmin, xmax, 0);
+  set_limits(ymin, ymax, 1);
+}
+
+
+// ======================================================================================
+
+
+double cosmobl::data::Data2D::covariance (const int i1, const int i2, const int j1, const int j2) const
+{
+  int i = i2+i1*m_x.size();
+  int j = j2+j1*m_y.size();
+
+  ErrorCBL("Work in progress in covariance of Data2D::covariance : work in progress!", ExitCode::_workInProgress_);
+  
+  return m_covariance_fxy[i][j];
 }
 
 
@@ -98,10 +113,10 @@ void cosmobl::data::Data2D::read (const string input_file, const int skip_nlines
 {
   (void)skip_nlines;
   
-  ErrorMsg("Error in cosmobl::data::Data2D::read : work in progress!");
+  ErrorCBL("Error in cosmobl::data::Data2D::read : work in progress!", ExitCode::_workInProgress_);
 
-  ifstream fin(input_file.c_str()); checkIO(input_file, 1);
-  string line;
+  ifstream fin(input_file.c_str()); checkIO(fin, input_file);
+  
   fin.clear(); fin.close();
 }
 
@@ -109,36 +124,36 @@ void cosmobl::data::Data2D::read (const string input_file, const int skip_nlines
 // ======================================================================================
 
 
-void cosmobl::data::Data2D::write (const string dir, const string file, const string xname, const string yname, const string fxyname, const bool full, const int rank) const 
+void cosmobl::data::Data2D::write (const string dir, const string file, const string header, const bool full, const int rank) const 
 {
   (void)rank;
   
   string file_out = dir+file;
-  ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+  ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
-  fout << "### " << xname << "  " << yname << "  " << fxyname << "  error ###" << endl;
+  fout << "### " << header << " ###" << endl;
 
-  for (size_t i=0; i<m_x.size(); i++)
-    for (size_t j=0; j<m_y.size(); j++) 
+  for (size_t i=0; i<m_x.size(); ++i)
+    for (size_t j=0; j<m_y.size(); ++j) 
       fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_x[i] << "  " << setw(8) << m_y[j] << "  " << setw(8) << m_fxy[i][j] << "  " << setw(8) << m_error_fxy[i][j] << endl;
 
  
   if (full) { // duplicate the information in the other 3 quadrants
 
-    for (size_t i=0; i<m_x.size(); i++)
-      for (size_t j=0; j<m_y.size(); j++) 
+    for (size_t i=0; i<m_x.size(); ++i)
+      for (size_t j=0; j<m_y.size(); ++j) 
 	fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_x[i] << "  " << setw(8) << -m_y[j] << "  " << setw(8) << m_fxy[i][j] << "  " << setw(8) << m_error_fxy[i][j] << endl;
 
-    for (size_t i=0; i<m_x.size(); i++)
-      for (size_t j=0; j<m_y.size(); j++) 
+    for (size_t i=0; i<m_x.size(); ++i)
+      for (size_t j=0; j<m_y.size(); ++j) 
 	fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << -m_x[i] << "  " << setw(8) << -m_y[j] << "  " << setw(8) << m_fxy[i][j] << "  " << setw(8) << m_error_fxy[i][j] << endl;
 
-    for (size_t i=0; i<m_x.size(); i++)
-      for (size_t j=0; j<m_y.size(); j++) 
+    for (size_t i=0; i<m_x.size(); ++i)
+      for (size_t j=0; j<m_y.size(); ++j) 
 	fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << -m_x[i] << "  " << setw(8) << m_y[j] << "  " << setw(8) << m_fxy[i][j] << "  " << setw(8) << m_error_fxy[i][j] << endl;
     
   }
 
-  fout.close(); cout << endl << "I wrote the file: " << file_out << endl << endl;
+  fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl << endl;
 
 }

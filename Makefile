@@ -20,8 +20,8 @@ dir_Python = $(PWD)/Python/
 
 HH = $(dir_H)*.h $(dir_O)*.h $(dir_M)*.h
 
-FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dir_H) -I$(dir_O) -I$(dir_M) -I$(dir_EH) -isystem $(HOME)/Numerical/ 
-FLAGS_FFTW = -lfftw3 -lfftw3_omp
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dir_H) -I$(dir_O) -I$(dir_M) -I$(dir_EH)
+FLAGS_FFTW = -lfftw3 #-lfftw3_omp
 FLAGS_GSL = -lgsl -lgslcblas -lm -L$(HOME)/lib 
 FLAGS_LINK = -shared
 
@@ -60,8 +60,9 @@ Dir_TWOP = CatalogueAnalysis/TwoPointCorrelation/
 Dir_THREEP = CatalogueAnalysis/ThreePointCorrelation/
 Dir_MODEL = Modelling/
 Dir_GLOB = GlobalFunc/
+Dir_READP = ReadParameters/
 
-Dir_CBL = $(Dir_H) $(Dir_O) $(Dir_M) $(Dir_FUNC) $(Dir_STAT) $(Dir_COSM) $(Dir_CM) $(Dir_CAT) $(Dir_LN) $(Dir_TWOP) $(Dir_THREEP) $(Dir_MODEL) $(Dir_GLOB)
+Dir_CBL = $(Dir_H) $(Dir_O) $(Dir_M) $(Dir_FUNC) $(Dir_STAT) $(Dir_COSM) $(Dir_CM) $(Dir_CAT) $(Dir_LN) $(Dir_TWOP) $(Dir_THREEP) $(Dir_MODEL) $(Dir_GLOB) $(Dir_READP)
 Dir_ALL = $(Dir_CBL) $(Dir_EH) Headers/ Cosmology/ CatalogueAnalysis/ 
 
 dir_FUNC = $(addprefix $(PWD)/,$(Dir_FUNC))
@@ -74,6 +75,7 @@ dir_TWOP = $(addprefix $(PWD)/,$(Dir_TWOP))
 dir_THREEP = $(addprefix $(PWD)/,$(Dir_THREEP))
 dir_MODEL = $(addprefix $(PWD)/,$(Dir_MODEL))
 dir_GLOB = $(addprefix $(PWD)/,$(Dir_GLOB))
+dir_READP = $(addprefix $(PWD)/,$(Dir_READP))
 dir_CBL = $(addprefix $(PWD)/,$(Dir_CBL))
 dir_ALL = $(addprefix $(PWD)/,$(Dir_ALL))
 
@@ -82,18 +84,19 @@ dir_ALLP = $(addprefix $(dir_Python)CosmoBolognaLib/,$(Dir_ALL))
 
 ##### CBL object files #####
 
-OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)GSLfunction.o  $(dir_FUNC)Data.o $(dir_FUNC)Data1D.o $(dir_FUNC)Data1D_collection.o $(dir_FUNC)Data2D.o $(dir_FUNC)Field3D.o
+OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)GSLfunction.o  $(dir_FUNC)Data.o $(dir_FUNC)Data1D.o $(dir_FUNC)Data1D_collection.o $(dir_FUNC)Data2D.o $(dir_FUNC)Data1D_extra.o $(dir_FUNC)Data2D_extra.o $(dir_FUNC)Field3D.o
 OBJ_STAT = $(dir_STAT)Chain.o $(dir_STAT)Prior.o $(dir_STAT)Parameter.o $(dir_STAT)Model.o $(dir_STAT)Chi2.o $(dir_STAT)Likelihood.o
 OBJ_COSM = $(dir_EH)power_whu.o $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)MassFunction.o $(dir_COSM)SizeFunction.o
 OBJ_CM = $(dir_CM)ChainMesh.o
-OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $(dir_CAT)ChainMesh_Catalogue.o
+OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $(dir_CAT)ChainMesh_Catalogue.o $(dir_CAT)RandomCatalogueVIPERS.o 
 OBJ_LN = $(dir_LN)LogNormal.o
-OBJ_TWOP = $(dir_TWOP)Pair.o $(dir_TWOP)TwoPointCorrelation.o $(dir_TWOP)TwoPointCorrelation1D.o $(dir_TWOP)TwoPointCorrelation1D_monopole.o $(dir_TWOP)TwoPointCorrelation1D_angular.o $(dir_TWOP)TwoPointCorrelation2D.o $(dir_TWOP)TwoPointCorrelation2D_cartesian.o $(dir_TWOP)TwoPointCorrelation2D_polar.o $(dir_TWOP)TwoPointCorrelation_projected.o $(dir_TWOP)TwoPointCorrelation_deprojected.o $(dir_TWOP)TwoPointCorrelation_multipoles.o $(dir_TWOP)TwoPointCorrelation_wedges.o $(dir_TWOP)TwoPointCorrelation1D_filtered.o
+OBJ_TWOP = $(dir_TWOP)Pair.o $(dir_TWOP)Pair1D.o $(dir_TWOP)Pair2D.o $(dir_TWOP)Pair1D_extra.o $(dir_TWOP)Pair2D_extra.o $(dir_TWOP)TwoPointCorrelation.o $(dir_TWOP)TwoPointCorrelation1D.o $(dir_TWOP)TwoPointCorrelation1D_angular.o $(dir_TWOP)TwoPointCorrelation1D_monopole.o $(dir_TWOP)TwoPointCorrelation2D.o $(dir_TWOP)TwoPointCorrelation2D_cartesian.o $(dir_TWOP)TwoPointCorrelation2D_polar.o $(dir_TWOP)TwoPointCorrelation_projected.o $(dir_TWOP)TwoPointCorrelation_deprojected.o $(dir_TWOP)TwoPointCorrelation_multipoles.o $(dir_TWOP)TwoPointCorrelation_wedges.o $(dir_TWOP)TwoPointCorrelation1D_filtered.o 
 OBJ_THREEP = $(dir_THREEP)Triplet.o $(dir_THREEP)ThreePointCorrelation.o $(dir_THREEP)ThreePointCorrelation_angular_connected.o $(dir_THREEP)ThreePointCorrelation_angular_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_connected.o $(dir_THREEP)ThreePointCorrelation_comoving_reduced.o 
-OBJ_MODEL = $(dir_MODEL)ModelFunction.o $(dir_MODEL)ModelBias.o $(dir_MODEL)ModelBAO.o $(dir_MODEL)Modelling.o $(dir_MODEL)Modelling_TwoPointCorrelation.o $(dir_MODEL)Modelling_TwoPointCorrelation_monopole.o $(dir_MODEL)Modelling_TwoPointCorrelation_projected.o $(dir_MODEL)Modelling_TwoPointCorrelation_deprojected.o 
-OBJ_GLOB = $(dir_GLOB)FuncCosmology.o $(dir_GLOB)Func.o $(dir_GLOB)SubSample.o
+OBJ_MODEL = $(dir_MODEL)ModelFunction.o $(dir_MODEL)Modelling.o $(dir_MODEL)Modelling_TwoPointCorrelation.o $(dir_MODEL)Modelling_TwoPointCorrelation1D.o $(dir_MODEL)Modelling_TwoPointCorrelation2D.o $(dir_MODEL)Modelling_TwoPointCorrelation_monopole.o $(dir_MODEL)Modelling_TwoPointCorrelation_cartesian.o $(dir_MODEL)Modelling_TwoPointCorrelation_projected.o $(dir_MODEL)Modelling_TwoPointCorrelation_deprojected.o 
+OBJ_GLOB = $(dir_GLOB)FuncCosmology.o $(dir_GLOB)Func.o $(dir_GLOB)SubSample.o $(dir_GLOB)Reconstruction.o
+OBJ_READP = $(dir_READP)ReadParameters.o
 
-OBJ_CBL = $(OBJ_FUNC) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL) $(OBJ_GLOB)
+OBJ_CBL = $(OBJ_FUNC) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL) $(OBJ_GLOB) $(OBJ_READP)
 OBJ_ALL = $(OBJ_CBL) $(dir_FUNC)conv.o $(PWD)/External/CAMB/*.o $(PWD)/External/classgal_v1/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o 
 
 
@@ -132,6 +135,8 @@ ALL:
 	make -j3 libMODEL
 	$(call colorecho, "\n"Compiling the library: libGLOB... "\n")
 	make -j3 libGLOB
+	$(call colorecho, "\n"Compiling the library: libREADP... "\n")
+	make -j3 libREADP
 	$(call colorecho, "\n"Compiling the full library: libCBL... "\n")
 	make -j3 libCBL
 
@@ -164,6 +169,9 @@ libMODEL: $(OBJ_MODEL) $(PWD)/Makefile
 
 libGLOB: $(OBJ_GLOB) $(PWD)/Makefile
 	$(C) $(FLAGS_LINK) -o $(PWD)/libGLOB.$(ES) $(OBJ_GLOB) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lTWOP -lTHREEP -lMODEL 
+
+libREADP: $(OBJ_READP) $(PWD)/Makefile
+	$(C) $(FLAGS_LINK) -o $(PWD)/libREADP.$(ES) $(OBJ_READP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC
 
 libCBL: $(OBJ_CBL) $(PWD)/Makefile
 	$(C) $(FLAGS_LINK) -o $(PWD)/libCBL.$(ES) $(OBJ_CBL) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW)
@@ -216,10 +224,16 @@ allExamples:
 	cd $(PWD)/Examples/clustering/codes ; make 2pt_angular
 	$(call colorecho, "\n"Compiling the example code: 3pt.cpp ... "\n")
 	cd $(PWD)/Examples/clustering/codes ; make 3pt
-	$(call colorecho, "\n"Compiling the example code: model_2pt_projected_bias.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make model_2pt_projected_bias
-	$(call colorecho, "\n"Compiling the example code: model_2pt_monopole_bao.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make model_2pt_monopole_bao
+	$(call colorecho, "\n"Compiling the example code: model_2pt_monopole_BAO.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make model_2pt_monopole_BAO
+	$(call colorecho, "\n"Compiling the example code: model_2pt_monopole_RSD.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make model_2pt_monopole_RSD
+	$(call colorecho, "\n"Compiling the example code: model_2pt_projected.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make model_2pt_projected
+	$(call colorecho, "\n"Compiling the example code: model_2pt_2D.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make model_2pt_2D
+	$(call colorecho, "\n"Compiling the example code: readParameterFile.cpp ... "\n")
+	cd $(PWD)/Examples/readParameterFile/ ; make 
 
 python: $(OBJ_CBL) $(dir_Python)CBL_wrap.o
 	$(C) -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(dir_PYLIB)_CosmoBolognaLib.so $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY)
@@ -242,6 +256,7 @@ python2: $(dir_Python)CBL_wrap.cxx $(dir_Python)CBL.i $(dir_Python)setup.py $(HH
 	rsync -av $(dir_THREEP)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_THREEP)
 	rsync -av $(dir_MODEL)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_MODEL)
 	rsync -av $(dir_GLOB)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_GLOB)
+	rsync -av $(dir_READP)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_READP)
 	cd $(dir_Python) ; python setup.py install --user 
 
 doc:
@@ -263,8 +278,9 @@ cleanExamples:
 	cd $(PWD)/Examples/covsample ; make clean && cd ../..
 	cd $(PWD)/Examples/fsigma8 ; make clean && cd ../..
 	cd $(PWD)/Examples/statistics/codes ; make clean && cd ../..
-	cd $(PWD)/Examples/catalogue ; make clean && cd ../
-	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../..
+	cd $(PWD)/Examples/catalogue ; make clean && cd ../..
+	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../../..
+	cd $(PWD)/Examples/readParameterFile ; make clean && cd ../..
 	rm -rf $(PWD)/Examples/statistics/output/* $(PWD)/Examples/clustering/output/*
 
 cleanpy:
@@ -280,7 +296,7 @@ purgepy:
 
 clean:
 	make cleanExamples
-	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_FUNC)*~ $(dir_STAT)/*~ $(dir_STAT)/*~  $(dir_STAT)/*~ $(dir_STAT)/*~ $(dir_STAT)/*~ $(dir_STAT)/*~ $(dir_STAT)/*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_TWOP)*~ $(dir_MODEL)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_H)*~ $(dir_O)*~ $(dir_M)*~ $(PWD)/\#* $(dir_FUNC)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_MODEL)\#* $(dir_THREEP)\#* $(dir_GLOB)\#* $(dir_H)\#* $(dir_O)\#* $(dir_M)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
+	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_FUNC)*~ $(dir_STAT)*~ $(dir_STAT)*~  $(dir_STAT)*~ $(dir_STAT)*~ $(dir_STAT)*~ $(dir_STAT)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_TWOP)*~ $(dir_MODEL)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_READP)*~ $(dir_H)*~ $(dir_O)*~ $(dir_M)*~ $(PWD)/\#* $(dir_FUNC)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_MODEL)\#* $(dir_THREEP)\#* $(dir_GLOB)\#* $(dir_READP)\#* $(dir_H)\#* $(dir_O)\#* $(dir_M)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
 
 purge:
 	make clean
@@ -330,6 +346,12 @@ $(dir_FUNC)Data1D_collection.o: $(dir_FUNC)Data1D_collection.cpp $(HH) $(PWD)/Ma
 
 $(dir_FUNC)Data2D.o: $(dir_FUNC)Data2D.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Data2D.cpp -o $(dir_FUNC)Data2D.o
+
+$(dir_FUNC)Data1D_extra.o: $(dir_FUNC)Data1D_extra.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Data1D_extra.cpp -o $(dir_FUNC)Data1D_extra.o
+
+$(dir_FUNC)Data2D_extra.o: $(dir_FUNC)Data2D_extra.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Data2D_extra.cpp -o $(dir_FUNC)Data2D_extra.o
 
 $(dir_FUNC)Field3D.o: $(dir_FUNC)Field3D.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Field3D.cpp -o $(dir_FUNC)Field3D.o
@@ -425,6 +447,9 @@ $(dir_CAT)RandomCatalogue.o: $(dir_CAT)RandomCatalogue.cpp $(HH) $(PWD)/Makefile
 $(dir_CAT)ChainMesh_Catalogue.o: $(dir_CAT)ChainMesh_Catalogue.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)ChainMesh_Catalogue.cpp -o $(dir_CAT)ChainMesh_Catalogue.o
 
+$(dir_CAT)RandomCatalogueVIPERS.o: $(dir_CAT)RandomCatalogueVIPERS.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)RandomCatalogueVIPERS.cpp -o $(dir_CAT)RandomCatalogueVIPERS.o
+
 
 #################################################################### 
 
@@ -438,6 +463,18 @@ $(dir_LN)LogNormal.o: $(dir_LN)LogNormal.cpp $(HH) $(PWD)/Makefile
 
 $(dir_TWOP)Pair.o: $(dir_TWOP)Pair.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_TWOP)Pair.cpp -o $(dir_TWOP)Pair.o
+
+$(dir_TWOP)Pair1D.o: $(dir_TWOP)Pair1D.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_TWOP)Pair1D.cpp -o $(dir_TWOP)Pair1D.o
+
+$(dir_TWOP)Pair2D.o: $(dir_TWOP)Pair2D.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_TWOP)Pair2D.cpp -o $(dir_TWOP)Pair2D.o
+
+$(dir_TWOP)Pair1D_extra.o: $(dir_TWOP)Pair1D_extra.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_TWOP)Pair1D_extra.cpp -o $(dir_TWOP)Pair1D_extra.o
+
+$(dir_TWOP)Pair2D_extra.o: $(dir_TWOP)Pair2D_extra.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_TWOP)Pair2D_extra.cpp -o $(dir_TWOP)Pair2D_extra.o
 
 $(dir_TWOP)TwoPointCorrelation.o: $(dir_TWOP)TwoPointCorrelation.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_TWOP)TwoPointCorrelation.cpp -o $(dir_TWOP)TwoPointCorrelation.o
@@ -503,11 +540,6 @@ $(dir_THREEP)ThreePointCorrelation_comoving_reduced.o: $(dir_THREEP)ThreePointCo
 $(dir_MODEL)ModelFunction.o: $(dir_MODEL)ModelFunction.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)ModelFunction.cpp -o $(dir_MODEL)ModelFunction.o
 
-$(dir_MODEL)ModelBias.o: $(dir_MODEL)ModelBias.cpp $(HH) $(PWD)/Makefile
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)ModelBias.cpp -o $(dir_MODEL)ModelBias.o
-
-$(dir_MODEL)ModelBAO.o: $(dir_MODEL)ModelBAO.cpp $(HH) $(PWD)/Makefile
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)ModelBAO.cpp -o $(dir_MODEL)ModelBAO.o
 
 $(dir_MODEL)Modelling.o: $(dir_MODEL)Modelling.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)Modelling.cpp -o $(dir_MODEL)Modelling.o
@@ -515,8 +547,17 @@ $(dir_MODEL)Modelling.o: $(dir_MODEL)Modelling.cpp $(HH) $(PWD)/Makefile
 $(dir_MODEL)Modelling_TwoPointCorrelation.o: $(dir_MODEL)Modelling_TwoPointCorrelation.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)Modelling_TwoPointCorrelation.cpp -o $(dir_MODEL)Modelling_TwoPointCorrelation.o
 
+$(dir_MODEL)Modelling_TwoPointCorrelation1D.o: $(dir_MODEL)Modelling_TwoPointCorrelation1D.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)Modelling_TwoPointCorrelation1D.cpp -o $(dir_MODEL)Modelling_TwoPointCorrelation1D.o
+
+$(dir_MODEL)Modelling_TwoPointCorrelation2D.o: $(dir_MODEL)Modelling_TwoPointCorrelation2D.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)Modelling_TwoPointCorrelation2D.cpp -o $(dir_MODEL)Modelling_TwoPointCorrelation2D.o
+
 $(dir_MODEL)Modelling_TwoPointCorrelation_monopole.o: $(dir_MODEL)Modelling_TwoPointCorrelation_monopole.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)Modelling_TwoPointCorrelation_monopole.cpp -o $(dir_MODEL)Modelling_TwoPointCorrelation_monopole.o
+
+$(dir_MODEL)Modelling_TwoPointCorrelation_cartesian.o: $(dir_MODEL)Modelling_TwoPointCorrelation_cartesian.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)Modelling_TwoPointCorrelation_cartesian.cpp -o $(dir_MODEL)Modelling_TwoPointCorrelation_cartesian.o
 
 $(dir_MODEL)Modelling_TwoPointCorrelation_projected.o: $(dir_MODEL)Modelling_TwoPointCorrelation_projected.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL)Modelling_TwoPointCorrelation_projected.cpp -o $(dir_MODEL)Modelling_TwoPointCorrelation_projected.o
@@ -537,6 +578,13 @@ $(dir_GLOB)Func.o: $(dir_GLOB)Func.cpp $(HH) $(PWD)/Makefile
 $(dir_GLOB)SubSample.o: $(dir_GLOB)SubSample.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_GLOB)SubSample.cpp -o $(dir_GLOB)SubSample.o
 
+$(dir_GLOB)Reconstruction.o: $(dir_GLOB)Reconstruction.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_GLOB)Reconstruction.cpp -o $(dir_GLOB)Reconstruction.o
+
+#################################################################### 
+
+$(dir_READP)ReadParameters.o: $(dir_READP)ReadParameters.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_READP)ReadParameters.cpp -o $(dir_READP)ReadParameters.o
 
 #################################################################### 
 

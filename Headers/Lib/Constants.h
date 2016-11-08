@@ -294,13 +294,25 @@ namespace cosmobl {
 
     /// red colour (used when printing something on the screen)
     static const string col_red = "\033[0;31m";
-
+    
+    /// bold high intensty red colour (used when printing something on the screen)
+    static const string col_bred = "\033[1;91m";
+  
+    /// background red colour (used when printing something on the screen)
+    static const string col_onred = "\033[41m";
+    
     /// green colour (used when printing something on the screen)
     static const string col_green = "\033[0;32m";
     
     /// blue colour (used when printing something on the screen)
     static const string col_blue = "\033[0;34m";
 
+    /// yellow colour (used when printing something on the screen)
+    static const string col_yellow = "\033[0;33m";
+
+    /// purple colour (used when printing something on the screen)
+    static const string col_purple = "\033[0;35m";
+    
     /**
      *  @} */
 
@@ -354,7 +366,25 @@ namespace cosmobl {
     
     /**
      *  @} */
-  
+
+    
+    /**
+     *  @defgroup msg internal messages
+     *
+     *  @brief messages for internal usage
+     *
+     *  @{
+     */
+
+    /// header of error messages for internal usage
+    static const string ErrorMsg = col_bred +
+      "\n\n ================================== \n" +
+      " ===== CosmoBolognaLib error! ===== \n" + 
+      " ================================== \n\n" +
+      col_default;
+    
+    /**
+     *  @} */
   }
 
 }

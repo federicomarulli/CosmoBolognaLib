@@ -224,7 +224,7 @@ void cosmobl::statistics::Chi2::minimize (const double parameter, const string t
     minimize(parameter, chi2_2D_error_1par, max_iter, min, max);
   
   else
-    ErrorMsg("Error in minimize of Chi2, no such type or dim");
+    ErrorCBL("Error in minimize of Chi2.cpp, no such type or dim");
 }
 
 // ============================================================================================
@@ -245,7 +245,7 @@ void cosmobl::statistics::Chi2::minimize (const vector<double> parameters, const
     minimize(parameters, chi2_2D_error_npar, max_iter, tol);
   
   else
-    ErrorMsg("Error in minimize of Chi2, no such type or dim");
+    ErrorCBL("Error in minimize of Chi2.cpp, no such type or dim");
 }
 
 
@@ -257,7 +257,7 @@ void cosmobl::statistics::Chi2::minimize (double parameter, const chi2_1par f, c
   unsigned int npar = m_model->npar_eff();
 
   if (npar!=1)
-    ErrorMsg("Error in minimize of Chi2, wrong number of parameters");
+    ErrorCBL("Error in minimize of Chi2.cpp, wrong number of parameters");
 
   double Parameter = parameter;
   
@@ -274,7 +274,7 @@ void cosmobl::statistics::Chi2::minimize (double parameter, const chi2_1par f, c
 
   glob::GSLfunction_1D_1 func(f, fixed_parameters);
   func.minimize(Parameter, max_iter, Min, Max);
-  cout << "Done" << endl;
+  coutCBL << "Done" << endl;
 }
 
 
@@ -285,27 +285,26 @@ void cosmobl::statistics::Chi2::minimize (const vector<double> parameters, const
 {
   unsigned int npar = m_model->npar_eff();
   if(npar==0)
-    ErrorMsg("Error in minimize of Chi2, there is no parameter to vary");
+    ErrorCBL("Error in minimize of Chi2.cpp, there is no parameter to vary");
 
   auto fixed_parameters = make_shared<STR_params>(STR_params(m_data,m_model));
 
   vector<double> pars ;
-  if(parameters.size() == npar){
+  if (parameters.size() == npar) 
     pars = parameters;
-  }
-  else if(parameters.size() == m_model->npar()){
-    for(unsigned int i=0;i<m_model->npar();i++){
-      if(!m_model->parameter(i)->isFreezed())
+  
+  else if (parameters.size() == m_model->npar()) {
+    for (unsigned int i=0; i<m_model->npar(); i++)
+      if (!m_model->parameter(i)->isFixed())
         pars.push_back(parameters[i]);
-    }
   }
-  else{ErrorMsg("Error in minimize of Chi2, unrecognized number of parameters");}
-
-  vector<double> step_size(npar,1);
+  else { ErrorCBL("Error in minimize of Chi2.cpp, unrecognized number of parameters"); }
+  
+  vector<double> step_size(npar, 1.);
   int nn = 0;
 
   for (unsigned int i=0; i<m_model->npar(); i++) {
-    if (!m_model->parameter(i)->isFreezed()) {
+    if (!m_model->parameter(i)->isFixed()) {
       
       if(!m_model->parameter(i)->prior()->isIncluded(pars[nn])) { 
         string msg = "Warning, starting value for parameter '"+m_model->parameter(i)->name()+"' is out of range, it will be changed";
@@ -322,5 +321,5 @@ void cosmobl::statistics::Chi2::minimize (const vector<double> parameters, const
 
   glob::GSLfunction_nD_1 func(npar, f, fixed_parameters);
   func.minimize(pars, step_size, max_iter, tol);
-  cout << "Done" << endl;
+  coutCBL << "Done" << endl;
 }

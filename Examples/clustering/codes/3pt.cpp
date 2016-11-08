@@ -4,82 +4,85 @@
 
 #include "ThreePointCorrelation_comoving_reduced.h"
 
-using namespace cosmobl;
-using namespace cosmology;
-using namespace catalogue;
-using namespace threept;
-
-string par::DirCosmo = DIRCOSMO, par::DirLoc = DIRL;
+// these two variables contain the name of the CosmoBolognaLib
+// directory and the name of the current directory (useful when
+// launching the code on remote systems)
+string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
 
 
 int main () {
+
+  try {
   
-  // --------------------------------------------------------------
-  // ---------------- set the cosmological parameters  ------------
-  // --------------------------------------------------------------
+    // --------------------------------------------------------------
+    // ---------------- set the cosmological parameters  ------------
+    // --------------------------------------------------------------
 
-  double OmegaM = 0.25;
-  double Omega_b = 0.045;
-  double Omega_nu = 0.;
-  double massless_neutrinos = 3.04;
-  int    massive_neutrinos = 0; 
-  double OmegaL = 1.-OmegaM;
-  double Omega_radiation = 0.;
-  double hh = 0.73;
-  double scalar_amp = 2.742e-9;
-  double n_s = 1;
-  double wa = 0.;
-  double w0 = -1.;   
+    const double OmegaM = 0.25;
+    const double Omega_b = 0.045;
+    const double Omega_nu = 0.;
+    const double massless_neutrinos = 3.04;
+    const int    massive_neutrinos = 0; 
+    const double OmegaL = 1.-OmegaM;
+    const double Omega_radiation = 0.;
+    const double hh = 0.73;
+    const double scalar_amp = 2.742e-9;
+    const double n_s = 1;
+    const double wa = 0.;
+    const double w0 = -1.;   
 
-  Cosmology cosmology {OmegaM, Omega_b, Omega_nu, massless_neutrinos, massive_neutrinos, OmegaL, Omega_radiation, hh, scalar_amp, n_s, w0, wa};
-
-  
-  // -----------------------------------------------------------------------------------------------------------
-  // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
-  // -----------------------------------------------------------------------------------------------------------
-  
-  string file_catalogue = par::DirLoc+"../input/cat.dat";
-
-  Catalogue catalogue {_Galaxy_, _observedCoordinates_, {file_catalogue}, cosmology};
+    cosmobl::cosmology::Cosmology cosmology {OmegaM, Omega_b, Omega_nu, massless_neutrinos, massive_neutrinos, OmegaL, Omega_radiation, hh, scalar_amp, n_s, w0, wa};
 
   
-  // --------------------------------------------------------------------------------------
-  // ---------------- construct the random catalogue (with cubic geometry) ----------------
-  // --------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------
+    // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
+    // -----------------------------------------------------------------------------------------------------------
+  
+    string file_catalogue = cosmobl::par::DirLoc+"../input/cat.dat";
 
-  double N_R = 1.; // random/data ratio
+    cosmobl::catalogue::Catalogue catalogue {cosmobl::catalogue::_Galaxy_, cosmobl::_observedCoordinates_, {file_catalogue}, cosmology};
+
+  
+    // --------------------------------------------------------------------------------------
+    // ---------------- construct the random catalogue (with cubic geometry) ----------------
+    // --------------------------------------------------------------------------------------
+
+    const double N_R = 1.; // random/data ratio
    
-  Catalogue random_catalogue {_createRandom_box_, catalogue, N_R};
+    cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
 
   
-  // -------------------------------------------------------------------------------
-  // ---------------- measure the three-point correlation functions ----------------
-  // -------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------
+    // ---------------- measure the three-point correlation functions ----------------
+    // -------------------------------------------------------------------------------
 
-  // binning parameters
+    // binning parameters
 
-  double side_s = 20.;  // 1st side of the triangle
-  double side_u = 2.;   // ratio between the 1st and 2nd sides of the triangle (u*s)
-  double perc = 0.0225; // tolerance
-  int nbins = 15;       // number of bins
-
-  
-  // output data
-  
-  string dir_output = par::DirLoc+"../output/";
-  string dir_triplets = dir_output;
-  string dir_2pt = dir_output;
-  string file_output = "3pt.dat";
+    const double side_s = 20.;  // 1st side of the triangle
+    const double side_u = 2.;   // ratio between the 1st and 2nd sides of the triangle (u*s)
+    const double perc = 0.0225; // tolerance
+    const int nbins = 15;       // number of bins
 
   
-  // measure the connected and reduced three-point correlation functions and write the output
-
-  auto ThreeP = ThreePointCorrelation::Create(_comoving_reduced_, catalogue, random_catalogue, triplets::_comoving_theta_, side_s, side_u, perc, nbins);
-
-  ThreeP->measure(dir_triplets, dir_2pt);
+    // output data
   
-  ThreeP->write(dir_output, file_output, 1);
+    const string dir_output = cosmobl::par::DirLoc+"../output/";
+    const string dir_triplets = dir_output;
+    const string dir_2pt = dir_output;
+    const string file_output = "3pt.dat";
 
+  
+    // measure the connected and reduced three-point correlation functions and write the output
+
+    const auto ThreeP = cosmobl::threept::ThreePointCorrelation::Create(cosmobl::threept::_comoving_reduced_, catalogue, random_catalogue, cosmobl::triplets::_comoving_theta_, side_s, side_u, perc, nbins);
+
+    ThreeP->measure(dir_triplets, dir_2pt);
+  
+    ThreeP->write(dir_output, file_output, 1);
+
+  }
+
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
   
   return 0;
 }

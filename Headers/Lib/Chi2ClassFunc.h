@@ -93,7 +93,7 @@ namespace cosmobl {
       double operator() (VecDoub Par)
       {  
 	if (Par.size()!=int(par_limits.size())) 
-	  ErrorMsg("Error in Chi2ClassFunc.h!");
+	  ErrorCBL("Error in Chi2ClassFunc.h!");
 
 	if (par_limits.size()>0)
 	  for (int i=0; i<Par.size(); i++) 
@@ -170,7 +170,7 @@ namespace cosmobl {
       double operator() (VecDoub Par)
       {  
 	if (Par.size()!=int(par_limits.size())) 
-	  ErrorMsg("Error in Chi2ClassFunc.h!");
+	  ErrorCBL("Error in Chi2ClassFunc.h!");
 
 	if (par_limits.size()>0)
 	  for (int i=0; i<Par.size(); i++) 
@@ -248,7 +248,7 @@ namespace cosmobl {
       double operator() (VecDoub Par)
       {  
 	if (Par.size()!=int(par_limits.size())) 
-	  ErrorMsg("Error in Chi2ClassFunc.h!");
+	  ErrorCBL("Error in Chi2ClassFunc.h!");
 
 	if (par_limits.size()>0)
 	  for (int i=0; i<Par.size(); i++) 
@@ -327,7 +327,7 @@ namespace cosmobl {
       double operator() (VecDoub Par)
       {  
 	if (Par.size()!=int(par_limits.size())) 
-	  ErrorMsg("Error in Chi2ClassFunc.h!");
+	  ErrorCBL("Error in Chi2ClassFunc.h!");
 
 	for (int i=0; i<Par.size(); i++) 
 	  if (Par[i] < par_limits[i][0] || Par[i] > par_limits[i][1]) return 1.e30;
@@ -407,7 +407,7 @@ namespace cosmobl {
       double operator() (VecDoub Par)
       {  
 	if (Par.size()!=int(par_limits.size())) 
-	  ErrorMsg("Error in Chi2ClassFunc.h!");
+	  ErrorCBL("Error in Chi2ClassFunc.h!");
 
 	if (par_limits.size()>0)
 	  for (int i=0; i<Par.size(); i++) 
@@ -488,7 +488,7 @@ namespace cosmobl {
       double operator() (VecDoub Par)
       {  
 	if (Par.size()!=int(par_limits.size())) 
-	  ErrorMsg("Error in Chi2ClassFunc.h!");
+	  ErrorCBL("Error in Chi2ClassFunc.h!");
 
 	if (par_limits.size()>0)
 	  for (int i=0; i<Par.size(); i++) 
@@ -571,7 +571,7 @@ namespace cosmobl {
       double operator() (VecDoub Par)
       {  
 	if (Par.size()!=int(par_limits.size())) 
-	  ErrorMsg("Error in Chi2ClassFunc.h!");
+	  ErrorCBL("Error in Chi2ClassFunc.h!");
 
 	if (par_limits.size()>0)
 	  for (int i=0; i<Par.size(); i++) 

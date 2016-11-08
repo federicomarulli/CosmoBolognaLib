@@ -39,9 +39,9 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::VolS (const double R) const
+double cosmobl::cosmology::Cosmology::VolS (const double RR) const
 {
-  return 4./3.*par::pi*pow(R,3);
+  return 4./3.*par::pi*pow(RR,3);
 }
 
 
@@ -88,16 +88,32 @@ double cosmobl::cosmology::Cosmology::f_nu (const double SS, const double del_v,
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::size_function (const double R, const double redshift, const double rho_vm, const double del_v, const double del_c, const string method_Pk, const string output_root, const string interpType, const int Num, const double stepsize, const double k_max, const string file_par) const
+double cosmobl::cosmology::Cosmology::size_function (const double RV, const double redshift, const double rho_vm, const double del_v, const double del_c, const string method_Pk, const string output_root, const string interpType, const int Num, const double stepsize, const double k_max, const string file_par, const string model) const
 {
   double Z0 = 0.;
   double zero = 0.;
-  double RR = R/r_rL(rho_vm);
-  double sigmaR = sqrt(SSR_norm(RR, method_Pk, zero, output_root, k_max, file_par));
+  double RL;
+  if ((model == "Vdn") || (model == "SVdW"))
+    RL = RV/r_rL(rho_vm);
+  
+  else if (model == "linear")
+    RL = RV;
+  
+  else 
+    { ErrorCBL("Error in cosmobl::cosmology::Cosmology::size_function of SizeFunction.cpp: model name not allowed! Allowed names are: SVdW (Sheth and Van de Weygaert, 2004), linear/Vdn (Jennings, Li and Hu, 2013)"); return 0; }
+  
+  double sigmaR = sqrt(SSR_norm(RL, method_Pk, zero, output_root, k_max, file_par));
   double sigmaRz = sigmaR*DD(redshift)/DD(Z0);
   double SSSR = sigmaRz*sigmaRz;
-	
-  double Dln_SigmaR = dnSR(1, RR, method_Pk, redshift, output_root, interpType, Num, stepsize, k_max, file_par)*(RR/(2.*SSSR))*DD(redshift)/DD(Z0);
-
-  return f_nu(sigmaRz, del_v, del_c)/VolS(R)*fabs(Dln_SigmaR);
+        
+  double Dln_SigmaR = dnSR(1, RL, method_Pk, Z0, output_root, interpType, Num, stepsize, k_max, file_par)*(RL/(2.*SSSR))*pow(DD(redshift)/DD(Z0), 2.);
+  
+  if (model == "Vdn")
+    return f_nu(sigmaRz, del_v, del_c)/VolS(RV)*fabs(Dln_SigmaR);
+  
+  else if ((model == "SVdW") || (model == "linear"))
+    return f_nu(sigmaRz, del_v, del_c)/VolS(RL)*fabs(Dln_SigmaR);
+  
+  else 
+    { ErrorCBL("Error in cosmobl::cosmology::Cosmology::size_function of SizeFunction.cpp: model name not allowed! Allowed names are: SVdW (Sheth and Van de Weygaert, 2004), linear/Vdn (Jennings, Li and Hu, 2013)"); return 0; }
 }

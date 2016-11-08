@@ -1,5 +1,5 @@
 /********************************************************************
- *  Copyright (C) 2014 by Federico Marulli and Alfonso Veropalumbo  *
+ *  Copyright (C) 2016 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
  *  This program is free software; you can redistribute it and/or   *

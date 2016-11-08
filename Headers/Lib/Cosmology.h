@@ -479,7 +479,7 @@ namespace cosmobl {
        *  @brief default destructor
        *  @return none
        */
-      ~Cosmology () {};
+      ~Cosmology () = default;
     
       ///@}
 
@@ -705,21 +705,21 @@ namespace cosmobl {
        *  @return none
        */
       void print_parameters () const {
-	cout << "Omega_matter = " << m_Omega_matter << endl;
-	cout << "Omega_baryon = " << m_Omega_baryon << endl;
-	cout << "Omega_neutrinos = " << m_Omega_neutrinos << endl;
-	cout << "massless_neutrinos = " << m_massless_neutrinos << endl;
-	cout << "massive_neutrinos = " << m_massive_neutrinos << endl;
-	cout << "Omega_DE = " << m_Omega_DE << endl;
-	cout << "Omega_k = " << m_Omega_k << endl; 
-	cout << "Omega_CDM = " << m_Omega_CDM << endl;
-	cout << "h = " << m_hh << endl;
-	cout << "scalar_amp " << m_scalar_amp << endl;
-	cout << "n_spec = " << m_n_spec << endl;
-	cout << "w0 = " << m_w0 << endl;
-	cout << "wa = " << m_wa << endl;
-	cout << "fNL = " << m_fNL << endl;
-	cout << "type_NG = " << m_type_NG << endl;
+	coutCBL << "Omega_matter = " << m_Omega_matter << endl;
+	coutCBL << "Omega_baryon = " << m_Omega_baryon << endl;
+	coutCBL << "Omega_neutrinos = " << m_Omega_neutrinos << endl;
+	coutCBL << "massless_neutrinos = " << m_massless_neutrinos << endl;
+	coutCBL << "massive_neutrinos = " << m_massive_neutrinos << endl;
+	coutCBL << "Omega_DE = " << m_Omega_DE << endl;
+	coutCBL << "Omega_k = " << m_Omega_k << endl; 
+	coutCBL << "Omega_CDM = " << m_Omega_CDM << endl;
+	coutCBL << "h = " << m_hh << endl;
+	coutCBL << "scalar_amp " << m_scalar_amp << endl;
+	coutCBL << "n_spec = " << m_n_spec << endl;
+	coutCBL << "w0 = " << m_w0 << endl;
+	coutCBL << "wa = " << m_wa << endl;
+	coutCBL << "fNL = " << m_fNL << endl;
+	coutCBL << "type_NG = " << m_type_NG << endl;
       }
       ///@}
 
@@ -1100,11 +1100,32 @@ namespace cosmobl {
 
       /**
        *  @brief inverse of the auxiliary function used to compute the Hubble function
+       *  integrand of the comoving distance
        *  @param redshift redshift
        *  @return 1./E=H<SUB>0</SUB>/H
        */
       double EE_inv (const double redshift=0.) const  
       {return 1./EE(redshift);}
+
+      /**
+       *  @brief inverse of the auxiliary function used to compute the Hubble function,
+       *  integrand of the lookback time
+       *  @param redshift redshift
+       *  @return 1/(1+z)/E=H<SUB>0</SUB>/H
+       */
+      double EE_inv2 (const double redshift=0.) const  
+      {return 1./(1.+redshift)/EE(redshift);}
+
+      /**
+       *  @brief inverse of the auxiliary function used to compute the Hubble function
+       *  integrand of the cosmic time
+       *  @param aa 1/(1+z)
+       *  @return (1+z)/E=H<SUB>0</SUB>/H
+       */
+      double EE_inv3 (const double aa) const  {
+	double redshift = 1./aa-1.;
+	return (1.+redshift)/EE(redshift);
+      }
 
       /**
        *  @brief the Hubble function
@@ -1586,9 +1607,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr; the
-       *  GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -1603,7 +1621,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double mass_function (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double mass_function (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       /**
        *  @brief the mass function of dark matter haloes (filaments and
@@ -1651,9 +1669,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr; the
-       *  GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -1668,7 +1683,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double mass_function_fast (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
+      double mass_function_fast (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString); 
 
       /**
        *  @brief the mass function of dark matter haloes (filaments and
@@ -1717,9 +1732,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param method_SS method used to compute the power spectrum and
@@ -1739,7 +1751,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double mass_function (const double, const double, const double, const double, const string, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string method_SS="CAMB", const string file_par=par::defaultString); 
+      double mass_function (const double, const double, const double, const double, const string, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string method_SS="CAMB", const string file_par=par::defaultString); 
     
       /**
        *  @brief number of dark matter haloes per steradian or square
@@ -2197,9 +2209,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr; the
-       *  GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -2208,7 +2217,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      void Pk_0 (const string, const double, const string output_root="test", const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
+      void Pk_0 (const string, const double, const string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString); 
 
       /**
        *  @brief normalized power spectrum
@@ -2242,9 +2251,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr; the
-       *  GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -2253,7 +2259,7 @@ namespace cosmobl {
        *
        *  @return P(k)
        */
-      double Pk (const double, const string, const bool, const double, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
+      double Pk (const double, const string, const bool, const double, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString); 
 
       /**
        *  @brief return power spectrum first three multipoles using linear kaiser model
@@ -2297,9 +2303,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr; the
-       *  GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -2308,7 +2311,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      void Pk_Kaiser_multipoles (vector<double> &, vector<double> &, vector<double> &, const vector<double>, const string, const bool, const double, const double, const double sigma_NL = 0., const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
+      void Pk_Kaiser_multipoles (vector<double> &, vector<double> &, vector<double> &, const vector<double>, const string, const bool, const double, const double, const double sigma_NL = 0., const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString); 
 
       /**
        *  @brief the dark matter power spectrum, de-wiggled (see e.g. Anderson et al 2014)
@@ -2730,9 +2733,6 @@ namespace cosmobl {
        *  @param [in] aa parameter \e a of Eq. 24 of Anderson et
        *  al. 2012
        *
-       *  @param [in] GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param [in] prec accuracy of the GSL integration
        *
        *  @param [in] file_par name of the parameter file; if a
@@ -2741,7 +2741,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      void get_barred_xi (vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string method_Pk, const double redshift, const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString) const;
+      void get_barred_xi (vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string method_Pk, const double redshift, const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const string file_par=par::defaultString) const;
 
       /**
        *  @brief the dark matter projected correlation function
@@ -2759,6 +2759,8 @@ namespace cosmobl {
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift redshift
+       *
+       *  @param pimax the upper limit of the line-of-sight integration
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -2797,7 +2799,7 @@ namespace cosmobl {
        *  @return w<SUB>p,DM</SUB>(&theta;): the projected correlation
        *  function of dark matter
        */
-      double wp_DM (const double, const string, const double, const string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double wp_DM (const double, const string, const double, const double pimax, const string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
 
       /**
        *  @brief the k<SUB>*</SUB> parameter 
@@ -2848,6 +2850,8 @@ namespace cosmobl {
        *
        *  @param redshift redshift
        *
+       *  @param pimax the upper limit of the line-of-sight integration
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -2884,7 +2888,7 @@ namespace cosmobl {
        *
        *  @return &sigma;<SUB>R</SUB>: the dark matter rms mass fluctuation
        */
-      double sigmaR_DM (const double, const int, const string, const double, const string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
+      double sigmaR_DM (const double, const int, const string, const double, const double pimax=40, const string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
 
       /**
        *  @brief the dark matter rms mass fluctuation within 8 Mpc/h
@@ -2913,9 +2917,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration
        *
        *  @param file_par name of the parameter file; if a
@@ -2925,7 +2926,7 @@ namespace cosmobl {
        *  @return &sigma;<SUB>8</SUB>: the dark matter rms mass
        *  fluctuation within 8 Mpc/h
        */
-      double sigma8_Pk (const string, const double, const string output_root="test", const bool NL=0, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString) const; 
+      double sigma8_Pk (const string, const double, const string output_root="test", const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString) const; 
 
       /**
        *  @brief bias of dark matter haloes
@@ -2962,9 +2963,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration
        *
        *  @param file_par name of the parameter file; if a
@@ -2979,7 +2977,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double bias_halo (const double, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
+      double bias_halo (const double, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString); 
 
       /**
        *  @brief bias of dark matter haloes
@@ -3013,9 +3011,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration
        *
        *  @param method_SS method used to compute the power spectrum and
@@ -3035,7 +3030,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double bias_halo (const double, const double, const double, const string, const string output_root="test", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string method_SS="CAMB", const string file_par=par::defaultString);
+      double bias_halo (const double, const double, const double, const string, const string output_root="test", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string method_SS="CAMB", const string file_par=par::defaultString);
   
       /**
        *  @brief effective bias of dark matter haloes
@@ -3091,9 +3086,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a
@@ -3108,7 +3100,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double bias_eff (const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double bias_eff (const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
  
       /**
        *  @brief effective bias of dark matter haloes
@@ -3154,9 +3146,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a
@@ -3171,7 +3160,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double bias_eff (const vector<double>, const vector<double>, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double bias_eff (const vector<double>, const vector<double>, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       ///@}
 
@@ -3215,9 +3204,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *   
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr; the GSL
-       *  libraries are used
-       *
        *  @param prec accuracy of the GSL integration
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -3226,7 +3212,7 @@ namespace cosmobl {
        *
        *  @return f*&sigma;<SUB>8</SUB>
        */
-      double fsigma8 (const double, const string, const string output_root="test", const double kk=-1., const bool NL=0, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString) const;
+      double fsigma8 (const double, const string, const string output_root="test", const double kk=-1., const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString) const;
 
       /**
        *  @brief the specific growth rate &beta;
@@ -3303,9 +3289,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a
@@ -3321,7 +3304,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double beta (const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double beta (const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       /**
        *  @brief the specific growth rate &beta;
@@ -3379,9 +3362,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a
@@ -3397,7 +3377,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double error_beta (const double, const double, const double, const string, const string, const string, const double, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
+      double error_beta (const double, const double, const double, const string, const string, const string, const double, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString); 
   
       /**
        *  @brief the specific growth rate &beta;
@@ -3443,9 +3423,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a
@@ -3461,7 +3438,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double beta (const vector<double>, const vector<double>, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double beta (const vector<double>, const vector<double>, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       /**
        *  @brief the error on the specific growth rate &beta;
@@ -3509,9 +3486,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a
@@ -3527,7 +3501,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double error_beta (const vector<double>, const vector<double>, const double, const string, const string, const double, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double error_beta (const vector<double>, const vector<double>, const double, const string, const string, const double, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
  
       /**
        *  @brief the error on the specific growth rate &beta; from
@@ -3588,9 +3562,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a
@@ -3606,7 +3577,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double error_beta_measured (const double, const double, const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
+      double error_beta_measured (const double, const double, const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString); 
 
       /**
        *  @brief the normalized quadrupole Q
@@ -3662,9 +3633,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a
@@ -3679,7 +3647,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double quadrupole (const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
+      double quadrupole (const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString); 
 
       /**
        *  @brief the normalized quadrupole Q
@@ -3725,9 +3693,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a
@@ -3742,7 +3707,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double quadrupole (const vector<double>, const vector<double>, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double quadrupole (const vector<double>, const vector<double>, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       /**
        *  @brief the mean square bulk flow
@@ -3769,9 +3734,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration
        *
        *  @param file_par name of the parameter file; if a
@@ -3780,7 +3742,7 @@ namespace cosmobl {
        *
        *  @return the mean square bulk flow
        */
-      double square_bulk_flow (const double, const double, const string, const double, const string output_root="test", const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double square_bulk_flow (const double, const double, const string, const double, const string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       /**
        *  @brief the mean square bulk flow
@@ -3825,9 +3787,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration
        *
        *  @param file_par name of the parameter file; if a
@@ -3836,7 +3795,7 @@ namespace cosmobl {
        *
        *  @return the mean square velocity dispersion
        */
-      double square_velocity_dispersion (const double, const double, const string, const double, const string output_root="test", const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double square_velocity_dispersion (const double, const double, const string, const double, const string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
     
       /**
        *  @brief the Cosmic Mach Number
@@ -4125,9 +4084,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration
        *
        *  @param file_par name of the parameter file; if a
@@ -4136,7 +4092,7 @@ namespace cosmobl {
        *
        *  @return &xi;<SUB>*</SUB>
        */
-      double xi_star (const double, const double, const string output_root="test", const double k_star=-1., const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double xi_star (const double, const double, const string output_root="test", const double k_star=-1., const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
   
       /**
        *  @brief the function &xi;<SUB>g,nw</SUB>(s) of the Chuang &
@@ -4442,9 +4398,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -4453,7 +4406,7 @@ namespace cosmobl {
        *
        *  @return A<SUB>m</SUB>
        */
-      double Am (const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString); 
+      double Am (const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString); 
 
       /**
        *  @brief the potential spectral amplitude 
@@ -4479,9 +4432,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -4490,7 +4440,7 @@ namespace cosmobl {
        *
        *  @return the potential spectral amplitude
        */
-      double potential_spectral_amplitude (const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double potential_spectral_amplitude (const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       /**
        *  @brief the bispectrum
@@ -4518,9 +4468,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -4529,7 +4476,7 @@ namespace cosmobl {
        *
        *  @return the potential spectral amplitude
        */
-      double bispectrum (const vector<double>, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double bispectrum (const vector<double>, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
     
       /**
        *  @brief auxiliary function to estimate cosmological quantities
@@ -4560,9 +4507,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -4571,7 +4515,7 @@ namespace cosmobl {
        *
        *  @return mrk
        */
-      double mrk (const double, const double, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double mrk (const double, const double, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       /**
        *  @brief auxiliary function to estimate cosmological quantities
@@ -4602,9 +4546,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -4613,12 +4554,12 @@ namespace cosmobl {
        *
        *  @return frk
        */
-      double frk (const double, const double, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double frk (const double, const double, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       /// @cond TEST_NG
       double bias_kernel (const double, void *); 
 
-      double frk_test (const double, const double, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double frk_test (const double, const double, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
       /// @endcond
 
 
@@ -4650,9 +4591,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -4661,7 +4599,7 @@ namespace cosmobl {
        *
        *  @return bias correction
        */
-      double bias_correction (const double, const double, const string, const string  output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double bias_correction (const double, const double, const string, const string  output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       /**
        *  @brief the skewness
@@ -4689,9 +4627,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -4700,7 +4635,7 @@ namespace cosmobl {
        *
        *  @return skewness
        */
-      double skewness (const double, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double skewness (const double, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       /**
        *  @brief the derivative of the skewness, ds/dM
@@ -4728,9 +4663,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -4739,7 +4671,7 @@ namespace cosmobl {
        *
        *  @return derivative of the skewness
        */
-      double dskewnessdM (const double, const string, const string  output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double dskewnessdM (const double, const string, const string  output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       /**
        *  @brief correction to the halo mass in non-Gaussian cosmologies
@@ -4776,9 +4708,6 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param GSL 0 &rarr; the Numerical libraries are used; 1 &rarr;
-       *  the GSL libraries are used
-       *
        *  @param prec accuracy of the GSL integration 
        *
        *  @param file_par name of the parameter file; if a parameter
@@ -4787,7 +4716,7 @@ namespace cosmobl {
        *
        *  @return bias correction
        */
-      double MF_correction (const double, const double, const string, const string output_root="test", const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const bool GSL=1, const double prec=1.e-2, const string file_par=par::defaultString);
+      double MF_correction (const double, const double, const string, const string output_root="test", const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
       ///@}
 
@@ -4803,11 +4732,11 @@ namespace cosmobl {
        *  @author Tommaso Ronconi
        *  @author tommaso.ronconi@studio.unibo.it
        *
-       *  @param R the radius of the sphere
+       *  @param RR the radius of the sphere
        *  
        *  @return volume of the sphere
        */
-      double VolS (const double) const;
+      double VolS (const double RR) const;
     
       /**
        *  @brief Linear (under)density contrast
@@ -4852,7 +4781,7 @@ namespace cosmobl {
        *  @return the fraction of trajectories that evolve into voids,
        *  as given in equation (8) of Jennings et al. (2013)
        */
-      double f_nu (const double, const double, const double) const;
+      double f_nu (const double SS, const double del_v, const double del_c) const;
 
       /**
        *  @brief the void size function
@@ -4860,7 +4789,7 @@ namespace cosmobl {
        *  @author Tommaso Ronconi
        *  @author tommaso.ronconi@studio.unibo.it
        *
-       *  @param R radius
+       *  @param RV radius
        *
        *  @param redshift redshift
        *
@@ -4892,13 +4821,15 @@ namespace cosmobl {
        *  @param file_par name of the parameter file; if a parameter
        *  file is provided (i.e. file_par!=NULL), it will be used,
        *  ignoring the cosmological parameters of the object
+       *
+       *  @param model size function model name;
+       *  valid choices for model name are SvdW (Sheth and van de Weygaert, 2004),
+       *  linear and Vdn (Jennings et al., 2013)
        *  
        *  @return the number density of voids as a function of radius.
        *  Volume Conserving Model, equation (17) from Jennings et al.(2013) 
        */
-      double size_function (const double, const double, const double, const double, const double, const string, const string, const string, const int, const double, const double, const string) const;
-
-      ///@}
+      double size_function (const double RV, const double redshift, const double rho_vm, const double del_v, const double del_c, const string method_Pk, const string output_root, const string interpType, const int Num, const double stepsize, const double k_max, const string file_par, const string model) const;
 
       /**
        *  @name Functions to estimate the multipoles/wedges covariance matrix

@@ -158,13 +158,13 @@ namespace cosmobl {
        *  @param i the bin index
        *  @return the i-th binned scale
        */
-      virtual double scale (const int i) const { (void)i; cosmobl::ErrorMsg("Error in Triplet::scale() of Triplet.h!"); return 0; }
+      virtual double scale (const int i) const { (void)i; cosmobl::ErrorCBL("Error in Triplet::scale() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member \e m_scale
        *  @return the vector containing the binned scales
        */
-      virtual vector<double> scale () const { cosmobl::ErrorMsg("Error in Triplet::scale() of Triplet.h!"); vector<double> vv; return vv; }
+      virtual vector<double> scale () const { cosmobl::ErrorCBL("Error in Triplet::scale() of Triplet.h!"); vector<double> vv; return vv; }
       
       /**
        *  @brief get the private member \e m_TT1D[i]
@@ -172,7 +172,7 @@ namespace cosmobl {
        *  @return the number of triplets in the i-th angular bin, or an
        *  error message if the derived object does not have this member
        */
-      virtual double TT1D (const int i) const { (void)i; cosmobl::ErrorMsg("Error in Triplet::TT1D() of Triplet.h!"); return 0; }
+      virtual double TT1D (const int i) const { (void)i; cosmobl::ErrorCBL("Error in Triplet::TT1D() of Triplet.h!"); return 0; }
       
       /**
        *  @brief get the private member \e m_TT1D
@@ -180,33 +180,33 @@ namespace cosmobl {
        *  bins, or an error message if the derived object does not have
        *  this member
        */
-      virtual vector<double> TT1D () const { cosmobl::ErrorMsg("Error in Triplet::TT1D() of Triplet.h!"); vector<double> vv; return vv; }
+      virtual vector<double> TT1D () const { cosmobl::ErrorCBL("Error in Triplet::TT1D() of Triplet.h!"); vector<double> vv; return vv; }
 
       /**
        *  @brief get the protected member \e m_scale_D1[i]
        *  @param i the bin index in the first dimension
        *  @return the i-th binned scale
        */
-      virtual double scale_D1 (const int i) const { (void)i; cosmobl::ErrorMsg("Error in Triplet::scale_D1() of Triplet.h!"); return 0; }
+      virtual double scale_D1 (const int i) const { (void)i; cosmobl::ErrorCBL("Error in Triplet::scale_D1() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member \e m_scale_D1
        *  @return the vector containing the binned scales
        */
-      virtual vector<double> scale_D1 () const { cosmobl::ErrorMsg("Error in Triplet::scale_D1() of Triplet.h!"); vector<double> vv; return vv; }
+      virtual vector<double> scale_D1 () const { cosmobl::ErrorCBL("Error in Triplet::scale_D1() of Triplet.h!"); vector<double> vv; return vv; }
 
       /**
        *  @brief get the protected member \e m_scale_D2[i]
        *  @param i the bin index in the first dimension
        *  @return the i-th binned scale
        */
-      virtual double scale_D2 (const int i) const { (void)i; cosmobl::ErrorMsg("Error in Triplet::scale_D2() of Triplet.h!"); return 0; }
+      virtual double scale_D2 (const int i) const { (void)i; cosmobl::ErrorCBL("Error in Triplet::scale_D2() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member \e m_scale_D2
        *  @return the vector containing the binned scales
        */
-      virtual vector<double> scale_D2 () const { cosmobl::ErrorMsg("Error in Triplet::scale_D2() of Triplet.h!"); vector<double> vv; return vv; }
+      virtual vector<double> scale_D2 () const { cosmobl::ErrorCBL("Error in Triplet::scale_D2() of Triplet.h!"); vector<double> vv; return vv; }
 
       /**
        *  @brief get the protected member \e m_TT2D[i]
@@ -214,27 +214,27 @@ namespace cosmobl {
        *  @param j the bin index in the second dimension
        *  @return the number of pairs in the i-th bin
        */
-      virtual double TT2D (const int i, const int j) const { (void)i; (void)j; cosmobl::ErrorMsg("Error in Triplet::TT2D() of Triplet.h!"); return 0; }
+      virtual double TT2D (const int i, const int j) const { (void)i; (void)j; cosmobl::ErrorCBL("Error in Triplet::TT2D() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member \e m_TT2D
        *  @return the vector containing the binned number of pairs
        */
-      virtual vector<vector<double> > TT2D () const { cosmobl::ErrorMsg("Error in Triplet::TT2D() of Triplet.h!"); vector<vector<double> > vv; return vv; }
+      virtual vector<vector<double> > TT2D () const { cosmobl::ErrorCBL("Error in Triplet::TT2D() of Triplet.h!"); vector<vector<double> > vv; return vv; }
       
       /**
        *  @brief get the private member \e m_side_s
        *  @return the size of r<SUB>12</SUB>, or an error message if the
        *  derived object does not have this member
        */
-      virtual double side_s () const { cosmobl::ErrorMsg("Error in Triplet::side_s() of Triplet.h!"); return 0; }
+      virtual double side_s () const { cosmobl::ErrorCBL("Error in Triplet::side_s() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the private member \e m_side_u
        *  @return the ratio r<SUB>13</SUB>/r<SUB>12</SUB>, or an error
        *  message if the derived object does not have this member
        */
-      virtual double side_u () const { cosmobl::ErrorMsg("Error in Triplet::side_u() of Triplet.h!"); return 0; }
+      virtual double side_u () const { cosmobl::ErrorCBL("Error in Triplet::side_u() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the private member \e m_perc_increase
@@ -243,21 +243,21 @@ namespace cosmobl {
        *  or an error message if the derived object does not have this
        *  member
        */
-      virtual double perc_increase () const { cosmobl::ErrorMsg("Error in Triplet::perc_increase() of Triplet.h!"); return 0; }
+      virtual double perc_increase () const { cosmobl::ErrorCBL("Error in Triplet::perc_increase() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the private member \e m_nbins
        *  @return the number of bins, or an error message if the
        *  derived object does not have this member
        */
-      virtual int nbins () const { cosmobl::ErrorMsg("Error in Triplet::nbins() of Triplet.h!"); return 0; }
+      virtual int nbins () const { cosmobl::ErrorCBL("Error in Triplet::nbins() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the private member \e m_binSize
        *  @return the bin size, or an error message if the
        *  derived object does not have this member
        */
-      virtual double binSize () const { cosmobl::ErrorMsg("Error in Triplet::binSize() of Triplet.h!"); return 0; }
+      virtual double binSize () const { cosmobl::ErrorCBL("Error in Triplet::binSize() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_side_s_D1
@@ -265,7 +265,7 @@ namespace cosmobl {
        *  or an error message if the derived object does not have this
        *  member
        */
-      virtual double side_s_D1 () const { cosmobl::ErrorMsg("Error in Triplet::m_side_s_D1() of Triplet.h!"); return 0; }
+      virtual double side_s_D1 () const { cosmobl::ErrorCBL("Error in Triplet::m_side_s_D1() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_side_u_D1
@@ -273,7 +273,7 @@ namespace cosmobl {
        *  dimension, or an error message if the derived object does
        *  not have this member
        */
-      virtual double side_u_D1 () const { cosmobl::ErrorMsg("Error in Triplet::side_u_D1() of Triplet.h!"); return 0; }
+      virtual double side_u_D1 () const { cosmobl::ErrorCBL("Error in Triplet::side_u_D1() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_perc_increase_D1
@@ -282,7 +282,7 @@ namespace cosmobl {
        *  in the first dimension, or an error message if the derived
        *  object does not have this member
        */    
-      virtual double perc_increase_D1 () const { cosmobl::ErrorMsg("Error in Triplet::perc_increase_D1() of Triplet.h!"); return 0; }
+      virtual double perc_increase_D1 () const { cosmobl::ErrorCBL("Error in Triplet::perc_increase_D1() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_nbins_D1
@@ -290,7 +290,7 @@ namespace cosmobl {
        *  error message if the derived object does not have this
        *  member
        */    
-      virtual int nbins_D1 () const { cosmobl::ErrorMsg("Error in Triplet::nbins_D1() of Triplet.h!"); return 0; }
+      virtual int nbins_D1 () const { cosmobl::ErrorCBL("Error in Triplet::nbins_D1() of Triplet.h!"); return 0; }
       
       /**
        *  @brief get the protected member Triplet1D::m_binSize_D1
@@ -298,7 +298,7 @@ namespace cosmobl {
        *  error message if the derived object does not have this
        *  member
        */    
-      virtual double binSize_D1 () const { cosmobl::ErrorMsg("Error in Triplet::binSize_D1() of Triplet.h!"); return 0; }
+      virtual double binSize_D1 () const { cosmobl::ErrorCBL("Error in Triplet::binSize_D1() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_side_s_D2
@@ -306,7 +306,7 @@ namespace cosmobl {
        *  or an error message if the derived object does not have this
        *  member
        */
-      virtual double side_s_D2 () const { cosmobl::ErrorMsg("Error in Triplet::side_s_D2() of Triplet.h!"); return 0; }
+      virtual double side_s_D2 () const { cosmobl::ErrorCBL("Error in Triplet::side_s_D2() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_side_u_D2
@@ -314,7 +314,7 @@ namespace cosmobl {
        *  second dimension, or an error message if the derived object
        *  does not have this member
        */
-      virtual double side_u_D2 () const { cosmobl::ErrorMsg("Error in Triplet::side_u_D2() of Triplet.h!"); return 0; }
+      virtual double side_u_D2 () const { cosmobl::ErrorCBL("Error in Triplet::side_u_D2() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_perc_increase_D2
@@ -323,7 +323,7 @@ namespace cosmobl {
        *  in the second dimension, or an error message if the derived
        *  object does not have this member
        */    
-      virtual double perc_increase_D2 () const { cosmobl::ErrorMsg("Error in Triplet::perc_increase_D2() of Triplet.h!"); return 0; }
+      virtual double perc_increase_D2 () const { cosmobl::ErrorCBL("Error in Triplet::perc_increase_D2() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_nbins_D2
@@ -331,7 +331,7 @@ namespace cosmobl {
        *  error message if the derived object does not have this
        *  member
        */    
-      virtual int nbins_D2 () const { cosmobl::ErrorMsg("Error in Triplet::nbins_D2() of Triplet.h!"); return 0; }
+      virtual int nbins_D2 () const { cosmobl::ErrorCBL("Error in Triplet::nbins_D2() of Triplet.h!"); return 0; }
       
       /**
        *  @brief get the protected member Triplet1D::m_binSize_D2
@@ -339,7 +339,7 @@ namespace cosmobl {
        *  error message if the derived object does not have this
        *  member
        */    
-      virtual double binSize_D2 () const { cosmobl::ErrorMsg("Error in Triplet::binSize_D2() of Triplet.h!"); return 0; }
+      virtual double binSize_D2 () const { cosmobl::ErrorCBL("Error in Triplet::binSize_D2() of Triplet.h!"); return 0; }
 
       ///@}
       
@@ -357,7 +357,7 @@ namespace cosmobl {
        *  not have this member
        */
       virtual void set_TT1D (const int i, const double tt)
-      { (void)i; (void)tt; cosmobl::ErrorMsg("Error in Triplet::set_TT() of Triplet.h!"); }
+      { (void)i; (void)tt; cosmobl::ErrorCBL("Error in Triplet::set_TT() of Triplet.h!"); }
 
       /**
        *  @brief set the protected member Triplet1D::m_TT1D[i] adding
@@ -368,7 +368,7 @@ namespace cosmobl {
        *  not have this member
        */
       virtual void add_TT1D (const int i, const double tt)
-      { (void)i; (void)tt; cosmobl::ErrorMsg("Error in Triplet::add_TT() of Triplet.h!"); }
+      { (void)i; (void)tt; cosmobl::ErrorCBL("Error in Triplet::add_TT() of Triplet.h!"); }
 
       ///@}
 

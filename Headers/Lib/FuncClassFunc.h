@@ -109,7 +109,7 @@ namespace cosmobl {
                 m_type = gsl_interp_steffen;
 
              else 
-                ErrorMsg("Error in interpolated of Func.cpp: the value of string 'type' is not permitted!");
+	       ErrorCBL("Error in interpolated of Func.cpp: the value of string 'type' is not permitted!");
 
 	     m_xmin = Min(_xg);
 	     m_xmax = Max(_xg);
@@ -117,17 +117,17 @@ namespace cosmobl {
              gsl_spline_init (m_spline, _xg.data(), _yg.data(), m_size);
           }  
 
-          void free()
+          void free ()
           {
              gsl_spline_free (m_spline);
              gsl_interp_accel_free (m_acc);
           }
 
-	  double xmin() {return m_xmin;}
+	  double xmin () { return m_xmin; }
                                         
-	  double xmax() {return m_xmax;}
+	  double xmax () { return m_xmax; }
 
-          double operator() (double XX) 
+          double operator () (double XX) 
           {
 	    
 	    if (XX<m_xmin) // perform a linear extrapolation
@@ -147,6 +147,16 @@ namespace cosmobl {
 	      YY.push_back(gsl_spline_eval(m_spline,XX[i],m_acc));
 
 	    return YY;
+	  }
+
+	  double D1(double xx)
+	  {
+	     return gsl_spline_eval_deriv(m_spline, xx,m_acc);
+	  }
+
+	  double D2(double xx)
+	  {
+	     return gsl_spline_eval_deriv2(m_spline, xx,m_acc);
 	  }
 
 	  double integrate_qag (const double a, const double b, const double prec=1.e-2, const int limit_size=6, const int rule=6)
@@ -342,7 +352,7 @@ namespace cosmobl {
 
     /* Alfonso Veropalumbo */
 
-    // Basic class_function to find minima on an interpolated function ( VecDoub instead of double, to be used with Powell)
+    // Basic class_function to find minima on an interpolated function ( vector<double> instead of double, to be used with Powell)
 
     //1D
 
@@ -356,7 +366,7 @@ namespace cosmobl {
       func_grid_minimum_1D (vector<double> _xg, vector<double> _yg, string _interpType)
 	: xg(_xg), yg(_yg), interpType(_interpType) {}  
   
-      double operator() (VecDoub XX) 
+      double operator() (vector<double> XX) 
       {
 	if (XX[0]>Max(xg) || XX[0] <Min(xg)) return 1.e30;
 
@@ -378,7 +388,7 @@ namespace cosmobl {
       func_grid_minimum_2D (vector<double> _x1g, vector<double> _x2g, vector< vector<double> > _yg , string _interpType)
 	: x1g(_x1g), x2g(_x2g), yg(_yg), interpType(_interpType) {}  
   
-      double operator() (VecDoub XX) 
+      double operator() (vector<double> XX) 
       {
 	if (XX[0]>Max(x1g) || XX[0] <Min(x1g)) {return 1.e30;}
 	if (XX[1]>Max(x2g) || XX[1] <Min(x2g)) return 1.e30;

@@ -19,16 +19,16 @@
  ********************************************************************/
 
 /**
- * @file Headers/Lib/Catalogue.h
+ *  @file Headers/Lib/Catalogue.h
  *
- * @brief The class Catalogue  
+ *  @brief The class Catalogue  
  *
- * This file defines the interface of the class Catalogue, used
- * handle catalogues of astronomical sources
+ *  This file defines the interface of the class Catalogue, used
+ *  handle catalogues of astronomical sources
  *
- * @authors Federico Marulli, Alfonso Veropalumbo 
+ *  @authors Federico Marulli, Alfonso Veropalumbo 
  *
- * @authors federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
+ *  @authors federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
  */
 
 
@@ -88,7 +88,7 @@ namespace cosmobl {
       _Dc_, 
 
       /// weight
-      _Weight_, 
+      _Weight_,
 
       /// mass
       _Mass_, 
@@ -110,11 +110,20 @@ namespace cosmobl {
 
       /// region
       _Region_,
-
-      /// radius properties
+      
+      /// radius 
       _Radius_,
       
-      /// generic properties
+      /// xx displacement
+      _X_displacement_,
+
+      /// yy displacement
+      _Y_displacement_,   
+   
+      /// zz displacement
+      _Z_displacement_,
+
+      /// generic property
       _Generic_
       
     };
@@ -138,6 +147,9 @@ namespace cosmobl {
       /// random catalogue with conic geometry
       _createRandom_cone_,
 
+      /// random catalogue using mangle
+      _createRandom_MANGLE_,
+
       /// random catalogue for VIPERS
       _createRandom_VIPERS_
       
@@ -156,7 +168,7 @@ namespace cosmobl {
     private :
       
       /// vector containing the objects of the catalogue
-      vector<shared_ptr<Object> > m_sample;
+      vector<shared_ptr<Object> > m_object;
       
       /// vector containing the object indexes
       vector<int> m_index;      
@@ -181,7 +193,7 @@ namespace cosmobl {
        *  @return object of class Catalogue
        */
       Catalogue (const Catalogue &cat)
-	: m_sample(cat.sample()), m_index(cat.index()) {}
+	: m_object(cat.sample()), m_index(cat.index()) {}
       
       /**
        *  @brief constructor
@@ -271,6 +283,9 @@ namespace cosmobl {
        *  @param colWeight column of the input file containing the
        *  weights
        *
+       *  @param colRegion column of the input file containing the
+       *  regions (used for jackknife or bootstrap)
+       *
        *  @param nSub the fracton of objects that will be randomly
        *  selected (nSub=1 &rArr; all objects are selected)
        *
@@ -283,7 +298,7 @@ namespace cosmobl {
        *
        *  @return an object of class Catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1=0, const int col2=1, const int col3=2, const int colWeight=-1, const double nSub=1.1, const double fact=1., const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_);
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1=1, const int col2=2, const int col3=3, const int colWeight=-1, const int colRegion=-1, const double nSub=1.1, const double fact=1., const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_);
 
       /**
        *  @brief constructor, reading a file with coordinates
@@ -304,7 +319,7 @@ namespace cosmobl {
        *  @return an object of class Catalogue
        */
       Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm, const CoordUnits inputUnits=_radians_)
-	: Catalogue(objType, coordType, file, 0, 1, 2, -1, 1.1, 1., cosm, inputUnits) {}
+	: Catalogue(objType, coordType, file, 1, 2, 3, -1, -1, 1.1, 1., cosm, inputUnits) {}
 
       /**
        *  @brief constructor, using vectors of generic objects
@@ -314,7 +329,7 @@ namespace cosmobl {
        */ 
       template<typename T> Catalogue (vector<T> object) {
 	for (size_t i=0; i<object.size(); i++)
-	  m_sample.push_back(move(make_shared<T>(T(object[i]))));
+	  m_object.push_back(move(make_shared<T>(T(object[i]))));
       }
 
       /**
@@ -326,8 +341,51 @@ namespace cosmobl {
        */
       Catalogue (vector<shared_ptr<Object> > sample) {
 	for (auto &&i : sample)
-	  m_sample.push_back(move(i));
+	  m_object.push_back(move(i));
       }
+
+      /**
+       *  @brief constructor, creating a catalogue by matching the
+       *  distribution of one quantity from a target catalogue
+       *
+       *  @param input_catalogue the input catalogue
+       *
+       *  @param target_catalogue the target catalogue
+       *
+       *  @param var_name1 the type of variable, specified
+       *  cosmobl::catalogue::Var enumeration
+       *
+       *  @param nbin1 the binning for the variable
+       *
+       *  @param seed the seed for random number generation
+       *
+       *  @return an object of class Catalogue
+       */
+      Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const Var var_name1, const int nbin1, const int seed);
+
+      /**
+       *  @brief constructor, creating a catalogue by matching the
+       *  distributions of two quantities from a target catalogue
+       *
+       *  @param input_catalogue the input catalogue
+       *
+       *  @param target_catalogue the target catalogue
+       *
+       *  @param var_name1 the type of variable, specified
+       *  cosmobl::catalogue::Var enumeration
+       *
+       *  @param nbin1 the binning for the variable
+       *
+       *  @param var_name2 the type of variable, specified
+       *  cosmobl::catalogue::Var enumeration
+       *
+       *  @param nbin2 the binning for the variable
+       *
+       *  @param seed the seed for random number generation
+       *
+       *  @return an object of class Catalogue
+       */
+      Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const cosmobl::catalogue::Var var_name1, const int nbin1, const cosmobl::catalogue::Var var_name2, const int nbin2, const int seed);
 
       /**
        * @brief default destructor
@@ -462,10 +520,44 @@ namespace cosmobl {
        */
       Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const double Angle, const vector<double> redshift, const cosmology::Cosmology &cosm={}, const bool conv=false, const double sigma=0., const int seed=3213);
 
-      
+      /**
+       *  @brief constructor that creates a random catalogue using the 
+       *  a mask in the MANGLE format for the angular distribution
+       *  and taking the redshift distribution from an input catalogue
+       * 
+       *  @param type the type of random catalogue, that must be
+       *  set to \_createRandom_MANGLE\_
+       *
+       *  @param mangle_mask vector containing the input masks in MANGLE format
+       *
+       *  @param catalogue object of class Catalogue
+       *
+       *  @param N_R fraction of random objects, i.e.
+       *  N<SUB>R</SUB>=N<SUB>random</SUB>/N<SUB>objects</SUB>
+       *
+       *  @param nbin number of redshift bins used to compute the
+       *  redshift distribution
+       *
+       *  @param cosm object of class Cosmology
+       *
+       *  @param conv 1 &rarr; compute the Gaussian convolvolution of
+       *  the distribution; 0 &rarr; do not convolve
+       *
+       *  @param sigma the standard deviation, &sigma;, of the
+       *  Gaussian kernel
+       *
+       *  @param seed the seed for random number generation
+       *
+       *  @return an object of class Catalogue
+       *
+       *  @warning the input parameter \e type is used only to make
+       *  the constructor type explicit
+       */
+      Catalogue (const RandomType type, const vector<string> mangle_mask, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology cosm, const bool conv=false, const double sigma=0., const int seed=3213);   
+
       /// @cond extrandom
       
-      Catalogue (const RandomType type, const double N_R, const cosmology::Cosmology &cosm, const int step_redshift, const vector<double> lim, const vector<double> redshift, const vector<double> weight, const double redshift_min, const double redshift_max, const bool venice, const string where, string file_random, const string mask, const string dir_venice); 
+      Catalogue (const RandomType type, const string WField, const bool isSpectroscopic, const Catalogue catalogue, const Catalogue catalogue_for_nz, const double N_R, const cosmology::Cosmology &cosm, const int step_redshift, const vector<double> lim, const double redshift_min, const double redshift_max, const bool do_convol, const double sigma, const bool use_venice, const bool do_zdistr_with_venice, const string file_random, const string mask, const string pointing_file, const string dir_venice, const int seed); 
       
       /// @endcond
   
@@ -478,10 +570,10 @@ namespace cosmobl {
       ///@{
 
       /**
-       *  @brief get the private member Catalogue::m_sample
+       *  @brief get the private member Catalogue::m_object
        *  @return the vector containing the objects of the catalogue
        */
-      vector<shared_ptr<Object> > sample () const { return m_sample; };
+      vector<shared_ptr<Object> > sample () const { return m_object; };
       
       /**
        *  @brief get the private member Catalogue::m_index
@@ -490,137 +582,200 @@ namespace cosmobl {
       vector<int> index () const { return m_index; };
       
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_xx
+       * @brief get the private member Catalogue::m_object[i]->m_xx
        * @param i the object index
        * @return the coordinate x of the i-th object 
        */
-      double xx (const int i) const { return m_sample[i]->xx(); };
+      double xx (const int i) const { return m_object[i]->xx(); };
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_yy
+       * @brief get the private member Catalogue::m_object[i]->m_yy
        * @param i the object index
        * @return the coordinate y of the i-th object 
        */
-      double yy (const int i) const { return m_sample[i]->yy(); };
+      double yy (const int i) const { return m_object[i]->yy(); };
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_zz
+       * @brief get the private member Catalogue::m_object[i]->m_zz
        * @param i the object index
        * @return the coordinate z of the i-th object 
        */
-      double zz (const int i) const { return m_sample[i]->zz(); };
+      double zz (const int i) const { return m_object[i]->zz(); };
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_vx
+       * @brief get the private member Catalogue::m_object[i]->m_vx
        * @param i the object index
        * @return the velocity along the x direction of the i-th object
        */
-      double vx (const int i) const { return m_sample[i]->vx(); };
+      double vx (const int i) const { return m_object[i]->vx(); };
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_vy
+       * @brief get the private member Catalogue::m_object[i]->m_vy
        * @param i the object index
        * @return the velocity along the y direction of the i-th object
        */
-      double vy (const int i) const { return m_sample[i]->vy(); };
+      double vy (const int i) const { return m_object[i]->vy(); };
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_vz
+       * @brief get the private member Catalogue::m_object[i]->m_vz
        * @param i the object index
        * @return the velocity along the z direction of the i-th object
        */
-      double vz (const int i) const { return m_sample[i]->vz(); }; 
+      double vz (const int i) const { return m_object[i]->vz(); }; 
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_dc
+       * @brief get the private member Catalogue::m_object[i]->m_dc
        * @param i the object index
        * @return the comoving distance of the i-th object
        */
-      double dc (const int i) const { return m_sample[i]->dc(); };
+      double dc (const int i) const { return m_object[i]->dc(); };
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_ra
+       * @brief get the private member Catalogue::m_object[i]->m_ra
        * @param i the object index
        * @return the Right Ascension of the i-th object
        */
-      double ra (const int i) const { return m_sample[i]->ra(); };
+      double ra (const int i) const { return m_object[i]->ra(); };
     
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_dec
+       * @brief get the private member Catalogue::m_object[i]->m_dec
        * @param i the object index
        * @return the Declination of the i-th object
        */
-      double dec (const int i) const { return m_sample[i]->dec(); };
+      double dec (const int i) const { return m_object[i]->dec(); };
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_redshift
+       * @brief get the private member Catalogue::m_object[i]->m_redshift
        * @param i the object index
        * @return the redshift of the i-th object
        */
-      double redshift (const int i) const { return m_sample[i]->redshift(); };
+      double redshift (const int i) const { return m_object[i]->redshift(); };
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_weight
+       * @brief get the private member Catalogue::m_object[i]->m_weight
        * @param i the object index
        * @return the weight of the i-th object
        */
-      double weight (const int i) const { return m_sample[i]->weight(); };
+      double weight (const int i) const { return m_object[i]->weight(); };
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_region
+       * @brief get the private member Catalogue::m_object[i]->m_region
        * @param i the object index
        * @return the index of the region of the i-th object
        */
-      long region (const int i) const { return m_sample[i]->region(); };
+      long region (const int i) const { return m_object[i]->region(); };
 
       /**
-       * @brief get the total number of region the Catalogues is divided
-       * @return the total number of regions
+       * @brief get the private member Catalogue::m_object[i]->m_field
+       * @param i the object index
+       * @return the field where the i-th object has been observed
        */
-      int Nregion () const;
+      string field (const int i) const { return m_object[i]->field(); };
 
       /**
-       * @brief get the list of regions in which the Catalogue is
-       divided     
-       * @return the list of regions of regions
+       * @brief get the private member
+       * Catalogue::m_object[i]->m_x_displacement
+       * @param i the object index
+       * @return the displacement of the i-th object along the x-axis
        */
-      vector<long> get_region_list () const;
+      double x_displacement (const int i) const { return m_object[i]->x_displacement(); };
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_mass
+       * @brief get the private member
+       * Catalogue::m_object[i]->m_y_displacement
+       * @param i the object index
+       * @return the displacement of the i-th object along the x-axis
+       */
+      double y_displacement (const int i) const { return m_object[i]->y_displacement(); };
+
+      /**
+       * @brief get the private member
+       * Catalogue::m_object[i]->m_z_displacement
+       * @param i the object index
+       * @return the displacement of the i-th object along the x-axis
+       */
+      double z_displacement (const int i) const { return m_object[i]->z_displacement(); };
+
+      /**
+       *  @brief get the list of regions in which the catalogue is
+       *  divided
+       *
+       *  @return the list of regions 
+       */
+      vector<long> region_list () const { return different_elements(region()); }
+
+      /**
+       *  @brief get the total number of regions by which the
+       *  Catalogues is divided
+       *
+       *  @return the total number of regions
+       */
+      size_t nRegions () const { return N_different_elements(region()); }
+      
+      /**
+       *  @brief get the list of fields where the objects have been
+       *  observed
+       *
+       *  @return the list of fields 
+       */
+      vector<string> field_list () const { return different_elements(field()); }
+      
+      /**
+       *  @brief get the total number of fields where the objects have
+       *  been observed
+       *
+       *  @return the total number of fields
+       */
+      size_t nFields () const { return N_different_elements(field()); }
+
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_mass
        * @param i the object index
        * @return the mass of the i-th object
        */
-      double mass (const int i) const { return m_sample[i]->mass(); }
+      double mass (const int i) const { return m_object[i]->mass(); }
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_magnitude
+       * @brief get the private member Catalogue::m_object[i]->m_magnitude
        * @param i the object index
        * @return the magnitude of the i-th object
        */
-      double magnitude (const int i) const { return m_sample[i]->magnitude(); }
+      double magnitude (const int i) const { return m_object[i]->magnitude(); }
 
       /**
-       * @brief get the private member Catalogue::m_sample[i]->m_richness
-       * @param i the object index
-       * @return the richness of the i-th object
-       */
-      double richness (const int i) const { return m_sample[i]->richness(); }
-
-      /**
-       * @brief get the private member Catalogue::m_sample[i]->m_generic
-       * @param i the object index
-       * @return generic properties of the i-th object
-       */
-      double generic (const int i) const { return m_sample[i]->generic(); }
-
-      /**
-       * @brief get the private member Catalogue::m_sample[i]->m_radius
+       * @brief get the private member Catalogue::m_object[i]->m_radius
        * @param i the object index
        * @return radius of the i-th object
        */
-      double radius (const int i) const { return m_sample[i]->radius(); }
-  
+      double radius (const int i) const { return m_object[i]->radius(); }
+      
+      /**
+       * @brief get the private member
+       * Catalogue::m_object[i]->m_richness
+       * @param i the object index
+       * @return the richness of the i-th object
+       */
+      double richness (const int i) const { return m_object[i]->richness(); }
+
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_generic
+       * @param i the object index
+       * @return generic properties of the i-th object
+       */
+      double generic (const int i) const { return m_object[i]->generic(); }
+
+      /**
+       * @brief get the values of the object regions  
+       * @return the object regions
+       */
+      vector<long> region () const;
+
+       /**
+       * @brief get the values of the object fields  
+       * @return the object fields
+       */
+      vector<string> field () const;
+      
       /**
        * @brief get the values of the object variables  
        * @param var_name the variable name
@@ -633,13 +788,13 @@ namespace cosmobl {
        * @param i the object index
        * @return pointer to an object of the catalogue
        */
-      shared_ptr<Object> catalogue_object (const int i) const { return m_sample[i]; }
+      shared_ptr<Object> catalogue_object (const int i) const { return m_object[i]; }
 
       /**
        * @brief get the object vector
        * @return vector of pointers to objects of the catalogue
        */
-      vector<shared_ptr<Object>> catalogue_objects () const { return m_sample; }   
+      vector<shared_ptr<Object>> catalogue_object () const { return m_object; }   
 
       /**
        * @brief get the X, Y, Z coordinates of the i-th object of the
@@ -648,13 +803,13 @@ namespace cosmobl {
        * @param i the object index
        * @return vector containing the three coordinates
        */
-      vector<double> coordinates (const int i) const { return m_sample[i]->coords(); }
+      vector<double> coordinate (const int i) const { return m_object[i]->coords(); }
     
       /**
        * @brief get the number of objects of the catalogue
        * @return the number of objects
        */
-      int nObjects () const { return m_sample.size(); }
+      size_t nObjects () const { return m_object.size(); }
   
       /**
        * @brief get the minimum value of a variable of the catalogue
@@ -682,7 +837,7 @@ namespace cosmobl {
        * the third and first quartiles of the variable
        * @return none
        */
-      void stats_var (const Var, vector<double> &) const;
+      void stats_var (const Var var_name, vector<double> & stats) const;
 
       /**
        * @brief get the mean, the median, the standard deviation, and
@@ -695,7 +850,7 @@ namespace cosmobl {
        * variable 
        * @return none
        */
-      void stats_var (const vector<Var>, vector<vector<double> > &) const;
+      void stats_var (const vector<Var> var_name, vector<vector<double>> &stats) const;
   
       /**
        * @brief get the distribution of a variable
@@ -736,21 +891,28 @@ namespace cosmobl {
        *  @name Member functions used to set the private members 
        */
       ///@{
-    
+
+      /**
+       * @brief set a private variable
+       * @param region vector containing the object regions
+       * @return none
+       */
+      void set_region (const vector<long> region);
+
+      /**
+       * @brief set a private variable
+       * @param field vector containing the object fields
+       * @return none
+       */
+      void set_field (const vector<string> field);
+      
       /**
        * @brief set a private variable
        * @param var_name name of the variable
-       * @param _var vector of variables
+       * @param var vector of variables
        * @return none
        */
-      void set_var (const Var, const vector<double> _var); 
-
-      /**
-       * @brief change the number of objects of the catalogue
-       * @param newN the new number of objects
-       * @return none
-       */
-      void resize (const int newN) { m_sample.resize(newN); }
+      void set_var (const Var var_name, const vector<double> var);
 
       ///@}
 
@@ -765,7 +927,7 @@ namespace cosmobl {
        * @param object pointer to an object of type \e Object
        * @return none
        */
-      void add_object (shared_ptr<Object> object) { m_sample.push_back(move(object)); }
+      void add_object (shared_ptr<Object> object) { m_object.push_back(move(object)); }
 
       /**
        * @brief add one single object to the catalogue
@@ -773,9 +935,8 @@ namespace cosmobl {
        * @return none
        */
       template<typename T>
-	void add_object (T object) { m_sample.push_back(move(make_shared<T>(T(object)))); }
+	void add_object (T object) { m_object.push_back(move(make_shared<T>(T(object)))); }
 
-   
       /**
        * @brief add some objects to the catalogue
        * @param sample vector of pointers to objects of type \e Object
@@ -783,7 +944,7 @@ namespace cosmobl {
        */
       void add_objects (vector<shared_ptr<Object> > sample) { 
 	for (auto &&i : sample)
-	  m_sample.push_back(move(i));
+	  m_object.push_back(move(i));
       }
 
       /**
@@ -796,14 +957,6 @@ namespace cosmobl {
 	for (auto &&i : sample)
 	  add_object(i);
       }
-
-      /**
-       * @brief remove all objects 
-       * @return none
-       */
-      void remove_objects () {
-	m_sample.erase(m_sample.begin(), m_sample.end());
-      }
     
       /**
        * @brief replace existing objects with new ones 
@@ -811,8 +964,8 @@ namespace cosmobl {
        * @return none
        */
       template<typename T>
-	void remove_objects (vector<T > sample) {
-	m_sample.erase(m_sample.begin(), m_sample.end());
+	void replace_objects(vector<T> sample) {
+	m_object.erase(m_object.begin(), m_object.end());
 	add_objects(sample);
       }
 
@@ -821,12 +974,25 @@ namespace cosmobl {
        * @param sample vector of pointers to objects of type \e Object
        * @return none
        */
-      void remove_objects (vector<shared_ptr<Object> > sample) {
-	m_sample.erase(m_sample.begin(), m_sample.end());
+      void replace_objects (vector<shared_ptr<Object> > sample) {
+	m_object.erase(m_object.begin(), m_object.end());
 	for (auto &&i : sample)
-	  m_sample.push_back(move(i));
+	  m_object.push_back(move(i));
       }
 
+      /**
+       * @brief remove all objects 
+       * @return none
+       */
+      void remove_objects () { m_object.erase(m_object.begin(), m_object.end()); }
+      
+      /**
+       * @brief remove an existing object
+       * @param index the index of the object to be removed
+       * @return none
+       */
+      void remove_object (const int index) { m_object.erase(m_object.begin()+index); }
+      
       ///@}
 
     
@@ -884,7 +1050,7 @@ namespace cosmobl {
        * @param vv vector used to order the catalogue
        * @return none
        */
-      void Order (const vector<int>); 
+      void Order (const vector<int> vv); 
 
       /**
        * @brief restore the original vector (i.e. the opposite of
@@ -896,26 +1062,27 @@ namespace cosmobl {
       /**
        * @brief write the comoving coordinates of the catalogue to an
        * output file
-       * @param file_output the name of the output file
+       * @param outputFile the name of the output file
        * @return none
        */
-      void write_comoving_coordinates (const string) const;
+      void write_comoving_coordinates (const string outputFile) const;
 
       /**
        * @brief write the polar coordinates of the catalogue to an
        * output file
-       * @param file_output the name of the output file
+       * @param outputFile the name of the output file
        * @return none
        */
-      void write_obs_coordinates (const string) const;
+      void write_obs_coordinates (const string outputFile) const;
 
       /**
-       * @brief write both the comoving and polar coordinates of the
-       * catalogue to an output file
-       * @param file_output the name of the output file
+       * @brief write both the comoving and polar coordinates, and the
+       * regions (if present) of the catalogue to an output file
+       *
+       * @param outputFile the name of the output file
        * @return none
        */
-      void write_coordinates (const string) const;
+      void write_data (const string outputFile) const;
 
       /**
        * @brief get the distrance between the i-th object of the
@@ -925,7 +1092,7 @@ namespace cosmobl {
        * @return distance between the i-th object of the catalogue and
        * the object obj
        */
-      double distance (const int, shared_ptr<Object>) const;
+      double distance (const int i, shared_ptr<Object> obj) const;
     
       /**
        * @brief get the angular distrance between the i-th object of the
@@ -935,7 +1102,7 @@ namespace cosmobl {
        * @return distance between the i-th object of the catalogue and
        * the object obj
        */
-      double angsep_xyz (const int, shared_ptr<Object>) const;
+      double angsep_xyz (const int i, shared_ptr<Object> obj) const;
     
       /**
        * @brief overloading of the += operator, to sum two catalogues
@@ -944,8 +1111,8 @@ namespace cosmobl {
        */
       Catalogue operator += (shared_ptr<Catalogue> cc)
       {
-	for (auto &&ss : cc->m_sample)
-	  m_sample.push_back(shared_ptr<Object>(new Object(*ss)));
+	for (auto &&ss : cc->m_object)
+	  m_object.push_back(shared_ptr<Object>(new Object(*ss)));
 	return *this;
       }
 
@@ -956,8 +1123,8 @@ namespace cosmobl {
        */
       Catalogue operator += (const Catalogue cc)
       {
-	for (auto &&ss : cc.m_sample)
-	  m_sample.push_back(shared_ptr<Object>(new Object(*ss)));
+	for (auto &&ss : cc.m_object)
+	  m_object.push_back(shared_ptr<Object>(new Object(*ss)));
 	return *this;
       }
 
@@ -970,7 +1137,7 @@ namespace cosmobl {
        * &rarr; creates a subcatalogue outside down-up;
        * @return object of class catalogue
        */
-      shared_ptr<Catalogue> cut (const Var, const double, const double, const bool excl=0);
+      Catalogue cut (const Var, const double, const double, const bool excl=0);
 
       /**
        * @brief create a smoothed version of the catalogue
@@ -1034,8 +1201,9 @@ namespace cosmobl {
        * @return the density field
        */
       data::ScalarField3D density_field (const double cell_size, const Catalogue mask_catalogue, const int interpolation_type = 0, const double kernel_radius=0., const bool useMass = 0) const;
+
       ///@}
-    
+      
     };
     
   }

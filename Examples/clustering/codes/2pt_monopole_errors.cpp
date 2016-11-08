@@ -5,92 +5,95 @@
 #include "TwoPointCorrelation1D_monopole.h"
 #include "GlobalFunc.h"
 
-using namespace cosmobl;
-using namespace cosmology;
-using namespace catalogue;
-using namespace twopt;
-
-string par::DirCosmo = DIRCOSMO, par::DirLoc = DIRL;
+// these two variables contain the name of the CosmoBolognaLib
+// directory and the name of the current directory (useful when
+// launching the code on remote systems)
+string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
 
 
 int main () {
-  
-  // -----------------------------------------------------------------
-  // ---------------- use default cosmological parameters ------------
-  // -----------------------------------------------------------------
 
-  Cosmology cosmology;
+  try {
   
-  
-  // -----------------------------------------------------------------------------------------------------------
-  // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
-  // -----------------------------------------------------------------------------------------------------------
-  
-  string file_catalogue = par::DirLoc+"../input/cat.dat";
-  
-  Catalogue catalogue {_Galaxy_, _observedCoordinates_, {file_catalogue}, cosmology};
+    // -----------------------------------------------------------------
+    // ---------------- use default cosmological parameters ------------
+    // -----------------------------------------------------------------
 
+    const cosmobl::cosmology::Cosmology cosmology;
   
-  // --------------------------------------------------------------------------------------
-  // ---------------- construct the random catalogue (with cubic geometry) ----------------
-  // --------------------------------------------------------------------------------------
   
-  double N_R = 1.; // random/data ratio
+    // -----------------------------------------------------------------------------------------------------------
+    // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
+    // -----------------------------------------------------------------------------------------------------------
   
-  Catalogue random_catalogue {_createRandom_box_, catalogue, N_R};
+    const string file_catalogue = cosmobl::par::DirLoc+"../input/cat.dat";
+  
+    cosmobl::catalogue::Catalogue catalogue {cosmobl::catalogue::_Galaxy_, cosmobl::_observedCoordinates_, {file_catalogue}, cosmology};
 
   
-  // --------------------------------------------------------------------------------------------
-  // ---------------- measure the monopole of the two-point correlation function ----------------
-  // --------------------------------------------------------------------------------------------
-
-  // binning parameters
-
-  double rMin = 1.;   // minimum separation 
-  double rMax = 50.;  // maximum separation 
-  int nbins = 5;      // number of bins
-  double shift = 0.5; // spatial shift used to set the bin centre
+    // --------------------------------------------------------------------------------------
+    // ---------------- construct the random catalogue (with cubic geometry) ----------------
+    // --------------------------------------------------------------------------------------
   
+    const double N_R = 1.; // random/data ratio
   
-  // construct the object used to measure the two-point correlation function
-  
-  TwoPointCorrelation1D_monopole TwoP {catalogue, random_catalogue, _logarithmic_, rMin, rMax, nbins, shift};
+    cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
 
   
-  // Input/Output directories
+    // --------------------------------------------------------------------------------------------
+    // ---------------- measure the monopole of the two-point correlation function ----------------
+    // --------------------------------------------------------------------------------------------
+
+    // binning parameters
+
+    const double rMin = 1.;   // minimum separation 
+    const double rMax = 50.;  // maximum separation 
+    const int nbins = 5;      // number of bins
+    const double shift = 0.5; // spatial shift used to set the bin centre
   
-  string dir_output = par::DirLoc+"../output/";
-  string dir_pairs = dir_output+"pairs/";
+  
+    // construct the object used to measure the two-point correlation function
+  
+    cosmobl::twopt::TwoPointCorrelation1D_monopole TwoP {catalogue, random_catalogue, cosmobl::_logarithmic_, rMin, rMax, nbins, shift};
 
   
-  // construct the sub-regions used for jackknife and bootstrap
-
-  cout << "I'm constructing the sub-regions used for jackknife and bootstrap..." << endl;
-  int nx = 3, ny = 3, nz = 3;
-  set_ObjectRegion_SubBoxes(catalogue, random_catalogue, nx, ny, nz);
-
+    // Input/Output directories
   
-  // measure the monopole and compute Poissonian errors 
-  
-  TwoP.measure(_Poisson_, dir_pairs);
-  TwoP.write(dir_output, "xi_PoissonianErrors.dat");
-  
-  
-  // measure the monopole and compute errors with jackknife (in cubic geometry)
-
-  TwoP.measure(_Jackknife_, dir_pairs);
-  TwoP.write(dir_output, "xi_JackknifeErrors.dat");
+    const string dir_output = cosmobl::par::DirLoc+"../output/";
+    const string dir_pairs = dir_output+"pairs/";
 
   
-  // measure the monopole and compute errors with bootstrap
-  
-  int nM = 20; // number of mocks generated for bootstrap resampling
-  TwoP.measure(_Bootstrap_, dir_pairs, {dir_pairs}, "", nM);
-  TwoP.write(dir_output, "xi_BootstrapErrors.dat");
+    // construct the sub-regions used for jackknife and bootstrap
 
-  print(TwoP.dataset()->covariance());
+    cout << "I'm constructing the sub-regions used for jackknife and bootstrap..." << endl;
+    const int nx = 3, ny = 3, nz = 3;
+    cosmobl::set_ObjectRegion_SubBoxes(catalogue, random_catalogue, nx, ny, nz);
+
+  
+    // measure the monopole and compute Poissonian errors 
+  
+    TwoP.measure(cosmobl::twopt::_Poisson_, dir_pairs);
+    TwoP.write(dir_output, "xi_PoissonianErrors.dat");
+  
+  
+    // measure the monopole and compute errors with jackknife (in cubic geometry)
+
+    TwoP.measure(cosmobl::twopt::_Jackknife_, dir_pairs);
+    TwoP.write(dir_output, "xi_JackknifeErrors.dat");
+
+  
+    // measure the monopole and compute errors with bootstrap
+  
+    const int nM = 100; // number of mocks generated for bootstrap resampling
+    TwoP.measure(cosmobl::twopt::_Bootstrap_, dir_pairs, {dir_pairs}, "", nM);
+    TwoP.write(dir_output, "xi_BootstrapErrors.dat");
+
+    cosmobl::print(TwoP.dataset()->covariance());
+
+  }
+
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
   
   return 0;
-
 }
 

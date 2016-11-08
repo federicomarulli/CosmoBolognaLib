@@ -38,7 +38,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::bias_halo (const double Mass, const double redshift, const string author, const string method_SS, const string output_root, const double Delta, const double kk, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
+double cosmobl::cosmology::Cosmology::bias_halo (const double Mass, const double redshift, const string author, const string method_SS, const string output_root, const double Delta, const double kk, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
 {
   double SSS = SSM_norm(Mass, method_SS, redshift, output_root, k_max, file_par); 
   double Sigma = sqrt(SSS); 
@@ -46,7 +46,7 @@ double cosmobl::cosmology::Cosmology::bias_halo (const double Mass, const double
   double bias = bias_halo_generator (Sigma, redshift, author, Delta); 
 
   if (m_fNL!=0) {
-    double fact = bias_correction(kk, Mass, method_SS, output_root, norm, k_min, k_max, GSL, prec, file_par) * SSS * (bias-1) * (bias-1);
+    double fact = bias_correction(kk, Mass, method_SS, output_root, norm, k_min, k_max, prec, file_par) * SSS * (bias-1) * (bias-1);
     bias += fact; 
   }
 
@@ -57,13 +57,13 @@ double cosmobl::cosmology::Cosmology::bias_halo (const double Mass, const double
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::bias_halo (const double Mass, const double Sigma, const double redshift, const string author_bias, const string output_root, const double Delta, const double kk, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string method_SS, const string file_par) 
+double cosmobl::cosmology::Cosmology::bias_halo (const double Mass, const double Sigma, const double redshift, const string author_bias, const string output_root, const double Delta, const double kk, const int norm, const double k_min, const double k_max, const double prec, const string method_SS, const string file_par) 
 {
   double bias = bias_halo_generator(Sigma, redshift, author_bias, Delta); 
   
   if (m_fNL!=0) {
     double z0 = 0.;
-    double fact = bias_correction(kk, Mass, method_SS, output_root, norm, k_min, k_max, GSL, prec, file_par) * SSM_norm(Mass, method_SS, z0, output_root, k_max, file_par) * (bias-1) * (bias-1);
+    double fact = bias_correction(kk, Mass, method_SS, output_root, norm, k_min, k_max, prec, file_par) * SSM_norm(Mass, method_SS, z0, output_root, k_max, file_par) * (bias-1) * (bias-1);
     bias += fact; 
   }
 
@@ -120,7 +120,7 @@ double cosmobl::cosmology::Cosmology::bias_halo_generator (const double Sigma, c
   
   if (bias<-100) {
     string Err = "Error in cosmobl::cosmology::Cosmology::bias_halo of Bias.cpp: author = " + author + "!";
-    ErrorMsg(Err);
+    ErrorCBL(Err);
   }
   
   return bias;
@@ -130,14 +130,14 @@ double cosmobl::cosmology::Cosmology::bias_halo_generator (const double Sigma, c
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::bias_eff (const double Mass_min, const double Mass_max, const double redshift, const string author_bias, const string author_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
+double cosmobl::cosmology::Cosmology::bias_eff (const double Mass_min, const double Mass_max, const double redshift, const string author_bias, const string author_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
 {
   // ---------- read the grid file ---------- 
   
   double zero = 0.;
   string file_grid = create_grid_sigmaM(method_SS, zero, output_root, interpType, Num, stepsize, k_max, file_par);
-  //cout <<"grid file: "<<file_grid<<endl;
-  ifstream fin (file_grid.c_str()); checkIO (file_grid,1); 
+  //coutCBL <<"grid file: "<<file_grid<<endl;
+  ifstream fin(file_grid.c_str()); checkIO(fin, file_grid); 
   
   double Mass, Sigma, Dln_Sigma;
   vector<double> mass, sigma, dlnsigma;
@@ -156,9 +156,9 @@ double cosmobl::cosmology::Cosmology::bias_eff (const double Mass_min, const dou
 
   for (unsigned int mm=0; mm<mass.size()-1; mm++) {
 
-    double MF = mass_function(mass[mm], sigma[mm], dlnsigma[mm], redshift, author_MF, output_root, Delta, interpType, Num, stepsize, norm, k_min, k_max, GSL, prec, method_SS, file_par);
+    double MF = mass_function(mass[mm], sigma[mm], dlnsigma[mm], redshift, author_MF, output_root, Delta, interpType, Num, stepsize, norm, k_min, k_max, prec, method_SS, file_par);
     
-    Bias_eff += bias_halo(mass[mm], sigma[mm], redshift, author_bias, output_root, Delta, kk, norm, k_min, k_max, GSL, prec, method_SS, file_par)*MF*(mass[mm+1]-mass[mm]);
+    Bias_eff += bias_halo(mass[mm], sigma[mm], redshift, author_bias, output_root, Delta, kk, norm, k_min, k_max, prec, method_SS, file_par)*MF*(mass[mm+1]-mass[mm]);
 
     Norm += MF*(mass[mm+1]-mass[mm]);
   }
@@ -170,13 +170,13 @@ double cosmobl::cosmology::Cosmology::bias_eff (const double Mass_min, const dou
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::bias_eff (const vector<double> MM, const vector<double> MF, const double redshift, const string author_bias, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const bool GSL, const double prec, const string file_par) 
+double cosmobl::cosmology::Cosmology::bias_eff (const vector<double> MM, const vector<double> MF, const double redshift, const string author_bias, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
 {
   // ---------- read the grid file ---------- 
   
   double zero = 0.;
   string file_grid = create_grid_sigmaM(method_SS, zero, output_root, interpType, Num, stepsize, k_max, file_par);
-  ifstream fin(file_grid.c_str()); checkIO(file_grid, 1); 
+  ifstream fin(file_grid.c_str()); checkIO(fin, file_grid); 
   
   double Mass, Sigma, Dln_Sigma;
   vector<double> mass, sigma;
@@ -189,7 +189,7 @@ double cosmobl::cosmology::Cosmology::bias_eff (const vector<double> MM, const v
   }
   if (mass.size()==0) { 
     string Err = "Error in cosmobl::cosmology::Cosmology::bias_eff of Bias.cpp: mass.size()=0, Min(MM) = " + conv(Min(MM),par::fDP3) + ", Max(MM) = " + conv(Max(MM),par::fDP3) + ", file_grid = " + file_grid;
-    ErrorMsg(Err);
+    ErrorCBL(Err);
   }
   
 
@@ -204,10 +204,10 @@ double cosmobl::cosmology::Cosmology::bias_eff (const vector<double> MM, const v
     
     if (err/sig>0.1) { 
       string Err = "Error in cosmobl::cosmology::Cosmology::bias_eff of Bias.cpp: err/sig = " + conv(err/sig, par::fDP3) + "!";
-      ErrorMsg(Err);
+      ErrorCBL(Err);
     } 
 
-    Bias_eff += bias_halo(MM[k], sig, redshift, author_bias, output_root, Delta, kk, norm, k_min, k_max, GSL, prec, method_SS, file_par)*mf*(MM[k+1]-MM[k]);
+    Bias_eff += bias_halo(MM[k], sig, redshift, author_bias, output_root, Delta, kk, norm, k_min, k_max, prec, method_SS, file_par)*mf*(MM[k+1]-MM[k]);
     Norm += mf*(MM[k+1]-MM[k]);
   }
 

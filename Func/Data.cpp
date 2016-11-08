@@ -32,23 +32,25 @@
  */
 
 #include "Data.h"
-#include "Data1D.h"
-#include "Data2D.h"
 #include "Data1D_collection.h"
+#include "Data1D_extra.h"
+#include "Data2D_extra.h"
 
 using namespace cosmobl;
 using namespace data;
 
+
 // ======================================================================================
 
 
-shared_ptr<Data> cosmobl::data::Data::Create (const DataType dType)
+shared_ptr<Data> cosmobl::data::Data::Create (const DataType dataType)
 {
-
-  if (dType==DataType::_1D_data_) return move(unique_ptr<Data1D>(new Data1D()));
-  else if (dType==DataType::_1D_collection_data_) return move(unique_ptr<Data1D_collection>(new Data1D_collection()));
-  else if (dType==DataType::_2D_data_) return move(unique_ptr<Data2D>(new Data2D()));
-  else ErrorMsg("Error in cosmobl::data::Data::Create of Data.cpp: no such type of object, or error in the input parameters!!");
+  if (dataType==DataType::_1D_data_) return move(unique_ptr<Data1D>(new Data1D()));
+  else if (dataType==DataType::_2D_data_) return move(unique_ptr<Data2D>(new Data2D()));
+  else if (dataType==DataType::_1D_data_collection_) return move(unique_ptr<Data1D_collection>(new Data1D_collection()));
+  else if (dataType==DataType::_1D_data_extra_) return move(unique_ptr<Data1D_extra>(new Data1D_extra()));
+  else if (dataType==DataType::_2D_data_extra_) return move(unique_ptr<Data2D_extra>(new Data2D_extra()));
+  else ErrorCBL("Error in cosmobl::data::Data::Create of Data.cpp: no such type of object, or error in the input parameters!!");
 
   return NULL;
 }
@@ -83,7 +85,7 @@ shared_ptr<Data> cosmobl::data::Data::Create (const vector<double> x, const vect
 // ======================================================================================
 
 
-shared_ptr<Data> cosmobl::data::Data::Create (const vector<double> x, const vector<double> fx, const vector<vector<double> > covariance, const double xmin, const double xmax)
+shared_ptr<Data> cosmobl::data::Data::Create (const vector<double> x, const vector<double> fx, const vector<vector<double>> covariance, const double xmin, const double xmax)
 {
   return move(unique_ptr<Data1D>(new Data1D(x, fx, covariance, xmin, xmax)));
 }
@@ -92,7 +94,7 @@ shared_ptr<Data> cosmobl::data::Data::Create (const vector<double> x, const vect
 // ======================================================================================
 
 
-shared_ptr<Data> cosmobl::data::Data::Create (vector<double> x, vector<double> y, vector<vector<double> > fxy, double xmin, double xmax, double ymin, double ymax)
+shared_ptr<Data> cosmobl::data::Data::Create (const vector<double> x, const vector<double> y, const vector<vector<double>> fxy, const double xmin, const double xmax, const double ymin, const double ymax)
 {
   return move(unique_ptr<Data2D>(new Data2D(x, y, fxy, xmin, xmax, ymin, ymax)));
 }
@@ -101,7 +103,7 @@ shared_ptr<Data> cosmobl::data::Data::Create (vector<double> x, vector<double> y
 // ======================================================================================
 
 
-shared_ptr<Data> cosmobl::data::Data::Create (vector<double> x, vector<double> y, vector<vector<double> > fxy, vector<vector<double> > error_fxy, double xmin, double xmax, double ymin, double ymax)
+shared_ptr<Data> cosmobl::data::Data::Create (const vector<double> x, const vector<double> y, const vector<vector<double>> fxy, const vector<vector<double>> error_fxy, const double xmin, const double xmax, const double ymin, const double ymax)
 {
   return move(unique_ptr<Data2D>(new Data2D(x, y, fxy, error_fxy, xmin, xmax, ymin, ymax)));
 }

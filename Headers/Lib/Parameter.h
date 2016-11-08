@@ -120,23 +120,27 @@ namespace cosmobl {
       Parameter () = default;
 
       /**
-       *  @brief constructor for parameter with uniform non limited prior
+       *  @brief constructor for parameter with uniform non limited
+       *  prior
        *
        *  @param value parameter value
-       *  @param pType the parameter type: it can be either _free_ or _fixed_
+       *  @param pType the parameter type: it can be either _free_ or
+       *  _fixed_
        *  @param name parameter name
        *
        *  @return object of class Parameter
        */
-      Parameter (const double value, const ParameterType pType=_free_, const string name="parameter");
+      Parameter (const double value, const ParameterType pType, const string name);
 
       /**
-       *  @brief constructor for parameter with uniform prior, with limits
+       *  @brief constructor for parameter with uniform prior, with
+       *  limits
        *
        *  @param value parameter value
        *  @param xmin lower value for the parameter
        *  @param xmax upper value for the parameter
-       *  @param pType the parameter type: it can be either _free_ or _fixed_
+       *  @param pType the parameter type: it can be either _free_ or
+       *  _fixed_
        *  @param name parameter name
        *
        *  @return object of class Parameter
@@ -144,7 +148,8 @@ namespace cosmobl {
       Parameter (const double value, const double xmin, const double xmax, const ParameterType pType=_free_, const string name="parameter");
 
       /**
-       *  @brief constructor for parameter with a gaussian/poisson prior, with limits
+       *  @brief constructor for parameter with a Gaussian/Poisson
+       *  prior, with limits
        *
        *  @param value parameter value
        *  @param priorType the type of prior to be created
@@ -152,7 +157,8 @@ namespace cosmobl {
        *  value for the parameter
        *  @param xmin lower value for the parameter
        *  @param xmax upper value for the parameter
-       *  @param pType the parameter type: it can be either _free_ or _fixed_
+       *  @param pType the parameter type: it can be either _free_ or
+       *  _fixed_
        *  @param name parameter name
        *
        *  @return object of class Parameter
@@ -160,13 +166,15 @@ namespace cosmobl {
       Parameter (const double value, const PriorType priorType, const vector<double> prior_params, const double xmin, const double xmax, const ParameterType pType=_free_, const string name="parameter");
 
       /**
-       *  @brief constructor for parameter with discrete distribution prior
+       *  @brief constructor for parameter with discrete distribution
+       *  prior
        *
        *  @param value parameter value
        *  @param priorType the type of prior to be created
        *  @param discrete_values discrete values for the parameter
        *  @param weights weights for discrete values
-       *  @param pType the parameter type: it can be either _free_ or _fixed_
+       *  @param pType the parameter type: it can be either _free_ or
+       *  _fixed_
        *  @param name parameter name
        *
        *  @return object of class Parameter
@@ -178,12 +186,22 @@ namespace cosmobl {
        * 
        *  @param value parameter value
        *  @param prior prior for the parameter 
-       *  @param pType the parameter type: it can be either _free_ or _fixed_
+       *  @param pType the parameter type: it can be either _free_ or
+       *  _fixed_
        *  @param name parameter name
        *
        *  @return object of class Parameter
        */
       Parameter (const double value, const Prior prior, const ParameterType pType=_free_, string name="parameter");
+
+      /**
+       *  @brief default constructor for fixed parameters
+       * 
+       *  @param value parameter value
+       *
+       *  @return object of class Parameter
+       */
+      Parameter (const double value) : Parameter(value, _fixed_, "parameter") {}
 
       /**
        *  @brief default destructor
@@ -277,7 +295,7 @@ namespace cosmobl {
        *
        * @return prior value
        */
-      double PriorProbability () const { return (isFreezed()) ? 1. : m_prior->operator()(m_value); }
+      double PriorProbability () const { return (isFixed()) ? 1. : m_prior->operator()(m_value); }
 
       /**
        * @brief value of the prior at a proposed value
@@ -301,7 +319,7 @@ namespace cosmobl {
        *  @param seed the prior seed
        *  @return none
        */
-      void set_prior_seed (const int seed) { m_prior->set_seed(seed); }
+      void set_prior_seed (const int seed) { if (m_pType==_free_) m_prior->set_seed(seed); }
 
       /**
        *  @brief set the protected member m_value
@@ -329,7 +347,7 @@ namespace cosmobl {
        *  @param pType the parameter type
        *  @return none
        */
-      void set_freeze (const ParameterType pType) { m_pType = pType; }
+      void set_pType (const ParameterType pType) { m_pType = pType; }
 
       /**
        *  @brief set user defined prior
@@ -390,13 +408,13 @@ namespace cosmobl {
        *  @brief get the protected member m_pType
        *  @return the parameter type
        */
-      bool isFreezed () const { return (m_pType==_fixed_) ? 1 : 0; }
+      bool isFixed () const { return (m_pType==_fixed_) ? true : false; }
 
       /**
        *  @brief extract a parameter value from the prior
        *  @return a parameter value
        */
-      double sample_from_prior () { return (isFreezed()) ? m_value : m_prior->sample(); }
+      double sample_from_prior () { return (isFixed()) ? m_value : m_prior->sample(); }
 
       /**
        *  @brief extract values from the prior 	 

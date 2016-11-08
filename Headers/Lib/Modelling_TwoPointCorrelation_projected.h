@@ -1,5 +1,5 @@
 /********************************************************************
- *  Copyright (C) 2010 by Federico Marulli                          *
+ *  Copyright (C) 2016 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
  *  This program is free software; you can redistribute it and/or   *
@@ -24,18 +24,19 @@
  *  @brief The class Modelling_TwoPointCorrelation_projected
  *
  *  This file defines the interface of the class
- *  Modelling_TwoPointCorrelation_projected, used for modelling projected 2pcf
+ *  Modelling_TwoPointCorrelation_projected, used to model the
+ *  projected two-point correlation function
  *
- *  @author Federico Marulli
+ *  @author Federico Marulli, Alfonso Veropalumbo
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
  */
 
 #ifndef __MODELLINGPROJ__
 #define __MODELLINGPROJ__
 
 
-#include "Modelling_TwoPointCorrelation.h"
+#include "Modelling_TwoPointCorrelation1D.h"
 
 
 // ===================================================================================================
@@ -57,9 +58,9 @@ namespace cosmobl {
      *  projected of the two-point correlation function
      *
      */
-    class Modelling_TwoPointCorrelation_projected : public Modelling_TwoPointCorrelation {
+    class Modelling_TwoPointCorrelation_projected : public Modelling_TwoPointCorrelation1D {
 
-      public:
+    public:
 
 	/**
 	 *  @name Constructors/destructors
@@ -70,74 +71,47 @@ namespace cosmobl {
 	 *  @brief default constuctor
 	 *  @return object of class ModellingTwoPointCorrelation_projected
 	 */
-	Modelling_TwoPointCorrelation_projected () {}
+      Modelling_TwoPointCorrelation_projected () = default;
+      
+      /**
+       *  @brief constructor
+       *  
+       *  @param twop the two-point correlation function to model
+       *
+       *  @return object of type
+       *  Modelling_TwoPointCorrelation_projected
+       */
+      Modelling_TwoPointCorrelation_projected (const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop)
+	: Modelling_TwoPointCorrelation1D(twop) {}
 
-	/**
-	 *  @brief default destructor
-	 *  @return none
-	 */
-	virtual ~Modelling_TwoPointCorrelation_projected () {}
-
-	/**
-	 *  @brief constructor of the Modelling_TwoPointCorrelation_projected
-	 *  
-	 *  @param twop the two-point correlation function to model
-	 *
-	 *  @return object of type Modelling_TwoPointCorrelation_projected
-	 */
-	Modelling_TwoPointCorrelation_projected(const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop);
+      /**
+       *  @brief constructor
+       *  
+       *  @param twop_dataset the dataset containing the two-point
+       *  correlation function to model
+       *
+       *  @return object of type
+       *  Modelling_TwoPointCorrelation_projected
+       */
+      Modelling_TwoPointCorrelation_projected (const shared_ptr<data::Data> twop_dataset)
+	: Modelling_TwoPointCorrelation1D() { set_data(twop_dataset); }
+      
+      /**
+       *  @brief default destructor
+       *  @return none
+       */
+      ~Modelling_TwoPointCorrelation_projected () = default;
 	
-	///@}
+      ///@}
 
-	/**
-	 * @brief set the fiducial model for dark matter 
-	 * two point correlation function
-	 *
-	 *  @return none
-	 */
-	void set_fiducial_twop() override;
+      /**
+       * @brief set the fiducial model for dark matter 
+       * two point correlation function
+       *
+       *  @return none
+       */
+      void set_fiducial_xiDM () override;
 
-	/**
-	 * @brief fit the bias of the measured
-	 * two point correlation function
-	 *
-	 * @param bias_prior prior for the bias
-	 * @param pT_bias the parameter type of the bias: it can be
-	 * either _free_ or _fixed_
-	 *
-	 * @return none
-	 */
-	void set_model_bias(const statistics::Prior bias_prior, const statistics::ParameterType pT_bias=statistics::_free_) override;
-
-	/**
-	 * @brief compute and write the model using the stored 
-	 * parameter values
-	 *
-	 * @param xx vector of point at which the model
-	 * is computed
-	 * @param dir_model the output directory of the model
-	 * @param file_model the name of the file
-	 *
-	 * @return none
-	 */
-	void write_model(const vector<double> xx, const string dir_model, const string file_model)
-	{ m_model->write_model(xx, dir_model, file_model); }
-
-	/**
-	 * @brief compute and write the model using the stored 
-	 * parameter values
-	 *
-	 * @param xx vector of point at which the model
-	 * is computed
-	 * @param parameters vector of parameters values
-	 * at which the model is computed
-	 * @param dir_model the output directory of the model
-	 * @param file_model the name of the file
-	 *
-	 * @return none
-	 */
-	virtual void write_model_parameters(const vector<double> xx, const vector<double> parameters, const string dir_model, const string file_model)
-	{ m_model->write_model(xx, parameters, dir_model, file_model); }
     };
   }
 }

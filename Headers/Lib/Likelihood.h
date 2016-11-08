@@ -42,13 +42,6 @@
 
 namespace cosmobl {
 
-  /**
-   *  @brief The namespace of functions and classes used for statistical
-   *  analysis
-   *  
-   * The \e statistic namespace contains all the functions and classes
-   * used for statistical analyis
-   */
   namespace statistics {
     
     /**
@@ -73,6 +66,7 @@ namespace cosmobl {
       _UserDefinedLikelihood_
     };
 
+    
     /**
      * @struct STR_likelihood_parameters
      * @brief the struct STR_likelihood_parameters
@@ -94,58 +88,58 @@ namespace cosmobl {
        *  @param _model pointers to the model 
        *  @return object of type STR_likelihood_parameters
        */ 
-      STR_likelihood_parameters (shared_ptr<data::Data> _data, shared_ptr<Model> _model) :
-      data(_data), model(_model) {}
+      STR_likelihood_parameters (const shared_ptr<data::Data> _data, const shared_ptr<Model> _model)
+      : data(_data), model(_model) {}
     };
 
 
     /** 
      *  @brief function to compute the gaussian loglikelihood 
      *  @param model_parameters the parameters of the model
-     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @param inputs pointer to an object of type STR_params
      *  @return the value of the loglikelihood; 
      */
-    double LogLikelihood_Gaussian_1D_model (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
+    double LogLikelihood_Gaussian_1D_model (vector<double> model_parameters, const shared_ptr<void> inputs);
 
     /** 
      *  @brief function to compute the gaussian loglikelihood 
      *  @param model_parameters the parameters of the model
-     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @param inputs pointer to an object of type STR_params
      *  @return the value of the loglikelihood 
      */
-    double LogLikelihood_Gaussian_1D_error (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
+    double LogLikelihood_Gaussian_1D_error (vector<double> model_parameters, const shared_ptr<void> inputs);
 
     /** 
      *  @brief function to compute the gaussian loglikelihood 
      *  @param model_parameters the parameters of the model
-     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @param inputs pointer to an object of type STR_params
      *  @return the value of the loglikelihood 
      */
-    double LogLikelihood_Gaussian_1D_covariance (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
+    double LogLikelihood_Gaussian_1D_covariance (vector<double> model_parameters, const shared_ptr<void> inputs);
 
     /** 
      *  @brief function to compute the gaussian loglikelihood 
      *  @param model_parameters the parameters of the model
-     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @param inputs pointer to an object of type STR_params
      *  @return the value of the loglikelihood 
      */
-    double LogLikelihood_Gaussian_2D_model (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
+    double LogLikelihood_Gaussian_2D_model (vector<double> model_parameters, const shared_ptr<void> inputs);
 
     /** 
      *  @brief function to compute the gaussian loglikelihood 
      *  model with one parameter  &chi;&sup2; 
      *  @param model_parameters the parameters of the model
-     *  @param fixed_parameters pointer to an object of type STR_params
+     *  @param inputs pointer to an object of type STR_params
      *  @return the value of the loglikelihood 
      */
-    double LogLikelihood_Gaussian_2D_error (vector<double> model_parameters, const shared_ptr<void> fixed_parameters);
+    double LogLikelihood_Gaussian_2D_error (vector<double> model_parameters, const shared_ptr<void> inputs);
 
     /**
      * @var typedef LogLikelihood_function
      * @brief definition of a function for computation of 
      * the LogLikelihood
      */
-    typedef function<double(const vector<double>, const shared_ptr<void>)> LogLikelihood_function;
+    typedef function<double (const vector<double>, const shared_ptr<void>)> LogLikelihood_function;
     
     /**
      *  @class Likelihood Likelihood.h "Headers/Lib/Likelihood.h"
@@ -234,10 +228,20 @@ namespace cosmobl {
        *  @brief default destructor
        *  @return none
        */
-      ~Likelihood () {}
+      ~Likelihood () = default;
 
       ///@}
 
+      /**
+       * @brief return the best-fit value of the i-th parameter
+       *
+       * @param i the parameter index
+       *
+       * @return the best-fit value of the i-th parameter
+       */
+      double best_fit (const int i) { return m_model->parameter(i)->value(); }
+
+	
       /**
        * @brief evaluate the likelihood
        *
@@ -357,18 +361,7 @@ namespace cosmobl {
        *  @return averace acceptance ratio
        */
       double sample_tabulated_likelihood (const int nstep_p1, const int nstep_p2, const string interpolation_method, const int nchains, const int chain_size, const int seed, bool do_write_chain = 0, const string output_dir=par::defaultString, const string output_file=par::defaultString);
-      /*
-       *  @brief function that samples likelihood, using
-       *  Metropolis-Hastings algorithm on uni-dimensional parameter
-       *  space, and stores chain parameters.       
-       *  @param nchains number of chains to sample the parameter space 
-       *  @param chain_size number of step in each chain 
-       *  @param shift  percentage shift for proposed parameter 
-       *  @param nsubstep number of substeps in each iteration 
-       *  @return averace acceptance ratio
-       */
-      // double sample (const int nchains, const int chain_size, const double shift, const int nsubstep = 100); 
-
+      
       /**
        *  @brief function that write sampled parameters 
        *  @param output_dir directory of output for chains 

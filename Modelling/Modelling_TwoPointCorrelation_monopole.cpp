@@ -1,5 +1,5 @@
 /********************************************************************
- *  Copyright (C) 2015 by Federico Marulli and Alfonso Veropalumbo  *
+ *  Copyright (C) 2016 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
  *  This program is free software; you can redistribute it and/or   * 
@@ -21,15 +21,16 @@
 /**
  *  @file Modelling/Modelling_TwoPointCorrelation_monopole.cpp
  *
- *  @brief Methods of the class Modelling, used for modelling the monopole
- *  of the 2pcf
+ *  @brief Methods of the class
+ *  Modelling_TwoPointCorrelation_monopole, used to model the monopole
+ *  of the two-point correlation function
  *
  *  This file contains the implementation of the methods of the class
  *  Modelling_TwoPointCorrelation_monopole
  *
- *  @authors Federico Marulli
+ *  @authors Federico Marulli, Alfonso Veropalumbo
  *
- *  @authors federico.marulli3@unbo.it
+ *  @authors federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
  */
 
 
@@ -41,65 +42,28 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::Modelling_TwoPointCorrelation_monopole (const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop)
+void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::set_fiducial_xiDM ()
 {
-  m_data = twop->dataset();
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::set_fiducial_twop ()
-{
-  cout << "Setting up the fiducial two point correlation function model" << endl;
+  coutCBL << "Setting up the fiducial two-point correlation function model" << endl;
   
-  m_twop_parameters.fiducial_twop.erase(m_twop_parameters.fiducial_twop.begin(), m_twop_parameters.fiducial_twop.end());
-
-  if (m_twop_parameters.sigmaNL ==0) {
-    for(size_t i=0; i<m_twop_parameters.model_scales.size(); i++) {
-      double xi = m_twop_parameters.cosmology->xi_DM(m_twop_parameters.model_scales[i], m_twop_parameters.method, m_twop_parameters.redshift, m_twop_parameters.output_root, m_twop_parameters.NL, m_twop_parameters.norm, m_twop_parameters.k_min, m_twop_parameters.k_max, m_twop_parameters.aa, m_twop_parameters.GSL, m_twop_parameters.prec, m_twop_parameters.file_par); 
-      m_twop_parameters.fiducial_twop.push_back(xi);
-    }
+  m_twop_parameters.fiducial_xiDM.erase(m_twop_parameters.fiducial_xiDM.begin(), m_twop_parameters.fiducial_xiDM.end());
+  
+  if (m_twop_parameters.sigmaNL==0) {
+    for (size_t i=0; i<m_twop_parameters.fiducial_radDM.size(); i++) 
+      m_twop_parameters.fiducial_xiDM.push_back(m_twop_parameters.cosmology->xi_DM(m_twop_parameters.fiducial_radDM[i], m_twop_parameters.method_Pk, m_twop_parameters.redshift, m_twop_parameters.output_root, m_twop_parameters.NL, m_twop_parameters.norm, m_twop_parameters.k_min, m_twop_parameters.k_max, m_twop_parameters.aa, m_twop_parameters.GSL, m_twop_parameters.prec, m_twop_parameters.file_par));
   }
   
   else {
     vector<double> kk = logarithmic_bin_vector(500, m_twop_parameters.k_min+1.e-4, m_twop_parameters.k_max), Pk;
 
-    for(size_t i=0; i<kk.size(); i++)
-      Pk.push_back(m_twop_parameters.cosmology->Pk_DeWiggle (kk[i], m_twop_parameters.redshift, m_twop_parameters.sigmaNL, m_twop_parameters.output_root, m_twop_parameters.norm, m_twop_parameters.k_min, m_twop_parameters.k_max, m_twop_parameters.aa, m_twop_parameters.prec));
+    for (size_t i=0; i<kk.size(); i++)
+      Pk.push_back(m_twop_parameters.cosmology->Pk_DeWiggle(kk[i], m_twop_parameters.redshift, m_twop_parameters.sigmaNL, m_twop_parameters.output_root, m_twop_parameters.norm, m_twop_parameters.k_min, m_twop_parameters.k_max, m_twop_parameters.aa, m_twop_parameters.prec));
 
-    m_twop_parameters.fiducial_twop = Xi0(m_twop_parameters.model_scales, kk, Pk);
+    m_twop_parameters.fiducial_xiDM = Xi0(m_twop_parameters.fiducial_radDM, kk, Pk);
   }
-
-  m_twop_parameters.func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(m_twop_parameters.model_scales, m_twop_parameters.fiducial_twop, "Spline"));
   
-  cout << "Done!" << endl;
-}
+  m_twop_parameters.func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(m_twop_parameters.fiducial_radDM, m_twop_parameters.fiducial_xiDM, "Spline"));
+  m_twop_parameters.sigma8_z = m_twop_parameters.cosmology->sigma8_Pk(m_twop_parameters.method_Pk, m_twop_parameters.redshift, m_twop_parameters.output_root);
+  m_twop_parameters.linear_growth_rate_z = m_twop_parameters.cosmology->linear_growth_rate(m_twop_parameters.redshift);
 
-
-// ============================================================================================
-
-
-void cosmobl::modelling::Modelling_TwoPointCorrelation_monopole::set_model_AP_isotropic (const statistics::Prior alpha_prior, const statistics::Prior B_prior, const statistics::Prior A0_prior, const statistics::Prior A1_prior, const statistics::Prior A2_prior, const statistics::ParameterType pT_alpha, const statistics::ParameterType pT_B, const statistics::ParameterType pT_A0, const statistics::ParameterType pT_A1, const statistics::ParameterType pT_A2)
-{
-  set_fiducial_twop();
-
-  vector<statistics::Parameter> model_parameters;
-
-  statistics::Parameter alpha(alpha_prior.sample(), alpha_prior, pT_alpha, "alpha");
-  statistics::Parameter B(B_prior.sample(), B_prior, pT_B, "B");
-  statistics::Parameter A0(A0_prior.sample(), A0_prior, pT_A0, "A0");
-  statistics::Parameter A1(A1_prior.sample(), A1_prior, pT_A1, "A1");
-  statistics::Parameter A2(A2_prior.sample(), A2_prior, pT_A2, "A2");
-
-  model_parameters.push_back(B);
-  model_parameters.push_back(alpha);
-  model_parameters.push_back(A0);
-  model_parameters.push_back(A1);
-  model_parameters.push_back(A2);
-
-  auto fixed_parameters = make_shared<glob::STR_twop_model>(m_twop_parameters);
-
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(model_parameters, fixed_parameters, &glob::xi_alpha_B_poly)); 
 }

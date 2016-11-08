@@ -40,59 +40,52 @@ using namespace data;
 // ======================================================================================
 
 
-cosmobl::data::Data1D::Data1D (const string input_file, const int skip_nlines, const double xmin, const double xmax) : Data(cosmobl::data::DataType::_1D_data_)
+cosmobl::data::Data1D::Data1D (const string input_file, const int skip_nlines, const double xmin, const double xmax, const DataType dataType) : Data(dataType)
 {
   read(input_file, skip_nlines);
-  double xMin = (xmin>-par::defaultDouble) ? xmin : Min(m_x)-0.001; 
-  double xMax = (xmin<par::defaultDouble) ? xmax : Max(m_x)+0.001; 
-  set_limits(xMin, xMax);
+  
+  set_limits((xmin>par::defaultDouble) ? xmin : Min(m_x)-0.001, (xmax<-par::defaultDouble) ? xmax : Max(m_x)+0.001);
 }
 
 
 // ======================================================================================
 
 
-cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, const double xmin, const double xmax) : Data(cosmobl::data::DataType::_1D_data_)
+cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, const double xmin, const double xmax, const DataType dataType) : Data(dataType)
 {
   m_x = x;
   m_fx = fx;
-  double xMin = (xmin>-par::defaultDouble) ? xmin : Min(m_x)-0.001; 
-  double xMax = (xmin<par::defaultDouble) ? xmax : Max(m_x)+0.001; 
-
-  find_index(m_x, xMin, xMax, m_x_down, m_x_up);
+  
+  set_limits((xmin>par::defaultDouble) ? xmin : Min(m_x)-0.001, (xmax<-par::defaultDouble) ? xmax : Max(m_x)+0.001);
 }
 
 
 // ======================================================================================
 
 
-cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, const vector<double> error_fx, const double xmin, const double xmax) : Data(cosmobl::data::DataType::_1D_data_)
+cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, const vector<double> error_fx, const double xmin, const double xmax, const DataType dataType) : Data(dataType)
 {
   m_x = x;
   m_fx = fx;
   m_error_fx = error_fx;
-  double xMin = (xmin>-par::defaultDouble) ? xmin : Min(m_x)-0.001; 
-  double xMax = (xmin<par::defaultDouble) ? xmax : Max(m_x)+0.001; 
 
-  find_index(m_x, xMin, xMax, m_x_down, m_x_up);
+  set_limits((xmin>par::defaultDouble) ? xmin : Min(m_x)-0.001, (xmax<-par::defaultDouble) ? xmax : Max(m_x)+0.001);
 }
 
 
 // ======================================================================================
 
 
-cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, const vector<vector<double> > covariance, const double xmin, const double xmax) : Data(cosmobl::data::DataType::_1D_data_)
+cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, const vector<vector<double> > covariance, const double xmin, const double xmax, const DataType dataType) : Data(dataType)
 {
   m_x = x;
   m_fx = fx;
   m_covariance = covariance;
-  double xMin = (xmin>-par::defaultDouble) ? xmin : Min(m_x)-0.001; 
-  double xMax = (xmin<par::defaultDouble) ? xmax : Max(m_x)+0.001; 
 
+  set_limits((xmin>par::defaultDouble) ? xmin : Min(m_x)-0.001, (xmax<-par::defaultDouble) ? xmax : Max(m_x)+0.001);
+  
   for (size_t i=0; i<m_covariance.size(); i++)
     m_error_fx.push_back(sqrt(m_covariance[i][i]));
-
-  find_index(m_x, xMin, xMax, m_x_down, m_x_up);
 }
 
 
@@ -150,7 +143,7 @@ vector<double> cosmobl::data::Data1D::error_fx () const
 vector<vector<double> > cosmobl::data::Data1D::covariance () const
 {
   if (m_covariance.size() == 0)
-    ErrorMsg("Error in covariance of Data1D, covariance matrix is not set");
+    ErrorCBL("Error in covariance of Data1D, covariance matrix is not set");
 
   if (isSet(m_x_down) && isSet(m_x_up)) {
     vector<vector<double>> cm;
@@ -174,7 +167,7 @@ vector<vector<double> > cosmobl::data::Data1D::covariance () const
 vector<vector<double> > cosmobl::data::Data1D::inverse_covariance () const
 {
   if (m_inverse_covariance.size() == 0)
-    ErrorMsg("Error in inverse_covariance of Data1D, inverted covariance matrix is not set. Run invert_covariance() first");
+    ErrorCBL("Error in inverse_covariance of Data1D, inverted covariance matrix is not set. Run invert_covariance() first");
 
   if (isSet(m_x_down) && isSet(m_x_up)) {
     vector<vector<double>> icm;
@@ -217,13 +210,9 @@ void cosmobl::data::Data1D::set_covariance (const string filename)
   m_covariance.erase(m_covariance.begin(), m_covariance.end());
   m_error_fx.erase(m_error_fx.begin(), m_error_fx.end());
 
-  ifstream fin (filename.c_str());
-  if (!fin) {
-    string Warn = "Attention: the file " + filename + " does not exist!";
-    WarningMsg (Warn);
-  }
+  ifstream fin(filename.c_str()); checkIO(fin, filename);
 
-  vector<double> vv ;
+  vector<double> vv;
   m_covariance.push_back(vv);
   string line; int i = 0;
 
@@ -231,10 +220,10 @@ void cosmobl::data::Data1D::set_covariance (const string filename)
     stringstream ss(line);
     vector<double> num; double NN = -1.e30;
     while (ss>>NN) num.push_back(NN);
-    if (num.size()>=3 && num[2]>-1.e29){
+    
+    if (num.size()>=3 && num[2]>-1.e29) 
       m_covariance[i].push_back(num[2]);
-    }
-    else {i++; m_covariance.push_back(vv);}
+    else { i++; m_covariance.push_back(vv); }
   }
 
   m_covariance.erase(m_covariance.end()-1, m_covariance.end());
@@ -261,13 +250,46 @@ void cosmobl::data::Data1D::set_covariance (const vector<vector<double> > covari
 // ======================================================================================
 
 
+void cosmobl::data::Data1D::set_limits (const double xmin, const double xmax)
+{
+  find_index(m_x, xmin, xmax, m_x_down, m_x_up);
+}
+
+
+// ======================================================================================
+
+
+void cosmobl::data::Data1D::write_covariance (const string dir, const string file, const string xname, const string fxname) const 
+{
+  string file_out = dir+file;
+  ofstream fout(file_out.c_str()); checkIO(fout, file_out);
+
+  fout << "### [1] "<< xname << " # [2] " << xname << " # [3] covariance # [4] " << fxname << " # [5] index1 # [6] index2 ### " << endl;
+
+  int cntr1 = 0, cntr2 = 0;
+  for (size_t i=0; i<m_x.size(); ++i) {
+    cntr2 = 0;
+    for (size_t j=0; j<m_x.size(); ++j) { 
+      fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_x[i] << "  " << setw(8) << m_x[j] << "  " << setw(8) << m_covariance[i][j] << " " << m_covariance[i][j]/sqrt(m_covariance[i][i]*m_covariance[j][j]) << " " << cntr1 << " " << cntr2 <<  endl;
+      cntr2 ++;
+    }
+    cntr1 ++;
+  }
+   
+  fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl;
+}
+
+
+// ======================================================================================
+
+
 void cosmobl::data::Data1D::read (const string input_file, const int skip_nlines)
 {
-  ifstream fin(input_file.c_str()); checkIO(input_file, 1);
+  ifstream fin(input_file.c_str()); checkIO(fin, input_file);
   string line;
 
-  if (skip_nlines > 0)
-    for (int i=0; i<skip_nlines; i++)
+  if (skip_nlines>0)
+    for (int i=0; i<skip_nlines; ++i)
       getline(fin, line);
 
   while (getline(fin, line)) {
@@ -284,51 +306,17 @@ void cosmobl::data::Data1D::read (const string input_file, const int skip_nlines
 // ======================================================================================
 
 
-void cosmobl::data::Data1D::write (const string dir, const string file, const string xname, const string fxname, const int rank) const 
+void cosmobl::data::Data1D::write (const string dir, const string file, const string header, const int rank) const 
 {
   (void)rank;
   
   string file_out = dir+file;
-  ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+  ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
-  fout << "### "<< xname << " " << fxname << " error ###" << endl;
+  fout << "### "<< header <<" ###" << endl;
 
   for (size_t i=0; i<m_x.size(); i++) 
-      fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_x[i] << "  " << setw(8) << m_fx[i] << "  " << setw(8) << m_error_fx[i] << endl;
+    fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_x[i] << "  " << setw(8) << m_fx[i] << "  " << setw(8) << m_error_fx[i] << endl;
    
-  fout.close(); cout << endl << "I wrote the file: " << file_out << endl;
+  fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl;
 }
-
-
-// ======================================================================================
-
-
-void cosmobl::data::Data1D::set_limits (const double xmin, const double xmax)
-{
-  find_index(m_x, xmin, xmax, m_x_down, m_x_up);
-}
-
-
-// ======================================================================================
-
-
-void cosmobl::data::Data1D::write_covariance (const string dir, const string file, const string xname) const 
-{
-  string file_out = dir+file;
-  ofstream fout (file_out.c_str()); checkIO(file_out, 0);
-
-  fout << "# "<< xname << " " << xname << " covariance 	 correlation    index1   index2" << endl;
-
-  int cntr1 = 0,cntr2 =0;
-  for (size_t i=0; i<m_x.size(); i++) {
-    cntr2 =0;
-    for (size_t j=0; j<m_x.size(); j++) { 
-      fout << setiosflags(ios::fixed) << setprecision(10) << setw(8) << m_x[i] << "  " << setw(8) << m_x[j] << "  " << setw(8) << m_covariance[i][j] << " " << m_covariance[i][j]/sqrt(m_covariance[i][i]*m_covariance[j][j]) << " " << cntr1 << " " << cntr2 <<  endl;
-      cntr2++;
-    }
-    cntr1++;
-  }
-   
-  fout.close(); cout << endl << "I wrote the file: " << file_out << endl;
-}
-

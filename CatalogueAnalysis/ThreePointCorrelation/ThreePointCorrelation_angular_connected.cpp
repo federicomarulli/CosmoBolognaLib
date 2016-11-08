@@ -19,7 +19,8 @@
  ********************************************************************/
 
 /**
- *  @file CatalogueAnalysis/ThreePointCorrelation/ThreePointCorrelation_angular_connected.cpp
+ *  @file
+ *  CatalogueAnalysis/ThreePointCorrelation/ThreePointCorrelation_angular_connected.cpp
  *
  *  @brief Methods of the class
  *  ThreePointCorrelation_angular_connected used to measure the
@@ -41,6 +42,7 @@ using namespace cosmobl;
 using namespace catalogue;
 using namespace triplets;
 using namespace threept;
+using namespace glob;
 
 
 // ============================================================================================
@@ -49,17 +51,17 @@ using namespace threept;
 void cosmobl::threept::ThreePointCorrelation_angular_connected::set_parameters (const double side_s, const double side_u, const double perc_increase, const int nbins) 
 {
   (void)side_s; (void)side_u; (void)perc_increase; (void)nbins;
-  ErrorMsg("Work in progress...");
+  ErrorCBL("Error in threept::ThreePointCorrelation_angular_connected::set_parameters() of ThreePointCorrelation_angular_connected.cpp", ExitCode::_workInProgress_);
 }
 
 
 // ============================================================================
 
 
-void cosmobl::threept::ThreePointCorrelation_angular_connected::measure (const string dir_output_triplets, const vector<string> dir_input_triplets, const int count_ddd, const int count_rrr, const int count_ddr, const int count_drr, const bool tcount) 
+void cosmobl::threept::ThreePointCorrelation_angular_connected::measure (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount) 
 {
   (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; 
-  ErrorMsg("Work in progress...");
+  ErrorCBL("Error in threept::ThreePointCorrelation_angular_connected::measure() of ThreePointCorrelation_angular_connected.cpp", ExitCode::_workInProgress_);
 }
 
 
@@ -69,5 +71,5 @@ void cosmobl::threept::ThreePointCorrelation_angular_connected::measure (const s
 void cosmobl::threept::ThreePointCorrelation_angular_connected::write (const string dir, const string file) const
 {
   (void)dir; (void)file;
-  ErrorMsg("Work in progress...");
+  ErrorCBL("Error in threept::ThreePointCorrelation_angular_connected::write() of ThreePointCorrelation_angular_connected.cpp", ExitCode::_workInProgress_);
 }  

@@ -104,7 +104,7 @@ namespace cosmobl {
        *  only objects of index > ii
        *  @return vector of close objects
        */
-      vector<shared_ptr<catalogue::Object> > object_list (shared_ptr<catalogue::Object> object, const int ii=-1);
+      vector<shared_ptr<catalogue::Object>> object_list (shared_ptr<catalogue::Object> object, const int ii=-1);
 
       /**
        *  @brief get the internal variable m_catalogue

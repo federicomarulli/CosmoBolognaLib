@@ -46,7 +46,7 @@ void cosmobl::chainmesh::ChainMesh::set_par (const double cell_size, const long 
   
   if (m_cell_size <= 0) {
     string Err = "Error in cosmobl::chainmesh::ChainMesh::set_par of ChainMesh.cpp: forbidden value for cell_size = "+conv(cell_size, par::fDP2);
-    ErrorMsg(Err);
+    ErrorCBL(Err);
   }
 
   m_Lim.resize(m_nDim, vector<double> (2,0));
@@ -74,7 +74,7 @@ long cosmobl::chainmesh::ChainMesh::pos_to_index (const vector<double> center) c
   vector<long> indx(m_nDim);
 
   for (long j=0; j<m_nDim; j++)
-    indx[j] = min(long((center[j]-m_Lim[j][0])/m_cell_size),m_nCell[j]-1);
+    indx[j] = min(long((center[j]-m_Lim[j][0])/m_cell_size), m_nCell[j]-1);
   
   long indx_tot = indx[m_nDim-1];
 
@@ -161,14 +161,14 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<doubl
 
     if (m_nCell_tot<10) {
       string ERR = "Error in cosmobl::chainmesh::ChainMesh::create_chain_mesh! m_nCell_tot = "+conv(m_nCell_tot, par::fINT)+"!";
-      ErrorMsg(ERR);
+      ErrorCBL(ERR);
     }
     
   }
  
   if (m_nCell_tot>pow(nMAX,3) || m_nCell_tot<nMIN) {
     string ERR = "Error in cosmobl::chainmesh::ChainMesh::create_chain_mesh! m_nCell_tot = "+conv(m_nCell_tot, par::fINT)+", possible memory problems!";
-    ErrorMsg(ERR);
+    ErrorCBL(ERR);
   }
 
   m_Label.resize(m_nCell_tot, -1);
@@ -264,7 +264,7 @@ vector<long> cosmobl::chainmesh::ChainMesh::close_objects (const vector<double> 
 
   vector<long> list;
   
-  if (long(center.size()) != m_nDim) ErrorMsg("Error in ChainMesh::get_list : point must have same dimensions of the chain-mesh");
+  if (long(center.size()) != m_nDim) ErrorCBL("Error in ChainMesh::get_list : point must have same dimensions of the chain-mesh");
 
    long center_indx = pos_to_index(center);
    
@@ -273,7 +273,7 @@ vector<long> cosmobl::chainmesh::ChainMesh::close_objects (const vector<double> 
      long k = min(max(m_search_region[i]+center_indx, (long)0), m_nCell_tot-1);
      long j = m_Label[k];
 
-     while (j>-1 && j>=ii) {
+     while (j>-1 && j>ii) {
        list.push_back(j);
        j = m_List[j];
      }

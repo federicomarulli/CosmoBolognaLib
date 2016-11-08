@@ -84,14 +84,24 @@ namespace cosmobl {
        *
        *  @param weight weight
        *
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param field the field where the object has been observed
+       *
+       *  @param x_displacement the displacement along the x-axis
+       *
+       *  @param y_displacement the displacement along the y-axis
+       *
+       *  @param z_displacement the displacement along the z-axis
+       *
        *  @param mass the galaxy mass
        *
        *  @param magnitude the galaxy magnitude
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const comovingCoordinates coord, const double weight=1., const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
-	: Object(coord, weight), m_mass(mass), m_magnitude(magnitude) {}
+      Galaxy (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
+	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude) {}
 
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -108,6 +118,16 @@ namespace cosmobl {
        *  @param z2_guess maximum prior on the redshift 
        *
        *  @param weight weight
+       *
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param field the field where the object has been observed
+       *
+       *  @param x_displacement the displacement along the x-axis
+       *
+       *  @param y_displacement the displacement along the y-axis
+       *
+       *  @param z_displacement the displacement along the z-axis
        *   
        *  @param mass the galaxy mass
        *
@@ -115,8 +135,8 @@ namespace cosmobl {
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight), m_mass(mass), m_magnitude(magnitude) {}
+      Galaxy (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
+	: Object(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -126,14 +146,24 @@ namespace cosmobl {
        *
        *  @param weight weight
        *
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param field the field where the object has been observed
+       *
+       *  @param x_displacement the displacement along the x-axis
+       *
+       *  @param y_displacement the displacement along the y-axis
+       *
+       *  @param z_displacement the displacement along the z-axis
+       *
        *  @param mass the galaxy mass
        *
        *  @param magnitude the galaxy magnitude
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const observedCoordinates coord, const double weight=1., const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
-	: Object(coord, weight), m_mass(mass), m_magnitude(magnitude) {}
+      Galaxy (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
+	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -146,14 +176,24 @@ namespace cosmobl {
        *
        *  @param weight weight
        *
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param field the field where the object has been observed
+       *
+       *  @param x_displacement the displacement along the x-axis
+       *
+       *  @param y_displacement the displacement along the y-axis
+       *
+       *  @param z_displacement the displacement along the z-axis
+       *
        *  @param mass the galaxy mass
        *
        *  @param magnitude the galaxy magnitude
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const observedCoordinates coord, const CoordUnits inputUnits, const double weight=1., const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
-	: Object(coord, inputUnits, weight), m_mass(mass), m_magnitude(magnitude) {}
+      Galaxy (const observedCoordinates coord, const CoordUnits inputUnits, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
+	: Object(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -168,14 +208,24 @@ namespace cosmobl {
        *
        *  @param weight weight
        *
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param field the field where the object has been observed
+       *
+       *  @param x_displacement the displacement along the x-axis
+       *
+       *  @param y_displacement the displacement along the y-axis
+       *
+       *  @param z_displacement the displacement along the z-axis
+       *
        *  @param mass the galaxy mass
        *
        *  @param magnitude the galaxy magnitude
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
-	: Object(coord, cosm, weight), m_mass(mass), m_magnitude(magnitude) {}
+      Galaxy (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
+	: Object(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -190,14 +240,24 @@ namespace cosmobl {
        *
        *  @param weight weight
        *
+       *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param field the field where the object has been observed
+       *
+       *  @param x_displacement the displacement along the x-axis
+       *
+       *  @param y_displacement the displacement along the y-axis
+       *
+       *  @param z_displacement the displacement along the z-axis
+       *
        *  @param mass the galaxy mass
        *
        *  @param magnitude the galaxy magnitude
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const observedCoordinates coord, const CoordUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
-	: Object(coord, inputUnits, cosm, weight), m_mass(mass), m_magnitude(magnitude) {}
+      Galaxy (const observedCoordinates coord, const CoordUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
+	: Object(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude) {}
 
       /**
        *  @brief constructor that uses both comoving and observed coordinates
@@ -207,14 +267,19 @@ namespace cosmobl {
        *  @param ra Right Ascension
        *  @param dec Declination
        *  @param redshift redshift
-       *  @param weight weight   
+       *  @param weight weight  
+       *  @param region region, used e.g. for jackknife and boostrap 
+       *  @param field the field where the object has been observed
+       *  @param x_displacement the displacement along the x-axis
+       *  @param y_displacement the displacement along the y-axis
+       *  @param z_displacement the displacement along the z-axis
        *  @param mass the galaxy mass
        *  @param magnitude the galaxy magnitude
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
-	: Object(xx, yy, zz, ra, dec, redshift, weight), m_mass(mass), m_magnitude(magnitude) {}
+      Galaxy (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble) 
+	: Object(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude) {}
       
       /**
        *  @brief default destructor

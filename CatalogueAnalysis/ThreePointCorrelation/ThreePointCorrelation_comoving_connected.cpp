@@ -41,6 +41,7 @@ using namespace cosmobl;
 using namespace catalogue;
 using namespace triplets;
 using namespace threept;
+using namespace glob;
 
 
 // ============================================================================================
@@ -58,7 +59,7 @@ void cosmobl::threept::ThreePointCorrelation_comoving_connected::set_parameters 
 // ============================================================================================
 
 
-void cosmobl::threept::ThreePointCorrelation_comoving_connected::measure (const string dir_output_triplets, const vector<string> dir_input_triplets, const int count_ddd, const int count_rrr, const int count_ddr, const int count_drr, const bool tcount) 
+void cosmobl::threept::ThreePointCorrelation_comoving_connected::measure (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount) 
 {  
 
   // -------- count the data-data-data, random-random-random, data-data-random and data-random-random triplets, or read them from file -------- 
@@ -99,12 +100,12 @@ void cosmobl::threept::ThreePointCorrelation_comoving_connected::write (const st
   checkDim(m_scale, m_ddd->nbins(), "scale");
 
   string file_out = dir+file;
-  ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+  ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
   fout << "# scale  zeta  error(work in progress)" << endl;
   
   for (size_t i=0; i<m_scale.size(); i++) 
     fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_scale[i] << "  " << setw(8) << m_zeta[i] << "  " << setw(8) << m_error[i] << endl;
     
-  fout.close(); cout << endl << "I wrote the file: " << file_out << endl << endl;
+  fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl << endl;
 }  

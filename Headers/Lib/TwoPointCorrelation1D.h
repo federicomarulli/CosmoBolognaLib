@@ -95,7 +95,7 @@ namespace cosmobl {
        *  @param file output file
        *  @return none
        */
-      void write_pairs (const vector<shared_ptr<pairs::Pair> > PP, const string dir, const string file) const override;
+      void write_pairs (const vector<shared_ptr<pairs::Pair>> PP, const string dir, const string file) const override;
 
       /**
        *  @brief read the number of pairs
@@ -104,18 +104,33 @@ namespace cosmobl {
        *  @param [in] file input file
        *  @return none
        */
-      void read_pairs (vector<shared_ptr<pairs::Pair> > PP, const vector<string> dir, const string file) const override;
+      void read_pairs (vector<shared_ptr<pairs::Pair>> PP, const vector<string> dir, const string file) const override;
       
       ///@}
 
+      
       /**
        *  @name Member functions to measure the two-point correlation function
        */
       ///@{
 
       /**
-       *  @brief measure the xi with Poisson error using measured pairs
-       *  using the Natural Estimator
+       *  @brief return a data object with extra info
+       *  
+       *  @param dd pointer to an object of type Pair containing the
+       *  data-data pairs
+       *  @param rad vector containing the binned scales
+       *  @param xi vector containing the binned two-point correlation
+       *  function
+       *  @param error vector containing the errors
+       *
+       *  @return pointer to an object of type Data
+       */
+      shared_ptr<data::Data> data_with_extra_info (const shared_ptr<pairs::Pair> dd, const vector<double> rad, const vector<double> xi, const vector<double> error) const;
+      
+      /**
+       *  @brief measure the two-point correlation function using the
+       *  natural estimator
        *  
        *  @param dd pointer to an object of type Pair containing the
        *  data-data pairs
@@ -129,11 +144,11 @@ namespace cosmobl {
        *
        *  @return pointer to an object of type Data
        */
-      shared_ptr<data::Data> NaturalEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const int nRandom) override;
+      shared_ptr<data::Data> NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const int nRandom) override;
 
       /**
-       *  @brief measure the xi with Poisson error using measured pairs
-       *  using the Landy-Szalay estimator
+       *  @brief measure the two-point correlation function using the
+       *  Landy-Szalay estimator
        *  
        *  @param dd pointer to an object of type Pair containing the
        *  data-data pairs
@@ -150,7 +165,7 @@ namespace cosmobl {
        *
        *  @return pointer to an object of type Data
        */
-      shared_ptr<data::Data> LandySzalayEstimatorTwoP (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const int nRandom) override;
+      shared_ptr<data::Data> LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const int nRandom) override;
 
       /**
        *  @brief measure the jackknife resampling of the two-point correlation
@@ -162,7 +177,7 @@ namespace cosmobl {
        *
        *  @return pointer to a vector of Data object
        */
-      vector<shared_ptr<data::Data> > XiJackknife(const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr) override;
+      vector<shared_ptr<data::Data>> XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr) override;
 
       /**
        *  @brief measure the jackknife resampling of the two-point correlation
@@ -176,7 +191,7 @@ namespace cosmobl {
        *
        *  @return pointer to a vector of Data object
        */
-      vector<shared_ptr<data::Data> > XiJackknife(const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr) override;
+      vector<shared_ptr<data::Data>> XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
 
       /**
        *  @brief measure the bootstrap resampling of the two-point correlation
@@ -190,7 +205,7 @@ namespace cosmobl {
        *
        *  @return pointer to a vector of Data object
        */
-      vector<shared_ptr<data::Data> > XiBootstrap(const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr) override;
+      vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr) override;
 
       /**
        *  @brief measure the bootstrap resampling of the two-point correlation
@@ -206,7 +221,7 @@ namespace cosmobl {
        *
        *  @return pointer to a vector of Data object
        */
-      vector<shared_ptr<data::Data> > XiBootstrap(const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr) override;
+      vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
 
       ///@}
 
@@ -230,10 +245,14 @@ namespace cosmobl {
        *  catalogue
        *  @param random of class Catalogue containing the random data
        *  catalogue
+       *  @param compute_extra_info true &rarr; compute extra
+       *  information related to the pairs, such as the mean pair
+       *  separation and redshift
        *  @return object of class TwoPointCorrelation1D
        */
-      TwoPointCorrelation1D (const catalogue::Catalogue data, const catalogue::Catalogue random) 
-	: TwoPointCorrelation(data, random) { m_dataset = data::Data::Create(data::DataType::_1D_data_); }
+      TwoPointCorrelation1D (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool compute_extra_info=false) 
+	: TwoPointCorrelation(data, random, compute_extra_info)
+	{ m_dataset = (!compute_extra_info) ? data::Data::Create(data::DataType::_1D_data_) : data::Data::Create(data::DataType::_1D_data_extra_); }
 
       /**
        *  @brief default destructor
@@ -277,7 +296,7 @@ namespace cosmobl {
       /**
        *  @brief measure the two-point correlation function
        *
-       *  @param errType type of &xi;(r) error
+       *  @param errorType type of &xi;(r) error
        *  
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
@@ -285,35 +304,31 @@ namespace cosmobl {
        *  @param dir_input_pairs vector of input directories used to
        *  store the number of pairs (if the pairs are read from files)
        *
-       *  @param dir_output_ResampleXi output directory of the
+       *  @param dir_output_resample output directory of the
        *  resampled &xi;(r)
        *
        *  @param nMocks number of resampling for bootstrap
        *
-       *  @param count_dd 1 &rarr; count the number of data-data
-       *  opairs; 0 &rarr; read the number of data-data pairs from
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-data pairs from
        *  file
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  opairs; 0 &rarr; read the number of random-random pairs from
+       *  @param count_rr true &rarr; count the number of random-random
+       *  pairs; false &rarr; read the number of random-random pairs from
        *  file
        *
-       *  @param count_dd 1 &rarr; count the number of data-random
-       *  opairs; 0 &rarr; read the number of data-random pairs from
-       *  file
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  pairs; 0 &rarr; read the number of random-random pairs
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
        *
-       *  @param count_dr 1 &rarr; count the number of data-random
-       *  pairs; 0 &rarr; read the number of data-random pairs
-       *
-       *  @param tcount 1 &rarr; activate the time counter; 0 &rarr;
-       *  don't activate the time counter; 
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
        *
        *  @return none
        */
-      virtual void measure (const ErrorType errType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_ResampleXi=par::defaultString, const int nMocks=0, const int count_dd=1, const int count_rr=1, const int count_dr=1, const bool tcount=1) = 0;
+      virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) = 0;
       
       ///@}
 
@@ -329,7 +344,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void read (const string dir, const string file)
-      { (void)dir; (void)file; ErrorMsg("Error in read() of TwoPointCorrelation1D.h"); }	
+      { (void)dir; (void)file; ErrorCBL("Error in read() of TwoPointCorrelation1D.h"); }	
 
       /**
        *  @brief write the measured two-point correlation
@@ -339,7 +354,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void write (const string dir, const string file, const int rank=0) const
-      { (void)dir; (void)file; (void)rank; ErrorMsg("Error in write() of TwoPointCorrelation.h"); }	
+      { (void)dir; (void)file; (void)rank; ErrorCBL("Error in write() of TwoPointCorrelation.h"); }	
 
       ///@}
 

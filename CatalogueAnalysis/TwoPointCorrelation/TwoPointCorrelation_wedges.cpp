@@ -19,15 +19,15 @@
  ********************************************************************/
 
 /**
- *  @file CatalogueAnalysis/TwoPointCorrelation/TwoPointCorrelation_wedges.cpp
+ *  @file
+ *  CatalogueAnalysis/TwoPointCorrelation/TwoPointCorrelation_wedges.cpp
  *
  *  @brief Methods of the class TwoPointCorrelation_multipoles used to
- *  measure the wedges of the two-point correlation
- *  function
+ *  measure the wedges of the two-point correlation function
  *
  *  This file contains the implementation of the methods of the class
- *  TwoPointCorrelation_wedges used to measure the wedges
- *  of the two-point correlation function
+ *  TwoPointCorrelation_wedges used to measure the wedges of the
+ *  two-point correlation function
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *
@@ -36,13 +36,43 @@
 
 
 #include "TwoPointCorrelation_wedges.h"
-#include "Data1D.h"
+#include "Data1D_extra.h"
 
 using namespace cosmobl;
 using namespace catalogue;
 using namespace chainmesh;
 using namespace pairs;
 using namespace twopt;
+
+
+// ============================================================================
+
+
+shared_ptr<data::Data> cosmobl::twopt::TwoPointCorrelation_wedges::data_with_extra_info (const vector<double> rad, const vector<double> wedges, const vector<double> error) const
+{
+  auto dd2D = cosmobl::twopt::TwoPointCorrelation2D_polar::m_dd;
+  
+  vector<double> scale_mean(dd2D->nbins_D1(), 0.), scale_sigma(dd2D->nbins_D1(), 0.), z_mean(dd2D->nbins_D1(), 0.), z_sigma(dd2D->nbins_D1(), 0.);
+
+  for (int i=0; i<dd2D->nbins_D1(); ++i) 
+    for (int j=0; j<dd2D->nbins_D2(); ++j) {
+      scale_mean[i] += dd2D->scale_D1_mean(i, j);
+      scale_sigma[i] += dd2D->scale_D1_sigma(i, j);
+      z_mean[i] += dd2D->z_mean(i, j);
+      z_sigma[i] += dd2D->z_sigma(i, j);
+    }
+  
+  vector<vector<double>> extra(4);
+  
+  for (int i=0; i<dd2D->nbins_D1(); ++i) {
+    extra[0].push_back(scale_mean[i]/dd2D->nbins_D2());
+    extra[1].push_back(scale_sigma[i]/dd2D->nbins_D2());
+    extra[2].push_back(z_mean[i]/dd2D->nbins_D2());
+    extra[3].push_back(z_sigma[i]/dd2D->nbins_D2());
+  }
+  
+  return move(unique_ptr<data::Data1D_extra>(new data::Data1D_extra(rad, wedges, error, extra)));
+}
 
 
 // ============================================================================================
@@ -133,21 +163,30 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::write (const string dir, const 
   checkDim(rad, m_dd->nbins_D1()*2, "rad");
   
   string file_out = dir+file;
-  ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+  ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
-  fout << "### rad  xi_perp  error[xi_perp]  xi_par  error[xi_par] ###" << endl;
+  string header = "[1] separation at the bin centre # [2] perpendicular wedge # [3] error on the perpendicular wedge # [4] parallel wedge # [5] error on the parallel wedge";
+  if (m_compute_extra_info)
+    header += " # [4] mean separation # [5] standard deviation of the separation distribution";
+  
+  fout << "### " << header << " ###" <<endl;
 
-  for (int i=0; i<m_dd->nbins_D1(); i++) 
-      fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << rad[i] << "  " << setw(8) << xiw[i] << "  " << setw(8) << error[i] << "  " << setw(8) << xiw[i+m_dd->nbins_D1()] << "  " << setw(8) << error[i+m_dd->nbins_D1()] << endl;
-   
-  fout.close(); cout << endl << "I wrote the file: " << file_out << endl << endl;
+  for (int i=0; i<m_dd->nbins_D1(); i++) {
+    fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << rad[i] << "  " << setw(8) << xiw[i] << "  " << setw(8) << error[i] << "  " << setw(8) << xiw[i+m_dd->nbins_D1()] << "  " << setw(8) << error[i+m_dd->nbins_D1()];
+    if (m_compute_extra_info)
+      for (size_t ex=0; ex<m_dataset->extra_info().size(); ++ex)
+	fout << "  " << setw(8) << m_dataset->extra_info(ex, i);
+    fout << endl;
+  }
+  
+  fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl << endl;
 }
 
 
 // ============================================================================================
 
 
-shared_ptr<data::Data> cosmobl::twopt::TwoPointCorrelation_wedges::WedgesTwoP(const vector<double> rr, const vector<double> mu, const vector<vector<double> > xi, const vector<vector<double> > error_xi)
+shared_ptr<data::Data> cosmobl::twopt::TwoPointCorrelation_wedges::Wedges (const vector<double> rr, const vector<double> mu, const vector<vector<double> > xi, const vector<vector<double> > error_xi)
 {
   double binSize = mu[1]-mu[0];
   int muSize = mu.size();
@@ -155,44 +194,43 @@ shared_ptr<data::Data> cosmobl::twopt::TwoPointCorrelation_wedges::WedgesTwoP(co
   int half = max(0, min(int(0.5/binSize), muSize));
   half = (mu[half]<0.5) ? half+1 : half;
   
-  vector<double> rad(2*rr.size(),0), wedges(2*rr.size(),0), error_wedges(2*rr.size(),0);
+  vector<double> rad(2*rr.size(),0), wedges(2*rr.size(),0), error(2*rr.size(),0);
 
   for (size_t i=0; i<rr.size(); i++) {
     rad[i] = rr[i];
     rad[i+rr.size()] = rr[i];
 
     for (int j=0; j<half; j++) {
-      wedges[i] += 2*xi[i][j]*binSize;   	 	     // xi_perp
-      error_wedges[i] += 2*pow(error_xi[i][j]*binSize, 2); // error[xi_perp]
+      wedges[i] += 2.*xi[i][j]*binSize;   	     // xi_perp
+      error[i] += 2.*pow(error_xi[i][j]*binSize, 2); // error[xi_perp]
     }
 
     for (size_t j=half; j<mu.size(); j++) {
-      wedges[i+rr.size()] +=  2*xi[i][j]*binSize;                    // xi_par
-      error_wedges[i+rr.size()] += 2*pow(error_xi[i][j]*binSize, 2); // error[xi_par]
+      wedges[i+rr.size()] += 2.*xi[i][j]*binSize;              // xi_par
+      error[i+rr.size()] += 2.*pow(error_xi[i][j]*binSize, 2); // error[xi_par]
     }  
   }
 
-  for_each( error_wedges.begin(), error_wedges.end(), [] (double &vv) { vv = sqrt(vv);} );
+  for_each( error.begin(), error.end(), [] (double &vv) { vv = sqrt(vv);} );
 
-  auto data = unique_ptr<data::Data1D>(new data::Data1D(rad, wedges, error_wedges));
-  return move(data);
+  return (!m_compute_extra_info) ? unique_ptr<data::Data1D>(new data::Data1D(rad, wedges, error)) : data_with_extra_info(rad, wedges, error);
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation_wedges::measure(const ErrorType errType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_ResampleXi, const int nMocks, const int count_dd, const int count_rr, const int count_dr, const bool tcount)
+void cosmobl::twopt::TwoPointCorrelation_wedges::measure(const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  switch (errType) {
+  switch (errorType) {
   case (ErrorType::_Poisson_) :
-    measurePoisson(dir_output_pairs,dir_input_pairs,count_dd,count_rr,count_dr,tcount);
+    measurePoisson(dir_output_pairs,dir_input_pairs,count_dd,count_rr,count_dr,tcount, estimator);
     break;
   case (ErrorType::_Jackknife_) :
-    measureJackknife(dir_output_pairs,dir_input_pairs,dir_output_ResampleXi,count_dd,count_rr,count_dr,tcount);
+    measureJackknife(dir_output_pairs,dir_input_pairs,dir_output_resample,count_dd,count_rr,count_dr,tcount, estimator);
     break;
   case (ErrorType::_Bootstrap_) :
-    measureBootstrap(nMocks, dir_output_pairs,dir_input_pairs,dir_output_ResampleXi,count_dd,count_rr,count_dr,tcount);
+    measureBootstrap(nMocks, dir_output_pairs,dir_input_pairs,dir_output_resample,count_dd,count_rr,count_dr,tcount, estimator);
     break;
   }
 }
@@ -201,46 +239,49 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::measure(const ErrorType errType
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation_wedges::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const int count_dd, const int count_rr, const int count_dr, const bool tcount)
+void cosmobl::twopt::TwoPointCorrelation_wedges::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   // ----------- measure the 2D two-point correlation function, xi(rp,pi) ----------- 
 
-  TwoPointCorrelation2D_polar::measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount);
+  TwoPointCorrelation2D_polar::measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
   
   // ----------- integrate the 2D two-point correlation function along the parallel direction ----------- 
   
-  m_dataset = WedgesTwoP(TwoPointCorrelation2D_polar::xx(), TwoPointCorrelation2D_polar::yy(), TwoPointCorrelation2D_polar::xi2D(), TwoPointCorrelation2D_polar::error2D());
+  m_dataset = Wedges(TwoPointCorrelation2D_polar::xx(), TwoPointCorrelation2D_polar::yy(), TwoPointCorrelation2D_polar::xi2D(), TwoPointCorrelation2D_polar::error2D());
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation_wedges::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_ResampleXi, const int count_dd, const int count_rr, const int count_dr, const bool tcount)
+void cosmobl::twopt::TwoPointCorrelation_wedges::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  if (dir_output_ResampleXi != par::defaultString) {
-    string mkdir = "mkdir -p "+dir_output_ResampleXi;
+  if (dir_output_resample != par::defaultString) {
+    string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
 
   vector<shared_ptr<data::Data> > data;
   vector<shared_ptr<pairs::Pair> > dd_regions, rr_regions, dr_regions;
-  count_allPairs_region (dd_regions, rr_regions, dr_regions, TwoPType::_2D_polar_, dir_output_pairs,dir_input_pairs, count_dd, count_rr, count_dr,  tcount);
+  count_allPairs_region (dd_regions, rr_regions, dr_regions, TwoPType::_2D_polar_, dir_output_pairs,dir_input_pairs, count_dd, count_rr, count_dr,  tcount, estimator);
 
-  auto data_polar = (count_dr>-1) ? LandySzalayEstimatorTwoP(m_dd, m_rr, m_dr, m_data->weightedN(), m_random->weightedN()) : NaturalEstimatorTwoP(m_dd, m_rr, m_data->weightedN(), m_random->weightedN());
+  auto data_polar = (estimator==_natural_) ? NaturalEstimator(m_dd, m_rr, m_data->weightedN(), m_random->weightedN()) : LandySzalayEstimator(m_dd, m_rr, m_dr, m_data->weightedN(), m_random->weightedN());
 
-  if (count_dr>-1) 
-    data = XiJackknife(dd_regions, rr_regions,dr_regions);
-  else
+  if (estimator==_natural_) 
     data = XiJackknife(dd_regions, rr_regions);
-
+  else if (estimator==_LandySzalay_)
+    data = XiJackknife(dd_regions, rr_regions, dr_regions);
+  else
+    ErrorCBL("Error in measureJackknife() of TwoPointCorrelation_wedges.cpp: the chosen estimator is not implemented!");
+  
   vector<vector<double> > ww, covariance;
+  
   for (size_t i=0; i<data.size(); i++) {
     ww.push_back(data[i]->fx());
     
-    if (dir_output_ResampleXi != par::defaultString) {
-      string file_out = dir_output_ResampleXi+"xi_wedges_Jackknife_"+conv(i,par::fINT)+".dat";
+    if (dir_output_resample != par::defaultString) {
+      string file_out = dir_output_resample+"xi_wedges_Jackknife_"+conv(i, par::fINT)+".dat";
 
       vector<double> rad = data[i]->xx();
       vector<double> xiw = data[i]->fx();
@@ -248,20 +289,20 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::measureJackknife (const string 
 
       checkDim(rad, m_dd->nbins_D1()*2, "rad");
   
-      ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+      ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
-      fout << "### rad  xi_perp  error[xi_perp]  xi_par  error[xi_par] ###" << endl;
+      fout << "### [1] separation at the bin centre # [2] perpendicular wedge # [3] error on the perpendicular wedge # [4] parallel wedge # [5] error on the parallel wedge ###" << endl;
 
       for (int i=0; i<m_dd->nbins_D1(); i++) 
 	fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << rad[i] << "  " << setw(8) << xiw[i] << "  " << setw(8) << error[i] << "  " << setw(8) << xiw[i+m_dd->nbins_D1()] << "  " << setw(8) << error[i+m_dd->nbins_D1()] << endl;
    
-      fout.close(); cout << endl << "I wrote the file: " << file_out << endl << endl;
+      fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl << endl;
     }
   }
 
-  covariance_matrix(ww, covariance, 1);
+  covariance_matrix(ww, covariance, true);
 
-  m_dataset = WedgesTwoP(data_polar->xx(), data_polar->yy(), data_polar->fxy(), data_polar->error_fxy());
+  m_dataset = Wedges(data_polar->xx(), data_polar->yy(), data_polar->fxy(), data_polar->error_fxy());
   m_dataset->set_covariance(covariance);
 
 }
@@ -270,32 +311,33 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::measureJackknife (const string 
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation_wedges::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_ResampleXi, const int count_dd, const int count_rr, const int count_dr, const bool tcount)
+void cosmobl::twopt::TwoPointCorrelation_wedges::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  if (dir_output_ResampleXi != par::defaultString) {
-    string mkdir = "mkdir -p "+dir_output_ResampleXi;
+  if (dir_output_resample != par::defaultString) {
+    string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
   
   vector<shared_ptr<data::Data> > data;
   vector<shared_ptr<pairs::Pair> > dd_regions, rr_regions, dr_regions;
-  count_allPairs_region (dd_regions, rr_regions, dr_regions, TwoPType::_2D_polar_, dir_output_pairs,dir_input_pairs, count_dd, count_rr, count_dr,  tcount);
+  count_allPairs_region (dd_regions, rr_regions, dr_regions, TwoPType::_2D_polar_, dir_output_pairs,dir_input_pairs, count_dd, count_rr, count_dr,  tcount, estimator);
 
-  auto data_polar = (count_dr>-1) ? LandySzalayEstimatorTwoP(m_dd, m_rr, m_dr, m_data->weightedN(), m_random->weightedN()) : NaturalEstimatorTwoP(m_dd, m_rr, m_data->weightedN(), m_random->weightedN());
+  auto data_polar = (estimator==_natural_) ? NaturalEstimator(m_dd, m_rr, m_data->weightedN(), m_random->weightedN()) : LandySzalayEstimator(m_dd, m_rr, m_dr, m_data->weightedN(), m_random->weightedN());
 
-  if (count_dr==1) 
-    data = XiBootstrap(nMocks, dd_regions, rr_regions,dr_regions);
-  else
+  if (estimator==_natural_)
     data = XiBootstrap(nMocks, dd_regions, rr_regions);
-
+  else if (estimator==_LandySzalay_)
+    data = XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions);
+  else
+    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation_wedges.cpp: the chosen estimator is not implemented!");
+  
   vector<vector<double> > ww, covariance;
   
-  for(size_t i=0; i<data.size(); i++) {
+  for (size_t i=0; i<data.size(); i++) {
     ww.push_back(data[i]->fx());
     
-    if (dir_output_ResampleXi != par::defaultString) {
-      string filename = dir_output_ResampleXi+"xi_wedges_Bootstrap_"+conv(i, par::fINT)+".dat";
-      string file_out = dir_output_ResampleXi+"xi_wedges_Jackknife_"+conv(i,par::fINT)+".dat";
+    if (dir_output_resample != par::defaultString) {
+      string file_out = dir_output_resample+"xi_wedges_Bootstrap_"+conv(i, par::fINT)+".dat";
 
       vector<double> rad = data[i]->xx();
       vector<double> xiw = data[i]->fx();
@@ -303,19 +345,19 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::measureBootstrap (const int nMo
 
       checkDim(rad, m_dd->nbins_D1()*2, "rad");
   
-      ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+      ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
-      fout << "### rad  xi_perp  error[xi_perp]  xi_par  error[xi_par] ###" << endl;
+      fout << "### [1] separation at the bin centre # [2] perpendicular wedge # [3] error on the perpendicular wedge # [4] parallel wedge # [5] error on the parallel wedge ###" << endl;
 
       for (int i=0; i<m_dd->nbins_D1(); i++) 
 	fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << rad[i] << "  " << setw(8) << xiw[i] << "  " << setw(8) << error[i] << "  " << setw(8) << xiw[i+m_dd->nbins_D1()] << "  " << setw(8) << error[i+m_dd->nbins_D1()] << endl;
    
-      fout.close(); cout << endl << "I wrote the file: " << file_out << endl << endl;
+      fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl << endl;
     }
   }
-  covariance_matrix(ww, covariance, 0);
+  covariance_matrix(ww, covariance, false);
 
-  m_dataset = WedgesTwoP(data_polar->xx(), data_polar->yy(), data_polar->fxy(), data_polar->error_fxy());
+  m_dataset = Wedges(data_polar->xx(), data_polar->yy(), data_polar->fxy(), data_polar->error_fxy());
   m_dataset->set_covariance(covariance);
 }
 
@@ -330,7 +372,7 @@ vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiJa
   auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd, rr);
 
   for (size_t i=0; i<data2d.size(); i++)
-    data.push_back(move(WedgesTwoP(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
+    data.push_back(move(Wedges(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
   
   return data;
 }
@@ -346,7 +388,7 @@ vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiJa
   auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd, rr, dr);
 
   for (size_t i=0; i<data2d.size(); i++)
-    data.push_back(move(WedgesTwoP(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
+    data.push_back(move(Wedges(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
   
   return data;
 }
@@ -362,7 +404,7 @@ vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiBo
   auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks, dd, rr);
 
   for (size_t i=0; i<data2d.size(); i++)
-    data.push_back(move(WedgesTwoP(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
+    data.push_back(move(Wedges(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
   
   return data;
 }
@@ -378,7 +420,7 @@ vector<shared_ptr<data::Data> > cosmobl::twopt::TwoPointCorrelation_wedges::XiBo
   auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks, dd, rr, dr);
 
   for (size_t i=0; i<data2d.size(); i++)
-    data.push_back(move(WedgesTwoP(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
+    data.push_back(move(Wedges(data2d[i]->xx(), data2d[i]->yy(), data2d[i]->fxy(), data2d[i]->error_fxy())));
   
   return data;
 }
@@ -405,9 +447,9 @@ void cosmobl::twopt::TwoPointCorrelation_wedges::write_covariance_matrix (const 
 // ============================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation_wedges::compute_covariance_matrix (const vector<shared_ptr<data::Data>> xi_collection, const bool doJK)
+void cosmobl::twopt::TwoPointCorrelation_wedges::compute_covariance_matrix (const vector<shared_ptr<data::Data> > xi_collection, const bool doJK)
 {
-  vector<vector<double>> xi;
+  vector<vector<double> > xi;
 
   for(size_t i=0;i<xi_collection.size();i++)
     xi.push_back(xi_collection[i]->fx());

@@ -1,22 +1,22 @@
-/*******************************************************************
- *  Copyright (C) 2010 by Federico Marulli and Alfonso Veropalumbo *
- *  federico.marulli3@unibo.it                                     *
- *                                                                 *
- *  This program is free software; you can redistribute it and/or  *
- *  modify it under the terms of the GNU General Public License as *
- *  published by the Free Software Foundation; either version 2 of *
- *  the License, or (at your option) any later version.            *
- *                                                                 *
- *  This program is distributed in the hope that it will be useful,*
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of *
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *
- *  GNU General Public License for more details.                   *
- *                                                                 *
- *  You should have received a copy of the GNU General Public      *
- *  License along with this program; if not, write to the Free     *
- *  Software Foundation, Inc.,                                     *
- *  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.      *
- *******************************************************************/
+/********************************************************************
+ *  Copyright (C) 2010 by Federico Marulli and Alfonso Veropalumbo  *
+ *  federico.marulli3@unibo.it                                      *
+ *                                                                  *
+ *  This program is free software; you can redistribute it and/or   *
+ *  modify it under the terms of the GNU General Public License as  *
+ *  published by the Free Software Foundation; either version 2 of  *
+ *  the License, or (at your option) any later version.             *
+ *                                                                  *
+ *  This program is distributed in the hope that it will be useful, *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   *
+ *  GNU General Public License for more details.                    *
+ *                                                                  *
+ *  You should have received a copy of the GNU General Public       *
+ *  License along with this program; if not, write to the Free      *
+ *  Software Foundation, Inc.,                                      *
+ *  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.       *
+ ********************************************************************/
 
 /**
  *  @file GlobalFunc/SubSample.cpp
@@ -53,7 +53,7 @@ void cosmobl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::
   {
     
 #pragma omp for schedule(static, 2) 
-    for (int i=0; i<data.nObjects(); i++) {
+    for (size_t i=0; i<data.nObjects(); i++) {
       int i1 = min(int((data.xx(i)-xMin)/Cell_X), nx-1);
       int j1 = min(int((data.yy(i)-yMin)/Cell_Y), ny-1);
       int z1 = min(int((data.zz(i)-zMin)/Cell_Z), nz-1);
@@ -62,7 +62,7 @@ void cosmobl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::
     }
 
 #pragma omp for schedule(static, 2) 
-    for (int i=0; i<random.nObjects(); i++) {
+    for (size_t i=0; i<random.nObjects(); i++) {
       int i1 = min(int((random.xx(i)-xMin)/Cell_X), nx-1);
       int j1 = min(int((random.yy(i)-yMin)/Cell_Y), ny-1);
       int z1 = min(int((random.zz(i)-zMin)/Cell_Z), nz-1);
@@ -71,37 +71,39 @@ void cosmobl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::
     }
   }
   
+  cosmobl::check_regions(data, random);
 }
 
 
 // ============================================================================
 
 
-void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nSamples, const string polygonfile, const string dir)
+void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nSamples, const string polygonfile)
 {
-  string temp_dir = dir+"temp/";
-  string mangle_dir = par::DirCosmo+"/CatalogueAnalysis/RandomCatalogue/mangle/";
-  string cmd = "mkdir -p "+temp_dir; if(system(cmd.c_str())){}
-  
-  string out_cat = temp_dir+"data";
-  string out_ran = temp_dir+"ran";
+  string mangle_dir = fullpath(par::DirCosmo)+"/External/mangle/";
 
-  ofstream fout(out_cat.c_str()); checkIO(out_cat, 0); fout.precision(10);
+  string mangle_working_dir = mangle_dir+"output/";
+  string mkdir = "mkdir -p "+mangle_working_dir;
+  if (system(mkdir.c_str())) {} 
+
+  string out_cat = mangle_working_dir+"data.dat";
+  string out_ran = mangle_working_dir+"ran.dat";
+
+  ofstream fout(out_cat.c_str()); checkIO(fout, out_cat); fout.precision(10);
   
-  for (int i=0; i<data.nObjects(); i++)
+  for (size_t i=0; i<data.nObjects(); i++)
     fout << data.ra(i) << " " << data.dec(i) << endl;
   fout.clear(); fout.close();
    
-  fout.open(out_ran.c_str()); checkIO(out_ran, 0);
-  for (int i=0; i<random.nObjects(); i++)
+  fout.open(out_ran.c_str()); checkIO(fout, out_ran);
+  for (size_t i=0; i<random.nObjects(); i++)
     fout << random.ra(i) << " " << random.dec(i) << endl;
   fout.clear(); fout.close();
   
-  cmd = mangle_dir+"bin/polyid -ur "+polygonfile+" "+out_cat+" "+out_cat+".id";
+  string cmd = mangle_dir+"bin/polyid -ur "+polygonfile+" "+out_cat+" "+out_cat+".id";
   if (system(cmd.c_str())) {}
   cmd = mangle_dir+"bin/polyid -ur "+polygonfile+" "+out_ran+" "+out_ran+".id";
   if (system(cmd.c_str())) {}
-   
    
   vector<int> poly_data, poly_random, poly_list;
 
@@ -109,26 +111,26 @@ void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Ca
   string in_cat = out_cat+".id";
   string in_ran = out_ran+".id";
 
-  ifstream fin(in_cat.c_str()); checkIO(in_cat, 1); 
+  ifstream fin(in_cat.c_str()); checkIO(fin, in_cat); 
   getline(fin, line);
   while (getline(fin, line)) {
     stringstream ss(line); double NUM; int pp=-100;
     ss >> NUM; 
     ss >> NUM; 
     ss >> pp;
-    if (pp==-100) ErrorMsg("Error in cosmobl::set_ObjectRegion_mangle!");
+    if (pp==-100) ErrorCBL("Error in cosmobl::set_ObjectRegion_mangle!");
     poly_data.push_back(pp);
   }
   fin.clear(); fin.close();
 
-  fin.open(in_ran.c_str()); checkIO(in_ran, 1); 
+  fin.open(in_ran.c_str()); checkIO(fin, in_ran); 
   getline(fin, line);
   while (getline(fin, line)) {
     stringstream ss(line); double NUM; int pp = -100;
     ss >> NUM; 
     ss >> NUM; 
     ss >> pp;
-    if (pp==-100) ErrorMsg("Error in cosmobl::set_ObjectRegion_mangle!");
+    if (pp==-100) ErrorCBL("Error in cosmobl::set_ObjectRegion_mangle!");
     poly_random.push_back(pp);
     poly_list.push_back(pp);
   }
@@ -146,7 +148,7 @@ void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Ca
 
   for (int i=1; i<nSamples; i++)
     boundaries[i] = poly_list[i*int(nPoly/(nSamples))];
-  
+ 
   for (size_t i=1; i<boundaries.size(); i++) {
     for (size_t j=0; j<poly_data.size(); j++) 
       if (poly_data[j]>=boundaries[i-1] && poly_data[j] <boundaries[i])
@@ -157,8 +159,10 @@ void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Ca
 	random.catalogue_object(j)->set_region(i-1);
   }
   
-  string RM = "rm -rf "+dir+"temp/";
+  string RM = "rm -rf "+mangle_working_dir;
   if (system(RM.c_str())) {}
+
+  cosmobl::check_regions(data, random);
 }
 
 
@@ -177,10 +181,10 @@ void cosmobl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Cat
   vector<double> random_x = random.var(catalogue::Var::_RA_);
   vector<double> random_y = random.var(catalogue::Var::_Dec_);
 
-  for (int i=0; i<data.nObjects(); i++)
+  for (size_t i=0; i<data.nObjects(); i++)
     data_x[i] *= cos(data_y[i]);
 
-  for (int i=0; i<random.nObjects(); i++)
+  for (size_t i=0; i<random.nObjects(); i++)
     random_x[i] *= cos(random_y[i]);
 
   Lim.push_back(Min(data_x));
@@ -216,14 +220,14 @@ void cosmobl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Cat
   {
     
 #pragma omp for schedule(static, 2) 
-    for (int i=0; i<data.nObjects(); i++) {
+    for (size_t i=0; i<data.nObjects(); i++) {
       int j1 = min(int((data_y[i]-Lim[2])/Cell_sz), nDec-1);
       int i1 = min(int((data_x[i]-Lim[0])/cell_size_x[j1]), n_cells_x[j1]-1);
       data.catalogue_object(i)->set_region(cells[j1][i1]);
     }
 
 #pragma omp for schedule(static, 2) 
-    for (int i=0; i<random.nObjects(); i++) {
+    for (size_t i=0; i<random.nObjects(); i++) {
       int j1 = min(int((random_y[i]-Lim[2])/Cell_sz), nDec-1);
       int i1 = min(int((random_x[i]-Lim[0])/cell_size_x[j1]), n_cells_x[j1]-1);
       random.catalogue_object(i)->set_region(cells[j1][i1]);
@@ -239,38 +243,40 @@ void cosmobl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Cat
 
 void cosmobl::check_regions (catalogue::Catalogue &data, catalogue::Catalogue &random)
 {
-  vector<long> data_regions = data.get_region_list();
-  vector<long> random_regions = random.get_region_list();
+  coutCBL << "Checking if the regions have been assigned correctly..." << endl;
+  
+  vector<long> data_regions = data.region_list();
+  vector<long> random_regions = random.region_list();
   
   // check if data and random catalogues have the same number of regions
   if (data_regions.size() != random_regions.size()) 
-    ErrorMsg("Error in check_regions of Subsample.cpp, data and random have different number of regions");
+    ErrorCBL("Error in check_regions of Subsample.cpp, data and random have different number of regions: data_regions.size() = "+conv(data_regions.size(), par::fINT)+", random_regions.size = "+conv(random_regions.size(), par::fINT));
   
   // check if data and random catalogues have the same regions
-  int nRegions = data_regions.size();
-  for (int i=0; i<nRegions; i++)
+  size_t nRegions = data_regions.size();
+  for (size_t i=0; i<nRegions; ++i)
     if (data_regions[i] != random_regions[i])
-      ErrorMsg("Error in check_regions of Subsample.cpp, data and random have regions");
+      ErrorCBL("Error in check_regions of Subsample.cpp, data and random have regions");
   
-  // check if regions are consecutives and starting from 0
-  bool cons = 1;
-  for (int i=0; i<nRegions; i++) 
-    if (data_regions[i]!=i)
-      cons = 0;
+  // check if regions are consecutive and starting from 0
+  bool cons = true;
+  for (size_t i=0; i<nRegions; ++i) 
+    if (data_regions[i] != (long)i)
+      cons = false;
   
   // make regions 
   if (!cons) {
     map<long, long> regions;
-    for (long i=0; i<nRegions; i++)
-      regions[data_regions[i]] = i;
+    for (size_t i=0; i<nRegions; ++i)
+      regions[data_regions[i]] = (long)i;
       
-    for (int i=0; i<data.nObjects(); i++) {
+    for (size_t i=0; i<data.nObjects(); ++i) {
       long region = data.catalogue_object(i)->region();
       auto search = regions.find(region);
       data.catalogue_object(i)->set_region(search->second);
     }
       
-    for (int i=0; i<random.nObjects(); i++) {
+    for (size_t i=0; i<random.nObjects(); ++i) {
       long region = random.catalogue_object(i)->region();
       auto search = regions.find(region);
       random.catalogue_object(i)->set_region(search->second);

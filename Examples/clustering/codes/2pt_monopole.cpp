@@ -4,67 +4,70 @@
 
 #include "TwoPointCorrelation1D_monopole.h"
 
-using namespace cosmobl;
-using namespace cosmology;
-using namespace catalogue;
-using namespace twopt;
-
-string par::DirCosmo = DIRCOSMO, par::DirLoc = DIRL;
+// these two variables contain the name of the CosmoBolognaLib
+// directory and the name of the current directory (useful when
+// launching the code on remote systems)
+string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
 
 
 int main () {
-  
-  // -----------------------------------------------------------------
-  // ---------------- use default cosmological parameters ------------
-  // -----------------------------------------------------------------
 
-  Cosmology cosmology;
-
+  try {
   
-  // -----------------------------------------------------------------------------------------------------------
-  // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
-  // -----------------------------------------------------------------------------------------------------------
-  
-  string file_catalogue = par::DirLoc+"../input/cat.dat";
+    // -----------------------------------------------------------------
+    // ---------------- use default cosmological parameters ------------
+    // -----------------------------------------------------------------
 
-  Catalogue catalogue {_Galaxy_, _observedCoordinates_, {file_catalogue}, cosmology};
+    const cosmobl::cosmology::Cosmology cosmology;
 
   
-  // --------------------------------------------------------------------------------------
-  // ---------------- construct the random catalogue (with cubic geometry) ----------------
-  // --------------------------------------------------------------------------------------
-
-  double N_R = 1.; // random/data ratio
+    // -----------------------------------------------------------------------------------------------------------
+    // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
+    // -----------------------------------------------------------------------------------------------------------
   
-  Catalogue random_catalogue {_createRandom_box_, catalogue, N_R};
+    const string file_catalogue = cosmobl::par::DirLoc+"../input/cat.dat";
 
-  
-  // --------------------------------------------------------------------------------------------
-  // ---------------- measure the monopole of the two-point correlation function ----------------
-  // --------------------------------------------------------------------------------------------
-
-  // binning parameters and output data
-
-  double rMin = 1.;   // minimum separation 
-  double rMax = 50.;  // maximum separation 
-  int nbins = 20;     // number of bins
-  double shift = 0.5; // spatial shift used to set the bin centre
-  
-  string dir = par::DirLoc+"../output/";
-  string file = "xi.dat";
+    const cosmobl::catalogue::Catalogue catalogue {cosmobl::catalogue::_Galaxy_, cosmobl::_observedCoordinates_, {file_catalogue}, cosmology};
 
   
-  // measure the monopole and compute Poisson errors 
+    // --------------------------------------------------------------------------------------
+    // ---------------- construct the random catalogue (with cubic geometry) ----------------
+    // --------------------------------------------------------------------------------------
 
-  TwoPointCorrelation1D_monopole TwoP {catalogue, random_catalogue, _logarithmic_, rMin, rMax, nbins, shift};
+    const double N_R = 1.; // random/data ratio
   
-  TwoP.measure(_Poisson_, dir);
+    const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
 
   
-  // store the output data
+    // --------------------------------------------------------------------------------------------
+    // ---------------- measure the monopole of the two-point correlation function ----------------
+    // --------------------------------------------------------------------------------------------
+
+    // binning parameters and output data
+
+    const double rMin = 1.;   // minimum separation 
+    const double rMax = 50.;  // maximum separation 
+    const int nbins = 20;     // number of bins
+    const double shift = 0.5; // spatial shift used to set the bin centre
   
-  TwoP.write(dir, file);
+    const string dir = cosmobl::par::DirLoc+"../output/";
+    const string file = "xi.dat";
+
   
+    // measure the monopole and compute Poisson errors 
+
+    cosmobl::twopt::TwoPointCorrelation1D_monopole TwoP {catalogue, random_catalogue, cosmobl::_logarithmic_, rMin, rMax, nbins, shift};
+  
+    TwoP.measure(cosmobl::twopt::_Poisson_, dir);
+
+  
+    // store the output data
+  
+    TwoP.write(dir, file);
+  
+  }
+
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
   
   return 0;
 }

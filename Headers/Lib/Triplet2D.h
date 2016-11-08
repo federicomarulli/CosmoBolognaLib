@@ -294,7 +294,7 @@ namespace cosmobl {
        *  @warning This method has not been implemented yet
        */
       void Sum (const shared_ptr<Triplet> tt, const double ww=1) override
-      { (void)tt; (void)ww; ErrorMsg("Work in progress..."); }
+      { (void)tt; (void)ww; ErrorCBL("Error in Sum of Triple2D.h", cosmobl::glob::ExitCode::_workInProgress_); }
 
       /**
        *  @brief estimate the distance between three objects and
@@ -308,7 +308,7 @@ namespace cosmobl {
        *  @warning This method has not been implemented yet
        */
       void put (const double r12, const double r13, const double r23, const double ww=1.) override
-      { (void)r12; (void)r13; (void)r23; (void)ww; ErrorMsg("Work in progress..."); }
+      { (void)r12; (void)r13; (void)r23; (void)ww; ErrorCBL("Error in put of Triple2D.h", cosmobl::glob::ExitCode::_workInProgress_); }
     
       /**
        *  @brief estimate the distance between three objects and
@@ -321,7 +321,7 @@ namespace cosmobl {
        *  @warning This method has not been implemented yet
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, const shared_ptr<catalogue::Object> obj3) override
-      { (void)obj1; (void)obj2; (void)obj3; ErrorMsg("Work in progress..."); }
+      { (void)obj1; (void)obj2; (void)obj3; ErrorCBL("Error in put of Triple2D.h", cosmobl::glob::ExitCode::_workInProgress_); }
       
       ///@}
     

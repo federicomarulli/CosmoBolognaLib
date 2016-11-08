@@ -35,3 +35,5 @@
 %include "TwoPointCorrelation_multipoles.h"
 %include "TwoPointCorrelation_wedges.h"
 %include "TwoPointCorrelation1D_filtered.h"
+
+%template(TwoPointCorrelationPtr) std::shared_ptr<cosmobl::twopt::TwoPointCorrelation>;

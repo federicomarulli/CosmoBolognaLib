@@ -1,5 +1,5 @@
 /********************************************************************
- *  Copyright (C) 2015 by Federico Marulli and Alfonso Veropalumbo  *
+ *  Copyright (C) 2016 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
  *  This program is free software; you can redistribute it and/or   * 
@@ -21,15 +21,16 @@
 /**
  *  @file Modelling/Modelling_TwoPointCorrelation_projected.cpp
  *
- *  @brief Methods of the class Modelling_TwoPointCorrelation_projected, 
- *  used for modelling projected 2pcf
+ *  @brief Methods of the class
+ *  Modelling_TwoPointCorrelation_projected, used to model the
+ *  projected two-point correlation function
  *
  *  This file contains the implementation of the methods of the class
  *  Modelling_TwoPointCorrelation_projected
  *
- *  @authors Federico Marulli
+ *  @authors Federico Marulli, Alfonso Veropalumbo
  *
- *  @authors federico.marulli3@unbo.it
+ *  @authors federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
  */
 
 
@@ -41,42 +42,16 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling_TwoPointCorrelation_projected::set_fiducial_twop ()
+void cosmobl::modelling::Modelling_TwoPointCorrelation_projected::set_fiducial_xiDM ()
 {
-  cout << "Setting up the fiducial two-point correlation function model" << endl;
-  m_twop_parameters.fiducial_twop.erase(m_twop_parameters.fiducial_twop.begin(), m_twop_parameters.fiducial_twop.end());
+  coutCBL << "Setting up the fiducial two-point correlation function model" << endl;
+  m_twop_parameters.fiducial_xiDM.erase(m_twop_parameters.fiducial_xiDM.begin(), m_twop_parameters.fiducial_xiDM.end());
 
-  for(size_t i=0; i<m_twop_parameters.model_scales.size(); i++){
-    double wp = m_twop_parameters.cosmology->wp_DM(m_twop_parameters.model_scales[i], m_twop_parameters.method, m_twop_parameters.redshift, m_twop_parameters.output_root, m_twop_parameters.NL, m_twop_parameters.norm, m_twop_parameters.r_min, m_twop_parameters.r_max, m_twop_parameters.k_min, m_twop_parameters.k_max, m_twop_parameters.aa, m_twop_parameters.GSL, m_twop_parameters.prec, m_twop_parameters.file_par); 
-    m_twop_parameters.fiducial_twop.push_back(wp);
-  }
+  for (size_t i=0; i<m_twop_parameters.fiducial_radDM.size(); i++) 
+    m_twop_parameters.fiducial_xiDM.push_back(m_twop_parameters.cosmology->wp_DM(m_twop_parameters.fiducial_radDM[i], m_twop_parameters.method_Pk, m_twop_parameters.redshift, m_twop_parameters.pi_max, m_twop_parameters.output_root, m_twop_parameters.NL, m_twop_parameters.norm, m_twop_parameters.r_min, m_twop_parameters.r_max, m_twop_parameters.k_min, m_twop_parameters.k_max, m_twop_parameters.aa, m_twop_parameters.GSL, m_twop_parameters.prec, m_twop_parameters.file_par));
   
-  m_twop_parameters.func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(m_twop_parameters.model_scales, m_twop_parameters.fiducial_twop, "Spline"));
-  cout << "Done!" << endl;
+  m_twop_parameters.func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(m_twop_parameters.fiducial_radDM, m_twop_parameters.fiducial_xiDM, "Spline"));
 
 }
 
-// ============================================================================================
 
-
-cosmobl::modelling::Modelling_TwoPointCorrelation_projected::Modelling_TwoPointCorrelation_projected(const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop)
-{
-  m_data = twop->dataset();
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::modelling::Modelling_TwoPointCorrelation_projected::set_model_bias(const statistics::Prior bias_prior, const statistics::ParameterType pT_bias)
-{
-  set_fiducial_twop();
-  statistics::Parameter bias(bias_prior.sample(), bias_prior, pT_bias, "bias");
-
-  vector<statistics::Parameter> model_parameters;
-  model_parameters.push_back(bias);
-
-  auto fixed_parameters = make_shared<glob::STR_twop_model>(m_twop_parameters);
-
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(model_parameters, fixed_parameters, &glob::wp_bias)); 
-}

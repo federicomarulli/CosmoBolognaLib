@@ -24,7 +24,7 @@
  *  @brief The class TwoPointCorrelation1D_filtered
  *
  *  This file defines the interface of the class
- *  TwoPointCorrelation1D_filtered, used to measure the filtered 
+ *  TwoPointCorrelation1D_filtered, used to measure the filtered
  *  monopole of the two-point correlation function
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
@@ -47,7 +47,8 @@ namespace cosmobl {
   namespace twopt {
   
     /**
-     *  @class TwoPointCorrelation1D_filtered TwoPointCorrelation1D_filtered.h
+     *  @class TwoPointCorrelation1D_filtered
+     *  TwoPointCorrelation1D_filtered.h
      *  "Headers/Lib/TwoPointCorrelation1D_filtered.h"
      *
      *  @brief The class TwoPointCorrelation1D_filtered
@@ -60,7 +61,129 @@ namespace cosmobl {
      *  monopole of the two-point correlation function
      *   
      */
-    class TwoPointCorrelation1D_filtered : public TwoPointCorrelation1D_monopole {
+    class TwoPointCorrelation1D_filtered : public TwoPointCorrelation1D_monopole
+    {
+
+    protected:
+      
+      /// scales at which the filtered correlation function is computed
+      vector<double> m_rc;
+
+      /**
+       *  @brief measure the filtered two-point correlation function,
+       *  \f$w(r_c)=2\pi \int dr \xi(r) W(r,r_c) r^2\f$, where \f$W(x)
+       *  = (2x)^2(1-x)(0.5-x)r_c^{-3}\f$
+       *  
+       *  @param data pointer to an object of type Pair containing the
+       *  data-data pairs
+       *
+       *  @return pointer to an object of type Data
+       */
+      shared_ptr<data::Data> Filtered (const shared_ptr<data::Data> data) override;
+
+      /**
+       *  @brief measure the filtered two-point correlation function
+       *  with Poisson errors
+       *
+       *  @param dir_output_pairs output directory used to store the
+       *  number of pairs
+       *
+       *  @param dir_input_pairs vector of input directories used to
+       *  store the number of pairs (if the pairs are read from files)
+       *
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-data pairs from
+       *  file
+       *
+       *  @param count_rr true &rarr; count the number of
+       *  random-random pairs; false &rarr; read the number of
+       *  random-random pairs from file
+       *
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
+       *
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
+       *
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
+       *
+       *  @return none
+       */
+      void measurePoisson (const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
+
+      /**
+       *  @brief measure the filtered two-point correlation function
+       *  estimating the covariance with Jackknife resampling
+       *
+       *  @param dir_output_pairs output directory used to store the
+       *  number of pairs
+       *
+       *  @param dir_input_pairs vector of input directories used to
+       *  store the number of pairs (if the pairs are read from files)
+       *
+       *  @param dir_output_resample output directory used to store
+       *  the Jackknife resampling correlation functions, with Poisson
+       *  errors
+       *
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-data pairs from
+       *  file
+       *
+       *  @param count_rr true &rarr; count the number of
+       *  random-random pairs; false &rarr; read the number of
+       *  random-random pairs from file
+       *
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
+       *
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
+       *
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
+       *
+       *  @return none
+       */
+      void measureJackknife (const string dir_output_pairs = par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
+
+      /**
+       *  @brief measure the filtered two-point correlation function
+       *  estimating the covariance with Bootstrap resampling
+       *
+       *  @param nMocks number of mocks to be generated with bootstrap
+       *  resampling
+       *
+       *  @param dir_output_pairs output directory used to store the
+       *  number of pairs
+       *
+       *  @param dir_input_pairs vector of input directories used to
+       *  store the number of pairs (if the pairs are read from files)
+       *
+       *  @param dir_output_resample output directory used to store
+       *  the Bootstrap resampling correlation function, with Poisson
+       *  errors
+       *
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-data pairs from
+       *  file
+       *
+       *  @param count_rr true &rarr; count the number of
+       *  random-random pairs; false &rarr; read the number of
+       *  random-random pairs from file
+       *
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
+       *
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
+       *
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
+       *
+       *  @return none
+       */
+      void measureBootstrap (const int nMocks, const string dir_output_pairs = par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
 
     public:
     
@@ -76,83 +199,100 @@ namespace cosmobl {
       TwoPointCorrelation1D_filtered () { m_twoPType = _1D_filtered_; }
 
       /**
-       *  @brief constructor
+       *  @brief constructor for the filtered two-point correlation
+       *  function
+       *
        *  @param data object of class Catalogue containing the input
        *  catalogue
+       *
        *  @param random of class Catalogue containing the random data
        *  catalogue
-       *  @param rMin minimum separation used to count the pairs
-       *  @param rMax maximum separation used to count the pairs
-       *  @param nbins number of bins
-       *  @param monopole_rMin minimum separation used to count the pairs
-       *  @param monopole_rMax maximum separation used to count the pairs
-       *  @param monopole_nbins number of bins
-       *  @param monopole_shift shift parameter, i.e. the radial shift is
-       *  binSize*shift*  @return object of class TwoPointCorrelation1D_monopole
+       *
+       *  @param binType_D1 binning type in the first dimension
+       *
+       *  @param Min_D1 minimum separation in the first dimensionused
+       *  to count the pairs
+       *
+       *  @param Max_D1 maximum separation in the first dimension used
+       *  to count the pairs
+       *
+       *  @param nbins_D1 number of bins in the first dimension
+       *
+       *  @param shift_D1 shift parameter in the first dimension,
+       *  i.e. the radial shift is binSize*shift
+       *
+       *  @param Min_D2 minimum separation in the second dimensionused
+       *  to count the pairs
+       *
+       *  @param Max_D2 maximum separation in the second dimension used
+       *  to count the pairs
+       *
+       *  @param nbins_D2 number of bins in the second dimension
+       *
+       *  @param shift_D2 shift parameter in the second dimension,
+       *  i.e. the radial shift is binSize*shift
+       *
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
+       *
+       *  @param compute_extra_info true &rarr; compute extra
+       *  information related to the pairs, such as the mean pair
+       *  separation and redshift
+       *
+       *  @return a pointer to an object of class TwoPointCorrelation of
+       *  a given type
        */
-      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const double rMin, const double rMax, const int nbins, const double monopole_rMin, const double monopole_rMax, const int monopole_nbins, const double monopole_shift)
-	: TwoPointCorrelation1D_monopole(data, random, _linear_, monopole_rMin, monopole_rMax, monopole_nbins, monopole_shift)
-      { m_twoPType = _1D_filtered_; set_parameters(rMin, rMax, nbins); }
-
-       /**
-       *  @brief constructor
-       *  @param data object of class Catalogue containing the input
-       *  catalogue
-       *  @param random of class Catalogue containing the random data
-       *  catalogue
-       *  @param rMin minimum separation used to filter the xi
-       *  @param rMax maximum separation used to filter the xi
-       *  @param nbins the number of bins
-       *  @param monopole_rMin minimum separation used to count the pairs
-       *  @param monopole_rMax maximum separation used to count the pairs
-       *  @param monopole_binSize the size of the bin for the monopole
-       *  @param monopole_shift shift parameter, i.e. the radial shift is
-       *  binSize*shift
-       *  @return object of class TwoPointCorrelation1D_filtered
-       */
-      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const double rMin, const double rMax, const int nbins, const double monopole_rMin, const double monopole_rMax, const double monopole_binSize, const double monopole_shift)
-	: TwoPointCorrelation1D_monopole(data, random, _linear_ , monopole_rMin, monopole_rMax, monopole_binSize, monopole_shift)
-      { m_twoPType = _1D_filtered_; set_parameters(rMin, rMax, nbins); }     
+      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
+	: TwoPointCorrelation1D_monopole(data, random, _linear_, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight, compute_extra_info)
+	{ m_twoPType = _1D_filtered_;  set_parameters(binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1); }
 
       /**
-       *  @brief constructor
+       *  @brief constructor for the filtered two-point correlation
+       *  function
+       *  
        *  @param data object of class Catalogue containing the input
        *  catalogue
+       *
        *  @param random of class Catalogue containing the random data
        *  catalogue
-       *  @param rMin minimum separation used to count the pairs
-       *  @param rMax maximum separation used to count the pairs
-       *  @param binSize the bin size
-       *  @param monopole_rMin minimum separation used to count the pairs
-       *  @param monopole_rMax maximum separation used to count the pairs
-       *  @param monopole_nbins number of bins
-       *  @param monopole_shift shift parameter, i.e. the radial shift is
-       *  binSize*shift*  @return object of class TwoPointCorrelation1D_monopole
+       *
+       *  @param binType_D1 binning type in the first dimension
+       *
+       *  @param Min_D1 minimum separation in the first dimension used
+       *  to count the pairs
+       *
+       *  @param Max_D1 maximum separation in the first dimension used
+       *  to count the pairs
+       *
+       *  @param binSize_D1 the bin size in the first dimension
+       *
+       *  @param shift_D1 shift parameter in the first dimension,
+       *  i.e. the radial shift is binSize*shift
+       *
+       *  @param Min_D2 minimum separation in the second dimension used
+       *  to count the pairs
+       *
+       *  @param Max_D2 maximum separation in the second dimension used
+       *  to count the pairs
+       *
+       *  @param binSize_D2 the bin size in the second dimension
+       *
+       *  @param shift_D2 shift parameter in the second dimension,
+       *  i.e. the radial shift is binSize*shift
+       *
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
+       *
+       *  @param compute_extra_info true &rarr; compute extra
+       *  information related to the pairs, such as the mean pair
+       *  separation and redshift
+       *
+       *  @return a pointer to an object of class TwoPointCorrelation of
+       *  a given type
        */
-      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const double rMin, const double rMax, const double binSize, const double monopole_rMin, const double monopole_rMax, const int monopole_nbins, const double monopole_shift)
-	: TwoPointCorrelation1D_monopole(data, random,_linear_, monopole_rMin, monopole_rMax, monopole_nbins, monopole_shift)
-      { m_twoPType = _1D_filtered_; set_parameters(rMin, rMax, binSize); }
-
-       /**
-       *  @brief constructor
-       *  @param data object of class Catalogue containing the input
-       *  catalogue
-       *  @param random of class Catalogue containing the random data
-       *  catalogue
-       *  @param rMin minimum separation used to filter the xi
-       *  @param rMax maximum separation used to filter the xi
-       *  @param binSize the number of bins
-       *  logarithmic
-       *  @param monopole_rMin minimum separation used to count the pairs
-       *  @param monopole_rMax maximum separation used to count the pairs
-       *  @param monopole_binSize the size of the bin for the monopole
-       *  @param monopole_shift shift parameter, i.e. the radial shift is
-       *  binSize*shift
-       *  @return object of class TwoPointCorrelation1D_filtered
-       */
-      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const double rMin, const double rMax, const double binSize, const double monopole_rMin, const double monopole_rMax, const double monopole_binSize, const double monopole_shift)
-	: TwoPointCorrelation1D_monopole(data, random, _linear_, monopole_rMin, monopole_rMax, monopole_binSize, monopole_shift)
-      { m_twoPType = _1D_filtered_; set_parameters(rMin, rMax, binSize); }     
+      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
+	: TwoPointCorrelation1D_monopole(data, random, _linear_, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight, compute_extra_info)
+	{ m_twoPType = _1D_filtered_; set_parameters(binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1); }     
 
       /**
        *  @brief default destructor
@@ -170,21 +310,27 @@ namespace cosmobl {
       
       /**
        *  @brief set the binning parameters
+       *  @param binType binning type
        *  @param rMin minimum separation used to count the pairs
        *  @param rMax maximum separation used to count the pairs
        *  @param nbins number of bins
+       *  @param shift shift parameter, i.e. the radial shift is
+       *  binSize*shift
        *  @return none
        */
-      void set_parameters (const double rMin, const double rMax, const int nbins);
+      void set_parameters (const binType binType, const double rMin, const double rMax, const int nbins, const double shift);
 
       /**
        *  @brief set the binning parameters
+       *  @param binType binning type
        *  @param rMin minimum separation used to count the pairs
        *  @param rMax maximum separation used to count the pairs
-       *  @param binSize the bin size
+       *  @param binSize size of the bin
+       *  @param shift shift parameter, i.e. the radial shift is
+       *  binSize*shift
        *  @return none
        */
-      void set_parameters (const double rMin, const double rMax, const double binSize);
+      void set_parameters (const binType binType, const double rMin, const double rMax, const double binSize, const double shift);
 
       ///@}
 
@@ -195,45 +341,41 @@ namespace cosmobl {
       ///@{
 
       /**
-       *  @brief measure the monopole of the two-point correlation
-       *  function, &xi;(r)
+       *  @brief measure the filtered of the two-point correlation
+       *  function
        *
-       *  @param errType type of &xi;(r) error
+       *  @param errorType type of error
        *  
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
        *
-       *  @param dir_input_pairs vector of input directories used to store the
-       *  number of pairs (if the pairs are read from files)
+       *  @param dir_input_pairs vector of input directories used to
+       *  store the number of pairs (if the pairs are read from files)
        *
-       *  @param dir_output_ResampleXi output directory of the resampled &xi;(r)
+       *  @param dir_output_resample output directory of the
+       *  resampled correlation function
        *
-       *  @param nMocks number of resampling for bootstrap
+       *  @param nMocks number of resampling used for bootstrap
        *
-       *  @param count_dd 1 &rarr; count the number of data-data
-       *  opairs; 0 &rarr; read the number of data-data pairs from
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-random pairs from
        *  file
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  opairs; 0 &rarr; read the number of random-random pairs from
-       *  file
+       *  @param count_rr true &rarr; count the number of random-random
+       *  pairs; false &rarr; read the number of random-random pairs
        *
-       *  @param count_dd 1 &rarr; count the number of data-random
-       *  opairs; 0 &rarr; read the number of data-random pairs from
-       *  file
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  pairs; 0 &rarr; read the number of random-random pairs
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
        *
-       *  @param count_dr 1 &rarr; count the number of data-random
-       *  pairs; 0 &rarr; read the number of data-random pairs
-       *
-       *  @param tcount 1 &rarr; activate the time counter; 0 &rarr;
-       *  don't activate the time counter; 
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
        *
        *  @return none
        */
-      void measure (const ErrorType errType = ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_ResampleXi=par::defaultString, int nMocks = 0, const int count_dd=1, const int count_rr=1, const int count_dr=1, const bool tcount=1) override;
+      void measure (const ErrorType errorType = ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
     
       ///@}
 

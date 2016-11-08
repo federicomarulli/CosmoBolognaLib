@@ -338,8 +338,8 @@ double cosmobl::multipoles (double rr, shared_ptr<void> pp, vector<double> par)
   
   if (vec->type[index]==1) return multipole_xi0(0,cos_lin,xi_cos); 
   else if (vec->type[index]==2) return multipole_xi2(0,cos_lin,xi_cos); 
-  else { ErrorMsg ("Error in the function multipoles of FuncMultipoles.cpp!"); return 0; } 
-  
+  else return ErrorCBL("Error in the function multipoles of FuncMultipoles.cpp!");
+
 }
 
 /// @endcond
@@ -358,7 +358,7 @@ double cosmobl::multipole_xi0_model (const double beta, const double xi_real)
 
 double cosmobl::multipole_xi0_model (const double f_sigma8, const double bias_sigma8, const double sigma8z, const double xi_DM) 
 { 
-  return xi_ratio(f_sigma8,bias_sigma8)*xi_DM*pow(bias_sigma8/sigma8z,2);
+  return xi_ratio(f_sigma8, bias_sigma8)*xi_DM*pow(bias_sigma8/sigma8z, 2);
 }
 
 
@@ -372,9 +372,9 @@ double cosmobl::multipole_xi0_model (double xx, shared_ptr<void> pp, vector<doub
 
   shared_ptr<cosmobl::glob::STR_xi0_model> vec = static_pointer_cast<cosmobl::glob::STR_xi0_model>(pp);
 
-  if (par.size()==2) return multipole_xi0_model (par[0], vec->bias_sigma8, vec->sigma8z, vec->xi_DM[par[par.size()-1]]); 
+  if (par.size()==2) return multipole_xi0_model(par[0], vec->bias_sigma8, vec->sigma8z, vec->xi_DM[par[par.size()-1]]); 
 
-  else { ErrorMsg("Error in multipole_xi0_model of FuncMultipoles.cpp!"); return 0; }
+  else return ErrorCBL("Error in multipole_xi0_model of FuncMultipoles.cpp!");
 }
 
 /// @endcond
@@ -887,14 +887,17 @@ vector< vector<double> > cosmobl::sigma2_k (const double nObjects, const double 
 // ============================================================================
 
 
-vector<vector<double> > cosmobl::Covariance_XiMultipoles (const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double> > Pk_multipoles, const vector<int> orders)
+void cosmobl::Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>> &covariance, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double>> Pk_multipoles, const vector<int> orders)
 {
   int n_orders = orders.size();
   int nbins_k = kk.size();
-  vector<double> r = linear_bin_vector(nbins, rMin, rMax);
-  double dr=r[1]-r[0];
 
-  vector<vector<double>> covariance(n_orders*nbins,vector<double>(n_orders*nbins, 0));
+  vector<double> rad = linear_bin_vector(nbins, rMin, rMax);
+  double dr = rad[1]-rad[0];
+  
+  covariance.erase(covariance.begin(), covariance.end());
+  covariance.resize(n_orders*nbins,vector<double>(n_orders*nbins, 0));
+
   vector<vector<double>> sigma2 = sigma2_k(nObjects, Volume, kk, Pk_multipoles, orders);
 
   vector<vector<vector<double> >> jr(n_orders,vector<vector<double>>(nbins,vector<double>(nbins_k, 0)));
@@ -902,7 +905,7 @@ vector<vector<double> > cosmobl::Covariance_XiMultipoles (const int nbins, const
   for (int l=0; l<n_orders; l++) 
     for (int i=0; i<nbins; i++) 
       for (int j=0; j<nbins_k; j++) 
-	jr[l][i][j] = jl_distance_average(kk[j], orders[l], r[i]-dr*0.5, r[i]+dr*0.5);
+	jr[l][i][j] = jl_distance_average(kk[j], orders[l], rad[i]-dr*0.5, rad[i]+dr*0.5);
 
   cosmobl::glob::STR_covariance_XiMultipoles_integrand params;
   int limit_size = 1000;
@@ -970,14 +973,18 @@ vector<vector<double> > cosmobl::Covariance_XiMultipoles (const int nbins, const
     }  
   }
 
-  return covariance;
+  rr.erase(rr.begin(), rr.end());
+  
+  for (int i=0; i<n_orders; i++)
+    for (int j=0; j<nbins; j++)
+      rr.push_back(rad[j]);
 }
 
 
 // ============================================================================
 
 
-vector<vector<double> > cosmobl::Covariance_XiWedges (const vector<double> mu, const vector<double> delta_mu, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double> > Pk_multipoles, const vector<int> orders)
+void cosmobl::Covariance_XiWedges (vector<double> &rr, vector<vector<double>> &covariance, const vector<double> mu, const vector<double> delta_mu, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double> > Pk_multipoles, const vector<int> orders)
 {
   int n_wedges = mu.size();
   vector<int> ord = orders;
@@ -990,8 +997,14 @@ vector<vector<double> > cosmobl::Covariance_XiWedges (const vector<double> mu, c
   }
 
   int n_orders = ord.size();
-  vector<vector<double>> covariance_wedges(n_wedges*nbins, vector<double>(n_wedges*nbins, 0));
-  vector<vector<double>> covariance_multipoles = cosmobl::Covariance_XiMultipoles(nbins, rMin, rMax, nObjects, Volume, kk, Pkl, ord);
+
+  vector<vector<double> > covariance_multipoles;
+
+  covariance.erase(covariance.begin(), covariance.end());
+  covariance.resize(n_wedges*nbins, vector<double>(n_wedges*nbins, 0));
+
+  vector<double> r_multipoles;
+  cosmobl::Covariance_XiMultipoles(r_multipoles, covariance_multipoles, nbins, rMin, rMax, nObjects, Volume, kk, Pkl, ord);
 
   for (int w1=0; w1<n_wedges; w1++) {
     for (int w2=0; w2<n_wedges; w2++) {
@@ -1007,14 +1020,19 @@ vector<vector<double> > cosmobl::Covariance_XiWedges (const vector<double> mu, c
 	      VV += covariance_multipoles[r1+nbins*l1][r2+nbins*l2]*leg_integral1*leg_integral2;
 	    }
 	  }
-	  covariance_wedges[r1+nbins*w1][r2+nbins*w2] = VV;
+	  covariance[r1+nbins*w1][r2+nbins*w2] = VV;
 	}
       }
 
     }
   }
 
-  return covariance_wedges;
+  vector<double> r = linear_bin_vector(nbins, rMin, rMax);
+  rr.erase(rr.begin(), rr.end());
+
+  for (int i=0; i<n_wedges; i++)
+    for (int j=0; j<nbins; j++)
+      rr.push_back(r[j]);
 }
 
 

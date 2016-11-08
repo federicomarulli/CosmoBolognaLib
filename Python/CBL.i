@@ -14,4 +14,4 @@
 %include Lib/ThreePointCorrelation.i
 %include Lib/Modelling.i
 %include Lib/GlobalFunc.i
-
+%include Lib/ReadParameters.i

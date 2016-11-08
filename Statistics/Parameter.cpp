@@ -41,10 +41,10 @@ using namespace cosmobl;
 
 cosmobl::statistics::Parameter::Parameter (const double value, const ParameterType pType, const string name)
 {
-  m_value=value;
+  m_value = value;
   m_pType = pType;
   m_name = name;
-  m_prior= make_shared<Prior>(statistics::Prior(statistics::PriorType::_UniformPrior_, value*0.9, value*1.1));
+  m_prior = make_shared<Prior>(statistics::Prior(statistics::PriorType::_UniformPrior_, value*0.9, value*1.1));
 }
 
 
@@ -99,7 +99,7 @@ cosmobl::statistics::Parameter::Parameter (const double value, const statistics:
 
 void cosmobl::statistics::Parameter::set_value (const double value)
 {
-  if (!isFreezed())
+  if (!isFixed())
     m_value = prior()->isIncluded(value) ? value : closest(value, prior()->xmin(), prior()->xmax());
 }
 
@@ -125,10 +125,10 @@ void cosmobl::statistics::Parameter::set_chains (const int nchains, const int ch
 
 void cosmobl::statistics::Parameter::set_chain_value (const int chain, const int position, const double value)
 {
-  if(chain >= m_nchains)
-    ErrorMsg("Error in set_chain value of Parameter.cpp, chain number >= number of chains");
-  if(position >= m_chain_size)
-    ErrorMsg("Error in set_chain value of Parameter.cpp, position in chain >= chain size");
+  if (chain >= m_nchains)
+    ErrorCBL("Error in set_chain value of Parameter.cpp, chain number >= number of chains");
+  if (position >= m_chain_size)
+    ErrorCBL("Error in set_chain value of Parameter.cpp, position in chain >= chain size");
 
   m_chains[chain]->set_chain_value(position, value);
 }
@@ -139,12 +139,12 @@ void cosmobl::statistics::Parameter::set_chain_value (const int chain, const int
 
 void cosmobl::statistics::Parameter::set_chains_values (const int position, const vector<double> values)
 {
-  if(int(values.size()) != m_nchains)
-    ErrorMsg("Error in set_chain value of Parameter.cpp, size of values != number of chains");
-  if(position >= m_chain_size)
-    ErrorMsg("Error in set_chain value of Parameter.cpp, position in chain >= chain size");
+  if (int(values.size()) != m_nchains)
+    ErrorCBL("Error in set_chain value of Parameter.cpp, size of values != number of chains");
+  if (position >= m_chain_size)
+    ErrorCBL("Error in set_chain value of Parameter.cpp, position in chain >= chain size");
 
-  for(int i=0; i<m_nchains; i++)
+  for (int i=0; i<m_nchains; i++)
     m_chains[i]->set_chain_value(position,values[i]);
 
 }
@@ -155,11 +155,11 @@ void cosmobl::statistics::Parameter::set_chains_values (const int position, cons
 
 void cosmobl::statistics::Parameter::set_chains_values_from_prior (const int position)
 {
-  if(position >= m_chain_size)
-    ErrorMsg("Error in set_chain value of Parameter.cpp, position in chain >= chain size");
+  if (position >= m_chain_size)
+    ErrorCBL("Error in set_chain value of Parameter.cpp, position in chain >= chain size");
 
   vector<double> values = sample_from_prior(m_nchains);
-  for(int i=0; i<m_nchains; i++)
+  for (int i=0; i<m_nchains; i++)
     m_chains[i]->set_chain_value(position,values[i]);
 
 }
@@ -204,14 +204,12 @@ double cosmobl::statistics::Parameter::chains_convergence (const int max, const 
 {
   double RR = 0.;
   
-  if (isFreezed()) { cout << endl << m_name  << ":" << endl << " freezed value = " << m_value << endl ; }
-
-  else {
+  if (!isFixed()) {
 
     auto chain = merge_chains(max, min, thin);
     chain->Statistics();
-    cout << endl << m_name << ":" << endl;
-    cout << setprecision(6) << " mean = "  << chain->mean() << endl << " std = " << chain->std() << endl << " median = " << chain->median() << endl << endl ;
+    coutCBL << endl << par::col_green << m_name << par::col_default << ":" << endl;
+    coutCBL << setprecision(6) << " mean = "  << chain->mean() << endl << " std = " << chain->std() << endl << " median = " << chain->median() << endl;
 
     set_value(chain->mean());
     m_std = chain->std();
@@ -227,8 +225,10 @@ double cosmobl::statistics::Parameter::chains_convergence (const int max, const 
     double W  = Average(var);
     double B = m_chain_size*Sigma(mean)*Sigma(mean);
     RR = sqrt((double(m_chain_size-1)/m_chain_size*W+B/m_chain_size)/W);
-    cout << setprecision(6) << "Convergence parameter (sqrt(R)-1) = " << RR-1 << endl;
+    coutCBL << setprecision(6) << "Convergence parameter (sqrt(R)-1) = " << RR-1 << endl;
   }
+  
+  //else { coutCBL << endl << m_name  << ":" << endl << " fixed value = " << m_value << endl ; }
 
   return RR;
 }
@@ -241,7 +241,7 @@ vector<double> cosmobl::statistics::Parameter::sample_from_prior (const int samp
 {
   vector<double> values;
   
-  if (!isFreezed())  
+  if (!isFixed())  
     values = m_prior->sample_vector(sample_size);
   else 
     values.resize(sample_size, m_value);

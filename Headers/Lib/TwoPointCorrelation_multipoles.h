@@ -25,7 +25,7 @@
  *
  *  This file defines the interface of the class
  *  TwoPointCorrelation_multipoles, used to measure the first three
- *  multipoles of the two-point correlation function
+ *  multipole moments of the two-point correlation function
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *
@@ -47,99 +47,141 @@ namespace cosmobl {
   namespace twopt {
   
     /**
-     *  @class TwoPointCorrelation_multipoles TwoPointCorrelation_multipoles.h
+     *  @class TwoPointCorrelation_multipoles
+     *  TwoPointCorrelation_multipoles.h
      *  "Headers/Lib/TwoPointCorrelation_multipoles.h"
      *
      *  @brief The class TwoPointCorrelation_multipoles
      *
      *  This class is used to handle objects of type <EM>
      *  TwoPointCorrelation_multipoles </EM>. It is used to measure
-     *  the first three multipoles of the two-point correlation
-     *  function, \f$\xi_l(r) = \frac{2l+1}{2} \int_{-1}^{1}
-     *  \xi(s,\mu) L_l(\mu) d\mu\f$, with $l=0,2,4$.
+     *  the first three multipole moments of the two-point correlation
+     *  function, i.e. the monopole, the quadrupole and the
+     *  exadecupole \f$\xi_l(r) = (2l+1) \int_{\mu_{min}}^{\mu_{max}}
+     *  \xi(s,\mu) L_l(\mu) d\mu\f$, with \f$l=0,2,4\f$. If
+     *  \f$\mu_{min}\neq0\f$ and \f$\mu_{max}\neq1\f$, the algorithm
+     *  provides the truncated multipoles (
+     *  http://arxiv.org/abs/1502.05045 ).
+     *
+     *  This class uses the so-called <EM> integrated </EM> method
+     *  (e.g. http://arxiv.org/abs/1105.2037 , appendix E). This
+     *  method is unbiased even in presence of wide angle and observer
+     *  angle effects, i.e. if the random-random (RR) pairs depend
+     *  also on \f$\mu\f$. However it is more affected by numerical
+     *  uncertainties, relative to the <EM> direct </EM> method, due
+     *  to the numerical integration. Moreover, it requires a large
+     *  enough random catalogue, in order to have random pairs in each
+     *  angular bin.
+     *
+     *  The monopole estimated with the <EM> direct </EM> method can be
+     *  obtained with the class TwoPointCorrelation1D_monopole.
      */
     class TwoPointCorrelation_multipoles : public TwoPointCorrelation2D_polar {
 
     protected:
+      
       /**
-       *  @brief measure multipoles of the correlation function
+       *  @brief measure the multipoles of the two-point correlation
+       *  function
        *  
        *  @param rr absolute separation 
        *
        *  @param mu angular separation
        *
-       *  @param xi 2d cartesian 2pcf
+       *  @param xi 2dD cartesian two-point correlation function
        *
-       *  @param error_xi error on the 2d polar 2pcf
+       *  @param error_xi errors on the 2d polar two-point correlation
+       *  function
        *
        *  @return pointer to an object of type Data
        */
-      shared_ptr<data::Data> MultipolesTwoP (const vector<double> rr, const vector<double> mu, const vector<vector<double> > xi, const vector<vector<double> > error_xi) override;
+      shared_ptr<data::Data> Multipoles (const vector<double> rr, const vector<double> mu, const vector<vector<double>> xi, const vector<vector<double>> error_xi) override;
 
       /**
-       *  @brief measure the multipoles of the two-point correlation
-       *  function, &xi;(r) with Poisson error
+       *  @brief return a data object with extra info
+       *  
+       *  @param rad vector containing the binned separations
+       *
+       *  @param xil vector containing the binned multipoles of the
+       *  correlation function
+       *
+       *  @param error vector containing the errors
+       *
+       *  @return pointer to an object of type Data
+       */
+      shared_ptr<data::Data> data_with_extra_info (const vector<double> rad, const vector<double> xil, const vector<double> error) const;
+
+      /**
+       *  @brief measure the first three multipoles of the two-point
+       *  correlation function with Poisson errors
+       *
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
+       *
        *  @param dir_input_pairs vector of input directories used to
        *  store the number of pairs (if the pairs are read from files)
-       *  @param count_dd 1 &rarr; count the number of data-data
-       *  opairs; 0 &rarr; read the number of data-data pairs from
+       *
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-data pairs from
        *  file
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  opairs; 0 &rarr; read the number of random-random pairs from
-       *  file
-       *  @param count_dr 1 &rarr; count the number of data-random
-       *  opairs; 0 &rarr; read the number of data-random pairs from
-       *  file
-       *  @param tcount 1 &rarr; activate the time counter; 0 &rarr;
-       *  don't activate the time counter; 
+       *
+       *  @param count_rr true &rarr; count the number of
+       *  random-random pairs; false &rarr; read the number of
+       *  random-random pairs from file
+       *
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
+       *
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
+       *
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
+       *
        *  @return none
        */
-      void measurePoisson (const string dir_output_pairs = par::defaultString, const vector<string> dir_input_pairs={}, const int count_dd=1, const int count_rr=1, const int count_dr=1, const bool tcount=1) override;
+      void measurePoisson (const string dir_output_pairs = par::defaultString, const vector<string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
 
       /**
-       *  @brief measure the multipoles of the two-point correlation
-       *  function, &xi;(r), estimate the covariance with Jackknife resampling
+       *  @brief measure the first three multipoles of the two-point
+       *  correlation function estimating the covariance with
+       *  Jackknife resampling
        *
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
        *
-       *  @param dir_input_pairs vector of input directories used to store the
-       *  number of pairs (if the pairs are read from files)
+       *  @param dir_input_pairs vector of input directories used to
+       *  store the number of pairs (if the pairs are read from files)
        *
-       *  @param dir_output_ResampleXi output directory used to store the
-       *  Jackknife resampling Xi, with Poisson error
+       *  @param dir_output_resample output directory used to store
+       *  the Jackknife resampling correlation functions, with Poisson
+       *  errors
        *
-       *  @param count_dd 1 &rarr; count the number of data-data
-       *  opairs; 0 &rarr; read the number of data-data pairs from
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-data pairs from
        *  file
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  opairs; 0 &rarr; read the number of random-random pairs from
-       *  file
+       *  @param count_rr true &rarr; count the number of
+       *  random-random pairs; false &rarr; read the number of
+       *  random-random pairs from file
        *
-       *  @param count_dd 1 &rarr; count the number of data-random
-       *  opairs; 0 &rarr; read the number of data-random pairs from
-       *  file
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  pairs; 0 &rarr; read the number of random-random pairs
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
        *
-       *  @param count_dr 1 &rarr; count the number of data-random
-       *  pairs; 0 &rarr; read the number of data-random pairs
-       *
-       *  @param tcount 1 &rarr; activate the time counter; 0 &rarr;
-       *  don't activate the time counter; 
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
        *
        *  @return none
        */
-      void measureJackknife (const string dir_output_pairs = par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_ResampleXi = par::defaultString, const int count_dd=1, const int count_rr=1, const int count_dr=1, const bool tcount=1) override;
+      void measureJackknife (const string dir_output_pairs = par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample = par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
 
       /**
-       *  @brief measure the multipoles of the two-point correlation
-       *  function, &xi;(r), estimate the covariance with bootstrap
-       *  resampling
+       *  @brief measure the first three multipoles of the two-point
+       *  correlation function estimating the covariance with
+       *  Bootstrap resampling
        *
        *  @param nMocks number of mocks to be generated with bootstrap
        *  resampling
@@ -147,76 +189,73 @@ namespace cosmobl {
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
        *
-       *  @param dir_input_pairs vector of input directories used to store the
-       *  number of pairs (if the pairs are read from files)
+       *  @param dir_input_pairs vector of input directories used to
+       *  store the number of pairs (if the pairs are read from files)
        *
-       *  @param dir_output_ResampleXi output directory used to store the
-       *  Jackknife resampling Xi, with Poisson error
+       *  @param dir_output_resample output directory used to store
+       *  the Bootstrap resampling correlation function, with Poisson
+       *  errors
        *
-       *  @param count_dd 1 &rarr; count the number of data-data
-       *  opairs; 0 &rarr; read the number of data-data pairs from
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-data pairs from
        *  file
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  opairs; 0 &rarr; read the number of random-random pairs from
-       *  file
+       *  @param count_rr true &rarr; count the number of
+       *  random-random pairs; false &rarr; read the number of
+       *  random-random pairs from file
        *
-       *  @param count_dd 1 &rarr; count the number of data-random
-       *  opairs; 0 &rarr; read the number of data-random pairs from
-       *  file
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  pairs; 0 &rarr; read the number of random-random pairs
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
        *
-       *  @param count_dr 1 &rarr; count the number of data-random
-       *  pairs; 0 &rarr; read the number of data-random pairs
-       *
-       *  @param tcount 1 &rarr; activate the time counter; 0 &rarr;
-       *  don't activate the time counter; 
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
        *
        *  @return none
        */
-      void measureBootstrap (const int nMocks, const string dir_output_pairs = par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_ResampleXi = par::defaultString, const int count_dd=1, const int count_rr=1, const int count_dr=1, const bool tcount=1) override;
+      void measureBootstrap (const int nMocks, const string dir_output_pairs = par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample = par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
 
       /**
-       *  @brief measure the jackknife resampling of the two-point correlation
-       *  function, &xi;(r) 
+       *  @brief measure the jackknife resampling of the first three
+       *  multipoles of the two-point correlation function
        *
-       *  @param dd vector of data-data pairs, divider per regions
+       *  @param dd vector of data-data pairs, divided per regions
        *
-       *  @param rr vector of random-random pairs, divider per regions
+       *  @param rr vector of random-random pairs, divided per regions
        *
        *  @return none
        */
-      vector<shared_ptr<data::Data> > XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr) override;
+      vector<shared_ptr<data::Data>> XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr) override;
 
       /**
-       *  @brief measure the jackknife resampling of the two-point correlation
-       *  function, &xi;(r)        
+       *  @brief measure the jackknife resampling of the first three
+       *  multipoles of the two-point correlation function
        *
-       *  @param dd vector of data-data pairs, divider per regions
+       *  @param dd vector of data-data pairs, divided per regions
        *
-       *  @param rr vector of random-random pairs, divider per regions
+       *  @param rr vector of random-random pairs, divided per regions
        *
-       *  @param dr vector of random-random pairs, divider per regions  
+       *  @param dr vector of random-random pairs, divided per regions  
        *
        *  @return a vector of pointers to objects of type Data
        */
-      vector<shared_ptr<data::Data> > XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr) override;
+      vector<shared_ptr<data::Data>> XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
 
       /**
-       *  @brief measure the bootstrap resampling of the two-point correlation
-       *  function, &xi;(r)       
+       *  @brief measure the bootstrap resampling of the first three
+       *  multipoles of the two-point correlation function
        * 
        *  @param nMocks number of bootstrap resamplings
        *
-       *  @param dd vector of data-data pairs, divider per regions
+       *  @param dd vector of data-data pairs, divided per regions
        *
-       *  @param rr vector of random-random pairs, divider per regions
+       *  @param rr vector of random-random pairs, divided per regions
        *
        *  @return a vector of pointers to objects of type Data
        */
-      vector<shared_ptr<data::Data> > XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr) override;
+      vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr) override;
 
       /**
        *  @brief measure the bootstrap resampling of the two-point correlation
@@ -224,15 +263,15 @@ namespace cosmobl {
        *
        *  @param nMocks number of bootstrap resamplings
        *
-       *  @param dd vector of data-data pairs, divider per regions
+       *  @param dd vector of data-data pairs, divided per regions
        *
-       *  @param rr vector of random-random pairs, divider per regions 
+       *  @param rr vector of random-random pairs, divided per regions 
        *
-       *  @param dr vector of random-random pairs, divider per regions  
+       *  @param dr vector of random-random pairs, divided per regions  
        *
        *  @return a vector of pointers to objects of type Data
        */
-      vector<shared_ptr<data::Data> > XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr) override;
+      vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
 
     public:
 
@@ -253,8 +292,7 @@ namespace cosmobl {
        *  catalogue
        *  @param random of class Catalogue containing the random data
        *  catalogue
-       *  @param binType_rad binning type in absolute separations:
-       *  0 &rarr; linear; 1 &rarr; logarithmic
+       *  @param binType_rad binning type in absolute separations
        *  @param rMin minimum absolute separation used to count
        *  the pairs
        *  @param rMax maximum absolute separation used to count
@@ -271,10 +309,13 @@ namespace cosmobl {
        *  separation, i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
+       *  @param compute_extra_info true &rarr; compute extra
+       *  information related to the pairs, such as the mean pair
+       *  separation and redshift
        *  @return object of class TwoPointCorrelation2D_polar
        */
-      TwoPointCorrelation_multipoles (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits, function<double(double)> angularWeight=nullptr)
-	: TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, nbins_rad, shift_rad, _linear_, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight)
+      TwoPointCorrelation_multipoles (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
+	: TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, nbins_rad, shift_rad, _linear_, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight, compute_extra_info)
 	{ m_twoPType = _1D_multipoles_; }
 
       /**
@@ -283,8 +324,7 @@ namespace cosmobl {
        *  catalogue
        *  @param random of class Catalogue containing the random data
        *  catalogue
-       *  @param binType_rad binning type in absolute separations:
-       *  0 &rarr; linear; 1 &rarr; logarithmic
+       *  @param binType_rad binning type in absolute separations
        *  @param rMin minimum absolute separation used to count
        *  the pairs
        *  @param rMax maximum absolute separation used to count
@@ -301,10 +341,13 @@ namespace cosmobl {
        *  separation, i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class TwoPointCorrelation2D_polar
+       *  @param compute_extra_info true &rarr; compute extra
+       *  information related to the pairs, such as the mean pair
+       *  separation and redshift
+       *  @return object of class TwoPointCorrelation_multipoles
        */
-      TwoPointCorrelation_multipoles (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits, function<double(double)> angularWeight=nullptr)
-	: TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, binSize_rad, shift_rad, _linear_, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight)
+      TwoPointCorrelation_multipoles (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
+	: TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, binSize_rad, shift_rad, _linear_, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight, compute_extra_info)
 	{ m_twoPType = _1D_multipoles_; }
 
       /**
@@ -332,14 +375,14 @@ namespace cosmobl {
        *  @return the y coordinates
        */
       vector<double> yy () const 
-        { cosmobl::ErrorMsg("Error in yy() of TwoPointCorrelation_multipoles.h!"); vector<double> vv; return vv; }
+        { cosmobl::ErrorCBL("Error in yy() of TwoPointCorrelation_multipoles.h!"); vector<double> vv; return vv; }
 
       /**
        *  @brief get the the binned correlation function 
        *  @return the binned correlation function 
        */
       vector<double> xi1D () const
-        { cosmobl::ErrorMsg("Error in xi1D() of TwoPointCorrelation_multipoles.h!"); vector<double> vv; return vv; }
+        { cosmobl::ErrorCBL("Error in xi1D() of TwoPointCorrelation_multipoles.h!"); vector<double> vv; return vv; }
 
       /**
        *  @brief get the error on the binned correlation function
@@ -348,14 +391,14 @@ namespace cosmobl {
        *  function
        */
       vector<double> error1D () const
-        { cosmobl::ErrorMsg("Error in error1D() of TwoPointCorrelation_multipoles.h!"); vector<double> vv; return vv; }
+        { cosmobl::ErrorCBL("Error in error1D() of TwoPointCorrelation_multipoles.h!"); vector<double> vv; return vv; }
 
       /**
        *  @brief get the the binned correlation function 
        *  @return the binned correlation function 
        */
-      vector<vector<double> > xi2D () const 
-        { cosmobl::ErrorMsg("Error in xi2D() of TwoPointCorrelation_multipoles.h!"); vector<vector<double> > vv; return vv; }
+      vector<vector<double>> xi2D () const 
+        { cosmobl::ErrorCBL("Error in xi2D() of TwoPointCorrelation_multipoles.h!"); vector<vector<double>> vv; return vv; }
 
       /**
        *  @brief get the error on the binned correlation function
@@ -363,8 +406,8 @@ namespace cosmobl {
        *  @return the error on the binned correlation function
        *  function
        */
-      vector<vector<double> > error2D () const 
-        { cosmobl::ErrorMsg("Error in error2D() of TwoPointCorrelation_multipoles.h!"); vector<vector<double> > vv; return vv; }
+      vector<vector<double>> error2D () const 
+        { cosmobl::ErrorCBL("Error in error2D() of TwoPointCorrelation_multipoles.h!"); vector<vector<double>> vv; return vv; }
 
       /**
        *  @brief get the monopole of the polar xi
@@ -403,30 +446,41 @@ namespace cosmobl {
       vector<double> errorOctupole () const override;
 
       /**
-       *  @brief measure the multipoles of the two-point correlation
-       *  function, &xi;(r)
-       *  @param errorType the type of error to be computed
+       *  @brief measure the first three multipoles of the two-point
+       *  correlation function
+       *
+       *  @param errorType type of error
+       *  
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
+       *
        *  @param dir_input_pairs vector of input directories used to
        *  store the number of pairs (if the pairs are read from files)
-       *  @param dir_output_ResampleXi output directory used to store xi from
-       *  resampled catalogues
-       *  @param nMocks number of resampling to be generate with bootstrap
-       *  @param count_dd 1 &rarr; count the number of data-data
-       *  opairs; 0 &rarr; read the number of data-data pairs from
+       *
+       *  @param dir_output_resample output directory of the
+       *  resampled correlation function
+       *
+       *  @param nMocks number of resampling used for bootstrap
+       *
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-random pairs from
        *  file
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  opairs; 0 &rarr; read the number of random-random pairs from
-       *  file
-       *  @param count_dr 1 &rarr; count the number of data-random
-       *  opairs; 0 &rarr; read the number of data-random pairs from
-       *  file
-       *  @param tcount 1 &rarr; activate the time counter; 0 &rarr;
-       *  don't activate the time counter; 
+       *
+       *  @param count_rr true &rarr; count the number of random-random
+       *  pairs; false &rarr; read the number of random-random pairs
+       *
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
+       *
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
+       *
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
+       *
        *  @return none
        */
-      void measure (const ErrorType errorType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={},  const string dir_output_ResampleXi=par::defaultString, const int nMocks=0, const int count_dd=1, const int count_rr=1, const int count_dr=1, const bool tcount=1) override;
+      void measure (const ErrorType errorType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={},  const string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
 
       ///@}
 
@@ -444,7 +498,7 @@ namespace cosmobl {
        *  @return none
        */
       void read (const string dir, const string file) override
-      { (void)dir; (void)file; ErrorMsg("Error in TwoPointCorrelation_multipoles::read of TwoPointCorrelation_multipoles.h: work in progress!"); }
+      { (void)dir; (void)file; ErrorCBL("Error in TwoPointCorrelation_multipoles::read of TwoPointCorrelation_multipoles.h: work in progress!", glob::ExitCode::_workInProgress_); }
 
       /**
        *  @brief write the multipoles of the two-point correlation

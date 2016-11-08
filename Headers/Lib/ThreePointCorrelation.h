@@ -153,7 +153,7 @@ namespace cosmobl {
        * @warning the angular three-point correlation function is not
        * implemented yet
        */
-      void count_triplets (const shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChainMesh_rMAX1, const chainmesh::ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<triplets::Triplet> tt, const bool tcount=0);
+      void count_triplets (const shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChainMesh_rMAX1, const chainmesh::ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<triplets::Triplet> tt, const bool tcount=false);
 
       /**
        *  @brief count the data-data-data, random-random-random,
@@ -187,7 +187,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      void count_allTriplets (const string dir_output_triplets=par::defaultString, const vector<string> dir_input_triplets={}, const int count_ddd=1, const int count_rrr=1, const int count_ddr=1, const int count_drr=1, const bool tcount=0);
+      void count_allTriplets (const string dir_output_triplets=par::defaultString, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false);
       
       /**
        *  @name Internal input/output member functions (customized in all the derived classes)
@@ -318,7 +318,7 @@ namespace cosmobl {
        *  @return the scale bins
        */
       virtual vector<double> scale () const
-      { cosmobl::ErrorMsg("Error in scale() of ThreePointCorrelation.h!"); vector<double> vv; return vv; }
+      { cosmobl::ErrorCBL("Error in scale() of ThreePointCorrelation.h!"); vector<double> vv; return vv; }
       
       /**
        *  @brief get the protected member m_zeta
@@ -326,14 +326,14 @@ namespace cosmobl {
        *  function
        */
       virtual vector<double> zeta () const  
-      { cosmobl::ErrorMsg("Error in zeta() of ThreePointCorrelation.h!"); vector<double> vv; return vv; }
+      { cosmobl::ErrorCBL("Error in zeta() of ThreePointCorrelation.h!"); vector<double> vv; return vv; }
 
       /**
        *  @brief get the protected member m_QQ
        *  @return the binned reduced three-point correlation function
        */
       virtual vector<double> QQ () const  
-      { cosmobl::ErrorMsg("Error in QQ() of ThreePointCorrelation.h!"); vector<double> vv; return vv; }
+      { cosmobl::ErrorCBL("Error in QQ() of ThreePointCorrelation.h!"); vector<double> vv; return vv; }
 
       /**
        *  @brief get the protected member
@@ -342,7 +342,7 @@ namespace cosmobl {
        *  correlation function
        */
       virtual vector<double> error () const  
-      { cosmobl::ErrorMsg("Error in error() of ThreePointCorrelation.h!"); vector<double> vv; return vv; }
+      { cosmobl::ErrorCBL("Error in error() of ThreePointCorrelation.h!"); vector<double> vv; return vv; }
 
       
       ///@}
@@ -405,8 +405,8 @@ namespace cosmobl {
        *
        * @return none
        */
-      virtual void measure (const string dir_output_triplets, const vector<string> dir_input_triplets={}, const int count_ddd=1, const int count_rrr=1, const int count_ddr=1, const int count_drr=1, const bool tcount=0)
-      { (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; cosmobl::ErrorMsg("Error in measure() of ThreePointCorrelation.h!"); }
+      virtual void measure (const string dir_output_triplets, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false)
+      { (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
  
       /**
        * @brief method to measure the three-point correlation function
@@ -441,8 +441,8 @@ namespace cosmobl {
        *
        * @return none
        */
-      virtual void measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const int count_ddd=1, const int count_rrr=1, const int count_ddr=1, const int count_drr=1, const bool tcount=0)
-      { (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; cosmobl::ErrorMsg("Error in measure() of ThreePointCorrelation.h!"); }
+      virtual void measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false)
+      { (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
       
       ///@}
       
@@ -459,7 +459,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void write (const string dir, const string file) const
-      { (void)dir; (void)file; cosmobl::ErrorMsg("Error in write() of ThreePointCorrelation.h!"); }
+      { (void)dir; (void)file; cosmobl::ErrorCBL("Error in write() of ThreePointCorrelation.h!"); }
       
       /**
        *  @brief write the measured three-point correlation
@@ -471,7 +471,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void write (const string dir, const string file, const bool connected) const
-      { (void)dir; (void)file; (void)connected; cosmobl::ErrorMsg("Error in write() of ThreePointCorrelation.h!"); }
+      { (void)dir; (void)file; (void)connected; cosmobl::ErrorCBL("Error in write() of ThreePointCorrelation.h!"); }
       
       ///@}
       

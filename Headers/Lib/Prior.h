@@ -108,7 +108,7 @@ namespace cosmobl {
        * @brief set prior normalization 
        * @return none
        */
-      void m_set_prior_normalization();
+      void m_set_prior_normalization ();
 
 
     public:
@@ -123,7 +123,7 @@ namespace cosmobl {
        *
        *  @return object of class Prior
        */
-      Prior () {}; 
+      Prior () : Prior(statistics::PriorType::_UniformPrior_, 0., 0.) {}
 
       /**
        *  @brief constructor of a flat prior
@@ -178,7 +178,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      ~Prior () {} 
+      ~Prior () = default;
 
       ///@}
 

@@ -48,7 +48,7 @@ using namespace cosmobl;
 double cosmobl::cosmology::Cosmology::pw (const double ww, const double ff, const string author) const 
 {
   if (author=="NS") {
-    if (ff<0.5) cout <<"Warning you are calling pw function for NS with f = "<<ff<<endl;
+    if (ff<0.5) coutCBL <<"Warning you are calling pw function for NS with f = "<<ff<<endl;
     return (1./ff-1.)*2.*ww*erfc(ww/sqrt(2.))+(2.-1./ff)*sqrt(2./par::pi)*exp(-ww*ww*0.5);
   }
   if (author=="GTS") {
@@ -75,7 +75,7 @@ double cosmobl::cosmology::Cosmology::pz (const double m0, const double z0, cons
   double SSf = SSM_norm(mf,method_SS,redshift,output_root);
   double ww = (dcz-dcz0)/sqrt(SSf-SS);
   if (author_model=="NS"){
-    if(frac<0.5) cout <<"Warning you are calling pw function for NS with frac = "<<frac<<endl;
+    if(frac<0.5) coutCBL <<"Warning you are calling pw function for NS with frac = "<<frac<<endl;
     return (1./frac-1.)*2.*ww*erfc(ww/sqrt(2.))+(2.-1./frac)*sqrt(2./par::pi)*exp(-ww*ww*0.5);
   }
   if (author_model=="GTS"){
@@ -95,7 +95,7 @@ double cosmobl::cosmology::Cosmology::pz (const double m0, const double z0, cons
 double cosmobl::cosmology::Cosmology::cumPw (const double ww, const double ff, const string author) const
 {
   if(author=="NS"){
-    if(ff<0.5) cout <<"Warning you are calling cumPw function for NS with f = "<<ff<<endl;
+    if(ff<0.5) coutCBL <<"Warning you are calling cumPw function for NS with f = "<<ff<<endl;
     double F0 = erf(ww/sqrt(2.))+ww*ww*erfc(ww/sqrt(2.))-sqrt(2./par::pi)*ww*exp(-ww*ww*0.5);
     double F1 = (1./ff-1.)-(1./ff-1.)*F0;
     double F2 = (2.-1./ff)*(1.-erf(ww/sqrt(2.)));

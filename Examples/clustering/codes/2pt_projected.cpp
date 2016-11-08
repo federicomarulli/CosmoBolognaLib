@@ -4,65 +4,68 @@
 
 #include "TwoPointCorrelation1D.h"
 
-using namespace cosmobl;
-using namespace cosmology;
-using namespace catalogue;
-using namespace twopt;
-
-string par::DirCosmo = DIRCOSMO, par::DirLoc = DIRL;
+// these two variables contain the name of the CosmoBolognaLib
+// directory and the name of the current directory (useful when
+// launching the code on remote systems)
+string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
 
 
 int main () {
-  
-  // -----------------------------------------------------------------
-  // ---------------- use default cosmological parameters ------------
-  // -----------------------------------------------------------------
-  
-  Cosmology cosmology;
 
+  try {
   
-  // ---------------------------------------------------------------------------------------------------------------------------
-  // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) --------------------------------
-  // ---------------------------------------------------------------------------------------------------------------------------
-
-  string file_catalogue = par::DirLoc+"../input/cat.dat";
-
-  Catalogue catalogue {_Galaxy_, _observedCoordinates_, {file_catalogue}, cosmology};
+    // -----------------------------------------------------------------
+    // ---------------- use default cosmological parameters ------------
+    // -----------------------------------------------------------------
+  
+    const cosmobl::cosmology::Cosmology cosmology;
 
   
-  // --------------------------------------------------------------------------------------
-  // ---------------- construct the random catalogue (with cubic geometry) ----------------
-  // --------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------------------------
+    // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) --------------------------------
+    // ---------------------------------------------------------------------------------------------------------------------------
 
-  double N_R = 1.; // random/data ratio
+    const string file_catalogue = cosmobl::par::DirLoc+"../input/cat.dat";
+
+    const cosmobl::catalogue::Catalogue catalogue {cosmobl::catalogue::_Galaxy_, cosmobl::_observedCoordinates_, {file_catalogue}, cosmology};
+
   
-  Catalogue random_catalogue {_createRandom_box_, catalogue, N_R};
+    // --------------------------------------------------------------------------------------
+    // ---------------- construct the random catalogue (with cubic geometry) ----------------
+    // --------------------------------------------------------------------------------------
+
+    const double N_R = 1.; // random/data ratio
+  
+    const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
 
 
-  // --------------------------------------------------------------------------------------
-  // ---------------- measure the projected two-point correlation function ----------------
-  // --------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------
+    // ---------------- measure the projected two-point correlation function ----------------
+    // --------------------------------------------------------------------------------------
 
-  // binning parameters and output data
+    // binning parameters and output data
 
-  double rMin = 1.;           // minimum separation 
-  double rMax = 50.;          // maximum separation 
-  int nbins = 20;             // number of bins
-  double shift = 0.5;         // spatial shift used to set the bin centre 
-  double piMax_integral = 30; // upper limit of the integral
+    const double rMin = 1.;           // minimum separation 
+    const double rMax = 50.;          // maximum separation 
+    const int nbins = 20;             // number of bins
+    const double shift = 0.5;         // spatial shift used to set the bin centre 
+    const double piMax_integral = 30; // upper limit of the integral
 
-  string dir = par::DirLoc+"../output/";
-  string file = "xi_projected.dat";
+    const string dir = cosmobl::par::DirLoc+"../output/";
+    const string file = "xi_projected.dat";
   
 
-  // measure the projected two-point correlation function
+    // measure the projected two-point correlation function
   
-  auto TwoP = TwoPointCorrelation::Create(TwoPType::_1D_projected_, catalogue, random_catalogue, _logarithmic_, rMin, rMax, nbins, shift, rMin, rMax, nbins, shift, piMax_integral);
+    const auto TwoP = cosmobl::twopt::TwoPointCorrelation::Create(cosmobl::twopt::TwoPType::_1D_projected_, catalogue, random_catalogue, cosmobl::_logarithmic_, rMin, rMax, nbins, shift, rMin, rMax, nbins, shift, piMax_integral);
 
-  TwoP->measure(_Poisson_, dir);
+    TwoP->measure(cosmobl::twopt::_Poisson_, dir);
 
-  TwoP->write(dir, file);
+    TwoP->write(dir, file);
 
+  }
+
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
   
   return 0;
 }

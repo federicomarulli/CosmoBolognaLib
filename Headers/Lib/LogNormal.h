@@ -35,8 +35,6 @@
 
 #include "Catalogue.h"
 #include <fftw3.h>
-#include <erf.h>
-
 
 namespace cosmobl {
   

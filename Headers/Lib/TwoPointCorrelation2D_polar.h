@@ -63,106 +63,114 @@ namespace cosmobl {
     class TwoPointCorrelation2D_polar : public TwoPointCorrelation2D {
 
     protected:
+
       /**
-       *  @brief measure the 2d polar two-point correlation
-       *  function, &xi;(r) with Poisson error
+       *  @brief measure the 2D two-point correlation function in
+       *  polar coordinates, with Poisson errors
+       *
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
+       *
        *  @param dir_input_pairs vector of input directories used to
        *  store the number of pairs (if the pairs are read from files)
-       *  @param count_dd 1 &rarr; count the number of data-data
-       *  opairs; 0 &rarr; read the number of data-data pairs from
+       *
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-data pairs from
        *  file
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  opairs; 0 &rarr; read the number of random-random pairs from
-       *  file
-       *  @param count_dr 1 &rarr; count the number of data-random
-       *  opairs; 0 &rarr; read the number of data-random pairs from
-       *  file
-       *  @param tcount 1 &rarr; activate the time counter; 0 &rarr;
-       *  don't activate the time counter; 
+       *
+       *  @param count_rr true &rarr; count the number of
+       *  random-random pairs; false &rarr; read the number of
+       *  random-random pairs from file
+       *
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
+       *
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
+       *
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
+       *
        *  @return none
        */
-      void measurePoisson (const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const int count_dd=1, const int count_rr=1, const int count_dr=1, const bool tcount=1) override;
+      void measurePoisson (const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
 
       /**
-       *  @brief measure the 2d polar two-point correlation
-       *  function, &xi;(r), estimate the covariance with Jackknife resampling
+       *  @brief measure the 2D two-point correlation function in
+       *  polar coordinates, estimating the covariance with Jackknife
+       *  resampling
        *
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
        *
-       *  @param dir_input_pairs vector of input directories used to store the
-       *  number of pairs (if the pairs are read from files)
+       *  @param dir_input_pairs vector of input directories used to
+       *  store the number of pairs (if the pairs are read from files)
        *
-       *  @param dir_output_JackknifeXi output directory used to store the
-       *  Jackknife resampling Xi, with Poisson error
+       *  @param dir_output_resample output directory used to store
+       *  the Jackknife resampling correlation functions, with Poisson
+       *  errors
        *
-       *  @param count_dd 1 &rarr; count the number of data-data
-       *  opairs; 0 &rarr; read the number of data-data pairs from
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-data pairs from
        *  file
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  opairs; 0 &rarr; read the number of random-random pairs from
-       *  file
+       *  @param count_rr true &rarr; count the number of
+       *  random-random pairs; false &rarr; read the number of
+       *  random-random pairs from file
        *
-       *  @param count_dd 1 &rarr; count the number of data-random
-       *  opairs; 0 &rarr; read the number of data-random pairs from
-       *  file
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  pairs; 0 &rarr; read the number of random-random pairs
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
        *
-       *  @param count_dr 1 &rarr; count the number of data-random
-       *  pairs; 0 &rarr; read the number of data-random pairs
-       *
-       *  @param tcount 1 &rarr; activate the time counter; 0 &rarr;
-       *  don't activate the time counter; 
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
        *
        *  @return none
        */
-      void measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs={}, const string dir_output_JackknifeXi = "NULL", const int count_dd=1, const int count_rr=1, const int count_dr=1, const bool tcount=1) override;
+      void measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs={}, const string dir_output_resample = "NULL", const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
 
       /**
-       *  @brief measure the 2d polar two-point correlation
-       *  function, &xi;(r), estimate the covariance with Bootstrap resampling
+       *  @brief measure the 2D two-point correlation function in
+       *  polar coordinates, estimating the covariance with Bootstrap
+       *  resampling
        *
-       *  @param nMocks number of mocks to be generated with bootstrap resampling
+       *  @param nMocks number of mocks to be generated with bootstrap
+       *  resampling
        *
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
        *
-       *  @param dir_input_pairs vector of input directories used to store the
-       *  number of pairs (if the pairs are read from files)
+       *  @param dir_input_pairs vector of input directories used to
+       *  store the number of pairs (if the pairs are read from files)
        *
-       *  @param dir_output_BootstrapXi output directory used to store the
-       *  Jackknife resampling Xi, with Poisson error
+       *  @param dir_output_resample output directory used to store
+       *  the Bootstrap resampling correlation function, with Poisson
+       *  errors
        *
-       *  @param count_dd 1 &rarr; count the number of data-data
-       *  opairs; 0 &rarr; read the number of data-data pairs from
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-data pairs from
        *  file
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  opairs; 0 &rarr; read the number of random-random pairs from
-       *  file
+       *  @param count_rr true &rarr; count the number of
+       *  random-random pairs; false &rarr; read the number of
+       *  random-random pairs from file
        *
-       *  @param count_dd 1 &rarr; count the number of data-random
-       *  opairs; 0 &rarr; read the number of data-random pairs from
-       *  file
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  pairs; 0 &rarr; read the number of random-random pairs
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
        *
-       *  @param count_dr 1 &rarr; count the number of data-random
-       *  pairs; 0 &rarr; read the number of data-random pairs
-       *
-       *  @param tcount 1 &rarr; activate the time counter; 0 &rarr;
-       *  don't activate the time counter; 
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
        *
        *  @return none
        */
-      void measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs={}, const string dir_output_BootstrapXi = "NULL", const int count_dd=1, const int count_rr=1, const int count_dr=1, const bool tcount=1) override;
+      void measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs={}, const string dir_output_resample="NULL", const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
 
+      
     public:
 
       /**
@@ -182,8 +190,7 @@ namespace cosmobl {
        *  catalogue
        *  @param random of class Catalogue containing the random data
        *  catalogue
-       *  @param binType_rad binning type in absolute separations:
-       *  0 &rarr; linear; 1 &rarr; logarithmic
+       *  @param binType_rad binning type in absolute separations
        *  @param rMin minimum absolute separation used to count
        *  the pairs
        *  @param rMax maximum absolute separation used to count
@@ -192,8 +199,7 @@ namespace cosmobl {
        *  separation
        *  @param shift_rad shift parameter in the absolute
        *  separation, i.e. the radial shift is binSize*shift
-       *  @param binType_mu binning type in angular separations:
-       *  0 &rarr; linear; 1 &rarr; logarithmic
+       *  @param binType_mu binning type in angular separations
        *  @param muMin minimum angular used to count the pairs
        *  @param muMax maximum angular used to count the pairs
        *  @param nbins_mu number of bins in the angular
@@ -202,10 +208,13 @@ namespace cosmobl {
        *  separation, i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
+       *  @param compute_extra_info true &rarr; compute extra
+       *  information related to the pairs, such as the mean pair
+       *  separation and redshift
        *  @return object of class TwoPointCorrelation2D_polar
        */
-      TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
-	: TwoPointCorrelation2D(data, random) { m_twoPType = _2D_polar_; set_parameters(binType_rad, rMin, rMax, nbins_rad, shift_rad, binType_mu, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight); }
+      TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
+	: TwoPointCorrelation2D(data, random, compute_extra_info) { m_twoPType = _2D_polar_; set_parameters(binType_rad, rMin, rMax, nbins_rad, shift_rad, binType_mu, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight, compute_extra_info); }
 
       /**
        *  @brief constructor
@@ -213,8 +222,7 @@ namespace cosmobl {
        *  catalogue
        *  @param random of class Catalogue containing the random data
        *  catalogue
-       *  @param binType_rad binning type in absolute separations:
-       *  0 &rarr; linear; 1 &rarr; logarithmic
+       *  @param binType_rad binning type in absolute separations
        *  @param rMin minimum absolute separation used to count
        *  the pairs
        *  @param rMax maximum absolute separation used to count
@@ -222,8 +230,7 @@ namespace cosmobl {
        *  @param binSize_rad bin size in the absolute separation
        *  @param shift_rad shift parameter in the absolute
        *  separation, i.e. the radial shift is binSize*shift
-       *  @param binType_mu binning type in angular separations:
-       *  0 &rarr; linear; 1 &rarr; logarithmic
+       *  @param binType_mu binning type in angular separations
        *  @param muMin minimum angular separation used to count
        *  the pairs
        *  @param muMax maximum angular separation used to count
@@ -233,10 +240,13 @@ namespace cosmobl {
        *  separation, i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
+       *  @param compute_extra_info true &rarr; compute extra
+       *  information related to the pairs, such as the mean pair
+       *  separation and redshift
        *  @return object of class TwoPointCorrelation2D_polar
        */
-      TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
-	: TwoPointCorrelation2D(data, random) { m_twoPType = _2D_polar_; set_parameters(binType_rad, rMin, rMax, binSize_rad, shift_rad, binType_mu, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight); }
+      TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
+	: TwoPointCorrelation2D(data, random, compute_extra_info) { m_twoPType = _2D_polar_; set_parameters(binType_rad, rMin, rMax, binSize_rad, shift_rad, binType_mu, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight, compute_extra_info); }
 
       /**
        *  @brief default destructor
@@ -254,8 +264,7 @@ namespace cosmobl {
 
       /**
        *  @brief set the binning parameters
-       *  @param binType_rad binning type in absolute separations:
-       *  0 &rarr; linear; 1 &rarr; logarithmic
+       *  @param binType_rad binning type in absolute separations
        *  @param rMin minimum absolute separation used to count
        *  the pairs
        *  @param rMax maximum absolute separation used to count
@@ -264,8 +273,7 @@ namespace cosmobl {
        *  separation
        *  @param shift_rad shift parameter in the absolute
        *  separation, i.e. the radial shift is binSize*shift
-       *  @param binType_mu binning type in angular separations:
-       *  0 &rarr; linear; 1 &rarr; logarithmic
+       *  @param binType_mu binning type in angular separations
        *  @param muMin minimum angular used to count the pairs
        *  @param muMax maximum angular used to count the pairs
        *  @param nbins_mu number of bins in the angular
@@ -274,14 +282,16 @@ namespace cosmobl {
        *  separation, i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
+       *  @param compute_extra_info true &rarr; compute extra
+       *  information related to the pairs, such as the mean pair
+       *  separation and redshift
        *  @return none
        */
-      void set_parameters (const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
+      void set_parameters (const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
 
       /**
        *  @brief set the binning parameters
-       *  @param binType_rad binning type in absolute separations:
-       *  0 &rarr; linear; 1 &rarr; logarithmic
+       *  @param binType_rad binning type in absolute separations
        *  @param rMin minimum absolute separation used to count
        *  the pairs
        *  @param rMax maximum absolute separation used to count
@@ -289,8 +299,7 @@ namespace cosmobl {
        *  @param binSize_rad bin size in the absolute separation
        *  @param shift_rad shift parameter in the absolute
        *  separation, i.e. the radial shift is binSize*shift
-       *  @param binType_mu binning type in angular separations:
-       *  0 &rarr; linear; 1 &rarr; logarithmic
+       *  @param binType_mu binning type in angular separations
        *  @param muMin minimum angular separation used to count
        *  the pairs
        *  @param muMax maximum angular separation used to count
@@ -300,9 +309,12 @@ namespace cosmobl {
        *  separation, i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
+       *  @param compute_extra_info true &rarr; compute extra
+       *  information related to the pairs, such as the mean pair
+       *  separation and redshift
        *  @return none
        */
-      void set_parameters (const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
+      void set_parameters (const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
 
       ///@}
 
@@ -313,45 +325,41 @@ namespace cosmobl {
       ///@{
 
       /**
-       *  @brief measure the 2d polar two-point correlation
-       *  function, &xi;(r)
+       *  @brief measure the 2D two-point correlation function in
+       *  polar coordinates
        *
-       *  @param errType type of &xi;(r) error
+       *  @param errorType type of error
        *  
        *  @param dir_output_pairs output directory used to store the
        *  number of pairs
        *
-       *  @param dir_input_pairs vector of input directories used to store the
-       *  number of pairs (if the pairs are read from files)
+       *  @param dir_input_pairs vector of input directories used to
+       *  store the number of pairs (if the pairs are read from files)
        *
-       *  @param dir_output_ResampleXi output directory of the resampled &xi;(r)
+       *  @param dir_output_resample output directory of the
+       *  resampled correlation function
        *
-       *  @param nMocks number of resampling for bootstrap
+       *  @param nMocks number of resampling used for bootstrap
        *
-       *  @param count_dd 1 &rarr; count the number of data-data
-       *  opairs; 0 &rarr; read the number of data-data pairs from
+       *  @param count_dd true &rarr; count the number of data-data
+       *  pairs; false &rarr; read the number of data-random pairs from
        *  file
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  opairs; 0 &rarr; read the number of random-random pairs from
-       *  file
+       *  @param count_rr true &rarr; count the number of random-random
+       *  pairs; false &rarr; read the number of random-random pairs
        *
-       *  @param count_dd 1 &rarr; count the number of data-random
-       *  opairs; 0 &rarr; read the number of data-random pairs from
-       *  file
+       *  @param count_dr true &rarr; count the number of data-random
+       *  pairs; false &rarr; read the number of data-random pairs
        *
-       *  @param count_rr 1 &rarr; count the number of random-random
-       *  pairs; 0 &rarr; read the number of random-random pairs
+       *  @param tcount true &rarr; activate the time counter; false
+       *  &rarr; no time counter
        *
-       *  @param count_dr 1 &rarr; count the number of data-random
-       *  pairs; 0 &rarr; read the number of data-random pairs
-       *
-       *  @param tcount 1 &rarr; activate the time counter; 0 &rarr;
-       *  don't activate the time counter; 
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
        *
        *  @return none
        */
-      void measure (const ErrorType errType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_ResampleXi=par::defaultString, const int nMocks=0, const int count_dd=1, const int count_rr=1, const int count_dr=1, const bool tcount=1) override;
+      void measure (const ErrorType errorType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
 
       ///@}
 
@@ -373,11 +381,24 @@ namespace cosmobl {
        *  @brief write the 2D two-point correlation function
        *  @param dir output directory
        *  @param file output file
+       *  @param full false &rarr; simply store the data; true &rarr;
+       *  duplicate the data in the other three quadrands (usefull
+       *  e.g. when storing the 2D correlation function)
        *  @param rank cpu index (for MPI usage)
        *  @return none
        */
-      void write (const string dir=par::defaultString, const string file=par::defaultString, const int rank=0) const override;
+      void write (const string dir, const string file, const bool full, const int rank=0) const override;
 
+      /**
+       *  @brief write the 2D two-point correlation function
+       *  @param dir output directory
+       *  @param file output file
+       *  @param rank cpu index (for MPI usage)
+       *  @return none
+       */
+      void write (const string dir=par::defaultString, const string file=par::defaultString, const int rank=0) const override
+      { write(dir, file, true, rank); }
+      
       ///@}
 
     };

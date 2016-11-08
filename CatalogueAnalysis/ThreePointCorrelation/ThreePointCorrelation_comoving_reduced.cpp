@@ -46,7 +46,7 @@ using namespace threept;
 // ============================================================================
 
 
-void cosmobl::threept::ThreePointCorrelation_comoving_reduced::measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const int count_ddd, const int count_rrr, const int count_ddr, const int count_drr, const bool tcount) 
+void cosmobl::threept::ThreePointCorrelation_comoving_reduced::measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount) 
 {   
 
   // ----------- compute the connected three-point correlation function -----------
@@ -85,15 +85,15 @@ void cosmobl::threept::ThreePointCorrelation_comoving_reduced::measure (const st
   }
 
   string file_2pt = dir_output_2pt+"2ptCorrelation_3pt.dat";
-  ofstream fout (file_2pt.c_str()); checkIO(file_2pt, 0);
+  ofstream fout(file_2pt.c_str()); checkIO(fout, file_2pt);
  
   for (size_t i=0; i<values_interp.size(); i++) {
     xi_real_lin[i] = pow(10., interpolated(values_interp[i], log_r, log_xi, "Linear"))-1.;
-    //cout << pow(10.,values_interp[i]) << " --- " << xi_real_lin[i] << endl;
+    //coutCBL << pow(10.,values_interp[i]) << " --- " << xi_real_lin[i] << endl;
     fout << pow(10.,values_interp[i]) << "     " << xi_real_lin[i] << endl;
   }
   
-  fout.clear(); fout.close(); cout <<"I wrote the file "<<file_2pt<<endl;
+  fout.clear(); fout.close(); coutCBL <<"I wrote the file "<<file_2pt<<endl;
 
   
   // ----------- compute the reduced three-point correlation function -----------
@@ -115,7 +115,7 @@ void cosmobl::threept::ThreePointCorrelation_comoving_reduced::write (const stri
   checkDim(m_scale, m_ddd->nbins(), "scale");
   
   string file_out = dir+file;
-  ofstream fout (file_out.c_str()); checkIO(file_out, 0);
+  ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
   if (!connected) {  
     fout << "# scale  Q  error(work in progress)" << endl;
@@ -129,5 +129,5 @@ void cosmobl::threept::ThreePointCorrelation_comoving_reduced::write (const stri
       fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_scale[i] << "  " << setw(8) << m_zeta[i] << "  " << setw(8) << ThreePointCorrelation_comoving_connected::m_error[i] << setw(8) << m_QQ[i] << "  " << setw(8) << m_error[i] << endl;
   }
   
-  fout.close(); cout << endl << "I wrote the file: " << file_out << endl << endl;
+  fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl << endl;
 }  

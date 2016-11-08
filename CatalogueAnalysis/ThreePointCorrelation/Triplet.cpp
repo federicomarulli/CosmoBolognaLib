@@ -49,7 +49,7 @@ shared_ptr<Triplet> cosmobl::triplets::Triplet::Create (const TripletType type, 
   if (type==_comoving_theta_) return move(unique_ptr<Triplet1D_comoving_theta>{new Triplet1D_comoving_theta(side_s, side_u, perc_increase, nbins)});
   else if (type==_comoving_side_)  return move(unique_ptr<Triplet1D_comoving_side>{new Triplet1D_comoving_side(side_s, side_u, perc_increase, nbins)});
   
-  else ErrorMsg("Error in cosmobl::triplets::Create of Triplet.cpp: no such type of object!");
+  else ErrorCBL("Error in cosmobl::triplets::Create of Triplet.cpp: no such type of object!");
   
   return NULL;
 }

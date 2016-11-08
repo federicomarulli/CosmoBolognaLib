@@ -80,7 +80,7 @@ void cosmobl::lognormal::LogNormal::setParameters_from_model (const shared_ptr<c
 void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, const string dir, const int start, const string filename)
 { 
   if (m_nLN==0)  
-    ErrorMsg("Error in cosmobl::lognormal::LogNormal::generate_LogNormal_mock of LogNormal.cpp, set number of LN realization first!");
+    ErrorCBL("Error in cosmobl::lognormal::LogNormal::generate_LogNormal_mock of LogNormal.cpp, set number of LN realization first!");
 
   default_random_engine gen;
   uniform_real_distribution<float> ran(0., 1.);
@@ -150,7 +150,7 @@ void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, 
     double beta = ff/m_bias;
     double fact = pow(m_bias,2);
     fact = (m_Real) ? fact : fact*(1+2.*beta/3.+0.2*beta*beta);
-    cout << fact << "   " << pow(m_bias,2) << endl;
+    coutCBL << fact << "   " << pow(m_bias,2) << endl;
 
     for (size_t i=0; i<kG.size(); i++) {
       kG[i] = pow(10,kG[i]);
@@ -187,7 +187,7 @@ void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, 
   }
   
   else 
-    ErrorMsg("Work in progres in cosmobl::lognormal::LogNormal::generate_LogNormal_mock of LogNormal.cpp");
+    ErrorCBL("Work in progres in cosmobl::lognormal::LogNormal::generate_LogNormal_mock of LogNormal.cpp");
   
 
   fftw_plan xi2pk;
@@ -195,7 +195,7 @@ void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, 
   fftw_execute(xi2pk);
   fftw_destroy_plan(xi2pk);
    
-  cout << "Ready to extract Mocks" << endl;
+  coutCBL << "Ready to extract Mocks" << endl;
 
   for (int nn=0; nn<m_nLN; nn++) {
     double *densX;
@@ -211,8 +211,7 @@ void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, 
       densK[i][1] = 0;
     }
 
-   
-    Erf erf;
+    normal_distribution<double> rang(0., 1.);
 
     for (int i=0; i<nx; i++) {
       for (int j=0; j<ny; j++) {
@@ -221,8 +220,8 @@ void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, 
 	  int kindex = k+nzp*(j+ny*i);
 	  double Pkk = max(0., ppkk[kindex][0]/nRtot);
 	  Pkk = sqrt(Pkk/2);
-	  double v1 = sqrt(2.)*Pkk*erf.inverf(2*ran(gen)-1);
-	  double v2 = sqrt(2.)*Pkk*erf.inverf(2*ran(gen)-1);
+	  double v1 = sqrt(2.)*Pkk*rang(gen);
+	  double v2 = sqrt(2.)*Pkk*rang(gen);
 
 	  if (i==0 && j==0 && k==0) {
 	    densK[kindex][0] = 0;
@@ -256,7 +255,7 @@ void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, 
       }
     }
     double sigma = Sigma(ff); double average = Average(ff);
-    cout << "Step " << nn+1 << " " <<"Sigma = "<< sigma<< " " << "Average = "<<average << endl;
+    coutCBL << "Step " << nn+1 << " " <<"Sigma = "<< sigma<< " " << "Average = "<<average << endl;
    
     for (int i=0;i<nx;i++) {
       for (int j=0;j<ny;j++) {

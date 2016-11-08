@@ -19,14 +19,15 @@
  ********************************************************************/
 
 /**
- *  @file CatalogueAnalysis/TwoPointCorrelation/TwoPointCorrelation1D_angular.cpp
+ *  @file
+ *  CatalogueAnalysis/TwoPointCorrelation/TwoPointCorrelation1D_angular.cpp
  *
  *  @brief Methods of the class TwoPointCorrelation1D_angular used to
  *  measure the angular two-point correlation function
  *
  *  This file contains the implementation of the methods of the class
- *  TwoPointCorrelation1D_angular used to measure the angular two-point
- *  correlation function
+ *  TwoPointCorrelation1D_angular used to measure the angular
+ *  two-point correlation function
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *
@@ -47,32 +48,55 @@ using namespace twopt;
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation1D_angular::set_parameters (const binType binType, const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight) 
+void cosmobl::twopt::TwoPointCorrelation1D_angular::set_parameters (const binType binType, const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info) 
 {
-  m_dd = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight))
-    : move(Pair::Create(_angular_lin_, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight));
-  
-  m_rr = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight))
-    : move(Pair::Create(_angular_lin_, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight));
-  
-  m_dr = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight))
-    : move(Pair::Create(_angular_lin_, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight));
+  if (!compute_extra_info) {
+    m_dd = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, _standard_, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight))
+      : move(Pair::Create(_angular_lin_, _standard_, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight));
+    
+    m_rr = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, _standard_, thetaMin, thetaMax, nbins, shift, angularUnits))
+      : move(Pair::Create(_angular_lin_, _standard_, thetaMin, thetaMax, nbins, shift, angularUnits));
+    
+    m_dr = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, _standard_, thetaMin, thetaMax, nbins, shift, angularUnits))
+      : move(Pair::Create(_angular_lin_, _standard_, thetaMin, thetaMax, nbins, shift, angularUnits));
+  }
+  else {
+    m_dd = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, _extra_, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight))
+      : move(Pair::Create(_angular_lin_, _extra_, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight));
+    
+    m_rr = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, _extra_, thetaMin, thetaMax, nbins, shift, angularUnits))
+      : move(Pair::Create(_angular_lin_, _extra_, thetaMin, thetaMax, nbins, shift, angularUnits));
+    
+    m_dr = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, _extra_, thetaMin, thetaMax, nbins, shift, angularUnits))
+      : move(Pair::Create(_angular_lin_, _extra_, thetaMin, thetaMax, nbins, shift, angularUnits));
+  }
 }
-
 
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation1D_angular::set_parameters (const binType binType, const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight)
+void cosmobl::twopt::TwoPointCorrelation1D_angular::set_parameters (const binType binType, const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info)
 {
-  m_dd = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight))
-    : move(Pair::Create(_angular_lin_, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight));
+  if (!compute_extra_info) {
+    m_dd = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, _standard_, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight))
+      : move(Pair::Create(_angular_lin_, _standard_, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight));
   
-  m_rr = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight))
-    : move(Pair::Create(_angular_lin_, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight));
+    m_rr = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, _standard_, thetaMin, thetaMax, binSize, shift, angularUnits))
+      : move(Pair::Create(_angular_lin_, _standard_, thetaMin, thetaMax, binSize, shift, angularUnits));
   
-  m_dr = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight))
-    : move(Pair::Create(_angular_lin_, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight));
+    m_dr = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, _standard_, thetaMin, thetaMax, binSize, shift, angularUnits))
+      : move(Pair::Create(_angular_lin_, _standard_, thetaMin, thetaMax, binSize, shift, angularUnits));
+  }
+  else {
+    m_dd = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, _extra_, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight))
+      : move(Pair::Create(_angular_lin_, _extra_, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight));
+  
+    m_rr = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, _extra_, thetaMin, thetaMax, binSize, shift, angularUnits))
+      : move(Pair::Create(_angular_lin_, _extra_, thetaMin, thetaMax, binSize, shift, angularUnits));
+  
+    m_dr = (binType==_logarithmic_) ? move(Pair::Create(_angular_log_, _extra_, thetaMin, thetaMax, binSize, shift, angularUnits))
+      : move(Pair::Create(_angular_lin_, _extra_, thetaMin, thetaMax, binSize, shift, angularUnits));
+  }
 }
 
 
@@ -91,27 +115,31 @@ void cosmobl::twopt::TwoPointCorrelation1D_angular::read (const string dir, cons
 void cosmobl::twopt::TwoPointCorrelation1D_angular::write (const string dir, const string file, const int rank) const 
 {
   checkDim(m_dataset->xx(), m_dd->nbins(), "theta");
-  m_dataset->write(dir, file, "theta", "w", rank);
+
+  string header = "[1] angular separation at the bin centre # [2] angular two-point correlation function # [3] error";
+  if (m_compute_extra_info) header += " # [4] mean angular separation # [5] standard deviation of the distribution of angular separations # [6] mean redshift # [7] standard deviation of the redshift distribution";
+  
+  m_dataset->write(dir, file, header, rank);
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation1D_angular::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_ResampleXi, int nMocks, int count_dd, const int count_rr, const int count_dr, const bool tcount)
+void cosmobl::twopt::TwoPointCorrelation1D_angular::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, int nMocks, bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  switch(errorType){
-    case(ErrorType::_Poisson_):
-      measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount);
-      break;
-    case(ErrorType::_Jackknife_):
-      measureJackknife(dir_output_pairs, dir_input_pairs, dir_output_ResampleXi, count_dd, count_rr, count_dr, tcount);
-      break;
-    case(ErrorType::_Bootstrap_):
-      measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_ResampleXi, count_dd, count_rr, count_dr, tcount);
-      break;
-    default:
-      ErrorMsg("Error in measure() of TwoPointCorrelation1D_angular.cpp, unknown type of error");
+  switch (errorType) {
+  case(ErrorType::_Poisson_):
+    measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
+    break;
+  case(ErrorType::_Jackknife_):
+    measureJackknife(dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator);
+    break;
+  case(ErrorType::_Bootstrap_):
+    measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator);
+    break;
+  default:
+    ErrorCBL("Error in measure() of TwoPointCorrelation1D_angular.cpp, unknown type of error");
   }
 }
 
@@ -119,7 +147,7 @@ void cosmobl::twopt::TwoPointCorrelation1D_angular::measure (const ErrorType err
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation1D_angular::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const int count_dd, const int count_rr, const int count_dr, const bool tcount)
+void cosmobl::twopt::TwoPointCorrelation1D_angular::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   // ----------- weigthed number of objects in the real and random catalogues ----------- 
   
@@ -127,49 +155,51 @@ void cosmobl::twopt::TwoPointCorrelation1D_angular::measurePoisson (const string
   int nRandom = m_random->weightedN();
   
   if (nData==0 || nRandom==0)  
-    ErrorMsg("Error in measurePoisson() of TwoPointCorrelation.cpp!");
+    ErrorCBL("Error in measurePoisson() of TwoPointCorrelation.cpp!");
 
   
   // ----------- count the data-data, random-random and data-random pairs, or read them from file ----------- 
   
-  count_allPairs(m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount);
+  count_allPairs(m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
   
   // ----------- compute the angular of the two-point correlation function ----------- 
 
-  if (count_dr>-1)
-    m_dataset = LandySzalayEstimatorTwoP(m_dd, m_rr, m_dr, nData, nRandom);
+  if (estimator==_natural_)
+    m_dataset = NaturalEstimator(m_dd, m_rr, nData, nRandom);
+  else if (estimator==_LandySzalay_)
+    m_dataset = LandySzalayEstimator(m_dd, m_rr, m_dr, nData, nRandom);
   else
-    m_dataset = NaturalEstimatorTwoP(m_dd, m_rr, nData, nRandom);
-
+    ErrorCBL("Error in measurePoisson() of TwoPointCorrelation1D_angular.cpp: the chosen estimator is not implemented!");
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation1D_angular::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_JackknifeXi, const int count_dd, const int count_rr, const int count_dr, const bool tcount)
+void cosmobl::twopt::TwoPointCorrelation1D_angular::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_JackknifeXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   if (dir_output_JackknifeXi!=par::defaultString) {
     string mkdir = "mkdir -p "+dir_output_JackknifeXi;
     if (system(mkdir.c_str())) {}
   }
   
-  vector<long> region_list = m_data->get_region_list();
-  int nRegions = region_list.size();
+  vector<long> region_list = m_data->region_list();
+  size_t nRegions = region_list.size();
 
-  vector<vector<double> > xi_SubSamples,covariance;
+  vector<vector<double> > xi_SubSamples, covariance;
 
   vector<shared_ptr<Pair> > dd_regions, rr_regions, dr_regions;
-  count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount);
+  
+  count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
-  vector<shared_ptr<Data> > data_SS = (count_dr>-1) ? XiJackknife(dd_regions,rr_regions,dr_regions) : XiJackknife(dd_regions,rr_regions);
+  vector<shared_ptr<Data> > data_SS = (estimator==_natural_) ? XiJackknife(dd_regions, rr_regions) : XiJackknife(dd_regions, rr_regions, dr_regions);
 
-  for (int i=0; i<nRegions; i++) {
+  for (size_t i=0; i<nRegions; i++) {
 
     if (dir_output_JackknifeXi != par::defaultString) {
       string file = "xi_Jackknife_"+conv(i, par::fINT)+".dat";
-      data_SS[i]->write(dir_output_JackknifeXi, file, "theta", "w", 0);
+      data_SS[i]->write(dir_output_JackknifeXi, file, "[1] angular separation at the bin centre # [2] angular two-point correlation function # [3] error", 0);
     }
 
     xi_SubSamples.push_back(data_SS[i]->fx());
@@ -180,10 +210,12 @@ void cosmobl::twopt::TwoPointCorrelation1D_angular::measureJackknife (const stri
   double nData = m_data->weightedN();
   double nRandom = m_random->weightedN();
 
-  if (count_dr>-1)
-    m_dataset = LandySzalayEstimatorTwoP(m_dd, m_rr, m_dr, nData, nRandom);
+  if (estimator==_natural_)
+    m_dataset = NaturalEstimator(m_dd, m_rr, nData, nRandom);
+  else if (estimator==_LandySzalay_)
+    m_dataset = LandySzalayEstimator(m_dd, m_rr, m_dr, nData, nRandom);
   else
-    m_dataset = NaturalEstimatorTwoP(m_dd, m_rr, nData, nRandom);
+    ErrorCBL("Error in measureJackknife() of TwoPointCorrelation1D_angular.cpp: the chosen estimator is not implemented!");
 
   m_dataset->set_covariance(covariance);
 
@@ -193,27 +225,29 @@ void cosmobl::twopt::TwoPointCorrelation1D_angular::measureJackknife (const stri
 // ============================================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation1D_angular::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_BootstrapXi, const int count_dd, const int count_rr, const int count_dr, const bool tcount)
+void cosmobl::twopt::TwoPointCorrelation1D_angular::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_BootstrapXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   if (nMocks <=0)
-    ErrorMsg("Error in measureBootstrap() of TwoPointCorrelation1D_angular.cpp, number of mocks must be >0");
+    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_angular.cpp, number of mocks must be >0");
 
   if (dir_output_BootstrapXi!=par::defaultString) {
     string mkdir = "mkdir -p "+dir_output_BootstrapXi;
     if (system(mkdir.c_str())) {}
   }
 
-  vector<vector<double> > xi_SubSamples,covariance;
+  vector<vector<double> > xi_SubSamples, covariance;
 
   vector<shared_ptr<Pair> > dd_regions, rr_regions, dr_regions;
-  count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount);
-  vector<shared_ptr<Data> > data_SS = (count_dr>-1) ? XiBootstrap(nMocks,dd_regions,rr_regions,dr_regions) : XiBootstrap(nMocks,dd_regions,rr_regions);
+  
+  count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
+
+  vector<shared_ptr<Data> > data_SS = (estimator==_natural_) ? XiBootstrap(nMocks, dd_regions, rr_regions) : XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions);
 
   for (int i=0; i<nMocks; i++) {
 
      if (dir_output_BootstrapXi!=par::defaultString) {
       string file = "xi_Bootstrap_"+conv(i, par::fINT)+".dat";
-      data_SS[i]->write(dir_output_BootstrapXi, file, "theta", "w", 0);
+      data_SS[i]->write(dir_output_BootstrapXi, file, "[1] angular separation at the bin centre # [2] angular two-point correlation function # [3] error", 0);
     }
 
     xi_SubSamples.push_back(data_SS[i]->fx());
@@ -224,10 +258,12 @@ void cosmobl::twopt::TwoPointCorrelation1D_angular::measureBootstrap (const int 
   double nData = m_data->weightedN();
   double nRandom = m_random->weightedN();
 
-  if (count_dr>-1)
-    m_dataset = LandySzalayEstimatorTwoP(m_dd, m_rr, m_dr, nData, nRandom);
+  if (estimator==_natural_)
+    m_dataset = NaturalEstimator(m_dd, m_rr, nData, nRandom);
+  else if (estimator==_LandySzalay_)
+    m_dataset = LandySzalayEstimator(m_dd, m_rr, m_dr, nData, nRandom);
   else
-    m_dataset = NaturalEstimatorTwoP(m_dd, m_rr, nData, nRandom);
+    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_angular.cpp: the chosen estimator is not implemented!");
 
   m_dataset->set_covariance(covariance);
 
