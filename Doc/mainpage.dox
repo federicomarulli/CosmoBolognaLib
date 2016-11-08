@@ -45,12 +45,6 @@ first, make sure that the following external libraries are present in your syste
 - GSL (GNU Scientific Library) (v2.1 is required)
 - FFTW (Fastest Fourier Transform in the West)
 - OpenMP (Open Multiprocessing) 
-- Numerical Recipes Third Edition
-
-( please note that some minor changes to the original Numerical
-  Recipes header files are required @n to prevent compiling errors due to
-  multiple definitions; in case of trouble, please do not hesitate to
-  ask me )
 
 then:
 
