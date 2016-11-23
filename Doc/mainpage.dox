@@ -30,10 +30,11 @@ Main contributors:
   - Alfonso Veropalumbo (two-point angular correlation, jackknife and bootstrap, lognormal mocks, BAO modelling)
 
 Other contributors:
- - Cosimo Fedeli (non-Gaussian cosmologies)
- - Carlo Giocoli (mass accretion history)
- - Mauro Roncarelli (fast comoving distance estimates) 
- - Tommaso Ronconi (voids)
+  - Carlo Cannarozzo (voids detection)
+  - Cosimo Fedeli (non-Gaussian cosmologies)
+  - Carlo Giocoli (mass accretion history)
+  - Mauro Roncarelli (fast comoving distance estimates) 
+  - Tommaso Ronconi (voids number counts)
 
 
 -----------------------------------------------------------------------------------------------------
