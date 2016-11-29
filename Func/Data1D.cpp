@@ -276,7 +276,7 @@ void cosmobl::data::Data1D::write_covariance (const string dir, const string fil
     cntr1 ++;
   }
    
-  fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl;
+  fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
 }
 
 
@@ -318,5 +318,5 @@ void cosmobl::data::Data1D::write (const string dir, const string file, const st
   for (size_t i=0; i<m_x.size(); i++) 
     fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_x[i] << "  " << setw(8) << m_fx[i] << "  " << setw(8) << m_error_fx[i] << endl;
    
-  fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl;
+  fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
 }

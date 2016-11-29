@@ -88,7 +88,7 @@ namespace cosmobl {
        *  @param dataType the data type
        *  @return an object of class Data1D_extra
        */
-      Data1D_extra (const vector<double> x, const vector<double> fx, const vector<vector<double>> extra_info={}, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_extra_)
+      Data1D_extra (const vector<double> x, const vector<double> fx, const vector<vector<double>> extra_info, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_extra_)
 	: Data1D(x, fx, xmin, xmax, dataType), m_extra_info(extra_info) {}
 
       /**
@@ -118,7 +118,7 @@ namespace cosmobl {
        *  @param dataType the data type
        *  @return an object of class Data1D_extra
        */
-      Data1D_extra (const vector<double> x, const vector<double> fx, const vector<vector<double>> covariance, const vector<vector<double>> extra_info={}, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_extra_)
+      Data1D_extra (const vector<double> x, const vector<double> fx, const vector<vector<double>> covariance, const vector<vector<double>> extra_info, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_extra_)
 	: Data1D(x, fx, covariance, xmin, xmax, dataType), m_extra_info(extra_info) {}
 
       /**

@@ -195,7 +195,7 @@ void cosmobl::twopt::TwoPointCorrelation_projected::measureJackknife (const stri
     ww.push_back(data[i]->fx());
     if (dir_output_resample != par::defaultString && dir_output_resample != "") {
       string file = "xi_projected_Jackkknife_"+conv(i, par::fINT)+".dat";
-      data[i]->write(dir_output_resample, file, "rp", "xi_projected", 0);
+      data[i]->write(dir_output_resample, file, "[1] perpendicular separation at the bin centre # [2] projected two-point correlation function # [3] error", 0);
     }
   }
   
@@ -235,7 +235,7 @@ void cosmobl::twopt::TwoPointCorrelation_projected::measureBootstrap (const int 
     ww.push_back(data[i]->fx());
     if (dir_output_resample != par::defaultString && dir_output_resample != "") {
       string file = "xi_projected_Bootstrap_"+conv(i, par::fINT)+".dat";
-      data[i]->write(dir_output_resample, file, "rp", "xi_projected", 0);
+      data[i]->write(dir_output_resample, file, "[1] perpendicular separation at the bin centre # [2] projected two-point correlation function # [3] error", 0);
     }
   }
   

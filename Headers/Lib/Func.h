@@ -102,8 +102,6 @@ using namespace std;
 #include "Exception.h"
 
 
-
-
 // ============================================================================================
 
 
@@ -212,6 +210,12 @@ using namespace std;
  * function in redshift space
  */
 /**
+ * @example readParameterFile.cpp
+ *
+ * This example shows how to read parameters from a standard *.ini
+ * file
+ */
+/**
  *  @example distances.py 
  *
  *  This example shows how to convert redshifts into comoving
@@ -233,6 +237,17 @@ using namespace std;
  *
  *  This example shows how to compute the monopole of the two-point
  *  correlation function
+ */
+/**
+ *  @example 2pt_monopole.ipynb 
+ *  
+ *  This \b notebook explains how to compute the monopole of the
+ *  two-point correlation function
+ *
+ *  To see the notebook, click here:
+ *  <a
+ *  href="https://nbviewer.jupyter.org/url/apps.difa.unibo.it/files/people/federico.marulli3/2pt_monopole.ipynb">
+ *  notebook</a>
  */
 
 /**

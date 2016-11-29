@@ -208,13 +208,17 @@ double cosmobl::statistics::Parameter::chains_convergence (const int max, const 
 
     auto chain = merge_chains(max, min, thin);
     chain->Statistics();
-    coutCBL << endl << par::col_green << m_name << par::col_default << ":" << endl;
-    coutCBL << setprecision(6) << " mean = "  << chain->mean() << endl << " std = " << chain->std() << endl << " median = " << chain->median() << endl;
+    
+    cout << endl;
+    coutCBL << par::col_green << m_name << par::col_default << ":" << endl;
+    coutCBL << setprecision(6) << " mean = "  << chain->mean() << endl;
+    coutCBL << " std = " << chain->std() << endl;
+    coutCBL << " median = " << chain->median() << endl;
 
     set_value(chain->mean());
     m_std = chain->std();
 
-    vector<double> mean,var;
+    vector<double> mean, var;
 
     for (auto &&cc : chains()) {
       cc->Statistics(max, min);
@@ -229,7 +233,7 @@ double cosmobl::statistics::Parameter::chains_convergence (const int max, const 
   }
   
   //else { coutCBL << endl << m_name  << ":" << endl << " fixed value = " << m_value << endl ; }
-
+  
   return RR;
 }
 

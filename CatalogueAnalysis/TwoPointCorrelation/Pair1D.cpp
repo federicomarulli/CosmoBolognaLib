@@ -238,8 +238,8 @@ void cosmobl::pairs::Pair1D_comoving_log::put (const shared_ptr<Object> obj1, co
 
 void cosmobl::pairs::Pair1D::add_data1D (const int i, const vector<double> data)
 {
-  checkDim(m_PP1D, i, "m_PP1D", false);
-  checkDim(data, 1, "data");
+  //checkDim(m_PP1D, i, "m_PP1D", false);
+  //checkDim(data, 1, "data");
   
   m_PP1D[i] += data[0];
 }
@@ -250,7 +250,7 @@ void cosmobl::pairs::Pair1D::add_data1D (const int i, const vector<double> data)
 
 void cosmobl::pairs::Pair1D::add_data1D (const int i, const shared_ptr<pairs::Pair> pair, const double ww) 
 {
-  checkDim(m_PP1D, i, "m_PP1D", false);
+  //checkDim(m_PP1D, i, "m_PP1D", false);
   
   m_PP1D[i] += ww*pair->PP1D(i);
 }

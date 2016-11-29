@@ -109,7 +109,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1, const int col2, const int col3, const int colWeight, const int colRegion, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordUnits inputUnits) 
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1, const int col2, const int col3, const int colWeight, const int colRegion, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordUnits inputUnits, const CharEncode charEncode) 
 { 
   // parameters for random numbers used in case nSub!=1
   
@@ -122,45 +122,99 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
   for (size_t dd=0; dd<file.size(); ++dd) {
 
     string line, file_in = file[dd];
-    coutCBL << "I'm reading the catalogue: " << file_in << endl;
-    ifstream finr(file_in.c_str()); checkIO(finr, file_in);
-
-    double Weight, Value; long Region;
-
-    while (getline(finr, line)) { // read the lines
-      
-      if (ran(gen)<nSub) { // extract a subsample
-	
-	stringstream ss(line);
-	vector<double> value; while (ss>>Value) value.emplace_back(Value);
-	checkDim(value, col1, "value", false); checkDim(value, col2, "value", false); 
-
-	if (coordType==_comovingCoordinates_) { // comoving coordinates (x, y, z)
-	  checkDim(value, col3, "value", false);
-	  comovingCoordinates coord;
-	  coord.xx = value[col1-1]*fact;
-	  coord.yy = value[col2-1]*fact;
-	  coord.zz = value[col3-1]*fact;
-	  Weight = (colWeight!=-1) ? value[colWeight-1] : 1.;
-	  Region = (long)value[colRegion-1];
-	  m_object.push_back(move(Object::Create(objType, coord, Weight, Region)));
-	}
-
-	else if (coordType==_observedCoordinates_) { // observed coordinates (R.A., Dec (redshift))
-	  observedCoordinates coord;
-	  coord.ra = value[col1-1]*fact;
-	  coord.dec = value[col2-1]*fact;
-	  coord.redshift = ((int)value.size()>=col3) ? value[col3-1] : 1.;
-	  Weight = (colWeight!=-1) ? value[colWeight-1] : 1.;
-	  Region = (long)value[colRegion-1];
-	  m_object.push_back(move(Object::Create(objType, coord, inputUnits, cosm, Weight, Region)));
-	}
-	
-	else ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: coordType is not valid!");	
-      }
-    }
     
-    finr.clear(); finr.close();
+          
+    if (charEncode==_ascii_) {
+	  
+      coutCBL << "I'm reading the catalogue: " << file_in << endl;
+      ifstream finr(file_in.c_str()); checkIO(finr, file_in);
+
+      double Weight, Value; long Region;
+
+      while (getline(finr, line)) { // read the lines
+	
+	if (ran(gen)<nSub) { // extract a subsample
+	  
+	  stringstream ss(line);
+	  vector<double> value; while (ss>>Value) value.emplace_back(Value);
+	  checkDim(value, col1, "value", false); checkDim(value, col2, "value", false); 
+
+	  if (coordType==_comovingCoordinates_) { // comoving coordinates (x, y, z)
+	    checkDim(value, col3, "value", false);
+	    comovingCoordinates coord;
+	    coord.xx = value[col1-1]*fact;
+	    coord.yy = value[col2-1]*fact;
+	    coord.zz = value[col3-1]*fact;
+	    Weight = (colWeight!=-1) ? value[colWeight-1] : 1.;
+	    Region = (long)value[colRegion-1];
+	    m_object.push_back(move(Object::Create(objType, coord, Weight, Region)));
+	  }
+
+	  else if (coordType==_observedCoordinates_) { // observed coordinates (R.A., Dec (redshift))
+	    observedCoordinates coord;
+	    coord.ra = value[col1-1]*fact;
+	    coord.dec = value[col2-1]*fact;
+	    coord.redshift = ((int)value.size()>=col3) ? value[col3-1] : 1.;
+	    Weight = (colWeight!=-1) ? value[colWeight-1] : 1.;
+	    Region = (long)value[colRegion-1];
+	    m_object.push_back(move(Object::Create(objType, coord, inputUnits, cosm, Weight, Region)));
+	  }
+	  
+	  else ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: coordType is not valid!");	
+	}
+      }
+      
+      finr.clear(); finr.close();
+    }
+          
+    else if (charEncode==_binary_) {
+            
+      // read the input catalogue files
+	
+      coutCBL << "I'm reading the catalogue: " << file_in << endl;
+
+      short num_bin;
+      float val;
+      ifstream finr (file_in.c_str(), ios::in|ios::binary|ios::ate);	
+
+      comovingCoordinates coord;
+
+      if (!finr) { cerr <<"Error in opening binary file "<<file_in<<"!\n\a"; exit(2); }
+      if (finr.is_open())
+      finr.seekg (0, ios::beg);
+      finr.read ((char*)(&num_bin), 2);
+
+      int  n_blocks=num_bin;
+      
+//       vector<double> value;
+//       double Weight; long Region;     
+      
+      for (int i=1; i<=n_blocks; ++i)
+      {
+        finr.read ((char*)(&num_bin), 4);
+        int n_objs=num_bin;
+
+        for (int j=1; j<=n_objs; ++j){
+          finr.read ((char*)(&val), 4);
+          coord.xx=(val)*fact;
+          finr.read ((char*)(&val), 4);
+          coord.yy=(val)*fact;
+          finr.read ((char*)(&val), 4);
+          coord.zz=(val)*fact;
+         // Weight = (colWeight!=-1) ? value[colWeight-1] : 1.;
+         // Region = (long)value[colRegion-1];
+          if(ran(gen)<nSub) m_object.push_back(move(Object::Create(objType, coord)));
+         // if(ran(gen)<nSub) m_object.push_back(move(Object::Create(objType, coord, Weight, Region)));
+        }
+        finr.read ((char*)(&num_bin), 4);
+        int n_objs2=num_bin;
+        if (n_objs2!=n_objs) {cout<<"Wrong reading of input binary file"<<endl; exit(3);}
+      }
+      finr.clear();finr.close();
+    }
+        
+    else ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: charEncode is not valid!");
+
   }
 }
 
@@ -239,6 +293,14 @@ vector<double> cosmobl::catalogue::Catalogue::var (Var var_name) const
     for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->magnitude();
     break;
 
+  case Var::_SFR_:
+    for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->SFR();
+    break;
+
+  case Var::_sSFR_:
+    for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->sSFR();
+    break;
+
   case Var::_Richness_:
     for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->richness();
     break;
@@ -268,15 +330,15 @@ vector<double> cosmobl::catalogue::Catalogue::var (Var var_name) const
     break;
 
   case Var::_X_displacement_:
-    for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->radius();
+    for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->x_displacement();
     break;
     
   case Var::_Y_displacement_:
-    for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->radius();
+    for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->y_displacement();
     break;
     
   case Var::_Z_displacement_:
-    for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->radius();
+    for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->z_displacement();
     break;
 
   default:
@@ -354,6 +416,14 @@ void cosmobl::catalogue::Catalogue::set_var (const Var var_name, const vector<do
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_magnitude(var[i]);
     break;
 
+  case Var::_SFR_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_SFR(var[i]);
+    break;
+
+  case Var::_sSFR_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_sSFR(var[i]);
+    break;
+    
   case Var::_Richness_:
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_richness(var[i]);
     break;
@@ -383,15 +453,15 @@ void cosmobl::catalogue::Catalogue::set_var (const Var var_name, const vector<do
     break;
 
   case Var::_X_displacement_:
-    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_x_displacement();
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_x_displacement(var[i]);
     break;
     
   case Var::_Y_displacement_:
-    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_y_displacement();
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_y_displacement(var[i]);
     break;
     
   case Var::_Z_displacement_:
-    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_z_displacement();
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_z_displacement(var[i]);
     break;
 
   default:
@@ -654,6 +724,8 @@ void cosmobl::catalogue::Catalogue::write_comoving_coordinates (const string out
 {
   if (m_object.size()==0) ErrorCBL("Error in cosmobl::catalogue::Catalogue::write_comoving_coordinates: m_object.size()=0!");
 
+  coutCBL << "I'm writing the file: " << outputFile << "..." << endl;
+  
   ofstream fout(outputFile.c_str()); checkIO(fout, outputFile);
   
   for (size_t i=0; i<nObjects(); ++i) 
@@ -670,6 +742,8 @@ void cosmobl::catalogue::Catalogue::write_comoving_coordinates (const string out
 void cosmobl::catalogue::Catalogue::write_obs_coordinates (const string outputFile) const 
 {
   if (m_object.size()==0) ErrorCBL("Error in cosmobl::catalogue::Catalogue::write_obs_coordinates: m_object.size()=0!");
+
+  coutCBL << "I'm writing the file: " << outputFile << "..." << endl;
   
   ofstream fout(outputFile.c_str()); checkIO(fout, outputFile);
   
@@ -687,20 +761,36 @@ void cosmobl::catalogue::Catalogue::write_obs_coordinates (const string outputFi
 // ============================================================================
 
 
-void cosmobl::catalogue::Catalogue::write_data (const string outputFile) const 
+void cosmobl::catalogue::Catalogue::write_data (const string outputFile, const vector<Var> var_name) const 
 {
+  coutCBL << "I'm writing the file: " << outputFile << "..." << endl;
+  
   ofstream fout(outputFile.c_str()); checkIO(fout, outputFile);
 
-  if (!isSet(ra(0)) || !isSet(dec(0)) || !isSet(redshift(0)) || !isSet(dc(0)))
-    ErrorCBL("Error in cosmobl::catalogue::Catalogue::write_coordinates of Catalogue.cpp! Polar coordinates are not set!");
+  if (var_name.size()==0) {
+    
+    if (!isSet(ra(0)) || !isSet(dec(0)) || !isSet(redshift(0)) || !isSet(dc(0)))
+      ErrorCBL("Error in cosmobl::catalogue::Catalogue::write_coordinates of Catalogue.cpp! Polar coordinates are not set!");
+    
+    if (!isSet(region(0)))
+      for (size_t i=0; i<nObjects(); ++i) 
+	fout << xx(i) << "   " << yy(i) << "   " << zz(i) << "   " << ra(i) << "   " << dec(i) << "   " << redshift(i) << "   " << dc(i) << endl;
+    else
+      for (size_t i=0; i<nObjects(); ++i) 
+	fout << xx(i) << "   " << yy(i) << "   " << zz(i) << "   " << ra(i) << "   " << dec(i) << "   " << redshift(i) << "   " << dc(i) << "   " << region(i) <<endl;
 
-  if (!isSet(region(0)))
-    for (size_t i=0; i<nObjects(); ++i) 
-      fout << xx(i) << "   " << yy(i) << "   " << zz(i) << "   " << ra(i) << "   " << dec(i) << "   " << redshift(i) << "   " << dc(i) << endl;
-  else
-    for (size_t i=0; i<nObjects(); ++i) 
-      fout << xx(i) << "   " << yy(i) << "   " << zz(i) << "   " << ra(i) << "   " << dec(i) << "   " << redshift(i) << "   " << dc(i) << "   " << region(i) <<endl;
-      
+  }
+
+  else {
+
+    for (size_t i=0; i<nObjects(); ++i) {
+      for (auto &&vv : var_name)
+	fout << var(vv)[i] << "   ";
+      fout << endl;
+    }
+    
+  }
+
   coutCBL << "I wrote the file: " << outputFile << endl;
   fout.clear(); fout.close();
 }
@@ -1017,28 +1107,28 @@ data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double c
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const Var var_name1, const int nbin1, const int seed) 
+cosmobl::catalogue::Catalogue::Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const Var var_name, const int nbin, const int seed) 
 {
-  vector<double> fvar_input(nbin1, 0);
-  vector<double> fvar_target(nbin1, 0);
+  vector<double> fvar_input(nbin, 0);
+  vector<double> fvar_target(nbin, 0);
 
-  vector<double> input_var = input_catalogue.var(var_name1);
-  vector<double> target_var = target_catalogue.var(var_name1);
+  vector<double> input_var = input_catalogue.var(var_name);
+  vector<double> target_var = target_catalogue.var(var_name);
 
-  double Vmin = target_catalogue.Min(var_name1);
-  double Vmax = target_catalogue.Max(var_name1);
+  double Vmin = target_catalogue.Min(var_name);
+  double Vmax = target_catalogue.Max(var_name);
 
-  double binSize_inv = pow((Vmax-Vmin)/nbin1, -1);
+  double binSize_inv = pow((Vmax-Vmin)/nbin, -1);
 
   for (size_t i=0; i<input_var.size(); i++)
     if (input_var[i] < Vmax && Vmin < input_var[i]) {
-      int occ = max(0, min(int((input_var[i]-Vmin)*binSize_inv), nbin1));
+      int occ = max(0, min(int((input_var[i]-Vmin)*binSize_inv), nbin));
       fvar_input[occ] ++;
     }
 
   for (size_t i=0; i<target_var.size(); i++)
     if (target_var[i] < Vmax && Vmin < target_var[i]) {
-      int occ = max(0, min(int((target_var[i]-Vmin)*binSize_inv), nbin1));
+      int occ = max(0, min(int((target_var[i]-Vmin)*binSize_inv), nbin));
       fvar_target[occ] ++;
     }
 
@@ -1046,7 +1136,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const Catalogue input_catalogue, const
 
   for (size_t i=0; i<input_var.size(); i++) 
     if (input_var[i] < Vmax && Vmin < input_var[i]) {
-      int occ = max(0, min(int((input_var[i]-Vmin)*binSize_inv), nbin1));
+      int occ = max(0, min(int((input_var[i]-Vmin)*binSize_inv), nbin));
       if (ran() < fvar_target[occ]/fvar_input[occ])
 	m_object.push_back(shared_ptr<Object>(input_catalogue.catalogue_object(i)));
     }

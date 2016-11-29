@@ -76,6 +76,7 @@ double cosmobl::modelling::xi0_linear (const double rad, const shared_ptr<void> 
   
 
   // return the redshift-space monopole of the two-point correlation function
+
   return xi_ratio(fsigma8, bsigma8)*pow(bsigma8/pp->sigma8_z, 2)*pp->func_xi->operator()(new_rad)+poly;
   
 }

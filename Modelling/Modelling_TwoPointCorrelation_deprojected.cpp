@@ -45,6 +45,7 @@ using namespace cosmobl;
 void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::set_fiducial_xiDM ()
 {
   coutCBL << "Setting up the fiducial two point correlation function model" << endl;
+  
   m_twop_parameters.fiducial_xiDM.erase(m_twop_parameters.fiducial_xiDM.begin(), m_twop_parameters.fiducial_xiDM.end());
 
   if (m_twop_parameters.sigmaNL==0) {
@@ -62,6 +63,10 @@ void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::set_fiducial
   }
   
   m_twop_parameters.func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(m_twop_parameters.fiducial_radDM, m_twop_parameters.fiducial_xiDM, "Spline"));
-
+  
+  m_twop_parameters.sigma8_z = m_twop_parameters.cosmology->sigma8_Pk(m_twop_parameters.method_Pk, m_twop_parameters.redshift, m_twop_parameters.output_root);
+  
+  m_twop_parameters.linear_growth_rate_z = m_twop_parameters.cosmology->linear_growth_rate(m_twop_parameters.redshift);
+  
 }
 

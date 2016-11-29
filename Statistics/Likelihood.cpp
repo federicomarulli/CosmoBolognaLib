@@ -74,12 +74,12 @@ double statistics::LogLikelihood_Gaussian_1D_model (vector<double> model_paramet
 
 #pragma omp for
     for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
-      computed_model[i]=pp->model->operator()(pp->data->xx(i));
+      computed_model[i] = pp->model->operator()(pp->data->xx(i));
   }
 
-  double LogLikelihood=0;
+  double LogLikelihood = 0.;
   for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
-    LogLikelihood += pow((pp->data->fx(i)-computed_model[i])/computed_model[i],2);
+    LogLikelihood += pow((pp->data->fx(i)-computed_model[i])/computed_model[i], 2);
 
   return -0.5*LogLikelihood;
 }
@@ -103,7 +103,8 @@ double statistics::LogLikelihood_Gaussian_1D_error (vector<double> model_paramet
       computed_model[i] = pp->model->operator()(pp->data->xx(i));
   }
 
-  double LogLikelihood=0;
+  double LogLikelihood = 0.;
+  
   for (int i=pp->data->x_down(); i<pp->data->x_up(); i++) 
     LogLikelihood += pow((pp->data->fx(i)-computed_model[i])/pp->data->error_fx(i), 2);
   
@@ -133,7 +134,7 @@ double statistics::LogLikelihood_Gaussian_1D_covariance (vector<double> model_pa
   for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
     diff[i]=pp->data->fx(i)-computed_model[i];
 
-  double LogLikelihood = 0;
+  double LogLikelihood = 0.;
   
   for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
     for (int j=pp->data->x_down(); j<pp->data->x_up(); j++)
@@ -177,7 +178,8 @@ double statistics::LogLikelihood_Gaussian_2D_model (vector<double> model_paramet
     }
   }
 
-  double LogLikelihood = 0;
+  double LogLikelihood = 0.;
+  
   for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
     for (int j=pp->data->y_down(); j<pp->data->y_up(); j++)
       LogLikelihood += pow((pp->data->fxy(i,j)-computed_model[i][j])/computed_model[i][j],2);
@@ -220,7 +222,8 @@ double statistics::LogLikelihood_Gaussian_2D_error (vector<double> model_paramet
   }
 
 
-  double LogLikelihood = 0;
+  double LogLikelihood = 0.;
+  
   for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
     for (int j=pp->data->y_down(); j<pp->data->y_up(); j++)
       LogLikelihood += pow((pp->data->fxy(i,j)-computed_model[i][j])/computed_model[i][j],2);
@@ -236,21 +239,21 @@ void cosmobl::statistics::Likelihood::set_likelihood_type (const LikelihoodType 
 {
   m_likelihood_type = likelihood_type;
 
-  switch(m_likelihood_type)
+  switch (m_likelihood_type)
     {
-    case(LikelihoodType::_GaussianLikelihood_Model_):
+    case (LikelihoodType::_GaussianLikelihood_Model_):
       m_cov = 0;
       break;
 
-    case(LikelihoodType::_GaussianLikelihood_Error_):
+    case (LikelihoodType::_GaussianLikelihood_Error_):
       m_cov = 0;
       break; 
 
-    case(LikelihoodType::_GaussianLikelihood_Covariance_):
+    case (LikelihoodType::_GaussianLikelihood_Covariance_):
       m_cov = 1;
       break;
 
-    case(LikelihoodType::_UserDefinedLikelihood_):
+    case (LikelihoodType::_UserDefinedLikelihood_):
       m_cov = cov;
       break;
 
@@ -288,44 +291,49 @@ void cosmobl::statistics::Likelihood::set_model (const shared_ptr<Model> model)
 // ============================================================================================
 
 
-void cosmobl::statistics::Likelihood::set_likelihood_function()
+void cosmobl::statistics::Likelihood::set_likelihood_function ()
 {
-  if (m_data->dataType() == data::DataType::_1D_data_) {
-    switch(m_likelihood_type)
+  
+  if (m_data->dataType()==data::DataType::_1D_data_ || m_data->dataType()==data::DataType::_1D_data_extra_) {
+   
+    switch (m_likelihood_type)
       {
-      case(LikelihoodType::_GaussianLikelihood_Model_):
+      case (LikelihoodType::_GaussianLikelihood_Model_):
 	m_log_likelihood_function = &LogLikelihood_Gaussian_1D_model;
 	break;
 
-      case(LikelihoodType::_GaussianLikelihood_Error_):
+      case (LikelihoodType::_GaussianLikelihood_Error_):
 	m_log_likelihood_function = &LogLikelihood_Gaussian_1D_error;
 	break; 
 
-      case(LikelihoodType::_GaussianLikelihood_Covariance_):
+      case (LikelihoodType::_GaussianLikelihood_Covariance_):
 	m_log_likelihood_function = &LogLikelihood_Gaussian_1D_covariance;
 	break;
 
       default:
-	ErrorCBL("Error in set_likelihood_type of Likelihood.cpp, Type of likelihood not recognized or not yet implemented");
+	ErrorCBL("Error in set_likelihood_function() of Likelihood.cpp: type of likelihood not recognized or not yet implemented!");
 	break;
       }
   }
-  else if (m_data->dataType() == data::DataType::_2D_data_) {
-    switch(m_likelihood_type)
+  
+  else if (m_data->dataType() == data::DataType::_2D_data_ || m_data->dataType() == data::DataType::_2D_data_extra_) {
+    switch (m_likelihood_type)
       {
-      case(LikelihoodType::_GaussianLikelihood_Model_):
+      case (LikelihoodType::_GaussianLikelihood_Model_):
 	m_log_likelihood_function = &LogLikelihood_Gaussian_2D_model;
 	break;
 
-      case(LikelihoodType::_GaussianLikelihood_Error_):
+      case (LikelihoodType::_GaussianLikelihood_Error_):
 	m_log_likelihood_function = &LogLikelihood_Gaussian_2D_error;
 	break; 
 
       default:
-	ErrorCBL("Error in set_likelihood_type of Likelihood.cpp, Type of likelihood not recognized or not yet implemented");
+	ErrorCBL("Error in set_likelihood_function() of Likelihood.cpp: type of likelihood not recognized or not yet implemented!");
 	break;
       }
   }
+  
+  else ErrorCBL("Error in set_likelihood_function() of Likelihood.cpp: data type not recognized or not yet implemented!");
 
 }
 
@@ -485,30 +493,29 @@ double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, 
 
   for (unsigned int i=0; i<m_model->npar(); i++)
     m_model->parameter(i)->set_prior_seed(int(prior_seeds()));
-
+ 
   // initialize chains
   m_nchains=nchains;
   m_chain_size=chain_size;
   vector<double> chains_index = linear_bin_vector(m_nchains, 0., m_nchains-1.);
   vector<double> chains_weights(m_nchains,1);
   random::DiscreteRandomNumbers chains(chains_index, chains_weights, int(prior_seeds()), 0, m_nchains-1);
-  
+ 
   for (size_t i=0; i<m_model->npar(); i++) {
     m_model->parameter(i)->set_chains(m_nchains, m_chain_size);
     m_model->parameter(i)->set_chains_values_from_prior(0);
   }
- 
-  // initialize LogLikelihood
+  
+  // initialize the likelihood
   auto fixed_parameters = make_shared<STR_likelihood_parameters>(STR_likelihood_parameters(m_data, m_model));
 
   vector<double> log_likelihood(m_nchains, 0);
   vector<double> log_prior(m_nchains, 0);
-  
+ 
   for (int i=0; i<m_nchains; i++) {
-    log_likelihood[i] = m_log_likelihood_function(m_model->parameter_values_from_chain(i,0), fixed_parameters);
-    log_prior[i] = LogPriorProbability(m_model->parameter_values_from_chain(i,0));
+    log_likelihood[i] = m_log_likelihood_function(m_model->parameter_values_from_chain(i, 0), fixed_parameters);
+    log_prior[i] = LogPriorProbability(m_model->parameter_values_from_chain(i, 0));
   }
-
   
   // stretch-move
 
@@ -581,7 +588,7 @@ double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, 
       m_write_chain (output_dir, output_file, 0, n, 1);
   }
 
-  coutCBL << endl;
+  cout << endl;
   cout.unsetf(ios::fixed); cout.unsetf(ios::showpoint); cout.precision(dp);
   
   for (size_t i = 0; i<m_model->npar(); i++)
@@ -730,7 +737,7 @@ double cosmobl::statistics::Likelihood::sample_tabulated_likelihood (const int n
 
 
       double proposed_loglikelihood = interpolated_2D(parameters_i[0], parameters_i[1], parameter1, parameter2, tabulated_likelihood, interpolation_method);
-//m_log_likelihood_function(parameters_i, fixed_parameters);
+      //m_log_likelihood_function(parameters_i, fixed_parameters);
       double proposed_prior = LogPriorProbability(parameters_i);
 
       double lnprob = min(1.,pow(gen_z,(m_model->npar_eff()-1))*exp(proposed_loglikelihood+proposed_prior-log_likelihood[i]-log_prior[i]));

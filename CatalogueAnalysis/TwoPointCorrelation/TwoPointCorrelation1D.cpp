@@ -256,10 +256,8 @@ shared_ptr<data::Data> cosmobl::twopt::TwoPointCorrelation1D::NaturalEstimator (
     
     if (dd->PP1D(i)>0) {
 
-      if (rr->PP1D(i)<1.e-30) {
-	string MSG = "Error in NaturalEstimator() of TwoPointCorrelation1D.cpp: there are no random objects in the bin "+conv(i, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size!";
-	ErrorCBL(MSG);
-      }
+      if (rr->PP1D(i)<1.e-30) 
+	ErrorCBL("Error in NaturalEstimator() of TwoPointCorrelation1D.cpp: there are no random objects in the bin "+conv(i, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size!");
       
       xi[i] = max(-1., norm*dd->PP1D(i)/rr->PP1D(i)-1.);
       error[i] = PoissonError(dd->PP1D(i), rr->PP1D(i), 0, nData, nRandom); 
@@ -289,7 +287,7 @@ shared_ptr<data::Data> cosmobl::twopt::TwoPointCorrelation1D::LandySzalayEstimat
 
       if (rr->PP1D(i)<1.e-30) 
 	ErrorCBL("Error in LandySzalayEstimator() of TwoPointCorrelation1D.cpp: there are no random objects in the bin "+conv(i, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size!");
-   
+
       xi[i] = max(-1., norm1*dd->PP1D(i)/rr->PP1D(i)-norm2*dr->PP1D(i)/rr->PP1D(i)+1.);
       error[i] = PoissonError(dd->PP1D(i), rr->PP1D(i), dr->PP1D(i), nData, nRandom);
       

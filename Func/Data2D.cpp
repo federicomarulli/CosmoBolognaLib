@@ -154,6 +154,6 @@ void cosmobl::data::Data2D::write (const string dir, const string file, const st
     
   }
 
-  fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl << endl;
+  fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl << endl;
 
 }

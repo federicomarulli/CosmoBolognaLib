@@ -140,10 +140,10 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<doubl
   
   double fact = 1.;
 
-  check_memory(0.9, 1, "cosmobl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp");
+  check_memory(2.0, true, "cosmobl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp");
   
-  while (m_nCell_tot>pow(nMAX,3) || m_nCell_tot<nMIN
-	 || !check_memory(0.9, 0, "cosmobl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp")) {
+  while (m_nCell_tot>pow(nMAX, 3) || m_nCell_tot<nMIN
+	 || !check_memory(2.0, false, "cosmobl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp")) {
  
     m_nCell_tot = 1;
     m_cell_size *= fact;
@@ -166,10 +166,8 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<doubl
     
   }
  
-  if (m_nCell_tot>pow(nMAX,3) || m_nCell_tot<nMIN) {
-    string ERR = "Error in cosmobl::chainmesh::ChainMesh::create_chain_mesh! m_nCell_tot = "+conv(m_nCell_tot, par::fINT)+", possible memory problems!";
-    ErrorCBL(ERR);
-  }
+  if (m_nCell_tot>pow(nMAX,3) || m_nCell_tot<nMIN) 
+    ErrorCBL("Error in cosmobl::chainmesh::ChainMesh::create_chain_mesh! m_nCell_tot = "+conv(m_nCell_tot, par::fINT)+", possible memory problems!");
 
   m_Label.resize(m_nCell_tot, -1);
   

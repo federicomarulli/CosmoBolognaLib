@@ -60,12 +60,12 @@ void cosmobl::pairs::Pair2D_comovingCartesian_linlin_extra::put (const shared_pt
     m_scale_D1_mean[ir][jr] += rp*obj1->weight()*obj2->weight()*angWeight;
     m_scale_D2_mean[ir][jr] += pi*obj1->weight()*obj2->weight()*angWeight;
     
-    m_scale_D1_sigma[ir][jr] += pow(rp*obj1->weight()*obj2->weight(), 2);
-    m_scale_D2_sigma[ir][jr] += pow(pi*obj1->weight()*obj2->weight(), 2);
+    m_scale_D1_sigma[ir][jr] += pow(rp, 2)*obj1->weight()*obj2->weight();
+    m_scale_D2_sigma[ir][jr] += pow(pi, 2)*obj1->weight()*obj2->weight();
 
     double pair_redshift = (obj1->redshift()>0 && obj2->redshift()>0) ? (obj1->redshift()+obj2->redshift())*0.5 : -1.;
     m_z_mean[ir][jr] += pair_redshift*obj1->weight()*obj2->weight()*angWeight;
-    m_z_sigma[ir][jr] += pow(pair_redshift*obj1->weight()*obj2->weight(), 2);
+    m_z_sigma[ir][jr] += pow(pair_redshift, 2)*obj1->weight()*obj2->weight();
     
   }
 }
@@ -91,12 +91,12 @@ void cosmobl::pairs::Pair2D_comovingCartesian_linlog_extra::put (const shared_pt
     m_scale_D1_mean[ir][jr] += rp*obj1->weight()*obj2->weight()*angWeight;
     m_scale_D2_mean[ir][jr] += pi*obj1->weight()*obj2->weight()*angWeight;
     
-    m_scale_D1_sigma[ir][jr] += pow(rp*obj1->weight()*obj2->weight(), 2);
-    m_scale_D2_sigma[ir][jr] += pow(pi*obj1->weight()*obj2->weight(), 2);
+    m_scale_D1_sigma[ir][jr] += pow(rp, 2)*obj1->weight()*obj2->weight();
+    m_scale_D2_sigma[ir][jr] += pow(pi, 2)*obj1->weight()*obj2->weight();
 
     double pair_redshift = (obj1->redshift()>0 && obj2->redshift()>0) ? (obj1->redshift()+obj2->redshift())*0.5 : -1.;
     m_z_mean[ir][jr] += pair_redshift*obj1->weight()*obj2->weight()*angWeight;
-    m_z_sigma[ir][jr] += pow(pair_redshift*obj1->weight()*obj2->weight(), 2);
+    m_z_sigma[ir][jr] += pow(pair_redshift, 2)*obj1->weight()*obj2->weight();
     
   }
 }
@@ -123,12 +123,12 @@ void cosmobl::pairs::Pair2D_comovingCartesian_loglin_extra::put (const shared_pt
     m_scale_D1_mean[ir][jr] += rp*obj1->weight()*obj2->weight()*angWeight;
     m_scale_D2_mean[ir][jr] += pi*obj1->weight()*obj2->weight()*angWeight;
     
-    m_scale_D1_sigma[ir][jr] += pow(rp*obj1->weight()*obj2->weight(), 2);
-    m_scale_D2_sigma[ir][jr] += pow(pi*obj1->weight()*obj2->weight(), 2);
+    m_scale_D1_sigma[ir][jr] += pow(rp, 2)*obj1->weight()*obj2->weight();
+    m_scale_D2_sigma[ir][jr] += pow(pi, 2)*obj1->weight()*obj2->weight();
 
     double pair_redshift = (obj1->redshift()>0 && obj2->redshift()>0) ? (obj1->redshift()+obj2->redshift())*0.5 : -1.;
     m_z_mean[ir][jr] += pair_redshift*obj1->weight()*obj2->weight()*angWeight;
-    m_z_sigma[ir][jr] += pow(pair_redshift*obj1->weight()*obj2->weight(), 2);
+    m_z_sigma[ir][jr] += pow(pair_redshift, 2)*obj1->weight()*obj2->weight();
     
   }
 }
@@ -155,12 +155,12 @@ void cosmobl::pairs::Pair2D_comovingCartesian_loglog_extra::put (const shared_pt
     m_scale_D1_mean[ir][jr] += rp*obj1->weight()*obj2->weight()*angWeight;
     m_scale_D2_mean[ir][jr] += pi*obj1->weight()*obj2->weight()*angWeight;
     
-    m_scale_D1_sigma[ir][jr] += pow(rp*obj1->weight()*obj2->weight(), 2);
-    m_scale_D2_sigma[ir][jr] += pow(pi*obj1->weight()*obj2->weight(), 2);
+    m_scale_D1_sigma[ir][jr] += pow(rp, 2)*obj1->weight()*obj2->weight();
+    m_scale_D2_sigma[ir][jr] += pow(pi, 2)*obj1->weight()*obj2->weight();
 
     double pair_redshift = (obj1->redshift()>0 && obj2->redshift()>0) ? (obj1->redshift()+obj2->redshift())*0.5 : -1.;
     m_z_mean[ir][jr] += pair_redshift*obj1->weight()*obj2->weight()*angWeight;
-    m_z_sigma[ir][jr] += pow(pair_redshift*obj1->weight()*obj2->weight(), 2);
+    m_z_sigma[ir][jr] += pow(pair_redshift, 2)*obj1->weight()*obj2->weight();
     
   }
 }
@@ -187,12 +187,12 @@ void cosmobl::pairs::Pair2D_comovingPolar_linlin_extra::put (const shared_ptr<Ob
     m_scale_D1_mean[ir][jr] += rr*obj1->weight()*obj2->weight()*angWeight;
     m_scale_D2_mean[ir][jr] += mu*obj1->weight()*obj2->weight()*angWeight;
     
-    m_scale_D1_sigma[ir][jr] += pow(rr*obj1->weight()*obj2->weight(), 2);
-    m_scale_D2_sigma[ir][jr] += pow(mu*obj1->weight()*obj2->weight(), 2);
+    m_scale_D1_sigma[ir][jr] += pow(rr, 2)*obj1->weight()*obj2->weight();
+    m_scale_D2_sigma[ir][jr] += pow(mu, 2)*obj1->weight()*obj2->weight();
 
     double pair_redshift = (obj1->redshift()>0 && obj2->redshift()>0) ? (obj1->redshift()+obj2->redshift())*0.5 : -1.;
     m_z_mean[ir][jr] += pair_redshift*obj1->weight()*obj2->weight()*angWeight;
-    m_z_sigma[ir][jr] += pow(pair_redshift*obj1->weight()*obj2->weight(), 2);
+    m_z_sigma[ir][jr] += pow(pair_redshift, 2)*obj1->weight()*obj2->weight();
     
   }
 }
@@ -219,12 +219,12 @@ void cosmobl::pairs::Pair2D_comovingPolar_linlog_extra::put (const shared_ptr<Ob
     m_scale_D1_mean[ir][jr] += rr*obj1->weight()*obj2->weight()*angWeight;
     m_scale_D2_mean[ir][jr] += mu*obj1->weight()*obj2->weight()*angWeight;
     
-    m_scale_D1_sigma[ir][jr] += pow(rr*obj1->weight()*obj2->weight(), 2);
-    m_scale_D2_sigma[ir][jr] += pow(mu*obj1->weight()*obj2->weight(), 2);
+    m_scale_D1_sigma[ir][jr] += pow(rr, 2)*obj1->weight()*obj2->weight();
+    m_scale_D2_sigma[ir][jr] += pow(mu, 2)*obj1->weight()*obj2->weight();
 
     double pair_redshift = (obj1->redshift()>0 && obj2->redshift()>0) ? (obj1->redshift()+obj2->redshift())*0.5 : -1.;
     m_z_mean[ir][jr] += pair_redshift*obj1->weight()*obj2->weight()*angWeight;
-    m_z_sigma[ir][jr] += pow(pair_redshift*obj1->weight()*obj2->weight(), 2);
+    m_z_sigma[ir][jr] += pow(pair_redshift, 2)*obj1->weight()*obj2->weight();
     
   }
 }
@@ -251,12 +251,12 @@ void cosmobl::pairs::Pair2D_comovingPolar_loglin_extra::put (const shared_ptr<Ob
     m_scale_D1_mean[ir][jr] += rr*obj1->weight()*obj2->weight()*angWeight;
     m_scale_D2_mean[ir][jr] += mu*obj1->weight()*obj2->weight()*angWeight;
     
-    m_scale_D1_sigma[ir][jr] += pow(rr*obj1->weight()*obj2->weight(), 2);
-    m_scale_D2_sigma[ir][jr] += pow(mu*obj1->weight()*obj2->weight(), 2);
+    m_scale_D1_sigma[ir][jr] += pow(rr, 2)*obj1->weight()*obj2->weight();
+    m_scale_D2_sigma[ir][jr] += pow(mu, 2)*obj1->weight()*obj2->weight();
 
     double pair_redshift = (obj1->redshift()>0 && obj2->redshift()>0) ? (obj1->redshift()+obj2->redshift())*0.5 : -1.;
     m_z_mean[ir][jr] += pair_redshift*obj1->weight()*obj2->weight()*angWeight;
-    m_z_sigma[ir][jr] += pow(pair_redshift*obj1->weight()*obj2->weight(), 2);
+    m_z_sigma[ir][jr] += pow(pair_redshift, 2)*obj1->weight()*obj2->weight();
     
   }
 }
@@ -283,12 +283,12 @@ void cosmobl::pairs::Pair2D_comovingPolar_loglog_extra::put (const shared_ptr<Ob
     m_scale_D1_mean[ir][jr] += rr*obj1->weight()*obj2->weight()*angWeight;
     m_scale_D2_mean[ir][jr] += mu*obj1->weight()*obj2->weight()*angWeight;
     
-    m_scale_D1_sigma[ir][jr] += pow(rr*obj1->weight()*obj2->weight(), 2);
-    m_scale_D2_sigma[ir][jr] += pow(mu*obj1->weight()*obj2->weight(), 2);
+    m_scale_D1_sigma[ir][jr] += pow(rr, 2)*obj1->weight()*obj2->weight();
+    m_scale_D2_sigma[ir][jr] += pow(mu, 2)*obj1->weight()*obj2->weight();
 
     double pair_redshift = (obj1->redshift()>0 && obj2->redshift()>0) ? (obj1->redshift()+obj2->redshift())*0.5 : -1.;
     m_z_mean[ir][jr] += pair_redshift*obj1->weight()*obj2->weight()*angWeight;
-    m_z_sigma[ir][jr] += pow(pair_redshift*obj1->weight()*obj2->weight(), 2);
+    m_z_sigma[ir][jr] += pow(pair_redshift, 2)*obj1->weight()*obj2->weight();
     
   }
 }
@@ -299,6 +299,7 @@ void cosmobl::pairs::Pair2D_comovingPolar_loglog_extra::put (const shared_ptr<Ob
 
 void cosmobl::pairs::Pair2D_extra::add_data2D (const int i, const int j, const vector<double> data)
 {
+  /*
   checkDim(m_PP2D, i, j, "m_PP2D", false);
   checkDim(m_scale_D1_mean, i, j, "m_scale_D1_mean", false);
   checkDim(m_scale_D2_mean, i, j, "m_scale_D2_mean", false);
@@ -307,6 +308,7 @@ void cosmobl::pairs::Pair2D_extra::add_data2D (const int i, const int j, const v
   checkDim(m_z_mean, i, j, "m_z_mean", false);
   checkDim(m_z_sigma, i, j, "m_z_sigma", false);
   checkDim(data, 7, "data");
+  */
   
   m_PP2D[i][j] += data[0];
   m_scale_D1_mean[i][j] += data[1];
@@ -323,6 +325,7 @@ void cosmobl::pairs::Pair2D_extra::add_data2D (const int i, const int j, const v
 
 void cosmobl::pairs::Pair2D_extra::add_data2D (const int i, const int j, const shared_ptr<pairs::Pair> pair, const double ww)
 {
+  /*
   checkDim(m_PP2D, i, j, "m_PP2D", false);
   checkDim(m_scale_D1_mean, i, j, "m_scale_D1_mean", false);
   checkDim(m_scale_D2_mean, i, j, "m_scale_D2_mean", false);
@@ -330,6 +333,7 @@ void cosmobl::pairs::Pair2D_extra::add_data2D (const int i, const int j, const s
   checkDim(m_scale_D2_sigma, i, j, "m_scale_D2_sigma", false); 
   checkDim(m_z_mean, i, j, "m_z_mean", false);
   checkDim(m_z_sigma, i, j, "m_z_sigma", false);
+  */
   
   m_PP2D[i][j] += ww*pair->PP2D(i, j);
   m_scale_D1_mean[i][j] += ww*pair->scale_D1_mean(i, j);
@@ -369,11 +373,11 @@ void cosmobl::pairs::Pair2D_extra::finalise ()
   for (int i=0; i<m_nbins_D1; i++) 
     for (int j=0; j<m_nbins_D2; j++) {
       m_scale_D1_mean[i][j] = (m_PP2D[i][j]>0) ? m_scale_D1_mean[i][j]/m_PP2D[i][j] : 0.;
-      m_scale_D1_sigma[i][j] = (m_PP2D[i][j]>0) ? sqrt(m_scale_D1_sigma[i][j]/m_PP2D[i][j]-pow(m_scale_D1_mean[i][j], 2)) : 0.;
+      m_scale_D1_sigma[i][j] = (m_PP2D[i][j]>0 && m_scale_D1_sigma[i][j]/m_PP2D[i][j]-pow(m_scale_D1_mean[i][j], 2)>0) ? sqrt(m_scale_D1_sigma[i][j]/m_PP2D[i][j]-pow(m_scale_D1_mean[i][j], 2)) : 0.;
       m_scale_D2_mean[i][j] = (m_PP2D[i][j]>0) ? m_scale_D2_mean[i][j]/m_PP2D[i][j] : 0.;
-      m_scale_D2_sigma[i][j] = (m_PP2D[i][j]>0) ? sqrt(m_scale_D2_sigma[i][j]/m_PP2D[i][j]-pow(m_scale_D2_mean[i][j], 2)) : 0.;
+      m_scale_D2_sigma[i][j] = (m_PP2D[i][j]>0 && m_scale_D2_sigma[i][j]/m_PP2D[i][j]-pow(m_scale_D2_mean[i][j], 2)>0) ? sqrt(m_scale_D2_sigma[i][j]/m_PP2D[i][j]-pow(m_scale_D2_mean[i][j], 2)) : 0.;
       m_z_mean[i][j] = (m_PP2D[i][j]>0) ? m_z_mean[i][j]/m_PP2D[i][j] : 0.;
-      m_z_sigma[i][j] = (m_PP2D[i][j]>0) ? sqrt(m_z_sigma[i][j]/m_PP2D[i][j]-pow(m_z_mean[i][j], 2)) : 0.;
+      m_z_sigma[i][j] = (m_PP2D[i][j]>0 && m_z_sigma[i][j]/m_PP2D[i][j]-pow(m_z_mean[i][j], 2)>0) ? sqrt(m_z_sigma[i][j]/m_PP2D[i][j]-pow(m_z_mean[i][j], 2)) : 0.;
     }
 }
 

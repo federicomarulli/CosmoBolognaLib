@@ -51,8 +51,9 @@ namespace cosmobl {
      * @brief The class ReadParameters
      *
      */
-    class ReadParameters {
-
+    class ReadParameters
+    {
+      
     public:
       
       /**
@@ -76,7 +77,7 @@ namespace cosmobl {
        * @return
        *    object of class ReadParameters
        */
-      ReadParameters (const string &parameter_file);
+      ReadParameters (const string parameter_file);
 
       /**
        * @brief
@@ -101,7 +102,7 @@ namespace cosmobl {
        *    value of the requested parameter of type T, 
        *    error message if parameter not found
        */
-      template <class T> T find (const string & key) const;
+      template <class T> T find (const string key) const;
 
       /**
        * @brief
@@ -113,7 +114,7 @@ namespace cosmobl {
        * @return
        *    value associated to key, or default_value if parameter not found
        */
-      template <class T> T find (const string & key, T & default_value) const;
+      template <class T> T find (const string key, const T default_value) const;
       
       ///@}
 
@@ -131,43 +132,44 @@ namespace cosmobl {
        * @return
        *    input string with treading and leading white spaces removed
        */
-      string m_trim (string & inStr);
+      string m_trim (const string inStr);
 
     }; // class ReadParameters
 
     
     /// template method to get the parameter value in the requested T type
-    template <class T> T ReadParameters::find (const string & key) const {
-      T value;
-      
-      if (m_parameters.find(key) != m_parameters.end()) {
-	stringstream tmpVal(m_parameters.at(key));
-	tmpVal >> std::boolalpha >> value ;
-
+    template <class T> T ReadParameters::find (const string key) const
+      {
+	T value;
+	
+	if (m_parameters.find(key) != m_parameters.end()) {
+	  stringstream tmpVal(m_parameters.at(key));
+	  tmpVal >> std::boolalpha >> value ;
+	}
+	else {
+	  string errorMsg = "[ReadParameters] Parameter "+key+" not found";
+	  ErrorCBL(errorMsg); return 0;
+	}
+	
+	return value;
       }
-      else {
-	string errorMsg = "[ReadParameters] Parameter "+key+" not found";
-	ErrorCBL(errorMsg); return 0;
-      }
-
-      return value;
-    }
-  
+    
     /// template method to get the parameter value in the requested T type with default
-    template <class T> T ReadParameters::find (const string & key, T & default_value) const {
-
-      T value;
-      if (m_parameters.find(key) != m_parameters.end()) {
-	stringstream tmpVal(m_parameters.at(key));
-	tmpVal >> std::boolalpha >> value;
-
-      } else {
-	std::cout <<"Parameter " << key << " not found. Using default " << default_value << ::std::endl;
-	value = default_value;
+    template <class T> T ReadParameters::find (const string key, const T default_value) const
+      {
+	T value;
+	
+	if (m_parameters.find(key) != m_parameters.end()) {
+	  stringstream tmpVal(m_parameters.at(key));
+	  tmpVal >> std::boolalpha >> value;
+	}
+	else {
+	  coutCBL <<"Parameter " << key << " not found --> using default: " << default_value << std::endl;
+	  value = default_value;
+	}
+	
+	return value;
       }
-
-      return value;
-    }
     
   } // namespace glob
 } // namespace cosmobl

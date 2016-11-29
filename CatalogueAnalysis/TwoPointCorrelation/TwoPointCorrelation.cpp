@@ -441,7 +441,7 @@ void cosmobl::twopt::TwoPointCorrelation::count_pairs_region (const shared_ptr<C
     ErrorCBL("Error in count_pairs_region of TwoPointCorrelation.cpp, no such type of pair dimension");
     break;
   }
-
+  
  
   // finalise the computation of the extra information
   if (m_compute_extra_info) {
@@ -567,7 +567,7 @@ void cosmobl::twopt::TwoPointCorrelation::count_allPairs_region (vector<shared_p
     file_regions = "dr_regions.dat";
     
     if (count_dr) {
-      count_pairs_region(m_data, ChM_random, m_dr, dr_regions, false, tcount);
+      count_pairs_region(m_data, ChM_random, m_dr, dr_regions, true, tcount);
       if (dir_output_pairs!=par::defaultString) {
 	write_pairs(m_dr, dir_output_pairs, file);
 	write_pairs(dr_regions, dir_output_pairs, file_regions);

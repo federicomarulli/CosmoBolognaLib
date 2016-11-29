@@ -143,7 +143,7 @@ void cosmobl::twopt::TwoPointCorrelation_deprojected::measureJackknife (const st
 
     if (dir_output_resample != par::defaultString && dir_output_resample != "") {
       string file = "xi_deprojected_Jackknife_"+conv(i, par::fINT)+".dat";
-      data[i]->write(dir_output_resample, file, "rp", "xi_deprojected", 0);
+      data[i]->write(dir_output_resample, file, "[1] separation at the bin centre # [2] deprojected two-point correlation function # [3] error", 0);
     }
   }
 
@@ -186,7 +186,7 @@ void cosmobl::twopt::TwoPointCorrelation_deprojected::measureBootstrap (const in
 
     if (dir_output_resample != par::defaultString && dir_output_resample != "") {
       string file = "xi_deprojected_Bootstrap_"+conv(i, par::fINT)+".dat";
-      data[i]->write(dir_output_resample, file, "rp", "xi_deprojected", 0);
+      data[i]->write(dir_output_resample, file, "[1] separation at the bin centre # [2] deprojected two-point correlation function # [3] error", 0);
     }
   }
   

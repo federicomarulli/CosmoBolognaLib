@@ -92,5 +92,5 @@ void cosmobl::data::Data1D_extra::write (const string dir, const string file, co
     fout << endl;
   }
   
-  fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl;
+  fout.close(); cout << endl ; coutCBL << endl << "I wrote the file: " << file_out << endl;
 }

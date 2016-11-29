@@ -93,12 +93,18 @@ namespace cosmobl {
       /// mass
       _Mass_, 
 
-      /// richness
-      _Richness_, 
-
       /// magnitude
-      _Magnitude_, 
+      _Magnitude_,
 
+      /// star formation rate
+      _SFR_,
+
+      /// specific star formation rate
+      _sSFR_, 
+
+      /// richness
+      _Richness_,
+      
       /// velocity along the x direction
       _Vx_, 
 
@@ -113,6 +119,15 @@ namespace cosmobl {
       
       /// radius 
       _Radius_,
+
+      /// densityContrast
+      _densityContrast_,
+
+      /// centralDensity
+      _centralDensity_,
+
+      /// ID
+      _ID_,
       
       /// xx displacement
       _X_displacement_,
@@ -127,7 +142,6 @@ namespace cosmobl {
       _Generic_
       
     };
-
     
     /**
      *  @enum RandomType
@@ -152,6 +166,34 @@ namespace cosmobl {
 
       /// random catalogue for VIPERS
       _createRandom_VIPERS_
+      
+    };
+  
+    /**
+     *  @enum VoidAlgorithm
+     *  @brief the algorithm used to look for Voids
+     */
+    enum VoidAlgorithm {
+       
+       /// Lagrangian Zel'dovich approximation Void algorithm used to move particles
+      _LaZeVo_,
+
+       /// Random Induced walk Void Algorithm used to move particles
+      _RIVA_      
+      
+    };
+    
+    /**
+     *  @enum CharEncode
+     *  @brief character encoding of input file
+     */
+    enum CharEncode {
+    
+      /// Format ASCII file
+      _ascii_,
+      
+      /// Format binary file
+      _binary_
       
     };
     
@@ -296,9 +338,12 @@ namespace cosmobl {
        *
        *  @param inputUnits the units of the input coordinates
        *
+       *  @param charEncode character encoding of input file,
+       *  ascii or binary
+       * 
        *  @return an object of class Catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1=1, const int col2=2, const int col3=3, const int colWeight=-1, const int colRegion=-1, const double nSub=1.1, const double fact=1., const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_);
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1=1, const int col2=2, const int col3=3, const int colWeight=-1, const int colRegion=-1, const double nSub=1.1, const double fact=1., const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const CharEncode charEncode=_ascii_);
 
       /**
        *  @brief constructor, reading a file with coordinates
@@ -315,11 +360,11 @@ namespace cosmobl {
        *  @param cosm object of class Cosmology 
        *
        *  @param inputUnits the units of the input coordinates
-       *
+       * 
        *  @return an object of class Catalogue
        */
       Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm, const CoordUnits inputUnits=_radians_)
-	: Catalogue(objType, coordType, file, 1, 2, 3, -1, -1, 1.1, 1., cosm, inputUnits) {}
+	: Catalogue(objType, coordType, file, 1, 2, 3, -1, -1, 1.1, 1., cosm, inputUnits, _ascii_) {}
 
       /**
        *  @brief constructor, using vectors of generic objects
@@ -352,16 +397,16 @@ namespace cosmobl {
        *
        *  @param target_catalogue the target catalogue
        *
-       *  @param var_name1 the type of variable, specified
+       *  @param var_name the type of variable, specified
        *  cosmobl::catalogue::Var enumeration
        *
-       *  @param nbin1 the binning for the variable
+       *  @param nbin the binning for the variable
        *
        *  @param seed the seed for random number generation
        *
        *  @return an object of class Catalogue
        */
-      Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const Var var_name1, const int nbin1, const int seed);
+      Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const Var var_name, const int nbin, const int seed=3213);
 
       /**
        *  @brief constructor, creating a catalogue by matching the
@@ -385,7 +430,7 @@ namespace cosmobl {
        *
        *  @return an object of class Catalogue
        */
-      Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const cosmobl::catalogue::Var var_name1, const int nbin1, const cosmobl::catalogue::Var var_name2, const int nbin2, const int seed);
+      Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const cosmobl::catalogue::Var var_name1, const int nbin1, const cosmobl::catalogue::Var var_name2, const int nbin2, const int seed=3213);
 
       /**
        * @brief default destructor
@@ -401,21 +446,6 @@ namespace cosmobl {
        */
       ///@{
       
-      /**
-       *  @brief constructor that creates a random catalogue in a
-       *  cubic box
-       *  @param type the type of random catalogue, that must be set
-       *  to \_createRandom_box\_
-       *  @param catalogue object of class Catalogue
-       *  @param N_R fraction of random objects, i.e.
-       *  N<SUB>R</SUB>=N<SUB>random</SUB>/N<SUB>objects</SUB>
-       *  @return an object of class Catalogue
-       *
-       *  @warning the input parameter \e type is used only to make
-       *  the constructor type explicit
-       */
-      Catalogue (const RandomType type, const Catalogue catalogue, const double N_R);
-
       /**
        *  @brief constructor that creates a random catalogue in a
        *  cubic box, warped by geometric distortions
@@ -457,7 +487,8 @@ namespace cosmobl {
        *  Dec coordinates of the input catalogue
        *
        *  @param type the type of random catalogue, that must be set
-       *  to \_createRandom_square\_ or \_createRandom_shuffle\_
+       *  to either \_createRandom_box\_, \_createRandom_square\_ or
+       *  \_createRandom_shuffle\_
        *
        *  @param catalogue object of class Catalogue
        *
@@ -482,7 +513,7 @@ namespace cosmobl {
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
        */
-      Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology &cosm={}, const bool conv=false, const double sigma=0., const int seed=3213);
+      Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin=10, const cosmology::Cosmology &cosm={}, const bool conv=false, const double sigma=0., const int seed=3213);
       
       /**
        *  @brief constructor that creates a random catalogue in a cone
@@ -563,6 +594,18 @@ namespace cosmobl {
   
       ///@}
 
+      /**
+       *  @name Constructors of Void catalogues 
+       */
+      ///@{
+
+      /// @cond extvoid
+      
+      Catalogue (const VoidAlgorithm algorithm, const Catalogue halo_catalogue, const vector<string> file, const double nSub, const int n_rnd, const string mode, const double rmax, const int cellsize);
+      
+      /// @endcond
+
+      ///@} 
     
       /**
        *  @name Member functions used to get the private members and thier properties
@@ -748,6 +791,27 @@ namespace cosmobl {
        * @return radius of the i-th object
        */
       double radius (const int i) const { return m_object[i]->radius(); }
+
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_densityContrast
+       * @param i the object index
+       * @return density contrast of the i-th object
+       */
+      double densityContrast (const int i) const { return m_object[i]->densityContrast(); }
+
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_centralDensity
+       * @param i the object index
+       * @return central density of the i-th object
+       */
+      double centralDensity (const int i) const { return m_object[i]->centralDensity(); }
+
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_ID
+       * @param i the object index
+       * @return ID of the i-th object
+       */
+      int ID (const int i) const { return m_object[i]->ID(); }
       
       /**
        * @brief get the private member
@@ -1076,14 +1140,18 @@ namespace cosmobl {
       void write_obs_coordinates (const string outputFile) const;
 
       /**
-       * @brief write both the comoving and polar coordinates, and the
-       * regions (if present) of the catalogue to an output file
+       *  @brief write both the comoving and polar coordinates, and the
+       *  regions (if present) of the catalogue to an output file
        *
-       * @param outputFile the name of the output file
-       * @return none
+       *  @param outputFile the name of the output file
+       *
+       *  @param var_name vector containing the variable names to be
+       *  written
+       *
+       *  @return none
        */
-      void write_data (const string outputFile) const;
-
+      void write_data (const string outputFile, const vector<Var> var_name={}) const;
+      
       /**
        * @brief get the distrance between the i-th object of the
        * catalogue and another object

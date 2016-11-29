@@ -11,6 +11,8 @@
 #include "Data.h"
 #include "Data1D.h"
 #include "Data2D.h"
+#include "Data1D_extra.h"
+#include "Data2D_extra.h"
 #include "Field3D.h"
 
   class EnumTypes {
@@ -21,7 +23,7 @@
     enum {_1D_, _2D_}; 
     enum {_linear_, _logarithmic_};
     enum {_comovingCoordinates_, _observedCoordinates_};
-    enum {_1D_data_, _2D_data_, _1D_collection_data_}; 
+    enum {_1D_data_, _2D_data_, _1D_collection_data_, _1D_data_extra_, _2D_data_extra_}; 
     enum {_UniformPrior_, _GaussianPrior_, _PoissonPrior_, _InterpolatedPrior_, _DiscretePrior_};
     enum {_Likelihood_NotSet_, _GaussianLikelihood_Model_, _GaussianLikelihood_Error_, _GaussianLikelihood_Covariance_, _UserDefinedLikelihood_};
     enum {_angular_lin_, _angular_log_, _comoving_lin_, _comoving_log_, _comovingCartesian_linlin_, _comovingCartesian_linlog_, _comovingCartesian_loglin_, _comovingCartesian_loglog_, _comovingPolar_linlin_, _comovingPolar_linlog_, _comovingPolar_loglin_, _comovingPolar_loglog_};
@@ -31,8 +33,10 @@
     enum {_comoving_theta_, _comoving_side_};
     enum {_angular_connected_, _angular_reduced_, _comoving_connected_, _comoving_reduced_};
     enum {_GenericObject_, _RandomObject_, _Mock_, _Halo_, _Galaxy_, _Cluster_, _Void_}; 
-    enum {_X_, _Y_, _Z_, _RA_, _Dec_, _Redshift_, _Dc_, _Weight_, _Mass_, _Richness_, _Magnitude_, _Vx_, Vy, Vz, _Region_, _Radius_, _Generic_};
+    enum {_X_, _Y_, _Z_, _RA_, _Dec_, _Redshift_, _Dc_, _Weight_, _Mass_, _Magnitude_, _SFR_, _sSFR_, _Richness_, _Vx_, Vy, Vz, _Region_, _Radius_, _Generic_};
     enum {_createRandom_box_, _createRandom_square_, _createRandom_shuffle_, _createRandom_cone_, _createRandom_MANGLE_, _createRandom_VIPERS_};
+    enum {_LaZeVo_, _RIVA_};
+    enum {_ascii_, _binary_};
   };
   
   string cosmobl::par::DirCosmo = "~/CosmoBolognaLib/";
@@ -105,6 +109,8 @@
 %include "Data.h"
 %include "Data1D.h"
 %include "Data2D.h"
+%include "Data1D_extra.h"
+%include "Data2D_extra.h"
 %include "Field3D.h"
 
 static const double yotta = 1.e24;
@@ -182,7 +188,7 @@ class EnumTypes {
   enum {_1D_, _2D_}; 
   enum {_linear_, _logarithmic_};
   enum {_comovingCoordinates_, _observedCoordinates_};
-  enum {_1D_data_, _2D_data_, _1D_collection_data_}; 
+  enum {_1D_data_, _2D_data_, _1D_collection_data_, _1D_data_extra_, _2D_data_extra_}; 
   enum {_UniformPrior_, _GaussianPrior_, _PoissonPrior_, _InterpolatedPrior_, _DiscretePrior_};
   enum {_Likelihood_NotSet_, _GaussianLikelihood_Model_, _GaussianLikelihood_Error_, _GaussianLikelihood_Covariance_, _UserDefinedLikelihood_};
   enum {_angular_lin_, _angular_log_, _comoving_lin_, _comoving_log_, _comovingCartesian_linlin_, _comovingCartesian_linlog_, _comovingCartesian_loglin_, _comovingCartesian_loglog_, _comovingPolar_linlin_, _comovingPolar_linlog_, _comovingPolar_loglin_, _comovingPolar_loglog_};
@@ -192,7 +198,9 @@ class EnumTypes {
   enum {_comoving_theta_, _comoving_side_};
   enum {_angular_connected_, _angular_reduced_, _comoving_connected_, _comoving_reduced_};
   enum {_GenericObject_, _RandomObject_, _Mock_, _Halo_, _Galaxy_, _Cluster_, _Void_}; 
-  enum {_X_, _Y_, _Z_, _RA_, _Dec_, _Redshift_, _Dc_, _Weight_, _Mass_, _Richness_, _Magnitude_, _Vx_, Vy, Vz, _Region_, _Radius_, _Generic_};
+  enum {_X_, _Y_, _Z_, _RA_, _Dec_, _Redshift_, _Dc_, _Weight_, _Mass_, _Magnitude_, _SFR_, _sSFR_, _Richness_, _Vx_, Vy, Vz, _Region_, _Radius_, _Generic_};
   enum {_createRandom_box_, _createRandom_square_, _createRandom_shuffle_, _createRandom_cone_, _createRandom_MANGLE_, _createRandom_VIPERS_};
+  enum {_LaZeVo_, _RIVA_};
+  enum {_ascii_, _binary_};
 };
   

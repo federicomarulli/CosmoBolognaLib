@@ -113,8 +113,8 @@ namespace cosmobl {
 
 	     m_xmin = Min(_xg);
 	     m_xmax = Max(_xg);
-             m_spline = gsl_spline_alloc (m_type, m_size); 
-             gsl_spline_init (m_spline, _xg.data(), _yg.data(), m_size);
+             m_spline = gsl_spline_alloc(m_type, m_size); 
+             gsl_spline_init(m_spline, _xg.data(), _yg.data(), m_size);
           }  
 
           void free ()
@@ -149,14 +149,14 @@ namespace cosmobl {
 	    return YY;
 	  }
 
-	  double D1(double xx)
+	  double D1v (double xx)
 	  {
-	     return gsl_spline_eval_deriv(m_spline, xx,m_acc);
+	    return gsl_spline_eval_deriv(m_spline, xx,m_acc);
 	  }
 
-	  double D2(double xx)
+	  double D2v (double xx)
 	  {
-	     return gsl_spline_eval_deriv2(m_spline, xx,m_acc);
+	    return gsl_spline_eval_deriv2(m_spline, xx,m_acc);
 	  }
 
 	  double integrate_qag (const double a, const double b, const double prec=1.e-2, const int limit_size=6, const int rule=6)

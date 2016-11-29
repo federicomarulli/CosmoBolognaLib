@@ -21,8 +21,8 @@
 /**
  *  @file ReadParameters/ReadParameters.cpp
  *
- *  @brief Methods of the class ReadParameters used to read 
- *  parameter files (*.ini)
+ *  @brief Methods of the class ReadParameters used to read parameter
+ *  files (*.ini)
  *
  *  This file contains the implementation of the methods of the class
  *  ReadParameters used to read a generic parameter file
@@ -41,7 +41,7 @@ using namespace glob;
 // ============================================================================
 
 
-cosmobl::glob::ReadParameters::ReadParameters (const string &parameter_file)
+cosmobl::glob::ReadParameters::ReadParameters (const string parameter_file)
 {      
   // open the input parameter file
   ifstream fin(parameter_file.c_str()); checkIO(fin, parameter_file);
@@ -75,7 +75,7 @@ cosmobl::glob::ReadParameters::ReadParameters (const string &parameter_file)
 // ============================================================================
 
 
-string cosmobl::glob::ReadParameters::m_trim (string &inStr)
+string cosmobl::glob::ReadParameters::m_trim (const string inStr)
 {
   return inStr.substr(inStr.find_first_not_of(' '), inStr.find_last_not_of(' ')+1);
 }

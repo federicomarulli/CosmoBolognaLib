@@ -68,7 +68,7 @@ void cosmobl::modelling::Modelling::sample_likelihood (const double xmin, const 
   set_likelihood(xmin, xmax, likelihood_type);
 
   m_likelihood->sample_stretch_move(n_chains, chain_size, seed, do_write_chain, dir_output, chain_file);
-
+  
   m_likelihood->write_chain(dir_output, chain_file, start, stop, thin);
 }
 

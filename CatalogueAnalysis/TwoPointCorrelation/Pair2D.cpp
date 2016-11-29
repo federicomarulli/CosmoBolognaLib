@@ -553,8 +553,8 @@ void cosmobl::pairs::Pair2D_comovingPolar_loglog::put (const shared_ptr<Object> 
 
 void cosmobl::pairs::Pair2D::add_data2D (const int i, const int j, const vector<double> data)
 {
-  checkDim(m_PP2D, i, j, "m_PP2D", false);
-  checkDim(data, 1, "data");
+  //checkDim(m_PP2D, i, j, "m_PP2D", false);
+  //checkDim(data, 1, "data");
   
   m_PP2D[i][j] += data[0];
 }
@@ -565,7 +565,7 @@ void cosmobl::pairs::Pair2D::add_data2D (const int i, const int j, const vector<
 
 void cosmobl::pairs::Pair2D::add_data2D (const int i, const int j, const shared_ptr<pairs::Pair> pair, const double ww)
 {
-  checkDim(m_PP2D, i, j, "m_PP2D", false);
+  //checkDim(m_PP2D, i, j, "m_PP2D", false);
   
   m_PP2D[i][j] += ww*pair->PP2D(i, j);
 }

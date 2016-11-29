@@ -67,7 +67,7 @@ vector<double> cosmobl::statistics::Model::parameter_values ()
 vector<double> cosmobl::statistics::Model::parameter_values_from_chain (const int chain, const int position)
 {  
   vector<double> parameters;
-
+  
   for (unsigned int i=0; i<m_npar; i++)
     parameters.push_back(parameter(i)->chain(chain)->chain_value(position));
 

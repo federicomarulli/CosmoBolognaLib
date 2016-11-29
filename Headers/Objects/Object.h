@@ -692,7 +692,19 @@ namespace cosmobl {
        *  message if the derived object does not have this member
        */
       virtual double magnitude () const { return cosmobl::ErrorCBL("Error in magnitude() of Objech.h!"); }  
-    
+
+      /**
+       *  @brief get the private member Galaxy::m_SFR
+       *  @return the star formation rate of the galaxy
+       */
+      virtual double SFR () const { return cosmobl::ErrorCBL("Error in SFR() of Objech.h!"); }
+
+      /**
+       *  @brief get the private member Galaxy::m_sSFR
+       *  @return the specific star formation rate of the galaxy
+       */
+      virtual double sSFR () const { return cosmobl::ErrorCBL("Error in sSFR() of Objech.h!"); }
+      
       /**
        *  @brief get the member \e m_richness
        *  @return the richness of the derived object, or an error
@@ -713,6 +725,27 @@ namespace cosmobl {
        *  error message if the derived object does not have this member
        */
       virtual double radius () const { return cosmobl::ErrorCBL("Error in radius() of Objech.h!"); }
+    
+      /**
+       *  @brief get the member \e m_radius
+       *  @return the density contrast of the derived object, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double densityContrast () const { return cosmobl::ErrorCBL("Error in densityContrast() of Objech.h!"); }
+    
+      /**
+       *  @brief get the member \e m_radius
+       *  @return the central density of the derived object, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double centralDensity () const { return cosmobl::ErrorCBL("Error in radius() of centralDensity.h!"); }
+    
+      /**
+       *  @brief get the member \e m_radius
+       *  @return the ID of the derived object, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual int ID () const { return cosmobl::ErrorCBL("Error in ID() of Objech.h!"); }
 
       ///@}
 
@@ -877,7 +910,23 @@ namespace cosmobl {
        *  not have this member
        */
       virtual void set_magnitude (const double magnitude=par::defaultDouble) { (void)magnitude; cosmobl::ErrorCBL("Error in set_magnitude() of Objech.h!"); }  
+
+      /**
+       *  @brief set the private member Galaxy::m_SFR
+       *  @param SFR the star formation rate of the galaxy
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_SFR (const double SFR=par::defaultDouble) { (void)SFR; cosmobl::ErrorCBL("Error in set_SFR() of Objech.h!"); }  
     
+      /**
+       *  @brief set the private member Galaxy::m_sSFR
+       *  @param sSFR the specific star formation rate of the galaxy
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_sSFR (const double sSFR=par::defaultDouble) { (void)sSFR; cosmobl::ErrorCBL("Error in set_sSFR() of Objech.h!"); }  
+      
       /**
        *  @brief set the member \e m_richness
        *  @param richness the richness 
@@ -901,6 +950,30 @@ namespace cosmobl {
        *  not have this member
        */
       virtual void set_radius (const double radius=par::defaultDouble) { (void)radius; cosmobl::ErrorCBL("Error in set_radius() of Objech.h!"); }
+    
+      /**
+       *  @brief set the member \e m_densityContrast
+       *  @param densityContrast the density contrast
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_densityContrast (const double densityContrast=par::defaultDouble) { (void)densityContrast; cosmobl::ErrorCBL("Error in set_densityContrast() of Objech.h!"); }
+    
+      /**
+       *  @brief set the member \e m_centralDensity
+       *  @param centralDensity the central density
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_centralDensity (const double centralDensity=par::defaultDouble) { (void)centralDensity; cosmobl::ErrorCBL("Error in set_centralDensity() of Objech.h!"); }
+    
+      /**
+       *  @brief set the member \e m_ID
+       *  @param ID the ID
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_ID (const int ID=par::defaultInt) { (void)ID; cosmobl::ErrorCBL("Error in set_ID() of Objech.h!"); }
 
       ///@}
       
