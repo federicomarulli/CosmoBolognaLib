@@ -168,20 +168,6 @@ namespace cosmobl {
       _createRandom_VIPERS_
       
     };
-  
-    /**
-     *  @enum VoidAlgorithm
-     *  @brief the algorithm used to look for Voids
-     */
-    enum VoidAlgorithm {
-       
-       /// Lagrangian Zel'dovich approximation Void algorithm used to move particles
-      _LaZeVo_,
-
-       /// Random Induced walk Void Algorithm used to move particles
-      _RIVA_      
-      
-    };
     
     /**
      *  @enum CharEncode
@@ -594,18 +580,6 @@ namespace cosmobl {
   
       ///@}
 
-      /**
-       *  @name Constructors of Void catalogues 
-       */
-      ///@{
-
-      /// @cond extvoid
-      
-      Catalogue (const VoidAlgorithm algorithm, const Catalogue halo_catalogue, const vector<string> file, const double nSub, const int n_rnd, const string mode, const double rmax, const int cellsize);
-      
-      /// @endcond
-
-      ///@} 
     
       /**
        *  @name Member functions used to get the private members and thier properties
