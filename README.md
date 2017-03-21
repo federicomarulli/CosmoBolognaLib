@@ -27,3 +27,5 @@ V3.0 Numerical Recipes fully substituted by GSL functions; classes to
      measure and model two-point statistics improved
 
 V3.1 bugs fixed in clustering measurements and modelling
+
+V3.2 new functions to model the void size function and to clean void catalogues (Ronconi & Marulli 2017)
