@@ -221,7 +221,7 @@ double cosmobl::glob::bias_kernel2 (const double xx, void *params)
 {
   struct cosmobl::glob::STR_NG *pp = (struct cosmobl::glob::STR_NG *) params;
   
-  Cosmology cosm (pp->Omega_matter, pp->Omega_baryon, pp->Omega_neutrinos, pp->massless_neutrinos, pp->massive_neutrinos, pp->Omega_DE, pp->Omega_radiation, pp->hh, pp->scalar_amp, pp->n_spec, pp->w0, pp->wa, pp->fNL, pp->type_NG, pp->model, pp->unit);
+  Cosmology cosm (pp->Omega_matter, pp->Omega_baryon, pp->Omega_neutrinos, pp->massless_neutrinos, pp->massive_neutrinos, pp->Omega_DE, pp->Omega_radiation, pp->hh, pp->scalar_amp, pp->n_spec, pp->w0, pp->wa, pp->fNL, pp->type_NG, pp->tau, pp->model, pp->unit);
 
   int ni = 16;
   double *XX = new double[ni]; 
@@ -291,6 +291,7 @@ double cosmobl::cosmology::Cosmology::frk (const double kk, const double mass, c
   str.wa = m_wa; 
   str.fNL = m_fNL;
   str.type_NG = m_type_NG;
+  str.tau = m_tau;
   str.model = m_model;
   str.unit = m_unit;
   str.kt = kk;
@@ -366,7 +367,7 @@ double cosmobl::glob::skewness_kernel (double *kk, size_t dim, void *params)
   
   struct cosmobl::glob::STR_NG *pp = (struct cosmobl::glob::STR_NG *) params;
   
-  Cosmology cosm (pp->Omega_matter, pp->Omega_baryon, pp->Omega_neutrinos, pp->massless_neutrinos, pp->massive_neutrinos, pp->Omega_DE, pp->Omega_radiation, pp->hh, pp->scalar_amp, pp->n_spec, pp->w0, pp->wa, pp->fNL, pp->type_NG, pp->output_root, pp->unit);
+  Cosmology cosm (pp->Omega_matter, pp->Omega_baryon, pp->Omega_neutrinos, pp->massless_neutrinos, pp->massive_neutrinos, pp->Omega_DE, pp->Omega_radiation, pp->hh, pp->scalar_amp, pp->n_spec, pp->w0, pp->wa, pp->fNL, pp->type_NG, pp->tau, pp->output_root, pp->unit);
 
   int ni = 16;
   double *XX = new double[ni];

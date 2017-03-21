@@ -109,9 +109,9 @@ double cosmobl::data::Data2D::covariance (const int i1, const int i2, const int 
 // ======================================================================================
 
 
-void cosmobl::data::Data2D::read (const string input_file, const int skip_nlines)
+void cosmobl::data::Data2D::read (const string input_file, const int skipped_lines)
 {
-  (void)skip_nlines;
+  (void)skipped_lines;
   
   ErrorCBL("Error in cosmobl::data::Data2D::read : work in progress!", ExitCode::_workInProgress_);
 

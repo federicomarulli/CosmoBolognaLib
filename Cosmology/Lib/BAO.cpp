@@ -181,5 +181,5 @@ double cosmobl::cosmology::Cosmology::rs (const double redshift, const double T_
 {
   function<double(double)> integrand = bind(&Cosmology::rs_integrand, this, std::placeholders::_1, T_CMB);
   double a = 1./(1+redshift);
-  return GSL_integrate_qag(integrand,0, a)/m_H0;
+  return gsl::GSL_integrate_qag(integrand,0, a)/m_H0;
 }

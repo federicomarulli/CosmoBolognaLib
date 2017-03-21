@@ -488,7 +488,7 @@ double cosmobl::Pkl_Kaiser_integral(const int order, const double bias, const do
   Func.function = &Pkl_Kaiser_integrand;
   Func.params = &params;
 
-  return 0.5*(2*order+1)*GSL_integrate_qag(Func,-1.,1.,prec,limit_size,6);
+  return 0.5*(2*order+1)*gsl::GSL_integrate_qag(Func,-1.,1.,prec,limit_size,6);
 }
 
 
@@ -599,7 +599,7 @@ vector<double> cosmobl::Xi0(const vector<double> r, const vector<double> kk, con
       double k_max = Max(kk); 
       double prec = 1.e-3;
 
-      classfunc::func_grid_GSL Pk0_interp(kk,Pk0,"Spline");
+      glob::FuncGrid Pk0_interp(kk,Pk0,"Spline");
       params.Pkl = &Pk0_interp;
       params.l = 0;
       params.k_cut = k_cut;
@@ -607,8 +607,9 @@ vector<double> cosmobl::Xi0(const vector<double> r, const vector<double> kk, con
 
       for (int i=0;i<nbins;i++){
         params.r = r[i];
-	xi0[i] = GSL_integrate_qag(Func,k_min,k_max,prec,limit_size,6)*f0;
+	xi0[i] = gsl::GSL_integrate_qag(Func,k_min,k_max,prec,limit_size,6)*f0;
       }
+      Pk0_interp.free();
 
     }
 
@@ -654,7 +655,7 @@ vector<double> cosmobl::Xi2 (const vector<double> rr, const vector<double> kk, c
       double k_max = Max(kk); 
       double prec = 1.e-3;
 
-      classfunc::func_grid_GSL Pk2_interp(kk,Pk2,"Spline");
+      glob::FuncGrid Pk2_interp(kk,Pk2,"Spline");
       params.Pkl = &Pk2_interp;
       params.l = 2;
       params.k_cut = k_cut;
@@ -662,8 +663,9 @@ vector<double> cosmobl::Xi2 (const vector<double> rr, const vector<double> kk, c
 
       for (int i=0; i<nbins; i++) {
         params.r = rr[i];
-	xi2[i] = GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6)*f2;
+	xi2[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6)*f2;
       }
+      Pk2_interp.free();
 
     }
 
@@ -709,7 +711,7 @@ vector<double> cosmobl::Xi4(const vector<double> rr, const vector<double> kk, co
       double k_max = Max(kk); 
       double prec = 1.e-3;
 
-      classfunc::func_grid_GSL Pk4_interp(kk, Pk4, "Spline");
+      glob::FuncGrid Pk4_interp(kk, Pk4, "Spline");
       params.Pkl = &Pk4_interp;
       params.l = 4;
       params.k_cut = k_cut;
@@ -717,8 +719,9 @@ vector<double> cosmobl::Xi4(const vector<double> rr, const vector<double> kk, co
 
       for (int i=0; i<nbins; i++) {
         params.r = rr[i];
-	xi4[i] = GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6)*f4;
+	xi4[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6)*f4;
       }
+      Pk4_interp.free();
 
     }
 
@@ -729,14 +732,89 @@ vector<double> cosmobl::Xi4(const vector<double> rr, const vector<double> kk, co
 // ============================================================================
 
 
-vector<vector<double>> cosmobl::Xi02_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const vector<double> rl, const vector<double> Xi0, const vector<double> Xi2)
+vector<vector<double>> cosmobl::Xi02_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const shared_ptr<glob::FuncGrid> xi0_interp, const shared_ptr<glob::FuncGrid> xi2_interp)
 {
-  classfunc::func_grid_GSL xi0_interp(rl, Xi0, "Spline");
-  classfunc::func_grid_GSL xi2_interp(rl, Xi2, "Spline");
-
   vector<double> xi0_new, xi2_new;
 
   if ((alpha_perpendicular-1)<1.e-30 && (alpha_parallel-1.)<1.e-30)
+    for (size_t i=0; i<rr.size(); i++) {
+      xi0_new.push_back(xi0_interp->operator()(rr[i]));
+      xi2_new.push_back(xi2_interp->operator()(rr[i]));
+    }
+
+  else {
+
+    double nbin_mu = 50.;
+    vector<double> mu = linear_bin_vector(nbin_mu, 0., 1.);
+    vector<double> xismu_0(nbin_mu, 0), xismu_2(nbin_mu, 0);
+
+    for (size_t j=0; j<rr.size(); j++) {
+      for (size_t i=0; i<nbin_mu; i++) {
+	double alpha = sqrt(pow(alpha_parallel*mu[i], 2)+pow(alpha_perpendicular, 2)*(1.-mu[i]*mu[i]));
+	double mu_new = mu[i]*alpha_parallel/alpha;
+	double s_new = alpha*rr[i];
+	xismu_0[i] = xi0_interp->operator()(s_new)+xi2_interp->operator()(s_new)*legendre_polynomial(mu_new, 2);
+	xismu_2[i] = xismu_0[i]*legendre_polynomial(mu[i], 2);
+      }
+      xi0_new.push_back(trapezoid_integration(mu, xismu_0));
+      xi2_new.push_back(5*trapezoid_integration(mu, xismu_2));
+    }
+  }
+
+  return {xi0_new, xi2_new};
+}
+
+
+// ============================================================================
+
+
+vector<vector<double>> cosmobl::Xi024_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const shared_ptr<glob::FuncGrid> xi0_interp, const shared_ptr<glob::FuncGrid> xi2_interp, const shared_ptr<glob::FuncGrid> xi4_interp)
+{
+  vector<double> xi0_new, xi2_new, xi4_new;
+
+  if ((alpha_perpendicular)==1 && (alpha_parallel)==1)
+    for (size_t i=0; i<rr.size(); i++) {
+      xi0_new.push_back(xi0_interp->operator()(rr[i]));
+      xi2_new.push_back(xi2_interp->operator()(rr[i]));
+      xi4_new.push_back(xi4_interp->operator()(rr[i]));
+    }
+
+  else {
+
+    double nbin_mu = 50.;
+    vector<double> mu = linear_bin_vector(nbin_mu, 0., 1.);
+    vector<double> xismu_0(nbin_mu, 0), xismu_2(nbin_mu, 0), xismu_4(nbin_mu, 0);
+
+    for (size_t j=0; j<rr.size(); j++) {
+      for (size_t i=0; i<nbin_mu; i++) {
+	double alpha = sqrt(pow(alpha_parallel*mu[i], 2)+pow(alpha_perpendicular, 2)*(1.-mu[i]*mu[i]));
+	double mu_new = mu[i]*alpha_parallel/alpha;
+	double s_new = alpha*rr[j];
+	xismu_0[i] = xi0_interp->operator()(s_new)+xi2_interp->operator()(s_new)*legendre_polynomial(mu_new, 2)+xi4_interp->operator()(s_new)*legendre_polynomial(mu_new, 4);
+	xismu_2[i] = xismu_0[i]*legendre_polynomial(mu[i], 2);
+	xismu_4[i] = xismu_0[i]*legendre_polynomial(mu[i], 4);
+      }
+      xi0_new.push_back(trapezoid_integration(mu, xismu_0));
+      xi2_new.push_back(5*trapezoid_integration(mu, xismu_2));
+      xi4_new.push_back(9*trapezoid_integration(mu, xismu_4));
+
+    }
+  }
+
+  return {xi0_new, xi2_new, xi4_new};
+}
+
+// ============================================================================
+
+
+vector<vector<double>> cosmobl::Xi02_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const vector<double> rl, const vector<double> Xi0, const vector<double> Xi2)
+{
+  glob::FuncGrid xi0_interp(rl, Xi0, "Spline");
+  glob::FuncGrid xi2_interp(rl, Xi2, "Spline");
+
+  vector<double> xi0_new, xi2_new;
+
+  if (alpha_perpendicular == 1 && alpha_parallel == 1)
     for (size_t i=0; i<rr.size(); i++) {
       xi0_new.push_back(xi0_interp(rr[i]));
       xi2_new.push_back(xi2_interp(rr[i]));
@@ -761,6 +839,9 @@ vector<vector<double>> cosmobl::Xi02_AP (const double alpha_perpendicular, const
     }
   }
 
+  xi0_interp.free();
+  xi2_interp.free();
+
   return {xi0_new, xi2_new};
 }
 
@@ -770,9 +851,9 @@ vector<vector<double>> cosmobl::Xi02_AP (const double alpha_perpendicular, const
 
 vector<vector<double>> cosmobl::Xi024_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const vector<double> rl, const vector<double> Xi0, const vector<double> Xi2, const vector<double> Xi4)
 {
-  classfunc::func_grid_GSL xi0_interp(rl, Xi0, "Spline");
-  classfunc::func_grid_GSL xi2_interp(rl, Xi2, "Spline");
-  classfunc::func_grid_GSL xi4_interp(rl, Xi4, "Spline");
+  glob::FuncGrid xi0_interp(rl, Xi0, "Spline");
+  glob::FuncGrid xi2_interp(rl, Xi2, "Spline");
+  glob::FuncGrid xi4_interp(rl, Xi4, "Spline");
 
   vector<double> xi0_new, xi2_new, xi4_new;
 
@@ -816,6 +897,28 @@ vector<vector<double>> cosmobl::Xi024_AP (const double alpha_perpendicular, cons
 // ============================================================================
 
 
+vector<vector<double>> cosmobl::XiWedges_AP (const vector<double> mu_min, const vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const shared_ptr<glob::FuncGrid> xi0_interp, const shared_ptr<glob::FuncGrid> xi2_interp, const shared_ptr<glob::FuncGrid> xi4_interp)
+{
+  vector<vector<double> > xi_multipoles = cosmobl::Xi024_AP(alpha_perpendicular, alpha_parallel, rr, xi0_interp, xi2_interp, xi4_interp);
+  vector<vector<double> > xi_wedges(mu_min.size(), vector<double>(rr.size(), 0));
+
+  vector<vector<double> > legendre_integral(mu_min.size(), vector<double>(3, 0));
+
+  for(size_t j=0; j<mu_min.size(); j++) {
+    double leg_int_0 = Legendre_polynomial_mu_average(0, mu_min[j], delta_mu[j]);
+    double leg_int_2 = Legendre_polynomial_mu_average(2, mu_min[j], delta_mu[j]);
+    double leg_int_4 = Legendre_polynomial_mu_average(4, mu_min[j], delta_mu[j]);
+    for (size_t i=0; i<rr.size(); i++)
+      xi_wedges[j][i] = xi_multipoles[0][i]*leg_int_0+xi_multipoles[1][i]*leg_int_2+xi_multipoles[2][i]*leg_int_4;
+  }
+
+  return xi_wedges;
+}
+
+
+// ============================================================================
+
+
 vector<vector<double>> cosmobl::XiWedges_AP (const vector<double> mu_min, const vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const vector<double> rl, const vector<double> Xi0, const vector<double> Xi2, const vector<double> Xi4)
 {
   vector<vector<double> > xi_multipoles = cosmobl::Xi024_AP(alpha_perpendicular, alpha_parallel, rr, rl, Xi0, Xi2, Xi4);
@@ -852,9 +955,9 @@ vector< vector<double> > cosmobl::sigma2_k (const double nObjects, const double 
 
   params.orders = orders;
 
-  vector<classfunc::func_grid_GSL> Pk_multipoles_interp;
+  vector<glob::FuncGrid> Pk_multipoles_interp;
   for(size_t i=0;i<n_orders;i++){
-    Pk_multipoles_interp.push_back(classfunc::func_grid_GSL(kk,Pk_multipoles[i],"Spline"));
+    Pk_multipoles_interp.push_back(glob::FuncGrid(kk,Pk_multipoles[i],"Spline"));
   }
 
   params.Pk_multipoles_interp = Pk_multipoles_interp;
@@ -871,7 +974,7 @@ vector< vector<double> > cosmobl::sigma2_k (const double nObjects, const double 
       int index = j+n_orders*i;
       for(size_t k=0;k<kk.size();k++){
 	params.kk = kk[k];
-	double Int = GSL_integrate_qag(Func,-1,1.,prec,limit_size,6);
+	double Int = gsl::GSL_integrate_qag(Func,-1,1.,prec,limit_size,6);
 	sigma2[index][k] = (2*orders[i]+1)*(2*orders[j]+1)*Int/Volume;
       }
     }
@@ -923,16 +1026,16 @@ void cosmobl::Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>
   for (int l=0; l<n_orders; l++) {
     int index = l+n_orders*l;
 
-    classfunc::func_grid_GSL s2(kk, sigma2[index], "Spline");
+    glob::FuncGrid s2(kk, sigma2[index], "Spline");
     params.s2 = &s2;
     for (int i=0; i<nbins; i++) {
-      classfunc::func_grid_GSL jl1r1(kk, jr[l][i], "Spline");
+      glob::FuncGrid jl1r1(kk, jr[l][i], "Spline");
       for (int j=i; j<nbins; j++) {
-	classfunc::func_grid_GSL jl2r2(kk, jr[l][j], "Spline");
+	glob::FuncGrid jl2r2(kk, jr[l][j], "Spline");
 	params.jl1r1 = &jl1r1;
 	params.jl2r2 = &jl2r2;
 
-	double Int = GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6);
+	double Int = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6);
 	Int = Int/(2.*par::pi*par::pi);
 	covariance[i+nbins*l][j+nbins*l] = Int;
 	covariance[j+nbins*l][i+nbins*l] = Int;
@@ -951,17 +1054,17 @@ void cosmobl::Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>
       int index = l2+n_orders*l1;
       int sign = pow(ii,orders[l1]+orders[l2]).real();
 
-      classfunc::func_grid_GSL s2(kk, sigma2[index], "Spline");
+      glob::FuncGrid s2(kk, sigma2[index], "Spline");
       params.s2 = &s2;
 
       for (int i=0; i<nbins; i++) {
-	classfunc::func_grid_GSL jl1r1(kk, jr[l1][i], "Spline");
+	glob::FuncGrid jl1r1(kk, jr[l1][i], "Spline");
 	for (int j=0; j<nbins; j++) {
-	  classfunc::func_grid_GSL jl2r2(kk, jr[l2][j], "Spline");
+	  glob::FuncGrid jl2r2(kk, jr[l2][j], "Spline");
 	  params.jl1r1 = &jl1r1;
 	  params.jl2r2 = &jl2r2;
 
-	  double Int = GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6);
+	  double Int = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6);
 	  Int = sign*Int/(2.*par::pi*par::pi);
 	  covariance[i+nbins*l1][j+nbins*l2] = Int;
 	  covariance[j+nbins*l2][i+nbins*l1] = Int;

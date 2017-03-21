@@ -100,21 +100,19 @@ void cosmobl::glob::GSLfunction_1D_1::minimize (double &result, const int max_it
   
   do
     {
-      iter++;
+      iter ++;
       status = gsl_min_fminimizer_iterate(s);
 
       m = gsl_min_fminimizer_x_minimum(s);
       min = gsl_min_fminimizer_x_lower(s);
       max = gsl_min_fminimizer_x_upper(s);
 
-      status 
-	= gsl_min_test_interval(min, max, 0.001, 0.0);
+      status = gsl_min_test_interval(min, max, 0.001, 0.0);
 
       if (status == GSL_SUCCESS)
-	{
-	  printf ("-----> Converged to minimum \n");
-	}
+	coutCBL << "-----> converged to a minimum" << endl;
     }
+  
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_min_fminimizer_free(s);
@@ -153,21 +151,19 @@ void cosmobl::glob::GSLfunction_1D_2::minimize (double &result, const int max_it
   
   do
     {
-      iter++;
+      iter ++;
       status = gsl_min_fminimizer_iterate(s);
 
       m = gsl_min_fminimizer_x_minimum(s);
       min = gsl_min_fminimizer_x_lower(s);
       max = gsl_min_fminimizer_x_upper(s);
 
-      status 
-	= gsl_min_test_interval(min, max, 0.001, 0.0);
+      status = gsl_min_test_interval(min, max, 0.001, 0.0);
 
       if (status == GSL_SUCCESS)
-	{
-	  printf ("-----> Converged to minimum \n");
-	}
+	coutCBL << "-----> converged to a minimum" << endl;
     }
+  
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_min_fminimizer_free(s);
@@ -225,22 +221,20 @@ void cosmobl::glob::GSLfunction_nD_1::minimize (vector<double> &result, const un
 
   do
     {
-      iter++;
+      iter ++;
       status = gsl_multimin_fminimizer_iterate(s);
 
       if (status) 
 	break;
 
-      size = gsl_multimin_fminimizer_size (s);
+      size = gsl_multimin_fminimizer_size(s);
     
-      status = gsl_multimin_test_size (size, tol);
+      status = gsl_multimin_test_size(size, tol);
 
       if (status == GSL_SUCCESS)
-	{
-	  printf ("-----> Converged to minimum \n");
-	}
-
+	coutCBL << "-----> converged to a minimum" << endl;
     }
+  
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_vector_free(ss);
@@ -295,22 +289,20 @@ void cosmobl::glob::GSLfunction_nD_1::minimize (vector<double> &result, const ve
 
   do
     {
-      iter++;
+      iter ++;
       status = gsl_multimin_fminimizer_iterate(s);
 
       if (status) 
 	break;
 
-      size = gsl_multimin_fminimizer_size (s);
+      size = gsl_multimin_fminimizer_size(s);
     
-      status = gsl_multimin_test_size (size, tol);
+      status = gsl_multimin_test_size(size, tol);
 
       if (status == GSL_SUCCESS)
-	{
-	  printf ("-----> Converged to minimum \n");
-	}
-
+	coutCBL << "-----> converged to a minimum" << endl;
     }
+  
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_vector_free(ss);
@@ -367,22 +359,20 @@ void cosmobl::glob::GSLfunction_nD_2::minimize (vector<double> &result, const un
 
   do
     {
-      iter++;
+      iter ++;
       status = gsl_multimin_fminimizer_iterate(s);
 
       if (status) 
 	break;
 
-      size = gsl_multimin_fminimizer_size (s);
+      size = gsl_multimin_fminimizer_size(s);
     
-      status = gsl_multimin_test_size (size, tol);
+      status = gsl_multimin_test_size(size, tol);
 
       if (status == GSL_SUCCESS)
-	{
-	  printf ("-----> Converged to minimum \n");
-	}
-
+	coutCBL << "-----> converged to a minimum" << endl;
     }
+  
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_vector_free(ss);
@@ -437,7 +427,7 @@ void cosmobl::glob::GSLfunction_nD_2::minimize (vector<double> &result, const ve
 
   do
     {
-      iter++;
+      iter ++;
       status = gsl_multimin_fminimizer_iterate(s);
 
       if (status) 
@@ -448,11 +438,9 @@ void cosmobl::glob::GSLfunction_nD_2::minimize (vector<double> &result, const ve
       status = gsl_multimin_test_size(size, tol);
 
       if (status == GSL_SUCCESS)
-	{
-	  printf ("-----> Converged to minimum \n");
-	}
-
+	coutCBL << "-----> converged to a minimum" << endl;
     }
+  
   while (status == GSL_CONTINUE && iter < max_iter);
 
   gsl_vector_free(ss);

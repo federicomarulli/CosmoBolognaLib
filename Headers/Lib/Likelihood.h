@@ -82,14 +82,35 @@ namespace cosmobl {
       /// model to test
       shared_ptr<Model> model;
 
+      /// index(s) of the extra info vector containing the point(s) where to evaluate the model
+      vector<int> x_index;
+
+      /// use priors in the likelihood
+      bool use_priors;
+
+      /// sign of the likelihood, used for minimization
+      int minus;
+
+      /// the number of samples
+      int nSamples;
+
+      /// the samples indipendent variables
+      vector<vector<double>> xx_multidata;
+
       /**
        *  @brief constructor
        *  @param _data pointers to the data container
        *  @param _model pointers to the model 
+       *  @param _x_index vector contaning the x indeces
        *  @return object of type STR_likelihood_parameters
        */ 
-      STR_likelihood_parameters (const shared_ptr<data::Data> _data, const shared_ptr<Model> _model)
-      : data(_data), model(_model) {}
+      STR_likelihood_parameters (const shared_ptr<data::Data> _data, const shared_ptr<Model> _model, const vector<int> _x_index={})
+      : data(_data), model(_model), minus(1), nSamples(1)
+      {
+	x_index.emplace_back(_x_index.size()>0 ? _x_index[0] : 0);
+	x_index.emplace_back(_x_index.size()>1 ? _x_index[1] : 2);
+      }
+      
     };
 
 
@@ -173,11 +194,13 @@ namespace cosmobl {
       int m_chain_size;
 
       /// number of parameters
-      bool m_npar;
+      int m_npar;
 
       /// use data covariance matrix; 0 &rarr; don't use data covariance matrix 
       /// 1 &rarr; use data covariance matrix; 
       bool m_cov;
+
+      vector<vector<double> > m_likelihood_chains;
 
       /**
        *  @brief function that write sampled parameters 
@@ -336,13 +359,33 @@ namespace cosmobl {
        *  @param nchains number of chains to sample the parameter space 
        *  @param chain_size number of step in each chain 
        *  @param seed the seed for random number generator
+       *  @param radius the radius
        *  @param do_write_chain 0 &rarr; don't write chains at each step 
        *  1 &rarr; write chains at each step
        *  @param output_dir directory of output for chains 
        *  @param output_file file of output for chains 
+       *  @param aa free parameter
        *  @return averace acceptance ratio
        */
-      double sample_stretch_move (const int nchains, const int chain_size, const int seed, bool do_write_chain = 0, const string output_dir=par::defaultString, const string output_file=par::defaultString);
+      double sample_stretch_move (const int nchains, const int chain_size, const int seed, const double radius=1.e-3, bool do_write_chain = 0, const string output_dir=par::defaultString, const string output_file=par::defaultString, const double aa=2);
+
+      /**
+       *  @brief parallel version of the function that 
+       *  samples likelihood, using stretch-move algorithm
+       *  on n-dimensional parameter space, and stores chain
+       *  parameters.
+       *  @param nchains number of chains to sample the parameter space 
+       *  @param chain_size number of step in each chain 
+       *  @param seed the seed for random number generator
+       *  @param radius the radius
+       *  @param do_write_chain 0 &rarr; don't write chains at each step 
+       *  1 &rarr; write chains at each step
+       *  @param output_dir directory of output for chains 
+       *  @param output_file file of output for chains
+       *  @param aa free parameter
+       *  @return averace acceptance ratio
+       */
+      double sample_stretch_move_parallel (const int nchains, const int chain_size, const int seed, const double radius=1.e-3, bool do_write_chain = 0, const string output_dir=par::defaultString, const string output_file=par::defaultString, const double aa=2.);
 
       /**
        *  @brief function that samples likelihood, using stretch-move
@@ -361,7 +404,7 @@ namespace cosmobl {
        *  @return averace acceptance ratio
        */
       double sample_tabulated_likelihood (const int nstep_p1, const int nstep_p2, const string interpolation_method, const int nchains, const int chain_size, const int seed, bool do_write_chain = 0, const string output_dir=par::defaultString, const string output_file=par::defaultString);
-      
+
       /**
        *  @brief function that write sampled parameters 
        *  @param output_dir directory of output for chains 

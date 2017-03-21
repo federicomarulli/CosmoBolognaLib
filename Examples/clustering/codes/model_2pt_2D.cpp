@@ -35,7 +35,7 @@ int main () {
     // ---------------- construct the random catalogue ----------------
     // ----------------------------------------------------------------
 
-    const double N_R = 1.; // random/data ratio
+    const double N_R = 3.; // random/data ratio
   
     const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
 
@@ -46,9 +46,9 @@ int main () {
 
     // binning parameters and output data
 
-    const double rMin = 0.1;  // minimum separation 
+    const double rMin = 5.;   // minimum separation 
     const double rMax = 50.;  // maximum separation 
-    const int nbins = 25;     // number of bins
+    const int nbins = 10;     // number of bins
     const double shift = 0.5; // spatial shift used to set the bin centre 
 
     const string dir = cosmobl::par::DirLoc+"../output/";

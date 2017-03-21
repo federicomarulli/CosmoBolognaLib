@@ -40,8 +40,8 @@ using namespace glob;
 // =====================================================================================
 
 
-cosmobl::cosmology::Cosmology::Cosmology (const double Omega_matter, const double Omega_baryon, const double Omega_neutrinos, const double massless_neutrinos, const int massive_neutrinos, const double Omega_DE, const double Omega_radiation, const double hh, const double scalar_amp, const double n_spec, const double w0, const double wa, const double fNL, const int type_NG, const string model, const bool unit)
-  : m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_sigma8(-1.), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_model(model), m_unit(unit)              
+cosmobl::cosmology::Cosmology::Cosmology (const double Omega_matter, const double Omega_baryon, const double Omega_neutrinos, const double massless_neutrinos, const int massive_neutrinos, const double Omega_DE, const double Omega_radiation, const double hh, const double scalar_amp, const double n_spec, const double w0, const double wa, const double fNL, const int type_NG, const double tau, const string model, const bool unit)
+  : m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_sigma8(-1.), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit)              
 {
   if (m_Omega_matter==0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::Cosmology of Cosmology.cpp: Omega_matter=0!");
 
@@ -107,7 +107,11 @@ double cosmobl::cosmology::Cosmology::value (const CosmoPar parameter) const
   case (_hh_):
     param_value = m_hh;
     break;
-  
+   
+  case (_ln_scalar_amp_):           
+    param_value = log(1.e10*m_scalar_amp);
+    break; 
+
   case (_scalar_amp_):           
     param_value = m_scalar_amp;
     break;
@@ -189,6 +193,10 @@ void cosmobl::cosmology::Cosmology::set_parameter (const CosmoPar parameter, con
 
   case (_hh_):
     set_hh(value); 
+    break;
+
+  case (_ln_scalar_amp_):           
+    set_scalar_amp(exp(value)*1.e-10);
     break;
 
   case (_scalar_amp_):           
@@ -327,8 +335,7 @@ double cosmobl::cosmology::Cosmology::DD (const double redshift) const
   // by Carroll, Press, & Turner 1992
   //return 5.*OmegaM(redshift)/(2*(1+redshift))/(1./70.+209./140.*OmegaM(redshift)-pow(OmegaM(redshift),2)/140.+pow(OmegaM(redshift),4./7.)); 
 
-  double zero = 0.;
-  return 1./(1.+redshift)*gg(redshift)/gg(zero);
+  return 1./(1.+redshift)*gg(redshift)/gg(0.);
 }
 
 
@@ -356,7 +363,7 @@ double cosmobl::cosmology::Cosmology::D_C (const double redshift) const
 
   if (m_model=="LCDM") {
     function<double(double)> integrand = bind(&Cosmology::EE_inv, this, std::placeholders::_1);
-    Dc =  GSL_integrate_qag(integrand,0, redshift); 
+    Dc =  gsl::GSL_integrate_qag(integrand,0, redshift); 
   }
   
   else {
@@ -522,7 +529,7 @@ double cosmobl::cosmology::Cosmology::Distance (const double redshift, const str
 double cosmobl::cosmology::Cosmology::lookback_time (const double redshift) const 
 {
   function<double(double)> integrand = bind(&Cosmology::EE_inv2, this, std::placeholders::_1);
-  double tt =  GSL_integrate_qag(integrand,0, redshift); 
+  double tt =  gsl::GSL_integrate_qag(integrand,0, redshift); 
 
   double Mpc = par::mega*par::pc*1.e-3; // in Km;
   double Gyr = par::giga*par::yr; // in sec
@@ -539,7 +546,7 @@ double cosmobl::cosmology::Cosmology::cosmic_time (const double redshift) const
   function<double(double)> integrand = bind(&Cosmology::EE_inv3, this, std::placeholders::_1);
   
   double aa = 1./(1.+redshift);
-  double tt =  GSL_integrate_qag(integrand,0, aa); 
+  double tt = gsl::GSL_integrate_qag(integrand,0, aa); 
 
   double Mpc = par::mega*par::pc*1.e-3; // in Km;
   double Gyr = par::giga*par::yr; // in sec
@@ -637,7 +644,7 @@ double cosmobl::cosmology::Cosmology::Redshift (const double d_c, const double z
   
   if (m_model=="LCDM") {
     function<double(double)> func = bind(&Cosmology::D_C, this, std::placeholders::_1);
-    redshift =  GSL_brent(func, d_c, z1_guess, z2_guess, prec); 
+    redshift =  gsl::GSL_root_brent(func, d_c, z1_guess, z2_guess, prec); 
   }
   
   else {
@@ -757,7 +764,7 @@ double cosmobl::cosmology::Cosmology::Redshift_time (const double time, const do
   double prec = 0.0001;
 
   function<double(double)> func = bind(&Cosmology::cosmic_time, this, std::placeholders::_1);
-  return GSL_brent(func, time, z1_guess, z2_guess, prec); 
+  return gsl::GSL_root_brent(func, time, z1_guess, z2_guess, prec); 
 }
 
 
@@ -801,7 +808,7 @@ double cosmobl::cosmology::Cosmology::max_redshift (const double Volume, const d
   double dcz2 = pow(3*Volume/Area_steradians+pow(D_C(z_min),3),1./3);
 
   function<double(double)> func = bind(&Cosmology::D_C, this, std::placeholders::_1);
-  return GSL_brent(func, dcz2, z_min, 10, 1.e-9); 
+  return gsl::GSL_root_brent(func, dcz2, z_min, 10, 1.e-9); 
 }
 
 
@@ -831,8 +838,9 @@ double cosmobl::cosmology::Cosmology::deltac (const double redshift) const
 
 double cosmobl::cosmology::Cosmology::Rho (const double Omega_matter, const double Omega_neutrinos, const bool unit1) const  
 {
-  double fact = (m_unit && unit1) ? 1. : m_hh*m_hh;
-
+  double fact = (m_unit) ? 1. : m_hh*m_hh;
+  if (unit1) fact = 1.;
+  
   //return 2.778e11*Omega_matter*fact; 
   return 2.778e11*(Omega_matter-Omega_neutrinos)*fact; // check!!!!
 }

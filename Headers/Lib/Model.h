@@ -354,6 +354,18 @@ namespace cosmobl {
        */
       Model1D (const vector<Parameter> parameters, const shared_ptr<void> fixed_parameters, const model_function_1D model) :
       Model(parameters, fixed_parameters), m_model(model) { m_2d = 0; }
+      
+      /**
+       *  @brief constructor
+       *
+       *  @param parameters list of model parameters
+       *  @param fixed_parameters list of fixed model parameters
+       *  @param model model function
+       *
+       * return object of class Model1D
+       */
+      Model1D (const vector<Parameter> parameters, const shared_ptr<void> fixed_parameters, const model_function_1D_vector model) :
+      Model(parameters, fixed_parameters), m_model_vector(model) { m_2d = 0; }
 
       /**
        *  @brief default destructor

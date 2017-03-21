@@ -1,5 +1,5 @@
 // ====================================================================
-// Example code: how to model a set of data points with a generic model
+// Example code: how to fit a set of data points with a generic model
 // ====================================================================
 
 #include "Cosmology.h"
@@ -56,7 +56,7 @@ int main () {
     likelihood.minimize_LogLikelihood(true);
 
     // sample the likelihood
-    int nchains = 20, chain_size = 10000;
+    int nchains = 10, chain_size = 10000;
     likelihood.sample_stretch_move(nchains, chain_size, 123123);
 
     // write the chain output

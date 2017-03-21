@@ -30,7 +30,11 @@ int main () {
     cout << "Third parameter in file, a float: " << parameters.find<float>("float"+par_common_name) << endl;
     cout << "Second parameter in file, an int: " << parameters.find<int>("int"+par_common_name) << endl;
     if (parameters.find<bool>("bool"+par_common_name)) cout << "The bool parameter is true." << endl;
-  
+
+    // also vectors can be read
+    vector<int> vect = parameters.find_vector<int> ("vector"+par_common_name);
+    cout << "The fifth parameter in file is a vector which contains " << vect.size() << " integers." << endl;
+    
   }
 
   catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }

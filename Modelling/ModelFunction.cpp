@@ -176,3 +176,41 @@ double cosmobl::modelling::xi2D_dispersionModel (const double rp, const double p
 }
 
 
+// ============================================================================================
+
+
+double cosmobl::modelling::HOD (const double rp, const shared_ptr<void> inputs, vector<double> parameter)
+{
+  (void)rp; (void)inputs; (void)parameter;
+  /*
+  // structure contaning the required input data
+  shared_ptr<STR_twop_model> pp = static_pointer_cast<STR_twop_model>(inputs);
+
+    
+  // ----- input parameters -----
+
+  // minimum halo mass containing a central galaxy
+  double Mmin = parameter[0];
+  
+  // scatter
+  double sigma_logM = parameter[1];
+  
+  // slope of the satellite distribution function
+  double alpha = parameter[2];
+
+  // mass parameter of the satellite distribution function
+  double M1 = parameter[3];
+
+  // mass parameter of the satellite distribution function
+  double M0 = parameter[4];
+  */
+  
+  // ----- derived parameters -----
+
+
+  // ----- HOD modelling ----- 
+  
+  // return the projected correlation function
+  return 1/*wp_HOD(rp, rad, xi)*/;
+  
+}

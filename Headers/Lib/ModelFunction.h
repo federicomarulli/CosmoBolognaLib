@@ -100,7 +100,7 @@ namespace cosmobl {
       vector<double> fiducial_xiDM;
 
       /// pointer to a function of func_grid_GSL class, used to interpolate of the two-point correlation function
-      shared_ptr<classfunc::func_grid_GSL> func_xi;
+      shared_ptr<glob::FuncGrid> func_xi;
 
       /// upper limit of integration for the projected correlation function
       double pi_max;
@@ -136,13 +136,13 @@ namespace cosmobl {
       vector<double> Xi__;
 
       /// &xi;(r) as pointer to an interpolation function
-      shared_ptr<classfunc::func_grid_GSL> funcXiR;
+      shared_ptr<glob::FuncGrid> funcXiR;
 
       /// barred &xi;(r) as pointer to an interpolation function
-      shared_ptr<classfunc::func_grid_GSL> funcXiR_;
+      shared_ptr<glob::FuncGrid> funcXiR_;
 
       /// double-barred &xi;(r) as pointer to an interpolation function
-      shared_ptr<classfunc::func_grid_GSL> funcXiR__;
+      shared_ptr<glob::FuncGrid> funcXiR__;
 
       /// 0 &rarr; linear bias; 1 &rarr; non-linear bias 
       int bias_nl;
@@ -280,6 +280,36 @@ namespace cosmobl {
      */
     double xi2D_dispersionModel (const double rp, const double pi, const shared_ptr<void> inputs, vector<double> parameter); 
 
+
+    /**
+     *  @brief Halo Occupation Distribution model for the projected
+     *  two-point correlation function function
+     *
+     *  the function computes:
+     *
+     *  \f$\w_p(r_p) = ...\f$
+     *
+     *  the model has * parameters: 
+     *    - \f$\M_{min}\f$
+     *    - \f$sigma_log_M\f$
+     *    - \f$\alpha\f$
+     *    - \f$M_1\f$
+     *    - \f$M_2\f$
+     *
+     *  the dark matter two-point correlation function is fixed and
+     *  provided in input
+     *
+     *  @param rp the scale perpendicular to the line of sight at
+     *  which the model is computed
+     *
+     *  @param inputs pointer to the structure that contains the dark
+     *  matter two-point correlation function 
+     *
+     *  @param parameter *D vector containing the input parameters
+     *
+     *  @return the model projected two-point correlation function
+     */
+    double HOD (const double rp, const shared_ptr<void> inputs, vector<double> parameter); 
   }
 }
 

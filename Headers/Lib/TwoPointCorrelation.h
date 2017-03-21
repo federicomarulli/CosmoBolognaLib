@@ -189,8 +189,12 @@ namespace cosmobl {
 	 
       /// true &rarr; compute extra information related to the pairs, such as the mean pair separation and redshift
       bool m_compute_extra_info;
+
+      /// fraction between the number of random objects in the diluted and original samples, used to improve performances in random-random pair counts
+      double m_random_dilution_fraction;
       
       ///@}
+
       
       /**
        *  @name Internal input/output member functions (customized in all the derived classes)
@@ -276,7 +280,8 @@ namespace cosmobl {
        *
        *  @param pp pointer to an object of class Pair
        *
-       *  @param pp_regions vector containing pointers to object of class Pair
+       *  @param pp_regions vector containing pointers to object of
+       *  class Pair
        *
        *  @param cross true &rarr; count the number of cross pairs
        *  (e.g. data-random pairs); false &rarr; count the number of
@@ -310,9 +315,9 @@ namespace cosmobl {
        *  pairs; false &rarr; read the number of data-data pairs from
        *  file
        *
-       *  @param count_rr true &rarr; count the number of random-random
-       *  pairs; false &rarr; read the number of random-random pairs from
-       *  file
+       *  @param count_rr true &rarr; count the number of
+       *  random-random pairs; false &rarr; read the number of
+       *  random-random pairs from file
        *
        *  @param count_dr true &rarr; count the number of data-random
        *  pairs; false &rarr; read the number of data-random pairs from
@@ -370,19 +375,20 @@ namespace cosmobl {
        *
        *  @return none
        */
-       void count_allPairs_region (vector<shared_ptr<pairs::Pair> > &dd_regions, vector<shared_ptr<pairs::Pair> > &rr_regions, vector<shared_ptr<pairs::Pair> > &dr_regions, const TwoPType type, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_);
+      void count_allPairs_region (vector<shared_ptr<pairs::Pair> > &dd_regions, vector<shared_ptr<pairs::Pair> > &rr_regions, vector<shared_ptr<pairs::Pair> > &dr_regions, const TwoPType type, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_);
 
       ///@}
 
-       /**
+      /**
        *  @name Member functions to compute the two-point correlation
        *  function
        */
       ///@{
 
-       /**
-       *  @brief measure the two-point correlation function using the
-       *  Natural Estimator
+      /**
+       *  @brief get a dataset containing the two-point correlation
+       *  function measured with the natural estimator, and its
+       *  Poisson errors
        *  
        *  @param dd pointer to an object of type Pair containing the
        *  data-data pairs
@@ -392,15 +398,20 @@ namespace cosmobl {
        *
        *  @param nData number of objects in the data catalogue
        *
+       *  @param nData_weighted weighted number of objects in the data catalogue
+       *
        *  @param nRandom number of objects in the random catalogue
+       *
+       *  @param nRandom_weighted weighted number of objects in the random catalogue
        *
        *  @return pointer to an object of type Data
        */
-      virtual shared_ptr<data::Data> NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const int nRandom) = 0;
+      virtual shared_ptr<data::Data> correlation_NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData=0, const double nData_weighted=0., const int nRandom=0, const double nRandom_weighted=0.) = 0;
 
       /**
-       *  @brief measure the two-point correlation function using the
-       *  Landy-Szalay estimator
+       *  @brief get a dataset containing the two-point correlation
+       *  function measured with the Landy-Szalay estimator, and its
+       *  Poisson errors
        *  
        *  @param dd pointer to an object of type Pair containing the
        *  data-data pairs
@@ -413,11 +424,17 @@ namespace cosmobl {
        *
        *  @param nData number of objects in the data catalogue
        *
+       *  @param nData_weighted weighted number of objects in the data
+       *  catalogue
+       *
        *  @param nRandom number of objects in the random catalogue
+       *
+       *  @param nRandom_weighted weighted number of objects in the
+       *  random catalogue
        *
        *  @return pointer to an object of type Data
        */
-      virtual shared_ptr<data::Data> LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const int nRandom) = 0;
+      virtual shared_ptr<data::Data> correlation_LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted) = 0;
 
       /**
        *  @brief measure the filtered two-point correlation function,
@@ -504,7 +521,7 @@ namespace cosmobl {
 
       ///@}
 
-       /**
+      /**
        *  @name Member functions to count pairs and compute the
        *  two-point correlation function
        */
@@ -639,7 +656,7 @@ namespace cosmobl {
        *
        *  @param rr vector of random-random pairs, divided per regions
        *
-       *  @param dr vector of random-random pairs, divided per regions   
+       *  @param dr vector of random-random pairs, divided per regions  
        *
        *  @return none
        */
@@ -695,17 +712,25 @@ namespace cosmobl {
 
       /**
        *  @brief constructor
+       *
        *  @param data object of class Catalogue containing the input
        *  catalogue
+       *
        *  @param random object of class Catalogue containing the random
        *  data catalogue
+       *
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
+       *
        *  @return object of class TwoPointCorrelation
        */
-      TwoPointCorrelation (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool compute_extra_info=false) 
-	: m_data(make_shared<catalogue::Catalogue>(catalogue::Catalogue(move(data)))), m_random(make_shared<catalogue::Catalogue>(catalogue::Catalogue(move(random)))), m_compute_extra_info(compute_extra_info) {}
+      TwoPointCorrelation (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool compute_extra_info=false, const double random_dilution_fraction=1.) 
+	: m_data(make_shared<catalogue::Catalogue>(catalogue::Catalogue(move(data)))), m_random(make_shared<catalogue::Catalogue>(catalogue::Catalogue(move(random)))), m_compute_extra_info(compute_extra_info), m_random_dilution_fraction(random_dilution_fraction) {}
     
       /**
        *  @brief default destructor
@@ -722,24 +747,38 @@ namespace cosmobl {
        *
        *  @param data object of class Catalogue containing the input
        *  catalogue
+       *
        *  @param random of class Catalogue containing the random data
        *  catalogue
+       *
        *  @param binType binning type: 0 &rarr; linear; 1 &rarr;
        *  logarithmic
+       *
        *  @param Min minimum separation used to count the pairs
+       *
        *  @param Max maximum separation used to count the pairs
+       *
        *  @param nbins number of bins
+       *
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *
        *  @param angularUnits angular units
+       *
        *  @param angularWeight angular weight function
+       *
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
+       *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double Min, const double Max, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
+      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double Min, const double Max, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
 
       /**
        *  @brief static factory used to construct two-point
@@ -750,26 +789,40 @@ namespace cosmobl {
        *
        *  @param data object of class Catalogue containing the input
        *  catalogue
+       *
        *  @param random of class Catalogue containing the random data
        *  catalogue
+       *
        *  @param binType binning type: 0 &rarr; linear; 1 &rarr;
        *  logarithmic
+       *
        *  @param Min minimum separation used to count the pairs
+       *
        *  @param Max maximum separation used to count the pairs
+       *
        *  @param binSize the bin size
+       *
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
+       *
        *  @param angularUnits angular units
+       *
        *  @param angularWeight angular weight function
+       *
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
+       *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double Min, const double Max, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
+      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double Min, const double Max, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
 
-       /**
+      /**
        *  @brief static factory used to construct two-point
        *  correlation functions of any type
        *
@@ -817,10 +870,14 @@ namespace cosmobl {
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
        *
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
+       *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
+      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
 
       /**
        *  @brief static factory used to construct two-point
@@ -870,12 +927,16 @@ namespace cosmobl {
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
        *
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
+       *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
+      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
       
-       /**
+      /**
        *  @brief static factory used to construct two-point
        *  correlation functions of any type
        *
@@ -923,10 +984,14 @@ namespace cosmobl {
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
        *
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
+       *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const double piMax_integral=50., const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
+      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const double piMax_integral=50., const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
 
       /**
        *  @brief static factory used to construct two-point
@@ -976,10 +1041,14 @@ namespace cosmobl {
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
        *
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts*
+       *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const double piMax_integral=50., const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
+      static shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const double piMax_integral=50., const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
 
       ///@}
 
@@ -1032,11 +1101,20 @@ namespace cosmobl {
       shared_ptr<pairs::Pair> dr () const { return m_dr; }
 
       /**
-       *  @brief get the protected member m_dr
-       *  @return the number of data-random pairs
+       *  @brief get the protected member m_compute_extra_info
+       *  @return true &rarr; compute extra information related to the
+       *  pairs, such as the mean pair separation and redshift
        */
       bool compute_extra_info () const { return m_compute_extra_info; }
 
+      /**
+       *  @brief get the protected member m_random_dilution_fraction
+       *  @return the fraction between the number of objects in the
+       *  diluted and original random samples, used to improve
+       *  performances in random-random pair counts
+       */
+      bool random_dilution_fraction () const { return m_random_dilution_fraction; }
+      
       /**
        *  @brief get the x coordinates
        *  @return the x coordinates
@@ -1252,7 +1330,7 @@ namespace cosmobl {
       
 
       /**
-       *  @name Member functions to compute, read and write covariance matrix
+       *  @name Member functions to to estimate the errors and covariance matrices
        */
       ///@{ 
 
@@ -1262,8 +1340,7 @@ namespace cosmobl {
        *  @param file input file
        *  @return none
        */
-      virtual void read_covariance_matrix (const string dir, const string file)
-      { (void)dir; (void)file; cosmobl::ErrorCBL("Error in read_covariance_matrix() of TwoPointCorrelation.h!"); }
+      virtual void read_covariance (const string dir, const string file) = 0;
 
       /**
        *  @brief write the measured two-point correlation
@@ -1271,44 +1348,74 @@ namespace cosmobl {
        *  @param file output file
        *  @return none
        */
-      virtual void write_covariance_matrix (const string dir, const string file) const
-      { (void)dir; (void)file; cosmobl::ErrorCBL("Error in write_covariance_matrix() of TwoPointCorrelation.h!");}
+      virtual void write_covariance (const string dir, const string file) const = 0;
 
       /**
        *  @brief compute the covariance matrix
-       *  @param xi_collection vector containing the xi to compute the covariance matrix
-       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
+       *  @param xi vector containing the measure correlation
+       *  functions used to compute the covariance matrix
+       *  @param JK true &rarr; compute the jackknife covariance
+       *  matrix; false compute the standard covariance matrix
        *  @return none
        */
-      virtual void compute_covariance_matrix (vector<shared_ptr<data::Data>> xi_collection, bool doJK)
-      { (void)xi_collection; (void)doJK; cosmobl::ErrorCBL("Error in compute_covariance_matrix() of TwoPointCorrelation.h!");}
+      virtual void compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK) = 0;
 
       /**
        *  @brief compute the covariance matrix
-       *  @param file_xi vector containing the path to the xi to compute the covariance matrix
-       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
+       *  @param file vector containing the input files with the
+       *  measured correlation functions used to compute the
+       *  covariance matrix
+       *  @param JK true &rarr; compute the jackknife covariance
+       *  matrix; false compute the standard covariance matrix
        *  @return none
        */
-      virtual void compute_covariance_matrix (vector<string> file_xi, bool doJK)
-      { (void)file_xi; (void)doJK; cosmobl::ErrorCBL("Error in compute_covariance_matrix() of TwoPointCorrelation.h!");}
-
-      ///@} 
-
-      /**
-       *  @name Member functions to estimate the errors
-       */
-      ///@{
+      virtual void compute_covariance (const vector<string> file, const bool JK) = 0;
     
       /**
-       *  @brief estimate the Poisson error 
+       *  @brief the Poisson errors 
+       *
+       *  This function computes the Poisson errors associated to the
+       *  natural or Landy&Szalay estimators of the two-point
+       *  correlation function. 
+       *  
+       *  The formula implemented is the following:
+       *   
+       *  \f[ \delta\xi = \sqrt{\left(N_1\frac{\sqrt{DD}}{RR}\right)^2
+       *  + \left(N_2\frac{\sqrt{DR}}{RR}\right)^2 +
+       *  \left(\frac{N_1DD-N_2DR}{RR^{1.5}}\right)^2} \f]
+       *
+       *  where 
+       *
+       *  \f[ N_1 = \frac{f_Rn_R(f_Rn_R-1)}{n_D(n_D-1)} \f]
+       *
+       *  and
+       *       
+       *  \f[ N_2 = \frac{f_Rn_R(f_Rn_R-1)}{n_Rn_D} \f]
+       *
+       *  DD, RR and DR are the un-normalised (weighted) numbers of
+       *  data-data, random-random and data-random pairs,
+       *  respectively. \f$n_D\f$ and \f$n_R\f$ are the total
+       *  (weighted) number of data and random objects,
+       *  respectively. \f$f_R=n_{R,dil}/n_R\f$ is the fraction
+       *  between the total (weighted) number of random objects and
+       *  the diluted one (used to improve performances when counting
+       *  the random-random pairs).
+       *
+       *  @param estimator the estimator used to measure the two-point
+       *  correlation function
+       *
        *  @param dd number of data-data pairs
        *  @param rr number of random-random pairs
        *  @param dr number of data-random pairs
        *  @param nData number of data points
        *  @param nRandom number of random points
+       *
        *  @return the Poisson error
+       *  
+       *  @warning This function currently works with only the natural
+       *  and Landy&Szalay estimators
        */
-      double PoissonError (const double dd, const double rr, const double dr, const int nData, const int nRandom) const;
+      double PoissonError (const Estimator estimator, const double dd, const double rr, const double dr, const int nData, const int nRandom) const;
     
       ///@}
 

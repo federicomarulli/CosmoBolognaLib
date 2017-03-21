@@ -40,11 +40,11 @@ using namespace data;
 // ======================================================================================
 
 
-cosmobl::data::Data1D::Data1D (const string input_file, const int skip_nlines, const double xmin, const double xmax, const DataType dataType) : Data(dataType)
+cosmobl::data::Data1D::Data1D (const string input_file, const int skipped_lines, const double xmin, const double xmax, const DataType dataType) : Data(dataType)
 {
-  read(input_file, skip_nlines);
+  read(input_file, skipped_lines);
   
-  set_limits((xmin>par::defaultDouble) ? xmin : Min(m_x)-0.001, (xmax<-par::defaultDouble) ? xmax : Max(m_x)+0.001);
+  set_limits(xmin, xmax);
 }
 
 
@@ -56,7 +56,7 @@ cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, 
   m_x = x;
   m_fx = fx;
   
-  set_limits((xmin>par::defaultDouble) ? xmin : Min(m_x)-0.001, (xmax<-par::defaultDouble) ? xmax : Max(m_x)+0.001);
+  set_limits(xmin, xmax);
 }
 
 
@@ -69,7 +69,7 @@ cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, 
   m_fx = fx;
   m_error_fx = error_fx;
 
-  set_limits((xmin>par::defaultDouble) ? xmin : Min(m_x)-0.001, (xmax<-par::defaultDouble) ? xmax : Max(m_x)+0.001);
+  set_limits(xmin, xmax);
 }
 
 
@@ -82,7 +82,7 @@ cosmobl::data::Data1D::Data1D (const vector<double> x, const vector<double> fx, 
   m_fx = fx;
   m_covariance = covariance;
 
-  set_limits((xmin>par::defaultDouble) ? xmin : Min(m_x)-0.001, (xmax<-par::defaultDouble) ? xmax : Max(m_x)+0.001);
+  set_limits(xmin, xmax);
   
   for (size_t i=0; i<m_covariance.size(); i++)
     m_error_fx.push_back(sqrt(m_covariance[i][i]));
@@ -142,8 +142,8 @@ vector<double> cosmobl::data::Data1D::error_fx () const
 
 vector<vector<double> > cosmobl::data::Data1D::covariance () const
 {
-  if (m_covariance.size() == 0)
-    ErrorCBL("Error in covariance of Data1D, covariance matrix is not set");
+  if (m_covariance.size()==0)
+    ErrorCBL("Error in covariance() of Data1D.cpp: the covariance matrix is not set");
 
   if (isSet(m_x_down) && isSet(m_x_up)) {
     vector<vector<double>> cm;
@@ -167,7 +167,7 @@ vector<vector<double> > cosmobl::data::Data1D::covariance () const
 vector<vector<double> > cosmobl::data::Data1D::inverse_covariance () const
 {
   if (m_inverse_covariance.size() == 0)
-    ErrorCBL("Error in inverse_covariance of Data1D, inverted covariance matrix is not set. Run invert_covariance() first");
+    ErrorCBL("Error in inverse_covariance() of Data1D.cpp, the inverted covariance matrix is not set: invert_covariance() must be run first!");
 
   if (isSet(m_x_down) && isSet(m_x_up)) {
     vector<vector<double>> icm;
@@ -205,7 +205,7 @@ void cosmobl::data::Data1D::invert_covariance ()
 // ======================================================================================
 
 
-void cosmobl::data::Data1D::set_covariance (const string filename)
+void cosmobl::data::Data1D::set_covariance (const string filename, const int skipped_lines)
 {  
   m_covariance.erase(m_covariance.begin(), m_covariance.end());
   m_error_fx.erase(m_error_fx.begin(), m_error_fx.end());
@@ -215,8 +215,11 @@ void cosmobl::data::Data1D::set_covariance (const string filename)
   vector<double> vv;
   m_covariance.push_back(vv);
   string line; int i = 0;
-
+  
+  for (int i=0; i<skipped_lines; ++i) getline(fin, line);
+  
   while (getline(fin, line)) {
+    
     stringstream ss(line);
     vector<double> num; double NN = -1.e30;
     while (ss>>NN) num.push_back(NN);
@@ -224,11 +227,13 @@ void cosmobl::data::Data1D::set_covariance (const string filename)
     if (num.size()>=3 && num[2]>-1.e29) 
       m_covariance[i].push_back(num[2]);
     else { i++; m_covariance.push_back(vv); }
+
   }
 
-  m_covariance.erase(m_covariance.end()-1, m_covariance.end());
   fin.clear(); fin.close();
 
+  m_covariance.erase(m_covariance.end()-1, m_covariance.end());
+  
   for (size_t i=0; i<m_covariance.size(); i++)
     m_error_fx.push_back(sqrt(m_covariance[i][i]));
 }
@@ -237,7 +242,7 @@ void cosmobl::data::Data1D::set_covariance (const string filename)
 // ======================================================================================
 
 
-void cosmobl::data::Data1D::set_covariance (const vector<vector<double> > covariance)
+void cosmobl::data::Data1D::set_covariance (const vector<vector<double>> covariance)
 {
   m_error_fx.erase(m_error_fx.begin(), m_error_fx.end());
   m_covariance = covariance;
@@ -252,7 +257,10 @@ void cosmobl::data::Data1D::set_covariance (const vector<vector<double> > covari
 
 void cosmobl::data::Data1D::set_limits (const double xmin, const double xmax)
 {
-  find_index(m_x, xmin, xmax, m_x_down, m_x_up);
+  m_x_down=0;
+  m_x_up = m_x.size();
+  if(xmin>par::defaultDouble && xmax <-par::defaultDouble)
+    find_index(m_x, xmin, xmax, m_x_down, m_x_up);
 }
 
 
@@ -261,6 +269,8 @@ void cosmobl::data::Data1D::set_limits (const double xmin, const double xmax)
 
 void cosmobl::data::Data1D::write_covariance (const string dir, const string file, const string xname, const string fxname) const 
 {
+  checkDim(m_covariance, m_x.size(), m_x.size(), "covariance", false);
+  
   string file_out = dir+file;
   ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
@@ -274,6 +284,8 @@ void cosmobl::data::Data1D::write_covariance (const string dir, const string fil
       cntr2 ++;
     }
     cntr1 ++;
+
+    fout << endl;
   }
    
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
@@ -283,13 +295,13 @@ void cosmobl::data::Data1D::write_covariance (const string dir, const string fil
 // ======================================================================================
 
 
-void cosmobl::data::Data1D::read (const string input_file, const int skip_nlines)
+void cosmobl::data::Data1D::read (const string input_file, const int skipped_lines)
 {
   ifstream fin(input_file.c_str()); checkIO(fin, input_file);
   string line;
 
-  if (skip_nlines>0)
-    for (int i=0; i<skip_nlines; ++i)
+  if (skipped_lines>0)
+    for (int i=0; i<skipped_lines; ++i)
       getline(fin, line);
 
   while (getline(fin, line)) {

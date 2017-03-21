@@ -90,6 +90,28 @@ void cosmobl::data::Field3D::set_parameters(const double deltaR, const double mi
   m_nCells = m_nX*m_nY*m_nZ;
   m_nCells_Fourier = m_nX*m_nY*m_nZF;
 
+// Set coordinates of the grid
+
+  double xfact = 2*par::pi/DeltaX;
+  double yfact = 2*par::pi/DeltaY;
+  double zfact = 2*par::pi/DeltaZ;
+
+  for(int i=0; i<m_nX; i++){
+    m_X.push_back(m_MinX+(i+0.5)*m_deltaX);
+    m_kX.push_back( (i<=m_nX/2) ? xfact*i : -(m_nX-i)*xfact);
+  }
+
+  for(int i=0; i<m_nY; i++){
+    m_Y.push_back(m_MinY+(i+0.5)*m_deltaY);
+    m_kY.push_back( (i<=m_nY/2) ? yfact*i : -(m_nY-i)*yfact);
+  }
+
+  for(int i=0; i<m_nZ; i++)
+    m_Z.push_back(m_MinZ+(i+0.5)*m_deltaZ);
+
+  for(int i=0; i<m_nZF; i++)
+    m_kZ.push_back(zfact*i);
+
 }
 
 
@@ -125,6 +147,28 @@ void cosmobl::data::Field3D::set_parameters (const int nx, const int ny, const i
 
   m_nCells = m_nX*m_nY*m_nZ;
   m_nCells_Fourier = m_nX*m_nY*m_nZF;
+
+// Set coordinates of the grid
+
+  double xfact = 2*par::pi/DeltaX;
+  double yfact = 2*par::pi/DeltaY;
+  double zfact = 2*par::pi/DeltaZ;
+
+  for(int i=0; i<m_nX; i++){
+    m_X.push_back(m_MinX+(i+0.5)*m_deltaX);
+    m_kX.push_back( (i<=m_nX/2) ? xfact*i : -(m_nX-i)*xfact);
+  }
+
+  for(int i=0; i<m_nY; i++){
+    m_Y.push_back(m_MinY+(i+0.5)*m_deltaY);
+    m_kY.push_back( (i<=m_nY/2) ? yfact*i : -(m_nY-i)*yfact);
+  }
+
+  for(int i=0; i<m_nZ; i++)
+    m_Z.push_back(m_MinZ+(i+0.5)*m_deltaZ);
+
+  for(int i=0; i<m_nZF; i++)
+    m_kZ.push_back(zfact*i);
 }
 
 
@@ -290,6 +334,43 @@ double  cosmobl::data::ScalarField3D::ScalarField_FourierSpace_complex (const in
   return m_field_FourierSpace[inds_to_index_Fourier(i,j,k)][1];
 }
 
+
+// ============================================================================
+
+
+double  cosmobl::data::ScalarField3D::ScalarField (const vector<double> pos) const 
+{
+  int i = min(int((pos[0]-m_MinX)/m_deltaX), m_nX-1);
+  int j = min(int((pos[1]-m_MinY)/m_deltaY), m_nY-1);
+  int k = min(int((pos[2]-m_MinZ)/m_deltaZ), m_nZ-1);
+
+  return m_field[inds_to_index(i,j,k)];
+}
+
+
+// ============================================================================
+
+
+vector<double> cosmobl::data::ScalarField3D::ScalarField () const 
+{
+  vector<double> vv(m_field, m_field+m_nCells);
+  return vv;
+}
+
+
+// ============================================================================
+
+
+void cosmobl::data::ScalarField3D::reset () 
+{
+  for(int i=0;i<m_nCells;i++)
+    m_field[i]=0;
+
+  for(int i=0;i<m_nCells_Fourier;i++){
+    m_field_FourierSpace[i][0] = 0;
+    m_field_FourierSpace[i][1] = 0;
+  }
+}
 
 // ============================================================================
 
@@ -486,4 +567,38 @@ vector<double> cosmobl::data::VectorField3D::VectorField_FourierSpace_real(const
 vector<double> cosmobl::data::VectorField3D::VectorField_FourierSpace_complex(const int i, const int j, const int k) const 
 {
   return {m_field_FourierSpace[0][inds_to_index_Fourier(i,j,k)][1], m_field_FourierSpace[1][inds_to_index_Fourier(i,j,k)][1], m_field_FourierSpace[2][inds_to_index_Fourier(i,j,k)][1]};
+}
+
+
+// ============================================================================
+
+
+vector<double> cosmobl::data::VectorField3D::VectorField(const vector<double> pos) const 
+{
+  int i = min(int((pos[0]-m_MinX)/m_deltaX), m_nX-1);
+  int j = min(int((pos[1]-m_MinY)/m_deltaY), m_nY-1);
+  int k = min(int((pos[2]-m_MinZ)/m_deltaZ), m_nZ-1);
+
+  return {m_field[0][inds_to_index(i,j,k)], m_field[1][inds_to_index(i,j,k)], m_field[2][inds_to_index(i,j,k)]};
+}
+
+
+// ============================================================================
+
+
+void cosmobl::data::VectorField3D::reset () 
+{
+  for(int i=0;i<m_nCells;i++){
+    m_field[0][i]=0;
+    m_field[1][i]=0;
+    m_field[2][i]=0;
+  }
+  for(int i=0;i<m_nCells_Fourier;i++){
+    m_field_FourierSpace[0][i][0] = 0;
+    m_field_FourierSpace[0][i][1] = 0;
+    m_field_FourierSpace[1][i][0] = 0;
+    m_field_FourierSpace[1][i][1] = 0;
+    m_field_FourierSpace[2][i][0] = 0;
+    m_field_FourierSpace[2][i][1] = 0;
+  }
 }

@@ -312,10 +312,13 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *  @return object of class TwoPointCorrelation2D_polar
        */
-      TwoPointCorrelation_multipoles (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
-	: TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, nbins_rad, shift_rad, _linear_, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight, compute_extra_info)
+      TwoPointCorrelation_multipoles (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	: TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, nbins_rad, shift_rad, _linear_, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
 	{ m_twoPType = _1D_multipoles_; }
 
       /**
@@ -344,10 +347,13 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *  @return object of class TwoPointCorrelation_multipoles
        */
-      TwoPointCorrelation_multipoles (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
-	: TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, binSize_rad, shift_rad, _linear_, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight, compute_extra_info)
+      TwoPointCorrelation_multipoles (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	: TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, binSize_rad, shift_rad, _linear_, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
 	{ m_twoPType = _1D_multipoles_; }
 
       /**
@@ -511,9 +517,10 @@ namespace cosmobl {
       void write (const string dir=par::defaultString, const string file=par::defaultString, const int rank=0) const override;
 
       ///@}
+      
 
       /**
-       *  @name Member functions to compute, read and write covariance matrix
+       *  @name Member functions to compute, read and write the covariance matrix
        */
       ///@{ 
 
@@ -523,7 +530,7 @@ namespace cosmobl {
        *  @param file input file
        *  @return none
        */
-      virtual void read_covariance_matrix (const string dir, const string file) override;
+      void read_covariance (const string dir, const string file) override;
 
       /**
        *  @brief write the measured two-point correlation
@@ -531,23 +538,28 @@ namespace cosmobl {
        *  @param file output file
        *  @return none
        */
-      virtual void write_covariance_matrix (const string dir, const string file) const override;
+      void write_covariance (const string dir, const string file) const override;
 
       /**
        *  @brief compute the covariance matrix
-       *  @param xi_collection vector containing the xi to compute the covariance matrix
-       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
+       *  @param xi vector containing the measure correlation
+       *  functions used to compute the covariance matrix
+       *  @param JK true &rarr; compute the jackknife covariance
+       *  matrix; false compute the standard covariance matrix
        *  @return none
        */
-      virtual void compute_covariance_matrix (vector<shared_ptr<data::Data>> xi_collection, bool doJK) override;
+      void compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK) override;
 
       /**
        *  @brief compute the covariance matrix
-       *  @param file_xi vector containing the path to the xi to compute the covariance matrix
-       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
+       *  @param file vector containing the input files with the
+       *  measured correlation functions used to compute the
+       *  covariance matrix
+       *  @param JK true &rarr; compute the jackknife covariance
+       *  matrix; false compute the standard covariance matrix
        *  @return none
        */
-      virtual void compute_covariance_matrix (vector<string> file_xi, bool doJK) override;
+      void compute_covariance (const vector<string> file, const bool JK) override;
 
       ///@} 
 

@@ -129,8 +129,9 @@ namespace cosmobl {
       shared_ptr<data::Data> data_with_extra_info (const shared_ptr<pairs::Pair> dd, const vector<double> rad, const vector<double> xi, const vector<double> error) const;
       
       /**
-       *  @brief measure the two-point correlation function using the
-       *  natural estimator
+       *  @brief get a dataset containing the two-point correlation
+       *  function measured with the natural estimator, and its
+       *  Poisson errors
        *  
        *  @param dd pointer to an object of type Pair containing the
        *  data-data pairs
@@ -140,15 +141,20 @@ namespace cosmobl {
        *
        *  @param nData number of objects in the data catalogue
        *
+       *  @param nData_weighted weighted number of objects in the data catalogue
+       *
        *  @param nRandom number of objects in the random catalogue
+       *
+       *  @param nRandom_weighted weighted number of objects in the random catalogue
        *
        *  @return pointer to an object of type Data
        */
-      shared_ptr<data::Data> NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const int nRandom) override;
+      shared_ptr<data::Data> correlation_NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData=0, const double nData_weighted=0., const int nRandom=0, const double nRandom_weighted=0.) override;
 
       /**
-       *  @brief measure the two-point correlation function using the
-       *  Landy-Szalay estimator
+       *  @brief get a dataset containing the two-point correlation
+       *  function measured with the Landy-Szalay estimator, and its
+       *  Poisson errors
        *  
        *  @param dd pointer to an object of type Pair containing the
        *  data-data pairs
@@ -161,11 +167,15 @@ namespace cosmobl {
        *
        *  @param nData number of objects in the data catalogue
        *
+       *  @param nData_weighted weighted number of objects in the data catalogue
+       *
        *  @param nRandom number of objects in the random catalogue
+       *
+       *  @param nRandom_weighted weighted number of objects in the random catalogue
        *
        *  @return pointer to an object of type Data
        */
-      shared_ptr<data::Data> LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const int nRandom) override;
+      shared_ptr<data::Data> correlation_LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData=0, const double nData_weighted=0., const int nRandom=0, const double nRandom_weighted=0.) override;
 
       /**
        *  @brief measure the jackknife resampling of the two-point correlation
@@ -248,10 +258,13 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *  @return object of class TwoPointCorrelation1D
        */
-      TwoPointCorrelation1D (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool compute_extra_info=false) 
-	: TwoPointCorrelation(data, random, compute_extra_info)
+      TwoPointCorrelation1D (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool compute_extra_info=false, const double random_dilution_fraction=1.) 
+	: TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction)
 	{ m_dataset = (!compute_extra_info) ? data::Data::Create(data::DataType::_1D_data_) : data::Data::Create(data::DataType::_1D_data_extra_); }
 
       /**
@@ -354,13 +367,13 @@ namespace cosmobl {
        *  @return none
        */
       virtual void write (const string dir, const string file, const int rank=0) const
-      { (void)dir; (void)file; (void)rank; ErrorCBL("Error in write() of TwoPointCorrelation.h"); }	
+      { (void)dir; (void)file; (void)rank; ErrorCBL("Error in write() of TwoPointCorrelation1D.h"); }	
 
       ///@}
 
+      
       /**
-       *  @name Member functions to compute, read and write covariance matrix (customized in all the derived classes)
-
+       *  @name Member functions to compute, read and write the covariance matrix (customised in all the derived classes)
        */
       ///@{ 
 
@@ -370,7 +383,7 @@ namespace cosmobl {
        *  @param file input file
        *  @return none
        */
-      void read_covariance_matrix (const string dir, const string file);
+      void read_covariance (const string dir, const string file) override;
 
       /**
        *  @brief write the measured two-point correlation
@@ -378,24 +391,29 @@ namespace cosmobl {
        *  @param file output file
        *  @return none
        */
-      void write_covariance_matrix (const string dir, const string file) const;
-
+      void write_covariance (const string dir, const string file) const override;
+      
       /**
        *  @brief compute the covariance matrix
-       *  @param xi_collection vector containing the xi to compute the covariance matrix
-       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
+       *  @param xi vector containing the measure correlation
+       *  functions used to compute the covariance matrix
+       *  @param JK true &rarr; compute the jackknife covariance
+       *  matrix; false compute the standard covariance matrix
        *  @return none
        */
-      void compute_covariance_matrix (vector<shared_ptr<data::Data>> xi_collection, bool doJK);
-
+      void compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK) override;
+ 
       /**
        *  @brief compute the covariance matrix
-       *  @param file_xi vector containing the path to the xi to compute the covariance matrix
-       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
+       *  @param file vector containing the input files with the
+       *  measured correlation functions used to compute the
+       *  covariance matrix
+       *  @param JK true &rarr; compute the jackknife covariance
+       *  matrix; false compute the standard covariance matrix
        *  @return none
        */
-      void compute_covariance_matrix (vector<string> file_xi, bool doJK);
-
+      void compute_covariance (const vector<string> file, const bool JK) override;
+      
       ///@} 
 
     };

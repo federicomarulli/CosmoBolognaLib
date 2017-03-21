@@ -69,8 +69,8 @@ void cosmobl::modelling::Modelling_TwoPointCorrelation_cartesian::set_fiducial_x
   m_twop_parameters.linear_growth_rate_z = m_twop_parameters.cosmology->linear_growth_rate(m_twop_parameters.redshift);
   m_twop_parameters.var = (1.+ m_twop_parameters.redshift)/m_twop_parameters.cosmology->HH(m_twop_parameters.redshift);
 
-  m_twop_parameters.funcXiR = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(m_twop_parameters.fiducial_radDM, m_twop_parameters.Xi, "Spline"));
-  m_twop_parameters.funcXiR_ = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(m_twop_parameters.fiducial_radDM, m_twop_parameters.Xi_, "Spline"));
-  m_twop_parameters.funcXiR__ = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(m_twop_parameters.fiducial_radDM, m_twop_parameters.Xi__, "Spline"));
+  m_twop_parameters.funcXiR = make_shared<glob::FuncGrid>(glob::FuncGrid(m_twop_parameters.fiducial_radDM, m_twop_parameters.Xi, "Spline"));
+  m_twop_parameters.funcXiR_ = make_shared<glob::FuncGrid>(glob::FuncGrid(m_twop_parameters.fiducial_radDM, m_twop_parameters.Xi_, "Spline"));
+  m_twop_parameters.funcXiR__ = make_shared<glob::FuncGrid>(glob::FuncGrid(m_twop_parameters.fiducial_radDM, m_twop_parameters.Xi__, "Spline"));
   
 }

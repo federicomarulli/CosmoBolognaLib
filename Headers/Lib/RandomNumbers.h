@@ -467,7 +467,7 @@ namespace cosmobl {
       shared_ptr<UniformRandomNumbers> m_uniform_generator;
 
       /// interpolated distribution
-      shared_ptr<classfunc::func_grid_GSL> m_distribution;
+      shared_ptr<glob::FuncGrid> m_distribution;
 
     public:
 
@@ -511,14 +511,14 @@ namespace cosmobl {
        */
       void set_interpolated_distribution (const vector<double> xx, const vector<double> distribution_function, const string interpolation_method)
       {
-	classfunc::func_grid_GSL ff(xx,distribution_function,interpolation_method);
+	glob::FuncGrid ff(xx,distribution_function,interpolation_method);
 	double norm = ff.integrate_qag(Min(xx), Max(xx));
 
 	vector<double> FX;
 	for (size_t i=0; i<xx.size(); i++)
 	  FX.push_back(ff.integrate_qag(Min(xx), xx[i])/norm);
 
-	m_distribution = make_shared<classfunc::func_grid_GSL>(FX, xx, interpolation_method);
+	m_distribution = make_shared<glob::FuncGrid>(FX, xx, interpolation_method);
       }
 
       /**

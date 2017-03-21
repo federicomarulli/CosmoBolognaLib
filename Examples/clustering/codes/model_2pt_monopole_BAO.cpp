@@ -36,13 +36,14 @@ int main () {
     const string dir_input = cosmobl::par::DirLoc+"../input/";
     const string dir_output = cosmobl::par::DirLoc+"../output/";
     const string dir_chains = dir_output+"chains/";
-
+    const string MK = "mkdir -p "+dir_output+" "+dir_chains; if (system(MK.c_str())) {}
+    
     const string file_xi = dir_input+"Anderson_2013_CMASSDR11_monopole_prerecon.dat";
     const string file_cov = dir_input+"Anderson_2013_CMASSDR11_monopole_prerecon_cov.dat";
 
-    const string MK = "mkdir -p "+dir_output+" "+dir_chains; if (system(MK.c_str())) {}
-
-    const auto twop_dataset = make_shared<cosmobl::data::Data1D>(cosmobl::data::Data1D(file_xi, true)); 
+    const int skipped_lines = 1;
+    
+    const auto twop_dataset = make_shared<cosmobl::data::Data1D>(cosmobl::data::Data1D(file_xi, skipped_lines)); 
     twop_dataset->set_covariance(file_cov);
 
   

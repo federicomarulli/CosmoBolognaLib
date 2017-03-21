@@ -51,7 +51,7 @@ void cosmobl::modelling::Modelling_TwoPointCorrelation_projected::set_fiducial_x
   for (size_t i=0; i<m_twop_parameters.fiducial_radDM.size(); i++) 
     m_twop_parameters.fiducial_xiDM.push_back(m_twop_parameters.cosmology->wp_DM(m_twop_parameters.fiducial_radDM[i], m_twop_parameters.method_Pk, m_twop_parameters.redshift, m_twop_parameters.pi_max, m_twop_parameters.output_root, m_twop_parameters.NL, m_twop_parameters.norm, m_twop_parameters.r_min, m_twop_parameters.r_max, m_twop_parameters.k_min, m_twop_parameters.k_max, m_twop_parameters.aa, m_twop_parameters.GSL, m_twop_parameters.prec, m_twop_parameters.file_par));
   
-  m_twop_parameters.func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(m_twop_parameters.fiducial_radDM, m_twop_parameters.fiducial_xiDM, "Spline"));
+  m_twop_parameters.func_xi = make_shared<glob::FuncGrid>(glob::FuncGrid(m_twop_parameters.fiducial_radDM, m_twop_parameters.fiducial_xiDM, "Spline"));
 
   m_twop_parameters.sigma8_z = m_twop_parameters.cosmology->sigma8_Pk(m_twop_parameters.method_Pk, m_twop_parameters.redshift, m_twop_parameters.output_root);
   

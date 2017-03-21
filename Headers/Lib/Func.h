@@ -88,6 +88,7 @@
 #include <gsl/gsl_sf_expint.h>
 #include <gsl/gsl_statistics_double.h>
 #include <gsl/gsl_roots.h>
+#include <gsl/gsl_poly.h>
 /// @endcond
 
 
@@ -124,6 +125,18 @@ using namespace std;
  *  distances
  */
 /**
+ *  @example integration.cpp  
+ *
+ *  This example shows how to integrate a function using the GSL
+ *  libraries
+ */
+/**
+ *  @example minimisation.cpp  
+ *
+ *  This example shows how to minimize a function using the GSL
+ *  libraries
+ */
+/**
  *  @example covsample.cpp  
  *
  *  This example shows how to generate correlated samples 
@@ -142,6 +155,11 @@ using namespace std;
  *  @example fit.cpp
  *
  *  This example shows how to fit a data set with a generic model
+ */
+/**
+ *  @example sampler.cpp
+ *
+ *  This example shows how to fit a function with a generic model
  */
 /**
  *  @example catalogue.cpp
@@ -216,10 +234,28 @@ using namespace std;
  * file
  */
 /**
+ * @example sizeFunction.cpp
+ *
+ * This example shows how to compute the theoretical size function of
+ * cosmic voids
+ */
+/**
+ * @example cleanVoidCatalogue.cpp
+ *
+ * This example shows how to clean a cosmic void catalogue, to extract
+ * cosmological constraints from void counting file
+ */
+/**
  *  @example distances.py 
  *
  *  This example shows how to convert redshifts into comoving
  *  distances 
+ */
+/**
+ * @example sizeFunction.py
+ *
+ * This example shows how to compute the theoretical size function of
+ * cosmic voids
  */
 /**
  *  @example prior.py
@@ -244,8 +280,7 @@ using namespace std;
  *  This \b notebook explains how to compute the monopole of the
  *  two-point correlation function
  *
- *  To see the notebook, click here:
- *  <a
+ *  To see the notebook, click here: <a
  *  href="https://nbviewer.jupyter.org/url/apps.difa.unibo.it/files/people/federico.marulli3/2pt_monopole.ipynb">
  *  notebook</a>
  */
@@ -401,7 +436,8 @@ namespace cosmobl {
    *  been set
    *
    *  @param vect a vactor of double values
-   *  @return if vect[i]<par::defaultDouble &forall; i &rArr; 0; else &rArr; 1
+   *  @return if vect[i]<par::defaultDouble &forall; i &rArr; 0; else
+   *  &rArr; 1
    */
   inline bool isSet (const vector<double> vect) 
   {
@@ -777,123 +813,15 @@ namespace cosmobl {
   double jl_distance_average (const double kk, const int order, const double r_down, const double r_up);
 
   /**
-   *  @brief function to integrate ordered data via trapezoid rule 
+   *  @brief integral, computed with the trapezoid rule, using ordered
+   *  data
+   *
    *  @param xx the point in which function is defined
    *  @param yy values of the function 
    *  @return the definite integral of the function
    */
-  double trapezoid_integration(const vector<double> xx, const vector<double> yy);
-
-  /**
-   *  @brief function to integrate using GSL qag method 
-   *  @param Func the GSL function to be integrated
-   *  @param a the lower limit of the integral
-   *  @param b the upper limit of the integral
-   *  @param prec the relative error tolerance
-   *  @param limit_size the maximum size of workspace
-   *  @param rule the rule of integration
-   *  @return the definite integral of the function
-   */
-  double GSL_integrate_qag(gsl_function Func, const double a, const double b, const double prec=1.e-2, const int limit_size=1000, const int rule=6);
-
-
-  /**
-   *  @brief function to integrate using GSL qag method 
-   *  @param Func the GSL function to be integrated
-   *  @param a the lower limit of the integral
-   *  @param b the upper limit of the integral
-   *  @param alpha &alpha;
-   *  @param beta &beta;
-   *  @param mu &mu;
-   *  @param nu &nu;
-   *  @param prec the relative error tolerance
-   *  @param limit_size the maximum size of workspace
-   *  @return the definite integral of the function
-   */
-  double GSL_integrate_qaws (gsl_function Func, const double a, const double b, const double alpha=0, const double beta=0, const int mu=1, const int nu =0, const double prec=1.e-2, const int limit_size=1000);
-
-  /**
-   *  @brief function to integrate using GSL qagiu method 
-   *  @param Func the GSL function to be integrated
-   *  @param a the lower limit of the integral
-   *  @param prec the relative error tolerance
-   *  @param limit_size the maximum size of workspace
-   *  @return the integral of the function
-   */
-  double GSL_integrate_qagiu(gsl_function Func, const double a, const double prec=1.e-2, const int limit_size=1000);
-
-  /**
-   *  @brief function to integrate using GSL qag method; only works
-   *  with function defined as function<double(double)> that doesn't use
-   *  fixed parameters (useful for class members, when the external parameters could be attributes of the class)
-   *  @param func the fuction to be integrated
-   *  @param a the lower limit of the integral
-   *  @param b the upper limit of the integral
-   *  @param prec the relative error tolerance
-   *  @param limit_size the maximum size of workspace
-   *  @param rule the rule of integration
-   *  @return the definite integral of the function
-   */
-  double GSL_integrate_qag (function<double(double)> func, const double a, const double b, const double prec=1.e-2, const int limit_size=1000, const int rule=6);
-
-  /**
-   *  @brief function to integrate using GSL qagiu method; only works
-   *  with function defined as function<double(double)> that doesn't use
-   *  fixed parameters (useful for class members, when the external parameters could be attributes of the class)
-   *  @param func the fuction to be integrated
-   *  @param a the lower limit of the integral
-   *  @param prec the relative error tolerance
-   *  @param limit_size the maximum size of workspace
-   *  @return the definite integral of the function
-   */
-  double GSL_integrate_qagiu (function<double(double)> func, const double a, const double prec=1.e-2, const int limit_size=1000);
-
-  /**
-   *  @brief function to integrate using GSL qag method 
-   *  @param func the function to be integrated
-   *  @param a the lower limit of the integral
-   *  @param b the upper limit of the integral
-   *  @param alpha &alpha;
-   *  @param beta &beta;
-   *  @param mu &mu;
-   *  @param nu &nu;
-   *  @param prec the relative error tolerance
-   *  @param limit_size the maximum size of workspace
-   *  @return the definite integral of the function
-   */
-  double GSL_integrate_qaws (function<double(double)> func, const double a, const double b, const double alpha=0, const double beta=0, const int mu=1, const int nu =0, const double prec=1.e-2, const int limit_size=1000);
-
-  /**
-   *  @brief function to integrate interpolated function 
-   *  @param xx the point in which function is defined
-   *  @param params the parameters of the function 
-   *  @return the value of the function at xx
-   */
-  double generic_integrand (const double xx, void *params);
-
-  double generic_roots (double xx, void *params);
-
-  /**
-   *  @brief function to find roots using GSL qag method 
-   *  @param Func the GSL function to be integrated
-   *  @param low_guess the lower limit 
-   *  @param up_guess the upper limit
-   *  @param prec the relative error tolerance
-   *  @return the definite integral of the function
-   */
-  double GSL_brent (gsl_function Func, const double low_guess, const double up_guess, const double prec=1.e-3);
-   
-  /**
-   *  @brief function to find roots using GSL brent method 
-   *  @param func the function to be integrated
-   *  @param xx0 the value of the zero
-   *  @param low_guess the lower limit 
-   *  @param up_guess the upper limit
-   *  @param prec the relative error tolerance
-   *  @return the definite integral of the function
-   */
-  double GSL_brent (function<double(double)> func, double xx0,  const double low_guess, const double up_guess, const double prec=1.e-3);
-   
+  double trapezoid_integration (const vector<double> xx, const vector<double> yy);
+ 
   ///@}
 
 
@@ -1461,118 +1389,64 @@ namespace cosmobl {
    *  @name Functions for statistical analyses
    */
   ///@{
-
   
   /**
    *  @brief the average of a vector
+   *
+   *  for the derivation of the formulae used here for numerically
+   *  stable calculation see Chan et al. 1979, Finch 2009 and
+   *  reference therein
+   *
    *  @param vect the input vector
    *  @return the average of vect
    */
-  template <typename T> 
-    T Average (const vector<T> vect) 
-    {
-      T aver = 0;
-      if (vect.size()>0) 
-	aver = accumulate(vect.begin(),vect.end(),0.)/double(vect.size());
-      return aver;
-    }
-
+  double Average (const vector<double> vect);
+  
   /**
    *  @brief the weighted average of a vector
+   *
+   *  for the derivation of the formulae used here for numerically
+   *  stable calculation see Chan et al. 1979, Finch 2009 and
+   *  reference therein
+   *
    *  @param vect the input vector
    *  @param weight the weight
    *  @return the weighted average of vect
    */
-  template <typename T> 
-    T Average (const vector<T> vect, const vector<T> weight) 
-    {
-      if (vect.size()!=weight.size()) ErrorCBL("Error in Average of Func.h");
-      T aver = 0;
-
-      vector<T> vw; 
-      for (unsigned int i=0; i<vect.size(); i++) vw.push_back(vect[i]*weight[i]);
-
-      if (vect.size()>0) 
-	aver = accumulate(vw.begin(),vw.end(),0.)/accumulate(weight.begin(),weight.end(),0.);
-      return aver;
-    }
-
+  double Average (const vector<double> vect, const vector<double> weight);
+  
   /**
    *  @brief the standard deviation of a vector
+   *
+   *  for the derivation of the formulae used here for numerically
+   *  stable calculation see Chan et al. 1979, Finch 2009 and
+   *  reference therein
+   *
    *  @param vect the input vector
    *  @return &sigma;
    */
-  template <typename T> 
-    T Sigma (const vector<T> vect) 
-    {
-      T aver = Average(vect);
-      T sigma = 0.;
-      if (vect.size()>1) {
-	for (unsigned int i=0; i<vect.size(); i++)
-	  sigma += pow(vect[i]-aver,2);
-	sigma = sqrt(sigma/(vect.size()-1));
-      }
-      return sigma;
-    }
-
+  double Sigma (const vector<double> vect);
+  
+  /**
+   *  @brief the weighted standard deviation of a vector
+   *
+   *  for the derivation of the formulae used here for numerically
+   *  stable calculation see Chan et al. 1979, Finch 2009 and
+   *  reference therein
+   *
+   *  @param vect the input vector
+   *  @param weight the weight
+   *  @return &sigma;
+   */
+  double Sigma (const vector<double> vect, const vector<double> weight);
+  
   /**
    *  @brief the first, second and third quartiles of a vector
-   *  @param vect the input vector
+   *  @param Vect the input vector
    *  @return a vector containing the first, second and third
    *  quartiles
    */
-  template <typename T> 
-    vector<T> Quartile (vector<T> vect) 
-    {
-      sort(vect.begin(), vect.end()); 
-      vector<T> vect1, vect2;
-      
-      int start;
-      int n = vect.size();
-      T first = 0, second = 0, third = 0;
-      
-      if (n>0) {
-	if (n==1) {
-	  first = -1e10;
-	  second = vect[0];
-	  third = 1e10;
-	}
-	if (n>1) {
-	  if (n % 2 == 0)  // the number of elemens is even
-	    start = int(vect.size()*0.5);
-	  else 
-	    start = int(vect.size()*0.5)+1;
-	  
-	  for (size_t i=0; i<vect.size()*0.5; i++)
-	    vect1.push_back(vect[i]);
-	  for (size_t i=start; i<vect.size(); i++)
-	    vect2.push_back(vect[i]);
-
-	  // first quartile
-	  n = vect1.size();
-	  if (n % 2 == 0) 
-	    first = (vect1[n*0.5-1]+vect1[(n*0.5)])*0.5;
-	  else 
-	    first = vect1[(n+1)*0.5-1];
-	  
-	  // second quartile = median
-	  n = vect.size();
-	  if (n % 2 == 0)  
-	    second = (vect[n*0.5-1]+vect[(n*0.5)])*0.5;
-	  else
-	    second = vect[(n+1)*0.5-1];
-	 
-	  // third quartile
-	  n = vect2.size();
-	  if (n % 2 == 0) 
-	    third = (vect2[n*0.5-1]+vect2[(n*0.5)])*0.5;
-	  else 
-	    third = vect2[(n+1)*0.5-1];
-	}
-      }
-
-      return {first, second, third};
-    }
+  vector<double> Quartile (const vector<double> Vect);
 
   /**
    *  @brief compute the moments of a set of data
@@ -1585,7 +1459,7 @@ namespace cosmobl {
    *  @param [out] curt the kurtosis
    *  @return none
    */
-  void Moment (const vector<double>, double &, double &, double &, double &, double &, double &);
+  void Moment (const vector<double> data, double &ave, double &adev, double &sdev, double &var, double &skew, double &curt);
 
   ///@}
 
@@ -1814,6 +1688,17 @@ namespace cosmobl {
     }
 
   /**
+   *  @brief the volume of a sphere of a given radius
+   *  @param RR the radius
+   *  @return the volume
+   */
+  template <typename T> 
+    T volume_sphere (const T RR) 
+    {
+      return 4./3.*par::pi*pow(RR,3);
+    }
+
+  /**
    *  @brief the mass of a sphere of a given radius and density
    *  @param RR the radius
    *  @param Rho the density
@@ -1976,7 +1861,7 @@ namespace cosmobl {
    *  grid points
    *  @return none
    */
-  void bin_function (const string, double func(double, void*), void *, const int, const double, const double, const string, vector<double> &, vector<double> &);
+  void bin_function (const string file_grid, double func(double, void*), void *par, const int bin, const double x_min, const double x_max, const string binning, vector<double> &xx, vector<double> &yy);
 
   /**
    *  @brief create a 2D grid given an input function
@@ -2330,8 +2215,8 @@ namespace cosmobl {
    *  this function estimates the projected correlation function by
    *  integrating a given two-point correlation function as follows:
    *  \f[
-   *  w_p(r_p)=\int_{r_p}^{r_{max}}\frac{\xi(r)}{\sqrt{r^2-r_p^2}}rdr
-   *  \f]
+   *  w_p(r_p)=2\int_{r_p}^{r_{max}}\frac{\xi(r)}{\sqrt{r^2-r_p^2}}r{\rm
+   *  d}r \f]
    *
    *  @param rp r<SUB>p</SUB>: comoving separation perpendicular to
    *  the line-of-sight
@@ -3002,7 +2887,7 @@ namespace cosmobl {
    *  @return &xi;(r<SUB>p</SUB>,&pi;)
    */
   double xi2D_model (const double, const double, const double, const double, const double, const vector<double>, const vector<double>, const vector<double>, const vector<double>, const double, const int, int index=-1, const bool bias_nl=0, const double bA=0., const double v_min=-3000., const double v_max=3000., const int step_v=500);
-
+  
   /**
    *  @brief the linear dispersion model for
    *  &xi;(r<SUB>p</SUB>,&pi;)
@@ -3018,14 +2903,14 @@ namespace cosmobl {
    *
    *  @param bias the bias  
    *
-   *  @param funcXiR pointer to an object of type func_grid_GSL, to interpolate
-   *  on  \f$ \xi(r) \f$
+   *  @param funcXiR pointer to an object of type FuncGrid, to
+   *  interpolate on \f$ \xi(r) \f$
    *
-   *  @param funcXiR_  pointer to an object of type func_grid_GSL, to interpolate
-   *  on \f$ \overline{\xi}(r) \f$
+   *  @param funcXiR_ pointer to an object of type FuncGrid, to
+   *  interpolate on \f$ \overline{\xi}(r) \f$
    *
-   *  @param funcXiR__ pointer to an object of type func_grid_GSL, to interpolate
-   *  on \f$ \overline{\overline{\xi}} (r) \f$
+   *  @param funcXiR__ pointer to an object of type FuncGrid, to
+   *  interpolate on \f$ \overline{\overline{\xi}} (r) \f$
    *
    *  @param bias_nl 0 &rArr; linear bias; &rArr; 1 non-linear bias 
    *
@@ -3052,14 +2937,14 @@ namespace cosmobl {
    *
    *  @param sigma12 &sigma;<SUB>12</SUB>
    *
-   *  @param funcXiR pointer to an object of type func_grid_GSL, to interpolate
-   *  on  \f$ \xi(r) \f$
+   *  @param funcXiR pointer to an object of type FuncGrid, to
+   *  interpolate on \f$ \xi(r) \f$
    *
-   *  @param funcXiR_  pointer to an object of type func_grid_GSL, to interpolate
-   *  on \f$ \overline{\xi}(r) \f$
+   *  @param funcXiR_ pointer to an object of type FuncGrid, to
+   *  interpolate on \f$ \overline{\xi}(r) \f$
    *
-   *  @param funcXiR__ pointer to an object of type func_grid_GSL, to interpolate
-   *  on \f$ \overline{\overline{\xi}} (r) \f$
+   *  @param funcXiR__ pointer to an object of type FuncGrid, to
+   *  interpolate on \f$ \overline{\overline{\xi}} (r) \f$
    *
    *  @param var 1/[H(z)a(z)]
    *
@@ -3326,12 +3211,12 @@ namespace cosmobl {
    * @param rl the scales at which the multipoles are defined
    * @param Xi0 the 2pfc monopole
    * @param Xi2 the 2pfc quadrupole
-   * @param Xi4 the 2pfc hecadecapole
+   * @param Xi4 the 2pfc hexadecapole
    *
    * @return the monopole, quadrupole and hexadecapole of the two
    * point correlation function
    */
-  vector< vector<double> > Xi024_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const vector<double> rl, const vector<double> Xi0, const vector<double> Xi2, const vector<double> Xi4);
+  vector<vector<double>> Xi024_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const vector<double> rl, const vector<double> Xi0, const vector<double> Xi2, const vector<double> Xi4);
 
   /**
    * @brief function to obtain the 2pcf wedges
@@ -3411,15 +3296,6 @@ namespace cosmobl {
    */
   namespace glob {
 
-    struct STR_generic_integrand{
-      function<double(double)> f;
-    };
-
-    struct STR_generic_roots{
-      function<double(double)> f;
-      double xx0;
-    };
-
     struct STR_grid
     {
       vector<double> _xx, _yy;
@@ -3474,18 +3350,70 @@ namespace cosmobl {
     struct STR_Pkl_Kaiser_integrand
     {
       int l;
-      double Pk,bias,f;
+      double Pk, bias, f;
     };
 
-    struct STR_closest_probability{
+    struct STR_closest_probability
+    {
       vector<double> values;
       vector<double> weights;
     };
   }
 }
 
-
+#include "GSLwrapper.h"
+#include "FuncGrid.h"
 #include "FuncClassFunc.h"
 #include "RandomNumbers.h"
+
+namespace cosmobl{
+
+  /**
+   * @brief function to obtain the monopole and
+   * quadrupole of the two point correlation function 
+   *
+   * @param alpha_perpendicular the shift along the line of sight
+   * @param alpha_parallel the shift parallel to the line of sight
+   * @param rr the scales r
+   * @param xi0_interp the xi0 interpolator
+   * @param xi2_interp the xi2 interpolator
+   *
+   * @return the monopole and quadrupole 
+   * of the two point correlation function 
+   */
+  vector<vector<double>> Xi02_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const shared_ptr<glob::FuncGrid> xi0_interp, const shared_ptr<glob::FuncGrid> xi2_interp);
+
+  /**
+   * @brief function to obtain the monopole, quadrupole
+   * and hexadecapole of the two-point correlation function 
+   * 
+   * @param alpha_perpendicular the shift along the line of sight
+   * @param alpha_parallel the shift parallel to the line of sight
+   * @param rr the scales r
+   * @param xi0_interp the xi0 interpolator
+   * @param xi2_interp the xi2 interpolator
+   * @param xi4_interp the xi4 interpolator
+   *
+   * @return the monopole, quadrupole and hexadecapole of the two
+   * point correlation function
+   */
+  vector< vector<double> > Xi024_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const shared_ptr<glob::FuncGrid> xi0_interp, const shared_ptr<glob::FuncGrid> xi2_interp, const shared_ptr<glob::FuncGrid> xi4_interp);
+
+  /**
+   * @brief function to obtain the 2pcf wedges
+   *
+   * @param mu_min the lower limit of integration for wedges
+   * @param delta_mu the mu width for wedges
+   * @param alpha_perpendicular the shift along the line of sight
+   * @param alpha_parallel the shift parallel to the line of sight
+   * @param rr the scales r
+   * @param xi0_interp the xi0 interpolator
+   * @param xi2_interp the xi2 interpolator
+   * @param xi4_interp the xi4 interpolator
+   *
+   * @return the 2pcf wedges 
+   */
+  vector<vector<double>> XiWedges_AP (const vector<double> mu_min, const vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const shared_ptr<glob::FuncGrid> xi0_interp, const shared_ptr<glob::FuncGrid> xi2_interp, const shared_ptr<glob::FuncGrid> xi4_interp);
+}
 
 #endif

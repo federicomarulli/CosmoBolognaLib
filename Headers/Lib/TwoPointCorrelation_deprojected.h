@@ -232,7 +232,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
+       vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
 
     public:
     
@@ -275,10 +275,13 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *  @return object of class TwoPointCorrelation_deprojected
        */
-      TwoPointCorrelation_deprojected (catalogue::Catalogue data, catalogue::Catalogue random, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const double piMax_integral, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
-	: TwoPointCorrelation_projected(data, random, _logarithmic_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, piMax_integral, angularUnits, angularWeight, compute_extra_info)
+      TwoPointCorrelation_deprojected (catalogue::Catalogue data, catalogue::Catalogue random, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const double piMax_integral, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	: TwoPointCorrelation_projected(data, random, _logarithmic_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, piMax_integral, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
 	{ m_twoPType = _1D_deprojected_; }
       
       /**
@@ -307,10 +310,13 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *  @return object of class TwoPointCorrelation_2D_deprojected
        */
-      TwoPointCorrelation_deprojected (catalogue::Catalogue data, catalogue::Catalogue random, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const double piMax_integral, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
-	: TwoPointCorrelation_projected(data, random, _logarithmic_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, piMax_integral, angularUnits, angularWeight, compute_extra_info)
+      TwoPointCorrelation_deprojected (catalogue::Catalogue data, catalogue::Catalogue random, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const double piMax_integral, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	: TwoPointCorrelation_projected(data, random, _logarithmic_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, piMax_integral, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
 	{ m_twoPType = _1D_deprojected_; }
       
       /**
@@ -426,46 +432,6 @@ namespace cosmobl {
       void write (const string dir=par::defaultString, const string file=par::defaultString, const int rank=0) const override;
     
       ///@}
-
-      /**
-       *  @name Member functions to compute, read and write covariance matrix
-       */
-      ///@{ 
-
-      /**
-       *  @brief read the measured covariance matrix
-       *  @param dir input directory
-       *  @param file input file
-       *  @return none
-       */
-      virtual void read_covariance_matrix (const string dir, const string file) override;
-
-      /**
-       *  @brief write the measured two-point correlation
-       *  @param dir output directory
-       *  @param file output file
-       *  @return none
-       */
-      virtual void write_covariance_matrix (const string dir, const string file) const override;
-
-      /**
-       *  @brief compute the covariance matrix
-       *  @param xi_collection vector containing the xi to compute the covariance matrix
-       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
-       *  @return none
-       */
-      virtual void compute_covariance_matrix (vector<shared_ptr<data::Data>> xi_collection, bool doJK) override;
-
-      /**
-       *  @brief compute the covariance matrix
-       *  @param file_xi vector containing the path to the xi to compute the covariance matrix
-       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
-       *  @return none
-       */
-      virtual void compute_covariance_matrix (vector<string> file_xi, bool doJK) override;
-
-      ///@} 
-
 
     };
   }

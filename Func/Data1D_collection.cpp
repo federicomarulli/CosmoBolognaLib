@@ -123,32 +123,34 @@ vector<double> cosmobl::data::Data1D_collection::error_fx () const
 // ======================================================================================
       
       
-void cosmobl::data::Data1D_collection::set_covariance (const string filename)
+void cosmobl::data::Data1D_collection::set_covariance (const string filename, const int skipped_lines)
 {
   m_covariance_matrix.erase(m_covariance_matrix.begin(), m_covariance_matrix.end());
 
-  ifstream fin (filename.c_str());
-  if (!fin) {
-    string Warn = "Attention: the file " + filename + " does not exist!";
-    WarningMsg (Warn);
-  }
+  ifstream fin(filename.c_str()); checkIO(fin, filename);
 
-  vector<double> vv ;
+  vector<double> vv;
   m_covariance_matrix.push_back(vv);
   string line; int i = 0;
 
+  for (int i=0; i<skipped_lines; ++i) getline(fin, line);
+ 
   while (getline(fin, line)) {
+    
     stringstream ss(line);
     vector<double> num; double NN = -1.e30;
     while (ss>>NN) num.push_back(NN);
-    if (num.size()>=3 && num[2]>-1.e29){
+
+    if (num.size()>=3 && num[2]>-1.e29)
       m_covariance_matrix[i].push_back(num[2]);
-    }
-    else {i++; m_covariance_matrix.push_back(vv);}
+    else { i++; m_covariance_matrix.push_back(vv); }
+
   }
 
-  m_covariance_matrix.erase(m_covariance_matrix.end()-1, m_covariance_matrix.end());
   fin.clear(); fin.close();
+  
+  m_covariance_matrix.erase(m_covariance_matrix.end()-1, m_covariance_matrix.end());
+  
 }
 
 

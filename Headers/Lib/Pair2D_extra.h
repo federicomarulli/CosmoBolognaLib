@@ -64,6 +64,12 @@ namespace cosmobl {
       /// the mean scales in each bin, in the second dimension
       vector<vector<double>> m_scale_D2_mean;
 
+      /// the square of the standard deviations of the scale distributions in each bin, in the first dimension, multiplied by the total weight
+      vector<vector<double>> m_scale_D1_S;
+      
+      /// the square of the standard deviations of the scale distributions in each bin, in the second dimension, multiplied by the total weight
+      vector<vector<double>> m_scale_D2_S;
+      
       /// the standard deviations of the scale distributions in each bin, in the first dimension
       vector<vector<double>> m_scale_D1_sigma;
       
@@ -73,9 +79,13 @@ namespace cosmobl {
       /// the mean redshifts in each bin
       vector<vector<double>> m_z_mean;
 
+      /// the square of the standard deviations of the redshift distributions in each bin, multiplied by the total weight
+      vector<vector<double>> m_z_S;
+
       /// the standard deviations of the redshift distributions in each bin
       vector<vector<double>> m_z_sigma;
-  
+
+      
     public:
   
       /**
@@ -151,6 +161,42 @@ namespace cosmobl {
       vector<vector<double>> scale_D2_mean () const override { return m_scale_D2_mean; }
 
       /**
+       *  @brief get the member m_scale_D1_S[i][j]
+       *  @param i the bin index in the first dimension
+       *  @param j the bin index in the second dimension
+       *  @return the square of the standard deviations of the scale
+       *  distribution, multiplied by the total weight, in the i-th
+       *  bin, in the first dimension
+       */
+      double scale_D1_S (const int i, const int j) const override { return m_scale_D1_S[i][j]; }
+
+      /**
+       *  @brief get the member vector<double> m_scale_D1_S
+       *  @return the vector the square of the standard deviations of
+       *  the scale distribution, multiplied by the total weight, in
+       *  the first dimension
+       */
+      vector<vector<double>> scale_D1_S () const override { return m_scale_D1_S; }
+
+      /**
+       *  @brief get the member m_scale_D2_S[i][j]
+       *  @param i the bin index in the first dimension
+       *  @param j the bin index in the second dimension
+       *  @return the square of the standard deviations of the scale
+       *  distribution, multiplied by the total weight, in the i-th
+       *  bin, in the second dimension
+       */
+      double scale_D2_S (const int i, const int j) const override { return m_scale_D2_S[i][j]; }
+
+      /**
+       *  @brief get the member vector<double> m_scale_D2_S
+       *  @return the vector the square of the standard deviations of
+       *  the scale distribution, multiplied by the total weight, in
+       *  the second dimension
+       */
+      vector<vector<double>> scale_D2_S () const override { return m_scale_D2_S; }
+
+      /**
        *  @brief get the member m_scale_D1_sigma[i][j]
        *  @param i the bin index in the first dimension
        *  @param j the bin index in the second dimension
@@ -191,11 +237,15 @@ namespace cosmobl {
       double z_mean (const int i, const int j) const override { return m_z_mean[i][j]; }
 
       /**
-       *  @brief get the protected member \e m_z_mean
-       *  @return the matrix containing the mean redshifts
+       *  @brief get the member m_z_S[i][j]
+       *  @param i the bin index in the first dimension
+       *  @param j the bin index in the second dimension
+       *  @return the square of the standard deviations of the
+       *  redshift distribution, multiplied by the total weight, in
+       *  the i-th bin
        */
-      vector<vector<double>> z_mean2D () const override { return m_z_mean; }
-
+      double z_S (const int i, const int j) const override { return m_z_S[i][j]; }
+      
       /**
        *  @brief get the member m_z_sigma[i][j]
        *  @param i the bin index in the first dimension
@@ -204,13 +254,6 @@ namespace cosmobl {
        *  in the i-th bin
        */
       double z_sigma (const int i, const int j) const override { return m_z_sigma[i][j]; }
-
-      /**
-       *  @brief get the member vector<double> m_z_sigma
-       *  @return the vector containing the standard deviations of the
-       *  redshift distribution
-       */
-      vector<vector<double>> z_sigma2D () const override { return m_z_sigma; }
 
       ///@}
 
@@ -306,18 +349,12 @@ namespace cosmobl {
       
       /**
        *  @brief sum the number of binned pairs
-       *  @param pp an object of class Pair
+       *  @param pair an object of class Pair
        *  @param ww the weight
        *  @return none
        */
+      void Sum (const shared_ptr<Pair> pair, const double ww=1) override;
       
-      void Sum (const shared_ptr<Pair> pp, const double ww=1) override;
-      /**
-       *  @brief finalise the computation of the extra information
-       *  @return none
-       */
-      void finalise () override;
-
       ///@}
     
     };
@@ -360,8 +397,10 @@ namespace cosmobl {
        *  @param nbins_rp number of bins in the perpendicular separation
        *  @param shift_rp shift parameter in the perpendicular
        *  separation, i.e. the shift is binSize*shift
-       *  @param piMin minimum parallel separation used to count the pairs
-       *  @param piMax maximum parallel separation used to count the pairs
+       *  @param piMin minimum parallel separation used to count the
+       *  pairs
+       *  @param piMax maximum parallel separation used to count the
+       *  pairs
        *  @param nbins_pi number of bins in the parallel separation
        *  @param shift_pi shift parameter in the parallel separation,
        *  i.e. the shift is binSize*shift
@@ -462,11 +501,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
@@ -495,11 +538,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
@@ -588,11 +635,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
@@ -621,11 +672,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
@@ -713,11 +768,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
@@ -746,11 +805,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
@@ -838,11 +901,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
@@ -871,11 +938,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
@@ -1038,11 +1109,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
@@ -1069,11 +1144,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
@@ -1160,11 +1239,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}  
   
@@ -1191,11 +1274,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
       
@@ -1282,11 +1369,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
@@ -1313,11 +1404,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
@@ -1403,11 +1498,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
@@ -1434,11 +1533,15 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D1_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_scale_D2_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D1_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_scale_D2_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_mean.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_z_S.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	  m_z_sigma.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   

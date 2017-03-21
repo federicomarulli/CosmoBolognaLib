@@ -87,6 +87,9 @@ namespace cosmobl {
       
       /// the number of binned pairs 
       vector<vector<double>> m_PP2D;
+      
+      /// the weighted number of binned pairs 
+      vector<vector<double>> m_PP2D_weighted;
 
       /**
        *  @name binning parameters
@@ -151,7 +154,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual ~Pair2D () = default;
-  
+      
       ///@}
   
   
@@ -199,7 +202,22 @@ namespace cosmobl {
        *  @return the vector containing the binned number of pairs
        */
       vector<vector<double>> PP2D () const override { return m_PP2D; }
-    
+
+      /**
+       *  @brief get the protected member \e m_PP2D_weighted[i]
+       *  @param i the bin index in the first dimension
+       *  @param j the bin index in the second dimension
+       *  @return the number of weighted pairs in the bin
+       */
+      double PP2D_weighted (const int i, const int j) const override { return m_PP2D_weighted[i][j]; }
+
+      /**
+       *  @brief get the protected member \e m_PP2D_weighted
+       *  @return the vector containing the binned number of weighted
+       *  pairs
+       */
+      vector<vector<double>> PP2D_weighted () const override { return m_PP2D_weighted; }
+      
       /**
        *  @brief get the protected member Pair2D::m_binSize_inv_D1
        *  @return the inverse of the bin size in the first dimension
@@ -271,6 +289,15 @@ namespace cosmobl {
        */
       void set_PP2D (const int i, const int j, const double pp) { checkDim(m_PP2D, i, j, "m_PP2D"); m_PP2D[i][j] = pp; }
 
+      /**
+       *  @brief set the protected member Pair2D::m_PP2D_weighted[i][j]
+       *  @param i the bin index in the first dimension
+       *  @param j the bin index in the second dimension
+       *  @param pp the number of weighetd pairs in the bin
+       *  @return none
+       */
+      void set_PP2D_weighted (const int i, const int j, const double pp) { checkDim(m_PP2D_weighted, i, j, "m_PP2D_weighted"); m_PP2D_weighted[i][j] = pp; }
+      
       /**
        *  @brief set the protected members by adding new data
        *  @param i the bin index in the first dimension
@@ -551,6 +578,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
       /**
@@ -578,6 +606,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
       /**
@@ -686,6 +715,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
       /**
@@ -713,6 +743,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
       /**
@@ -820,6 +851,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
       /**
@@ -847,6 +879,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
       /**
@@ -954,6 +987,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
       /**
@@ -981,6 +1015,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
       /**
@@ -1239,6 +1274,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
       /**
@@ -1264,6 +1300,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
       /**
@@ -1370,6 +1407,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
       /**
@@ -1395,6 +1433,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
       /**
@@ -1501,6 +1540,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
       /**
@@ -1526,6 +1566,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
       /**
@@ -1631,6 +1672,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_nbins();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	}
   
       /**
@@ -1656,6 +1698,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_;
 	  m_set_parameters_binSize();
 	  m_PP2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
+	  m_PP2D_weighted.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.));
 	} 
   
       /**

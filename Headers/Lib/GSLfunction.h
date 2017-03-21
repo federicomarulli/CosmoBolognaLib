@@ -38,6 +38,9 @@
 #include "Func.h"
 
 
+// =====================================================================================
+
+
 namespace cosmobl {
 
   namespace glob {
@@ -199,12 +202,14 @@ namespace cosmobl {
     };
 
     /**
-     *  @class GSLfunction_1D_1 GSLfunction.h "Headers/Lib/GSLfunction.h"
+     *  @class GSLfunction_1D_1 GSLfunction.h
+     *  "Headers/Lib/GSLfunction.h"
      *
      *  @brief The class GSLfunction_1D_1
      *
-     *  This class is used to wrap object of type GSL_function, ad use them in
-     *  minimizing procedures. It works with function of type func_1par_1
+     *  This class is used to wrap object of type GSL_function, ad use
+     *  them in minimizing procedures. It works with function of type
+     *  func_1par_1
      */
     class GSLfunction_1D_1 : public GSLfunction
     {
@@ -266,8 +271,8 @@ namespace cosmobl {
       /**
        * @brief minimize the provided function using GSL procedure
        *
-       * @param result store the value of the variable at which the function
-       * has its minimum
+       * @param result store the value of the variable at which the
+       * function has its minimum
        *
        * @param max_iter maximum number of iteration
        *
@@ -281,12 +286,14 @@ namespace cosmobl {
     };
 
     /**
-     *  @class GSLfunction_1D_2 GSLfunction.h "Headers/Lib/GSLfunction.h"
+     *  @class GSLfunction_1D_2 GSLfunction.h
+     *  "Headers/Lib/GSLfunction.h"
      *
      *  @brief The class GSLfunction_1D_2
      *
-     *  This class is used to wrap object of type GSL_function, ad use them in
-     *  minimizing procedures. It works with function of type func_1par_2
+     *  This class is used to wrap object of type GSL_function, ad use
+     *  them in minimizing procedures. It works with function of type
+     *  func_1par_2
      */
     class GSLfunction_1D_2 : public GSLfunction
     {

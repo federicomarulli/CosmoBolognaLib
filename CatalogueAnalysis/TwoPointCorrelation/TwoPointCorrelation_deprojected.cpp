@@ -126,7 +126,7 @@ void cosmobl::twopt::TwoPointCorrelation_deprojected::measureJackknife (const st
   vector<shared_ptr<pairs::Pair>> dd_regions, rr_regions, dr_regions;
   count_allPairs_region(dd_regions, rr_regions, dr_regions, TwoPType::_2D_Cartesian_, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
-  auto data_cart = (estimator==_natural_) ? NaturalEstimator(m_dd, m_rr, m_data->weightedN(), m_random->weightedN()) : LandySzalayEstimator(m_dd, m_rr, m_dr, m_data->weightedN(), m_random->weightedN());
+  auto data_cart = (estimator==_natural_) ? correlation_NaturalEstimator(m_dd, m_rr) : correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
 
   auto data_proj = TwoPointCorrelation_projected::Projected(data_cart->xx(), data_cart->yy(), data_cart->fxy(), data_cart->error_fxy());
 
@@ -169,7 +169,7 @@ void cosmobl::twopt::TwoPointCorrelation_deprojected::measureBootstrap (const in
   vector<shared_ptr<pairs::Pair>> dd_regions, rr_regions, dr_regions;
   count_allPairs_region(dd_regions, rr_regions, dr_regions, TwoPType::_2D_Cartesian_, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
-  auto data_cart = (estimator==_natural_) ? NaturalEstimator(m_dd, m_rr, m_data->weightedN(), m_random->weightedN()) : LandySzalayEstimator(m_dd, m_rr, m_dr, m_data->weightedN(), m_random->weightedN());
+  auto data_cart = (estimator==_natural_) ? correlation_NaturalEstimator(m_dd, m_rr) : correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
 
   auto data_proj = TwoPointCorrelation_projected::Projected(data_cart->xx(), data_cart->yy(), data_cart->fxy(), data_cart->error_fxy());
 
@@ -284,49 +284,3 @@ void cosmobl::twopt::TwoPointCorrelation_deprojected::write (const string dir, c
 }
 
 
-// ============================================================================
-
-
-void cosmobl::twopt::TwoPointCorrelation_deprojected::read_covariance_matrix (const string dir, const string file)
-{
-  m_dataset->set_covariance(dir+file);
-}
-
-
-// ============================================================================
-
-
-void cosmobl::twopt::TwoPointCorrelation_deprojected::write_covariance_matrix (const string dir, const string file) const
-{
-  m_dataset->write_covariance(dir, file, "r");
-}
-
-
-// ============================================================================
-
-
-void cosmobl::twopt::TwoPointCorrelation_deprojected::compute_covariance_matrix (const vector<shared_ptr<data::Data>> xi_collection, const bool doJK)
-{
-  vector<vector<double>> xi;
-
-  for(size_t i=0;i<xi_collection.size();i++)
-    xi.push_back(xi_collection[i]->fx());
-
-  vector<vector<double>> cov_mat;
-  cosmobl::covariance_matrix(xi, cov_mat, doJK);
-  
-  m_dataset->set_covariance(cov_mat);
-}
-
-
-// ============================================================================
-
-
-void cosmobl::twopt::TwoPointCorrelation_deprojected::compute_covariance_matrix (const vector<string> file_xi, const bool doJK)
-{
-  vector<double> rad, mean;
-  vector<vector<double>> cov_mat;
-
-  cosmobl::covariance_matrix (file_xi, rad, mean, cov_mat, doJK); 
-  m_dataset->set_covariance(cov_mat);
-}

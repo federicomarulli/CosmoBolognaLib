@@ -34,7 +34,7 @@ int main () {
     // ---------------- construct the random catalogue (with cubic geometry) ----------------
     // --------------------------------------------------------------------------------------
 
-    const double N_R = 1.; // random/data ratio
+    const double N_R = 3.; // random/data ratio
   
     const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
 
@@ -45,19 +45,24 @@ int main () {
 
     // binning parameters and output data
 
-    const double rMin = 1.;           // minimum separation 
-    const double rMax = 50.;          // maximum separation 
-    const int nbins = 20;             // number of bins
-    const double shift = 0.5;         // spatial shift used to set the bin centre 
-    const double piMax_integral = 30; // upper limit of the integral
-
+    const double rpMin = 5.;     // minimum separation in the first dimension
+    const double rpMax = 50.;    // maximum separation in the first dimension 
+    const int nbins_D1 = 10;     // number of bins in the first dimension
+    const double shift_D1 = 0.5; // spatial shift used to set the bin centre in the first dimension
+    const double piMin = 0.;     // minimum separation in the second dimension
+    const double piMax = 50.;    // maximum separation in the second dimension 
+    const int nbins_D2 = 20;     // number of bins in the second dimension
+    const double shift_D2 = 0.5; // spatial shift used to set the bin centre in the second dimension
+    
+    const double piMax_integral = 30.; // upper limit of the integral
+    
     const string dir = cosmobl::par::DirLoc+"../output/";
     const string file = "xi_projected.dat";
   
 
     // measure the projected two-point correlation function
   
-    const auto TwoP = cosmobl::twopt::TwoPointCorrelation::Create(cosmobl::twopt::TwoPType::_1D_projected_, catalogue, random_catalogue, cosmobl::_logarithmic_, rMin, rMax, nbins, shift, rMin, rMax, nbins, shift, piMax_integral);
+    const auto TwoP = cosmobl::twopt::TwoPointCorrelation::Create(cosmobl::twopt::TwoPType::_1D_projected_, catalogue, random_catalogue, cosmobl::_logarithmic_, rpMin, rpMax, nbins_D1, shift_D1, piMin, piMax, nbins_D2, shift_D2, piMax_integral);
 
     TwoP->measure(cosmobl::twopt::_Poisson_, dir);
 

@@ -5,13 +5,12 @@ FLAGS = -O3 -std=c++11
 dirLib = $(PWD)/../../
 dirH = $(dirLib)Headers/Lib/
 dirHO = $(dirLib)Headers/Objects/
-dirNum = $(PWD)/../../../Numerical/
 dirEH = $(dirLib)External/EH/
 
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
 FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC
-FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirNum) -I$(dirEH) 
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirEH) 
 
 OBJ = randomNumbers.o
 

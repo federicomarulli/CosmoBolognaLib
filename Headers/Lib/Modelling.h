@@ -319,10 +319,12 @@ namespace cosmobl {
        *
        *  @param dir the output directory
        *  @param file the output file
-       * 
+       *  @param write_parameters write_parameters[i]=true &rarr; the
+       *  i-th parameter is stored
+       *
        *  @return none
        */
-      void write_parameters (const string dir, const string file) const;
+      void write_parameters (const string dir, const string file, vector<bool> write_parameters={}) const;
 
       /**
        *  @brief compute and write the model

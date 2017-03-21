@@ -58,6 +58,7 @@ namespace cosmobl {
    *  The \e catalogue namespace contains all the functions and
    *  classes used to handle catalogues of astronomical sources
    */
+
   namespace catalogue {
 
     /**
@@ -121,13 +122,10 @@ namespace cosmobl {
       _Radius_,
 
       /// densityContrast
-      _densityContrast_,
+      _DensityContrast_,
 
       /// centralDensity
-      _centralDensity_,
-
-      /// ID
-      _ID_,
+      _CentralDensity_,
       
       /// xx displacement
       _X_displacement_,
@@ -168,6 +166,20 @@ namespace cosmobl {
       _createRandom_VIPERS_
       
     };
+  
+    /**
+     *  @enum VoidAlgorithm
+     *  @brief the algorithm used to look for Voids
+     */
+    enum VoidAlgorithm {
+       
+       /// Lagrangian Zel'dovich approximation Void algorithm used to move particles
+      _LaZeVo_,
+
+       /// Random Induced walk Void Algorithm used to move particles
+      _RIVA_      
+      
+    };
     
     /**
      *  @enum CharEncode
@@ -181,6 +193,67 @@ namespace cosmobl {
       /// Format binary file
       _binary_
       
+    };
+
+    /**
+     *  @struct Gadget_Header
+     *  @brief This structure allows to store GADGET-2.0 header
+     */
+    struct Gadget_Header {
+
+      /// the number of particles of each type in the snapshot file
+      int npart[6];
+
+      /// the mass of each particle type 
+      double massarr[6];
+
+      /// time of output, or expansion factor for cosmological simulations
+      double time;
+
+      /// z = 1/a-1 (only set for cosmological integrations)
+      double redshift;
+
+      /// flag for star formation (unused in the public version of GADGET-2)
+      int flag_sfr;
+
+      /// flag for feedback (unused)
+      int flag_feedback;
+
+      /// total number of particles of each type in the simulation
+      int npartTotal[6];
+
+      /// flag for cooling (unused)
+      int flag_cool;
+
+      /// number of files in each snapshot
+      int nfiles;
+
+      /// gives the box size if periodic boundary conditions are used
+      double boxsize;
+
+      /// matter density at z=0 in units of the critical density
+      double omega0;
+
+      /// vacuum energy density at z=0 in units of the critical density
+      double omegaLambda;
+
+      /// gives the Hubble constant in units of 100 km/(s Mpc)
+      double hubblePar;
+
+      /// creation time of stars (unused)
+      int flag_stAge;
+
+      /// flag for metallicity values (unused)
+      int flag_Metals;
+
+      /// internal variable for simulations that use more than 2^32 particles
+      int npart_totHW;
+
+      /// flags that the initial conditions contain entropy instead of thermal energy in the u block
+      int flag_entr_ics;
+
+      /// currently unused space which fills the header to a total length of 256 bytes leaving room for future additions
+      short la[40]; 
     };
     
     /**
@@ -196,10 +269,55 @@ namespace cosmobl {
     private :
       
       /// vector containing the objects of the catalogue
-      vector<shared_ptr<Object> > m_object;
+      vector<shared_ptr<Object>> m_object;
       
       /// vector containing the object indexes
-      vector<int> m_index;      
+      vector<int> m_index;
+
+      /// catalogue's comoving volume
+      double m_volume;
+
+      /// catalogue number density
+      double m_numdensity;
+
+      /// catalogue mean particle separation
+      double m_mps;
+    
+      /**
+       *  @name private variables and functions used to read 
+       *  catalogues from standard GADGET-2.0 files
+       */
+      ///@{
+      
+      /// contains the block-header temporary value
+      int m_blockheader;
+
+      /**
+       * @brief swap endianism of the GADGET snapshot header
+       * @param header the un-swapped header
+       * @return an object of type cosmobl::catalogue::Gadget_Header
+       */
+      Gadget_Header swap_header (Gadget_Header header) ;
+
+      /**
+       * @brief Input function to check consistency in reading block-headers
+       * in binary GADGET snapshots
+       * @param finr a pointer to an input stream class object
+       * @param swap true = swap endianism, false = do not swap endianism
+       * @return none
+       */
+      void check_it_in (ifstream& finr, const bool swap);
+
+      /**
+       * @brief Ouput function to check consistency in reading block-headers
+       * in binary GADGET snapshots
+       * @param finr a pointer to an input stream class object
+       * @param swap true = swap endianism, false = do not swap endianism
+       * @return none
+       */
+      void check_it_out (ifstream &finr, const bool swap);
+      
+      ///@}   
 
       
     public :
@@ -351,6 +469,44 @@ namespace cosmobl {
        */
       Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const cosmology::Cosmology &cosm, const CoordUnits inputUnits=_radians_)
 	: Catalogue(objType, coordType, file, 1, 2, 3, -1, -1, 1.1, 1., cosm, inputUnits, _ascii_) {}
+
+      /**
+       *  @brief constructor, reading a file with attributes of the catalogue
+       *
+       *  @param objType the object type, specified in the
+       *  cosmobl::catalogue::ObjType enumeration
+       *
+       *  @param coordType the coordinate type, specified in the
+       *  cosmobl::CoordType enumeration
+       *
+       *  @param attributes vector containing the list of attributes
+       *  contained in the file, used to construct the catalogue
+       *
+       *  @param columns vector containing the column number which 
+       *  correspond to each element of the vector 'attributes'
+       *
+       *  @param file vector containing the files where the input
+       *  catalogues are stored
+       *
+       *  @param comments number of rows to ignore at the beginning of the
+       *  input file if its character encoding is ascii
+       *
+       *  @param nSub the fracton of objects that will be randomly
+       *  selected (nSub=1 &rArr; all objects are selected)
+       *
+       *  @param fact a factor used to multiply the coordinates,
+       *  i.e. coordinate_i=coordinate_i*fact
+       *
+       *  @param cosm object of class Cosmology 
+       *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param charEncode character encoding of input file,
+       *  ascii or binary
+       * 
+       *  @return an object of class Catalogue
+       */
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<Var> attributes, const vector<int> columns, const vector<string> file, const int comments = 0, const double nSub = 1.1, const double fact=1, const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const CharEncode charEncode=_ascii_);
 
       /**
        *  @brief constructor, using vectors of generic objects
@@ -577,12 +733,91 @@ namespace cosmobl {
       Catalogue (const RandomType type, const string WField, const bool isSpectroscopic, const Catalogue catalogue, const Catalogue catalogue_for_nz, const double N_R, const cosmology::Cosmology &cosm, const int step_redshift, const vector<double> lim, const double redshift_min, const double redshift_max, const bool do_convol, const double sigma, const bool use_venice, const bool do_zdistr_with_venice, const string file_random, const string mask, const string pointing_file, const string dir_venice, const int seed); 
       
       /// @endcond
-  
+
+      
       ///@}
 
+      /**
+       *  @name Constructor of Void catalogues 
+       */
+      ///@{
+
+      /// @cond extvoid
+      
+      Catalogue (const VoidAlgorithm algorithm, const Catalogue halo_catalogue, const vector<string> file, const double nSub, const int n_rnd, const string mode, const string dir_output, const double rmax, const int cellsize);
+      
+      /// @endcond
+
+      /**
+       *  @brief constructor that modifies an input void catalogue
+       *  according to a set of user selected criteria. If all the 
+       *  steps are selected the final result is a catalogue of spherical,
+       *  not-overlapped voids.
+       * 
+       *  @param input_voidCatalogue the input void catalogue to be modified
+       *
+       *  @param clean a 3 element bool vector. clean[0] = true, erase voids outside 
+       *  a given interval; clean[1] = true, erase voids with voids higher than a given threshold;
+       *  clean[2] = true, erase voids with density contrast lower than a given value. 
+       *
+       *  @param delta_r the interval of accepted radii
+       *
+       *  @param threshold the density threshold
+       *
+       *  @param statistical_relevance the minimum accepted density contrast
+       *
+       *  @param rescale true = for each void finds the larger radius enclosing
+       *  density = threshold, false = skip the step
+       *
+       *  @param tracers_catalogue object of class Catalogue with the tracers defining
+       *  the void distribution (necessary if rescale = true)
+       *
+       *  @param checkoverlap true = erase all the voids wrt a given criterion, 
+       *  false = skip the step
+       *
+       *  @param ol_criterion the criterion for the overlap step 
+       *  (valid criteria: Var::_DensityContrast_, Var::_CentralDensity_)
+       * 
+       *  @return an object of class Catalogue
+       */
+
+      Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean={false,false,false}, const vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale = false, const shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, bool checkoverlap=false, Var ol_criterion=_DensityContrast_);
+
+      ///@} 
+
+      
+      /**
+       *  @name Constructors used to read catalogues from standar
+       *  GADGET-2.0 files
+       */
+      ///@{
+      
+      /**
+       *  @brief constructor
+       *
+       *  @param objType the object type, specified in the
+       *  cosmobl::catalogue::ObjType enumeration 
+       *
+       *  @param file_cn the the name common to all the files in which
+       *  the gadget snapshot is divided (path/to/file/common_name)
+       *
+       *  @param swap true = swap endianism, false = do not swap endianism
+       *
+       *  @param fact a factor used to multiply the coordinates,
+       *  i.e. coordinate_i=coordinate_i*fact
+       *
+       *  @param read_catalogue true = the constructor actually reads the GADGET snapshot
+       *  false = the constructor only reads the snapshot header and prints it on the screan
+       *
+       *  @return object of type catalogue
+       */
+      Catalogue (const ObjType objType, const string file_cn = par::defaultString, const bool swap = false, const double fact = 0.001, const bool read_catalogue = true);
+
+      ///@}
     
       /**
-       *  @name Member functions used to get the private members and thier properties
+       *  @name Member functions used to get the private members and
+       *  their properties
        */
       ///@{
 
@@ -815,11 +1050,19 @@ namespace cosmobl {
       vector<string> field () const;
       
       /**
+       * @brief get the value of the i-th object variable  
+       * @param index the index of the object
+       * @param var_name the variable name
+       * @return i-th variable Var
+       */
+      double var (const int index, const Var var_name) const;
+      
+      /**
        * @brief get the values of the object variables  
        * @param var_name the variable name
        * @return the vector of the variable Var
        */
-      vector<double> var (const Var) const;
+      vector<double> var (const Var var_name) const;
 
       /**
        * @brief get the i-th object of the catalogue
@@ -921,6 +1164,24 @@ namespace cosmobl {
        * @return the total weight
        */
       double weightedN () const;
+
+      /**
+       * @brief get the catalogue's comoving volume
+       * @return private variable m_volume
+       */
+      double volume () const { return m_volume; }
+
+      /**
+       * @brief get the catalogue's number density
+       * @return private variable m_numdensity
+       */
+      double numdensity () const { return m_numdensity; }
+
+      /**
+       * @brief get the catalogue's mean particle separation
+       * @return private variable m_mps
+       */
+      double mps () const { return m_mps; }
     
       ///@}
   
@@ -946,11 +1207,69 @@ namespace cosmobl {
       
       /**
        * @brief set a private variable
+       * @param index index of the variable to set
+       * @param var_name name of the variable
+       * @param value variable value
+       * @return none
+       */
+      void set_var (const int index, const Var var_name, const double value);
+      
+      /**
+       * @brief set a private variable
        * @param var_name name of the variable
        * @param var vector of variables
        * @return none
        */
       void set_var (const Var var_name, const vector<double> var);
+
+      /**
+       *  @brief compute the central density of each object in a void catalogue.
+       *  The central density is defined as \f$ n_0=\frac{r\,N_v}{V(R_0)} \f$,
+       *  \f$r\f$ is the ratio between the number of particle around the centre
+       *  of the void to be used as tracers of the central density and the total 
+       *  number of particles contained in the void, \f$N_v\f$.
+       *  The distance between the furthest of those \f$r\,N_v\f$ particles 
+       *  from the centre of the void determines the radius of the centre \f$R_0\f$.
+       *  \f$V(R_0)\f$ is the volume of a sphere with radius \f$R_0\f$.
+       *
+       *  @param tracers_catalogue the density field tracers catalogue
+       *
+       *  @param ratio the ratio \f$r\f$ 
+       *
+       *  @param ChM a 3D chain mesh object, used to speed-up the
+       *  search of close pairs
+       *
+       *  @return none
+       *
+       *  @warning if the choice of \f$r\f$ is too low to select more than 3 tracers
+       *  this function will select by dafault the 3 tracers closer to the void centre
+       *  to map the central density.
+       */
+      void compute_centralDensity (const Catalogue tracers_catalogue, chainmesh::ChainMesh3D ChM, const double ratio=0.1);
+
+      /**
+       *  @brief compute density contrast of cosmic voids in catalogue
+       *  as the ratio between the central density and the overall
+       *  density of the region enclosed in the distance between the
+       *  centre and the most distant tracer within an effective
+       *  radius
+       *
+       *  @param tracers_catalogue the density field tracers catalogue
+       *
+       *  @param ChM a 3D chain mesh object, used to speed-up the
+       *  search of close pairs
+       *
+       *  @param ratio the ratio \f$r\f$ used to compute the central density
+       *
+       *  @return none
+       *
+       *  @warning to obtain the density contrast this function computes the 
+       *  central density of each void in the catalogue using the internal 
+       *  function compute_centralDensity; if the choice of \f$r\f$ is too low 
+       *  to select more than 3 tracers the program will select by dafault the
+       *  3 tracers closer to the void centre to map the central density.
+       */
+      void compute_densityContrast (const Catalogue tracers_catalogue, chainmesh::ChainMesh3D ChM, const double ratio=0.1);
 
       ///@}
 
@@ -1030,6 +1349,47 @@ namespace cosmobl {
        * @return none
        */
       void remove_object (const int index) { m_object.erase(m_object.begin()+index); }
+      
+      /**
+       * @brief remove a set of existing objects
+       * @param index vector of boolean variables
+       * @return none
+       */
+      void remove_objects (const vector<bool> index); 
+
+      /**
+       * @brief swap two existing objects
+       * @param ind1 the index of the first object to swap
+       * @param ind2 the index of the second object to swap
+       * @return none
+       */
+      void swap_objects (const int ind1, const int ind2) {
+	shared_ptr<Object> temp = m_object[ind1];
+	m_object[ind1] = m_object[ind2];
+	m_object[ind2] = temp;
+      }
+
+      /**
+       * @brief bubble sort of a catalogue wrt a variable (double)
+       * @param var_name the name of the variable to use in order to sort the catalogue
+       * @return none
+       */
+      void sort (const Var var_name) {
+	vector<double> variable = var(var_name);
+	bool swap = true;
+	while (swap) {
+	  swap = false;
+	  for (size_t i = 0; i<nObjects()-1; ++i) {
+	    if (variable[i] < variable[i+1]) {
+	      double temp = variable[i];
+	      variable[i] = variable[i+1];
+	      variable[i+1] = temp;
+	      swap_objects(i, i+1);
+	      swap = true;
+	    }
+	  }
+	}
+      } 
       
       ///@}
 
@@ -1171,16 +1531,28 @@ namespace cosmobl {
       }
 
       /**
-       * @brief create a sub-catalogue
-       * @param var_name the variable name
-       * @param down minimum variable used to cut the catalogue
-       * @param up maximum variable used to cut the catalogue
-       * @param excl 0 &rarr; creates a subcatalogue inside down-up; 1
-       * &rarr; creates a subcatalogue outside down-up;
-       * @return object of class catalogue
+       *  @brief create a sub-catalogue
+       *  @param var_name the variable name
+       *  @param down minimum variable used to cut the catalogue
+       *  @param up maximum variable used to cut the catalogue
+       *  @param excl false &rarr; create a subcatalogue inside
+       *  down-up; true &rarr; create a subcatalogue outside down-up
+       *  @return object of class catalogue
        */
-      Catalogue cut (const Var, const double, const double, const bool excl=0);
+      Catalogue cutted_catalogue (const Var var_name, const double down, const double up, const bool excl=0) const;
 
+      /**
+       *  @brief create a diluted catalogue
+       * 
+       *  @param nSub the fracton of objects that will be randomly
+       *  selected (nSub=1 &rArr; all objects are selected)
+       *
+       *  @param seed the seed for random number generation
+       *
+       *  @return object of class catalogue
+       */
+      Catalogue diluted_catalogue (const double nSub, const int seed=3213) const;
+      
       /**
        * @brief create a smoothed version of the catalogue
        * averaging quantities on a X, Y, Z grid 
@@ -1221,28 +1593,40 @@ namespace cosmobl {
       double weightedN_condition (const Var, const double, const double, const bool excl=0);
 
       /**
-       * @brief return the density field from object position
-       * @param cell_size the minimum size of the density field
-       * @param interpolation_type the type of interpolation 0 &rarr; nearest-grid-point;
-       * 1 &rarr; cloud-in-cell
-       * @param kernel_radius size of the kernel for the gaussian smoothing
-       * @param useMass generate the density field using the mass information
-       * @return the density field
+       * @brief compute catalogue volume, number density and mean particle separation
+       * @param boxside side lenght of the cubic catalogue box
+       * @return none
        */
-      data::ScalarField3D density_field (const double cell_size, const int interpolation_type=0, const double kernel_radius=0., const bool useMass=0) const;
+      void compute_catalogueProperties (const double boxside = par::defaultDouble);
 
       /**
-       * @brief return the density field from object position
-       * @param cell_size the minimum size of the density field
-       * @param mask_catalogue catalogue containing points sampling the selecion function
-       * of the catalogue
-       * @param interpolation_type the type of interpolation 0 &rarr; nearest-grid-point;
-       * 1 &rarr; cloud-in-cell
-       * @param kernel_radius size of the kernel for the gaussian smoothing
-       * @param useMass generate the density field using the mass information
-       * @return the density field
+       *  @brief return the density field from object positions
+       *  @param cell_size the minimum size of the density field
+       *  @param interpolation_type the type of interpolation 0 &rarr; nearest-grid-point;
+       *  1 &rarr; cloud-in-cell
+       *  @param useMass generate the density field using the mass information
+       *  @param minX minimum value of the x coordinate
+       *  @param maxX maximum value of the x coordinate
+       *  @param minY minimum value of the y coordinate
+       *  @param maxY maximum value of the y coordinate
+       *  @param minZ minimum value of the z coordinate
+       *  @param maxZ maximum value of the z coordinate
+       *  @return the density field
        */
-      data::ScalarField3D density_field (const double cell_size, const Catalogue mask_catalogue, const int interpolation_type = 0, const double kernel_radius=0., const bool useMass = 0) const;
+      data::ScalarField3D counts_in_cell (const double cell_size, const int interpolation_type=0, const bool useMass=false, const double minX=par::defaultDouble, const double maxX=par::defaultDouble, const double minY=par::defaultDouble, const double maxY=par::defaultDouble, const double minZ=par::defaultDouble, const double maxZ=par::defaultDouble) const;
+
+      /**
+       *  @brief return the density field from object position
+       *  @param cell_size the minimum size of the density field
+       *  @param mask_catalogue catalogue containing points sampling
+       *  the selecion function of the catalogue
+       *  @param interpolation_type the type of interpolation 0 &rarr;
+       *  nearest-grid-point; 1 &rarr; cloud-in-cell
+       *  @param kernel_radius size of the kernel for the gaussian smoothing
+       *  @param useMass generate the density field using the mass information
+       *  @return the density field
+       */
+      data::ScalarField3D density_field (const double cell_size, const Catalogue mask_catalogue, const int interpolation_type=0, const double kernel_radius=0., const bool useMass=false) const;
 
       ///@}
       

@@ -70,7 +70,7 @@ void cosmobl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::
       random.catalogue_object(i)->set_region(index);
     }
   }
-  
+
   cosmobl::check_regions(data, random);
 }
 

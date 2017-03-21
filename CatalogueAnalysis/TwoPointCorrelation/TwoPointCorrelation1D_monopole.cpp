@@ -50,26 +50,18 @@ using namespace twopt;
 
 void cosmobl::twopt::TwoPointCorrelation1D_monopole::set_parameters (const binType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info) 
 {
-  if (!compute_extra_info) {
+  if (!compute_extra_info) 
     m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _standard_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
       : move(Pair::Create(_comoving_lin_, _standard_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
-    
-    m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _standard_, rMin, rMax, nbins, shift, angularUnits))
-      : move(Pair::Create(_comoving_lin_, _standard_, rMin, rMax, nbins, shift, angularUnits));
-    
-    m_dr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _standard_, rMin, rMax, nbins, shift, angularUnits))
-      : move(Pair::Create(_comoving_lin_, _standard_, rMin, rMax, nbins, shift, angularUnits));
-  }
-  else {
+  else 
     m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _extra_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
       : move(Pair::Create(_comoving_lin_, _extra_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
     
-    m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _extra_, rMin, rMax, nbins, shift, angularUnits))
-      : move(Pair::Create(_comoving_lin_, _extra_, rMin, rMax, nbins, shift, angularUnits));
-    
-    m_dr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _extra_, rMin, rMax, nbins, shift, angularUnits))
-      : move(Pair::Create(_comoving_lin_, _extra_, rMin, rMax, nbins, shift, angularUnits));
-  }
+  m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _standard_, rMin, rMax, nbins, shift, angularUnits))
+    : move(Pair::Create(_comoving_lin_, _standard_, rMin, rMax, nbins, shift, angularUnits));
+  
+  m_dr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _standard_, rMin, rMax, nbins, shift, angularUnits))
+    : move(Pair::Create(_comoving_lin_, _standard_, rMin, rMax, nbins, shift, angularUnits));
 }
 
 
@@ -78,26 +70,18 @@ void cosmobl::twopt::TwoPointCorrelation1D_monopole::set_parameters (const binTy
 
 void cosmobl::twopt::TwoPointCorrelation1D_monopole::set_parameters (const binType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info)
 {
-  if (!compute_extra_info) {
+  if (!compute_extra_info) 
     m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _standard_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
       : move(Pair::Create(_comoving_lin_, _standard_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
-  
-    m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _standard_, rMin, rMax, binSize, shift, angularUnits))
-      : move(Pair::Create(_comoving_lin_, _standard_, rMin, rMax, binSize, shift, angularUnits));
-  
-    m_dr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _standard_, rMin, rMax, binSize, shift, angularUnits))
-      : move(Pair::Create(_comoving_lin_, _standard_, rMin, rMax, binSize, shift, angularUnits));
-  }
-  else {
+  else 
     m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _extra_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
       : move(Pair::Create(_comoving_lin_, _extra_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
+    
+  m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _standard_, rMin, rMax, binSize, shift, angularUnits))
+    : move(Pair::Create(_comoving_lin_, _standard_, rMin, rMax, binSize, shift, angularUnits));
   
-    m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _extra_, rMin, rMax, binSize, shift, angularUnits))
-      : move(Pair::Create(_comoving_lin_, _extra_, rMin, rMax, binSize, shift, angularUnits));
-  
-    m_dr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _extra_, rMin, rMax, binSize, shift, angularUnits))
-      : move(Pair::Create(_comoving_lin_, _extra_, rMin, rMax, binSize, shift, angularUnits));
-  }
+  m_dr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_log_, _standard_, rMin, rMax, binSize, shift, angularUnits))
+    : move(Pair::Create(_comoving_lin_, _standard_, rMin, rMax, binSize, shift, angularUnits));
 }
 
 
@@ -150,15 +134,6 @@ void cosmobl::twopt::TwoPointCorrelation1D_monopole::measure (const ErrorType er
 
 void cosmobl::twopt::TwoPointCorrelation1D_monopole::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  // ----------- weigthed number of objects in the real and random catalogues ----------- 
-  
-  int nData = m_data->weightedN();
-  int nRandom = m_random->weightedN();
-  
-  if (nData==0 || nRandom==0)  
-    ErrorCBL("Error in measurePoisson() of TwoPointCorrelation.cpp!");
-
-  
   // ----------- count the data-data, random-random and data-random pairs, or read them from file ----------- 
   
   count_allPairs(m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
@@ -167,9 +142,9 @@ void cosmobl::twopt::TwoPointCorrelation1D_monopole::measurePoisson (const strin
   // ----------- compute the monopole of the two-point correlation function ----------- 
 
   if (estimator==_natural_)
-    m_dataset = NaturalEstimator(m_dd, m_rr, nData, nRandom);
+    m_dataset = correlation_NaturalEstimator(m_dd, m_rr);
   else if (estimator==_LandySzalay_)
-    m_dataset = LandySzalayEstimator(m_dd, m_rr, m_dr, nData, nRandom);
+    m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
     ErrorCBL("Error in measurePoisson() of TwoPointCorrelation1D_monopole.cpp: the chosen estimator is not implemented!");
   
@@ -199,7 +174,7 @@ void cosmobl::twopt::TwoPointCorrelation1D_monopole::measureJackknife (const str
   
   for (size_t i=0; i<nRegions; i++) {
 
-    if (dir_output_JackknifeXi !=par::defaultString && dir_output_JackknifeXi!="") {
+    if (dir_output_JackknifeXi!=par::defaultString && dir_output_JackknifeXi!="") {
       string file = "xi_Jackknife_"+conv(i, par::fINT)+".dat";
       data_SS[i]->write(dir_output_JackknifeXi, file, "[1] separation at the bin centre # [2] spherically averagerded two-point correlation function # [3] error", 0);
     }
@@ -208,14 +183,11 @@ void cosmobl::twopt::TwoPointCorrelation1D_monopole::measureJackknife (const str
   }
 
   covariance_matrix(xi_SubSamples, covariance, 1);
-
-  double nData = m_data->weightedN();
-  double nRandom = m_random->weightedN();
   
   if (estimator==_natural_)
-    m_dataset = NaturalEstimator(m_dd, m_rr, nData, nRandom);
+    m_dataset = correlation_NaturalEstimator(m_dd, m_rr);
   else if (estimator==_LandySzalay_)
-    m_dataset = LandySzalayEstimator(m_dd, m_rr, m_dr, nData, nRandom);
+    m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
     ErrorCBL("Error in measureJackknife() of TwoPointCorrelation1D_monopole.cpp: the chosen estimator is not implemented!");
   
@@ -256,14 +228,11 @@ void cosmobl::twopt::TwoPointCorrelation1D_monopole::measureBootstrap (const int
   }
 
   covariance_matrix(xi_SubSamples, covariance, 0);
-
-  double nData = m_data->weightedN();
-  double nRandom = m_random->weightedN();
   
   if (estimator==_natural_)
-    m_dataset = NaturalEstimator(m_dd, m_rr, nData, nRandom);
+    m_dataset = correlation_NaturalEstimator(m_dd, m_rr);
   else if (estimator==_LandySzalay_)
-    m_dataset = LandySzalayEstimator(m_dd, m_rr, m_dr, nData, nRandom);
+    m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
     ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_monopole.cpp: the chosen estimator is not implemented!");
 

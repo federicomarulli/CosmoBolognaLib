@@ -520,23 +520,6 @@ namespace cosmobl {
       { (void)error_fx; ErrorCBL("Error in set_error_fx of Data.h!"); }
 
       /**
-       *  @brief set interval variable m_covariance, reading from an input file
-       *  @param filename file containing the covariance matrix in the format:
-       * column 0 &rarr x<SUB>i</SUB>, column 1 &rarr x<SUB>j</SUB>, column 2 &rarr cov(x<SUB>i</SUB>,x<SUB>j</SUB>)
-       *  @return none
-       */
-      virtual void set_covariance (const string filename)
-      { (void)filename; ErrorCBL("Error in set_covariance of Data.h!"); }
-
-      /**
-       *  @brief set interval variable m_covariance
-       *  @param covariance vector containing f(x) covariance matrix 
-       *  @return none
-       */
-      virtual void set_covariance (const vector<vector<double>> covariance) 
-      { (void)covariance; ErrorCBL("Error in set_covariance of Data.h!"); }
-
-      /**
        *  @brief set interval variable m_fxy
        *  @param fxy vector containing f(x,y) 
        *  @return none
@@ -590,23 +573,51 @@ namespace cosmobl {
       { (void)i; (void)error_fx; ErrorCBL("Error in set_error_fx of Data.h"); }
 
       /**
-       *  @brief set interval variable m_covariance, in the i-th
-       *  dataset reading from an input file; also compute inverted
-       *  covariance matrix
-       *  @param i index to the i-th dataset
+       *  @brief set the interval variable m_covariance, reading from an input file
+       *
        *  @param filename file containing the covariance matrix in the
        *  format: column 0 &rarr x<SUB>i</SUB>, column 1 &rarr
        *  x<SUB>j</SUB>, column 2 &rarr
        *  cov(x<SUB>i</SUB>,x<SUB>j</SUB>)
+       *
+       *  @param skipped_lines comment lines to be skipped
+       *
        *  @return none
        */
-      virtual void set_covariance (const int i, const string filename)
-      { (void)i; (void)filename; ErrorCBL("Error in set_covariance of Data.h"); }
+      virtual void set_covariance (const string filename, const int skipped_lines=0)
+      { (void)filename; (void)skipped_lines; ErrorCBL("Error in set_covariance of Data.h!"); }
 
       /**
-       *  @brief set interval variable m_covariance, in the i-th
-       *  dataset reading from an input file; also compute inverted
-       *  covariance matrix
+       *  @brief set interval the variable m_covariance
+       *  @param covariance vector containing the covariance matrix
+       *  @return none
+       */
+      virtual void set_covariance (const vector<vector<double>> covariance) 
+      { (void)covariance; ErrorCBL("Error in set_covariance of Data.h!"); }
+      
+      /**
+       *  @brief set the interval variable m_covariance, in the i-th
+       *  dataset reading from an input file; it also compute the
+       *  inverted covariance matrix
+       *
+       *  @param i index to the i-th dataset
+       *
+       *  @param filename file containing the covariance matrix in the
+       *  format: column 0 &rarr x<SUB>i</SUB>, column 1 &rarr
+       *  x<SUB>j</SUB>, column 2 &rarr
+       *  cov(x<SUB>i</SUB>,x<SUB>j</SUB>)
+       *
+       *  @param skipped_lines comment lines to be skipped
+       *
+       *  @return none
+       */
+      virtual void set_covariance (const int i, const string filename, const int skipped_lines=0)
+      { (void)i; (void)filename; (void)skipped_lines; ErrorCBL("Error in set_covariance of Data.h"); }
+
+      /**
+       *  @brief set the interval variable m_covariance, in the i-th
+       *  dataset reading from an input file; it also compute the
+       *  inverted covariance matrix
        *  @param i index to the i-th dataset
        *  @param covariance vector containing f(x) covariance matrix 
        *  @return none
@@ -625,8 +636,9 @@ namespace cosmobl {
       { (void)i; (void)j; (void)covariance; ErrorCBL("Error in set_covariance of Data.h"); }
 
       /**
-       *  @brief set interval variable m_covariance_matrix, from covariance matrix
-       *  of datasets, the result is a block covariance matrix
+       *  @brief set the interval variable m_covariance_matrix, from
+       *  covariance matrix of datasets, the result is a block
+       *  covariance matrix       
        *  @return none
        */
       virtual void set_covariance ()
@@ -706,11 +718,11 @@ namespace cosmobl {
        *  @param input_file file containing input data in 4 columns:
        *  first column &rarr x points, second column y points, thrid column &rarr f(x,y), fourth column &rarr 
        *  f(x,y) error
-       *  @param skip_nlines the header lines to be skipped
+       *  @param skipped_lines the header lines to be skipped
        *  @return none
        */
-      virtual void read (const string input_file, const int skip_nlines=0)
-      { (void)input_file; (void)skip_nlines; ErrorCBL("Error in read of Data.h!"); }
+      virtual void read (const string input_file, const int skipped_lines=0)
+      { (void)input_file; (void)skipped_lines; ErrorCBL("Error in read of Data.h!"); }
 
       /**
        *  @brief write the data

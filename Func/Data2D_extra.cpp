@@ -41,9 +41,9 @@ using namespace glob;
 // ======================================================================================
 
 
-void cosmobl::data::Data2D_extra::read (const string input_file, const int skip_nlines)
+void cosmobl::data::Data2D_extra::read (const string input_file, const int skipped_lines)
 {
-  (void)skip_nlines;
+  (void)skipped_lines;
   
   ErrorCBL("Error in cosmobl::data::Data2D_extra::read : work in progress!", ExitCode::_workInProgress_);
 

@@ -99,7 +99,7 @@ namespace cosmobl {
       Data2D () { set_dataType(DataType::_2D_data_); }
       
       /**
-       *  @brief constructor used 
+       *  @brief constructor
        *  @param x vector containing x points 
        *  @param y vector containing y points 
        *  @param fxy vector containing f(x,y) values
@@ -113,7 +113,7 @@ namespace cosmobl {
       Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > fxy, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const double ymin=par::defaultDouble, const double ymax=-par::defaultDouble, const DataType dataType=DataType::_2D_data_); 
 
       /**
-       *  @brief constructor used
+       *  @brief constructor
        *  @param x vector containing x points 
        *  @param y vector containing y points 
        *  @param fxy vector containing f(x,y) values
@@ -317,10 +317,10 @@ namespace cosmobl {
       /**
        *  @brief read the data
        *  @param input_file input data file
-       *  @param skip_nlines the header lines to be skipped
+       *  @param skipped_lines the header lines to be skipped
        *  @return none
        */
-      virtual void read (const string input_file, const int skip_nlines=0) override;
+      virtual void read (const string input_file, const int skipped_lines=0) override;
 
       /**
        *  @brief write the data
@@ -334,8 +334,8 @@ namespace cosmobl {
        *  @param rank cpu index (for MPI usage)
        *  @return none
        */
-      void write (const string dir, const string file, const string header, const bool full, const int rank=0) const;
-      
+      virtual void write (const string dir, const string file, const string header, const bool full, const int rank=0) const override;
+
       ///@}
 
     };

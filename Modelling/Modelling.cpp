@@ -66,8 +66,8 @@ void cosmobl::modelling::Modelling::set_likelihood (const double xmin, const dou
 void cosmobl::modelling::Modelling::sample_likelihood (const double xmin, const double xmax, const statistics::LikelihoodType likelihood_type, const int n_chains, const int chain_size, const int seed, const string dir_output, const string chain_file, const bool do_write_chain, const double start, const double stop, const int thin)
 {
   set_likelihood(xmin, xmax, likelihood_type);
-
-  m_likelihood->sample_stretch_move(n_chains, chain_size, seed, do_write_chain, dir_output, chain_file);
+  
+  m_likelihood->sample_stretch_move(n_chains, chain_size, seed, 1.e-3, do_write_chain, dir_output, chain_file);
   
   m_likelihood->write_chain(dir_output, chain_file, start, stop, thin);
 }
@@ -80,7 +80,7 @@ void cosmobl::modelling::Modelling::sample_likelihood (const double xmin, const 
 {
   set_likelihood(xmin, xmax, ymin, ymax, likelihood_type);
 
-  m_likelihood->sample_stretch_move(n_chains, chain_size, seed, do_write_chain, dir_output, chain_file);
+  m_likelihood->sample_stretch_move(n_chains, chain_size, seed, 1.e-3, do_write_chain, dir_output, chain_file);
 
   m_likelihood->write_chain(dir_output, chain_file, start, stop, thin);
 
@@ -93,7 +93,7 @@ void cosmobl::modelling::Modelling::sample_likelihood (const statistics::Likelih
 {
   m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, likelihood_type));
 
-  m_likelihood->sample_stretch_move(n_chains, chain_size, seed, do_write_chain, dir_output, chain_file);
+  m_likelihood->sample_stretch_move(n_chains, chain_size, seed, 1.e-3, do_write_chain, dir_output, chain_file);
 
   m_likelihood->write_chain(dir_output, chain_file, start, stop, thin);
 }
@@ -106,7 +106,7 @@ void cosmobl::modelling::Modelling::sample_likelihood (const statistics::Likelih
 {
   m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, likelihood_type, loglikelihood_function, cov));
 
-  m_likelihood->sample_stretch_move(n_chains, chain_size, seed, do_write_chain, dir_output, chain_file);
+  m_likelihood->sample_stretch_move(n_chains, chain_size, seed, 1.e-3, do_write_chain, dir_output, chain_file);
 
   m_likelihood->write_chain(dir_output, chain_file, start, stop, thin);
 }
@@ -138,13 +138,19 @@ void cosmobl::modelling::Modelling::sample_likelihood (const double xmin, const 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::write_parameters (const string dir, const string file) const
+void cosmobl::modelling::Modelling::write_parameters (const string dir, const string file, vector<bool> write_parameter) const
 {
+  if (write_parameter.size()==0) write_parameter.resize(m_model->npar(), true);
+  checkDim(write_parameter, m_model->npar(), "write_parameter");
+  
+  if (system(("mkdir -p "+dir).c_str())) {}
+  
   string output = dir+file; 
   ofstream fout(output); checkIO(fout, output);
 
   for (unsigned int i=0; i<m_model->npar(); i++)
-    fout << m_model->parameter(i)->value() << "   " << m_model->parameter(i)->std() << endl;
+    if (write_parameter[i])
+      fout << setprecision(4) << m_model->parameter(i)->mean() << "   " << m_model->parameter(i)->median() << "   " << m_model->parameter(i)->std() << endl;
   
   fout.clear(); fout.close();
   coutCBL << "I wrote the file: " << output << endl;

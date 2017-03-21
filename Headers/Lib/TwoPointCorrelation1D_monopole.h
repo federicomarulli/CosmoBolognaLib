@@ -216,10 +216,13 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *  @return object of class TwoPointCorrelation1D_monopole
        */
-      TwoPointCorrelation1D_monopole (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
-	: TwoPointCorrelation1D(data, random, compute_extra_info)
+      TwoPointCorrelation1D_monopole (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	: TwoPointCorrelation1D(data, random, compute_extra_info, random_dilution_fraction)
 	{ m_twoPType = _1D_monopole_; set_parameters(binType, rMin, rMax, nbins, shift, angularUnits, angularWeight, compute_extra_info); }
       
       /**
@@ -239,10 +242,13 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *  @return object of class TwoPointCorrelation1D_monopole
        */
-      TwoPointCorrelation1D_monopole (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
-	: TwoPointCorrelation1D(data, random, compute_extra_info)
+      TwoPointCorrelation1D_monopole (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	: TwoPointCorrelation1D(data, random, compute_extra_info, random_dilution_fraction)
 	{ m_twoPType = _1D_monopole_; set_parameters(binType, rMin, rMax, binSize, shift, angularUnits, angularWeight, compute_extra_info); }
 
       /**
@@ -363,7 +369,7 @@ namespace cosmobl {
        *  @return none
        */
       void write (const string dir=par::defaultString, const string file=par::defaultString, const int rank=0) const override;
-    
+
       ///@}
 
     };

@@ -76,7 +76,18 @@ namespace cosmobl {
        *  @return object of class Data1D_extra
        */
       Data1D_extra () { set_dataType(DataType::_1D_data_extra_); }
-      
+
+      /**
+       *  @brief constructor, reading data from an input file
+       *  @param input_file the input data file
+       *  @param skipped_lines the header lines to be skipped
+       *  @param xmin maximun value of x to be used 
+       *  @param xmax maximun value of x to be used 
+       *  @param dataType the data type
+       *  @return object of class Data1D
+       */
+      Data1D_extra (const string input_file, const int skipped_lines=0, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_);
+	
       /**
        *  @brief constructor
        *  @param x vector containing x points 
@@ -176,10 +187,10 @@ namespace cosmobl {
       /**
        *  @brief read the data
        *  @param input_file input data file
-       *  @param skip_nlines the header lines to be skipped
+       *  @param skipped_lines the header lines to be skipped
        *  @return none
        */
-      virtual void read (const string input_file, const int skip_nlines=0) override;
+      virtual void read (const string input_file, const int skipped_lines=0) override;
 
       /**
        *  @brief write the data

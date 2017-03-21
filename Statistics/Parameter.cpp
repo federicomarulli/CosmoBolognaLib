@@ -208,15 +208,18 @@ double cosmobl::statistics::Parameter::chains_convergence (const int max, const 
 
     auto chain = merge_chains(max, min, thin);
     chain->Statistics();
+
+    m_mean = chain->mean();
+    m_median = chain->median();
+    m_std = chain->std();
     
     cout << endl;
     coutCBL << par::col_green << m_name << par::col_default << ":" << endl;
-    coutCBL << setprecision(6) << " mean = "  << chain->mean() << endl;
-    coutCBL << " std = " << chain->std() << endl;
-    coutCBL << " median = " << chain->median() << endl;
-
+    coutCBL << setprecision(4) << " mean = "  << m_mean << endl;
+    coutCBL << " median = " << m_median << endl;
+    coutCBL << " std = " << m_std << endl;
+   
     set_value(chain->mean());
-    m_std = chain->std();
 
     vector<double> mean, var;
 
@@ -226,7 +229,7 @@ double cosmobl::statistics::Parameter::chains_convergence (const int max, const 
       var.push_back(cc->std()*cc->std());
     }
     
-    double W  = Average(var);
+    double W = Average(var);
     double B = m_chain_size*Sigma(mean)*Sigma(mean);
     RR = sqrt((double(m_chain_size-1)/m_chain_size*W+B/m_chain_size)/W);
     coutCBL << setprecision(6) << "Convergence parameter (sqrt(R)-1) = " << RR-1 << endl;
@@ -252,4 +255,39 @@ vector<double> cosmobl::statistics::Parameter::sample_from_prior (const int samp
 
   return values;
   
+}
+
+
+// ============================================================================================
+
+
+vector<double> cosmobl::statistics::Parameter::sample_sphere (const int sample_size, const double radius, const int seed)
+{
+  vector<double> values;
+  
+  if (!isFixed()){
+    random::NormalRandomNumbers random_values(m_best_value, radius, seed, m_prior->xmin(), m_prior->xmax());
+    for (int i=0; i<sample_size; i++)
+      values.push_back(random_values());
+  }
+  else 
+    values.resize(sample_size, m_value);
+
+  return values;
+  
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::statistics::Parameter::set_chains_values_sphere (const int position, const double radius, const int seed)
+{
+  if (position >= m_chain_size)
+    ErrorCBL("Error in set_chain value of Parameter.cpp, position in chain >= chain size");
+
+  vector<double> values = sample_sphere(m_nchains, radius, seed);
+  for (int i=0; i<m_nchains; i++)
+    m_chains[i]->set_chain_value(position,values[i]);
+
 }

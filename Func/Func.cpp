@@ -19,7 +19,7 @@
  *******************************************************************/
 
 /**
- *  @file ../CosmoBolognaLib/Func/Func.cpp
+ *  @file CosmoBolognaLib/Func/Func.cpp
  *
  *  @brief Useful generic functions
  *
@@ -38,6 +38,7 @@ using namespace glob;
 
 
 // ============================================================================
+
 
 double cosmobl::closest_probability (double xx, shared_ptr<void> pp, vector<double> par)
 {
@@ -621,8 +622,10 @@ double cosmobl::interpolated (const double _xx, const vector<double> xx, const v
 
   gsl_interp *interp = gsl_interp_alloc(TT, size);
   gsl_interp_init(interp, xx.data(), yy.data(), size);
-  double _yy = gsl_interp_eval(interp, xx.data(), yy.data() ,_xx,acc);
-
+  
+  double _yy;
+  interp->type->eval(interp->state, xx.data(), yy.data(), interp->size, _xx, acc, &_yy);
+  
   gsl_interp_free(interp);
   gsl_interp_accel_free(acc);
   
@@ -641,7 +644,7 @@ double cosmobl::interpolated_2D (const double _x1, const double _x2, const vecto
   const size_t size_x2 = x2.size();
   double *ydata = new double[size_x1*size_x2];
 
-  if((_x1>Max(x1) || Min(x1)>_x1) ||(_x2>Max(x2) || Min(x2)>_x2))
+  if ((_x1>Max(x1) || Min(x1)>_x1) ||(_x2>Max(x2) || Min(x2)>_x2))
     extr = 1;
 
   gsl_interp_accel *x1acc = gsl_interp_accel_alloc();
@@ -763,8 +766,8 @@ void cosmobl::invert_matrix (const vector<vector<double> > mat, vector<vector<do
   gsl_matrix *im = gsl_matrix_alloc (n, n);
   gsl_permutation * perm = gsl_permutation_alloc (n);
 
-  for(int i=i1;i<i2;i++)
-    for(int j=i1;j<i2;j++)
+  for (int i=i1; i<i2; i++)
+    for (int j=i1; j<i2; j++)
       gsl_matrix_set(mm,i-i1,j-i1,mat[i][j]);
 
   // Make LU decomposition of matrix m
@@ -785,8 +788,8 @@ void cosmobl::invert_matrix (const vector<vector<double> > mat, vector<vector<do
     }
   }
 
-  for (size_t i=0; i<mat.size(); i++){
-    for (size_t j=0; j<mat[i].size(); j++){
+  for (size_t i=0; i<mat.size(); i++) {
+    for (size_t j=0; j<mat[i].size(); j++) {
       if (int(i)<i2 && int(i)>=i1 && int(j)<i2 && int(j)>=i1)
 	mat_inv[i][j] = gsl_matrix_get(im,i-i1,j-i1);
       else
@@ -801,38 +804,39 @@ void cosmobl::invert_matrix (const vector<vector<double> > mat, vector<vector<do
 
 void cosmobl::covariance_matrix (const vector<vector<double> > mat, vector< vector<double> > &cov, const bool JK) 
 {  
-  cov.erase(cov.begin(),cov.end());
-  vector<double> vv (mat[0].size(),0.);
-  for (unsigned int i=0; i<mat[0].size(); i++) cov.push_back(vv);
+  cov.erase(cov.begin(), cov.end());
+  vector<double> vv (mat[0].size(), 0.);
+  for (size_t i=0; i<mat[0].size(); i++) cov.push_back(vv);
   
 
   // measure the mean values at each bin
 
-  vector<double> mean, sigma;
+  vector<double> mean;
 
-  for (unsigned int i=0; i<mat[0].size(); i++) { // loop on the bin i
+  for (size_t i=0; i<mat[0].size(); i++) { // loop on the i-th bin 
     
     vector<double> vect_temp;
-    for (unsigned int j=0; j<mat.size(); j++) // loop on the realization j
+    for (size_t j=0; j<mat.size(); j++) // loop on the j-th realisation
       vect_temp.push_back(mat[j][i]);
 
-    if (vect_temp.size()>2) {
+    if (vect_temp.size()>2) 
       mean.push_back(Average(vect_temp));
-      sigma.push_back(Sigma(vect_temp));
-    }
     else 
       mean.push_back(-1.e30);
+    
   }
   
   
   // compute the elements of the covariance matrix
   
-  for (unsigned int i=0; i<cov.size(); i++) 
-    for (unsigned int j=0; j<cov.size(); j++) {
+  for (size_t i=0; i<cov.size(); i++) 
+    for (size_t j=0; j<cov.size(); j++) {
       int nm = 0;
-      for (unsigned int k=0; k<mat.size(); k++) {
-	cov[i][j] += (mean[i]-mat[k][i])*(mean[j]-mat[k][j]);
-	nm ++;
+      for (size_t k=0; k<mat.size(); k++) {
+	if (mean[i]>-1.e30) {
+	  cov[i][j] += (mean[i]-mat[k][i])*(mean[j]-mat[k][j]);
+	  nm ++;
+	}
       }
       if (nm>1) cov[i][j] = (JK) ? double(nm-1)/(nm)*cov[i][j] : cov[i][j]/(nm-1);
     }
@@ -894,8 +898,8 @@ void cosmobl::covariance_matrix (const vector<string> file, const string covaria
 
   ofstream fout(covariance_matrix_file.c_str()); checkIO(fout, covariance_matrix_file);
 
-  for(size_t i=0;i<rad.size();i++){
-    for(size_t j=0;j<rad.size();j++)
+  for (size_t i=0; i<rad.size(); i++) {
+    for (size_t j=0; j<rad.size(); j++)
       fout << rad[i] << " " << rad[j] << " " << cov[i][j] << " " <<  cov[i][j]/sqrt(cov[i][i]*cov[j][j]) << endl;
     fout << endl;
   }
@@ -906,15 +910,202 @@ void cosmobl::covariance_matrix (const vector<string> file, const string covaria
 
 // ============================================================================
 
+ 
+double cosmobl::Average (const vector<double> vect) 
+{
+  if (vect.size()==0) ErrorCBL("Error in Average() of Func.h");
+
+  double aver = 0., NT = 0.;
+  
+#pragma omp parallel num_threads(omp_get_max_threads())
+  {
+    
+    double averT = 0., nT = 0.;
+	
+#pragma omp for schedule(static, 2)
+    for (size_t i=0; i<vect.size(); ++i) 
+      averT += 1./(++nT)*(vect[i]-averT);
+    
+#pragma omp critical
+    aver += ((NT+=nT)>0) ? nT/NT*(averT-aver) : 0.;
+    
+  }
+  
+  return aver;
+}
+
+
+// ============================================================================
+
+
+double cosmobl::Average (const vector<double> vect, const vector<double> weight) 
+{
+  if (vect.size()==0 || vect.size()!=weight.size())
+    ErrorCBL("Error in Average() of Func.h");
+
+  double aver = 0., WeightTOT = 0.;
+  
+#pragma omp parallel num_threads(omp_get_max_threads())
+  {
+
+    double averT = 0., WeightT = 0.;
+    
+#pragma omp for schedule(static, 2)
+    for (size_t i=0; i<vect.size(); ++i) 
+      averT += weight[i]/(WeightT+=weight[i])*(vect[i]-averT);
+    
+#pragma omp critical
+    aver += ((WeightTOT+=WeightT)>0) ? WeightT/WeightTOT*(averT-aver) : 0.;
+
+  }
+  
+  return aver;  
+}
+
+
+// ============================================================================
+
+
+double cosmobl::Sigma (const vector<double> vect) 
+{
+  if (vect.size()==0) ErrorCBL("Error in Sigma() of Func.h");
+  
+  double aver_n1 = 0., aver_n = 0., Sn = 0., sigma = 0., NT = 0.;
+
+#pragma omp parallel num_threads(omp_get_max_threads())
+  {
+    
+    double aver_n1T = 0., aver_nT = 0., SnT = 0., nT = 0.;
+
+#pragma omp for schedule(static, 2)
+    for (size_t i=0; i<vect.size(); ++i) {
+      aver_n1T = aver_nT;
+      aver_nT += 1./(++nT)*(vect[i]-aver_nT);
+      SnT += (vect[i]-aver_n1T)*(vect[i]-aver_nT);
+    }
+    
+#pragma omp critical
+    {
+      NT += nT;
+      if (NT>0) {
+	aver_n1 = aver_n;
+	aver_n += nT/NT*(aver_nT-aver_n);
+	Sn += SnT+pow((aver_nT-aver_n1), 2)*nT*(NT-nT)/NT;
+	sigma = sqrt(Sn/NT);
+      }
+    }
+    
+  }
+  
+  return sigma;
+}
+
+
+// ============================================================================
+
+
+double cosmobl::Sigma (const vector<double> vect, const vector<double> weight) 
+{
+  if (vect.size()==0 || vect.size()!=weight.size()) ErrorCBL("Error in Sigma() of Func.h");
+  
+  double aver_n1 = 0., aver_n = 0., Sn = 0., sigma = 0., WeightTOT = 0.;
+
+#pragma omp parallel num_threads(omp_get_max_threads())
+  {
+    
+    double aver_n1T = 0., aver_nT = 0., SnT = 0., WeightT = 0.;
+
+#pragma omp for schedule(static, 2)
+    for (size_t i=0; i<vect.size(); ++i) {
+      aver_n1T = aver_nT;
+      aver_nT += weight[i]/(WeightT+=weight[i])*(vect[i]-aver_nT);
+      SnT += weight[i]*(vect[i]-aver_n1T)*(vect[i]-aver_nT);
+    }
+    
+#pragma omp critical
+    {
+      WeightTOT += WeightT;
+      if (WeightTOT>0) {
+	aver_n1 = aver_n;
+	aver_n += WeightT/WeightTOT*(aver_nT-aver_n);
+	Sn += SnT+pow((aver_nT-aver_n1), 2)*WeightT*(WeightTOT-WeightT)/WeightTOT;
+	sigma = sqrt(Sn/WeightTOT);
+      }
+    }
+    
+  }
+  
+  return sigma;
+}
+
+
+// ============================================================================
+
+
+vector<double> cosmobl::Quartile (const vector<double> Vect) 
+{
+  vector<double> vect = Vect;
+  sort(vect.begin(), vect.end()); 
+  vector<double> vect1, vect2;
+  
+  int start, n = vect.size();
+  double first = 0., second = 0., third = 0.;
+  
+  if (n>0) {
+    if (n==1) {
+      first = -1e10;
+      second = vect[0];
+      third = 1e10;
+    }
+    if (n>1) {
+      if (n % 2 == 0)  // the number of elemens is even
+	start = int(vect.size()*0.5);
+      else 
+	start = int(vect.size()*0.5)+1;
+	  
+      for (size_t i=0; i<vect.size()*0.5; i++)
+	vect1.push_back(vect[i]);
+      for (size_t i=start; i<vect.size(); i++)
+	vect2.push_back(vect[i]);
+
+      // first quartile
+      n = vect1.size();
+      if (n % 2 == 0) 
+	first = (vect1[n*0.5-1]+vect1[(n*0.5)])*0.5;
+      else 
+	first = vect1[(n+1)*0.5-1];
+	  
+      // second quartile = median
+      n = vect.size();
+      if (n % 2 == 0)  
+	second = (vect[n*0.5-1]+vect[(n*0.5)])*0.5;
+      else
+	second = vect[(n+1)*0.5-1];
+	 
+      // third quartile
+      n = vect2.size();
+      if (n % 2 == 0) 
+	third = (vect2[n*0.5-1]+vect2[(n*0.5)])*0.5;
+      else 
+	third = vect2[(n+1)*0.5-1];
+    }
+  }
+
+  return {first, second, third};
+}
+
+
+// ============================================================================
+
 
 void cosmobl::Moment (const vector<double> data, double &ave, double &adev, double &sdev, double &var, double &skew, double &curt) 
 {
-   ave = gsl_stats_mean(data.data(), 1, data.size());  
-   adev = gsl_stats_absdev_m(data.data(), 1, data.size(), ave);
-   var = gsl_stats_variance_m(data.data(), 1, data.size(), ave);
-   sdev = sqrt(var);
-   skew = gsl_stats_skew_m_sd(data.data(), 1, data.size(), ave, sdev);
-   curt = gsl_stats_kurtosis_m_sd(data.data(), 1, data.size(), ave, sdev);
+  ave = gsl_stats_mean(data.data(), 1, data.size());  
+  adev = gsl_stats_absdev_m(data.data(), 1, data.size(), ave);
+  var = gsl_stats_variance_m(data.data(), 1, data.size(), ave);
+  sdev = sqrt(var);
+  skew = gsl_stats_skew_m_sd(data.data(), 1, data.size(), ave, sdev);
+  curt = gsl_stats_kurtosis_m_sd(data.data(), 1, data.size(), ave, sdev);
 }
 
 
@@ -1023,6 +1214,7 @@ int cosmobl::used_memory (const int type)
   return memory;
 
 #else 
+  (void)type;
   WarningMsg("Attention: used_memory of Func.cpp works only on Linux systems");
   return 1;
 
@@ -1055,6 +1247,7 @@ int cosmobl::check_memory (const double frac, const bool exit, const string func
   return 1;
   
 #else
+  (void)frac; (void)exit; (void)func; (void)type;
   WarningMsg("Attention: check_memory of Func.cpp works only on Linux systems");
   return 1;
   
@@ -1424,13 +1617,13 @@ void cosmobl::fill_distr (const int nRan, const vector<double> xx, const vector<
   vector<double> Fx(sz, 0.);
   vector<double> new_x = linear_bin_vector(sz, minVar, maxVar); 
 
-  cosmobl::classfunc::func_grid_GSL dist(xx,fx,"Spline");
+  cosmobl::glob::FuncGrid dist(xx,fx,"Spline");
   double NN = dist.integrate_qag(minVar,maxVar);
 
   for (int i=1; i<sz; i++) 
     Fx[i] = dist.integrate_qag(minVar,new_x[i])/NN;
 
-  cosmobl::classfunc::func_grid_GSL ff(Fx,new_x,"Spline");
+  cosmobl::glob::FuncGrid ff(Fx,new_x,"Spline");
 
   for (int i=0; i<nRan; i++) 
     varRandom.push_back(ff(ran()));
@@ -1482,7 +1675,7 @@ void cosmobl::read_cov (const string filecov, vector< vector<double> > &cov, vec
     stringstream ss(line);
     vector<double> num; double NN = -1.e30;
     while (ss>>NN) num.push_back(NN);
-    if (num.size()==3 && num[2]>-1.e29){
+    if (num.size()==3 && num[2]>-1.e29) {
       cov[i].push_back(num[2]);
     }
     else {i++; cov.push_back(vv);}
@@ -1496,22 +1689,23 @@ void cosmobl::read_cov (const string filecov, vector< vector<double> > &cov, vec
 
   int tot_size=cov.size();
 
-  for(int i=0;i<tot_size;i++){
-    for(int j=0;j<tot_size;j++){
-      if(i>i2 || i<i1 || j>i2 || j<i1){
+  for (int i=0; i<tot_size; i++) {
+    for (int j=0; j<tot_size; j++) {
+      if (i>i2 || i<i1 || j>i2 || j<i1) {
       }
-      else{  cov_lim[i-i1][j-i1]=cov[i][j]; }
+      else
+	cov_lim[i-i1][j-i1] = cov[i][j]; 
     }
   }
 
   invert_matrix(cov_lim,cov_lim_inv);
 
-  for(int i=0;i<tot_size;i++){
-    for(int j=0;j<tot_size;j++){
-      if(i>i2 || i<i1 || j>i2 || j<i1){
+  for (int i=0; i<tot_size; i++) {
+    for (int j=0; j<tot_size; j++) {
+      if (i>i2 || i<i1 || j>i2 || j<i1) 
 	cov_inv[i][j]=0.;
-      }
-      else {cov_inv[i][j]=cov_lim_inv[i-i1][j-i1];}
+      else
+	cov_inv[i][j] = cov_lim_inv[i-i1][j-i1]; 
     }
   }
 
@@ -1739,7 +1933,7 @@ double cosmobl::Legendre_polynomial_mu_average (const int ll, const double mu, c
   int lll = ll;
   Func.params = &lll;
 
-  return GSL_integrate_qag(Func, mu, mu+delta_mu, 1.e-3, 1000, 6)/delta_mu;
+  return gsl::GSL_integrate_qag(Func, mu, mu+delta_mu, 1.e-3, 1000, 6)/delta_mu;
 }
 
 
@@ -1832,7 +2026,7 @@ double cosmobl::jl_distance_average (const double kk, const int order, const dou
   double prec=1.e-2;
   int limit_size = 1000;
 
-  double Int = cosmobl::GSL_integrate_qag(Func, r_down, r_up, prec, limit_size, 6);
+  double Int = cosmobl::gsl::GSL_integrate_qag(Func, r_down, r_up, prec, limit_size, 6);
 
   return Int/volume;
 }
@@ -1911,191 +2105,6 @@ double cosmobl::trapezoid_integration (const vector<double> xx, const vector<dou
 // ============================================================================
 
 
-double cosmobl::GSL_integrate_qag (gsl_function Func, const double a, const double b, const double prec, const int limit_size, const int rule)
-{
-  gsl_set_error_handler_off();
-
-  double Int, error;
-  gsl_integration_workspace *ww = gsl_integration_workspace_alloc(limit_size);
-  gsl_integration_qag (&Func, a, b, 0., prec, limit_size, rule, ww, &Int, &error); 
-  gsl_integration_workspace_free(ww);
-
-  if (error/fabs(Int)>prec) {
-    string Msg = "Warning in GSL_integrate_qag: unable to reach the requested precision: "+conv(error/fabs(Int), par::fDP3)+" "+conv(prec, par::fDP3);
-    WarningMsg(Msg);
-  }
-  
-  return Int;
-}
-
-
-// ============================================================================
-
-
-double cosmobl::GSL_integrate_qagiu (gsl_function Func, const double a, const double prec, const int limit_size)
-{
-  gsl_set_error_handler_off();
-
-  double Int, error;
-  gsl_integration_workspace *ww = gsl_integration_workspace_alloc(limit_size);
-  gsl_integration_qagiu (&Func, a, 0., prec, limit_size, ww, &Int, &error); 
-  gsl_integration_workspace_free(ww);
-
-  if (error/fabs(Int)>prec) {
-     string Msg = "Warning in GSL_integrate_qagiu: unable to reach the requested precision: "+conv(error/fabs(Int), par::fDP3)+" "+conv(prec, par::fDP3);
-     WarningMsg(Msg);
-  }
-  
-  return Int;
-}
-
-
-// ============================================================================
-
-
-double cosmobl::GSL_integrate_qaws (gsl_function Func, const double a, const double b, const double alpha, const double beta, const int mu, const int nu, const double prec, const int limit_size)
-{
-  gsl_set_error_handler_off();
-
-  gsl_integration_qaws_table *T = gsl_integration_qaws_table_alloc(alpha, beta, mu, nu);
-
-  double Int, error;
-  gsl_integration_workspace *ww = gsl_integration_workspace_alloc(limit_size);
-  gsl_integration_qaws (&Func, a, b, T, 0., prec, limit_size, ww, &Int, &error); 
-
-  gsl_integration_workspace_free(ww);
-  gsl_integration_qaws_table_free(T);
-
-  if (error/fabs(Int)>prec) {
-     string Msg = "Warning in GSL_integrate_qagiu: unable to reach the requested precision: "+conv(error/fabs(Int), par::fDP3)+" "+conv(prec, par::fDP3);
-     WarningMsg(Msg);
-  }
-  
-  return Int;
-}
-
-
-// ============================================================================
-
-
-double cosmobl::GSL_integrate_qag (function<double(double)> func, const double a, const double b, const double prec, const int limit_size, const int rule)
-{
-  
-  typedef function<double(double)> fun_type;
-
-  gsl_function Func;  
-  Func.function = [](double x, void *p) { return (*static_cast<fun_type*>(p))(x); };
-  Func.params = &func;
-  return GSL_integrate_qag(Func, a, b, prec, limit_size, rule);
-}
-
-
-// ============================================================================
-
-
-double cosmobl::GSL_integrate_qagiu (function<double(double)> func, const double a, const double prec, const int limit_size)
-{
-  
-  typedef function<double(double)> fun_type;
-
-  gsl_function Func;  
-  Func.function = [](double x, void *p) { return (*static_cast<fun_type*>(p))(x); };
-  Func.params = &func;
-  return GSL_integrate_qagiu(Func, a, prec, limit_size);
-}
-
-
-// ============================================================================
-
-
-double cosmobl::GSL_integrate_qaws (function<double(double)> func, const double a, const double b, const double alpha, const double beta, const int mu, const int nu, const double prec, const int limit_size)
-{
-  
-  typedef function<double(double)> fun_type;
-
-  gsl_function Func;  
-  Func.function = [](double x, void *p) { return (*static_cast<fun_type*>(p))(x); };
-  Func.params = &func;
-  return GSL_integrate_qaws(Func, a, b, alpha, beta, mu, nu, prec, limit_size);
-}
-
-
-// ============================================================================
-
-
-double cosmobl::generic_integrand (const double xx, void *params)
-{
-  cosmobl::glob::STR_generic_integrand *pp = (cosmobl::glob::STR_generic_integrand *)params;
-  return pp->f(xx);
-}
-
-
-// ============================================================================
-
-
-double cosmobl::generic_roots (double xx, void *params)
-{
-  cosmobl::glob::STR_generic_roots *pp = (cosmobl::glob::STR_generic_roots *) params;
-  return pp->f(xx)-pp->xx0;
-}
-
-
-// ============================================================================
-
-
-double cosmobl::GSL_brent (gsl_function Func, const double low_guess, const double up_guess, const double prec)
-{
-  int status;
-  int iter = 0, max_iter = 10000;
-  const gsl_root_fsolver_type *T;
-  double r;
-
-  gsl_root_fsolver *s;
-  T = gsl_root_fsolver_brent;
-  s = gsl_root_fsolver_alloc(T);
-  
-  double x_lo = low_guess;
-  double x_hi = up_guess;
-
-  gsl_root_fsolver_set(s, &Func, x_lo, x_hi); 
-
-  do
-  {
-    iter++;
-    status = gsl_root_fsolver_iterate(s);
-    r = gsl_root_fsolver_root(s);
-    x_lo = gsl_root_fsolver_x_lower(s);
-    x_hi = gsl_root_fsolver_x_upper(s);
-    status = gsl_root_test_interval(x_lo, x_hi, 0, prec);
-  }
-  
-  while (status == GSL_CONTINUE && iter < max_iter);
-
-  gsl_root_fsolver_free(s);
-
-  return r;
-}
-
-
-// ============================================================================
-
-
-double cosmobl::GSL_brent (function<double(double)> func, double xx0, const double low_guess, const double up_guess, const double prec)
-{
-  STR_generic_roots params;
-  params.f=func;
-  params.xx0 = xx0;
-
-  gsl_function Func;
-  Func.function = &generic_roots;
-  Func.params = &params;
-
-  return GSL_brent(Func, low_guess, up_guess, prec);
-}
-
-// ============================================================================
-
-
 vector< vector<double> > cosmobl::generate_correlated_data (const int nExtractions, const vector<double> mean, const vector<vector<double> > covariance, const int idum)
 {
   default_random_engine generator(idum);
@@ -2106,16 +2115,16 @@ vector< vector<double> > cosmobl::generate_correlated_data (const int nExtractio
 
   gsl_matrix *correlation  = gsl_matrix_alloc(sample_size,sample_size);
   
-  for(size_t i=0;i<sample_size;i++) {
+  for (size_t i=0; i<sample_size; i++) {
     std.push_back(sqrt(covariance[i][i]));
-    for(size_t j=0;j<sample_size;j++)
+    for (size_t j=0; j<sample_size; j++)
       gsl_matrix_set(correlation,i,j,covariance[i][j]/sqrt(covariance[i][i]*covariance[j][j]));
   }
 
   vector<vector<double>> sample;
-  for (int j=0;j<nExtractions;j++) {
+  for (int j=0; j<nExtractions; j++) {
     vector<double> subS(sample_size, 0);
-    for (size_t i=0;i<sample_size;i++)
+    for (size_t i=0; i<sample_size; i++)
       subS[i] = distribution(generator);
     sample.push_back(subS);
   }

@@ -94,18 +94,18 @@ namespace cosmobl {
       Data1D () { set_dataType(DataType::_1D_data_); }
 
       /**
-       *  @brief constructor of Data1D
+       *  @brief constructor, reading data from an input file
        *  @param input_file the input data file
-       *  @param skip_nlines the header lines to be skipped
+       *  @param skipped_lines the header lines to be skipped
        *  @param xmin maximun value of x to be used 
        *  @param xmax maximun value of x to be used 
        *  @param dataType the data type
        *  @return object of class Data1D
        */
-      Data1D (const string input_file, const int skip_nlines=0, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_); 
+      Data1D (const string input_file, const int skipped_lines=0, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_); 
 
       /**
-       *  @brief constructor of Data1D
+       *  @brief constructor
        *  @param x vector containing x points 
        *  @param fx vector containing f(x) 
        *  @param xmin maximun value of x to be used 
@@ -116,7 +116,7 @@ namespace cosmobl {
       Data1D (const vector<double> x, const vector<double> fx, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_); 
 
       /**
-       *  @brief Constructor of Data1D
+       *  @brief constructor
        *  @param x vector containing x points 
        *  @param fx vector containing f(x) 
        *  @param error_fx vector containing error on f(x) 
@@ -128,7 +128,7 @@ namespace cosmobl {
       Data1D (const vector<double> x, const vector<double> fx, const vector<double> error_fx, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_); 
 
       /**
-       *  @brief Constructor of Data1D
+       *  @brief Constructor
        *  @param x vector containing x points 
        *  @param fx vector containing f(x) 
        *  @param covariance vector containing f(x) covariance matrix 
@@ -271,21 +271,25 @@ namespace cosmobl {
       void set_error_fx (const vector<double> error_fx) override { m_error_fx = error_fx; }
 
       /**
-       *  @brief set interval variable m_covariance, reading from an input file;
-       *  also compute inverted covariance matrix
-       *  @param filename file containing the covariance matrix in the format:
-       *  column 0 &rarr x<SUB>i</SUB>, column 1 &rarr x<SUB>j</SUB>, column 2 &rarr cov(x<SUB>i</SUB>,x<SUB>j</SUB>)
+       *  @brief set the interval variable m_covariance, reading from an input file
+       *
+       *  @param filename file containing the covariance matrix in the
+       *  format: column 0 &rarr x<SUB>i</SUB>, column 1 &rarr
+       *  x<SUB>j</SUB>, column 2 &rarr
+       *  cov(x<SUB>i</SUB>,x<SUB>j</SUB>)
+       *
+       *  @param skipped_lines comment lines to be skipped
+       *
        *  @return none
        */
-      void set_covariance (const string filename) override;
+      void set_covariance (const string filename, const int skipped_lines=0) override;
 
       /**
-       *  @brief set interval variable m_covariance,
-       *  also compute inverted covariance matrix
-       *  @param covariance vector containing f(x) covariance matrix 
+       *  @brief set interval the variable m_covariance
+       *  @param covariance vector containing f(x) covariance matrix
        *  @return none
        */
-      void set_covariance (const vector<vector<double> > covariance) override; 
+      void set_covariance (const vector<vector<double>> covariance) override; 
 
       ///@}
       
@@ -325,10 +329,10 @@ namespace cosmobl {
       /**
        *  @brief read the data
        *  @param input_file input data file
-       *  @param skip_nlines the header lines to be skipped
+       *  @param skipped_lines the header lines to be skipped
        *  @return none
        */
-      virtual void read (const string input_file, const int skip_nlines=0) override;
+      virtual void read (const string input_file, const int skipped_lines=0) override;
 
       /**
        *  @brief write the data

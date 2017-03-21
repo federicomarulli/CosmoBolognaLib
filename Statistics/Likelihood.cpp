@@ -64,24 +64,49 @@ cosmobl::statistics::Likelihood::Likelihood (const shared_ptr<data::Data> data, 
 
 double statistics::LogLikelihood_Gaussian_1D_model (vector<double> model_parameters, const shared_ptr<void> fixed_parameters)
 {
-  shared_ptr<statistics::STR_likelihood_parameters> pp  = static_pointer_cast<statistics::STR_likelihood_parameters>(fixed_parameters);
-  pp->model->set_parameter_values(model_parameters);
+  // ----- extract the parameters ----- 
+  shared_ptr<statistics::STR_likelihood_parameters> pp = static_pointer_cast<statistics::STR_likelihood_parameters>(fixed_parameters);
 
+  // ----- check the parameters limit ----- 
+  
+  for (unsigned int p=0; p<pp->model->npar(); p++)
+    if (!pp->model->parameter(p)->isFixed() && !pp->model->parameter(p)->prior()->isIncluded(model_parameters[p])) 
+      return pp->minus*par::defaultDouble;
+
+  // ----- compute the model values -----
+  
   vector<double> computed_model(pp->data->ndata(), 0);
 
-#pragma omp parallel num_threads(omp_get_max_threads())
-  {
+  if (pp->data->dataType()==data::_1D_data_)
+    for (int i=pp->data->x_down(); i<pp->data->x_up(); i++) // at the bin centre
+      computed_model[i] = pp->model->operator()(pp->data->xx(i), model_parameters);
 
-#pragma omp for
-    for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
-      computed_model[i] = pp->model->operator()(pp->data->xx(i));
+  else if (pp->data->dataType()==data::_1D_data_extra_) {
+    int x_index = pp->x_index[0];
+    for (int i=pp->data->x_down(); i<pp->data->x_up(); i++) // using extra info
+      computed_model[i] = pp->model->operator()(pp->data->extra_info(x_index, i), model_parameters);
   }
+
+  else ErrorCBL("Error in LogLikelihood_Gaussian_1D_model of Likelihood.cpp: wrong dataType!");  
+  
+
+
+  // ----- estimate the Gaussian log-likelihood -----
 
   double LogLikelihood = 0.;
   for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
     LogLikelihood += pow((pp->data->fx(i)-computed_model[i])/computed_model[i], 2);
+  
+  LogLikelihood = -0.5*LogLikelihood;
 
-  return -0.5*LogLikelihood;
+  if (pp->use_priors) {
+    for (unsigned int i=0; i<pp->model->npar(); i++)
+    {
+      LogLikelihood += pp->model->parameter(i)->isFixed() ? 0 : Log(pp->model->parameter(i)->PriorProbability(model_parameters[i]));
+    }
+  }
+
+  return pp->minus*LogLikelihood;
 }
 
 
@@ -90,25 +115,48 @@ double statistics::LogLikelihood_Gaussian_1D_model (vector<double> model_paramet
 
 double statistics::LogLikelihood_Gaussian_1D_error (vector<double> model_parameters, const shared_ptr<void> fixed_parameters)
 {
+  // ----- extract the parameters ----- 
   shared_ptr<statistics::STR_likelihood_parameters> pp = static_pointer_cast<statistics::STR_likelihood_parameters>(fixed_parameters);
-  pp->model->set_parameter_values(model_parameters);
+
+  // ----- check the parameters limit ----- 
+  
+  for (unsigned int p=0; p<pp->model->npar(); p++)
+    if (!pp->model->parameter(p)->isFixed() && !pp->model->parameter(p)->prior()->isIncluded(model_parameters[p])) 
+      return pp->minus*par::defaultDouble;
+
+  // ----- compute the model values ----- 
 
   vector<double> computed_model(pp->data->ndata(), 0);
 
-#pragma omp parallel num_threads(omp_get_max_threads())
-  {
+  if (pp->data->dataType()==data::_1D_data_)
+    for (int i=pp->data->x_down(); i<pp->data->x_up(); i++) // at the bin centre
+      computed_model[i] = pp->model->operator()(pp->data->xx(i), model_parameters);
 
-#pragma omp for
-    for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
-      computed_model[i] = pp->model->operator()(pp->data->xx(i));
+  else if (pp->data->dataType()==data::_1D_data_extra_) {
+    int x_index = pp->x_index[0];
+    for (int i=pp->data->x_down(); i<pp->data->x_up(); i++) // using extra info
+      computed_model[i] = pp->model->operator()(pp->data->extra_info(x_index, i), model_parameters);
   }
 
-  double LogLikelihood = 0.;
+  else ErrorCBL("Error in LogLikelihood_Gaussian_1D_error of Likelihood.cpp: wrong dataType!");  
+
+ 
+  // ----- estimate the Gaussian log-likelihood -----
   
+  double LogLikelihood = 0.;
   for (int i=pp->data->x_down(); i<pp->data->x_up(); i++) 
     LogLikelihood += pow((pp->data->fx(i)-computed_model[i])/pp->data->error_fx(i), 2);
-  
-  return -0.5*LogLikelihood;
+
+  LogLikelihood = -0.5*LogLikelihood;
+
+  if (pp->use_priors) {
+    for (unsigned int i=0; i<pp->model->npar(); i++)
+    {
+      LogLikelihood += pp->model->parameter(i)->isFixed() ? 0 : Log(pp->model->parameter(i)->PriorProbability(model_parameters[i]));
+    }
+  }
+
+  return pp->minus*LogLikelihood;
 }
 
 
@@ -117,30 +165,56 @@ double statistics::LogLikelihood_Gaussian_1D_error (vector<double> model_paramet
 
 double statistics::LogLikelihood_Gaussian_1D_covariance (vector<double> model_parameters, const shared_ptr<void> fixed_parameters)
 {
+  // ----- extract the parameters ----- 
   shared_ptr<statistics::STR_likelihood_parameters> pp = static_pointer_cast<statistics::STR_likelihood_parameters>(fixed_parameters);
-  pp->model->set_parameter_values(model_parameters);
-  vector<double> computed_model(pp->data->ndata(),0);
 
-#pragma omp parallel num_threads(omp_get_max_threads())
-  {
+  // ----- check the parameters limit ----- 
+  
+  for (unsigned int p=0; p<pp->model->npar(); p++)
+    if (!pp->model->parameter(p)->isFixed() && !pp->model->parameter(p)->prior()->isIncluded(model_parameters[p])) 
+      return pp->minus*par::defaultDouble;
 
-#pragma omp for
-    for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
-      computed_model[i]=pp->model->operator()(pp->data->xx(i));
+  // ----- compute the model values ----- 
+
+  vector<double> computed_model(pp->data->ndata(), 0);
+  
+  if (pp->data->dataType()==data::_1D_data_)
+    for (int i=pp->data->x_down(); i<pp->data->x_up(); i++) // at the bin centre
+      computed_model[i] = pp->model->operator()(pp->data->xx(i), model_parameters);
+
+  else if (pp->data->dataType()==data::_1D_data_extra_) {
+    int x_index = pp->x_index[0];
+    for (int i=pp->data->x_down(); i<pp->data->x_up(); i++) // using extra info
+      computed_model[i] = pp->model->operator()(pp->data->extra_info(x_index, i), model_parameters);
   }
 
+  else ErrorCBL("Error in LogLikelihood_Gaussian_1D_covariance of Likelihood.cpp: wrong dataType!");  
 
-  vector<double> diff(pp->data->ndata(),0);
-  for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
-    diff[i]=pp->data->fx(i)-computed_model[i];
-
-  double LogLikelihood = 0.;
   
+  // ----- compute the difference between model and data at each bin ----- 
+  
+  vector<double> diff(pp->data->ndata(), 0);
+  for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
+    diff[i] = pp->data->fx(i)-computed_model[i];
+
+
+  // ----- estimate the Gaussian log-likelihood ----- 
+  
+  double LogLikelihood = 0.;
   for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
     for (int j=pp->data->x_down(); j<pp->data->x_up(); j++)
-      LogLikelihood += diff[i]*pp->data->inverse_covariance(i,j)*diff[j];    
+      LogLikelihood += diff[i]*pp->data->inverse_covariance(i, j)*diff[j];    
 
-  return -0.5*LogLikelihood;
+  LogLikelihood = -0.5*LogLikelihood;
+
+  if (pp->use_priors) {
+    for (unsigned int i=0; i<pp->model->npar(); i++)
+    {
+      LogLikelihood += pp->model->parameter(i)->isFixed() ? 0 : Log(pp->model->parameter(i)->PriorProbability(model_parameters[i]));
+    }
+  }
+
+  return pp->minus*LogLikelihood;
 }
 
 
@@ -149,10 +223,16 @@ double statistics::LogLikelihood_Gaussian_1D_covariance (vector<double> model_pa
 
 double statistics::LogLikelihood_Gaussian_2D_model (vector<double> model_parameters, const shared_ptr<void> fixed_parameters)
 {
+  // ----- extract the parameters ----- 
   shared_ptr<statistics::STR_likelihood_parameters> pp = static_pointer_cast<statistics::STR_likelihood_parameters>(fixed_parameters);
-  pp->model->set_parameter_values(model_parameters);
+  
+  for (unsigned int p=0; p<pp->model->npar(); p++)
+    if (!pp->model->parameter(p)->isFixed() && !pp->model->parameter(p)->prior()->isIncluded(model_parameters[p])) 
+      return pp->minus*par::defaultDouble;
 
-  vector<vector<double>> computed_model(pp->data->ndata(),vector<double>(pp->data->ndata(),0));
+  // ----- compute the model values ----- 
+
+  vector<vector<double>> computed_model(pp->data->ndata(), vector<double>(pp->data->ndata(), 0));
 
   int imin = pp->data->x_down();
   int imax = pp->data->x_up();
@@ -164,28 +244,43 @@ double statistics::LogLikelihood_Gaussian_2D_model (vector<double> model_paramet
 
   int ijmax = (imax-imin)*(jmax-jmin);
 
-
-#pragma omp parallel num_threads(omp_get_max_threads())
-
-  {
-
-#pragma omp for
-    for (int ij=0; ij<ijmax; ++ij)
-    {
+  if (pp->data->dataType()==data::_2D_data_)
+    for (int ij=0; ij<ijmax; ++ij) {
       int i = ij/deltaj+imin;
       int j = ij%deltaj+jmin;
-      computed_model[i][j] = pp->model->operator()(pp->data->xx(i),pp->data->yy(j));
+      computed_model[i][j] = pp->model->operator()(pp->data->xx(i), pp->data->yy(j), model_parameters);
+    }
+
+  else if (pp->data->dataType()==data::_2D_data_extra_) {
+    int scaleD1_index = pp->x_index[0];
+    int scaleD2_index = pp->x_index[1];
+    for (int ij=0; ij<ijmax; ++ij) {
+      int i = ij/deltaj+imin;
+      int j = ij%deltaj+jmin;
+      computed_model[i][j] = pp->model->operator()(pp->data->extra_info(scaleD1_index, i), pp->data->extra_info(scaleD2_index, j), model_parameters);
     }
   }
 
-  double LogLikelihood = 0.;
+  else ErrorCBL("Error in LogLikelihood_Gaussian_2D_model of Likelihood.cpp: wrong dataType!");  
+
   
+  // ----- estimate the Gaussian log-likelihood -----
+  
+  double LogLikelihood = 0.;
   for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
     for (int j=pp->data->y_down(); j<pp->data->y_up(); j++)
-      LogLikelihood += pow((pp->data->fxy(i,j)-computed_model[i][j])/computed_model[i][j],2);
+      LogLikelihood += pow((pp->data->fxy(i, j)-computed_model[i][j])/computed_model[i][j], 2);
 
- 
-  return -0.5*LogLikelihood;
+  LogLikelihood = -0.5*LogLikelihood;
+
+  if (pp->use_priors) {
+    for (unsigned int i=0; i<pp->model->npar(); i++)
+    {
+      LogLikelihood += pp->model->parameter(i)->isFixed() ? 0 : Log(pp->model->parameter(i)->PriorProbability(model_parameters[i]));
+    }
+  } 
+
+  return pp->minus*LogLikelihood;
 }
 
 // ============================================================================================
@@ -193,10 +288,18 @@ double statistics::LogLikelihood_Gaussian_2D_model (vector<double> model_paramet
 
 double statistics::LogLikelihood_Gaussian_2D_error (vector<double> model_parameters, const shared_ptr<void> fixed_parameters)
 {
+  // ----- extract the parameters ----- 
   shared_ptr<statistics::STR_likelihood_parameters> pp = static_pointer_cast<statistics::STR_likelihood_parameters>(fixed_parameters);
-  pp->model->set_parameter_values(model_parameters);
 
-  vector<vector<double>> computed_model(pp->data->ndata(),vector<double>(pp->data->ndata(),0));
+  // ----- check the parameters limit ----- 
+  
+  for (unsigned int p=0; p<pp->model->npar(); p++)
+    if (!pp->model->parameter(p)->isFixed() && !pp->model->parameter(p)->prior()->isIncluded(model_parameters[p])) 
+      return pp->minus*par::defaultDouble;
+  
+  // ----- compute the model values -----
+  
+  vector<vector<double>> computed_model(pp->data->ndata(), vector<double>(pp->data->ndata(), 0));
 
   int imin = pp->data->x_down();
   int imax = pp->data->x_up();
@@ -208,27 +311,41 @@ double statistics::LogLikelihood_Gaussian_2D_error (vector<double> model_paramet
 
   int ijmax = (imax-imin)*(jmax-jmin);
 
-
-#pragma omp parallel num_threads(omp_get_max_threads())
-  {
-
-#pragma omp for schedule(static, 2)
-    for (int ij=0; ij<ijmax; ++ij)
-    {
+  if (pp->data->dataType()==data::_2D_data_)
+    for (int ij=0; ij<ijmax; ++ij) {
       int i = ij/deltaj+imin;
       int j = ij%deltaj+jmin;
-      computed_model[i][j] = pp->model->operator()(pp->data->xx(i),pp->data->yy(j));
+      computed_model[i][j] = pp->model->operator()(pp->data->xx(i), pp->data->yy(j), model_parameters);
+    }
+
+  else if (pp->data->dataType()==data::_2D_data_extra_) {
+    int scaleD1_index = pp->x_index[0];
+    int scaleD2_index = pp->x_index[1];
+    for (int ij=0; ij<ijmax; ++ij) {
+      int i = ij/deltaj+imin;
+      int j = ij%deltaj+jmin;
+      computed_model[i][j] = pp->model->operator()(pp->data->extra_info(scaleD1_index, i), pp->data->extra_info(scaleD2_index, j), model_parameters);
     }
   }
 
+  
+  // ----- estimate the Gaussian log-likelihood -----
 
   double LogLikelihood = 0.;
-  
   for (int i=pp->data->x_down(); i<pp->data->x_up(); i++)
     for (int j=pp->data->y_down(); j<pp->data->y_up(); j++)
-      LogLikelihood += pow((pp->data->fxy(i,j)-computed_model[i][j])/computed_model[i][j],2);
+      LogLikelihood += pow((pp->data->fxy(i, j)-computed_model[i][j])/computed_model[i][j], 2);
 
-  return -0.5*LogLikelihood;
+  LogLikelihood = -0.5*LogLikelihood;
+
+  if (pp->use_priors) {
+    for (unsigned int i=0; i<pp->model->npar(); i++)
+    {
+      LogLikelihood += pp->model->parameter(i)->isFixed() ? 0 : Log(pp->model->parameter(i)->PriorProbability(model_parameters[i]));
+    }
+  }
+
+  return pp->minus*LogLikelihood;
 }
 
 
@@ -395,84 +512,41 @@ void cosmobl::statistics::Likelihood::minimize_LogLikelihood (const bool usePrio
     ErrorCBL("Error in minimize of minimize of Likelihood.cpp, there is no parameter to vary");
 
   auto fixed_parameters = make_shared<STR_likelihood_parameters>(STR_likelihood_parameters(m_data,m_model));
+  fixed_parameters->use_priors= usePrior;
+  fixed_parameters->minus = -1;
 
-  auto likelihood_prior = [&](vector<double> xx, shared_ptr<void> pp) { return -m_log_likelihood_function(xx, pp) + ((usePrior) ? -LogPriorProbability(xx) : 0); };
+  function<double(vector<double>)> ll = bind(m_log_likelihood_function, std::placeholders::_1, fixed_parameters);
 
+  vector<double> start(npar,0);
   vector<double> step_size(npar, 1);
+
   int nn = 0;
   for (unsigned int i=0; i<npar; i++) {
+    start[i] = m_model->parameter(i)->value();
     if (!m_model->parameter(i)->isFixed()) { 
       if ( m_model->parameter(i)->interval_size()<-par::defaultDouble) 
-	step_size[nn]=0.05*m_model->parameter(i)->interval_size();
+	step_size[nn]=1.e-3*m_model->parameter(i)->interval_size();
       nn ++;
     }
   }
-
-  // Starting the minimization...
-  
-  const gsl_multimin_fminimizer_type *T = gsl_multimin_fminimizer_nmsimplex2rand;
-  gsl_multimin_fminimizer *s = NULL;
-  gsl_vector *ss, *x;
-  gsl_multimin_function minex_func;
-
-  size_t iter = 0;
-  int status;
-  double size;
-
-  // Starting point 
-  x = gsl_vector_alloc (npar);
-  ss = gsl_vector_alloc (npar);
-  for (size_t i=0; i<npar; i++) {
-    gsl_vector_set(x, i, m_model->parameter_values()[i]);
-    gsl_vector_set(ss, i, step_size[i]);
-  }
-
-  typedef function<double(vector<double>)> likelihood;
-  likelihood func = bind(&Likelihood::operator(), this, std::placeholders::_1);
-
-  minex_func.n = npar;
-  minex_func.f = [](const gsl_vector *gsl_x, void *p) {
-    auto f = (likelihood *)p;
-    vector<double> xx;
-    for (unsigned int i=0; i<gsl_x->size; i++)
-      xx.push_back(gsl_vector_get(gsl_x,i));
-
-    return -f->operator()(xx); //perator()(xx); //likelihood(xx);
-  };
-  minex_func.params = &func;
-
-  s = gsl_multimin_fminimizer_alloc (T, npar);
-  gsl_multimin_fminimizer_set (s, &minex_func, x, ss);
-
-  do {
-    iter++;
-
-    status = gsl_multimin_fminimizer_iterate(s);
-
-    if (status) break;
-
-    size = gsl_multimin_fminimizer_size (s);
-    
-    status = gsl_multimin_test_size (size, tol);
-
-    if (status == GSL_SUCCESS)
-      printf ("-----> converged to minimum \n");
-  }
-  
-  while (status == GSL_CONTINUE && iter <max_iter);
-
-  gsl_vector_free(ss);
-  gsl_multimin_fminimizer_free (s);
+  vector<double> result = cosmobl::gsl::GSL_minimize_nD (ll, start, step_size, max_iter, tol);
 
   for (unsigned int i=0; i<m_model->npar(); i++) {
-    if (m_model->parameter(i)->isFixed())
-      coutCBL << par::col_green << m_model->parameter(i)->name() << par::col_default << ": fixed value = " << m_model->parameter(i)->value() << endl;
-    else
+    if (m_model->parameter(i)->isFixed()) {
+      coutCBL << par::col_green << m_model->parameter(i)->name() << par::col_default << ": fixed value = " << m_model->parameter(i)->value() <<  endl;
+    }
+    else{
+      m_model->parameter(i)->set_value(result[i]);
+      m_model->parameter(i)->set_best_value(result[i]);
       coutCBL << par::col_green << m_model->parameter(i)->name() << par::col_default << ": best-fit value from the chi2 minimization =" << m_model->parameter(i)->value() << endl;
+    }
   }
 
 
-  coutCBL << "-2*LogLikelihood = " << likelihood_prior(m_model->parameter_values(), fixed_parameters) << endl << endl;
+  if (usePrior)
+    coutCBL << "-2*LogLikelihood = " << ll(result)+ LogPriorProbability(result) << endl << endl;
+  else
+    coutCBL << "-2*LogLikelihood = " << ll(result) << endl << endl;
 
 }
 
@@ -480,7 +554,7 @@ void cosmobl::statistics::Likelihood::minimize_LogLikelihood (const bool usePrio
 // ============================================================================================
 
 
-double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, const int chain_size, const int seed, const bool do_write_chain, const string output_dir, const string output_file)
+double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, const int chain_size, const int seed, const double radius, const bool do_write_chain, const string output_dir, const string output_file, const double aa)
 {
   coutCBL << "Sampling the likelihood" << endl;
   
@@ -500,20 +574,30 @@ double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, 
   vector<double> chains_index = linear_bin_vector(m_nchains, 0., m_nchains-1.);
   vector<double> chains_weights(m_nchains,1);
   random::DiscreteRandomNumbers chains(chains_index, chains_weights, int(prior_seeds()), 0, m_nchains-1);
- 
-  for (size_t i=0; i<m_model->npar(); i++) {
-    m_model->parameter(i)->set_chains(m_nchains, m_chain_size);
-    m_model->parameter(i)->set_chains_values_from_prior(0);
+
+  if (radius<0) {
+    for (size_t i=0; i<m_model->npar(); i++) {
+      m_model->parameter(i)->set_chains(m_nchains, m_chain_size);
+      m_model->parameter(i)->set_chains_values_from_prior(0);
+    }
+  }
+  else{
+    minimize_LogLikelihood (true, 1.e7, 1.e-6);
+    for (size_t i=0; i<m_model->npar(); i++) {
+      m_model->parameter(i)->set_chains(m_nchains, m_chain_size);
+      m_model->parameter(i)->set_chains_values_sphere(0, radius, int(prior_seeds()));
+    }
   }
   
   // initialize the likelihood
   auto fixed_parameters = make_shared<STR_likelihood_parameters>(STR_likelihood_parameters(m_data, m_model));
+  fixed_parameters->use_priors = true;
 
-  vector<double> log_likelihood(m_nchains, 0);
+  m_likelihood_chains.resize(m_nchains, vector<double>(m_chain_size, 0));
   vector<double> log_prior(m_nchains, 0);
  
   for (int i=0; i<m_nchains; i++) {
-    log_likelihood[i] = m_log_likelihood_function(m_model->parameter_values_from_chain(i, 0), fixed_parameters);
+    m_likelihood_chains[i][0] = m_log_likelihood_function(m_model->parameter_values_from_chain(i, 0), fixed_parameters);
     log_prior[i] = LogPriorProbability(m_model->parameter_values_from_chain(i, 0));
   }
   
@@ -521,7 +605,7 @@ double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, 
 
   // sample the distribuion function g(Z), to be moved somewhere else
   
-  double gzpar = 2; // User defined ?
+  double gzpar = aa;
 
   double zmin = 1./gzpar;
   double zmax = gzpar;
@@ -564,17 +648,16 @@ double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, 
       m_model->set_parameter_values(parameters_i);
 
       double proposed_loglikelihood = m_log_likelihood_function(parameters_i, fixed_parameters);
-      double proposed_prior = LogPriorProbability(parameters_i);
 
-      double lnprob = min(1.,pow(gen_z,(m_model->npar_eff()-1))*exp(proposed_loglikelihood-proposed_prior-log_likelihood[i]+log_prior[i]));
+      double lnprob = min(1.,pow(gen_z,(m_model->npar_eff()-1))*exp(proposed_loglikelihood-m_likelihood_chains[i][n-1]));
 
       if (MH_random() <lnprob) {
-	log_prior[i] = proposed_prior;
-	log_likelihood[i] = proposed_loglikelihood;
+	m_likelihood_chains[i][n] = proposed_loglikelihood;
 	for (unsigned int p=0; p<m_model->npar(); p++)
 	  m_model->parameter(p)->set_chain_value (i, n, parameters_i[p]);
       }
       else {
+	m_likelihood_chains[i][n] = m_likelihood_chains[i][n-1];
 	parameters_i = m_model->parameter_values_from_chain(i, n-1);
 	for (unsigned int p=0; p<m_model->npar(); p++)
 	  m_model->parameter(p)->set_chain_value (i, n, parameters_i[p]);
@@ -601,6 +684,158 @@ double cosmobl::statistics::Likelihood::sample_stretch_move (const int nchains, 
 // ============================================================================================
 
 
+double cosmobl::statistics::Likelihood::sample_stretch_move_parallel (const int nchains, const int chain_size, const int seed, const double radius, const bool do_write_chain, const string output_dir, const string output_file, const double aa)
+{
+  
+  coutCBL << "Sampling the likelihood" << endl;
+  
+  // set the likelihood type, according to data and parameters, if not yet setted
+  if (m_likelihood_type != LikelihoodType::_UserDefinedLikelihood_) 
+    set_likelihood_function();
+
+  // set seed for priors
+  random::UniformRandomNumbers prior_seeds(0, 23412432, seed);
+
+  for (unsigned int i=0; i<m_model->npar(); i++)
+    m_model->parameter(i)->set_prior_seed(int(prior_seeds()));
+ 
+  // initialize chains
+  m_nchains=nchains;
+  int half = m_nchains/2;
+  m_chain_size=chain_size;
+  m_npar = m_model->npar();
+  cout << m_npar << " " << m_model->npar() << endl;
+
+  vector<double> chains_index = linear_bin_vector(m_nchains, 0., m_nchains-1.);
+  vector<double> chains_weights(m_nchains,1);
+
+  random::DiscreteRandomNumbers chains_first_half(chains_index, chains_weights, int(prior_seeds()), 0, half-1);
+  random::DiscreteRandomNumbers chains_second_half(chains_index, chains_weights, int(prior_seeds()), half, m_nchains-1);
+
+  vector<random::DiscreteRandomNumbers> chains_sample = {chains_second_half, chains_first_half};
+ 
+  vector<vector<vector<double>> > chains(m_nchains,vector<vector<double>>(m_chain_size, vector<double>(m_npar, 0)));
+  m_likelihood_chains.resize(m_nchains, vector<double>(m_chain_size, 0));
+
+  if (radius<0) {
+    for (size_t i=0; i<m_model->npar(); i++) {
+      m_model->parameter(i)->set_chains(m_nchains, m_chain_size);
+      m_model->parameter(i)->set_chains_values_from_prior(0);
+    }
+  }
+  else{
+    minimize_LogLikelihood (true, 1.e7, 1.e-6);
+    for (size_t i=0; i<m_model->npar(); i++) {
+      m_model->parameter(i)->set_chains(m_nchains, m_chain_size);
+      m_model->parameter(i)->set_chains_values_sphere(0, radius, int(prior_seeds()));
+    }
+  }
+    
+  // initialize the likelihood
+  auto fixed_parameters = make_shared<STR_likelihood_parameters>(STR_likelihood_parameters(m_data, m_model));
+  fixed_parameters->use_priors = true;
+
+  for (int i=0; i<m_nchains; i++) {
+    chains[i][0] = m_model->parameter_values_from_chain(i, 0);
+    m_likelihood_chains[i][0] = m_log_likelihood_function(chains[i][0], fixed_parameters);
+  }
+  
+  // stretch-move
+
+  // sample the distribuion function g(Z), to be moved somewhere else
+  
+  double gzpar =  aa; //1.5; //2.; // User defined ?
+
+  double zmin = 1./gzpar;
+  double zmax = gzpar;
+  vector<double> zz = linear_bin_vector(1000,zmin,zmax), gzz;
+  for (auto &&zzz : zz)
+    gzz.push_back(1./sqrt(zzz));
+
+  random::UniformRandomNumbers MH_random(0., 1., int(prior_seeds()));
+  random::DistributionRandomNumbers GZ(zz, gzz, "Spline", int(prior_seeds()));
+
+  int dp = cout.precision();
+
+  for (int n=1; n<m_chain_size; n++) {
+    for (int ss=0; ss<2; ss++) {
+      
+#pragma omp parallel for schedule(dynamic)
+      for (int ii=0; ii<half; ii++) {
+	int nn = n-1+ss; //(ss==1) ? n : n-1;
+	int i = half*ss+ii;
+	int kk;
+
+	vector<double> parameters_i;
+	vector<double> parameters_k;
+
+	double gen_z;
+
+	kk =  int(chains_sample[ss]());
+
+	bool isIncluded = 0;
+
+	while (!isIncluded) {
+	  gen_z = GZ();
+	  parameters_i = chains[i][n-1]; //m_model->parameter_values_from_chain(i, n-1);
+	  parameters_k = chains[kk][nn]; //m_model->parameter_values_from_chain(kk, nn);
+	  vector<bool> included(m_npar, true);
+	  
+	  for (int p=0; p<m_npar; p++) {
+	    if (!m_model->parameter(p)->isFixed()) {
+	      parameters_i[p] = parameters_k[p] + gen_z*(parameters_i[p]-parameters_k[p]);
+	      included[p] =  m_model->parameter(p)->prior()->isIncluded(parameters_i[p]);
+	    }
+	  }
+	  isIncluded = accumulate(included.begin(), included.end(), 1, std::multiplies<bool>());
+	}
+	double proposed_loglikelihood = m_log_likelihood_function(parameters_i, fixed_parameters);
+
+	double prob = min(1.,pow(gen_z,(m_model->npar_eff()-1))*exp(proposed_loglikelihood-m_likelihood_chains[i][n-1]));
+
+	if (MH_random() <prob) {
+	  m_likelihood_chains[i][n] = proposed_loglikelihood;
+	  chains[i][n] = parameters_i;
+	}
+	else{
+	  chains[i][n]= chains[i][n-1];
+	  m_likelihood_chains[i][n] = m_likelihood_chains[i][n-1];
+	}
+
+      }
+    }
+
+    double progress = double((n+1)*m_nchains)/(m_nchains*m_chain_size)*100;
+    coutCBL << setprecision(2) << setiosflags(ios::fixed) << setw(8) << progress << "% \r"; cout.flush();
+
+    if (do_write_chain)
+      m_write_chain (output_dir, output_file, 0, n, 1);
+  }
+
+  cout << endl;
+
+  for (int i=0;i<m_nchains; i++)
+    for (int j=0;j<m_chain_size;j++) {
+    //  cout << i << " " << j << " ";
+      for (unsigned int p=0; p<m_model->npar(); p++) {
+//	cout << p << " " << chains[i][j][p] << " ";
+	m_model->parameter(p)->set_chain_value (i, j, chains[i][j][p]);
+      }
+  //    cout << endl;
+    }
+
+  cout.unsetf(ios::fixed); cout.unsetf(ios::showpoint); cout.precision(dp);
+
+  for (size_t i = 0; i<m_model->npar(); i++)
+    m_model->parameter(i)->chains_convergence(m_chain_size, m_chain_size*0.5);
+
+  return 0;
+}
+
+
+// ============================================================================================
+
+
 void cosmobl::statistics::Likelihood::write_chain (const string output_dir, const string output_file, const double start, const double stop, const int thin)
 {
   string MK = "mkdir -p "+output_dir;
@@ -608,22 +843,21 @@ void cosmobl::statistics::Likelihood::write_chain (const string output_dir, cons
   
   string file = output_dir+output_file; 
   ofstream fout(file.c_str()); checkIO(fout, file);
+  fout.precision(10);
   
   double new_start = int(m_chain_size*start);
   double new_stop = int(m_chain_size*stop);
   int nn = 0;
 
   if (m_model->npar()) {
-    vector< shared_ptr<Parameter> > pp = m_model->parameters();
-    for (int i=0; i<m_nchains; i++) {
-      for (int j=new_start; j<new_stop; j+=thin) {
-	fout << nn << " ";
-	vector<double> pars;
-	for (size_t k = 0; k<pp.size(); k++) {
-	  pars.push_back(pp[k]->chain(i)->chain_value(j));
-	  fout << " " << pp[k]->chain(i)->chain_value(j) << " ";
-	}
-	fout << endl;
+     vector< shared_ptr<Parameter> > pp = m_model->parameters();
+     for (int j=new_start; j<new_stop; j+=thin) {
+	for (int i=0; i<m_nchains; i++) {
+	   fout << nn << " ";
+	   for (size_t k = 0; k<pp.size(); k++) {
+	      fout << " " << pp[k]->chain(i)->chain_value(j) << " ";
+	   }
+	fout << m_likelihood_chains[i][j] << endl;
 	nn ++;
       }
     }
@@ -797,7 +1031,7 @@ void cosmobl::statistics::Likelihood::m_write_chain (const string output_dir, co
 	  pars.push_back(pp[k]->chain(i)->chain_value(j));
 	  fout << " " << pp[k]->chain(i)->chain_value(j) << " ";
 	}
-	fout << i << " " << j << endl;
+	fout << m_likelihood_chains[i][j] << " " << i << " " << j << endl;
 	nn ++;
       }
     }

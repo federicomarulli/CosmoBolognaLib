@@ -27,9 +27,9 @@
  *  This file contains the implementation of the methods of the class
  *  ReadParameters used to read a generic parameter file
  *
- *  @authors Federico Marulli, Tommaso Ronconi
+ *  @authors Tommaso Ronconi, Federico Marulli
  *
- *  @authors federico.marulli3@unibo.it, tommaso.ronconi@outlook.it
+ *  @authors tommaso.ronconi@outlook.it, federico.marulli3@unibo.it
  */
 
 #include "ReadParameters.h"
@@ -63,11 +63,16 @@ cosmobl::glob::ReadParameters::ReadParameters (const string parameter_file)
 	string val = line.substr(eqpos+1, string::npos);
 	    
 	// trim and store
-	m_parameters[m_trim(key)] = m_trim(val);
+	if (val.find('{') == string::npos) m_parameters[m_trim(key)] = m_trim(val);
+	else {
+	  vector<string> vval = m_trim_vect(val);
+	  m_vectors[m_trim(key)] = vval;
+	}
+	  
       }
     }
   }
-  
+
   fin.clear(); fin.close();
 }
 
@@ -78,5 +83,29 @@ cosmobl::glob::ReadParameters::ReadParameters (const string parameter_file)
 string cosmobl::glob::ReadParameters::m_trim (const string inStr)
 {
   return inStr.substr(inStr.find_first_not_of(' '), inStr.find_last_not_of(' ')+1);
+}
+
+
+// ============================================================================
+
+vector<string> cosmobl::glob::ReadParameters::m_trim_vect (const string inStr)
+{
+  string str = inStr;
+  str = m_trim(str);
+  vector<string> vect;
+  str = str.substr(str.find_first_not_of('{'), str.find_last_not_of('}'));
+  while (str.find(str.front()) != string::npos) {
+    string val;
+    if (str.find(',') != string::npos) {
+      val = m_trim(str.substr(str.find(str.front()), str.find_first_of(',')));
+      str.erase(str.find(str.front()), str.find_first_of(',')+1);
+    }
+    else {
+      val = m_trim(str.substr(str.find(str.front()), string::npos));
+      str.erase(str.find(str.front()), string::npos);
+    }
+    vect.emplace_back(val);
+  }
+  return vect;
 }
 

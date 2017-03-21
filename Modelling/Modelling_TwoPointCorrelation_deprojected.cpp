@@ -62,7 +62,7 @@ void cosmobl::modelling::Modelling_TwoPointCorrelation_deprojected::set_fiducial
     m_twop_parameters.fiducial_xiDM = Xi0(m_twop_parameters.fiducial_radDM, kk, Pk);
   }
   
-  m_twop_parameters.func_xi = make_shared<classfunc::func_grid_GSL>(classfunc::func_grid_GSL(m_twop_parameters.fiducial_radDM, m_twop_parameters.fiducial_xiDM, "Spline"));
+  m_twop_parameters.func_xi = make_shared<glob::FuncGrid>(glob::FuncGrid(m_twop_parameters.fiducial_radDM, m_twop_parameters.fiducial_xiDM, "Spline"));
   
   m_twop_parameters.sigma8_z = m_twop_parameters.cosmology->sigma8_Pk(m_twop_parameters.method_Pk, m_twop_parameters.redshift, m_twop_parameters.output_root);
   

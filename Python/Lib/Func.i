@@ -6,6 +6,13 @@
 %include "std_vector.i"
 %include <std_shared_ptr.i>
 
+%shared_ptr(cosmobl::data::Data);
+%shared_ptr(cosmobl::data::Data1D);
+%shared_ptr(cosmobl::data::Data2D);
+%shared_ptr(cosmobl::data::Data1D_extra);
+%shared_ptr(cosmobl::data::Data2D_extra);
+%shared_ptr(cosmobl::glob::FuncGrid);
+
 %{
 #include "Func.h"
 #include "Data.h"
@@ -14,11 +21,11 @@
 #include "Data1D_extra.h"
 #include "Data2D_extra.h"
 #include "Field3D.h"
-
+  
   class EnumTypes {
   public:
     enum {_error_, _IO_, _workInProgress_};
-    enum {_Omega_matter_LCDM_, _Omega_matter_, _Omega_baryon_, _Omega_baryon_h2_,  _Omega_neutrinos_, _massless_neutrinos_, _massive_neutrinos_, _Omega_DE_, _Omega_radiation_, _H0_, _hh_, _scalar_amp_, _n_spec_, _w0_, _wa_, _fNL_, _sigma8_};
+    enum {_Omega_matter_LCDM_, _Omega_matter_, _Omega_baryon_, _Omega_baryon_h2_,  _Omega_neutrinos_, _massless_neutrinos_, _massive_neutrinos_, _Omega_DE_, _Omega_radiation_, _H0_, _hh_, _scalar_amp_, _ln_scalar_amp_, _n_spec_, _w0_, _wa_, _fNL_, _sigma8_};
     enum {_radians_, _degrees_, _arcseconds_, _arcminutes_};
     enum {_1D_, _2D_}; 
     enum {_linear_, _logarithmic_};
@@ -183,7 +190,7 @@ static const string col_purple = "\033[0;35m";
 class EnumTypes {
  public:
   enum {_error_, _IO_, _workInProgress_};
-  enum {_Omega_matter_LCDM_, _Omega_matter_, _Omega_baryon_, _Omega_baryon_h2_,  _Omega_neutrinos_, _massless_neutrinos_, _massive_neutrinos_, _Omega_DE_, _Omega_radiation_, _H0_, _hh_, _scalar_amp_, _n_spec_, _w0_, _wa_, _fNL_, _sigma8_};
+  enum {_Omega_matter_LCDM_, _Omega_matter_, _Omega_baryon_, _Omega_baryon_h2_,  _Omega_neutrinos_, _massless_neutrinos_, _massive_neutrinos_, _Omega_DE_, _Omega_radiation_, _H0_, _hh_, _scalar_amp_, _ln_scalar_amp_, _n_spec_, _w0_, _wa_, _fNL_, _sigma8_};
   enum {_radians_, _degrees_, _arcseconds_, _arcminutes_};
   enum {_1D_, _2D_}; 
   enum {_linear_, _logarithmic_};

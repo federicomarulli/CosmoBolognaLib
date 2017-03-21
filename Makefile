@@ -84,12 +84,12 @@ dir_ALLP = $(addprefix $(dir_Python)CosmoBolognaLib/,$(Dir_ALL))
 
 ##### CBL object files #####
 
-OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)GSLfunction.o  $(dir_FUNC)Data.o $(dir_FUNC)Data1D.o $(dir_FUNC)Data1D_collection.o $(dir_FUNC)Data2D.o $(dir_FUNC)Data1D_extra.o $(dir_FUNC)Data2D_extra.o $(dir_FUNC)Field3D.o
-OBJ_STAT = $(dir_STAT)Chain.o $(dir_STAT)Prior.o $(dir_STAT)Parameter.o $(dir_STAT)Model.o $(dir_STAT)Chi2.o $(dir_STAT)Likelihood.o
+OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)GSLfunction.o  $(dir_FUNC)Data.o $(dir_FUNC)Data1D.o $(dir_FUNC)Data1D_collection.o $(dir_FUNC)Data2D.o $(dir_FUNC)Data1D_extra.o $(dir_FUNC)Data2D_extra.o $(dir_FUNC)Field3D.o $(dir_FUNC)FuncGrid.o $(dir_FUNC)GSLwrapper.o
+OBJ_STAT = $(dir_STAT)Chain.o $(dir_STAT)Prior.o $(dir_STAT)Parameter.o $(dir_STAT)Model.o $(dir_STAT)Chi2.o $(dir_STAT)Sampler.o $(dir_STAT)Likelihood.o
 OBJ_COSM = $(dir_EH)power_whu.o $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)MassFunction.o $(dir_COSM)SizeFunction.o
 OBJ_CM = $(dir_CM)ChainMesh.o
-OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $(dir_CAT)ChainMesh_Catalogue.o $(dir_CAT)RandomCatalogueVIPERS.o 
-OBJ_LN = $(dir_LN)LogNormal.o
+OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $(dir_CAT)ChainMesh_Catalogue.o $(dir_CAT)RandomCatalogueVIPERS.o $(dir_CAT)VoidCatalogue.o $(dir_CAT)GadgetCatalogue.o
+OBJ_LN = $(dir_LN)LogNormal.o $(dir_LN)LogNormal_full.o
 OBJ_TWOP = $(dir_TWOP)Pair.o $(dir_TWOP)Pair1D.o $(dir_TWOP)Pair2D.o $(dir_TWOP)Pair1D_extra.o $(dir_TWOP)Pair2D_extra.o $(dir_TWOP)TwoPointCorrelation.o $(dir_TWOP)TwoPointCorrelation1D.o $(dir_TWOP)TwoPointCorrelation1D_angular.o $(dir_TWOP)TwoPointCorrelation1D_monopole.o $(dir_TWOP)TwoPointCorrelation2D.o $(dir_TWOP)TwoPointCorrelation2D_cartesian.o $(dir_TWOP)TwoPointCorrelation2D_polar.o $(dir_TWOP)TwoPointCorrelation_projected.o $(dir_TWOP)TwoPointCorrelation_deprojected.o $(dir_TWOP)TwoPointCorrelation_multipoles.o $(dir_TWOP)TwoPointCorrelation_wedges.o $(dir_TWOP)TwoPointCorrelation1D_filtered.o 
 OBJ_THREEP = $(dir_THREEP)Triplet.o $(dir_THREEP)ThreePointCorrelation.o $(dir_THREEP)ThreePointCorrelation_angular_connected.o $(dir_THREEP)ThreePointCorrelation_angular_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_connected.o $(dir_THREEP)ThreePointCorrelation_comoving_reduced.o 
 OBJ_MODEL = $(dir_MODEL)ModelFunction.o $(dir_MODEL)Modelling.o $(dir_MODEL)Modelling_TwoPointCorrelation.o $(dir_MODEL)Modelling_TwoPointCorrelation1D.o $(dir_MODEL)Modelling_TwoPointCorrelation2D.o $(dir_MODEL)Modelling_TwoPointCorrelation_monopole.o $(dir_MODEL)Modelling_TwoPointCorrelation_cartesian.o $(dir_MODEL)Modelling_TwoPointCorrelation_projected.o $(dir_MODEL)Modelling_TwoPointCorrelation_deprojected.o 
@@ -200,6 +200,10 @@ allExamples:
 	cd $(PWD)/Examples/vectors ; make
 	$(call colorecho, "\n"Compiling the example code: randomNumbers.cpp ... "\n")
 	cd $(PWD)/Examples/randomNumbers ; make 
+	$(call colorecho, "\n"Compiling the example code: integration.cpp ... "\n")
+	cd $(PWD)/Examples/gsl ; make integration
+	$(call colorecho, "\n"Compiling the example code: minimisation.cpp ... "\n")
+	cd $(PWD)/Examples/gsl ; make minimisation
 	$(call colorecho, "\n"Compiling the example code: distances.cpp ... "\n")
 	cd $(PWD)/Examples/distances ; make 
 	$(call colorecho, "\n"Compiling the example code: covsample.cpp ... "\n")
@@ -210,6 +214,8 @@ allExamples:
 	cd $(PWD)/Examples/statistics/codes ; make prior 
 	$(call colorecho, "\n"Compiling the example code: fit.cpp ... "\n")
 	cd $(PWD)/Examples/statistics/codes ; make fit
+	$(call colorecho, "\n"Compiling the example code: sampler.cpp ... "\n")
+	cd $(PWD)/Examples/statistics/codes ; make sampler
 	$(call colorecho, "\n"Compiling the example code: catalogue.cpp ... "\n")
 	cd $(PWD)/Examples/catalogue ; make catalogue 
 	$(call colorecho, "\n"Compiling the example code: 2pt_monopole.cpp ... "\n")
@@ -232,6 +238,10 @@ allExamples:
 	cd $(PWD)/Examples/clustering/codes ; make model_2pt_projected
 	$(call colorecho, "\n"Compiling the example code: model_2pt_2D.cpp ... "\n")
 	cd $(PWD)/Examples/clustering/codes ; make model_2pt_2D
+	$(call colorecho, "\n"Compiling the example code: sizeFunction.cpp ... "\n")
+	cd $(PWD)/Examples/cosmicVoids/codes ; make sizeFunction
+	$(call colorecho, "\n"Compiling the example code: cleanVoidCatalogue.cpp ... "\n")
+	cd $(PWD)/Examples/cosmicVoids/codes ; make cleanVoidCatalogue
 	$(call colorecho, "\n"Compiling the example code: readParameterFile.cpp ... "\n")
 	cd $(PWD)/Examples/readParameterFile/ ; make 
 
@@ -274,12 +284,14 @@ doct:
 cleanExamples:
 	cd $(PWD)/Examples/vectors ; make clean && cd ../..
 	cd $(PWD)/Examples/randomNumbers ; make clean && cd ../..
+	cd $(PWD)/Examples/gsl ; make clean && cd ../..
 	cd $(PWD)/Examples/distances ; make clean && cd ../..
 	cd $(PWD)/Examples/covsample ; make clean && cd ../..
 	cd $(PWD)/Examples/fsigma8 ; make clean && cd ../..
 	cd $(PWD)/Examples/statistics/codes ; make clean && cd ../..
 	cd $(PWD)/Examples/catalogue ; make clean && cd ../..
 	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../../..
+	cd $(PWD)/Examples/cosmicVoids/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/readParameterFile ; make clean && cd ../..
 	rm -rf $(PWD)/Examples/statistics/output/* $(PWD)/Examples/clustering/output/*
 
@@ -356,6 +368,12 @@ $(dir_FUNC)Data2D_extra.o: $(dir_FUNC)Data2D_extra.cpp $(HH) $(PWD)/Makefile
 $(dir_FUNC)Field3D.o: $(dir_FUNC)Field3D.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Field3D.cpp -o $(dir_FUNC)Field3D.o
 
+$(dir_FUNC)FuncGrid.o: $(dir_FUNC)FuncGrid.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)FuncGrid.cpp -o $(dir_FUNC)FuncGrid.o
+
+$(dir_FUNC)GSLwrapper.o: $(dir_FUNC)GSLwrapper.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)GSLwrapper.cpp -o $(dir_FUNC)GSLwrapper.o 
+
 $(dir_FUNC)conv.o: $(dir_FUNC)conv.f90 
 	$(F) -c $(dir_FUNC)conv.f90 -o $(dir_FUNC)conv.o
 
@@ -377,6 +395,9 @@ $(dir_STAT)Model.o: $(dir_STAT)Model.cpp $(HH) $(PWD)/Makefile
 
 $(dir_STAT)Chi2.o: $(dir_STAT)Chi2.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Chi2.cpp -o $(dir_STAT)Chi2.o
+
+$(dir_STAT)Sampler.o: $(dir_STAT)Sampler.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Sampler.cpp -o $(dir_STAT)Sampler.o
 
 $(dir_STAT)Likelihood.o: $(dir_STAT)Likelihood.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Likelihood.cpp -o $(dir_STAT)Likelihood.o
@@ -450,12 +471,21 @@ $(dir_CAT)ChainMesh_Catalogue.o: $(dir_CAT)ChainMesh_Catalogue.cpp $(HH) $(PWD)/
 $(dir_CAT)RandomCatalogueVIPERS.o: $(dir_CAT)RandomCatalogueVIPERS.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)RandomCatalogueVIPERS.cpp -o $(dir_CAT)RandomCatalogueVIPERS.o
 
+$(dir_CAT)VoidCatalogue.o: $(dir_CAT)VoidCatalogue.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)VoidCatalogue.cpp -o $(dir_CAT)VoidCatalogue.o
+
+$(dir_CAT)GadgetCatalogue.o: $(dir_CAT)GadgetCatalogue.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)GadgetCatalogue.cpp -o $(dir_CAT)GadgetCatalogue.o
+
 
 #################################################################### 
 
 
 $(dir_LN)LogNormal.o: $(dir_LN)LogNormal.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_LN)LogNormal.cpp -o $(dir_LN)LogNormal.o
+
+$(dir_LN)LogNormal_full.o: $(dir_LN)LogNormal_full.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_LN)LogNormal_full.cpp -o $(dir_LN)LogNormal_full.o
 
 
 #################################################################### 

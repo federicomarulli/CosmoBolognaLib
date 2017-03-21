@@ -363,6 +363,24 @@ namespace cosmobl {
        */
       virtual vector<double> scale_mean () const
       { cosmobl::ErrorCBL("Error in scale_mean() of Pair.h!"); vector<double> vv; return vv; }
+
+      /**
+       *  @brief get the member m_scale_S[i]
+       *  @param i the bin index
+       *  @return the square of the standard deviations of the scale
+       *  distribution, multiplied by the total weight, in the i-th
+       *  bin
+       */
+      virtual double scale_S (const int i) const
+      { (void)i; cosmobl::ErrorCBL("Error in scale_S() of Pair.h!"); return 0; }
+
+      /**
+       *  @brief get the member vector<double> m_scale_S
+       *  @return the vector the square of the standard deviations of
+       *  the scale distribution, multiplied by the total weight
+       */
+      virtual vector<double> scale_S () const
+      { cosmobl::ErrorCBL("Error in scale_S() of Pair.h!"); vector<double> vv; return vv; }
       
       /**
        *  @brief get the member m_scale_sigma[i]
@@ -397,6 +415,24 @@ namespace cosmobl {
       { cosmobl::ErrorCBL("Error in z_mean() of Pair.h!"); vector<double> vv; return vv; }
 
       /**
+       *  @brief get the protected member Pair1D_extra::m_z_S[i]
+       *  @param i the bin index
+       *  @return the square of the standard deviations of the
+       *  redshift distribution, multiplied by the total weight, in
+       *  the i-th bin
+       */
+      virtual double z_S (const int i) const
+      { (void)i; cosmobl::ErrorCBL("Error in z_S() of Pair.h!"); return 0; }
+
+      /**
+       *  @brief get the protected member Pair1D_extra::m_z_S
+       *  @return the vector the square of the standard deviations of
+       *  the redshift distribution, multiplied by the total weight
+       */
+      virtual vector<double> z_S () const
+      { cosmobl::ErrorCBL("Error in z_S() of Pair.h!"); vector<double> vv; return vv; }
+      
+      /**
        *  @brief get the protected member Pair1D_extra::m_z_sigma[i]
        *  @param i the bin index
        *  @return the standard deviation of the redshift distribution
@@ -427,6 +463,22 @@ namespace cosmobl {
        */
       virtual vector<double> PP1D () const
       { cosmobl::ErrorCBL("Error in PP1D() of Pair.h!"); vector<double> vv; return vv; }
+      
+      /**
+       *  @brief get the member m_PP1D_weighted[i]
+       *  @param i the bin index
+       *  @return the number of weighted pairs in the i-th bin
+       */
+      virtual double PP1D_weighted (const int i) const
+      { (void)i; cosmobl::ErrorCBL("Error in PP1D_weighted() of Pair.h!"); return 0; }
+
+      /**
+       *  @brief get the member vector<double> m_PP1D_weighted
+       *  @return the vector containing the binned weighted number of
+       *  pairs
+       */
+      virtual vector<double> PP1D_weighted () const
+      { cosmobl::ErrorCBL("Error in PP1D_weighted() of Pair.h!"); vector<double> vv; return vv; }
 
       /**
        *  @brief get the member m_scale_D1[i]
@@ -494,6 +546,46 @@ namespace cosmobl {
       { cosmobl::ErrorCBL("Error in scale_D2_mean() of Pair.h!"); vector<vector<double>> vv; return vv; }
 
       /**
+       *  @brief get the member m_scale_D1_S[i][j]
+       *  @param i the bin index in the first dimension
+       *  @param j the bin index in the second dimension
+       *  @return the square of the standard deviations of the scale
+       *  distribution, multiplied by the total weight, in the i-th
+       *  bin, in the first dimension
+       */
+      virtual double scale_D1_S (const int i, const int j) const
+      { (void)i; (void)j; cosmobl::ErrorCBL("Error in scale_D1_S() of Pair.h!"); return 0; }
+
+      /**
+       *  @brief get the member vector<double> m_scale_D1
+       *  @return the vector the square of the standard deviations of
+       *  the scale distribution, multiplied by the total weight, in
+       *  the first dimension
+       */
+      virtual vector<vector<double>> scale_D1_S () const
+      { cosmobl::ErrorCBL("Error in scale_D1_S() of Pair.h!"); vector<vector<double>> vv; return vv; }
+
+      /**
+       *  @brief get the member m_scale_D2[i][j]
+       *  @param i the bin index in the first dimension
+       *  @param j the bin index in the second dimension
+       *  @return the square of the standard deviations of the scale
+       *  distribution, multiplied by the total weight, in the i-th
+       *  bin, in the second dimension
+       */
+      virtual double scale_D2_S (const int i, const int j) const
+      { (void)i; (void)j; cosmobl::ErrorCBL("Error in scale_D2_S() of Pair.h!"); return 0; }
+
+      /**
+       *  @brief get the member vector<double> m_scale_D2
+       *  @return the vector the square of the standard deviations of
+       *  the scale distribution, multiplied by the total weight, in
+       *  the second dimension
+       */
+      virtual vector<vector<double>> scale_D2_S () const
+      { cosmobl::ErrorCBL("Error in scale_D2_S() of Pair.h!"); vector<vector<double>> vv; return vv; }
+
+      /**
        *  @brief get the member m_scale_D1_sigma[i][j]
        *  @param i the bin index in the first dimension
        *  @param j the bin index in the second dimension
@@ -528,7 +620,7 @@ namespace cosmobl {
        */
       virtual vector<vector<double>> scale_D2_sigma () const
       { cosmobl::ErrorCBL("Error in scale_D2_sigma() of Pair.h!"); vector<vector<double>> vv; return vv; }
-
+      
       /**
        *  @brief get the protected member \e m_z_mean[i][j]
        *  @param i the bin index in the first dimension
@@ -545,6 +637,17 @@ namespace cosmobl {
       virtual vector<vector<double>> z_mean2D () const
       { cosmobl::ErrorCBL("Error in z_mean2D() of Pair.h!"); vector<vector<double>> vv; return vv; }
 
+      /**
+       *  @brief get the member m_z_sigma[i][j]
+       *  @param i the bin index in the first dimension
+       *  @param j the bin index in the second dimension
+       *  @return the square of the standard deviations of the
+       *  redshift distribution, multiplied by the total weight, in
+       *  the i-th bin
+       */
+      virtual double z_S (const int i, const int j) const
+      { (void)i; (void)j; cosmobl::ErrorCBL("Error in z_S() of Pair.h!"); return 0; }
+      
       /**
        *  @brief get the member m_z_sigma[i][j]
        *  @param i the bin index in the first dimension
@@ -578,6 +681,23 @@ namespace cosmobl {
        */
       virtual vector<vector<double>> PP2D () const
       { cosmobl::ErrorCBL("Error in PP2D() of Pair.h!"); vector<vector<double>> vv; return vv; }
+
+      /**
+       *  @brief get the member m_PP2D_weighted[i][j]
+       *  @param i the bin index in the first dimension
+       *  @param j the bin index in the second dimension
+       *  @return the number of weighted pairs in the i-th bin
+       */
+      virtual double PP2D_weighted (const int i, const int j) const
+      { (void)i; (void)j; cosmobl::ErrorCBL("Error in PP2D_weighted() of Pair.h!"); return 0;}
+
+      /**
+       *  @brief get the member vector<vector<double>> m_PP2D_weighted
+       *  @return the vector containing the binned weighted number of
+       *  pairs
+       */
+      virtual vector<vector<double>> PP2D_weighted () const
+      { cosmobl::ErrorCBL("Error in PP2D_weighted() of Pair.h!"); vector<vector<double>> vv; return vv; }
       
       /**
        *  @brief get the member m_binSize_inv
@@ -706,6 +826,15 @@ namespace cosmobl {
        */
       virtual void set_PP1D (const int i, const double pp)
       { (void)i; (void)pp; cosmobl::ErrorCBL("Error in set_PP1D() of Pair.h!"); }
+
+      /**
+       *  @brief set the member m_PP1D_weighted[i]
+       *  @param i the bin index
+       *  @param pp the number of weighted pairs in the bin
+       *  @return none
+       */
+      virtual void set_PP1D_weighted (const int i, const double pp)
+      { (void)i; (void)pp; cosmobl::ErrorCBL("Error in set_PP1D_weighted() of Pair.h!"); }
       
       /**
        *  @brief set the member m_PP2D[i][j]
@@ -716,6 +845,16 @@ namespace cosmobl {
        */
       virtual void set_PP2D (const int i, const int j, const double pp)
       { (void)i; (void)j; (void)pp; cosmobl::ErrorCBL("Error in set_PP2D() of Pair.h!"); }
+
+      /**
+       *  @brief set the member m_PP2D_weighted[i][j]
+       *  @param i the bin index in the first dimension
+       *  @param j the bin index in the second dimension
+       *  @param pp the number of weighted pairs in the bin
+       *  @return none
+       */
+      virtual void set_PP2D_weighted (const int i, const int j, const double pp)
+      { (void)i; (void)j; (void)pp; cosmobl::ErrorCBL("Error in set_PP2D_weighted() of Pair.h!"); }
 
        /**
        *  @brief set the protected members by adding new 1D data
@@ -781,13 +920,6 @@ namespace cosmobl {
        *  @return none
        */
       virtual void Sum (const shared_ptr<Pair> pp, const double ww=1) = 0;
-
-      /**
-       *  @brief finalise the computation of the extra information
-       *  @return none
-       */
-      virtual void finalise ()
-      { cosmobl::ErrorCBL("Error in finalise() of Pair.h!"); }
       
       ///@}
 

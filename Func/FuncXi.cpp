@@ -32,6 +32,7 @@
  */
 
 #include "Func.h"
+
 using namespace cosmobl;
 
 
@@ -141,7 +142,7 @@ double cosmobl::Pk_from_xi (const double kk, const vector<double> lgrr, const ve
     
   function<double(double) > ff = bind(&cosmobl::classfunc::func_Pk::operator(), func, std::placeholders::_1);
   double prec = 0.0001;
-  double Int = GSL_integrate_qag (ff, r_min, r_max, prec);
+  double Int = gsl::GSL_integrate_qag (ff, r_min, r_max, prec);
   
   return 4.*par::pi*Int;
 } 
@@ -184,12 +185,12 @@ double cosmobl::Pk_from_xi (const double kk, const string file, const  int c1, c
 
 double cosmobl::wp (const double rp, const vector<double> rr, const vector<double> xi, const double r_max) 
 {
-  cosmobl::classfunc::func_wp func (rr, xi, rp);
+  cosmobl::classfunc::func_wp func(rr, xi, rp);
 
-  function<double(double) > ff = bind(&cosmobl::classfunc::func_wp::operator(), func, std::placeholders::_1);
+  function<double(double)> ff = bind(&cosmobl::classfunc::func_wp::operator(), func, std::placeholders::_1);
   double prec = 0.0001;
-  return 2*GSL_integrate_qag (ff,rp, r_max, prec);
 
+  return 2.*gsl::GSL_integrate_qag(ff, rp, r_max, prec);
 }
 
 
@@ -225,7 +226,7 @@ double cosmobl::sigmaR (const double RR, const int corrType, const vector<double
 
     function<double(double) > ff = bind(&cosmobl::classfunc::func_sigma_xi::operator(), func, std::placeholders::_1);
     double prec = 0.0001;
-    double Int = GSL_integrate_qaws (ff, 0., 2*RR, 1, 0, 0, 0, prec);
+    double Int = gsl::GSL_integrate_qaws (ff, 0., 2*RR, 1, 0, 0, 0, prec);
 
     if (1./pow(RR,3)*Int<0) ErrorCBL("Error in sigmaR with xi of Func.cpp!,"+conv(1./pow(RR,3)*Int,par::fDP4)+"<0");
     sigmaR = sqrt(1./pow(RR,3)*Int);
@@ -236,8 +237,8 @@ double cosmobl::sigmaR (const double RR, const int corrType, const vector<double
     function<double(double) > ff = bind(&cosmobl::classfunc::func_sigma_wp::operator(), func, std::placeholders::_1);
 
     double prec = 0.0001;
-    double Int1 = GSL_integrate_qaws (ff, 0., 1., prec);
-    double Int2 = GSL_integrate_qaws (ff, 1., 100., prec);
+    double Int1 = gsl::GSL_integrate_qaws (ff, 0., 1., prec);
+    double Int2 = gsl::GSL_integrate_qaws (ff, 1., 100., prec);
 
     if (1./pow(RR,3)*(Int1+Int2)<0) ErrorCBL("Error in sigmaR with wp of Func.cpp!,"+conv(1./pow(RR,3)*(Int1+Int2),par::fDP4)+"<0");
     sigmaR = sqrt(1./pow(RR,3)*(Int1+Int2));
@@ -373,7 +374,7 @@ double cosmobl::barred_xi_ (const double RR, const vector<double> rr, const vect
   for (unsigned int i=0; i<xi.size(); i++) 
     xi_.push_back(xi[i]*rr[i]*rr[i]);
   
-  cosmobl::classfunc::func_grid_GSL func(rr, xi_, "Spline");
+  cosmobl::glob::FuncGrid func(rr, xi_, "Spline");
 
   double int_an = (RR<rApp) ?  1./((3.-gamma)*pow(r0,-gamma))*pow(RR,3.-gamma) : 1./((3.-gamma)*pow(r0,-gamma))*pow(rApp,3.-gamma);
 
@@ -393,7 +394,7 @@ double cosmobl::barred_xi__ (const double RR, const vector<double> rr, const vec
   for (unsigned int i=0; i<xi.size(); i++) 
     xi__.push_back(xi[i]*rr[i]*rr[i]*rr[i]*rr[i]);
   
-  cosmobl::classfunc::func_grid_GSL func(rr, xi__, "Spline");
+  cosmobl::glob::FuncGrid func(rr, xi__, "Spline");
 
   double int_an = (RR<rApp) ? 1./((5.-gamma)*pow(r0,-gamma))*pow(RR,5.-gamma) : 1./((5.-gamma)*pow(r0,-gamma))*pow(rApp,5.-gamma);
 
@@ -427,8 +428,8 @@ double cosmobl::xi2D_lin_model (double rp, double pi, shared_ptr<void> pp, vecto
       ErrorCBL(Err);
     }
     double bA = par[3];
-    double rr = sqrt(pow(rp,2)+pow(pi,2));
-    bias *= b_nl(rr,bA);
+    double rr = sqrt(pow(rp, 2)+pow(pi, 2));
+    bias *= b_nl(rr, bA);
   }
 
   double b2 = bias*bias;
@@ -643,11 +644,12 @@ double cosmobl::b_nl (const double rr, const double bA, const double bB, const d
 
 // ============================================================================
 
+
 double cosmobl::xi2D_lin_model (const double rp, const double pi, const double beta, const double bias, const shared_ptr<void> funcXiR, const shared_ptr<void> funcXiR_, const shared_ptr<void> funcXiR__, const bool bias_nl, const double bA)
 {
-  shared_ptr<classfunc::func_grid_GSL> pfuncXiR = static_pointer_cast<classfunc::func_grid_GSL>(funcXiR);
-  shared_ptr<classfunc::func_grid_GSL> pfuncXiR_ = static_pointer_cast<classfunc::func_grid_GSL>(funcXiR_);
-  shared_ptr<classfunc::func_grid_GSL> pfuncXiR__ = static_pointer_cast<classfunc::func_grid_GSL>(funcXiR__);
+  shared_ptr<glob::FuncGrid> pfuncXiR = static_pointer_cast<glob::FuncGrid>(funcXiR);
+  shared_ptr<glob::FuncGrid> pfuncXiR_ = static_pointer_cast<glob::FuncGrid>(funcXiR_);
+  shared_ptr<glob::FuncGrid> pfuncXiR__ = static_pointer_cast<glob::FuncGrid>(funcXiR__);
 
   double rr = sqrt(rp*rp+pi*pi);
   double cos = pi/rr;
@@ -677,10 +679,9 @@ double cosmobl::xi2D_lin_model (const double rp, const double pi, const double b
 
 double cosmobl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const shared_ptr<void> funcXiR, const shared_ptr<void> funcXiR_, const shared_ptr<void> funcXiR__, const double var, const int FV, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
 {
-
-  shared_ptr<classfunc::func_grid_GSL> pfuncXiR = static_pointer_cast<classfunc::func_grid_GSL>(funcXiR);
-  shared_ptr<classfunc::func_grid_GSL> pfuncXiR_ = static_pointer_cast<classfunc::func_grid_GSL>(funcXiR_);
-  shared_ptr<classfunc::func_grid_GSL> pfuncXiR__ = static_pointer_cast<classfunc::func_grid_GSL>(funcXiR__);
+  shared_ptr<glob::FuncGrid> pfuncXiR = static_pointer_cast<glob::FuncGrid>(funcXiR);
+  shared_ptr<glob::FuncGrid> pfuncXiR_ = static_pointer_cast<glob::FuncGrid>(funcXiR_);
+  shared_ptr<glob::FuncGrid> pfuncXiR__ = static_pointer_cast<glob::FuncGrid>(funcXiR__);
 
   double delta_v = (v_max-v_min)/step_v;
 
@@ -709,4 +710,5 @@ double cosmobl::xi2D_model (const double rp, const double pi, const double beta,
  	
   return xi2D;
 }
+
 

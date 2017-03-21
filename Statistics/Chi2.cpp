@@ -71,11 +71,11 @@ double cosmobl::statistics::chi2_1D_model_npar (vector<double> model_parameters,
 
   vector<double> computed_model(data->ndata(),0);
   for (int i=data->x_down(); i<data->x_up(); i++)
-    computed_model[i]=model->operator()(data->xx(i));
+    computed_model[i] = model->operator()(data->xx(i));
 
-  double c2=0;
+  double c2 = 0.;
   for (int i=data->x_down(); i<data->x_up(); i++)
-    c2+=pow((data->fx(i)-computed_model[i])/computed_model[i],2);
+    c2 += pow((data->fx(i)-computed_model[i])/computed_model[i], 2);
 
   return c2;
 }
@@ -90,7 +90,7 @@ double cosmobl::statistics::chi2_1D_error_1par (double model_parameter, const sh
 
   model->set_parameter_values({model_parameter});
 
-  double c2 = 0;
+  double c2 = 0.;
   
   for (int i=data->x_down(); i<data->x_up(); i++)
     c2 += pow((data->fx(i)-model->operator()(data->xx(i)))/data->error_fx(i),2);
@@ -109,12 +109,11 @@ double cosmobl::statistics::chi2_1D_error_npar (vector<double> model_parameters,
 
   model->set_parameter_values(model_parameters);
 
-  double c2 = 0;
+  double c2 = 0.;
   
   for (int i=data->x_down(); i<data->x_up(); i++)
     c2 += pow((data->fx(i)-model->operator()(data->xx(i)))/data->error_fx(i),2);
   
-
   return c2;
 }
 
@@ -129,12 +128,12 @@ double cosmobl::statistics::chi2_1D_covariance_1par (double model_parameter, con
 
   model->set_parameter_values({model_parameter});
 
-  vector<double> computed_model(data->ndata(),0);
-  for (int i=data->x_down(); i< data->x_up(); i++)
+  vector<double> computed_model(data->ndata(), 0);
+  for (int i=data->x_down(); i<data->x_up(); i++)
     computed_model[i]=model->operator()(data->xx(i));
 
-  double c2 = 0;
-  
+  double c2 = 0.;
+ 
   for (int i=data->x_down(); i<data->x_up(); i++)
     for (int j=data->x_down(); j<data->x_up(); j++)
       c2 += (data->fx(i)-computed_model[i])*data->inverse_covariance(i,j)*(data->fx(j)-computed_model[j]);    

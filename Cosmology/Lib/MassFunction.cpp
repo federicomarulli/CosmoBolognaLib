@@ -39,7 +39,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::mass_function (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root, const double Delta, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
+double cosmobl::cosmology::Cosmology::mass_function (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root, const double Delta, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const double prec, const string file_par, const bool default_delta, const double delta_t) 
 {
   double fact = (m_unit) ? 1 : m_hh;
   double MASS = Mass*fact;
@@ -49,9 +49,10 @@ double cosmobl::cosmology::Cosmology::mass_function (const double Mass, const do
   double Sigma = sqrt(SSS);
   double Dln_Sigma = dnSM(1, MASS, method_SS, zero, output_root, interpType, Num, stepsize, k_max, file_par)*(MASS/(2.*SSS));
 
-  double MF = MF_generator(MASS, Sigma, Dln_Sigma, redshift, author_MF, Delta)*pow(fact, 4.);
+  double MF = MF_generator(MASS, Sigma, Dln_Sigma, redshift, author_MF, Delta, default_delta, delta_t)*pow(fact, 4.);
 
-  if (m_fNL!=0) MF *= MF_correction(MASS, redshift, author_MF, output_root, interpType, Num, stepsize, norm, k_min, k_max, prec, file_par);
+  if (m_fNL!=0 && default_delta) MF *= MF_correction(MASS, redshift, author_MF, output_root, interpType, Num, stepsize, norm, k_min, k_max, prec, file_par);
+  else if (m_fNL!=0 && !default_delta) ErrorCBL("Non Gaussianity still not available for user-defined density contrast threshold!");
 
   return MF;
 }
@@ -103,7 +104,7 @@ double cosmobl::cosmology::Cosmology::mass_function (const double Mass, const do
   double fact = (m_unit) ? 1 : m_hh;
   double MASS = Mass*fact;
 
-  double MF = MF_generator(MASS, Sigma, Dln_Sigma, redshift, author_MF, Delta)*pow(fact,4.);
+  double MF = MF_generator(MASS, Sigma, Dln_Sigma, redshift, author_MF, Delta)*pow(fact, 4.);
 
   if (m_fNL!=0) MF *= MF_correction(MASS, redshift, method_SS, output_root, interpType, Num, stepsize, norm, k_min, k_max, prec, file_par);
 
@@ -114,12 +115,12 @@ double cosmobl::cosmology::Cosmology::mass_function (const double Mass, const do
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string author_MF, const double Delta) 
+double cosmobl::cosmology::Cosmology::MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string author_MF, const double Delta, const bool default_delta, const double delta_t) 
 { 
-  double deltacz = deltac(redshift);
+  double deltacz = (default_delta) ? deltac(redshift) : fabs(delta_t*DD(redshift)/DD(0.));
   double sigmaz = Sigma*DD(redshift)/DD(0.);
   
-  double RHO = Rho(m_Omega_matter, m_Omega_neutrinos); 
+  double RHO = Rho(m_Omega_matter, m_Omega_neutrinos, true); 
   
   double dndm = -1.;
   
@@ -230,7 +231,7 @@ double cosmobl::cosmology::Cosmology::MF_generator (const double Mass, const dou
   if (author_MF=="Angulo_Sub") // SUBFIND MF by Angulo et al. (2012)
     return 0.265*pow(1.675/sigmaz,1.9)*exp(-1.4/(sigmaz*sigmaz))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
 
-  if (dndm<0) return ErrorCBL("Error in cosmobl::cosmology::Cosmology::MF of MassFunction.cpp!");
+  if (dndm<0) return ErrorCBL("Error in cosmobl::cosmology::Cosmology::MF_generator of MassFunction.cpp!");
 
   return dndm;  
 }
@@ -286,11 +287,11 @@ double cosmobl::cosmology::Cosmology::n_haloes (const double Mass_min, const dou
 
 double cosmobl::cosmology::Cosmology::MhaloMin (const int n_halo, const double Area, const bool angle_rad, const double z_min, const double z_max, const double Mmax, const double lgM1_guess, const double lgM2_guess, const string author_MF, const string method_SS, const string output_root, const string interpType, const int Num, const double stepsize, const double k_max, const string file_par) const
 {
-  cosmobl::classfunc::func_MhaloMin func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_model, m_unit, n_halo, Area, angle_rad, z_min, z_max, Mmax, author_MF, method_SS, output_root, interpType, Num, stepsize, k_max, file_par);
+  cosmobl::classfunc::func_MhaloMin func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, n_halo, Area, angle_rad, z_min, z_max, Mmax, author_MF, method_SS, output_root, interpType, Num, stepsize, k_max, file_par);
   
   function<double(double) > ff = bind(&cosmobl::classfunc::func_MhaloMin::operator(), func, std::placeholders::_1);
   double prec = 0.0001;
-  double lgM =  GSL_brent (ff, 0., lgM1_guess, lgM2_guess, prec);
+  double lgM = gsl::GSL_root_brent (ff, 0., lgM1_guess, lgM2_guess, prec);
 
   return pow(10.,lgM);
 

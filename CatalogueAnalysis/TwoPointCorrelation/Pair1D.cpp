@@ -43,7 +43,7 @@ using namespace pairs;
 
 void cosmobl::pairs::Pair1D_angular_lin::m_set_parameters_nbins ()
 {
-  double binSize = ((m_thetaMax-m_thetaMin)/m_nbins);
+  const double binSize = ((m_thetaMax-m_thetaMin)/m_nbins);
   m_binSize_inv = 1./binSize;
   
   m_scale.resize(m_nbins);
@@ -73,7 +73,7 @@ void cosmobl::pairs::Pair1D_angular_log::m_set_parameters_nbins ()
 {
   if (m_thetaMin<1.e-30) ErrorCBL("Error in cosmobl::pairs::Pair1D_angular_log::m_set_parameters_nbins of Pair.cpp: Min must be >0!");
   
-  double binSize = ((log10(m_thetaMax)-log10(m_thetaMin))/m_nbins);
+  const double binSize = ((log10(m_thetaMax)-log10(m_thetaMin))/m_nbins);
   m_binSize_inv = 1./binSize;
 
   m_scale.resize(m_nbins);
@@ -103,7 +103,7 @@ void cosmobl::pairs::Pair1D_angular_log::m_set_parameters_binSize ()
 
 void cosmobl::pairs::Pair1D_comoving_lin::m_set_parameters_nbins ()
 {
-  double binSize = ((m_rMax-m_rMin)/m_nbins);
+  const double binSize = ((m_rMax-m_rMin)/m_nbins);
   m_binSize_inv = 1./binSize;
 
   m_scale.resize(m_nbins);
@@ -133,7 +133,7 @@ void cosmobl::pairs::Pair1D_comoving_log::m_set_parameters_nbins ()
 {
   if (m_rMin<1.e-30) ErrorCBL("Error in cosmobl::pairs::Pair1D_comoving_log::m_set_parameters_nbins of Pair.cpp: Min must be >0!");
   
-  double binSize = ((log10(m_rMax)-log10(m_rMin))/m_nbins);
+  const double binSize = ((log10(m_rMax)-log10(m_rMin))/m_nbins);
   m_binSize_inv = 1./binSize;
 
   m_scale.resize(m_nbins);
@@ -163,16 +163,17 @@ void cosmobl::pairs::Pair1D_comoving_log::m_set_parameters_binSize ()
 
 void cosmobl::pairs::Pair1D_angular_lin::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2)
 {
-  double dist = (m_angularUnits==_radians_) ? angular_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()) 
+  const double dist = (m_angularUnits==_radians_) ? angular_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()) 
 	     : converted_angle(angular_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()), _radians_, m_angularUnits);
 
   if (m_thetaMin < dist && dist < m_thetaMax) {
 
-    int kk = max(0, min(int((dist-m_thetaMin)*m_binSize_inv), m_nbins));
+    const int kk = max(0, min(int((dist-m_thetaMin)*m_binSize_inv), m_nbins));
 
-    m_PP1D[kk] += obj1->weight()*obj2->weight();
+    m_PP1D[kk] ++;
+    m_PP1D_weighted[kk] += obj1->weight()*obj2->weight();
     
-  } 
+  }
 }
 
 
@@ -181,15 +182,16 @@ void cosmobl::pairs::Pair1D_angular_lin::put (const shared_ptr<Object> obj1, con
 
 void cosmobl::pairs::Pair1D_angular_log::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2)
 {
-  double dist = (m_angularUnits==_radians_) ? angular_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()) 
+  const double dist = (m_angularUnits==_radians_) ? angular_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()) 
 	     : converted_angle(angular_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()), _radians_, m_angularUnits);
   
   if (m_thetaMin < dist && dist < m_thetaMax) {
 
-    int kk = max(0, min(int((log10(dist)-log10(m_thetaMin))*m_binSize_inv), m_nbins));
+    const int kk = max(0, min(int((log10(dist)-log10(m_thetaMin))*m_binSize_inv), m_nbins));
 
-    m_PP1D[kk] += obj1->weight()*obj2->weight();
-    
+    m_PP1D[kk] ++;
+    m_PP1D_weighted[kk] += obj1->weight()*obj2->weight();
+
   }
 }
 
@@ -199,16 +201,17 @@ void cosmobl::pairs::Pair1D_angular_log::put (const shared_ptr<Object> obj1, con
 
 void cosmobl::pairs::Pair1D_comoving_lin::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2)
 {
-  double dist = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()); 
+  const double dist = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()); 
   
   if (m_rMin < dist && dist < m_rMax) {
 
-    int kk = max(0, min(int((dist-m_rMin)*m_binSize_inv), m_nbins));
+    const int kk = max(0, min(int((dist-m_rMin)*m_binSize_inv), m_nbins));
     
-    double angWeight = (m_angularWeight==nullptr) ? 1.
-      : m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits));
+    const double angWeight = (m_angularWeight==nullptr) ? 1.
+      : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
     
-    m_PP1D[kk] += obj1->weight()*obj2->weight()*angWeight;
+    m_PP1D[kk] ++;
+    m_PP1D_weighted[kk] += obj1->weight()*obj2->weight()*angWeight;
     
   }
 }
@@ -219,16 +222,18 @@ void cosmobl::pairs::Pair1D_comoving_lin::put (const shared_ptr<Object> obj1, co
 
 void cosmobl::pairs::Pair1D_comoving_log::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2)
 {
-  double dist = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()); 
+  const double dist = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()); 
   
   if (m_rMin < dist && dist < m_rMax) {
 
-    int kk = max(0, min(int((log10(dist)-log10(m_rMin))*m_binSize_inv), m_nbins));
+    const int kk = max(0, min(int((log10(dist)-log10(m_rMin))*m_binSize_inv), m_nbins));
 
-    double angWeight = (m_angularWeight==nullptr) ? 1.
-      : m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits));
+    const double angWeight = (m_angularWeight==nullptr) ? 1.
+      : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
 
-    m_PP1D[kk] += obj1->weight() * obj2->weight() * angWeight;
+    m_PP1D[kk] ++;
+    m_PP1D_weighted[kk] += obj1->weight()*obj2->weight()*angWeight;
+
   }
 }
 
@@ -238,10 +243,14 @@ void cosmobl::pairs::Pair1D_comoving_log::put (const shared_ptr<Object> obj1, co
 
 void cosmobl::pairs::Pair1D::add_data1D (const int i, const vector<double> data)
 {
-  //checkDim(m_PP1D, i, "m_PP1D", false);
-  //checkDim(data, 1, "data");
+  /*
+    checkDim(m_PP1D, i, "m_PP1D", false);
+    checkDim(m_PP1D_weighted, i, "m_PP1D_weighted", false);
+    checkDim(data, 1, "data");
+  */
   
   m_PP1D[i] += data[0];
+  m_PP1D_weighted[i] += data[1];
 }
 
 
@@ -250,20 +259,18 @@ void cosmobl::pairs::Pair1D::add_data1D (const int i, const vector<double> data)
 
 void cosmobl::pairs::Pair1D::add_data1D (const int i, const shared_ptr<pairs::Pair> pair, const double ww) 
 {
-  //checkDim(m_PP1D, i, "m_PP1D", false);
-  
-  m_PP1D[i] += ww*pair->PP1D(i);
+  add_data1D(i, {ww*pair->PP1D(i), ww*pair->PP1D_weighted(i)});
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::pairs::Pair1D::Sum (const shared_ptr<Pair> pp, const double ww)
+void cosmobl::pairs::Pair1D::Sum (const shared_ptr<Pair> pair, const double ww)
 {
-  if (m_nbins != pp->nbins()) 
+  if (m_nbins != pair->nbins()) 
     ErrorCBL("Error in cosmobl::pairs::Pair1D::Sum of Pair.cpp: dimension problems!");
   
-  for (int i=0; i<m_nbins; ++i) 
-    m_PP1D[i] += ww*pp->PP1D(i);
+  for (int i=0; i<m_nbins; ++i)
+    add_data1D(i, pair, ww);
 }

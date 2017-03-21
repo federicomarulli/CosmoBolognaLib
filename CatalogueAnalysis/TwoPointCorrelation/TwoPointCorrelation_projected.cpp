@@ -52,25 +52,43 @@ shared_ptr<data::Data> cosmobl::twopt::TwoPointCorrelation_projected::data_with_
 {
   auto dd2D = cosmobl::twopt::TwoPointCorrelation2D_cartesian::m_dd;
   
-  vector<double> scale_mean(dd2D->nbins_D1(), 0.), scale_sigma(dd2D->nbins_D1(), 0.), z_mean(dd2D->nbins_D1(), 0.), z_sigma(dd2D->nbins_D1(), 0.);
+  vector<double> weightTOT(dd2D->nbins_D1(), 0.), scale_mean(dd2D->nbins_D1(), 0.), scale_sigma(dd2D->nbins_D1(), 0.), z_mean(dd2D->nbins_D1(), 0.), z_sigma(dd2D->nbins_D1(), 0.);
 
-  for (int i=0; i<dd2D->nbins_D1(); ++i) 
+  double fact_err, fact_scale, fact_z;
+  
+  for (int i=0; i<dd2D->nbins_D1(); ++i) {
+
+    for (int j=0; j<dd2D->nbins_D2(); ++j)
+      weightTOT[i] += dd2D->PP2D_weighted(i, j);
+    
     for (int j=0; j<dd2D->nbins_D2(); ++j) {
-      scale_mean[i] += dd2D->scale_D1_mean(i, j);
-      scale_sigma[i] += dd2D->scale_D1_sigma(i, j);
-      z_mean[i] += dd2D->z_mean(i, j);
-      z_sigma[i] += dd2D->z_sigma(i, j);
+      scale_mean[i] += dd2D->scale_D1_mean(i, j)*dd2D->PP2D_weighted(i, j)/weightTOT[i];
+      z_mean[i] += dd2D->z_mean(i, j)*dd2D->PP2D_weighted(i, j)/weightTOT[i];
     }
+
+    scale_sigma[i] = pow(dd2D->scale_D1_sigma(i, 0), 2)*dd2D->PP2D_weighted(i, 0);
+    z_sigma[i] = pow(dd2D->z_sigma(i, 0), 2)*dd2D->PP2D_weighted(i, 0);
+    
+    for (int j=1; j<dd2D->nbins_D2(); ++j) {
+      if (dd2D->PP2D_weighted(i, j)>0) {
+	fact_err = dd2D->PP2D_weighted(i, j)*dd2D->PP2D_weighted(i, j-1)/(dd2D->PP2D_weighted(i, j)+dd2D->PP2D_weighted(i, j-1));
+	fact_scale = pow(dd2D->scale_D1_mean(i, j)-dd2D->scale_D1_mean(i, j-1), 2)*fact_err;
+	fact_z = pow(dd2D->z_mean(i, j)-dd2D->z_mean(i, j-1), 2)*fact_err;
+	scale_sigma[i] += pow(dd2D->scale_D1_sigma(i, j), 2)*dd2D->PP2D_weighted(i, j)+fact_scale;
+	z_sigma[i] += pow(dd2D->z_sigma(i, j),2)*weightTOT[i]+fact_z;
+      }
+    }
+  }
   
   vector<vector<double>> extra(4);
   
   for (int i=0; i<dd2D->nbins_D1(); ++i) {
-    extra[0].push_back(scale_mean[i]/dd2D->nbins_D2());
-    extra[1].push_back(scale_sigma[i]/dd2D->nbins_D2());
-    extra[2].push_back(z_mean[i]/dd2D->nbins_D2());
-    extra[3].push_back(z_sigma[i]/dd2D->nbins_D2());
+    extra[0].push_back(scale_mean[i]);
+    extra[1].push_back(sqrt(scale_sigma[i]/weightTOT[i]));
+    extra[2].push_back(z_mean[i]);
+    extra[3].push_back(sqrt(z_sigma[i]/weightTOT[i]));
   }
-  
+    
   return move(unique_ptr<data::Data1D_extra>(new data::Data1D_extra(rp, ww, error, extra)));
 }
 
@@ -181,7 +199,7 @@ void cosmobl::twopt::TwoPointCorrelation_projected::measureJackknife (const stri
   vector<shared_ptr<pairs::Pair>> dd_regions, rr_regions, dr_regions;
   count_allPairs_region(dd_regions, rr_regions, dr_regions, TwoPType::_2D_Cartesian_, dir_output_pairs,dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
-  auto data_cart = (estimator==_natural_) ? NaturalEstimator(m_dd, m_rr, m_data->weightedN(), m_random->weightedN()) : LandySzalayEstimator(m_dd, m_rr, m_dr, m_data->weightedN(), m_random->weightedN());
+  auto data_cart = (estimator==_natural_) ? correlation_NaturalEstimator(m_dd, m_rr) : correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   
   if (estimator==_natural_) 
     data = XiJackknife(dd_regions, rr_regions);
@@ -221,7 +239,7 @@ void cosmobl::twopt::TwoPointCorrelation_projected::measureBootstrap (const int 
   vector<shared_ptr<pairs::Pair>> dd_regions, rr_regions, dr_regions;
   count_allPairs_region(dd_regions, rr_regions, dr_regions, TwoPType::_2D_Cartesian_, dir_output_pairs,dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
-  auto data_cart = (estimator==_natural_) ? NaturalEstimator(m_dd, m_rr, m_data->weightedN(), m_random->weightedN()) : LandySzalayEstimator(m_dd, m_rr, m_dr, m_data->weightedN(), m_random->weightedN());
+  auto data_cart = (estimator==_natural_) ? correlation_NaturalEstimator(m_dd, m_rr) : correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
 
   if (estimator==_natural_)
     data = XiBootstrap(nMocks, dd_regions, rr_regions);
@@ -313,7 +331,7 @@ vector<shared_ptr<data::Data>> cosmobl::twopt::TwoPointCorrelation_projected::Xi
 // ============================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation_projected::read_covariance_matrix (const string dir, const string file)
+void cosmobl::twopt::TwoPointCorrelation_projected::read_covariance (const string dir, const string file)
 {
   m_dataset->set_covariance(dir+file);
 }
@@ -322,24 +340,24 @@ void cosmobl::twopt::TwoPointCorrelation_projected::read_covariance_matrix (cons
 // ============================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation_projected::write_covariance_matrix (const string dir, const string file) const
+void cosmobl::twopt::TwoPointCorrelation_projected::write_covariance (const string dir, const string file) const
 {
-  m_dataset->write_covariance(dir, file, "r");
+  m_dataset->write_covariance(dir, file);
 }
 
 
 // ============================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation_projected::compute_covariance_matrix (const vector<shared_ptr<data::Data>> xi_collection, const bool doJK)
+void cosmobl::twopt::TwoPointCorrelation_projected::compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK)
 {
-  vector<vector<double>> xi;
+  vector<vector<double>> Xi;
 
-  for(size_t i=0;i<xi_collection.size();i++)
-    xi.push_back(xi_collection[i]->fx());
+  for (size_t i=0; i<xi.size(); i++)
+    Xi.push_back(xi[i]->fx());
 
   vector<vector<double>> cov_mat;
-  cosmobl::covariance_matrix(xi, cov_mat, doJK);
+  cosmobl::covariance_matrix(Xi, cov_mat, JK);
   
   m_dataset->set_covariance(cov_mat);
 }
@@ -348,11 +366,11 @@ void cosmobl::twopt::TwoPointCorrelation_projected::compute_covariance_matrix (c
 // ============================================================================
 
 
-void cosmobl::twopt::TwoPointCorrelation_projected::compute_covariance_matrix (const vector<string> file_xi, const bool doJK)
+void cosmobl::twopt::TwoPointCorrelation_projected::compute_covariance (const vector<string> file, const bool JK)
 {
   vector<double> rad, mean;
   vector<vector<double>> cov_mat;
 
-  cosmobl::covariance_matrix (file_xi, rad, mean, cov_mat, doJK); 
+  cosmobl::covariance_matrix(file, rad, mean, cov_mat, JK); 
   m_dataset->set_covariance(cov_mat);
 }

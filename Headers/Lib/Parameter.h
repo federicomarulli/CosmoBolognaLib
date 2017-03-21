@@ -65,10 +65,10 @@ namespace cosmobl {
       
     protected:
 
-      /// the parameter value
+      /// the parameter value used for internal computations
       double m_value;
 
-      /// the parameter best value
+      /// the best-fit parameter value, mode of the posterior
       double m_best_value;
 
       /// the parameter name
@@ -89,13 +89,13 @@ namespace cosmobl {
       /// the vectors containing the parameter chains
       vector< shared_ptr<Chain> > m_chains;
 
-      /// the parameter mean value 
+      /// the mean value of the posterior
       double m_mean;
 	
       /// the parameter standard deviation 
       double m_std;
 	
-      /// the parameter median value
+      /// the median value of the posterior
       double m_median;
 
       /// the binned parameter range
@@ -395,7 +395,20 @@ namespace cosmobl {
        *  @return none
        */
       void set_chains_values_from_prior (const int position);
-      
+   
+      /**
+       *  @brief set the chains values from prior
+       *
+       *  @param position the i-th position in the chain
+       *
+       *  @param radius the radius
+
+       *  @param seed the prior seed
+       * 
+       *  @return none
+       */
+      void set_chains_values_sphere (const int position, const double radius, const int seed);   
+
       ///@}
       
 
@@ -416,6 +429,7 @@ namespace cosmobl {
        */
       double sample_from_prior () { return (isFixed()) ? m_value : m_prior->sample(); }
 
+      
       /**
        *  @brief extract values from the prior 	 
        *  @param sample_size the size of the extracted sample
@@ -423,6 +437,12 @@ namespace cosmobl {
        */
       vector<double> sample_from_prior (const int sample_size);
       
+      /**
+       *  @brief extract a parameter value from the prior
+       *  @return a parameter value
+       */
+      vector<double> sample_sphere (const int sample_size, const double radius, const int seed);
+
       /**
        *  @brief merge the chains
        *

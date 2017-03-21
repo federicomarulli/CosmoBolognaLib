@@ -48,7 +48,7 @@ int main () {
     // ---------------- construct the random catalogue ----------------
     // ----------------------------------------------------------------
 
-    const double N_R = 1.; // random/data ratio
+    const double N_R = 3.; // random/data ratio
   
     const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
 
@@ -59,16 +59,21 @@ int main () {
 
     // binning parameters
 
-    const double rMin = 1.;            // minimum separation 
-    const double rMax = 50.;           // maximum separation 
-    const int nbins = 20;              // number of bins
-    const double shift = 0.5;          // spatial shift used to set the bin centre 
+    const double rpMin = 5.;     // minimum separation in the first dimension
+    const double rpMax = 50.;    // maximum separation in the first dimension 
+    const int nbins_D1 = 10;     // number of bins in the first dimension
+    const double shift_D1 = 0.5; // spatial shift used to set the bin centre in the first dimension
+    const double piMin = 0.;     // minimum separation in the second dimension
+    const double piMax = 50.;    // maximum separation in the second dimension 
+    const int nbins_D2 = 20;     // number of bins in the second dimension
+    const double shift_D2 = 0.5; // spatial shift used to set the bin centre in the second dimension
+    
     const double piMax_integral = 30.; // upper limit of the integral
 
   
     // measure the projected two-point correlation function and estimate Poissonian errors
 
-    const auto TwoP = cosmobl::twopt::TwoPointCorrelation::Create(cosmobl::twopt::TwoPType::_1D_projected_, catalogue, random_catalogue, cosmobl::_logarithmic_, rMin, rMax, nbins, shift, rMin, rMax, nbins, shift, piMax_integral);
+    const auto TwoP = cosmobl::twopt::TwoPointCorrelation::Create(cosmobl::twopt::TwoPType::_1D_projected_, catalogue, random_catalogue, cosmobl::_logarithmic_, rpMin, rpMax, nbins_D1, shift_D1, piMin, piMax, nbins_D2, shift_D2, piMax_integral);
 
     TwoP->measure(cosmobl::twopt::ErrorType::_Poisson_, dir_output, {dir_output});
     TwoP->write(dir_output, "wp.dat");
@@ -97,11 +102,11 @@ int main () {
   
     const int nChains = 100;     // number of chains
     const int chain_size = 1000; // size of the chains
-    const double rpMin = 5.;     // minimum scale used for fitting
-    const double rpMax = 20.;    // maximum scale used for fitting
+    const double rpMin_fit = 5.;     // minimum scale used for fitting
+    const double rpMax_fit = 20.;    // maximum scale used for fitting
     const string chain_file = "chain.dat";
   
-    model_twop.sample_likelihood(rpMin, rpMax, cosmobl::statistics::_GaussianLikelihood_Error_, nChains, chain_size, 32113, dir_output, chain_file); 
+    model_twop.sample_likelihood(rpMin_fit, rpMax_fit, cosmobl::statistics::_GaussianLikelihood_Error_, nChains, chain_size, 32113, dir_output, chain_file); 
   }
 
   catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }

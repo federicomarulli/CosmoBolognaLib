@@ -47,7 +47,7 @@ int main () {
     // ---------------- construct the random catalogue (with cubic geometry) ---------------- 
     // -------------------------------------------------------------------------------------- 
 
-    const double N_R = 1.; // random/data ratio
+    const double N_R = 3.; // random/data ratio
  
     const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
   
@@ -64,13 +64,13 @@ int main () {
   
     // ----- measure the 2D correlation function in Cartesian coordinates, xi(rp,pi), and store the outputs ----- 
   
-    const double rpMin = 1.;     // minimum separation in the first dimension
+    const double rpMin = 5.;     // minimum separation in the first dimension
     const double rpMax = 50.;    // maximum separation in the first dimension 
-    const int nbins_D1 = 50;     // number of bins in the first dimension
+    const int nbins_D1 = 10;     // number of bins in the first dimension
     const double shift_D1 = 0.5; // spatial shift used to set the bin centre in the first dimension
-    const double piMin = 1.;     // minimum separation in the second dimension
+    const double piMin = 5.;     // minimum separation in the second dimension
     const double piMax = 50.;    // maximum separation in the second dimension 
-    const int nbins_D2 = 50;     // number of bins in the second dimension
+    const int nbins_D2 = 10;     // number of bins in the second dimension
     const double shift_D2 = 0.5; // spatial shift used to set the bin centre in the second dimension
   
     // construct the object using a static factory

@@ -101,6 +101,24 @@ namespace cosmobl {
       /// box volume
       double m_Volume;
 
+      /// coordinates of the cells along the x-axis
+      vector<double>  m_X;
+
+      /// coordinates of the cells along the y-axis
+      vector<double>  m_Y;
+
+      /// coordinates of the cells along the z-axis
+      vector<double>  m_Z;
+
+      /// coordinates of the cells along the kx-axis
+      vector<double>  m_kX;
+
+      /// coordinates of the cells along the ky-axis
+      vector<double>  m_kY;
+
+      /// coordinates of the cells along the kz-axis
+      vector<double>  m_kZ;
+
       /**
        * @brief contract 3 indeces into one
        *
@@ -319,6 +337,62 @@ namespace cosmobl {
        */
       double Volume () const { return m_Volume; }
 
+      /**
+       * @brief get the value of the X coordinates at the i-th cell
+       *
+       * @param i the index of the cell
+       *
+       * @return the value of the center of the cell along the x-axis 
+       */
+      double XX(const int i) const { return m_X[i];}
+
+      /**
+       * @brief get the value of the Y coordinates at the i-th cell
+       *
+       * @param i the index of the cell
+       *
+       * @return the value of the center of the cell along the y-axis 
+       */
+      double YY(const int i) const { return m_Y[i];}
+
+      /**
+       * @brief get the value of the Z coordinates at the i-th cell
+       *
+       * @param i the index of the cell
+       *
+       * @return the value of the center of the cell along the z-axis 
+       */  
+      double ZZ(const int i) const { return m_Z[i];}
+
+      /**
+       * @brief get the value of the X coordinates at the i-th cell,
+       * Fourier space
+       *
+       * @param i the index of the cell
+       *
+       * @return the value of the center of the cell along the x-axis 
+       */   
+      double kX(const int i) const { return m_kX[i];}
+
+      /**
+       * @brief get the value of the Y coordinates at the i-th cell,
+       * Fourier space
+       *
+       * @param i the index of the cell
+       *
+       * @return the value of the center of the cell along the y-axis 
+       */   
+      double kY(const int i) const { return m_kY[i];}
+    
+      /**
+       * @brief get the value of the Z coordinates at the i-th cell,
+       * Fourier space
+       *
+       * @param i the index of the cell
+       *
+       * @return the value of the center of the cell along the z-axis 
+       */    
+      double kZ(const int i) const { return m_kZ[i];}
       
       /**
        * @brief get the value of the scalar field
@@ -332,6 +406,25 @@ namespace cosmobl {
       virtual double ScalarField (const int i, const int j, const int k) const
       { (void)i; (void)j; (void)k; ErrorCBL("Error in Scalarield of Field3D"); double vv; return vv; }
 
+        
+      /**
+       * @brief get the value of the scalar field
+       * 
+       * @param pos vector containing the point coordinates
+       *
+       * @return the value of the vector field
+       */
+      virtual double ScalarField (const vector<double> pos) const
+      { (void)pos; ErrorCBL("Error in Scalarield of Field3D"); double vv; return vv; }
+    
+      /**
+       * @brief get the value of the scalar field
+       *
+       * @return the values of the scalar field
+       */
+      virtual vector<double> ScalarField () const
+      { ErrorCBL("Error in Scalarield of Field3D"); vector<double> vv; return vv; }
+
       /**
        * @brief get the value of the vector field
        * 
@@ -339,10 +432,20 @@ namespace cosmobl {
        * @param j the j-th cell along the y-axis
        * @param k the k-th cell along the z-axis
        *
-       * @return vector containing the value of the vector field
+       * @return vector containing the values of the vector field
        */
       virtual vector<double> VectorField (const int i, const int j, const int k) const
       { (void)i; (void)j; (void)k; ErrorCBL("Error in VectorField of Field3D"); double vv; return {vv}; }
+
+      /**
+       * @brief get the value of the vector field
+       * 
+       * @param pos vector containing the point coordinates
+       *
+       * @return vector containing the values of the vector field
+       */
+      virtual vector<double> VectorField (const vector<double> pos) const
+      { (void)pos; ErrorCBL("Error in VectorField of Field3D"); double vv; return {vv}; }
 
       /**
        * @brief get the value of the scalar field, Fourier space, real part
@@ -351,7 +454,7 @@ namespace cosmobl {
        * @param j the j-th cell along the y-axis
        * @param k the k-th cell along the z-axis
        *
-       * @return the value of the vector field, Fourier space, real part
+       * @return the values of the scalar field, Fourier space, real part
        */
       virtual double ScalarField_FourierSpace_real (const int i, const int j, const int k) const
       { (void)i; (void)j; (void)k; ErrorCBL("Error in ScalarField_FourierSpace of Field3D"); double vv; return vv; }
@@ -363,10 +466,26 @@ namespace cosmobl {
        * @param j the j-th cell along the y-axis
        * @param k the k-th cell along the z-axis
        *
-       * @return the value of the vector field, Fourier space, complex part
+       * @return the value of the scalar field, Fourier space, complex part
        */
       virtual double ScalarField_FourierSpace_complex (const int i, const int j, const int k) const
       { (void)i; (void)j; (void)k; ErrorCBL("Error in ScalarField_FourierSpace of Field3D"); double vv; return vv; }
+
+      /**
+       * @brief get the value of the scalar field, Fourier space, real part
+       *
+       * @return the values of the scalar field
+       */
+      virtual vector<double> ScalarField_FourierSpace_real () const
+      { ErrorCBL("Error in Scalarield of Field3D"); vector<double> vv; return vv; }
+
+      /**
+       * @brief get the value of the scalar field, Fourier space, complex part
+       *
+       * @return the value of the vector field
+       */
+      virtual vector<double> ScalarField_FourierSpace_complex () const
+      { ErrorCBL("Error in Scalarield of Field3D"); vector<double> vv; return vv; }
 
       /**
        * @brief get the value of the vector field, Fourier space, real part
@@ -391,7 +510,7 @@ namespace cosmobl {
        */
       virtual vector<double> VectorField_FourierSpace_complex (const int i, const int j, const int k) const
       { (void)i; (void)j; (void)k; ErrorCBL("Error in VectorField_FourierSpace_complex of Field3D"); double vv; return {vv}; }
-      
+
       ///@}
 
 
@@ -513,6 +632,14 @@ namespace cosmobl {
        */
       virtual void set_VectorField_FourierSpace_complex (const vector<double> value, const int i, const int j, const int k, const bool add=0)
       { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("Error in set_VectorField_FourierSpace_complex of Field3D"); }
+
+      /**
+       * @brief set to 0 the fields
+       *
+       * @return none
+       */
+      virtual void reset()
+      { ErrorCBL("Error in reset of Field3D"); }
 
       ///@}
       
@@ -664,6 +791,22 @@ namespace cosmobl {
        * @return the value of the vector field
        */
       double ScalarField (const int i, const int j, const int k) const;
+            
+      /**
+       * @brief get the value of the scalar field
+       * 
+       * @param pos vector containing the point coordinates
+       *
+       * @return the value of the vector field
+       */
+      double ScalarField (const vector<double> pos) const;
+
+      /**
+       * @brief get the values of the scalar field
+       *
+       * @return the values of the scalar field
+       */
+      vector<double> ScalarField () const;
 
       /**
        * @brief get the value of the scalar field, Fourier space, real
@@ -688,7 +831,7 @@ namespace cosmobl {
        * @return the value of the vector field, Fourier space, complex part
        */
       double ScalarField_FourierSpace_complex (const int i, const int j, const int k) const;
-
+       
       ///@}
       
 
@@ -714,6 +857,13 @@ namespace cosmobl {
        * @return none
        */
       void GaussianConvolutionField (const double kernel_size);
+
+      /**
+       * @brief set to 0 the fields
+       *
+       * @return none
+       */
+      void reset();
 
       ///@}
     };
@@ -863,6 +1013,15 @@ namespace cosmobl {
        * @return vector containing the value of the vector field
        */
       vector<double> VectorField (const int i, const int j, const int k) const;
+      
+      /**
+       * @brief get the value of the vector field
+       * 
+       * @param pos vector containing the point coordinates
+       *
+       * @return vector containing the value of the vector field
+       */
+      vector<double> VectorField (const vector<double> pos) const;
 
       /**
        * @brief get the value of the vector field, Fourier space, real
@@ -887,7 +1046,7 @@ namespace cosmobl {
        * @return vector containing the value of the vector field, Fourier space, complex part
        */
       vector<double> VectorField_FourierSpace_complex (const int i, const int j, const int k) const;
-      
+
       ///@}
 
       
@@ -907,6 +1066,13 @@ namespace cosmobl {
        * @return none
        */
       void FourierAntiTransformField ();
+
+      /**
+       * @brief set to 0 the fields
+       *
+       * @return none
+       */
+      void reset();
 
       ///@}
 

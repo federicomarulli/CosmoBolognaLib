@@ -44,15 +44,8 @@ void cosmobl::statistics::Prior::m_set_prior_normalization()
   m_prior_normalization = 1;
 
   function<double(double)> f = bind(&Prior::operator(), this, std::placeholders::_1);
-	   
-  glob::STR_generic_integrand pp;
-  pp.f = f;
 
-  gsl_function Func;
-  Func.function = &generic_integrand;
-  Func.params = &pp;
-
-  m_prior_normalization = GSL_integrate_qag(Func,m_xmin, m_xmax);
+  m_prior_normalization = gsl::GSL_integrate_qag(f, m_xmin, m_xmax);
 }
 
 // ======================================================================================

@@ -145,8 +145,8 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 	    coord.xx = value[col1-1]*fact;
 	    coord.yy = value[col2-1]*fact;
 	    coord.zz = value[col3-1]*fact;
-	    Weight = (colWeight!=-1) ? value[colWeight-1] : 1.;
-	    Region = (long)value[colRegion-1];
+	    Weight = (colWeight!=-1 && colWeight-1<(int)value.size()) ? value[colWeight-1] : 1.;
+	    Region = (colRegion!=-1 && colRegion-1<(int)value.size()) ? (long)value[colRegion-1] : 0;
 	    m_object.push_back(move(Object::Create(objType, coord, Weight, Region)));
 	  }
 
@@ -155,8 +155,8 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 	    coord.ra = value[col1-1]*fact;
 	    coord.dec = value[col2-1]*fact;
 	    coord.redshift = ((int)value.size()>=col3) ? value[col3-1] : 1.;
-	    Weight = (colWeight!=-1) ? value[colWeight-1] : 1.;
-	    Region = (long)value[colRegion-1];
+	    Weight = (colWeight!=-1 && colWeight-1<(int)value.size()) ? value[colWeight-1] : 1.;
+	    Region = (colRegion!=-1 && colRegion-1<(int)value.size()) ? (long)value[colRegion-1] : 0;
 	    m_object.push_back(move(Object::Create(objType, coord, inputUnits, cosm, Weight, Region)));
 	  }
 	  
@@ -175,46 +175,121 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 
       short num_bin;
       float val;
-      ifstream finr (file_in.c_str(), ios::in|ios::binary|ios::ate);	
+      
+      ifstream finr(file_in.c_str(), ios::in|ios::binary|ios::ate); checkIO(finr, file_in);	
 
       comovingCoordinates coord;
 
-      if (!finr) { cerr <<"Error in opening binary file "<<file_in<<"!\n\a"; exit(2); }
       if (finr.is_open())
-      finr.seekg (0, ios::beg);
-      finr.read ((char*)(&num_bin), 2);
-
-      int  n_blocks=num_bin;
+	finr.seekg(0, ios::beg);
       
-//       vector<double> value;
-//       double Weight; long Region;     
-      
-      for (int i=1; i<=n_blocks; ++i)
-      {
-        finr.read ((char*)(&num_bin), 4);
-        int n_objs=num_bin;
+      finr.read((char*)(&num_bin), 2);
 
-        for (int j=1; j<=n_objs; ++j){
-          finr.read ((char*)(&val), 4);
-          coord.xx=(val)*fact;
-          finr.read ((char*)(&val), 4);
-          coord.yy=(val)*fact;
-          finr.read ((char*)(&val), 4);
-          coord.zz=(val)*fact;
-         // Weight = (colWeight!=-1) ? value[colWeight-1] : 1.;
-         // Region = (long)value[colRegion-1];
-          if(ran(gen)<nSub) m_object.push_back(move(Object::Create(objType, coord)));
-         // if(ran(gen)<nSub) m_object.push_back(move(Object::Create(objType, coord, Weight, Region)));
+      int n_blocks = num_bin;
+      
+      for (int i=1; i<=n_blocks; ++i) {
+        finr.read((char*)(&num_bin), 4);
+        int n_objs = num_bin;
+
+        for (int j=1; j<=n_objs; ++j) {
+          finr.read((char*)(&val), 4);
+          coord.xx = (val)*fact;
+          finr.read((char*)(&val), 4);
+          coord.yy = (val)*fact;
+          finr.read((char*)(&val), 4);
+          coord.zz = (val)*fact;
+	  // Weight = (colWeight!=-1 && colWeight-1<value.size()) ? value[colWeight-1] : 1.;
+	  // Region = (colRegion!=-1 && colRegion-1<value.size()) ? (long)value[colRegion-1] : 0;
+          if (ran(gen)<nSub) m_object.push_back(move(Object::Create(objType, coord)));
+	  // if(ran(gen)<nSub) m_object.push_back(move(Object::Create(objType, coord, Weight, Region)));
         }
-        finr.read ((char*)(&num_bin), 4);
-        int n_objs2=num_bin;
-        if (n_objs2!=n_objs) {cout<<"Wrong reading of input binary file"<<endl; exit(3);}
+	
+        finr.read((char*)(&num_bin), 4);
+
+	int n_objs2 = num_bin;
+	
+        if (n_objs2!=n_objs) ErrorCBL("Wrong reading of input binary file");
       }
-      finr.clear();finr.close();
+      
+      finr.clear(); finr.close();
     }
         
     else ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: charEncode is not valid!");
+  }
+}
 
+
+// ============================================================================
+
+
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<Var> attributes, const vector<int> columns, const vector<string> file, const int comments, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordUnits inputUnits, const CharEncode charEncode) 
+{ 
+  // parameters for random numbers used in case nSub!=1
+  
+  default_random_engine gen;
+  uniform_real_distribution<float> ran(0., 1.);
+  
+  
+  // read the input catalogue files
+ 
+  for (size_t dd=0; dd<file.size(); ++dd) {
+
+    string line, file_in = file[dd];
+    
+          
+    if (charEncode==_ascii_) {
+	  
+      coutCBL << "I'm reading the catalogue: " << file_in << endl;
+      ifstream finr(file_in.c_str()); checkIO(finr, file_in);
+
+      double Value;
+
+      // prepare default coordinates
+      comovingCoordinates defaultComovingCoord = { par::defaultDouble, par::defaultDouble, par::defaultDouble};
+      observedCoordinates defaultObservedCoord = { par::defaultDouble, par::defaultDouble, par::defaultDouble};
+
+      // start reading catalogue
+      for (int cc = 0; cc < comments; cc++) getline(finr, line); // ignore commented lines at the beginning of file
+      while (getline(finr, line)) { // read the lines
+
+	if (ran(gen)<nSub) { // extract a subsample
+
+	  if (coordType==_comovingCoordinates_) {
+	    m_object.push_back(move(Object::Create(objType, defaultComovingCoord, 1.)));
+	  }
+	  else if (coordType==_observedCoordinates_) {
+	    m_object.push_back(move(Object::Create(objType, defaultObservedCoord, inputUnits, cosm, 1.)));
+	  }
+	  else ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: coordType is not valid!");
+
+	  stringstream ss(line);
+
+	  int column_counter = 0; // number of the file column to read
+	  int attribute_index = 0; // element of vector 'attributes' to search
+	  size_t ii = nObjects()-1;
+	  while (ss>>Value) {
+	    column_counter++;
+	    if (column_counter == columns[attribute_index]) {
+	      ((attributes[attribute_index] == Var::_X_) ||
+	       (attributes[attribute_index] == Var::_Y_) ||
+	       (attributes[attribute_index] == Var::_Z_) ||
+	       (attributes[attribute_index] == Var::_RA_) ||
+	       (attributes[attribute_index] == Var::_Dec_) ||
+	       (attributes[attribute_index] == Var::_Redshift_)) ?
+		Value = Value*fact : Value = Value;
+	      set_var(ii, attributes[attribute_index], Value);
+	      attribute_index++;
+	    }
+	  }
+	}
+      }
+      
+      finr.clear(); finr.close();
+    }
+    //binary reader coming soon...
+    else if (charEncode==_binary_)
+      ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: charEncode=_binary_ not supported yet. Work in Progress...");
+    else ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: charEncode is not valid!");
   }
 }
 
@@ -246,7 +321,120 @@ vector<string> cosmobl::catalogue::Catalogue::field () const
 
 // ============================================================================
 
+
+double cosmobl::catalogue::Catalogue::var (int index, Var var_name) const
+{ 
+  double vv = 0;
+  
+  switch (var_name) {
+
+  case Var::_X_:
+    vv = m_object[index]->xx();
+    break;
+
+  case Var::_Y_:
+    vv = m_object[index]->yy();
+    break;
+
+  case Var::_Z_:
+    vv = m_object[index]->zz();
+    break;
+
+  case Var::_RA_:
+    vv = m_object[index]->ra();
+    break;
+
+  case Var::_Dec_:
+    vv = m_object[index]->dec();
+    break;
+
+  case Var::_Redshift_:
+    vv = m_object[index]->redshift();
+    break;
+
+  case Var::_Dc_:
+    vv = m_object[index]->dc();
+    break;
+
+  case Var::_Weight_:
+    vv = m_object[index]->weight();
+    break;
+
+  case Var::_Mass_:
+    vv = m_object[index]->mass();
+    break;
+
+  case Var::_Magnitude_:
+    vv = m_object[index]->magnitude();
+    break;
+
+  case Var::_SFR_:
+    vv = m_object[index]->SFR();
+    break;
+
+  case Var::_sSFR_:
+    vv = m_object[index]->sSFR();
+    break;
+
+  case Var::_Richness_:
+    vv = m_object[index]->richness();
+    break;
+
+  case Var::_Vx_:
+    vv = m_object[index]->vx();
+    break;
+  
+  case Var::_Vy_:
+    vv = m_object[index]->vy();
+    break;
+  
+  case Var::_Vz_:
+    vv = m_object[index]->vz();
+    break;
+
+  case Var::_Region_:
+    vv = m_object[index]->region();
+    break; 
+  
+  case Var::_Generic_:
+    vv = m_object[index]->generic();
+    break;
+
+  case Var::_Radius_:
+    vv = m_object[index]->radius();
+    break;
     
+  case Var::_DensityContrast_:
+    vv = m_object[index]->densityContrast();
+    break;
+
+  case Var::_CentralDensity_:
+    vv = m_object[index]->centralDensity();
+    break;
+
+  case Var::_X_displacement_:
+    vv = m_object[index]->x_displacement();
+    break;
+    
+  case Var::_Y_displacement_:
+    vv = m_object[index]->y_displacement();
+    break;
+    
+  case Var::_Z_displacement_:
+    vv = m_object[index]->z_displacement();
+    break;
+
+  default:
+    ErrorCBL("Error in cosmobl::catalogue::Catalogue::var of Catalogue.cpp: no such a variable in the list!");
+  }
+  
+  return vv;
+}
+
+
+// ============================================================================
+
+
 vector<double> cosmobl::catalogue::Catalogue::var (Var var_name) const
 { 
   vector<double> vv(m_object.size(), 0.);
@@ -328,6 +516,14 @@ vector<double> cosmobl::catalogue::Catalogue::var (Var var_name) const
   case Var::_Radius_:
     for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->radius();
     break;
+    
+  case Var::_DensityContrast_:
+    for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->densityContrast();
+    break;
+
+  case Var::_CentralDensity_:
+    for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->centralDensity();
+    break;
 
   case Var::_X_displacement_:
     for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->x_displacement();
@@ -366,6 +562,116 @@ void cosmobl::catalogue::Catalogue::set_field (const vector<string> field)
   for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_field(field[i]);
 }
 
+
+// ============================================================================
+
+
+void cosmobl::catalogue::Catalogue::set_var (const int index, const Var var_name, const double value)
+{
+  
+  switch (var_name) {
+
+  case Var::_X_:
+    m_object[index]->set_xx(value);
+    break;
+
+  case Var::_Y_:
+    m_object[index]->set_yy(value);
+    break;
+
+  case Var::_Z_:
+    m_object[index]->set_zz(value);
+    break;
+
+  case Var::_RA_:
+    m_object[index]->set_ra(value);
+    break;
+
+  case Var::_Dec_:
+    m_object[index]->set_dec(value);
+    break;
+
+  case Var::_Redshift_:
+    m_object[index]->set_redshift(value);
+    break;
+
+  case Var::_Dc_:
+    m_object[index]->set_dc(value);
+    break;
+
+  case Var::_Weight_:
+    m_object[index]->set_weight(value);
+    break;
+
+  case Var::_Mass_:
+    m_object[index]->set_mass(value);
+    break;
+
+  case Var::_Magnitude_:
+    m_object[index]->set_magnitude(value);
+    break;
+
+  case Var::_SFR_:
+    m_object[index]->set_SFR(value);
+    break;
+
+  case Var::_sSFR_:
+    m_object[index]->set_sSFR(value);
+    break;
+    
+  case Var::_Richness_:
+    m_object[index]->set_richness(value);
+    break;
+
+  case Var::_Vx_:
+    m_object[index]->set_vx(value);
+    break;
+  
+  case Var::_Vy_:
+    m_object[index]->set_vy(value);
+    break;
+  
+  case Var::_Vz_:
+    m_object[index]->set_vz(value);
+    break;
+
+  case Var::_Region_:
+    m_object[index]->set_region(value);
+    break;
+    
+  case Var::_Generic_:
+    m_object[index]->set_generic(value);
+    break;
+
+  case Var::_Radius_:
+    m_object[index]->set_radius(value);
+    break;
+
+  case Var::_CentralDensity_:
+    m_object[index]->set_centralDensity(value);
+    break;
+
+  case Var::_DensityContrast_:
+    m_object[index]->set_densityContrast(value);
+    break;
+
+  case Var::_X_displacement_:
+    m_object[index]->set_x_displacement(value);
+    break;
+    
+  case Var::_Y_displacement_:
+    m_object[index]->set_y_displacement(value);
+    break;
+    
+  case Var::_Z_displacement_:
+    m_object[index]->set_z_displacement(value);
+    break;
+
+  default:
+    ErrorCBL("Error in cosmobl::catalogue::Catalogue::set_var of Catalogue.cpp: no such a variable in the list!");
+  }
+
+}
 
 // ============================================================================
 
@@ -450,6 +756,14 @@ void cosmobl::catalogue::Catalogue::set_var (const Var var_name, const vector<do
 
   case Var::_Radius_:
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_radius(var[i]);
+    break;
+
+  case Var::_CentralDensity_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_centralDensity(var[i]);
+    break;
+
+  case Var::_DensityContrast_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_densityContrast(var[i]);
     break;
 
   case Var::_X_displacement_:
@@ -799,9 +1113,9 @@ void cosmobl::catalogue::Catalogue::write_data (const string outputFile, const v
 // ============================================================================
 
 
-Catalogue cosmobl::catalogue::Catalogue::cut (const Var var_name, const double down, const double up, const bool excl)
+Catalogue cosmobl::catalogue::Catalogue::cutted_catalogue (const Var var_name, const double down, const double up, const bool excl) const
 {
-  vector<shared_ptr<Object> > objects;
+  vector<shared_ptr<Object>> objects;
   vector<double> vvar = var(var_name);
   vector<int> w(vvar.size());
 
@@ -815,13 +1129,40 @@ Catalogue cosmobl::catalogue::Catalogue::cut (const Var var_name, const double d
     if (w[i]==1)
       objects.push_back(m_object[i]);
  
-  return Catalogue {objects};
+  return Catalogue{objects};
 }
 
 
 // ============================================================================
 
 
+Catalogue cosmobl::catalogue::Catalogue::diluted_catalogue (const double nSub, const int seed) const
+{
+  if (nSub<=0 || nSub>1 || !isfinite(nSub)) ErrorCBL("Error in diluted_catalogue() of Catalogue.cpp: nSub must be in the range (0,1] !");
+  
+  // copy the catalogue into a new one 
+  auto diluted_catalogue = *this;
+  
+  // set the index vector that will be used to remove the objects
+  vector<bool> index(nObjects(), false);
+
+  // nObjects()*(1-nSub) will be removed
+  for (size_t i=0; i<nObjects()*(1-nSub); ++i) index[i] = true;
+  
+  // shuffle the indexes of the objects that will be removed
+  default_random_engine engine(seed);
+  shuffle(begin(index), end(index), engine);
+  
+  // dilute the new catalogue
+  diluted_catalogue.remove_objects(index);
+  
+  return diluted_catalogue;
+}
+
+  
+// ============================================================================
+
+  
 double cosmobl::catalogue::Catalogue::distance (const int i, shared_ptr<Object> obj) const
 {
   return sqrt((m_object[i]->xx()-obj->xx())*(m_object[i]->xx()-obj->xx())+
@@ -885,7 +1226,7 @@ shared_ptr<Catalogue> cosmobl::catalogue::Catalogue::smooth (const double gridsi
   for (size_t i=0; i<nRegions; ++i) {
     double start = (double)cat->region_list()[i];
     double stop = start+1;
-    subSamples[i] = cut(Var::_Region_, start, stop);
+    subSamples[i] = cutted_catalogue(Var::_Region_, start, stop);
   }
 
   
@@ -978,9 +1319,16 @@ double cosmobl::catalogue::Catalogue::weightedN_condition (const Var var_name, c
 // ============================================================================
 
 
-data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double cell_size, const int interpolation_type, const double kernel_radius, const bool useMass) const
+data::ScalarField3D cosmobl::catalogue::Catalogue::counts_in_cell (const double cell_size, const int interpolation_type, const bool useMass, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ) const
 {
-  data::ScalarField3D density(cell_size, Min(Var::_X_), Max(Var::_X_), Min(Var::_Y_), Max(Var::_Y_), Min(Var::_Z_), Max(Var::_Z_));
+  double _minX = (minX>par::defaultDouble) ? minX : Min(Var::_X_);
+  double _maxX = (maxX>par::defaultDouble) ? maxX : Max(Var::_X_);
+  double _minY = (minY>par::defaultDouble) ? minY : Min(Var::_Y_);
+  double _maxY = (maxY>par::defaultDouble) ? maxY : Max(Var::_Y_);
+  double _minZ = (minZ>par::defaultDouble) ? minZ : Min(Var::_Z_);
+  double _maxZ = (maxZ>par::defaultDouble) ? maxZ : Max(Var::_Z_);
+
+  data::ScalarField3D density(cell_size, _minX, _maxX, _minY, _maxY, _minZ, _maxZ);
 
   double deltaX = density.deltaX();
   double deltaY = density.deltaY();
@@ -989,15 +1337,12 @@ data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double c
   int ny = density.ny();
   int nz = density.nz();
 
-  long int nCells = density.nCells();
-  double nCells_inv = 1./nCells;
-
   for (size_t i=0; i<nObjects(); ++i) {
     int i1 = min(int((xx(i)-density.MinX())/deltaX),nx-1);
     int j1 = min(int((yy(i)-density.MinY())/deltaY),ny-1);
     int k1 = min(int((zz(i)-density.MinZ())/deltaZ),nz-1);
 
-    double w = (useMass) ? mass(i) : 1.;
+    double w = (useMass) ? mass(i)*weight(i) : weight(i);
 
     if (interpolation_type==0) {
       density.set_ScalarField(w, i1, j1, k1,1);
@@ -1053,26 +1398,6 @@ data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double c
     }
   }
 
-  if (kernel_radius>0)
-    density.GaussianConvolutionField(kernel_radius);
-
-  double wMean = 0;
-  for (int i=0; i<nx; i++) 
-    for (int j=0; j<ny; j++) 
-      for (int k=0; k<nz; k++) 
-	wMean += density.ScalarField(i, j, k);
-
-  wMean *= nCells_inv;
-
-  for (int i=0; i<nx; i++) {
-    for (int j=0; j<ny; j++) {
-      for (int k=0; k<nz; k++) {
-	double val = density.ScalarField(i, j, k)/wMean-1;
-	density.set_ScalarField(val, i, j, k);
-      }
-    }
-  }
-
   return density;
 }
 
@@ -1082,24 +1407,35 @@ data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double c
 
 data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double cell_size, const Catalogue mask_catalogue, const int interpolation_type, const double kernel_radius, const bool useMass) const
 {
-  (void)kernel_radius;
-  
-  data::ScalarField3D mask_density = mask_catalogue.density_field(cell_size, interpolation_type, 0, 0);
 
-  data::ScalarField3D density = density_field(cell_size, interpolation_type, 10, useMass);
+  data::ScalarField3D data_cic = counts_in_cell(cell_size, interpolation_type, useMass);
 
-  if (density.nx() != mask_density.nx() || density.ny() != mask_density.ny() || density.nz() != mask_density.nz())
-    ErrorCBL("Error in density_field, mask_catalogue is not correct"); 
+  data::ScalarField3D mask_cic = mask_catalogue.counts_in_cell(cell_size, interpolation_type, useMass, data_cic.MinX(), data_cic.MaxX(), data_cic.MinY(), data_cic.MaxY(), data_cic.MinZ(), data_cic.MaxZ());
   
+  data::ScalarField3D density(cell_size, data_cic.MinX(), data_cic.MaxX(), data_cic.MinY(), data_cic.MaxY(), data_cic.MinZ(), data_cic.MaxZ());
+
+  double data_tot=0, random_tot=0;
+
   for (int i=0; i<density.nx(); i++) 
     for (int j=0; j<density.ny(); j++) 
       for (int k=0; k<density.nz(); k++) {
-	double val = density.ScalarField(i, j, k)+1;
-	double mask_val = mask_density.ScalarField(i, j, k)+1;
-	val = val*mask_val-1;
-	density.set_ScalarField(val, i, j, k);
+        data_tot += data_cic.ScalarField(i, j, k);
+        random_tot += mask_cic.ScalarField(i, j, k);
       }
-    
+
+  double norm = random_tot/data_tot;
+  for (int i=0; i<density.nx(); i++) 
+    for (int j=0; j<density.ny(); j++) 
+      for (int k=0; k<density.nz(); k++) {
+        double val=0;
+        if(mask_cic.ScalarField(i,j,k)>0)
+          val = data_cic.ScalarField(i,j,k)/mask_cic.ScalarField(i,j,k)*norm-1;
+        density.set_ScalarField(val, i, j, k);
+      }
+
+  if (kernel_radius>0)
+    density.GaussianConvolutionField(kernel_radius);
+
   return density;
 }
 
@@ -1191,3 +1527,41 @@ cosmobl::catalogue::Catalogue::Catalogue (const Catalogue input_catalogue, const
     }
   
 } 
+
+
+// ============================================================================
+
+
+void cosmobl::catalogue::Catalogue::remove_objects (const vector<bool> index)
+{
+  if (index.size() != m_object.size()) ErrorCBL ("Error in remove_objects() of Catalogue.cpp: argument size not valid!");
+
+  decltype(m_object) object_temp;
+  
+  for (size_t ii = 0; ii<index.size(); ii++) 
+    if (!index[ii]) object_temp.emplace_back(m_object[ii]);
+  
+  m_object.swap(object_temp);
+}
+
+
+// ============================================================================
+
+
+void cosmobl::catalogue::Catalogue::compute_catalogueProperties (const double boxside)
+{
+
+  m_volume = (boxside > 0.) ? pow(boxside, 3.) :
+    (cosmobl::Max(var(Var::_X_)) - cosmobl::Min(var(Var::_X_)))*
+    (cosmobl::Max(var(Var::_Y_)) - cosmobl::Min(var(Var::_Y_)))*
+    (cosmobl::Max(var(Var::_Z_)) - cosmobl::Min(var(Var::_Z_)));
+  coutCBL << "Sample volume = " << m_volume << " (Mpc/h)^3" << endl;
+  
+  m_numdensity = m_object.size()/m_volume;
+  coutCBL << "Sample density = " << m_numdensity << " (Mpc/h)^-3" << endl;
+  
+  m_mps = pow(m_numdensity, -1./3.);
+  coutCBL << "Sample mps = " << m_mps << " Mpc/h" << endl;
+  
+}
+

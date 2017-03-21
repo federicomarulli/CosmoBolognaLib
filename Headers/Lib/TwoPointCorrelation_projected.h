@@ -218,7 +218,7 @@ namespace cosmobl {
        *  @param rr vector of random-random pairs, divided per regions
        *
        *  @param dr vector of random-random pairs, divided per regions
-       *
+       * 
        *  @return a vector of pointers to objects of type Data
        */
       vector<shared_ptr<data::Data>> XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
@@ -251,7 +251,7 @@ namespace cosmobl {
        *
        *  @return a vector of pointers to objects of type Data
        */
-      vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
+       vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
 
       
     public:
@@ -296,10 +296,13 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *  @return object of class TwoPointCorrelation_projected
        */
-      TwoPointCorrelation_projected (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const double piMax_integral, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
-	: TwoPointCorrelation2D_cartesian(data, random, binType_rp, rpMin, rpMax, nbins_rp, shift_rp, _linear_, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight, compute_extra_info)
+      TwoPointCorrelation_projected (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const double piMax_integral, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	: TwoPointCorrelation2D_cartesian(data, random, binType_rp, rpMin, rpMax, nbins_rp, shift_rp, _linear_, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
 	{ m_twoPType = _1D_projected_; m_piMax_integral = piMax_integral; }
       
       /**
@@ -329,10 +332,13 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *  @return object of class TwoPointCorrelation2D_projected
        */
-      TwoPointCorrelation_projected (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const double piMax_integral, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
-	: TwoPointCorrelation2D_cartesian(data, random, binType_rp, rpMin, rpMax, binSize_rp, shift_rp, _linear_, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight, compute_extra_info)
+      TwoPointCorrelation_projected (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const double piMax_integral, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	: TwoPointCorrelation2D_cartesian(data, random, binType_rp, rpMin, rpMax, binSize_rp, shift_rp, _linear_, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
 	{ m_twoPType = _1D_projected_; m_piMax_integral = piMax_integral; }
       
       /**
@@ -449,8 +455,9 @@ namespace cosmobl {
     
       ///@}
 
+
       /**
-       *  @name Member functions to compute, read and write covariance matrix
+       *  @name Member functions to compute, read and write the covariance matrix
        */
       ///@{ 
 
@@ -460,7 +467,7 @@ namespace cosmobl {
        *  @param file input file
        *  @return none
        */
-      virtual void read_covariance_matrix (const string dir, const string file) override;
+      void read_covariance (const string dir, const string file) override;
 
       /**
        *  @brief write the measured two-point correlation
@@ -468,25 +475,31 @@ namespace cosmobl {
        *  @param file output file
        *  @return none
        */
-      virtual void write_covariance_matrix (const string dir, const string file) const override;
+      void write_covariance (const string dir, const string file) const override;
 
       /**
        *  @brief compute the covariance matrix
-       *  @param xi_collection vector containing the xi to compute the covariance matrix
-       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
+       *  @param xi vector containing the measure correlation
+       *  functions used to compute the covariance matrix
+       *  @param JK true &rarr; compute the jackknife covariance
+       *  matrix; false compute the standard covariance matrix
        *  @return none
        */
-      virtual void compute_covariance_matrix (vector<shared_ptr<data::Data>> xi_collection, bool doJK) override;
+      void compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK) override;
 
       /**
        *  @brief compute the covariance matrix
-       *  @param file_xi vector containing the path to the xi to compute the covariance matrix
-       *  @param doJK 1 &rarr; compute jackknife covariance matrix; 0 compute standard covariance matrix
+       *  @param file vector containing the input files with the
+       *  measured correlation functions used to compute the
+       *  covariance matrix
+       *  @param JK true &rarr; compute the jackknife covariance
+       *  matrix; false compute the standard covariance matrix
        *  @return none
        */
-      virtual void compute_covariance_matrix (vector<string> file_xi, bool doJK) override;
+      void compute_covariance (const vector<string> file, const bool JK) override;
 
-      ///@} 
+      ///@}
+      
     };
   }
 }

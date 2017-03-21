@@ -43,10 +43,10 @@ using namespace pairs;
 
 void cosmobl::pairs::Pair2D_comovingCartesian_linlin::m_set_parameters_nbins ()
 {
-  double binSize_D1 = ((m_rpMax-m_rpMin)/m_nbins_D1);
+  const double binSize_D1 = ((m_rpMax-m_rpMin)/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
 
-  double binSize_D2 = ((m_piMax-m_piMin)/m_nbins_D2);
+  const double binSize_D2 = ((m_piMax-m_piMin)/m_nbins_D2);
   m_binSize_inv_D2 = 1./binSize_D2;
 
   m_scale_D1.resize(m_nbins_D1); m_scale_D2.resize(m_nbins_D2);
@@ -84,10 +84,10 @@ void cosmobl::pairs::Pair2D_comovingCartesian_linlog::m_set_parameters_nbins ()
   if (m_piMin<1.e-30)
     ErrorCBL("Error in cosmobl::pairs::Pair2D_comovingCartesian_linlog::m_set_parameters_nbins of Pair.cpp: m_piMin must be >0!");
   
-  double binSize_D1 = ((m_rpMax-m_rpMin)/m_nbins_D1);
+  const double binSize_D1 = ((m_rpMax-m_rpMin)/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
 
-  double binSize_D2 = ((log10(m_piMax)-log10(m_piMin))/m_nbins_D2);
+  const double binSize_D2 = ((log10(m_piMax)-log10(m_piMin))/m_nbins_D2);
   m_binSize_inv_D2 = 1./binSize_D2;
 
   m_scale_D1.resize(m_nbins_D1); m_scale_D2.resize(m_nbins_D2);
@@ -128,10 +128,10 @@ void cosmobl::pairs::Pair2D_comovingCartesian_loglin::m_set_parameters_nbins ()
   if (m_rpMin<1.e-30)
     ErrorCBL("Error in cosmobl::pairs::Pair2D_comovingCartesian_loglin::m_set_parameters_nbins of Pair.cpp: m_rpMin must be >0!");
   
-  double binSize_D1 = ((log10(m_rpMax)-log10(m_rpMin))/m_nbins_D1);
+  const double binSize_D1 = ((log10(m_rpMax)-log10(m_rpMin))/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
   
-  double binSize_D2 = ((m_piMax-m_piMin)/m_nbins_D2);
+  const double binSize_D2 = ((m_piMax-m_piMin)/m_nbins_D2);
   m_binSize_inv_D2 = 1./binSize_D2;
 
   m_scale_D1.resize(m_nbins_D1); m_scale_D2.resize(m_nbins_D2);
@@ -172,10 +172,10 @@ void cosmobl::pairs::Pair2D_comovingCartesian_loglog::m_set_parameters_nbins ()
   if (m_rpMin<1.e-30 || m_piMin<1.e-30)
     ErrorCBL("Error in cosmobl::pairs::Pair2D_comovingCartesian_loglog::m_set_parameters_nbins of Pair.cpp: m_rpMin and m_piMin must be >0!");
   
-  double binSize_D1 = ((log10(m_rpMax)-log10(m_rpMin))/m_nbins_D1);
+  const double binSize_D1 = ((log10(m_rpMax)-log10(m_rpMin))/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
   
-  double binSize_D2 = ((log10(m_piMax)-log10(m_piMin))/m_nbins_D2);
+  const double binSize_D2 = ((log10(m_piMax)-log10(m_piMin))/m_nbins_D2);
   m_binSize_inv_D2 = 1./binSize_D2;
 
   m_scale_D1.resize(m_nbins_D1); m_scale_D2.resize(m_nbins_D2);
@@ -213,10 +213,10 @@ void cosmobl::pairs::Pair2D_comovingCartesian_loglog::m_set_parameters_binSize (
 
 void cosmobl::pairs::Pair2D_comovingPolar_linlin::m_set_parameters_nbins ()
 { 
-  double binSize_D1 = ((m_rMax-m_rMin)/m_nbins_D1);
+  const double binSize_D1 = ((m_rMax-m_rMin)/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
 
-  double binSize_D2 = ((m_muMax-m_muMin)/m_nbins_D2);
+  const double binSize_D2 = ((m_muMax-m_muMin)/m_nbins_D2);
   m_binSize_inv_D2 = 1./binSize_D2;
 
   m_scale_D1.resize(m_nbins_D1); m_scale_D2.resize(m_nbins_D2);
@@ -254,10 +254,10 @@ void cosmobl::pairs::Pair2D_comovingPolar_linlog::m_set_parameters_nbins ()
   if (m_muMin<1.e-30)
     ErrorCBL("Error in cosmobl::pairs::Pair2D_comovingPolar_linlog::m_set_parameters_nbins of Pair.cpp: m_muMin must be >0!");
   
-  double binSize_D1 = ((m_rMax-m_rMin)/m_nbins_D1);
+  const double binSize_D1 = ((m_rMax-m_rMin)/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
 
-  double binSize_D2 = ((log10(m_muMax)-log10(m_muMin))/m_nbins_D2);
+  const double binSize_D2 = ((log10(m_muMax)-log10(m_muMin))/m_nbins_D2);
   m_binSize_inv_D2 = 1./binSize_D2;
 
   m_scale_D1.resize(m_nbins_D1); m_scale_D2.resize(m_nbins_D2);
@@ -298,10 +298,10 @@ void cosmobl::pairs::Pair2D_comovingPolar_loglin::m_set_parameters_nbins ()
   if (m_rMin<1.e-30)
     ErrorCBL("Error in cosmobl::pairs::Pair2D_comovingPolar_loglin::m_set_parameters_nbins of Pair.cpp: m_rMin must be >0!");
   
-  double binSize_D1 = ((log10(m_rMax)-log10(m_rMin))/m_nbins_D1);
+  const double binSize_D1 = ((log10(m_rMax)-log10(m_rMin))/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
   
-  double binSize_D2 = ((m_muMax-m_muMin)/m_nbins_D2);
+  const double binSize_D2 = ((m_muMax-m_muMin)/m_nbins_D2);
   m_binSize_inv_D2 = 1./binSize_D2;
 
   m_scale_D1.resize(m_nbins_D1); m_scale_D2.resize(m_nbins_D2);
@@ -342,10 +342,10 @@ void cosmobl::pairs::Pair2D_comovingPolar_loglog::m_set_parameters_nbins ()
   if (m_rMin<1.e-30 || m_muMin<1.e-30)
     ErrorCBL("Error in cosmobl::pairs::Pair2D_comovingPolar_loglog::m_set_parameters_nbins of Pair.cpp: m_rMin and m_muMin must be >0!");
   
-  double binSize_D1 = ((log10(m_rMax)-log10(m_rMin))/m_nbins_D1);
+  const double binSize_D1 = ((log10(m_rMax)-log10(m_rMin))/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
   
-  double binSize_D2 = ((log10(m_muMax)-log10(m_muMin))/m_nbins_D2);
+  const double binSize_D2 = ((log10(m_muMax)-log10(m_muMin))/m_nbins_D2);
   m_binSize_inv_D2 = 1./binSize_D2;
 
   m_scale_D1.resize(m_nbins_D1); m_scale_D2.resize(m_nbins_D2);
@@ -383,39 +383,42 @@ void cosmobl::pairs::Pair2D_comovingPolar_loglog::m_set_parameters_binSize ()
 
 void cosmobl::pairs::Pair2D_comovingCartesian_linlin::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2) 
 {
-  double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
-  double pi = fabs(obj1->dc()-obj2->dc());
+  const double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
+  const double pi = fabs(obj1->dc()-obj2->dc());
   
   if (m_rpMin<rp && rp<m_rpMax && m_piMin<pi && pi<m_piMax) {
 
-    int ir = max(0, min(int((rp-m_rpMin)*m_binSize_inv_D1), m_nbins_D1));
-    int jr = max(0, min(int((pi-m_piMin)*m_binSize_inv_D2), m_nbins_D2));
+    const int ir = max(0, min(int((rp-m_rpMin)*m_binSize_inv_D1), m_nbins_D1));
+    const int jr = max(0, min(int((pi-m_piMin)*m_binSize_inv_D2), m_nbins_D2));
 
-    double angWeight = (m_angularWeight==nullptr) ? 1.
-      : m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits));
+    const double angWeight = (m_angularWeight==nullptr) ? 1.
+      : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
     
-    m_PP2D[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    m_PP2D[ir][jr] ++;
+    m_PP2D_weighted[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
     
   }
 }
+
 
 // ============================================================================================
 
 
 void cosmobl::pairs::Pair2D_comovingCartesian_linlog::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2) 
 {
-  double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
-  double pi = fabs(obj1->dc()-obj2->dc());
+  const double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
+  const double pi = fabs(obj1->dc()-obj2->dc());
   
   if (m_rpMin<rp && rp<m_rpMax && m_piMin<pi && pi<m_piMax) {
     
-    int ir = max(0, min(int((rp-m_rpMin)*m_binSize_inv_D1), m_nbins_D1));
-    int jr = max(0, min(int((log10(pi)-log10(m_piMin))*m_binSize_inv_D2), m_nbins_D2));
+    const int ir = max(0, min(int((rp-m_rpMin)*m_binSize_inv_D1), m_nbins_D1));
+    const int jr = max(0, min(int((log10(pi)-log10(m_piMin))*m_binSize_inv_D2), m_nbins_D2));
 
-    double angWeight = (m_angularWeight==nullptr) ? 1.
-      : m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits));
+    const double angWeight = (m_angularWeight==nullptr) ? 1.
+      : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
     
-    m_PP2D[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    m_PP2D[ir][jr] ++;
+    m_PP2D_weighted[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
     
   }
 }
@@ -426,18 +429,19 @@ void cosmobl::pairs::Pair2D_comovingCartesian_linlog::put (const shared_ptr<Obje
 
 void cosmobl::pairs::Pair2D_comovingCartesian_loglin::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2) 
 {
-  double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
-  double pi = fabs(obj1->dc()-obj2->dc());
+  const double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
+  const double pi = fabs(obj1->dc()-obj2->dc());
 
   if (m_rpMin<rp && rp<m_rpMax && m_piMin<pi && pi<m_piMax) {
 
-    int ir = max(0, min(int((log10(rp)-log10(m_rpMin))*m_binSize_inv_D1), m_nbins_D1)); 
-    int jr = max(0, min(int((pi-m_piMin)*m_binSize_inv_D2), m_nbins_D2));
+    const int ir = max(0, min(int((log10(rp)-log10(m_rpMin))*m_binSize_inv_D1), m_nbins_D1)); 
+    const int jr = max(0, min(int((pi-m_piMin)*m_binSize_inv_D2), m_nbins_D2));
 
-    double angWeight = (m_angularWeight==nullptr) ? 1.
-      : m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits));
+    const double angWeight = (m_angularWeight==nullptr) ? 1.
+      : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
  
-    m_PP2D[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    m_PP2D[ir][jr] ++;
+    m_PP2D_weighted[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
     
   }
 }
@@ -448,18 +452,20 @@ void cosmobl::pairs::Pair2D_comovingCartesian_loglin::put (const shared_ptr<Obje
 
 void cosmobl::pairs::Pair2D_comovingCartesian_loglog::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2) 
 {
-  double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
-  double pi = fabs(obj1->dc()-obj2->dc());
+  const double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
+  const double pi = fabs(obj1->dc()-obj2->dc());
   
   if (m_rpMin<rp && rp<m_rpMax && m_piMin<pi && pi<m_piMax) {
 
-    int ir = max(0, min(int((log10(rp)-log10(m_rpMin))*m_binSize_inv_D1), m_nbins_D1)); 
-    int jr = max(0, min(int((log10(pi)-log10(m_piMin))*m_binSize_inv_D2), m_nbins_D2)); 
+    const int ir = max(0, min(int((log10(rp)-log10(m_rpMin))*m_binSize_inv_D1), m_nbins_D1)); 
+    const int jr = max(0, min(int((log10(pi)-log10(m_piMin))*m_binSize_inv_D2), m_nbins_D2)); 
 
-    double angWeight = (m_angularWeight==nullptr) ? 1.
-      : m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits));
+    const double angWeight = (m_angularWeight==nullptr) ? 1.
+      : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
  
-    m_PP2D[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    m_PP2D[ir][jr] ++;
+    m_PP2D_weighted[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    
   }
 }
 
@@ -469,18 +475,20 @@ void cosmobl::pairs::Pair2D_comovingCartesian_loglog::put (const shared_ptr<Obje
 
 void cosmobl::pairs::Pair2D_comovingPolar_linlin::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2) 
 {
-  double rr = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz());
-  double mu = fabs(obj1->dc()-obj2->dc())/rr;
+  const double rr = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz());
+  const double mu = fabs(obj1->dc()-obj2->dc())/rr;
   
   if (m_rMin<rr && rr<m_rMax && m_muMin<mu && mu<m_muMax) {
     
-    int ir = max(0, min(int((rr-m_rMin)*m_binSize_inv_D1), m_nbins_D1));
-    int jr = max(0, min(int((mu-m_muMin)*m_binSize_inv_D2), m_nbins_D2));
+    const int ir = max(0, min(int((rr-m_rMin)*m_binSize_inv_D1), m_nbins_D1));
+    const int jr = max(0, min(int((mu-m_muMin)*m_binSize_inv_D2), m_nbins_D2));
 
-    double angWeight = (m_angularWeight==nullptr) ? 1.
-      : m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits));
+    const double angWeight = (m_angularWeight==nullptr) ? 1.
+      : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
  
-    m_PP2D[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    m_PP2D[ir][jr] ++;
+    m_PP2D_weighted[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    
   }
 }
 
@@ -490,18 +498,20 @@ void cosmobl::pairs::Pair2D_comovingPolar_linlin::put (const shared_ptr<Object> 
 
 void cosmobl::pairs::Pair2D_comovingPolar_linlog::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2) 
 {
-  double rr = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz());
-  double mu = fabs(obj1->dc()-obj2->dc())/rr;
+  const double rr = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz());
+  const double mu = fabs(obj1->dc()-obj2->dc())/rr;
   
   if (m_rMin<rr && rr<m_rMax && m_muMin<mu && mu<m_muMax) {
     
-    int ir = max(0, min(int((rr-m_rMin)*m_binSize_inv_D1), m_nbins_D1));
-    int jr = max(0, min(int((log10(mu)-log10(m_muMin))*m_binSize_inv_D2), m_nbins_D2)); 
+    const int ir = max(0, min(int((rr-m_rMin)*m_binSize_inv_D1), m_nbins_D1));
+    const int jr = max(0, min(int((log10(mu)-log10(m_muMin))*m_binSize_inv_D2), m_nbins_D2)); 
 
-    double angWeight = (m_angularWeight==nullptr) ? 1.
-      : m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits));
+    const double angWeight = (m_angularWeight==nullptr) ? 1.
+      : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
     
-    m_PP2D[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    m_PP2D[ir][jr] ++;
+    m_PP2D_weighted[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    
   }
 }
 
@@ -511,18 +521,20 @@ void cosmobl::pairs::Pair2D_comovingPolar_linlog::put (const shared_ptr<Object> 
 
 void cosmobl::pairs::Pair2D_comovingPolar_loglin::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2) 
 {
-  double rr = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz());
-  double mu = fabs(obj1->dc()-obj2->dc())/rr;
+  const double rr = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz());
+  const double mu = fabs(obj1->dc()-obj2->dc())/rr;
 
   if (m_rMin<rr && rr<m_rMax && m_muMin<mu && mu<m_muMax) {
 
-    int ir = max(0, min(int((log10(rr)-log10(m_rMin))*m_binSize_inv_D1), m_nbins_D1)); 
-    int jr = max(0, min(int((mu-m_muMin)*m_binSize_inv_D2), m_nbins_D2));
+    const int ir = max(0, min(int((log10(rr)-log10(m_rMin))*m_binSize_inv_D1), m_nbins_D1)); 
+    const int jr = max(0, min(int((mu-m_muMin)*m_binSize_inv_D2), m_nbins_D2));
 
-    double angWeight = (m_angularWeight==nullptr) ? 1.
-      : m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits));
+    const double angWeight = (m_angularWeight==nullptr) ? 1.
+      : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
     
-    m_PP2D[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    m_PP2D[ir][jr] ++;
+    m_PP2D_weighted[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    
   }
 }
 
@@ -532,18 +544,20 @@ void cosmobl::pairs::Pair2D_comovingPolar_loglin::put (const shared_ptr<Object> 
 
 void cosmobl::pairs::Pair2D_comovingPolar_loglog::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2) 
 {
-  double rr = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz());
-  double mu = fabs(obj1->dc()-obj2->dc())/rr;
+  const double rr = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz());
+  const double mu = fabs(obj1->dc()-obj2->dc())/rr;
   
   if (m_rMin<rr && rr<m_rMax && m_muMin<mu && mu<m_muMax) {
 
-    int ir = max(0, min(int((log10(rr)-log10(m_rMin))*m_binSize_inv_D1), m_nbins_D1)); 
-    int jr = max(0, min(int((log10(mu)-log10(m_muMin))*m_binSize_inv_D2), m_nbins_D2)); 
+    const int ir = max(0, min(int((log10(rr)-log10(m_rMin))*m_binSize_inv_D1), m_nbins_D1)); 
+    const int jr = max(0, min(int((log10(mu)-log10(m_muMin))*m_binSize_inv_D2), m_nbins_D2)); 
 
-    double angWeight = (m_angularWeight==nullptr) ? 1.
-      : m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits));
+    const double angWeight = (m_angularWeight==nullptr) ? 1.
+      : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
     
-    m_PP2D[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    m_PP2D[ir][jr] ++;
+    m_PP2D_weighted[ir][jr] += obj1->weight()*obj2->weight()*angWeight;
+    
   }
 }
 
@@ -553,10 +567,14 @@ void cosmobl::pairs::Pair2D_comovingPolar_loglog::put (const shared_ptr<Object> 
 
 void cosmobl::pairs::Pair2D::add_data2D (const int i, const int j, const vector<double> data)
 {
-  //checkDim(m_PP2D, i, j, "m_PP2D", false);
-  //checkDim(data, 1, "data");
+  /*
+    checkDim(m_PP2D, i, j, "m_PP2D", false);
+    checkDim(m_PP2D_weighted, i, j, "m_PP2D_weighted", false);
+    checkDim(data, 1, "data");
+  */
   
   m_PP2D[i][j] += data[0];
+  m_PP2D_weighted[i][j] += data[1];
 }
 
 
@@ -565,22 +583,20 @@ void cosmobl::pairs::Pair2D::add_data2D (const int i, const int j, const vector<
 
 void cosmobl::pairs::Pair2D::add_data2D (const int i, const int j, const shared_ptr<pairs::Pair> pair, const double ww)
 {
-  //checkDim(m_PP2D, i, j, "m_PP2D", false);
-  
-  m_PP2D[i][j] += ww*pair->PP2D(i, j);
+  add_data2D(i, j, {ww*pair->PP2D(i, j), ww*pair->PP2D_weighted(i, j)});
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::pairs::Pair2D::Sum (const shared_ptr<Pair> pp, const double ww)
+void cosmobl::pairs::Pair2D::Sum (const shared_ptr<Pair> pair, const double ww)
 {
-  if (m_nbins_D1 != pp->nbins_D1() || m_nbins_D2 != pp->nbins_D2()) 
+  if (m_nbins_D1 != pair->nbins_D1() || m_nbins_D2 != pair->nbins_D2()) 
     ErrorCBL("Error in cosmobl::pairs::Pair2D::Sum of Pair.cpp: dimension problems!");
     
   for (int i=0; i<m_nbins_D1; i++)
-    for (int j=0; j<m_nbins_D2; j++)
-      m_PP2D[i][j] += ww*pp->PP2D(i, j);
+    for (int j=0; j<m_nbins_D2; j++) 
+      add_data2D(i, j, pair, ww);
 }
 

@@ -40,13 +40,26 @@ using namespace data;
 // ======================================================================================
 
 
-void cosmobl::data::Data1D_extra::read (const string input_file, const int skip_nlines)
+cosmobl::data::Data1D_extra::Data1D_extra (const string input_file, const int skipped_lines, const double xmin, const double xmax, const DataType dataType) 
+{
+  set_dataType(dataType);
+
+  read(input_file, skipped_lines);
+
+  set_limits((xmin>par::defaultDouble) ? xmin : Min(m_x)-0.001, (xmax<-par::defaultDouble) ? xmax : Max(m_x)+0.001);
+}
+
+
+// ======================================================================================
+
+
+void cosmobl::data::Data1D_extra::read (const string input_file, const int skipped_lines)
 {
   ifstream fin(input_file.c_str()); checkIO(fin, input_file);
   string line;
 
-  if (skip_nlines>0)
-    for (int i=0; i<skip_nlines; ++i)
+  if (skipped_lines>0)
+    for (int i=0; i<skipped_lines; ++i)
       getline(fin, line);
 
   bool first = true;
@@ -62,10 +75,10 @@ void cosmobl::data::Data1D_extra::read (const string input_file, const int skip_
     m_error_fx.push_back(num[2]);
 
     if (first) m_extra_info.resize(num.size()-3);
-    
-    for (size_t ex=3; ex<num.size(); ++ex) 
-      m_extra_info[ex].emplace_back(num[ex]);
 
+    for (size_t ex=0; ex<num.size()-3; ++ex) 
+      m_extra_info[ex].emplace_back(num[ex+3]);
+    
     first = false;
   }
 

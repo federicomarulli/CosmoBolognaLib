@@ -154,15 +154,6 @@ void cosmobl::twopt::TwoPointCorrelation1D_filtered::measure (const ErrorType er
 
 void cosmobl::twopt::TwoPointCorrelation1D_filtered::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator) 
 {
-  // ----------- weigthed number of objects in the real and random catalogues ----------- 
-  
-  int nData = m_data->weightedN();
-  int nRandom = m_random->weightedN();
-  
-  if (nData==0 || nRandom==0)  
-    ErrorCBL("Error in measurePoisson() of TwoPointCorrelation.cpp!");
-
-  
   // ----------- count the data-data, random-random and data-random pairs, or read them from file ----------- 
   
   count_allPairs(m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount);
@@ -171,9 +162,9 @@ void cosmobl::twopt::TwoPointCorrelation1D_filtered::measurePoisson (const strin
   // ----------- compute the monopole of the two-point correlation function ----------- 
 
   if (estimator==_natural_)
-    m_dataset = Filtered(NaturalEstimator(m_dd, m_rr, nData, nRandom));
+    m_dataset = Filtered(correlation_NaturalEstimator(m_dd, m_rr));
   else if (estimator==_LandySzalay_)
-    m_dataset = Filtered(LandySzalayEstimator(m_dd, m_rr, m_dr, nData, nRandom));
+    m_dataset = Filtered(correlation_LandySzalayEstimator(m_dd, m_rr, m_dr));
   else
     ErrorCBL("Error in measurePoisson() of TwoPointCorrelation1D_filtered.cpp: the chosen estimator is not implemented!");
 }
@@ -211,14 +202,11 @@ void cosmobl::twopt::TwoPointCorrelation1D_filtered::measureJackknife (const str
   }
 
   covariance_matrix(xi_SubSamples, covariance, true);
-
-  double nData = m_data->weightedN();
-  double nRandom = m_random->weightedN();
   
   if (estimator==_natural_)
-    m_dataset = Filtered(NaturalEstimator(m_dd, m_rr, nData, nRandom));
+    m_dataset = Filtered(correlation_NaturalEstimator(m_dd, m_rr));
   else if (estimator==_LandySzalay_)
-    m_dataset = Filtered(LandySzalayEstimator(m_dd, m_rr, m_dr, nData, nRandom));
+    m_dataset = Filtered(correlation_LandySzalayEstimator(m_dd, m_rr, m_dr));
   else
     ErrorCBL("Error in measureJackknife() of TwoPointCorrelation1D_filtered.cpp: the chosen estimator is not implemented!");
   
@@ -257,14 +245,11 @@ void cosmobl::twopt::TwoPointCorrelation1D_filtered::measureBootstrap (const int
   }
 
   covariance_matrix(xi_SubSamples, covariance, 0);
-
-  double nData = m_data->weightedN();
-  double nRandom = m_random->weightedN();
   
   if (estimator==_natural_)
-    m_dataset = Filtered(NaturalEstimator(m_dd, m_rr, nData, nRandom));
+    m_dataset = Filtered(correlation_NaturalEstimator(m_dd, m_rr));
   else if (estimator==_LandySzalay_)
-    m_dataset = Filtered(LandySzalayEstimator(m_dd, m_rr, m_dr, nData, nRandom));
+    m_dataset = Filtered(correlation_LandySzalayEstimator(m_dd, m_rr, m_dr));
   ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_filtered.cpp: the chosen estimator is not implemented!");
   
   m_dataset->set_covariance(covariance);

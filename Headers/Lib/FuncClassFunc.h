@@ -1,5 +1,5 @@
 /*******************************************************************
- *  Copyright (C) 2010 by Federico Marulli                         *
+ *  Copyright (C) 2010 by Federico Marulli, Alfonso Veropalumbo    *
  *  federico.marulli3@unibo.it                                     *
  *                                                                 *
  *  This program is free software; you can redistribute it and/or  *
@@ -20,14 +20,14 @@
 
 /** @file Headers/Lib/FuncClassFunc.h
  *
- *  @brief Generic class functions used by Numerical methods
+ *  @brief Generic class functions
  *
- *  This file contains some generic class functions used by Numerical
- *  methods
+ *  This file contains some generic class functions used by different
+ *  numerical methods of internal usage
  *
- *  @author Federico Marulli 
+ *  @author Federico Marulli, Alfonso Veropalumbo
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
  */
 
 #ifndef __FUNCCLASSFUNC__
@@ -60,148 +60,6 @@ namespace cosmobl {
       {
 	return interpolated(XX, xg, yg, interpType);
       }
-    };
-
-
-    // =====================================================================================
-
-
-    class func_grid_GSL
-    {
-       private: 
-          gsl_spline *m_spline;
-          const gsl_interp_type *m_type;
-          gsl_interp_accel *m_acc;
-          size_t m_size;
-	  double m_xmin;
-	  double m_xmax;
-
-       public:
-          func_grid_GSL (vector<double> _xg, vector<double> _yg, string _interpType)
-          {
-             m_size = _xg.size();
-             m_acc = gsl_interp_accel_alloc();
-
-	     if (_xg.size() < 5 && _interpType != "Linear"){
-	       WarningMsg("Warning in constructor of func_grid_GSL: array size less than 5, setting interpolation method to Linear");
-	       _interpType="Linear";
-	     }
-
-             if (_interpType=="Linear") 
-                m_type = gsl_interp_linear;
-
-             else if (_interpType=="Poly") 
-                m_type = gsl_interp_polynomial;
-
-             else if (_interpType=="Spline") 
-                m_type = gsl_interp_cspline;
-
-             else if (_interpType=="Spline_periodic") 
-                m_type = gsl_interp_cspline_periodic;
-
-             else if (_interpType=="Akima") 
-                m_type = gsl_interp_akima;
-
-             else if (_interpType=="Akima_periodic") 
-                m_type = gsl_interp_akima_periodic;
-
-             else if (_interpType=="Steffen") 
-                m_type = gsl_interp_steffen;
-
-             else 
-	       ErrorCBL("Error in interpolated of Func.cpp: the value of string 'type' is not permitted!");
-
-	     m_xmin = Min(_xg);
-	     m_xmax = Max(_xg);
-             m_spline = gsl_spline_alloc(m_type, m_size); 
-             gsl_spline_init(m_spline, _xg.data(), _yg.data(), m_size);
-          }  
-
-          void free ()
-          {
-             gsl_spline_free (m_spline);
-             gsl_interp_accel_free (m_acc);
-          }
-
-	  double xmin () { return m_xmin; }
-                                        
-	  double xmax () { return m_xmax; }
-
-          double operator () (double XX) 
-          {
-	    
-	    if (XX<m_xmin) // perform a linear extrapolation
-	      return m_spline->y[0]+(XX-m_xmin)/(m_spline->x[1]-m_xmin)*(m_spline->y[1]-m_spline->y[0]);
-
-	    else if (XX>m_xmax) // perform a linear extrapolation
-	      return m_spline->y[m_size-2]+(XX-m_spline->x[m_size-2])/(m_xmax-m_spline->x[m_size-2])*(m_spline->y[m_size-1]-m_spline->y[m_size-2]);
-
-             return gsl_spline_eval (m_spline, XX, m_acc);
-          }
-
-	  vector<double> eval_func (vector<double> XX)
-	  {
-	    vector<double> YY;
-	    
-	    for(size_t i=0;i<XX.size();i++)
-	      YY.push_back(gsl_spline_eval(m_spline,XX[i],m_acc));
-
-	    return YY;
-	  }
-
-	  double D1v (double xx)
-	  {
-	    return gsl_spline_eval_deriv(m_spline, xx,m_acc);
-	  }
-
-	  double D2v (double xx)
-	  {
-	    return gsl_spline_eval_deriv2(m_spline, xx,m_acc);
-	  }
-
-	  double integrate_qag (const double a, const double b, const double prec=1.e-2, const int limit_size=6, const int rule=6)
-	  {
-	    function<double(double)> f = bind(&func_grid_GSL::operator(), this, std::placeholders::_1);
-	   
-	    glob::STR_generic_integrand pp;
-	    pp.f = f;
-
-	    gsl_function Func;
-	    Func.function = &generic_integrand;
-	    Func.params = &pp;
-
-	    return GSL_integrate_qag(Func,a, b, prec, limit_size, rule);
-	  }
-
-	  double integrate_qaws (const double a, const double b, const double alpha =0, const double beta =0, const int mu=0, const int nu =0, const double prec=1.e-2, const int limit_size=6)
-	  {
-	    function<double(double)> f = bind(&func_grid_GSL::operator(), this, std::placeholders::_1);
-	   
-	    glob::STR_generic_integrand pp;
-	    pp.f = f;
-
-	    gsl_function Func;
-	    Func.function = &generic_integrand;
-	    Func.params = &pp;
-
-	    return GSL_integrate_qaws(Func,a, b, alpha, beta, mu, nu, prec, limit_size);
-	  }
-
-	  double root (const double x_low, const double x_up, const double fx0=0, const double prec=1.e-2)
-	  {
-	    function<double(double)> f = bind(&func_grid_GSL::operator(), this, std::placeholders::_1);
-	   
-	    glob::STR_generic_roots pp;
-	    pp.f = f;
-	    pp.xx0 = fx0;
-
-	    gsl_function Func;
-	    Func.function = &generic_roots;
-	    Func.params = &pp;
-
-	    return GSL_brent(Func, x_low, x_up, prec);
-	  }
-
     };
 
 
@@ -400,33 +258,34 @@ namespace cosmobl {
   }
 
   namespace glob {
-     struct STR_sigma2_integrand
-     {
-        int l1, l2;
-        double density_inv,kk;
-        vector<int> orders;
-        vector<classfunc::func_grid_GSL> Pk_multipoles_interp;
-     };
+    struct STR_sigma2_integrand
+    {
+      int l1, l2;
+      double density_inv,kk;
+      vector<int> orders;
+      vector<FuncGrid> Pk_multipoles_interp;
+    };
 
-     struct STR_XiMultipoles_integrand
-     {
-        double r;
-        int l;
-        classfunc::func_grid_GSL *Pkl;
-	double k_cut;
-	double cut_pow;
-     };
+    struct STR_XiMultipoles_integrand
+    {
+      double r;
+      int l;
+      FuncGrid *Pkl;
+      double k_cut;
+      double cut_pow;
+    };
 
-     struct STR_xi2D_smu_integrand
-     {
-       classfunc::func_grid_GSL *func;
-       int order;
-     };
+    struct STR_xi2D_smu_integrand
+    {
+      FuncGrid *func;
+      int order;
+    };
 
-     struct STR_covariance_XiMultipoles_integrand
-     {
-       classfunc::func_grid_GSL *s2, *jl1r1, *jl2r2;
-     };
+    struct STR_covariance_XiMultipoles_integrand
+    {
+      FuncGrid *s2, *jl1r1, *jl2r2;
+    };
+     
   }
 }
 

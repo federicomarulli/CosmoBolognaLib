@@ -238,12 +238,15 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
-	: TwoPointCorrelation1D_monopole(data, random, _linear_, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight, compute_extra_info)
+      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	: TwoPointCorrelation1D_monopole(data, random, _linear_, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
 	{ m_twoPType = _1D_filtered_;  set_parameters(binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1); }
 
       /**
@@ -286,12 +289,15 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *
        *  @return a pointer to an object of class TwoPointCorrelation of
        *  a given type
        */
-      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
-	: TwoPointCorrelation1D_monopole(data, random, _linear_, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight, compute_extra_info)
+      TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	: TwoPointCorrelation1D_monopole(data, random, _linear_, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
 	{ m_twoPType = _1D_filtered_; set_parameters(binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1); }     
 
       /**
@@ -401,9 +407,9 @@ namespace cosmobl {
        *  @return none
        */
       void write (const string dir=par::defaultString, const string file=par::defaultString, const int rank=0) const override;
-    
+      
       ///@}
-
+      
     };
   }
 }

@@ -260,37 +260,48 @@ namespace cosmobl {
       { m_data[i].set_error_fx(error_fx); }
 
       /**
-       *  @brief set interval variable m_covariance reading from an input file; 
+       *  @brief set the interval variable m_covariance, reading from
+       *  an input file
+       *
        *  @param filename file containing the covariance matrix in the
        *  format: column 0 &rarr x<SUB>i</SUB>, column 1 &rarr
        *  x<SUB>j</SUB>, column 2 &rarr
        *  cov(x<SUB>i</SUB>,x<SUB>j</SUB>)
+       *
+       *  @param skipped_lines comment lines to be skipped
+       *
        *  @return none
        */
-      void set_covariance (const string filename) override;
+      void set_covariance (const string filename, const int skipped_lines=0) override;
 
       /**
-       *  @brief set the covariance matrix for the i-th dataset
-       *  @param i index for the i-th dataset 
-       *  @param covariance vector containing f(x) covariance matrix 
+       *  @brief set the interval variable m_covariance, in the i-th
+       *  dataset reading from an input file; it also compute the
+       *  inverted covariance matrix
+       *
+       *  @param i index to the i-th dataset
+       *
+       *  @param covariance matrix containing the covariance matrix 
+       *
        *  @return none
        */
-      void set_covariance (const int i, const vector<vector<double> > covariance)
+      void set_covariance (const int i, const vector<vector<double>> covariance)
       { m_data[i].set_covariance(covariance); }
 
       /**
-       *  @brief set interval variable m_covariance_matrix, from covariance matrix
-       *  of datasets, the result is a block covariance matrix
+       *  @brief set interval variable m_covariance_matrix, from
+       *  covariance matrix of datasets, the result is a block
+       *  covariance matrix
        *  @return none
        */
       void set_covariance () override;
 
       /**
-       *  @brief set interval variable m_covariance
-       *  @param covariance vector containing f(x) covariance matrix 
+       *  @brief set the interval variable m_covariance
+       *  @param covariance matrix containing the covariance matrix 
        *  @return none
        */
-      void set_covariance (const vector<vector<double> > covariance)
+      void set_covariance (const vector<vector<double>> covariance)
       { m_covariance_matrix = covariance; }
 
       ///@}

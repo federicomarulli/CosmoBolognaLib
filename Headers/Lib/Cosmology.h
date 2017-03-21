@@ -59,19 +59,19 @@ namespace cosmobl {
      */
     enum CosmoPar {
 
-      /// &Omega;<SUB>M</SUB>: the density of baryons, cold dark matter and massive neutrinos (in units of the critical density) at z=0, LCDM case
+      /// &Omega;<SUB>M</SUB>: the density of baryons, cold dark matter and massive neutrinos (in units of the critical density) at z=0 in the LCDM case
       _Omega_matter_LCDM_,
 
-      /// &Omega_,<SUB>M</SUB>: the density of baryons, cold dark matter and massive neutrinos (in units of the critical density) at z=0
+      /// &Omega;<SUB>M</SUB>: the density of baryons, cold dark matter and massive neutrinos (in units of the critical density) at z=0
       _Omega_matter_,
   
-      /// &Omega_,<SUB>b</SUB>: the baryon density at z=0
+      /// &Omega;<SUB>b</SUB>: the baryon density at z=0
       _Omega_baryon_,         
     
-      /// &Omega_,<SUB>b</SUB> h<SUP>2</SUP>: the baryon density times h<SUP>2</SUP> at z=0
+      /// &Omega;<SUB>b</SUB> h<SUP>2</SUP>: the baryon density times h<SUP>2</SUP> at z=0
       _Omega_baryon_h2_,        
 
-      /// &Omega_,<SUB>&nu_,</SUB>: the density of massive neutrinos at z=0
+      /// &Omega;<SUB>&nu;</SUB>: the density of massive neutrinos at z=0
       _Omega_neutrinos_,      
 
       /// N<SUB>eff</SUB>: the effective number (for QED + non-instantaneous decoupling)
@@ -80,21 +80,24 @@ namespace cosmobl {
       /// the number of degenerate massive neutrino species 
       _massive_neutrinos_,    
 
-      /// &Omega_,<SUB>DE</SUB>: the dark energy density at z=0
+      /// &Omega;<SUB>DE</SUB>: the dark energy density at z=0
       _Omega_DE_,             
 
-      /// &Omega_,<SUB>rad</SUB>: the radiation density at z=0
+      /// &Omega;<SUB>rad</SUB>: the radiation density at z=0
       _Omega_radiation_,     
              
       /// H<SUB>0</SUB>: the Hubble constant at z=0 [km/sec/Mpc] 
       _H0_,
     
       /// h: the Hubble constant at z=0 / 100 
-      _hh_,
+      _hh_,           
 
       /// A<SUB>s</SUB>: the initial scalar amplitude of the power spectrum
       _scalar_amp_,           
 
+      /// ln(1e10A<SUB>s</SUB>): the logarithm of 1e10 times the initial scalar amplitude of the power spectrum
+      _ln_scalar_amp_,
+      
       /// n<SUB>spec</SUB>: the primordial spectral index
       _n_spec_,               
 
@@ -107,9 +110,12 @@ namespace cosmobl {
       /// f<SUB>NL</SUB>: the non-Gaussian amplitude
       _fNL_,                  
 
-      /// &sigma_,<SUB>8</SUB>: the power spectrum normalization
-      _sigma8_ 
-
+      /// &sigma;<SUB>8</SUB>: the power spectrum normalization
+      _sigma8_,
+      
+      /// &tau;: Thomson scattering optical depth due to reionization
+      _tau_
+      
     };
 
 
@@ -195,6 +201,9 @@ namespace cosmobl {
       /// the non-Gaussian shape (type=1 local, type=2 equilateral, type=3 enfolded, type=4 orthogonal)
       int m_type_NG;    
 
+      /// &tau: Thomson scattering optical depth due to reionization
+      double m_tau;
+      
       /// the normalization of the power spectrum for Eisenstein & Hu [http://background.uchicago.edu/~whu/transfer/transferpage.html]
       double m_Pk0_EH;
 
@@ -211,7 +220,7 @@ namespace cosmobl {
       string m_model;                
 
       /// 0 &rarr; phyical units; 1 &rarr; cosmological units (i.e. without \e h)
-      bool m_unit;                   
+      bool m_unit;
 
 
       /**
@@ -272,6 +281,11 @@ namespace cosmobl {
        *  @param Delta &Delta;: the overdensity, defined as the mean
        *  interior density relative to the background
        *
+       *  @param default_delta true = using function cosmobl::cosmology::deltac;
+       *  false = using delta_t*growth factor
+       *  
+       *  @param delta_t user defined density contrast at \f$z = 0\f$
+       *
        *  @return the mass function, d&Phi;/dM=dn(M)/dM
        *
        *  @warning the input parameter &Delta; is used only in the
@@ -280,7 +294,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string author_MF, const double Delta=200.); 
+      double MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string author_MF, const double Delta=200., const bool default_delta=true, const double delta_t=1.686); 
 
       /**
        *  @brief auxiliary function to compute the halo bias
@@ -450,30 +464,34 @@ namespace cosmobl {
        *
        *  @param n_spec n<SUB>spec</SUB>: the primordial spectral index
        *
-       *  @param w0 w<SUB>0</SUB>: one of the two parameters of the dark energy
-       *  equation of state (CPL parameterisation)
+       *  @param w0 w<SUB>0</SUB>: one of the two parameters of the
+       *  dark energy equation of state (CPL parameterisation)
        *
-       *  @param wa w<SUB>a</SUB>: one of the two parameters of the dark energy
-       *  equation of state (CPL parameterisation)
+       *  @param wa w<SUB>a</SUB>: one of the two parameters of the
+       *  dark energy equation of state (CPL parameterisation)
        *
        *  @param fNL f<SUB>NL</SUB>: the non-Gaussian amplitude
        *
        *  @param type_NG the non-Gaussian shape (type=1 local, type=2
        *  equilateral, type=3 enfolded, type=4 orthogonal)
        *
+       *  @param tau &tau;: Thomson scattering optical depth due to
+       *  reionization
+       *
        *  @param model the cosmologial model used to compute distances
        *
-       *  @param unit 0 &rarr; phyical units; 1 &rarr; cosmological units
-       *  (i.e. without \e h)
+       *  @param unit 0 &rarr; phyical units; 1 &rarr; cosmological
+       *  units (i.e. without \e h)
        *
        *  @return object of class Cosmology; by default:
        *  &Omega;<SUB>k</SUB>=1-&Omega;<SUB>M</SUB>-&Omega;<SUB>rad</SUB>-&Omega;<SUB>DE</SUB>,
        *  &Omega;<SUB>CDM</SUB>=&Omega;<SUB>M</SUB>-&Omega;<SUB>b</SUB>-&Omega;<SUB>&nu;</SUB>,
-       *  t<SUB>H</SUB>=1/H<SUB>0</SUB>, D<SUB>H</SUB>=c/t<SUB>H</SUB>,
+       *  t<SUB>H</SUB>=1/H<SUB>0</SUB>,
+       *  D<SUB>H</SUB>=c/t<SUB>H</SUB>,
        *  &rho;<SUB>0</SUB>=&rho;<SUB>0</SUB>(&Omega;<SUB>M</SUB>,&Omega;<SUB>&nu;</SUB>),
-       *  Pk0_*=1
+       *  Pk0_*=1, 
        */
-      Cosmology (const double Omega_matter=0.27, const double Omega_baryon=0.046, const double Omega_neutrinos=0., const double massless_neutrinos=3.04, const int massive_neutrinos=0, const double Omega_DE=0.73, const double Omega_radiation=0., const double hh=0.7, const double scalar_amp=2.46e-9, const double n_spec=0.96, const double w0=-1., const double wa=0., const double fNL=0., const int type_NG=1, const string model="LCDM", const bool unit=1);    
+      Cosmology (const double Omega_matter=0.27, const double Omega_baryon=0.046, const double Omega_neutrinos=0., const double massless_neutrinos=3.04, const int massive_neutrinos=0, const double Omega_DE=0.73, const double Omega_radiation=0., const double hh=0.7, const double scalar_amp=2.46e-9, const double n_spec=0.96, const double w0=-1., const double wa=0., const double fNL=0., const int type_NG=1, const double tau=0.09, const string model="LCDM", const bool unit=1);    
 
       /**
        *  @brief default destructor
@@ -651,7 +669,15 @@ namespace cosmobl {
        *  @return the non-Gaussian shape (type=1 local, type=2
        *  equilateral, type=3 enfolded, type=4 orthogonal)
        */
-      int type_NG () const { return m_type_NG; }; 
+      int type_NG () const { return m_type_NG; };
+
+      /**
+       *  @brief get the private member Cosmology::m_tau
+       *
+       *  @return &tau; the Thomson scattering optical depth due to
+       *  reionization
+       */
+      int tau () const { return m_tau; }; 
 
       /**
        *  @brief get the private member Cosmology::m_Pk0_EH
@@ -694,8 +720,8 @@ namespace cosmobl {
       /**
        *  @brief get the private member Cosmology::m_unit
        *
-       *  @return unit: 0 &rarr; phyical units; 1 &rarr; cosmological units
-       *  (i.e. without \e h)
+       *  @return unit: 0 &rarr; phyical units; 1 &rarr; cosmological
+       *  units (i.e. without \e h)
        */
       bool unit () const { return m_unit; };
 
@@ -720,6 +746,7 @@ namespace cosmobl {
 	coutCBL << "wa = " << m_wa << endl;
 	coutCBL << "fNL = " << m_fNL << endl;
 	coutCBL << "type_NG = " << m_type_NG << endl;
+	coutCBL << "tau = " << m_tau << endl;
       }
       ///@}
 
@@ -753,7 +780,7 @@ namespace cosmobl {
 
       /**
        *  @brief set the value of &Omega;<SUB>M</SUB>, keeping
-       * &Omega;<SUB>DE</SUB>=1-&Omega;<SUB>M</SUB>
+       *  &Omega;<SUB>DE</SUB>=1-&Omega;<SUB>M</SUB>
        *
        *  @param Omega_matter &Omega;<SUB>M</SUB>: density of baryons,
        *  cold dark matter and massive neutrinos (in units of the
@@ -863,10 +890,15 @@ namespace cosmobl {
        *  @brief set the value of h 
        *
        *  @param hh the Hubble constant H0/100
+       *
+       *  @param warn true &rarr; print a warning message if m_unit is
+       *  true
+       *
        *  @return none
        */
-      void set_hh (const double hh=0.7)
+      void set_hh (const double hh=0.7, const bool warn=true)
       {
+	if (m_unit && warn) WarningMsg("if unit=1 then H0=100 (by internal definition)");
 	m_hh = hh; 
 	m_H0 = (m_unit) ? 100. : m_hh*100.;   
 	m_t_H = 1./m_H0; 
@@ -878,10 +910,14 @@ namespace cosmobl {
        *
        *  @param H0 H<SUB>0</SUB>: Hubble constant [km/sec/Mpc]
        *
+       *  @param warn true &rarr; print a warning message if m_unit is
+       *  true
+       *
        *  @return none
        */
-      void set_H0 (const double H0=70.)
+      void set_H0 (const double H0=70., const bool warn=true)
       {
+	if (m_unit && warn) WarningMsg("if unit=true then H0=100 (by internal definition)");
 	m_hh = H0/100.; 
 	m_H0 = (m_unit) ? 100. : m_hh*100.;   
 	m_t_H = 1./m_H0; 
@@ -961,7 +997,17 @@ namespace cosmobl {
        *
        *  @return none
        */
-      void set_type_NG (const double type_NG=1) { m_type_NG = type_NG; };  
+      void set_type_NG (const int type_NG=1) { m_type_NG = type_NG; };  
+
+      /**
+       *  @brief set the value of the &tau;
+       *
+       *  @param &tau; the Thomson scattering optical depth due to
+       *  reionization
+       *
+       *  @return none
+       */
+      void set_tau (const double tau=0.09) { m_tau = tau; };  
     
       /**
        *  @brief set the cosmologial model used to compute distances
@@ -975,11 +1021,12 @@ namespace cosmobl {
       /**
        *  @brief set the value of unit
        *
-       *  @param unit: 0 &rarr; phyical units; 1 &rarr; cosmological units (i.e. without \e h)
+       *  @param unit false &rarr; phyical units; true &rarr;
+       *  cosmological units (i.e. without \e h)
        *
        *  @return none
        */
-      void set_unit (const bool unit=1) { m_unit = unit; set_H0(100*m_hh); }
+      void set_unit (const bool unit=true) { m_unit = unit; set_H0(100*m_hh, false); }
 
       ///@}
 
@@ -1044,12 +1091,11 @@ namespace cosmobl {
        *  @param Omega_neutrinos &Omega;<SUB>&nu;</SUB>: density of
        *  massive neutrinos
        *
-       *  @param unit1 0 &rarr; phyical units; 1 &rarr; cosmological units
-       *  (i.e. without \e h)
+       *  @param unit1 true &rarr; force phyical units
        *
        *  @return &rho;<SUB>mean</SUB>: the mean cosmic density [Msun*Mpc^-3(*h^2)]
        */
-      double Rho (const double Omega_matter=0.27, const double Omega_neutrinos=0., const bool unit1=1) const;  
+      double Rho (const double Omega_matter=0.27, const double Omega_neutrinos=0., const bool unit1=false) const;  
 
       /**
        *  @brief the overdensity within a sphere of radius R
@@ -1233,18 +1279,18 @@ namespace cosmobl {
        */
       double z_eq () const;
 
-      // Sound speed
-      double sound_speed(const double redshift, const double T_CMB=2.7255) const;
+      // sound speed
+      double sound_speed (const double redshift, const double T_CMB=2.7255) const;
     
-      // Sound horizon integrand
-      double rs_integrand(const double redshift, const double T_CMB=2.7255) const;
+      // sound horizon integrand
+      double rs_integrand (const double redshift, const double T_CMB=2.7255) const;
 
-      // Sound horizon 
+      // sound horizon 
       double rs (const double redshift, const double T_CMB=2.7255) const;
 
       /**
        *  @brief maximum absolute magnitude to have a volume-limited
-       *	catalogue
+       *  catalogue
        *
        *  @param z_max maximum redshift
        *  @param mag_lim magnitude limit
@@ -1369,6 +1415,60 @@ namespace cosmobl {
        *  @return &Delta;<SUB>vir</SUB>
        */
       double Deltavir (const double redshift) const; 
+    
+      /**
+       *  @brief Linear (under)density contrast
+       *
+       *  @author Tommaso Ronconi
+       *  @author tommaso.ronconi@studio.unibo.it
+       *
+       *  @param bias the bias of the sample
+       *
+       *  @param rho_vm the non linear density contrast:
+       *  \f$\rho_v/\rho_m\f$ (default value set to \f$0.205\f$)
+       *  
+       *  @return The linear density contrast used as second barrier
+       *  in the excursion set formalism for voids, based on the fit
+       *  by Bernardeu (1994): \f$\delta_v^L \equiv \frac{\rho_v -
+       *  \rho_m}{\rho_m} \approx C [1 - (\rho_v/\rho_m)^{- 1/C}]\f$
+       *  where \f$\rho_v =\ \f$ average void density, \f$\rho_m =\
+       *  \f$ average density of the surrounding Universe and \f$C =
+       *  1.594\f$, a costant.
+       */
+      double deltav_L (const double bias = 1., const double rho_vm = 0.205) const;
+    
+      /**
+       *  @brief Non-Linear (under)density contrast
+       *
+       *  @author Tommaso Ronconi
+       *  @author tommaso.ronconi@studio.unibo.it
+       *
+       *  @param deltav the linear density contrast: \f$\delta_v\f$
+       *  (default value set to \f$-2.71\f$)
+       *  
+       *  @return The non linear density contrast to be used in
+       *  samples of tracers, independently of the bias value, based
+       *  on the fit by Bernardeu (1994): \f$ \delta_v^{NL} \equiv
+       *  \frac{\rho_v}{\rho_m} - 1 \approx \bigl(1 -
+       *  C^{-1}\delta_v^L\bigr)^{-C} - 1\f$ where \f$\rho_v =\ \f$
+       *  average void density, \f$\rho_m =\ \f$ average density of
+       *  the surrounding Universe and \f$C = 1.594\f$, a costant.
+       */
+      double deltav_NL (const double deltav=-2.71) const;
+
+      /**
+       *  @brief expansion factor
+       *
+       *  @author Tommaso Ronconi
+       *  @author tommaso.ronconi@studio.unibo.it
+       *
+       *  @param deltav the linear density contrast: \f$\delta_v^L\f$
+       *  (default value set to \f$-2.71\f$)
+       *  
+       *  @return the expansion factor: \f$\frac{r}{r_L} = \bigl((1 -
+       *  C^{-1}\delta_v^L\bigr)^{C/3}\f$ where \f$C = 1.594\f$
+       */
+      double r_rL (const double deltav = -2.71) const;
 
       ///@}
     
@@ -1544,7 +1644,7 @@ namespace cosmobl {
 
       /**
        *  @brief the derivative of the comoving volume,
-       d<SUP>2</SUP>V/(dz*d&Omega;) at a given redshift
+       *  d<SUP>2</SUP>V/(dz*d&Omega;) at a given redshift
        *  @param redshift redshift
        *  @param angle_rad 0 &rarr; &Omega; in square degrees; 1 &rarr; &Omega;
        *  in steradians
@@ -1613,6 +1713,11 @@ namespace cosmobl {
        *  file is provided (i.e. file_par!=NULL), it will be used,
        *  ignoring the cosmological parameters of the object
        *
+       *  @param default_delta true = using function cosmobl::cosmology::deltac;
+       *  false = using delta_t*growth factor
+       *  
+       *  @param delta_t user defined density contrast at \f$z = 0\f$
+       *
        *  @return the mass function, d&Phi;/dM=dn(M)/dM
        *
        *  @warning the input parameter &Delta; is used only in the
@@ -1621,7 +1726,7 @@ namespace cosmobl {
        *  cosmobl::Cosmology::DeltaR can be used to convert
        *  &Delta;<SUB>crit</SUB> into &Delta;
        */
-      double mass_function (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
+      double mass_function (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root="test", const double Delta=200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString, const bool default_delta=true, const double delta_t=1.686);
 
       /**
        *  @brief the mass function of dark matter haloes (filaments and
@@ -2121,6 +2226,8 @@ namespace cosmobl {
        *  @return none
        */
       void run_CAMB (const bool, const double, const string output_root="test", const double k_max=100., const string file_par=par::defaultString) const; 
+
+      void run_read_CAMB (const bool NL, vector<double> &lgkk, vector<double> &lgPk, const double redshift, const string output_root="test", const double k_max=100, const string file_par=par::defaultString) const;
 
       /**
        *  @brief write or read the table where the dark matter power
@@ -4727,46 +4834,6 @@ namespace cosmobl {
       ///@{
 
       /**
-       *  @brief Volume of the sphere of corresponding radius
-       *
-       *  @author Tommaso Ronconi
-       *  @author tommaso.ronconi@studio.unibo.it
-       *
-       *  @param RR the radius of the sphere
-       *  
-       *  @return volume of the sphere
-       */
-      double VolS (const double RR) const;
-    
-      /**
-       *  @brief Linear (under)density contrast
-       *
-       *  @author Tommaso Ronconi
-       *  @author tommaso.ronconi@studio.unibo.it
-       *
-       *  @param rho_vm the non linear density contrast: \f$\rho_v/\rho_m\f$ (default value set to \f$0.2\f$)
-       *  
-       *  @return The linear density contrast used as second barrier in the excursion set formalism
-       *  for voids, as given by Bernardeu (1994):
-       *  \f$\delta_v \equiv \frac{\rho_v - \rho_m}{\rho_m} \approx C [1 - (\rho_v/\rho_m)^{- 1/C}]\f$
-       *  where \f$\rho_v =\ \f$ average void density, 
-       *  \f$\rho_m =\ \f$ average density of the surrounding Universe and \f$C = 1.594\f$, a costant.
-       */
-      double deltav (const double rho_vm = 0.2) const;
-
-      /**
-       *  @brief expansion factor
-       *
-       *  @author Tommaso Ronconi
-       *  @author tommaso.ronconi@studio.unibo.it
-       *
-       *  @param rho_vm the non linear density contrast: \f$\rho_v/\rho_m\f$ (default value set to \f$0.2\f$)
-       *  
-       *  @return the expansion factor: \f$\frac{r}{r_L} = \biggl(\frac{\rho_v}{\rho_m}\biggr)^{-1/3}\f$
-       */
-      double r_rL (const double rho_vm = 0.2) const;
-
-      /**
        *  @brief \f$f_{\ln \sigma}(\sigma)\f$ (approximation)
        *
        *  @author Tommaso Ronconi
@@ -4792,8 +4859,6 @@ namespace cosmobl {
        *  @param RV radius
        *
        *  @param redshift redshift
-       *
-       *  @param rho_vm the non linear density contrast: \f$\rho_v/\rho_m\f$ (default value set to \f$0.2\f$)
        *
        *  @param del_v linear density contrast defining a void
        *
@@ -4829,20 +4894,88 @@ namespace cosmobl {
        *  @return the number density of voids as a function of radius.
        *  Volume Conserving Model, equation (17) from Jennings et al.(2013) 
        */
-      double size_function (const double RV, const double redshift, const double rho_vm, const double del_v, const double del_c, const string method_Pk, const string output_root, const string interpType, const int Num, const double stepsize, const double k_max, const string file_par, const string model) const;
+      double size_function (const double RV, const double redshift, const double del_v, const double del_c, const string model, const string method_Pk="CAMB", const string output_root="test", const string interpType="Linear", const int Num=-1, const double stepsize=100., const double k_max=100., const string file_par=cosmobl::par::defaultString) const;
+
+      /**
+       *  @brief the void size function
+       *
+       *  @author Tommaso Ronconi
+       *  @author tommaso.ronconi@studio.unibo.it
+       *
+       *  @param RV radius
+       *
+       *  @param redshift redshift
+       *
+       *  @param model_mf author(s) who proposed the mass function; 
+       *  valid authors are: PS (Press & Schechter), ST (Sheth & Tormen), 
+       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006), Reed, (Reed et al. 2007), 
+       *  Pan (Pan 2007), ShenH (halo MF by Shen et al. 2006), 
+       *  ShenF (filaments MF by Shen et al. 2006), ShenS (sheets MF by Shen et al. 2006), 
+       *  Tinker (Tinker et al. 2008), Crocce (Crocce et al. 2010), 
+       *  Angulo_FOF (FOF MF by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et al. 2012)
+       *
+       *  @param del_v linear density contrast defining a void
+       *
+       *  @param model size function model name;
+       *  valid choices for model name are SvdW (Sheth and van de Weygaert, 2004),
+       *  linear and Vdn (Jennings et al., 2013)
+       *
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_root output_root of the parameter file used to compute
+       *  the power spectrum and &sigma;(mass); it can be any name
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean interior density relative to the background
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param Num number of near points used in the interpolation
+       *
+       *  @param stepsize width of the steps used in the derivative
+       *  method
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalize the power spectrum;
+       *  1 \f$\rightarrow\f$ normalize the power spectrum
+       *
+       *  @param k_min minimum wave vector module up to which the power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param prec accuracy of the GSL integration
+       *
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @param default_delta true = using function cosmobl::cosmology::deltac; 
+       *  false = using delta_t*growth factor
+       *  
+       *  @return the number density of voids as a function of radius.
+       *  Volume Conserving Model, equation (17) from Jennings et al.(2013) 
+       */
+
+      ///@}
+
+      double size_function (const double RV, const double redshift, const string model_mf, const double del_v, const string model_sf, const string method_Pk="CAMB", const string output_root="test", const double Delta = 200., const string interpType="Linear", const int Num=-1, const double stepsize=100., const int norm = -1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=cosmobl::par::defaultString);
 
       /**
        *  @name Functions to estimate the multipoles/wedges covariance matrix
        */
       ///@{
 
-      vector<vector<double>> get_XiMonopole_covariance(const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod=1);
+      vector<vector<double>> get_XiMonopole_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod=1);
 
-      vector<vector<double>> get_XiMultipoles(const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
+      vector<vector<double>> get_XiMultipoles (const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
 
-      vector<vector<double>> get_XiMultipoles_covariance(const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
+      vector<vector<double>> get_XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
 
       ///@}
+      
     };
     
   }
@@ -4893,6 +5026,7 @@ namespace cosmobl {
       double wa;
       double fNL;
       int type_NG;
+      double tau;
       string model;
       bool unit;
       string method_Pk;
@@ -4917,6 +5051,7 @@ namespace cosmobl {
       double wa;
       double fNL;
       int type_NG;
+      double tau;
       string model;
       bool unit;
       string method_Pk;
@@ -4941,6 +5076,7 @@ namespace cosmobl {
       double wa;
       double fNL;
       int type_NG;
+      double tau;
       string model;
       bool unit;
       double kt;

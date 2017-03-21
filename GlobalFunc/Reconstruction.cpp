@@ -48,7 +48,7 @@ void cosmobl::reconstruction_fourier_space (const catalogue::Catalogue data, con
   //double rsd_term = 3*ff/(7+3*ff);
   double rsd_term = (ff-beta)/(1+beta);
 
-  data::ScalarField3D density_field = data.density_field(cell_size, interpolation_type, smoothing_radius);
+  data::ScalarField3D density_field = data.density_field(cell_size, random, interpolation_type, smoothing_radius);
   density_field.FourierTransformField();
 
   data::VectorField3D displacement_field(density_field.nx(), density_field.ny(), density_field.nz(), density_field.MinX(), density_field.MaxX(), density_field.MinY(), density_field.MaxY(), density_field.MinZ(), density_field.MaxZ()); 

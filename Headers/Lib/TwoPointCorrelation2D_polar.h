@@ -211,10 +211,13 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *  @return object of class TwoPointCorrelation2D_polar
        */
-      TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
-	: TwoPointCorrelation2D(data, random, compute_extra_info) { m_twoPType = _2D_polar_; set_parameters(binType_rad, rMin, rMax, nbins_rad, shift_rad, binType_mu, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight, compute_extra_info); }
+      TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	: TwoPointCorrelation2D(data, random, compute_extra_info, random_dilution_fraction) { m_twoPType = _2D_polar_; set_parameters(binType_rad, rMin, rMax, nbins_rad, shift_rad, binType_mu, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight, compute_extra_info); }
 
       /**
        *  @brief constructor
@@ -243,10 +246,13 @@ namespace cosmobl {
        *  @param compute_extra_info true &rarr; compute extra
        *  information related to the pairs, such as the mean pair
        *  separation and redshift
+       *  @param random_dilution_fraction fraction between the number
+       *  of objects in the diluted and original random samples, used
+       *  to improve performances in random-random pair counts
        *  @return object of class TwoPointCorrelation2D_polar
        */
-      TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false)
-	: TwoPointCorrelation2D(data, random, compute_extra_info) { m_twoPType = _2D_polar_; set_parameters(binType_rad, rMin, rMax, binSize_rad, shift_rad, binType_mu, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight, compute_extra_info); }
+      TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	: TwoPointCorrelation2D(data, random, compute_extra_info, random_dilution_fraction) { m_twoPType = _2D_polar_; set_parameters(binType_rad, rMin, rMax, binSize_rad, shift_rad, binType_mu, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight, compute_extra_info); }
 
       /**
        *  @brief default destructor
@@ -401,6 +407,56 @@ namespace cosmobl {
       
       ///@}
 
+      
+      /**
+       *  @name Member functions to compute, read and write the covariance matrix (customised in all the derived classes)
+       */
+      ///@{ 
+
+      /**
+       *  @brief read the measured covariance matrix
+       *  @param dir input directory
+       *  @param file input file
+       *  @return none
+       */
+      void read_covariance (const string dir, const string file) override
+      { (void)dir; (void)file; ErrorCBL("Work in progress in read_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::_workInProgress_); }
+
+      /**
+       *  @brief write the measured two-point correlation
+       *  @param dir output directory
+       *  @param file output file
+       *  @return none
+       */
+      void write_covariance (const string dir, const string file) const override
+      { (void)dir; (void)file; ErrorCBL("Work in progress in write_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::_workInProgress_); }
+      
+      /**
+       *  @brief compute the covariance matrix
+       *  @param xi vector containing the measure correlation
+       *  functions used to compute the covariance matrix
+       *  @param JK true &rarr; compute the jackknife covariance
+       *  matrix; false compute the standard covariance matrix
+       *  @return none
+       */
+      void compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK) override
+      { (void)xi; (void)JK; ErrorCBL("Work in progress in compute_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::_workInProgress_); }
+      
+      /**
+       *  @brief compute the covariance matrix
+       *  @param file vector containing the input files with the
+       *  measured correlation functions used to compute the
+       *  covariance matrix
+       *  @param JK true &rarr; compute the jackknife covariance
+       *  matrix; false compute the standard covariance matrix
+       *  @return none
+       */
+      void compute_covariance (const vector<string> file, const bool JK) override
+      { (void)file; (void)JK; ErrorCBL("Work in progress in compute_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::_workInProgress_); }
+      
+      ///@} 
+
+      
     };
   }
 }

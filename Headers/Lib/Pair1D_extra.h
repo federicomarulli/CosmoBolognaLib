@@ -61,15 +61,35 @@ namespace cosmobl {
       /// the mean scales in each bin
       vector<double> m_scale_mean;
 
+      /// the square of the standard deviations of the scale distributions in each bin, multiplied by the total weight
+      vector<double> m_scale_S;
+      
       /// the standard deviations of the scale distributions in each bin
       vector<double> m_scale_sigma;
 
       /// the mean redshift in each bin
       vector<double> m_z_mean;
 
+      /// the square of the standard deviations of the redshift distributions in each bin, multiplied by the total weight
+      vector<double> m_z_S;
+      
       /// the standard deviations of the redshift distributions in each bin
       vector<double> m_z_sigma;
 
+      
+      /**
+       *  @name parameters used for internal computations
+       */
+      ///@{
+      
+      /// factor used to combine two standard deviations of the scale distribution
+      vector<double> m_fact_scale;
+      
+      /// factor used to combine two standard deviations of the redshift distribution
+      vector<double> m_fact_z;
+
+      ///@}
+      
       
     public:
       
@@ -124,6 +144,22 @@ namespace cosmobl {
       vector<double> scale_mean () const override { return m_scale_mean; }
 
       /**
+       *  @brief get the protected member Pair1D_extra::m_scale_S[i]
+       *  @param i the bin index
+       *  @return the square of the standard deviations of the scale
+       *  distribution, multiplied by the total weight, in the i-th
+       *  bin
+       */
+      double scale_S (const int i) const override { return m_scale_S[i]; }
+
+      /**
+       *  @brief get the protected member Pair1D_extra::m_scale_S
+       *  @return the vector the square of the standard deviations of
+       *  the scale distribution, multiplied by the total weight
+       */
+      vector<double> scale_S () const override { return m_scale_S; }
+
+      /**
        *  @brief get the protected member Pair1D_extra::m_scale_sigma[i]
        *  @param i the bin index
        *  @return the standard deviation of the scale distribution in
@@ -132,7 +168,7 @@ namespace cosmobl {
       double scale_sigma (const int i) const override { return m_scale_sigma[i]; }
 
       /**
-       *  @brief get the protected member Pair1D_extra::m_scale_mean
+       *  @brief get the protected member Pair1D_extra::m_scale_sigma
        *  @return the vector containing the standard deviations of the
        *  scale distribution
        */
@@ -151,6 +187,22 @@ namespace cosmobl {
        */
       vector<double> z_mean () const override { return m_z_mean; }
 
+      /**
+       *  @brief get the protected member Pair1D_extra::m_z_S[i]
+       *  @param i the bin index
+       *  @return the square of the standard deviations of the
+       *  redshift distribution, multiplied by the total weight, in
+       *  the i-th bin
+       */
+      double z_S (const int i) const override { return m_z_S[i]; }
+
+      /**
+       *  @brief get the protected member Pair1D_extra::m_z_S
+       *  @return the vector the square of the standard deviations of
+       *  the redshift distribution, multiplied by the total weight
+       */
+      vector<double> z_S () const override { return m_z_S; }
+      
       /**
        *  @brief get the protected member Pair1D_extra::m_z_sigma[i]
        *  @param i the bin index
@@ -233,18 +285,12 @@ namespace cosmobl {
 
       /**
        *  @brief sum the number of binned pairs
-       *  @param pp an object of class Pair
+       *  @param pair an object of class Pair
        *  @param ww the weight
        *  @return none
        */
-      void Sum (const shared_ptr<Pair> pp, const double ww=1) override;
+      void Sum (const shared_ptr<Pair> pair, const double ww=1) override;
       
-      /**
-       *  @brief finalise the computation of the extra information
-       *  @return none
-       */
-      void finalise () override;
-
       ///@}
     
     };
@@ -371,9 +417,13 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_nbins();
 	  m_scale_mean.resize(m_nbins+1, 0.);
+	  m_scale_S.resize(m_nbins+1, 0.);
 	  m_scale_sigma.resize(m_nbins+1, 0.);
 	  m_z_mean.resize(m_nbins+1, 0.);
+	  m_z_S.resize(m_nbins+1, 0.);
 	  m_z_sigma.resize(m_nbins+1, 0.);
+	  m_fact_scale.resize(m_nbins+1, -1.);
+	  m_fact_z.resize(m_nbins+1, -1.);
 	}
   
       /**
@@ -396,9 +446,13 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_binSize();
 	  m_scale_mean.resize(m_nbins+1, 0.);
+	  m_scale_S.resize(m_nbins+1, 0.);
 	  m_scale_sigma.resize(m_nbins+1, 0.);
 	  m_z_mean.resize(m_nbins+1, 0.);
+	  m_z_S.resize(m_nbins+1, 0.);
 	  m_z_sigma.resize(m_nbins+1, 0.);
+	  m_fact_scale.resize(m_nbins+1, -1.);
+	  m_fact_z.resize(m_nbins+1, -1.);
 	}
       
       /**
@@ -480,9 +534,13 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_nbins();
 	  m_scale_mean.resize(m_nbins+1, 0.);
+	  m_scale_S.resize(m_nbins+1, 0.);
 	  m_scale_sigma.resize(m_nbins+1, 0.);
 	  m_z_mean.resize(m_nbins+1, 0.);
+	  m_z_S.resize(m_nbins+1, 0.);
 	  m_z_sigma.resize(m_nbins+1, 0.);
+	  m_fact_scale.resize(m_nbins+1, -1.);
+	  m_fact_z.resize(m_nbins+1, -1.);
 	}
       
       /**
@@ -505,9 +563,13 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_binSize();
 	  m_scale_mean.resize(m_nbins+1, 0.);
+	  m_scale_S.resize(m_nbins+1, 0.);
 	  m_scale_sigma.resize(m_nbins+1, 0.);
 	  m_z_mean.resize(m_nbins+1, 0.);
+	  m_z_S.resize(m_nbins+1, 0.);
 	  m_z_sigma.resize(m_nbins+1, 0.);
+	  m_fact_scale.resize(m_nbins+1, -1.);
+	  m_fact_z.resize(m_nbins+1, -1.);
 	} 
   
       /**
@@ -653,9 +715,13 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_nbins();
 	  m_scale_mean.resize(m_nbins+1, 0.);
+	  m_scale_S.resize(m_nbins+1, 0.);
 	  m_scale_sigma.resize(m_nbins+1, 0.);
 	  m_z_mean.resize(m_nbins+1, 0.);
+	  m_z_S.resize(m_nbins+1, 0.);
 	  m_z_sigma.resize(m_nbins+1, 0.);
+	  m_fact_scale.resize(m_nbins+1, -1.);
+	  m_fact_z.resize(m_nbins+1, -1.);
 	}
   
       /**
@@ -676,9 +742,13 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_binSize();
 	  m_scale_mean.resize(m_nbins+1, 0.);
+	  m_scale_S.resize(m_nbins+1, 0.);
 	  m_scale_sigma.resize(m_nbins+1, 0.);
 	  m_z_mean.resize(m_nbins+1, 0.);
+	  m_z_S.resize(m_nbins+1, 0.);
 	  m_z_sigma.resize(m_nbins+1, 0.);
+	  m_fact_scale.resize(m_nbins+1, -1.);
+	  m_fact_z.resize(m_nbins+1, -1.);
 	} 
    
   
@@ -759,9 +829,13 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_nbins();
 	  m_scale_mean.resize(m_nbins+1, 0.);
+	  m_scale_S.resize(m_nbins+1, 0.);
 	  m_scale_sigma.resize(m_nbins+1, 0.);
 	  m_z_mean.resize(m_nbins+1, 0.);
+	  m_z_S.resize(m_nbins+1, 0.);
 	  m_z_sigma.resize(m_nbins+1, 0.);
+	  m_fact_scale.resize(m_nbins+1, -1.);
+	  m_fact_z.resize(m_nbins+1, -1.);
 	}
   
       /**
@@ -782,9 +856,13 @@ namespace cosmobl {
 	  m_pairInfo = _extra_;
 	  m_set_parameters_binSize();
 	  m_scale_mean.resize(m_nbins+1, 0.);
+	  m_scale_S.resize(m_nbins+1, 0.);
 	  m_scale_sigma.resize(m_nbins+1, 0.);
 	  m_z_mean.resize(m_nbins+1, 0.);
+	  m_z_S.resize(m_nbins+1, 0.);
 	  m_z_sigma.resize(m_nbins+1, 0.);
+	  m_fact_scale.resize(m_nbins+1, -1.);
+	  m_fact_z.resize(m_nbins+1, -1.);
 	}
   
       /**

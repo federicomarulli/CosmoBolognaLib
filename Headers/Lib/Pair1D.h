@@ -84,6 +84,9 @@ namespace cosmobl {
       
       /// the number of binned pairs 
       vector<double> m_PP1D;
+      
+      /// the number of binned weighted pairs 
+      vector<double> m_PP1D_weighted;
 
       /**
        *  @name binning parameters
@@ -130,6 +133,7 @@ namespace cosmobl {
       {
 	m_pairDim = _1D_;
 	m_PP1D.resize(m_nbins+1, 0.);
+	m_PP1D_weighted.resize(m_nbins+1, 0.);
 	m_angularUnits = angularUnits;
 	m_angularWeight = angularWeight;
       }
@@ -173,6 +177,20 @@ namespace cosmobl {
        *  @return the vector containing the binned number of pairs
        */
       vector<double> PP1D () const override { return m_PP1D; }
+
+      /**
+       *  @brief get the protected member Pair1D::m_PP1D_weighted[i]
+       *  @param i the bin index
+       *  @return the number of weighted pairs in the i-th bin
+       */
+      double PP1D_weighted (const int i) const override { return m_PP1D_weighted[i]; }
+
+      /**
+       *  @brief get the protected member Pair1D::m_PP1D
+       *  @return the vector containing the binned number of weighted
+       *  pairs
+       */
+      vector<double> PP1D_weighted () const override { return m_PP1D_weighted; }
     
       /**
        *  @brief get the protected member Pair1D::m_binSize_inv
@@ -215,9 +233,17 @@ namespace cosmobl {
        *  @return none
        */
       void set_PP1D (const int i, const double pp) { checkDim(m_PP1D, i, "m_PP1D", false); m_PP1D[i] = pp; }
+
+      /**
+       *  @brief set the protected member Pair1D::m_PP1D_weighted[i]
+       *  @param i the bin index
+       *  @param pp the number of weighted pairs in the bin
+       *  @return none
+       */
+      void set_PP1D_weighted (const int i, const double pp) { checkDim(m_PP1D_weighted, i, "m_PP1D_weighted", false); m_PP1D_weighted[i] = pp; }
       
       /**
-       *  @brief set the protected member m_PP1D by adding new data
+       *  @brief set the protected member by adding new data
        *  @param i the bin index
        *  @param data the number of pairs in the bin
        *  @return none
@@ -225,7 +251,7 @@ namespace cosmobl {
       void add_data1D (const int i, const vector<double> data) override;
 
       /**
-       *  @brief set the protected member m_PP1D by adding new data
+       *  @brief set the protected member by adding new data
        *  @param i the bin index
        *  @param pair pair pointer to an object of class Pair
        *  @param ww a multiplicative factor used for bootstrap
@@ -243,11 +269,11 @@ namespace cosmobl {
     
       /**
        *  @brief sum the number of binned pairs
-       *  @param pp an object of class Pair
+       *  @param pair an object of class Pair
        *  @param ww the weight
        *  @return none
        */
-      void Sum (const shared_ptr<Pair> pp, const double ww=1) override;
+      void Sum (const shared_ptr<Pair> pair, const double ww=1) override;
 
       ///@}
     
@@ -455,6 +481,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_; 
 	  m_set_parameters_nbins();
 	  m_PP1D.resize(m_nbins+1, 0.);
+	  m_PP1D_weighted.resize(m_nbins+1, 0.);
 	}
   
       /**
@@ -477,6 +504,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_; 
 	  m_set_parameters_binSize();
 	  m_PP1D.resize(m_nbins+1, 0.);
+	  m_PP1D_weighted.resize(m_nbins+1, 0.);
 	} 
   
       /**
@@ -579,6 +607,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_; 
 	  m_set_parameters_nbins();
 	  m_PP1D.resize(m_nbins+1, 0.);
+	  m_PP1D_weighted.resize(m_nbins+1, 0.);
 	}
   
       /**
@@ -601,6 +630,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_; 
 	  m_set_parameters_binSize();
 	  m_PP1D.resize(m_nbins+1, 0.);
+	  m_PP1D_weighted.resize(m_nbins+1, 0.);
 	} 
   
       /**
@@ -825,6 +855,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_; 
 	  m_set_parameters_nbins();
 	  m_PP1D.resize(m_nbins+1, 0.);
+	  m_PP1D_weighted.resize(m_nbins+1, 0.);
 	}
   
       /**
@@ -845,6 +876,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_; 
 	  m_set_parameters_binSize();
 	  m_PP1D.resize(m_nbins+1, 0.);
+	  m_PP1D_weighted.resize(m_nbins+1, 0.);
 	} 
   
       /**
@@ -945,6 +977,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_; 
 	  m_set_parameters_nbins();
 	  m_PP1D.resize(m_nbins+1, 0.);
+	  m_PP1D_weighted.resize(m_nbins+1, 0.);
 	}
   
       /**
@@ -965,6 +998,7 @@ namespace cosmobl {
 	  m_pairInfo = _standard_; 
 	  m_set_parameters_binSize();
 	  m_PP1D.resize(m_nbins+1, 0.);
+	  m_PP1D_weighted.resize(m_nbins+1, 0.);
 	} 
   
       /**

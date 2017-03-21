@@ -2,6 +2,19 @@
 
 %module cblTwoPointCorrelation
 
+%shared_ptr(cosmobl::twopt::TwoPointCorrelation);
+%shared_ptr(cosmobl::twopt::TwoPointCorrelation1D);
+%shared_ptr(cosmobl::twopt::TwoPointCorrelation1D_angular);
+%shared_ptr(cosmobl::twopt::TwoPointCorrelation1D_monopole);
+%shared_ptr(cosmobl::twopt::TwoPointCorrelation2D);
+%shared_ptr(cosmobl::twopt::TwoPointCorrelation2D_cartesian);
+%shared_ptr(cosmobl::twopt::TwoPointCorrelation2D_polar);
+%shared_ptr(cosmobl::twopt::TwoPointCorrelation_projected);
+%shared_ptr(cosmobl::twopt::TwoPointCorrelation_deprojected);
+%shared_ptr(cosmobl::twopt::TwoPointCorrelation_multipoles);
+%shared_ptr(cosmobl::twopt::TwoPointCorrelation_wedges);
+%shared_ptr(cosmobl::twopt::TwoPointCorrelation1D_filtered);
+
 %{
 #include "Pair.h"
 #include "Pair1D.h"
@@ -35,5 +48,3 @@
 %include "TwoPointCorrelation_multipoles.h"
 %include "TwoPointCorrelation_wedges.h"
 %include "TwoPointCorrelation1D_filtered.h"
-
-%template(TwoPointCorrelationPtr) std::shared_ptr<cosmobl::twopt::TwoPointCorrelation>;
