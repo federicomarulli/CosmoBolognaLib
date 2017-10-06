@@ -47,192 +47,195 @@
 
 namespace cosmobl {
   
-  namespace threept {
-    
-    /**
-     *  @class ThreePointCorrelation_angular_connected
-     *  ThreePointCorrelation_angular_connected.h
-     *  "Headers/Lib/ThreePointCorrelation_angular_connected.h"
-     *
-     *  @brief The class ThreePointCorrelation_angular_connected
-     *
-     *  This is the base class used to measure the connected three-point
-     *  correlation function in angular coordinates
-     *
-     *  @warning This class has not been fully implemented yet
-     */
-    class ThreePointCorrelation_angular_connected : public ThreePointCorrelation {
+  namespace measure {
 
-    protected :
+    namespace threept {
     
       /**
-       *  @name Three-point correlation function data
+       *  @class ThreePointCorrelation_angular_connected
+       *  ThreePointCorrelation_angular_connected.h
+       *  "Headers/Lib/ThreePointCorrelation_angular_connected.h"
+       *
+       *  @brief The class ThreePointCorrelation_angular_connected
+       *
+       *  This is the base class used to measure the connected three-point
+       *  correlation function in angular coordinates
+       *
+       *  @warning This class has not been fully implemented yet
        */
-      ///@{
+      class ThreePointCorrelation_angular_connected : public ThreePointCorrelation {
+
+      protected :
     
-      /// scale bins
-      vector<double> m_scale;
-
-      /// binned connected three-point correlation function
-      vector<double> m_zeta;
-
-      /// error on the binned connected three-point correlation function
-      vector<double> m_error;
+	/**
+	 *  @name Three-point correlation function data
+	 */
+	///@{
     
-      ///@}
+	/// scale bins
+	vector<double> m_scale;
+
+	/// binned connected three-point correlation function
+	vector<double> m_zeta;
+
+	/// error on the binned connected three-point correlation function
+	vector<double> m_error;
+    
+	///@}
 
     
-    public:
+      public:
     
-      /**
-       *  @name Constructors/destructors
-       */
-      ///@{
+	/**
+	 *  @name Constructors/destructors
+	 */
+	///@{
 
-      /**
-       *  @brief default constructor
-       *  @return object of class ThreePointCorrelation_angular_connected
-       */
-      ThreePointCorrelation_angular_connected () = default;
+	/**
+	 *  @brief default constructor
+	 *  @return object of class ThreePointCorrelation_angular_connected
+	 */
+	ThreePointCorrelation_angular_connected () = default;
 
-      /**
-       *  @brief constructor
-       *  @param data object of class Catalogue containing the input
-       *  catalogue
-       *  @param random of class Catalogue containing the random data
-       *  catalogue
-       *  @param side_s the size of r<SUB>12</SUB>
-       *  @param side_u the ratio r<SUB>13</SUB>/r<SUB>12</SUB>
-       *  @param perc_increase the ratio
-       *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
-       *  @param nbins number of bins
-       *  @return object of class ThreePointCorrelation_angular_connected
-       */
-      ThreePointCorrelation_angular_connected (const catalogue::Catalogue data, const catalogue::Catalogue random, const double side_s, const double side_u, const double perc_increase, const int nbins)
-	: ThreePointCorrelation(data, random) { ErrorCBL("Error in ThreePointCorrelation_angular_connected() of ThreePointCorrelation_angular_connected.h", cosmobl::glob::ExitCode::_workInProgress_); set_parameters(side_s, side_u, perc_increase, nbins); }
+	/**
+	 *  @brief constructor
+	 *  @param data object of class Catalogue containing the input
+	 *  catalogue
+	 *  @param random of class Catalogue containing the random data
+	 *  catalogue
+	 *  @param side_s the size of r<SUB>12</SUB>
+	 *  @param side_u the ratio r<SUB>13</SUB>/r<SUB>12</SUB>
+	 *  @param perc_increase the ratio
+	 *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
+	 *  @param nbins number of bins
+	 *  @return object of class ThreePointCorrelation_angular_connected
+	 */
+	ThreePointCorrelation_angular_connected (const catalogue::Catalogue data, const catalogue::Catalogue random, const double side_s, const double side_u, const double perc_increase, const int nbins)
+	  : ThreePointCorrelation(data, random) { ErrorCBL("Error in ThreePointCorrelation_angular_connected() of ThreePointCorrelation_angular_connected.h", cosmobl::glob::ExitCode::_workInProgress_); set_parameters(side_s, side_u, perc_increase, nbins); }
 
-      /**
-       *  @brief default destructor
-       *  @return none
-       */
-      ~ThreePointCorrelation_angular_connected () = default;
+	/**
+	 *  @brief default destructor
+	 *  @return none
+	 */
+	~ThreePointCorrelation_angular_connected () = default;
 
-      ///@}
+	///@}
 
       
-      /**
-       *  @name Member functions to set the binning parameters
-       */
-      ///@{
+	/**
+	 *  @name Member functions to set the binning parameters
+	 */
+	///@{
       
-      /**
-       *  @brief set the binning parameters
-       *  @param side_s the size of r<SUB>12</SUB>
-       *  @param side_u the ratio r<SUB>13</SUB>/r<SUB>12</SUB>
-       *  @param perc_increase the ratio
-       *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
-       *  @param nbins number of bins
-       *  @return none
-       *
-       *  @warning This method has not been implemented yet
-       */
-      void set_parameters (const double side_s, const double side_u, const double perc_increase, const int nbins);
+	/**
+	 *  @brief set the binning parameters
+	 *  @param side_s the size of r<SUB>12</SUB>
+	 *  @param side_u the ratio r<SUB>13</SUB>/r<SUB>12</SUB>
+	 *  @param perc_increase the ratio
+	 *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
+	 *  @param nbins number of bins
+	 *  @return none
+	 *
+	 *  @warning This method has not been implemented yet
+	 */
+	void set_parameters (const double side_s, const double side_u, const double perc_increase, const int nbins);
 
-      ///@}
+	///@}
 
       
-      /**
-       *  @name Member functions to get protected parameters
-       */
-      ///@{
+	/**
+	 *  @name Member functions to get protected parameters
+	 */
+	///@{
 
-      /**
-       *  @brief get the protected member
-       *  ThreePointCorrelation_angular_connected::m_scale
-       *  @return the scale bins
-       */
-      vector<double> scale () const override { return m_scale; }
+	/**
+	 *  @brief get the protected member
+	 *  ThreePointCorrelation_angular_connected::m_scale
+	 *  @return the scale bins
+	 */
+	vector<double> scale () const override { return m_scale; }
 
-      /**
-       *  @brief get the protected member
-       *  ThreePointCorrelation_angular_connected::m_zeta
-       *  @return the binned connected three-point correlation
-       *  function
-       */
-      vector<double> zeta () const override { return m_zeta; }
+	/**
+	 *  @brief get the protected member
+	 *  ThreePointCorrelation_angular_connected::m_zeta
+	 *  @return the binned connected three-point correlation
+	 *  function
+	 */
+	vector<double> zeta () const override { return m_zeta; }
 
-      /**
-       *  @brief get the protected member
-       *  ThreePointCorrelation_angular_connected::m_error
-       *  @return the error on the connected three-point
-       *  correlation function
-       */
-      vector<double> error () const override { return m_error; }
+	/**
+	 *  @brief get the protected member
+	 *  ThreePointCorrelation_angular_connected::m_error
+	 *  @return the error on the connected three-point
+	 *  correlation function
+	 */
+	vector<double> error () const override { return m_error; }
 
-      ///@}
+	///@}
 
 
-      /**
-       *  @name Member functions to measure the three-point correlation function
-       */
-      ///@{
+	/**
+	 *  @name Member functions to measure the three-point correlation function
+	 */
+	///@{
 
-      /**
-       * @brief method to measure the three-point correlation function
-       *
-       * @param dir_output_triplets name of the output directory used to
-       * store the number of triplets
-       * 
-       * @param dir_input_triplets name of the input directories
-       * containing the number of triplets
-       *
-       * @param count_ddd 1 &rarr; count the data-data-data
-       * triplets; 0 &rarr; read the data-data-data triplets
-       * from a file
-       *
-       * @param count_rrr 1 &rarr; count the random-random-random
-       * triplets; 0 &rarr; read the random-random-random triplets
-       * from a file
-       *
-       * @param count_ddr 1 &rarr; count the data-data-random
-       * triplets; 0 &rarr; read the data-data-random triplets
-       * from a file
-       *
-       * @param count_drr 1 &rarr; count the data-random-random
-       * triplets; 0 &rarr; read the data-random-random triplets
-       * from a file
-       *
-       * @param tcount 1 &rarr; activate the CPU time counter; 0
-       * &rarr; no time counter
-       *
-       * @return none
-       *
-       * @warning This method has not been implemented yet
-       */
-      void measure (const string dir_output_triplets, const vector<string> dir_input_triplets={}, const bool count_ddd=1, const bool count_rrr=1, const bool count_ddr=1, const bool count_drr=1, const bool tcount=0) override;
+	/**
+	 * @brief method to measure the three-point correlation function
+	 *
+	 * @param dir_output_triplets name of the output directory used to
+	 * store the number of triplets
+	 * 
+	 * @param dir_input_triplets name of the input directories
+	 * containing the number of triplets
+	 *
+	 * @param count_ddd 1 &rarr; count the data-data-data
+	 * triplets; 0 &rarr; read the data-data-data triplets
+	 * from a file
+	 *
+	 * @param count_rrr 1 &rarr; count the random-random-random
+	 * triplets; 0 &rarr; read the random-random-random triplets
+	 * from a file
+	 *
+	 * @param count_ddr 1 &rarr; count the data-data-random
+	 * triplets; 0 &rarr; read the data-data-random triplets
+	 * from a file
+	 *
+	 * @param count_drr 1 &rarr; count the data-random-random
+	 * triplets; 0 &rarr; read the data-random-random triplets
+	 * from a file
+	 *
+	 * @param tcount 1 &rarr; activate the CPU time counter; 0
+	 * &rarr; no time counter
+	 *
+	 * @return none
+	 *
+	 * @warning This method has not been implemented yet
+	 */
+	void measure (const string dir_output_triplets, const vector<string> dir_input_triplets={}, const bool count_ddd=1, const bool count_rrr=1, const bool count_ddr=1, const bool count_drr=1, const bool tcount=0) override;
     
-      ///@}
+	///@}
 
     
-      /**
-       *  @name Input/Output methods
-       */
-      ///@{
+	/**
+	 *  @name Input/Output methods
+	 */
+	///@{
     
-      /**
-       *  @brief write the monopole of the two-point correlation
-       *  function
-       *  @param dir output directory
-       *  @param file output file
-       *  @return none
-       *
-       *  @warning This method has not been implemented yet
-       */
-      void write (const string dir, const string file) const override;
+	/**
+	 *  @brief write the monopole of the two-point correlation
+	 *  function
+	 *  @param dir output directory
+	 *  @param file output file
+	 *  @return none
+	 *
+	 *  @warning This method has not been implemented yet
+	 */
+	void write (const string dir, const string file) const override;
     
-      ///@}
+	///@}
       
-    };
+      };
+    }
   }
 }
 

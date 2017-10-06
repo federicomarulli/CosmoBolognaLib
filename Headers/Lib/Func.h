@@ -46,6 +46,7 @@
 #include <algorithm>
 #include <memory>
 #include <numeric>
+#include <functional>
 #include <stdlib.h>
 #include <unistd.h>
 #include <random>
@@ -64,6 +65,7 @@
 
 /// @cond GSLinc
 #include <gsl/gsl_errno.h>
+#include <gsl/gsl_deriv.h>
 #include <gsl/gsl_integration.h>
 #include <gsl/gsl_fit.h>
 #include <gsl/gsl_math.h>
@@ -83,15 +85,15 @@
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_eigen.h>
 #include <gsl/gsl_cblas.h>
+#include <gsl/gsl_sf.h>
 #include <gsl/gsl_sf_bessel.h>
 #include <gsl/gsl_sf_legendre.h>
 #include <gsl/gsl_sf_expint.h>
 #include <gsl/gsl_statistics_double.h>
 #include <gsl/gsl_roots.h>
 #include <gsl/gsl_poly.h>
+#include <gsl/gsl_sf_erf.h>
 /// @endcond
-
-
 
 /// @cond FFTWinc
 #include <fftw3.h>
@@ -125,16 +127,28 @@ using namespace std;
  *  distances
  */
 /**
- *  @example integration.cpp  
+ *  @example integration_cuba.cpp 
+ *
+ *  This example shows how to to use the wrapper for CUBA
+ *  multidimensiona integration functions
+ */
+/**
+ *  @example integration_gsl.cpp  
  *
  *  This example shows how to integrate a function using the GSL
  *  libraries
  */
 /**
- *  @example minimisation.cpp  
+ *  @example minimisation.cpp
  *
  *  This example shows how to minimize a function using the GSL
  *  libraries
+ */
+/**
+ *  @example fft_fftlog.py
+ *
+ *  This example shows how to computes the discrete Fourier
+ * of a logarithmically spaced periodic sequence using the FFTlog libraries
  */
 /**
  *  @example covsample.cpp  
@@ -142,7 +156,17 @@ using namespace std;
  *  This example shows how to generate correlated samples 
  */
 /**
+ *  @example cosmology.cpp
+ *
+ *  This example shows how to set a cosmological model
+ */
+/**
  *  @example fsigma8.cpp
+ *
+ *  This example shows how to estimate f*sigma8(z=1)
+ */
+/**
+ *  @example model_cosmology.cpp
  *
  *  This example shows how to estimate f*sigma8(z=1)
  */
@@ -228,6 +252,12 @@ using namespace std;
  * function in redshift space
  */
 /**
+ * @example model_3pt.cpp
+ *
+ * This example shows how to model the reduced 
+ * three-point correlation function
+ */
+/**
  * @example readParameterFile.cpp
  *
  * This example shows how to read parameters from a standard *.ini
@@ -242,8 +272,8 @@ using namespace std;
 /**
  * @example cleanVoidCatalogue.cpp
  *
- * This example shows how to clean a cosmic void catalogue, to extract
- * cosmological constraints from void counting file
+ * This example shows how to clean a cosmic void catalogue, in order
+ * to extract cosmological constraints from void counting
  */
 /**
  *  @example distances.py 
@@ -273,6 +303,12 @@ using namespace std;
  *
  *  This example shows how to compute the monopole of the two-point
  *  correlation function
+ */
+/**
+ * @example cleanVoidCatalogue.py
+ *
+ *  This example shows how to clean a cosmic void catalogue, in order
+ *  to extract cosmological constraints from void counting 
  */
 /**
  *  @example 2pt_monopole.ipynb 
@@ -372,10 +408,10 @@ namespace cosmobl {
    *  @return the header for internal messages
    */
   inline ostream &headerCBL (ostream &stream)
-    {
-      stream << par::col_blue << "CBL > " << par::col_default;
-      return stream;
-    }
+  {
+    stream << par::col_blue << "CBL > " << par::col_default;
+    return stream;
+  }
   
 #define coutCBL cout << headerCBL
 
@@ -441,7 +477,7 @@ namespace cosmobl {
    */
   inline bool isSet (const vector<double> vect) 
   {
-    bool is = 1;
+    bool is = true;
     size_t ind = 0;
     while (is && ind<vect.size()) 
       if (vect[ind++]<par::defaultDouble*0.99999) is = 0;
@@ -517,6 +553,33 @@ namespace cosmobl {
    *  @return the converted variable d
    */
   double DoubleSwap (const double);
+
+  /**
+   *  @brief reduce the digit figures of an input double
+   *
+   *  e.g. round(0.2363, 2) = 0.24, round(13.24, 1) = 10
+   *
+   *  @param num the input double number
+   *
+   *  @param ndigits the number of digit figures
+   *
+   *  @return the input number with the required digit figures
+   */
+  double round_to_digits (const double num, const int ndigits);
+
+  /**
+   *  @brief reduce the precision of an input double
+   *
+   *  e.g. round(0.2363, 2) = 0.23, round(13.24, 1) = 13.2
+   *
+   *  @param num the input double number
+   *
+   *  @param ndigits the number of digit figures
+   *
+   *  @return the input number with the required digit figures
+   */
+  double round_to_precision (const double num, const int ndigits);
+ 
   
   /**
    *  @brief 1D interpolation
@@ -1154,6 +1217,22 @@ namespace cosmobl {
 	      ErrorCBL("Errorin checkDim of Func.h! The dimension of: " + matrix + " is:" + conv(mat[k].size(), par::fINT) + " <= " + conv(val_j, par::fINT) + "!");
       }
     }
+
+  /**
+   *  @brief check if two vectors are equal
+   *  @param vect1 a vector
+   *  @param vect2 a vector
+   *  @return 0 &rarr; the vectors are different; 1 &rarr; the
+   *  vectors are equal
+   */
+  template <typename T> 
+    void checkEqual (const vector<T> vect1, const vector<T> vect2) 
+    {
+      checkDim(vect2, vect1.size(), "vect2");
+      for (size_t i=0; i<vect1.size(); i++)
+	if(vect1[i]!=vect2[i])
+	  ErrorCBL("Error in checkEqual! vect1 and vect2 are different");
+    }
   
   /**
    *  @brief fill a vector with linearly spaced values
@@ -1219,7 +1298,86 @@ namespace cosmobl {
       else
 	return jl;
     }
+
+
+  template <typename T>
+    vector<T> extract_elements (vector<T> vec, vector<unsigned int> index)
+    {
+      vector<T> vv;
+      for (unsigned int i=0; i< index.size(); i++)
+	vv.push_back(vec[index[i]]);
+      return vv;
+    }
   
+  
+  template <typename T>
+    vector<T> flatten(vector<vector<T>> matrix)
+    {
+      vector<T> flatten;
+      for (int i=0; i<matrix.size(); i++)
+	for (int j=0; j<matrix[i].size(); j++)
+	  flatten.push_back(matrix[i][j]);
+
+      return flatten;
+    }
+
+  template <typename T>
+    vector<vector<T>> reshape(vector<T> vec, const int size1, const int size2)
+    {
+      if (size1*size2!=int(vec.size()))
+	ErrorCBL("Error in reshape() of Func.h, sizes does not match! "+conv(size1*size2, par::fINT)+" should be equal to "+conv(int(vec.size()), par::fINT));
+
+      vector<vector<T>> matrix(size1, vector<T> (size2, 0));
+
+      for (int i=0; i<size1; i++)
+	for (int j=0; j<size2; j++)
+	  matrix[i][j] = vec[j+i*size2];
+
+      return matrix;
+    }
+
+  template <typename T>
+    vector<vector<T>> transpose (vector<vector<T>> matrix)
+    {
+
+      int size1 = matrix.size();
+      int size2 = matrix[0].size();
+      checkDim (matrix, size1, size2, "matrix", true); 
+      
+      vector<vector<T>> TRmatrix(size2, vector<T> (size1, 0));
+
+      for (int i=0; i<size1; i++)
+	for (int j=0; j<size2; j++)
+	  TRmatrix[j][i] = matrix[i][j];
+
+      return TRmatrix;
+    }
+
+
+  /**
+   *  @brief return the value of 
+   *  \f[ \vec{x} M \vec{x}^T \f]
+   *
+   *  @param [in] the vector v
+   *  @param [in] the matrix M
+   *  @return result
+   */
+  template <typename T> 
+    T v_M_vt (const vector<T> vv, const vector<vector<T>> MM)
+    {
+      const int size = vv.size();
+
+      vector<double> ivv(size, 0);
+      for(int i=0; i<size; i++)
+	for(int j=0; j<size; j++)
+	  ivv[i] += vv[j]*MM[i][j];
+
+      double res=0;
+      for(int i=0; i<size; i++)
+	res += vv[i]*ivv[i];
+
+      return res;
+    }
 
   // sort two or more vectors at the same time
   namespace glob {
@@ -1294,6 +1452,34 @@ namespace cosmobl {
   }
 
   /**
+   *  @brief read a matrix from file
+   *
+   *  @param [in] file_matrix input file where the matrix is
+   *  stored
+   *
+   *  @param [out] xx the variable in row
+   *
+   *  @param [out] yy the variable in column
+   *
+   *  @param [out] matrix the matrix 
+   *
+   *  @param [in] col the columns to be read
+   *
+   *  @return none
+   *
+   *  @author Alfonso Veropalumbo
+   *  @author alfonso.veropalumbo@unibo.it
+   */
+  void read_matrix (const string file_matrix, vector<double> &xx, vector<double> &yy, vector<vector<double>> &matrix, const vector<int> col={});
+
+  /**
+   *  @brief compute the determinant of a matrix
+   *  @param mat the matrix
+   *  @return the determinant
+   */
+  double determinant_matrix (const vector<vector<double> > mat); 
+
+  /**
    *  @brief method to invert a matrix using the GSL
    *  @param [in] mat the matrix to be inverted
    *  @param [out] mat_inv the inverted matrix
@@ -1337,45 +1523,116 @@ namespace cosmobl {
 
   /**
    *  @brief compute the covariance matrix
+   *
    *  @param [in] file the vector containing the input files
+   *
    *  @param [out] covariance_matrix_file the output covariance matrix
    *  file
+   *
    *  @param [in] JK 0 &rarr; normalize to 1/(n-1); 1 &rarr; normalize
    *  to n-1/n (for Jackknife)
+   *
    *  @return none
    */
   void covariance_matrix (const vector<string> file, const string covariance_matrix_file, const bool JK=0);
 
-
-  /* ======== Alfonso Veropalumbo ======== */
-
-  // read and invert the covariance matrix
-  void read_cov (const string, vector<vector<double> > &, vector<vector<double> > &, const int, const int);
-
-  // fill a vector from a given distribution 
-  void fill_distr (const int, const vector<double>, const vector<double>, vector<double> &, const double, const double, const int);
-
-  // find the vector index
-  void find_index (const vector<double>, const double, const double, int &, int &);
-
   /**
-   *  @brief generate a covariant sample of n points using a 
-   *  covariance matrix
-   *  @param mean the mean values for the sample
-   *  @param covariance the covariance matrix of the sample
-   *  @param idum seed for random number generator
-   *  @return vector containing a correlated sample of given mean and covariance
+   *  @brief read and invert the covariance matrix
+   *
+   *  @param [in] filecov input file where the covariance matrix is
+   *  stored
+   *
+   *  @param [out] cov the covariance matrix 
+   *  
+   *  @param [out] cov_inv the inverse of the covariance matrix
+   * 
+   *  @param [in] i1 mininum index
+   *
+   *  @param [in] i2 maximum index
+   *
+   *  @return none
+   *
+   *  @author Alfonso Veropalumbo
+   *  @author alfonso.veropalumbo@unibo.it
    */
-  vector<double> generate_correlated_data (const vector<double> mean, const vector<vector<double> > covariance, const int idum =213123);
+  void read_invert_covariance (const string filecov, vector<vector<double>> &cov, vector<vector<double>> &cov_inv, const size_t i1, const size_t i2);
+ 
+  /**
+   *  @brief return a vector of numbers sampled from a given
+   *  distribution
+   *
+   *  @param nRan number of elements to be extracted 
+   *
+   *  @param xx vector containing the x variables
+   *
+   *  @param fx vector containing the f(x) variables
+   *
+   *  @param xmin minimum value of the variable
+   *
+   *  @param xmax maximum value of the variable
+   *
+   *  @param idum random seed
+   *
+   *  @return a vector containing the numbers extracted from the given
+   *  distribution
+   *
+   *  @author Alfonso Veropalumbo
+   *  @author alfonso.veropalumbo@unibo.it
+   */
+  vector<double> vector_from_distribution (const int nRan, const vector<double> xx, const vector<double> fx, const double xmin, const double xmax, const int idum);
 
   /**
-   *  @brief generate a covariant sample of n points using a 
+   *  @brief return the vector indexes corresponding to a given
+   *  interval
+   *
+   *  @param xx input vector
+   *
+   *  @param x_min minimum x value
+   *
+   *  @param x_max maximum x value
+   *
+   *  @return the 2D vector containing the indexes
+   *
+   *  @author Alfonso Veropalumbo
+   *  @author alfonso.veropalumbo@unibo.it
+   */
+  vector<size_t> minimum_maximum_indexes (const vector<double> xx, const double x_min, const double x_max);
+
+  /**
+   *  @brief generate a covariant sample of n points using a
    *  covariance matrix
-   *  @param nExtractions the number of correlated samples to extract
+   *
    *  @param mean the mean values for the sample
+   *
    *  @param covariance the covariance matrix of the sample
+   *
    *  @param idum seed for random number generator
-   *  @return vector containing a correlated samples of given mean and covariance
+   *
+   *  @return vector containing a correlated sample of given mean and
+   *  covariance
+   *
+   *  @author Alfonso Veropalumbo
+   *  @author alfonso.veropalumbo@unibo.it
+   */
+  vector<double> generate_correlated_data (const vector<double> mean, const vector<vector<double>> covariance, const int idum =213123);
+
+  /**
+   *  @brief generate a covariant sample of n points using a
+   *  covariance matrix
+   *
+   *  @param nExtractions the number of correlated samples to extract
+   *
+   *  @param mean the mean values for the sample
+   *
+   *  @param covariance the covariance matrix of the sample
+   *
+   *  @param idum seed for random number generator
+   *
+   *  @return vector containing a correlated samples of given mean and
+   *  covariance
+   *
+   *  @author Alfonso Veropalumbo
+   *  @author alfonso.veropalumbo@unibo.it
    */
   vector<vector<double>> generate_correlated_data (const int nExtractions, const vector<double> mean, const vector<vector<double> > covariance, const int idum=12312);
 
@@ -1506,8 +1763,7 @@ namespace cosmobl {
   /**
    *  @brief linear function
    *  @param xx the coordinate x
-   *  @return a vector of the Numerical libraries containing
-   *  [1,xx]
+   *  @return a vector containing [1, x]
    */
   inline vector<double> linearfit (const double xx) 
   {
@@ -1520,8 +1776,7 @@ namespace cosmobl {
   /**
    *  @brief quadratic function
    *  @param xx the coordinate x
-   *  @return a vector of the Numerical libraries containing
-   *  [1,xx,xx<SUP>2</SUP>]
+   *  @return a vector containing [1, x, x<SUP>2</SUP>]
    */
   inline vector<double> quadratic (const double xx) 
   {
@@ -1534,8 +1789,8 @@ namespace cosmobl {
   /**
    *  @brief cubic function
    *  @param xx the coordinate x
-   *  @return a vector of the Numerical libraries containing
-   *  [1,xx,xx<SUP>2</SUP>,xx<SUP>3</SUP>]
+   *  @return a vector of containing [1, x, x<SUP>2</SUP>,
+   *  x<SUP>3</SUP>]
    */
   inline vector<double> cubicfit (const double xx) 
   {
@@ -1590,7 +1845,17 @@ namespace cosmobl {
    *  @return the weight of closest element from a discrete list to x
    *  @warning par is not used, it is necessary only for GSL operations
    */
-   double closest_probability (double xx, shared_ptr<void> pp, vector<double> par);
+  double closest_probability (double xx, shared_ptr<void> pp, vector<double> par);
+
+  /**
+   *  @brief probability of an interpolated distribution 
+   *  @param xx the variable x
+   *  @param pp a void pointer 
+   *  @param par a vector containing the coefficients: 
+   *  @return the weight of closest element from a discrete list to x
+   *  @warning par is not used, it is necessary only for GSL operations
+   */
+  double distribution_probability (double xx, shared_ptr<void> pp, vector<double> par);
 
   /**
    *  @brief the Gaussian function 
@@ -1675,6 +1940,19 @@ namespace cosmobl {
       return 3.*(sin(kR)-kR*cos(kR))/pow(kR,3);
     }
   
+  /**
+   *  @brief the derivative of the top-hat 
+   *  window function
+   *  @param kR the variable k*R
+   *  @return the derivative of the top-hat 
+   *  window function
+   */
+  template <typename T> 
+    T TopHat_WF_D1 (const T kR) 
+    {
+      return (3.*(kR*kR-3.)*sin(kR)+9.*kR*cos(kR))*pow(kR, -4);
+    }
+
   /**
    *  @brief the radius of a sphere of a given mass and density
    *  @param Mass the mass
@@ -2214,6 +2492,7 @@ namespace cosmobl {
    * 
    *  this function estimates the projected correlation function by
    *  integrating a given two-point correlation function as follows:
+   *
    *  \f[
    *  w_p(r_p)=2\int_{r_p}^{r_{max}}\frac{\xi(r)}{\sqrt{r^2-r_p^2}}r{\rm
    *  d}r \f]
@@ -3259,9 +3538,10 @@ namespace cosmobl {
    * @param kk the scales kk
    * @param Pk_multipoles the power spectrum multipoles 
    * @param orders the power spectrum multipoles orders
+   * @param bin_type the bin type
    * @return none
    */
-  void Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>> &covariance, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double>> Pk_multipoles, const vector<int> orders);
+  void Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>> &covariance, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double>> Pk_multipoles, const vector<int> orders, const cosmobl::binType bin_type=cosmobl::binType::_linear_);
 
   /**
    * @brief Covariance matrix for 2pcf wedges
@@ -3277,16 +3557,24 @@ namespace cosmobl {
    * @param kk the scales kk
    * @param Pk_multipoles the power spectrum multipoles 
    * @param orders the power spectrum multipoles orders
+   * @param bin_type the bin type
    * @return none
    */
-  void Covariance_XiWedges (vector<double> &rr, vector<vector<double>> &covariance, const vector<double> mu, const vector<double> delta_mu, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double> > Pk_multipoles, const vector<int> orders);
+  void Covariance_XiWedges (vector<double> &rr, vector<vector<double>> &covariance, const vector<double> mu, const vector<double> delta_mu, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double> > Pk_multipoles, const vector<int> orders, const cosmobl::binType bin_type=cosmobl::binType::_linear_);
 
   ///@}
+}
 
+// ============================================================================================
 
-  // ============================================================================================
+#include "GSLwrapper.h"
+#include "CUBAwrapper.h"
+#include "FuncGrid.h"
+#include "FuncClassFunc.h"
+#include "RandomNumbers.h"
+#include "FFTlog.h"
 
-
+namespace cosmobl{
   /**
    *  @brief The namespace of the functions and classes of <B>
    *  internal auxiliary use </B>
@@ -3358,16 +3646,22 @@ namespace cosmobl {
       vector<double> values;
       vector<double> weights;
     };
+
+    struct STR_distribution_probability
+    {
+      shared_ptr<cosmobl::glob::FuncGrid> func;
+    };
   }
 }
 
-#include "GSLwrapper.h"
-#include "FuncGrid.h"
-#include "FuncClassFunc.h"
-#include "RandomNumbers.h"
 
-namespace cosmobl{
+namespace cosmobl {
 
+  /**
+   *  @name Functions to model the correlation function
+   */
+  ///@{
+  
   /**
    * @brief function to obtain the monopole and
    * quadrupole of the two point correlation function 
@@ -3414,6 +3708,10 @@ namespace cosmobl{
    * @return the 2pcf wedges 
    */
   vector<vector<double>> XiWedges_AP (const vector<double> mu_min, const vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const shared_ptr<glob::FuncGrid> xi0_interp, const shared_ptr<glob::FuncGrid> xi2_interp, const shared_ptr<glob::FuncGrid> xi4_interp);
+
 }
+
+///@}
+
 
 #endif

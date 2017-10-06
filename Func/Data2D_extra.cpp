@@ -41,14 +41,14 @@ using namespace glob;
 // ======================================================================================
 
 
-void cosmobl::data::Data2D_extra::read (const string input_file, const int skipped_lines)
+void cosmobl::data::Data2D_extra::read (const string input_file, const int skip_nlines)
 {
-  (void)skipped_lines;
-  
+  (void)skip_nlines;
+
   ErrorCBL("Error in cosmobl::data::Data2D_extra::read : work in progress!", ExitCode::_workInProgress_);
 
   ifstream fin(input_file.c_str()); checkIO(fin, input_file);
-  
+
   fin.clear(); fin.close();
 }
 
@@ -56,58 +56,61 @@ void cosmobl::data::Data2D_extra::read (const string input_file, const int skipp
 // ======================================================================================
 
 
-void cosmobl::data::Data2D_extra::write (const string dir, const string file, const string header, const bool full, const int rank) const 
+void cosmobl::data::Data2D_extra::write (const string dir, const string file, const string header, const bool full, const int precision, const int rank) const 
 {
   (void)rank;
-  
+
   string file_out = dir+file;
   ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
-  fout << "### " << header << " ###" << endl;
+  if(header!=par::defaultString)
+    fout << "### " << header << " ###" << endl;
 
-  int index = 0;
-  for (size_t i=0; i<m_x.size(); ++i)
-    for (size_t j=0; j<m_y.size(); ++j) {
-      fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_x[i] << "  " << setw(8) << m_y[j] << "  " << setw(8) << m_fxy[i][j] << "  " << setw(8) << m_error_fxy[i][j];
+  for (int i=0; i<m_xsize; ++i)
+    for (int j=0; j<m_ysize; ++j){
+      int index = j+m_ysize*i;
+      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(8) << m_x[i] << "  " << setw(8) << m_y[j] << "  " << setw(8) << m_data[index] << "  " << setw(8) << m_error[index];
+
       for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-	fout << "  " << setw(8) << m_extra_info[ex][index];
+        fout << setw(8) << m_extra_info[ex][index] << "  ";
       fout << endl;
-      index ++;
     }
-  
+
+
   if (full) { // duplicate the information in the other 3 quadrants
 
-    index = 0;
-    for (size_t i=0; i<m_x.size(); ++i)
-      for (size_t j=0; j<m_y.size(); ++j) {
-	fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_x[i] << "  " << setw(8) << -m_y[j] << "  " << setw(8) << m_fxy[i][j] << "  " << setw(8) << m_error_fxy[i][j] << "  ";
-	for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-	  fout << setw(8) << m_extra_info[ex][index] << "  ";
-	fout << endl;
-	index ++;
-      }
-    
-    index = 0;
-    for (size_t i=0; i<m_x.size(); ++i)
-      for (size_t j=0; j<m_y.size(); ++j) { 
-	fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << -m_x[i] << "  " << setw(8) << -m_y[j] << "  " << setw(8) << m_fxy[i][j] << "  " << setw(8) << m_error_fxy[i][j] << "  ";
-	for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-	  fout << setw(8) << m_extra_info[ex][index] << "  ";
-	fout << endl;
-	index ++;
+    for (int i=0; i<m_xsize; ++i)
+      for (int j=0; j<m_ysize; ++j){
+        int index = j+m_ysize*i;
+        fout << setiosflags(ios::fixed) << setprecision(precision) << setw(8) << m_x[i] << "  " << setw(8) << -m_y[j] << "  " << setw(8) << m_data[index] << "  " << setw(8) << m_error[index];
+
+        for (size_t ex=0; ex<m_extra_info.size(); ++ex)
+          fout << setw(8) << m_extra_info[ex][index] << "  ";
+        fout << endl;
       }
 
-    index = 0;
-    for (size_t i=0; i<m_x.size(); ++i)
-      for (size_t j=0; j<m_y.size(); ++j) {
-	fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << -m_x[i] << "  " << setw(8) << m_y[j] << "  " << setw(8) << m_fxy[i][j] << "  " << setw(8) << m_error_fxy[i][j] << "  ";
-	for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-	  fout << setw(8) << m_extra_info[ex][index] << "  ";
-	fout << endl;
-	index ++;
+    for (int i=0; i<m_xsize; ++i)
+      for (int j=0; j<m_ysize; ++j){
+        int index = j+m_ysize*i;
+        fout << setiosflags(ios::fixed) << setprecision(precision) << setw(8) << -m_x[i] << "  " << setw(8) << -m_y[j] << "  " << setw(8) << m_data[index] << "  " << setw(8) << m_error[index];
+
+        for (size_t ex=0; ex<m_extra_info.size(); ++ex)
+          fout << setw(8) << m_extra_info[ex][index] << "  ";
+        fout << endl;
       }
+
+    for (int i=0; i<m_xsize; ++i)
+      for (int j=0; j<m_ysize; ++j){
+        int index = j+m_ysize*i;
+        fout << setiosflags(ios::fixed) << setprecision(precision) << setw(8) << -m_x[i] << "  " << setw(8) << m_y[j] << "  " << setw(8) << m_data[index] << "  " << setw(8) << m_error[index];
+
+        for (size_t ex=0; ex<m_extra_info.size(); ++ex)
+          fout << setw(8) << m_extra_info[ex][index] << "  ";
+        fout << endl;
+      }
+
   }
 
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl << endl;
-
 }
+

@@ -34,161 +34,277 @@
  */
 
 #include "Cosmology.h"
+
 using namespace cosmobl;
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::SSR (const double RR, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
+double cosmobl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, function<double(double)> filter, const bool unit1) const 
 {
-  double SS = -1;
+  function<double(double)> func;
+  
+  vector<double> kk, Pk;
 
-  function<double(double)> ff;
-
-  if (method_Pk=="EisensteinHu") {
-    cosmobl::classfunc::func_SSR func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, RR, redshift); 
-
-    ff = bind(&cosmobl::classfunc::func_SSR::operator(), func, std::placeholders::_1);
-  }
-
-  else if (method_Pk=="CAMB" || method_Pk=="CLASS") {
-    vector<double> lgkk, lgPk;
-    bool do_nonlinear = false;
-    double RHO = Rho(m_Omega_matter, m_Omega_neutrinos, true); 
+  // the power spectrum is read from file
+  if (input_file!=par::defaultString && !is_parameter_file) {
    
-    Table_PkCodes(method_Pk, do_nonlinear, lgkk, lgPk, redshift, output_root, kmax, file_par);
-        
-    cosmobl::classfunc::func_SSR_Table func(m_hh, m_n_spec, RHO, true, lgkk, lgPk, RR); 
+    string line;
+    double KK, PK;
+    
+    ifstream fin(input_file.c_str()); checkIO(fin, input_file);
 
-    ff = bind(&cosmobl::classfunc::func_SSR_Table::operator(), func, std::placeholders::_1);
+    while (getline(fin, line)) {
+      if (line.find("#") == string::npos) { // skip comments
+	stringstream ss(line);
+	vector<double> num;
+	ss >> KK >> PK;
+	if (KK<kmax) {
+	  kk.emplace_back(KK);
+	  Pk.emplace_back(PK);
+	}
+      }
+    }
+
+    fin.clear(); fin.close();
+
+    func = cosmobl::glob::FuncGrid(kk, Pk, interpType, cosmobl::binType::_logarithmic_);
+  }
+    
+
+  // alternatively, the power spectrum is computed using either the internal cosmological parameters, or using a parameter file
+    
+  else if (method_Pk=="EisensteinHu" && input_file==par::defaultString){
+
+    auto ff = [&] (const double kk)
+    {
+      return this->Pk_UnNorm(kk, redshift, method_Pk, unit1);
+    };
+
+    func = ff;
   }
 
-  else ErrorCBL("Error in cosmobl::cosmology::Cosmology::SSR of Sigma.cpp: method_Pk is wrong!");
+  else if (method_Pk=="CAMB" || method_Pk=="classgal_v1") {
 
-  double Int = gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4) + gsl::GSL_integrate_qagiu(ff, 1., 1.e-5);
-  
-  SS = 1./(2.*pow(par::pi, 2))*Int;
+    double fact = (m_unit) ? 1. : m_hh;
 
-  return SS;
-}
+    fact= (!m_unit && unit1) ? 1. :fact;
 
-
-// =====================================================================================
-
-
-double cosmobl::cosmology::Cosmology::SSR_norm (const double RR, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
-{
-  double fact = 1.;
-
-  if (m_sigma8>0) {
-    double RRR = 8.; // sigma_8 = sigma(8Mpc/h)
-    fact = (m_sigma8*m_sigma8)/SSR(RRR, method_Pk, redshift, output_root, kmax, file_par); // normalization factor
-  }
-  else if (method_Pk=="EisensteinHu") ErrorCBL("Error in SSR_norm of Sigma.cpp: sigma8 must be >0 if method_Pk=Eisenstein&Hu!");
-  
-  return SSR(RR, method_Pk, redshift, output_root, kmax, file_par)*fact;
-}
-
-
-// =====================================================================================
-
-
-double cosmobl::cosmology::Cosmology::dnSR (const int nd, const double RR, const string method_Pk, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
-{
-  (void)nd; (void)interpType; (void)Num; (void)stepsize; 
-
-  double dR = RR*1.e-7;
-  double RRR = RR+dR;
-  return (SSR_norm(RRR, method_Pk, redshift, output_root, kmax, file_par)-SSR_norm(RR, method_Pk, redshift, output_root, kmax, file_par))/dR;
-  /*
-    cosmobl::classfunc::func_SSRd SSRd(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, redshift, output_root, kmax, file_par);
-
-    return Deriv(nd, RR, SSRd, interpType, Num, stepsize);
-  */
-}
-
-
-// =====================================================================================
-
-
-double cosmobl::cosmology::Cosmology::SSM (const double MM, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
-{
-  double SS = -1;
-
-  function<double(double)> ff;
-
-  if (method_Pk=="EisensteinHu") {
-    cosmobl::classfunc::func_SSM func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, MM, redshift); 
-
-    ff = bind(&cosmobl::classfunc::func_SSM::operator(), func, std::placeholders::_1);
-  }
-
-  else if (method_Pk=="CAMB" || method_Pk=="CLASS") {
     vector<double> lgkk, lgPk;
-    bool do_nonlinear = false;
-    double RHO = Rho(m_Omega_matter, m_Omega_neutrinos, true); 
+    Table_PkCodes(method_Pk, false, lgkk, lgPk, redshift, output_root, kmax, input_file);
 
-    Table_PkCodes(method_Pk, do_nonlinear, lgkk, lgPk, redshift, output_root, kmax, file_par);
+    for (size_t i=0; i<lgkk.size(); i++) {
+      double KK = pow(10., lgkk[i])*fact;
+	if (KK<kmax) {
+	  kk.emplace_back(KK);
+          Pk.emplace_back(pow(10., lgPk[i])*pow(fact, -3.));
+	}
+    }
 
-    cosmobl::classfunc::func_SSM_Table func(m_hh, m_n_spec, RHO, true, lgkk, lgPk, MM); 
-
-    ff = bind(&cosmobl::classfunc::func_SSM_Table::operator(), func, std::placeholders::_1);
+    func = cosmobl::glob::FuncGrid(kk, Pk, interpType, cosmobl::binType::_linear_);
   }
   
-  else ErrorCBL("Error in cosmobl::cosmology::Cosmology::SSM of Sigma.cpp: method_Pk is wrong!");
+  else ErrorCBL("Error in cosmobl::cosmology::Cosmology::sigma2M_notNormalised of Sigma.cpp: the chosen method_Pk is not available!");
+
+  auto ff = [&] (const double kk)
+    {
+      return func(kk)*kk*kk*filter(kk);
+    };
   
-  double Int = gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4) + gsl::GSL_integrate_qagiu(ff, 1., 1.e-5);
+  // compute the mass variance
+  //return 1./(2.*pow(par::pi, 2)) * (gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4) + gsl::GSL_integrate_qagiu(ff, 1., 1.e-5));
+  return 1./(2.*pow(par::pi, 2)) * (gsl::GSL_integrate_qag(ff, 1.e-4, kmax, 1.e-1));
+}
 
-  SS = 1./(2.*pow(par::pi, 2))*Int;
 
-  return SS;
+
+// =====================================================================================
+
+
+double cosmobl::cosmology::Cosmology::m_sigma2R_notNormalised (const double radius, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+{
+  auto filter = [&] (const double k)
+  {
+    return pow(cosmobl::TopHat_WF(k*radius),2);
+  };
+
+  return cosmobl::cosmology::Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1);
+
 }
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::SSM_norm (const double MM, const string method_Pk, const double redshift, const string output_root, const double kmax, const string file_par) const 
+double cosmobl::cosmology::Cosmology::sigma2R (const double radius, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
+  if (radius<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::sigma2R() of Sigma.cpp: the radius must be >0!");
+  
+  // the normalisation factor
   double fact = 1.;
 
-  if (m_sigma8>0) {
-    double RR = 8.; // sigma_8 = sigma(8Mpc/h)
-    double RHO = Rho(m_Omega_matter, m_Omega_neutrinos, true); 
-    double Mss = Mass(RR, RHO);
-    fact = (m_sigma8*m_sigma8)/SSM(Mss, method_Pk, redshift, output_root, kmax, file_par); // normalization factor
+  // if the power spectrum is read from file or m_sigma8<0, then the
+  // mass variance does not need to be normalised (hence fact=1 and
+  // sigma2R=sigma2R_unnormalised); otherwise the normalisation factor
+  // is computed
+  if (input_file==par::defaultString || is_parameter_file) {
+    
+    if (m_sigma8>0) 
+      // sigma_8 = sigma(8Mpc/h)
+      fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor
+    
+    else if (method_Pk=="EisensteinHu") ErrorCBL("Error in sigma2R of Sigma.cpp: sigma8 must be >0 if method_Pk=Eisenstein&Hu!");
+      
   }
-  else if (method_Pk=="EisensteinHu") ErrorCBL("Error in SSM_norm of Sigma.cpp: sigma8 must be >0 if method_Pk=Eisenstein&Hu!");
-  
-  return SSM(MM, method_Pk, redshift, output_root, kmax, file_par)*fact;
+
+  return m_sigma2R_notNormalised(radius, method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, unit1)*fact;
 }
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::dnSM (const int nd, const double MM, const string method_Pk, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
+double cosmobl::cosmology::Cosmology::dnsigma2R (const int nd, const double radius, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
-  (void)nd; (void)interpType; (void)Num; (void)stepsize;
+  if (radius<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::dnsigma2R() of Sigma.cpp: the radius must be >0!");
   
-  double dM = MM*1.e-7;
-  double MMM = MM+dM;
-  return (SSM_norm(MMM, method_Pk, redshift, output_root, kmax, file_par)-SSM_norm(MM, method_Pk, redshift, output_root, kmax, file_par))/dM;
+  // the normalisation factor
+  double fact = 1.;
+
+  // if the power spectrum is read from file or m_sigma8<0, then the
+  // mass variance does not need to be normalised (hence fact=1 and
+  // sigma2R=sigma2R_unnormalised); otherwise the normalisation factor
+  // is computed
+  if (input_file==par::defaultString || is_parameter_file) {
+    
+    if (m_sigma8>0) 
+      // sigma_8 = sigma(8Mpc/h)
+      fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, 0., output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor
+    
+    else if (method_Pk=="EisensteinHu") ErrorCBL("Error in sigma2R of Sigma.cpp: sigma8 must be >0 if method_Pk=Eisenstein&Hu!");
+      
+  }
+
+  if (nd==1) {
+
+    auto filter = [&] (const double k)
+    {
+      return 2.*cosmobl::TopHat_WF(k*radius)*cosmobl::TopHat_WF_D1(k*radius)*k;
+    };
+
+    return cosmobl::cosmology::Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1)*fact;
+
+  }
+
+  else
+    return ErrorCBL("Work in progress in cosmobl::cosmology::Cosmology::dnsigma2R of Sigma.cpp...", glob::ExitCode::_workInProgress_);
 }
 
 
 // =====================================================================================
 
 
-string cosmobl::cosmology::Cosmology::create_grid_sigmaM (const string method_SS, const double redshift, const string output_root, const string interpType, const int Num, const double stepsize, const double kmax, const string file_par) const 
-{ 
-  string norm = (m_sigma8>0) ? "_sigma8"+conv(m_sigma8,par::fDP3) : "_scalar_amp"+conv(m_scalar_amp,par::ee3);
-  string dir_cosmo=fullpath(par::DirCosmo);
+double cosmobl::cosmology::Cosmology::m_sigma2M_notNormalised (const double mass, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+{
+  if (mass<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::m_sigma2M_notNormalised() of Sigma.cpp: the mass must be >0!");
+  
+  const double radius = (input_file!=par::defaultString && !is_parameter_file) ? cosmobl::Radius(mass, m_RhoZero) : cosmobl::Radius(mass, rho_m(redshift, unit1)); 
+
+  auto filter = [&] (const double k)
+  {
+    return pow(TopHat_WF(k*radius),2);
+  };
+
+  return cosmology::Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1);
+}
+
+
+// =====================================================================================
+
+
+double cosmobl::cosmology::Cosmology::sigma2M (const double mass, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+{
+  if (mass<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::sigma2M() of Sigma.cpp: the mass must be >0!");
+  
+  // the normalisation factor
+  double fact = 1.;
+
+  // if the power spectrum is read from file or m_sigma8<0, then the
+  // mass variance does not need to be normalised (hence fact=1 and
+  // sigma2M=sigma2M_unnormalised); otherwise the normalisation factor
+  // is computed
+  if (input_file==par::defaultString || is_parameter_file) {
+    if (m_sigma8>0)
+      // (sigma8 = sigma(8Mpc/h))
+      fact = pow(m_sigma8, 2)/m_sigma2M_notNormalised(Mass(8., rho_m(0., true)), method_Pk, 0., output_root, interpType, kmax, input_file, is_parameter_file, true);
+    
+    else if (m_sigma8<0 && method_Pk=="EisensteinHu") ErrorCBL("Error in sigma2M of Sigma.cpp: sigma8 must be >0 if method_Pk=Eisenstein&Hu!");
+  }
+
+
+  return m_sigma2M_notNormalised(mass, method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, unit1)*fact;
+}
+
+
+// =====================================================================================
+
+
+double cosmobl::cosmology::Cosmology::dnsigma2M (const int nd, const double mass, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+{
+  if (mass<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::dnsigma2M() of Sigma.cpp: the mass must be >0!");
+  
+  // the normalisation factor
+  double fact = 1.;
+
+  // if the power spectrum is read from file or m_sigma8<0, then the
+  // mass variance does not need to be normalised (hence fact=1 and
+  // sigma2M=sigma2M_unnormalised); otherwise the normalisation factor
+  // is computed
+  if (input_file==par::defaultString || is_parameter_file) {
+    if (m_sigma8>0)
+      // (sigma8 = sigma(8Mpc/h))
+      fact = pow(m_sigma8, 2)/m_sigma2M_notNormalised(Mass(8., rho_m(0., true)), method_Pk, 0., output_root, interpType, kmax, input_file, is_parameter_file, true);
+    
+    else if (m_sigma8<0 && method_Pk=="EisensteinHu") ErrorCBL("Error in sigma2M of Sigma.cpp: sigma8 must be >0 if method_Pk=Eisenstein&Hu!");
+  }
+
+  if (nd==1) {
+
+    //return gsl::GSL_derivative(bind(&Cosmology::sigma2M, this, placeholders::_1, method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, unit1), mass, 1.e11);
+    //return gsl::GSL_derivative(bind(&Cosmology::sigma2M, this, placeholders::_1, method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file), mass, mass*1.e-3);
+
+    const double rho = (input_file!=par::defaultString && !is_parameter_file) ?  m_RhoZero : rho_m(redshift, unit1);
+
+    const double radius = cosmobl::Radius(mass, rho); 
+
+    const double dRdM = pow(3./(4.*cosmobl::par::pi*rho), 1./3.)*pow(mass, -2./3.)/3.;
+
+    auto filter = [&] (const double k)
+    {
+      return 2.*cosmobl::TopHat_WF(k*radius)*cosmobl::TopHat_WF_D1(k*radius)*k*dRdM;
+    };
+
+    return cosmobl::cosmology::Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1)*fact;
+
+  }
+  else
+    return ErrorCBL("Work in progress in cosmobl::cosmology::Cosmology::dnsigma2M of Sigma.cpp...", glob::ExitCode::_workInProgress_);
+}
+
+
+// =====================================================================================
+
+
+string cosmobl::cosmology::Cosmology::create_grid_sigmaM (const string method_SS, const double redshift, const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const 
+{
+  string norm = (m_sigma8>0) ? "_sigma8"+conv(m_sigma8, par::fDP3) : "_scalar_amp"+conv(m_scalar_amp, par::ee3);
+
+  string dir_cosmo = fullpath(par::DirCosmo);
   string dir_grid = dir_cosmo+"Cosmology/Tables/grid_SigmaM/unit"+conv(m_unit,par::fINT)+"/";
   string MK = "mkdir -p "+dir_grid; if (system (MK.c_str())) {};
 
-  string file_grid = dir_grid+"grid_"+method_SS+norm+"_h"+conv(m_hh,par::fDP3)+"_OmB"+conv(m_Omega_baryon,par::fDP3)+"_OmCDM"+conv(m_Omega_CDM,par::fDP3)+"_OmL"+conv(m_Omega_DE,par::fDP3)+"_OmN"+conv(m_Omega_neutrinos,par::fDP3)+".dat";
+  string file_grid = dir_grid+"grid_"+method_SS+norm+"_h"+conv(m_hh, par::fDP6)+"_OmB"+conv(m_Omega_baryon, par::fDP6)+"_OmCDM"+conv(m_Omega_CDM, par::fDP6)+"_OmL"+conv(m_Omega_DE, par::fDP6)+"_OmN"+conv(m_Omega_neutrinos, par::fDP6)+"_Z"+conv(redshift, par::fDP6)+"_scalar_amp"+conv(m_scalar_amp, par::ee3)+"_scalar_pivot"+conv(m_scalar_pivot, par::fDP6)+"_n"+conv(m_n_spec, par::fDP6)+"_w0"+conv(m_w0, par::fDP6)+"_wa"+conv(m_wa, par::fDP6)+".dat";
 
   ifstream fin(file_grid.c_str());
 
@@ -202,20 +318,23 @@ string cosmobl::cosmology::Cosmology::create_grid_sigmaM (const string method_SS
     
     double SSS, Sigma, Dln_Sigma;
     
+    int dp = cout.precision();
+    cout.setf(ios::fixed); cout.setf(ios::showpoint); cout.precision(1);
+      
     for (size_t k=0; k<MM.size(); k++) {
-      cout.setf(ios::fixed); cout.setf(ios::showpoint); cout.precision(1);
-      coutCBL << "\r..." << double(k)/double(MM.size())*100. << "% completed \r"; cout.flush(); 
+      coutCBL << "\r............." << double(k)/double(MM.size())*100. << "% completed \r"; cout.flush(); 
 
-      SSS = SSM_norm(MM[k], method_SS, redshift, output_root, kmax, file_par);
+      SSS = sigma2M(MM[k], method_SS, redshift, output_root, interpType, k_max, input_file, is_parameter_file, true);
       Sigma = sqrt(SSS);
-      Dln_Sigma = dnSM(1, MM[k], method_SS, redshift, output_root, interpType, Num, stepsize, kmax, file_par)*(MM[k]/(2.*SSS));
+      Dln_Sigma = dnsigma2M(1, MM[k], method_SS, redshift, output_root, interpType, k_max, input_file, is_parameter_file, true)*(MM[k]/(2.*SSS));
       fout << MM[k] << "   " << Sigma << "   " << Dln_Sigma << endl;
     }
-
+    
+    cout.unsetf(ios::fixed); cout.unsetf(ios::showpoint); cout.precision(dp);
     fout.clear(); fout.close(); coutCBL << endl << "I wrote the file: " << file_grid << endl;
   }
   
   fin.clear(); fin.close();
-
+  
   return file_grid;
 }

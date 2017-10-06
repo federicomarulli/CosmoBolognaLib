@@ -488,7 +488,7 @@ double cosmobl::Pkl_Kaiser_integral(const int order, const double bias, const do
   Func.function = &Pkl_Kaiser_integrand;
   Func.params = &params;
 
-  return 0.5*(2*order+1)*gsl::GSL_integrate_qag(Func,-1.,1.,prec,limit_size,6);
+  return 0.5*(2*order+1)*gsl::GSL_integrate_qag(Func, -1., 1., prec, limit_size, 6);
 }
 
 
@@ -563,55 +563,53 @@ vector< vector<double>> cosmobl::Pkl_Kaiser(const vector<int> orders, const vect
 // ============================================================================
 
 
-
-vector<double> cosmobl::Xi0(const vector<double> r, const vector<double> kk, const vector<double> Pk0, const double k_cut, const double cut_pow, const int IntegrationMethod)
+vector<double> cosmobl::Xi0 (const vector<double> r, const vector<double> kk, const vector<double> Pk0, const double k_cut, const double cut_pow, const int IntegrationMethod)
 {
   double f0 = 1./(2.*par::pi*par::pi); 
   int nbins = r.size();
   int nbins_k = kk.size();
 
-  vector<double> xi0(nbins,0);
+  vector<double> xi0(nbins, 0);
 
-  if (IntegrationMethod==0) //Perform trapezoid integration
-    { 
+  if (IntegrationMethod==0) { // perform trapezoid integration
 
-      for (int i=0;i<nbins;i++){
-        
-        vector<double> i0(kk.size(),0);
-
-        for(int j=0;j<nbins_k;j++)
-	  i0[j] =kk[j]*kk[j]*Pk0[j]*j0(kk[j]*r[i]); 
-
-        xi0[i] = trapezoid_integration(kk,i0)*f0;
-      }
-
+    for (int i=0; i<nbins; i++) {
+      
+      vector<double> i0(kk.size(), 0);
+      
+      for (int j=0; j<nbins_k; j++)
+	i0[j] = kk[j]*kk[j]*Pk0[j]*j0(kk[j]*r[i]); 
+      
+      xi0[i] = trapezoid_integration(kk,i0)*f0;
     }
-  else if (IntegrationMethod==1) //Perform integration with GSL
-    {
-      cosmobl::glob::STR_XiMultipoles_integrand params;
-      int limit_size = 1000;
+    
+  }
+  else if (IntegrationMethod==1) { // perform integration with GSL
 
-      gsl_function Func;
-      Func.function = &XiMultipoles_integrand;
-      Func.params = &params;
+    cosmobl::glob::STR_XiMultipoles_integrand params;
+    int limit_size = 1000;
+      
+    gsl_function Func;
+    Func.function = &XiMultipoles_integrand;
+    Func.params = &params;
 
-      double k_min = Min(kk);
-      double k_max = Max(kk); 
-      double prec = 1.e-3;
+    double k_min = Min(kk);
+    double k_max = Max(kk); 
+    double prec = 1.e-3;
 
-      glob::FuncGrid Pk0_interp(kk,Pk0,"Spline");
-      params.Pkl = &Pk0_interp;
-      params.l = 0;
-      params.k_cut = k_cut;
-      params.cut_pow = cut_pow;
+    glob::FuncGrid Pk0_interp(kk, Pk0, "Spline");
+    params.Pkl = &Pk0_interp;
+    params.l = 0;
+    params.k_cut = k_cut;
+    params.cut_pow = cut_pow;
 
-      for (int i=0;i<nbins;i++){
-        params.r = r[i];
-	xi0[i] = gsl::GSL_integrate_qag(Func,k_min,k_max,prec,limit_size,6)*f0;
-      }
-      Pk0_interp.free();
-
+    for (int i=0; i<nbins; i++) {
+      params.r = r[i];
+      xi0[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6)*f0;
     }
+    
+    Pk0_interp.free();
+  }
 
   return xi0;
 }
@@ -974,7 +972,7 @@ vector< vector<double> > cosmobl::sigma2_k (const double nObjects, const double 
       int index = j+n_orders*i;
       for(size_t k=0;k<kk.size();k++){
 	params.kk = kk[k];
-	double Int = gsl::GSL_integrate_qag(Func,-1,1.,prec,limit_size,6);
+	double Int = gsl::GSL_integrate_qag(Func, -1, 1., prec, limit_size, 6);
 	sigma2[index][k] = (2*orders[i]+1)*(2*orders[j]+1)*Int/Volume;
       }
     }
@@ -990,13 +988,19 @@ vector< vector<double> > cosmobl::sigma2_k (const double nObjects, const double 
 // ============================================================================
 
 
-void cosmobl::Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>> &covariance, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double>> Pk_multipoles, const vector<int> orders)
+void cosmobl::Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>> &covariance, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double>> Pk_multipoles, const vector<int> orders, const cosmobl::binType bin_type)
 {
   int n_orders = orders.size();
   int nbins_k = kk.size();
 
-  vector<double> rad = linear_bin_vector(nbins, rMin, rMax);
-  double dr = rad[1]-rad[0];
+  const double binSize = (bin_type==cosmobl::binType::_linear_) ? (rMax-rMin)/nbins : (log10(rMax)-log10(rMin))/nbins;
+
+  vector<double> rad(nbins, 0), edges(nbins+1,0);
+  for(int i=0; i<nbins; i++){
+    rad[i] = (bin_type==cosmobl::binType::_linear_) ? (i+0.5)*binSize+rMin : pow(10.,(i+0.5)*binSize+log10(rMin));
+    edges[i] = (bin_type==cosmobl::binType::_linear_) ? i*binSize+rMin : pow(10., i*binSize+log10(rMin));
+  }
+  edges[nbins] = (bin_type==cosmobl::binType::_linear_) ? nbins*binSize+rMin : pow(10., nbins*binSize+log10(rMin));
   
   covariance.erase(covariance.begin(), covariance.end());
   covariance.resize(n_orders*nbins,vector<double>(n_orders*nbins, 0));
@@ -1008,7 +1012,7 @@ void cosmobl::Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>
   for (int l=0; l<n_orders; l++) 
     for (int i=0; i<nbins; i++) 
       for (int j=0; j<nbins_k; j++) 
-	jr[l][i][j] = jl_distance_average(kk[j], orders[l], rad[i]-dr*0.5, rad[i]+dr*0.5);
+	jr[l][i][j] = jl_distance_average(kk[j], orders[l], edges[i], edges[i+1]);
 
   cosmobl::glob::STR_covariance_XiMultipoles_integrand params;
   int limit_size = 1000;
@@ -1020,7 +1024,7 @@ void cosmobl::Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>
   double k_min= max(1.e-4, cosmobl::Min(kk));
   double k_max = min(Max(kk),1.); //1.e0; 
   double prec = 1.e-2;
-  complex<double> ii = complex<double>(0.,1.);
+  complex<double> ii = complex<double>(0., 1.);
 
   // auto-correlation terms
   for (int l=0; l<n_orders; l++) {
@@ -1045,7 +1049,6 @@ void cosmobl::Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>
     }
     s2.free();
   }
-
   
   // cross-correlation terms
 
@@ -1087,7 +1090,7 @@ void cosmobl::Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>
 // ============================================================================
 
 
-void cosmobl::Covariance_XiWedges (vector<double> &rr, vector<vector<double>> &covariance, const vector<double> mu, const vector<double> delta_mu, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double> > Pk_multipoles, const vector<int> orders)
+void cosmobl::Covariance_XiWedges (vector<double> &rr, vector<vector<double>> &covariance, const vector<double> mu, const vector<double> delta_mu, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double> > Pk_multipoles, const vector<int> orders, const cosmobl::binType bin_type)
 {
   int n_wedges = mu.size();
   vector<int> ord = orders;
@@ -1107,7 +1110,7 @@ void cosmobl::Covariance_XiWedges (vector<double> &rr, vector<vector<double>> &c
   covariance.resize(n_wedges*nbins, vector<double>(n_wedges*nbins, 0));
 
   vector<double> r_multipoles;
-  cosmobl::Covariance_XiMultipoles(r_multipoles, covariance_multipoles, nbins, rMin, rMax, nObjects, Volume, kk, Pkl, ord);
+  cosmobl::Covariance_XiMultipoles(r_multipoles, covariance_multipoles, nbins, rMin, rMax, nObjects, Volume, kk, Pkl, ord, bin_type);
 
   for (int w1=0; w1<n_wedges; w1++) {
     for (int w2=0; w2<n_wedges; w2++) {

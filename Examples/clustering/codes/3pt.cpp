@@ -3,6 +3,7 @@
 // ========================================================================================
 
 #include "ThreePointCorrelation_comoving_reduced.h"
+#include "GlobalFunc.h"
 
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
@@ -18,20 +19,7 @@ int main () {
     // ---------------- set the cosmological parameters  ------------
     // --------------------------------------------------------------
 
-    const double OmegaM = 0.25;
-    const double Omega_b = 0.045;
-    const double Omega_nu = 0.;
-    const double massless_neutrinos = 3.04;
-    const int    massive_neutrinos = 0; 
-    const double OmegaL = 1.-OmegaM;
-    const double Omega_radiation = 0.;
-    const double hh = 0.73;
-    const double scalar_amp = 2.742e-9;
-    const double n_s = 1;
-    const double wa = 0.;
-    const double w0 = -1.;   
-
-    cosmobl::cosmology::Cosmology cosmology {OmegaM, Omega_b, Omega_nu, massless_neutrinos, massive_neutrinos, OmegaL, Omega_radiation, hh, scalar_amp, n_s, w0, wa};
+    cosmobl::cosmology::Cosmology cosmology {cosmobl::cosmology::_Planck15_};
 
   
     // -----------------------------------------------------------------------------------------------------------
@@ -50,7 +38,12 @@ int main () {
     const double N_R = 1.; // random/data ratio
    
     cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
+  
+    // construct the sub-regions used for jackknife and bootstrap
 
+    cout << "I'm constructing the sub-regions used for jackknife and bootstrap..." << endl;
+    const int nx = 3, ny = 3, nz = 3;
+    cosmobl::set_ObjectRegion_SubBoxes(catalogue, random_catalogue, nx, ny, nz);
   
     // -------------------------------------------------------------------------------
     // ---------------- measure the three-point correlation functions ----------------
@@ -69,20 +62,20 @@ int main () {
     const string dir_output = cosmobl::par::DirLoc+"../output/";
     const string dir_triplets = dir_output;
     const string dir_2pt = dir_output;
-    const string file_output = "3pt.dat";
+    const string file_output = "3ptJK.dat";
 
   
     // measure the connected and reduced three-point correlation functions and write the output
 
-    const auto ThreeP = cosmobl::threept::ThreePointCorrelation::Create(cosmobl::threept::_comoving_reduced_, catalogue, random_catalogue, cosmobl::triplets::_comoving_theta_, side_s, side_u, perc, nbins);
+    const auto ThreeP = cosmobl::measure::threept::ThreePointCorrelation::Create(cosmobl::measure::threept::_comoving_reduced_, catalogue, random_catalogue, cosmobl::triplets::_comoving_theta_, side_s, side_u, perc, nbins);
 
-    ThreeP->measure(dir_triplets, dir_2pt);
+    ThreeP->measure(cosmobl::measure::ErrorType::_Jackknife_, dir_triplets, dir_2pt);
   
     ThreeP->write(dir_output, file_output, 1);
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

@@ -1,1 +1,1 @@
-emacs ../../Headers/Lib/Cosmology.h ../../Headers/Lib/CosmClassFunc.h Cosmology.cpp MassFunction.cpp PkXi.cpp PkXizSpace.cpp Bias.cpp RSD.cpp Sigma.cpp Velocities.cpp MassGrowth.cpp NG.cpp BAO.cpp SizeFunction.cpp &
+emacs ../../Headers/Lib/Cosmology.h ../../Headers/Lib/CosmClassFunc.h *.cpp &

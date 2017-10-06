@@ -19,7 +19,7 @@
  *******************************************************************/
 
 /**
- *  @file GlobalFunc/Func.cpp
+ *  @file CosmoBolognaLib/GlobalFunc/Func.cpp
  *
  *  @brief Generic functions that use one or more classes of the
  *  CosmoBolognaLib

@@ -34,7 +34,7 @@
 #ifndef __SAMP__
 #define __SAMP__
 
-#include "Chi2.h"
+#include "Distribution.h"
 
 
 // ============================================================================================
@@ -45,12 +45,12 @@ namespace cosmobl {
   namespace statistics {
     
     /**
-     *  @class Likelihood Likelihood.h "Headers/Lib/Likelihood.h"
+     *  @class Sampler Sampler.h "Headers/Lib/Sampler.h"
      *
-     *  @brief The class Likelihood
+     *  @brief The class Sampler
      *
-     *  This class is used to handle objects of type likelihood. It is
-     *  used for all kind of likelihood analyses, sample and minimization
+     *  This class is used to handle objects of type sample. It samples
+     *  generic functions
      */
     class Sampler
     {
@@ -58,7 +58,7 @@ namespace cosmobl {
     protected:
 
       /// number of chains
-      int m_nchains;
+      int m_nwalkers;
 
       /// size of the chains
       int m_chain_size;
@@ -66,11 +66,17 @@ namespace cosmobl {
       /// number of parameters
       int m_npar;
 
+      /// number of free parameters
+      int m_npar_free;
+
       /// the function to be sampled
-      function<double(vector<double>)> m_function;
+      function<double(vector<double> &)> m_function;
 
       /// chain acceptance ratio
       vector<double> m_acceptance;
+
+      /// use python-defined function
+      bool m_use_python;
 
       /// value of the function at sampled points
       vector<vector<double>> m_function_chain;
@@ -87,20 +93,49 @@ namespace cosmobl {
        * 
        * @return pointer to the random number generator
        */
-      shared_ptr<random::DistributionRandomNumbers>m_set_gz(const int seed, const double aa=2);
+      shared_ptr<random::DistributionRandomNumbers>m_set_gz (const int seed, const double aa=2);
 
       /**
        * @brief initialize chains, generating random
        * points in a sphere around starting position
        *
-       * @param seed the random generator seed
        * @param start vector containing the starting position
        * for the parameters
-       * @param radius the sphere radius
        * 
        * @return none
        */
-      void m_initialize_chains(const int seed, const vector<double> start, const double radius=1.e-3);
+      void m_initialize_chains (const vector<vector<double>> start);
+
+      /**
+       *  @brief samples lthe input function, using stretch-move
+       *  algorithm on n-dimensional parameter space. Parallel version
+       *  
+       *  @param chain_size number of step in each chain 
+       *  @param nwalkers number of parallel walkers 
+       *  @param start vector containing the starting position
+       *  for the parameters
+       *  @param seed the seed for random number generator
+       *  @param aa the stretch-move distribution parameter
+       *
+       *  @return none
+       */
+      void m_sample_stretch_move_parallel_cpp (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed=4241, const double aa=2);
+
+      /**
+       *  @brief samples lthe input function, using stretch-move
+       *  algorithm on n-dimensional parameter space. Parallel version
+       *  Special function for function written in python
+       *
+       *  @param chain_size number of step in each chain 
+       *  @param nwalkers number of parallel walkers   
+       *  @param start vector containing the starting position
+       *  for the parameters
+       *  @param seed the seed for random number generator
+       *  @param aa the stretch-move distribution parameter
+       *
+       *  @return none
+       */
+      void m_sample_stretch_move_parallel_py (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed=4241, const double aa=2);
 
     public:
 
@@ -117,12 +152,20 @@ namespace cosmobl {
 
       /**
        *  @brief constructor
-       *  @param data pointers to the data container
-       *  @param model pointers to the model 
-       *  @param likelihood_type type of likelihood
-       *  @return object of class Likelihood
+       *  @param npar the number of parameters
+       *  @param function the function to sample
+       *  @return object of class Sampler
        */
-      Sampler (const int npar, const function<double(vector<double>)> function) : m_npar(npar), m_function(function) {}
+      Sampler (const int npar, const function<double(vector<double> &)> function) : m_npar(npar), m_npar_free(npar) {set_function(function);}
+
+      /**
+       *  @brief constructor
+       *  @param npar the number of parameters
+       *  @param npar_free the number of free parameters
+       *  @param function the function to sample
+       *  @return object of class Sampler
+       */
+      Sampler (const int npar, const int npar_free, const function<double(vector<double> &)> function) : m_npar(npar), m_npar_free(npar_free) {set_function(function);}
 
       /**
        *  @brief default destructor
@@ -133,27 +176,73 @@ namespace cosmobl {
       ///@}
 
       /**
-       * @brief evaluate the function
+       * @brief evaluate the function and 
+       * return its value and derived parameters
        *
        * @param pp the function parameters
        *
        * @return none
        */
-      double operator () (vector<double> pp) 
+      double operator () (vector<double> &pp) 
       {	
 	return m_function(pp);
       }
 
       /**
-       * @brief function to set the chains
+       * @brief return the chain value
        *
-       * @param npar the number of parameters
-       * @param nchains the number of chains
-       * @param chain_size the size of the chain
+       * @param par the parameter
+       *
+       * @param chain the chain number
+       *
+       * @param step the step in the chain
        *
        * @return none
        */
-      void set_chain(const int npar, const int nchains, const int chain_size);
+      double get_chain (const int par, const int chain, const int step) {return m_chains[step][chain][par];}
+
+      /**
+       * @brief return the chains
+       *
+       * @return vector containing the chains
+       */
+      vector<vector<vector<double>>> get_chain () {return m_chains;}
+
+      /**
+       * @brief return the function value
+       *
+       * @param chain the chain number
+       *
+       * @param step the step in the chain
+       *
+       * @return none
+       */
+      double get_function (const int chain, const int step) {return m_function_chain[step][chain];}
+
+      /**
+       *  @brief get the chain values and the function
+       *  
+       *  @param[out] chains vector containing the chains
+       *  @param[out] function the function computed at each step of the chain 
+       *  @param[out] acceptance the acceptance rate
+       *  @param start the starting position for each chain
+       *  @param thin the position step
+       *
+       *  @return none
+       */
+      void get_chain_function_acceptance(vector<vector<double>> &chains, vector<double> &function, vector<double> &acceptance, const int start=0, const int thin=1);
+
+      /**
+       * @brief function to set the chains
+       *
+       * @param npar the number of parameters
+       * @param npar_free the number of free parameters
+       * @param chain_size number of step in each chain 
+       * @param nwalkers number of parallel walkers 
+       *
+       * @return none
+       */
+      void set_chain (const int npar, const int npar_free, const int chain_size, const int nwalkers);
 
       /**
        * @brief set the function 
@@ -162,39 +251,37 @@ namespace cosmobl {
        *
        * @return none
        */
-      void set_function(const function<double(vector<double>)> function);
+      void set_function (const function<double(vector<double> &)> function);
 
       /**
        *  @brief samples lthe input function, using stretch-move
        *  algorithm on n-dimensional parameter space 
-       *    
-       *  @param nchains number of chains to sample the parameter space 
+       *
        *  @param chain_size number of step in each chain 
+       *  @param nwalkers number of parallel walkers  
        *  @param start vector containing the starting position
-       * for the parameters
-       *  @param radius the sphere radius
+       *  for the parameters
        *  @param seed the seed for random number generator
        *  @param aa the stretch-move distribution parameter
        *  
        *  @return averace acceptance ratio
        */
-      void sample_stretch_move (const int nchains, const int chain_size, const vector<double> start, double radius=1.e-3, const int seed=4241, const double aa=2);
+      void sample_stretch_move (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed=4241, const double aa=2);
 
       /**
        *  @brief samples lthe input function, using stretch-move
        *  algorithm on n-dimensional parameter space. Parallel version
-       *  
-       *  @param nchains number of chains to sample the parameter space 
+       *
        *  @param chain_size number of step in each chain 
+       *  @param nwalkers number of parallel walkers  *
        *  @param start vector containing the starting position
        *  for the parameters
-       *  @param radius the sphere radius
        *  @param seed the seed for random number generator
        *  @param aa the stretch-move distribution parameter
        *
        *  @return none
        */
-      void sample_stretch_move_parallel (const int nchains, const int chain_size, const vector<double> start, double radius=1.e-3, const int seed=4241, const double aa=2);
+      void sample_stretch_move_parallel (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed=4241, const double aa=2);
 
       /**
        *  @brief write the chains in an output file
@@ -202,12 +289,11 @@ namespace cosmobl {
        *  @param dir_output the output directory
        *  @param file the output file
        *  @param start the starting position for each chain
-       *  @param stop the ending position for each chain
        *  @param thin the position step
        *
        *  @return none
        */
-      void write_chain(const string dir_output, const string file, const int start, const int stop, const int thin);
+      void write_chain(const string dir_output, const string file, const int start, const int thin);
       
     };
   }

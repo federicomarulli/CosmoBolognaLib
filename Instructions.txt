@@ -1,0 +1,33 @@
+#######################################
+### instructions for CBL developers ###
+#######################################
+
+1) write the doxygen documentation for the new software you want to implement (in the header file)
+
+2) implement the software
+
+3) update Python/setup.py (if the software is stored in one or more new files)
+
+4) add the new file(s) in Python/Lib/ required for Swig (if one or more new classes are implemented)
+
+5) test the new software on local environment, both in C++ and Python
+
+6) add one or more example codes
+
+7) add the example documentation in Header/Func.h and in the Makefile
+
+8) update test.py, adding the command for the new example(s)
+
+9) run the following command:
+
+   ./test.py valgrind new_example1 new_example2 ...
+
+   alternatively, to test all the examples at once, the command is:
+
+   ./test.py valgrind all
+
+   to speed up the test, valgrind can be removed from the above
+   commands, and/or one or more of the following options can be added
+   (in any order): nocompile nopy nopy2 nodoc
+
+10) if everything is OK, push the new code in the DIFA git repository!

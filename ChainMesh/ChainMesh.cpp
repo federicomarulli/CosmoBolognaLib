@@ -44,7 +44,7 @@ void cosmobl::chainmesh::ChainMesh::set_par (const double cell_size, const long 
   m_nDim = nDim;
   m_cell_size = cell_size;
   
-  if (m_cell_size <= 0) {
+  if (m_cell_size<=0) {
     string Err = "Error in cosmobl::chainmesh::ChainMesh::set_par of ChainMesh.cpp: forbidden value for cell_size = "+conv(cell_size, par::fDP2);
     ErrorCBL(Err);
   }
@@ -140,10 +140,10 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<doubl
   
   double fact = 1.;
 
-  check_memory(2.0, true, "cosmobl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp");
+  check_memory(3.0, true, "cosmobl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp");
   
   while (m_nCell_tot>pow(nMAX, 3) || m_nCell_tot<nMIN
-	 || !check_memory(2.0, false, "cosmobl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp")) {
+	 || !check_memory(3.0, false, "cosmobl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp")) {
  
     m_nCell_tot = 1;
     m_cell_size *= fact;
@@ -166,7 +166,7 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<doubl
     
   }
  
-  if (m_nCell_tot>pow(nMAX,3) || m_nCell_tot<nMIN) 
+  if (m_nCell_tot>pow(nMAX, 3) || m_nCell_tot<nMIN) 
     ErrorCBL("Error in cosmobl::chainmesh::ChainMesh::create_chain_mesh! m_nCell_tot = "+conv(m_nCell_tot, par::fINT)+", possible memory problems!");
 
   m_Label.resize(m_nCell_tot, -1);
@@ -190,7 +190,7 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<doubl
 
 void cosmobl::chainmesh::ChainMesh::create_chain_mesh_m2 (const vector<vector<double> > data) 
 {
-  // Setting stuff, generalized for n(=nDim) dimensions
+  // setting stuff, generalized for n(=nDim) dimensions
   long nObj = data[0].size();
 
   for (int i=0; i<m_nDim; i++) {

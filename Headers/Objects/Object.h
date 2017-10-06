@@ -364,9 +364,6 @@ namespace cosmobl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  @param region the object region, used e.g. for jackknife and
-       *  bootstrap
        * 
        *  @return object of a given type
        */
@@ -402,9 +399,6 @@ namespace cosmobl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @param region the object region, used e.g. for jackknife and
-       *  bootstrap
-       *
        *  @return object of a given type
        */
       static shared_ptr<Object> Create (const ObjType objType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
@@ -430,9 +424,6 @@ namespace cosmobl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  @param region the object region, used e.g. for jackknife and
-       *  bootstrap
        *
        *  @return object of a given type
        */
@@ -461,9 +452,6 @@ namespace cosmobl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  @param region the object region, used e.g. for jackknife and
-       *  bootstrap
        *
        *  @return object of a given type
        */
@@ -494,9 +482,6 @@ namespace cosmobl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  @param region the object region, used e.g. for jackknife and
-       *  bootstrap
        *
        *  @return object of a given type
        */
@@ -529,9 +514,6 @@ namespace cosmobl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  @param region the object region, used e.g. for jackknife and
-       *  bootstrap
        *
        *  @return object of a given type
        */
@@ -711,6 +693,21 @@ namespace cosmobl {
        *  message if the derived object does not have this member
        */
       virtual double richness () const { return cosmobl::ErrorCBL("Error in richness() of Objech.h!"); }  
+
+      /**
+       *  @brief get the member \e m_richness_error
+       *  @return the richness_error of the derived object, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual double richness_error () const { return cosmobl::ErrorCBL("Error in richness_error() of Objech.h!"); }  
+      
+      /**
+       *  @brief get the member \e m_bias
+       *  @return the bias of the derived object, or an error
+       *  message if the derived object does not have this member
+       */
+      virtual double bias () const { return cosmobl::ErrorCBL("Error in bias() of Objech.h!"); }  
     
       /**
        *  @brief get the member \e m_generic
@@ -933,7 +930,23 @@ namespace cosmobl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_richness (const double richness=par::defaultDouble) { (void)richness; cosmobl::ErrorCBL("Error in set_richness() of Objech.h!"); }  
+      virtual void set_richness (const double richness=par::defaultDouble) { (void)richness; cosmobl::ErrorCBL("Error in set_richness() of Objech.h!"); }
+
+      /**
+       *  @brief set the member \e m_richness_error
+       *  @param richness_error the richness error 
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_richness_error (const double richness_error=par::defaultDouble) { (void)richness_error; cosmobl::ErrorCBL("Error in set_richness_error() of Objech.h!"); }
+      
+      /**
+       *  @brief set the member \e m_bias
+       *  @param bias the bias 
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_bias (const double bias=par::defaultDouble) { (void)bias; cosmobl::ErrorCBL("Error in set_bias() of Objech.h!"); }  
     
       /**
        *  @brief set the member \e m_generic

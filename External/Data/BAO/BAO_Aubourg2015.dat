@@ -1,0 +1,6 @@
+#redshift   data     error  data_type    survey		      reference
+0.106	    3.047    0.137    DV/rs      6dFGS		   Beutler et al. 2011
+0.15        4.480    0.168    DV/rs      MGS		   Ross et al. 2015
+0.32	    8.467    0.167    DV/rs      BOSS, LOWZ        Anderson et al. 2014
+0.57	    14.945   0.210    DM/rs      BOSS, DR11 CMASS   ""
+0.57	    20.75    0.73     DH/rs      BOSS, DR11 CMASS   ""

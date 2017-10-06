@@ -40,15 +40,19 @@ using namespace cosmobl;
 // ============================================================================
 
 
-void cosmobl::reconstruction_fourier_space (const catalogue::Catalogue data, const catalogue::Catalogue random, const cosmology::Cosmology cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type)
+void cosmobl::reconstruction_fourier_space (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool random_RSD, const cosmology::Cosmology cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type)
 {
   double ff = cosmology.linear_growth_rate(redshift);
   double beta = ff/bias;
   
   //double rsd_term = 3*ff/(7+3*ff);
-  double rsd_term = (ff-beta)/(1+beta);
+  //double rsd_term = (ff-beta)/(1+beta);
+  //double rsd_term= ff/(ff+1);
 
-  data::ScalarField3D density_field = data.density_field(cell_size, random, interpolation_type, smoothing_radius);
+  double rsd_term = 3*beta/(7+3*beta);
+  
+data::ScalarField3D density_field = data.density_field(cell_size, random, interpolation_type, smoothing_radius);
+
   density_field.FourierTransformField();
 
   data::VectorField3D displacement_field(density_field.nx(), density_field.ny(), density_field.nz(), density_field.MinX(), density_field.MaxX(), density_field.MinY(), density_field.MaxY(), density_field.MinZ(), density_field.MaxZ()); 
@@ -70,12 +74,12 @@ void cosmobl::reconstruction_fourier_space (const catalogue::Catalogue data, con
 	double kz = zfact*k;
 	double kk = pow(kx*kx+ky*ky+kz*kz, 0.5);
 
-	vector<double> gridK = {density_field.ScalarField_FourierSpace_real (i, j, k), density_field.ScalarField_FourierSpace_complex (i, j, k) };
+	vector<double> gridK = {density_field.ScalarField_FourierSpace_real (i, j, k)/bias, density_field.ScalarField_FourierSpace_complex (i, j, k)/bias };
 
 	if (kk!=0){
-	  displacement_field.set_VectorField_FourierSpace_real({kx*gridK[1]/(kk*kk)/bias, ky*gridK[1]/(kk*kk)/bias, kz*gridK[1]/(kk*kk)/bias} ,i ,j ,k);
+	  displacement_field.set_VectorField_FourierSpace_real({kx*gridK[1]/(kk*kk), ky*gridK[1]/(kk*kk), kz*gridK[1]/(kk*kk)} ,i ,j ,k);
 
-	  displacement_field.set_VectorField_FourierSpace_complex({-kx*gridK[0]/(kk*kk)/bias, -ky*gridK[0]/(kk*kk)/bias, -kz*gridK[0]/(kk*kk)/bias} ,i , j, k);
+	  displacement_field.set_VectorField_FourierSpace_complex({-kx*gridK[0]/(kk*kk), -ky*gridK[0]/(kk*kk)/bias, -kz*gridK[0]/(kk*kk)} ,i , j, k);
 	}
 
       }
@@ -91,7 +95,7 @@ void cosmobl::reconstruction_fourier_space (const catalogue::Catalogue data, con
     for (int j=0; j<density_field.ny(); j++)
       for (int k=0; k<density_field.nz(); k++) {
 
-	double rx = i*density_field.deltaX()+density_field.MinX(), ry = j*density_field.deltaY()+density_field.MinY(), rz = k*density_field.deltaZ()+density_field.MinZ();
+	double rx = density_field.XX(i), ry = density_field.YY(j), rz = density_field.ZZ(k); 
 	double rr = (sqrt(rx*rx+ry*ry+rz*rz)==0) ? 1 : sqrt(rx*rx+ry*ry+rz*rz);
 
 	vector<double> displ = displacement_field.VectorField(i, j, k);
@@ -124,7 +128,7 @@ void cosmobl::reconstruction_fourier_space (const catalogue::Catalogue data, con
     int j1 = min(int((random.yy(i)-density_field.MinY())/density_field.deltaY()), density_field.ny()-1);
     int k1 = min(int((random.zz(i)-density_field.MinZ())/density_field.deltaZ()), density_field.nz()-1);
 
-    vector<double> displacement = displacement_field_RSD.VectorField(i1, j1, k1);
+    vector<double> displacement = (random_RSD) ? displacement_field_RSD.VectorField(i1, j1, k1) : displacement_field.VectorField(i1, j1, k1);
 
     random.catalogue_object(i)->set_x_displacement(displacement[0]);
     random.catalogue_object(i)->set_y_displacement(displacement[1]);
@@ -152,9 +156,9 @@ cosmobl::catalogue::Catalogue cosmobl::displaced_catalogue (const catalogue::Cat
     double y_displ = displaced_cat.y_displacement(i);
     double z_displ = displaced_cat.z_displacement(i);
 
-    displaced_cat.catalogue_object(i)->set_xx(xx-x_displ);
-    displaced_cat.catalogue_object(i)->set_yy(yy-y_displ);
-    displaced_cat.catalogue_object(i)->set_zz(zz-z_displ);
+    displaced_cat.catalogue_object(i)->set_xx(xx+x_displ);
+    displaced_cat.catalogue_object(i)->set_yy(yy+y_displ);
+    displaced_cat.catalogue_object(i)->set_zz(zz+z_displ);
   }
 
   displaced_cat.computePolarCoordinates();

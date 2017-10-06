@@ -75,68 +75,70 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Data1D_extra
        */
-      Data1D_extra () { set_dataType(DataType::_1D_data_extra_); }
+      Data1D_extra ()
+	: Data1D() { set_dataType(DataType::_1D_data_extra_); }
 
       /**
-       *  @brief constructor, reading data from an input file
+       *  @brief constructor of Data1D
+       *  @param extra_info number of extra info
        *  @param input_file the input data file
-       *  @param skipped_lines the header lines to be skipped
-       *  @param xmin maximun value of x to be used 
-       *  @param xmax maximun value of x to be used 
-       *  @param dataType the data type
+       *  @param skip_nlines the header lines to be skipped
        *  @return object of class Data1D
        */
-      Data1D_extra (const string input_file, const int skipped_lines=0, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_);
-	
-      /**
-       *  @brief constructor
-       *  @param x vector containing x points 
-       *  @param fx vector containing f(x) 
-       *  @param extra_info vector containing vectors of extra generic
-       *  information
-       *  @param xmin maximun value of x to be used 
-       *  @param xmax maximun value of x to be used 
-       *  @param dataType the data type
-       *  @return an object of class Data1D_extra
-       */
-      Data1D_extra (const vector<double> x, const vector<double> fx, const vector<vector<double>> extra_info, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_extra_)
-	: Data1D(x, fx, xmin, xmax, dataType), m_extra_info(extra_info) {}
-
-      /**
-       *  @brief constructor
-       *  @param x vector containing x points 
-       *  @param fx vector containing f(x) 
-       *  @param error_fx vector containing error on f(x) 
-       *  @param extra_info vector containing vectors of extra generic
-       *  information
-       *  @param xmin maximun value of x to be used 
-       *  @param xmax maximun value of x to be used 
-       *  @param dataType the data type
-       *  @return an object of class Data1D_extra
-       */
-      Data1D_extra (const vector<double> x, const vector<double> fx, const vector<double> error_fx, const vector<vector<double>> extra_info={}, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_extra_)
-	: Data1D(x, fx, error_fx, xmin, xmax, dataType), m_extra_info(extra_info) {}
+      Data1D_extra (const int n_extra_info, const string input_file, const int skip_nlines=0)
+	: Data1D()
+	{ m_extra_info.resize(n_extra_info); read(input_file, skip_nlines); set_dataType(DataType::_1D_data_extra_); }
       
       /**
        *  @brief constructor
        *  @param x vector containing x points 
-       *  @param fx vector containing f(x) 
-       *  @param covariance vector containing f(x) covariance matrix 
+       *  @param data vector containing data values 
        *  @param extra_info vector containing vectors of extra generic
        *  information
-       *  @param xmin maximun value of x to be used 
-       *  @param xmax maximun value of x to be used
-       *  @param dataType the data type
        *  @return an object of class Data1D_extra
        */
-      Data1D_extra (const vector<double> x, const vector<double> fx, const vector<vector<double>> covariance, const vector<vector<double>> extra_info, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const DataType dataType=DataType::_1D_data_extra_)
-	: Data1D(x, fx, covariance, xmin, xmax, dataType), m_extra_info(extra_info) {}
+      Data1D_extra (const vector<double> x, const vector<double> data, const vector<vector<double>> extra_info)
+	: Data1D(x, data), m_extra_info(extra_info)
+      { set_dataType(DataType::_1D_data_extra_); }
+
+      /**
+       *  @brief constructor
+       *  @param x vector containing x points 
+       *  @param data vector containing the data values
+       *  @param error vector containing the errors 
+       *  @param extra_info vector containing vectors of extra generic
+       *  information
+       *  @return an object of class Data1D_extra
+       */
+      Data1D_extra (const vector<double> x, const vector<double> data, const vector<double> error, const vector<vector<double>> extra_info={})
+	: Data1D(x, data, error), m_extra_info(extra_info)
+      { set_dataType(DataType::_1D_data_extra_); }
+      
+      /**
+       *  @brief constructor
+       *  @param x vector containing x points 
+       *  @param data vector containing data values 
+       *  @param covariance vector containing data covariance matrix 
+       *  @param extra_info vector containing vectors of extra generic
+       *  information
+       *  @return an object of class Data1D_extra
+       */
+      Data1D_extra (const vector<double> x, const vector<double> data, const vector<vector<double>> covariance, const vector<vector<double>> extra_info)
+	: Data1D(x, data, covariance), m_extra_info(extra_info)
+      { set_dataType(DataType::_1D_data_extra_); }
 
       /**
        *  @brief default destructor
        *  @return none
        */
       virtual ~Data1D_extra () = default;
+
+      /**
+       *  @brief static factory used to construct objects of class
+       *  Data1D_extra
+       *  @return a shared pointer to an object of class Data
+       */
+      shared_ptr<Data> as_factory () {return move(unique_ptr<Data1D_extra>(this));}
 
       ///@}
 
@@ -159,7 +161,23 @@ namespace cosmobl {
        *  @return vector containing vectors with extra information
        */
       vector<vector<double>> extra_info () const override { return m_extra_info; }
-      
+
+      /**
+       *  @brief get the independet variable, to be used 
+       *  in model computation
+       *  @param i index of the extra_info containing
+       *  the independent variable
+       *  @param j index of the second extra_info, not used
+       *  @return the independent variable
+       */
+      vector<vector<double>> IndipendentVariable (const int i=-1, const int j=-1) const 
+      {
+	(void)j;
+	vector<vector<double>> iv;
+	iv.push_back(((i>0) ? m_extra_info[i] : m_x));
+	return iv;
+      }
+
       ///@}
 
       
@@ -186,11 +204,14 @@ namespace cosmobl {
 
       /**
        *  @brief read the data
-       *  @param input_file input data file
-       *  @param skipped_lines the header lines to be skipped
+       *
+       *  @param input_file the input data file
+       *
+       *  @param skip_nlines the header lines to be skipped
+       *
        *  @return none
        */
-      virtual void read (const string input_file, const int skipped_lines=0) override;
+      virtual void read (const string input_file, const int skip_nlines=0) override;
 
       /**
        *  @brief write the data
@@ -198,10 +219,11 @@ namespace cosmobl {
        *  @param file output file
        *  @param header text with the variable names to be written at
        *  the first line of the output file
+       *  @param precision the floating point precision
        *  @param rank cpu index (for MPI usage)
        *  @return none
        */
-      virtual void write (const string dir, const string file, const string header, const int rank=0) const override;
+      virtual void write (const string dir, const string file, const string header, const int precision=4, const int rank=0) const override;
 
       ///@}
       

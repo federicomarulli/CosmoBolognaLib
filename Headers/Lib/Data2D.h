@@ -62,28 +62,13 @@ namespace cosmobl {
       /// ordered y axis points
       vector<double> m_y;
 
-      /// f(x,y) values
-      vector<vector<double>> m_fxy;
+      /// number of points along x
+      int m_xsize;
 
-      /// errors of f(x,y)
-      vector<vector<double>> m_error_fxy;
-
-      /// covariance of f(x,y)
-      vector<vector<double>> m_covariance_fxy;
+      /// number of points along y
+      int m_ysize;
 
       ///@}
-
-      /// index of the first x data to be used
-      int m_x_down;
-
-      /// index of the last x data to be used
-      int m_x_up;
-      
-      /// index of the first y data to be used
-      int m_y_down;
-
-      /// index of the last y data to be used
-      int m_y_up;
 
     public:
 
@@ -96,36 +81,57 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return an object of class Data2D
        */
-      Data2D () { set_dataType(DataType::_2D_data_); }
+      Data2D ()
+	: Data(DataType::_2D_data_) {}
+
+       /**
+       *  @brief constructor used 
+       *  @param input_file input file 
+       *  @param skip_nlines skip header lines
+       *  @return an object of class Data2D
+       */
+      Data2D (const string input_file, const int skip_nlines=0)    
+	: Data(DataType::_2D_data_)
+	{ read(input_file, skip_nlines); }
       
       /**
-       *  @brief constructor
+       *  @brief constructor used 
        *  @param x vector containing x points 
        *  @param y vector containing y points 
-       *  @param fxy vector containing f(x,y) values
-       *  @param xmin maximun value of x to be used 
-       *  @param xmax maximun value of x to be used 
-       *  @param ymin maximun value of y to be used 
-       *  @param ymax maximun value of y to be used 
-       *  @param dataType the data type
+       *  @param data vector containing f(x,y) values
        *  @return an object of class Data2D
        */
-      Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > fxy, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const double ymin=par::defaultDouble, const double ymax=-par::defaultDouble, const DataType dataType=DataType::_2D_data_); 
+      Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > data);
 
       /**
-       *  @brief constructor
+       *  @brief constructor used 
        *  @param x vector containing x points 
        *  @param y vector containing y points 
-       *  @param fxy vector containing f(x,y) values
-       *  @param error_fxy vector containing error on f(x,y)
-       *  @param xmin maximun value of x to be used 
-       *  @param xmax maximun value of x to be used 
-       *  @param ymin maximun value of y to be used 
-       *  @param ymax maximun value of y to be used 
-       *  @param dataType the data type
+       *  @param data vector containing data points
+       *  @param error vector containing error in data points
        *  @return an object of class Data2D
        */
-      Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > fxy, const vector< vector<double> > error_fxy, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const double ymin=par::defaultDouble, const double ymax=-par::defaultDouble, const DataType dataType=DataType::_2D_data_); 
+      Data2D (const vector<double> x, const vector<double> y, const vector< vector<double> > data, const vector< vector<double> > error); 
+
+      /**
+       *  @brief constructor used
+       *  @param x vector containing x points 
+       *  @param y vector containing y points 
+       *  @param data vector containing data values
+       *  @param error vector containing error on data points
+       *  @return an object of class Data2D
+       */
+      Data2D (const vector<double> x, const vector<double> y, const vector<double> data, const vector<double> error); 
+
+      /**
+       *  @brief constructor used
+       *  @param x vector containing x points 
+       *  @param y vector containing y points 
+       *  @param data vector containing data values
+       *  @param covariance vector containing error on data points
+       *  @return an object of class Data2D
+       */
+      Data2D (const vector<double> x, const vector<double> y, const vector<double> data, const vector< vector<double> > covariance); 
 
       /**
        *  @brief default destructor
@@ -133,37 +139,25 @@ namespace cosmobl {
        */
       ~Data2D () = default;
 
-      ///@}
+      /**
+       *  @brief static factory used to construct objects of class
+       *  Data2D
+       *  @return a shared pointer to an object of class Data
+       */
+      shared_ptr<Data> as_factory ();
 
+      ///@}
 
       /**
        *  @name Member functions used to get the private members
        */
       ///@{
-      
-      /**
-       *  @brief get index of the first x used
-       *  @return the index of the first x used
-       */
-      int x_down () const override { return m_x_down; }
 
-      /**
-       *  @brief get index of the last x used
-       *  @return the index of the last x used
-       */
-      int x_up () const override { return m_x_up; }
+      int xsize () const
+      { return m_xsize; }
 
-      /**
-       *  @brief get index of the first y used
-       *  @return the index of the first y used
-       */
-      int y_down () const override { return m_y_down; }
-
-      /**
-       *  @brief get index of the last y used
-       *  @return the index of the last y used
-       */
-      int y_up () const override { return m_y_up; }
+      int ysize () const
+      { return m_ysize; }
 
       /**
        *  @brief get the value of x at index i
@@ -180,54 +174,59 @@ namespace cosmobl {
       double yy (const int i) const override { return m_y[i]; }
 
       /**
-       *  @brief get the value of f(x,y) at index i,j
+       *  @brief get x values
+       *  @param [out] x the x values
+       *  @return none
+       */
+      void xx (vector<double> &x) const { x= m_x; }
+
+      /**
+       *  @brief get y values
+       *  @param [out] y the y values
+       *  @return none
+       */
+      void yy (vector<double> &y) const { y= m_y; }
+
+      /**
+       *  @brief get the independet variable, to be used 
+       *  in model computation
+       *  @param i index of the extra_info containing
+       *  the first independent variable
+       *  @param j index of the extra_info containing
+       *  the second independent variable
+       *  @return the independent variable
+       */
+      vector<vector<double>> IndipendentVariable(const int i=-1, const int j=-1) const {(void)i; (void)j;  return {m_x, m_y};}
+
+      /**
+       *  @brief get data at index i,j
        *  @param i index
        *  @param j index
-       *  @return the value of the m_fxy vector at position i,j
+       *  @return the value of the m_data vector at position i,j
        */
-      double fxy (const int i, const int j) const override { return m_fxy[i][j]; }
+      double data (const int i, const int j) const {return m_data[j+i*m_ysize];} 
 
       /**
-       *  @brief get error on f(x,y) at index i,j
+       *  @brief get data
+       *  @param [out] data vector containing the dataset
+       *  @return none
+       */
+      void data(vector<vector<double>> &data) const;
+
+      /**
+       *  @brief get error at index i,j
        *  @param i index
        *  @param j index
-       *  @return the value of the m_error_fxy vector at position i,j
+       *  @return the value of the m_error vector at position i,j
        */
-      double error_fxy (const int i, const int j) const override { return m_error_fxy[i][j]; }
+      double error (const int i, const int j) const {return m_error[j+i*m_ysize];} 
 
       /**
-       *  @brief get covariance on f(x,y) at index i1, i2, j1, j2
-       *  @param i1 index
-       *  @param i2 index
-       *  @param j1 index
-       *  @param j2 index
-       *  @return the value of the m_error_fxy vector at position (i1, i2), (j1, j2)
+       *  @brief get error
+       *  @param [out] error vector containing the error
+       *  @return none
        */
-      double covariance(const int i1, const int i2, const int j1, const int j2) const override;
-
-      /**
-       *  @brief get the x vector
-       *  @return vector containing the x values
-       */
-      vector<double> xx () const override { return m_x; }
-
-      /**
-       *  @brief get the y vector
-       *  @return vector containing the x values
-       */
-      vector<double> yy () const override { return m_y; }
-
-      /**
-       *  @brief get the m_fx vector
-       *  @return vector containing the fx values
-       */
-      vector<vector<double> > fxy () const override { return m_fxy; }
-
-      /**
-       *  @brief get the m_error_fx vector
-       *  @return vector containing the values of fx error
-       */
-      vector<vector<double> > error_fxy () const override { return m_error_fxy; }
+      void error(vector<vector<double>> &error) const;
 
       ///@}
 
@@ -236,75 +235,20 @@ namespace cosmobl {
        *  @name Member functions used to set the private members
        */
       ///@{
-      
-      /**
-       *  @brief set interval variables for x range
-       *  @param min maximun value of x to be used 
-       *  @param max maximun value of x to be used 
-       *  @param axis 0 &rarr; acts on x axis ; 1 &rarr;
-       *  acts on y axis
-       *  @return none
-       */
-      void set_limits (const double min, const double max, bool axis) override;
-
-      /**
-       *  @brief set interval variables for x range
-       *  @param xmin maximun value of x to be used 
-       *  @param xmax maximun value of x to be used 
-       *  @param ymin maximun value of y to be used 
-       *  @param ymax maximun value of y to be used 
-       *  @return none
-       */
-      void set_limits (const double xmin, const double xmax, const double ymin, const double ymax) override;
 
       /**
        *  @brief set interval variable m_x
        *  @param x vector containing x points
        *  @return none
        */
-      void set_xx (const vector<double> x) override { m_x = x; }
+      void set_xx (const vector<double> x) override { m_x = x; m_xsize=m_x.size();}
 
       /**
        *  @brief set interval variable m_y
        *  @param y vector containing y points
        *  @return none
        */
-      void set_yy (const vector<double> y) override { m_y = y; }
-
-      /**
-       *  @brief set interval variable m_fxy
-       *  @param fxy vector containing f(x,y) 
-       *  @return none
-       */
-      void set_fxy (const vector<vector<double> > fxy) override { m_fxy = fxy; }
-
-      /**
-       *  @brief set interval variable m_error_fxy
-       *  @param error_fxy vector containing errors on f(x,y)
-       *  @return none
-       */ 
-      void set_error_fxy (const vector<vector<double> > error_fxy) override { m_error_fxy = error_fxy; }
-
-      ///@}
-
-      
-      /**
-       *  @name Member functions for Input/Output
-       */
-      ///@{
-      
-      /**
-       * @brief function that returns effective number of data between
-       * defined limits
-       * @return effective number of data between defined limits
-       */
-      int ndata_eff () const override { return (m_x_up-m_x_down)*(m_y_up-m_y_down); }
-
-      /**
-       * @brief function that returns total number of data
-       * @return total number of data
-       */
-      int ndata () const override { return m_x.size()*m_y.size(); }
+      void set_yy (const vector<double> y) override { m_y = y; m_ysize=m_y.size(); }
 
       ///@}
 
@@ -317,10 +261,10 @@ namespace cosmobl {
       /**
        *  @brief read the data
        *  @param input_file input data file
-       *  @param skipped_lines the header lines to be skipped
+       *  @param skip_nlines the header lines to be skipped
        *  @return none
        */
-      virtual void read (const string input_file, const int skipped_lines=0) override;
+      virtual void read (const string input_file, const int skip_nlines=0) override;
 
       /**
        *  @brief write the data
@@ -331,10 +275,38 @@ namespace cosmobl {
        *  @param full false &rarr; simply store the data; true &rarr;
        *  duplicate the data in the other three quadrands (usefull
        *  e.g. when storing the 2D correlation function)
+       *  @param precision the floating point precision
        *  @param rank cpu index (for MPI usage)
        *  @return none
        */
-      virtual void write (const string dir, const string file, const string header, const bool full, const int rank=0) const override;
+      void write (const string dir, const string file, const string header, const bool full, const int precision=4, const int rank=0) const;
+          
+      /**
+       *  @brief write the covariance
+       *  @param dir the output directory
+       *  @param file the output file
+       *  @param precision the floating point precision
+       *  @return none
+       */
+      void write_covariance (const string dir, const string file, const int precision=10) const override;
+
+      ///@}
+
+      /**
+       *  @name Member functions for data cut
+       */
+
+      ///@{
+
+      /**
+       * @brief cut the data
+       * @param xmin minumum value for the independent variable x
+       * @param xmax maximum value for the independent variable x
+       * @param ymin minumum value for the independent variable y
+       * @param ymax maximum value for the independent variable y
+       * @return pointer to an object of type Data2D
+       */
+      shared_ptr<Data> cut(const double xmin, const double xmax, const double ymin, const double ymax) const;
 
       ///@}
 

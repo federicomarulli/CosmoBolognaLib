@@ -16,7 +16,7 @@ int main () {
     double xmin = -10., xmax = 10.;
     double mean = -1., sigma = 0.1;
     
-    cosmobl::statistics::Prior prior { cosmobl::statistics::PriorType::_GaussianPrior_, {mean, sigma}, xmin, xmax };
+    cosmobl::statistics::Prior prior { cosmobl::glob::DistributionType::_GaussianDistribution_, {mean, sigma}, xmin, xmax };
     
     for (int i=0; i<100; ++i) {
       double value = prior.sample(i);
@@ -25,7 +25,7 @@ int main () {
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

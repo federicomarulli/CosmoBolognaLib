@@ -82,7 +82,7 @@ int main () {
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

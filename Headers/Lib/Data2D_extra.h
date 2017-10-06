@@ -81,42 +81,62 @@ namespace cosmobl {
        *  @brief constructor
        *  @param x vector containing x points 
        *  @param y vector containing y points 
-       *  @param fxy vector containing f(x,y) values
+       *  @param data vector containing f(x,y) values
        *  @param extra_info vector containing vectors of extra generic
        *  information
-       *  @param xmin maximun value of x to be used 
-       *  @param xmax maximun value of x to be used 
-       *  @param ymin maximun value of y to be used 
-       *  @param ymax maximun value of y to be used 
-       *  @param dataType the data type
        *  @return an object of class Data2D_extra
        */
-      Data2D_extra (const vector<double> x, const vector<double> y, const vector<vector<double>> fxy, const vector<vector<double>> extra_info, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const double ymin=par::defaultDouble, const double ymax=-par::defaultDouble, const DataType dataType=DataType::_2D_data_extra_)
-	: Data2D(x, y, fxy, xmin, xmax, ymin, ymax, dataType), m_extra_info(extra_info) {}
+      Data2D_extra (const vector<double> x, const vector<double> y, const vector<vector<double>> data, const vector<vector<double>> extra_info)
+	: Data2D(x, y, data), m_extra_info(extra_info) { set_dataType(DataType::_2D_data_extra_); }
 
       /**
        *  @brief constructor
        *  @param x vector containing x points 
        *  @param y vector containing y points 
-       *  @param fxy vector containing f(x,y) values
-       *  @param error_fxy vector containing error on f(x,y)
+       *  @param data vector containing data values
+       *  @param covariance vector containing covariance matrix
        *  @param extra_info vector containing vectors of extra generic
        *  information
-       *  @param xmin maximun value of x to be used 
-       *  @param xmax maximun value of x to be used 
-       *  @param ymin maximun value of y to be used 
-       *  @param ymax maximun value of y to be used 
-       *  @param dataType the data type
+       *  @return an object of class Data2D_extra
+       */
+      Data2D_extra (const vector<double> x, const vector<double> y, const vector<vector<double>> data, const vector<vector<double>> covariance, const vector<vector<double>> extra_info) : Data2D(x, y, data, covariance), m_extra_info(extra_info) { set_dataType(DataType::_2D_data_extra_); }
+
+      /**
+       *  @brief constructor
+       *  @param x vector containing x points 
+       *  @param y vector containing y points 
+       *  @param data vector containing data values
+       *  @param error vector containing error values
+       *  @param extra_info vector containing vectors of extra generic
+       *  information
        *  @return shared pointer to an object of class Data2D_extra
        */
-      Data2D_extra (const vector<double> x, const vector<double> y, const vector<vector<double>> fxy, const vector<vector<double>> error_fxy, const vector<vector<double>> extra_info, const double xmin=par::defaultDouble, const double xmax=-par::defaultDouble, const double ymin=par::defaultDouble, const double ymax=-par::defaultDouble, const DataType dataType=DataType::_2D_data_extra_)
-	: Data2D(x, y, fxy, error_fxy, xmin, xmax, ymin, ymax, dataType), m_extra_info(extra_info) {}
+      Data2D_extra (const vector<double> x, const vector<double> y, const vector<double> data, const vector<double> error, const vector<vector<double>> extra_info) : Data2D(x, y, data, error), m_extra_info(extra_info) { set_dataType(DataType::_2D_data_extra_); }
+
+      /**
+       *  @brief constructor
+       *  @param x vector containing x points 
+       *  @param y vector containing y points 
+       *  @param data vector containing data values
+       *  @param covariance vector containing covariance matrix
+       *  @param extra_info vector containing vectors of extra generic
+       *  information
+       *  @return shared pointer to an object of class Data2D_extra
+       */
+      Data2D_extra (const vector<double> x, const vector<double> y, const vector<double> data, const vector<vector<double>> covariance, const vector<vector<double>> extra_info) : Data2D(x, y, data, covariance), m_extra_info(extra_info) { set_dataType(DataType::_2D_data_extra_); }
 
       /**
        *  @brief default destructor
        *  @return none
        */
       virtual ~Data2D_extra () = default;
+
+      /**
+       *  @brief static factory used to construct objects of class
+       *  Data1D
+       *  @return a shared pointer to an object of class Data
+       */
+      shared_ptr<Data> as_factory () {return move(unique_ptr<Data2D_extra>(this));}
 
       ///@}
 
@@ -139,7 +159,24 @@ namespace cosmobl {
        *  @return vector containing the extra information
        */
       vector<vector<double>> extra_info () const { return m_extra_info; }
-      
+
+      /**
+       *  @brief get the independet variable, to be used 
+       *  in model computation
+       *  @param i index of the extra_info containing
+       *  the first independent variable
+       *  @param j index of the extra_info containing
+       *  the second independent variable
+       *  @return the independent variable
+       */
+      vector<vector<double>> IndipendentVariable(const int i=-1, const int j=-1) const 
+      {
+	vector<vector<double>> iv;
+	iv.push_back(((i>0) ? m_extra_info[i] : m_x));
+	iv.push_back(((j>0) ? m_extra_info[i] : m_y));
+	return iv;
+      }
+
       ///@}
 
       
@@ -180,10 +217,12 @@ namespace cosmobl {
        *  @param full false &rarr; simply store the data; true &rarr;
        *  duplicate the data in the other three quadrands (usefull
        *  e.g. when storing the 2D correlation function)
+       *  @param precision the floating point precision for the output
+       *  file
        *  @param rank cpu index (for MPI usage)
        *  @return none
        */
-      virtual void write (const string dir, const string file, const string header, const bool full, const int rank=0) const override;
+      virtual void write (const string dir, const string file, const string header, const bool full, const int precision=4, const int rank=0) const override;
       
       ///@}
       

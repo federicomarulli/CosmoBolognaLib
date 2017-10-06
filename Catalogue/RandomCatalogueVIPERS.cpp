@@ -215,7 +215,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const string WF
 
       if (isSpectroscopic) 
 	// extract the random redshifts from the distribution
-	fill_distr(random_ra.size(), xx, yy, random_redshift, redshift_min, redshift_max, seed);
+	random_redshift = vector_from_distribution(random_ra.size(), xx, yy, redshift_min, redshift_max, seed);
       else
 	for (size_t i=0; i<random_ra.size(); ++i)
 	  random_redshift.emplace_back(1.);
@@ -247,10 +247,10 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const string WF
   // ----- check the number of fields -----
   
   if (nFields() != nFieldsB)
-    ErrorCBL("Error in Catalogue::Catalogue of RandomCatalogue.cpp, nFields() = "+conv(nFields(), par::fINT)+" != nFieldsB = "+conv(nFieldsB, par::fINT));
+    ErrorCBL("Error in Catalogue::Catalogue of RandomCatalogueVIPERS.cpp, nFields() = "+conv(nFields(), par::fINT)+" != nFieldsB = "+conv(nFieldsB, par::fINT)+" --> the random sample should be probably enlarged");
 
   if (catalogue.nFields()>nFields())
-    ErrorCBL("Error in Catalogue::Catalogue of RandomCatalogue.cpp, catalogue.nFields() = "+conv(catalogue.nFields(), par::fINT)+" > nFields = "+conv(nFields(), par::fINT));
+    ErrorCBL("Error in Catalogue::Catalogue of RandomCatalogueVIPERS.cpp, catalogue.nFields() = "+conv(catalogue.nFields(), par::fINT)+" > nFields = "+conv(nFields(), par::fINT)+" --> the random sample should be probably enlarged");
   
   coutCBL <<"total number of fields in the catalogue = "<<catalogue.nFields() << endl;
   coutCBL <<"total number of fields in the random = "<<nFields()<<endl;

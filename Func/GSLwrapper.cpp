@@ -66,7 +66,63 @@ double cosmobl::gsl::generic_minimizer (const gsl_vector * xx, void * params)
     _xx.push_back(gsl_vector_get(xx, i));
 
   cosmobl::gsl::STR_generic_func_GSL *pp = (cosmobl::gsl::STR_generic_func_GSL *) params;
+  pp->parameters_return = _xx;
+
   return pp->fmin(_xx);
+}
+
+
+// ============================================================================
+
+
+double cosmobl::gsl::generic_minimizer_return (const gsl_vector * xx, void * params)
+{
+  vector<double> _xx;
+  for (size_t i=0; i<xx->size; i++)
+    _xx.push_back(gsl_vector_get(xx, i));
+
+  cosmobl::gsl::STR_generic_func_GSL *pp = (cosmobl::gsl::STR_generic_func_GSL *) params;
+
+  double val = pp->fmin_return(_xx);
+  pp->parameters_return = _xx;
+  
+  return val;
+}
+
+
+// ============================================================================
+
+
+double cosmobl::gsl::GSL_derivative (gsl_function Func, const double xx, const double hh, const double prec)
+{
+  double Deriv, error;
+
+  gsl_deriv_central(&Func, xx, hh, &Deriv, &error);
+
+  return (Deriv!=0 && error/Deriv<prec) ? Deriv : ErrorCBL("Error in cosmobl::gsl::GSL_derivative of CSLwrapper! error/Deriv = "+conv(error/Deriv, par::fDP6)+" > prec = "+conv(prec, par::fDP3));
+}
+
+
+// ============================================================================
+
+
+double cosmobl::gsl::GSL_integrate_cquad (gsl_function Func, const double a, const double b, const double prec, const int nevals)
+{
+  gsl_set_error_handler_off();
+
+  double Int, error;
+  size_t nn = nevals;
+
+  gsl_integration_cquad_workspace *ww = gsl_integration_cquad_workspace_alloc(nevals);
+  gsl_integration_cquad(&Func, a, b, 0., prec, ww, &Int, &error, &nn); 
+  gsl_integration_cquad_workspace_free(ww);
+
+  if (error/fabs(Int)>prec) {
+    string Msg = "Warning in GSL_integrate_qag: unable to reach the requested precision: "+conv(error/fabs(Int), par::fDP6)+" "+conv(prec, par::fDP6);
+    WarningMsg(Msg);
+  }
+  
+  return Int;
 }
 
 
@@ -83,7 +139,7 @@ double cosmobl::gsl::GSL_integrate_qag (gsl_function Func, const double a, const
   gsl_integration_workspace_free(ww);
 
   if (error/fabs(Int)>prec) {
-    string Msg = "Warning in GSL_integrate_qag: unable to reach the requested precision: "+conv(error/fabs(Int), par::fDP3)+" "+conv(prec, par::fDP3);
+    string Msg = "Warning in GSL_integrate_qag: unable to reach the requested precision: "+conv(error/fabs(Int), par::fDP6)+" "+conv(prec, par::fDP6);
     WarningMsg(Msg);
   }
   
@@ -104,7 +160,7 @@ double cosmobl::gsl::GSL_integrate_qagiu (gsl_function Func, const double a, con
   gsl_integration_workspace_free(ww);
 
   if (error/fabs(Int)>prec) {
-     string Msg = "Warning in GSL_integrate_qagiu: unable to reach the requested precision: "+conv(error/fabs(Int), par::fDP3)+" "+conv(prec, par::fDP3);
+     string Msg = "Warning in GSL_integrate_qagiu: unable to reach the requested precision: "+conv(error/fabs(Int), par::fDP6)+" "+conv(prec, par::fDP6);
      WarningMsg(Msg);
   }
   
@@ -129,11 +185,43 @@ double cosmobl::gsl::GSL_integrate_qaws (gsl_function Func, const double a, cons
   gsl_integration_qaws_table_free(T);
 
   if (error/fabs(Int)>prec) {
-     string Msg = "Warning in GSL_integrate_qagiu: unable to reach the requested precision: "+conv(error/fabs(Int), par::fDP3)+" "+conv(prec, par::fDP3);
+     string Msg = "Warning in GSL_integrate_qagiu: unable to reach the requested precision: "+conv(error/fabs(Int), par::fDP6)+" "+conv(prec, par::fDP6);
      WarningMsg(Msg);
   }
   
   return Int;
+}
+
+
+// ============================================================================
+
+
+double cosmobl::gsl::GSL_derivative (function<double(double)> func, const double xx, const double hh, const double prec)
+{
+  STR_generic_func_GSL params;
+  params.f = func;
+
+  gsl_function Func;
+  Func.function = generic_function;
+  Func.params = &params;
+
+  return GSL_derivative(Func, xx, hh, prec);
+}
+
+
+// ============================================================================
+
+
+double cosmobl::gsl::GSL_integrate_cquad (function<double(double)> func, const double a, const double b, const double prec, const int nevals)
+{
+  STR_generic_func_GSL params;
+  params.f = func;
+
+  gsl_function Func;  
+  Func.function = generic_function;
+  Func.params = &params;
+  
+  return GSL_integrate_cquad(Func, a, b, prec, nevals);
 }
 
 
@@ -148,6 +236,7 @@ double cosmobl::gsl::GSL_integrate_qag (function<double(double)> func, const dou
   gsl_function Func;  
   Func.function = generic_function;
   Func.params = &params;
+  
   return GSL_integrate_qag(Func, a, b, prec, limit_size, rule);
 }
 
@@ -181,6 +270,17 @@ double cosmobl::gsl::GSL_integrate_qaws (function<double(double)> func, const do
   Func.params = &params;
 
   return GSL_integrate_qaws(Func, a, b, alpha, beta, mu, nu, prec, limit_size);
+}
+
+
+// ============================================================================
+
+
+double cosmobl::gsl::GSL_integrate_cquad (function<double(double, shared_ptr<void>, vector<double>)> func, const shared_ptr<void> pp, const vector<double> par, const double a, const double b, const double prec, const int nevals)
+{
+  function<double(double)> func_bind = bind(func, placeholders::_1, pp, par);
+
+  return GSL_integrate_cquad(func_bind, a, b, prec, nevals);
 }
 
 
@@ -275,6 +375,71 @@ double cosmobl::gsl::GSL_root_brent (function<double(double)> func, double xx0, 
 // ============================================================================
 
 
+vector<double> cosmobl::gsl::GSL_minimize_nD (function<double(vector<double > &)> func, const vector<double> start, const vector<double> step_size, const unsigned int max_iter, const double tol)
+{
+  size_t npar = start.size();
+
+  STR_generic_func_GSL params;
+  params.fmin_return = func;
+
+  const gsl_multimin_fminimizer_type *T = gsl_multimin_fminimizer_nmsimplex2;
+  gsl_multimin_fminimizer *s = NULL;
+  gsl_vector *ss, *x;
+  gsl_multimin_function minex_func;
+
+  size_t iter = 0;
+  int status;
+  double size;
+
+  // Starting point
+  
+  x = gsl_vector_alloc(npar);
+  ss = gsl_vector_alloc(npar);
+
+  for (size_t i=0; i<npar; i++) {
+    gsl_vector_set(x, i, start[i]);
+    gsl_vector_set(ss, i, ( (step_size.size()==npar) ? step_size[i] : 1) );
+  }
+
+  
+  // Initialize the method and iterate 
+
+  minex_func.n = npar;
+  minex_func.f = &generic_minimizer_return;
+  minex_func.params = &params;
+
+  s = gsl_multimin_fminimizer_alloc (T, npar);
+  gsl_multimin_fminimizer_set (s, &minex_func, x, ss);
+
+  do
+    {
+      iter++;
+      status = gsl_multimin_fminimizer_iterate(s);
+
+      if (status) 
+	break;
+
+      size = gsl_multimin_fminimizer_size(s);
+    
+      status = gsl_multimin_test_size(size, tol);
+
+      if (status == GSL_SUCCESS)
+	coutCBL << "-----> converged to a minimum" << endl;
+    }
+  
+  while (status == GSL_CONTINUE && iter < max_iter);
+
+  gsl_vector_free(x);
+  gsl_vector_free(ss);
+  gsl_multimin_fminimizer_free (s);
+
+  return params.parameters_return;
+}
+
+
+// ============================================================================
+
+
 vector<double> cosmobl::gsl::GSL_minimize_nD (function<double(vector<double>)> func, const vector<double> start, const vector<double> step_size, const unsigned int max_iter, const double tol)
 {
   size_t npar = start.size();
@@ -347,7 +512,7 @@ vector<double> cosmobl::gsl::GSL_minimize_nD (function<double(vector<double>)> f
 // ============================================================================
 
 
-double cosmobl::gsl::GSL_minimize_1D (function<double(double)> func, const double start, double min, double max, const int max_iter)
+double cosmobl::gsl::GSL_minimize_1D (function<double(double)> func, const double start, double min, double max, const int max_iter, const bool verbose)
 {
   int status;
   int iter = 0;
@@ -377,7 +542,7 @@ double cosmobl::gsl::GSL_minimize_1D (function<double(double)> func, const doubl
 
       status = gsl_min_test_interval(min, max, 0.001, 0.0);
 
-      if (status==GSL_SUCCESS)
+      if (status==GSL_SUCCESS && verbose)
 	coutCBL << "-----> Converged to minimum" << endl;
     }
   

@@ -19,7 +19,7 @@ int main () {
     // ---------------- use default cosmological parameters ------------
     // -----------------------------------------------------------------
 
-    const cosmobl::cosmology::Cosmology cosmology;
+    const cosmobl::cosmology::Cosmology cosmology {cosmobl::cosmology::_Planck15_};
   
   
     // -----------------------------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ int main () {
   
     // construct the object used to measure the two-point correlation function
   
-    cosmobl::twopt::TwoPointCorrelation1D_monopole TwoP {catalogue, random_catalogue, cosmobl::_logarithmic_, rMin, rMax, nbins, shift};
+    cosmobl::measure::twopt::TwoPointCorrelation1D_monopole TwoP {catalogue, random_catalogue, cosmobl::_logarithmic_, rMin, rMax, nbins, shift};
 
   
     // Input/Output directories
@@ -72,27 +72,27 @@ int main () {
   
     // measure the monopole and compute Poissonian errors 
   
-    TwoP.measure(cosmobl::twopt::_Poisson_, dir_pairs);
+    TwoP.measure(cosmobl::measure::ErrorType::_Poisson_, dir_pairs);
     TwoP.write(dir_output, "xi_PoissonianErrors.dat");
   
   
     // measure the monopole and compute errors with jackknife (in cubic geometry)
 
-    TwoP.measure(cosmobl::twopt::_Jackknife_, dir_pairs);
+    TwoP.measure(cosmobl::measure::ErrorType::_Jackknife_, dir_pairs);
     TwoP.write(dir_output, "xi_JackknifeErrors.dat");
 
   
     // measure the monopole and compute errors with bootstrap
   
     const int nM = 100; // number of mocks generated for bootstrap resampling
-    TwoP.measure(cosmobl::twopt::_Bootstrap_, dir_pairs, {dir_pairs}, "", nM);
+    TwoP.measure(cosmobl::measure::ErrorType::_Bootstrap_, dir_pairs, {dir_pairs}, "", nM);
     TwoP.write(dir_output, "xi_BootstrapErrors.dat");
 
     cosmobl::print(TwoP.dataset()->covariance());
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

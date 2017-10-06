@@ -78,7 +78,7 @@ void cosmobl::catalogue::Catalogue::check_it_out (ifstream& finr, bool swap)
 
 //==============================================================================================
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const string file_cn, const bool swap, const double fact, const bool read_catalogue)
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const string file_cn, const bool swap, const double fact, const bool read_catalogue, const double nSub)
 {
   Gadget_Header header;
   string gdgt_head = file_cn+".0";
@@ -92,23 +92,27 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const string fi
   vector<string> components_name = {"Gas", "Halo", "Disk", "Bulge", "Stars", "Boundary"};
 
   cout << endl;
-  cout << "------- Total Particles -------" << endl << endl;
-  for (int i = 0; i<6; i++) if (header.npartTotal[i] != 0) cout << components_name[i]+": " << header.npartTotal[i] << endl;
+  coutCBL << "------- Total Particles -------" << endl << endl;
+  for (int i = 0; i<6; i++) if (header.npartTotal[i] != 0) coutCBL << components_name[i]+": " << header.npartTotal[i] << endl;
   cout << endl;
-  cout << "------- Mass Resolution -------" << endl << endl;
-  for (int i = 0; i<6; i++) if (header.massarr[i] != 0) cout << components_name[i]+": " << header.massarr[i] << "" << endl;
+  coutCBL << "------- Mass Resolution -------" << endl << endl;
+  for (int i = 0; i<6; i++) if (header.massarr[i] != 0) coutCBL << components_name[i]+": " << header.massarr[i] << "" << endl;
   cout << endl;
-  cout << "Age (normalized): " << header.time << endl;
-  cout << "Redshift: " << header.redshift << endl;
-  cout << "Box Size: " << header.boxsize << " kpc/h" << endl;
-  cout << "Omega_M,0 = " << header.omega0 << endl;
-  cout << "Omega_Lambda = " << header.omegaLambda << endl;
-  cout << "h_0 = " << header.hubblePar << endl;
+  coutCBL << "Age (normalized): " << header.time << endl;
+  coutCBL << "Redshift: " << header.redshift << endl;
+  coutCBL << "Box Size: " << header.boxsize << " kpc/h" << endl;
+  coutCBL << "Omega_M,0 = " << header.omega0 << endl;
+  coutCBL << "Omega_Lambda = " << header.omegaLambda << endl;
+  coutCBL << "h_0 = " << header.hubblePar << endl;
   cout << endl;
-  cout << "Snapshot divided in " << header.nfiles << " files." << endl;
+  coutCBL << "Snapshot divided in " << header.nfiles << " files." << endl;
   cout << endl;
 
   if (read_catalogue) {
+    
+    // parameters for random numbers used in case nSub!=1
+    default_random_engine gen;
+    uniform_real_distribution<float> ran(0., 1.);
 
     float num_float1, num_float2, num_float3;
     for (int i = 0; i<header.nfiles; i++) {
@@ -142,7 +146,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const string fi
 	if (swap) num_float3 = FloatSwap(num_float3);
 	coords.zz=(num_float3)*fact;
 
-	m_object.push_back(move(Object::Create(objType, coords)));
+	if (ran(gen)<nSub) m_object.push_back(move(Object::Create(objType, coords)));
       }
       check_it_out(finsnap,swap);
       finsnap.clear(); finsnap.close();

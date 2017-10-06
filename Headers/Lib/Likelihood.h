@@ -34,7 +34,7 @@
 #ifndef __LIKEL__
 #define __LIKEL__
 
-#include "Chi2.h"
+#include "LikelihoodFunction.h"
 
 
 // ============================================================================================
@@ -45,130 +45,13 @@ namespace cosmobl {
   namespace statistics {
     
     /**
-     * @enum LikelihoodType
-     * @brief the type of likelihood function
-     */
-    enum LikelihoodType {
-
-      /// not set
-      _Likelihood_NotSet_,
-
-      /// Gaussian likelihood model
-      _GaussianLikelihood_Model_,
-
-      /// Gaussian likelihood error
-      _GaussianLikelihood_Error_,
-      
-      /// Gaussian likelihood covariance
-      _GaussianLikelihood_Covariance_,
-      
-      /// Likelihood function defined by the user
-      _UserDefinedLikelihood_
-    };
-
-    
-    /**
-     * @struct STR_likelihood_parameters
-     * @brief the struct STR_likelihood_parameters
-     *
-     * This struct contains the data
-     * and the model for the likelihood analysis
-     */
-    struct STR_likelihood_parameters
-    {
-      /// data containers
-      shared_ptr<data::Data> data;
-
-      /// model to test
-      shared_ptr<Model> model;
-
-      /// index(s) of the extra info vector containing the point(s) where to evaluate the model
-      vector<int> x_index;
-
-      /// use priors in the likelihood
-      bool use_priors;
-
-      /// sign of the likelihood, used for minimization
-      int minus;
-
-      /// the number of samples
-      int nSamples;
-
-      /// the samples indipendent variables
-      vector<vector<double>> xx_multidata;
-
-      /**
-       *  @brief constructor
-       *  @param _data pointers to the data container
-       *  @param _model pointers to the model 
-       *  @param _x_index vector contaning the x indeces
-       *  @return object of type STR_likelihood_parameters
-       */ 
-      STR_likelihood_parameters (const shared_ptr<data::Data> _data, const shared_ptr<Model> _model, const vector<int> _x_index={})
-      : data(_data), model(_model), minus(1), nSamples(1)
-      {
-	x_index.emplace_back(_x_index.size()>0 ? _x_index[0] : 0);
-	x_index.emplace_back(_x_index.size()>1 ? _x_index[1] : 2);
-      }
-      
-    };
-
-
-    /** 
-     *  @brief function to compute the gaussian loglikelihood 
-     *  @param model_parameters the parameters of the model
-     *  @param inputs pointer to an object of type STR_params
-     *  @return the value of the loglikelihood; 
-     */
-    double LogLikelihood_Gaussian_1D_model (vector<double> model_parameters, const shared_ptr<void> inputs);
-
-    /** 
-     *  @brief function to compute the gaussian loglikelihood 
-     *  @param model_parameters the parameters of the model
-     *  @param inputs pointer to an object of type STR_params
-     *  @return the value of the loglikelihood 
-     */
-    double LogLikelihood_Gaussian_1D_error (vector<double> model_parameters, const shared_ptr<void> inputs);
-
-    /** 
-     *  @brief function to compute the gaussian loglikelihood 
-     *  @param model_parameters the parameters of the model
-     *  @param inputs pointer to an object of type STR_params
-     *  @return the value of the loglikelihood 
-     */
-    double LogLikelihood_Gaussian_1D_covariance (vector<double> model_parameters, const shared_ptr<void> inputs);
-
-    /** 
-     *  @brief function to compute the gaussian loglikelihood 
-     *  @param model_parameters the parameters of the model
-     *  @param inputs pointer to an object of type STR_params
-     *  @return the value of the loglikelihood 
-     */
-    double LogLikelihood_Gaussian_2D_model (vector<double> model_parameters, const shared_ptr<void> inputs);
-
-    /** 
-     *  @brief function to compute the gaussian loglikelihood 
-     *  model with one parameter  &chi;&sup2; 
-     *  @param model_parameters the parameters of the model
-     *  @param inputs pointer to an object of type STR_params
-     *  @return the value of the loglikelihood 
-     */
-    double LogLikelihood_Gaussian_2D_error (vector<double> model_parameters, const shared_ptr<void> inputs);
-
-    /**
-     * @var typedef LogLikelihood_function
-     * @brief definition of a function for computation of 
-     * the LogLikelihood
-     */
-    typedef function<double (const vector<double>, const shared_ptr<void>)> LogLikelihood_function;
-    
-    /**
      *  @class Likelihood Likelihood.h "Headers/Lib/Likelihood.h"
      *
      *  @brief The class Likelihood
      *
      *  This class is used to handle objects of type likelihood. It is
-     *  used for all kind of likelihood analyses, sample and minimization
+     *  used for all kind of likelihood analyses, sample and
+     *  maximization
      */
     class Likelihood
     {
@@ -181,37 +64,23 @@ namespace cosmobl {
       /// model to test
       shared_ptr<Model> m_model; 
 
+      /// likelihood parameters
+      shared_ptr<void> m_likelihood_parameters;
+
+      /// likelihood parameters
+      shared_ptr<LikelihoodParameters> m_parameters;
+
       /// type of the likelihood
-      LikelihoodType m_likelihood_type;
+      LikelihoodType m_likelihood_type = LikelihoodType::_Likelihood_NotSet_;
 
       /// likelihood function
       LogLikelihood_function m_log_likelihood_function;
 
-      /// number of chains
-      int m_nchains;
+      /// value of the likelihood
+      vector<double> m_likelihood_values;
 
-      /// size of the chains
-      int m_chain_size;
-
-      /// number of parameters
-      int m_npar;
-
-      /// use data covariance matrix; 0 &rarr; don't use data covariance matrix 
-      /// 1 &rarr; use data covariance matrix; 
-      bool m_cov;
-
-      vector<vector<double> > m_likelihood_chains;
-
-      /**
-       *  @brief function that write sampled parameters 
-       *  @param output_dir directory of output for chains 
-       *  @param output_file file of output for chains 
-       *  @param start starting position in the chains
-       *  @param stop final position in the chains
-       *  @param thin interval of parameter in output
-       *  @return none
-       */
-      void m_write_chain (const string output_dir, const string output_file, const int start=-1, const int stop=-1, const int thin=1);
+      /// acceptance values
+      vector<double> m_acceptance;
 
     public:
 
@@ -228,68 +97,127 @@ namespace cosmobl {
 
       /**
        *  @brief constructor
+       *  
        *  @param data pointers to the data container
+       *  
        *  @param model pointers to the model 
+       *
+       *  @param parameters vector containing likelihood parameters 
+       *
        *  @param likelihood_type type of likelihood
+       *
        *  @return object of class Likelihood
        */
-      Likelihood (const shared_ptr<data::Data> data, const shared_ptr<Model> model, const LikelihoodType likelihood_type);
+      Likelihood (const shared_ptr<data::Data> data, const shared_ptr<Model> model, const vector<shared_ptr<Parameter>> parameters, const LikelihoodType likelihood_type);
 
       /**
        *  @brief constructor
+       *
        *  @param data pointers to the data container
+       *
        *  @param model pointers to the model 
-       *  @param likelihood_type type of likelihood
+       *
+       *  @param parameters vector containing likelihood parameters 
+       *
        *  @param loglikelihood_function function of type loglikelihood_function
-       *  @param cov if cov=0 &rarr do not invert covariance matrix; else &rarr invert the covariance matrix;
-       *  @param cov 
+       *
        *  @return object of class Likelihood
        */
-      Likelihood (const shared_ptr<data::Data> data, const shared_ptr<Model> model, const LikelihoodType likelihood_type, const LogLikelihood_function loglikelihood_function, const bool cov);
+      Likelihood (const shared_ptr<data::Data> data, const shared_ptr<Model> model, const vector<shared_ptr<Parameter>> parameters, const LogLikelihood_function loglikelihood_function);
+
+      /**
+       *  @brief constructor
+       *  
+       *  @param data pointers to the data container
+       *  
+       *  @param model pointers to the model 
+       *
+       *  @param parameters likelihood parameters 
+       *
+       *  @param likelihood_type type of likelihood
+       *
+       *  @return object of class Likelihood
+       */
+      Likelihood (const shared_ptr<data::Data> data, const shared_ptr<Model> model, const shared_ptr<LikelihoodParameters> parameters, const LikelihoodType likelihood_type);
+
+      /**
+       *  @brief constructor
+       *
+       *  @param data pointers to the data container
+       *
+       *  @param model pointers to the model 
+       *
+       *  @param parameters likelihood parameters 
+       *
+       *  @param loglikelihood_function function of type loglikelihood_function
+       *
+       *  @return object of class Likelihood
+       */
+      Likelihood (const shared_ptr<data::Data> data, const shared_ptr<Model> model, const shared_ptr<LikelihoodParameters> parameters, const LogLikelihood_function loglikelihood_function);
 
       /**
        *  @brief default destructor
+       *
        *  @return none
        */
       ~Likelihood () = default;
 
       ///@}
 
-      /**
-       * @brief return the best-fit value of the i-th parameter
-       *
-       * @param i the parameter index
-       *
-       * @return the best-fit value of the i-th parameter
-       */
-      double best_fit (const int i) { return m_model->parameter(i)->value(); }
 
-	
+      /**
+       * @brief evaluate the prior
+       *
+       * @param pp the likelihood parameters
+       *
+       * @return none
+       */
+      double prior (vector<double> &pp) const;
+
+      /**
+       * @brief evaluate the prior
+       *
+       * @param pp the likelihood parameters
+       *
+       * @return none
+       */
+      double log_prior (vector<double> &pp) const;
+
       /**
        * @brief evaluate the likelihood
        *
-       * @param pp the model parameters
+       * @param pp the likelihood parameters
        *
-       * @return none
+       * @return the likelihood \f$ \mathcal{L} \f$
        */
-      double operator () (vector<double> pp) 
-      {	
-	shared_ptr<void> pars = make_shared<STR_likelihood_parameters>(STR_likelihood_parameters(m_data, m_model));
-	return m_log_likelihood_function(pp, pars);
-      }
+      double likelihood (vector<double> &pp) const;
 
       /**
-       * @brief set the likelihood type using the LikelihoodType object 
+       * @brief evaluate the log-likelihood
        *
-       * @param likelihood_type the likelihood type, specified with the 
-       * LikelihoodType object
+       * @param pp the likelihood parameters
        *
-       * @param cov use data covariance matrix; 0 &rarr; don't use data covariance
-       * matrix, 1 &rarr; use data covariance matrix; 
-       *
-       * @return none
+       * @return the log-likelihood \f$ \log(\mathcal{L}) \f$
        */
-      void set_likelihood_type (const LikelihoodType likelihood_type, const bool cov);
+      double log_likelihood (vector<double> &pp) const;
+
+      /**
+       * @brief evaluate the likelihood
+       *
+       * @param pp the likelihood parameters
+       *
+       * @return  \f$ \mathcal{L} \times P(\vec{\theta}) \f$
+       */
+      double likelihood_and_priors (vector<double> &pp) const;
+
+      /**
+       * @brief evaluate the likelihood times the priors
+       *
+       * @param pp the likelihood parameters
+       *
+       * @return \f$ \log(\mathcal{L}) + log(P(\vec{\theta})) \f$
+       */
+      double log_likelihood_and_priors (vector<double> &pp) const;
 
       /**
        * @brief set the data for the likelihood analysis 
@@ -310,82 +238,106 @@ namespace cosmobl {
       void set_model (shared_ptr<Model> model);
 
       /**
-       * @brief set the likelihood function 
-       * according among pre-defined likelihood functions 
+       * @brief set the likelihood parameters  
+       *
+       * @param parameters vector containing pointers
+       * to the likelihood parameters
        *
        * @return none
        */
-      void set_likelihood_function ();
+      void set_parameters (vector<shared_ptr<Parameter>> parameters);
+
+      /**
+       * @brief set the likelihood type using the LikelihoodType object 
+       *
+       * @param likelihood_type the likelihood type, specified with the 
+       * LikelihoodType object
+       *
+       * @return none
+       */
+      void set_likelihood_function (const LikelihoodType likelihood_type);
 
       /**
        * @brief set the likelihood function 
        *
        * @param loglikelihood_function the likelihood function
        *
-       * @param cov use data covariance matrix; 0 &rarr; don't use data covariance
-       * matrix, 1 &rarr; use data covariance matrix; 
-       *
        * @return none
        */
-      void set_likelihood_function (const LogLikelihood_function loglikelihood_function, const bool cov);
+      void set_likelihood_function (const LogLikelihood_function loglikelihood_function);
 
       /**
-       *  @brief return the Log prior probability
-       *  @return value of the Log prior probability
-       */
-      double LogPriorProbability ();
-
-      /**
-       *  @brief return the Log prior probability
-       *  @param parameter_values values of the parameters
-       *  @return value of the Log Prior probability
-       */
-      double LogPriorProbability (const vector<double> parameter_values);
-
-      /**
-       *  @brief function that maximize Likelihood, find best fit
-       *  parameters and store them in model       
-       *  @param usePriors minimize the Log likelihood using the Priors
-       *  @param max_iter maximum number of iteration 
-       *  @param tol the tolerance for minima finding convergence 
+       *  @brief function that maximize the likelihood, find the
+       *  best-fit parameters and store them in model
+       *
+       *  @param guess vector containing initial guess values and
+       *  result of the likelihood maximization
+       *
+       *  @param usePriors false &rarr; minimize \f$
+       *  -\log(\mathcal{L}) \f$; true &rarr; minimize \f$
+       *  -\log(\mathcal{L})- \log(\mathcal{L}) \f$:
+       *
+       *  @param max_iter the maximum number of iterations
+       *
+       *  @param tol the tolerance in finding convergence 
+       *
+       *  @param epsilon the relative fraction of the interval size
+       *
        *  @return none
        */
-      void minimize_LogLikelihood (const bool usePriors=true, const unsigned int max_iter=100, const double tol=1.e-6); 
+      void maximize (vector<double> &guess, const bool usePriors=false, const unsigned int max_iter=100, const double tol=1.e-6, const double epsilon=1.e-3); 
 
       /**
-       *  @brief function that samples likelihood, using stretch-move
+       *  @brief function that maximize the likelihood, find the
+       *  best-fit parameters and store them in model
+       *
+       *  @param guess vector containing the results of the likelihood
+       *  maximization
+       *
+       *  @param ntry number of prior extractions to find the initial guess
+       *
+       *  @param prior_seed base prior seed
+       *
+       *  @param usePriors false &rarr; minimize \f$ -\log(\mathcal{L}) \f$; 
+       *  true &rarr; minimize \f$ -\log(\mathcal{L})- \log(\mathcal{L}) \f$:
+       *
+       *  @param max_iter maximum number of iterations 
+       *
+       *  @param tol the tolerance in finding convergence
+       *
+       *  @param epsilon the relative fraction of the interval size
+       *
+       *  @return none
+       */
+      void maximize (vector<double> &guess, const int ntry, const int prior_seed=431412, const bool usePriors=false, const unsigned int max_iter=100, const double tol=1.e-6, const double epsilon=1.e-3);
+
+      /**
+       *  @brief function that 
+       *  samples likelihood, using stretch-move
        *  algorithm on n-dimensional parameter space, and stores chain
        *  parameters.
-       *  @param nchains number of chains to sample the parameter space 
-       *  @param chain_size number of step in each chain 
+       *
        *  @param seed the seed for random number generator
-       *  @param radius the radius
-       *  @param do_write_chain 0 &rarr; don't write chains at each step 
-       *  1 &rarr; write chains at each step
-       *  @param output_dir directory of output for chains 
-       *  @param output_file file of output for chains 
-       *  @param aa free parameter
+       *
+       *  @param aa parameter for the stretch-move distribution
+       *
        *  @return averace acceptance ratio
        */
-      double sample_stretch_move (const int nchains, const int chain_size, const int seed, const double radius=1.e-3, bool do_write_chain = 0, const string output_dir=par::defaultString, const string output_file=par::defaultString, const double aa=2);
+      void sample_stretch_move (const int seed, const double aa=2);
 
       /**
        *  @brief parallel version of the function that 
-       *  samples likelihood, using stretch-move algorithm
-       *  on n-dimensional parameter space, and stores chain
+       *  samples likelihood, using stretch-move
+       *  algorithm on n-dimensional parameter space, and stores chain
        *  parameters.
-       *  @param nchains number of chains to sample the parameter space 
-       *  @param chain_size number of step in each chain 
+       *
        *  @param seed the seed for random number generator
-       *  @param radius the radius
-       *  @param do_write_chain 0 &rarr; don't write chains at each step 
-       *  1 &rarr; write chains at each step
-       *  @param output_dir directory of output for chains 
-       *  @param output_file file of output for chains
-       *  @param aa free parameter
+       *
+       *  @param aa parameter for the stretch-move distribution
+       *
        *  @return averace acceptance ratio
        */
-      double sample_stretch_move_parallel (const int nchains, const int chain_size, const int seed, const double radius=1.e-3, bool do_write_chain = 0, const string output_dir=par::defaultString, const string output_file=par::defaultString, const double aa=2.);
+      void sample_stretch_move_parallel (const int seed, const double aa=2);
 
       /**
        *  @brief function that samples likelihood, using stretch-move
@@ -403,19 +355,223 @@ namespace cosmobl {
        *  @param output_file file of output for chains 
        *  @return averace acceptance ratio
        */
-      double sample_tabulated_likelihood (const int nstep_p1, const int nstep_p2, const string interpolation_method, const int nchains, const int chain_size, const int seed, bool do_write_chain = 0, const string output_dir=par::defaultString, const string output_file=par::defaultString);
+      void sample_tabulated_likelihood (const int nstep_p1, const int nstep_p2, const string interpolation_method, const int nchains, const int chain_size, const int seed, bool do_write_chain = 0, const string output_dir=par::defaultString, const string output_file=par::defaultString);
 
       /**
        *  @brief function that write sampled parameters 
+       *
        *  @param output_dir directory of output for chains 
+       *
        *  @param output_file file of output for chains 
+       *
        *  @param start starting position in the chains
-       *  @param stop final position in the chains
-       *  @param thin interval of parameter in output
+       *
+       *  @param thin take one chain step every \e thin steps
+       *
        *  @return none
        */
-      void write_chain (const string output_dir, const string output_file, const double start=0.5, const double stop=1, const int thin=1);
+      void write_chain (const string output_dir, const string output_file, const int start, const int thin=1);
       
+      /**
+       *  @brief function that write sampled parameters 
+       *  on a FITS file
+       *
+       *  @param output_dir directory of output for chains 
+       *
+       *  @param output_file file of output for chains 
+       *
+       *  @param table_name table name
+       *
+       *  @param burn_in the number of the first chain steps to be
+       *  discarded
+       *
+       *  @param thin take one chain step every \e thin steps
+       *
+       *  @return none
+       */
+      void write_chain_FITS (const string output_dir, const string output_file, const string table_name, const int burn_in=0, const int thin=1)
+      { (void)output_dir; (void)output_file; (void)table_name; (void)burn_in; (void)thin; ErrorCBL("Error in write_chain_FITS! Work in progress...", glob::_workInProgress_); }
+
+      /**
+       *  @brief function that write sampled parameters 
+       *
+       *  @param output_dir directory of output for chains 
+       *
+       *  @param output_file file of output for chains 
+       *
+       *  @param nwalkers the number of parallel walkers
+       *  
+       *  @param skip_header header lines
+       *
+       *  @return none
+       */
+      void read_chain (const string output_dir, const string output_file, const int nwalkers, const int skip_header);
+      
+      /**
+       *  @brief function that read sampled parameters 
+       *  from a FITS file
+       *
+       *  @param output_dir directory of output for chains 
+       *
+       *  @param output_file file of output for chains 
+       *
+       *  @param table_name table name
+       *
+       *  @param burn_in the number of the first chain steps to be
+       *  discarded
+       *
+       *  @param thin take one chain step every \e thin steps
+       *
+       *  @return none
+       */
+      void read_chain_FITS (const string output_dir, const string output_file, const string table_name, const int burn_in=0, const int thin=1)
+      { (void)output_dir; (void)output_file; (void)table_name; (void)burn_in; (void)thin; ErrorCBL("Error in read_chain_FITS() of Likelihood.h! Work in progress...", glob::_workInProgress_); }
+
+      /**
+       *  @brief initialize the chains
+       *
+       *  @param chain_size the chain size
+       *
+       *  @param nwalkers the number of parallel
+       * walkers
+       *
+       *  @param seed the base seed for initialization
+       *
+       *  @return none
+       */
+      void initialize_chains (const int chain_size, const int nwalkers, const int seed);
+
+      /**
+       *  @brief initialize the chains
+       *
+       *  @param chain_size the chain size
+       *
+       *  @param nwalkers the number of parallel
+       * walkers
+       *
+       *  @param seed the base seed for initialization
+       *
+       *  @param radius the stardand distribution for
+       * normal distribution random extraction
+       *
+       *  @param ntry number of prior extractions to find the initial guess
+       *
+       *  @param prior_seed base prior seed
+       *
+       *  @param max_iter maximum number of iteration 
+       *
+       *  @param tol the tolerance for minima finding convergence 
+       *
+       *  @param epsilon the relative fraction of the interval size
+       *
+       *  @return none
+       */
+      void initialize_chains (const int chain_size, const int nwalkers, const int seed, const double radius, const int ntry, const int prior_seed=23442341, const unsigned int max_iter=100, const double tol=1.e-6, const double epsilon=1.e-3);
+
+      /**
+       *  @brief initialize the chains
+       *
+       *  @param chain_size the chain size
+       *
+       *  @param nwalkers the number of parallel
+       * walkers
+       *
+       *  @param seed the base seed for initialization
+       *
+       *  @param radius the stardand distribution for
+       * normal distribution random extraction   
+       * 
+       *  @param guess vector containing initial guess and result
+       *  of the likelihood maximization
+       *
+       *  @param max_iter maximum number of iteration 
+       *
+       *  @param tol the tolerance for minima finding convergence 
+       *
+       *  @param epsilon the relative fraction of the interval size
+       *
+       *  @return none
+       */
+      void initialize_chains (const int chain_size, const int nwalkers, const int seed, const double radius, vector<double> &guess, const unsigned int max_iter=100, const double tol=1.e-6, const double epsilon=1.e-3);
+
+      /**
+       *  @brief initialize the chains
+       *
+       *  @param chain_size the chain size
+       *
+       *  @param nwalkers the number of parallel
+       * walkers
+       *
+       *  @param seed the base seed for initialization
+       *
+       *  @param values the means  for
+       * normal distribution random extraction
+       *
+       *  @param radius the stardand distribution for
+       * normal distribution random extraction
+       *
+       *  @return none
+       */
+      void initialize_chains (const int chain_size, const int nwalkers, const int seed, vector<double> &values, const double radius);
+
+      /**
+       *  @brief function that initialize chains
+       *
+       *  @param chain_size the chain size
+       *
+       *  @param chain_values the value of the chain 
+       *
+       *  @return none
+       */
+      void initialize_chains (const int chain_size, const vector<vector<double>> chain_values);
+
+      /**
+       *  @brief function that initialize chains
+       *  reading from an input chain file 
+       *
+       *  @param chain_size the chain size
+       *
+       *  @param nwalkers the number of parallel
+       * walkers
+       *
+       *  @param input_dir directory of input for chains 
+       *
+       *  @param input_file file of input for chains 
+       *
+       *  @return none
+       */
+      void initialize_chains (const int chain_size, const int nwalkers, const string input_dir, const string input_file);
+
+      /**
+       *  @brief show the results on the standard output
+       *
+       *  @param start starting position in the chains
+       *
+       *  @param thin take one chain step every \e thin steps
+       *
+       *  @param seed the base seed for initialization
+       *
+       *  @return none
+       */
+      void show_results (const int start, const int thin, const int seed);
+
+      /**
+       *  @brief write results on files
+       *
+       *  @param dir name of the output directory
+       *
+       *  @param file name of the output file
+       *
+       *  @param start starting position in the chains
+       *
+       *  @param thin take one chain step every \e thin steps
+       *
+       *  @param seed the base seed for initialization
+       *
+       *  @return none
+       */
+      void write_results (const string dir, const string output, const int start, const int thin, const int seed);
+
     };
   }
 }

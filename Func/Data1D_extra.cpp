@@ -40,56 +40,72 @@ using namespace data;
 // ======================================================================================
 
 
-cosmobl::data::Data1D_extra::Data1D_extra (const string input_file, const int skipped_lines, const double xmin, const double xmax, const DataType dataType) 
-{
-  set_dataType(dataType);
-
-  read(input_file, skipped_lines);
-
-  set_limits((xmin>par::defaultDouble) ? xmin : Min(m_x)-0.001, (xmax<-par::defaultDouble) ? xmax : Max(m_x)+0.001);
-}
-
-
-// ======================================================================================
-
-
-void cosmobl::data::Data1D_extra::read (const string input_file, const int skipped_lines)
+void cosmobl::data::Data1D_extra::read (const string input_file, const int skip_nlines)
 {
   ifstream fin(input_file.c_str()); checkIO(fin, input_file);
   string line;
-
-  if (skipped_lines>0)
-    for (int i=0; i<skipped_lines; ++i)
-      getline(fin, line);
-
-  bool first = true;
   
-  while (getline(fin, line)) {
-    
-    stringstream ss(line); 
-    vector<double> num; double NUM;
-    while (ss>>NUM) num.push_back(NUM);
-    
-    m_x.push_back(num[0]);
-    m_fx.push_back(num[1]);
-    m_error_fx.push_back(num[2]);
+  bool moreColumns = true;
+  int col = 3;
+  int ind1 = 1, ind2 = 2;
+  
+  // continue to read in case of more the 3 columns (e.g. for clustering multipoles)
+  while (moreColumns) {
 
-    if (first) m_extra_info.resize(num.size()-3);
+    // skip the first nlines (in case of header lines)
+    if (skip_nlines>0)
+      for (int i=0; i<skip_nlines; ++i)
+	getline(fin, line);
 
-    for (size_t ex=0; ex<num.size()-3; ++ex) 
-      m_extra_info[ex].emplace_back(num[ex+3]);
+    // read the file lines
+    while (getline(fin, line)) {
+      
+      stringstream ss(line); 
+      vector<double> num; double NUM;
+      while (ss>>NUM) num.emplace_back(NUM);
+
+      // if there are more than 3 columns (e.g. for clustering
+      // multipoles) then the next columns will be read and added to
+      // the first one
+      if (num.size()==(size_t)col+m_extra_info.size()) moreColumns = false;
     
-    first = false;
+      m_x.emplace_back(num[0]);
+      m_data.emplace_back(num[ind1]);
+      m_error.emplace_back(num[ind2]);
+      
+      int ind = 0;
+      for (size_t ex=num.size()-m_extra_info.size(); ex<num.size(); ++ex) 
+	m_extra_info[ind++].emplace_back(num[ex]);
+
+    }
+    
+    // go back at the beginning of the file
+    fin.clear(); fin.seekg(ios::beg);
+ 
+    col += 2;
+    ind1 += 2;
+    ind2 += 2;
   }
 
-  fin.clear(); fin.close(); 
+  fin.clear(); fin.close();
+
+  
+  // set the data type and diagonal covariance
+  
+  m_ndata = m_data.size();
+
+  m_covariance.resize(m_ndata, vector<double>(m_ndata, 0));
+  for (int i=0; i<m_ndata; i++)
+    m_covariance[i][i] = pow(m_error[i], 2);
+
+  invert_covariance();
 }
 
 
 // ======================================================================================
 
 
-void cosmobl::data::Data1D_extra::write (const string dir, const string file, const string header, const int rank) const 
+void cosmobl::data::Data1D_extra::write (const string dir, const string file, const string header, const int precision, const int rank) const 
 {
   (void)rank;
   
@@ -99,7 +115,7 @@ void cosmobl::data::Data1D_extra::write (const string dir, const string file, co
   fout << "### "<< header <<" ###" << endl;
 
   for (size_t i=0; i<m_x.size(); ++i) { 
-    fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_x[i] << "  " << setw(8) << m_fx[i] << "  " << setw(8) << m_error_fx[i];
+    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(8) << m_x[i] << "  " << setw(8) << m_data[i] << "  " << setw(8) << m_error[i];
     for (size_t ex=0; ex<m_extra_info.size(); ++ex)
       fout << "  " << setw(8) << m_extra_info[ex][i];
     fout << endl;

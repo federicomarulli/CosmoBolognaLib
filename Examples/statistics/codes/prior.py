@@ -8,7 +8,7 @@ xmax = 10.
 mean = -1.
 sigma = 0.1
 
-prior = Prior(EnumTypes._GaussianPrior_, [mean, sigma], xmin, xmax)
+prior = Prior(EnumTypes._GaussianDistribution_, [mean, sigma], xmin, xmax)
 
 nExtr = 2000
 sample = np.array([prior.sample(i) for i in range(nExtr)])

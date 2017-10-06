@@ -105,7 +105,8 @@ double cosmobl::cosmology::Cosmology::rs_EH (const double T_CMB) const
   double Rd = 31.5*Ombh2*pow(Tratio,-4)*pow(10.,3)/zdrag;
   double Req = 31.5*Ombh2*pow(Tratio,-4)*pow(10.,3)/zeq;
 
-  return 2.*pow(3.*keq,-1)*pow(6./Req,0.5)*log((pow(1.+Rd,0.5)+pow(Rd+Req,0.5))/(1.+pow(Req,0.5)));
+  double rs = 2.*pow(3.*keq,-1)*pow(6./Req,0.5)*log((pow(1.+Rd,0.5)+pow(Rd+Req,0.5))/(1.+pow(Req,0.5)));
+  return ((m_unit) ? rs*m_hh : rs);
 }
 
 
@@ -155,7 +156,7 @@ double cosmobl::cosmology::Cosmology::sound_speed(const double redshift, const d
 
 
 // =====================================================================================
-// Sound horizon integrand
+
 
 double cosmobl::cosmology::Cosmology::rs_integrand (const double a, const double T_CMB) const
 {
@@ -175,11 +176,71 @@ double cosmobl::cosmology::Cosmology::rs_integrand (const double a, const double
 
 
 // =====================================================================================
-// Sound horizon 
+
 
 double cosmobl::cosmology::Cosmology::rs (const double redshift, const double T_CMB) const
 {
   function<double(double)> integrand = bind(&Cosmology::rs_integrand, this, std::placeholders::_1, T_CMB);
   double a = 1./(1+redshift);
   return gsl::GSL_integrate_qag(integrand,0, a)/m_H0;
+}
+
+
+// =====================================================================================
+
+
+vector<double> cosmobl::cosmology::Cosmology::linear_point (const double redshift, const double rmin, const double rmax, const int nbinr, const string interpType)
+{
+  vector<double> rr = linear_bin_vector(nbinr, rmin, rmax);
+
+  vector<double> kk, Pk;
+  run_CAMB(kk, Pk, false, redshift); 
+  for(size_t i=0; i<kk.size(); i++){
+    kk[i] = pow(10., kk[i]);
+    Pk[i] = pow(10., Pk[i]);
+  }
+
+  vector<double> xi = cosmobl::fftlog::transform_FFTlog(rr, 1, kk, Pk);
+
+  cosmobl::glob::FuncGrid xi_interp(rr, xi, interpType);
+
+  double rsCAMB = rs_CAMB();
+  vector<double> boundaries = {rsCAMB-5, rsCAMB+5};
+
+  
+  // procedure to find the peak
+
+  bool end = false;
+  double rpeak, rdip;
+
+  while (!end) {
+    rpeak = xi_interp.root_D1v(boundaries[0], boundaries[1], 0, 1.e-10);
+
+    if ((rpeak<boundaries[1]) && (rpeak > boundaries[0]))
+      end = true;
+    else if (rpeak==boundaries[1])
+      boundaries[1]+=2;
+    else 
+      boundaries[0]-=2;
+  }
+
+  
+  // procedure to find the dip
+
+  end = false;
+  boundaries[1] = boundaries[0];
+  boundaries[0] = boundaries[1]-10;
+
+  while (!end) {
+    rdip = xi_interp.root_D1v(boundaries[0], boundaries[1], 0, 1.e-10);
+
+    if ((rdip<boundaries[1]) &&(rdip > boundaries[0]))
+      end = true;
+    else if (rdip==boundaries[1])
+      boundaries[1] += 2;
+    else 
+      boundaries[0] -= 2;
+  }
+
+  return {0.5*(rdip+rpeak), rdip, rpeak};
 }

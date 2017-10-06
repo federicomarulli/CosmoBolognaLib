@@ -18,7 +18,7 @@ int main () {
     // ---------------- use default cosmological parameters ------------
     // -----------------------------------------------------------------
 
-    const cosmobl::cosmology::Cosmology cosmology;
+    const cosmobl::cosmology::Cosmology cosmology {cosmobl::cosmology::_Planck15_};
 
   
     // -----------------------------------------------------------------------------------------------------------
@@ -56,10 +56,10 @@ int main () {
   
     // measure the monopole and compute Poisson errors 
 
-    cosmobl::twopt::TwoPointCorrelation1D_monopole TwoP {catalogue, random_catalogue, cosmobl::_logarithmic_, rMin, rMax, nbins, shift};
+    cosmobl::measure::twopt::TwoPointCorrelation1D_monopole TwoP {catalogue, random_catalogue, cosmobl::_logarithmic_, rMin, rMax, nbins, shift};
   
-    TwoP.measure(cosmobl::twopt::_Poisson_, dir);
-
+    TwoP.measure(cosmobl::measure::ErrorType::_Poisson_, dir);
+    
   
     // store the output data
   
@@ -67,7 +67,7 @@ int main () {
   
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

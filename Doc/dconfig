@@ -789,7 +789,8 @@ RECURSIVE              = YES
 # run.
 
 EXCLUDE  = External/CAMB/
-EXCLUDE += External/classgal_v1/ 
+EXCLUDE += External/classgal_v1/
+EXCLUDE += External/Cuba-4.2/
 EXCLUDE += External/EH/
 EXCLUDE += External/fftlog-f90-master/
 EXCLUDE += External/mangle/
@@ -836,7 +837,7 @@ EXAMPLE_PATH           = Examples/
 # *.h) to filter out the source-files in the directories. If left blank all
 # files are included.
 
-EXAMPLE_PATTERNS       = *cpp *py
+EXAMPLE_PATTERNS       = *cpp *py *ipynb
 
 # If the EXAMPLE_RECURSIVE tag is set to YES then subdirectories will be
 # searched for input files to be used with the \include or \dontinclude commands
@@ -2211,7 +2212,7 @@ INCLUDED_BY_GRAPH      = YES
 # The default value is: NO.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-CALL_GRAPH             = YES
+CALL_GRAPH             = NO
 
 # If the CALLER_GRAPH tag is set to YES then doxygen will generate a caller
 # dependency graph for every global function or class method.

@@ -1,17 +1,19 @@
 CC = g++
 
-FLAGS = -O3 -std=c++11 -fopenmp
+FLAGS0 = -std=c++11 -fopenmp 
+FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 
 dirLib = $(PWD)/../../../
 dirH = $(dirLib)Headers/Lib/
 dirHO = $(dirLib)Headers/Objects/
 dirHM = $(dirLib)Headers/Models/
 dirEH = $(dirLib)External/EH/
+dirCUBA = $(dirLib)External/Cuba-4.2/
 
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
-FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lTWOP -lTHREEP -lMODEL -lGLOB
-FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirEH)
+FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_TWOP -lMODEL_THREEP -lGLOB
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirEH) -I$(dirCUBA)
 
 OBJ1 = 2pt_monopole.o
 OBJ2 = 2pt_monopole_errors.o
@@ -23,6 +25,7 @@ OBJ7 = model_2pt_monopole_BAO.o
 OBJ8 = model_2pt_monopole_RSD.o
 OBJ9 = model_2pt_projected.o
 OBJ10 = model_2pt_2D.o
+OBJ11 = model_3pt.o
 
 ES = so
 
@@ -60,36 +63,42 @@ model_2pt_projected: $(OBJ9)
 model_2pt_2D: $(OBJ10) 
 	$(CC) $(OBJ10) -o model_2pt_2D $(FLAGS_LIB)
 
+model_3pt: $(OBJ11) 
+	$(CC) $(OBJ11) -o model_3pt $(FLAGS_LIB)
+
 clean:
-	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 3pt model_2pt_monopole_BAO model_2pt_monopole_RSD model_2pt_projected model_2pt_2D *~ \#* temp* core*
+	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 3pt model_2pt_monopole_BAO model_2pt_monopole_RSD model_2pt_projected model_2pt_2D model_3pt *~ \#* temp* core*
 
 
 2pt_monopole.o: 2pt_monopole.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_monopole.cpp
+	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_monopole.cpp
 
 2pt_monopole_errors.o: 2pt_monopole_errors.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_monopole_errors.cpp
+	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_monopole_errors.cpp
 
 2pt_2D.o: 2pt_2D.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_2D.cpp
+	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_2D.cpp
 
 2pt_projected.o: 2pt_projected.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_projected.cpp
+	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_projected.cpp
 
 2pt_angular.o: 2pt_angular.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_angular.cpp
+	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_angular.cpp
 
 3pt.o: 3pt.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 3pt.cpp 
+	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 3pt.cpp 
 
 model_2pt_monopole_BAO.o: model_2pt_monopole_BAO.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_monopole_BAO.cpp
+	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_monopole_BAO.cpp
 
 model_2pt_monopole_RSD.o: model_2pt_monopole_RSD.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_monopole_RSD.cpp
+	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_monopole_RSD.cpp
 
 model_2pt_projected.o: model_2pt_projected.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_projected.cpp
+	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_projected.cpp
 
 model_2pt_2D.o: model_2pt_2D.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_2D.cpp
+	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_2D.cpp
+
+model_3pt.o: model_3pt.cpp makefile $(dirLib)*.$(ES)
+	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_3pt.cpp 

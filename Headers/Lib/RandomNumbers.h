@@ -41,6 +41,12 @@
 namespace cosmobl {
 
   /**
+   * @brief generic distribution function
+   * @return distribution function
+   */
+  typedef function<double(double, shared_ptr<void>, vector<double>)> distribution_func;
+
+  /**
    *  @brief The namespace of the functions and classes used to handle
    *  <B> random numbers </B>
    *  
@@ -100,7 +106,7 @@ namespace cosmobl {
        *
        *  @return none
        */
-      ~RandomNumbers () = default;
+      virtual ~RandomNumbers () = default;
 
 
       /**
@@ -133,12 +139,20 @@ namespace cosmobl {
       }
 
       /**
+       *  @brief set the value for constant distribution
+       *  @param value the value to be returned
+       *  @return none
+       */
+      void set_value(const double value) 
+      { (void)value; ErrorCBL("Error in set_value() of RandomNumbers.h"); }
+
+      /**
        *  @brief set the mean for Poisson distribution
        *  @param mean the Poisson distribution mean
        *  @return none
        */
       virtual void set_mean (const double mean)
-      { (void)mean; ErrorCBL("Error in set_parameters() of RandomNumbers.h"); }
+      { (void)mean; ErrorCBL("Error in set_mean() of RandomNumbers.h"); }
 
       /**
        *  @brief set parameters for Normal distribution
@@ -147,7 +161,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_mean_sigma (const double mean, const double sigma)
-      { (void)mean; (void)sigma; ErrorCBL("Error in set_parameters() of RandomNumbers.h"); }
+      { (void)mean; (void)sigma; ErrorCBL("Error in set_mean_sigma() of RandomNumbers.h"); }
 
       /**
        *  @brief set parameters for Discrete distribution
@@ -156,7 +170,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_discrete_values (const vector<double> values, const vector<double> weights)
-      { (void)values; (void)weights; ErrorCBL("Error in set_parameters() of RandomNumbers.h"); }
+      { (void)values; (void)weights; ErrorCBL("Error in set_discrete_values() of RandomNumbers.h"); }
 
       /**
        *  @brief set the parameters for the interpolated distribution
@@ -165,8 +179,72 @@ namespace cosmobl {
        *  @return none
        */
       virtual void set_interpolated_distribution (const vector<double> values, const vector<double> weights)
-      { (void)values; (void)weights; ErrorCBL("Error in set_parameters() of RandomNumbers.h"); }
-      
+      { (void)values; (void)weights; ErrorCBL("Error in set_interpolated_distribution() of RandomNumbers.h"); }
+
+      /**
+       *  @brief set parameters for interpolated distribution
+       *  @param func the distribution func 
+       *  @param fixed_pars fixed parameters
+       *  @param pars distribution free parameters
+       *  @return none
+       */
+      virtual void set_custom_distribution (const distribution_func func, const shared_ptr<void> fixed_pars, const vector<double> pars)
+      { (void)func; (void)fixed_pars; (void)pars; ErrorCBL("Error in set_custom_distribution() of RandomNumbers.h"); }
+
+    };
+
+    /**
+     *  @class UniformRandomNumbers RandomNumbers.h
+     *  "Headers/Lib/RandomNumbers.h"
+     *
+     *  @brief The class UniformRandomNumbers
+     *
+     *  The base class to generate random numbers
+     *  on a interval
+     *
+     */
+    class ConstantRandomNumbers : public RandomNumbers
+    {
+    protected:
+
+      /// returned value
+      double m_value;
+
+    public:
+
+      /**
+       *  @brief constructor
+       *  @param value the value to be returned
+       *  @return object of class ConstantRandomNumbers
+       */
+      ConstantRandomNumbers (const double value) : RandomNumbers(1)
+      {
+	m_value=value;
+      }
+
+      /**
+       *  @brief default destructor
+       *
+       *  @return none
+       */
+      ~ConstantRandomNumbers () = default; 
+
+      /**
+       *  @brief set the value for constant distribution
+       *  @param value the value to be returned
+       *  @return none
+       */
+      void set_value(const double value) {m_value = value;}
+
+      /**
+       * @brief extract number from the distribution
+       * @return random values
+       */
+      double operator () ()
+      {
+	return m_value;
+      }
+
     };
 
     
@@ -420,7 +498,7 @@ namespace cosmobl {
 	if (weights.size()==0) {
 	  m_values = values;
 	  m_weights.erase(m_weights.begin(), m_weights.end());
-	  fill(m_weights.begin(), m_weights.end(), 1.);
+	  m_weights.resize(m_values.size(), 1.);
 	}
 	else if (weights.size()!=values.size())
 	  ErrorCBL("Error in set_parameters of DiscreteRandomNumbers.h: value and weight vectors have different sizes!");
@@ -530,7 +608,104 @@ namespace cosmobl {
 	return m_distribution->operator()(m_uniform_generator->operator()());
       }
     };
-    
+
+    /**
+     *  @class CustomDistributionRandomNumbers RandomNumbers.h
+     *  "Headers/Lib/RandomNumbers.h"
+     *
+     *  @brief The class CustomDistributionRandomNumbers
+     *
+     *  The base class to generate random numbers
+     *  from an user-defined function 
+     *
+     */
+    class CustomDistributionRandomNumbers : public RandomNumbers
+    {
+
+    protected:
+
+      /// Uniform random number generator
+      shared_ptr<UniformRandomNumbers> m_uniform_generator;
+
+      /// the probability distribution function
+      distribution_func m_func;
+
+      /// parameters of the distribution function
+      vector<double> m_func_pars;
+      
+      /// void pointer for the distribution function
+      shared_ptr<void> m_func_fixed_pars;
+
+      /// the distribution normalization
+      double m_normalization;
+
+    public:
+
+      /**
+       *  @brief constructor
+       *
+       *  @param func function
+       *  @param fixed_pars function fixed parameters
+       *  @param pars function free parameters
+       *  @param seed the random number generator seed
+       *  @param MinVal minimum value
+       *  @param MaxVal maximum value
+       *
+       *  @return object of class RandomNumbers
+       */
+      CustomDistributionRandomNumbers (const distribution_func func, const shared_ptr<void> fixed_pars, const vector<double> pars, const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble) : RandomNumbers(seed, MinVal, MaxVal)
+	{
+	  set_custom_distribution(func, fixed_pars, pars);
+	  m_uniform_generator = make_shared<UniformRandomNumbers>(0., 1., seed);
+	}
+
+      /**
+       *  @brief default destructor
+       *
+       *  @return none
+       */
+      ~CustomDistributionRandomNumbers () = default;
+
+      /**
+       *  @brief set the random number generator seed
+       *  @param seed the random number generator seed
+       *  @return none
+       */
+      void set_seed (const int seed)
+      {
+	m_uniform_generator->set_seed(seed);
+      }
+
+      /**
+       *  @brief set parameters for interpolated distribution
+       *
+       *  @param func function
+       *  @param fixed_pars function fixed parameters
+       *  @param pars function free parameters
+       *
+       *  @return none
+       */
+      void set_custom_distribution (const distribution_func func, const shared_ptr<void> fixed_pars, const vector<double> pars)
+      {
+	m_func = func;
+	m_func_fixed_pars = fixed_pars;
+	m_func_pars = pars;
+	
+	m_normalization = gsl::GSL_integrate_qag(m_func, m_func_fixed_pars, m_func_pars, m_MinVal, m_MaxVal);
+      }
+
+      /**
+       * @brief extract number from the distribution
+       * @return random values
+       */
+      double operator () ()
+      {
+	auto f = [this] (double xx) {return gsl::GSL_integrate_qag(m_func, m_func_fixed_pars, m_func_pars, m_MinVal, xx)/m_normalization;};
+	return gsl::GSL_root_brent(f, m_uniform_generator->operator()(), m_MinVal, m_MaxVal);
+      }
+
+    };
+
   }
 }
 

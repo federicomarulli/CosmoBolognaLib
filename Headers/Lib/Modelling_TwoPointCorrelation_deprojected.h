@@ -32,11 +32,11 @@
  *  @author federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
  */
 
-#ifndef __MODELLINGDEP__
-#define __MODELLINGDEP__
+#ifndef __MODELLINGTWOPOINTDEPROJ__
+#define __MODELLINGTWOPOINTDEPROJ__
 
 
-#include "Modelling_TwoPointCorrelation1D.h"
+#include "Modelling_TwoPointCorrelation_projected.h"
 
 
 // ===================================================================================================
@@ -45,74 +45,69 @@
 namespace cosmobl {
   
   namespace modelling {
+
+    namespace twopt {
     
-    /**
-     *  @class Modelling_TwoPointCorrelation_deprojected
-     *  Modelling_TwoPointCorrelation_deprojected.h
-     *  "Headers/Lib/Modelling_TwoPointCorrelation_deprojected.h"
-     *
-     *  @brief The class Modelling_TwoPointCorrelation_deprojected
-     *
-     *  This file defines the interface of the base class
-     *  Modelling_TwoPointCorrelation_deprojected, used for modelling
-     *  the deprojected two-point correlation function
-     *
-     */
-    class Modelling_TwoPointCorrelation_deprojected : public Modelling_TwoPointCorrelation1D {
-      
-    public:
-
       /**
-       *  @name Constructors/destructors
-       */
-      ///@{
-
-      /**
-       *  @brief default constuctor
-       *  @return object of class Modelling_TwoPointCorrelation_deprojected
-       */
-      Modelling_TwoPointCorrelation_deprojected () = default;
-
-      /**
-       *  @brief constructor
-       *  
-       *  @param twop the two-point correlation function to model
+       *  @class Modelling_TwoPointCorrelation_deprojected
+       *  Modelling_TwoPointCorrelation_deprojected.h
+       *  "Headers/Lib/Modelling_TwoPointCorrelation_deprojected.h"
        *
-       *  @return object of type Modelling_TwoPointCorrelation_deprojected
-       */
-      Modelling_TwoPointCorrelation_deprojected (const shared_ptr<cosmobl::twopt::TwoPointCorrelation> twop)
-	: Modelling_TwoPointCorrelation1D(twop) {}
-
-      /**
-       *  @brief constructor
-       *  
-       *  @param twop_dataset the dataset containing the two-point
-       *  correlation function to model
+       *  @brief The class Modelling_TwoPointCorrelation_deprojected
        *
-       *  @return object of type
-       *  Modelling_TwoPointCorrelation_deprojected
+       *  This file defines the interface of the base class
+       *  Modelling_TwoPointCorrelation_deprojected, used for modelling
+       *  the deprojected two-point correlation function
+       *
        */
-      Modelling_TwoPointCorrelation_deprojected (const shared_ptr<data::Data> twop_dataset)
-	: Modelling_TwoPointCorrelation1D() { set_data(twop_dataset); }
+      class Modelling_TwoPointCorrelation_deprojected : public Modelling_TwoPointCorrelation_projected {
       
-      /**
-       *  @brief default destructor
-       *  @return none
-       */
-      virtual ~Modelling_TwoPointCorrelation_deprojected () = default;
+      public:
+
+	/**
+	 *  @name Constructors/destructors
+	 */
+	///@{
+
+	/**
+	 *  @brief default constuctor
+	 *  @return object of class Modelling_TwoPointCorrelation_deprojected
+	 */
+	Modelling_TwoPointCorrelation_deprojected () = default;
+
+	/**
+	 *  @brief constructor
+	 *  
+	 *  @param twop the two-point correlation function to model
+	 *
+	 *  @return object of type
+	 *  Modelling_TwoPointCorrelation_deprojected
+	 */
+	Modelling_TwoPointCorrelation_deprojected (const shared_ptr<cosmobl::measure::twopt::TwoPointCorrelation> twop)
+	  : Modelling_TwoPointCorrelation_projected(twop) {}
+
+	/**
+	 *  @brief constructor
+	 *  
+	 *  @param twop_dataset the dataset containing the two-point
+	 *  correlation function to model
+	 *
+	 *  @return object of type
+	 *  Modelling_TwoPointCorrelation_deprojected
+	 */
+	Modelling_TwoPointCorrelation_deprojected (const shared_ptr<data::Data> twop_dataset)
+	  : Modelling_TwoPointCorrelation_projected() { set_data(twop_dataset); }
+      
+	/**
+	 *  @brief default destructor
+	 *  @return none
+	 */
+	virtual ~Modelling_TwoPointCorrelation_deprojected () = default;
 	
-      ///@}
-      
-      
-      /**
-       * @brief set the fiducial model for dark matter 
-       * two point correlation function
-       *
-       *  @return none
-       */
-      void set_fiducial_xiDM () override;
+	///@}
 
-    };
+      };
+    }
   }
 }
 

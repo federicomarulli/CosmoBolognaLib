@@ -622,7 +622,30 @@ namespace cosmobl {
        *  @name Member functions used to handle pairs
        */
       ///@{
-  
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @return none
+       */
+      void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @param weight the weight of the region
+       *  @return none
+       */
+      void set_pair (const int ir, const int jr, const double ww, const double weight=1) override;
+
       /**
        *  @brief estimate the distance between two objects and update the
        *  pair vector accordingly
@@ -765,6 +788,29 @@ namespace cosmobl {
        *  pair vector accordingly
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @return none
+       */
+      void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @param weight the weight of the region
+       *  @return none
+       */
+      void set_pair (const int ir, const int jr, const double ww, const double weight=1) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
        *  @return none
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
@@ -901,6 +947,29 @@ namespace cosmobl {
        *  pair vector accordingly
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @return none
+       */
+      void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @param weight the weight of the region
+       *  @return none
+       */
+      void set_pair (const int ir, const int jr, const double ww, const double weight=1) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
        *  @return none
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
@@ -1032,6 +1101,29 @@ namespace cosmobl {
        */
       ///@{
   
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @return none
+       */
+      void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @param weight the weight of the region
+       *  @return none
+       */
+      void set_pair (const int ir, const int jr, const double ww, const double weight=1) override;
+
       /**
        *  @brief estimate the distance between two objects and update the
        *  pair vector accordingly
@@ -1322,6 +1414,29 @@ namespace cosmobl {
        *  pair vector accordingly
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @return none
+       */
+      void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @param weight the weight of the region
+       *  @return none
+       */
+      void set_pair (const int ir, const int jr, const double ww, const double weight=1) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
        *  @return none
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
@@ -1450,6 +1565,29 @@ namespace cosmobl {
        */
       ///@{
   
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @return none
+       */
+      void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @param weight the weight of the region
+       *  @return none
+       */
+      void set_pair (const int ir, const int jr, const double ww, const double weight=1) override;
+
       /**
        *  @brief estimate the distance between two objects and update the
        *  pair vector accordingly
@@ -1588,6 +1726,29 @@ namespace cosmobl {
        *  pair vector accordingly
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @return none
+       */
+      void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @param weight the weight of the region
+       *  @return none
+       */
+      void set_pair (const int ir, const int jr, const double ww, const double weight=1) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
        *  @return none
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
@@ -1715,6 +1876,29 @@ namespace cosmobl {
        */
       ///@{
   
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @return none
+       */
+      void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @param weight the weight of the region
+       *  @return none
+       */
+      void set_pair (const int ir, const int jr, const double ww, const double weight=1) override;
+
       /**
        *  @brief estimate the distance between two objects and update the
        *  pair vector accordingly

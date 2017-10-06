@@ -388,6 +388,27 @@ namespace cosmobl {
        *  @name Member functions used to handle triplets
        */
       ///@{
+     
+      /**
+       *  @brief estimate the distance between two objects and update
+       *  the triplet vectors accordingly
+       *  @param r12 distance between object1 and object2
+       *  @param r13 distance between object1 and object3
+       *  @param r23 distance between object2 and object3
+       *  @param klin triplet bin
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      void get_triplet (const double r12, const double r13, const double r23, int &klin) override;   
+
+      /**
+       *  @brief update the triplet
+       *  @param klin triplet bin
+       *  @param ww the weight
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      void set_triplet (const int klin, const double ww=1.) override;
 
       /**
        *  @brief estimate the distance between three objects and
@@ -483,6 +504,27 @@ namespace cosmobl {
        *  @name Member functions used to handle triplets
        */
       ///@{
+     
+      /**
+       *  @brief estimate the distance between two objects and update
+       *  the triplet vectors accordingly
+       *  @param r12 distance between object1 and object2
+       *  @param r13 distance between object1 and object3
+       *  @param r23 distance between object2 and object3
+       *  @param klin triplet bin
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      void get_triplet (const double r12, const double r13, const double r23, int &klin) override;   
+
+      /**
+       *  @brief update the triplet
+       *  @param klin triplet bin
+       *  @param ww the weight
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      void set_triplet (const int klin, const double ww=1.) override;
 
       /**
        *  @brief estimate the distance between three objects and

@@ -48,7 +48,7 @@ int main () {
     // ---------------- construct the random catalogue ----------------
     // ----------------------------------------------------------------
 
-    const double N_R = 3.; // random/data ratio
+    const double N_R = 2.; // random/data ratio
   
     const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
 
@@ -67,15 +67,14 @@ int main () {
     const double piMax = 50.;    // maximum separation in the second dimension 
     const int nbins_D2 = 20;     // number of bins in the second dimension
     const double shift_D2 = 0.5; // spatial shift used to set the bin centre in the second dimension
-    
-    const double piMax_integral = 30.; // upper limit of the integral
+    const double piMax_integral = 30.; // upper limit of the integral to compute the projected correlation function
 
   
-    // measure the projected two-point correlation function and estimate Poissonian errors
+    // measure the projected two-point correlation function and store the result
 
-    const auto TwoP = cosmobl::twopt::TwoPointCorrelation::Create(cosmobl::twopt::TwoPType::_1D_projected_, catalogue, random_catalogue, cosmobl::_logarithmic_, rpMin, rpMax, nbins_D1, shift_D1, piMin, piMax, nbins_D2, shift_D2, piMax_integral);
+    const auto TwoP = cosmobl::measure::twopt::TwoPointCorrelation::Create(cosmobl::measure::twopt::TwoPType::_1D_projected_, catalogue, random_catalogue, cosmobl::_logarithmic_, rpMin, rpMax, nbins_D1, shift_D1, piMin, piMax, nbins_D2, shift_D2, piMax_integral);
 
-    TwoP->measure(cosmobl::twopt::ErrorType::_Poisson_, dir_output, {dir_output});
+    TwoP->measure(cosmobl::measure::ErrorType::_Poisson_, dir_output, {dir_output});
     TwoP->write(dir_output, "wp.dat");
 
   
@@ -83,33 +82,40 @@ int main () {
     // -------------------------- model the projected two-point correlation function and estimate the linear bias ------------------------------
     // -----------------------------------------------------------------------------------------------------------------------------------------
 
-    cosmobl::modelling::Modelling_TwoPointCorrelation_projected model_twop(TwoP); // object used for modelling
+    // object used for modelling
+    cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_projected model_twop(TwoP);
 
+    // redshift of the snapshot of the simulation box, at which the model is computed
+    const double redshift = 1.;
+    
+    // set the data used to construct the model (all the unspecified parameters will be set to default values) 
+    model_twop.set_data_model(cosmology, redshift); 
   
-    const double redshift = 1.; // redshift of the sample
-  
-    const vector<double> rad_xiDM = cosmobl::logarithmic_bin_vector(200, 0.1, 50.); // scales used
-  
-    model_twop.set_parameters_xiDM(rad_xiDM, cosmology, redshift, "CAMB"); // set the model parameters
-  
-
-    const cosmobl::statistics::Prior bias_prior {cosmobl::statistics::PriorType::_UniformPrior_, 0.8, 3.}; // flat prior for the bias
-
-    model_twop.set_model_linearBias(bias_prior); // set the prior on the bias
-  
+    // set the model used to constrain the linear bias, imposing a flat prior on b*sigma8
+    model_twop.set_model_linearBias({cosmobl::glob::DistributionType::_UniformDistribution_, 0.8, 3.});
+    
+    // set the scale limits use for fitting
+    model_twop.set_fit_range(5., 20.);
+    
+    // set the likelihood
+    model_twop.set_likelihood(cosmobl::statistics::LikelihoodType::_GaussianLikelihood_Covariance_);
 
     // sample the likelihood and store the chains
-  
-    const int nChains = 100;     // number of chains
     const int chain_size = 1000; // size of the chains
-    const double rpMin_fit = 5.;     // minimum scale used for fitting
-    const double rpMax_fit = 20.;    // maximum scale used for fitting
-    const string chain_file = "chain.dat";
-  
-    model_twop.sample_likelihood(rpMin_fit, rpMax_fit, cosmobl::statistics::_GaussianLikelihood_Error_, nChains, chain_size, 32113, dir_output, chain_file); 
+    const int nwalkers = 100; // number of chains
+    const int burn_in = 0.1*chain_size; // number of step to be excluded
+    model_twop.sample_likelihood(chain_size, nwalkers, 32113); 
+
+    // write the results on the standard output
+    const int thin = 10;
+    model_twop.show_results(burn_in, thin, 3213);
+    
+    // store the results on file
+    const string filename = "model_projected";
+    model_twop.write_results(dir_output, filename, burn_in, thin, 3213);
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

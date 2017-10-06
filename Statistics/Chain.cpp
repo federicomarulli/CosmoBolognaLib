@@ -34,33 +34,141 @@
 
 #include "Chain.h"
 
-using namespace cosmobl;
-
 
 // ============================================================================================
 
 
-void cosmobl::statistics::Chain::Statistics (const int max, const int min)
+cosmobl::statistics::Chain::Chain (const vector<double> values, const int nwalkers)
 {
-  double Max = (max<=0) ? m_values.size() : max;
-  double Min = (min<=0) ? 0 : min;
-  vector<double> values;
-  
-  for (int i=Min; i<Max; i++)
-    values.push_back(m_values[i]);
-
-  m_mean = Average(values);
-  m_std = Sigma(values);
-
-  m_median = Quartile(values)[1];
+  set_values(values, nwalkers);
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::statistics::Chain::ComputeDistribution (const int nbin)
+cosmobl::statistics::Chain::Chain (const int size, const int nwalkers)
 {
-  vector<double> ww(m_values.size(),1), err;
-  distribution(m_var, m_dist, err, m_values, ww, nbin);
+  set_chain(size, nwalkers);
+}
+
+
+// ============================================================================================
+
+
+cosmobl::statistics::Chain::Chain (vector<vector<double>> values)
+{
+  set_values(values);
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::statistics::Chain::set_chain (const int size, const int nwalkers)
+{
+  m_size = size;
+  m_nwalkers = nwalkers;
+  reset();
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::statistics::Chain::reset()
+{
+  m_values.erase(m_values.begin(), m_values.end());
+  m_values.resize(m_size*m_nwalkers, 0);
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::statistics::Chain::expand(const int append)
+{
+  vector<double> values = m_values;
+  int old_size = m_size;
+
+  m_size += append;
+
+  reset();
+
+  for(int i=0; i<old_size; i++)
+    for(int j=0; j<m_nwalkers; j++)
+      set_value(i, j, values[i*m_nwalkers+j]);
+}
+
+
+// ============================================================================================
+
+
+vector<double> cosmobl::statistics::Chain::values(const int start, const int thin) const
+{
+  vector<double> values;
+
+  for(int i=start; i<size(); i+=thin)
+    for(int j=0; j<m_nwalkers; j++)
+      values.push_back(value(i, j));
+
+  return values;
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::statistics::Chain::set_values(const vector<double> values, const int nwalkers)
+{
+  int size = values.size()/nwalkers;
+  
+  if(values.size()%nwalkers!=0)
+    ErrorCBL("Error in set_values! wrong size of input values of wrong number of walkers!");
+
+  set_chain(size, nwalkers);
+
+  for(int i=0; i< m_size; i++)
+    for(int j=0; j< m_nwalkers; j++)
+      set_value(i, j, values[i*m_nwalkers+j]);
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::statistics::Chain::set_values(const vector<vector<double>> values)
+{
+  vector<double> flatten_val;
+
+  int nwalkers = values[0].size();
+
+  for(size_t i=0; i<values.size(); i++){
+    checkDim(values[i], nwalkers, "values["+conv(i, par::fINT)+"]");
+    for(size_t j=0; j< values[i].size(); j++)
+      flatten_val.push_back(values[i][j]);
+  }
+
+  set_values(flatten_val, nwalkers);
+}
+
+
+// ============================================================================================
+ 
+
+shared_ptr<cosmobl::statistics::Posterior> cosmobl::statistics::Chain::PosteriorDistribution(const int seed) const
+{
+  const int nbins=50;
+  return make_shared<cosmobl::statistics::Posterior> (cosmobl::statistics::Posterior(glob::DistributionType::_DiscreteDistribution_, m_values, {}, nbins, "Spline", seed));
+}
+
+
+// ============================================================================================
+ 
+
+shared_ptr<cosmobl::statistics::Posterior> cosmobl::statistics::Chain::PosteriorDistribution(const int start, const int thin, const int seed) const
+{
+  const int nbins=50;
+  vector<double> vv = values(start, thin);
+  return make_shared<cosmobl::statistics::Posterior> (cosmobl::statistics::Posterior(glob::DistributionType::_DiscreteDistribution_, vv, {}, nbins, "Spline", seed));
 }

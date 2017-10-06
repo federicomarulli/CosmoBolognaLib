@@ -60,7 +60,12 @@ namespace cosmobl {
       /// cluster richness
       double m_richness;
 
-
+      /// cluster richness error
+      double m_richness_error;
+      
+      /// cluster linear bias
+      double m_bias;
+      
     public:
     
       /**
@@ -73,7 +78,7 @@ namespace cosmobl {
        *  @return object of class Cluster
        */
       Cluster ()
-	: Object(), m_mass(par::defaultDouble), m_richness(par::defaultDouble) {}
+	: Object(), m_mass(par::defaultDouble), m_richness(par::defaultDouble), m_richness_error(par::defaultDouble), m_bias(par::defaultDouble) {}
 
       /**
        *  @brief constructor that uses comoving coordinates
@@ -97,10 +102,14 @@ namespace cosmobl {
        *
        *  @param richness the cluster richness
        *
+       *  @param richness_error the cluster richness error
+       *
+       *  @param bias the cluster linear bias
+       *
        *  @return object of class Cluster
        */
-      Cluster (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble) 
-	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness) {}
+      Cluster (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
 
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -132,10 +141,14 @@ namespace cosmobl {
        *
        *  @param richness the cluster richness
        *
+       *  @param richness error the cluster richness error
+       *
+       *  @param bias the cluster linear bias
+       *
        *  @return object of class Cluster
        */
-      Cluster (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness) {}
+      Cluster (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -159,10 +172,14 @@ namespace cosmobl {
        *
        *  @param richness the cluster richness
        *
+       *  @param richness error the cluster richness error
+       *
+       *  @param bias the cluster linear bias
+       *
        *  @return object of class Cluster
        */
-      Cluster (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble) 
-	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness) {}
+      Cluster (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -189,10 +206,14 @@ namespace cosmobl {
        *
        *  @param richness the cluster richness
        *
+       *  @param richness error the cluster richness error
+       *
+       *  @param bias the cluster linear bias
+       *
        *  @return object of class Cluster
        */
-      Cluster (const observedCoordinates coord, const CoordUnits inputUnits, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble) 
-	: Object(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness) {}
+      Cluster (const observedCoordinates coord, const CoordUnits inputUnits, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -221,10 +242,14 @@ namespace cosmobl {
        *
        *  @param richness the cluster richness
        *
+       *  @param richness error the cluster richness error
+       *
+       *  @param bias the cluster linear bias
+       *
        *  @return object of class Cluster
        */
-      Cluster (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble) 
-	: Object(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness) {}
+      Cluster (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -235,7 +260,8 @@ namespace cosmobl {
        *
        *  @param inputUnits the units of the input coordinates
        *
-       *  @param cosm object of class Cosmology, used to estimate comoving distances
+       *  @param cosm object of class Cosmology, used to estimate
+       *  comoving distances
        *
        *  @param weight weight
        *
@@ -253,10 +279,14 @@ namespace cosmobl {
        *
        *  @param richness the cluster richness
        *
+       *  @param richness error the cluster richness error
+       *
+       *  @param bias the cluster linear bias
+       *
        *  @return object of class Cluster
        */
-      Cluster (const observedCoordinates coord, const CoordUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble) 
-	: Object(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness) {}
+      Cluster (const observedCoordinates coord, const CoordUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
 
       /**
        *  @brief constructor that uses both comoving and observed coordinates
@@ -274,11 +304,12 @@ namespace cosmobl {
        *  @param z_displacement the displacement along the z-axis
        *  @param mass the cluster mass
        *  @param richness the cluster richness
+       *  @param richness error the cluster richness error
        *
        *  @return object of class Cluster
        */
-      Cluster (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble) 
-	: Object(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness) {}
+      Cluster (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
       
       /**
        *  @brief default destructor
@@ -306,6 +337,18 @@ namespace cosmobl {
        */
       double richness () const override { return m_richness; }
 
+      /**
+       *  @brief get the private member Cluster::m_richness_error
+       *  @return the richness error of the cluster
+       */
+      double richness_error () const override { return m_richness_error; }
+
+      /**
+       *  @brief get the private member Cluster::m_bias
+       *  @return the linear bias of the cluster
+       */
+      double bias () const override { return m_bias; }
+
       ///@}
   
   
@@ -327,6 +370,20 @@ namespace cosmobl {
        *  @return none
        */
       void set_richness (const double richness=par::defaultDouble) override { m_richness = richness; }
+
+      /**
+       *  @brief set the private member Cluster::m_richness_error
+       *  @param richness_error the richness of the cluster
+       *  @return none
+       */
+      void set_richness_error (const double richness_error=par::defaultDouble) override { m_richness_error = richness_error; }
+
+      /**
+       *  @brief set the private member Cluster::m_bias
+       *  @param bias the linear bias of the cluster
+       *  @return none
+       */
+      void set_bias (const double bias=par::defaultDouble) override { m_bias = bias; }
 
       ///@}
     

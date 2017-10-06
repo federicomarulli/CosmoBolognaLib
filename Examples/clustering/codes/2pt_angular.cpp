@@ -23,15 +23,14 @@ int main () {
     const cosmobl::catalogue::Catalogue catalogue {cosmobl::catalogue::_Galaxy_, cosmobl::_observedCoordinates_, {file_catalogue}};
 
   
-    // --------------------------------------------------------------------------------------
-    // ---------------- construct the random catalogue (with cubic geometry) ----------------
-    // --------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------
+    // ---------------- construct the random catalogue ----------------
+    // ----------------------------------------------------------------
 
     const double N_R = 1.; // random/data ratio
-    const int zbins = 10;  // number of bins used to compute the redshift distribution 
   
-    const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_square_, catalogue, N_R, zbins};
-
+    const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_square_, catalogue, N_R};
+    
   
     // --------------------------------------------------------------------------------------------
     // ---------------- measure the angular of the two-point correlation function ----------------
@@ -39,10 +38,10 @@ int main () {
 
     // binning parameters and output data
 
-    const double angMin = 0.01;                // minimum angular separation 
-    const double angMax = 1.;                  // maximum angular separation 
-    const int nbins = 20;                      // number of bins
-    const double shift = 0.5;                  // shift used to set the bin centre 
+    const double angMin = 0.01;                                  // minimum angular separation 
+    const double angMax = 1.;                                    // maximum angular separation 
+    const int nbins = 20;                                        // number of bins
+    const double shift = 0.5;                                    // shift used to set the bin centre 
     const cosmobl::CoordUnits angularUnits = cosmobl::_degrees_; // angular units
 
     const string dir = cosmobl::par::DirLoc+"../output/";
@@ -51,15 +50,15 @@ int main () {
   
     // measure the angular two-point correlation function
   
-    cosmobl::twopt::TwoPointCorrelation1D_angular TwoP {catalogue, random_catalogue, cosmobl::_linear_, angMin, angMax, nbins, shift, angularUnits};
+    cosmobl::measure::twopt::TwoPointCorrelation1D_angular TwoP {catalogue, random_catalogue, cosmobl::_linear_, angMin, angMax, nbins, shift, angularUnits};
   
-    TwoP.measure(cosmobl::twopt::_Poisson_, dir);
+    TwoP.measure(cosmobl::measure::ErrorType::_Poisson_, dir);
 
     TwoP.write(dir, file);
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

@@ -18,7 +18,7 @@ int main () {
     // ---------------- use default cosmological parameters ------------
     // -----------------------------------------------------------------
   
-    const cosmobl::cosmology::Cosmology cosmology;
+    const cosmobl::cosmology::Cosmology cosmology {cosmobl::cosmology::_Planck15_};
 
   
     // ---------------------------------------------------------------------------------------------------------------------------
@@ -62,15 +62,15 @@ int main () {
 
     // measure the projected two-point correlation function
   
-    const auto TwoP = cosmobl::twopt::TwoPointCorrelation::Create(cosmobl::twopt::TwoPType::_1D_projected_, catalogue, random_catalogue, cosmobl::_logarithmic_, rpMin, rpMax, nbins_D1, shift_D1, piMin, piMax, nbins_D2, shift_D2, piMax_integral);
+    const auto TwoP = cosmobl::measure::twopt::TwoPointCorrelation::Create(cosmobl::measure::twopt::TwoPType::_1D_projected_, catalogue, random_catalogue, cosmobl::_logarithmic_, rpMin, rpMax, nbins_D1, shift_D1, piMin, piMax, nbins_D2, shift_D2, piMax_integral);
 
-    TwoP->measure(cosmobl::twopt::_Poisson_, dir);
+    TwoP->measure(cosmobl::measure::ErrorType::_Poisson_, dir);
 
     TwoP->write(dir, file);
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

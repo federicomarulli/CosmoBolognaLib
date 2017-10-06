@@ -48,6 +48,16 @@ double cosmobl::closest_probability (double xx, shared_ptr<void> pp, vector<doub
 }
 
 
+// ============================================================================
+
+
+double cosmobl::distribution_probability (double xx, shared_ptr<void> pp, vector<double> par)
+{
+  (void)par;
+  shared_ptr<cosmobl::glob::STR_distribution_probability> pars = static_pointer_cast<cosmobl::glob::STR_distribution_probability>(pp);
+  return pars->func->operator()(xx);
+}
+
 
 // ============================================================================
 
@@ -380,7 +390,7 @@ double cosmobl::MC_Int (double func(const double), const double x1, const double
   default_random_engine generator(5);
   std::uniform_real_distribution<double> distribution;
   auto ran = bind(distribution, generator);
-
+  
   double xt, yt, INT;
   int sub = 0, subn = 0, numTOT = 10000000;
 
@@ -576,6 +586,33 @@ double cosmobl::DoubleSwap (const double d)
 }
 
 
+// ============================================================================================
+
+
+double cosmobl::round_to_digits (const double num, const int ndigits)
+{
+  int exp_base10 = round(log10(num));
+  double man_base10 = num*pow(10., -exp_base10);
+  double factor = pow(10., -ndigits+1);  
+  double truncated_man_base10 = man_base10-fmod(man_base10, factor);
+  double rounded_remainder = fmod(man_base10, factor)/factor;
+
+  rounded_remainder = rounded_remainder > 0.5 ? 1.0*factor : 0.0;
+
+  return (truncated_man_base10+rounded_remainder)*pow(10.0, exp_base10);
+}
+
+
+// ============================================================================================
+
+
+double cosmobl::round_to_precision (const double num, const int ndigits)
+{
+  const double tenth = pow(10., ndigits);
+  return floor(num*tenth)/tenth;
+}
+
+
 // ============================================================================
 
 
@@ -673,6 +710,7 @@ double cosmobl::interpolated_2D (const double _x1, const double _x2, const vecto
   gsl_interp2d_free(interp);
   gsl_interp_accel_free(x1acc);
   gsl_interp_accel_free(x2acc);
+  free(ydata);
 
   return val;
 }
@@ -707,6 +745,64 @@ void cosmobl::checkIO (const ofstream &fout, const string file)
 // ============================================================================
 
 
+void cosmobl::read_matrix (const string file_matrix, vector<double> &xx, vector<double> &yy, vector<vector<double>> &matrix, const vector<int> col)
+{
+  vector<int> cols = {0, 1, 2};
+  cols = (col.size() != 3) ? cols : col; 
+  const size_t max_col = Max(cols);
+
+  matrix.erase(matrix.begin(), matrix.end());
+
+  ifstream fin(file_matrix.c_str()); checkIO(fin, file_matrix);
+
+  vector<double> vv;
+  matrix.push_back(vv);
+  string line; size_t i = 0;
+
+  vector<double> _xx, _yy;
+  while (getline(fin, line)) {
+    stringstream ss(line);
+    vector<double> num; double NN = -1.e30;
+    while (ss>>NN) num.push_back(NN);
+    if (num.size()>=max_col){
+      _xx.push_back(num[cols[0]]);
+      _yy.push_back(num[cols[1]]);
+      matrix[i].push_back(num[cols[2]]);
+    }
+    else {i++; matrix.push_back(vv);}
+  }
+
+  xx = different_elements(_xx);
+  yy = different_elements(_yy);
+
+}
+
+
+// ============================================================================
+
+double cosmobl::determinant_matrix (const vector<vector<double> > mat)
+{
+  int n = mat.size();
+  int s;
+  gsl_matrix *mm = gsl_matrix_alloc(n, n);
+  gsl_permutation *perm = gsl_permutation_alloc(n);
+
+  for (int i=0; i<n; i++)
+    for (int j=0; j<n; j++)
+      gsl_matrix_set(mm, i, j, mat[i][j]);
+
+  // make the LU decomposition of the matrix mm
+  gsl_linalg_LU_decomp(mm, perm, &s);
+  double det = gsl_linalg_LU_det(mm, s);
+
+  gsl_matrix_free(mm);
+  gsl_permutation_free(perm);
+  return det;
+}
+
+// ============================================================================
+
+
 void cosmobl::invert_matrix (const vector<vector<double> > mat, vector<vector<double> > &mat_inv, const double prec)
 {
   int n = mat.size();
@@ -719,21 +815,21 @@ void cosmobl::invert_matrix (const vector<vector<double> > mat, vector<vector<do
 
   gsl_matrix *mm = gsl_matrix_alloc(n, n);
   gsl_matrix *im = gsl_matrix_alloc(n, n);
-  gsl_permutation * perm = gsl_permutation_alloc(n);
+  gsl_permutation *perm = gsl_permutation_alloc(n);
 
   for (int i=0; i<n; i++)
     for (int j=0; j<n; j++)
       gsl_matrix_set(mm, i, j, mat[i][j]);
 
   // make the LU decomposition of the matrix mm
-  gsl_linalg_LU_decomp (mm, perm, &s);
+  gsl_linalg_LU_decomp(mm, perm, &s);
 
   // invert the matrix mm
-  gsl_linalg_LU_invert (mm, perm, im);
+  gsl_linalg_LU_invert(mm, perm, im);
 
   for (int i=0; i<n; i++)
     for (int j=0; j<n; j++)
-      mat_inv[i][j] = gsl_matrix_get(im,i,j);
+      mat_inv[i][j] = gsl_matrix_get(im, i, j);
 
   for (int i=0; i<n; i++) {
     for (int j=0; j<n; j++) {
@@ -743,9 +839,13 @@ void cosmobl::invert_matrix (const vector<vector<double> > mat, vector<vector<do
 	prod += mat[i][el]*mat_inv[el][j];
       
       if (fabs(fact - prod) > prec)  
-	WarningMsg("Exceeded precision for element "+conv(i,par::fINT)+" "+conv(j,par::fINT)+"; "+conv(fact,par::fDP4)+" "+conv(prod,par::fDP4));
+	WarningMsg("Exceeded precision for element "+conv(i, par::fINT)+" "+conv(j, par::fINT)+"; "+conv(fact, par::fDP4)+" "+conv(prod, par::fDP4));
     }
   }
+  
+  gsl_matrix_free(mm);
+  gsl_matrix_free(im);
+  gsl_permutation_free(perm);
 }
 
 
@@ -1603,107 +1703,102 @@ void cosmobl::sdss_stripe (const vector<double> eta, const vector<double> lambda
 // ============================================================================
 
 
-void cosmobl::fill_distr (const int nRan, const vector<double> xx, const vector<double> fx, vector<double> &varRandom, const double xmin, const double xmax, const int idum)
+vector<double> cosmobl::vector_from_distribution (const int nRan, const vector<double> xx, const vector<double> fx, const double xmin, const double xmax, const int idum)
 {
   default_random_engine generator(idum);
   std::uniform_real_distribution<double> distribution;
   auto ran = bind(distribution, generator);
 
-  varRandom.erase(varRandom.begin(), varRandom.end());
-
-  double minVar = xmin, maxVar = xmax;
-
   int sz = 100;
   vector<double> Fx(sz, 0.);
-  vector<double> new_x = linear_bin_vector(sz, minVar, maxVar); 
+  vector<double> new_x = linear_bin_vector(sz, xmin, xmax); 
 
-  cosmobl::glob::FuncGrid dist(xx,fx,"Spline");
-  double NN = dist.integrate_qag(minVar,maxVar);
+  cosmobl::glob::FuncGrid dist(xx, fx, "Spline");
+  double NN = dist.integrate_qag(xmin, xmax);
 
   for (int i=1; i<sz; i++) 
-    Fx[i] = dist.integrate_qag(minVar,new_x[i])/NN;
+    Fx[i] = dist.integrate_qag(xmin, new_x[i])/NN;
+  
+  cosmobl::glob::FuncGrid ff(Fx, new_x, "Spline");
 
-  cosmobl::glob::FuncGrid ff(Fx,new_x,"Spline");
-
-  for (int i=0; i<nRan; i++) 
-    varRandom.push_back(ff(ran()));
+  vector<double> varRandom;
+  
+  for (int i=0; i<nRan; i++)
+    varRandom.emplace_back(ff(ran()));
+  
+  return varRandom;
 }
 
 
 // ============================================================================
 
 
-void cosmobl::find_index (const vector<double> xx, const double x_min, const double x_max, int &ind1, int &ind2)
+vector<size_t> cosmobl::minimum_maximum_indexes (const vector<double> xx, const double x_min, const double x_max)
 {
-  ind1 = xx.size();
-  ind2 = 0;
+  size_t ind1 = xx.size(), ind2 = 0;
   
-  for (size_t i=0; i<xx.size(); i++) {
-    if (x_min < xx[i] && xx[i] < x_max) {
-      ind1 = min((int)i, ind1);
-      ind2 = max((int)i, ind2);
+  for (size_t i=0; i<xx.size(); i++) 
+    if (x_min<xx[i] && xx[i]<x_max) {
+      ind1 = min(i, ind1);
+      ind2 = max(i, ind2);
     }
-  }
   
   ind2 ++;
+
+  return {ind1, ind2};
 }
 
 
 // ============================================================================
 
 
-void cosmobl::read_cov (const string filecov, vector< vector<double> > &cov, vector<vector<double> > &cov_inv, const int i1, const int i2)
+void cosmobl::read_invert_covariance (const string filecov, vector< vector<double>> &cov, vector<vector<double>> &cov_inv, const size_t i1, const size_t i2)
 {
-  int size=i2-i1+1;
+  size_t size = i2-i1+1;
 
-  cov.erase(cov.begin(),cov.end());
-  cov_inv.erase(cov_inv.begin(),cov_inv.end());
+  cov.erase(cov.begin(), cov.end());
+  cov_inv.erase(cov_inv.begin(), cov_inv.end());
 
-  ifstream fin (filecov.c_str());
-  if (!fin) {
-    string Warn = "Attention: the file " + filecov + " does not exist!";
-    WarningMsg(Warn);
-  }
+  ifstream fin(filecov.c_str()); checkIO(fin, filecov);
 
-  cov.erase(cov.begin(),cov.end());
+  cov.erase(cov.begin(), cov.end());
 
-  vector<double> vv ;
+  vector<double> vv;
   cov.push_back(vv);
-  string line; int i = 0;
+  string line; size_t i = 0;
 
-  while(getline(fin,line)) {
+  while (getline(fin, line)) {
     stringstream ss(line);
     vector<double> num; double NN = -1.e30;
     while (ss>>NN) num.push_back(NN);
-    if (num.size()==3 && num[2]>-1.e29) {
+    if (num.size()==3 && num[2]>-1.e29) 
       cov[i].push_back(num[2]);
-    }
     else {i++; cov.push_back(vv);}
   }
 
-  cov.erase(cov.end()-1,cov.end());
+  cov.erase(cov.end()-1, cov.end());
   fin.clear(); fin.close();
 
-  cov_inv=cov;
-  vector<vector<double> > cov_lim(size,vector<double>(size,0)), cov_lim_inv;
+  cov_inv = cov;
+  vector<vector<double>> cov_lim(size,vector<double>(size,0)), cov_lim_inv;
 
-  int tot_size=cov.size();
+  size_t tot_size = cov.size();
 
-  for (int i=0; i<tot_size; i++) {
-    for (int j=0; j<tot_size; j++) {
+  for (size_t i=0; i<tot_size; i++) {
+    for (size_t j=0; j<tot_size; j++) {
       if (i>i2 || i<i1 || j>i2 || j<i1) {
       }
       else
 	cov_lim[i-i1][j-i1] = cov[i][j]; 
     }
   }
+  
+  invert_matrix(cov_lim, cov_lim_inv);
 
-  invert_matrix(cov_lim,cov_lim_inv);
-
-  for (int i=0; i<tot_size; i++) {
-    for (int j=0; j<tot_size; j++) {
+  for (size_t i=0; i<tot_size; i++) {
+    for (size_t j=0; j<tot_size; j++) {
       if (i>i2 || i<i1 || j>i2 || j<i1) 
-	cov_inv[i][j]=0.;
+	cov_inv[i][j] = 0.;
       else
 	cov_inv[i][j] = cov_lim_inv[i-i1][j-i1]; 
     }
@@ -1724,7 +1819,7 @@ void cosmobl::convolution (const vector<double> f1, const vector<double> f2, vec
   double *ff2 = new double[nn];
   double *rr = new double[nn];
 
-  for (unsigned int i=0; i<nn; i++) {
+  for (size_t i=0; i<nn; i++) {
     ff1[i] = f1[i];
     ff2[i] = f2[i];
     rr[i] = 0.;
@@ -1813,7 +1908,7 @@ void cosmobl::distribution (vector<double> &xx, vector<double> &fx, vector<doubl
   if (Weight.size()==0) Weight.resize(FF.size(), 1.);
   checkDim(Weight, FF.size(), "WW");
   
-  for (size_t i=0; i<FF.size(); i++) 
+  for (size_t i=0; i<FF.size(); i++)
     gsl_histogram_accumulate(histo, FF[i], Weight[i]);
   
   double x1, x2;
@@ -1845,7 +1940,7 @@ void cosmobl::distribution (vector<double> &xx, vector<double> &fx, vector<doubl
     double *func;
     fftw_complex *func_tr;
 
-    if (!linear) ErrorCBL("Work in progress...");
+    if (!linear) ErrorCBL("Work in progress...", ExitCode::_workInProgress_);
     int nbinN = 2*nbin;
     int i1 = nbin*0.5, i2 = 1.5*nbin;
 
@@ -1897,8 +1992,11 @@ void cosmobl::distribution (vector<double> &xx, vector<double> &fx, vector<doubl
     for (size_t i=0; i<xx.size(); i++)
       fout << xx[i] << "   " << fx[i] << "   " << err[i] << endl;
 
+
     fout.clear(); fout.close(); coutCBL << "I wrote the file: " << file_out << endl;
   }
+
+  fftw_cleanup();
 
 }
 
@@ -1906,7 +2004,7 @@ void cosmobl::distribution (vector<double> &xx, vector<double> &fx, vector<doubl
 // ============================================================================
 
 
-double cosmobl::legendre_polynomial(const double mu, const int l)
+double cosmobl::legendre_polynomial (const double mu, const int l)
 {
   return gsl_sf_legendre_Pl(l,mu);
 }
@@ -1917,7 +2015,6 @@ double cosmobl::legendre_polynomial(const double mu, const int l)
 
 double cosmobl::legendre_polynomial_integral (double mu, void *params)
 {
-
   //  cosmobl::glob::STR_jl_distance_average *par = (cosmobl::glob::STR_jl_distance_average *)(params);
   int *l = (int *)(params);
   return legendre_polynomial(mu, *l);
@@ -1925,6 +2022,7 @@ double cosmobl::legendre_polynomial_integral (double mu, void *params)
 
 
 // ============================================================================
+
 
 double cosmobl::Legendre_polynomial_mu_average (const int ll, const double mu, const double delta_mu)
 {
@@ -2035,7 +2133,7 @@ double cosmobl::jl_distance_average (const double kk, const int order, const dou
 // ============================================================================
 
 
-vector<double> cosmobl::generate_correlated_data (const vector<double> mean, const vector<vector<double> > covariance, const int idum)
+vector<double> cosmobl::generate_correlated_data (const vector<double> mean, const vector<vector<double>> covariance, const int idum)
 {
   default_random_engine generator(idum);
   normal_distribution<double> distribution(0., 1.); 
@@ -2134,11 +2232,11 @@ vector< vector<double> > cosmobl::generate_correlated_data (const int nExtractio
   
   gsl_vector *eigenvalues = gsl_vector_alloc(sample_size);
   gsl_matrix *VV = gsl_matrix_alloc(sample_size,sample_size);
-  gsl_matrix_set_zero (VV);
+  gsl_matrix_set_zero(VV);
 
   gsl_matrix *eigenvectors = gsl_matrix_alloc(sample_size,sample_size);
 
-  gsl_eigen_symmv_workspace * ww = gsl_eigen_symmv_alloc (sample_size); 
+  gsl_eigen_symmv_workspace *ww = gsl_eigen_symmv_alloc (sample_size); 
   gsl_eigen_symmv (correlation, eigenvalues, eigenvectors, ww);
   gsl_eigen_symmv_free(ww);
 

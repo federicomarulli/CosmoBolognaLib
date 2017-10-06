@@ -11,7 +11,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   *
  *  GNU General Public License for more details.                    *
- *                                                                  *
+ *                                                                  * 
  *  You should have received a copy of the GNU General Public       *
  *  License along with this program; if not, write to the Free      *
  *  Software Foundation, Inc.,                                      *
@@ -56,21 +56,20 @@ namespace cosmobl {
        *  @name Data input
        */
       ///@{
+	
+      /// The number of datasets
+      int m_ndataset;
 
-      /// ordered x axis points
-      vector<Data1D> m_data;
+      /// vector containing the number of data in each dataset
+      vector<int> m_xsize;
 
-      /// covariance_matrix
-      vector<vector<double>> m_covariance_matrix;
-     
-      /// inverse covariance_matrix
-      vector<vector<double>> m_inverse_covariance_matrix;
+      /// vector containing indipendent variables
+      vector<vector<double>> m_x;
 
-      /// number of members of the data collection
-      int m_n_data;
+      /// vector containing matrix-to-vector indexes
+      vector<vector<int>> m_index;
 
       ///@}
-
       
     public:
 
@@ -83,39 +82,75 @@ namespace cosmobl {
        *  @brief default constructor
        *  @return object of class Data1D
        */
-      Data1D_collection () : Data(DataType::_1D_data_collection_) {}
+      Data1D_collection () : Data() {set_dataType(DataType::_1D_data_collection_);}
 
       /**
        *  @brief constructor of class Data1D_collection
-       *  @param n_data the number of dataset
+       *  @param input_file file with datasets
+       *  @param skip_header number of lines to be skipped 
        *  @return object of class Data1D_collection
        */
-      Data1D_collection (const int n_data);
+      Data1D_collection(const string input_file, const int skip_header=0);
 
       /**
        *  @brief constructor of class Data1D_collection
-       *  @param data vector containing the datasets
-       *  @param x_min vector containing miminum values for the datasets 
-       *  @param x_max vector containing maximum values for the datasets 
+       *  @param input_files files with datasets
+       *  @param skip_header number of lines to be skipped 
        *  @return object of class Data1D_collection
        */
-      Data1D_collection(const vector<Data1D> data, const vector<double> x_min={}, const vector<double> x_max={});
+      Data1D_collection(const vector<string> input_files, const int skip_header=0);
 
       /**
        *  @brief constructor of class Data1D_collection
-       *  @param data vector containing the datasets
-       *  @param covariance_matrix vector containing covariance_matrix values of the datasets
-       *  @param x_min vector containing miminum values for the datasets 
-       *  @param x_max vector containing maximum values for the datasets 
+       *  @param xx vector containing the independent variable xx 
+       *  for each dataset
+       *  @param data vector containing the data for each dataset
        *  @return object of class Data1D_collection
        */
-      Data1D_collection (const vector<Data1D> data, const vector<vector<double > > covariance_matrix, const vector<double> x_min={}, const vector<double> x_max={});
+      Data1D_collection(const vector<vector<double>> xx, const vector<vector<double>> data);
+
+      /**
+       *  @brief constructor of class Data1D_collection
+       *  @param xx vector containing the independent variable xx 
+       *  for each dataset
+       *  @param data vector containing the data for each dataset
+       *  @param covariance vector containing the data covariance
+       *  @return object of class Data1D_collection
+       */
+      Data1D_collection (const vector<vector<double>> xx, const vector<vector<double>> data, const vector<vector<double>> covariance);
+
+      /**
+       *  @brief constructor of class Data1D_collection
+       *  @param xx vector containing the independent variable xx 
+       *  for each dataset
+       *  @param data vector containing the data for each dataset
+       *  @param error vector containing the data error
+       *  @return object of class Data1D_collection
+       */
+      Data1D_collection (const vector<vector<double>> xx, const vector<double> data, const vector<double> error);
+
+      /**
+       *  @brief constructor of class Data1D_collection
+       *  @param xx vector containing the independent variable xx 
+       *  for each dataset
+       *  @param data vector containing the data for each dataset
+       *  @param covariance vector containing the data covariance
+       *  @return object of class Data1D_collection
+       */
+      Data1D_collection (const vector<vector<double>> xx, const vector<double> data, const vector<vector<double>> covariance);
 
       /**
        *  @brief default destructor
        *  @return none
        */
       virtual ~Data1D_collection () = default;
+
+      /**
+       *  @brief static factory used to construct objects of class
+       *  Data1D
+       *  @return a shared pointer to an object of class Data
+       */
+      shared_ptr<Data> as_factory () {return move(unique_ptr<Data1D_collection>(this));}
 
       ///@}
 
@@ -124,22 +159,9 @@ namespace cosmobl {
        *  @name Member functions used to get the private members
        */
       ///@{
-
-      /**
-       *  @brief get index of the first x used in the i-th dataset
-       *  @param i the i-th dataset
-       *  @return the index of the first x used
-       */
-      int x_down (const int i) const 
-      { return m_data[i].x_down(); } 
-
-      /**
-       *  @brief get index of the last x usedin the i-th dataset
-       *  @param i the i-th dataset
-       *  @return the index of the last x used
-       */
-      int x_up (const int i) const 
-      { return m_data[i].x_up(); } 
+    
+      int xsize (const int i) const
+      { return m_xsize[i]; }
 
       /**
        *  @brief get value of x at index j in the i-th dataset
@@ -147,90 +169,60 @@ namespace cosmobl {
        *  @param j index
        *  @return the value of the x vector at position j in the i-th dataset
        */
-      double xx (const int i, const int j) const 
-      { return m_data[i].xx(j); }  
+      double xx (const int i, const int j) const { return m_x[i][j]; }  
 
       /**
-       *  @brief get the x vector for all datasets, concatenated
-       *  @return the vector containing the x values for all datasets, concatenated
+       *  @brief get x values
+       *  @param x [out] the x values
+       *  @return the value of the m_x vector for the i-th dataset
        */
-      vector<double> xx () const override;
+      void xx (vector<vector<double> > x) const { x = m_x; }
 
       /**
-       *  @brief get f(x) at index j in the i-th dataset
-       *  @param i the i-th dataset
+       *  @brief get the independet variable, to be used 
+       *  in model computation
+       *  @param i index (not used)
+       *  @param j index (not used)
+       *  @return the independent variable
+       */
+      vector<vector<double>> IndipendentVariable(const int i=-1, const int j=-1) const {(void)i; (void)j; return m_x;}
+
+      /**
+       *  @brief get data at index i,j
+       *  @param i index
        *  @param j index
-       *  @return the value of the fx vector at position j in the i-th dataset
+       *  @return the value of the m_data vector at position i,j
        */
-      double fx (const int i, const int j) const
-      { return m_data[i].fx(j); } 
+      double data (const int i, const int j) const {return m_data[m_index[i][j]];} 
 
       /**
-       *  @brief get the fx vector for all datasets, concatenated
-       *  @return the vector containing the fx values for all datasets, concatenated
+       *  @brief get data
+       *  @param [out] data vector containing the dataset
+       *  @return none
        */
-      vector<double> fx () const override;
+      void data(vector<vector<double>> &data) const;
 
       /**
-       *  @brief get error on f(x) at index j in the i-th dataset
-       *  @param i the i-th dataset
+       *  @brief get value of f(x) error at index i,j
+       *  @param i index
        *  @param j index
-       *  @return the value of the error_fx vector at position j in the i-th dataset
+       *  @return the value of the m_error vector at position i,j
        */
-      double error_fx (const int i, const int j) const
-      { return m_data[i].error_fx(j); } 
+      double error (const int i, const int j) const { return m_error[m_index[i][j]]; } 
 
       /**
-       *  @brief get the error_fx vector for all datasets, concatenated
-       *  @return the vector containing the error_fx values for all datasets, concatenated
+       *  @brief get standard deviation
+       *  @param [out] error vector containing the error
+       *  @return none
        */
-      vector<double> error_fx () const override;
-
-      /**
-       *  @brief get value of f(x) covariance at index i,j
-       *  @param i the i-th x element of the covariance matrix
-       *  @param j the j-th x element of the covariance matrix
-       *  @return the value of the covariance matrix for datasets i,j at position ax1,ax2
-       */
-      double covariance (const int i, const int j) const
-      { return m_covariance_matrix[i][j]; }
-
-      /**
-       *  @brief get value of f(x) inverted covariance at index i,j
-       *  @param i the i-th x element of the covariance matrix 
-       *  @param j the j-th x element of the covariance matrix 
-       *  @return the value of the inverted covariance matrix at position i,j
-       */
-      double inverse_covariance (const int i, const int j) const
-      { return m_inverse_covariance_matrix[i][j]; }
-
-      /**
-       *  @brief get value of f(x) inverted covariance at index i,j
-       *  @param d the d-th dataset
-       *  @param i the i-th x element of the covariance matrix 
-       *  @param j the j-th x element of the covariance matrix 
-       *  @return the value of the inverted covariance matrix for at position i,j
-       */
-      double inverse_covariance (const int d, const int i, const int j) const
-      { return m_data[d].inverse_covariance(i, j) ;}
+      void error(vector<vector<double>> &error) const;
 
       ///@}
-
       
       /**
        *  @name Member functions used to set the private members
        */
       ///@{
-      
-      /**
-       *  @brief set interval variables for x range in the i-th dataset
-       *  @param i index to the i-th dataset
-       *  @param xmin maximun value of x to be used 
-       *  @param xmax maximun value of x to be used 
-       *  @return none
-       */
-      void set_limits (const int i, const double xmin, const double xmax) 
-      { m_data[i].set_limits(xmin, xmax); }
 
       /**
        *  @brief set interval variable m_x in the i-th dataset
@@ -238,123 +230,97 @@ namespace cosmobl {
        *  @param x vector containing x points
        *  @return none
        */
-      void set_xx (const int i, const vector<double> x) 
-      { m_data[i].set_xx(x); } 
-
-      /**
-       *  @brief set interval variable m_fx in the i-th dataset
-       *  @param i index to the i-th dataset
-       *  @param fx vector containing f(x) values 
-       *  @return none
-       */
-      void set_fx (const int i, const vector<double> fx) 
-      { m_data[i].set_fx(fx); }
-
-      /**
-       *  @brief set interval variable m_error_fx in the i-th dataset
-       *  @param i index to the i-th dataset
-       *  @param error_fx vector containing error on f(x)
-       *  @return none
-       */
-      void set_error_fx (const int i, const vector<double> error_fx)
-      { m_data[i].set_error_fx(error_fx); }
-
-      /**
-       *  @brief set the interval variable m_covariance, reading from
-       *  an input file
-       *
-       *  @param filename file containing the covariance matrix in the
-       *  format: column 0 &rarr x<SUB>i</SUB>, column 1 &rarr
-       *  x<SUB>j</SUB>, column 2 &rarr
-       *  cov(x<SUB>i</SUB>,x<SUB>j</SUB>)
-       *
-       *  @param skipped_lines comment lines to be skipped
-       *
-       *  @return none
-       */
-      void set_covariance (const string filename, const int skipped_lines=0) override;
-
-      /**
-       *  @brief set the interval variable m_covariance, in the i-th
-       *  dataset reading from an input file; it also compute the
-       *  inverted covariance matrix
-       *
-       *  @param i index to the i-th dataset
-       *
-       *  @param covariance matrix containing the covariance matrix 
-       *
-       *  @return none
-       */
-      void set_covariance (const int i, const vector<vector<double>> covariance)
-      { m_data[i].set_covariance(covariance); }
-
-      /**
-       *  @brief set interval variable m_covariance_matrix, from
-       *  covariance matrix of datasets, the result is a block
-       *  covariance matrix
-       *  @return none
-       */
-      void set_covariance () override;
-
-      /**
-       *  @brief set the interval variable m_covariance
-       *  @param covariance matrix containing the covariance matrix 
-       *  @return none
-       */
-      void set_covariance (const vector<vector<double>> covariance)
-      { m_covariance_matrix = covariance; }
+      void set_xx (const int i, const vector<double> x) { m_x[i] = x; } 
 
       ///@}
       
-
       /**
        *  @name Member functions to compute data properties
        */
       ///@{
-      
-      /**
-       * @brief function that returns effective number of data between defined limits
-       * @return effective number of data between defined limits
-       */
-      int ndata_eff () const override; 
-
-      /**
-       * @brief function that returns total number of data
-       * @return total number of data
-       */
-      int ndata () const override;  
-
-      /**
-       * @brief function that returns effective number of data between defined limits
-       * @param i index to the i-th dataset
-       * @return effective number of data between defined limits
-       */
-      int ndata_eff (const int i) const
-      { return m_data[i].ndata_eff(); }
-
-      /**
-       * @brief function that returns total number of data
-       * @param i index to the i-th dataset
-       * @return total number of data
-       */
-      int ndata (const int i) const 
-      { return m_data[i].ndata(); } 
 
       /**
        * @brief function that returns total number of datasets
        * @return total number of dataset
        */
-      int ndataset () const 
-      { return m_data.size(); }  
+      int ndataset () const { return m_ndataset; }  
+      
+      /**
+       *  @brief read the data
+       *  @param input_file input data file
+       *  @param skip_nlines the header lines to be skipped
+       *  @return none
+       */
+      void read (const string input_file, const int skip_nlines=0) override;
+      
+      /**
+       *  @brief read the data
+       *  @param input_files input data files
+       *  @param skip_nlines the header lines to be skipped
+       *  @return none
+       */
+      void read (const vector<string> input_files, const int skip_nlines=0) override;
 
       /**
-       *  @brief invert the covariance matrix
+       *  @brief write the data
+       *  @param dir output directory
+       *  @param file output file
+       *  @param header text with the variable names to be written at
+       *  the first line of the output file
+       *  @param precision the float precision
+       *  @param rank cpu index (for MPI usage)
        *  @return none
-       */  
-      void invert_covariance () override;
+       */
+      void write (const string dir, const string file, const string header, const int precision=10, const int rank=0) const override;
       
+      /**
+       *  @brief write the data
+       *  @param dir output directory
+       *  @param files output files
+       *  @param header text with the variable names to be written at
+       *  the first line of the output file
+       *  @param precision the float precision
+       *  @param rank cpu index (for MPI usage)
+       *  @return none
+       */
+      void write (const string dir, const vector<string> files, const string header, const int precision=10, const int rank=0) const override;
+
+      /**
+       *  @brief write the interval variable m_covariance on a file,
+       *  @param dir the output directory
+       *  @param file the output file
+       *  @param precision the float precision
+       *  @return none
+       */
+      void write_covariance (const string dir, const string file, const int precision=10) const override;
+
       ///@}
       
+      /**
+       *  @name Member functions for data cut
+       */
+
+      ///@{
+     
+      /**
+       * @brief cut the data, for Data1D_collection
+       * @param dataset the i-th dataset
+       * @param xmin minumum value for the independet variable x
+       * @param xmax maximum value for the independent variable x
+       * @return pointer to an object of type Data1D
+       */
+      shared_ptr<Data> cut(const int dataset, const double xmin, const double xmax) const override;
+
+      /**
+       * @brief cut the data, for Data1D_collection type
+       * @param xmin vector containing minumum values for the independet variable x
+       * @param xmax vector containing maximum values for the independent variable x
+       * @return pointer to an object of type Data1D_collection
+       */
+      shared_ptr<Data> cut(const vector<double> xmin, const vector<double> xmax) const override;
+
+      ///@}
+
     };
    
   }

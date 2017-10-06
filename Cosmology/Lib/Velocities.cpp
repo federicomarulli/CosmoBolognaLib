@@ -33,6 +33,7 @@
  */
 
 #include "Cosmology.h"
+
 using namespace cosmobl;
 
 
@@ -48,7 +49,7 @@ double cosmobl::cosmology::Cosmology::square_bulk_flow (const double rr, const d
 
   if (method_Pk=="EisensteinHu") {
     if (m_sigma8<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::square_bulk_flow: sigma8 must be >0 using EisensteinHu!");
-    cosmobl::classfunc::func_V2 func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, rr, redshift);
+    cosmobl::classfunc::func_V2 func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, rr, redshift);
 
     ff = bind(&cosmobl::classfunc::func_V2::operator(), func, std::placeholders::_1);
   }
@@ -57,9 +58,9 @@ double cosmobl::cosmology::Cosmology::square_bulk_flow (const double rr, const d
     vector<double> lgkk, lgPk;
     bool do_nonlinear = 0; 
 
-    Table_PkCodes (method_Pk, do_nonlinear, lgkk, lgPk, redshift, output_root, k_max, file_par);
+    Table_PkCodes(method_Pk, do_nonlinear, lgkk, lgPk, redshift, output_root, k_max, file_par);
 
-    cosmobl::classfunc::func_V2_Table func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
+    cosmobl::classfunc::func_V2_Table func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
 
     ff = bind(&cosmobl::classfunc::func_V2_Table::operator(), func, std::placeholders::_1);
 
@@ -78,7 +79,7 @@ double cosmobl::cosmology::Cosmology::square_bulk_flow (const double rr, const d
 
 double cosmobl::cosmology::Cosmology::square_bulk_flow_Table (const double rr, const double k_int_min, const vector<double> lgkk, const vector<double> lgPk, const double redshift) const 
 {
-  cosmobl::classfunc::func_V2_Table func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
+  cosmobl::classfunc::func_V2_Table func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
 
   function<double(double)> ff = bind(&cosmobl::classfunc::func_V2_Table::operator(), func, std::placeholders::_1);
 
@@ -102,7 +103,7 @@ double cosmobl::cosmology::Cosmology::square_velocity_dispersion (const double r
 
   if (method_Pk=="EisensteinHu") {
     if (m_sigma8<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::square_velocity_dispersion: sigma8 must be >0 using EisensteinHu!");
-    cosmobl::classfunc::func_sigma2 func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, rr, redshift);
+    cosmobl::classfunc::func_sigma2 func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, rr, redshift);
 
     ff = bind(&cosmobl::classfunc::func_sigma2::operator(), func, std::placeholders::_1);
 
@@ -114,7 +115,7 @@ double cosmobl::cosmology::Cosmology::square_velocity_dispersion (const double r
 
     Table_PkCodes (method_Pk, do_nonlinear, lgkk, lgPk, redshift, output_root, k_max, file_par);
  
-    cosmobl::classfunc::func_sigma2_Table func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
+    cosmobl::classfunc::func_sigma2_Table func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
 
     ff = bind(&cosmobl::classfunc::func_sigma2_Table::operator(), func, std::placeholders::_1);
   }
@@ -135,8 +136,8 @@ double cosmobl::cosmology::Cosmology::CMN (const double rr, const double k_int_m
 
   if (method_Pk=="EisensteinHu") {
 
-    cosmobl::classfunc::func_V2 func1 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, rr, redshift);
-    cosmobl::classfunc::func_sigma2 func2 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, rr, redshift);
+    cosmobl::classfunc::func_V2 func1 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, rr, redshift);
+    cosmobl::classfunc::func_sigma2 func2 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, rr, redshift);
 
     ff1 = bind(&cosmobl::classfunc::func_V2::operator(), func1, std::placeholders::_1);
     ff2 = bind(&cosmobl::classfunc::func_sigma2::operator(), func2, std::placeholders::_1);
@@ -147,10 +148,10 @@ double cosmobl::cosmology::Cosmology::CMN (const double rr, const double k_int_m
     vector<double> lgkk, lgPk;
     bool do_nonlinear = 0; 
 
-    Table_PkCodes (method_Pk, do_nonlinear, lgkk, lgPk, redshift, output_root, k_max, file_par);
+    Table_PkCodes(method_Pk, do_nonlinear, lgkk, lgPk, redshift, output_root, k_max, file_par);
 
-    cosmobl::classfunc::func_V2_Table func1 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
-    cosmobl::classfunc::func_sigma2_Table func2 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
+    cosmobl::classfunc::func_V2_Table func1 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
+    cosmobl::classfunc::func_sigma2_Table func2 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
 
     ff1 = bind(&cosmobl::classfunc::func_V2_Table::operator(), func1, std::placeholders::_1);
     ff2 = bind(&cosmobl::classfunc::func_sigma2_Table::operator(), func2, std::placeholders::_1);

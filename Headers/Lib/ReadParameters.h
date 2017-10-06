@@ -24,7 +24,7 @@
  *  @brief The class ReadParameters
  *
  *  This file defines the methods of the class ReadParameters,
- *  used to read generic parameter files (*.ini)
+ *  used to read generic parameter files
  *
  *  @authors Tommaso Ronconi, Federico Marulli
  *
@@ -215,7 +215,7 @@ namespace cosmobl {
 	vector< T > vect;
 	
 	if (m_vectors.find(key) != m_vectors.end()) {
-	  for (int ii = 0; ii<m_vectors.at(key).size(); ii++) {
+	  for (size_t ii=0; ii<m_vectors.at(key).size(); ii++) {
 	    T value;
 	    stringstream tmpVal(m_vectors.at(key)[ii]);
 	    tmpVal >> std::boolalpha >> value ;
@@ -237,7 +237,7 @@ namespace cosmobl {
 	
 	if (m_vectors.find(key) != m_vectors.end()) {
 	  vector< T > vect;
-	  for (int ii = 0; ii<m_vectors.at(key).size(); ii++) {
+	  for (size_t ii=0; ii<m_vectors.at(key).size(); ii++) {
 	    T value;
 	    stringstream tmpVal(m_vectors.at(key)[ii]);
 	    tmpVal >> std::boolalpha >> value ;

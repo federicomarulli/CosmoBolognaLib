@@ -404,7 +404,7 @@ namespace cosmobl {
        * @return the value of the vector field
        */
       virtual double ScalarField (const int i, const int j, const int k) const
-      { (void)i; (void)j; (void)k; ErrorCBL("Error in Scalarield of Field3D"); double vv; return vv; }
+      { (void)i; (void)j; (void)k; ErrorCBL("Error in Scalarield of Field3D"); return 0; }
 
         
       /**
@@ -415,7 +415,7 @@ namespace cosmobl {
        * @return the value of the vector field
        */
       virtual double ScalarField (const vector<double> pos) const
-      { (void)pos; ErrorCBL("Error in Scalarield of Field3D"); double vv; return vv; }
+      { (void)pos; ErrorCBL("Error in Scalarield of Field3D"); return 0; }
     
       /**
        * @brief get the value of the scalar field
@@ -435,7 +435,7 @@ namespace cosmobl {
        * @return vector containing the values of the vector field
        */
       virtual vector<double> VectorField (const int i, const int j, const int k) const
-      { (void)i; (void)j; (void)k; ErrorCBL("Error in VectorField of Field3D"); double vv; return {vv}; }
+      { (void)i; (void)j; (void)k; ErrorCBL("Error in VectorField of Field3D"); return {0}; }
 
       /**
        * @brief get the value of the vector field
@@ -445,7 +445,7 @@ namespace cosmobl {
        * @return vector containing the values of the vector field
        */
       virtual vector<double> VectorField (const vector<double> pos) const
-      { (void)pos; ErrorCBL("Error in VectorField of Field3D"); double vv; return {vv}; }
+      { (void)pos; ErrorCBL("Error in VectorField of Field3D"); double vv=0; return {vv}; }
 
       /**
        * @brief get the value of the scalar field, Fourier space, real part
@@ -457,7 +457,7 @@ namespace cosmobl {
        * @return the values of the scalar field, Fourier space, real part
        */
       virtual double ScalarField_FourierSpace_real (const int i, const int j, const int k) const
-      { (void)i; (void)j; (void)k; ErrorCBL("Error in ScalarField_FourierSpace of Field3D"); double vv; return vv; }
+      { (void)i; (void)j; (void)k; ErrorCBL("Error in ScalarField_FourierSpace of Field3D"); return 0; }
 
       /**
        * @brief get the value of the scalar field, Fourier space, complex part
@@ -469,7 +469,7 @@ namespace cosmobl {
        * @return the value of the scalar field, Fourier space, complex part
        */
       virtual double ScalarField_FourierSpace_complex (const int i, const int j, const int k) const
-      { (void)i; (void)j; (void)k; ErrorCBL("Error in ScalarField_FourierSpace of Field3D"); double vv; return vv; }
+      { (void)i; (void)j; (void)k; ErrorCBL("Error in ScalarField_FourierSpace of Field3D"); return 0; }
 
       /**
        * @brief get the value of the scalar field, Fourier space, real part
@@ -497,7 +497,7 @@ namespace cosmobl {
        * @return vector containing the value of the vector field, Fourier space, real part
        */
       virtual vector<double> VectorField_FourierSpace_real (const int i, const int j, const int k) const
-      { (void)i; (void)j; (void)k; ErrorCBL("Error in VectorField_FourierSpace of Field3D"); double vv; return {vv}; }
+      { (void)i; (void)j; (void)k; ErrorCBL("Error in VectorField_FourierSpace of Field3D"); return {0}; }
 
       /**
        * @brief get the value of the vector field, Fourier space, complex part
@@ -509,7 +509,7 @@ namespace cosmobl {
        * @return vector containing the value of the vector field, Fourier space, complex part
        */
       virtual vector<double> VectorField_FourierSpace_complex (const int i, const int j, const int k) const
-      { (void)i; (void)j; (void)k; ErrorCBL("Error in VectorField_FourierSpace_complex of Field3D"); double vv; return {vv}; }
+      { (void)i; (void)j; (void)k; ErrorCBL("Error in VectorField_FourierSpace_complex of Field3D"); return {0}; }
 
       ///@}
 

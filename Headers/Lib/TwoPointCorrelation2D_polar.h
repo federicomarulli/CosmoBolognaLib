@@ -43,421 +43,424 @@
 
 
 namespace cosmobl {
-
-  namespace twopt {
+  
+  namespace measure {
     
-    /**
-     *  @class TwoPointCorrelation2D_polar TwoPointCorrelation2D_polar.h
-     *  "Headers/Lib/TwoPointCorrelation2D_polar.h"
-     *
-     *  @brief The class TwoPointCorrelation2D_polar
-     *
-     *  This class is used to handle objects of type <EM>
-     *  TwoPointCorrelation2D_polar </EM>. It is used to measure the
-     *  2D two-point correlation function in polar coordinates,
-     *  \f$\xi(r,\mu)\f$, that is as a function of absolute
-     *  separation, \f$r=\sqrt{r_p^2+\pi^2}\f$, and the cosine of the
-     *  angle between the separation vector and the line of sight,
-     *  \f$\mu\equiv\cos\theta=s_\parallel/s\f$.
-     */
-    class TwoPointCorrelation2D_polar : public TwoPointCorrelation2D {
-
-    protected:
-
+    namespace twopt {
+    
       /**
-       *  @brief measure the 2D two-point correlation function in
-       *  polar coordinates, with Poisson errors
+       *  @class TwoPointCorrelation2D_polar TwoPointCorrelation2D_polar.h
+       *  "Headers/Lib/TwoPointCorrelation2D_polar.h"
        *
-       *  @param dir_output_pairs output directory used to store the
-       *  number of pairs
+       *  @brief The class TwoPointCorrelation2D_polar
        *
-       *  @param dir_input_pairs vector of input directories used to
-       *  store the number of pairs (if the pairs are read from files)
-       *
-       *  @param count_dd true &rarr; count the number of data-data
-       *  pairs; false &rarr; read the number of data-data pairs from
-       *  file
-       *
-       *  @param count_rr true &rarr; count the number of
-       *  random-random pairs; false &rarr; read the number of
-       *  random-random pairs from file
-       *
-       *  @param count_dr true &rarr; count the number of data-random
-       *  pairs; false &rarr; read the number of data-random pairs
-       *
-       *  @param tcount true &rarr; activate the time counter; false
-       *  &rarr; no time counter
-       *
-       *  @param estimator the estimator used to measure the two-point
-       *  correlation function
-       *
-       *  @return none
+       *  This class is used to handle objects of type <EM>
+       *  TwoPointCorrelation2D_polar </EM>. It is used to measure the
+       *  2D two-point correlation function in polar coordinates,
+       *  \f$\xi(r,\mu)\f$, that is as a function of absolute
+       *  separation, \f$r=\sqrt{r_p^2+\pi^2}\f$, and the cosine of the
+       *  angle between the separation vector and the line of sight,
+       *  \f$\mu\equiv\cos\theta=s_\parallel/s\f$.
        */
-      void measurePoisson (const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
+      class TwoPointCorrelation2D_polar : public TwoPointCorrelation2D {
 
-      /**
-       *  @brief measure the 2D two-point correlation function in
-       *  polar coordinates, estimating the covariance with Jackknife
-       *  resampling
-       *
-       *  @param dir_output_pairs output directory used to store the
-       *  number of pairs
-       *
-       *  @param dir_input_pairs vector of input directories used to
-       *  store the number of pairs (if the pairs are read from files)
-       *
-       *  @param dir_output_resample output directory used to store
-       *  the Jackknife resampling correlation functions, with Poisson
-       *  errors
-       *
-       *  @param count_dd true &rarr; count the number of data-data
-       *  pairs; false &rarr; read the number of data-data pairs from
-       *  file
-       *
-       *  @param count_rr true &rarr; count the number of
-       *  random-random pairs; false &rarr; read the number of
-       *  random-random pairs from file
-       *
-       *  @param count_dr true &rarr; count the number of data-random
-       *  pairs; false &rarr; read the number of data-random pairs
-       *
-       *  @param tcount true &rarr; activate the time counter; false
-       *  &rarr; no time counter
-       *
-       *  @param estimator the estimator used to measure the two-point
-       *  correlation function
-       *
-       *  @return none
-       */
-      void measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs={}, const string dir_output_resample = "NULL", const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
+      protected:
 
-      /**
-       *  @brief measure the 2D two-point correlation function in
-       *  polar coordinates, estimating the covariance with Bootstrap
-       *  resampling
-       *
-       *  @param nMocks number of mocks to be generated with bootstrap
-       *  resampling
-       *
-       *  @param dir_output_pairs output directory used to store the
-       *  number of pairs
-       *
-       *  @param dir_input_pairs vector of input directories used to
-       *  store the number of pairs (if the pairs are read from files)
-       *
-       *  @param dir_output_resample output directory used to store
-       *  the Bootstrap resampling correlation function, with Poisson
-       *  errors
-       *
-       *  @param count_dd true &rarr; count the number of data-data
-       *  pairs; false &rarr; read the number of data-data pairs from
-       *  file
-       *
-       *  @param count_rr true &rarr; count the number of
-       *  random-random pairs; false &rarr; read the number of
-       *  random-random pairs from file
-       *
-       *  @param count_dr true &rarr; count the number of data-random
-       *  pairs; false &rarr; read the number of data-random pairs
-       *
-       *  @param tcount true &rarr; activate the time counter; false
-       *  &rarr; no time counter
-       *
-       *  @param estimator the estimator used to measure the two-point
-       *  correlation function
-       *
-       *  @return none
-       */
-      void measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs={}, const string dir_output_resample="NULL", const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
+	/**
+	 *  @brief measure the 2D two-point correlation function in
+	 *  polar coordinates, with Poisson errors
+	 *
+	 *  @param dir_output_pairs output directory used to store the
+	 *  number of pairs
+	 *
+	 *  @param dir_input_pairs vector of input directories used to
+	 *  store the number of pairs (if the pairs are read from files)
+	 *
+	 *  @param count_dd true &rarr; count the number of data-data
+	 *  pairs; false &rarr; read the number of data-data pairs from
+	 *  file
+	 *
+	 *  @param count_rr true &rarr; count the number of
+	 *  random-random pairs; false &rarr; read the number of
+	 *  random-random pairs from file
+	 *
+	 *  @param count_dr true &rarr; count the number of data-random
+	 *  pairs; false &rarr; read the number of data-random pairs
+	 *
+	 *  @param tcount true &rarr; activate the time counter; false
+	 *  &rarr; no time counter
+	 *
+	 *  @param estimator the estimator used to measure the two-point
+	 *  correlation function
+	 *
+	 *  @return none
+	 */
+	void measurePoisson (const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
+
+	/**
+	 *  @brief measure the 2D two-point correlation function in
+	 *  polar coordinates, estimating the covariance with Jackknife
+	 *  resampling
+	 *
+	 *  @param dir_output_pairs output directory used to store the
+	 *  number of pairs
+	 *
+	 *  @param dir_input_pairs vector of input directories used to
+	 *  store the number of pairs (if the pairs are read from files)
+	 *
+	 *  @param dir_output_resample output directory used to store
+	 *  the Jackknife resampling correlation functions, with Poisson
+	 *  errors
+	 *
+	 *  @param count_dd true &rarr; count the number of data-data
+	 *  pairs; false &rarr; read the number of data-data pairs from
+	 *  file
+	 *
+	 *  @param count_rr true &rarr; count the number of
+	 *  random-random pairs; false &rarr; read the number of
+	 *  random-random pairs from file
+	 *
+	 *  @param count_dr true &rarr; count the number of data-random
+	 *  pairs; false &rarr; read the number of data-random pairs
+	 *
+	 *  @param tcount true &rarr; activate the time counter; false
+	 *  &rarr; no time counter
+	 *
+	 *  @param estimator the estimator used to measure the two-point
+	 *  correlation function
+	 *
+	 *  @return none
+	 */
+	void measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs={}, const string dir_output_resample = "NULL", const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
+
+	/**
+	 *  @brief measure the 2D two-point correlation function in
+	 *  polar coordinates, estimating the covariance with Bootstrap
+	 *  resampling
+	 *
+	 *  @param nMocks number of mocks to be generated with bootstrap
+	 *  resampling
+	 *
+	 *  @param dir_output_pairs output directory used to store the
+	 *  number of pairs
+	 *
+	 *  @param dir_input_pairs vector of input directories used to
+	 *  store the number of pairs (if the pairs are read from files)
+	 *
+	 *  @param dir_output_resample output directory used to store
+	 *  the Bootstrap resampling correlation function, with Poisson
+	 *  errors
+	 *
+	 *  @param count_dd true &rarr; count the number of data-data
+	 *  pairs; false &rarr; read the number of data-data pairs from
+	 *  file
+	 *
+	 *  @param count_rr true &rarr; count the number of
+	 *  random-random pairs; false &rarr; read the number of
+	 *  random-random pairs from file
+	 *
+	 *  @param count_dr true &rarr; count the number of data-random
+	 *  pairs; false &rarr; read the number of data-random pairs
+	 *
+	 *  @param tcount true &rarr; activate the time counter; false
+	 *  &rarr; no time counter
+	 *
+	 *  @param estimator the estimator used to measure the two-point
+	 *  correlation function
+	 *
+	 *  @return none
+	 */
+	void measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs={}, const string dir_output_resample="NULL", const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
 
       
-    public:
+      public:
 
-      /**
-       *  @name Constructors/destructors
-       */
-      ///@{
+	/**
+	 *  @name Constructors/destructors
+	 */
+	///@{
 
-      /**
-       *  @brief default constructor
-       *  @return object of class TwoPointCorrelation2D_polar
-       */
-      TwoPointCorrelation2D_polar () { m_twoPType = _2D_polar_; }
+	/**
+	 *  @brief default constructor
+	 *  @return object of class TwoPointCorrelation2D_polar
+	 */
+	TwoPointCorrelation2D_polar () { m_twoPType = _2D_polar_; }
 
-      /**
-       *  @brief constructor
-       *  @param data object of class Catalogue containing the input
-       *  catalogue
-       *  @param random of class Catalogue containing the random data
-       *  catalogue
-       *  @param binType_rad binning type in absolute separations
-       *  @param rMin minimum absolute separation used to count
-       *  the pairs
-       *  @param rMax maximum absolute separation used to count
-       *  the pairs
-       *  @param nbins_rad number of bins in the absolute
-       *  separation
-       *  @param shift_rad shift parameter in the absolute
-       *  separation, i.e. the radial shift is binSize*shift
-       *  @param binType_mu binning type in angular separations
-       *  @param muMin minimum angular used to count the pairs
-       *  @param muMax maximum angular used to count the pairs
-       *  @param nbins_mu number of bins in the angular
-       *  separation
-       *  @param shift_mu shift parameter in the angular
-       *  separation, i.e. the radial shift is binSize*shift
-       *  @param angularUnits angular units
-       *  @param angularWeight angular weight function
-       *  @param compute_extra_info true &rarr; compute extra
-       *  information related to the pairs, such as the mean pair
-       *  separation and redshift
-       *  @param random_dilution_fraction fraction between the number
-       *  of objects in the diluted and original random samples, used
-       *  to improve performances in random-random pair counts
-       *  @return object of class TwoPointCorrelation2D_polar
-       */
-      TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
-	: TwoPointCorrelation2D(data, random, compute_extra_info, random_dilution_fraction) { m_twoPType = _2D_polar_; set_parameters(binType_rad, rMin, rMax, nbins_rad, shift_rad, binType_mu, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight, compute_extra_info); }
+	/**
+	 *  @brief constructor
+	 *  @param data object of class Catalogue containing the input
+	 *  catalogue
+	 *  @param random of class Catalogue containing the random data
+	 *  catalogue
+	 *  @param binType_rad binning type in absolute separations
+	 *  @param rMin minimum absolute separation used to count
+	 *  the pairs
+	 *  @param rMax maximum absolute separation used to count
+	 *  the pairs
+	 *  @param nbins_rad number of bins in the absolute
+	 *  separation
+	 *  @param shift_rad shift parameter in the absolute
+	 *  separation, i.e. the radial shift is binSize*shift
+	 *  @param binType_mu binning type in angular separations
+	 *  @param muMin minimum angular used to count the pairs
+	 *  @param muMax maximum angular used to count the pairs
+	 *  @param nbins_mu number of bins in the angular
+	 *  separation
+	 *  @param shift_mu shift parameter in the angular
+	 *  separation, i.e. the radial shift is binSize*shift
+	 *  @param angularUnits angular units
+	 *  @param angularWeight angular weight function
+	 *  @param compute_extra_info true &rarr; compute extra
+	 *  information related to the pairs, such as the mean pair
+	 *  separation and redshift
+	 *  @param random_dilution_fraction fraction between the number
+	 *  of objects in the diluted and original random samples, used
+	 *  to improve performances in random-random pair counts
+	 *  @return object of class TwoPointCorrelation2D_polar
+	 */
+	TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	  : TwoPointCorrelation2D(data, random, compute_extra_info, random_dilution_fraction) { m_twoPType = _2D_polar_; set_parameters(binType_rad, rMin, rMax, nbins_rad, shift_rad, binType_mu, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight, compute_extra_info); }
 
-      /**
-       *  @brief constructor
-       *  @param data object of class Catalogue containing the input
-       *  catalogue
-       *  @param random of class Catalogue containing the random data
-       *  catalogue
-       *  @param binType_rad binning type in absolute separations
-       *  @param rMin minimum absolute separation used to count
-       *  the pairs
-       *  @param rMax maximum absolute separation used to count
-       *  the pairs
-       *  @param binSize_rad bin size in the absolute separation
-       *  @param shift_rad shift parameter in the absolute
-       *  separation, i.e. the radial shift is binSize*shift
-       *  @param binType_mu binning type in angular separations
-       *  @param muMin minimum angular separation used to count
-       *  the pairs
-       *  @param muMax maximum angular separation used to count
-       *  the pairs
-       *  @param binSize_mu bin size in the angular separation
-       *  @param shift_mu shift parameter in the angular
-       *  separation, i.e. the radial shift is binSize*shift
-       *  @param angularUnits angular units
-       *  @param angularWeight angular weight function
-       *  @param compute_extra_info true &rarr; compute extra
-       *  information related to the pairs, such as the mean pair
-       *  separation and redshift
-       *  @param random_dilution_fraction fraction between the number
-       *  of objects in the diluted and original random samples, used
-       *  to improve performances in random-random pair counts
-       *  @return object of class TwoPointCorrelation2D_polar
-       */
-      TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
-	: TwoPointCorrelation2D(data, random, compute_extra_info, random_dilution_fraction) { m_twoPType = _2D_polar_; set_parameters(binType_rad, rMin, rMax, binSize_rad, shift_rad, binType_mu, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight, compute_extra_info); }
+	/**
+	 *  @brief constructor
+	 *  @param data object of class Catalogue containing the input
+	 *  catalogue
+	 *  @param random of class Catalogue containing the random data
+	 *  catalogue
+	 *  @param binType_rad binning type in absolute separations
+	 *  @param rMin minimum absolute separation used to count
+	 *  the pairs
+	 *  @param rMax maximum absolute separation used to count
+	 *  the pairs
+	 *  @param binSize_rad bin size in the absolute separation
+	 *  @param shift_rad shift parameter in the absolute
+	 *  separation, i.e. the radial shift is binSize*shift
+	 *  @param binType_mu binning type in angular separations
+	 *  @param muMin minimum angular separation used to count
+	 *  the pairs
+	 *  @param muMax maximum angular separation used to count
+	 *  the pairs
+	 *  @param binSize_mu bin size in the angular separation
+	 *  @param shift_mu shift parameter in the angular
+	 *  separation, i.e. the radial shift is binSize*shift
+	 *  @param angularUnits angular units
+	 *  @param angularWeight angular weight function
+	 *  @param compute_extra_info true &rarr; compute extra
+	 *  information related to the pairs, such as the mean pair
+	 *  separation and redshift
+	 *  @param random_dilution_fraction fraction between the number
+	 *  of objects in the diluted and original random samples, used
+	 *  to improve performances in random-random pair counts
+	 *  @return object of class TwoPointCorrelation2D_polar
+	 */
+	TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	  : TwoPointCorrelation2D(data, random, compute_extra_info, random_dilution_fraction) { m_twoPType = _2D_polar_; set_parameters(binType_rad, rMin, rMax, binSize_rad, shift_rad, binType_mu, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight, compute_extra_info); }
 
-      /**
-       *  @brief default destructor
-       *  @return none
-       */
-      ~TwoPointCorrelation2D_polar () = default;
+	/**
+	 *  @brief default destructor
+	 *  @return none
+	 */
+	~TwoPointCorrelation2D_polar () = default;
 
-      ///@}
-
-
-      /**
-       *  @name Member functions to set the binning parameters
-       */
-      ///@{
-
-      /**
-       *  @brief set the binning parameters
-       *  @param binType_rad binning type in absolute separations
-       *  @param rMin minimum absolute separation used to count
-       *  the pairs
-       *  @param rMax maximum absolute separation used to count
-       *  the pairs
-       *  @param nbins_rad number of bins in the absolute
-       *  separation
-       *  @param shift_rad shift parameter in the absolute
-       *  separation, i.e. the radial shift is binSize*shift
-       *  @param binType_mu binning type in angular separations
-       *  @param muMin minimum angular used to count the pairs
-       *  @param muMax maximum angular used to count the pairs
-       *  @param nbins_mu number of bins in the angular
-       *  separation
-       *  @param shift_mu shift parameter in the angular
-       *  separation, i.e. the radial shift is binSize*shift
-       *  @param angularUnits angular units
-       *  @param angularWeight angular weight function
-       *  @param compute_extra_info true &rarr; compute extra
-       *  information related to the pairs, such as the mean pair
-       *  separation and redshift
-       *  @return none
-       */
-      void set_parameters (const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
-
-      /**
-       *  @brief set the binning parameters
-       *  @param binType_rad binning type in absolute separations
-       *  @param rMin minimum absolute separation used to count
-       *  the pairs
-       *  @param rMax maximum absolute separation used to count
-       *  the pairs
-       *  @param binSize_rad bin size in the absolute separation
-       *  @param shift_rad shift parameter in the absolute
-       *  separation, i.e. the radial shift is binSize*shift
-       *  @param binType_mu binning type in angular separations
-       *  @param muMin minimum angular separation used to count
-       *  the pairs
-       *  @param muMax maximum angular separation used to count
-       *  the pairs
-       *  @param binSize_mu bin size in the angular separation
-       *  @param shift_mu shift parameter in the angular
-       *  separation, i.e. the radial shift is binSize*shift
-       *  @param angularUnits angular units
-       *  @param angularWeight angular weight function
-       *  @param compute_extra_info true &rarr; compute extra
-       *  information related to the pairs, such as the mean pair
-       *  separation and redshift
-       *  @return none
-       */
-      void set_parameters (const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
-
-      ///@}
+	///@}
 
 
-      /**
-       *  @name Methods to set the binning parameters
-       */
-      ///@{
+	/**
+	 *  @name Member functions to set the binning parameters
+	 */
+	///@{
 
-      /**
-       *  @brief measure the 2D two-point correlation function in
-       *  polar coordinates
-       *
-       *  @param errorType type of error
-       *  
-       *  @param dir_output_pairs output directory used to store the
-       *  number of pairs
-       *
-       *  @param dir_input_pairs vector of input directories used to
-       *  store the number of pairs (if the pairs are read from files)
-       *
-       *  @param dir_output_resample output directory of the
-       *  resampled correlation function
-       *
-       *  @param nMocks number of resampling used for bootstrap
-       *
-       *  @param count_dd true &rarr; count the number of data-data
-       *  pairs; false &rarr; read the number of data-random pairs from
-       *  file
-       *
-       *  @param count_rr true &rarr; count the number of random-random
-       *  pairs; false &rarr; read the number of random-random pairs
-       *
-       *  @param count_dr true &rarr; count the number of data-random
-       *  pairs; false &rarr; read the number of data-random pairs
-       *
-       *  @param tcount true &rarr; activate the time counter; false
-       *  &rarr; no time counter
-       *
-       *  @param estimator the estimator used to measure the two-point
-       *  correlation function
-       *
-       *  @return none
-       */
-      void measure (const ErrorType errorType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
+	/**
+	 *  @brief set the binning parameters
+	 *  @param binType_rad binning type in absolute separations
+	 *  @param rMin minimum absolute separation used to count
+	 *  the pairs
+	 *  @param rMax maximum absolute separation used to count
+	 *  the pairs
+	 *  @param nbins_rad number of bins in the absolute
+	 *  separation
+	 *  @param shift_rad shift parameter in the absolute
+	 *  separation, i.e. the radial shift is binSize*shift
+	 *  @param binType_mu binning type in angular separations
+	 *  @param muMin minimum angular used to count the pairs
+	 *  @param muMax maximum angular used to count the pairs
+	 *  @param nbins_mu number of bins in the angular
+	 *  separation
+	 *  @param shift_mu shift parameter in the angular
+	 *  separation, i.e. the radial shift is binSize*shift
+	 *  @param angularUnits angular units
+	 *  @param angularWeight angular weight function
+	 *  @param compute_extra_info true &rarr; compute extra
+	 *  information related to the pairs, such as the mean pair
+	 *  separation and redshift
+	 *  @return none
+	 */
+	void set_parameters (const binType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
 
-      ///@}
+	/**
+	 *  @brief set the binning parameters
+	 *  @param binType_rad binning type in absolute separations
+	 *  @param rMin minimum absolute separation used to count
+	 *  the pairs
+	 *  @param rMax maximum absolute separation used to count
+	 *  the pairs
+	 *  @param binSize_rad bin size in the absolute separation
+	 *  @param shift_rad shift parameter in the absolute
+	 *  separation, i.e. the radial shift is binSize*shift
+	 *  @param binType_mu binning type in angular separations
+	 *  @param muMin minimum angular separation used to count
+	 *  the pairs
+	 *  @param muMax maximum angular separation used to count
+	 *  the pairs
+	 *  @param binSize_mu bin size in the angular separation
+	 *  @param shift_mu shift parameter in the angular
+	 *  separation, i.e. the radial shift is binSize*shift
+	 *  @param angularUnits angular units
+	 *  @param angularWeight angular weight function
+	 *  @param compute_extra_info true &rarr; compute extra
+	 *  information related to the pairs, such as the mean pair
+	 *  separation and redshift
+	 *  @return none
+	 */
+	void set_parameters (const binType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const binType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
+
+	///@}
 
 
-      /**
-       *  @name Input/Output methods
-       */
-      ///@{
+	/**
+	 *  @name Methods to set the binning parameters
+	 */
+	///@{
 
-      /**
-       *  @brief read the 2D two-point correlation function
-       *  @param dir input directory
-       *  @param file input file
-       *  @return none
-       */
-      void read (const string dir, const string file) override;     
+	/**
+	 *  @brief measure the 2D two-point correlation function in
+	 *  polar coordinates
+	 *
+	 *  @param errorType type of error
+	 *  
+	 *  @param dir_output_pairs output directory used to store the
+	 *  number of pairs
+	 *
+	 *  @param dir_input_pairs vector of input directories used to
+	 *  store the number of pairs (if the pairs are read from files)
+	 *
+	 *  @param dir_output_resample output directory of the
+	 *  resampled correlation function
+	 *
+	 *  @param nMocks number of resampling used for bootstrap
+	 *
+	 *  @param count_dd true &rarr; count the number of data-data
+	 *  pairs; false &rarr; read the number of data-random pairs from
+	 *  file
+	 *
+	 *  @param count_rr true &rarr; count the number of random-random
+	 *  pairs; false &rarr; read the number of random-random pairs
+	 *
+	 *  @param count_dr true &rarr; count the number of data-random
+	 *  pairs; false &rarr; read the number of data-random pairs
+	 *
+	 *  @param tcount true &rarr; activate the time counter; false
+	 *  &rarr; no time counter
+	 *
+	 *  @param estimator the estimator used to measure the two-point
+	 *  correlation function
+	 *
+	 *  @return none
+	 */
+	void measure (const ErrorType errorType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
 
-      /**
-       *  @brief write the 2D two-point correlation function
-       *  @param dir output directory
-       *  @param file output file
-       *  @param full false &rarr; simply store the data; true &rarr;
-       *  duplicate the data in the other three quadrands (usefull
-       *  e.g. when storing the 2D correlation function)
-       *  @param rank cpu index (for MPI usage)
-       *  @return none
-       */
-      void write (const string dir, const string file, const bool full, const int rank=0) const override;
+	///@}
 
-      /**
-       *  @brief write the 2D two-point correlation function
-       *  @param dir output directory
-       *  @param file output file
-       *  @param rank cpu index (for MPI usage)
-       *  @return none
-       */
-      void write (const string dir=par::defaultString, const string file=par::defaultString, const int rank=0) const override
-      { write(dir, file, true, rank); }
+
+	/**
+	 *  @name Input/Output methods
+	 */
+	///@{
+
+	/**
+	 *  @brief read the 2D two-point correlation function
+	 *  @param dir input directory
+	 *  @param file input file
+	 *  @return none
+	 */
+	void read (const string dir, const string file) override;     
+
+	/**
+	 *  @brief write the 2D two-point correlation function
+	 *  @param dir output directory
+	 *  @param file output file
+	 *  @param full false &rarr; simply store the data; true &rarr;
+	 *  duplicate the data in the other three quadrands (usefull
+	 *  e.g. when storing the 2D correlation function)
+	 *  @param rank cpu index (for MPI usage)
+	 *  @return none
+	 */
+	void write (const string dir, const string file, const bool full, const int rank=0) const override;
+
+	/**
+	 *  @brief write the 2D two-point correlation function
+	 *  @param dir output directory
+	 *  @param file output file
+	 *  @param rank cpu index (for MPI usage)
+	 *  @return none
+	 */
+	void write (const string dir=par::defaultString, const string file=par::defaultString, const int rank=0) const override
+	{ write(dir, file, true, rank); }
       
-      ///@}
-
-      
-      /**
-       *  @name Member functions to compute, read and write the covariance matrix (customised in all the derived classes)
-       */
-      ///@{ 
-
-      /**
-       *  @brief read the measured covariance matrix
-       *  @param dir input directory
-       *  @param file input file
-       *  @return none
-       */
-      void read_covariance (const string dir, const string file) override
-      { (void)dir; (void)file; ErrorCBL("Work in progress in read_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::_workInProgress_); }
-
-      /**
-       *  @brief write the measured two-point correlation
-       *  @param dir output directory
-       *  @param file output file
-       *  @return none
-       */
-      void write_covariance (const string dir, const string file) const override
-      { (void)dir; (void)file; ErrorCBL("Work in progress in write_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::_workInProgress_); }
-      
-      /**
-       *  @brief compute the covariance matrix
-       *  @param xi vector containing the measure correlation
-       *  functions used to compute the covariance matrix
-       *  @param JK true &rarr; compute the jackknife covariance
-       *  matrix; false compute the standard covariance matrix
-       *  @return none
-       */
-      void compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK) override
-      { (void)xi; (void)JK; ErrorCBL("Work in progress in compute_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::_workInProgress_); }
-      
-      /**
-       *  @brief compute the covariance matrix
-       *  @param file vector containing the input files with the
-       *  measured correlation functions used to compute the
-       *  covariance matrix
-       *  @param JK true &rarr; compute the jackknife covariance
-       *  matrix; false compute the standard covariance matrix
-       *  @return none
-       */
-      void compute_covariance (const vector<string> file, const bool JK) override
-      { (void)file; (void)JK; ErrorCBL("Work in progress in compute_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::_workInProgress_); }
-      
-      ///@} 
+	///@}
 
       
-    };
+	/**
+	 *  @name Member functions to compute, read and write the covariance matrix (customised in all the derived classes)
+	 */
+	///@{ 
+
+	/**
+	 *  @brief read the measured covariance matrix
+	 *  @param dir input directory
+	 *  @param file input file
+	 *  @return none
+	 */
+	void read_covariance (const string dir, const string file) override
+	{ (void)dir; (void)file; ErrorCBL("Work in progress in read_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::_workInProgress_); }
+
+	/**
+	 *  @brief write the measured two-point correlation
+	 *  @param dir output directory
+	 *  @param file output file
+	 *  @return none
+	 */
+	void write_covariance (const string dir, const string file) const override
+	{ (void)dir; (void)file; ErrorCBL("Work in progress in write_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::_workInProgress_); }
+      
+	/**
+	 *  @brief compute the covariance matrix
+	 *  @param xi vector containing the measure correlation
+	 *  functions used to compute the covariance matrix
+	 *  @param JK true &rarr; compute the jackknife covariance
+	 *  matrix; false compute the standard covariance matrix
+	 *  @return none
+	 */
+	void compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK) override
+	{ (void)xi; (void)JK; ErrorCBL("Work in progress in compute_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::_workInProgress_); }
+      
+	/**
+	 *  @brief compute the covariance matrix
+	 *  @param file vector containing the input files with the
+	 *  measured correlation functions used to compute the
+	 *  covariance matrix
+	 *  @param JK true &rarr; compute the jackknife covariance
+	 *  matrix; false compute the standard covariance matrix
+	 *  @return none
+	 */
+	void compute_covariance (const vector<string> file, const bool JK) override
+	{ (void)file; (void)JK; ErrorCBL("Work in progress in compute_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::_workInProgress_); }
+      
+	///@} 
+
+      
+      };
+    }
   }
 }
 

@@ -33,6 +33,7 @@
  */
 
 #include "Cosmology.h"
+
 using namespace cosmobl;
 
 
@@ -41,7 +42,7 @@ using namespace cosmobl;
 
 double cosmobl::cosmology::Cosmology::deltav_L (const double bias, const double rho_vm) const
 {
-  return 1.594*(1. - pow(1+(rho_vm-1.)*bias,(-1./1.594)));
+  return 1.594*(1.-pow(1+(rho_vm-1.)*bias, (-1./1.594)));
 }
 
 
@@ -88,10 +89,8 @@ double cosmobl::cosmology::Cosmology::f_nu (const double SS, const double del_v,
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::size_function (const double RV, const double redshift, const double del_v, const double del_c, const string model, const string method_Pk, const string output_root, const string interpType, const int Num, const double stepsize, const double k_max, const string file_par) const
+double cosmobl::cosmology::Cosmology::size_function (const double RV, const double redshift, const double del_v, const double del_c, const string model, const string method_Pk, const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const
 {
-  double Z0 = 0.;
-  double zero = 0.;
   double RL;
   if ((model == "Vdn") || (model == "SvdW"))
     RL = RV/r_rL(del_v);
@@ -102,11 +101,11 @@ double cosmobl::cosmology::Cosmology::size_function (const double RV, const doub
   else 
     { ErrorCBL("Error in cosmobl::cosmology::Cosmology::size_function of SizeFunction.cpp: model name not allowed! Allowed names are: SvdW (Sheth and van de Weygaert, 2004), linear/Vdn (Jennings, Li and Hu, 2013)"); return 0; }
   
-  double sigmaR = sqrt(SSR_norm(RL, method_Pk, zero, output_root, k_max, file_par));
-  double sigmaRz = sigmaR*DD(redshift)/DD(Z0);
+  double sigmaR = sqrt(sigma2R(RL, method_Pk, 0., output_root, interpType, k_max, input_file, is_parameter_file));
+  double sigmaRz = sigmaR*DD(redshift)/DD(0.);
   double SSSR = sigmaRz*sigmaRz;
         
-  double Dln_SigmaR = dnSR(1, RL, method_Pk, Z0, output_root, interpType, Num, stepsize, k_max, file_par)*(RL/(2.*SSSR))*pow(DD(redshift)/DD(Z0), 2.);
+  double Dln_SigmaR = dnsigma2R(1, RL, method_Pk, 0., output_root, interpType, k_max, input_file, is_parameter_file)*(RL/(2.*SSSR))*pow(DD(redshift)/DD(0.), 2.);
   
   if (model == "Vdn")
     return f_nu(sigmaRz, del_v, del_c)/volume_sphere(RV)*fabs(Dln_SigmaR);
@@ -122,7 +121,7 @@ double cosmobl::cosmology::Cosmology::size_function (const double RV, const doub
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::size_function (const double RV, const double redshift, const string model_mf, const double del_v, const string model_sf, const string method_Pk, const string output_root, const double Delta, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+double cosmobl::cosmology::Cosmology::size_function (const double RV, const double redshift, const string model_mf, const double del_v, const string model_sf, const string method_Pk, const string output_root, const double Delta, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
 {
   double RL;
   
@@ -134,14 +133,15 @@ double cosmobl::cosmology::Cosmology::size_function (const double RV, const doub
   
   else 
     { ErrorCBL("Error in cosmobl::cosmology::Cosmology::size_function of SizeFunction.cpp: model name not allowed! Allowed names are: SvdW (Sheth and van de Weygaert, 2004), linear/Vdn (Jennings, Li and Hu, 2013)"); return 0; }
-  double RHO = Rho(m_Omega_matter, m_Omega_neutrinos, true);
+  
+  double RHO = rho_m(redshift, true);
   double MM = Mass(RL, RHO);
   
   if (model_sf == "Vdn")
-    return 3.*MM*cosmology::Cosmology::mass_function(MM, redshift, model_mf, method_Pk, output_root, Delta, interpType, Num, stepsize, norm, k_min, k_max, prec, file_par, false, del_v)*deltav_NL(del_v);
+    return 3.*MM*cosmology::Cosmology::mass_function(MM, redshift, model_mf, method_Pk, output_root, Delta, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file, false, del_v)*deltav_NL(del_v);
   
   else if ((model_sf == "SvdW") || (model_sf == "linear"))
-    return 3.*MM*cosmology::Cosmology::mass_function(MM, redshift, model_mf, method_Pk, output_root, Delta, interpType, Num, stepsize, norm, k_min, k_max, prec, file_par, false, del_v);
+    return 3.*MM*cosmology::Cosmology::mass_function(MM, redshift, model_mf, method_Pk, output_root, Delta, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file, false, del_v);
   
   else 
     { ErrorCBL("Error in cosmobl::cosmology::Cosmology::size_function of SizeFunction.cpp: model name not allowed! Allowed names are: SvdW (Sheth and van de Weygaert, 2004), linear/Vdn (Jennings, Li and Hu, 2013)"); return 0; }

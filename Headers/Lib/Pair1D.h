@@ -363,10 +363,13 @@ namespace cosmobl {
   
       /**
        *  @brief constructor
-       *  @param thetaMin minimum value of the angle &theta; used to count
-       *  the pairs
-       *  @param thetaMax maximum value of the angle &theta; used to count
-       *  the pairs
+       *
+       *  @param thetaMin minimum value of the angle &theta; used to
+       *  count the pairs
+       *
+       *  @param thetaMax maximum value of the angle &theta; used to
+       *  count the pairs
+       *
        *  @param binSize size of the bins
        *  @param shift shift parameter, i.e. the radial shift is
        *  binSize*shift
@@ -526,6 +529,27 @@ namespace cosmobl {
        *  pair vector accordingly
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
+       *  @param kk index of the pairs
+       *  @param wkk weight of the pair
+       *  @return none
+       */
+      void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &kk, double &wkk) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param kk index of the pairs
+       *  @param wkk weight of the pair
+       *  @param weight the weght of the region
+       *  @return none
+       */
+      void set_pair (const int kk, const double wkk, const double weight=1) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
        *  @return none
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
@@ -646,7 +670,28 @@ namespace cosmobl {
        *  @name Member functions used to handle pairs
        */
       ///@{
-  
+    
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
+       *  @param kk index of the pairs
+       *  @param wkk weight of the pair
+       *  @return none
+       */
+      void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &kk, double &wkk) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param kk index of the pairs
+       *  @param wkk weight of the pair
+       *  @param weight the weght of the region
+       *  @return none
+       */
+      void set_pair (const int kk, const double wkk, const double weight=1) override;
+
       /**
        *  @brief estimate the distance between two objects and update the
        *  pair vector accordingly
@@ -891,7 +936,28 @@ namespace cosmobl {
       /**
        *  @name Member functions used to handle pairs
        */
-      ///@{
+      ///@{ 
+      
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
+       *  @param kk index of the pairs
+       *  @param wkk weight of the pair
+       *  @return none
+       */
+      void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &kk, double &wkk) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param kk index of the pairs
+       *  @param wkk weight of the pair
+       *  @param weight the weght of the region
+       *  @return none
+       */
+      void set_pair (const int kk, const double wkk, const double weight=1) override;
   
       /**
        *  @brief estimate the distance between two objects and update the
@@ -1014,7 +1080,28 @@ namespace cosmobl {
        *  @name Member functions used to handle pairs
        */
       ///@{
-  
+        
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
+       *  @param kk index of the pairs
+       *  @param wkk weight of the pair
+       *  @return none
+       */
+      void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &kk, double &wkk) override;
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param kk index of the pairs
+       *  @param wkk weight of the pair
+       *  @param weight the weght of the region
+       *  @return none
+       */
+      void set_pair (const int kk, const double wkk, const double weight=1) override;
+
       /**
        *  @brief estimate the distance between two objects and update the
        *  pair vector accordingly

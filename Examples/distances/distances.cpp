@@ -21,25 +21,14 @@ int main () {
     // ---------------- set the cosmological parameters ------------
     // -------------------------------------------------------------
 
-    double OmegaM = 0.25;
-    double Omega_b = 0.045;
-    double Omega_nu = 0.;
-    double massless_neutrinos = 3.04;
-    int massive_neutrinos = 0; 
-    double OmegaL = 1.-OmegaM;
-    double Omega_radiation = 0.;
-    double hh = 0.73;
-    double scalar_amp = 2.742e-9;
-    double n_s = 1;
-
-    cosmobl::cosmology::Cosmology cosmology {OmegaM, Omega_b, Omega_nu, massless_neutrinos, massive_neutrinos, OmegaL, Omega_radiation, hh, scalar_amp, n_s};
+    cosmobl::cosmology::Cosmology cosmology {cosmobl::cosmology::_Planck15_};
 
 
     // ---------------------------------------------------------------------------------------
     // ---------------- set the redshifts to be converted into comoving distances ------------
     // ---------------------------------------------------------------------------------------
 
-    int step = 1e6;
+    int step = 5e4;
     double z_min = 0.1;
     double z_max = 2.;
     vector<double> redshift = cosmobl::linear_bin_vector<double>(step, z_min, z_max);
@@ -52,13 +41,15 @@ int main () {
     cout << "Computing comoving distances with a standard integration..." << endl;
 
     time_t start, end;
-    double diffT, D_C;
-  
+    double D_C;
+    
     time (&start);
 
     for (auto &&zz : redshift) 
       D_C = cosmology.D_C(zz);
-  
+
+    cout << "D_C = " << D_C << endl;
+    
     time (&end);
     double T1 = difftime(end, start);
     cout << "The computetional time is: " << T1 << " sec" << endl << endl;
@@ -74,6 +65,8 @@ int main () {
 
     for (auto &&zz : redshift) 
       D_C = cosmology.D_C_LCDM(zz);
+
+    cout << "D_C = " << D_C << endl;
   
     time (&end);
     double T2 = difftime(end, start);
@@ -81,7 +74,7 @@ int main () {
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

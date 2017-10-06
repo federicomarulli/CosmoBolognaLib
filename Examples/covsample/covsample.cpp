@@ -34,13 +34,13 @@ int main () {
     vector<vector<double> > measured_covariance;
     cosmobl::covariance_matrix(sample, measured_covariance);
   
-    for (int i=0; i<covariance.size(); i++)
-      for (int j=0; j<covariance[i].size(); j++)
+    for (size_t i=0; i<covariance.size(); i++)
+      for (size_t j=0; j<covariance[i].size(); j++)
 	cout << i << " " << j << " covariance: " << covariance[i][j] << ", measured covariance: " << measured_covariance[i][j] << endl;
     cout << endl;  
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

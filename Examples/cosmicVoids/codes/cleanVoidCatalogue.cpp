@@ -56,6 +56,9 @@ int main () {
     // store the mean particle separation of the simulation
     double mps = tracers_catalogue.mps();      
 
+    // store the numerical density of the simulation
+    double density = tracers_catalogue.numdensity();      
+
     // generate the chain mesh of the inpute tracer catalogue
     cosmobl::chainmesh::ChainMesh3D ChM(2*mps, tracers_catalogue.var(cosmobl::catalogue::Var::_X_), tracers_catalogue.var(cosmobl::catalogue::Var::_Y_), tracers_catalogue.var(cosmobl::catalogue::Var::_Z_), void_catalogue_in.Max(cosmobl::catalogue::Var::_Radius_));
 
@@ -68,7 +71,7 @@ int main () {
     // --------------------------------------------
 
     // compute the central densities of the input void catalogue
-    void_catalogue_in.compute_centralDensity(tracers_catalogue, ChM);
+    void_catalogue_in.compute_centralDensity(input_tracersCata, ChM, density);
 
 
     // ---- use built in catalogue constructor, selecting which step of the cleaning procedure to perform ----
@@ -81,18 +84,22 @@ int main () {
     vector<double> delta_r = {0.5, 50.}; // the interval of accepted radii
     double threshold = 0.21;             // the density threshold
     double relevance = 1.57;             // the minimum accepted density contrast
+    double ratio = 0.1;
 
     // catalogue constructor
-    cosmobl::catalogue::Catalogue void_catalogue_out {input_voidCata, clean, delta_r, threshold, relevance, true, input_tracersCata, ChM, true, cosmobl::catalogue::Var::_CentralDensity_};
+    cosmobl::catalogue::Catalogue void_catalogue_out {input_voidCata, clean, delta_r, threshold, relevance, true, input_tracersCata, ChM, ratio, true, cosmobl::catalogue::Var::_CentralDensity_};
 
     // store the obtained catalogue in an ASCII file
     var_names_voids.emplace_back(cosmobl::catalogue::Var::_CentralDensity_);
+    string mkdir = "mkdir -p ../output/";
+    if (system(mkdir.c_str())) {}
+
     string cata_out = cosmobl::par::DirLoc+"../output/void_catalogue_cleaned.out";
     void_catalogue_out.write_data(cata_out, var_names_voids);
     
   }
   
-  catch (cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch (cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
    
   return 0;
 }

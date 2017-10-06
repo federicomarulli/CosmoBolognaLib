@@ -33,7 +33,8 @@
 #ifndef __CHAIN__
 #define __CHAIN__
 
-#include "Data2D.h"
+#include "Model2D.h"
+#include "Posterior.h"
 
 namespace cosmobl {
 
@@ -52,25 +53,26 @@ namespace cosmobl {
       protected:
 
 	/// the lenght of the chain
-	int m_chain_size;
+	int m_size;
+
+	/// the number of parallel walkers
+	int m_nwalkers;
 
 	/// content of the chain
 	vector<double> m_values;
 
-	/// the chain mean value 
-	double m_mean;
+	/**
+	 *  @brief get the position in the vector
+	 *  m_values from position index and walker index
+	 *
+	 *  @param pp the position in the chain
+	 *
+	 *  @param ww the walker
+	 *
+	 *  @return object of class Chain.  
+	 */
+	int m_inds_to_index(const int pp, const int ww) const { return pp*m_nwalkers+ww;}
 
-	/// the standard deviation of chain values 
-	double m_std;
-
-	/// the chain median value
-	double m_median;
-
-	/// var 
-	vector<double> m_var;
-
-	/// dist
-	vector<double> m_dist;
 
       public:
 
@@ -89,11 +91,33 @@ namespace cosmobl {
 	/**
 	 *  @brief constructor
 	 *
-	 *  @param chain_size size of the chain 
+	 *  @param size size of the chain 
+	 *
+	 *  @param nwalkers the number of parallel walkers
 	 *
 	 *  @return object of class Chain.
 	 */
-	Chain (const int chain_size) : m_chain_size(chain_size) { m_values.resize(m_chain_size, 0); }
+	Chain (const int size, const int nwalkers);
+
+	/**
+	 *  @brief constructor
+	 *
+	 *  @param values the input chain values
+	 *
+	 *  @param nwalkers the number of parallel walkers
+	 *
+	 *  @return object of class Chain.
+	 */
+	Chain (const vector<double> values, const int nwalkers);
+
+	/**
+	 *  @brief constructor
+	 *
+	 *  @param values the input chain values
+	 *
+	 *  @return object of class Chain.
+	 */
+	Chain (vector<vector<double>> values);
 
 	/**
 	 *  @brief default destructor
@@ -103,95 +127,125 @@ namespace cosmobl {
 
 	///@}
 
-
 	/**
-	 *  @brief compute statistics (mean, std, median) of the chain
-	 *  
-	 *  @param max maximum step of the chain to use
-	 *  @param min minumium step of the chain to use
-	 *
-	 *  @return none
-	 */
-	void Statistics (const int max=-1, const int min=-1);
-
-	/**
-	 *  @brief compute chain distribution 
-	 *  
-	 *  @param nbin numbers of bin
-	 *
-	 *  @return none
-	 */
-	void ComputeDistribution(const int nbin);
-
-	/**
-	 *  @brief return the private member m_var
-	 *  
-	 *  @return the range of the binned chain values 
-	 */
-	vector<double> var () const { return m_var; }
-
-	/**
-	 *  @brief return the private member m_dist
-	 *  
-	 *  @return the distribution of chain values 
-	 */
-	vector<double> dist () const { return m_dist; }
-
-	/**
-	 *  @brief return the private member m_mean 
-	 *  
-	 *  @return the chain mean value
-	 */
-	double mean () const { return m_mean; }
-
-	/**
-	 *  @brief return the private member m_median
-	 *  
-	 *  @return the chain median value
-	 */
-	double median () const { return m_median;}
-
-	/**
-	 *  @brief return the private member m_std 
-	 *  
-	 *  @return the chain standard deviation value
-	 */
-	double std () const { return m_std; }
-
-	/**
-	 *  @brief set the chain size
-	 *  
-	 *  @param chain_size the chain size
-	 *
-	 *  @return none
-	 */
-	void set_chain_size (const int chain_size) { m_chain_size=chain_size; m_values.resize(m_chain_size, 0); }
-
-	/**
-	 *  @brief set the i-th chain value
-	 *
-	 *  @param i the i-th chain step
-	 *  @param value the value at the i-th step
-	 *
-	 *  @return none
-	 */
-	void set_chain_value (const int i, const double value) { m_values[i] = value; }
-
-	/**
-	 * @brief return the private member m_chain_size
+	 * @brief return the private member m_size
 	 *
 	 * @return the chain size
 	 */
-	int chain_size () const { return m_chain_size; }
+	int size () const { return m_size; }
 
 	/**
-	 * @brief return the private member m_values at the i-th step
-	 * 
-	 * @param i the i-th step
+	 * @brief return the private member m_nwalkers
 	 *
-	 * @return the chain value at i-th step
+	 * @return the chain size
 	 */
-	double chain_value (const int i) const { return m_values[i]; } 
+	int nwalkers () const { return m_nwalkers; }
+
+	/**
+	 * @brief set the chain
+	 *
+	 * @param size the chain lenght 
+         *
+	 * @param nwalkers the number of parallel walkers
+	 *
+	 * @return none
+	 */
+	void set_chain (const int size, const int nwalkers);
+
+	/**
+	 * @brief reset the chain using m_size and m_nwalkers
+	 *
+	 * @return none
+	 */
+	void reset();
+
+	/**
+	 * @brief expand the already existing chain
+	 *
+	 * @param append the lenght of the empty chunk of the chain 
+	 *
+	 * @return none
+	 */
+	void expand(const int append);
+
+	/**
+	 * @brief return the private member m_values at the pp-th step
+	 * for the ww-th step
+	 * 
+	 * @param pp the chain step
+	 * 
+	 * @param ww the walker index
+	 *
+	 * @return the chain value
+	 */
+	double value (const int pp, const int ww) const { return m_values[m_inds_to_index(pp, ww)]; }
+
+	/**
+	 * @brief set the private member m_values at the pp-th step
+	 * for the ww-th step
+	 * 
+	 * @param pp the chain step
+	 * 
+	 * @param ww the walker index
+	 *
+	 * @param value the chain value
+	 *
+	 * @return none
+	 */
+	void set_value (const int pp, const int ww, const double value) { m_values[m_inds_to_index(pp, ww)] = value; }
+
+	/**
+	 *  @brief set the chain values
+	 *
+	 *  @param values the input chain values
+	 *
+	 *  @param nwalkers the number of parallel walkers
+	 *
+	 *  @return none
+	 */
+	void set_values(const vector<double> values, const int nwalkers);
+
+	/**
+	 *  @brief set the chain values
+	 *
+	 *  @param values the input chain values
+	 *
+	 *  @return none
+	 */
+	void set_values(const vector<vector<double>> values);
+
+	/**
+	 * @brief return the chain
+	 * 
+	 * @param start the starting point 
+	 * 
+	 * @param thin number of jumped indexes in the chain
+	 *
+	 * @return the  chain values
+	 */
+	vector<double> values(const int start, const int thin = 1) const;
+
+	/**
+	 * @brief get the posterior distribution from the chain values
+	 * 
+	 * @param start the starting point 
+	 * 
+	 * @param thin number of jumped indexes in the chain
+	 *
+	 * @param seed the random number generator seed 
+	 *
+	 * @return the posterior distribution
+	*/
+	shared_ptr<statistics::Posterior> PosteriorDistribution(const int start, const int thin, const int seed=43241) const;
+
+	/**
+	 * @brief get the posterior distribution from the chain values
+	 * 
+	 * @param seed the random number generator seed 
+	 *
+	 * @return the posterior distribution
+	*/
+	shared_ptr<statistics::Posterior> PosteriorDistribution(const int seed=43241) const;
 
     };
   }

@@ -380,6 +380,10 @@ double cosmobl::catalogue::Catalogue::var (int index, Var var_name) const
     vv = m_object[index]->richness();
     break;
 
+  case Var::_RichnessError_:
+    vv = m_object[index]->richness_error();
+    break;
+
   case Var::_Vx_:
     vv = m_object[index]->vx();
     break;
@@ -491,6 +495,10 @@ vector<double> cosmobl::catalogue::Catalogue::var (Var var_name) const
 
   case Var::_Richness_:
     for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->richness();
+    break;
+
+  case Var::_RichnessError_:
+    for (size_t i=0; i<nObjects(); ++i) vv[i] = m_object[i]->richness_error();
     break;
 
   case Var::_Vx_:
@@ -733,6 +741,10 @@ void cosmobl::catalogue::Catalogue::set_var (const Var var_name, const vector<do
   case Var::_Richness_:
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_richness(var[i]);
     break;
+    
+  case Var::_RichnessError_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_richness_error(var[i]);
+    break;
 
   case Var::_Vx_:
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_vx(var[i]);
@@ -881,24 +893,30 @@ void cosmobl::catalogue::Catalogue::computePolarCoordinates (const CoordUnits ou
   
   // ----- unit conversion -----
   
-  if (outputUnits!=_radians_) {
+  if (outputUnits!=_radians_) {    
 
     if (outputUnits==_degrees_)
       for (size_t i=0; i<nObjects(); ++i) {
-	m_object[i]->set_ra(degrees(ra));
-	m_object[i]->set_dec(degrees(dec));
+        ra = m_object[i]->ra();
+        dec = m_object[i]->dec();
+        m_object[i]->set_ra(degrees(ra));
+        m_object[i]->set_dec(degrees(dec));
       }
 
     else if (outputUnits==_arcseconds_)
       for (size_t i=0; i<nObjects(); ++i) {
-	m_object[i]->set_ra(arcseconds(ra));
-	m_object[i]->set_dec(arcseconds(dec)); 		    
+        ra = m_object[i]->ra();
+        dec = m_object[i]->dec();
+        m_object[i]->set_ra(arcseconds(ra));
+        m_object[i]->set_dec(arcseconds(dec)); 		    
       }
 
     else if (outputUnits==_arcminutes_)
       for (size_t i=0; i<nObjects(); ++i) {
-	m_object[i]->set_ra(arcminutes(ra));
-	m_object[i]->set_dec(arcminutes(dec)); 		    
+        ra = m_object[i]->ra();
+        dec = m_object[i]->dec();
+        m_object[i]->set_ra(arcminutes(ra));
+        m_object[i]->set_dec(arcminutes(dec)); 		    
       }
 
     else ErrorCBL("Error in cosmobl::catalogue::Catalogue::computePolarCoordinates: outputUnits type not allowed!");
@@ -1096,10 +1114,13 @@ void cosmobl::catalogue::Catalogue::write_data (const string outputFile, const v
   }
 
   else {
+    vector<vector<double>> data;
+    for (size_t j=0; j<var_name.size(); j++)
+      data.push_back(var(var_name[j]));
 
     for (size_t i=0; i<nObjects(); ++i) {
-      for (auto &&vv : var_name)
-	fout << var(vv)[i] << "   ";
+      for (size_t j=0; j<data.size(); j++)
+	fout << data[j][i] << "   ";
       fout << endl;
     }
     
@@ -1321,12 +1342,12 @@ double cosmobl::catalogue::Catalogue::weightedN_condition (const Var var_name, c
 
 data::ScalarField3D cosmobl::catalogue::Catalogue::counts_in_cell (const double cell_size, const int interpolation_type, const bool useMass, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ) const
 {
-  double _minX = (minX>par::defaultDouble) ? minX : Min(Var::_X_);
-  double _maxX = (maxX>par::defaultDouble) ? maxX : Max(Var::_X_);
-  double _minY = (minY>par::defaultDouble) ? minY : Min(Var::_Y_);
-  double _maxY = (maxY>par::defaultDouble) ? maxY : Max(Var::_Y_);
-  double _minZ = (minZ>par::defaultDouble) ? minZ : Min(Var::_Z_);
-  double _maxZ = (maxZ>par::defaultDouble) ? maxZ : Max(Var::_Z_);
+  double _minX = (minX>par::defaultDouble) ? minX : Min(Var::_X_)-3*cell_size;
+  double _maxX = (maxX>par::defaultDouble) ? maxX : Max(Var::_X_)+3*cell_size;
+  double _minY = (minY>par::defaultDouble) ? minY : Min(Var::_Y_)-3*cell_size;
+  double _maxY = (maxY>par::defaultDouble) ? maxY : Max(Var::_Y_)+3*cell_size;
+  double _minZ = (minZ>par::defaultDouble) ? minZ : Min(Var::_Z_)-3*cell_size;
+  double _maxZ = (maxZ>par::defaultDouble) ? maxZ : Max(Var::_Z_)+3*cell_size;
 
   data::ScalarField3D density(cell_size, _minX, _maxX, _minY, _maxY, _minZ, _maxZ);
 
@@ -1345,55 +1366,45 @@ data::ScalarField3D cosmobl::catalogue::Catalogue::counts_in_cell (const double 
     double w = (useMass) ? mass(i)*weight(i) : weight(i);
 
     if (interpolation_type==0) {
-      density.set_ScalarField(w, i1, j1, k1,1);
+      density.set_ScalarField(w, i1, j1, k1, 1);
     }
     else if (interpolation_type==1) {
-      double dx_samecell, dy_samecell, dz_samecell;
-      int dx_index, dy_index, dz_index;
 
-      dx_samecell = (xx(i)-(i1*deltaX+density.MinX()))/deltaX;
-      dy_samecell = (yy(i)-(j1*deltaY+density.MinY()))/deltaY;
-      dz_samecell = (zz(i)-(k1*deltaZ+density.MinZ()))/deltaZ;
+      double dx = (xx(i)-density.XX(i1))/deltaX;
+      double dy = (yy(i)-density.YY(j1))/deltaY;
+      double dz = (zz(i)-density.ZZ(k1))/deltaZ;
 
-      dx_index = (dx_samecell <0.5) ? -1 : 1 ;
-      dy_index = (dy_samecell <0.5) ? -1 : 1 ;
-      dz_index = (dz_samecell <0.5) ? -1 : 1 ;
-      
-      dx_samecell = (dx_samecell<0.5) ? (xx(i)+0.5*deltaX-(i1*deltaX+density.MinX()))/deltaX : 1-(xx(i)-0.5*deltaX-(i1*deltaX+density.MinX()))/deltaX;
-      dy_samecell = (dy_samecell<0.5) ? (yy(i)+0.5*deltaY-(j1*deltaY+density.MinY()))/deltaY : 1-(yy(i)-0.5*deltaY-(j1*deltaY+density.MinY()))/deltaY;
-      dz_samecell = (dz_samecell<0.5) ? (zz(i)+0.5*deltaZ-(k1*deltaZ+density.MinZ()))/deltaZ : 1-(zz(i)-0.5*deltaZ-(k1*deltaZ+density.MinZ()))/deltaZ;
-      
-      if (dx_samecell<0 || dy_samecell<0 || dz_samecell<0)
-	coutCBL << dx_index << " " << dx_samecell << " " << dy_index << " " << dy_samecell << " " << dz_index << " " << dz_samecell << endl;
+      int i2 = (dx<0) ? i1-1 : i1+1;
+      int j2 = (dy<0) ? j1-1 : j1+1;
+      int k2 = (dz<0) ? k1-1 : k1+1;
 
-      double ww = 0.;
-      int i2 = ((i1+dx_index>-1) & (i1+dx_index<nx)) ? i1+dx_index : i1;
-      int j2 = ((j1+dy_index>-1) & (j1+dy_index<ny)) ? j1+dy_index : j1;
-      int k2 = ((k1+dz_index>-1) & (k1+dz_index<nz)) ? k1+dz_index : k1;
-      
-      ww += w*(dx_samecell*dy_samecell*dz_samecell);
-      density.set_ScalarField(w*(dx_samecell*dy_samecell*dz_samecell), i1, j1, k1, 1);
-      
-      ww += w*(dx_samecell*dy_samecell*(1.-dz_samecell));
-      density.set_ScalarField(w*(dx_samecell*dy_samecell*(1.-dz_samecell)), i1, j1, k2, 1);
-      
-      ww += w*(dx_samecell*(1.-dy_samecell)*dz_samecell);
-      density.set_ScalarField(w*(dx_samecell*(1.-dy_samecell)*dz_samecell), i1, j2, k1, 1);
-      
-      ww += w*(dx_samecell*(1.-dy_samecell)*(1.-dz_samecell));
-      density.set_ScalarField(w*(dx_samecell*(1.-dy_samecell)*(1.-dz_samecell)), i1, j2, k2, 1);
-      
-      ww += w*((1.-dx_samecell)*dy_samecell*dz_samecell);
-      density.set_ScalarField(w*((1.-dx_samecell)*dy_samecell*dz_samecell), i2, j1, k1, 1);
-      
-      ww += w*((1.-dx_samecell)*dy_samecell*(1.-dz_samecell));
-      density.set_ScalarField(w*((1.-dx_samecell)*dy_samecell*(1.-dz_samecell)), i2, j1, k2, 1);
-      
-      ww += w*((1.-dx_samecell)*(1.-dy_samecell)*dz_samecell);
-      density.set_ScalarField(w*((1.-dx_samecell)*(1.-dy_samecell)*dz_samecell), i2, j2, k1, 1);
+      dx = fabs(dx);
+      dy = fabs(dy);
+      dz = fabs(dz);
 
-      ww += w*((1.-dx_samecell)*(1.-dy_samecell)*(1.-dz_samecell));
-      density.set_ScalarField(w*((1.-dx_samecell)*(1.-dy_samecell)*(1.-dz_samecell)), i2, j2, k2, 1);
+      double tx = 1-dx;
+      double ty = 1-dy;
+      double tz = 1-dz;
+      //cout << i1 << " " << i2 << " " << dx << " "<< tx << " " << j1 << " " << j2 << " " << dy << " " << ty << " " <<  k1 << " " << k2 << " " << dz  << " " << tz << endl;
+
+      double ww = 0;
+      ww += w*tx*ty*tz;
+      ww += w*dx*ty*tz;
+      ww += w*tx*dy*tz;
+      ww += w*tx*ty*dz;
+      ww += w*dx*dy*tz;
+      ww += w*dx*ty*dz;
+      ww += w*tx*dy*dz;
+      ww += w*dx*dy*dz;
+
+      density.set_ScalarField(w*tx*ty*tz, i1, j1, k1, 1);
+      density.set_ScalarField(w*dx*ty*tz, i2, j1, k1, 1);
+      density.set_ScalarField(w*tx*dy*tz, i1, j2, k1, 1);
+      density.set_ScalarField(w*tx*ty*dz, i1, j1, k2, 1);
+      density.set_ScalarField(w*dx*dy*tz, i2, j2, k1, 1);
+      density.set_ScalarField(w*dx*ty*dz, i2, j1, k2, 1);
+      density.set_ScalarField(w*tx*dy*dz, i1, j2, k2, 1);
+      density.set_ScalarField(w*dx*dy*dz, i2, j2, k2, 1);
 
     }
   }
@@ -1410,29 +1421,55 @@ data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double c
 
   data::ScalarField3D data_cic = counts_in_cell(cell_size, interpolation_type, useMass);
 
-  data::ScalarField3D mask_cic = mask_catalogue.counts_in_cell(cell_size, interpolation_type, useMass, data_cic.MinX(), data_cic.MaxX(), data_cic.MinY(), data_cic.MaxY(), data_cic.MinZ(), data_cic.MaxZ());
-  
+  data::ScalarField3D mask_cic = mask_catalogue.counts_in_cell(cell_size, 0 /*interpolation_type*/, useMass, data_cic.MinX(), data_cic.MaxX(), data_cic.MinY(), data_cic.MaxY(), data_cic.MinZ(), data_cic.MaxZ());
+
+
   data::ScalarField3D density(cell_size, data_cic.MinX(), data_cic.MaxX(), data_cic.MinY(), data_cic.MaxY(), data_cic.MinZ(), data_cic.MaxZ());
 
   double data_tot=0, random_tot=0;
+  int nrandom = 0;
 
   for (int i=0; i<density.nx(); i++) 
     for (int j=0; j<density.ny(); j++) 
       for (int k=0; k<density.nz(); k++) {
-        data_tot += data_cic.ScalarField(i, j, k);
-        random_tot += mask_cic.ScalarField(i, j, k);
+	if(mask_cic.ScalarField(i, j, k)>0){
+	  random_tot += mask_cic.ScalarField(i, j, k);	
+	  nrandom +=1;
+	}
       }
 
-  double norm = random_tot/data_tot;
+  double mean_random = random_tot/nrandom;
+  cout << "Mean random objects " << mean_random << " in " << nrandom << " cells " << endl;
+
+  random_tot=0;
+  int masked_cells=0;
+
+  for (int i=0; i<density.nx(); i++) 
+    for (int j=0; j<density.ny(); j++) 
+      for (int k=0; k<density.nz(); k++) {
+	if(mask_cic.ScalarField(i, j, k)>0.){
+	  data_tot += data_cic.ScalarField(i, j, k);
+	  random_tot += mask_cic.ScalarField(i, j, k);
+	}
+	else if(mask_cic.ScalarField(i, j, k)>0 && mask_cic.ScalarField(i, j, k)<0.1*mean_random)
+	{
+	  masked_cells +=1;
+	  data_cic.set_ScalarField(0, i, j, k, 0);
+	  mask_cic.set_ScalarField(0, i, j, k, 0);
+	}
+      }
+
+  cout << "Masked " << masked_cells << "/" << nrandom << " for bad random coverage " << endl;
+
+  double norm = int(random_tot)/data_tot;
   for (int i=0; i<density.nx(); i++) 
     for (int j=0; j<density.ny(); j++) 
       for (int k=0; k<density.nz(); k++) {
         double val=0;
-        if(mask_cic.ScalarField(i,j,k)>0)
-          val = data_cic.ScalarField(i,j,k)/mask_cic.ScalarField(i,j,k)*norm-1;
+	val = (mask_cic.ScalarField(i, j, k)>0) ? data_cic.ScalarField(i,j,k)/mask_cic.ScalarField(i,j,k)*norm-1 : 0;
         density.set_ScalarField(val, i, j, k);
       }
-
+  
   if (kernel_radius>0)
     density.GaussianConvolutionField(kernel_radius);
 

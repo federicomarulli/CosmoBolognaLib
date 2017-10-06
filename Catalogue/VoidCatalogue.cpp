@@ -30,8 +30,8 @@
  *
  *  @author Federico Marulli, Carlo Cannarozzo, Tommaso Ronconi
  *
- *  @author federico.marulli3@unbo.it, carlo.cannarozzo@studio.unibo.it,
- *  tommaso.ronconi@studio.unibo.it
+ *  @author federico.marulli3@unbo.it,
+ *  carlo.cannarozzo@studio.unibo.it, tommaso.ronconi@studio.unibo.it
  */
 
 #include "Func.h"
@@ -47,9 +47,14 @@ using namespace cosmobl;
 
 // ============================================================================
 
-typedef vector< vector< vector <int> > >            Tensor3Di;  /// 3D Tensor of int
-typedef vector< vector< vector <double> > >         Tensor3Dd;  /// 3D Tensor of double
-typedef vector< vector< vector < vector <int> > > > Tensor4Di;  /// 4D Tensor of int
+/// 3D Tensor of int
+typedef vector< vector< vector <int> > >            Tensor3Di;
+
+/// 3D Tensor of double
+typedef vector< vector< vector <double> > >         Tensor3Dd;
+
+/// 4D Tensor of int
+typedef vector< vector< vector < vector <int> > > > Tensor4Di;  
 
 /// @cond extvoid
 
@@ -913,10 +918,11 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
 
 /////////////////////////////////// Tommaso Ronconi //////////////////////////////////////////
 
-cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean, const vector<double> delta_r, const double threshold, const double statistical_relevance, bool rescale, const shared_ptr<Catalogue> tracers_catalogue, cosmobl::chainmesh::ChainMesh3D ChM, bool checkoverlap, Var ol_criterion)
+cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean, const vector<double> delta_r, const double threshold, const double statistical_relevance, bool rescale, const shared_ptr<Catalogue> tracers_catalogue, cosmobl::chainmesh::ChainMesh3D ChM, double ratio, bool checkoverlap, Var ol_criterion)
 {
 
   auto catalogue = input_voidCatalogue;
+  clock_t begin_time = clock();
     
   // ---------------------------------------------------- //
   // ---------------- Cleaning Procedure ---------------- //
@@ -960,8 +966,12 @@ cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_void
       "\t r_min - r_max criterion : " << counter[0] << "\n" <<
       "\t central density too high: " << counter[1] << "\n" <<
       "\t statistically irrelevant: " << counter[2] << "\n" <<
-      "\t total: " << counter[0]+counter[1]+counter[2] << endl;
+      "\t total removed: " << counter[0]+counter[1]+counter[2] << endl;
   }
+  coutCBL << "\n Voids in the Catalogue: " << catalogue->nObjects() << endl;
+  
+  float cleaning_time = float( clock() - begin_time ) / CLOCKS_PER_SEC;
+  coutCBL << "Time spent by the cleaning procedure: " << cleaning_time << " seconds \n" << endl;
   
   // ---------------------------------------------------- //
   // ----------------- Radius Rescaling ----------------- //
@@ -969,7 +979,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_void
   
   if (rescale) {
     coutCBL << "Rescaling radii ... " << endl;
-
+    
     tracers_catalogue->compute_catalogueProperties();
     double density = tracers_catalogue->numdensity();
     
@@ -978,50 +988,83 @@ cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_void
     
     //counter for regions without any tracer:
     int void_voids = 0;
-
+    
     //counter for negative radius voids:
     int negative = 0;
-
-      for (size_t j = 0; j<catalogue->nObjects(); j++) {
-	ChM.get_searching_region(catalogue->radius(j));
-	vector<long> close = ChM.close_objects(catalogue->coordinate(j));
+    
+    for (size_t j = 0; j<catalogue->nObjects(); j++) {
+      double value = (3.*catalogue->radius(j) < delta_r[1]) ? 3.*catalogue->radius(j) : delta_r[1];
+      ChM.get_searching_region(value);
+      vector<long> close = ChM.close_objects(catalogue->coordinate(j));
 	
-	//compute distances between the void and the surrounding particles
-	vector<double> distances;
-	for (auto&& k : close) {
-	  double distance = catalogue->distance(j, tracers_catalogue->catalogue_object(k));
-	  if (distance < catalogue->radius(j)) distances.emplace_back(distance);
-	}
+      //compute distances between the void and the surrounding particles
+      vector<double> distances;
+      for (auto&& k : close) {
+	double distance = catalogue->distance(j, tracers_catalogue->catalogue_object(k));
+	if (distance < value) distances.emplace_back(distance);
+      }
+	
+      // find radius at which the required density (threshold) is reached
+      if (distances.size() > 0) {
 
-	//find radius at which the required density (threshold) is reached
-	if (distances.size() > 0) {
-	  std::sort (distances.begin(), distances.end());
-	  unsigned int k = distances.size();
-	  while (k/(volume_sphere(distances[k-1])*density) > threshold && k > 1) k--;
+	// find starting radius
+	std::sort (distances.begin(), distances.end());
+	vector<double>::iterator up = std::upper_bound(distances.begin(), distances.end(), catalogue->radius(j));
+        auto kk = std::distance(distances.begin(), up);
+
+	// shrink or expand to match the required threshold
+	if (kk/(volume_sphere(distances[kk-1])*density > threshold))
+	  while (kk/(volume_sphere(distances[kk-1])*density) > threshold && kk > 1) kk--; // either you shrink
+	else while (kk/(volume_sphere(distances[kk-1])*density) < threshold && kk < (int) distances.size()) kk++; // or you expand
 	  
-	  //linear interpolation:
-	  double new_radius = interpolated(threshold,
-					   {k/(volume_sphere(distances[k-1])*density), (k+1)/(volume_sphere(distances[k])*density)},
-					   {distances[k-1], distances[k]}, "Linear");
+	// linear interpolation:
+	double new_radius = interpolated(threshold,
+					 {kk/(volume_sphere(distances[kk-1])*density), (kk+1)/(volume_sphere(distances[kk])*density)},
+					 {distances[kk-1], distances[kk]}, "Linear"); // gsl function
 	  
 	  
-	  if (new_radius < 0) {
-	    negative++;
-	    remove[j] = true;
-	  }
-	  else catalogue->set_var(j, _Radius_, abs(new_radius));
-	}
-	else {
-	  void_voids ++;
+	if (new_radius < 0) {
+	  negative++;
 	  remove[j] = true;
 	}
-      }//for
+	else catalogue->set_var(j, _Radius_, abs(new_radius));
+      }
+      else {
+	void_voids ++;
+	remove[j] = true;
+      }
+    }//for
     
     catalogue->remove_objects(remove);
     coutCBL << "\t Empty voids removed: " << void_voids << endl;
-    if (negative > 0) WarningMsg("Warning: there were "+conv(negative,par::fINT)+" negative radii.");
-
+    coutCBL << "\t Negative voids removed: " << negative << "\n" << endl;
+    //if (negative > 0) WarningMsg("Warning: there were "+conv(negative,par::fINT)+" negative radii.");
+    
+    //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
+    vector<bool> remove_outofrange(catalogue->nObjects(), false);
+    int outofrange = 0;
+    for (size_t ii = 0; ii<catalogue->nObjects(); ii++) {
+      if (catalogue->radius(ii) < delta_r[0] ||
+	  delta_r[1] < catalogue->radius(ii)) {
+	remove_outofrange[ii] = true;
+	outofrange++;
+      }
+    }
+    
+    catalogue->remove_objects(remove_outofrange);
+    coutCBL << "\t Removed voids out of range ["+conv(delta_r[0],par::fDP2)+","+conv(delta_r[1],par::fDP2)+"] : " << outofrange << endl;
+    
+    //compute new central density and density contrast:
+    catalogue->compute_centralDensity(tracers_catalogue, ChM, density, ratio);
+    catalogue->compute_densityContrast(tracers_catalogue, ChM, ratio);
+    
   }//rescale part
+  
+  coutCBL << "\n Voids in the Catalogue: " << catalogue->nObjects() << endl;
+
+  float rescaling_time = float( clock() - begin_time ) / CLOCKS_PER_SEC;
+  rescaling_time = rescaling_time - cleaning_time;
+  coutCBL << "Time spent by the rescaling procedure: " << rescaling_time << " seconds \n" << endl;
     
   // ---------------------------------------------------- //
   // ------------------ Overlap Check ------------------- //
@@ -1030,16 +1073,18 @@ cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_void
   if (checkoverlap) {
     coutCBL << "Checking for overlapping voids ..." << endl;
 
-    if ((ol_criterion != Var::_DensityContrast_) && (ol_criterion != Var::_CentralDensity_)) ErrorCBL("Error in cosmobl::catalogue::Catalogue::Catalogue()! Allowed overlap criteria are '_CentralDensity_' or '_DensityContrast_' .");
-    catalogue->sort(ol_criterion);
+    if (ol_criterion == Var::_CentralDensity_) catalogue->sort(ol_criterion, false);
+    else if (ol_criterion == Var::_DensityContrast_) catalogue->sort(ol_criterion, true);
+    else ErrorCBL("Error in cosmobl::catalogue::Catalogue::Catalogue()! Allowed overlap criteria are '_CentralDensity_' or '_DensityContrast_' .");
+    
     vector<bool> remove(catalogue->nObjects(), false);
     
     coutCBL << "\t Generating chain-mesh for void centres ..." << endl;
     chainmesh::ChainMesh3D ChM_voids(catalogue->Min(Var::_Radius_),
-			  catalogue->var(Var::_X_),
-			  catalogue->var(Var::_Y_),
-			  catalogue->var(Var::_Z_),
-			  2.*catalogue->Max(Var::_Radius_));
+				     catalogue->var(Var::_X_),
+				     catalogue->var(Var::_Y_),
+				     catalogue->var(Var::_Z_),
+				     2.*catalogue->Max(Var::_Radius_));
     for (size_t i = 0; i<catalogue->nObjects(); i++) {
       vector<long> close = ChM_voids.close_objects(catalogue->coordinate(i));
       unsigned int h = 0;
@@ -1056,59 +1101,98 @@ cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_void
     catalogue->remove_objects(remove);
     coutCBL << "\t Voids removed to avoid overlap: " << overlap_removed << endl;
   }//overlap check
+  coutCBL << "\n Voids in the Catalogue: " << catalogue->nObjects() << endl;
+
+  float olchecking_time = float( clock() - begin_time ) / CLOCKS_PER_SEC;
+  olchecking_time = olchecking_time - rescaling_time - cleaning_time;
+  coutCBL << "Time spent by the overlap-checking procedure: " << olchecking_time << " seconds" << endl;
+  coutCBL << "\n Total time spent: " << float( clock() - begin_time ) / CLOCKS_PER_SEC << " seconds \n" << endl;
   
   m_object = catalogue->sample();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void cosmobl::catalogue::Catalogue::compute_centralDensity (const Catalogue tracers_catalogue, cosmobl::chainmesh::ChainMesh3D ChM, const double ratio) {
-  
+void cosmobl::catalogue::Catalogue::compute_centralDensity (const shared_ptr<Catalogue> tracers_catalogue, cosmobl::chainmesh::ChainMesh3D ChM, const double density, const double ratio) {
+  ///
+  //coutCBL << "check1" << endl;
+  ///
   //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
   vector<bool> remove(m_object.size(), false);
-    
+  ///
+  //coutCBL << "check2" << endl;
+  ///
   //counter for regions without any tracer:
   int void_voids = 0;
   
-  for (size_t j = 0; j<m_object.size(); j++) {
+  for (size_t j = 0/*27971*/; j<m_object.size(); j++) {
+    ///
+    //vector<double> coords = m_object[j]->coords();
+    //coutCBL << m_object[j]->radius() << "  " << coords[0] << "  " << coords[1] << "  " << coords[2] << endl;
+    ///
     ChM.get_searching_region(m_object[j]->radius());
     vector<long> close = ChM.close_objects(m_object[j]->coords());
-    
+    ///
+    //coutCBL << close.size() << endl;
+    ///
     //compute distances between the void and the surrounding particles
       vector<double> distances;
       for (auto&& k : close) {
-	double distance = cosmobl::catalogue::Catalogue::distance(j, tracers_catalogue.catalogue_object(k));
+	double distance = cosmobl::catalogue::Catalogue::distance(j, tracers_catalogue->catalogue_object(k));
 	if (distance < m_object[j]->radius()) distances.emplace_back(distance);
       }
-      
+      ///
+      //coutCBL << distances.size() << endl;
+      ///
       //FIND CENTRAL DENSITY
       if (distances.size() > 0) {
 	std::sort (distances.begin(), distances.end());
+	int NN = 0;
+	while (distances[NN]<ratio*m_object[j]->radius()) NN++;
+	///
+	//coutCBL << (NN/cosmobl::volume_sphere(distances[NN]))/density << endl;
+	///
+	m_object[j]->set_centralDensity((NN/cosmobl::volume_sphere(distances[NN]))/density);
+      }
+      else {
+	void_voids ++;
+	remove[j] = true;
+      }
+      //coutCBL << j << "/" << m_object.size() << ": " << m_object << endl;
+      /*
+      if (distances.size() > 3) {
+	std::sort (distances.begin(), distances.end());
 	int NN = (int(ratio*distances.size())>3) ? int(ratio*distances.size())-1 : 3;
-	m_object[j]->set_centralDensity(NN/cosmobl::volume_sphere(distances[NN]));
-      }    
+	m_object[j]->set_centralDensity((NN/cosmobl::volume_sphere(distances[NN]))/density);
+      }   
       else {
 	void_voids ++;
 	remove[j] = true;
       } 
-  }//for
-  
+      */
+      }//for
+  ///
+  //coutCBL << "check3" << endl;
+  ///
   for (size_t j = 0; j<m_object.size(); j++)
     if (remove[j]) m_object.erase(m_object.begin()+j);
-
+  ///
+  //coutCBL << "check4" << endl;
+  ///
   coutCBL << "I removed " << void_voids << " voids in calculating the central density!" << endl;
   
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void cosmobl::catalogue::Catalogue::compute_densityContrast (const Catalogue tracers_catalogue, cosmobl::chainmesh::ChainMesh3D ChM, const double ratio) {
+void cosmobl::catalogue::Catalogue::compute_densityContrast (const shared_ptr<Catalogue> tracers_catalogue, cosmobl::chainmesh::ChainMesh3D ChM, const double ratio) {
   
   //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
   vector<bool> remove(m_object.size(), false);
     
   //counter for regions without any tracer:
   int void_voids = 0;
+  int cloud_in_void = 0;
   
   for (size_t j = 0; j<m_object.size(); j++) {
     ChM.get_searching_region(m_object[j]->radius());
@@ -1117,17 +1201,29 @@ void cosmobl::catalogue::Catalogue::compute_densityContrast (const Catalogue tra
     //compute distances between the void and the surrounding particles
       vector<double> distances;
       for (auto&& k : close) {
-	double distance = cosmobl::catalogue::Catalogue::distance(j, tracers_catalogue.catalogue_object(k));
+	double distance = cosmobl::catalogue::Catalogue::distance(j, tracers_catalogue->catalogue_object(k));
 	if (distance < m_object[j]->radius()) distances.emplace_back(distance);
       }
       
       //FIND CENTRAL DENSITY
       if (distances.size() > 0) {
 	std::sort (distances.begin(), distances.end());
-	int NN = (int(ratio*distances.size())>3) ? int(ratio*distances.size())-1 : 3;
-	double delta_in = NN/cosmobl::volume_sphere(distances[NN]);
-	double delta_out = distances.size()/cosmobl::volume_sphere(distances[distances.size()-1]);
-	m_object[j]->set_densityContrast(delta_out/delta_in);
+	int NN = 0;
+	while (distances[NN]<ratio*m_object[j]->radius()) NN++;
+	/*
+	  if (distances.size() > 3) {
+	  std::sort (distances.begin(), distances.end());
+	  int NN = (int(ratio*distances.size())>3) ? int(ratio*distances.size())-1 : 3;*/
+	if (NN > 0) {
+	  double delta_in = NN/cosmobl::volume_sphere(distances[NN]);
+	  double delta_out = distances.size()/cosmobl::volume_sphere(distances[distances.size()-1]);
+	  if (delta_out/delta_in < 1.) {
+	    cloud_in_void ++;
+	    remove[j] = true;
+	  }
+	  else m_object[j]->set_densityContrast(delta_out/delta_in);
+	}
+	else m_object[j]->set_densityContrast(1.);
       }    
       else {
 	void_voids ++;
@@ -1138,6 +1234,7 @@ void cosmobl::catalogue::Catalogue::compute_densityContrast (const Catalogue tra
   for (size_t j = 0; j<m_object.size(); j++)
     if (remove[j]) m_object.erase(m_object.begin()+j);
 
-  coutCBL << "I removed " << void_voids << " voids in calculating the density contrast!" << endl;
+  coutCBL << "Cloud-in-void: " << cloud_in_void << endl;
+  coutCBL << "I removed " << void_voids+cloud_in_void << " voids in calculating the density contrast!" << endl;
   
 }

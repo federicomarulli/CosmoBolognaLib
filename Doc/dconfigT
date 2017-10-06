@@ -789,7 +789,8 @@ RECURSIVE              = YES
 # run.
 
 EXCLUDE  = External/CAMB/
-EXCLUDE += External/classgal_v1/ 
+EXCLUDE += External/classgal_v1/
+EXCLUDE += External/Cuba-4.2/
 EXCLUDE += External/EH/
 EXCLUDE += External/fftlog-f90-master/
 EXCLUDE += External/mangle/
@@ -836,7 +837,7 @@ EXAMPLE_PATH           = Examples/
 # *.h) to filter out the source-files in the directories. If left blank all
 # files are included.
 
-EXAMPLE_PATTERNS       = *cpp *py
+EXAMPLE_PATTERNS       = *cpp *py *ipynb
 
 # If the EXAMPLE_RECURSIVE tag is set to YES then subdirectories will be
 # searched for input files to be used with the \include or \dontinclude commands

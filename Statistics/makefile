@@ -6,11 +6,10 @@ FLAGS = -O3 -unroll -std=c++11 -Wextra #-openmp
 dir = $(PWD)/
 dirLib = $(dir)../../
 dirH = $(dir)../../Headers/Lib/
-dirHO = $(dir)../../Headers/Objects/
-dirNum = $(dir)../../../Numerical/	
+dirHO = $(dir)../../Headers/Objects/	
 
 FLAGS_LIB = -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC
-FLAGS_INC = -I$(dir) -I$(dirH) -I$(dirHO) -I$(dirNum)
+FLAGS_INC = -I$(dir) -I$(dirH) -I$(dirHO)
 FLAGS_GSL = -lgsl -lgslcblas -lm
 
 HH = $(dirH)*.h

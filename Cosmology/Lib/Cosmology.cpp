@@ -40,8 +40,111 @@ using namespace glob;
 // =====================================================================================
 
 
-cosmobl::cosmology::Cosmology::Cosmology (const double Omega_matter, const double Omega_baryon, const double Omega_neutrinos, const double massless_neutrinos, const int massive_neutrinos, const double Omega_DE, const double Omega_radiation, const double hh, const double scalar_amp, const double n_spec, const double w0, const double wa, const double fNL, const int type_NG, const double tau, const string model, const bool unit)
-  : m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_sigma8(-1.), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit)              
+string cosmobl::cosmology::CosmoPar_name (const CosmoPar parameter)
+{
+  string name;
+
+  switch (parameter) {
+
+  case (_Omega_matter_LCDM_):
+    name = "Omega_matter_LCDM";
+    break;
+
+  case (_Omega_matter_):
+    name = "Omega_matter";
+    break;
+
+  case (_Omega_baryon_):        
+    name = "Omega_baryon";
+    break;
+
+  case (_Omega_baryon_h2_):        
+    name = "Omega_baryon_h2";
+    break;
+
+  case (_Omega_neutrinos_):      
+    name = "Omega_matter";
+    break;
+
+  case (_massless_neutrinos_):   
+    name = "massless_neutrinos";
+    break;
+
+  case (_massive_neutrinos_):    
+    name = "massive_neutrinos";
+    break;
+
+  case (_neutrino_mass_):    
+    name = "neutrino_mass";
+    break;
+
+  case (_Omega_DE_):            
+    name = "Omega_DE";
+    break;
+
+  case (_Omega_radiation_):     
+    name = "Omega_radiation";
+    break;
+
+  case (_H0_):
+    name = "H0";
+    break;
+
+  case (_hh_):
+    name = "hh";
+    break;
+   
+  case (_ln_scalar_amp_):           
+    name = "ln_scalar_amp";
+    break; 
+
+  case (_scalar_amp_):           
+    name = "scalar_amp";
+    break;
+    
+  case (_scalar_pivot_):           
+    name = "scalar_pivot";
+    break;
+
+  case (_n_spec_):               
+    name = "n_spec";
+    break;
+
+  case (_w0_):
+    name = "w0";
+    break;
+
+  case (_wa_):             
+    name = "wa";
+    break;
+
+  case (_fNL_):                  
+    name = "fNL";
+    break;
+
+  case (_sigma8_):
+    name = "sigma8";
+    break;
+
+  case (_tau_):
+    name = "tau";
+    break;
+
+  case (_rs_):
+    name = "rs";
+    break;
+
+  default:
+    ErrorCBL("Error in cosmobl::cosmology::Cosmology::value_CosmoPar of Cosmology.cpp: no such a variable in the list!");
+  }
+  
+  return name;
+}
+
+// =====================================================================================
+
+
+void cosmobl::cosmology::Cosmology::set_default ()
 {
   if (m_Omega_matter==0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::Cosmology of Cosmology.cpp: Omega_matter=0!");
 
@@ -50,9 +153,99 @@ cosmobl::cosmology::Cosmology::Cosmology (const double Omega_matter, const doubl
   m_H0 = (m_unit) ? 100. : 100.*m_hh;
   m_t_H = 1./m_H0;
   m_D_H = par::cc*m_t_H;
-  m_RhoZero = Rho(m_Omega_matter, m_Omega_neutrinos); 
+  m_RhoZero = rho_m(0.); 
   m_Pk0_EH = 1., m_Pk0_CAMB = 1., m_Pk0_MPTbreeze = 1., m_Pk0_CLASS = 1.;
-} 
+}
+
+// =====================================================================================
+
+
+cosmobl::cosmology::Cosmology::Cosmology (const double Omega_matter, const double Omega_baryon, const double Omega_neutrinos, const double massless_neutrinos, const int massive_neutrinos, const double Omega_DE, const double Omega_radiation, const double hh, const double scalar_amp, const double scalar_pivot, const double n_spec, const double w0, const double wa, const double fNL, const int type_NG, const double tau, const string model, const bool unit)
+  : m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_sigma8(-1.), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit)
+{ set_default(); } 
+
+
+// =====================================================================================
+
+
+cosmobl::cosmology::Cosmology::Cosmology (const CosmoModel CosmoModel, const string model, const bool unit)
+  :  m_Omega_neutrinos(0.), m_massless_neutrinos(3.04), m_massive_neutrinos(0.), m_Omega_radiation(0.), m_sigma8(-1.), m_n_spec(0.96), m_w0(-1.), m_wa(0.), m_fNL(0.), m_type_NG(1.), m_tau(0.09), m_model(model), m_unit(unit)
+{
+  switch(CosmoModel) {
+
+    // Komatsu et al. 2009: Table 1, WMAP 5 Year Mean
+  case(_WMAP5_): 
+    m_Omega_matter = 0.258;  // OmegaK = 0 (and Omega_radiation=0) -> Omega_matter = 1-Omega_DE
+    m_Omega_baryon = 0.0441; // Omega_b = 0.0441 ± 0.0030
+    m_Omega_DE = 0.742;      // Omega_DE = 0.742 ± 0.030
+    m_hh = 0.719;            // h = 0.719 ± 0.027 Km/s/Mpc
+    m_scalar_pivot = 0.002;  // baseline
+    m_scalar_amp = 2.41e-9;  // scalar amplitude = (2.41 ± 0.11)e-9 -> sigma8 = 0.796 ± 0.036
+    m_n_spec = 0.963;        // n = 0.963 ± 0.015
+    m_tau = 0.087;           // tau = 0.087 ± 0.017
+    break;
+    
+    // Komatsu et al. 2011: Table 1, WMAP Seven-year Mean
+  case(_WMAP7_):
+    m_Omega_matter = 0.273;  // OmegaK = 0 (and Omega_radiation=0) -> Omega_matter = 1-Omega_DE
+    m_Omega_baryon = 0.0455; // Omega_b = 0.0455 ± 0.0028
+    m_Omega_DE = 0.727;      // Omega_DE = 0.727 ± 0.030
+    m_hh = 0.704;            // h = 0.704 ± 0.025 Km/s/Mpc
+    m_scalar_amp = 2.43e-9;  // scalar amplitude = (2.43 ± 0.11)e-9 -> sigma8 = 0.811 ± 0.031
+    m_scalar_pivot = 0.002;  // baseline
+    m_n_spec = 0.968;        // n = 0.968 ± 0.012
+    m_tau = 0.088;           // tau = 0.088 ± 0.015
+    break;
+
+    // Hinshaw et al. 2013: Table 3, WMAP-only Nine-year
+  case(_WMAP9_):
+    m_Omega_matter = 0.279;  // OmegaK = 0 (and Omega_radiation=0) -> Omega_matter = 1-Omega_DE
+    m_Omega_baryon = 0.0463; // Omega_b = 0.0463 ± 0.0024
+    m_Omega_DE = 0.721;      // Omega_DE = 0.721 ± 0.025
+    m_hh = 0.70;             // h = 0.700 ± 0.022 Km/s/Mpc
+    m_scalar_amp = 2.41e-9;  // scalar amplitude = (2.41 ± 0.10)e-9 -> sigma8 = 0.821 ± 0.023
+    m_scalar_pivot = 0.002;  // baseline
+    m_n_spec = 0.972;        // n = 0.972 ± 0.013
+    m_tau = 0.089;           // tau = 0.089 ± 0.014
+    break;
+
+    // Planck Collab 2013, Paper XVI: Table 3, Planck+WP
+  case(_Planck13_):
+    m_Omega_matter = 0.315;                    // Omega_M = 0.315 ± 0.018
+    m_Omega_baryon = 0.0486;                   // Omega_b*h^2 = 0.02205 ± 0.00028
+    m_massless_neutrinos = 2.04;               // baseline (see Table 2)
+    m_massive_neutrinos = 1;                   // baseline (see Table 2)
+    m_Omega_DE = 0.685;                        // Omega_DE = 0.685 ± 0.018
+    m_hh = 0.673;                              // h = 0.673 ± 0.012 Km/s/Mpc
+    m_scalar_amp = 2.196e-9;                   // scalar amplitude = (2.196 ± 0.06)e-9 -> sigma8 = 0.829 ± 0.012
+    m_scalar_pivot = 0.05;                     // baseline
+    m_n_spec = 0.9603;                         // n = 0.9603 ± 0.0073
+    m_tau = 0.089;                             // tau = 0.089 ± 0.014
+    m_Omega_neutrinos = Omega_neutrinos(0.06); // baseline (see Table 2)
+    break;
+    
+    // Planck Collab 2015, Paper XIII: Table 4, TT,TE,EE+lowP+lensing
+  case(_Planck15_):
+    m_Omega_matter = 0.3121;                   // Omega_M = 0.3121 ± 0.0087
+    m_Omega_baryon = 0.0488;                   // Omega_b*h^2 = 0.02226 ± 0.00016
+    m_massless_neutrinos = 2.04;               // baseline 
+    m_massive_neutrinos = 1;                   // baseline 
+    m_Omega_DE = 0.6879;                       // Omega_DE = 0.6879 ± 0.0087
+    m_hh = 0.6751;                             // h = 0.6751 ± 0.0064 Km/s/Mpc
+    m_scalar_amp = 2.13e-9;                    // scalar amplitude = (2.130 ± 0.053)e-9 -> sigma8 = 0.8150 ± 0.0087
+    m_scalar_pivot = 0.05;                     // baseline
+    m_n_spec = 0.9653;                         // n = 0.9653 ± 0.0048
+    m_tau = 0.063;                             // tau = 0.063 ± 0.014
+    m_Omega_neutrinos = Omega_neutrinos(0.06); // baseline 
+    break;
+    
+  default:
+    ErrorCBL("Error in cosmobl::cosmology::Cosmology::Cosmology() of Cosmology.cpp: the chosen built-in cosmological model is not implemented");
+    
+  }
+
+  set_default();
+}
 
 
 // =====================================================================================
@@ -92,6 +285,10 @@ double cosmobl::cosmology::Cosmology::value (const CosmoPar parameter) const
     param_value = m_massive_neutrinos;
     break;
 
+  case (_neutrino_mass_):    
+    param_value = neutrino_mass();
+    break;
+
   case (_Omega_DE_):            
     param_value = m_Omega_DE;
     break;
@@ -115,6 +312,10 @@ double cosmobl::cosmology::Cosmology::value (const CosmoPar parameter) const
   case (_scalar_amp_):           
     param_value = m_scalar_amp;
     break;
+    
+  case (_scalar_pivot_):           
+    param_value = m_scalar_pivot;
+    break;
 
   case (_n_spec_):               
     param_value = m_n_spec;
@@ -136,6 +337,14 @@ double cosmobl::cosmology::Cosmology::value (const CosmoPar parameter) const
     param_value = m_sigma8;
     break;
 
+  case (_tau_):
+    param_value = m_tau; 
+    break;
+
+  case (_rs_):
+    param_value = m_rs; 
+    break;
+    
   default:
     ErrorCBL("Error in cosmobl::cosmology::Cosmology::value_CosmoPar of Cosmology.cpp: no such a variable in the list!");
   }
@@ -168,15 +377,19 @@ void cosmobl::cosmology::Cosmology::set_parameter (const CosmoPar parameter, con
     break;
 
   case (_Omega_neutrinos_):      
-    set_OmegaNu (value, m_massless_neutrinos, m_massive_neutrinos);
+    set_OmegaNu(value, m_massless_neutrinos, m_massive_neutrinos);
     break;
 
   case (_massless_neutrinos_):   
-    set_OmegaNu (m_Omega_neutrinos, value, m_massive_neutrinos);
+    set_OmegaNu(m_Omega_neutrinos, value, m_massive_neutrinos);
     break;
 
   case (_massive_neutrinos_):    
-    set_OmegaNu (m_Omega_neutrinos, m_massless_neutrinos, int(value));
+    set_OmegaNu(m_Omega_neutrinos, m_massless_neutrinos, int(value));
+    break;
+
+  case (_neutrino_mass_):
+    set_OmegaNu(Omega_neutrinos(value), m_massless_neutrinos, m_massive_neutrinos);
     break;
 
   case (_Omega_DE_):            
@@ -192,7 +405,7 @@ void cosmobl::cosmology::Cosmology::set_parameter (const CosmoPar parameter, con
     break;
 
   case (_hh_):
-    set_hh(value); 
+    set_hh(value, false); 
     break;
 
   case (_ln_scalar_amp_):           
@@ -201,6 +414,10 @@ void cosmobl::cosmology::Cosmology::set_parameter (const CosmoPar parameter, con
 
   case (_scalar_amp_):           
     set_scalar_amp(value);
+    break;
+    
+  case (_scalar_pivot_):           
+    set_scalar_pivot(value);
     break;
 
   case (_n_spec_):               
@@ -223,6 +440,14 @@ void cosmobl::cosmology::Cosmology::set_parameter (const CosmoPar parameter, con
     set_sigma8(value); 
     break;
 
+  case (_tau_):
+    set_tau(value); 
+    break;
+
+  case (_rs_):
+    set_rs(value); 
+    break;
+
   default:
     ErrorCBL("Error in cosmobl::cosmology::Cosmology::set_CosmoPar of Cosmology.cpp: no such a variable in the list!");
   }
@@ -232,7 +457,7 @@ void cosmobl::cosmology::Cosmology::set_parameter (const CosmoPar parameter, con
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::set_parameter (const vector<CosmoPar> parameter, const vector<double> value)
+void cosmobl::cosmology::Cosmology::set_parameters (const vector<CosmoPar> parameter, const vector<double> value)
 {
   for (size_t i=0; i<parameter.size(); i++)
     set_parameter(parameter[i], value[i]);
@@ -289,8 +514,11 @@ double cosmobl::cosmology::Cosmology::HH (const double redshift) const
 double cosmobl::cosmology::Cosmology::OmegaM (const double redshift) const
 {
   return m_Omega_matter/EE2(redshift)*1./(1.+redshift);
-  //return pow(m_H0/HH(redshift),2)*m_Omega_matter*pow(1.+redshift,3);
 }
+
+
+// =====================================================================================
+
 
 double cosmobl::cosmology::Cosmology::OmegaDE (const double redshift) const 
 {
@@ -299,21 +527,43 @@ double cosmobl::cosmology::Cosmology::OmegaDE (const double redshift) const
   return m_Omega_DE/EE2(redshift)*pow(1./(1.+redshift),1.-3.*m_w0);
 } 
 
+
+// =====================================================================================
+
+
 double cosmobl::cosmology::Cosmology::OmegaR (const double redshift) const 
 {
   return m_Omega_radiation/EE2(redshift);
 } 
+
+
+// =====================================================================================
+
 
 double cosmobl::cosmology::Cosmology::OmegaK (const double redshift) const 
 {
   return m_Omega_k/EE2(redshift)*pow(1./(1.+redshift),2);
 } 
 
+
+// =====================================================================================
+
+
+double cosmobl::cosmology::Cosmology::OmegaNu (const double redshift) const
+{
+  return m_Omega_neutrinos/EE2(redshift)*1./(1.+redshift);
+}
+
+
+// =====================================================================================
+
+
 double cosmobl::cosmology::Cosmology::Omega (const double redshift) const 
 {
   if (m_wa!=0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::Omega of Cosmology.cpp: w_a!=0", ExitCode::_workInProgress_);
 
-  double aa = 1./(1.+redshift);
+  const double aa = 1./(1.+redshift);
+
   return (m_Omega_radiation+m_Omega_matter*aa+m_Omega_DE*pow(aa,1.-3.*m_w0))/EE2(redshift);
 } 
 
@@ -321,9 +571,33 @@ double cosmobl::cosmology::Cosmology::Omega (const double redshift) const
 // =====================================================================================
 
 
+double cosmobl::cosmology::Cosmology::Omega_neutrinos (const double Mnu) const
+{
+  if (m_hh<1.e-33) ErrorCBL("Error in Omega_neutrinos() of Cosmology.h: m_hh should be >0");
+  return Mnu/(93.8*pow(m_hh, 2));
+}
+
+
+// =====================================================================================
+
+
+double cosmobl::cosmology::Cosmology::neutrino_mass () const
+{
+  if (m_hh<1.e-33) ErrorCBL("Error in neutrino_mass() of Cosmology.h: m_hh should be >0");
+  return m_Omega_neutrinos*93.8*pow(m_hh, 2);
+}
+
+
+// =====================================================================================
+
+
 double cosmobl::cosmology::Cosmology::gg (const double redshift) const 
 {
-  return 2.5*OmegaM(redshift)*pow(pow(OmegaM(redshift),4./7.)-(1.-OmegaM(redshift))+(1.+OmegaM(redshift)*0.5)*(1.+((1.-OmegaM(redshift))/70.)),-1.);
+  auto func = [&] (const double aa) { return pow(aa*HH(1./aa-1.), -3); };
+  
+  const double aa = 1./(1+redshift);
+  
+  return 2.5*OmegaM(redshift)*aa*aa*pow(HH(redshift), 3)*gsl::GSL_integrate_qag(func, 0, aa);
 }
 
 
@@ -335,7 +609,7 @@ double cosmobl::cosmology::Cosmology::DD (const double redshift) const
   // by Carroll, Press, & Turner 1992
   //return 5.*OmegaM(redshift)/(2*(1+redshift))/(1./70.+209./140.*OmegaM(redshift)-pow(OmegaM(redshift),2)/140.+pow(OmegaM(redshift),4./7.)); 
 
-  return 1./(1.+redshift)*gg(redshift)/gg(0.);
+  return 1./(1.+redshift)*gg(redshift);
 }
 
 
@@ -363,7 +637,7 @@ double cosmobl::cosmology::Cosmology::D_C (const double redshift) const
 
   if (m_model=="LCDM") {
     function<double(double)> integrand = bind(&Cosmology::EE_inv, this, std::placeholders::_1);
-    Dc =  gsl::GSL_integrate_qag(integrand,0, redshift); 
+    Dc = gsl::GSL_integrate_qag(integrand,0, redshift); 
   }
   
   else {
@@ -836,22 +1110,112 @@ double cosmobl::cosmology::Cosmology::deltac (const double redshift) const
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::Rho (const double Omega_matter, const double Omega_neutrinos, const bool unit1) const  
+double cosmobl::cosmology::Cosmology::rho_crit (const double redshift, const bool unit1) const
 {
-  double fact = (m_unit) ? 1. : m_hh*m_hh;
-  if (unit1) fact = 1.;
+  // km sec^-1 Mpc^-1 -> sec^-1
+  double HHc = HH(redshift)*pow(cosmobl::par::kilo*cosmobl::par::pc, -1);
+
+  // force cosmological units
+  if (!m_unit && unit1) HHc /= m_hh;
   
-  //return 2.778e11*Omega_matter*fact; 
-  return 2.778e11*(Omega_matter-Omega_neutrinos)*fact; // check!!!!
+  // m^3 Kg^-1 sec^-2 -> Mpc^3 Msun^-1 sec^-2
+  const double GNc = cosmobl::par::GN*(cosmobl::par::Msol*pow(cosmobl::par::mega*cosmobl::par::pc, -3));
+  
+  return 3.*pow(HHc, 2)/(8.*par::pi*GNc);
+}
+
+// =====================================================================================
+
+
+double cosmobl::cosmology::Cosmology::rho_m (const double redshift, const bool unit1, const bool nu) const 
+{
+  return rho_crit(redshift, unit1) * ((!nu) ? OmegaM(redshift) : OmegaM(redshift)-OmegaNu(redshift));
 }
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::DeltaR (const double Delta_crit, const double redshift) const 
+double cosmobl::cosmology::Cosmology::Delta_c (const double redshift, const string author) const
 {
-  return Delta_crit/OmegaM(redshift);
+  if (author=="BryanNorman") {
+    const double xx = OmegaM(redshift)-1.;
+    
+    if (fabs(m_Omega_DE)<1.e-30)
+      return 18.*par::pi*par::pi+60.*xx-32.*xx*xx;
+    
+    else if (fabs(m_Omega_k)<1.e-30)
+      return 18.*par::pi*par::pi+82.*xx-39.*xx*xx;
+    
+    else return ErrorCBL("Error in cosmobl::cosmology::Cosmology::Delta_c(): cosmological parameters not allowed for the current implementation");
+  }
+
+  else if (author=="Eke") {
+    if (fabs(m_Omega_DE)<1.e-30)
+      return 178.*pow(OmegaM(redshift), 0.30);
+    
+    else if (fabs(m_Omega_k)<1.e-30)
+      return 178.*pow(OmegaM(redshift), 0.45);
+
+    else return ErrorCBL("Error in cosmobl::cosmology::Cosmology::Delta_c(): cosmological parameters not allowed for the current implementation");
+  }
+
+  else if (author=="NakamuraSuto") {
+    if (fabs(m_Omega_DE)<1.e-30) {
+      const double x = pow(1./m_Omega_matter-1., 1./3.)/(1.+redshift);
+      return 18.*pow(par::pi, 2)*(1+0.4093*pow(x, 2.7152))*OmegaM(redshift);
+    }
+    else return ErrorCBL("Error in cosmobl::cosmology::Cosmology::Delta_c(): cosmological parameters not allowed for the current implementation");
+  }
+    
+  else return ErrorCBL("Error in cosmobl::cosmology::Cosmology::Delta_c(): author not allowed");
+}
+
+
+// =====================================================================================
+
+
+double cosmobl::cosmology::Cosmology::Delta_vir (const double Delta_c, const double redshift) const 
+{
+  return Delta_c/OmegaM(redshift);
+}
+
+
+// =====================================================================================
+
+
+double cosmobl::cosmology::Cosmology::Delta_vir (const double redshift, const string author) const
+{
+  return Delta_vir(Delta_c(redshift, author), redshift);
+}
+
+
+// =====================================================================================
+
+
+double cosmobl::cosmology::Cosmology::M_vir (const double r_vir, const double redshift, const string author, const bool unit1) const
+{
+  return 4./3.*par::pi*pow(r_vir, 3)*Delta_c(redshift, author)*rho_crit(redshift, unit1);
+}
+
+
+// =====================================================================================
+
+
+double cosmobl::cosmology::Cosmology::r_vir (const double M_vir, const double redshift, const string author, const bool unit1) const
+{
+  return pow(3*M_vir/(4.*par::pi*Delta_c(redshift, author)*rho_crit(redshift, unit1)), 1./3.);
+}
+
+
+// =====================================================================================
+
+
+double cosmobl::cosmology::Cosmology::c_vir (const double c_200, const double redshift, const string author) const
+{
+  const double a = -1.119*log10(Delta_c(redshift, author))+3.537;
+  const double b = -0.967*log10(Delta_c(redshift, author))+2.181;
+  return a*c_200+b;
 }
 
 
@@ -874,19 +1238,19 @@ double cosmobl::cosmology::Cosmology::D_C_LCDM (const double redshift) const
   double f_m = (1.-sqrt(3.))*pow((1.-m_Omega_matter)/m_Omega_matter,1./3.);
   double f_p = (1.+sqrt(3.))*pow((1.-m_Omega_matter)/m_Omega_matter,1./3.);
   double phi0 = acos((1.+f_m)/(1.+f_p));
-  double F_phi0 = elf_dz(phi0);
+  double F_phi0 = m_elf_dz(phi0);
 
   double aa = 1./(1.+redshift);
   double phi1 = acos((1.+f_m*aa)/(1.+f_p*aa));
   
-  return CC*(F_phi0-elf_dz(phi1))*2997.9199;
+  return CC*(F_phi0-m_elf_dz(phi1))*2997.9199;
 }  
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::elf_dz (const double phi) const 
+double cosmobl::cosmology::Cosmology::m_elf_dz (const double phi) const 
 {
   int jj = round(phi/M_PI);
   double phi0 = phi-jj*M_PI;
@@ -901,17 +1265,17 @@ double cosmobl::cosmology::Cosmology::elf_dz (const double phi) const
   double phic = 1.5707963-phi0; // pi/2 - phi0
 
   if (phi0 < phiS) 
-    return ss*asn_dz(sin(phi0))+jj*5.5361264;
+    return ss*m_asn_dz(sin(phi0))+jj*5.5361264;
   else {
     double cc = sin(phic);
     double xx = cc*cc;
     double d2 = 0.066987298 + 0.93301270 * xx;
     if (xx < yS*d2) 
-      return ss*(2.7680632-asn_dz(cc/sqrt(d2)))+jj*5.5361264;
+      return ss*(2.7680632-m_asn_dz(cc/sqrt(d2)))+jj*5.5361264;
     else {
       double vv = 0.066987298 * (1.-xx);
-      if (vv < xx*d2) return ss*acn_dz(cc);
-      else return ss*acn_dz(sqrt(vv/d2)) + jj*5.5361264;
+      if (vv < xx*d2) return ss*m_acn_dz(cc);
+      else return ss*m_acn_dz(sqrt(vv/d2)) + jj*5.5361264;
     }
   }
 }
@@ -920,18 +1284,18 @@ double cosmobl::cosmology::Cosmology::elf_dz (const double phi) const
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::acn_dz (const double cc) const 
+double cosmobl::cosmology::Cosmology::m_acn_dz (const double cc) const 
 {
   double pp = 1.;
   double xx = cc*cc;
   for (int j=1; j<10; j++) {
-    if (xx > 0.5) return pp*asn_dz(sqrt(1.-xx));
+    if (xx > 0.5) return pp*m_asn_dz(sqrt(1.-xx));
     double dd = sqrt(0.066987298+0.93301270*xx);
     xx = (sqrt(xx)+dd)/(1.+dd);
     pp *= 2.;
   }
   
-  ErrorCBL("Error in cosmobl::cosmology::Cosmology::acn_dz of Cosmology.cpp: too many half"
+  ErrorCBL("Error in cosmobl::cosmology::Cosmology::m_acn_dz of Cosmology.cpp: too many half"
 	   " argument transformations of cn");
   return 0;
 }
@@ -940,31 +1304,31 @@ double cosmobl::cosmology::Cosmology::acn_dz (const double cc) const
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::asn_dz (const double ss) const 
+double cosmobl::cosmology::Cosmology::m_asn_dz (const double ss) const 
 {
   //double yA = 0.034856757;
   double yA = 0.153532;
 
   double yy = ss*ss;
   if (yy < yA) 
-    return ss*serf_dz(yy);
+    return ss*m_serf_dz(yy);
 
   double pp = 1.;
   for (int j=1; j<10; j++) {
     yy /= ((1.+sqrt(1.-yy))*(1.+sqrt(1.-0.93301270*yy)));
     pp *= 2.;
     if (yy < yA)
-      return pp*sqrt(yy)*serf_dz(yy);
+      return pp*sqrt(yy)*m_serf_dz(yy);
   }
   
-  return ErrorCBL("Error in cosmobl::cosmology::Cosmology::asn_dz: too many half argument transformations of sn");
+  return ErrorCBL("Error in cosmobl::cosmology::Cosmology::m_asn_dz: too many half argument transformations of sn");
 }
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::serf_dz (const double yy) const 
+double cosmobl::cosmology::Cosmology::m_serf_dz (const double yy) const 
 {
   return (1.+yy*(0.32216878+yy*(0.18693909+yy*(0.12921048+yy*(0.097305732+yy*(0.077131543+yy*0.063267775+yy*(0.053185339+yy*(0.045545557+yy*0.039573617))))))));
 }

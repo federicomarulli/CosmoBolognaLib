@@ -325,9 +325,13 @@ namespace cosmobl {
 
       /**
        *  @brief constructor
-       *  @param thetaMin minimum value of the angle &theta; used to count
-       *  the pairs
-       *  @param thetaMax maximum value of the angle &theta; used to count
+       *
+       *  @param thetaMin minimum value of the angle &theta; used to
+       *  count the pairs
+       *
+       *  @param thetaMax maximum value of the angle &theta; used to
+       *  count
+       *
        *  the pairs
        *  @param nbins number of bins
        *  @param shift shift parameter, i.e. the radial shift is

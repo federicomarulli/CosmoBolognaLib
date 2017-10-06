@@ -41,32 +41,32 @@ using namespace cosmobl;
 
 void cosmobl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nx, const int ny, const int nz)
 {
-  double xMin = data.Min(catalogue::Var::_X_);
-  double yMin = data.Min(catalogue::Var::_Y_);
-  double zMin = data.Min(catalogue::Var::_Z_);
+  const double xMin = data.Min(catalogue::Var::_X_);
+  const double yMin = data.Min(catalogue::Var::_Y_);
+  const double zMin = data.Min(catalogue::Var::_Z_);
   
-  double Cell_X = (data.Max(catalogue::Var::_X_)-xMin)/nx;
-  double Cell_Y = (data.Max(catalogue::Var::_Y_)-yMin)/ny;
-  double Cell_Z = (data.Max(catalogue::Var::_Z_)-zMin)/nz;
+  const double Cell_X = (data.Max(catalogue::Var::_X_)-xMin)/nx;
+  const double Cell_Y = (data.Max(catalogue::Var::_Y_)-yMin)/ny;
+  const double Cell_Z = (data.Max(catalogue::Var::_Z_)-zMin)/nz;
 
 #pragma omp parallel num_threads(omp_get_max_threads())
   {
     
 #pragma omp for schedule(static, 2) 
     for (size_t i=0; i<data.nObjects(); i++) {
-      int i1 = min(int((data.xx(i)-xMin)/Cell_X), nx-1);
-      int j1 = min(int((data.yy(i)-yMin)/Cell_Y), ny-1);
-      int z1 = min(int((data.zz(i)-zMin)/Cell_Z), nz-1);
-      int index = z1+nz*(j1+ny*i1);
+      const int i1 = min(int((data.xx(i)-xMin)/Cell_X), nx-1);
+      const int j1 = min(int((data.yy(i)-yMin)/Cell_Y), ny-1);
+      const int z1 = min(int((data.zz(i)-zMin)/Cell_Z), nz-1);
+      const int index = z1+nz*(j1+ny*i1);
       data.catalogue_object(i)->set_region(index);
     }
 
 #pragma omp for schedule(static, 2) 
     for (size_t i=0; i<random.nObjects(); i++) {
-      int i1 = min(int((random.xx(i)-xMin)/Cell_X), nx-1);
-      int j1 = min(int((random.yy(i)-yMin)/Cell_Y), ny-1);
-      int z1 = min(int((random.zz(i)-zMin)/Cell_Z), nz-1);
-      int index = z1+nz*(j1+ny*i1);
+      const int i1 = min(int((random.xx(i)-xMin)/Cell_X), nx-1);
+      const int j1 = min(int((random.yy(i)-yMin)/Cell_Y), ny-1);
+      const int z1 = min(int((random.zz(i)-zMin)/Cell_Z), nz-1);
+      const int index = z1+nz*(j1+ny*i1);
       random.catalogue_object(i)->set_region(index);
     }
   }

@@ -105,6 +105,9 @@ namespace cosmobl {
 
       /// richness
       _Richness_,
+
+      /// richness error
+      _RichnessError_,
       
       /// velocity along the x direction
       _Vx_, 
@@ -155,6 +158,9 @@ namespace cosmobl {
 
       /// random catalogue obtained with shuffling in observed coordinates (R.A., Dec)
       _createRandom_shuffle_,
+
+      /// random catalogue obtained with shuffling in observed coordinates (R.A., Dec) and redshift 
+      _createRandom_shuffleTOT_,
       
       /// random catalogue with conic geometry
       _createRandom_cone_,
@@ -173,10 +179,10 @@ namespace cosmobl {
      */
     enum VoidAlgorithm {
        
-       /// Lagrangian Zel'dovich approximation Void algorithm used to move particles
+      /// Lagrangian Zel'dovich approximation Void algorithm used to move particles
       _LaZeVo_,
 
-       /// Random Induced walk Void Algorithm used to move particles
+      /// Random Induced walk Void Algorithm used to move particles
       _RIVA_      
       
     };
@@ -255,6 +261,13 @@ namespace cosmobl {
       /// currently unused space which fills the header to a total length of 256 bytes leaving room for future additions
       short la[40]; 
     };
+
+    inline void VarCast (vector<Var> &_out, vector<int> in) {
+      for (size_t ii = 0; ii<in.size(); ii++) {
+	Var vv = static_cast<Var>(in[ii]);
+	_out.emplace_back(vv);
+      }
+    }
     
     /**
      *  @class Catalogue Catalogue.h "Headers/Lib/Catalogue.h"
@@ -284,8 +297,7 @@ namespace cosmobl {
       double m_mps;
     
       /**
-       *  @name private variables and functions used to read 
-       *  catalogues from standard GADGET-2.0 files
+       *  @name private variables and functions used to read catalogues from standard GADGET-2.0 files
        */
       ///@{
       
@@ -629,8 +641,8 @@ namespace cosmobl {
        *  Dec coordinates of the input catalogue
        *
        *  @param type the type of random catalogue, that must be set
-       *  to either \_createRandom_box\_, \_createRandom_square\_ or
-       *  \_createRandom_shuffle\_
+       *  to either \_createRandom_box\_, \_createRandom_square\_,
+       *  \_createRandom_shuffle\_ or \_createRandom_shuffleTOT\_
        *
        *  @param catalogue object of class Catalogue
        *
@@ -650,12 +662,28 @@ namespace cosmobl {
        *
        *  @param seed the seed for random number generation
        *
+       *  @param redshift vector containg the redshifts used to
+       *  computed the redshift distribution for the random catalogue;
+       *  if it is not provided, the redshifts of the input catalogue
+       *  will be used
+       *  
+       *  @param RA vector containg the right ascensions of the random
+       *  objects; if it is not provided, it will be created by the
+       *  function
+       *
+       *  @param Dec vector containg the declinations of the random
+       *  objects; if it is not provided, it will be created by the
+       *  function
+       *
+       *  @param z_ndigits the number of digit figures used for the
+       *  redshifts
+       *
        *  @return an object of class Catalogue
        *
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
        */
-      Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin=10, const cosmology::Cosmology &cosm={}, const bool conv=false, const double sigma=0., const int seed=3213);
+      Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin=10, const cosmology::Cosmology &cosm={}, const bool conv=false, const double sigma=0., const int seed=3213, const vector<double> redshift={}, const vector<double> RA={}, const vector<double> Dec={}, int z_ndigits=10);
       
       /**
        *  @brief constructor that creates a random catalogue in a cone
@@ -772,6 +800,8 @@ namespace cosmobl {
        *  @param tracers_catalogue object of class Catalogue with the tracers defining
        *  the void distribution (necessary if rescale = true)
        *
+       *  @param ChM object of ChainMesh3D class
+       *
        *  @param checkoverlap true = erase all the voids wrt a given criterion, 
        *  false = skip the step
        *
@@ -780,15 +810,13 @@ namespace cosmobl {
        * 
        *  @return an object of class Catalogue
        */
-
-      Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean={false,false,false}, const vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale = false, const shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, bool checkoverlap=false, Var ol_criterion=_DensityContrast_);
+      Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean={false,false,false}, const vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale = false, const shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, double ratio = 0.1, bool checkoverlap=false, Var ol_criterion=_DensityContrast_);
 
       ///@} 
 
       
       /**
-       *  @name Constructors used to read catalogues from standar
-       *  GADGET-2.0 files
+       *  @name Constructors used to read catalogues from standar GADGET-2.0 files
        */
       ///@{
       
@@ -809,15 +837,17 @@ namespace cosmobl {
        *  @param read_catalogue true = the constructor actually reads the GADGET snapshot
        *  false = the constructor only reads the snapshot header and prints it on the screan
        *
+       *  @param nSub the fraction of objects that will be randomly
+       *  selected (nSub=1 &rArr; all objects are selected)
+       *
        *  @return object of type catalogue
        */
-      Catalogue (const ObjType objType, const string file_cn = par::defaultString, const bool swap = false, const double fact = 0.001, const bool read_catalogue = true);
+      Catalogue (const ObjType objType, const string file_cn = par::defaultString, const bool swap = false, const double fact = 0.001, const bool read_catalogue = true, const double nSub=1.1);
 
       ///@}
     
       /**
-       *  @name Member functions used to get the private members and
-       *  their properties
+       *  @name Member functions used to get the private members and their properties
        */
       ///@{
 
@@ -1043,7 +1073,7 @@ namespace cosmobl {
        */
       vector<long> region () const;
 
-       /**
+      /**
        * @brief get the values of the object fields  
        * @return the object fields
        */
@@ -1234,6 +1264,8 @@ namespace cosmobl {
        *
        *  @param tracers_catalogue the density field tracers catalogue
        *
+       *  @param density the numerical density of the density field tracers catalogue
+       *
        *  @param ratio the ratio \f$r\f$ 
        *
        *  @param ChM a 3D chain mesh object, used to speed-up the
@@ -1245,7 +1277,7 @@ namespace cosmobl {
        *  this function will select by dafault the 3 tracers closer to the void centre
        *  to map the central density.
        */
-      void compute_centralDensity (const Catalogue tracers_catalogue, chainmesh::ChainMesh3D ChM, const double ratio=0.1);
+      void compute_centralDensity (const shared_ptr< Catalogue > tracers_catalogue, chainmesh::ChainMesh3D ChM, const double density, const double ratio=0.1);
 
       /**
        *  @brief compute density contrast of cosmic voids in catalogue
@@ -1269,7 +1301,7 @@ namespace cosmobl {
        *  to select more than 3 tracers the program will select by dafault the
        *  3 tracers closer to the void centre to map the central density.
        */
-      void compute_densityContrast (const Catalogue tracers_catalogue, chainmesh::ChainMesh3D ChM, const double ratio=0.1);
+      void compute_densityContrast (const shared_ptr< Catalogue > tracers_catalogue, chainmesh::ChainMesh3D ChM, const double ratio=0.1);
 
       ///@}
 
@@ -1372,20 +1404,32 @@ namespace cosmobl {
       /**
        * @brief bubble sort of a catalogue wrt a variable (double)
        * @param var_name the name of the variable to use in order to sort the catalogue
+       * @param incresing if true order from lower to higher, if false from higher to lower
        * @return none
        */
-      void sort (const Var var_name) {
+      void sort (const Var var_name, const bool increasing = false) {
 	vector<double> variable = var(var_name);
 	bool swap = true;
 	while (swap) {
 	  swap = false;
 	  for (size_t i = 0; i<nObjects()-1; ++i) {
-	    if (variable[i] < variable[i+1]) {
-	      double temp = variable[i];
-	      variable[i] = variable[i+1];
-	      variable[i+1] = temp;
-	      swap_objects(i, i+1);
-	      swap = true;
+	    if (increasing) {
+	      if (variable[i] > variable[i+1]) {
+		double temp = variable[i];
+		variable[i] = variable[i+1];
+		variable[i+1] = temp;
+		swap_objects(i, i+1);
+		swap = true;
+	      }
+	    }
+	    else {
+	      if (variable[i] < variable[i+1]) {
+		double temp = variable[i];
+		variable[i] = variable[i+1];
+		variable[i+1] = temp;
+		swap_objects(i, i+1);
+		swap = true;
+	      }
 	    }
 	  }
 	}

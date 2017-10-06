@@ -34,22 +34,8 @@
  */
 
 #include "Cosmology.h"
+
 using namespace cosmobl;
-
-
-// =====================================================================================
-
-
-double cosmobl::cosmology::Cosmology::Deltavir (const double redshift) const
-{
-  double xx = OmegaM(redshift)-1.;
- 
-  if (m_Omega_DE==0)
-    return 18.*par::pi*par::pi+60.*xx-32.*xx*xx;
-  
-  else
-    return 18.*par::pi*par::pi+82.*xx-39.*xx*xx;
-}
 
 
 // =====================================================================================
@@ -57,7 +43,9 @@ double cosmobl::cosmology::Cosmology::Deltavir (const double redshift) const
 
 double cosmobl::cosmology::Cosmology::linear_growth_rate (const double redshift, const double kk) const
 {
-  if (redshift>10) WarningMsg("Attention: the approximation used for the linear growth rate is not very accurate at z>10 (see Kiakotou, Elgaroy & Lahav 2008)! (see linear_growth_rate of RSD.cpp)");
+  if (m_wa!=0) WarningMsg("Attention in cosmobl::cosmology::Cosmology::linear_growth_rate of RSD.cpp: the current implementation is not correct with m_wa="+conv(m_wa, par::fDP3));
+  
+  if (redshift>10) WarningMsg("Attention: the approximation used in cosmobl::cosmology::Cosmology::linear_growth_rate of RSD.cpp to compute the linear growth rate is not very accurate at z>10 (see Kiakotou, Elgaroy & Lahav 2008)!");
   
 
   // Wang & Steinhardt 1998
@@ -81,7 +69,7 @@ double cosmobl::cosmology::Cosmology::linear_growth_rate (const double redshift,
     double cc[] = {0., 7.13, 21.13, 21.45, 15.5, -0.844};
     
     vector<double> lgKK;
-    lgKK.push_back(log10(0.005)); // to improve the interpolation
+//lgKK.push_back(log10(0.005)); // to improve the interpolation
     for (int i=0; i<6; i++) lgKK.push_back(log10(kkk[i]));
 
     //vector<double> KK;
@@ -89,7 +77,7 @@ double cosmobl::cosmology::Cosmology::linear_growth_rate (const double redshift,
     //for (int i=0; i<6; i++) KK.push_back(kkk[i]);
 
     vector<double> MU;
-    MU.push_back(1.);
+ //   MU.push_back(1.);
     for (int i=0; i<6; i++) MU.push_back(1.-aa[i]*m_Omega_DE*fnu+bb[i]*fnu*fnu-cc[i]*fnu*fnu*fnu); 
     
     double mu;
@@ -116,7 +104,7 @@ double cosmobl::cosmology::Cosmology::linear_growth_rate (const double redshift,
 
 double cosmobl::cosmology::Cosmology::fsigma8 (const double redshift, const string method_Pk, const string output_root, const double kk, const bool NL, const double k_min, const double k_max, const double prec, const string file_par) const
 {
-  return linear_growth_rate(redshift,kk)*sigma8_Pk(method_Pk, redshift, output_root, NL, k_min, k_max, prec, file_par);
+  return linear_growth_rate(redshift, kk)*sigma8_Pk(method_Pk, redshift, output_root, NL, k_min, k_max, prec, file_par);
 }
 
 
@@ -141,46 +129,46 @@ double cosmobl::cosmology::Cosmology::error_beta (const double redshift, const d
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::beta (const double Mass_min, const double Mass_max, const double redshift, const string author_bias, const string author_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
+double cosmobl::cosmology::Cosmology::beta (const double Mass_min, const double Mass_max, const double redshift, const string author_bias, const string author_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
-  return linear_growth_rate(redshift)/bias_eff(Mass_min, Mass_max, redshift, author_bias, author_MF, method_SS, output_root, Delta, kk, interpType, Num, stepsize, norm, k_min, k_max, prec, file_par);
+  return linear_growth_rate(redshift)/bias_eff(Mass_min, Mass_max, redshift, author_bias, author_MF, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
 }
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::error_beta (const double Mass_min, const double Mass_max, const double redshift, const string author_bias, const string author_MF, const string method_SS, const double err_bias, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+double cosmobl::cosmology::Cosmology::error_beta (const double Mass_min, const double Mass_max, const double redshift, const string author_bias, const string author_MF, const string method_SS, const double err_bias, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
 {
-  return linear_growth_rate(redshift)/pow(bias_eff(Mass_min, Mass_max, redshift, author_bias, author_MF, method_SS, output_root, Delta, kk, interpType, Num, stepsize, norm, k_min, k_max, prec, file_par),2)*err_bias;
+  return linear_growth_rate(redshift)/pow(bias_eff(Mass_min, Mass_max, redshift, author_bias, author_MF, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file),2)*err_bias;
 }
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::beta (const vector<double> MM, const vector<double> MF, const double redshift, const string author_bias, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
+double cosmobl::cosmology::Cosmology::beta (const vector<double> MM, const vector<double> MF, const double redshift, const string author_bias, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
-  return linear_growth_rate(redshift)/bias_eff(MM, MF, redshift, author_bias, method_SS, output_root, Delta, kk, interpType, Num, stepsize, norm, k_min, k_max, prec, file_par);
+  return linear_growth_rate(redshift)/bias_eff(MM, MF, redshift, author_bias, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
 }
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::error_beta (const vector<double> MM, const vector<double> MF, const double redshift, const string author_bias, const string method_SS, const double err_bias, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
+double cosmobl::cosmology::Cosmology::error_beta (const vector<double> MM, const vector<double> MF, const double redshift, const string author_bias, const string method_SS, const double err_bias, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
-  return linear_growth_rate(redshift)/pow(bias_eff(MM, MF, redshift, author_bias, method_SS, output_root, Delta, kk, interpType, Num, stepsize, norm, k_min, k_max, prec, file_par),2)*err_bias;
+  return linear_growth_rate(redshift)/pow(bias_eff(MM, MF, redshift, author_bias, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file),2)*err_bias;
 }
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const string author_bias, const string author_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
+double cosmobl::cosmology::Cosmology::error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const string author_bias, const string author_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 { // from Eq. 20 of Bianchi et al. 2012
   
-  double bias = bias_eff(Mass_min, Mass_max, redshift, author_bias, author_MF, method_SS, output_root, Delta, kk, interpType, Num, stepsize, norm, k_min, k_max, prec, file_par);
+  double bias = bias_eff(Mass_min, Mass_max, redshift, author_bias, author_MF, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
 
   return relative_error_beta (bias, Volume, density);
 }
@@ -189,9 +177,9 @@ double cosmobl::cosmology::Cosmology::error_beta_measured (const double Volume, 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::quadrupole (const double Mass_min, const double Mass_max, const double redshift, const string author_bias, const string author_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
+double cosmobl::cosmology::Cosmology::quadrupole (const double Mass_min, const double Mass_max, const double redshift, const string author_bias, const string author_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
-  double Beta = beta(Mass_min, Mass_max, redshift, author_bias, author_MF, method_SS, output_root, Delta, kk, interpType, Num, stepsize, norm, k_min, k_max, prec, file_par);
+  double Beta = beta(Mass_min, Mass_max, redshift, author_bias, author_MF, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
   return (4./3.*Beta+4./7.*Beta*Beta)/(1.+2./3*Beta+1./5.*Beta*Beta);
 }
 
@@ -199,9 +187,9 @@ double cosmobl::cosmology::Cosmology::quadrupole (const double Mass_min, const d
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::quadrupole (const vector<double> MM, const vector<double> MF, const double redshift, const string author_bias, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int Num, const double stepsize, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
+double cosmobl::cosmology::Cosmology::quadrupole (const vector<double> MM, const vector<double> MF, const double redshift, const string author_bias, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
-  double Beta = beta(MM, MF, redshift, author_bias, method_SS, output_root, Delta, kk, interpType, Num, stepsize, norm, k_min, k_max, prec, file_par);
+  double Beta = beta(MM, MF, redshift, author_bias, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
   return (4./3.*Beta+4./7.*Beta*Beta)/(1.+2./3*Beta+1./5.*Beta*Beta);
 }
 

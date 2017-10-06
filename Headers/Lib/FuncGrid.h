@@ -80,6 +80,9 @@ namespace cosmobl {
       /// maximum x value
       double m_xmax;
 
+      /// bin type
+      binType m_binType;
+
       
     public:
 
@@ -100,10 +103,11 @@ namespace cosmobl {
        *  @param x vector containing the x values
        *  @param y vector containing the y values
        *  @param interpType interpolation method
+       *  @param bin_type the binning type
        *
        *  @return object of class FuncGrid
        */
-      FuncGrid (const vector<double> x, const vector<double> y, const string interpType);
+      FuncGrid (const vector<double> x, const vector<double> y, const string interpType, const cosmobl::binType bin_type=binType::_linear_);
 
       /**
        *  @brief default destructor
@@ -266,6 +270,200 @@ namespace cosmobl {
        */
       double root_D2v (const double x_low, const double x_up, const double fx0=0, const double prec=1.e-2);
     };
+
+    /**
+     *  @class FuncGrid FuncGrid2D.h "Headers/Lib/FuncGrid2D.h"
+     *
+     *  @brief The class FuncGrid2D
+     *
+     *  This class is used to handle 2D functions stored on a
+     *  grid. Specifically, it contains member functions to
+     *  interpolate.
+     */
+    class FuncGrid2D
+    {
+      
+    private:
+
+      /// x values
+      vector<double> m_x;
+      
+      /// y values
+      vector<double> m_y;
+
+      /// y values
+      double *m_fxy;
+      
+      /// size of the x vector
+      size_t m_size_x;
+
+      /// size of the x vector
+      size_t m_size_y; 
+      
+      /// method used to interpolate
+      string m_interpType;
+
+      /// GSL object used to set the interpolation type 
+      const gsl_interp2d_type *m_type;
+
+      /// GSL accelerator object
+      gsl_interp_accel *m_acc_x;
+
+      /// GSL accelerator object
+      gsl_interp_accel *m_acc_y;
+
+      /// GSL object used to interpolate
+      gsl_interp2d *m_interp;
+
+      /// minimum x value
+      double m_xmin;
+
+      /// maximum x value
+      double m_xmax;
+
+      /// minimum x value
+      double m_ymin;
+
+      /// maximum x value
+      double m_ymax;
+      
+    public:
+
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{
+      
+      /**
+       *  @brief default constructor
+       *  @return object of class FuncGrid2D
+       */
+      FuncGrid2D () = default;
+
+      /**
+       *  @brief constructor
+       *
+       *  @param x vector containing the x values
+       *  @param y vector containing the y values
+       *  @param grid vector containing the grid values
+       *  @param interpType interpolation method
+       *
+       *  @return object of class FuncGrid
+       */
+      FuncGrid2D (const vector<double> x, const vector<double> y, const vector<vector<double>> fxy, const string interpType);
+
+      /**
+       *  @brief default destructor
+       *  @return none
+       */
+      ~FuncGrid2D () = default;
+
+      ///@}
+
+      
+      /**
+       *  @name Functions to get the private members of the class
+       */
+      ///@{
+
+      /**
+       *  @brief get the private member FuncGrid::m_x
+       *  @return the vector containing the x values
+       */
+      vector<double> x () const { return m_x; }
+
+      /**
+       *  @brief get the i-th element of the private member
+       *  FuncGrid::m_x
+       *  @param i the i-th index
+       *  @return the i-th value of x
+       */
+      double x (const int i) const { return m_x[i]; }
+      
+      /**
+       *  @brief get the private member FuncGrid::m_y
+       *  @return the vector containing the y values
+       */
+      vector<double> y () const { return m_y; }
+      
+      /**
+       *  @brief get the i-th element of the private member
+       *  FuncGrid::m_y
+       *  @param i the i-th index
+       *  @return the i-th value of y
+       */
+      double y (const int i) const { return m_y[i]; }
+
+      /**
+       *  @brief get the private member FuncGrid::m_size
+       *  @return the size of the x
+       */
+      double size_x () const { return m_size_x; }
+
+      /**
+       *  @brief get the private member FuncGrid::m_xmin
+       *  @return minimum x value
+       */
+      double xmin () const { return m_xmin; }
+
+      /**
+       *  @brief get the private member FuncGrid::m_xmax
+       *  @return maximum x value
+       */                            
+      double xmax () const { return m_xmax; }
+		
+      /**
+       *  @brief get the private member FuncGrid::m_size
+       *  @return the size of the y vector
+       */
+      double size_y () const { return m_size_y; }
+
+      /**
+       *  @brief get the private member FuncGrid::m_ymin
+       *  @return minimum y value
+       */
+      double ymin () const { return m_ymin; }
+
+      /**
+       *  @brief get the private member FuncGrid::m_ymax
+       *  @return maximum y value
+       */                            
+      double ymax () const { return m_ymax; }	 
+
+      ///@}
+
+      
+      /**
+       *  @name Functions of generic usage
+       */
+      ///@{
+
+      /**
+       *  @brief free the GSL objects
+       *  @return none
+       */   
+      void free ();
+
+      /**
+       *  @brief overloading of the () operator
+       *  @param xx the value at which the function will be
+       *  evaluated
+       *  @param yy the value at which the function will be
+       *  evaluated
+       *  @return the function evaluated at xx, yy
+       */   
+      double operator () (const double xx, const double yy) const;
+
+      /**
+       *  @brief evaluate the function at the xx points
+       *  @param xx the values at which the function will be
+       *  evaluated
+       *  @return the function evaluated at the xx points
+       */   
+      vector<double> eval_func (const vector<vector<double>> xx) const;
+
+    };
+
 
   }
 }

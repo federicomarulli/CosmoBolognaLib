@@ -17,21 +17,8 @@ int main () {
     // -------------------------------------------------------------
     // ---------------- set the cosmological parameters ------------
     // -------------------------------------------------------------
-
-    const double OmegaM = 0.27;
-    const double Omega_b = 0.046;
-    const double Omega_nu = 0.;
-    const double massless_neutrinos = 3.04;
-    const int    massive_neutrinos = 0; 
-    const double OmegaL = 1.-OmegaM;
-    const double Omega_radiation = 0.;
-    const double hh = 0.7;
-    const double scalar_amp = 2.46e-9;
-    const double n_s = 0.96;
-    const double wa = 0.;
-    const double w0 = -1.;   
   
-    const cosmobl::cosmology::Cosmology cosmology {OmegaM, Omega_b, Omega_nu, massless_neutrinos, massive_neutrinos, OmegaL, Omega_radiation, hh, scalar_amp, n_s, w0, wa};
+    const cosmobl::cosmology::Cosmology cosmology {cosmobl::cosmology::_Planck15_};
   
   
     // ----------------------------------------------------------
@@ -74,15 +61,15 @@ int main () {
     const double shift_D2 = 0.5; // spatial shift used to set the bin centre in the second dimension
   
     // construct the object using a static factory
-    const auto xi2DCart = cosmobl::twopt::TwoPointCorrelation::Create(cosmobl::twopt::_2D_Cartesian_, catalogue, random_catalogue, cosmobl::_linear_, rpMin, rpMax, nbins_D1, shift_D1, cosmobl::_linear_, piMin, piMax, nbins_D2, shift_D2);
+    const auto xi2DCart = cosmobl::measure::twopt::TwoPointCorrelation::Create(cosmobl::measure::twopt::_2D_Cartesian_, catalogue, random_catalogue, cosmobl::_linear_, rpMin, rpMax, nbins_D1, shift_D1, cosmobl::_linear_, piMin, piMax, nbins_D2, shift_D2);
 
     // measure the 2D correlation function and compute Poisson errors
-    xi2DCart->measure(cosmobl::twopt::_Poisson_, dir_pairs);
+    xi2DCart->measure(cosmobl::measure::ErrorType::_Poisson_, dir_pairs);
     xi2DCart->write(dir_output, "xi_rp_pi_linlin.dat");
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

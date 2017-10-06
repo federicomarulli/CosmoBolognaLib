@@ -67,12 +67,11 @@ double cosmobl::cosmology::Cosmology::pw (const double ww, const double ff, cons
 
 double cosmobl::cosmology::Cosmology::pz (const double m0, const double z0, const double frac, const double redshift, const string author_model, const string method_SS, const string output_root) const
 {
-  double zero = 0.;
-  double dcz0 = deltac(z0)/DD(z0)*DD(zero);
-  double dcz = deltac(redshift)/DD(redshift)*DD(zero);
-  double SS = SSM_norm(m0,method_SS,redshift,output_root); 
+  double dcz0 = deltac(z0)/DD(z0)*DD(0.);
+  double dcz = deltac(redshift)/DD(redshift)*DD(0.);
+  double SS = sigma2M(m0, method_SS, redshift, output_root); 
   double mf = m0*frac;
-  double SSf = SSM_norm(mf,method_SS,redshift,output_root);
+  double SSf = sigma2M(mf, method_SS, redshift, output_root);
   double ww = (dcz-dcz0)/sqrt(SSf-SS);
   if (author_model=="NS"){
     if(frac<0.5) coutCBL <<"Warning you are calling pw function for NS with frac = "<<frac<<endl;
@@ -150,12 +149,11 @@ void cosmobl::cosmology::Cosmology::medianwf (const double ff, const string auth
 
 double cosmobl::cosmology::Cosmology::wf (const double mm, const double redshift, const double ff, const double zf, const string method_SS, const string output_root) const
 {
-  double zero = 0.;
-  double deltacz = deltac(redshift)/DD(redshift)*DD(zero);
-  double deltaczf = deltac(zf)/DD(zf)*DD(zero);
-  double SS = SSM_norm(mm,method_SS,redshift,output_root); 
+  double deltacz = deltac(redshift)/DD(redshift)*DD(0.);
+  double deltaczf = deltac(zf)/DD(zf)*DD(0.);
+  double SS = sigma2M(mm, method_SS, redshift, output_root); 
   double mf = mm*ff;
-  double SSf = SSM_norm(mf,method_SS,redshift,output_root); 
+  double SSf = sigma2M(mf, method_SS, redshift, output_root); 
   return (deltaczf-deltacz)/sqrt(SSf-SS);
 }
 
@@ -168,18 +166,17 @@ double cosmobl::cosmology::Cosmology::Redshift (const double mm, const double re
 {
   int const nn = 128;
   vector<double> lzi = linear_bin_vector(nn, 0., 1.7);
-  double zero = 0.;
-  double dc0 = deltac(redshift)/DD(redshift)*DD(zero);
-  double SS = SSM_norm(mm, method_SS, redshift, output_root); 
+  double dc0 = deltac(redshift)/DD(redshift)*DD(0.);
+  double SS = sigma2M(mm, method_SS, redshift, output_root); 
   double mf = mm*ff;
-  double SSf = SSM_norm(mf, method_SS, redshift, output_root); 
+  double SSf = sigma2M(mf, method_SS, redshift, output_root); 
   double dd = wwf*sqrt(SSf-SS) + dc0;
   
   vector<double> dci(nn);
 
   for (int i=0; i<nn; i++) {
     double zi = -1 + pow(10.,lzi[i]);
-    dci[i] = deltac(zi)/DD(zi)*DD(zero);
+    dci[i] = deltac(zi)/DD(zi)*DD(0.);
   }
   
   return -1.+pow(10.,interpolated(dd, dci, lzi, "Poly"));
@@ -198,23 +195,5 @@ void cosmobl::cosmology::Cosmology::medianzf (const double ff, const double mass
   zf[0] = Redshift(mass, z0, ff, method_SS, wf[0], output_root);
   zf[1] = Redshift(mass, z0, ff, method_SS, wf[1], output_root);
   zf[2] = Redshift(mass, z0, ff, method_SS, wf[2], output_root);
-}
-
-
-// ============================================================================
-
-
-double cosmobl::cosmology::Cosmology::concentration (const double Vmax, const double Rmax) const
-{ 
-  const int nn = 128;
-  vector<double> xxi = linear_bin_vector(nn, 0.1, 50.);
-  vector<double> yyi(nn);
-
-  for (int i=0; i<nn; i++)
-    // reset 200 for the spherical collapse model
-    yyi[i] = 200./3.*pow(xxi[i],3.)/(log(1.+xxi[i])-xxi[i]/(1.+xxi[i]))-14.426*pow(Vmax/Rmax/m_H0,2.);
-  
-  double null = 0.;
-  return interpolated(null, yyi, xxi, "Poly");
 }
 

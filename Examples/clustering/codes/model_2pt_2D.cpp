@@ -2,7 +2,7 @@
 // Example code: how to model the Cartesian 2D two-point correlation function to constrain the linear bias and sigma12
 // ===================================================================================================================
 
-#include "Modelling_TwoPointCorrelation_cartesian.h"
+#include "Modelling_TwoPointCorrelation2D_cartesian.h"
 
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
@@ -57,9 +57,9 @@ int main () {
   
     // measure the 2D Cartesian two-point correlation function and estimate Poissonian errors
 
-    const auto TwoP = cosmobl::twopt::TwoPointCorrelation::Create(cosmobl::twopt::TwoPType::_2D_Cartesian_, catalogue, random_catalogue, cosmobl::_linear_, rMin, rMax, nbins, shift, cosmobl::_linear_, rMin, rMax, nbins, shift);
+    const auto TwoP = cosmobl::measure::twopt::TwoPointCorrelation::Create(cosmobl::measure::twopt::TwoPType::_2D_Cartesian_, catalogue, random_catalogue, cosmobl::_linear_, rMin, rMax, nbins, shift, cosmobl::_linear_, rMin, rMax, nbins, shift);
 
-    TwoP->measure(cosmobl::twopt::_Poisson_, dir, {dir});
+    TwoP->measure(cosmobl::measure::ErrorType::_Poisson_, dir, {dir});
     TwoP->write(dir, file);
   
 
@@ -67,40 +67,60 @@ int main () {
     // ----------------- model the Cartesian 2D two-point correlation function and estimate the linear bias and sigma12 ----------------- 
     // ----------------------------------------------------------------------------------------------------------------------------------
 
-    cosmobl::modelling::Modelling_TwoPointCorrelation_cartesian model_twop(TwoP); // object used for modelling
+    cosmobl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian model_twop(TwoP); // object used for modelling
 
   
     // flat prior for f*sigma8
     const vector<double> fsigma8_limits = {0., 1.}; 
-    const cosmobl::statistics::Prior fsigma8_prior {cosmobl::statistics::PriorType::_UniformPrior_, fsigma8_limits[0], fsigma8_limits[1]}; 
+    const cosmobl::statistics::Prior fsigma8_prior {cosmobl::glob::DistributionType::_UniformDistribution_, fsigma8_limits[0], fsigma8_limits[1]}; 
   
     // flat prior for b*sigma8
     const vector<double> bsigma8_limits = {0.8*cosmology.sigma8(), 3.*cosmology.sigma8()}; 
-    const cosmobl::statistics::Prior bsigma8_prior {cosmobl::statistics::PriorType::_UniformPrior_, bsigma8_limits[0], bsigma8_limits[1]}; 
+    const cosmobl::statistics::Prior bsigma8_prior {cosmobl::glob::DistributionType::_UniformDistribution_, bsigma8_limits[0], bsigma8_limits[1]}; 
   
     // flat prior for sigma12
     const vector<double> sigma12_limits = {1., 1000.}; 
-    const cosmobl::statistics::Prior sigma12_prior {cosmobl::statistics::PriorType::_UniformPrior_, sigma12_limits[0], sigma12_limits[1]}; 
+    const cosmobl::statistics::Prior sigma12_prior {cosmobl::glob::DistributionType::_UniformDistribution_, sigma12_limits[0], sigma12_limits[1]}; 
 
-    const vector<double> model_scales = cosmobl::linear_bin_vector(100, 0.1, 50.); // scales used in the fit
-    const double redshift = 1.; // mean redshift of the sample
-  
-    model_twop.set_parameters_xi2D_DM(model_scales, cosmology, redshift); // set the model parameters
+    // mean redshift of the sample
+    const double redshift = 1.;
+    
+    // set the data used to construct de model
+    model_twop.set_data_model(cosmology, redshift);
+    
+    // set the model for the redshift-space 2D two-point correlation 
+    model_twop.set_model_dispersionModel(fsigma8_prior, bsigma8_prior, sigma12_prior); 
 
-    model_twop.set_model_dispersionModel(fsigma8_prior, bsigma8_prior, sigma12_prior); // set the model for the redshift-space 2D two-point correlation 
+    
+    // ----------------------------------------------------------------------
+    // ------------- run chains and write output chain and model ------------
+    // ----------------------------------------------------------------------
 
+    const double min = 1., max = 40.;
   
-    // sample the likelihood and store the chains
-  
-    const int nChains = 10; // number of chains
-    const int chain_size = 100; // size of the chains
+    model_twop.set_fit_range(min, max, min, max);
+    
+
+    const int chain_size = 200;
+    const int nwalkers = 20;
+    const int seed = 4232;
+
+    vector<double> starting_parameters = {1., 1., 0.5, 1.5, 100.};
+    const double radius = 1.e-3;
+    
     const string chain_file = "chain_cartesian_bias_sigma12.dat";
+    
+    model_twop.set_likelihood(cosmobl::statistics::LikelihoodType::_GaussianLikelihood_Error_);
+    model_twop.sample_likelihood(chain_size, nwalkers, seed, starting_parameters, radius);
 
-    model_twop.sample_likelihood(1., 40., 1., 40., cosmobl::statistics::_GaussianLikelihood_Error_, nChains, chain_size, 32113, dir, chain_file); 
+    const int burn_in = 20;
+    const int thin = 10; 
+    model_twop.show_results(burn_in, thin, seed);
+    model_twop.write_results(dir, chain_file, burn_in, thin, seed);
 
   }
   
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

@@ -31,17 +31,11 @@
 %template(ObjectPtr) shared_ptr<cosmobl::catalogue::Object>;
 %template(VoidPtr) shared_ptr<cosmobl::catalogue::Void>;
 
-%template(Catalogueptr) shared_ptr<cosmobl::catalogue::Catalogue>;
+%template(VarVec) std::vector<enum cosmobl::catalogue::Var>;
+
 
 %extend cosmobl::catalogue::Catalogue
 {  
-  %template(Catalogue) Catalogue< RandomObject >;
-  %template(Catalogue) Catalogue< Mock >;
-  %template(Catalogue) Catalogue< Halo >;
-  %template(Catalogue) Catalogue< Galaxy >;
-  %template(Catalogue) Catalogue< Cluster >;
-  //%template(Catalogue) Catalogue< Void >;
- 
   %template(add_object) add_object< RandomObject >;
   %template(add_object) add_object< Mock >;
   %template(add_object) add_object< Halo >;

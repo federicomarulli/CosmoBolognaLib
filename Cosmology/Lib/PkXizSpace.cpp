@@ -55,6 +55,25 @@ double cosmobl::cosmology::Cosmology::xi0_Kaiser (const double rad, const double
 
 // =====================================================================================
 
+ 
+vector<double> cosmobl::cosmology::Cosmology::xi0_Kaiser (const vector<double> rad, const double bias, const string method_Pk, const bool NL, const double redshift, const string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const string file_par)
+{
+  const vector<double> kk = cosmobl::logarithmic_bin_vector(step, k_min, k_max);
+  const vector<double> Pk = this->Pk(kk, method_Pk, NL, redshift, output_root, norm, k_min, k_max, prec, file_par);
+
+  vector<double> xi = cosmobl::fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
+
+  const double fact = bias*bias*xi_ratio(linear_growth_rate(redshift, 1.), bias);
+
+  for (size_t i=0; i<xi.size(); i++)
+    xi[i] *= fact;
+
+  return xi;
+}
+
+
+// =====================================================================================
+
 
 double cosmobl::cosmology::Cosmology::xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const string method_Pk, const double redshift, const int FV, const bool NL, vector<double> rr, vector<double> &Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root, const int index, const bool bias_nl, const double bA, const bool xiType, const double k_star, const bool xiNL, const double v_min, const double v_max, const int step_v, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par) 
 {
@@ -104,7 +123,7 @@ double cosmobl::cosmology::Cosmology::xi_star (const double rr, const double red
 
   Pk_0(method_Pk1, redshift, output_root, k_min, k_max, prec, file_par); 
 
-  cosmobl::classfunc::func_xistar func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, rr, redshift, output_root, m_Pk0_EH, k_max, k_star);
+  cosmobl::classfunc::func_xistar func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, rr, redshift, output_root, m_Pk0_EH, k_max, k_star);
 
   function<double(double)> ff = bind(&cosmobl::classfunc::func_xistar::operator(), func, std::placeholders::_1);
 

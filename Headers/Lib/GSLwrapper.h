@@ -36,7 +36,7 @@
 #define __GSLwrap__
 
 
-namespace cosmobl{
+namespace cosmobl {
 
   /**
    *  @brief The namespace of the <B> GSL wrappers </B>
@@ -50,7 +50,11 @@ namespace cosmobl{
     {
       function<double(double)> f;
       double xx0;
+
       function<double(vector<double>)> fmin;
+
+      function<double(vector<double> &)> fmin_return;
+      vector<double> parameters_return;
     };
     
     /**
@@ -76,6 +80,61 @@ namespace cosmobl{
      *  @return the value of the generic minimizer
      */
     double generic_minimizer (const gsl_vector * xx, void * params);
+
+    /**
+     *  @brief generic roots
+     *  @param xx the point in which function is defined
+     *  @param params the parameters of the function 
+     *  @return the value of the generic minimizer
+     */
+    double generic_minimizer_return (const gsl_vector * xx, void * params);
+    
+    /**
+     *  @brief the derivative of a function
+     *
+     *  This function computes the numerical derivative of the
+     *  function Func at the point xx using an adaptive central
+     *  difference algorithm with a step size of hh.
+     *
+     *  The initial value of hh is used to estimate an optimal
+     *  step-size, based on the scaling of the truncation error and
+     *  round-off error in the derivative calculation. The derivative
+     *  is computed using a 5-point rule for equally spaced abscissae
+     *  at xx-hh, xx-hh/2, xx, xx+hh/2, xx+hh, with an error estimate
+     *  taken from the difference between the 5-point rule and the
+     *  corresponding 3-point rule xx-hh, xx, xx+hh. Note that the
+     *  value of the function at xx does not contribute to the
+     *  derivative calculation, so only 4-points are actually used.
+     *  (from the GSL documentation)
+     *
+     *  @param Func the GSL function to be derived 
+     *
+     *  @param xx point at which the derivative is computed
+     *
+     *  @param hh the initial value of the step size
+     *
+     *  @param prec the relative error tolerance
+     *
+     *  @return the definite integral of the function
+     */
+    double GSL_derivative (gsl_function Func, const double xx, const double hh, const double prec=1.e-2);
+    
+    /**
+     *  @brief integral, using the GSL cquad method
+     *
+     *  it only works with a function defined as
+     *  function<double(double)> that doesn't use fixed parameters
+     *  (useful for class members, when the external parameters can be
+     *  attributes of the class)
+     *
+     *  @param Func the fuction to be integrated
+     *  @param a the lower limit of the integral
+     *  @param b the upper limit of the integral
+     *  @param prec the relative error tolerance
+     *  @param nevals the number of intervals
+     *  @return the definite integral of the function
+     */
+    double GSL_integrate_cquad (gsl_function Func, const double a, const double b, const double prec=1.e-2, const int nevals=100);
 
     /**
      *  @brief integral, computed using the GSL qag method 
@@ -113,6 +172,56 @@ namespace cosmobl{
      *  @return the integral of the function
      */
     double GSL_integrate_qagiu (gsl_function Func, const double a, const double prec=1.e-2, const int limit_size=1000);
+
+    /**
+     *  @brief the derivative of a function
+     *
+     *  This function computes the numerical derivative of the
+     *  function Func at the point xx using an adaptive central
+     *  difference algorithm with a step size of hh.
+     *
+     *  The initial value of hh is used to estimate an optimal
+     *  step-size, based on the scaling of the truncation error and
+     *  round-off error in the derivative calculation. The derivative
+     *  is computed using a 5-point rule for equally spaced abscissae
+     *  at xx-hh, xx-hh/2, xx, xx+hh/2, xx+hh, with an error estimate
+     *  taken from the difference between the 5-point rule and the
+     *  corresponding 3-point rule xx-hh, xx, xx+hh. Note that the
+     *  value of the function at xx does not contribute to the
+     *  derivative calculation, so only 4-points are actually used.
+     *  (from the GSL documentation)
+     *
+     *  It only works with function defined as function<double(double)>
+     *  that doesn't use fixed parameters (useful for class members,
+     *  when the external parameters could be attributes of the class)
+     *
+     *  @param func the function to be derived 
+     *
+     *  @param xx point at which the derivative is computed
+     *
+     *  @param hh the initial value of the step size
+     *
+     *  @param prec the relative error tolerance
+     *
+     *  @return the definite integral of the function
+     */
+    double GSL_derivative (function<double(double)> func, const double xx, const double hh, const double prec=1.e-2);
+
+    /**
+     *  @brief integral, using the GSL cquad method
+     *
+     *  it only works with function defined as function<double(double)>
+     *  that doesn't use fixed parameters (useful for class members,
+     *  when the external parameters could be attributes of the class)
+     *
+     *  @param func the fuction to be integrated
+     *  @param a the lower limit of the integral
+     *  @param b the upper limit of the integral
+     *  @param prec the relative error tolerance
+     *  @param nevals the number of intervals
+     *  @return the definite integral of the function
+     */
+    double GSL_integrate_cquad (function<double(double)> func, const double a, const double b, const double prec=1.e-2, const int nevals=100);
 
     /**
      *  @brief integral, using the GSL qag method
@@ -161,6 +270,25 @@ namespace cosmobl{
      *  @return the definite integral of the function
      */
     double GSL_integrate_qaws (function<double(double)> func, const double a, const double b, const double alpha=0, const double beta=0, const int mu=1, const int nu =0, const double prec=1.e-2, const int limit_size=1000);
+
+    /**
+     *  @brief integral, using the GSL cquad method
+     *
+     *  it only works with a function defined as
+     *  function<double(double)> that doesn't use fixed parameters
+     *  (useful for class members, when the external parameters can be
+     *  attributes of the class)
+     *
+     *  @param func the fuction to be integrated
+     *  @param pp a void pointer 
+     *  @param par a vector containing the coefficients
+     *  @param a the lower limit of the integral
+     *  @param b the upper limit of the integral
+     *  @param prec the relative error tolerance
+     *  @param nevals the number of intervals
+     *  @return the definite integral of the function
+     */
+    double GSL_integrate_cquad (function<double(double, shared_ptr<void>, vector<double>)> func, shared_ptr<void> pp, vector<double> par, const double a, const double b, const double prec=1.e-2, const int nevals=100);
 
     /**
      *  @brief integral, using the GSL qag method
@@ -256,17 +384,49 @@ namespace cosmobl{
      *
      * @param func the function to minimize
      * @param start the starting point
+     * @param step_size size of the step for minima search
+     * @param max_iter maximum number of iteration
+     * @param tol tolerance of the minimization
+     *
+     * @return vector containing the point that minimize the function
+     */
+    vector<double> GSL_minimize_nD (function<double(vector<double> &)> func, const vector<double> start, const vector<double> step_size={}, const unsigned int max_iter=1000, const double tol=1.e-6);
+
+    /**
+     * @brief minimize the provided function using GSL procedure
+     *
+     * @param func the function to minimize
+     * @param start the starting point
      * @param min the minimum of the search interval
      * @param max the maximum of the search interval
      * @param max_iter maximum number of iteration
+     * @param verbose show output
      *
      * @return the point that minimize the function
      */
-    double GSL_minimize_1D (function<double(double)> func, const double start, double min=par::defaultDouble, double max=-par::defaultDouble, const int max_iter=1000);
+    double GSL_minimize_1D (function<double(double)> func, const double start, double min=par::defaultDouble, double max=-par::defaultDouble, const int max_iter=1000, const bool verbose=false);
 
-    double GSL_polynomial_eval(const double x, shared_ptr<void> fixed_parameters, const vector<double> coeff);
+    /**
+     * @brief evaluate a polynomial 
+     *
+     * @param x the independent variable
+     * @param fixed_parameters fixed parameters of 
+     * the polynomial
+     * @param coeff polynomial coefficients
+     *
+     * @return the value of the polynomial at x
+     */
+    double GSL_polynomial_eval (const double x, shared_ptr<void> fixed_parameters, const vector<double> coeff);
 
-    void GSL_polynomial_root(const vector<double> coeff, vector<vector<double>> &root);
+    /**
+     * @brief find polynomial roots
+     *
+     * @param coeff polynomial coefficients 
+     * @param root polynomial roots
+     *
+     * @return the point that minimize the function
+     */
+    void GSL_polynomial_root (const vector<double> coeff, vector<vector<double>> &root);
   }
 }
 

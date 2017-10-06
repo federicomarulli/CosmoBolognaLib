@@ -435,7 +435,7 @@ namespace cosmobl {
 
   ///@{
 
-  void reconstruction_fourier_space(const catalogue::Catalogue data, const catalogue::Catalogue random, const cosmology::Cosmology cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type=0);
+  void reconstruction_fourier_space(const catalogue::Catalogue data, const catalogue::Catalogue random, const bool random_RSD, const cosmology::Cosmology cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type=0);
 
   /**
    * @brief return a sample with objects displaced, according to the
@@ -444,6 +444,20 @@ namespace cosmobl {
    * @return the displaced catalogue
    */
   catalogue::Catalogue displaced_catalogue (const catalogue::Catalogue input_catalogue);
+
+  ///@}
+
+  /**
+   *  @name Functions to provide 2PCF/3PCF forecasts
+   */
+
+  ///@{
+
+  vector<double> fit_covariance_matrix_2PCF_monopole(const vector<double> mean, const vector<vector<double>> mock_xi0, const bool doJK, const cosmobl::cosmology::Cosmology cosmology, const double nObjects, const double Volume, const double bias, const double redshift, const double rMin, const double rMax, const int nbins, const cosmobl::binType bin_type, const string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
+
+  shared_ptr<cosmobl::data::Data> generate_mock_2PCF_monopole (const cosmobl::cosmology::Cosmology cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cosmobl::binType bin_type, const string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
+
+  shared_ptr<cosmobl::data::Data> generate_mock_2PCF_multipoles (const cosmobl::cosmology::Cosmology cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cosmobl::binType bin_type, const string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
 
   ///@}
 }

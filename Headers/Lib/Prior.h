@@ -33,10 +33,10 @@
 #ifndef __PRIOR__
 #define __PRIOR__
 
-#include "Chain.h"
+#include "Distribution.h"
 
 
-// ============================================================================================
+// ===================================================================================================
 
 
 namespace cosmobl {
@@ -44,72 +44,13 @@ namespace cosmobl {
   namespace statistics {
 
     /**
-     * @var typedef prior_func
-     * @brief definition of a function for the priors 
-     */
-    typedef function<double(double, shared_ptr<void>, vector<double>)> prior_func;
-
-    /**
-     * @enum PriorType
-     * @brief the two-point correlation function error type
-     */
-    enum PriorType {
-      
-      /// Identity function
-      _UniformPrior_,
-
-      ///Gaussian function
-      _GaussianPrior_,
-
-      /// Poisson function
-      _PoissonPrior_,
-      
-      /// User defined Tabulated Function
-      _InterpolatedPrior_,
-
-      /// Discrete prior
-      _DiscretePrior_
-      
-    };
-
-    /**
      *  @class Prior Prior.h "Headers/Lib/Prior.h"
      *
      *  @brief The class Prior
      *
-     *  This class is used to define the prior
+     *  This class is used to define the distribution
      */
-    class Prior {
-
-    protected:
-
-      /// the prior function
-      prior_func m_func;
-
-      /// the prior random generator
-      shared_ptr<random::RandomNumbers> m_prior_random;
-
-      /// the prior lower limit
-      double m_xmin;
-
-      /// the prior upper limit
-      double m_xmax;
-
-      /// parameters of the prior func
-      vector<double> m_prior_func_pars;
-
-      /// void pointer for the prior func
-      shared_ptr<void> m_prior_func_fixed_pars;
-
-      /// prior normalization
-      double m_prior_normalization;
-
-      /**
-       * @brief set prior normalization 
-       * @return none
-       */
-      void m_set_prior_normalization ();
-
+    class Prior : public glob::Distribution {
 
     public:
 
@@ -123,55 +64,110 @@ namespace cosmobl {
        *
        *  @return object of class Prior
        */
-      Prior () : Prior(statistics::PriorType::_UniformPrior_, 0., 0.) {}
+      Prior () : Distribution () {}
 
       /**
-       *  @brief constructor of a flat prior
+       *  @brief constructor of a constant distribution
        *
-       *  @param priorType the type of prior to be created
+       *  @param priorType the type of distribution to be created
        *
-       *  @param xmin lower limit of the prior
-       *
-       *  @param xmax upper limit of the prior
-       *
-       *  @param seed the prior seed for random sampling
+       *  @param value the value to be returned
        *
        *  @return object of class Prior
        */
-      Prior (const PriorType priorType, const double xmin, const double xmax, const int seed=1);
+      Prior (const glob::DistributionType priorType, const double value) : Distribution(priorType, value) {}
+
+      /**
+       *  @brief constructor of a flat distribution
+       *
+       *  @param priorType the type of distribution to be created
+       *
+       *  @param xmin lower limit of the distribution
+       *
+       *  @param xmax upper limit of the distribution
+       *
+       *  @param seed the distribution seed for random sampling
+       *
+       *  @return object of class Prior
+       */
+      Prior (const glob::DistributionType priorType, const double xmin, const double xmax, const int seed=1) : Distribution(priorType, xmin, xmax, seed) {}
 
       /**
        *  @brief constructor
        *
-       *  @param priorType the type of prior to be created
+       *  @param priorType the type of distribution to be created
        *
-       *  @param prior_params parameters of the prior function or discrete
-       *  list of values for discrete prior
+       *  @param prior_params parameters of the distribution function
+       *  or discrete list of values for discrete distribution
        *
-       *  @param xmin lower limit of the prior
+       *  @param xmin lower limit of the distribution
        *
-       *  @param xmax upper limit of the prior
+       *  @param xmax upper limit of the distribution
        *
-       *  @param seed the prior seed for random sampling
+       *  @param seed the distribution seed for random sampling
        *
        *  @return object of class Prior
        */
-      Prior (const PriorType priorType, const vector<double> prior_params, const double xmin, const double xmax, const int seed=1);
+      Prior (const glob::DistributionType priorType, const vector<double> prior_params, const double xmin, const double xmax, const int seed=1) : 
+	Distribution(priorType, prior_params, xmin, xmax, seed) {}
 
       /**
        *  @brief constructor
        *
-       *  @param priorType the type of prior to be created
+       *  @param priorType the type of distribution to be created
+       *
+       *  @param prior_func the functional form of the distribution
+       *
+       *  @param prior_fixed_pars the fixed parameters
+       *
+       *  @param prior_pars the distribution parameters
+       *
+       *  @param xmin lower limit of the distribution
+       *
+       *  @param xmax upper limit of the distribution
+       *
+       *  @param seed the distribution seed for random sampling
+       *
+       *  @return object of class Prior
+       */
+      Prior (const glob::DistributionType priorType, const distribution_func prior_func, const shared_ptr<void> prior_fixed_pars, const vector<double> prior_pars, const double xmin, const double xmax, const int seed=1)
+	: Distribution(priorType, prior_func, prior_fixed_pars, prior_pars, xmin, xmax, seed) {}
+
+      /**
+       *  @brief constructor
+       *
+       *  @param priorType the type of distribution to be created
        *
        *  @param discrete_values list of discrete values 
        *
        *  @param weights list of weights for discrete values
        *
-       *  @param seed the prior seed for random sampling
+       *  @param seed the distribution seed for random sampling
        *
        *  @return object of class Prior
        */
-      Prior (const PriorType priorType, const vector<double> discrete_values, const vector<double> weights, const int seed=1);
+      Prior (const glob::DistributionType priorType, const vector<double> discrete_values, const vector<double> weights, const int seed=1)
+	: Distribution(priorType, discrete_values, weights, seed) {}
+
+      /**
+       * @brief constructor
+       *
+       * @param priorType the type of distribution to be created
+       *
+       * @param var vector containing binned values
+       *
+       * @param dist list of distribution values for each bin
+       *
+       * @param nbin the number of bins
+       *
+       * @param interpolationType the kind of interpolation
+       *
+       * @param seed the distribution seed for random sampling
+       *
+       * @return object of class Prior
+       */
+      Prior (const glob::DistributionType priorType, const vector<double> var, const vector<double> dist, const int nbin, const string interpolationType, const int seed=1)
+	: Distribution(priorType, var, dist, nbin, interpolationType, seed) {}
 
       /**
        *  @brief default destructor
@@ -181,133 +177,6 @@ namespace cosmobl {
       ~Prior () = default;
 
       ///@}
-
-      /**
-       * @brief evaluate prior 
-       *
-       * @param xx the value for prior calculation
-       *
-       * @return the prior value
-       */
-      double operator() (double xx) 
-      {
-	if (xx<m_xmin || xx>m_xmax) return 0;
-	else return m_func(xx, m_prior_func_fixed_pars, m_prior_func_pars)/m_prior_normalization;
-      }
-
-      /**
-       * @brief set prior seed
-       * @param seed the prior seed
-       * return none
-       */
-      void set_seed (const int seed) {m_prior_random->set_seed(seed);}
-
-      /**
-       * @brief set the prior limits 
-       *
-       * @param xmin lower limit of the prior
-       *
-       * @param xmax upper limit of the prior
-       *
-       * @return none
-       */
-      void set_limits (const double xmin, const double xmax);
-
-      /**
-       * @brief set an uniform prior with input limits and seed
-       *
-       * @param xmin lower limit of the prior
-       *
-       * @param xmax upper limit of the prior
-       *
-       * @param seed the prior seed for random sampling
-       *
-       * @return none
-       */
-      void set_uniform_prior (const double xmin, const double xmax, const int seed=1);
-
-      /**
-       * @brief set normal prior 
-       *
-       * @param mean the normal distribution mean
-       *
-       * @param sigma the normal distribution standard deviation
-       *
-       * @param seed the prior seed for random sampling
-       *
-       * @return none
-       */
-      void set_gaussian_prior (const double mean, const double sigma, const int seed=1);
-
-      /**
-       * @brief set poisson prior  
-       *
-       * @param mean the poisson distribution mean
-       *
-       * @param seed the prior seed for random sampling
-       *
-       * @return none
-       */       
-      void set_poisson_prior (const double mean, const int seed=1);
-
-      /**
-       * @brief set discrete prior values and weights 
-       *
-       * @param discrete_values vector containing discrete values
-       *
-       * @param weights list of weights for discrete values
-       *
-       * @param seed the prior seed for random sampling
-       *
-       * @return none
-       */       
-      void set_discrete_values (const vector<double> discrete_values, const vector<double> weights, const int seed=1);
-
-      /**
-       * @brief return the private member m_xmin
-       *
-       * @return the prior lower limit
-       */
-      double xmin () const { return m_xmin; }
-
-      /**
-       * @brief return the private member m_xmax
-       *
-       * @return the prior upper limit
-       */
-      double xmax () const { return m_xmax; }
-
-      /**
-       * @brief check if a value is included in the prior limits
-       * @param value the value to be checked
-       * @return 0 &rarr; not included in prior range; 1 &rarr; included in prior range
-       */
-      bool isIncluded (const double value) const;
-
-      /**
-       * @brief sample a value from the prior
-       *
-       * @return value of the parameter
-       */
-      double sample () const;
-
-      /**
-       * @brief sample a value from the prior
-       *
-       * @param seed the seed for random number generation
-       *
-       * @return value of the parameter
-       */
-      double sample(const int seed);
-
-      /**
-       * @brief sample values from the prior
-       *
-       * @param nvalues the number of points to be generated
-       *
-       * @return values of the parameter
-       */
-      vector<double> sample_vector(const int nvalues);
 
     };
   }

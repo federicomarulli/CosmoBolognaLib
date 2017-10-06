@@ -4,6 +4,8 @@
 
 %{
 #include "LogNormal.h"
+#include "LogNormalFull.h"
 %}
 
 %include "LogNormal.h"
+%include "LogNormalFull.h"

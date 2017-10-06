@@ -54,7 +54,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                    
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;
       double m_n_spec;               
       double m_w0; 
       double m_wa;   
@@ -65,12 +66,12 @@ namespace cosmobl {
       bool m_unit;      
 
     public:
-      E_inv (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit) {}  
+      E_inv (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit)
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit) {}  
   
       double operator() (double redshift) 
       {
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
+	cosmology::Cosmology cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
 	
 	return 1./cosm.EE(redshift);   
       }
@@ -91,7 +92,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                  
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;           
       double m_n_spec;               
       double m_w0;
       double m_wa; 
@@ -102,12 +104,12 @@ namespace cosmobl {
       bool m_unit;      
 
     public:
-      E_inv2 (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit) {}  
+      E_inv2 (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit)
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit) {}  
   
       double operator() (double redshift) 
       {
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
     
 	return 1./(1.+redshift)/cosm.EE(redshift);   
       }
@@ -128,7 +130,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                  
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;           
       double m_n_spec;               
       double m_w0;
       double m_wa; 
@@ -138,12 +141,12 @@ namespace cosmobl {
       string m_model;
 
     public:
-      E_inv3 (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model) {}  
+      E_inv3 (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model)
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model) {}  
 
       double operator() (double aa)
       {
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, 0);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, 0);
 	double redshift = 1./aa-1.;
 	return (1.+redshift)/cosm.EE(redshift);  
       }
@@ -187,7 +190,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                  
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;           
       double m_n_spec;               
       double m_w0, m_wa;   
       double m_fNL;
@@ -198,12 +202,12 @@ namespace cosmobl {
       double m_dd;
 
     public:
-      func_z (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, double dd)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_dd(dd) {}  
+      func_z (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, double dd)
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_dd(dd) {}  
 
       double operator() (double redshift) 
       {
-	cosmology::Cosmology cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
+	cosmology::Cosmology cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
 
 	return cosm.D_C(redshift)-m_dd;
       }
@@ -224,7 +228,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                  
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;           
       double m_n_spec;               
       double m_w0, m_wa;
       double m_fNL;
@@ -237,12 +242,12 @@ namespace cosmobl {
       double m_VV;
 
     public:
-      func_V (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, double z_min, double Area, double VV)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_z_min(z_min), m_Area(Area), m_VV(VV) {}  
+      func_V (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, double z_min, double Area, double VV)
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_z_min(z_min), m_Area(Area), m_VV(VV) {}  
 
       double operator() (double z_max) 
       {
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
     
 	return cosm.Volume(m_z_min, z_max, m_Area)-m_VV;
       }
@@ -263,7 +268,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                  
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;           
       double m_n_spec;               
       double m_w0;
       double m_wa;   
@@ -275,247 +281,14 @@ namespace cosmobl {
       double m_tt;
 
     public:
-      func_zt (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, double tt)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_tt(tt) {}  
+      func_zt (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, double tt)
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_tt(tt) {}  
 
       double operator() (double redshift) 
       {
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
 
 	return cosm.cosmic_time(redshift)-m_tt;
-      }
-    };
-
-
-    // =====================================================================================
-
-
-    class func_SSR {
-
-    private:   
-      double m_Omega_matter;  
-      double m_Omega_baryon;         
-      double m_Omega_neutrinos;      
-      double m_massless_neutrinos;   
-      int m_massive_neutrinos;       
-      double m_Omega_DE;        
-      double m_Omega_radiation;     
-      double m_hh;                  
-      double m_scalar_amp;           
-      double m_n_spec;               
-      double m_w0;
-      double m_wa; 
-      double m_fNL;
-      int m_type_NG;
-      double m_tau;
-      string m_model;
-      bool m_unit;   
-      string m_method_Pk;
-      double m_rr;
-      double m_redshift;
-
-    public:
-      func_SSR (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, string method_Pk, double rr, double redshift)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_method_Pk(method_Pk), m_rr(rr), m_redshift(redshift) {}  
-
-      double operator() (double kk) 
-      { 
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
-
-	if (m_method_Pk=="EisensteinHu") return cosm.Pk_UnNorm(kk, m_redshift, m_method_Pk)*pow(cosmobl::TopHat_WF(kk*m_rr)*kk,2);  
-
-	else return cosmobl::ErrorCBL("Error in func_SSR of CosmClassFunc.h!");
-      }
-    };
-
-
-    // =====================================================================================
-
-
-    class func_SSM {
-
-    private:   
-      double m_Omega_matter;  
-      double m_Omega_baryon;         
-      double m_Omega_neutrinos;      
-      double m_massless_neutrinos;   
-      int m_massive_neutrinos;       
-      double m_Omega_DE;        
-      double m_Omega_radiation;     
-      double m_hh;                  
-      double m_scalar_amp;           
-      double m_n_spec;               
-      double m_w0;
-      double m_wa;
-      double m_fNL;
-      int m_type_NG;
-      double m_tau;
-      string m_model;
-      bool m_unit; 
-      string m_method_Pk;
-      double m_mass;
-      double m_redshift;
-
-    public:
-      func_SSM (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, string method_Pk, double mass, double redshift)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_method_Pk(method_Pk), m_mass(mass), m_redshift(redshift) {}  
-
-      double operator() (double kk) 
-      { 
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
- 
-	double RHO = cosm.RhoZero();
-	if (m_unit==false) { cosm.set_unit(true); RHO = cosm.Rho(m_Omega_matter, m_Omega_neutrinos); cosm.set_unit(false); }
-	double rr = cosmobl::Radius(m_mass, RHO);
-
-	if (m_method_Pk=="EisensteinHu") return cosm.Pk_UnNorm(kk, m_redshift, m_method_Pk)*pow(cosmobl::TopHat_WF(kk*rr)*kk,2);  
-
-	else return cosmobl::ErrorCBL("Error in func_SSM of CosmClassFunc.h!"); 
-      }
-    };
-
-
-    // =====================================================================================
-
-
-    class func_SSR_Table {
-
-    private:
-      double m_hh;
-      double m_n_spec;
-      double m_rho;
-      bool m_unit;
-      vector<double> m_lgkk, m_lgPk;
-      double m_rr;
-      string m_interpType;
-
-    public:
-      func_SSR_Table (double hh, double n_spec, double rho, bool unit, vector<double> lgkk, vector<double> lgPk, double rr, string interpType = "Linear")
-	: m_hh(hh), m_n_spec(n_spec), m_rho(rho), m_unit(unit), m_lgkk(lgkk), m_lgPk(lgPk), m_rr(rr), m_interpType(interpType) {}
-  
-      double operator() (double kk) 
-      { 
-	double fact = (m_unit) ? 1. : m_hh;
-	double lgk = log10(kk/fact);
-
-	double lgPkK = cosmobl::interpolated(lgk, m_lgkk, m_lgPk, m_interpType);
-
-	return pow(10.,lgPkK)*pow(cosmobl::TopHat_WF(kk*m_rr)*kk,2)/pow(fact,m_n_spec); 
-      }
-    };
-
-
-    // =====================================================================================
-
-
-    class func_SSM_Table {
-
-    private:
-      double m_hh;
-      double m_n_spec;
-      double m_rho;
-      bool m_unit;
-      vector<double> m_lgkk, m_lgPk;
-      double m_mass;
-      string m_interpType;
-
-    public:
-      func_SSM_Table (double hh, double n_spec, double rho, bool unit, vector<double> lgkk, vector<double> lgPk, double mass, string interpType = "Linear")
-	: m_hh(hh), m_n_spec(n_spec), m_rho(rho), m_unit(unit), m_lgkk(lgkk), m_lgPk(lgPk), m_mass(mass), m_interpType(interpType) {}
-  
-      double operator() (double kk) 
-      { 
-	double fact = (m_unit) ? 1. : m_hh;
-	double lgk = log10(kk/fact);
-
-	double lgPkK = cosmobl::interpolated(lgk, m_lgkk, m_lgPk, m_interpType);
-	double rr = cosmobl::Radius(m_mass, m_rho);
-
-	return pow(10.,lgPkK)*pow(cosmobl::TopHat_WF(kk*rr)*kk,2)/pow(fact,m_n_spec); 
-      }
-    };
-
-
-    // =====================================================================================
-
-
-    class func_SSRd {
-
-    private:   
-      double m_Omega_matter;  
-      double m_Omega_baryon;         
-      double m_Omega_neutrinos;      
-      double m_massless_neutrinos;   
-      int m_massive_neutrinos;       
-      double m_Omega_DE;        
-      double m_Omega_radiation;     
-      double m_hh;                  
-      double m_scalar_amp;           
-      double m_n_spec;               
-      double m_w0;
-      double m_wa;  
-      double m_fNL;
-      int m_type_NG;
-      double m_tau;
-      string m_model;
-      bool m_unit;   
-      string m_method_Pk;
-      double m_redshift;
-      string m_output_root;
-      double m_kmax;
-      string m_file_par;
-
-    public:
-      func_SSRd (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, string method_Pk, double redshift, string output_root, double kmax=1000., string file_par=par::defaultString)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_method_Pk(method_Pk), m_redshift(redshift), m_output_root(output_root), m_kmax(kmax), m_file_par(file_par) {}  
-
-      double operator() (double RR) 
-      { 
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
-
-	return cosm.SSR_norm(RR, m_method_Pk, m_redshift, m_output_root, m_kmax, m_file_par);
-      }
-    };
-
-
-    // =====================================================================================
-
-
-    class func_SSMd {
-
-    private:   
-      double m_Omega_matter;  
-      double m_Omega_baryon;         
-      double m_Omega_neutrinos;      
-      double m_massless_neutrinos;   
-      int m_massive_neutrinos;       
-      double m_Omega_DE;        
-      double m_Omega_radiation;     
-      double m_hh;                  
-      double m_scalar_amp;           
-      double m_n_spec;               
-      double m_w0;
-      double m_wa;  
-      double m_fNL;
-      int m_type_NG;
-      double m_tau;
-      string m_model;
-      bool m_unit;   
-      string m_method_Pk;
-      double m_redshift;
-      string m_output_root;
-      double m_kmax;
-      string m_file_par;
-
-    public:
-      func_SSMd (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, string method_Pk, double redshift, string output_root, double kmax=1000., string file_par=par::defaultString)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_method_Pk(method_Pk), m_redshift(redshift), m_output_root(output_root), m_kmax(kmax), m_file_par(file_par) {}
-
-      double operator() (double MM) 
-      { 
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
-
-	return cosm.SSM_norm(MM, m_method_Pk, m_redshift, m_output_root, m_kmax, m_file_par);
       }
     };
 
@@ -534,7 +307,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                  
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;           
       double m_n_spec;               
       double m_w0;
       double m_wa; 
@@ -549,12 +323,12 @@ namespace cosmobl {
       double m_aa;
 
     public:
-      func_xiD (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, string method_Pk, double rr, double redshift, double aa=0)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_method_Pk(method_Pk), m_rr(rr), m_redshift(redshift), m_aa(aa) {}  
+      func_xiD (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, string method_Pk, double rr, double redshift, double aa=0)
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_method_Pk(method_Pk), m_rr(rr), m_redshift(redshift), m_aa(aa) {}  
   
       double operator() (double kk) 
       { 
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
     
 	double Int = cosm.Pk_UnNorm(kk, m_redshift, m_method_Pk)*sin(kk*m_rr)*kk/m_rr;  
     
@@ -579,7 +353,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                  
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;           
       double m_n_spec;               
       double m_w0;
       double m_wa; 
@@ -596,12 +371,12 @@ namespace cosmobl {
       double m_k_star;
 
     public:
-      func_xistar (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, double rr, double redshift, string output_root, double Pk0_EH, double kmax, double k_star)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_rr(rr), m_redshift(redshift), m_output_root(output_root), m_Pk0_EH(Pk0_EH), m_kmax(kmax), m_k_star(k_star) {}  
+      func_xistar (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, double rr, double redshift, string output_root, double Pk0_EH, double kmax, double k_star)
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_rr(rr), m_redshift(redshift), m_output_root(output_root), m_Pk0_EH(Pk0_EH), m_kmax(kmax), m_k_star(k_star) {}  
   
       double operator() (double kk) 
       { 
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
     
 	string method_PkC = "CAMB";
 	string method_PkEH = "EisensteinHu";
@@ -630,7 +405,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                   
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;           
       double m_n_spec;               
       double m_w0, m_wa;  
       double m_fNL;
@@ -643,12 +419,12 @@ namespace cosmobl {
       double m_redshift;
 
     public:
-      func_V2 (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, string method_Pk, double rr, double redshift)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_method_Pk(method_Pk), m_rr(rr), m_redshift(redshift) {}  
+      func_V2 (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, string method_Pk, double rr, double redshift)
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_method_Pk(method_Pk), m_rr(rr), m_redshift(redshift) {}  
 
       double operator() (double kk) 
       { 
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
 	
 	if (m_method_Pk=="EisensteinHu") 
 	  return pow(cosm.linear_growth_rate(m_redshift, kk),2)*cosm.Pk_UnNorm(kk, m_redshift, m_method_Pk)*pow(cosmobl::TopHat_WF(kk*m_rr),2);   
@@ -672,7 +448,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                  
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;           
       double m_n_spec;               
       double m_w0;
       double m_wa;  
@@ -686,15 +463,15 @@ namespace cosmobl {
       double m_redshift;
 
     public:
-      func_V2_Table (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, vector<double> lgkk, vector<double> lgPk, double rr, double redshift)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_lgkk(lgkk), m_lgPk(lgPk), m_rr(rr), m_redshift(redshift) {}  
+      func_V2_Table (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, vector<double> lgkk, vector<double> lgPk, double rr, double redshift)
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_lgkk(lgkk), m_lgPk(lgPk), m_rr(rr), m_redshift(redshift) {}  
   
       double operator() (double kk) 
       { 
 	double fact = (m_unit) ? 1. : m_hh;
 	double lgk = log10(kk/fact);
 
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
 
 	double lgPkK = cosmobl::interpolated(lgk, m_lgkk, m_lgPk, "Linear");
 
@@ -717,7 +494,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                  
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;           
       double m_n_spec;               
       double m_w0;
       double m_wa;   
@@ -731,12 +509,12 @@ namespace cosmobl {
       double m_redshift;
 
     public:
-      func_sigma2 (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, string method_Pk, double rr, double redshift)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_method_Pk(method_Pk), m_rr(rr), m_redshift(redshift) {}  
+      func_sigma2 (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, string method_Pk, double rr, double redshift)
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_method_Pk(method_Pk), m_rr(rr), m_redshift(redshift) {}  
 
       double operator() (double kk) 
       { 
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
     
 	if (m_method_Pk=="EisensteinHu") 
 	  return pow(cosm.linear_growth_rate(m_redshift, kk),2)*cosm.Pk_UnNorm(kk, m_redshift, m_method_Pk)*(1.-pow(cosmobl::TopHat_WF(kk*m_rr),2)); 
@@ -759,7 +537,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                  
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;           
       double m_n_spec;               
       double m_w0;
       double m_wa; 
@@ -773,15 +552,15 @@ namespace cosmobl {
       double m_redshift;
 
     public:
-      func_sigma2_Table (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, vector<double> lgkk, vector<double> lgPk, double rr, double redshift)
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_lgkk(lgkk), m_lgPk(lgPk), m_rr(rr), m_redshift(redshift) {}  
+      func_sigma2_Table (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, vector<double> lgkk, vector<double> lgPk, double rr, double redshift)
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_lgkk(lgkk), m_lgPk(lgPk), m_rr(rr), m_redshift(redshift) {}  
   
       double operator() (double kk) 
       { 
 	double fact = (m_unit) ? 1. : m_hh;
 	double lgk = log10(kk/fact);
 
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
  
 	double lgPkK = cosmobl::interpolated(lgk, m_lgkk, m_lgPk, "Linear");
 
@@ -804,7 +583,8 @@ namespace cosmobl {
       double m_Omega_DE;        
       double m_Omega_radiation;     
       double m_hh;                  
-      double m_scalar_amp;           
+      double m_scalar_amp;
+      double m_scalar_pivot;           
       double m_n_spec;               
       double m_w0;
       double m_wa;   
@@ -816,22 +596,23 @@ namespace cosmobl {
       bool m_angle_rad;
       double m_n_halo, m_Mmax, m_z_min, m_z_max, m_Area;
       string m_author_MF, m_method_SS, m_output_root;
+      double m_Delta;
       string m_interpType; 
-      int m_Num; 
-      double m_stepsize, m_kmax; 
-      string m_file_par;
-
+      double m_kmax; 
+      string m_input_file;
+      bool m_is_parameter_file;
+      
     public:
-       func_MhaloMin (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, double n_halo, double Area, bool angle_rad, double z_min, double z_max, double Mmax, string author_MF, string method_SS, string output_root, string interpType, int Num, double stepsize, double kmax, string file_par)  
-	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_angle_rad(angle_rad), m_n_halo(n_halo), m_Mmax(Mmax), m_z_min(z_min), m_z_max(z_max), m_Area(Area), m_author_MF(author_MF), m_method_SS(method_SS), m_output_root(output_root), m_interpType(interpType), m_Num(Num), m_stepsize(stepsize), m_kmax(kmax), m_file_par(file_par) {}
+      func_MhaloMin (double Omega_matter, double Omega_baryon, double Omega_neutrinos, double massless_neutrinos, int massive_neutrinos, double Omega_DE, double Omega_radiation, double hh, double scalar_amp, double scalar_pivot, double n_spec, double w0, double wa, double fNL, int type_NG, double tau, string model, bool unit, double n_halo, double Area, bool angle_rad, double z_min, double z_max, double Mmax, string author_MF, string method_SS, string output_root, const double Delta, string interpType, double kmax, string input_file, bool is_parameter_file)  
+	: m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit), m_angle_rad(angle_rad), m_n_halo(n_halo), m_Mmax(Mmax), m_z_min(z_min), m_z_max(z_max), m_Area(Area), m_author_MF(author_MF), m_method_SS(method_SS), m_output_root(output_root), m_Delta(Delta), m_interpType(interpType), m_kmax(kmax), m_input_file(input_file), m_is_parameter_file(is_parameter_file) {}
   
       double operator() (double lgMmin) 
       {
-	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
+	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
 
-	double Mmin = pow(10.,lgMmin);
+	double Mmin = pow(10., lgMmin);
 
-	double n_halo_expected = cosm.n_haloes(Mmin, m_Mmax, m_z_min, m_z_max, m_angle_rad, m_author_MF, m_method_SS, m_output_root, m_interpType, m_Num, m_stepsize, m_kmax, m_file_par)*m_Area;
+	double n_halo_expected = cosm.n_haloes(Mmin, m_Mmax, m_z_min, m_z_max, m_angle_rad, m_author_MF, m_method_SS, m_output_root, m_Delta, m_interpType, m_kmax, m_input_file, m_is_parameter_file)*m_Area;
    
 	return m_n_halo-n_halo_expected;
       }

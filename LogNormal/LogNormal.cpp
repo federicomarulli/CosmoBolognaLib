@@ -18,7 +18,8 @@
  *  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.       *
  *******************************************************************/
 
-/** @file LogNormal/LogNormal.cpp
+/** 
+ *  @file LogNormal/LogNormal.cpp
  *
  *  @brief Functions for the LogNormal data structure
  *

@@ -15,6 +15,9 @@ If you use the CosmoBolognaLib, please reference the code paper: @b
 CosmoBolognaLib: @b C++ @b libraries @b for @b cosmological @b
 calculations http://arxiv.org/abs/1511.00012
 
+The specific tools to analyse cosmic void catalogues are presented in
+https://arxiv.org/abs/1703.07848
+
 This is the full list of scientific publications that used the
 CosmoBolognaLib: <a href="../../Doc/papers.txt">publications</a>
 
@@ -27,12 +30,13 @@ Author and BDFL:
 
 Main contributors:
   - Michele Moresco (three-point correlation)
-  - Alfonso Veropalumbo (two-point angular correlation, jackknife and bootstrap, lognormal mocks, BAO modelling)
+  - Alfonso Veropalumbo (two-point angular correlation, clustering wedges, jackknife and bootstrap, lognormal mocks, BAO modelling, MCMC, etc.)
 
 Other contributors:
   - Carlo Cannarozzo (void detection)
   - Cosimo Fedeli (non-Gaussian cosmologies)
   - Carlo Giocoli (mass accretion history)
+  - Jacopo Neri (mass function)
   - Mauro Roncarelli (fast comoving distance estimates) 
   - Tommaso Ronconi (void number counts)
 

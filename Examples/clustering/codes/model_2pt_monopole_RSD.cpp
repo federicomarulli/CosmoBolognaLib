@@ -1,8 +1,8 @@
-// ================================================================================================================
-// Example code: how to model the monopole of the two-point correlation function to constrain f*sigma8 and b*sigma8
-// ================================================================================================================
+// ===============================================================================================
+// Example code: how to model the monopole of the two-point correlation function in redshift space
+// ===============================================================================================
 
-#include "Modelling_TwoPointCorrelation_monopole.h"
+#include "Modelling_TwoPointCorrelation1D_monopole.h"
 
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
@@ -57,42 +57,62 @@ int main () {
   
     // measure the 2D Cartesian two-point correlation function and estimate Poissonian errors
 
-    auto TwoP = cosmobl::twopt::TwoPointCorrelation::Create(cosmobl::twopt::TwoPType::_1D_monopole_, catalogue, random_catalogue, cosmobl::_linear_, rMin, rMax, nbins, shift);
+    auto TwoP = cosmobl::measure::twopt::TwoPointCorrelation::Create(cosmobl::measure::twopt::TwoPType::_1D_monopole_, catalogue, random_catalogue, cosmobl::_linear_, rMin, rMax, nbins, shift);
 
-    TwoP->measure(cosmobl::twopt::_Poisson_, dir);
+    TwoP->measure(cosmobl::measure::ErrorType::_Poisson_, dir);
     TwoP->write(dir, file);
-  
+
 
     // ----------------------------------------------------------------------------------------------------------------------------
     // ----------------- model the monopole two-point correlation function and estimate the f*sigma8 and b*sigma8 -----------------
+    // ----------------------- (f*sigma8 and b*sigma8 will be degenerate, if the prior is uniform for both) -----------------------
     // ----------------------------------------------------------------------------------------------------------------------------
 
-    cosmobl::modelling::Modelling_TwoPointCorrelation_monopole model_twop(TwoP); // object used for modelling
-  
-  
-    const vector<double> model_scales = cosmobl::linear_bin_vector(100, 0.1, 50.); // scales used in the fit
-    const double redshift = 1.; // mean redshift of the sample
-  
-    model_twop.set_parameters_xiDM(model_scales, cosmology, redshift); // set the model parameters
+    // object used for modelling
+    cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole model_twop(TwoP); 
 
+    // mean redshift of the sample
+    const double redshift = 1.; 
 
-    const cosmobl::statistics::Prior fsigma8_prior {cosmobl::statistics::PriorType::_UniformPrior_, 0., 2.}; // flat prior for the f*sigma8
-    const cosmobl::statistics::Prior bsigma8_prior {cosmobl::statistics::PriorType::_UniformPrior_, 1.2, 1.3}; // flat prior for the b*sigma8
+    // set the data used to construct the model
+    model_twop.set_data_model(cosmology, redshift);
   
-    model_twop.set_model_Kaiser(fsigma8_prior, bsigma8_prior); // set the priors 
+    // set the priors and the model
+    const cosmobl::statistics::Prior fsigma8_prior {cosmobl::glob::DistributionType::_UniformDistribution_, 0., 2.}; // flat prior for the f*sigma8
+    const cosmobl::statistics::Prior bsigma8_prior {cosmobl::glob::DistributionType::_UniformDistribution_, 0., 2.}; // flat prior for the b*sigma8
+    model_twop.set_model_Kaiser(fsigma8_prior, bsigma8_prior);
 
   
-    // sample the likelihood and store the chains
-  
-    const int nChains = 100; // number of chains
-    const int chain_size = 1000; // size of the chains
-    const string chain_file = "chain_monopole_fsigma8_bsigma8.dat";
+    // ----------------------------------------------------------------------
+    // ------------- run chains and write output chain and model ------------
+    // ----------------------------------------------------------------------
 
-    model_twop.sample_likelihood(10., 40., cosmobl::statistics::_GaussianLikelihood_Error_, nChains, chain_size, 32113, dir, chain_file); 
+    // minimum and maxium scales used in the fit
+    const double xmin = 10.;
+    const double xmax = 40.;
+    model_twop.set_fit_range(xmin, xmax);
 
+    const int chain_size = 10000; // the size the chain lenght
+    const int nwalkers = 200;     // the number of parallel walkers in the MCMC chains
+    const int seed = 4232;        // the base seed for initialization
+
+    // set the likelihood type
+    model_twop.set_likelihood(cosmobl::statistics::LikelihoodType::_GaussianLikelihood_Error_);
+
+    // sample the likelihood
+    model_twop.sample_likelihood(chain_size, nwalkers, seed);
+
+    const int burn_in = 100; // discard the first 100 chain steps 
+    const int thin = 10;     // take 1 step every 10
+
+    // write the results on screen 
+    model_twop.show_results(burn_in, thin, seed);
+
+    // store the results in file
+    model_twop.write_results(dir, "model_RSD", burn_in, thin, seed);
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; }
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

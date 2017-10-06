@@ -903,7 +903,55 @@ namespace cosmobl {
        *  @name Member functions used to handle object pairs (customized in all the derived classes) 
        */
       ///@{
-  
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
+       *  @param kk index of the pairs
+       *  @param wkk weight of the pair
+       *  @return none
+       */
+      virtual void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &kk, double &wkk)
+      { (void)obj1; (void)obj2; (void)kk; (void)wkk; cosmobl::ErrorCBL("Error in get() of Pair.h!"); }
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @return none
+       */
+      virtual void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww)
+      { (void)obj1; (void)obj2; (void)ir; (void)jr; (void)ww; cosmobl::ErrorCBL("Error in get() of Pair.h!"); }
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param kk index of the pairs
+       *  @param wkk weight of the pair
+       *  @param weight the weight of the region
+       *  @return none
+       */
+      virtual void set_pair (const int kk, const double wkk, const double weight=1)
+      { (void)kk; (void)wkk; (void)weight; cosmobl::ErrorCBL("Error in set() of Pair.h!"); }
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param ir the bin index in the first dimension
+       *  @param jr the bin index in the second dimension
+       *  @param ww weight of the pair
+       *  @param weight the weight of the region
+       *  @return none
+       */
+      virtual void set_pair (const int ir, const int jr, const double ww, const double weight=1)
+      { (void)ir; (void)jr; (void)ww; (void)weight; cosmobl::ErrorCBL("Error in set() of Pair.h!"); }
+
       /**
        *  @brief estimate the distance between two objects and update the
        *  pair vector accordingly

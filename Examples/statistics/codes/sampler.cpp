@@ -10,41 +10,53 @@
 string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
 
 
-double func (const vector<double> x)
+double func (vector<double> &x)
 {
   return -(100.*pow(x[1]-x[0]*x[0], 2)+pow(1.-x[0], 2))/20.;
 }
 
-
-double func2 (const vector<double> x)
+vector<vector<double>> starting_values(const int nwalkers, const vector<double> center, const double radius)
 {
-  double ff1 = 0.5*cosmobl::gaussian(x[0], NULL, {-4, 1, 1})*cosmobl::gaussian(x[1], NULL, {30, 0.5, 1});
-  double ff2 = 0.5*cosmobl::gaussian(x[0], NULL, {4, 1, 1})*cosmobl::gaussian(x[1], NULL, {30, 0.5, 1});
-  return log(ff1+ff2+0.1*exp(func(x)));
+  int npar = center.size();
+  vector<vector<double>> start(nwalkers, vector<double>(npar, 0));
+  cosmobl::random::NormalRandomNumbers ran(0, radius, 43213234, -100, 100);
+  for(int i=0; i<nwalkers;i++)
+    for(int j=0;j<npar;j++)
+      start[i][j] = center[j]+ran();
+  return start;
 }
 
 
 int main () {
-
-  int npar = 2;
-  int nchains = 1000;
-  int chain_size = 10000;
-  vector<double> start = {0, 0};
   
-  string dir_output = "../output/";
-  cosmobl::statistics::Sampler sampler(npar, &func2);
+  try {
 
-  // sample the likelihood
-  sampler.sample_stretch_move(nchains, chain_size, start, 1., 4314234, 2);
+    int npar = 2;
+    int nwalkers = 1000;
+    int chain_size = 10000;
 
-  // write the chain output
-  sampler.write_chain(dir_output, "chain.dat", 100, nchains, 10);
-
-  // sample the likelihood in parallel
-  sampler.sample_stretch_move_parallel(nchains, chain_size, start, 1.e-4, 4314234, 2);
+    double radius = 1.e-3;
+    vector<double> center= {0,0};
+    vector<vector<double>> start = starting_values(nwalkers, center, radius);
   
-  // write the chain output
-  sampler.write_chain(dir_output, "chain_parallel.dat", 100, nchains, 10);
+    string dir_output = "../output/";
+    cosmobl::statistics::Sampler sampler(npar, &func);
+
+    // sample the likelihood
+    sampler.sample_stretch_move(chain_size, nwalkers, start, 4314234, 2);
+
+    // write the chain output
+    sampler.write_chain(dir_output, "chain.dat", 100, 10);
+
+    // sample the likelihood in parallel
+    sampler.sample_stretch_move_parallel(chain_size, nwalkers, start, 4314234, 2);
+  
+    // write the chain output
+    sampler.write_chain(dir_output, "chain_parallel.dat", 100, 10);
+
+  }
+
+  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
 
   return 0;
 }

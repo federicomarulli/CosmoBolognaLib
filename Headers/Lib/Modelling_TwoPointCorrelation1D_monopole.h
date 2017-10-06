@@ -1,0 +1,696 @@
+/********************************************************************
+ *  Copyright (C) 2016 by Federico Marulli and Alfonso Veropalumbo  *
+ *  federico.marulli3@unibo.it                                      *
+ *                                                                  *
+ *  This program is free software; you can redistribute it and/or   *
+ *  modify it under the terms of the GNU General Public License as  *
+ *  published by the Free Software Foundation; either version 2 of  * 
+ *  the License, or (at your option) any later version.             *
+ *                                                                  *
+ *  This program is distributed in the hope that it will be useful, *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   *
+ *  GNU General Public License for more details.                    *
+ *                                                                  *
+ *  You should have received a copy of the GNU General Public       *
+ *  License along with this program; if not, write to the Free      *
+ *  Software Foundation, Inc.,                                      *
+ *  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.       *
+ ********************************************************************/
+
+/**
+ *  @file Headers/Lib/Modelling_TwoPointCorrelation1D_monopole.h
+ *
+ *  @brief The class Modelling_TwoPointCorrelation1D_monopole
+ *
+ *  This file defines the interface of the class
+ *  Modelling_TwoPointCorrelation1D_monopole, used to model the monopole
+ *  of two-point correlation function
+ *
+ *  @author Federico Marulli, Alfonso Veropalumbo
+ *
+ *  @author federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
+ */
+
+#ifndef __MODELLINGTWOPOINTMON__
+#define __MODELLINGTWOPOINTMON__
+
+
+#include "Modelling_TwoPointCorrelation1D.h"
+#include "ModelFunction_TwoPointCorrelation1D_monopole.h"
+
+
+// ===================================================================================================
+
+
+namespace cosmobl {
+
+  namespace modelling {
+
+    namespace twopt {
+      
+      /**
+       *  @class Modelling_TwoPointCorrelation1D_monopole
+       *  Modelling_TwoPointCorrelation1D_monopole.h
+       *  "Headers/Lib/Modelling_TwoPointCorrelation1D_monopole.h"
+       *
+       *  @brief The class Modelling_TwoPointCorrelation1D_monopole
+       *
+       *  This file defines the interface of the base class
+       *  Modelling_TwoPointCorrelation1D_monopole, used for modelling the
+       *  monopole of two-point correlation function
+       *
+       */
+      class Modelling_TwoPointCorrelation1D_monopole : public Modelling_TwoPointCorrelation1D {
+
+      protected:
+
+	/**
+	 *  @name free parameters to model the two-point correlation function
+	 */
+	///@{
+	
+	/// redshift error
+	shared_ptr<statistics::Parameter> m_sigmaz;
+
+	/// polynomial coefficients
+	vector<shared_ptr<statistics::Parameter>> m_polynomial;
+
+	///@}
+
+	
+      public:
+
+	/**
+	 *  @name Constructors/destructors
+	 */
+	///@{
+
+	/**
+	 *  @brief default constuctor
+	 *  @return object of class
+	 *  Modelling_TwoPointCorrelation1D_monopole
+	 */
+	Modelling_TwoPointCorrelation1D_monopole () = default;
+
+	/**
+	 *  @brief constructor
+	 *  
+	 *  @param twop the two-point correlation function to model
+	 *
+	 *  @return object of type
+	 *  Modelling_TwoPointCorrelation1D_monopole
+	 */
+	Modelling_TwoPointCorrelation1D_monopole (const shared_ptr<cosmobl::measure::twopt::TwoPointCorrelation> twop)
+	  : Modelling_TwoPointCorrelation1D(twop) {}
+
+	/**
+	 *  @brief constructor
+	 *  
+	 *  @param twop_dataset the dataset containing the two-point
+	 *  correlation function to model
+	 *
+	 *  @return object of type
+	 *  Modelling_TwoPointCorrelation1D_monopole
+	 */
+	Modelling_TwoPointCorrelation1D_monopole (const shared_ptr<data::Data> twop_dataset)
+	  : Modelling_TwoPointCorrelation1D() { set_data(twop_dataset); }
+
+	/**
+	 *  @brief default destructor
+	 *  @return none
+	 */
+	virtual ~Modelling_TwoPointCorrelation1D_monopole () = default;
+
+	///@}
+	
+
+	/**
+	 *  @name Member functions used to set the model parameters
+	 */
+	///@{
+
+	/**
+	 *  @brief set the fiducial model for the dark matter
+	 *  two-point correlation function and associated quantities
+	 *
+	 *  @return none
+	 */
+	void set_fiducial_xiDM ();
+
+	/**
+	 *  @brief set the fiducial model for the dark matter power
+	 *  spectrum
+	 *
+	 *  @return none
+	 */
+	void set_fiducial_PkDM ();
+		
+	/**
+	 *  @brief set the fiducial model for the variance
+	 *  \f$\sigma(M)\f$ 
+	 *  @return none
+	 */
+	void set_fiducial_sigma_data_model ();
+
+	/**
+	 *  @brief set the fiducial model for the variance
+	 *  \f$\sigma(M)\f$ and its derivative \f$d\ln\sigma(M)/d\ln
+	 *  M\f$
+	 *
+	 *  @return none
+	 */
+	void set_fiducial_sigma ();
+
+	void set_bias_eff_grid (const vector<cosmobl::cosmology::CosmoPar> cosmoPars, const vector<double> min_pars, const vector<double> max_pars, const vector<int> nbins_pars, const string dir, const string file_grid_bias);
+
+	/**
+	 *  @brief set the parameters used to model the full shape of
+	 *  the monopole of the two-point correlation function
+	 *
+	 *  the model is the following:
+	 *
+	 *  \f[\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3}
+	 *  f\sigma_8 \cdot b\sigma_8 + \frac{1}{5}(f\sigma_8)^2
+	 *  \right] \cdot \xi_{\rm DM}(\alpha\cdot s)/\sigma_8^2 +
+	 *  \sum_{i=0}^N \frac{A_i}{r^{i}}\f]
+	 *
+	 *  the model has 3+N parameters: 
+	 *    - \f$\alpha\f$
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$A_i\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @param alpha_prior prior for the parameter \f$\alpha\f$
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param polynomial_prior vector containing the priors
+	 *  for the polynomial part: order of the polynomial is
+	 *  the size of the vector \f$-1\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_linear (const statistics::Prior alpha_prior, const statistics::Prior fsigma8_prior, const statistics::Prior bsigma8_prior, const vector<statistics::Prior> polynomial_prior);
+
+	/**
+	 *  @brief set the parameters used to model the full shape of
+	 *  the monopole of the two-point correlation function
+	 *
+	 *  the model is the following:
+	 *
+	 *  \f[\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3}
+	 *  f\sigma_8 \cdot b\sigma_8 + \frac{1}{5}(f\sigma_8)^2
+	 *  \right] \cdot \xi_{\rm DM}(\alpha\cdot s)/\sigma_8^2 +
+	 *  \sum_{i=0}^N \frac{A_i}{r^{i}}\f]
+	 *
+	 *  the model has 3+N parameters: 
+	 *    - \f$\alpha\f$
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$A_i\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @param alpha_prior prior for the parameter \f$\alpha\f$
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param polynomial_prior vector containing the priors
+	 *  for the polynomial part: order of the polynomial is
+	 *  the size of the vector \f$-1\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_linear_LinearPoint (const statistics::Prior alpha_prior, const statistics::Prior fsigma8_prior, const statistics::Prior bsigma8_prior, const vector<statistics::Prior> polynomial_prior);
+
+	/**
+	 *  @brief set the parameters used to model the full shape
+	 *  of the monopole of the two-point correlation function as
+	 *  a polynomial
+	 *
+	 *  @param polynomial_prior vector containing the priors
+	 *  for the polynomial part: order of the polynomial is
+	 *  the size of the vector \f$-1\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_polynomial_LinearPoint (const vector<statistics::Prior> polynomial_prior);
+
+	/**
+	 *  @brief set the parameters to model the monopole of the
+	 *  two-point correlation function in redshift space
+	 * 
+	 *  redshift-space distorsions are modelled in the Kaiser
+	 *  limit, that is neglecting non-linearities in dynamics
+	 *  and bias; specifically, the model considered is the
+	 *  following:
+	 *  
+	 *  \f[\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3} f\sigma_8
+	 *  \cdot b\sigma_8 + \frac{1}{5}(f\sigma_8)^2 \right] \cdot
+	 *  \xi_{\rm DM}(s)/\sigma_8^2\f]
+	 * 
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_Kaiser (const statistics::Prior fsigma8_prior={}, const statistics::Prior bsigma8_prior={});
+
+	/**
+	 *  @brief set the parameters to model the monopole of the
+	 *  two-point correlation function in redshift space
+	 * 
+	 *  redshift-space distorsions are modelled in the Kaiser
+	 *  limit, that is neglecting non-linearities in dynamics
+	 *  and bias; specifically, the model considered is the
+	 *  following:
+	 *         
+	 *  \f[\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3}
+	 *  f(z)\sigma_8(z) \cdot b(z)\sigma_8(z) +
+	 *  \frac{1}{5}(f(z)^2\sigma_8(z)^2) \right] \cdot \xi_{\rm
+	 *  DM}(s)\frac{\sigma_8^2}{\sigma_8^2(z)} \f]
+	 *
+	 *  @param sigma8_prior prior for the parameter
+	 *  \f$\sigma_8(z)\f$
+	 *
+	 *  @param bias_prior prior for the parameter bias
+	 *  \f$b(z)\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_sigma8_bias (const statistics::Prior sigma8_prior={}, const statistics::Prior bias_prior={});
+	
+	/**
+	 *  @brief set the parameters used to model the full shape
+	 *  of the monopole of the two-point correlation function
+	 *
+	 *  the model is the following:
+	 *
+	 *  \f[\xi_0(s) = \left[ b^2 + \frac{2}{3}f \cdot b +
+	 *  \frac{1}{5}f^2 \right] \cdot \xi_{\rm
+	 *  DM}\left(\frac{D_V(z)}{D_V^{fid}(z)}\cdot s\right) \f]
+	 *
+	 *  the model has 1+N parameters: 
+	 *    - bias
+	 *    - cosmological paramters
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @param bias_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param cosmo_param_prior vector containing the priors for
+	 *  the cosmological parameters
+	 *
+	 *  @return none
+	 */
+	void set_model_linear_bias_cosmology (const statistics::Prior bias_prior={}, const vector<cosmobl::cosmology::CosmoPar> cosmo_param={}, const vector<statistics::Prior> cosmo_param_prior={});
+	
+        /**
+	 *  @brief set the parameters used to model the full shape of
+	 *  the monopole of the two-point correlation function with
+	 *  cluster masses provided in input, with only \f$sigma_8\f$
+	 *  as a free parameter
+	 *
+	 *  the model is the following:
+	 *
+	 *  \f[\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3} f\sigma_8
+	 *  \cdot b\sigma_8 + \frac{1}{5}(f\sigma_8)^2 \right] \cdot
+	 *  \xi_{\rm DM}(s)/\sigma_8^2\f]
+	 *
+	 *  the model has 1 parameter: \f$sigma_8\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters; the linear
+	 *  effective bias is computed for each cosmology using the
+	 *  provided halo masses by cosmobl::cosmology::bias_eff
+	 *	 
+	 *
+	 *  @param sigma8_prior prior for the parameter
+	 *  \f$\sigma_8(z)\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_linear_sigma8_clusters (const statistics::Prior sigma8_prior={});
+
+	/**
+	 *  @brief set the parameters used to model the full shape of
+	 *  the monopole of the two-point correlation function with
+	 *  cluster masses provided in input, with only \f$sigma_8\f$
+	 *  as a free parameter
+	 *
+	 *  the model is the following:
+	 *
+	 *  \f[\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3} f\sigma_8
+	 *  \cdot b\sigma_8 + \frac{1}{5}(f\sigma_8)^2 \right] \cdot
+	 *  \xi_{\rm DM}(s)/\sigma_8^2\f]
+	 *
+	 *  the model has 1 cosmological parameter
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters; the linear
+	 *  effective bias is computed for each cosmology using the
+	 *  provided halo masses by cosmobl::cosmology::bias_eff
+	 *
+	 *  @param cosmo_param the cosmological
+	 *  parameter
+	 *
+	 *  @param cosmo_param_prior the prior for
+	 *  the cosmological parameter 
+	 *
+	 *  @param dir the directory where is the grid
+	 *  of effective bias is stored
+	 *
+	 *  @param file_grid_bias the file where is the grid
+	 *  of effective bias is stored
+	 *
+	 *  @param min_par the minimum value for the
+	 *  parameter where the effective bias is computed
+	 *  
+	 *  @param max_par the maximum value for the
+	 *  parameter where the effective bias is computed
+	 *
+	 *  @param nbins_par the number of points for the
+	 *  parameter where the effective bias is computed
+	 *
+	 *  @return none
+	 */
+	void set_model_linear_cosmology_clusters_grid (const cosmobl::cosmology::CosmoPar cosmoPar, const statistics::Prior cosmo_param_prior, const string dir, const string file_grid_bias, const double min_par, const double max_par, const int nbins_par);
+		
+	/**
+	 *  @brief set the parameters used to model the full shape of
+	 *  the monopole of the two-point correlation function with
+	 *  cluster masses provided in input, with only \f$sigma_8\f$
+	 *  as a free parameter
+	 *
+	 *  the model is the following:
+	 *
+	 *  \f[\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3} f\sigma_8
+	 *  \cdot b\sigma_8 + \frac{1}{5}(f\sigma_8)^2 \right] \cdot
+	 *  \xi_{\rm DM}(s)/\sigma_8^2\f]
+	 *
+	 *  the model has 2 cosmological parameter
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters; the linear
+	 *  effective bias is computed for each cosmology using the
+	 *  provided halo masses by cosmobl::cosmology::bias_eff
+	 *
+	 *  @param cosmo_param1 the first cosmological
+	 *  parameter
+	 *
+	 *  @param cosmo_param_prior1 the prior for
+	 *  the first cosmological parameter 
+	 *
+	 *  @param cosmo_param2 the second cosmological
+	 *  parameter
+	 *
+	 *  @param cosmo_param_prior2 the prior for
+	 *  the second cosmological parameter 
+	 *
+	 *  @param dir the directory where is the grid
+	 *  of effective bias is stored
+	 *
+	 *  @param file_grid_bias the file where is the grid
+	 *  of effective bias is stored
+	 *
+	 *  @param min_par1 the minimum value for the first
+	 *  parameter where the effective bias is computed
+	 *  
+	 *  @param max_par1 the maximum value for the first
+	 *  parameter where the effective bias is computed
+	 *
+	 *  @param nbins_par1 the number of points for the first
+	 *  parameter where the effective bias is computed
+	 *
+	 *  @param min_par2 the minimum value for the second
+	 *  parameter where the effective bias is computed
+	 *  
+	 *  @param max_par2 the maximum value for the second
+	 *  parameter where the effective bias is computed
+	 *
+	 *  @param nbins_par2 the number of points for the second
+	 *  parameter where the effective bias is computed
+	 *
+	 *  @return none
+	 */
+	void set_model_linear_cosmology_clusters_grid (const cosmobl::cosmology::CosmoPar cosmoPar1, const statistics::Prior cosmo_param_prior1, const cosmobl::cosmology::CosmoPar cosmoPar2, const statistics::Prior cosmo_param_prior2, const string dir, const string file_grid_bias, const double min_par1, const double max_par1, const int nbins_par1, const double min_par2, const double max_par2, const int nbins_par2);
+	
+	/**
+	 *  @brief set the parameters used to model the full shape of
+	 *  the monopole of the two-point correlation function with
+	 *  cluster masses provided in input
+	 *
+	 *  the model is the following:
+	 *
+	 *  \f[\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3} f\sigma_8
+	 *  \cdot b\sigma_8 + \frac{1}{5}(f\sigma_8)^2 \right] \cdot
+	 *  \xi_{\rm DM}(s)/\sigma_8^2\f]
+	 *
+	 *  the model has N cosmological parameters
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters; the linear
+	 *  effective bias is computed for each cosmology using the
+	 *  provided halo masses by cosmobl::cosmology::bias_eff
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param cosmo_param_prior vector containing the priors for
+	 *  the cosmological parameters
+	 *
+	 *  @return none
+	 */
+	void set_model_linear_cosmology_clusters (const vector<cosmobl::cosmology::CosmoPar> cosmo_param={}, const vector<statistics::Prior> cosmo_param_prior={});
+	
+	/**
+	 *  @brief set the parameter to model the monopole of the
+	 *  two-point correlation function in real space, taking into
+	 *  accout geometric distortions (that is the Alcock-Paczynski
+	 *  effect), and using a second order polynomial
+	 *
+	 *  the model used is the following:
+	 *
+	 *  \f[\xi(s)= b^2 \xi_{DM}(\alpha s)\ + A_0 + A_1/s
+	 *  +A_2/s^2\f]
+	 *
+	 *  where \f$\xi_{DM}\f$ is computed at the fiducial (fixed)
+	 *  cosmology, and {\f$b\sigma_8\f$, \f$A_0\f$, \f$A_1\f$,
+	 *  \f$A_2\f$} are considered as nuisance parameters
+	 *
+	 *  @param alpha_prior prior for the parameter \f$\alpha\f$
+	 *
+	 *  @param BB_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param A0_prior prior for the parameter \f$A_0\f$
+	 *
+	 *  @param A1_prior prior for the parameter \f$A_1\f$
+	 *
+	 *  @param A2_prior prior for the parameter \f$A_2\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_BAO (const statistics::Prior alpha_prior={}, const statistics::Prior BB_prior={}, const statistics::Prior A0_prior={}, const statistics::Prior A1_prior={}, const statistics::Prior A2_prior={});
+
+	/**
+	 *  @brief set the parameter to model the monopole of the
+	 *  two-point correlation function in real space, taking into
+	 *  accout geometric distortions (that is the Alcock-Paczynski
+	 *  effect), and using a second order polynomial
+	 *
+	 *  the model used is the following:
+	 *
+	 *  \f[\xi(s)= b^2 \xi_{DM}(\alpha s, \Sigma_{NL})\ + A_0 + A_1/s
+	 *  +A_2/s^2\f]
+	 *
+	 *  where \f$\xi_{DM}\f$ is computed at the fiducial (fixed)
+	 *  cosmology, with damping of the BAO peak
+	 *
+	 *  @param sigmaNL_prior prior for the parameter \f$\Sigma_{NL}\f$
+	 *
+	 *  @param alpha_prior prior for the parameter \f$\alpha\f$
+	 *
+	 *  @param BB_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param A0_prior prior for the parameter \f$A_0\f$
+	 *
+	 *  @param A1_prior prior for the parameter \f$A_1\f$
+	 *
+	 *  @param A2_prior prior for the parameter \f$A_2\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_BAO_sigmaNL (const statistics::Prior sigmaNL_prior={}, const statistics::Prior alpha_prior={}, const statistics::Prior BB_prior={}, const statistics::Prior A0_prior={}, const statistics::Prior A1_prior={}, const statistics::Prior A2_prior={});
+
+	/**
+	 *  @brief set the parameter to model the monopole of the
+	 *  two-point correlation function in real space, taking into
+	 *  accout geometric distortions (that is the Alcock-Paczynski
+	 *  effect), and using a second order polynomial
+	 *
+	 *  the model used is the following:
+	 *
+	 *  \f[\xi(s)= b^2 \xi_{DM}(\alpha s)\ + A_0 + A_1/s
+	 *  +A_2/s^2\f]
+	 *
+	 *  where \f$\xi_{DM}\f$ is computed at the fiducial (fixed)
+	 *  cosmology, and {\f$b\sigma_8\f$, \f$A_0\f$, \f$A_1\f$,
+	 *  \f$A_2\f$} are considered as nuisance parameters
+	 *
+	 *  @param alpha_prior prior for the parameter \f$\alpha\f$
+	 *
+	 *  @param BB_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param A0_prior prior for the parameter \f$A_0\f$
+	 *
+	 *  @param A1_prior prior for the parameter \f$A_1\f$
+	 *
+	 *  @param A2_prior prior for the parameter \f$A_2\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_BAO_LinearPoint (const statistics::Prior alpha_prior={}, const statistics::Prior BB_prior={}, const statistics::Prior A0_prior={}, const statistics::Prior A1_prior={}, const statistics::Prior A2_prior={});
+
+	/**
+	 *  @brief set the HOD parameters used to model the full shape
+	 *  of the monopole of the two-point correlation function
+	 *
+	 *  the HOD model for \f$\xi(r)\f$ is the one implemented by
+	 *  cosmobl::modelling::twopt::xi_HOD
+	 *
+	 *  the model has 5 free parameters:
+	 *
+	 *  - \f$M_{min}\f$: the mass scale at which 50% of haloes
+	 *   host a satellite galaxy
+	 *
+	 *  - \f$\sigma_{\log M_h}\f$: transition width reflecting
+	 *   the scatter in the luminosity-halo mass relation
+	 *
+	 *  - \f$M_0\f$: the cutoff mass
+	 *
+	 *  - \f$M_1\f$: the amplitude of the power law
+	 *
+	 *  - \f$\alpha\f$: the slope of the power law
+	 *
+	 *  @param Mmin_value if Mmin_value>par::defaultDouble then
+	 *  the \f$M_{min}\f$ value is fixed at Mmin_value
+	 *
+	 *  @param Mmin_prior \f$M_{min}\f$ prior
+	 *
+	 *  @param sigmalgM_value if
+	 *  sigmalgM_value>par::defaultDouble then the
+	 *  \f$\sigma_{\log M_h}\f$ value is fixed at sigmalgM_value
+	 *
+	 *  @param sigmalgM_prior \f$\sigma_{\log M_h}\f$ prior
+	 *
+	 *  @param M0_value if M0_value>par::defaultDouble then the
+	 *  \f$M_0\f$ value is fixed at M0_value
+	 *
+	 *  @param M0_prior \f$M_0\f$ prior
+	 *
+	 *  @param M1_value if M1_value>par::defaultDouble then the
+	 *  \f$M_1\f$ value is fixed at M1_value
+	 *
+	 *  @param M1_prior \f$\alpha\f$ prior
+	 *
+	 *  @param alpha_value if alpha_value>par::defaultDouble
+	 *  then the \f$\alpha\f$ value is fixed at alpha_value
+	 *
+	 *  @param alpha_prior \f$\alpha\f$ prior
+	 *
+	 *  @return none
+	 */
+	void set_model_HOD (const statistics::Prior Mmin_prior={}, const statistics::Prior sigmalgM_prior={}, const statistics::Prior M0_prior={}, const statistics::Prior M1_prior={}, const statistics::Prior alpha_prior={});
+
+	/**
+	 *  @brief set the parameters to model the monopole of the
+	 *  two-point correlation function in redshift space
+	 * 
+	 *  redshift-space distorsions are modelled in the Kaiser
+	 *  limit, that is neglecting non-linearities in dynamics
+	 *  and bias; specifically, the model considered is the
+	 *  following:
+	 * 
+	 *  \f$\xi(s) = b^2 \xi'(s) + b \xi''(s) + \xi'''(s) \, ;\f$
+	 *
+	 *  where b is the linear bias and the terms \f$\xi'(s)\f$,
+	 *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are
+	 *  the Fourier anti-transform of the power spectrum terms
+	 *  obtained integrating the redshift space 2D power spectrum
+	 *  along \f$\mu\f$ (see cosmobl::modelling::twopt.:damped_Pk_terms).
+	 *
+	 *  @param bias_prior prior for the parameter bias
+	 *  \f$b(z)\f$
+	 *
+	 *  @param sigmaz_prior prior for the parameter
+	 *  \f$\sigma_z(z)\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_bias_sigmaz (const statistics::Prior bias_prior={}, const statistics::Prior sigmaz_prior={});
+
+	/**
+	 *  @brief set the parameters to model the monopole of the
+	 *  two-point correlation function in redshift space
+	 * 
+	 *  redshift-space distorsions are modelled in the Kaiser
+	 *  limit, that is neglecting non-linearities in dynamics
+	 *  and bias; specifically, the model considered is the
+	 *  following:
+	 * 
+	 *  \f$\xi(s) = b^2 \xi'(s) + b \xi''(s) + \xi'''(s) \, ;\f$
+	 *
+	 *  where b is the linear bias and the terms \f$\xi'(s)\f$,
+	 *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are
+	 *  the Fourier anti-transform of the power spectrum terms
+	 *  obtained integrating the redshift space 2D power spectrum
+	 *  along \f$\mu\f$ (see cosmobl::modelling::twopt.:damped_Pk_terms).
+	 *
+	 *  @param M0_prior prior for the parameter \f$M_0\f$, the intercept
+	 *  of the scaling relation
+	 *
+	 *  @param slope_prior prior for the slope of the scaling relation
+	 *
+	 *  @param scatter prior for the scatter of the scaling relatino
+	 *
+	 *  @param sigmaz_prior prior for the parameter
+	 *  \f$\sigma_z(z)\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_scaling_relation_sigmaz (const statistics::Prior M0_prior={}, const statistics::Prior slope_prior={}, const statistics::Prior scatter_prior={}, const statistics::Prior sigmaz_prior={});
+
+	void set_model_linear_cosmology_cluster_selection_function (const statistics::Prior alpha_prior, const vector<cosmobl::cosmology::CosmoPar> cosmo_param, const vector<statistics::Prior> cosmo_param_prior);
+
+	///@}
+
+      };
+    }
+  }
+}
+
+#endif
