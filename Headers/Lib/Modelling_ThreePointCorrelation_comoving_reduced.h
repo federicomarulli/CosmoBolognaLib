@@ -29,9 +29,9 @@
  *  all the methods to model the connected three-point correlation
  *  function in angular coordinates
  *
- *  @author Federico Marulli
+ *  @author Federico Marulli, Michele Moresco
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unbo.it, michele.moresco@unibo.it
  */
 
 #ifndef __MODELLINGTHREEPOINTCOMRED__
@@ -114,58 +114,49 @@ namespace cosmobl {
 	///@}
 
 	/**
-	 *  @brief set the parameters used to model the full shape
-	 *  of the monopole of the two-point correlation function
+	 *  @brief set the parameters used to model the reduced
+	 *  three-point correlation function in comoving coordinates
 	 *
-	 *  the model is the following:
+	 *  @param bias1_prior prior for the parameter \f$\b_1\f$
 	 *
-	 *  \f[\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3}
-	 *  f\sigma_8 \cdot b\sigma_8 + \frac{1}{5}(f\sigma_8)^2
-	 *  \right] \cdot \xi_{\rm DM}(\alpha\cdot s)/\sigma_8^2 +
-	 *  \sum_{i=0}^N \frac{A_i}{r^{i}}\f]
-	 *
-	 *  the model has 3+N parameters: 
-	 *    - \f$\alpha\f$
-	 *    - \f$f(z)\sigma_8(z)\f$
-	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$A_i\f$
-	 *
-	 *  the dark matter two-point correlation function is computed
-	 *  using the input cosmological parameters
-	 *
-	 *  @param alpha_value if alpha_value>par::defaultDouble
-	 *  then the \f$\alpha\f$ value is fixed at alpha_value
-	 *
-	 *  @param alpha_prior prior for the parameter \f$\alpha\f$
-	 *
-	 *  @param fsigma8_value if fsigma8_value>par::defaultDouble
-	 *  then the \f$f\sigma_8\f$ value is fixed at fsigma8_value
-	 *
-	 *  @param fsigma8_prior prior for the parameter
-	 *  \f$f(z)\sigma_8(z)\f$
-	 *
-	 *  @param bsigma8_value if bsigma8_value>par::defaultDouble
-	 *  then the \f$b\sigma_8\f$ value is fixed at bsigma8_value
-	 *
-	 *  @param bsigma8_prior prior for the parameter
-	 *  \f$b(z)\sigma_8(z)\f$
-	 *
-	 *  @param polynomial_value if
-	 *  polynomial_value_value[i]>par::defaultDouble then the
-	 *  the polynomial values are fixed at polynomial_value[i]
-	 *
-	 *  @param polynomial_prior vector containing the priors
-	 *  for the polynomial part: the order of the polynomial is
-	 *  the size of the vector \f$-1\f$
-	 *
-	 *  @param compute_xiDM true \f$rightarrow\f$ compute the
-	 *  fiducial model of the dark matter correlation function
+	 *  @param bias2_prior prior for the parameter \f$\b_2\f$
 	 *
 	 *  @return none
 	 */
 	void set_model_nonlinear_localbias (const statistics::Prior bias1_prior={}, const statistics::Prior bias2_prior={});
 
-      
+	/**
+	 *  @brief set the parameters used to model the reduced
+	 *  three-point correlation function in comoving coordinates
+	 *  with non-local contributions
+	 *
+	 *  @param bias1_prior prior for the parameter \f$\b_1\f$
+	 *
+	 *  @param bias2_prior prior for the parameter \f$\b_2\f$
+	 *
+	 *  @param g2_prior prior for the parameter \f$\g_2\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_nonlinear_nonlocalbias (const statistics::Prior bias1_prior={}, const statistics::Prior bias2_prior={}, const statistics::Prior g2_prior={});
+
+	/**
+	 *  @brief set the parameters used to model the reduced
+	 *  three-point correlation function in comoving coordinates
+	 *  with non-local contributions
+	 *
+	 *  @param bias1_prior prior for the parameter \f$\b_1\f$
+	 *
+	 *  @param bias2_prior prior for the parameter \f$\b_2\f$
+	 *
+	 *  @param g2_prior prior for the parameter \f$\g_2\f$
+	 *
+	 *  @param alpha_prior prior for the parameter \f$\alpha\f$
+	 *
+	 *  @return none
+	 */
+	void set_model_nonlinear_nonlocalbias_alpha (const statistics::Prior bias1_prior={}, const statistics::Prior bias2_prior={}, const statistics::Prior g2_prior={}, const statistics::Prior alpha_prior={});
+
       };
     }
   }

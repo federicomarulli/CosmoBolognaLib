@@ -181,14 +181,20 @@ namespace cosmobl {
     
       /**
        *  @brief generate the LogNormal mock catalogues
+       *
        *  @param rmin the cell size in comoving coordinates
        *  @param dir the output directory
+       *      
        *  @param start the starting index of the mock to be created
+       * 
        *  @param filename the prefix of the ouput file containing the
        *  LogNormal realizations
+       *
+       *  @param seed the seed for random number generation
+       *
        *  @return none
        */
-      void generate_LogNormal_mock (const double, const string, const int start=0, const string filename="lognormal_");
+      void generate_LogNormal_mock (const double, const string, const int start=0, const string filename="lognormal_", const int seed=3213);
     
     };
 

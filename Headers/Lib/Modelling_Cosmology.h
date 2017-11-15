@@ -47,7 +47,14 @@ namespace cosmobl {
 
   namespace modelling {
 
-    namespace cosmology{
+    /**
+     *  @brief The namespace of the <B> modelling of cosmological data
+     *  </B>
+     *  
+     *  The \e modelling::cosmology namespace contains all the
+     *  functions and classes to model cosmological data
+     */
+    namespace cosmology {
 
       /**
        *  @class Modelling_Cosmology Modelling_Cosmology.h
@@ -89,7 +96,14 @@ namespace cosmobl {
 	  Modelling_Cosmology () {}
 
 	  /**
-	   *  @brief default constuctor
+	   *  @brief constuctor
+	   *
+	   *  @param dataset the dataset containing the input
+	   *  measurements to be modelled
+	   *
+	   *  @param data_type the type of cosmological measurements
+	   *  to be modelled
+	   *
 	   *  @return object of class Modelling
 	   */
 	  Modelling_Cosmology (const shared_ptr<cosmobl::data::Data> dataset, const vector<string> data_type);
@@ -130,7 +144,7 @@ namespace cosmobl {
 	   *
 	   *  @param distance_prior the CMB distance prior name
 	   *
-	   *  @param external dataest external dataset file name
+	   *  @param external_dataset external dataset file name
 	   * 
 	   *  @return none
 	   */

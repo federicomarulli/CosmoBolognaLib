@@ -395,12 +395,12 @@ shared_ptr<Data> cosmobl::measure::twopt::TwoPointCorrelation2D::correlation_Lan
 
   // inverse of the total number of data-random pairs
   double nDRi = 1./(nDw*nRw);
-  
+
   for (int i=0; i<dd->nbins_D1(); i++) {
     scale_D1[i] = dd->scale_D1(i);
     for (int j=0; j<dd->nbins_D2(); j++) {
       scale_D2[j] = dd->scale_D2(j);
-
+      
       xi[i][j] = -1.;
       error[i][j] = 1000.;
 
@@ -427,7 +427,7 @@ shared_ptr<Data> cosmobl::measure::twopt::TwoPointCorrelation2D::correlation_Lan
       }
     }
   }
-
+  
   return (!m_compute_extra_info) ? move(unique_ptr<Data2D>(new Data2D(scale_D1, scale_D2, xi, error))) : data_with_extra_info(dd, scale_D1, scale_D2, xi, error);
 }
 
@@ -539,7 +539,7 @@ vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiJackk
 // ============================================================================
 
 
-vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
+vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -554,8 +554,8 @@ vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBoots
     nRandom_reg_weighted.push_back(m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
   }
 
-  uniform_int_distribution<int> uni(0, nRegions-1);
-  default_random_engine rng;
+  random::UniformRandomNumbers ran(0., nRegions-1, seed);
+  
   int val = 2; // see Norberg et al. 2009
 
   for (int i=0; i<nMocks; i++) {
@@ -569,7 +569,7 @@ vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBoots
     
     vector<int> w(nRegions, 0);
     for (size_t n=0; n<val*nRegions; n++)
-      w[uni(rng)] +=1;
+      w[ran()] ++;
 
     for (size_t j=0; j<nRegions; j++) {
       nData_SS += w[j]*nData_reg[j];
@@ -599,7 +599,7 @@ vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBoots
 // ============================================================================
 
 
-vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
+vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -614,12 +614,13 @@ vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBoots
     nRandom_reg_weighted.push_back(m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
   }
 
-  uniform_int_distribution<int> uni(0, nRegions-1);
-  default_random_engine rng;
+  random::UniformRandomNumbers ran(0., nRegions-1, seed);
+  
   int val = 2; // see Norberg et al. 2009
 
   int nbins_D1 = m_dd->nbins_D1();
   int nbins_D2 = m_dd->nbins_D2();
+  
   for (int i=0; i<nMocks; i++) {
 
     coutCBL << "analysing mock: " << i << " of " << nMocks << "\r"; cout.flush();
@@ -632,7 +633,7 @@ vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBoots
     
     vector<int> w(nRegions, 0);
     for (size_t n=0; n<val*nRegions; n++)
-      w[uni(rng)] +=1;
+      w[ran()] ++;
 
     for (size_t j=0; j<nRegions; j++) {
       nData_SS += w[j]*nData_reg[j];

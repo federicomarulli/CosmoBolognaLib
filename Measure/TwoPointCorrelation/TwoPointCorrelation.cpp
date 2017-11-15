@@ -50,7 +50,7 @@ using namespace measure::twopt;
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType, const double Min, const double Max, const int nbins, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double Min, const double Max, const int nbins, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==_1D_angular_) return move(unique_ptr<TwoPointCorrelation1D_angular>(new TwoPointCorrelation1D_angular(data, random, binType, Min, Max, nbins, shift, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
   
@@ -65,7 +65,7 @@ shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Cr
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType, const double Min, const double Max, const double binSize, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double Min, const double Max, const double binSize, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==_1D_angular_) return move(unique_ptr<TwoPointCorrelation1D_angular>(new TwoPointCorrelation1D_angular(data, random, binType, Min, Max, binSize, shift, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
   
@@ -80,7 +80,7 @@ shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Cr
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const double piMax_integral, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const double piMax_integral, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==_1D_projected_) return move(unique_ptr<TwoPointCorrelation_projected>(new TwoPointCorrelation_projected(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, piMax_integral, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
@@ -101,7 +101,7 @@ shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Cr
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const double piMax_integral, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const double piMax_integral, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==_1D_projected_) return move(unique_ptr<TwoPointCorrelation_projected>(new TwoPointCorrelation_projected(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, piMax_integral, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
@@ -122,7 +122,7 @@ shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Cr
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==_2D_Cartesian_) return move(unique_ptr<TwoPointCorrelation2D_cartesian>(new TwoPointCorrelation2D_cartesian(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, binType_D2, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
@@ -137,7 +137,7 @@ shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Cr
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const Catalogue data, const Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const binType binType_D2, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==_2D_Cartesian_) return move(unique_ptr<TwoPointCorrelation2D_cartesian>(new TwoPointCorrelation2D_cartesian(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, binType_D2, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
@@ -481,12 +481,12 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_pairs_region (const sha
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation::count_pairs_region_test (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, shared_ptr<Pair> pp, vector<shared_ptr<Pair>> pp_res, const vector<double> weights, const bool cross, const bool tcount)  
+void cosmobl::measure::twopt::TwoPointCorrelation::count_pairs_region_test (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, shared_ptr<Pair> pp, vector<shared_ptr<Pair>> pp_res, const vector<double> weight, const bool cross, const bool tcount)  
 {
   if(pp->pairDim()==_1D_)
-    count_pairs_region_test_1D(cat1, ChM, pp, pp_res, weights, cross, tcount);
+    count_pairs_region_test_1D(cat1, ChM, pp, pp_res, weight, cross, tcount);
   else if(pp->pairDim()==_2D_)
-    count_pairs_region_test_2D(cat1, ChM, pp, pp_res, weights, cross, tcount);
+    count_pairs_region_test_2D(cat1, ChM, pp, pp_res, weight, cross, tcount);
   else
     ErrorCBL("Error in count_pairs_region_test, wrong pair type");
 }
@@ -495,7 +495,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_pairs_region_test (cons
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_1D (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, shared_ptr<Pair> pp, vector<shared_ptr<Pair>> pp_res, const vector<double> weights, const bool cross, const bool tcount)  
+void cosmobl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_1D (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, shared_ptr<Pair> pp, vector<shared_ptr<Pair>> pp_res, const vector<double> weight, const bool cross, const bool tcount)  
 {
   // timer 
   time_t start; time (&start);
@@ -540,12 +540,12 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_1D (c
 	pp_thread->get_pair(cat1->catalogue_object(i), cat2->catalogue_object(j), kk, wkk);
 	pp_thread->set_pair(kk, wkk);
 
-	vector<double> ww = weights;
+	vector<double> ww = weight;
 
 	ww[cat1->region(i)] = 0;
 	ww[cat2->region(j)] = 0;
 
-	for(size_t k=0; k< weights.size(); k++)
+	for(size_t k=0; k< weight.size(); k++)
 	  pp_res_thread[k]->set_pair(kk, wkk, ww[k]);
       }
       
@@ -585,7 +585,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_1D (c
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_2D (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, shared_ptr<Pair> pp, vector<shared_ptr<Pair>> pp_res, const vector<double> weights, const bool cross, const bool tcount)  
+void cosmobl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_2D (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, shared_ptr<Pair> pp, vector<shared_ptr<Pair>> pp_res, const vector<double> weight, const bool cross, const bool tcount)  
 {
   // timer 
   time_t start; time (&start);
@@ -632,12 +632,12 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_2D (c
 	int reg1 = (cross) ? cat1->region(i) : min(cat1->region(i), cat2->region(j));
 	int reg2 = (cross) ? cat2->region(j) : max(cat1->region(i), cat2->region(j));
 
-	vector<double> ww = weights;
+	vector<double> ww = weight;
 
 	ww[reg1] = 0;
 	ww[reg2] = 0;
 
-	for(size_t k=0; k< weights.size(); k++)
+	for(size_t k=0; k< weight.size(); k++)
 	  pp_res_thread[k]->set_pair(ir, jr, wkk, ww[k]);
       }
       
@@ -844,7 +844,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs_region (vector
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (const TwoPType type, const vector<double> weights, const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)  
+void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (const TwoPType type, const vector<double> weight, const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)  
 {
   // ----------- compute polar coordinates, if necessary ----------- 
 
@@ -909,7 +909,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (c
   
   // ----------- initialize the pair vectors used for resampling ----------- 
 
-  int nResamplings = weights.size();
+  int nResamplings = weight.size();
 
   for (int i=0; i<nResamplings; ++i) {
 
@@ -932,7 +932,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (c
   file_regions = "dd_regions.dat";
 
   if (count_dd) {
-    count_pairs_region_test(m_data, ChM_data, m_dd, m_dd_res, weights, false, tcount);
+    count_pairs_region_test(m_data, ChM_data, m_dd, m_dd_res, weight, false, tcount);
     if (dir_output_pairs!=par::defaultString) 
       write_pairs(m_dd, dir_output_pairs, file);
   }
@@ -945,7 +945,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (c
   file_regions = "rr_regions.dat";
 
   if (count_rr) {
-    count_pairs_region_test(random_dil, ChM_random_dil, m_rr, m_rr_res, weights, false, tcount);
+    count_pairs_region_test(random_dil, ChM_random_dil, m_rr, m_rr_res, weight, false, tcount);
     if (dir_output_pairs!=par::defaultString) 
       write_pairs(m_rr, dir_output_pairs, file);
     
@@ -962,7 +962,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (c
     file_regions = "dr_regions.dat";
     
     if (count_dr) {
-      count_pairs_region_test(m_data, ChM_random, m_dr, m_dr_res, weights, true, tcount);
+      count_pairs_region_test(m_data, ChM_random, m_dr, m_dr_res, weight, true, tcount);
       if (dir_output_pairs!=par::defaultString) 
 	write_pairs(m_dr, dir_output_pairs, file);
     }

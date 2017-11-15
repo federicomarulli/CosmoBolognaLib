@@ -69,7 +69,7 @@ namespace cosmobl {
       /**
        *  @brief constructor of a constant distribution
        *
-       *  @param PosteriorType the type of distribution to be created
+       *  @param posteriorType the type of distribution to be created
        *
        *  @param value the value to be returned
        *

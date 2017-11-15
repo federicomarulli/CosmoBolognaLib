@@ -209,9 +209,11 @@ namespace cosmobl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param seed the seed for random number generation
+	 *
 	 * @return none
 	 */
-	void measure (const string dir_output_triplets, const vector<string> dir_input_triplets={}, const bool count_ddd=1, const bool count_rrr=1, const bool count_ddr=1, const bool count_drr=1, const bool tcount=1) override;
+	void measure (const string dir_output_triplets, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=true, const int seed=3213) override;
 
   	/**
 	 * @brief method to measure the three-point correlation function
@@ -221,13 +223,11 @@ namespace cosmobl {
 	 * @param doJK &rarr; normalize to 1/(n-1); 1 &rarr; normalize
 	 *  to n-1/n (for Jackknife)
 	 *
-	 * @param dir_output_triplets name of the output directory used to
-	 * store the number of triplets
+	 * @param dir_output_triplets name of the output directory
+	 * used to store the number of triplets
 	 * 
 	 * @param dir_input_triplets name of the input directories
 	 * containing the number of triplets
-	 *
-	 * @param nResamplings number of resamplings
 	 *
 	 * @param count_ddd 1 &rarr; count the data-data-data
 	 * triplets; 0 &rarr; read the data-data-data triplets
@@ -248,9 +248,11 @@ namespace cosmobl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param seed the seed for random number generation
+	 *
 	 * @return none
 	 */
-	void measure (const vector<vector<double>> weights, const bool doJK, const string dir_output_triplets=par::defaultString, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=true) override;
+	void measure (const vector<vector<double>> weight, const bool doJK, const string dir_output_triplets=par::defaultString, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=true, const int seed=3213) override;
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -284,9 +286,11 @@ namespace cosmobl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param seed the seed for random number generation
+	 *
 	 * @return none
 	 */
-	void measure (const ErrorType errorType, const string dir_output_triplets, const vector<string> dir_input_triplets={}, const int nResamplings = 100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=true) override;
+	void measure (const ErrorType errorType, const string dir_output_triplets, const vector<string> dir_input_triplets={}, const int nResamplings = 100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=true, const int seed=3213) override;
 	
 	///@}
 
@@ -304,6 +308,14 @@ namespace cosmobl {
 	 *  @return none
 	 */
 	void write (const string dir, const string file) const override;
+
+        /**
+         *  @brief write the measured three-point correlation covariance
+         *  @param dir output directory
+         *  @param file output file
+         *  @return none
+         */
+        void write_covariance (const string dir, const string file) const override;
     
 	///@}
       

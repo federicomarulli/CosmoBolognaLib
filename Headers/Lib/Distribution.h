@@ -191,7 +191,7 @@ namespace cosmobl {
        *
        *  @return object of class Distribution
        */
-      Distribution (const DistributionType distributionType, const double xmin, const double xmax, const int seed=1);
+      Distribution (const DistributionType distributionType, const double xmin, const double xmax, const int seed=3213);
 
       /**
        *  @brief constructor

@@ -149,6 +149,7 @@ namespace cosmobl {
 	/**
 	 *  @brief set the fiducial model for the variance
 	 *  \f$\sigma(M)\f$ 
+	 *
 	 *  @return none
 	 */
 	void set_fiducial_sigma_data_model ();
@@ -162,8 +163,64 @@ namespace cosmobl {
 	 */
 	void set_fiducial_sigma ();
 
-	void set_bias_eff_grid (const vector<cosmobl::cosmology::CosmoPar> cosmoPars, const vector<double> min_pars, const vector<double> max_pars, const vector<int> nbins_pars, const string dir, const string file_grid_bias);
+	/**
+	 *  @brief set a grid with effective bias values estimating
+	 *  from a set of masses
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param min_par the minimum value for the parameter where
+	 *  the effective bias is computed
+	 *
+	 *  @param max_par the maximum value for the parameter where
+	 *  the effective bias is computed
+	 *
+	 *  @param nbins_par the number of points for the
+	 *  parameter where the effective bias is computed
+	 *
+	 *  @param dir the directory where is the grid of effective
+	 *  bias is stored
+	 *
+	 *  @param file_grid_bias the file where is the grid
+	 *  of effective bias is stored
+	 *
+	 *  @return none
+	 */
+	void set_bias_eff_grid (const vector<cosmobl::cosmology::CosmoPar> cosmo_param, const vector<double> min_par, const vector<double> max_par, const vector<int> nbins_par, const string dir, const string file_grid_bias);
 
+	/**
+	 *  @brief set a grid with effective bias values estimating
+	 *  from a selection function and a theoretical mass function
+	 *
+	 *  @param file_selection_function input file with the
+	 *  selection function
+	 *	 
+	 *  @param column vector containing the columns with {mass,
+	 *  redshift, selection function}
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param min_par the minimum value for the parameter where
+	 *  the effective bias is computed
+	 *  
+	 *  @param max_par the maximum value for the parameter where
+	 *  the effective bias is computed
+	 *
+	 *  @param nbins_par the number of points for the
+	 *  parameter where the effective bias is computed
+	 *
+	 *  @param dir the directory where is the grid of effective
+	 *  bias is stored
+	 *
+	 *  @param file_grid_bias the file where is the grid
+	 *  of effective bias is stored
+	 *
+	 *  @return none
+	 */
+	void set_bias_eff_grid (const string file_selection_function, const vector<int> column, const vector<cosmobl::cosmology::CosmoPar> cosmo_param, const vector<double> min_par, const vector<double> max_par, const vector<int> nbins_par, const string dir, const string file_grid_bias);
+	
 	/**
 	 *  @brief set the parameters used to model the full shape of
 	 *  the monopole of the two-point correlation function
@@ -345,7 +402,6 @@ namespace cosmobl {
 	 *  effective bias is computed for each cosmology using the
 	 *  provided halo masses by cosmobl::cosmology::bias_eff
 	 *	 
-	 *
 	 *  @param sigma8_prior prior for the parameter
 	 *  \f$\sigma_8(z)\f$
 	 *
@@ -356,16 +412,8 @@ namespace cosmobl {
 	/**
 	 *  @brief set the parameters used to model the full shape of
 	 *  the monopole of the two-point correlation function with
-	 *  cluster masses provided in input, with only \f$sigma_8\f$
-	 *  as a free parameter
-	 *
-	 *  the model is the following:
-	 *
-	 *  \f[\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3} f\sigma_8
-	 *  \cdot b\sigma_8 + \frac{1}{5}(f\sigma_8)^2 \right] \cdot
-	 *  \xi_{\rm DM}(s)/\sigma_8^2\f]
-	 *
-	 *  the model has 1 cosmological parameter
+	 *  either the cluster masses provided in input, or using a
+	 *  selection function to estimate the bias
 	 *
 	 *  the dark matter two-point correlation function is computed
 	 *  using the input cosmological parameters; the linear
@@ -393,23 +441,21 @@ namespace cosmobl {
 	 *  @param nbins_par the number of points for the
 	 *  parameter where the effective bias is computed
 	 *
+	 *  @param file_selection_function input file with the
+	 *  selection function
+	 *
+	 *  @param column vector containing the columns with {mass,
+	 *  redshift, selection function}
+	 *
 	 *  @return none
 	 */
-	void set_model_linear_cosmology_clusters_grid (const cosmobl::cosmology::CosmoPar cosmoPar, const statistics::Prior cosmo_param_prior, const string dir, const string file_grid_bias, const double min_par, const double max_par, const int nbins_par);
+	void set_model_linear_cosmology_clusters_grid (const cosmobl::cosmology::CosmoPar cosmo_param, const statistics::Prior cosmo_param_prior, const string dir, const string file_grid_bias, const double min_par, const double max_par, const int nbins_par, const string file_selection_function=par::defaultString, const vector<int> column={0, 1, 2});
 		
 	/**
 	 *  @brief set the parameters used to model the full shape of
 	 *  the monopole of the two-point correlation function with
-	 *  cluster masses provided in input, with only \f$sigma_8\f$
-	 *  as a free parameter
-	 *
-	 *  the model is the following:
-	 *
-	 *  \f[\xi_0(s) = \left[ (b\sigma_8)^2 + \frac{2}{3} f\sigma_8
-	 *  \cdot b\sigma_8 + \frac{1}{5}(f\sigma_8)^2 \right] \cdot
-	 *  \xi_{\rm DM}(s)/\sigma_8^2\f]
-	 *
-	 *  the model has 2 cosmological parameter
+	 *  either the cluster masses provided in input, or using a
+	 *  selection function to estimate the bias
 	 *
 	 *  the dark matter two-point correlation function is computed
 	 *  using the input cosmological parameters; the linear
@@ -451,10 +497,40 @@ namespace cosmobl {
 	 *
 	 *  @param nbins_par2 the number of points for the second
 	 *  parameter where the effective bias is computed
+	 *	
+	 *  @param file_selection_function input file with the
+	 *  selection function
+	 *	 
+	 *  @param column vector containing the columns with {mass,
+	 *  redshift, selection function}
 	 *
 	 *  @return none
 	 */
-	void set_model_linear_cosmology_clusters_grid (const cosmobl::cosmology::CosmoPar cosmoPar1, const statistics::Prior cosmo_param_prior1, const cosmobl::cosmology::CosmoPar cosmoPar2, const statistics::Prior cosmo_param_prior2, const string dir, const string file_grid_bias, const double min_par1, const double max_par1, const int nbins_par1, const double min_par2, const double max_par2, const int nbins_par2);
+	void set_model_linear_cosmology_clusters_grid (const cosmobl::cosmology::CosmoPar cosmo_param1, const statistics::Prior cosmo_param_prior1, const cosmobl::cosmology::CosmoPar cosmo_param2, const statistics::Prior cosmo_param_prior2, const string dir, const string file_grid_bias, const double min_par1, const double max_par1, const int nbins_par1, const double min_par2, const double max_par2, const int nbins_par2, const string file_selection_function=par::defaultString, const vector<int> column={0, 1, 2});
+	
+	/**
+	 *  @brief set the parameters used to model the full shape of
+	 *  the monopole of the two-point correlation function in
+	 *  redshift space, using a given selection function to
+	 *  estimate the bias
+	 * 
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters; the linear
+	 *  effective bias is computed for each cosmology using the
+	 *  provided halo masses by cosmobl::cosmology::bias_eff
+	 *
+	 *  @param alpha_prior prior for the \f$\alpha\f$ parameter of
+	 *  the cluster mass scaling relation
+	 *
+	 *  @param cosmo_param the model cosmological parameters
+	 *
+	 *  @param cosmo_param_prior the prior for the model
+	 *  cosmological parameters
+	 *
+	 *  @return none
+	 */
+	void set_model_linear_cosmology_cluster_selection_function (const statistics::Prior alpha_prior, const vector<cosmobl::cosmology::CosmoPar> cosmo_param, const vector<statistics::Prior> cosmo_param_prior);
+
 	
 	/**
 	 *  @brief set the parameters used to model the full shape of
@@ -596,29 +672,13 @@ namespace cosmobl {
 	 *
 	 *  - \f$\alpha\f$: the slope of the power law
 	 *
-	 *  @param Mmin_value if Mmin_value>par::defaultDouble then
-	 *  the \f$M_{min}\f$ value is fixed at Mmin_value
-	 *
 	 *  @param Mmin_prior \f$M_{min}\f$ prior
-	 *
-	 *  @param sigmalgM_value if
-	 *  sigmalgM_value>par::defaultDouble then the
-	 *  \f$\sigma_{\log M_h}\f$ value is fixed at sigmalgM_value
 	 *
 	 *  @param sigmalgM_prior \f$\sigma_{\log M_h}\f$ prior
 	 *
-	 *  @param M0_value if M0_value>par::defaultDouble then the
-	 *  \f$M_0\f$ value is fixed at M0_value
-	 *
 	 *  @param M0_prior \f$M_0\f$ prior
 	 *
-	 *  @param M1_value if M1_value>par::defaultDouble then the
-	 *  \f$M_1\f$ value is fixed at M1_value
-	 *
 	 *  @param M1_prior \f$\alpha\f$ prior
-	 *
-	 *  @param alpha_value if alpha_value>par::defaultDouble
-	 *  then the \f$\alpha\f$ value is fixed at alpha_value
 	 *
 	 *  @param alpha_prior \f$\alpha\f$ prior
 	 *
@@ -638,10 +698,11 @@ namespace cosmobl {
 	 *  \f$\xi(s) = b^2 \xi'(s) + b \xi''(s) + \xi'''(s) \, ;\f$
 	 *
 	 *  where b is the linear bias and the terms \f$\xi'(s)\f$,
-	 *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are
-	 *  the Fourier anti-transform of the power spectrum terms
-	 *  obtained integrating the redshift space 2D power spectrum
-	 *  along \f$\mu\f$ (see cosmobl::modelling::twopt.:damped_Pk_terms).
+	 *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are the Fourier
+	 *  anti-transform of the power spectrum terms obtained
+	 *  integrating the redshift space 2D power spectrum along
+	 *  \f$\mu\f$ (see
+	 *  cosmobl::modelling::twopt.:damped_Pk_terms).
 	 *
 	 *  @param bias_prior prior for the parameter bias
 	 *  \f$b(z)\f$
@@ -665,17 +726,20 @@ namespace cosmobl {
 	 *  \f$\xi(s) = b^2 \xi'(s) + b \xi''(s) + \xi'''(s) \, ;\f$
 	 *
 	 *  where b is the linear bias and the terms \f$\xi'(s)\f$,
-	 *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are
-	 *  the Fourier anti-transform of the power spectrum terms
-	 *  obtained integrating the redshift space 2D power spectrum
-	 *  along \f$\mu\f$ (see cosmobl::modelling::twopt.:damped_Pk_terms).
+	 *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are the Fourier
+	 *  anti-transform of the power spectrum terms obtained
+	 *  integrating the redshift space 2D power spectrum along
+	 *  \f$\mu\f$ (see
+	 *  cosmobl::modelling::twopt.:damped_Pk_terms).
 	 *
-	 *  @param M0_prior prior for the parameter \f$M_0\f$, the intercept
-	 *  of the scaling relation
+	 *  @param M0_prior prior for the parameter \f$M_0\f$, the
+	 *  intercept of the scaling relation
 	 *
-	 *  @param slope_prior prior for the slope of the scaling relation
+	 *  @param slope_prior prior for the slope of the scaling
+	 *  relation
 	 *
-	 *  @param scatter prior for the scatter of the scaling relatino
+	 *  @param scatter_prior for the scatter of the scaling
+	 *  relatino
 	 *
 	 *  @param sigmaz_prior prior for the parameter
 	 *  \f$\sigma_z(z)\f$
@@ -683,8 +747,6 @@ namespace cosmobl {
 	 *  @return none
 	 */
 	void set_model_scaling_relation_sigmaz (const statistics::Prior M0_prior={}, const statistics::Prior slope_prior={}, const statistics::Prior scatter_prior={}, const statistics::Prior sigmaz_prior={});
-
-	void set_model_linear_cosmology_cluster_selection_function (const statistics::Prior alpha_prior, const vector<cosmobl::cosmology::CosmoPar> cosmo_param, const vector<statistics::Prior> cosmo_param_prior);
 
 	///@}
 

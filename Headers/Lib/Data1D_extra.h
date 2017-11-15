@@ -80,7 +80,7 @@ namespace cosmobl {
 
       /**
        *  @brief constructor of Data1D
-       *  @param extra_info number of extra info
+       *  @param n_extra_info number of extra info
        *  @param input_file the input data file
        *  @param skip_nlines the header lines to be skipped
        *  @return object of class Data1D

@@ -251,7 +251,7 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets (const 
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation::count_triplets_region (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<Triplet> tt, vector<shared_ptr<Triplet>> tt_region, const vector<vector<double>> weights, const bool tcount) 
+void cosmobl::measure::threept::ThreePointCorrelation::count_triplets_region (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<Triplet> tt, vector<shared_ptr<Triplet>> tt_region, const vector<vector<double>> weight, const bool tcount) 
 {
   time_t start; time (&start);
   
@@ -311,8 +311,8 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_triplets_region (co
 	      tt_thread->get_triplet(r12, r13, r23, klin);
 	      tt_thread->set_triplet(klin, ww);
 	      
-	      for (size_t r=0; r< weights.size(); r++){
-		double region_weight = weights[r][reg1]*weights[r][reg2]*weights[r][reg3];
+	      for (size_t r=0; r<weight.size(); r++) {
+		double region_weight = weight[r][reg1]*weight[r][reg2]*weight[r][reg3];
 		tt_region_thread[r]->set_triplet(klin, ww*region_weight);
 	      }
 	      
@@ -333,7 +333,7 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_triplets_region (co
       // sum all the object triplets computed by each thread
       tt->Sum(tt_thread);
 
-      for(size_t k=0; k< weights.size(); k++)
+      for (size_t k=0; k< weight.size(); k++)
 	tt_region[k]->Sum(tt_region_thread[k]);
 
     }
@@ -353,7 +353,7 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_triplets_region (co
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets_region (const vector<vector<double>> weights, const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
+void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets_region (const vector<vector<double>> weight, const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
 {
   // ----- double chain-mesh -----
   
@@ -382,7 +382,7 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets_region 
   m_ddr_regions.erase(m_ddr_regions.begin(), m_ddr_regions.end());
   m_drr_regions.erase(m_drr_regions.begin(), m_drr_regions.end());
 
-  int nResamplings = weights.size();
+  int nResamplings = weight.size();
 
   for (int i=0; i<nResamplings; ++i) {
     m_ddd_regions.push_back(move(Triplet::Create(m_ddd->tripletType(), m_ddd->side_s(), m_ddd->side_u(), m_ddd->perc_increase(), m_ddd->nbins())));
@@ -400,7 +400,7 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets_region 
   file = "ddd.dat";
   
   if (count_ddd) { 
-    count_triplets_region(m_data, ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, m_ddd, m_ddd_regions, weights, tcount);
+    count_triplets_region(m_data, ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, m_ddd, m_ddd_regions, weight, tcount);
     if (dir_output_triplets!=par::defaultString) write_triplets(m_ddd, dir_output_triplets, file);
   } 
   else read_triplets (m_ddd, dir_input_triplets, file);
@@ -411,7 +411,7 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets_region 
   file = "rrr.dat";
   
   if (count_rrr==1) {
-    count_triplets_region(m_random, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2, m_rrr, m_rrr_regions, weights, tcount);
+    count_triplets_region(m_random, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2, m_rrr, m_rrr_regions, weight, tcount);
     if (dir_output_triplets!=par::defaultString) write_triplets(m_rrr, dir_output_triplets, file);
   } 
   else if (count_rrr==0) read_triplets (m_rrr, dir_input_triplets, file);
@@ -431,19 +431,19 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets_region 
     vector<shared_ptr<Triplet>> ddr2_regions;
     vector<shared_ptr<Triplet>> ddr3_regions;
 
-    for(int i=0; i<nResamplings; i++){
+    for (int i=0; i<nResamplings; i++) {
       ddr1_regions.push_back(move(Triplet::Create(m_ddr->tripletType(), m_ddr->side_s(), m_ddr->side_u(), m_ddr->perc_increase(), m_ddr->nbins())));
       ddr2_regions.push_back(move(Triplet::Create(m_ddr->tripletType(), m_ddr->side_s(), m_ddr->side_u(), m_ddr->perc_increase(), m_ddr->nbins())));
       ddr3_regions.push_back(move(Triplet::Create(m_ddr->tripletType(), m_ddr->side_s(), m_ddr->side_u(), m_ddr->perc_increase(), m_ddr->nbins())));
     }
     
-    count_triplets_region(m_data, ChainMesh_data_rMAX1, ChainMesh_random_rMAX2, ddr1, ddr1_regions, weights, tcount);
-    count_triplets_region(m_data, ChainMesh_random_rMAX1, ChainMesh_data_rMAX2, ddr2, ddr2_regions, weights,tcount);
-    count_triplets_region(m_random, ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ddr3, ddr3_regions, weights, tcount);
+    count_triplets_region(m_data, ChainMesh_data_rMAX1, ChainMesh_random_rMAX2, ddr1, ddr1_regions, weight, tcount);
+    count_triplets_region(m_data, ChainMesh_random_rMAX1, ChainMesh_data_rMAX2, ddr2, ddr2_regions, weight,tcount);
+    count_triplets_region(m_random, ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ddr3, ddr3_regions, weight, tcount);
 
     m_ddr->Sum(ddr1); m_ddr->Sum(ddr2); m_ddr->Sum(ddr3); 
 
-    for(int i=0; i<nResamplings; i++){
+    for (int i=0; i<nResamplings; i++) {
       m_ddr_regions[i]->Sum(ddr1_regions[i]);
       m_ddr_regions[i]->Sum(ddr2_regions[i]);
       m_ddr_regions[i]->Sum(ddr3_regions[i]);
@@ -469,19 +469,19 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets_region 
     vector<shared_ptr<Triplet>> drr2_regions;
     vector<shared_ptr<Triplet>> drr3_regions;
 
-    for(int i=0; i<nResamplings; i++){
+    for (int i=0; i<nResamplings; i++) {
       drr1_regions.push_back(move(Triplet::Create(m_drr->tripletType(), m_drr->side_s(), m_drr->side_u(), m_drr->perc_increase(), m_drr->nbins())));
       drr2_regions.push_back(move(Triplet::Create(m_drr->tripletType(), m_drr->side_s(), m_drr->side_u(), m_drr->perc_increase(), m_drr->nbins())));
       drr3_regions.push_back(move(Triplet::Create(m_drr->tripletType(), m_drr->side_s(), m_drr->side_u(), m_drr->perc_increase(), m_drr->nbins())));
     }
     
-    count_triplets_region(m_random, ChainMesh_random_rMAX1, ChainMesh_data_rMAX2, drr1, drr1_regions, weights, tcount);
-    count_triplets_region(m_random, ChainMesh_data_rMAX1, ChainMesh_random_rMAX2, drr2, drr1_regions, weights, tcount);
-    count_triplets_region(m_data, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2, drr3, drr1_regions, weights, tcount);
+    count_triplets_region(m_random, ChainMesh_random_rMAX1, ChainMesh_data_rMAX2, drr1, drr1_regions, weight, tcount);
+    count_triplets_region(m_random, ChainMesh_data_rMAX1, ChainMesh_random_rMAX2, drr2, drr1_regions, weight, tcount);
+    count_triplets_region(m_data, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2, drr3, drr1_regions, weight, tcount);
 
     m_drr->Sum(drr1); m_drr->Sum(drr2); m_drr->Sum(drr3); 
 
-    for(int i=0; i<nResamplings; i++){
+    for (int i=0; i<nResamplings; i++) {
       m_drr_regions[i]->Sum(drr1_regions[i]);
       m_drr_regions[i]->Sum(drr2_regions[i]);
       m_drr_regions[i]->Sum(drr3_regions[i]);

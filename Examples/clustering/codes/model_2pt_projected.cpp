@@ -100,14 +100,14 @@ int main () {
     // set the likelihood
     model_twop.set_likelihood(cosmobl::statistics::LikelihoodType::_GaussianLikelihood_Covariance_);
 
-    // sample the likelihood and store the chains
+    // run the MCMC method to sample the posterior
     const int chain_size = 1000; // size of the chains
     const int nwalkers = 100; // number of chains
-    const int burn_in = 0.1*chain_size; // number of step to be excluded
-    model_twop.sample_likelihood(chain_size, nwalkers, 32113); 
+    model_twop.run_MCMC(chain_size, nwalkers, 32113); 
 
     // write the results on the standard output
-    const int thin = 10;
+    const int burn_in = 0.1*chain_size; // number of step to be excluded
+    const int thin = 10;                // take 1 step every 10
     model_twop.show_results(burn_in, thin, 3213);
     
     // store the results on file

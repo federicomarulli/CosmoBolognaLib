@@ -1,0 +1,1 @@
+emacs ../../Headers/Lib/Modelling_Cosmology*.h ../../Headers/Lib/ModelFunction_Cosmology*.h *.cpp &

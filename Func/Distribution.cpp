@@ -42,7 +42,7 @@ using namespace random;
 
 double cosmobl::glob::Distribution::m_percentile_integrator (const double xx)
 {
-  function<double(double)> f_moment = [this] (double x) {return  this->m_central_moments_integrator(x, 0);};
+  function<double(double)> f_moment = [this] (double x) {return this->operator()(x);};
   return gsl::GSL_integrate_qag(f_moment, m_xmin, xx);
 }
 
@@ -540,7 +540,7 @@ double cosmobl::glob::Distribution::mode ()
       return -this->operator()(param);
     };
 
-    val= gsl::GSL_minimize_1D (func, (m_xmax+m_xmin)*0.5, m_xmin, m_xmax, 1000., false);
+    val= gsl::GSL_minimize_1D(func, (m_xmax+m_xmin)*0.5, m_xmin, m_xmax);
   }
   return val;
 }

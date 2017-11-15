@@ -262,10 +262,21 @@ namespace cosmobl {
       short la[40]; 
     };
 
-    inline void VarCast (vector<Var> &_out, vector<int> in) {
-      for (size_t ii = 0; ii<in.size(); ii++) {
-	Var vv = static_cast<Var>(in[ii]);
-	_out.emplace_back(vv);
+    /**
+     *  @brief inline casting of an input integer vector into a
+     *  Catalogue::Var vector
+     *
+     *  @param [out] output_vector output Catalogue::Var vector
+     *
+     *  @param [in] input_vector input vector of integer values
+     *
+     *  @return none
+     */
+    inline void VarCast (vector<Var> &output_vector, const vector<int> input_vector)
+    {
+      for (auto &&in : input_vector) {
+	const Var vv = static_cast<Var>(in);
+	output_vector.emplace_back(vv);
       }
     }
     
@@ -456,10 +467,12 @@ namespace cosmobl {
        *
        *  @param charEncode character encoding of input file,
        *  ascii or binary
-       * 
+       *
+       *  @param seed the seed for random number generation
+       *
        *  @return an object of class Catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1=1, const int col2=2, const int col3=3, const int colWeight=-1, const int colRegion=-1, const double nSub=1.1, const double fact=1., const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const CharEncode charEncode=_ascii_);
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1=1, const int col2=2, const int col3=3, const int colWeight=-1, const int colRegion=-1, const double nSub=1.1, const double fact=1., const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const CharEncode charEncode=_ascii_, const int seed=3213);
 
       /**
        *  @brief constructor, reading a file with coordinates
@@ -491,10 +504,10 @@ namespace cosmobl {
        *  @param coordType the coordinate type, specified in the
        *  cosmobl::CoordType enumeration
        *
-       *  @param attributes vector containing the list of attributes
+       *  @param attribute vector containing the list of attributes
        *  contained in the file, used to construct the catalogue
        *
-       *  @param columns vector containing the column number which 
+       *  @param column vector containing the column number which 
        *  correspond to each element of the vector 'attributes'
        *
        *  @param file vector containing the files where the input
@@ -516,9 +529,11 @@ namespace cosmobl {
        *  @param charEncode character encoding of input file,
        *  ascii or binary
        * 
+       *  @param seed the seed for random number generation
+       *
        *  @return an object of class Catalogue
        */
-      Catalogue (const ObjType objType, const CoordType coordType, const vector<Var> attributes, const vector<int> columns, const vector<string> file, const int comments = 0, const double nSub = 1.1, const double fact=1, const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const CharEncode charEncode=_ascii_);
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<Var> attribute, const vector<int> column, const vector<string> file, const int comments=0, const double nSub=1.1, const double fact=1, const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const CharEncode charEncode=_ascii_, const int seed=3213);
 
       /**
        *  @brief constructor, using vectors of generic objects
@@ -660,8 +675,6 @@ namespace cosmobl {
        *  @param sigma the standard deviation, &sigma;, of the
        *  Gaussian kernel
        *
-       *  @param seed the seed for random number generation
-       *
        *  @param redshift vector containg the redshifts used to
        *  computed the redshift distribution for the random catalogue;
        *  if it is not provided, the redshifts of the input catalogue
@@ -678,12 +691,14 @@ namespace cosmobl {
        *  @param z_ndigits the number of digit figures used for the
        *  redshifts
        *
+       *  @param seed the seed for random number generation
+       *
        *  @return an object of class Catalogue
        *
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
        */
-      Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin=10, const cosmology::Cosmology &cosm={}, const bool conv=false, const double sigma=0., const int seed=3213, const vector<double> redshift={}, const vector<double> RA={}, const vector<double> Dec={}, int z_ndigits=10);
+      Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin=10, const cosmology::Cosmology &cosm={}, const bool conv=false, const double sigma=0., const vector<double> redshift={}, const vector<double> RA={}, const vector<double> Dec={}, int z_ndigits=10, const int seed=3213);
       
       /**
        *  @brief constructor that creates a random catalogue in a cone
@@ -772,7 +787,7 @@ namespace cosmobl {
 
       /// @cond extvoid
       
-      Catalogue (const VoidAlgorithm algorithm, const Catalogue halo_catalogue, const vector<string> file, const double nSub, const int n_rnd, const string mode, const string dir_output, const double rmax, const int cellsize);
+      Catalogue (const VoidAlgorithm algorithm, const Catalogue halo_catalogue, const vector<string> file, const double nSub, const int n_rec, const string mode, const string dir_output, const string output, const double rmax, const int cellsize, const int n_iter, const double delta_movement);
       
       /// @endcond
 
@@ -802,15 +817,19 @@ namespace cosmobl {
        *
        *  @param ChM object of ChainMesh3D class
        *
-       *  @param checkoverlap true = erase all the voids wrt a given criterion, 
-       *  false = skip the step
+       *  @param ratio
        *
-       *  @param ol_criterion the criterion for the overlap step 
-       *  (valid criteria: Var::_DensityContrast_, Var::_CentralDensity_)
+       *  @param checkoverlap true \f$\rightarray\f$ erase all the
+       *  voids wrt a given criterion, false \f$\rightarray\f$ skip
+       *  the step
+       *
+       *  @param ol_criterion the criterion for the overlap step
+       *  (valid criteria: Var::_DensityContrast_,
+       *  Var::_CentralDensity_)
        * 
        *  @return an object of class Catalogue
        */
-      Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean={false,false,false}, const vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale = false, const shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, double ratio = 0.1, bool checkoverlap=false, Var ol_criterion=_DensityContrast_);
+      Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean={false, false, false}, const vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale = false, const shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=_DensityContrast_);
 
       ///@} 
 
@@ -829,20 +848,24 @@ namespace cosmobl {
        *  @param file_cn the the name common to all the files in which
        *  the gadget snapshot is divided (path/to/file/common_name)
        *
-       *  @param swap true = swap endianism, false = do not swap endianism
+       *  @param swap true = swap endianism, false = do not swap
+       *  endianism
        *
        *  @param fact a factor used to multiply the coordinates,
        *  i.e. coordinate_i=coordinate_i*fact
        *
-       *  @param read_catalogue true = the constructor actually reads the GADGET snapshot
-       *  false = the constructor only reads the snapshot header and prints it on the screan
+       *  @param read_catalogue true = the constructor actually reads
+       *  the GADGET snapshot false = the constructor only reads the
+       *  snapshot header and prints it on the screan
        *
        *  @param nSub the fraction of objects that will be randomly
        *  selected (nSub=1 &rArr; all objects are selected)
        *
+       *  @param seed the seed for random number generation
+       *
        *  @return object of type catalogue
        */
-      Catalogue (const ObjType objType, const string file_cn = par::defaultString, const bool swap = false, const double fact = 0.001, const bool read_catalogue = true, const double nSub=1.1);
+      Catalogue (const ObjType objType, const string file_cn = par::defaultString, const bool swap = false, const double fact = 0.001, const bool read_catalogue = true, const double nSub=1.1, const int seed=3213);
 
       ///@}
     
@@ -1395,45 +1418,21 @@ namespace cosmobl {
        * @param ind2 the index of the second object to swap
        * @return none
        */
-      void swap_objects (const int ind1, const int ind2) {
-	shared_ptr<Object> temp = m_object[ind1];
-	m_object[ind1] = m_object[ind2];
-	m_object[ind2] = temp;
-      }
+      void swap_objects (const int ind1, const int ind2);
 
       /**
-       * @brief bubble sort of a catalogue wrt a variable (double)
-       * @param var_name the name of the variable to use in order to sort the catalogue
-       * @param incresing if true order from lower to higher, if false from higher to lower
-       * @return none
+       *  @brief bubble sort of a catalogue wrt a variable 
+       *
+       *  @param var_name the name of the variable to use in order to
+       *  sort the catalogue
+       *
+       *  @param increasing if true order from lower to higher, if
+       *  false from higher to lower
+       *
+       *  @return none
        */
-      void sort (const Var var_name, const bool increasing = false) {
-	vector<double> variable = var(var_name);
-	bool swap = true;
-	while (swap) {
-	  swap = false;
-	  for (size_t i = 0; i<nObjects()-1; ++i) {
-	    if (increasing) {
-	      if (variable[i] > variable[i+1]) {
-		double temp = variable[i];
-		variable[i] = variable[i+1];
-		variable[i+1] = temp;
-		swap_objects(i, i+1);
-		swap = true;
-	      }
-	    }
-	    else {
-	      if (variable[i] < variable[i+1]) {
-		double temp = variable[i];
-		variable[i] = variable[i+1];
-		variable[i+1] = temp;
-		swap_objects(i, i+1);
-		swap = true;
-	      }
-	    }
-	  }
-	}
-      } 
+      void sort (const Var var_name, const bool increasing=false);
+      
       
       ///@}
 

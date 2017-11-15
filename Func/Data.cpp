@@ -262,18 +262,18 @@ void cosmobl::data::Data::cut(const vector<bool> mask, vector<double> &data, vec
 // ============================================================================
 
 
-shared_ptr<data::Data> cosmobl::data::join_dataset(vector<shared_ptr<cosmobl::data::Data>> dataset)
+shared_ptr<data::Data> cosmobl::data::join_dataset (vector<shared_ptr<data::Data>> dataset)
 {
-  if(dataset.size()<2)
+  if (dataset.size()<2)
     cosmobl::ErrorCBL("Error in join_dataset(). You must provide at least 2 dataset");
 
   cosmobl::data::DataType dt = dataset[0]->dataType();
 
-  for(size_t i=0; i<dataset.size(); i++)
-    if(dt!=dataset[i]->dataType())
+  for (size_t i=0; i<dataset.size(); i++)
+    if (dt!=dataset[i]->dataType())
       cosmobl::ErrorCBL("Error in join_dataset(). Dataset must be equal");
 
-  switch(dt){
+  switch(dt) {
 
     case cosmobl::data::DataType::_1D_data_:
       return join_dataset_1D(dataset);
@@ -295,17 +295,17 @@ shared_ptr<data::Data> cosmobl::data::join_dataset(vector<shared_ptr<cosmobl::da
 // ============================================================================
 
 
-shared_ptr<cosmobl::data::Data> cosmobl::data::join_dataset_1D(vector<shared_ptr<cosmobl::data::Data>> dataset)
+shared_ptr<data::Data> cosmobl::data::join_dataset_1D(vector<shared_ptr<data::Data>> dataset)
 {
   int ndataset = (int)dataset.size();
-  int ndata=0;
+  int ndata = 0;
   vector<vector<int>> data_index;
 
-  int nn=0;
-  for(int i=0; i<ndataset; i++){
+  int nn = 0;
+  for (int i=0; i<ndataset; i++) {
     ndata+=dataset[i]->ndata();
     vector<int> _dd;
-    for(int j=0; j<dataset[i]->ndata(); j++){
+    for (int j=0; j<dataset[i]->ndata(); j++) {
       _dd.push_back(nn);
       nn++;
     }
@@ -315,12 +315,12 @@ shared_ptr<cosmobl::data::Data> cosmobl::data::join_dataset_1D(vector<shared_ptr
   vector<double> xx(ndata, 0), data(ndata, 0);
   vector<vector<double>> covariance(ndata, vector<double>(ndata, 0));
 
-  for(int i=0; i<ndataset;i++)
-    for(int j=0; j<dataset[i]->ndata(); j++){
+  for (int i=0; i<ndataset;i++)
+    for (int j=0; j<dataset[i]->ndata(); j++) {
       xx[data_index[i][j]] = dataset[i]->xx(j);
       data[data_index[i][j]] = dataset[i]->data(j);
 
-      for(int k=0; k<dataset[i]->ndata(); k++)
+      for (int k=0; k<dataset[i]->ndata(); k++)
 	covariance[data_index[i][j]][data_index[i][k]] = dataset[i]->covariance(j, k);
     }
 
@@ -331,7 +331,7 @@ shared_ptr<cosmobl::data::Data> cosmobl::data::join_dataset_1D(vector<shared_ptr
 // ============================================================================
 
 
-shared_ptr<cosmobl::data::Data> cosmobl::data::join_dataset_1D_extra(vector<shared_ptr<cosmobl::data::Data>> dataset)
+shared_ptr<data::Data> data::join_dataset_1D_extra (vector<shared_ptr<data::Data>> dataset)
 {
   ErrorCBL("Error in join_dataset_1D_extra, work in progress!");
   int ndataset = (int)dataset.size();
@@ -339,14 +339,14 @@ shared_ptr<cosmobl::data::Data> cosmobl::data::join_dataset_1D_extra(vector<shar
   vector<int> n_data(ndataset);
   int nextra = dataset[0]->extra_info().size();
 
-  for(int i=0; i<ndataset; i++)
-    ndata+=dataset[i]->ndata();
+  for (int i=0; i<ndataset; i++)
+    ndata += dataset[i]->ndata();
 
   vector<double> xx(ndata, 0), data(ndata, 0);
   vector<vector<double>> extra_info (nextra, vector<double>(ndata, 0));
   vector<vector<double>> covariance(ndata, vector<double>(ndata, 0));
 
-
   auto merged_dataset = make_shared<cosmobl::data::Data1D_extra>(cosmobl::data::Data1D_extra(xx, data, covariance, extra_info));
+  
   return merged_dataset;
 }

@@ -215,9 +215,11 @@ namespace cosmobl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
+	 *  @param seed the seed for random number generation
+	 *
 	 *  @return none
 	 */
-	void measureBootstrap (const int nMocks, const string dir_output_pairs = par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample = par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
+	void measureBootstrap (const int nMocks, const string dir_output_pairs = par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample = par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_, const int seed=3213) override;
 
 	/**
 	 *  @brief measure the jackknife resampling of the first three
@@ -237,9 +239,10 @@ namespace cosmobl {
 	 *
 	 *  @param dd vector of data-data pairs, divided per regions
 	 *
-	 *  @param rr vector of random-random pairs, divided per regions
+	 *  @param rr vector of random-random pairs, divided per
+	 *  regions
 	 *
-	 *  @param dr vector of random-random pairs, divided per regions  
+	 *  @param dr vector of data-random pairs, divided per regions  
 	 *
 	 *  @return a vector of pointers to objects of type Data
 	 */
@@ -253,27 +256,33 @@ namespace cosmobl {
 	 *
 	 *  @param dd vector of data-data pairs, divided per regions
 	 *
-	 *  @param rr vector of random-random pairs, divided per regions
+	 *  @param rr vector of random-random pairs, divided per
+	 *  regions
+	 *
+	 *  @param seed the seed for random number generation
 	 *
 	 *  @return a vector of pointers to objects of type Data
 	 */
-	vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr) override;
+	vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed=3213) override;
 
 	/**
-	 *  @brief measure the bootstrap resampling of the two-point correlation
-	 *  function, &xi;(r)     
+	 *  @brief measure the bootstrap resampling of the two-point
+	 *  correlation function, &xi;(r)
 	 *
 	 *  @param nMocks number of bootstrap resamplings
 	 *
 	 *  @param dd vector of data-data pairs, divided per regions
 	 *
-	 *  @param rr vector of random-random pairs, divided per regions 
+	 *  @param rr vector of random-random pairs, divided per
+	 *  regions
 	 *
-	 *  @param dr vector of random-random pairs, divided per regions  
+	 *  @param dr vector of data-random pairs, divided per regions
+	 *
+	 *  @param seed the seed for random number generation
 	 *
 	 *  @return a vector of pointers to objects of type Data
 	 */
-	vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
+	vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed=3213) override;
 
       public:
 
@@ -486,9 +495,11 @@ namespace cosmobl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
+	 *  @param seed the seed for random number generation
+	 *
 	 *  @return none
 	 */
-	void measure (const ErrorType errorType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={},  const string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
+	void measure (const ErrorType errorType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={},  const string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_, const int seed=3213) override;
 
 	///@}
 

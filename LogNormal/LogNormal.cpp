@@ -78,13 +78,12 @@ void cosmobl::lognormal::LogNormal::setParameters_from_model (const shared_ptr<c
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, const string dir, const int start, const string filename)
+void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, const string dir, const int start, const string filename, const int seed)
 { 
   if (m_nLN==0)  
     ErrorCBL("Error in cosmobl::lognormal::LogNormal::generate_LogNormal_mock of LogNormal.cpp, set number of LN realization first!");
 
-  default_random_engine gen;
-  uniform_real_distribution<float> ran(0., 1.);
+  random::UniformRandomNumbers ran(0., 1., seed);
   
   m_rmin = rmin;
 
@@ -211,9 +210,9 @@ void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, 
       densK[i][0] = 0;
       densK[i][1] = 0;
     }
-
-    normal_distribution<double> rang(0., 1.);
-
+    
+    random::NormalRandomNumbers rang(0., 1., seed);
+    
     for (int i=0; i<nx; i++) {
       for (int j=0; j<ny; j++) {
 	for (int k=0; k<nzp; k++) {
@@ -221,8 +220,8 @@ void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, 
 	  int kindex = k+nzp*(j+ny*i);
 	  double Pkk = max(0., ppkk[kindex][0]/nRtot);
 	  Pkk = sqrt(Pkk/2);
-	  double v1 = sqrt(2.)*Pkk*rang(gen);
-	  double v2 = sqrt(2.)*Pkk*rang(gen);
+	  double v1 = sqrt(2.)*Pkk*rang();
+	  double v2 = sqrt(2.)*Pkk*rang();
 
 	  if (i==0 && j==0 && k==0) {
 	    densK[kindex][0] = 0;
@@ -282,9 +281,9 @@ void cosmobl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, 
 
 	  for (int nnoo = 0; nnoo<no; nnoo++) {
 	    comovingCoordinates coord;
-	    coord.xx = xmin*(i+ran(gen))+m_random->Min(Var::_X_);
-	    coord.yy = ymin*(j+ran(gen))+m_random->Min(Var::_Y_);
-	    coord.zz = zmin*(k+ran(gen))+m_random->Min(Var::_Z_);
+	    coord.xx = xmin*(i+ran())+m_random->Min(Var::_X_);
+	    coord.yy = ymin*(j+ran())+m_random->Min(Var::_Y_);
+	    coord.zz = zmin*(k+ran())+m_random->Min(Var::_Z_);
 	    shared_ptr<Galaxy> SMP(new Galaxy(coord));
 	    mock_sample.push_back(SMP);
 	  }

@@ -55,7 +55,7 @@ int main () {
     const string file = "xi.dat";
 
   
-    // measure the 2D Cartesian two-point correlation function and estimate Poissonian errors
+    // measure the monopole of the two-point correlation function and estimate Poissonian errors
 
     auto TwoP = cosmobl::measure::twopt::TwoPointCorrelation::Create(cosmobl::measure::twopt::TwoPType::_1D_monopole_, catalogue, random_catalogue, cosmobl::_linear_, rMin, rMax, nbins, shift);
 
@@ -99,8 +99,8 @@ int main () {
     // set the likelihood type
     model_twop.set_likelihood(cosmobl::statistics::LikelihoodType::_GaussianLikelihood_Error_);
 
-    // sample the likelihood
-    model_twop.sample_likelihood(chain_size, nwalkers, seed);
+    // run the MCMC method to sample the posterior
+    model_twop.run_MCMC(chain_size, nwalkers, seed);
 
     const int burn_in = 100; // discard the first 100 chain steps 
     const int thin = 10;     // take 1 step every 10
@@ -110,6 +110,9 @@ int main () {
 
     // store the results in file
     model_twop.write_results(dir, "model_RSD", burn_in, thin, seed);
+
+    // store the best-fit model
+    model_twop.write_model(dir, "bestfit_model.dat", cosmobl::logarithmic_bin_vector(100, 0.1, 100.));
   }
 
   catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }

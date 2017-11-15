@@ -38,19 +38,18 @@ using namespace cosmobl;
 // ============================================================================
 
 
-void cosmobl::Vmax_DC_distribution (vector<double> &dc, vector<double> &nObj, const vector<double> D_C, const vector<double> zobj_min, const vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, cosmology::Cosmology &cosm, const double Area, const int nObjRan, const int idum, const bool norm, const string file_Vmax, const double delta_dc_Vmax)
+void cosmobl::Vmax_DC_distribution (vector<double> &dc, vector<double> &nObj, const vector<double> D_C, const vector<double> zobj_min, const vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, cosmology::Cosmology &cosm, const double Area, const int nObjRan, const bool norm, const string file_Vmax, const double delta_dc_Vmax, const int seed)
 {
   if (dc.size()>0 || nObj.size()>0) ErrorCBL("Error in Vmax_DC_distribution of GlobalFunc_Cosmology.cpp)!");
 
-  default_random_engine gen(idum);
-  uniform_real_distribution<float> ran(0., 1.);
-
+  random::UniformRandomNumbers ran(0., 1., seed);
+  
   vector<double> err, dc_Vmax, ww;
   double Volume, zz;
 
   for (unsigned int i=0; i<D_C.size(); i++) { 
     for (int j=0; j<nObjRan; j++) {
-      Volume = ran(gen)*cosm.Volume(zobj_min[i],zobj_max[i],Area);
+      Volume = ran()*cosm.Volume(zobj_min[i], zobj_max[i], Area);
       zz = cosm.max_redshift(Volume, Area, zobj_min[i]);
       if (z_min<zz && zz<z_max) { 
 	dc_Vmax.push_back(cosm.D_C(zz));

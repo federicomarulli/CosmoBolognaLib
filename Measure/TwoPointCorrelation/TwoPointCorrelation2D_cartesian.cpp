@@ -206,7 +206,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::write (const stri
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
   case (ErrorType::_Poisson_) :
@@ -216,7 +216,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measure (const Er
     measureJackknife(dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator);
     break;
   case (ErrorType::_Bootstrap_) :
-    measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator);
+    measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, seed);
     break;
   default:
     ErrorCBL("Error in measure() of TwoPointCorrelation2D_cartesian.cpp, unknown type of error");
@@ -294,7 +294,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife 
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_BootstrapXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_BootstrapXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (nMocks<1)
     ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation2D_cartesian.cpp, number of mocks must be >0");
@@ -309,7 +309,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap 
   vector<shared_ptr<Pair> > dd_regions, rr_regions, dr_regions;
   count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
-  vector<shared_ptr<Data> > data_SS = (estimator==_natural_) ? XiBootstrap(nMocks, dd_regions, rr_regions) : XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions);
+  vector<shared_ptr<Data> > data_SS = (estimator==_natural_) ? XiBootstrap(nMocks, dd_regions, rr_regions, seed) : XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions, seed);
 
   for (int i=0; i<nMocks; i++) {
 

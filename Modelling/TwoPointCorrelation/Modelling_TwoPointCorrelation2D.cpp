@@ -88,17 +88,20 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation2D::write_model (co
   // compute the model with best-fit parameters
   
   if (parameter.size()==0) {
+    
+    vector<vector<double>> median_model, low_model, up_model;
+    compute_model_from_chains(r1, r2, start, thin, median_model, low_model, up_model); // check!!!
+    
   
     string mkdir = "mkdir -p "+dir; if (system(mkdir.c_str())) {}
     string file_out = dir+file;
     ofstream fout(file_out.c_str()); checkIO(fout, file_out);
+
+    fout << "### scale in the first dimension # scale in the second dimension # median model # model at 16th percentile # model at 84th percentile ###" << endl;
     
-    vector<vector<double>> median_model, low_model, up_model;
-    compute_model_from_chains(r1, r2, start, thin, median_model, low_model, up_model); // check!!!
-  
     for (size_t i=0; i<r1.size(); i++)
       for (size_t j=0; j<r2.size(); j++) 
-	fout << r1[i] << "  " << r2[j] << "  " << median_model[i][j] << "  " << low_model[i][j] << "  " << up_model[i][j] << endl;
+	fout << setw(10) << setiosflags(ios::fixed) << setprecision(5) << r1[i] << "  " << r2[j] << "  " << median_model[i][j] << "  " << low_model[i][j] << "  " << up_model[i][j] << endl;
     
     fout.clear(); fout.close();
     coutCBL << "I wrote the file: " << dir+file << endl;

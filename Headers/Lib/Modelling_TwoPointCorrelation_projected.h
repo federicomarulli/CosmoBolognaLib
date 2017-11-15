@@ -130,9 +130,6 @@ namespace cosmobl {
 	   *
 	   *  \f[w_p(r_p) = (b\sigma_8)^2 \cdot w_p^{\rm DM}(r_p)\f]
 	   *
-	   *  @param bsigma8_value if bsigma8_value>par::defaultDouble
-	   *  then the \f$b\sigma_8\f$ value is fixed at bsigma8_value
-	   *
 	   *  @param bsigma8_prior prior for the parameter
 	   *  \f$b(z)\sigma_8(z)\f$
 	   *
@@ -161,29 +158,13 @@ namespace cosmobl {
 	   *
 	   *  - \f$\alpha\f$: the slope of the power law
 	   *
-	   *  @param Mmin_value if Mmin_value>par::defaultDouble then
-	   *  the \f$M_{min}\f$ value is fixed at Mmin_value
-	   *
 	   *  @param Mmin_prior \f$M_{min}\f$ prior
-	   *
-	   *  @param sigmalgM_value if
-	   *  sigmalgM_value>par::defaultDouble then the
-	   *  \f$\sigma_{\log M_h}\f$ value is fixed at sigmalgM_value
 	   *
 	   *  @param sigmalgM_prior \f$\sigma_{\log M_h}\f$ prior
 	   *
-	   *  @param M0_value if M0_value>par::defaultDouble then the
-	   *  \f$M_0\f$ value is fixed at M0_value
-	   *
 	   *  @param M0_prior \f$M_0\f$ prior
 	   *
-	   *  @param M1_value if M1_value>par::defaultDouble then the
-	   *  \f$M_1\f$ value is fixed at M1_value
-	   *
 	   *  @param M1_prior \f$\alpha\f$ prior
-	   *
-	   *  @param alpha_value if alpha_value>par::defaultDouble
-	   *  then the \f$\alpha\f$ value is fixed at alpha_value
 	   *
 	   *  @param alpha_prior \f$\alpha\f$ prior
 	   *

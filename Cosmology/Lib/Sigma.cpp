@@ -46,8 +46,12 @@ double cosmobl::cosmology::Cosmology::m_func_sigma (const string method_Pk, cons
   function<double(double)> func;
   
   vector<double> kk, Pk;
+  
+  double fact = (m_unit || unit1) ? 1. : m_hh;
 
+  
   // the power spectrum is read from file
+  
   if (input_file!=par::defaultString && !is_parameter_file) {
    
     string line;
@@ -69,40 +73,41 @@ double cosmobl::cosmology::Cosmology::m_func_sigma (const string method_Pk, cons
 
     fin.clear(); fin.close();
 
-    func = cosmobl::glob::FuncGrid(kk, Pk, interpType, cosmobl::binType::_logarithmic_);
+    func = glob::FuncGrid(kk, Pk, interpType, cosmobl::binType::_logarithmic_);
   }
     
 
   // alternatively, the power spectrum is computed using either the internal cosmological parameters, or using a parameter file
     
-  else if (method_Pk=="EisensteinHu" && input_file==par::defaultString){
-
+  else if (method_Pk=="EisensteinHu" && input_file==par::defaultString) {
+    
     auto ff = [&] (const double kk)
     {
-      return this->Pk_UnNorm(kk, redshift, method_Pk, unit1);
-    };
+      EisensteinHu eh;
+      eh.TFmdm_set_cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massive_neutrinos, m_Omega_DE, m_hh, redshift, m_scalar_amp, m_scalar_pivot, m_n_spec);
+      
+      if (eh.Pk(kk)!=eh.Pk(kk)) ErrorCBL("Error in cosmobl::cosmology::Cosmology::m_func_sigma() of Sigma.cpp: eh.Pk=nan!");
 
+      return eh.Pk(kk*fact)*pow(fact, -3.);
+    };
+    
     func = ff;
   }
 
   else if (method_Pk=="CAMB" || method_Pk=="classgal_v1") {
 
-    double fact = (m_unit) ? 1. : m_hh;
-
-    fact= (!m_unit && unit1) ? 1. :fact;
-
     vector<double> lgkk, lgPk;
     Table_PkCodes(method_Pk, false, lgkk, lgPk, redshift, output_root, kmax, input_file);
 
     for (size_t i=0; i<lgkk.size(); i++) {
-      double KK = pow(10., lgkk[i])*fact;
+      const double KK = pow(10., lgkk[i])*fact;
 	if (KK<kmax) {
 	  kk.emplace_back(KK);
           Pk.emplace_back(pow(10., lgPk[i])*pow(fact, -3.));
 	}
     }
 
-    func = cosmobl::glob::FuncGrid(kk, Pk, interpType, cosmobl::binType::_linear_);
+    func = glob::FuncGrid(kk, Pk, interpType, cosmobl::binType::_linear_);
   }
   
   else ErrorCBL("Error in cosmobl::cosmology::Cosmology::sigma2M_notNormalised of Sigma.cpp: the chosen method_Pk is not available!");
@@ -113,8 +118,9 @@ double cosmobl::cosmology::Cosmology::m_func_sigma (const string method_Pk, cons
     };
   
   // compute the mass variance
-  //return 1./(2.*pow(par::pi, 2)) * (gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4) + gsl::GSL_integrate_qagiu(ff, 1., 1.e-5));
-  return 1./(2.*pow(par::pi, 2)) * (gsl::GSL_integrate_qag(ff, 1.e-4, kmax, 1.e-1));
+  //return 1./(2.*pow(par::pi, 2))*gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4)+gsl::GSL_integrate_qagiu(ff, 1., 1.e-5);
+ 
+  return 1./(2.*pow(par::pi, 2))*gsl::GSL_integrate_qag(ff, 1.e-4, kmax, 1.e-1);
 }
 
 
@@ -126,10 +132,10 @@ double cosmobl::cosmology::Cosmology::m_sigma2R_notNormalised (const double radi
 {
   auto filter = [&] (const double k)
   {
-    return pow(cosmobl::TopHat_WF(k*radius),2);
+    return pow(TopHat_WF(k*radius),2);
   };
 
-  return cosmobl::cosmology::Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1);
+  return cosmology::Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1);
 
 }
 
@@ -213,10 +219,10 @@ double cosmobl::cosmology::Cosmology::m_sigma2M_notNormalised (const double mass
 
   auto filter = [&] (const double k)
   {
-    return pow(TopHat_WF(k*radius),2);
+    return pow(TopHat_WF(k*radius), 2);
   };
 
-  return cosmology::Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1);
+  return Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1);
 }
 
 
@@ -238,10 +244,7 @@ double cosmobl::cosmology::Cosmology::sigma2M (const double mass, const string m
     if (m_sigma8>0)
       // (sigma8 = sigma(8Mpc/h))
       fact = pow(m_sigma8, 2)/m_sigma2M_notNormalised(Mass(8., rho_m(0., true)), method_Pk, 0., output_root, interpType, kmax, input_file, is_parameter_file, true);
-    
-    else if (m_sigma8<0 && method_Pk=="EisensteinHu") ErrorCBL("Error in sigma2M of Sigma.cpp: sigma8 must be >0 if method_Pk=Eisenstein&Hu!");
   }
-
 
   return m_sigma2M_notNormalised(mass, method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, unit1)*fact;
 }
@@ -265,8 +268,6 @@ double cosmobl::cosmology::Cosmology::dnsigma2M (const int nd, const double mass
     if (m_sigma8>0)
       // (sigma8 = sigma(8Mpc/h))
       fact = pow(m_sigma8, 2)/m_sigma2M_notNormalised(Mass(8., rho_m(0., true)), method_Pk, 0., output_root, interpType, kmax, input_file, is_parameter_file, true);
-    
-    else if (m_sigma8<0 && method_Pk=="EisensteinHu") ErrorCBL("Error in sigma2M of Sigma.cpp: sigma8 must be >0 if method_Pk=Eisenstein&Hu!");
   }
 
   if (nd==1) {
@@ -285,7 +286,7 @@ double cosmobl::cosmology::Cosmology::dnsigma2M (const int nd, const double mass
       return 2.*cosmobl::TopHat_WF(k*radius)*cosmobl::TopHat_WF_D1(k*radius)*k*dRdM;
     };
 
-    return cosmobl::cosmology::Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1)*fact;
+    return cosmology::Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1)*fact;
 
   }
   else

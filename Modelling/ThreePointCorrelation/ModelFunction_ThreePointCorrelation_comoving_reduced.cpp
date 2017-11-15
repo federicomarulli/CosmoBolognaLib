@@ -30,12 +30,14 @@
  *  coordinates
  *
  *
- *  @authors Federico Marulli
+ *  @authors Federico Marulli, Michele Moresco
  *
- *  @authors federico.marulli3@unbo.it
+ *  @authors federico.marulli3@unbo.it, michele.moresco@unibo.it
  */
 
 #include "ModelFunction_ThreePointCorrelation_comoving_reduced.h"
+
+using namespace cosmobl;
 
 
 // ============================================================================================
@@ -58,4 +60,52 @@ vector<double> cosmobl::modelling::threept::Q_nonlinear_localbias (const vector<
   	Q_nl_lb[i] = 1./bias1*(pp->Q_DM[i]+bias2/bias1);
 
   return Q_nl_lb;
+}
+
+
+// ============================================================================================
+
+vector<double> cosmobl::modelling::threept::Q_nonlinear_nonlocalbias (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
+{
+  (void)theta;
+
+  // structure contaning the required input data
+  shared_ptr<STR_data_model_threept> pp = static_pointer_cast<STR_data_model_threept>(inputs);
+
+  // input likelihood parameters
+
+  // bias
+  double bias1 = parameter[0];
+  double bias2 = parameter[1];
+  double g2 = parameter[2];
+
+  vector<double> Q_nl_nlb(pp->theta.size());
+  Q_nl_nlb = pp->cosmology->Q_halo (pp->r1, pp->r2, pp->theta, bias1, bias2, g2, pp->model, pp->kk, pp->Pk_DM);
+
+  return Q_nl_nlb;
+}
+
+
+// ============================================================================================
+
+vector<double> cosmobl::modelling::threept::Q_nonlinear_nonlocalbias_alpha (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
+{
+  (void)theta;
+
+  // structure contaning the required input data
+  shared_ptr<STR_data_model_threept> pp = static_pointer_cast<STR_data_model_threept>(inputs);
+
+  // input likelihood parameters
+
+  // bias
+  double bias1 = parameter[0];
+  double bias2 = parameter[1];
+  double g2 = parameter[2];
+  double alpha = parameter[3];
+
+  vector<double> Q_nl_nlb_alpha(pp->theta.size());
+
+  Q_nl_nlb_alpha = pp->cosmology->Q_halo (pp->r1*alpha, pp->r2*alpha, pp->theta, bias1, bias2, g2, pp->model, pp->kk, pp->Pk_DM);
+
+  return Q_nl_nlb_alpha;
 }

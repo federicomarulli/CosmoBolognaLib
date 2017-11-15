@@ -218,10 +218,12 @@ namespace cosmobl {
 	 *
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
+	 * 
+	 *  @param seed the seed for random number generation
 	 *
 	 *  @return none
 	 */
-	void measureBootstrap (const int nMocks, const string dir_output_pairs = par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample = par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
+	void measureBootstrap (const int nMocks, const string dir_output_pairs = par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample = par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_, const int seed=3213) override;
 
       public:
     
@@ -377,9 +379,11 @@ namespace cosmobl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
+	 *  @param seed the seed for random number generation
+	 *
 	 *  @return none
 	 */
-	void measure (const ErrorType errorType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={},  const string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) override;
+	void measure (const ErrorType errorType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={},  const string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_, const int seed=3213) override;
 
 	///@}
 

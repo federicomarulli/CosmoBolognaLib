@@ -88,7 +88,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const cosmology
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology &cosm, const bool conv, const double sigma, const int seed, const vector<double> redshift, const vector<double> RA, const vector<double> Dec, const int z_ndigits)
+cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology &cosm, const bool conv, const double sigma, const vector<double> redshift, const vector<double> RA, const vector<double> Dec, const int z_ndigits, const int seed)
 {
   size_t nRandom = int(N_R*catalogue.nObjects());
 
@@ -108,14 +108,13 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue
 
     if (Xmin>Xmax || Ymin>Ymax || Zmin>Zmax) ErrorCBL("Error in Catalogue::Catalogue of Catalogue.cpp!");
 
-    default_random_engine gen(seed);
-    uniform_real_distribution<float> ran(0., 1.);
-
+    random::UniformRandomNumbers ran(0., 1., seed);
+    
     for (size_t i=0; i<nRandom; ++i) {
       comovingCoordinates coord;
-      coord.xx = ran(gen)*(Xmax-Xmin)+Xmin;
-      coord.yy = ran(gen)*(Ymax-Ymin)+Ymin;
-      coord.zz = ran(gen)*(Zmax-Zmin)+Zmin;
+      coord.xx = ran()*(Xmax-Xmin)+Xmin;
+      coord.yy = ran()*(Ymax-Ymin)+Ymin;
+      coord.zz = ran()*(Zmax-Zmin)+Zmin;
       m_object.push_back(move(Object::Create(_RandomObject_, coord)));
     }
 
@@ -135,13 +134,11 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue
       }
     }
     
-    uniform_int_distribution<int> uni(0, catalogue.nObjects()-1);
-    default_random_engine rng;
-
+    random::UniformRandomNumbers ran(0., catalogue.nObjects()-1, seed);
     
     // constructing the random sample
     for (size_t i=0; i<ra.size(); i++) {
-      observedCoordinates coord = {ra[i], dec[i], round_to_precision(catalogue.redshift(uni(rng)), z_ndigits)};
+      observedCoordinates coord = {ra[i], dec[i], round_to_precision(catalogue.redshift(ran()), z_ndigits)};
       m_object.push_back(move(Object::Create(_RandomObject_, coord, cosm)));
     }
     
@@ -170,11 +167,9 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue
       else if (type==_createRandom_square_) {
 	coutCBL << "I'm creating a random catalogue in a RA-Dec square..." << endl;
         
-	default_random_engine generator(seed);
-	uniform_real_distribution<double> distribution;
-	auto ran = bind(distribution, generator);
+	random::UniformRandomNumbers ran(0., 1., seed);
 	
-	double ra_min = catalogue.Min(Var::_RA_),
+	const double ra_min = catalogue.Min(Var::_RA_),
 	  ra_max = catalogue.Max(Var::_RA_),
 	  sin_dec_min = sin(catalogue.Min(Var::_Dec_)),
 	  sin_dec_max = sin(catalogue.Max(Var::_Dec_));
@@ -232,9 +227,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue
 
   vector<double> DD;
  
-  default_random_engine gen(seed);
-  uniform_real_distribution<float> ran(0., 1.);
-
+  random::UniformRandomNumbers ran(0., 1., seed);
   
   // extract the redshift distribution  
   
@@ -265,9 +258,9 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue
     bool OK = 0;
     while (!OK) {
 
-      coord.xx = fact*DD[i]*rMax*2.*(ran(gen)-0.5);
+      coord.xx = fact*DD[i]*rMax*2.*(ran()-0.5);
       coord.yy = DD[i];
-      coord.zz = fact*DD[i]*rMax*2.*(ran(gen)-0.5);
+      coord.zz = fact*DD[i]*rMax*2.*(ran()-0.5);
 
       r1 = sqrt(coord.xx*coord.xx+coord.zz*coord.zz);
       r2 = sqrt(coord.xx*coord.xx+coord.zz*coord.zz+DD[i]*DD[i]);

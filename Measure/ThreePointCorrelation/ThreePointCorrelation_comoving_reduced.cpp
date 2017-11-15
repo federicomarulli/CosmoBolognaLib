@@ -50,9 +50,10 @@ using namespace threept;
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount) 
+void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
 {   
-
+  (void)seed;
+  
   // ----------- compute the connected three-point correlation function -----------
   
   ThreePointCorrelation_comoving_connected::measure(dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
@@ -118,12 +119,13 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const vector<vector<double>> weights, const bool doJK, const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount) 
-{   
+void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const vector<vector<double>> weight, const bool doJK, const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+{
+  (void)seed;
 
   // ----------- compute the connected three-point correlation function -----------
   
-  ThreePointCorrelation_comoving_connected::measure(weights, doJK, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+  ThreePointCorrelation_comoving_connected::measure(weight, doJK, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
   m_scale = ThreePointCorrelation_comoving_connected::m_scale;
   
   
@@ -181,7 +183,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
 
   /// Compute resamplings and covariance matrix
   
-  vector<vector<double>> resampling_threept(weights.size(), vector<double>(m_ddd->nbins(), 0));
+  vector<vector<double>> resampling_threept(weight.size(), vector<double>(m_ddd->nbins(), 0));
   vector<long> region_list = m_data->region_list();
 
   vector<double> nData_reg_weighted, nRandom_reg_weighted;
@@ -193,14 +195,14 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
     nRandom_reg_weighted.push_back(m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
   }
 
-  for(size_t i=0; i<weights.size(); i++){
+  for (size_t i=0; i<weight.size(); i++) {
 
     double nData = 0;
     double nRan = 0;
 
-    for(size_t j=0; j<weights[i].size(); j++){
-      nData += weights[i][j]*nData_reg_weighted[j];
-      nRan += weights[i][j]*nRandom_reg_weighted[j];
+    for (size_t j=0; j<weight[i].size(); j++) {
+      nData += weight[i][j]*nData_reg_weighted[j];
+      nRan += weight[i][j]*nRandom_reg_weighted[j];
     }
 
     double norm1 = (double(nData)*double(nData-1)*double(nData-2))/6.;
@@ -209,7 +211,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
     double norm4 = (double(nRan)*double(nRan-1)*double(nRan-2))/6.;
 
     for (int j=0; j<m_ddd->nbins(); j++) 
-      if (m_ddd_regions[i]->TT1D(j)>0 && m_rrr_regions[i]->TT1D(j)>0){
+      if (m_ddd_regions[i]->TT1D(j)>0 && m_rrr_regions[i]->TT1D(j)>0) {
 	resampling_threept[i][j] = ((m_ddd_regions[i]->TT1D(j)/norm1)/(m_rrr_regions[i]->TT1D(j)/norm4))-3.*((m_ddr_regions[i]->TT1D(j)/norm2)/(m_rrr_regions[i]->TT1D(j)/norm4))+3.*(((m_drr_regions[i]->TT1D(j)/norm3)/(m_rrr_regions[i]->TT1D(j)/norm4)))-1.;
 	resampling_threept[i][j] /= ((xi_real_lin[0]*xi_real_lin[1])+(xi_real_lin[0]*xi_real_lin[j+2])+(xi_real_lin[1]*xi_real_lin[j+2]));
       }
@@ -227,10 +229,10 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
 
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const cosmobl::measure::ErrorType errorType, const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const int nResamplings, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount) 
+void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const cosmobl::measure::ErrorType errorType, const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const int nResamplings, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
 {  
 
-  switch(errorType){
+  switch (errorType) {
     
     case cosmobl::measure::ErrorType::_None_:
       {
@@ -242,11 +244,11 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
       {
 	const int nRegions = m_data->nRegions();
 
-	vector<vector<double>> weights(nRegions, vector<double>(nRegions, 1));
-	for(int i=0; i<nRegions; i++)
-	  weights[i][i] = 0;
+	vector<vector<double>> weight(nRegions, vector<double>(nRegions, 1));
+	for (int i=0; i<nRegions; i++)
+	  weight[i][i] = 0;
 
-	measure(weights, true, dir_output_triplets, dir_output_2pt, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+	measure(weight, true, dir_output_triplets, dir_output_2pt, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
 	break;
       }
 
@@ -254,16 +256,16 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
       {
 	const int nRegions = m_data->nRegions();
 
-	uniform_int_distribution<int> uni(0, nRegions-1);
-	default_random_engine rng;
+	random::UniformRandomNumbers ran(0., nRegions-1, seed);
+	
 	int val = 3; // see Norberg et al. 2009
 
-	vector<vector<double>> weights(nResamplings, vector<double>(nRegions, 0));
-	for(int i=0; i<nResamplings; i++)
-	  for(int j=0; j<val*nRegions; j++)
-	    weights[i][uni(rng)] ++;
+	vector<vector<double>> weight(nResamplings, vector<double>(nRegions, 0));
+	for (int i=0; i<nResamplings; i++)
+	  for (int j=0; j<val*nRegions; j++)
+	    weight[i][ran()] ++;
 
-	measure(weights, false, dir_output_triplets, dir_output_2pt, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+	measure(weight, false, dir_output_triplets, dir_output_2pt, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
 	break;
       }
 
@@ -298,3 +300,12 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::write (c
   
   fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl << endl;
 }  
+
+
+// ============================================================================
+
+
+void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::write_covariance (const string dir, const string file) const
+{
+  m_dataset->write_covariance(dir, file);
+}

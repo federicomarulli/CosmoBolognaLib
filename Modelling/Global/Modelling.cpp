@@ -93,8 +93,10 @@ void cosmobl::modelling::Modelling::maximize_likelihood (vector<double> &guess, 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::sample_likelihood (const int chain_size, const int nwalkers, const int seed, const double aa)
+void cosmobl::modelling::Modelling::run_MCMC (const int chain_size, const int nwalkers, const int seed, const double aa)
 {
+  if (nwalkers<2) ErrorCBL("Error in cosmobl::modelling::Modelling::run_MCMC of Modelling.cpp: the MCMC algorithms currently implemented require nwalkers>1");
+  
   m_likelihood->initialize_chains(chain_size, nwalkers, seed);
 
   m_likelihood->sample_stretch_move_parallel(seed, aa);
@@ -104,8 +106,10 @@ void cosmobl::modelling::Modelling::sample_likelihood (const int chain_size, con
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::sample_likelihood (const int chain_size, const int nwalkers, const int seed, vector<double> &start, const double radius, const double aa)
+void cosmobl::modelling::Modelling::run_MCMC (const int chain_size, const int nwalkers, const int seed, vector<double> &start, const double radius, const double aa)
 {
+  if (nwalkers<2) ErrorCBL("Error in cosmobl::modelling::Modelling::run_MCMC of Modelling.cpp: the MCMC algorithms currently implemented require nwalkers>1");
+  
   m_likelihood->initialize_chains(chain_size, nwalkers, seed, start, radius);
 
   m_likelihood->sample_stretch_move_parallel(seed, aa);
@@ -114,8 +118,8 @@ void cosmobl::modelling::Modelling::sample_likelihood (const int chain_size, con
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::sample_likelihood (const int chain_size, const vector<vector<double>> chain_values, const int seed, const double aa)
-{
+void cosmobl::modelling::Modelling::run_MCMC (const int chain_size, const vector<vector<double>> chain_values, const int seed, const double aa)
+{ 
   m_likelihood->initialize_chains(chain_size, chain_values);
 
   m_likelihood->sample_stretch_move_parallel(seed, aa);
@@ -124,8 +128,10 @@ void cosmobl::modelling::Modelling::sample_likelihood (const int chain_size, con
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::sample_likelihood (const int chain_size, const int nwalkers, const int seed, const string input_dir, const string input_file, const double aa)
+void cosmobl::modelling::Modelling::run_MCMC (const int chain_size, const int nwalkers, const int seed, const string input_dir, const string input_file, const double aa)
 {
+  if (nwalkers<2) ErrorCBL("Error in cosmobl::modelling::Modelling::run_MCMC of Modelling.cpp: the MCMC algorithms currently implemented require nwalkers>1");
+  
   m_likelihood->initialize_chains(chain_size, nwalkers, input_dir, input_file);
 
   m_likelihood->sample_stretch_move_parallel(seed, aa);

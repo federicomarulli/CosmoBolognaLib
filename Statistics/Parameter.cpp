@@ -24,8 +24,8 @@
  *  @brief Methods of the  class Parameter 
  *
  *  This file contains the implementation of the methods of the class
- *  Parameter, used to manage model parameters in chi2 fitting or monte carlo
- *  analysis
+ *  Parameter, used to manage model parameters in chi2 fitting or
+ *  monte carlo analysis
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo 
  *

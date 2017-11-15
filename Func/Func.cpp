@@ -371,7 +371,7 @@ double cosmobl::haversine_distance (const double ra1, const double ra2, const do
 // ============================================================================================
 
 
-double cosmobl::MC_Int (double func(const double), const double x1, const double x2) 
+double cosmobl::MC_Int (double func(const double), const double x1, const double x2, const int seed) 
 {
   int step = 100000;
   double delta_x = (x2-x1)/step;
@@ -387,9 +387,7 @@ double cosmobl::MC_Int (double func(const double), const double x1, const double
   f1 = (f1>0) ? f1*0.5 : -fabs(f1)*2.;
   f2 *= 2.; 
 
-  default_random_engine generator(5);
-  std::uniform_real_distribution<double> distribution;
-  auto ran = bind(distribution, generator);
+  random::UniformRandomNumbers ran(0., 1., seed);
   
   double xt, yt, INT;
   int sub = 0, subn = 0, numTOT = 10000000;
@@ -419,7 +417,11 @@ double cosmobl::MC_Int (double func(const double), const double x1, const double
   return INT;
 }
 
-double cosmobl::MC_Int (double func(const double, const double AA), const double AA, const double x1, const double x2) 
+
+// ============================================================================================
+
+
+double cosmobl::MC_Int (double func(const double, const double AA), const double AA, const double x1, const double x2, const int seed) 
 {
   int step = 100000;
   double delta_x = (x2-x1)/step;
@@ -435,9 +437,7 @@ double cosmobl::MC_Int (double func(const double, const double AA), const double
   f1 = (f1>0) ? f1*0.5 : -fabs(f1)*2.;
   f2 *= 2.; 
 
-  default_random_engine generator(5);
-  std::uniform_real_distribution<double> distribution;
-  auto ran = bind(distribution, generator);
+  random::UniformRandomNumbers ran(0., 1., seed);
 
   double xt, yt, INT;
   int sub = 0, subn = 0, numTOT = 10;
@@ -467,7 +467,11 @@ double cosmobl::MC_Int (double func(const double, const double AA), const double
   return INT;
 }
 
-double cosmobl::MC_Int (double func(const double, const double AA, const double BB, const double CC, const double DD, const double EE), const double AA, const double BB, const double CC, const double DD, const double EE, const double x1, const double x2) 
+
+// ============================================================================================
+
+
+double cosmobl::MC_Int (double func(const double, const double AA, const double BB, const double CC, const double DD, const double EE), const double AA, const double BB, const double CC, const double DD, const double EE, const double x1, const double x2, const int seed) 
 {
   int step = 100000;
   double delta_x = (x2-x1)/step;
@@ -483,10 +487,8 @@ double cosmobl::MC_Int (double func(const double, const double AA, const double 
   f1 = (f1>0) ? f1*0.5 : -fabs(f1)*2.;
   f2 *= 2.; 
 
-  default_random_engine generator(5);
-  std::uniform_real_distribution<double> distribution;
-  auto ran = bind(distribution, generator);
-
+  random::UniformRandomNumbers ran(0., 1., seed);
+  
   double xt, yt, INT;
   int sub = 0, subn = 0, numTOT = 100000;
 
@@ -553,26 +555,27 @@ long cosmobl::LongSwap (const long i)
 
 float cosmobl::FloatSwap (const float f)
 {
-  union
-  {
+  union {
     float f;
     unsigned char b[4];
   } dat1, dat2;
+  
   dat1.f = f;
   dat2.b[0] = dat1.b[3];
   dat2.b[1] = dat1.b[2];
   dat2.b[2] = dat1.b[1];
   dat2.b[3] = dat1.b[0];
+  
   return dat2.f;
 }
 
 double cosmobl::DoubleSwap (const double d)
 {
-  union
-  {
+  union {
     double d;
     unsigned char b[8];
   } dat1, dat2;
+  
   dat1.d = d;
   dat2.b[0] = dat1.b[7];
   dat2.b[1] = dat1.b[6];
@@ -582,6 +585,7 @@ double cosmobl::DoubleSwap (const double d)
   dat2.b[5] = dat1.b[2];
   dat2.b[6] = dat1.b[1];
   dat2.b[7] = dat1.b[0];
+  
   return dat2.d;
 }
 
@@ -665,7 +669,7 @@ double cosmobl::interpolated (const double _xx, const vector<double> xx, const v
   
   gsl_interp_free(interp);
   gsl_interp_accel_free(acc);
-  
+
   return _yy;
 }
 
@@ -1315,7 +1319,7 @@ int cosmobl::used_memory (const int type)
 
 #else 
   (void)type;
-  WarningMsg("Attention: used_memory of Func.cpp works only on Linux systems");
+  //WarningMsg("Attention: used_memory of Func.cpp works only on Linux systems");
   return 1;
 
 #endif
@@ -1348,7 +1352,7 @@ int cosmobl::check_memory (const double frac, const bool exit, const string func
   
 #else
   (void)frac; (void)exit; (void)func; (void)type;
-  WarningMsg("Attention: check_memory of Func.cpp works only on Linux systems");
+  //WarningMsg("Attention: check_memory of Func.cpp works only on Linux systems");
   return 1;
   
 #endif
@@ -1703,12 +1707,10 @@ void cosmobl::sdss_stripe (const vector<double> eta, const vector<double> lambda
 // ============================================================================
 
 
-vector<double> cosmobl::vector_from_distribution (const int nRan, const vector<double> xx, const vector<double> fx, const double xmin, const double xmax, const int idum)
+vector<double> cosmobl::vector_from_distribution (const int nRan, const vector<double> xx, const vector<double> fx, const double xmin, const double xmax, const int seed)
 {
-  default_random_engine generator(idum);
-  std::uniform_real_distribution<double> distribution;
-  auto ran = bind(distribution, generator);
-
+  random::UniformRandomNumbers ran(0., 1., seed);
+  
   int sz = 100;
   vector<double> Fx(sz, 0.);
   vector<double> new_x = linear_bin_vector(sz, xmin, xmax); 
@@ -1996,6 +1998,7 @@ void cosmobl::distribution (vector<double> &xx, vector<double> &fx, vector<doubl
     fout.clear(); fout.close(); coutCBL << "I wrote the file: " << file_out << endl;
   }
 
+  gsl_histogram_free(histo);
   fftw_cleanup();
 
 }
@@ -2032,6 +2035,21 @@ double cosmobl::Legendre_polynomial_mu_average (const int ll, const double mu, c
   Func.params = &lll;
 
   return gsl::GSL_integrate_qag(Func, mu, mu+delta_mu, 1.e-3, 1000, 6)/delta_mu;
+}
+
+
+// ============================================================================
+
+
+vector<double> cosmobl::spherical_harmonics (const int l, const int m, const double xx, const double yy, const double zz)
+{
+  const double sintheta = sin(acos(zz));
+  complex<double> exp_iphi(xx/(sintheta), yy/(sintheta));
+  complex<double> pow_exp = pow(exp_iphi, m);
+
+  double fact = pow(-1., m)*gsl_sf_legendre_sphPlm (l, m, zz);
+
+  return { fact*pow_exp.real(), fact*pow_exp.imag()};
 }
 
 
@@ -2133,11 +2151,10 @@ double cosmobl::jl_distance_average (const double kk, const int order, const dou
 // ============================================================================
 
 
-vector<double> cosmobl::generate_correlated_data (const vector<double> mean, const vector<vector<double>> covariance, const int idum)
+vector<double> cosmobl::generate_correlated_data (const vector<double> mean, const vector<vector<double>> covariance, const int seed)
 {
-  default_random_engine generator(idum);
-  normal_distribution<double> distribution(0., 1.); 
-
+  random::UniformRandomNumbers ran(0., 1., seed);
+  
   size_t sample_size = mean.size();
   vector<double> sample;
   vector<double> std;
@@ -2146,7 +2163,7 @@ vector<double> cosmobl::generate_correlated_data (const vector<double> mean, con
   
   for (size_t i=0; i<sample_size; i++) {
     std.push_back(sqrt(covariance[i][i]));
-    sample.push_back(distribution(generator));
+    sample.push_back(ran());
     for (size_t j=0; j<sample_size; j++) 
       gsl_matrix_set(correlation,i,j,covariance[i][j]/sqrt(covariance[i][i]*covariance[j][j]));
   }
@@ -2203,15 +2220,14 @@ double cosmobl::trapezoid_integration (const vector<double> xx, const vector<dou
 // ============================================================================
 
 
-vector< vector<double> > cosmobl::generate_correlated_data (const int nExtractions, const vector<double> mean, const vector<vector<double> > covariance, const int idum)
+vector< vector<double> > cosmobl::generate_correlated_data (const int nExtractions, const vector<double> mean, const vector<vector<double> > covariance, const int seed)
 {
-  default_random_engine generator(idum);
-  normal_distribution<double> distribution(0.,1.); 
-
+  random::UniformRandomNumbers ran(0., 1., seed);
+  
   size_t sample_size = mean.size();
   vector<double> std;
 
-  gsl_matrix *correlation  = gsl_matrix_alloc(sample_size,sample_size);
+  gsl_matrix *correlation = gsl_matrix_alloc(sample_size,sample_size);
   
   for (size_t i=0; i<sample_size; i++) {
     std.push_back(sqrt(covariance[i][i]));
@@ -2223,7 +2239,7 @@ vector< vector<double> > cosmobl::generate_correlated_data (const int nExtractio
   for (int j=0; j<nExtractions; j++) {
     vector<double> subS(sample_size, 0);
     for (size_t i=0; i<sample_size; i++)
-      subS[i] = distribution(generator);
+      subS[i] = ran();
     sample.push_back(subS);
   }
 

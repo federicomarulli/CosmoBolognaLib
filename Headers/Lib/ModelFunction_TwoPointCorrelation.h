@@ -72,6 +72,9 @@ namespace cosmobl {
 	/// method to compute the dark matter power spectrum
 	string method_Pk;
       
+	/// the output_dir directory where the output of external codes are written
+	string output_dir;
+      
 	/// output root of the parameter file used to compute the dark matter power spectrum
 	string output_root;
 
@@ -226,10 +229,10 @@ namespace cosmobl {
 	vector<double> cluster_mass_proxy_error;	
 	
 	/// method to estimate the mass function
-	string method_MF;
+	string model_MF;
 
 	/// method to estimate the bias
-	string method_bias;
+	string model_bias;
 
 	///  pointer to a function of FuncGrid class, used to interpolate the \f$\sigma(M)\f$
 	shared_ptr<glob::FuncGrid> func_sigma;
@@ -240,22 +243,28 @@ namespace cosmobl {
 	/// function to interpolate the effective bias against two cosmological parameters
 	function<double(const double, const double)> cosmopar_bias_interp_2D;
 		
-	/// Function to interpolate the selection function
+	/// function to interpolate the selection function in mass, at the mean redshift
 	shared_ptr<glob::FuncGrid> interp_SelectionFunction_cut;
-
-	/// Function to interpolate the selection function
+	
+	/// function to interpolate the selection function in mass and redshift
 	shared_ptr<glob::FuncGrid2D> interp_SelectionFunction;
 
+	/// minimum redshift
 	double z_min; 
 
+	/// maximum redshift
 	double z_max;
-	
+
+	/// numeber of mass steps 
 	int mass_step; 
 
+	/// minimum mass 
 	double Mass_min; 
-	
+
+	/// maximum mass
 	double Mass_max; 
 
+	/// vector containing the masses
 	vector<double> mass;
 
 	/**

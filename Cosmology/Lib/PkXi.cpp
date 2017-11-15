@@ -93,44 +93,17 @@ string cosmobl::cosmology::Cosmology::Pk_output_file (const string code, const b
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::Pk_UnNorm (const double kk, const double redshift, const string method_Pk, const bool unit1) const
-{ 
-  double fact= (m_unit) ? 1. : m_hh;
-  fact = (!m_unit && unit1) ? 1. : fact;
-
-  double k_ov_h = (fact==1) ? kk : kk/m_hh;
-  double k = k_ov_h*m_hh;
-
-  double norm = 2.*par::pi*par::pi*m_scalar_amp*pow(2.*pow(par::cc/100.,2)/(5*m_Omega_matter)*DD(redshift),2)*pow(k/m_scalar_pivot, m_n_spec-1)*k_ov_h*pow(fact, -3);
-
-  double Pk = -1.;
-  if (method_Pk=="EisensteinHu") { // Eisenstein & Hu  
-    TFmdm_set_cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massive_neutrinos, m_Omega_DE, m_hh, redshift); 
-
-    double func = TFmdm_onek_mpc(k); // transfer function
-    Pk = norm*pow(func,2);
-  }
-  
-  if (Pk<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::Pk_UnNorm of PkXi.cpp!");
-
-  return Pk;
-}
-
-
-// =====================================================================================
-
-
 void cosmobl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, const string output_root, const string output_dir, const double k_max, const string file_par) const 
 {
   string dir = par::DirCosmo+"External/CAMB/";
 
   string File_par = file_par;
 
-  bool delete_output = (output_root == "NULL") ? true : false;
+  bool delete_output = (output_dir==par::defaultString) ? true : false;
 
   string mkdir = "mkdir -p "+output_dir; if (system(mkdir.c_str())) {} 
 
-  string OutputRoot = output_dir+"/"+output_root;
+  string OutputRoot = (output_dir==par::defaultString) ? dir+output_root : output_dir+"/"+output_root;
 
   OutputRoot = (omp_get_max_threads()>1) ? OutputRoot+"_t"+conv(omp_get_thread_num(), par::fINT) : OutputRoot;
 
@@ -193,11 +166,12 @@ void cosmobl::cosmology::Cosmology::run_CAMB (vector<double> &kk, vector<double>
 
   string File_par = file_par;
 
-  bool delete_output = (output_root == "NULL") ? true : false;
+  bool delete_output = (output_dir==par::defaultString) ? true : false;
 
   string mkdir = "mkdir -p "+output_dir; if (system(mkdir.c_str())) {} 
 
-  string OutputRoot = output_dir+"/"+output_root;
+  string OutputRoot = (output_dir==par::defaultString) ? dir+output_root : output_dir+"/"+output_root;
+
 
   OutputRoot = (omp_get_max_threads() > 1) ? OutputRoot+"_t"+conv(omp_get_thread_num(), par::fINT) : OutputRoot;
 
@@ -563,15 +537,16 @@ void cosmobl::cosmology::Cosmology::Pk_0 (const string method_Pk, const double r
 
   if (method_Pk=="EisensteinHu") {
 
-    eisensteinhu::EisensteinHu eh;
+    EisensteinHu eh;
 
     eh.TFmdm_set_cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massive_neutrinos, m_Omega_DE, m_hh, redshift, m_scalar_amp, m_scalar_pivot, m_n_spec); 
 
-    auto func = [&] (const double kk){
-      return pow(TopHat_WF(kk*RR)*kk, 2)*eh.Pk(kk); 
-    };
+    auto func = [&] (const double kk)
+      {
+	return pow(TopHat_WF(kk*RR)*kk, 2)*eh.Pk(kk); 
+      };
     
-    Int = gsl::GSL_integrate_qag (func, k_min, k_max, prec);
+    Int = gsl::GSL_integrate_qag(func, k_min, k_max, prec);
   }
 
   else if (method_Pk=="CAMB" || method_Pk=="MPTbreeze-v1" || method_Pk=="classgal_v1") {
@@ -622,7 +597,7 @@ double cosmobl::cosmology::Cosmology::Pk (const double kk, const string method_P
   else { m_Pk0_EH = 1.; m_Pk0_CAMB = 1.; m_Pk0_MPTbreeze = 1.; m_Pk0_CLASS = 1.; }
 
   if (method_Pk=="EisensteinHu"){  // NL is not used!!!
-    eisensteinhu::EisensteinHu eh;
+    EisensteinHu eh;
 
     eh.TFmdm_set_cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massive_neutrinos, m_Omega_DE, m_hh, redshift, m_scalar_amp, m_scalar_pivot, m_n_spec); 
 
@@ -652,12 +627,11 @@ double cosmobl::cosmology::Cosmology::Pk (const double kk, const string method_P
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::Pk (const vector<double> kk, const string method_Pk, const bool NL, const double redshift, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+vector<double> cosmobl::cosmology::Cosmology::Pk (const vector<double> kk, const string method_Pk, const bool NL, const double redshift, const string output_dir, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
 {
   // define the normalization
   int Norm = norm;
   if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
-
 
   vector<double> Pk(kk.size()); 
 
@@ -666,7 +640,7 @@ vector<double> cosmobl::cosmology::Cosmology::Pk (const vector<double> kk, const
     if (Norm==1) Pk_0(method_Pk, redshift, output_root, k_min, k_max, prec, file_par);
     else { m_Pk0_EH = 1.;}
 
-    eisensteinhu::EisensteinHu eh;
+    EisensteinHu eh;
 
     eh.TFmdm_set_cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massive_neutrinos, m_Omega_DE, m_hh, redshift, m_scalar_amp, m_scalar_pivot, m_n_spec); 
 
@@ -678,7 +652,7 @@ vector<double> cosmobl::cosmology::Cosmology::Pk (const vector<double> kk, const
   else if (method_Pk=="CAMB") {
 
     vector<double> _kk, _pk;
-    run_CAMB(_kk, _pk, NL, redshift, output_root, "./", k_max, file_par);
+    run_CAMB(_kk, _pk, NL, redshift, output_root, output_dir, k_max, file_par);
     glob::FuncGrid interp_Pk(_kk, _pk, "Spline");
     Pk = interp_Pk.eval_func(kk);
 
@@ -746,11 +720,13 @@ double cosmobl::glob::func_xi_EH_GSL (double kk, void *params)
 {
   struct cosmobl::glob::STR_xi_EH *pp = (struct cosmobl::glob::STR_xi_EH *) params;
 
-  Cosmology cosm(pp->Omega_matter, pp->Omega_baryon, pp->Omega_neutrinos, pp->massless_neutrinos, pp->massive_neutrinos, pp->Omega_DE, pp->Omega_radiation, pp->hh, pp->scalar_amp, pp->scalar_pivot, pp->n_spec, pp->w0, pp->wa, pp->fNL, pp->type_NG, pp->tau, pp->model, pp->unit);
+  EisensteinHu eh;
 
-  double Int = cosm.Pk_UnNorm(kk, pp->redshift, pp->method_Pk)*sin(kk*pp->rr)*kk/pp->rr;
+  eh.TFmdm_set_cosm(pp->Omega_matter, pp->Omega_baryon, pp->Omega_neutrinos, pp->massive_neutrinos, pp->Omega_DE, pp->hh, pp->redshift, pp->scalar_amp, pp->scalar_pivot, pp->n_spec); 
+  
+  double Int = eh.Pk(kk)*sin(kk*pp->rr)*kk/pp->rr;
  
-  return Int * exp(-kk*kk*pp->aa*pp->aa); // eq. 24 of Anderson et al. 2012  
+  return Int*exp(-kk*kk*pp->aa*pp->aa); // eq. 24 of Anderson et al. 2012  
 }
 
 /// @endcond
@@ -813,7 +789,7 @@ double cosmobl::cosmology::Cosmology::xi_DM (const double rr, const string metho
 
       Func.function = &glob::func_xi_EH_GSL;
       Func.params = &str;
-      gsl_integration_qag (&Func, k_min, k_max, 0., prec, limit_size, 6, ww, &Int, &error); 
+      gsl_integration_qag(&Func, k_min, k_max, 0., prec, limit_size, 6, ww, &Int, &error); 
     }
 
     else if (method_Pk=="CAMB" || method_Pk=="MPTbreeze-v1" || method_Pk=="classgal_v1") {
@@ -996,7 +972,11 @@ double cosmobl::glob::func_sigma2M_EH_GSL (double kk, void *params)
   double RHO = cosm.rho_m(0., true);
   double rr = Radius(pp->mass,RHO);
 
-  return cosm.Pk_UnNorm(kk, pp->redshift, pp->method_Pk, true)*pow(TopHat_WF(kk*rr)*kk, 2);  
+  EisensteinHu eh;
+
+  eh.TFmdm_set_cosm(pp->Omega_matter, pp->Omega_baryon, pp->Omega_neutrinos, pp->massive_neutrinos, pp->Omega_DE, pp->hh, pp->redshift, pp->scalar_amp, pp->scalar_pivot, pp->n_spec); 
+  
+  return eh.Pk(kk)*pow(TopHat_WF(kk*rr)*kk, 2);  
 }
 
 /// @endcond
@@ -1021,13 +1001,14 @@ double cosmobl::cosmology::Cosmology::sigma8_Pk (const string method_Pk, const d
 
   if (method_Pk=="EisensteinHu") {
 
-    eisensteinhu::EisensteinHu eh;
+    EisensteinHu eh;
 
     eh.TFmdm_set_cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massive_neutrinos, m_Omega_DE, m_hh, redshift, m_scalar_amp, m_scalar_pivot, m_n_spec); 
 
-    auto func = [&] (double kk){
-      return pow(TopHat_WF(kk*RR)*kk, 2)*eh.Pk(kk); 
-    };
+    auto func = [&] (double kk)
+      {
+	return pow(TopHat_WF(kk*RR)*kk, 2)*eh.Pk(kk); 
+      };
     
     Int = gsl::GSL_integrate_qag (func, k_min, k_max, prec, limit_size);
     

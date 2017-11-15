@@ -353,7 +353,7 @@ void cosmobl::lognormal::LogNormalFull::set_density_field (const double smoothin
   double mean = Average(m_densityG->ScalarField());
   m_sigma2G = pow(Sigma(m_densityG->ScalarField()), 2);
 
-  cout << "Average: "  << mean << " Sigma^2: " << m_sigma2G << endl;
+  coutCBL << "Average: "  << mean << " Sigma^2: " << m_sigma2G << endl;
 
   for (int i=0; i<m_nx; i++) {
     double xx = m_density->XX(i);
@@ -505,7 +505,6 @@ void cosmobl::lognormal::LogNormalFull::set_visibility_from_random ()
       double ww = m_random[s]->weight(obj)/nObjects;
       m_visibility_random[s]->set_ScalarField(ww, i, j, k, 1);
     }
-    cout << "HH" << endl;
 
   }
 

@@ -440,7 +440,7 @@ namespace cosmobl {
        * parameter is fixed
        */
       virtual bool fixed () const
-      { ErrorCBL("Error in fixed of Parameter.h"); return 0; }
+      { return ErrorCBL("Error in fixed() of Parameter.h: this parameter is neither fixed or free"); }
 
       /**
        * @brief set the parameter as fixed
@@ -459,36 +459,34 @@ namespace cosmobl {
        * @return none
        */
       virtual void free ()
-      { ErrorCBL("Error in free of Parameter.h"); }
+      { ErrorCBL("Error in free() of Parameter.h"); }
 
       /**
-       * @brief fix the parameter 
-       * at the m_value;
+       * @brief fix the parameter at the m_value
        *
        * @return none
        */
       virtual void fix ()
-      { ErrorCBL("Error in fix of Parameter.h"); }
+      { ErrorCBL("Error in fix() of Parameter.h"); }
 
       /**
-       * @brief fix the parameter at the 
-       * input value;
+       * @brief fix the parameter at the input value
        * 
        * @param value the input value
        *
        * @return none
        */
       virtual void fix (const double value)
-      { (void)value; ErrorCBL("Error in fix of Parameter.h"); }
+      { (void)value; ErrorCBL("Error in fix() of Parameter.h"); }
 
       /**
-       * @brief fix the parameter at the bestfit value,
-       * contained in m_bestfit_value;
+       * @brief fix the parameter at the bestfit value, contained in
+       * m_bestfit_value
        *
        * @return none
        */
       virtual void fix_at_bestfit()
-      { ErrorCBL("Error in fix_at_bestfit of Parameter.h"); }
+      { ErrorCBL("Error in fix_at_bestfit() of Parameter.h"); }
 
       /**
        * @brief get the protected member m_value

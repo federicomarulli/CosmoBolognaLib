@@ -65,7 +65,7 @@ double cosmobl::cosmology::Cosmology::pw (const double ww, const double ff, cons
 
 // Probability that a halo of a given mass m0 at redshift z0 make a mass fraction f at redshift z
 
-double cosmobl::cosmology::Cosmology::pz (const double m0, const double z0, const double frac, const double redshift, const string author_model, const string method_SS, const string output_root) const
+double cosmobl::cosmology::Cosmology::pz (const double m0, const double z0, const double frac, const double redshift, const string model_model, const string method_SS, const string output_root) const
 {
   double dcz0 = deltac(z0)/DD(z0)*DD(0.);
   double dcz = deltac(redshift)/DD(redshift)*DD(0.);
@@ -73,11 +73,11 @@ double cosmobl::cosmology::Cosmology::pz (const double m0, const double z0, cons
   double mf = m0*frac;
   double SSf = sigma2M(mf, method_SS, redshift, output_root);
   double ww = (dcz-dcz0)/sqrt(SSf-SS);
-  if (author_model=="NS"){
+  if (model_model=="NS"){
     if(frac<0.5) coutCBL <<"Warning you are calling pw function for NS with frac = "<<frac<<endl;
     return (1./frac-1.)*2.*ww*erfc(ww/sqrt(2.))+(2.-1./frac)*sqrt(2./par::pi)*exp(-ww*ww*0.5);
   }
-  if (author_model=="GTS"){
+  if (model_model=="GTS"){
     double alpha = 0.815*exp(-2.*frac*frac*frac)/pow(frac,0.707);
     double Denumerator = (exp(ww*ww*0.5)+alpha-1.);
     return alpha*ww*exp(ww*ww*0.5)/Denumerator/Denumerator;
@@ -112,11 +112,11 @@ double cosmobl::cosmology::Cosmology::cumPw (const double ww, const double ff, c
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::medianwf (const double ff, const string author_model, vector<double> &wf) const
+void cosmobl::cosmology::Cosmology::medianwf (const double ff, const string model_model, vector<double> &wf) const
 {
   wf.resize(3);
 
-  if (author_model=="NS") {
+  if (model_model=="NS") {
     int nn = 128;
     vector<double> ww = linear_bin_vector(nn, 0., 5.);
     vector<double> Pw(nn);
@@ -132,7 +132,7 @@ void cosmobl::cosmology::Cosmology::medianwf (const double ff, const string auth
     wf[0] = interpolated(0.75, Pw, ww, type);
   }
 
-  if (author_model=="GTS") {
+  if (model_model=="GTS") {
     double alpha = 0.815*exp(-2*ff*ff*ff)/pow(ff, 0.707);
     wf[2] = sqrt(2.*log(4.*alpha-(alpha-1.)));
     wf[1] = sqrt(2.*log(alpha+1.));
@@ -186,11 +186,11 @@ double cosmobl::cosmology::Cosmology::Redshift (const double mm, const double re
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::medianzf (const double ff, const double mass, const double z0, const string author_model, const string method_SS, vector<double> &zf, const string output_root) const
+void cosmobl::cosmology::Cosmology::medianzf (const double ff, const double mass, const double z0, const string model_model, const string method_SS, vector<double> &zf, const string output_root) const
 {
   vector<double> wf;
   zf.resize(3);
-  medianwf(ff, author_model, wf);
+  medianwf(ff, model_model, wf);
 
   zf[0] = Redshift(mass, z0, ff, method_SS, wf[0], output_root);
   zf[1] = Redshift(mass, z0, ff, method_SS, wf[1], output_root);

@@ -95,6 +95,12 @@ namespace cosmobl {
       /// the total number of cells
       long m_nCell_tot;
 
+      /// the number of non-empty cells
+      long m_nCell_NonEmpty;
+
+      /// the total number of non-empty cells
+      vector<long> m_NonEmpty_Cells;
+
     public:
     
       /**
@@ -130,6 +136,18 @@ namespace cosmobl {
        *  @return total number of cells 
        */
       long nCell() const { return m_nCell_tot; }
+
+      /**
+       *  @brief get the private member ChainMesh::m_nCell_NonEmpty
+       *  @return number of non-empty cells 
+       */
+      long nCell_NonEmpty() const { return m_nCell_NonEmpty; }
+
+      /**
+       *  @brief get the private member ChainMesh::m_NonEmpty_Cells
+       *  @return indexes of non-empty cells 
+       */
+      vector<long> NonEmpty_Cells() const { return m_NonEmpty_Cells; }
     
       /**
        * @brief get the index of the cell given the object coordinates
@@ -179,6 +197,14 @@ namespace cosmobl {
        * @return none
        */
       void get_searching_region (const double r_max, const double r_min = -1);
+
+      /**
+       * @brief get the indeces of the objects close to a cell
+       * @param cell_index the cell index
+       * @param ii the minimum index given in output
+       * @return vector containing the index of the objects inside the cell
+       */
+      vector<long> close_objects_cell (const int cell_index, long ii=-1) const; 
 
       /**
        * @brief get the indeces of the objects close to an object

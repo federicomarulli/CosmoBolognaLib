@@ -78,7 +78,7 @@ void cosmobl::catalogue::Catalogue::check_it_out (ifstream& finr, bool swap)
 
 //==============================================================================================
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const string file_cn, const bool swap, const double fact, const bool read_catalogue, const double nSub)
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const string file_cn, const bool swap, const double fact, const bool read_catalogue, const double nSub, const int seed)
 {
   Gadget_Header header;
   string gdgt_head = file_cn+".0";
@@ -111,9 +111,9 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const string fi
   if (read_catalogue) {
     
     // parameters for random numbers used in case nSub!=1
-    default_random_engine gen;
-    uniform_real_distribution<float> ran(0., 1.);
-
+    
+    random::UniformRandomNumbers ran(0., 1., seed);
+    
     float num_float1, num_float2, num_float3;
     for (int i = 0; i<header.nfiles; i++) {
       string gdgt_snap = file_cn+"."+conv(i, par::fINT);
@@ -146,7 +146,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const string fi
 	if (swap) num_float3 = FloatSwap(num_float3);
 	coords.zz=(num_float3)*fact;
 
-	if (ran(gen)<nSub) m_object.push_back(move(Object::Create(objType, coords)));
+	if (ran()<nSub) m_object.push_back(move(Object::Create(objType, coords)));
       }
       check_it_out(finsnap,swap);
       finsnap.clear(); finsnap.close();

@@ -45,7 +45,7 @@
     enum {_error_, _IO_, _workInProgress_};
     enum {_ConstantDistribution_, _UniformDistribution_, _GaussianDistribution_, _PoissonDistribution_, _CustomDistribution_, _InterpolatedDistribution_, _DiscreteDistribution_    };
     enum {_BaseParameter_, _DerivedParameter_};
-    enum {_WMAP5_, _WMAP7_, _WMAP9_, _Planck13_, _Planck15_};
+    enum {_WMAP5_, _WMAP7_, _WMAP9_, _Planck13_, _Planck15_, _Planck15_TT_};
     enum {_Omega_matter_LCDM_, _Omega_matter_, _Omega_baryon_, _Omega_baryon_h2_,  _Omega_neutrinos_, _massless_neutrinos_, _massive_neutrinos_, _neutrino_mass_, _Omega_DE_, _Omega_radiation_, _H0_, _hh_, _scalar_amp_, _ln_scalar_amp_, _scalar_pivot_, _n_spec_, _w0_, _wa_, _fNL_, _sigma8_, _tau_, _rs_};
     enum {_radians_, _degrees_, _arcseconds_, _arcminutes_};
     enum {_1D_, _2D_}; 
@@ -210,6 +210,7 @@ static const string col_purple = "\033[0;35m";
 static const function<double(double)> default_func = nullptr;
 
 %template(IntVector) std::vector<int>;
+%template(LongVector) std::vector<long>;
 %template(DoubleVector) std::vector<double>;
 %template(StringVector) std::vector<std::string>;
 %template(BoolVector) std::vector<bool>;
@@ -220,7 +221,7 @@ class EnumTypes {
   enum {_error_, _IO_, _workInProgress_};
   enum {_ConstantDistribution_, _UniformDistribution_, _GaussianDistribution_, _PoissonDistribution_, _CustomDistribution_, _InterpolatedDistribution_, _DiscreteDistribution_    };
   enum {_BaseParameter_, _DerivedParameter_};
-  enum {_WMAP5_, _WMAP7_, _WMAP9_, _Planck13_, _Planck15_};
+  enum {_WMAP5_, _WMAP7_, _WMAP9_, _Planck13_, _Planck15_, _Planck15_TT_};
   enum {_Omega_matter_LCDM_, _Omega_matter_, _Omega_baryon_, _Omega_baryon_h2_,  _Omega_neutrinos_, _massless_neutrinos_, _massive_neutrinos_, _neutrino_mass_, _Omega_DE_, _Omega_radiation_, _H0_, _hh_, _scalar_amp_, _ln_scalar_amp_, _scalar_pivot_, _n_spec_, _w0_, _wa_, _fNL_, _sigma8_, _tau_, _rs_};
   enum {_radians_, _degrees_, _arcseconds_, _arcminutes_};
   enum {_1D_, _2D_}; 

@@ -326,7 +326,7 @@ namespace cosmobl {
 	 * 
 	 *  @return none
 	 */
-	void count_pairs_region_test (const shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, shared_ptr<pairs::Pair> pp, vector< shared_ptr<pairs::Pair> > pp_res, const vector<double> weights, const bool cross=true, const bool tcount=false);
+	void count_pairs_region_test (const shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, shared_ptr<pairs::Pair> pp, vector< shared_ptr<pairs::Pair> > pp_res, const vector<double> weight, const bool cross=true, const bool tcount=false);
       
 	/**
 	 *  @brief count the number of pairs, used for
@@ -355,7 +355,7 @@ namespace cosmobl {
 	 * 
 	 *  @return none
 	 */
-	void count_pairs_region_test_1D (const shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, shared_ptr<pairs::Pair> pp, vector< shared_ptr<pairs::Pair> > pp_res, const vector<double> weights, const bool cross=true, const bool tcount=false);
+	void count_pairs_region_test_1D (const shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, shared_ptr<pairs::Pair> pp, vector< shared_ptr<pairs::Pair> > pp_res, const vector<double> weight, const bool cross=true, const bool tcount=false);
       
 	/**
 	 *  @brief count the number of pairs, used for
@@ -384,7 +384,7 @@ namespace cosmobl {
 	 * 
 	 *  @return none
 	 */
-	void count_pairs_region_test_2D (const shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, shared_ptr<pairs::Pair> pp, vector< shared_ptr<pairs::Pair> > pp_res, const vector<double> weights, const bool cross=true, const bool tcount=false);
+	void count_pairs_region_test_2D (const shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, shared_ptr<pairs::Pair> pp, vector< shared_ptr<pairs::Pair> > pp_res, const vector<double> weight, const bool cross=true, const bool tcount=false);
 
 	/**
 	 *  @brief count the data-data, random-random and data-random
@@ -478,7 +478,7 @@ namespace cosmobl {
 	 *  \_1D_deprojected\_, \_1D_multipoles\_, \_1D_angular\_,
 	 *  \_2D_Cartesian\_, \_2D_polar\_
 	 *
-	 *  @param weights region weights
+	 *  @param weight region weights
 	 *
 	 *  @param dir_output_pairs output directory used to store the
 	 *  number of pairs
@@ -506,7 +506,7 @@ namespace cosmobl {
 	 *
 	 *  @return none
 	 */
-	void count_allPairs_region_test (const TwoPType type, const vector<double> weights, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_);
+	void count_allPairs_region_test (const TwoPType type, const vector<double> weight, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_);
 
 	///@}
 
@@ -790,10 +790,12 @@ namespace cosmobl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
+	 *  @param seed the seed for random number generation
+	 *
 	 *  @return none
 	 */
-	virtual void measureBootstrap (const int nMocks, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_)
-	{ (void)nMocks; (void)dir_output_pairs; (void)dir_input_pairs; (void)dir_output_resample; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; cosmobl::ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation.h!"); }
+	virtual void measureBootstrap (const int nMocks, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_, const int seed=3213)
+	{ (void)nMocks; (void)dir_output_pairs; (void)dir_input_pairs; (void)dir_output_resample; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; (void)seed; cosmobl::ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation.h!"); }
 
 	/**
 	 *  @brief measure the jackknife resampling of the two-point
@@ -814,9 +816,10 @@ namespace cosmobl {
 	 *
 	 *  @param dd vector of data-data pairs, divided per regions
 	 *
-	 *  @param rr vector of random-random pairs, divided per regions
+	 *  @param rr vector of random-random pairs, divided per
+	 *  regions
 	 *
-	 *  @param dr vector of random-random pairs, divided per
+	 *  @param dr vector of data-random pairs, divided per
 	 *  regions
 	 *
 	 *  @return none
@@ -843,10 +846,10 @@ namespace cosmobl {
 	 *
 	 *  @param dd vector of data-data pairs, divided per regions
 	 *
-	 *  @param rr vector of random-random pairs, divided per regions
-	 *
-	 *  @param dr vector of random-random pairs, divided per
+	 *  @param rr vector of random-random pairs, divided per
 	 *  regions
+	 *
+	 *  @param dr vector of data-random pairs, divided per regions
 	 *
 	 *  @return none
 	 */
@@ -864,10 +867,12 @@ namespace cosmobl {
 	 *  @param rr vector of random-random pairs, divided per
 	 *  regions
 	 *
+	 *  @param seed the seed for random number generation
+	 *
 	 *  @return none
 	 */
-	virtual vector<shared_ptr<data::Data> > XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
-	{ (void)nMocks; (void)dd; (void)rr; cosmobl::ErrorCBL("Error in vector<shared_ptr<data::Data> > XiJackknife of TwoPointCorrelation.h!"); vector<shared_ptr<data::Data> > data; return data; }
+	virtual vector<shared_ptr<data::Data> > XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const int seed=3213)
+	{ (void)nMocks; (void)dd; (void)rr; (void)seed; cosmobl::ErrorCBL("Error in vector<shared_ptr<data::Data> > XiJackknife of TwoPointCorrelation.h!"); vector<shared_ptr<data::Data> > data; return data; }
 
 	/**
 	 *  @brief measure the bootstrap resampling of the two-point
@@ -880,13 +885,14 @@ namespace cosmobl {
 	 *  @param rr vector of random-random pairs, divided per
 	 *  regions
 	 *
-	 *  @param dr vector of random-random pairs, divided per
-	 *  regions
+	 *  @param dr vector of data-random pairs, divided per regions
+	 *
+	 *  @param seed the seed for random number generation
 	 *
 	 *  @return none
 	 */
-	virtual vector<shared_ptr<data::Data> > XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
-	{ (void)nMocks; (void)dd; (void)rr; (void)dr; cosmobl::ErrorCBL("Error in vector<shared_ptr<data::Data> > XiBootstrap of TwoPointCorrelation.h!"); vector<shared_ptr<data::Data> > data; return data; }
+	virtual vector<shared_ptr<data::Data> > XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr, const int seed=3213)
+	{ (void)nMocks; (void)dd; (void)rr; (void)dr; (void)seed; cosmobl::ErrorCBL("Error in vector<shared_ptr<data::Data> > XiBootstrap of TwoPointCorrelation.h!"); vector<shared_ptr<data::Data> > data; return data; }
 
 	///@}
 
@@ -1474,9 +1480,11 @@ namespace cosmobl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
+	 *  @param seed the seed for random number generation
+	 *
 	 *  @return none
 	 */
-	virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_) = 0;
+	virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const string dir_output_pairs=par::defaultString, const vector<string> dir_input_pairs={}, const string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=_LandySzalay_, const int seed=3213) = 0;
 
 	///@}
 

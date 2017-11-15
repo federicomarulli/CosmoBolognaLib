@@ -27,9 +27,9 @@
  *  Modelling_ThreePointCorrelation, used to model three-point
  *  correlation functions of any kind
  *
- *  @author Federico Marulli
+ *  @author Federico Marulli, Michele Moresco
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unbo.it, michele.moresco@unibo.it
  */
 
 #ifndef __MODELLINGTHREEPOINT__
@@ -138,19 +138,48 @@ namespace cosmobl {
 
 	
 	/**
-	 * @brief return the type of correlation function
-	 * @return the type of correlation function
+	 *  @brief return the type of correlation function
+	 *  @return the type of correlation function
 	 */
 	measure::threept::ThreePType threePType () { return m_threePType; }
 
 
-// ============================================================================================
-
-
-    void set_data_model (const vector<double> Q_DM);
-
+	// ============================================================================================
 
 	
+	/**
+	 *  @brief set the data model for the three-point correlation
+	 *  function 
+	 *
+	 *  @param Q_DM vector contaning the DM reduced three-point
+	 *  correlation function
+	 *
+	 *  @return none
+	 */
+	void set_data_model (const vector<double> Q_DM);
+
+	/**
+	 *  @brief set the data model for the three-point correlation
+	 *  function with non-local contributions
+	 *
+	 *  @param cosmology
+	 *
+	 *  @param r1
+	 *
+	 *  @param r2
+	 *
+	 *  @param theta
+	 *
+	 *  @param model
+	 *
+	 *  @param kk
+	 *
+	 *  @param Pk_DM
+	 *
+	 *  @return none
+	 */
+	void set_data_Q_nonlocal (const cosmology::Cosmology cosmology, const double r1, const double r2, const vector<double> theta, const string model, const vector<double> kk, const vector<double> Pk_DM);
+
 	/**
 	 *  @name Member functions used to write the outputs
 	 */

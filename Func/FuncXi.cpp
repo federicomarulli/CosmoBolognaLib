@@ -80,7 +80,7 @@ double cosmobl::xi_from_Pk (const double rr, const vector<double> lgkk, const ve
   double Int = -1.;
 
   int limit_size = 1000;
-  gsl_integration_workspace *ww = gsl_integration_workspace_alloc (limit_size);
+  gsl_integration_workspace *ww = gsl_integration_workspace_alloc(limit_size);
 
   cosmobl::glob::STR_xi str;
   str.rr = rr;
@@ -93,11 +93,11 @@ double cosmobl::xi_from_Pk (const double rr, const vector<double> lgkk, const ve
   Func.params = &str;
 
   double error = -1.;
-  gsl_integration_qag (&Func, k_min, k_max, 0., prec, limit_size, 6, ww, &Int, &error); 
+  gsl_integration_qag(&Func, k_min, k_max, 0., prec, limit_size, 6, ww, &Int, &error); 
 
-  gsl_integration_workspace_free (ww);
+  gsl_integration_workspace_free(ww);
 
-  return 1./(2.*pow(par::pi,2))*Int;
+  return 1./(2.*pow(par::pi, 2))*Int;
 } 
 
 

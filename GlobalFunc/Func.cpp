@@ -88,7 +88,7 @@ double cosmobl::volume (const double boxSize, const int frac, const double Bord,
 // ============================================================================
 
 
-void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<double> &redshift, vector<double> &xx, vector<double> &yy, vector<double> &zz, const vector<double> vx, const vector<double> vy, const vector<double> vz, const double sigmaV, cosmology::Cosmology &real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int idum) 
+void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<double> &redshift, vector<double> &xx, vector<double> &yy, vector<double> &zz, const vector<double> vx, const vector<double> vy, const vector<double> vz, const double sigmaV, cosmology::Cosmology &real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int seed) 
 {
   (void)redshift_min; (void)redshift_max;
   
@@ -104,10 +104,8 @@ void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<doub
   
   coutCBL <<"sigmaV = "<<SigmaV<<", catastrophic_error = "<<catastrophic_error<<endl;
 
-  default_random_engine gen(idum);
-  normal_distribution<double> ran(0., SigmaV);
-  uniform_real_distribution<double> ran2(0., 1.);
-
+  random::NormalRandomNumbers ran(0., SigmaV, seed);
+  random::UniformRandomNumbers ran2(0., 1., seed);
   
   vector<double>::iterator pos;
   pos = min_element(xx.begin(),xx.end()); double xm = *pos;
@@ -120,7 +118,7 @@ void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<doub
   
   for (size_t i=0; i<ra.size(); i++) {
     
-    if (ran2(gen)<catastrophic_error) {  // catastrophic error     
+    if (ran2()<catastrophic_error) {  // catastrophic error     
       
       /*
       // test
@@ -129,9 +127,9 @@ void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<doub
       */
       
       // default
-      double XX = ran2(gen)*(xM-xm)+xm;
-      double YY = ran2(gen)*(yM-ym)+ym;
-      double ZZ = ran2(gen)*(zM-zm)+zm;
+      double XX = ran2()*(xM-xm)+xm;
+      double YY = ran2()*(yM-ym)+ym;
+      double ZZ = ran2()*(zM-zm)+zm;
       double Dc = sqrt(XX*XX+YY*YY+ZZ*ZZ);
       dc.push_back(Dc);
       ra[i] = atan(XX/YY);
@@ -145,7 +143,7 @@ void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<doub
 
       double vrad = vx[i]*cos(dec[i])*sin(ra[i])+vy[i]*cos(dec[i])*cos(ra[i])+vz[i]*sin(dec[i]);
    
-      redshift[i] += vrad/par::cc*(1.+mean_redshift) + ran(gen)/par::cc; // peculiar velocities + gaussian error
+      redshift[i] += vrad/par::cc*(1.+mean_redshift)+ran()/par::cc; // peculiar velocities + gaussian error
 
       dc.push_back(real_cosm.D_C(redshift[i]));          
     

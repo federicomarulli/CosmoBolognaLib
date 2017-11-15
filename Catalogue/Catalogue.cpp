@@ -109,13 +109,12 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1, const int col2, const int col3, const int colWeight, const int colRegion, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordUnits inputUnits, const CharEncode charEncode) 
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1, const int col2, const int col3, const int colWeight, const int colRegion, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordUnits inputUnits, const CharEncode charEncode, const int seed) 
 { 
   // parameters for random numbers used in case nSub!=1
   
-  default_random_engine gen;
-  uniform_real_distribution<float> ran(0., 1.);
-  
+  random::UniformRandomNumbers ran(0., 1., seed);
+
   
   // read the input catalogue files
   
@@ -133,7 +132,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 
       while (getline(finr, line)) { // read the lines
 	
-	if (ran(gen)<nSub) { // extract a subsample
+	if (ran()<nSub) { // extract a subsample
 	  
 	  stringstream ss(line);
 	  vector<double> value; while (ss>>Value) value.emplace_back(Value);
@@ -200,8 +199,8 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
           coord.zz = (val)*fact;
 	  // Weight = (colWeight!=-1 && colWeight-1<value.size()) ? value[colWeight-1] : 1.;
 	  // Region = (colRegion!=-1 && colRegion-1<value.size()) ? (long)value[colRegion-1] : 0;
-          if (ran(gen)<nSub) m_object.push_back(move(Object::Create(objType, coord)));
-	  // if(ran(gen)<nSub) m_object.push_back(move(Object::Create(objType, coord, Weight, Region)));
+          if (ran()<nSub) m_object.push_back(move(Object::Create(objType, coord)));
+	  // if (ran()<nSub) m_object.push_back(move(Object::Create(objType, coord, Weight, Region)));
         }
 	
         finr.read((char*)(&num_bin), 4);
@@ -222,13 +221,11 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<Var> attributes, const vector<int> columns, const vector<string> file, const int comments, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordUnits inputUnits, const CharEncode charEncode) 
+cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<Var> attribute, const vector<int> column, const vector<string> file, const int comments, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordUnits inputUnits, const CharEncode charEncode, const int seed) 
 { 
   // parameters for random numbers used in case nSub!=1
   
-  default_random_engine gen;
-  uniform_real_distribution<float> ran(0., 1.);
-  
+  random::UniformRandomNumbers ran(0., 1., seed);
   
   // read the input catalogue files
  
@@ -252,7 +249,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
       for (int cc = 0; cc < comments; cc++) getline(finr, line); // ignore commented lines at the beginning of file
       while (getline(finr, line)) { // read the lines
 
-	if (ran(gen)<nSub) { // extract a subsample
+	if (ran()<nSub) { // extract a subsample
 
 	  if (coordType==_comovingCoordinates_) {
 	    m_object.push_back(move(Object::Create(objType, defaultComovingCoord, 1.)));
@@ -268,16 +265,16 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 	  int attribute_index = 0; // element of vector 'attributes' to search
 	  size_t ii = nObjects()-1;
 	  while (ss>>Value) {
-	    column_counter++;
-	    if (column_counter == columns[attribute_index]) {
-	      ((attributes[attribute_index] == Var::_X_) ||
-	       (attributes[attribute_index] == Var::_Y_) ||
-	       (attributes[attribute_index] == Var::_Z_) ||
-	       (attributes[attribute_index] == Var::_RA_) ||
-	       (attributes[attribute_index] == Var::_Dec_) ||
-	       (attributes[attribute_index] == Var::_Redshift_)) ?
+	    column_counter ++;
+	    if (column_counter==column[attribute_index]) {
+	      ((attribute[attribute_index] == Var::_X_) ||
+	       (attribute[attribute_index] == Var::_Y_) ||
+	       (attribute[attribute_index] == Var::_Z_) ||
+	       (attribute[attribute_index] == Var::_RA_) ||
+	       (attribute[attribute_index] == Var::_Dec_) ||
+	       (attribute[attribute_index] == Var::_Redshift_)) ?
 		Value = Value*fact : Value = Value;
-	      set_var(ii, attributes[attribute_index], Value);
+	      set_var(ii, attribute[attribute_index], Value);
 	      attribute_index++;
 	    }
 	  }
@@ -1385,9 +1382,8 @@ data::ScalarField3D cosmobl::catalogue::Catalogue::counts_in_cell (const double 
       double tx = 1-dx;
       double ty = 1-dy;
       double tz = 1-dz;
-      //cout << i1 << " " << i2 << " " << dx << " "<< tx << " " << j1 << " " << j2 << " " << dy << " " << ty << " " <<  k1 << " " << k2 << " " << dz  << " " << tz << endl;
 
-      double ww = 0;
+      double ww = 0.;
       ww += w*tx*ty*tz;
       ww += w*dx*ty*tz;
       ww += w*tx*dy*tz;
@@ -1432,14 +1428,14 @@ data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double c
   for (int i=0; i<density.nx(); i++) 
     for (int j=0; j<density.ny(); j++) 
       for (int k=0; k<density.nz(); k++) {
-	if(mask_cic.ScalarField(i, j, k)>0){
+	if (mask_cic.ScalarField(i, j, k)>0) {
 	  random_tot += mask_cic.ScalarField(i, j, k);	
-	  nrandom +=1;
+	  nrandom ++;
 	}
       }
 
   double mean_random = random_tot/nrandom;
-  cout << "Mean random objects " << mean_random << " in " << nrandom << " cells " << endl;
+  coutCBL << "Mean random objects " << mean_random << " in " << nrandom << " cells " << endl;
 
   random_tot=0;
   int masked_cells=0;
@@ -1447,19 +1443,19 @@ data::ScalarField3D cosmobl::catalogue::Catalogue::density_field (const double c
   for (int i=0; i<density.nx(); i++) 
     for (int j=0; j<density.ny(); j++) 
       for (int k=0; k<density.nz(); k++) {
-	if(mask_cic.ScalarField(i, j, k)>0.){
+	if (mask_cic.ScalarField(i, j, k)>0.) {
 	  data_tot += data_cic.ScalarField(i, j, k);
 	  random_tot += mask_cic.ScalarField(i, j, k);
 	}
-	else if(mask_cic.ScalarField(i, j, k)>0 && mask_cic.ScalarField(i, j, k)<0.1*mean_random)
+	else if (mask_cic.ScalarField(i, j, k)>0 && mask_cic.ScalarField(i, j, k)<0.1*mean_random)
 	{
-	  masked_cells +=1;
+	  masked_cells ++;
 	  data_cic.set_ScalarField(0, i, j, k, 0);
 	  mask_cic.set_ScalarField(0, i, j, k, 0);
 	}
       }
 
-  cout << "Masked " << masked_cells << "/" << nrandom << " for bad random coverage " << endl;
+  coutCBL << "Masked " << masked_cells << "/" << nrandom << " for bad random coverage " << endl;
 
   double norm = int(random_tot)/data_tot;
   for (int i=0; i<density.nx(); i++) 
@@ -1557,8 +1553,8 @@ cosmobl::catalogue::Catalogue::Catalogue (const Catalogue input_catalogue, const
 
   for (size_t i=0; i<input_var1.size(); i++)
     if ((input_var1[i] < V1max && V1min < input_var1[i]) && (input_var2[i] < V2max && V2min < input_var2[i])) {
-      int occ1 = max(0, min(int((input_var1[i]-V1min)*binSize1_inv), nbin1));
-      int occ2 = max(0, min(int((input_var2[i]-V2min)*binSize2_inv), nbin2));
+      const int occ1 = max(0, min(int((input_var1[i]-V1min)*binSize1_inv), nbin1));
+      const int occ2 = max(0, min(int((input_var2[i]-V2min)*binSize2_inv), nbin2));
       if (ran() < fvars_target[occ1][occ2]/fvars_input[occ1][occ2])
 	m_object.push_back(shared_ptr<Object>(input_catalogue.catalogue_object(i)));
     }
@@ -1579,6 +1575,50 @@ void cosmobl::catalogue::Catalogue::remove_objects (const vector<bool> index)
     if (!index[ii]) object_temp.emplace_back(m_object[ii]);
   
   m_object.swap(object_temp);
+}
+
+
+// ============================================================================
+
+
+void cosmobl::catalogue::Catalogue::swap_objects (const int ind1, const int ind2)
+{
+  shared_ptr<Object> temp = m_object[ind1];
+  m_object[ind1] = m_object[ind2];
+  m_object[ind2] = temp;
+}
+
+
+// ============================================================================
+
+
+void cosmobl::catalogue::Catalogue::sort (const Var var_name, const bool increasing)
+{
+  vector<double> variable = var(var_name);
+  bool swap = true;
+  while (swap) {
+    swap = false;
+    for (size_t i = 0; i<nObjects()-1; ++i) {
+      if (increasing) {
+	if (variable[i] > variable[i+1]) {
+	  double temp = variable[i];
+	  variable[i] = variable[i+1];
+	  variable[i+1] = temp;
+	  swap_objects(i, i+1);
+	  swap = true;
+	}
+      }
+      else {
+	if (variable[i] < variable[i+1]) {
+	  double temp = variable[i];
+	  variable[i] = variable[i+1];
+	  variable[i+1] = temp;
+	  swap_objects(i, i+1);
+	  swap = true;
+	}
+      }
+    }
+  }
 }
 
 

@@ -285,7 +285,8 @@ namespace cosmobl {
       void maximize_likelihood (vector<double> &guess, const int ntry, const int prior_seed=431412, const bool usePriors=false, const unsigned int max_iter=100, const double tol=1.e-6, const double epsilon=1.e-3);
 
       /**
-       * @brief sample the likelihood
+       * @brief run the Markov chain Monte Carlo method to sample the
+       * posterior
        *
        * @param chain_size size the chain lenght
        *
@@ -297,10 +298,11 @@ namespace cosmobl {
        *
        * @return none
        */
-      void sample_likelihood (const int chain_size, const int nwalkers, const int seed, const double aa=2);
+      void run_MCMC (const int chain_size, const int nwalkers, const int seed, const double aa=2);
       
       /**
-       * @brief sample the likelihood
+       * @brief run the Markov chain Monte Carlo method to sample the
+       * posterior
        *
        * @param chain_size size the chain lenght
        *
@@ -318,10 +320,11 @@ namespace cosmobl {
        *
        * @return none
        */
-      void sample_likelihood (const int chain_size, const int nwalkers, const int seed, vector<double> &start, const double radius, const double aa=2);
+      void run_MCMC (const int chain_size, const int nwalkers, const int seed, vector<double> &start, const double radius, const double aa=2);
 
       /**
-       *  @brief function that initialize chains
+       *  @brief run the Markov chain Monte Carlo method to sample the
+       * posterior
        *
        *  @param chain_size the chain size
        *
@@ -333,10 +336,11 @@ namespace cosmobl {
        *
        *  @return none
        */
-      void sample_likelihood (const int chain_size, const vector<vector<double>> chain_values, const int seed, const double aa=2);
+      void run_MCMC (const int chain_size, const vector<vector<double>> chain_values, const int seed, const double aa=2);
 
       /**
-       * @brief sample the likelihood
+       * @brief run the Markov chain Monte Carlo method to sample the
+       * posterior
        *
        * @param chain_size size the chain lenght
        *
@@ -352,7 +356,7 @@ namespace cosmobl {
        *
        * @return none
        */
-      void sample_likelihood (const int chain_size, const int nwalkers, const int seed, const string input_dir, const string input_file, const double aa=2);
+      void run_MCMC (const int chain_size, const int nwalkers, const int seed, const string input_dir, const string input_file, const double aa=2);
 
 
       ///@}

@@ -1,22 +1,22 @@
-/*******************************************************************
- *  Copyright (C) 2010 by Federico Marulli                         *
- *  federico.marulli3@unibo.it                                     *
- *                                                                 *
- *  This program is free software; you can redistribute it and/or  *
- *  modify it under the terms of the GNU General Public License as *
- *  published by the Free Software Foundation; either version 2 of *
- *  the License, or (at your option) any later version.            *
- *                                                                 *
- *  This program is distributed in the hope that it will be useful,*
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of *
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *
- *  GNU General Public License for more details.                   *
- *                                                                 *
- *  You should have received a copy of the GNU General Public      *
- *  License along with this program; if not, write to the Free     *
- *  Software Foundation, Inc.,                                     *
- *  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.      *
- *******************************************************************/
+/********************************************************************
+ *  Copyright (C) 2010 by Federico Marulli                          *
+ *  federico.marulli3@unibo.it                                      *
+ *                                                                  *
+ *  This program is free software; you can redistribute it and/or   *
+ *  modify it under the terms of the GNU General Public License as  *
+ *  published by the Free Software Foundation; either version 2 of  *
+ *  the License, or (at your option) any later version.             *
+ *                                                                  *
+ *  This program is distributed in the hope that it will be useful, *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   *
+ *  GNU General Public License for more details.                    *
+ *                                                                  *
+ *  You should have received a copy of the GNU General Public       *
+ *  License along with this program; if not, write to the Free      *
+ *  Software Foundation, Inc.,                                      *
+ *  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.       *
+ ********************************************************************/
 
 /**
  *  @file Headers/Lib/Func.h
@@ -415,6 +415,17 @@ namespace cosmobl {
   
 #define coutCBL cout << headerCBL
 
+  /**
+   *  @brief set the default directories
+   *
+   *  @param _DirCosmo directory where the CosmoBolognaLib are stored
+   *
+   *  @param _DirLoc local directory of the main code
+   *
+   *  @return none
+   */
+  inline void SetDirs (const string _DirCosmo, const string _DirLoc)
+  { par::DirCosmo = _DirCosmo; par::DirLoc = _DirLoc; }
   
   /**
    *  @brief warning message
@@ -805,6 +816,21 @@ namespace cosmobl {
    *  of the l-th order over the mu range
    */
   double Legendre_polynomial_mu_average (const int ll, const double mu, const double delta_mu);
+
+  /**
+   *  @brief the order l, degree m spherical harmonics
+   * 
+   *  @param l the degree l 
+   *
+   *  @param m the order m
+   *
+   *  @param the angle theta
+   *
+   *  @param the angle phi
+   *
+   *  @return the order l, degree m spherical harmonics
+   */
+  vector<double> spherical_harmonics (const int l, const int m, const double xx, const double yy, const double zz);
 
   /**
    *  @brief the l=0 spherical Bessel function 
@@ -1358,8 +1384,8 @@ namespace cosmobl {
    *  @brief return the value of 
    *  \f[ \vec{x} M \vec{x}^T \f]
    *
-   *  @param [in] the vector v
-   *  @param [in] the matrix M
+   *  @param [in] vv the vector v
+   *  @param [in] MM the matrix M
    *  @return result
    */
   template <typename T> 
@@ -2094,9 +2120,10 @@ namespace cosmobl {
    *  @param func the function f(x)
    *  @param x1 minimum limit of the integral
    *  @param x2 maximum limit of the integral
+   *  @param seed the seed for random number generation
    *  @return \f$\int_{x1}^{x2} f(x)dx\f$
    */
-  double MC_Int (double func(const double), const double x1, const double x2); 
+  double MC_Int (double func(const double), const double x1, const double x2, const int seed=3213); 
 
   /**
    *  @brief simple Monte Carlo integration of f(x,A)
@@ -2104,9 +2131,10 @@ namespace cosmobl {
    *  @param AA parameter of the function, A
    *  @param x1 minimum limit of the integral
    *  @param x2 maximum limit of the integral
+   *  @param seed the seed for random number generation
    *  @return \f$\int_{x1}^{x2} f(x)dx\f$
    */
-  double MC_Int (double func(const double, const double AA), const double AA, const double x1, double x2); 
+  double MC_Int (double func(const double, const double AA), const double AA, const double x1, double x2, const int seed=3213); 
   
   /**
    *  @brief simple Monte Carlo integration of f(x,A,B,C,D,E)
@@ -2118,12 +2146,15 @@ namespace cosmobl {
    *  @param EE parameter of the function, E
    *  @param x1 minimum limit of the integral
    *  @param x2 maximum limit of the integral
+   *  @param seed the seed for random number generation
    *  @return \f$\int_{x1}^{x2} f(x,A,B,C,D,E)dx\f$
    */
-  double MC_Int (double func(const double, const double AA, const double BB, const double CC, const double DD, const double EE), const double AA, const double BB, const double CC, const double DD, const double EE, const double x1, const double x2); 
+  double MC_Int (double func(const double, const double AA, const double BB, const double CC, const double DD, const double EE), const double AA, const double BB, const double CC, const double DD, const double EE, const double x1, const double x2, const int seed=3213); 
 
+  
   // ============================================================================================
 
+  
   /**
    *  @brief create a 1D grid given an input function
    *  @param file_grid the file with the input function

@@ -56,12 +56,12 @@ double cosmobl::cosmology::Cosmology::xi0_Kaiser (const double rad, const double
 // =====================================================================================
 
  
-vector<double> cosmobl::cosmology::Cosmology::xi0_Kaiser (const vector<double> rad, const double bias, const string method_Pk, const bool NL, const double redshift, const string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const string file_par)
+vector<double> cosmobl::cosmology::Cosmology::xi0_Kaiser (const vector<double> rad, const double bias, const string method_Pk, const bool NL, const double redshift, const string output_dir, const string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const string file_par)
 {
-  const vector<double> kk = cosmobl::logarithmic_bin_vector(step, k_min, k_max);
-  const vector<double> Pk = this->Pk(kk, method_Pk, NL, redshift, output_root, norm, k_min, k_max, prec, file_par);
+  const vector<double> kk = logarithmic_bin_vector(step, k_min, k_max);
+  const vector<double> Pk = this->Pk(kk, method_Pk, NL, redshift, output_dir, output_root, norm, k_min, k_max, prec, file_par);
 
-  vector<double> xi = cosmobl::fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
+  vector<double> xi = fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
 
   const double fact = bias*bias*xi_ratio(linear_growth_rate(redshift, 1.), bias);
 
@@ -123,16 +123,16 @@ double cosmobl::cosmology::Cosmology::xi_star (const double rr, const double red
 
   Pk_0(method_Pk1, redshift, output_root, k_min, k_max, prec, file_par); 
 
-  cosmobl::classfunc::func_xistar func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, rr, redshift, output_root, m_Pk0_EH, k_max, k_star);
+  classfunc::func_xistar func(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, rr, redshift, output_root, k_max, k_star);
 
-  function<double(double)> ff = bind(&cosmobl::classfunc::func_xistar::operator(), func, std::placeholders::_1);
+  function<double(double)> ff = bind(&classfunc::func_xistar::operator(), func, std::placeholders::_1);
 
   double Int1 = gsl::GSL_integrate_qag(ff, 0., 1.e2, 1.e-3);
   double Int2 = gsl::GSL_integrate_qag(ff, 1.e2, 1.e3, 1.e-3);
 
   double Int = (rr<1) ? Int1+Int2 : Int1; // check!!!
 
-  return 1./(2.*pow(par::pi,2))*Int; 
+  return 1./(2.*pow(par::pi, 2))*Int; 
 }
 
 

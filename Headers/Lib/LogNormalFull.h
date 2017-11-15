@@ -66,7 +66,7 @@ namespace cosmobl {
       /// string containing the author for the model power spectrum
       string m_author;
 
-      /// 0 \f$\rightarrow\f$ compute the linear power spectrum; 1 \f$\rightarrow\f$ compute the non-linear power spectrum
+      /// false \f$\rightarrow\f$ compute the linear power spectrum; true \f$\rightarrow\f$ compute the non-linear power spectrum
       bool m_NL;
 
       /// generator for random numbers

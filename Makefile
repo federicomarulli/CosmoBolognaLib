@@ -10,22 +10,19 @@ FLAGS_FFTLOG = -fPIC -w
 
 Dir_H = Headers/Lib/
 Dir_O = Headers/Objects/
-Dir_EH = External/EH/
 Dir_CUBA = External/Cuba-4.2/
 Dir_FFTLOG = External/fftlog-f90-master/
 
 dir_H = $(addprefix $(PWD)/,$(Dir_H))
 dir_O = $(addprefix $(PWD)/,$(Dir_O))
-dir_EH = $(addprefix $(PWD)/,$(Dir_EH))
 dir_CUBA = $(addprefix $(PWD)/,$(Dir_CUBA))
 dir_FFTLOG = $(addprefix $(PWD)/,$(Dir_FFTLOG))
 
-dir_PYLIB =  $(PWD)/../.local/lib/python2.7/site-packages/
 dir_Python = $(PWD)/Python/
 
 HH = $(dir_H)*.h $(dir_O)*.h
 
-FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dir_CUBA) -I$(dir_H) -I$(dir_O) -I$(dir_EH) 
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dir_CUBA) -I$(dir_H) -I$(dir_O)
 FLAGS_FFTW = -lfftw3 #-lfftw3_omp
 FLAGS_GSL = -lgsl -lgslcblas -lm -L$(HOME)/lib
 
@@ -47,7 +44,6 @@ ifeq ($(SYS),MAC)
 	FLAGS_FFTW = -lfftw3 
 	FLAGS_LINK = -dynamiclib -undefined suppress -flat_namespace
         ES = dylib
-	dir_PYLIB = $(HOME)/Library/Python/2.7/lib/python/site-packages/
 	FLAGS_PY = -L/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -ldl	
 	CUBA_LIB = $(dir_CUBA)libcuba.a
 	FLAGS_CUBA = $(dir_CUBA)libcuba.a
@@ -77,9 +73,6 @@ Dir_MODEL_THREEP = Modelling/ThreePointCorrelation/
 Dir_GLOB = GlobalFunc/
 Dir_READP = ReadParameters/
 
-Dir_CBL = $(Dir_H) $(Dir_O) $(Dir_M) $(Dir_FUNC) $(Dir_STAT) $(Dir_COSM) $(Dir_CM) $(Dir_CAT) $(Dir_LN) $(Dir_TWOP) $(Dir_THREEP) $(Dir_MODEL_GLOB) $(Dir_MODEL_COSM) $(Dir_MODEL_TWOP) $(Dir_MODEL_THREEP) $(Dir_GLOB) $(Dir_READP)
-Dir_ALL = $(Dir_CBL) $(Dir_EH) Headers/ Cosmology/ Measure/ 
-
 dir_FUNC = $(addprefix $(PWD)/,$(Dir_FUNC))
 dir_STAT = $(addprefix $(PWD)/,$(Dir_STAT))
 dir_COSM = $(addprefix $(PWD)/,$(Dir_COSM))
@@ -94,10 +87,6 @@ dir_MODEL_TWOP = $(addprefix $(PWD)/,$(Dir_MODEL_TWOP))
 dir_MODEL_THREEP = $(addprefix $(PWD)/,$(Dir_MODEL_THREEP))
 dir_GLOB = $(addprefix $(PWD)/,$(Dir_GLOB))
 dir_READP = $(addprefix $(PWD)/,$(Dir_READP))
-dir_CBL = $(addprefix $(PWD)/,$(Dir_CBL))
-dir_ALL = $(addprefix $(PWD)/,$(Dir_ALL))
-
-dir_ALLP = $(addprefix $(dir_Python)CosmoBolognaLib/,$(Dir_ALL))
 
 ##### FFTlog object files #####
 
@@ -105,11 +94,11 @@ OBJ_FFTLOG = $(dir_FFTLOG)drffti.o $(dir_FFTLOG)drfftb.o $(dir_FFTLOG)drfftf.o $
 
 ##### CBL object files #####
 
-OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)GSLfunction.o  $(dir_FUNC)Data.o $(dir_FUNC)Data1D.o $(dir_FUNC)Data1D_collection.o $(dir_FUNC)Data2D.o $(dir_FUNC)Data1D_extra.o $(dir_FUNC)Data2D_extra.o $(dir_FUNC)Field3D.o $(dir_FUNC)FuncGrid.o $(dir_FUNC)GSLwrapper.o $(dir_FUNC)CUBAwrapper.o $(dir_FUNC)Distribution.o $(OBJ_FFTLOG) $(dir_FUNC)FFTlog.o
+OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)GSLfunction.o  $(dir_FUNC)Data.o $(dir_FUNC)Data1D.o $(dir_FUNC)Data1D_collection.o $(dir_FUNC)Data2D.o $(dir_FUNC)Data1D_extra.o $(dir_FUNC)Data2D_extra.o $(dir_FUNC)Field3D.o $(dir_FUNC)FuncGrid.o $(dir_FUNC)GSLwrapper.o $(dir_FUNC)CUBAwrapper.o $(dir_FUNC)RandomNumbers.o $(dir_FUNC)Distribution.o $(OBJ_FFTLOG) $(dir_FUNC)FFTlog.o
 
 OBJ_STAT = $(dir_STAT)Model.o $(dir_STAT)Model1D.o $(dir_STAT)Model2D.o $(dir_STAT)Chain.o $(dir_STAT)Parameter.o $(dir_STAT)BaseParameter.o $(dir_STAT)DerivedParameter.o $(dir_STAT)LikelihoodParameters.o $(dir_STAT)LikelihoodFunction.o $(dir_STAT)Sampler.o  $(dir_STAT)Likelihood.o
 
-OBJ_COSM = $(dir_EH)power_whu.o $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)MassFunction.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)DensityProfile.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)SizeFunction.o  $(dir_COSM)3PCF.o
+OBJ_COSM = $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)MassFunction.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)DensityProfile.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)SizeFunction.o  $(dir_COSM)3PCF.o
 
 OBJ_CM = $(dir_CM)ChainMesh.o
 
@@ -231,26 +220,22 @@ libREADP: $(OBJ_READP) $(PWD)/Makefile
 libCBL: $(OBJ_CBL) $(PWD)/Makefile
 	$(C) $(FLAGS_LINK) -o $(PWD)/libCBL.$(ES) $(OBJ_CBL) $(FLAGS_CUBA) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
 
-
 conv: $(dir_FUNC)conv.o
 	$(F) -o $(dir_FUNC)conv $(dir_FUNC)conv.o 
 
 CUBA: $(CUBA_LIB)
 
-CAMB:
-	cd $(PWD)/External/CAMB ; make clean && make && make clean && cd ../..
+CAMB: $(PWD)/External/CAMB/camb
 
-CLASS:
-	cd $(PWD)/External/classgal_v1 ; make clean && make && make clean && cd ../..
+CLASS: $(PWD)/External/classgal_v1/class
 
-CLASSpy:
-	cd $(PWD)/External/classgal_v1/python/ ; python setup.py install --user
+MPTbreeze:  $(PWD)/External/MPTbreeze-v1/mptbreeze
 
-MPTbreeze:
-	cd $(PWD)/External/MPTbreeze-v1 ; ./compile.sh && cd ../..
+fftlog-f90: $(PWD)/External/fftlog-f90-master/fftlog-f90
 
-fftlog-f90:
-	cd $(PWD)/External/fftlog-f90-master ; make clean && make "F90 = gfortran -g -w" && make clean && cd ../..
+mangle: $(PWD)/External/mangle/bin/ransack
+
+venice: $(PWD)/External/VIPERS/venice3.9/venice
 
 allExamples:
 	$(call colorecho, "\n"Compiling the example code: vector.cpp ... "\n")
@@ -310,31 +295,12 @@ allExamples:
 	$(call colorecho, "\n"Compiling the example code: readParameterFile.cpp ... "\n")
 	cd $(PWD)/Examples/readParameterFile/ ; make 
 
-python: $(OBJ_CBL) $(dir_Python)CBL_wrap.o
-	$(C) -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(dir_PYLIB)_CosmoBolognaLib.so $(FLAGS_CUBA) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY) -lgfortran
-	cp $(dir_Python)CosmoBolognaLib.py* $(dir_PYLIB)
+swig_wrapper: $(dir_Python)CBL_wrap.cxx
 
-python2: $(dir_Python)CBL_wrap.cxx $(dir_Python)CBL.i $(dir_Python)setup.py $(HH) $(PWD)/Makefile
-	$(call colorecho, "\n"Compiling the python wrapper. It may take a few minutes ... "\n")
-	cd $(dir_Python)CosmoBolognaLib ; mkdir -p $(Dir_ALL)  
-	rsync -av $(dir_H)*.h $(dir_Python)CosmoBolognaLib/$(Dir_H)
-	rsync -av $(dir_O)*.h $(dir_Python)CosmoBolognaLib/$(Dir_O)
-	rsync -av $(dir_EH)* $(dir_Python)CosmoBolognaLib/$(Dir_EH)
-	rsync -av $(dir_FUNC)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_FUNC)
-	rsync -av $(dir_STAT)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_STAT)
-	rsync -av $(dir_COSM)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_COSM)
-	rsync -av $(dir_CM)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_CM)
-	rsync -av $(dir_CAT)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_CAT)
-	rsync -av $(dir_LN)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_LN)
-	rsync -av $(dir_TWOP)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_TWOP)
-	rsync -av $(dir_THREEP)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_THREEP)
-	rsync -av $(dir_MODEL_GLOB)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_MODEL_GLOB)
-	rsync -av $(dir_MODEL_COSM)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_MODEL_COSM)
-	rsync -av $(dir_MODEL_TWOP)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_MODEL_TWOP)		
-	rsync -av $(dir_MODEL_THREEP)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_MODEL_THREEP)
-	rsync -av $(dir_GLOB)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_GLOB)
-	rsync -av $(dir_READP)*.cpp $(dir_Python)CosmoBolognaLib/$(Dir_READP)
-	cd $(dir_Python) ; python setup.py install --user 
+python: $(dir_Python)CBL_wrap.o $(OBJ_CBL) $(dir_Python)CBL.i 
+	$(C) -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(dir_Python)/_CosmoBolognaLib.so $(FLAGS_CUBA) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY) -lgfortran
+	mv $(dir_Python)/_CosmoBolognaLib.so $(dir_Python)/CosmoBolognaLib/
+	mv $(dir_Python)/CosmoBolognaLib.py $(dir_Python)/CosmoBolognaLib/
 
 doc:
 	rm Doc/html/* Doc/xml/* -rf
@@ -364,19 +330,20 @@ cleanExamples:
 
 
 cleanpy:
-	rm -f $(PWD)/Python/*~ $(PWD)/Python/CBL_wrap.o $(PWD)/Python/CBL_wrap.cxx $(PWD)/Python/CosmoBolognaLib.py*
-	rm -rf $(PWD)/Python/dist $(PWD)/Python/build $(PWD)/Python/CosmoBolognaLib.egg-info
-	rm -f $(PWD)/Python/Lib/*~ $(PWD)/Python/Lib/*.o $(PWD)/Python/Lib/*.cxx $(PWD)/Python/Lib/*.py
-	rm -f $(PWD)/Python/CosmoBolognaLib/CosmoBolognaLib* $(PWD)/Python/CosmoBolognaLib/*pyc $(PWD)/Python/CosmoBolognaLib/*~
-	rm -rf $(dir_ALLP) 
+	rm -f $(dir_Python)*~ $(dir_Python)CBL_wrap.o $(dir_Python)CBL_wrap.cxx $(dir_Python)CosmoBolognaLib.py*
+	rm -rf $(dir_Python)dist $(dir_Python)build $(dir_Python)CosmoBolognaLib.egg-info
+	rm -f $(dir_Python)Lib/*~ $(dir_Python)Lib/*.o $(dir_Python)Lib/*.cxx $(dir_Python)Lib/*.py
+	rm -f $(dir_Python)/CosmoBolognaLib/*CosmoBolognaLib* $(dir_Python)CosmoBolognaLib/*~ $(dir_Python)CosmoBolognaLib/*.pyc
 
 purgepy:
 	make cleanpy
-	rm -fr $(dir_PYLIB)*CosmoBolognaLib*
+
+cleanTEMP:
+	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_FUNC)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_TWOP)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_READP)*~ $(dir_H)*~ $(dir_O)*~ $(PWD)/\#* $(dir_FUNC)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_READP)\#* $(dir_H)\#* $(dir_O)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
 
 clean:
 	make cleanExamples
-	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_FUNC)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_TWOP)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_READP)*~ $(dir_H)*~ $(dir_O)*~ $(PWD)/\#* $(dir_FUNC)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_READP)\#* $(dir_H)\#* $(dir_O)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
+	make cleanTEMP
 
 purge:
 	make clean
@@ -387,14 +354,20 @@ purgeALL:
 	make cleanpy
 	rm -rf Cosmology/Tables/* ;
 	cd External/CAMB ; make clean ; cd .. ;
+	rm -rf External/CAMB/camb
 	rm -rf External/CAMB/output_linear/* ;
 	rm -rf External/CAMB/output_nonlinear/* ;
+	rm -rf External/CAMB/test_* ; 
+	rm -rf External/VIPERS/venice3.9/venice
+	rm -rf External/mangle/bin/*
+	cd External/mangle/src; make cleaner ; cd .. ;
 	cd External/classgal_v1/ ; make clean ; cd .. ;
 	rm -rf External/classgal_v1/output_linear/* ;
 	rm -rf External/classgal_v1/output_nonlinear/* ;
-	rm -rf External/EH/*.o External/EH/*~ ;
 	cd External/fftlog-f90-master/ ; make clean ; cd .. ;
 	cd External/mangle/src ; make clean ; cd .. ;
+	cd External/MPTbreeze-v1/Cuba-1.4/ ; make distclean ;
+	rm -rf External/MPTbreeze-v1/mptbreeze ;
 	rm -rf External/MPTbreeze-v1/*~ ;
 	rm -rf External/MPTbreeze-v1/output_linear/* ;
 	rm -rf External/MPTbreeze-v1/output_nonlinear/* ;
@@ -448,6 +421,9 @@ $(dir_FUNC)GSLwrapper.o: $(dir_FUNC)GSLwrapper.cpp $(HH) $(PWD)/Makefile
 
 $(dir_FUNC)CUBAwrapper.o: $(dir_FUNC)CUBAwrapper.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)CUBAwrapper.cpp -o $(dir_FUNC)CUBAwrapper.o
+
+$(dir_FUNC)RandomNumbers.o: $(dir_FUNC)RandomNumbers.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)RandomNumbers.cpp -o $(dir_FUNC)RandomNumbers.o 
 
 $(dir_FUNC)Distribution.o: $(dir_FUNC)Distribution.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Distribution.cpp -o $(dir_FUNC)Distribution.o 
@@ -552,9 +528,6 @@ $(dir_COSM)NG.o: $(dir_COSM)NG.cpp $(HH) $(PWD)/Makefile
 
 $(dir_COSM)BAO.o: $(dir_COSM)BAO.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)BAO.cpp -o $(dir_COSM)BAO.o
-
-$(dir_EH)power_whu.o: $(dir_EH)power_whu.cpp $(dir_EH)power_whu.h
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_EH)power_whu.cpp -o $(dir_EH)power_whu.o
 
 $(dir_COSM)3PCF.o: $(dir_COSM)3PCF.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)3PCF.cpp -o $(dir_COSM)3PCF.o
@@ -848,11 +821,38 @@ $(dir_READP)ReadParameters.o: $(dir_READP)ReadParameters.cpp $(HH) $(PWD)/Makefi
 #################################################################### 
 
 
-$(dir_Python)CBL_wrap.o: $(dir_Python)CBL.i $(HH) $(PWD)/Makefile
+$(dir_Python)CBL_wrap.o: $(dir_Python)CBL_wrap.cxx $(dir_Python)CBL.i $(HH) 
 	$(call colorecho, "\n"Compiling the python wrapper. It may take a few minutes ... "\n")
-	$(SWIG) -Wextra -python -c++ -I$(dir_H) -I$(dir_O) -I$(dir_EH) $(dir_Python)CBL.i
 	$(C) $(FLAGST) -Wno-uninitialized $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)CBL_wrap.cxx -o $(dir_Python)CBL_wrap.o
 
-$(dir_Python)CBL_wrap.cxx: $(dir_Python)CBL.i $(HH) $(PWD)/Makefile
+$(dir_Python)CBL_wrap.cxx: $(dir_Python)CBL.i $(HH) 
 	$(SWIG) -python -c++ -I$(dir_H) -I$(dir_O) -I$(dir_EH) $(dir_Python)CBL.i
-	mv $(dir_Python)CosmoBolognaLib.py $(dir_Python)CosmoBolognaLib/
+
+
+#################################################################### 
+
+
+$(PWD)/External/CAMB/camb:
+	cd $(PWD)/External/CAMB ; make clean && make && make clean && cd ../..
+
+$(PWD)/External/classgal_v1/class:
+	cd $(PWD)/External/classgal_v1 ; make clean && make && make clean && cd ../..
+
+CLASSpy:
+	cd $(PWD)/External/classgal_v1/python/ ; python setup.py install --user
+
+$(PWD)/External/MPTbreeze-v1/mptbreeze:
+	cd External/MPTbreeze-v1/Cuba-1.4/ ; ./configure && make lib && cd ../../../
+	cd $(PWD)/External/MPTbreeze-v1 ; ./compile.sh && cd ../..
+
+$(PWD)/External/fftlog-f90-master/fftlog-f90:
+	cd $(PWD)/External/fftlog-f90-master ; make clean && make "F90 = gfortran -g -w" && make clean && cd ../..
+
+
+$(PWD)/External/mangle/bin/ransack:
+	cd $(PWD)/External/mangle/src ; make cleaner ; ./configure && make && make clean && cd -
+
+
+$(PWD)/External/VIPERS/venice3.9/venice:
+	cd $(PWD)/External/VIPERS/venice3.9 ; make clean && make "CC = gcc" && make && make clean && cd -
+

@@ -186,7 +186,7 @@ namespace cosmobl {
 	/**
 	 *  @brief set the scale range used for the fit
 	 *
-	 *  @param vector containing the fitting range for
+	 *  @param fit_range vector containing the fitting range for
 	 *  the multipoles
 	 *
 	 *  @return none

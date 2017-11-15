@@ -107,7 +107,7 @@ namespace cosmobl {
          *
 	 * @return none
 	 */
-	void m_set_parameter_posterior(const int start, const int thin=1, const int seed=3214);
+	void m_set_parameter_posterior (const int start, const int thin=1, const int seed=3214);
 
 	/**
 	 * @brief private member to set internal variable 
@@ -119,7 +119,7 @@ namespace cosmobl {
 	 *
 	 * @return none
 	 */
-	void m_set_parameter_covariance(const int start, const int thin=1);
+	void m_set_parameter_covariance (const int start, const int thin=1);
 
       public:
 
@@ -165,7 +165,7 @@ namespace cosmobl {
 	 *
 	 * @return the total number of parameters
 	 */
-	int nparameters() const;
+	int nparameters () const;
 
 	/**
 	 * @brief return the number of free
@@ -173,12 +173,12 @@ namespace cosmobl {
 	 *
 	 * @return the number of free parameters
 	 */
-	int nparameters_free() const;
+	int nparameters_free () const;
 
 	/**
 	 * @brief return all the likelihood parameters
 	 * 
-	 * @param free_parameters vector of free parameters
+	 * @param free_parameter_values vector of free parameters
 	 *
 	 * @return all the likelihood parameters value
 	 */
@@ -208,7 +208,7 @@ namespace cosmobl {
 	 *
 	 * @return the i-th parameters
 	 */
-	shared_ptr<Parameter> parameter(const unsigned int i) const;
+	shared_ptr<Parameter> parameter (const unsigned int i) const;
 
 	/**
 	 * @brief return the parameters
@@ -216,7 +216,7 @@ namespace cosmobl {
 	 * @return vector containing pointers to the
 	 * parameters
 	 */
-	vector<shared_ptr<Parameter>> parameters() const;
+	vector<shared_ptr<Parameter>> parameters () const;
 
 	/**
 	 *  @brief set the parameter
@@ -226,7 +226,7 @@ namespace cosmobl {
 	 *
 	 *  @return none
 	 */
-	void set_parameters(const vector<shared_ptr<Parameter>> parameters);
+	void set_parameters (const vector<shared_ptr<Parameter>> parameters);
 
 	/**
 	 * @brief return the protected member m_parameter_covariance
@@ -237,7 +237,7 @@ namespace cosmobl {
 	 *
 	 * @return the value of the parameter covariance at i,j
 	 */
-	double parameter_covariance(const int i, const int j) const;
+	double parameter_covariance (const int i, const int j) const;
 
 	/**
 	 * @brief return the protected member m_parameter_covariance
@@ -245,14 +245,14 @@ namespace cosmobl {
 	 * @return vector containing the parameter covariance
 	 * matrix
 	 */
-	vector<vector<double>> parameter_covariance() const;
+	vector<vector<double>> parameter_covariance () const;
 
 	/**
 	 * @brief return the chain size
 	 *
 	 * @return the chain size
 	 */
-	int chain_size() const;
+	int chain_size () const;
 
 	/**
 	 * @brief return the number
@@ -260,7 +260,7 @@ namespace cosmobl {
 	 *
 	 * @return the number of parallel walkers
 	 */
-	int nwalkers() const;
+	int nwalkers () const;
 
 	///@}
 	
@@ -276,7 +276,7 @@ namespace cosmobl {
 	 *
 	 * @return none
 	 */
-	void free(const int p);
+	void free (const int p);
 
 	/**
 	 * @brief set m_fixed to true
@@ -285,7 +285,7 @@ namespace cosmobl {
 	 * 
 	 * @return none
 	 */
-	void fix(const int p);
+	void fix (const int p);
 
 	/**
 	 * @brief fix the parameter at the input value;
@@ -296,7 +296,7 @@ namespace cosmobl {
 	 *
 	 * @return none
 	 */
-	void fix(const int p, const double value);
+	void fix (const int p, const double value);
 
 	/**
 	 * @brief fix the parameter at the bestfit value,
@@ -306,7 +306,7 @@ namespace cosmobl {
 	 *
 	 * @return none
 	 */
-	void fix_at_bestfit(const int p);
+	void fix_at_bestfit (const int p);
 
 	///@}
 
@@ -401,7 +401,7 @@ namespace cosmobl {
 	 *
 	 *  @return the scaled prior interval
 	 */
-	double prior_range(const int p, const double epsilon=1);
+	double prior_range (const int p, const double epsilon=1);
 
 	/**
 	 *  @brief return the size of 
@@ -411,7 +411,7 @@ namespace cosmobl {
 	 *
 	 *  @return  the scaled prior intervals
 	 */
-	vector<double> prior_range(const double epsilon=1);
+	vector<double> prior_range (const double epsilon=1);
 
 	///@}
 
@@ -604,7 +604,7 @@ namespace cosmobl {
 	 *
 	 * @return the chain values
 	 */
-	double chain_value(const int pos, const int ww, const int par);
+	double chain_value (const int pos, const int ww, const int par);
 
 	/**
 	 * @brief return the chain values
@@ -615,7 +615,7 @@ namespace cosmobl {
 	 *
 	 * @return the chain values
 	 */
-	vector<double> chain_values(const int pos, const int par);
+	vector<double> chain_values (const int pos, const int par);
 	
 	/**
 	 * @brief return the chain values
@@ -624,7 +624,7 @@ namespace cosmobl {
 	 *
 	 * @return the chain values
 	 */
-	vector<vector<double>> chain_values(const int pos);
+	vector<vector<double>> chain_values (const int pos);
 	
 	/**
 	 * @brief set the chain values
@@ -639,7 +639,7 @@ namespace cosmobl {
 	 *
 	 * @return none
 	 */
-	void set_chain_value(const int pos, const int ww, const int par, const double value);
+	void set_chain_value (const int pos, const int ww, const int par, const double value);
 		
 	/**
 	 * @brief set the chain values
@@ -652,7 +652,7 @@ namespace cosmobl {
 	 *
 	 * @return none
 	 */
-	void set_chain_values(const int pos, const int par, const vector<double> values);
+	void set_chain_values (const int pos, const int par, const vector<double> values);
 
 	/**
 	 * @brief set the chain values
@@ -663,7 +663,7 @@ namespace cosmobl {
 	 *
 	 * @return none
 	 */
-	void set_chain_values(const int pos, const vector<vector<double>> values);
+	void set_chain_values (const int pos, const vector<vector<double>> values);
 	
 	/**
 	 * @brief set the chain
@@ -768,7 +768,9 @@ namespace cosmobl {
 	 * @return none
 	 */
 	void write_results (const string dir, const string file, const int start, const int thin, const int seed=34121);
+
 	///@}
+
     };
   }
 }

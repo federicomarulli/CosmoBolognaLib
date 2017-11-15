@@ -141,7 +141,7 @@ namespace cosmobl {
        *
        *  @param richness the cluster richness
        *
-       *  @param richness error the cluster richness error
+       *  @param richness_error the error on the cluster richness
        *
        *  @param bias the cluster linear bias
        *
@@ -172,7 +172,7 @@ namespace cosmobl {
        *
        *  @param richness the cluster richness
        *
-       *  @param richness error the cluster richness error
+       *  @param richness_error the error on the cluster richness
        *
        *  @param bias the cluster linear bias
        *
@@ -206,7 +206,7 @@ namespace cosmobl {
        *
        *  @param richness the cluster richness
        *
-       *  @param richness error the cluster richness error
+       *  @param richness_error the error on the cluster richness
        *
        *  @param bias the cluster linear bias
        *
@@ -242,7 +242,7 @@ namespace cosmobl {
        *
        *  @param richness the cluster richness
        *
-       *  @param richness error the cluster richness error
+       *  @param richness_error the error on the cluster richness
        *
        *  @param bias the cluster linear bias
        *
@@ -279,7 +279,7 @@ namespace cosmobl {
        *
        *  @param richness the cluster richness
        *
-       *  @param richness error the cluster richness error
+       *  @param richness_error the error on the cluster richness
        *
        *  @param bias the cluster linear bias
        *
@@ -289,22 +289,40 @@ namespace cosmobl {
 	: Object(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
 
       /**
-       *  @brief constructor that uses both comoving and observed coordinates
+       *  @brief constructor that uses both comoving and observed
+       *  coordinates
+       *
        *  @param xx comoving coordinate
+       *
        *  @param yy comoving coordinate
+       *
        *  @param zz comoving coordinate 
+       *
        *  @param ra Right Ascension
+       *
        *  @param dec Declination
+       *
        *  @param redshift redshift
+       *
        *  @param weight weight  
+       *
        *  @param region region, used e.g. for jackknife and bootstrap
+       *
        *  @param field the field where the object has been observed
+       *
        *  @param x_displacement the displacement along the x-axis
+       *
        *  @param y_displacement the displacement along the y-axis
+       *
        *  @param z_displacement the displacement along the z-axis
+       *
        *  @param mass the cluster mass
+       *
        *  @param richness the cluster richness
-       *  @param richness error the cluster richness error
+       *
+       *  @param richness_error the error on the cluster richness
+       *
+       *  @param bias the cluster bias
        *
        *  @return object of class Cluster
        */

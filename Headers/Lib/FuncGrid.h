@@ -66,13 +66,13 @@ namespace cosmobl {
       string m_interpType;
 
       /// GSL object used to interpolate 
-      gsl_spline *m_spline;
+      shared_ptr<gsl_spline> m_spline;
 
       /// GSL object used to set the interpolation type 
       const gsl_interp_type *m_type;
 
       /// GSL accelerator object
-      gsl_interp_accel *m_acc;
+      shared_ptr<gsl_interp_accel> m_acc;
 
       /// minimum x value
       double m_xmin;
@@ -107,7 +107,7 @@ namespace cosmobl {
        *
        *  @return object of class FuncGrid
        */
-      FuncGrid (const vector<double> x, const vector<double> y, const string interpType, const cosmobl::binType bin_type=binType::_linear_);
+      FuncGrid (const vector<double> x, const vector<double> y, const string interpType, const binType bin_type=binType::_linear_);
 
       /**
        *  @brief default destructor
@@ -222,7 +222,7 @@ namespace cosmobl {
        *  @param rule the rule of integration
        *  @return the definite integral of the function
        */  
-      double integrate_qag (const double a, const double b, const double prec=1.e-2, const int limit_size=6, const int rule=6);
+      double integrate_qag (const double a, const double b, const double prec=1.e-2, const int limit_size=1000, const int rule=6);
 
       /**
        *  @brief compute the definite integral with GSL qaws method
@@ -236,7 +236,7 @@ namespace cosmobl {
        *  @param limit_size the maximum size of workspace
        *  @return the definite integral of the function
        */  
-      double integrate_qaws (const double a, const double b, const double alpha=0, const double beta=0, const int mu=0, const int nu=0, const double prec=1.e-2, const int limit_size=6);
+      double integrate_qaws (const double a, const double b, const double alpha=0, const double beta=0, const int mu=0, const int nu=0, const double prec=1.e-2, const int limit_size=1000);
       
       /**
        *  @brief find roots with GSL brent method 
@@ -272,7 +272,7 @@ namespace cosmobl {
     };
 
     /**
-     *  @class FuncGrid FuncGrid2D.h "Headers/Lib/FuncGrid2D.h"
+     *  @class FuncGrid2D FuncGrid.h "Headers/Lib/FuncGrid.h"
      *
      *  @brief The class FuncGrid2D
      *
@@ -292,7 +292,7 @@ namespace cosmobl {
       vector<double> m_y;
 
       /// y values
-      double *m_fxy;
+      shared_ptr<double> m_fxy;
       
       /// size of the x vector
       size_t m_size_x;
@@ -307,13 +307,13 @@ namespace cosmobl {
       const gsl_interp2d_type *m_type;
 
       /// GSL accelerator object
-      gsl_interp_accel *m_acc_x;
+      shared_ptr<gsl_interp_accel> m_acc_x;
 
       /// GSL accelerator object
-      gsl_interp_accel *m_acc_y;
+      shared_ptr<gsl_interp_accel> m_acc_y;
 
       /// GSL object used to interpolate
-      gsl_interp2d *m_interp;
+      shared_ptr<gsl_interp2d> m_interp;
 
       /// minimum x value
       double m_xmin;
@@ -345,7 +345,7 @@ namespace cosmobl {
        *
        *  @param x vector containing the x values
        *  @param y vector containing the y values
-       *  @param grid vector containing the grid values
+       *  @param fxy matrix containing the func values
        *  @param interpType interpolation method
        *
        *  @return object of class FuncGrid

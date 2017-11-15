@@ -323,7 +323,7 @@ double cosmobl::gsl::GSL_integrate_qaws (function<double(double, shared_ptr<void
 
 double cosmobl::gsl::GSL_root_brent (gsl_function Func, const double low_guess, const double up_guess, const double prec)
 {
-  int status;
+  int status = 0;
   int iter = 0, max_iter = 10000;
   const gsl_root_fsolver_type *T;
   double r;
@@ -388,7 +388,7 @@ vector<double> cosmobl::gsl::GSL_minimize_nD (function<double(vector<double > &)
   gsl_multimin_function minex_func;
 
   size_t iter = 0;
-  int status;
+  int status = 0;
   double size;
 
   // Starting point
@@ -453,7 +453,7 @@ vector<double> cosmobl::gsl::GSL_minimize_nD (function<double(vector<double>)> f
   gsl_multimin_function minex_func;
 
   size_t iter = 0;
-  int status;
+  int status = 0;
   double size;
 
   
@@ -514,7 +514,7 @@ vector<double> cosmobl::gsl::GSL_minimize_nD (function<double(vector<double>)> f
 
 double cosmobl::gsl::GSL_minimize_1D (function<double(double)> func, const double start, double min, double max, const int max_iter, const bool verbose)
 {
-  int status;
+  int status = 0;
   int iter = 0;
   const gsl_min_fminimizer_type *T;
   gsl_min_fminimizer *s;

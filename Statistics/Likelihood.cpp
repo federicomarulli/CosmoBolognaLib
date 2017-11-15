@@ -344,10 +344,10 @@ void cosmobl::statistics::Likelihood::sample_stretch_move (const int seed, const
   cosmobl::statistics::Sampler sampler(m_parameters->nparameters(), m_parameters->nparameters_free(), likelihood_function); 
   sampler.sample_stretch_move (m_parameters->chain_size(), m_parameters->nwalkers(), start, seed, aa);
   
-  vector<vector<double>> chain_values;
-  sampler.get_chain_function_acceptance(chain_values, m_likelihood_values, m_acceptance);
+  vector<vector<double>> chain_value;
+  sampler.get_chain_function_acceptance(chain_value, m_likelihood_value, m_acceptance);
 
-  m_parameters->set_chains(chain_values, m_parameters->nwalkers());
+  m_parameters->set_chains(chain_value, m_parameters->nwalkers());
 
   coutCBL << "Done!" << endl << endl;
 }
@@ -373,10 +373,10 @@ void cosmobl::statistics::Likelihood::sample_stretch_move_parallel (const int se
   
   sampler.sample_stretch_move_parallel(m_parameters->chain_size(), m_parameters->nwalkers(), start, seed, aa);
   
-  vector<vector<double>> chain_values;
-  sampler.get_chain_function_acceptance(chain_values, m_likelihood_values, m_acceptance);
+  vector<vector<double>> chain_value;
+  sampler.get_chain_function_acceptance(chain_value, m_likelihood_value, m_acceptance);
 
-  m_parameters->set_chains(chain_values, m_parameters->nwalkers());
+  m_parameters->set_chains(chain_value, m_parameters->nwalkers());
 
   coutCBL << "Done!" << endl << endl;
 }
@@ -394,21 +394,28 @@ void cosmobl::statistics::Likelihood::write_chain (const string output_dir, cons
   ofstream fout(file.c_str()); checkIO(fout, file);
   fout.precision(10);
   
+  fout << "### MCMC chain step";
+  for (int k=0; k<m_parameters->nparameters(); k++) 
+    fout << " # value of the parameter: " << k+1;
+  fout << " # likelihood-log(prior) # prior ###" << endl;
+  
   int nn = 0;
 
   for (int j=start; j<m_parameters->chain_size(); j+=thin) {
     for (int i=0; i<m_parameters->nwalkers(); i++) {
+
       int index = i+j*m_parameters->nwalkers();
-      fout << nn << " ";
+      fout << setw(6) << setiosflags(ios::fixed) << nn++ << "  ";
       vector<double> pp;
-      for (int k = 0; k<m_parameters->nparameters(); k++) {
+      
+      for (int k=0; k<m_parameters->nparameters(); k++) {
 	pp.push_back(m_parameters->chain_value(j, i, k));
-	fout << " " << m_parameters->chain_value(j, i, k) << " ";
+	fout << setw(10) << setiosflags(ios::fixed) << m_parameters->chain_value(j, i, k) << "  ";
       }
 
-      double pr=prior(pp);
-      fout << m_likelihood_values[index] -log(pr) << " " << pr << endl;
-      nn ++;
+      const double pr = prior(pp);
+      fout << setw(10) << setiosflags(ios::fixed) << m_likelihood_value[index]-log(pr) << "  " << pr << endl;
+      
     }
   }
 
@@ -432,8 +439,8 @@ void cosmobl::statistics::Likelihood::read_chain (const string input_dir, const 
   for(int i=0; i<skip_header; i++)
     getline(fin, line);
 
-  vector<vector<double>> chain_values;
-  vector<double> likelihood_values;
+  vector<vector<double>> chain_value;
+  vector<double> likelihood_value;
 
   while(getline(fin, line))
   {
@@ -446,18 +453,18 @@ void cosmobl::statistics::Likelihood::read_chain (const string input_dir, const 
       params.push_back(ll[i]);
     }
 
-    likelihood_values.push_back(ll[ll.size()-1]);
-    chain_values.push_back(params);
+    likelihood_value.push_back(ll[ll.size()-1]);
+    chain_value.push_back(params);
   }
-  int chain_size = chain_values.size()/nwalkers;
+  int chain_size = chain_value.size()/nwalkers;
 
-  checkDim(chain_values, nwalkers*chain_size, m_parameters->nparameters(), "chain_from_file");
-  checkDim(likelihood_values, nwalkers*chain_size, "likelihood_from_file");
+  checkDim(chain_value, nwalkers*chain_size, m_parameters->nparameters(), "chain_from_file");
+  checkDim(likelihood_value, nwalkers*chain_size, "likelihood_from_file");
 
-  chain_values = cosmobl::transpose(chain_values);
+  chain_value = cosmobl::transpose(chain_value);
 
-  m_parameters->set_chains(chain_values, nwalkers);
-  m_likelihood_values = likelihood_values;
+  m_parameters->set_chains(chain_value, nwalkers);
+  m_likelihood_value = likelihood_value;
 
   fin.clear(); fin.close();
   
@@ -521,13 +528,13 @@ void cosmobl::statistics::Likelihood::initialize_chains (const int chain_size, c
 // ============================================================================================
 
 
-void cosmobl::statistics::Likelihood::initialize_chains (const int chain_size, const vector<vector<double>> chain_values)
+void cosmobl::statistics::Likelihood::initialize_chains (const int chain_size, const vector<vector<double>> chain_value)
 {
-  const int nwalkers = chain_values[0].size();
+  const int nwalkers = chain_value[0].size();
   m_parameters->set_chains(chain_size, nwalkers);
 
-  for(int pp=0; pp<m_parameters->nparameters(); pp++)
-    m_parameters->set_chain_values(0, pp, chain_values[pp]);
+  for (int pp=0; pp<m_parameters->nparameters(); pp++)
+    m_parameters->set_chain_values(0, pp, chain_value[pp]);
 }
 
 
@@ -543,7 +550,7 @@ void cosmobl::statistics::Likelihood::initialize_chains (const int chain_size, c
   ifstream fin(last_step_file);
   string line;
 
-  vector<vector<double>> chain_values;
+  vector<vector<double>> chain_value;
 
   while(getline(fin, line))
   {
@@ -556,17 +563,17 @@ void cosmobl::statistics::Likelihood::initialize_chains (const int chain_size, c
       params.push_back(ll[i]);
     }
 
-    chain_values.push_back(params);
+    chain_value.push_back(params);
   }
   fin.clear(); fin.close();
 
   string rm_last_step = "rm -r "+last_step_file;
   if (system(rm_last_step.c_str())) {}
 
-  checkDim(chain_values, nwalkers, m_parameters->nparameters(), "chain_from_LastStep_file");
-  chain_values = cosmobl::transpose(chain_values);
+  checkDim(chain_value, nwalkers, m_parameters->nparameters(), "chain_from_LastStep_file");
+  chain_value = cosmobl::transpose(chain_value);
 
-  initialize_chains (chain_size, chain_values);
+  initialize_chains (chain_size, chain_value);
 }
 
 
@@ -639,7 +646,7 @@ void cosmobl::statistics::Likelihood::sample_tabulated_likelihood (const int nst
 
   for (size_t i=0; i<m_model->npar(); i++) {
     m_model->parameter(i)->set_chains(m_nchains, m_chain_size);
-    m_model->parameter(i)->set_chains_values_from_prior(0);
+    m_model->parameter(i)->set_chains_value_from_prior(0);
   }
 
 
@@ -650,9 +657,9 @@ void cosmobl::statistics::Likelihood::sample_tabulated_likelihood (const int nst
   vector<double> log_prior(m_nchains, 0);
   
   for (int i=0; i<m_nchains; i++) {
-    vector<double> params = m_model->parameter_values_from_chain(i,0);
+    vector<double> params = m_model->parameter_value_from_chain(i,0);
     log_likelihood[i] = interpolated_2D(params[0], params[1], parameter1, parameter2, tabulated_likelihood, interpolation_method);
-    log_prior[i] = LogPriorProbability(m_model->parameter_values_from_chain(i,0));
+    log_prior[i] = LogPriorProbability(m_model->parameter_value_from_chain(i,0));
   }
 
 
@@ -685,8 +692,8 @@ void cosmobl::statistics::Likelihood::sample_tabulated_likelihood (const int nst
 
       while (!isIncluded) {
 	gen_z = GZ();
-	parameters_i = m_model->parameter_values_from_chain(i, n-1);
-	parameters_k = m_model->parameter_values_from_chain(kk, n-1);
+	parameters_i = m_model->parameter_value_from_chain(i, n-1);
+	parameters_k = m_model->parameter_value_from_chain(kk, n-1);
 	vector<bool> included(m_model->npar());
 	for (unsigned int p=0; p<m_model->npar(); p++) {
 	  parameters_i[p] = parameters_k[p] + gen_z*(parameters_i[p]-parameters_k[p]);
@@ -695,7 +702,7 @@ void cosmobl::statistics::Likelihood::sample_tabulated_likelihood (const int nst
 	isIncluded = accumulate(included.begin(), included.end(), 1, std::multiplies<bool>());
       }
 
-      m_model->set_parameter_values(parameters_i);
+      m_model->set_parameter_value(parameters_i);
 
 
       double proposed_loglikelihood = interpolated_2D(parameters_i[0], parameters_i[1], parameter1, parameter2, tabulated_likelihood, interpolation_method);
@@ -711,7 +718,7 @@ void cosmobl::statistics::Likelihood::sample_tabulated_likelihood (const int nst
 	  m_model->parameter(p)->set_chain_value (i, n, parameters_i[p]);
       }
       else {
-	parameters_i = m_model->parameter_values_from_chain(i, n-1);
+	parameters_i = m_model->parameter_value_from_chain(i, n-1);
 	for (unsigned int p=0; p<m_model->npar(); p++)
 	  m_model->parameter(p)->set_chain_value (i, n, parameters_i[p]);
       }

@@ -137,7 +137,7 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_ResampleXi, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_ResampleXi, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
   case (ErrorType::_Poisson_) :
@@ -147,7 +147,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measure (const Err
     measureJackknife(dir_output_pairs, dir_input_pairs, dir_output_ResampleXi, count_dd, count_rr, count_dr, tcount, estimator);
     break;
   case (ErrorType::_Bootstrap_) :
-    measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_ResampleXi, count_dd, count_rr, count_dr, tcount, estimator);
+    measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_ResampleXi, count_dd, count_rr, count_dr, tcount, estimator, seed);
     break;
   default:
     ErrorCBL("Error in measure() of TwoPointCorrelation1D_filtered.cpp, unknown type of error");
@@ -224,7 +224,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measureJackknife (
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (nMocks<=0)
     ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_filtered.cpp, number of mocks must be >0");
@@ -238,7 +238,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measureBootstrap (
 
   vector<shared_ptr<Pair> > dd_regions, rr_regions, dr_regions;
   count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount);
-  vector<shared_ptr<Data> > data_SS = (estimator==_natural_) ? XiBootstrap(nMocks, dd_regions, rr_regions) : XiBootstrap(nMocks,dd_regions,rr_regions,dr_regions);
+  vector<shared_ptr<Data> > data_SS = (estimator==_natural_) ? XiBootstrap(nMocks, dd_regions, rr_regions, seed) : XiBootstrap(nMocks,dd_regions,rr_regions,dr_regions, seed);
 
   for (int i=0; i<nMocks; i++) {
     shared_ptr<Data> data_filtered = Filtered(data_SS[i]);

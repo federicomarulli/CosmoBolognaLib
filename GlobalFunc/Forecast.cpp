@@ -41,26 +41,26 @@ using namespace cosmobl;
 // ============================================================================
 
 
-vector<double> cosmobl::fit_covariance_matrix_2PCF_monopole(const vector<double> mean, const vector<vector<double>> mock_xi0, const bool doJK, const cosmobl::cosmology::Cosmology cosmology, const double nObjects, const double Volume, const double bias, const double redshift, const double rMin, const double rMax, const int nbins, const cosmobl::binType bin_type, const string method_Pk, const double sigma_NL, const bool NL)
+vector<double> cosmobl::fit_covariance_matrix_2PCF_monopole (const vector<double> mean, const vector<vector<double>> mock_xi0, const bool doJK, const cosmobl::cosmology::Cosmology cosmology, const double nObjects, const double Volume, const double bias, const double redshift, const double rMin, const double rMax, const int nbins, const cosmobl::binType bin_type, const string method_Pk, const double sigma_NL, const bool NL)
 {
-  cout << "Fitting the Covariance Matrix" << endl;
+  coutCBL << "Fitting the Covariance Matrix" << endl;
   const int nmock = mock_xi0.size();
 
   double term = (doJK) ? nmock-1 : 1.;
   vector<double> mock_mean(nbins, 0);
 
-  if(mean.size()==0){
+  if (mean.size()==0) {
     vector<vector<double>> vv = transpose(mock_xi0);
-    for(int i=0; i<nbins; i++)
+    for (int i=0; i<nbins; i++)
       mock_mean[i] = Average(vv[i]);
   }
   else
-    for(int i=0; i<nbins; i++)
+    for (int i=0; i<nbins; i++)
       mock_mean[i] = mean[i];
 
   vector<vector<double>> diff(nmock, vector<double>(nbins, 0));
-  for(int i=0; i<nmock; i++)
-    for(int j=0; j<nbins; j++)
+  for (int i=0; i<nmock; i++)
+    for (int j=0; j<nbins; j++)
       diff[i][j] = mock_xi0[i][j]-mock_mean[j];
 
   cosmobl::cosmology::Cosmology cosmo = cosmology;
@@ -76,39 +76,38 @@ vector<double> cosmobl::fit_covariance_matrix_2PCF_monopole(const vector<double>
   {
     const double _nObjects = parameters[0];
     const double _Volume = parameters[1];
-    if(_nObjects<0.2*nObjects || _nObjects>nObjects ) return 1.e30;
-    if(_Volume<0.2*Volume || _Volume>Volume ) return 1.e30;
+    if (_nObjects<0.2*nObjects || _nObjects>nObjects ) return 1.e30;
+    if (_Volume<0.2*Volume || _Volume>Volume ) return 1.e30;
 
     vector<double> rr;
     vector<vector<double>> covariance, icovariance;
     cosmobl::Covariance_XiMultipoles (rr, covariance, nbins, rMin, rMax, _nObjects, _Volume, kk, {Pk0, Pk2, Pk4}, {0}, bin_type);
-    for(int i=0; i<nbins; i++)
-      for(int j=0; j<nbins; j++)
+    for (int i=0; i<nbins; i++)
+      for (int j=0; j<nbins; j++)
 	covariance[i][j] /=term;
 
     invert_matrix(covariance, icovariance);
-    double chi2=0.;
-    for(int i=0; i<nmock; i++)
+    double chi2 = 0.;
+    for (int i=0; i<nmock; i++)
       chi2+=v_M_vt(diff[i], icovariance);
     double LL = nmock*nbins*nbins*log(2*par::pi)+nmock*log(determinant_matrix(covariance))+chi2;
     return LL;
   };
   
-  double min_nObj=0, min_Vol=0;
+  double min_nObj = 0., min_Vol = 0.;
   double min_LL = 1.e30;
-  for(size_t i=0; i<nObj.size(); i++)
-    for(size_t j=0; j<Vol.size(); j++){
+  for (size_t i=0; i<nObj.size(); i++)
+    for (size_t j=0; j<Vol.size(); j++) {
       vector<double> pars = {nObj[i], Vol[j]};
       double LL = func(pars);
-      if(LL<min_LL){
+      if (LL<min_LL) {
 	min_LL = LL;
 	min_nObj = nObj[i];
 	min_Vol = Vol[j];
       }
     }
 
-  return cosmobl::gsl::GSL_minimize_nD (func, {min_nObj, min_Vol}, {0.1, 0.1});
-  cout << "Done!" << endl;
+  return cosmobl::gsl::GSL_minimize_nD(func, {min_nObj, min_Vol}, {0.1, 0.1});
 }
 
 
@@ -124,14 +123,14 @@ shared_ptr<cosmobl::data::Data> cosmobl::generate_mock_2PCF_monopole (const cosm
   vector<double> rad(ndata, 0), xi0(ndata, 0);
   vector<vector<double>> covariance(ndata, vector<double>(ndata, 0));
 
-  for(int i=0; i<ndata; i++){
+  for (int i=0; i<ndata; i++) {
     rad[i] = data->xx(i);
     xi0[i] = data->data(i);
-    for(int j=0; j<ndata; j++)
+    for (int j=0; j<ndata; j++)
       covariance[i][j] = data->covariance(i, j);
   }
 
-  return  make_shared<cosmobl::data::Data1D> (cosmobl::data::Data1D(rad, xi0, covariance));
+  return make_shared<cosmobl::data::Data1D> (cosmobl::data::Data1D(rad, xi0, covariance));
 }
 
 // ============================================================================
@@ -155,8 +154,8 @@ shared_ptr<cosmobl::data::Data> cosmobl::generate_mock_2PCF_multipoles (const co
   xil[2] = cosmobl::fftlog::transform_FFTlog(rr, 1, kk, Pk4, 4);
 
   vector<double> rad, xi;
-  for(int i=0; i<3; i++){
-    for (int j=0; j<nbins; j++){
+  for (int i=0; i<3; i++) {
+    for (int j=0; j<nbins; j++) {
       rad.push_back(rr[j]);
       xi.push_back(xil[i][j]);
     }

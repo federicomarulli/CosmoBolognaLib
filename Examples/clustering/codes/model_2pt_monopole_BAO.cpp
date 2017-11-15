@@ -93,7 +93,9 @@ int main () {
     model_twop.set_fit_range(xmin, xmax);
     
     model_twop.set_likelihood(cosmobl::statistics::LikelihoodType::_GaussianLikelihood_Covariance_);
-    model_twop.sample_likelihood(chain_size, nwalkers, seed, starting_parameters, radius);
+    
+    model_twop.run_MCMC(chain_size, nwalkers, seed, starting_parameters, radius);
+    
     model_twop.show_results(500, 10, 3213);
   }
 

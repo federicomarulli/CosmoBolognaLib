@@ -40,7 +40,7 @@ using namespace cosmobl;
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::mass_function (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root, const double Delta, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file, const bool default_delta, const double delta_t) 
+double cosmobl::cosmology::Cosmology::mass_function (const double Mass, const double redshift, const string model_MF, const string method_SS, const string output_root, const double Delta, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file, const bool default_delta, const double delta_t) 
 {
   double fact = (m_unit) ? 1 : m_hh;
   double MASS = Mass*fact;
@@ -51,9 +51,9 @@ double cosmobl::cosmology::Cosmology::mass_function (const double Mass, const do
   double Sigma = sqrt(SSS);
   double Dln_Sigma = dnsigma2M(1, MASS, method_SS, 0., output_root, interpType, k_max, input_file, is_parameter_file, unit1)*(MASS/(2.*SSS));
 
-  double MF = m_MF_generator(MASS, Sigma, Dln_Sigma, redshift, author_MF, Delta, default_delta, delta_t)*pow(fact, 4.);
+  double MF = m_MF_generator(MASS, Sigma, Dln_Sigma, redshift, model_MF, Delta, default_delta, delta_t)*pow(fact, 4.);
 
-  if (m_fNL!=0 && default_delta) MF *= MF_correction(MASS, redshift, author_MF, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
+  if (m_fNL!=0 && default_delta) MF *= MF_correction(MASS, redshift, model_MF, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
   else if (m_fNL!=0 && !default_delta) ErrorCBL("Non Gaussianity still not available for user-defined density contrast threshold!");
 
   return MF;
@@ -76,9 +76,9 @@ double cosmobl::cosmology::Cosmology::m_mass_function (const double Mass, shared
   double Sigma = sqrt(SSS);
   double Dln_Sigma = dnsigma2M(1, MASS, pp->method_SS, 0., pp->output_root, pp->interpType, pp->k_max, pp->input_file, pp->is_parameter_file, unit1)*(MASS/(2.*SSS));
 
-  double MF = m_MF_generator(MASS, Sigma, Dln_Sigma, pp->redshift, pp->author_MF, pp->Delta,pp-> default_delta, pp->delta_t)*pow(fact, 4.);
+  double MF = m_MF_generator(MASS, Sigma, Dln_Sigma, pp->redshift, pp->model_MF, pp->Delta,pp-> default_delta, pp->delta_t)*pow(fact, 4.);
 
-  if (m_fNL!=0 && pp->default_delta) MF *= MF_correction(MASS, pp->redshift, pp->author_MF, pp->output_root, pp->interpType, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->input_file, pp->is_parameter_file);
+  if (m_fNL!=0 && pp->default_delta) MF *= MF_correction(MASS, pp->redshift, pp->model_MF, pp->output_root, pp->interpType, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->input_file, pp->is_parameter_file);
   else if (m_fNL!=0 && !pp->default_delta) ErrorCBL("Non Gaussianity still not available for user-defined density contrast threshold!");
 
   return MF;
@@ -88,7 +88,7 @@ double cosmobl::cosmology::Cosmology::m_mass_function (const double Mass, shared
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::mass_function_fast (const double Mass, const double redshift, const string author_MF, const string method_SS, const string output_root, const double Delta, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+double cosmobl::cosmology::Cosmology::mass_function_fast (const double Mass, const double redshift, const string model_MF, const string method_SS, const string output_root, const double Delta, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
   double fact = (m_unit) ? 1 : m_hh;
   double MASS = Mass*fact;
@@ -114,7 +114,7 @@ double cosmobl::cosmology::Cosmology::mass_function_fast (const double Mass, con
   double sig = interpolated(MASS, mass, sigma, "Steffen");
   double dlsig = interpolated(MASS, mass, dln_sigma, "Steffen");
   
-  double MF = m_MF_generator(MASS, sig, dlsig, redshift, author_MF, Delta)*pow(fact, 4.);
+  double MF = m_MF_generator(MASS, sig, dlsig, redshift, model_MF, Delta)*pow(fact, 4.);
   if (std::isnan(MF)) { string Err = "Error in cosmobl::cosmology::Cosmology::mass_function_fast of MassFunction.cpp: MF = " + conv(MF,par::fDP3) + "!"; ErrorCBL(Err); }
 
   if (m_fNL!=0) MF *= MF_correction(MASS, redshift, method_SS, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
@@ -126,12 +126,12 @@ double cosmobl::cosmology::Cosmology::mass_function_fast (const double Mass, con
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string author_MF, const string output_root, const double Delta, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string method_SS, const string input_file, const bool is_parameter_file) 
+double cosmobl::cosmology::Cosmology::mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string model_MF, const string output_root, const double Delta, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string method_SS, const string input_file, const bool is_parameter_file) 
 {
   double fact = (m_unit) ? 1 : m_hh;
   double MASS = Mass*fact;
 
-  double MF = m_MF_generator(MASS, Sigma, Dln_Sigma, redshift, author_MF, Delta)*pow(fact, 4.);
+  double MF = m_MF_generator(MASS, Sigma, Dln_Sigma, redshift, model_MF, Delta)*pow(fact, 4.);
   
   if (m_fNL!=0) MF *= MF_correction(MASS, redshift, method_SS, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
 
@@ -142,27 +142,27 @@ double cosmobl::cosmology::Cosmology::mass_function (const double Mass, const do
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string author_MF, const double Delta, const bool default_delta, const double delta_t) 
+double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const string model_MF, const double Delta, const bool default_delta, const double delta_t) 
 { 
   const double deltacz = (default_delta) ? deltac(redshift) : fabs(delta_t*DD(redshift)/DD(0.));
   const double sigmaz = Sigma*DD(redshift)/DD(0.);
   
   const double RHO = rho_m(0., true); 
   
-  if (author_MF=="PS") // Press & Schechter
+  if (model_MF=="PS") // Press & Schechter
     return sqrt(2./par::pi)*RHO/(Mass*Mass)*deltacz/sigmaz*fabs(Dln_Sigma)*exp(-(deltacz*deltacz)*0.5/(sigmaz*sigmaz));
    
-  else if (author_MF=="ST") { // Sheth & Tormen
+  else if (model_MF=="ST") { // Sheth & Tormen
     double aa = 0.707;
     double qq = 0.3;
     double AA = 0.3222;
     return AA*sqrt(2.*aa/par::pi)*RHO/(Mass*Mass)*deltacz/sigmaz*(1+pow(sigmaz/(sqrt(aa)*deltacz),2.*qq))*fabs(Dln_Sigma)*exp(-(aa*deltacz*deltacz)*0.5/(sigmaz*sigmaz));
   }
   
-  else if (author_MF=="Jenkins") // Jenkins et al. (2001)
+  else if (model_MF=="Jenkins") // Jenkins et al. (2001)
     return 0.315*exp(-pow(fabs(log(1./sigmaz)+0.61),3.8))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
   
-  else if (author_MF=="Warren") { // Warren et al. (2006) 
+  else if (model_MF=="Warren") { // Warren et al. (2006) 
     double AA = 0.7234;
     double aa = 1.625;
     double bb = 0.2538;
@@ -170,7 +170,7 @@ double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const d
     return AA*(pow(sigmaz,-aa)+bb)*exp(-cc/(sigmaz*sigmaz))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
   }
   
-  else if (author_MF=="Reed") { // Reed et al. (2007) 
+  else if (model_MF=="Reed") { // Reed et al. (2007) 
     double cc = 1.08;
     double aa = 0.764/cc;
     double pp = 0.3;
@@ -182,12 +182,12 @@ double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const d
     return Fatt*RHO/(Mass*Mass)*deltacz/sigmaz*(1+pow(sigmaz*sigmaz/(aa*deltacz*deltacz),pp)+0.6*G1+0.4*G2)*fabs(Dln_Sigma)*exp(-(cc*aa*deltacz*deltacz)*0.5/(sigmaz*sigmaz)-(0.03/pow(n_eff+3.,2)*pow(deltacz/sigmaz,0.6)));
   }
 
-  else if (author_MF=="Pan") { // Pan (2007)
+  else if (model_MF=="Pan") { // Pan (2007)
     double alpha = 0.435; // check!!!
     return 4.*alpha/sqrt(2.*par::pi)*RHO/(Mass*Mass)*deltacz/pow(sigmaz,2.*alpha)*fabs(Dln_Sigma)*exp(-(deltacz*deltacz)*0.5/pow(sigmaz,4.*alpha));
   }
 
-  else if (author_MF=="ShenH") { // halo MF, Shen et al. (2006) // check!!!
+  else if (model_MF=="ShenH") { // halo MF, Shen et al. (2006) // check!!!
     double alpha = -0.55;
     double beta = -0.56;
     double ni = pow(deltacz/sigmaz,2);
@@ -195,7 +195,7 @@ double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const d
     return ni_fni*RHO/(Mass*Mass)*fabs(Dln_Sigma)*2;
   }
   
-  else if (author_MF=="ShenF") { // filament MF, Shen et al. (2006) // check!!!
+  else if (model_MF=="ShenF") { // filament MF, Shen et al. (2006) // check!!!
     double alpha = -0.28;
     double beta = -0.012;
     double ni = pow(deltacz/sigmaz,2);
@@ -203,7 +203,7 @@ double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const d
     return ni_fni*RHO/(Mass*Mass)*fabs(Dln_Sigma)*2;
   }
 
-  else if (author_MF=="ShenS") { // sheet MF, Shen et al. (2006) // check!!!
+  else if (model_MF=="ShenS") { // sheet MF, Shen et al. (2006) // check!!!
     double alpha = -0.61;
     double beta = 0.45;
     double ni = pow(deltacz/sigmaz,2);
@@ -211,7 +211,7 @@ double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const d
     return fabs(ni_fni*RHO/(Mass*Mass)*fabs(Dln_Sigma)*2); // check!!!
   }
 
-  else if (author_MF=="Tinker") { // Tinker et al. (2008)
+  else if (model_MF=="Tinker") { // Tinker et al. (2008)
 
     //if (redshift>2) WarningMsg("Attention: the Tinker mass function has been tested for z<~2!");
 
@@ -242,7 +242,7 @@ double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const d
     return AA*(pow(sigmaz/bb,-aa)+1.)*exp(-cc/(sigmaz*sigmaz))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
   }
 
-  else if (author_MF=="Crocce") { // Crocce et al. (2010)
+  else if (model_MF=="Crocce") { // Crocce et al. (2010)
     double AA = 0.58*pow(1.+redshift,-0.13);
     double aa = 1.37*pow(1.+redshift,-0.15);
     double bb = 0.3*pow(1.+redshift,-0.084);
@@ -250,13 +250,13 @@ double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const d
     return AA*(pow(sigmaz,-aa)+bb)*exp(-cc*pow(sigmaz,-2))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
   }
   
-  else if (author_MF=="Angulo_FOF") // FoF MF, Angulo et al. (2012)
+  else if (model_MF=="Angulo_FOF") // FoF MF, Angulo et al. (2012)
     return 0.201*(pow(2.08/sigmaz,1.7)+1)*exp(-1.172/(sigmaz*sigmaz))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
  
-  else if (author_MF=="Angulo_Sub") // SUBFIND MF, Angulo et al. (2012)
+  else if (model_MF=="Angulo_Sub") // SUBFIND MF, Angulo et al. (2012)
     return 0.265*(pow(1.675/sigmaz,1.9)+1)*exp(-1.4/(sigmaz*sigmaz))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
 
-  else if (author_MF=="Bhattacharya") { // Bhattacharya et al. (2011) // check!!!
+  else if (model_MF=="Bhattacharya") { // Bhattacharya et al. (2011) // check!!!
     double aa = 0.788/pow(1+redshift,0.01);
     double qq = 1.795;
     double AA = 0.333/pow(1+redshift,0.11);
@@ -266,14 +266,14 @@ double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const d
     return RHO/(Mass*Mass)*fabs(Dln_Sigma)*AA*sqrt(2/par::pi)*exp(-nu*nu*0.5*aa)*(1+pow(1/(nu*nu*aa),pp))*pow(nu*sqrt(aa),qq);
   }
 
-  else if (author_MF=="Courtin") { // Courtin et al. (2010) 
+  else if (model_MF=="Courtin") { // Courtin et al. (2010) 
     double aa = 0.695;
     double qq = 0.1;
     double AA = 0.348; 
     return AA*sqrt(2.*aa/par::pi)*RHO/(Mass*Mass)*deltacz/sigmaz*(1+pow(sigmaz/(sqrt(aa)*deltacz),2.*qq))*fabs(Dln_Sigma)*exp(-(aa*deltacz*deltacz)*0.5/(sigmaz*sigmaz));
   }
 
-  else if (author_MF=="Manera") { // Manera et al. (2010)
+  else if (model_MF=="Manera") { // Manera et al. (2010)
     
     double aa, qq;
     if (fabs(redshift-0.)<1.e-30) {
@@ -290,7 +290,7 @@ double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const d
     return 0.3222*sqrt(2.*aa/par::pi)*RHO/(Mass*Mass)*deltacz/sigmaz*(1+pow(sigmaz/(sqrt(aa)*deltacz),2.*qq))*fabs(Dln_Sigma)*exp(-(aa*deltacz*deltacz)*0.5/(sigmaz*sigmaz));
   }
 
-  else if (author_MF=="Watson_FOF") { // FoF MF, Watson et al. (2012) 
+  else if (model_MF=="Watson_FOF") { // FoF MF, Watson et al. (2012) 
     double a = 0.282;
     double b = 1.406;
     double c = 2.163;
@@ -298,8 +298,8 @@ double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const d
     return a*(pow((b/sigmaz),c)+1)*exp(-d/(sigmaz*sigmaz))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
   }
 
-  else if (author_MF=="Watson_SOH") { // Spherical Overdensity halo MF, Watson et al. (2012) 
-    double Omega = cosmobl::cosmology::Cosmology::OmegaM(redshift);
+  else if (model_MF=="Watson_SOH") { // Spherical Overdensity halo MF, Watson et al. (2012) 
+    double Omega = OmegaM(redshift);
     double C = exp(0.023*(Delta/178-1));
     double d = -0.456*Omega-0.139;
     double p = 0.072;
@@ -324,7 +324,7 @@ double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const d
     return RHO/(Mass*Mass)*fabs(Dln_Sigma)*Gamma*A*(pow((beta/sigmaz),alpha)+1.)*exp(-gamma/(sigmaz*sigmaz));
   }
 
-  else if (author_MF=="Peacock") { // Peacock et al. (2007)
+  else if (model_MF=="Peacock") { // Peacock et al. (2007)
     double aa = 1.529;
     double bb = 0.704;
     double cc = 0.412;
@@ -332,14 +332,14 @@ double cosmobl::cosmology::Cosmology::m_MF_generator (const double Mass, const d
     return nu*exp(-cc*nu*nu)/pow(1+aa*pow(nu,bb),2)*(bb*aa*pow(nu,bb-1)+2*cc*nu*(1+aa* pow(nu,bb)))*RHO/(Mass*Mass)*fabs(Dln_Sigma);
   }
 
-  else return ErrorCBL("Error in cosmobl::cosmology::Cosmology::m_MF_generator of MassFunction.cpp: author_MF not allowed!");  
+  else return ErrorCBL("Error in cosmobl::cosmology::Cosmology::m_MF_generator of MassFunction.cpp: model_MF not allowed!");  
 }
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::n_haloes (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const string author_MF, const string method_SS, const string output_root, const double Delta, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
+double cosmobl::cosmology::Cosmology::n_haloes (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const string model_MF, const string method_SS, const string output_root, const double Delta, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
 {
 
   // ---------- read the grid file ---------- 
@@ -370,7 +370,7 @@ double cosmobl::cosmology::Cosmology::n_haloes (const double Mass_min, const dou
 
     double Int = 0.;
     for (unsigned int k=0; k<mass.size()-1; k++) 
-      Int += mass_function(mass[k], sigma[k], dlnsigma[k], redshift, author_MF, output_root, Delta)*dV_dZdOmega(redshift, angle_rad)*(mass[k+1]-mass[k]);
+      Int += mass_function(mass[k], sigma[k], dlnsigma[k], redshift, model_MF, output_root, Delta)*dV_dZdOmega(redshift, angle_rad)*(mass[k+1]-mass[k]);
 
     N_haloes += Int*delta_z;
 
@@ -384,12 +384,12 @@ double cosmobl::cosmology::Cosmology::n_haloes (const double Mass_min, const dou
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::n_haloes (const double Mass_min, const double Mass_max, const double Volume, const double redshift, const string author_MF, const string method_SS, const int nbin_mass, const string output_root, const double Delta, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file, const bool default_delta, const double delta_t) 
+double cosmobl::cosmology::Cosmology::n_haloes (const double Mass_min, const double Mass_max, const double Volume, const double redshift, const string model_MF, const string method_SS, const int nbin_mass, const string output_root, const double Delta, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file, const bool default_delta, const double delta_t) 
 {
   glob::STR_MF mass_function_par;
 
   mass_function_par.redshift = redshift;
-  mass_function_par.author_MF = author_MF ;
+  mass_function_par.model_MF = model_MF ;
   mass_function_par.method_SS = method_SS;
   mass_function_par.output_root = output_root;
   mass_function_par.Delta = Delta;
@@ -433,9 +433,9 @@ double cosmobl::cosmology::Cosmology::n_haloes (const double Mass_min, const dou
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::MhaloMin (const int n_halo, const double Area, const bool angle_rad, const double z_min, const double z_max, const double Mmax, const double lgM1_guess, const double lgM2_guess, const string author_MF, const string method_SS, const string output_root, const double Delta, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const
+double cosmobl::cosmology::Cosmology::MhaloMin (const int n_halo, const double Area, const bool angle_rad, const double z_min, const double z_max, const double Mmax, const double lgM1_guess, const double lgM2_guess, const string model_MF, const string method_SS, const string output_root, const double Delta, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const
 {
-  cosmobl::classfunc::func_MhaloMin func(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, n_halo, Area, angle_rad, z_min, z_max, Mmax, author_MF, method_SS, output_root, Delta, interpType, k_max, input_file, is_parameter_file);
+  cosmobl::classfunc::func_MhaloMin func(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, n_halo, Area, angle_rad, z_min, z_max, Mmax, model_MF, method_SS, output_root, Delta, interpType, k_max, input_file, is_parameter_file);
   
   function<double(double) > ff = bind(&cosmobl::classfunc::func_MhaloMin::operator(), func, std::placeholders::_1);
   double prec = 0.0001;
@@ -461,7 +461,7 @@ double cosmobl::cosmology::Cosmology::unevolved_mass_function (const double mass
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::n_haloes_selection_function (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const string author_MF, const string method_SS, const string selection_function_file, const vector<int> cols, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
+double cosmobl::cosmology::Cosmology::n_haloes_selection_function (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> cols, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
 {
 
   // ---------- read the grid file ---------- 
@@ -508,7 +508,7 @@ double cosmobl::cosmology::Cosmology::n_haloes_selection_function (const double 
     for (unsigned int k=0; k<mass.size()-1; k++) {
       double DD = (isDelta_vir) ? Delta_vir(Delta, redshift) : Delta;
       double SF = interp_SF(mass[k], redshift);
-      Int += SF*mass_function(mass[k], sigma[k], dlnsigma[k], redshift, author_MF, output_root, DD)*dV_dZdOmega(redshift, angle_rad)*(mass[k+1]-mass[k]);
+      Int += SF*mass_function(mass[k], sigma[k], dlnsigma[k], redshift, model_MF, output_root, DD)*dV_dZdOmega(redshift, angle_rad)*(mass[k+1]-mass[k]);
     }
 
     N_haloes += Int*delta_z;
@@ -523,7 +523,7 @@ double cosmobl::cosmology::Cosmology::n_haloes_selection_function (const double 
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::mass_function_vector (const vector<double> mass, const double z_min, const double z_max, const string author_MF, const string method_SS, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
+vector<double> cosmobl::cosmology::Cosmology::mass_function_vector (const vector<double> mass, const double z_min, const double z_max, const string model_MF, const string method_SS, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
 {
   vector<double> MF(mass.size());
 
@@ -559,7 +559,7 @@ vector<double> cosmobl::cosmology::Cosmology::mass_function_vector (const vector
     auto func = [&] (const double redshift) 
     {
       double DD = (isDelta_vir) ? Delta_vir(Delta, redshift) : Delta;
-      return mass_function(mass[k], sigma, dlnsigma, redshift, author_MF, output_root, DD)*dV_dZdOmega(redshift, false);
+      return mass_function(mass[k], sigma, dlnsigma, redshift, model_MF, output_root, DD)*dV_dZdOmega(redshift, false);
     };
     MF[k] = gsl::GSL_integrate_qag(func, z_min, z_max)/VV;
   }
@@ -571,7 +571,7 @@ vector<double> cosmobl::cosmology::Cosmology::mass_function_vector (const vector
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::mass_function_selection_function_vector (const vector<double> mass, const double z_min, const double z_max, const string author_MF, const string method_SS, const string selection_function_file, const vector<int> cols, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
+vector<double> cosmobl::cosmology::Cosmology::mass_function_selection_function_vector (const vector<double> mass, const double z_min, const double z_max, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> cols, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
 {
   vector<double> MF(mass.size());
 
@@ -616,7 +616,7 @@ vector<double> cosmobl::cosmology::Cosmology::mass_function_selection_function_v
     {
       double SF = interp_SF(mass[k], redshift);
       double DD = (isDelta_vir) ? Delta_vir(Delta, redshift) : Delta;
-      return SF*mass_function(mass[k], sigma, dlnsigma, redshift, author_MF, output_root, DD)*dV_dZdOmega(redshift, false);
+      return SF*mass_function(mass[k], sigma, dlnsigma, redshift, model_MF, output_root, DD)*dV_dZdOmega(redshift, false);
     };
 
     MF[k] = gsl::GSL_integrate_qag(func, z_min, z_max)/VV; ///gsl::GSL_integrate_qag(funcD, z_min, z_max);  
@@ -629,7 +629,7 @@ vector<double> cosmobl::cosmology::Cosmology::mass_function_selection_function_v
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const string author_MF, const string method_SS, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
+vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const string model_MF, const string method_SS, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
 {
 
   // ---------- read the grid file ---------- 
@@ -672,7 +672,7 @@ vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes (cons
       double DD = (isDelta_vir) ? Delta_vir(Delta, redshift) : Delta;
       double sigma = interp_sigma(mass);
       double dlnsigma = interp_dlnsigma(mass);
-      return Area_degrees*dV_dZdOmega(redshift, false)*mass_function(mass, sigma, dlnsigma, redshift, author_MF, output_root, DD);
+      return Area_degrees*dV_dZdOmega(redshift, false)*mass_function(mass, sigma, dlnsigma, redshift, model_MF, output_root, DD);
     };
 
     cosmobl::cuba::CUBAwrapper CubaIntegrand(integrand, 2);
@@ -688,7 +688,7 @@ vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes (cons
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes_selection_function (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const string author_MF, const string method_SS, const string selection_function_file, const vector<int> cols, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
+vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes_selection_function (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> cols, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
 {
 
   // ---------- read the grid file ---------- 
@@ -742,7 +742,7 @@ vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes_selec
       double sigma = interp_sigma(mass);
       double dlnsigma = interp_dlnsigma(mass);
       double SF = interp_SF(mass, redshift);
-      return SF*Area_degrees*dV_dZdOmega(redshift, false)*mass_function(mass, sigma, dlnsigma, redshift, author_MF, output_root, DD);
+      return SF*Area_degrees*dV_dZdOmega(redshift, false)*mass_function(mass, sigma, dlnsigma, redshift, model_MF, output_root, DD);
     };
 
     cosmobl::cuba::CUBAwrapper CubaIntegrand(integrand, 2);
@@ -758,7 +758,7 @@ vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes_selec
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::mean_redshift_haloes_selection_function (const double z_min, const double z_max, const double Mass_min, const double Mass_max, const string author_MF, const string method_SS, const string selection_function_file, const vector<int> cols, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
+double cosmobl::cosmology::Cosmology::mean_redshift_haloes_selection_function (const double z_min, const double z_max, const double Mass_min, const double Mass_max, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> cols, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
 {
 
   // ---------- read the grid file ---------- 
@@ -800,7 +800,7 @@ double cosmobl::cosmology::Cosmology::mean_redshift_haloes_selection_function (c
     double SF = interp_SF(mass, redshift);
 
     double DD = (isDelta_vir) ? Delta_vir(Delta, redshift) : Delta;
-    double MF = mass_function(mass, sigma, dlnsigma, redshift, author_MF, output_root, DD);
+    double MF = mass_function(mass, sigma, dlnsigma, redshift, model_MF, output_root, DD);
     return redshift*MF*SF*dV_dZdOmega(redshift, false);
   };
 
@@ -813,7 +813,7 @@ double cosmobl::cosmology::Cosmology::mean_redshift_haloes_selection_function (c
     double SF = interp_SF(mass, redshift);
 
     double DD = (isDelta_vir) ? Delta_vir(Delta, redshift) : Delta;
-    double MF = mass_function(mass, sigma, dlnsigma, redshift, author_MF, output_root, DD);
+    double MF = mass_function(mass, sigma, dlnsigma, redshift, model_MF, output_root, DD);
     return MF*SF*dV_dZdOmega(redshift, false);
   };
 

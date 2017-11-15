@@ -269,13 +269,12 @@ double cosmobl::statistics::BaseParameter::prior_range (const double epsilon)
 
 void cosmobl::statistics::BaseParameter::set_posterior (const int start, const int thin, const int seed)
 {
-  if (fixed()){
+  if (fixed()) {
     (void)start; (void)thin; (void)seed;
     m_posterior = move(unique_ptr<statistics::Posterior>(new statistics::Posterior(glob::DistributionType::_ConstantDistribution_, m_prior->sample())));
   }
-  else{
+  else
     m_posterior = m_chain->PosteriorDistribution(start, thin, seed);
-  }
 }
 
 
@@ -284,11 +283,11 @@ void cosmobl::statistics::BaseParameter::set_posterior (const int start, const i
 
 void cosmobl::statistics::BaseParameter::set_posterior (const vector<double> chain_values, const int nwalkers, const int seed)
 {
-  if (fixed()){
+  if (fixed()) {
     (void)chain_values; (void)nwalkers; (void)seed;
     m_posterior = move(unique_ptr<statistics::Posterior>(new statistics::Posterior(glob::DistributionType::_ConstantDistribution_, m_prior->sample())));
   }
-  else{
+  else {
     set_chain(chain_values, nwalkers);
     m_posterior = m_chain->PosteriorDistribution(seed);
   }
@@ -300,11 +299,11 @@ void cosmobl::statistics::BaseParameter::set_posterior (const vector<double> cha
 
 void cosmobl::statistics::BaseParameter::set_posterior (const vector<vector<double>> chain_values, const int seed)
 {
-  if (fixed()){
+  if (fixed()) {
     (void)chain_values; (void)seed;
     m_posterior = move(unique_ptr<statistics::Posterior>(new statistics::Posterior(glob::DistributionType::_ConstantDistribution_, m_prior->sample())));
   }
-  else{
+  else {
     set_chain(chain_values);
     m_posterior = m_chain->PosteriorDistribution(seed);
   }

@@ -34,10 +34,17 @@
  *  carlo.cannarozzo@studio.unibo.it, tommaso.ronconi@studio.unibo.it
  */
 
+
+// * * * * * * * * * * * * * * * * * * * * * //
+// * * * LAST UPDATE -- 28th June 2017 * * * //
+// * * * * * * * * * * * * * * * * * * * * * //
+
+
 #include "Func.h"
 #include "Catalogue.h"
 #include "ChainMesh_Catalogue.h"
 #include "Object.h"
+#include "TwoPointCorrelation.h"
 #include "TwoPointCorrelation1D_monopole.h"
 #include <time.h>
 #include <algorithm>
@@ -58,11 +65,13 @@ typedef vector< vector< vector < vector <int> > > > Tensor4Di;
 
 /// @cond extvoid
 
-cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catalogue halo_catalogue, const vector<string> file, const double nSub, const int n_rnd, const string mode, const string dir_output, const double rmax, const int cellsize)
+cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catalogue halo_catalogue, const vector<string> file, const double nSub, const int n_rec, const string mode, const string dir_output, const string output, const double rmax, const int cellsize, const int n_iter, const double delta_movement)
 {
   // -------------------------------------------- //
   // ---------------- First Step ---------------- //
   // -------------------------------------------- //
+    
+  // * * * Displacement field reconstruction * * * //     
   
   const clock_t begin_time = clock();
   
@@ -72,7 +81,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   Catalogue total_catalogue;
   Catalogue displacement_catalogue;
   
-  if (algorithm==_LaZeVo_)
+  if (algorithm==_LaZeVo_) // Begin of LaZeVo method
   {
     cout << endl; coutCBL << par::col_green << "LaZeVo algorithm" << par::col_default << endl << endl;
 
@@ -91,16 +100,15 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
     
     coutCBL << "* * * Looking for closest pairs particles-random particles and calculating displacement field * * *" << endl << endl;
     
-    
-    for (int rndd=1; rndd<=n_rnd; ++rndd) // 'for' cycle - Cycling to the number of realizations 'n_rnd' set up in the 'input_param.ini' file 
+    for (int rndd=1; rndd<=n_rec; ++rndd) // 'for' cycle - Cycling to the number of realizations 'n_rec' set up in the 'input_param.ini' file 
     {
       int seed = rndd;
       
-      coutCBL << rndd << " of " << n_rnd << " random realizations " << endl;
+      coutCBL << rndd << " of " << n_rec << " random realizations " << endl;
 
       if (rand_file=="not_provided" && (mode=="non_periodic"||mode=="periodic"))
       {
-        Catalogue rand_tempcatalogue {_createRandom_box_, halo_catalogue, 1., 10, cosm, false, 10., seed};
+        Catalogue rand_tempcatalogue {_createRandom_box_, halo_catalogue, 1., 10, cosm, false, 10., {}, {}, {}, 10, seed};
         
         rand_catalogue = rand_tempcatalogue;      
       }
@@ -134,14 +142,14 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
       vector<shared_ptr<cosmobl::catalogue::Object>> displacement_catalogue_object;
       
       cout << endl;
-      
-      for (unsigned int iter=0; iter<2500; iter++)
+      unsigned int iteration_number= n_iter; /// <<<
+      for (unsigned int iter=0; iter<iteration_number; iter++) /// <<<
       {        
         vector<shared_ptr<cosmobl::catalogue::Object>> temp_initial_catalogue_object;
         vector<shared_ptr<cosmobl::catalogue::Object>> temp_total_catalogue_object;
         vector<shared_ptr<cosmobl::catalogue::Object>> temp_displacement_catalogue_object;
         
-        coutCBL << iter+1 << " / 2500 \r"; cout.flush();
+        coutCBL << iter+1 << " / "<< iteration_number << " \r"; cout.flush(); /// <<<
         
         int iter_seed = iter;
         vector<bool> used(rand_catalogue.nObjects(), false);
@@ -215,19 +223,19 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
 
           old_unpaired = unpaired;
 
-          coutCBL << iter+1 << " / 2500 - lower: " << unpaired << endl;
+//           coutCBL << iter+1 << " / 2500 - lower: " << unpaired << endl;
         }
       }
       
       stringstream ss;
       ss << rndd;
       string str = ss.str();
-      string output = ss.str();
+//       string output = ss.str();
       string name =  "../output/Displacement";
       name.append("_");
       name.append(str);
       name.append("_");
-      output = "coord_LCDM";
+//       output = "coord_LCDM.dat";
       name.append(output);
       ofstream fout_displ(name.c_str());
       
@@ -249,9 +257,85 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
       coutCBL << "Percentage of unpaired halos: " << (float)unpaired/halo_cat->nObjects() * 100 << "% " << endl;
       cout << endl;
     }
-  }
+  } // End of LaZeVo method
 
-  else if (algorithm==_RIVA_) {coutCBL << par::col_green << "RIVA algorithm is coming soon... " << par::col_default << endl; exit(1);}
+  else if (algorithm==_RIVA_) // Begin of RIVA method
+  {
+
+    (void)delta_movement;
+    /*
+    cout << endl; coutCBL << par::col_green << "RIVA algorithm" << par::col_default << endl << endl;
+
+    // * * * Two Point Correlation Function * * * //
+
+    const double N_R = 1.; // random/data ratio
+
+    const cosmobl::catalogue::Catalogue test_random_catalogue {cosmobl::catalogue::_createRandom_box_, halo_catalogue, N_R};
+
+    const double rMin  = 1e3; // minimum separation 
+    const double rMax  = 5e4; // maximum separation 
+    const int nbins    = 50;  // number of bins
+    const double shift = 0.5; // spatial shift used to set the bin centre
+
+    string w_file = "xi_RIVA_pre.dat";
+    cosmobl::twopt::TwoPointCorrelation1D_monopole TPCF_catalogue {halo_catalogue, test_random_catalogue, cosmobl::_logarithmic_, rMin, rMax, nbins, shift};
+// // //     TPCF_catalogue.measure_for_RIVA(cosmobl::twopt::_Poisson_, dir_output);
+    TPCF_catalogue.measure(cosmobl::twopt::_Poisson_, dir_output);
+
+    TPCF_catalogue.write(dir_output, w_file);
+    
+    
+// // // // // WHILE CYCLE - - - while (2pcf_peak/max(xi[i])<1e-2) {...}
+    
+    auto halo_cat = make_shared<cosmobl::catalogue::Catalogue> (cosmobl::catalogue::Catalogue(move(halo_catalogue)));
+
+    vector<shared_ptr<cosmobl::catalogue::Object>> total_catalogue_object; // vector shared pointer for the constructor 'total_catalogue'
+    
+    vector<double> x_position, y_position, z_position;
+
+    for (size_t i = 0; i<halo_cat->nObjects(); i++)
+    {
+        x_position.push_back(halo_cat->xx(i));
+        y_position.push_back(halo_cat->yy(i));
+        z_position.push_back(halo_cat->zz(i));
+    }    
+
+    srand(time(NULL));
+    int randomDirection = 0;
+    
+    for (size_t i = 0; i<x_position.size(); i++)
+    {
+        randomDirection = (rand() % 3) + (-1);
+        x_position[i]=x_position[i]+delta_movement*randomDirection;
+        randomDirection = (rand() % 3) + (-1);
+        y_position[i]=y_position[i]+delta_movement*randomDirection;
+        randomDirection = (rand() % 3) + (-1);  
+        z_position[i]=z_position[i]+delta_movement*randomDirection;
+    }
+    
+    vector<shared_ptr<cosmobl::catalogue::Object>> temp_initial_catalogue_object;
+
+    for (size_t i = 0; i<x_position.size(); i++)
+    {
+        cosmobl::comovingCoordinates initial_coordinates = {x_position[i], y_position[i], z_position[i]};
+        auto inital_halo_coord = make_shared<cosmobl::catalogue::Halo>(initial_coordinates);
+        temp_initial_catalogue_object.push_back(inital_halo_coord);
+    }
+
+    const cosmobl::catalogue::Catalogue test_random_catalogue_post {cosmobl::catalogue::_createRandom_box_, halo_catalogue, N_R};
+
+
+    string w_file_post = "xi_RIVA_post.dat";
+    cosmobl::twopt::TwoPointCorrelation1D_monopole TPCF_catalogue_post {temp_initial_catalogue_object, test_random_catalogue_post, cosmobl::_logarithmic_, rMin, rMax, nbins, shift};
+
+    TPCF_catalogue_post.measure(cosmobl::twopt::_Poisson_, dir_output);
+
+    TPCF_catalogue_post.write(dir_output, w_file_post);
+
+
+    exit(1000);
+  */
+  } // End of RIVA method
 
   else ErrorCBL (" Algorithm type is not correct! ");
 
@@ -292,9 +376,9 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
 // ^ ^ ^ Uncomment the previous part to compute the Two Point Correlation Function of the final displacement with respect to a generic random field ^ ^ ^ //
   
   string name;
-  string output;
+//   string output;
   
-  output = "coord_LCDM";
+//   output = "coord_LCDM.dat";
   
   name = dir_output + "Divergence";
   name.append("_");
@@ -306,8 +390,15 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   name.append(output);
   ofstream fout_subvoids(name.c_str());
 
+  name = dir_output + "Minima";
+  name.append("_");
+  name.append(output);
+  ofstream fout_local_minima(name.c_str());
+  
   fout_divergence.precision(7);
   fout_subvoids.precision(7);
+  fout_local_minima.precision(7);
+
   
   double min_x       = total_cat->catalogue::Catalogue::Min(_X_), max_x = total_cat->catalogue::Catalogue::Max(_X_);
   double min_y       = total_cat->catalogue::Catalogue::Min(_Y_), max_y = total_cat->catalogue::Catalogue::Max(_Y_);
@@ -326,7 +417,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   double substep     = 1.e-3*step;
   double substep_1   = 1./substep;
   double substep10_1 = 0.1/substep;
-  double step_d      = step*1.75;
+// // //   double step_d      = step*1.75;
 
   double sigma       = 1.5*step; 
   double sg          = 1./(2.*sigma*sigma);
@@ -337,13 +428,14 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   coutCBL << "Δz     = " << delta_z << endl;
   coutCBL << "Volume = " << volume  << endl;
   coutCBL << "n      = " << density << endl;
+  coutCBL << "step   = " << step    << endl;
   coutCBL << "σ      = " << sigma   << endl;
   cout << endl;
   
   int mem_alloc_x    = int(delta_x/step); 
   int mem_alloc_y    = int(delta_y/step);
   int mem_alloc_z    = int(delta_z/step);
-  int mem_alloc_A    = round(400*n_rnd*1.5*1.5*1.5); //1.5^3 test <<--<<--<<--
+  int mem_alloc_A    = round(400*n_rec*1.5*1.5*1.5); //1.5^3 test <<--<<--<<--
 
   Tensor3Di Pn         (mem_alloc_x, vector<vector<int> >          (mem_alloc_y, vector<int>          (mem_alloc_z, 0)));
   Tensor3Dd Divergence (mem_alloc_x, vector<vector<double> >       (mem_alloc_y, vector<double>       (mem_alloc_z, 0.)));
@@ -378,6 +470,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   
   // * * * Divergence field construction * * * //
   
+  cout << endl;
   coutCBL << "* * * Divergence field construction * * *" << endl << endl;
   coutCBL << "Wait...\r"; cout.flush();
   int number=0;
@@ -576,7 +669,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   
   fout_divergence.clear(); fout_divergence.close();
 
-  coutCBL << "Number of cells with negative divergence: " << number << endl;
+  coutCBL << "Number of cells with negative divergence: " << number << endl << endl;
 
   temp_x = min_x;
   while (temp_x<max_x)
@@ -607,7 +700,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
           {
             for (int k=-1; k<=1; ++k)
             {              
-              if (io+i>0 && jo+j>0 && ko+k>0 && io+i<mem_alloc_x && jo+j<mem_alloc_z && ko+k<mem_alloc_z && io>0 && jo>0 && ko>0 && io<mem_alloc_x && jo<mem_alloc_y && ko<mem_alloc_z)
+              if (io+i>0 && jo+j>0 && ko+k>0 && io+i<mem_alloc_x && jo+j<mem_alloc_y && ko+k<mem_alloc_z && io>0 && jo>0 && ko>0 && io<mem_alloc_x && jo<mem_alloc_y && ko<mem_alloc_z)
               {
                 if (Divergence[io+i][jo+j][ko+k]>Divergence[io][jo][ko] && Divergence[io][jo][ko]<-1e-10) index++; // Condition on minimum value
               }   
@@ -620,16 +713,22 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
           x_locmin.push_back(io*step+min_x);
           y_locmin.push_back(jo*step+min_y);
           z_locmin.push_back(ko*step+min_z);
+          
+          fout_local_minima << io*step+min_x << " " << jo*step+min_y << " " << ko*step+min_z << endl; // local minima
+
         }
       }
     }
   }
   
-  coutCBL << "Number of local minima: " << x_locmin.size() << endl;
-  cout << endl;
+  fout_local_minima.clear(); fout_local_minima.close();
 
-  coutCBL << "* * * Identification of subvoids * * *" << endl;
-  cout << endl;
+  
+//   coutCBL << "Number of local minima: " << x_locmin.size() << endl;
+//   cout << endl;
+
+//   coutCBL << "* * * Identification of subvoids * * *" << endl;
+//   cout << endl;
 
   int control1 = 0;
   int control2 = 0;
@@ -639,8 +738,8 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   
   int subvoids_number = 0;
   vector <int> number_host_subvoids;
-  vector <double> div;
-  
+  vector <double> x_subvoid, y_subvoid, z_subvoid, div_subvoid;
+  vector <int> id_subvoid;
   for (int temp_number=1; temp_number<=number; ++temp_number)
   {
     temp_x = x_void[temp_number];  // Initial coordinates
@@ -672,12 +771,16 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
       {
         if (fabs(temp_x-x_locmin[ID])<1.1*step && fabs(temp_y-y_locmin[ID])<1.1*step && fabs(temp_z-z_locmin[ID])<1.1*step)
         {
-          fout_subvoids << temp_x << " " << temp_y << " " << temp_z << " " << x_void[temp_number] << " " << y_void[temp_number] << " " << z_void [temp_number] << " " << ID << " " << Divergence[io][jo][ko] << endl;
           tumbler = 1;
           control3++; 
+          fout_subvoids << x_locmin[ID]<< " " << y_locmin[ID]<< " " << z_locmin[ID]<< " " << temp_x << " " << temp_y << " " << temp_z << " " << x_void[temp_number] << " " << y_void[temp_number] << " " << z_void[temp_number] << " " << ID << " " << Divergence[io][jo][ko] << " " << rejected << endl;
           subvoids_number++;
           number_host_subvoids.push_back(ID);
-          div.push_back(Divergence[io][jo][ko]);
+          x_subvoid.push_back(x_locmin[ID]);
+          y_subvoid.push_back(y_locmin[ID]);
+          z_subvoid.push_back(z_locmin[ID]);
+          id_subvoid.push_back(ID);
+          div_subvoid.push_back(Divergence[io][jo][ko]);
         }
       }
 
@@ -718,188 +821,63 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   // ---------------- Third Step ---------------- //
   // -------------------------------------------- //
         
-  coutCBL << "Number of subvoids: " << subvoids_number << endl;
+//   coutCBL << "Number of subvoids: " << subvoids_number << endl;
+  cout << endl;
+  coutCBL << "* * * Identification of voids * * *" << endl;
   
   if (subvoids_number==0) ErrorCBL ("Error in cosmobl::catalogue::Catalogue VoidCatalogue.cpp: no subvoids were found");
   
-  int max_ID = *max_element(number_host_subvoids.begin(), number_host_subvoids.end());
-  
-  double radius_lim = 3*step*pow(3./(4.*M_PI),fraction);
-  
-  coutCBL << "Minimum effective radius: " << radius_lim << endl;
-  cout<<endl;
-  
+// // //   int max_ID = *max_element(number_host_subvoids.begin(), number_host_subvoids.end());
+// // //   
+// // //   double radius_lim = 3*step*pow(3./(4.*M_PI),fraction);
+// // //   coutCBL << "Minimum effective radius: " << radius_lim << endl;
+    
   name = dir_output+"Voids_";
   name.append(output);
   ofstream fout_voids(name.c_str());
-  
-  vector<double> radius_cc(max_ID+1);
 
-  int number_void   = 0;
-  int label         = 0;
-  int counter_voids = 0;
+  vector <int> id_unique_subvoid = id_subvoid;
+  std::sort (id_unique_subvoid.begin(),id_unique_subvoid.end());  
+
+  auto last = std::unique(id_unique_subvoid.begin(), id_unique_subvoid.end());
+
+  id_unique_subvoid.erase(last, id_unique_subvoid.end()); 
+
+  double cell_volume = step*step*step;
+  vector <double> radius_void, counter_subvoid(id_unique_subvoid.size());
+  vector <double> x_c_void(id_unique_subvoid.size()), y_c_void(id_unique_subvoid.size()), z_c_void(id_unique_subvoid.size()), div_c_void(id_unique_subvoid.size());
   
-  for (number_void=1; number_void<=max_ID; ++number_void)
+  for (int j=0; j<(int)id_subvoid.size();j++)
   {
-    label = 0;
-    counter_voids  = 0;
-    
-    for (int i=0; i<subvoids_number; ++i)
+    for (int i=0; i<(int)id_unique_subvoid.size(); i++)
     {
-      if (number_host_subvoids[i]==number_void)
-      {
-        counter_voids+=1;
-        label=1;
-      }
-    }
-    
-   if (label==1)
-   {
-     radius_cc[number_void]=pow(3*(counter_voids*step*step*step)/(4*M_PI),fraction);
-   } 
-  }
-  
-  vector<int> total_number_host_subvoids(subvoids_number);
-  
-  counter_voids=8;
-  while (counter_voids!=0)
-  {
-    for (int sn=0; sn<subvoids_number; ++sn) {total_number_host_subvoids[sn]=0; }
-    counter_voids=0;
-    for (int i=0; i<subvoids_number; ++i)
-    {
-      for (int j=0; j<subvoids_number; ++j)
-      {
-	if (number_host_subvoids[i]!=number_host_subvoids[j] && radius_cc[number_host_subvoids[j]]<radius_lim && radius_cc[number_host_subvoids[j]]<radius_cc[number_host_subvoids[i]]&& total_number_host_subvoids[j]==0)
-        {
-	  if (fabs(x_void[i]-x_void[j])<step_d && fabs(y_void[i]-y_void[j])<step_d && fabs(z_void[i]-z_void[j])<step_d)
-          {
-	    counter_voids++;
-	    for (int m=0; m<subvoids_number; ++m)
-            {
-	      if (number_host_subvoids[m]==number_host_subvoids[j])
-              {
-                total_number_host_subvoids[m]=number_host_subvoids[i];
-              }
-            }
-          }
-        }
-      }
- 
-      for (int m=0; m<subvoids_number; ++m)
-      {
-	if (total_number_host_subvoids[m]!=0)
-        {
-	  number_host_subvoids[m]=total_number_host_subvoids[m];
-	}
-      }
-    }
-
-    for (number_void=1; number_void<=max_ID; ++number_void)
-    {
-      label = 0;
-      int counter_voids2 = 0;
-      for (int i=0; i<subvoids_number; ++i)
-      {
-        if (number_host_subvoids[i]==number_void)
-        {
-	  counter_voids2+=1;
-          label=1;
-        }
-      }
-      
-      if (label==1)
-      {
-	radius_cc[number_void]=pow(3*(counter_voids2*step*step*step)/(4*M_PI),fraction);
-      }
-    }
-  }
-
-  // * * * Remove isolated voids with radius < radius_lim  * * * //
-
-  for (number_void=1; number_void<=max_ID; ++number_void)
-  {
-    if (radius_cc[number_void]<radius_lim)
-    {
-      radius_cc[number_void]=0;
-      
-      for (int i=0; i<subvoids_number; ++i)
-      {
-        if (number_host_subvoids[i]==number_void)
-        {
-          number_host_subvoids[i]=0;
-        }
-      } 
-    }
-  }
-  
-  // * * * Compute void radius * * * //
-
-  for (number_void=1; number_void<=max_ID; ++number_void)
-  {
-    label = 0;
-    counter_voids  = 0;
-    
-    for (int i=0; i<subvoids_number; ++i)
-    {
-      if (number_host_subvoids[i]==number_void)
-      {
-        counter_voids++;
-        label=1;
+      if (id_subvoid[j]==id_unique_subvoid[i] && div_subvoid[j]<0.)
+      {   
+        counter_subvoid[i]=counter_subvoid[i]+1;    // counter of cells constituing a void
+        
+        x_c_void[i]=x_subvoid[j];                   // x-centre coordinate
+        y_c_void[i]=y_subvoid[j];                   // y-centre coordinate
+        z_c_void[i]=z_subvoid[j];                   // z-centre coordinate
+        
+        div_c_void[i]=div_subvoid[j];               // divergence value in the centre of void
       }   
     }
-
-    if (label==1)
-    {
-      radius_cc[number_void]=pow(3*(counter_voids*step*step*step)/(4*M_PI),fraction);
-    }
   }
   
-  counter_voids=0;
+  for (int i=0; i<(int)counter_subvoid.size(); i++) 
+    
+    radius_void.push_back(pow(((3/(4*M_PI))*cell_volume*counter_subvoid[i]), fraction)); // compute the radius of the i-th void
 
-  vector<double> x_void_centre (max_ID+1), y_void_centre (max_ID+1), z_void_centre (max_ID+1);
-
-  // * * * Find the deepest minimum and assume it as void centre * * * //
-  
-  coutCBL << "* * * Identification of subvoids * * *" << endl;
-  cout << endl;
-  
-  for (number_void=1; number_void<=max_ID; ++number_void)
+  for (int i=0; i<(int)x_c_void.size() ;i++)
   {
-    label = 0;
-    double minimum_divergence = 0.;
-    
-    for (int i=0; i<subvoids_number; ++i)
-    {
-      if (number_host_subvoids[i]==number_void && div[i]<minimum_divergence)
-      {
-        label=1;
-	x_void_centre[number_void] = x_void[i];
-	y_void_centre[number_void] = y_void[i];
-	z_void_centre[number_void] = z_void[i];
-        minimum_divergence         = div[i];
-      }
-    }
-    
-    if (label==1)
-    {
-      if (x_void_centre[number_void]<min_x || x_void_centre[number_void]>max_x || y_void_centre[number_void]<min_y || y_void_centre[number_void]>max_y || z_void_centre[number_void]<min_z || z_void_centre[number_void]>max_z)
-      {
-        radius_cc[number_void]=0;
-      }
-
-      if (radius_cc[number_void]>radius_lim)
-      {
-        fout_voids << x_void_centre[number_void] << " " << y_void_centre[number_void] << " " << z_void_centre[number_void] << " " << radius_cc[number_void] << " " << number_void << " " << minimum_divergence << endl;
-        counter_voids++;
-      }
-    }
+    fout_voids << x_c_void[i] << " " << y_c_void[i] << " " << z_c_void[i] << " " << radius_void[i] << " " << div_c_void[i] << endl;
   }
   
   fout_voids.clear(); fout_voids.close();
 
-  coutCBL << "Number of voids: " << counter_voids << endl;
   cout << endl;
+  coutCBL << "Number of voids: " << x_locmin.size() << endl << endl;
+
   
   // ---------------------------------------------------------- //
   // ---------------- Computing execution time ---------------- //
@@ -918,7 +896,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
 
 /////////////////////////////////// Tommaso Ronconi //////////////////////////////////////////
 
-cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean, const vector<double> delta_r, const double threshold, const double statistical_relevance, bool rescale, const shared_ptr<Catalogue> tracers_catalogue, cosmobl::chainmesh::ChainMesh3D ChM, double ratio, bool checkoverlap, Var ol_criterion)
+cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean, const vector<double> delta_r, const double threshold, const double statistical_relevance, bool rescale, const shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const double ratio, const bool checkoverlap, const Var ol_criterion)
 {
 
   auto catalogue = input_voidCatalogue;

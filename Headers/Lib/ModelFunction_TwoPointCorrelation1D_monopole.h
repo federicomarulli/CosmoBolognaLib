@@ -445,6 +445,37 @@ namespace cosmobl {
       vector<double> xi0_linear_bias_cosmology (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter);
 
       /**
+       *  @brief model for the monopole of the redshift-space
+       *  two-point correlation function of galaxy clusters,
+       *  considering the selection function
+       *
+       *  the function computes:
+       *
+       *  \f[\xi_0(s) = \left[ (b)^2 + \frac{2}{3}f \cdot b + \frac{1}{5}(f)^2 \right] 
+       *  \cdot \xi_{\rm DM}(\frac{D_V(redshift)}{D_V^{fid}(redshift}\cdot s) \f]
+       *
+       *  the model has 1+n parameters: 
+       *    - \f$b\f$
+       *    - cosmological paramters
+       *
+       *  the dark matter two-point correlation function is computed
+       *  using the input cosmological parameters
+       *
+       *  @param rad the scale at which the model is computed
+       *
+       *  @param inputs pointer to the structure that contains the
+       *  cosmological paramters used to compute the dark matter
+       *  two-point correlation function
+       *
+       *  @param parameter 1D vector containing the linear bias
+       *
+       *  @return the monopole of the two-point correlation function
+       *  in redshift-space
+       */
+      vector<double> xi0_linear_cosmology_clusters_selection_function (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter);
+
+      
+      /**
        *  @name Functions of the Halo Occupation Distribution (HOD) models
        */
       ///@{
@@ -1291,8 +1322,7 @@ namespace cosmobl {
       double xi_HOD_zspace (const double rp, const double pi, const shared_ptr<void> inputs, vector<double> &parameter);
 	
       ///@}
-
-      vector<double> xi0_linear_cosmology_clusters_selection_function (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter);
+       
     }
   }
 }

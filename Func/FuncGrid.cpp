@@ -43,7 +43,8 @@ using namespace glob;
 cosmobl::glob::FuncGrid::FuncGrid (const vector<double> x, const vector<double> y, const string interpType, const cosmobl::binType bin_type)
   : m_x(x), m_y(y), m_size(x.size()), m_interpType(interpType), m_binType(bin_type)
 {
-  m_acc = gsl_interp_accel_alloc();
+  shared_ptr<gsl_interp_accel> acc(gsl_interp_accel_alloc(), gsl_interp_accel_free);
+  m_acc = acc;
 	  
   if (m_size<5 && interpType!="Linear") {
     WarningMsg("Warning in the constructor of FuncGrid in FuncGrid.h: the array size is less than 5 -> setting interpolation method to Linear");
@@ -92,8 +93,9 @@ cosmobl::glob::FuncGrid::FuncGrid (const vector<double> x, const vector<double> 
   m_xmin = Min(m_x);
   m_xmax = Max(m_x);
   
-  m_spline = gsl_spline_alloc(m_type, m_size); 
-  gsl_spline_init(m_spline, xx.data(), yy.data(), m_size);
+  std::shared_ptr<gsl_spline> spline(gsl_spline_alloc(m_type, m_size), gsl_spline_free);
+  gsl_spline_init(spline.get(), xx.data(), yy.data(), m_size);
+  m_spline = spline;
 }
 
 
@@ -102,8 +104,8 @@ cosmobl::glob::FuncGrid::FuncGrid (const vector<double> x, const vector<double> 
 				 
 void cosmobl::glob::FuncGrid::free ()
 {
-  gsl_spline_free(m_spline);
-  gsl_interp_accel_free(m_acc);
+  //gsl_spline_free(m_spline);
+  //gsl_interp_accel_free(m_acc);
 }
 
 
@@ -117,14 +119,14 @@ double cosmobl::glob::FuncGrid::operator () (const double xx) const
   double val = -1.;
   
   if (xx<m_xmin) { // perform a linear extrapolation
-    val = m_spline->y[0]+(_xx-m_spline->x[0])/(m_spline->x[1]-m_spline->x[0])*(m_spline->y[1]-m_spline->y[0]);
+    val = m_spline.get()->y[0]+(_xx-m_spline.get()->x[0])/(m_spline.get()->x[1]-m_spline.get()->x[0])*(m_spline.get()->y[1]-m_spline.get()->y[0]);
     val = (m_binType==cosmobl::binType::_logarithmic_) ? pow(10, val) : val;
     if (val!=val) return ErrorCBL("Error in cosmobl::glob::FuncGrid::operator () of FuncGrid.cpp: inside the xx<m_xmin condition, the return value is nan!");
     else return val;
   }
   
   else if (xx>m_xmax) { // perform a linear extrapolation
-    val = m_spline->y[m_size-2]+(_xx-m_spline->x[m_size-2])/(m_spline->x[m_size-1]-m_spline->x[m_size-2])*(m_spline->y[m_size-1]-m_spline->y[m_size-2]);
+    val = m_spline.get()->y[m_size-2]+(_xx-m_spline.get()->x[m_size-2])/(m_spline.get()->x[m_size-1]-m_spline.get()->x[m_size-2])*(m_spline.get()->y[m_size-1]-m_spline.get()->y[m_size-2]);
     val = (m_binType==cosmobl::binType::_logarithmic_) ? pow(10, val) : val;
     if (val!=val) return ErrorCBL("Error in cosmobl::glob::FuncGrid::operator () of FuncGrid.cpp: inside the xx>m_xmax condition, the return value is nan!");
     else return val;
@@ -132,7 +134,7 @@ double cosmobl::glob::FuncGrid::operator () (const double xx) const
   
   // performe an interpolation
   else {
-    val = ( (m_binType==cosmobl::binType::_logarithmic_) ? pow(10., gsl_spline_eval(m_spline, _xx, m_acc)) : gsl_spline_eval(m_spline, _xx, m_acc));
+    val = (m_binType==cosmobl::binType::_logarithmic_) ? pow(10., gsl_spline_eval(m_spline.get(), _xx, m_acc.get())) : gsl_spline_eval(m_spline.get(), _xx, m_acc.get());
     if (val!=val) return ErrorCBL("Error in cosmobl::glob::FuncGrid::operator () of FuncGrid.cpp: the return value is nan!");
     else return val;
   }
@@ -158,7 +160,7 @@ vector<double> cosmobl::glob::FuncGrid::eval_func (const vector<double> xx) cons
 
 double cosmobl::glob::FuncGrid::D1v (const double xx) const
 {
-  double D1 = gsl_spline_eval_deriv(m_spline, xx, m_acc);
+  double D1 = gsl_spline_eval_deriv(m_spline.get(), xx, m_acc.get());
 
   return ((m_binType==cosmobl::binType::_logarithmic_) ? xx*D1/this->operator()(xx): D1);
 }
@@ -169,7 +171,7 @@ double cosmobl::glob::FuncGrid::D1v (const double xx) const
 
 double cosmobl::glob::FuncGrid::D2v (const double xx) const
 {
-  return gsl_spline_eval_deriv2(m_spline, xx, m_acc);
+  return gsl_spline_eval_deriv2(m_spline.get(), xx, m_acc.get());
 }
 
 
@@ -233,7 +235,7 @@ double cosmobl::glob::FuncGrid::root_D2v (const double x_low, const double x_up,
 
 cosmobl::glob::FuncGrid2D::FuncGrid2D (const vector<double> x, const vector<double> y, const vector<vector<double>> fxy, const string interpType)
 {
-  // Set internal variables
+  // set internal variables
   m_x = x;
 
   m_size_x = m_x.size();
@@ -245,14 +247,13 @@ cosmobl::glob::FuncGrid2D::FuncGrid2D (const vector<double> x, const vector<doub
   m_ymin = Min(m_y);
   m_ymax = Max(m_y);
 
-  double *grid = new double[m_size_x*m_size_y];
+  std::shared_ptr<double> grid( new double[m_size_x*m_size_y], []( double *p ) { delete[] p; });
 
   for (size_t i=0; i<m_size_x; i++)
     for (size_t j=0; j<m_size_y; j++)
-      grid[i+j*m_size_x] = fxy[i][j];
+      grid.get()[i+j*m_size_x] = fxy[i][j];
 
   m_fxy = grid;
-  std::free(grid);
 
   m_interpType = interpType;
 
@@ -262,11 +263,14 @@ cosmobl::glob::FuncGrid2D::FuncGrid2D (const vector<double> x, const vector<doub
   else if (m_interpType=="Cubic") 
     m_type = gsl_interp2d_bicubic;
 
-  m_acc_x = gsl_interp_accel_alloc();
-  m_acc_y = gsl_interp_accel_alloc();
+  shared_ptr<gsl_interp_accel> acc_x(gsl_interp_accel_alloc(), gsl_interp_accel_free);
+  shared_ptr<gsl_interp_accel> acc_y(gsl_interp_accel_alloc(), gsl_interp_accel_free);
+  m_acc_x = acc_x;
+  m_acc_y = acc_x;
 
-  m_interp = gsl_interp2d_alloc(m_type, m_size_x, m_size_y);
-  gsl_interp2d_init (m_interp, m_x.data(), m_y.data(), m_fxy, m_size_x, m_size_y);
+  shared_ptr<gsl_interp2d> interp(gsl_interp2d_alloc(m_type, m_size_x, m_size_y), gsl_interp2d_free);
+  gsl_interp2d_init(interp.get(), m_x.data(), m_y.data(), m_fxy.get(), m_size_x, m_size_y);
+  m_interp = interp;
 }
 
 
@@ -275,10 +279,12 @@ cosmobl::glob::FuncGrid2D::FuncGrid2D (const vector<double> x, const vector<doub
 				 
 void cosmobl::glob::FuncGrid2D::free ()
 {
+  /*
   gsl_interp2d_free(m_interp);
   gsl_interp_accel_free(m_acc_x);
   gsl_interp_accel_free(m_acc_y);
   std::free(m_fxy);
+  */
 }
 
 
@@ -293,9 +299,9 @@ double cosmobl::glob::FuncGrid2D::operator () (const double xx, const double yy)
 
   double val;
   if (extr)
-    val= gsl_interp2d_eval_extrap(m_interp, m_x.data(), m_y.data() , m_fxy, xx, yy, m_acc_x, m_acc_y);
+    val= gsl_interp2d_eval_extrap(m_interp.get(), m_x.data(), m_y.data() , m_fxy.get(), xx, yy, m_acc_x.get(), m_acc_y.get());
   else
-    val= gsl_interp2d_eval(m_interp, m_x.data(), m_y.data() , m_fxy, xx, yy, m_acc_x, m_acc_y);
+    val= gsl_interp2d_eval(m_interp.get(), m_x.data(), m_y.data() , m_fxy.get(), xx, yy, m_acc_x.get(), m_acc_y.get());
 
   return val;
 

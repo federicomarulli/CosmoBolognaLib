@@ -111,7 +111,8 @@ int main () {
     const string chain_file = "chain_cartesian_bias_sigma12.dat";
     
     model_twop.set_likelihood(cosmobl::statistics::LikelihoodType::_GaussianLikelihood_Error_);
-    model_twop.sample_likelihood(chain_size, nwalkers, seed, starting_parameters, radius);
+    
+    model_twop.run_MCMC(chain_size, nwalkers, seed, starting_parameters, radius);
 
     const int burn_in = 20;
     const int thin = 10; 

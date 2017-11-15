@@ -63,10 +63,10 @@ namespace cosmobl {
 	double redshift = 0.;
 	
 	/// author(s) of the mass function
-	string author_MF = "Tinker";
+	string model_MF = "Tinker";
 	
 	/// author(s) of the bias
-	string author_bias = "Tinker";
+	string model_bias = "Tinker";
 
 	/// minimum halo mass
 	double Mh_min = 0.;
@@ -126,7 +126,7 @@ namespace cosmobl {
 	bool is_parameter_file = true;
 	
 	/// the author(s) of the concentration-mass relation (see cosmobl::modelling::twopt::concentration)
-	string author_cM = "Duffy";
+	string model_cM = "Duffy";
 
 	/// the density profile, see cosmobl::modelling::twopt::concentration
 	string profile = "NFW";

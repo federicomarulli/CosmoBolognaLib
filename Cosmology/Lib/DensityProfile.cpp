@@ -113,12 +113,12 @@ double cosmobl::cosmology::Cosmology::concentration (const double Mass, const do
 // ============================================================================================
 
 
-double cosmobl::cosmology::Cosmology::density_profile (const double rad, const double Mass, const double redshift, const string author_cM, const string profile, const string halo_def) const
+double cosmobl::cosmology::Cosmology::density_profile (const double rad, const double Mass, const double redshift, const string model_cM, const string profile, const string halo_def) const
 {
   if (profile!="NFW")
     return ErrorCBL("Error in cosmobl::cosmology::Cosmology::halo_def() of DensityProfile.cpp: profile not allowed!");
   
-  const double conc = concentration(Mass, redshift, author_cM, profile, halo_def);
+  const double conc = concentration(Mass, redshift, model_cM, profile, halo_def);
 
   const double rho_s = rho_crit(redshift)*Delta_c(redshift)/3.*pow(conc, 3)/(log(1.+conc)-conc/(1.+conc));
 
@@ -131,9 +131,9 @@ double cosmobl::cosmology::Cosmology::density_profile (const double rad, const d
 // ============================================================================================
 
 
-double cosmobl::cosmology::Cosmology::density_profile_FourierSpace (const double kk, const double Mass, const double redshift, const string author_cM, const string profile, const string halo_def) const
+double cosmobl::cosmology::Cosmology::density_profile_FourierSpace (const double kk, const double Mass, const double redshift, const string model_cM, const string profile, const string halo_def) const
 {
-  const double conc = concentration(Mass, redshift, author_cM, profile, halo_def);
+  const double conc = concentration(Mass, redshift, model_cM, profile, halo_def);
 
   const double rho_s = rho_crit(redshift)*Delta_c(redshift)/3.*pow(conc, 3)/(log(1.+conc)-conc/(1.+conc));
 

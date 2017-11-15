@@ -114,8 +114,8 @@ int main () {
     // set the likelihood type
     model_threep.set_likelihood(cosmobl::statistics::LikelihoodType::_GaussianLikelihood_Error_);
 
-    // sample the likelihood
-    model_threep.sample_likelihood(chain_size, nwalkers, seed);
+    // run the MCMC method to sample the posterior
+    model_threep.run_MCMC(chain_size, nwalkers, seed);
 
     const int burn_in = 100; // discard the first 100 chain steps 
     const int thin = 10;     // take 1 step every 10

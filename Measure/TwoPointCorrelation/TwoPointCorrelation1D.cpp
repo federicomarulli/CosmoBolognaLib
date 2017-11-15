@@ -457,11 +457,11 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::X
     vector<int> w(nRegions, 1);
     w[i] = 0;
 
-    for (size_t j=0; j<nRegions; j++){
+    for (size_t j=0; j<nRegions; j++) {
 
-      if(w[j]>0){
+      if (w[j]>0) {
         for (size_t k=j; k<nRegions; k++) { // auto pairs
-          if(w[k]>0){
+          if (w[k]>0) {
             int index = j*nRegions+k-(j-1)*j/2-j;
             for (int bin=0; bin<dd_SS->nbins(); bin++) {
               dd_SS->add_data1D(bin, dd[index]);
@@ -472,7 +472,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::X
         }
 
         for (size_t k=0; k<nRegions; k++) {// cross pairs
-          if (w[k]>0){
+          if (w[k]>0) {
             int index = j*nRegions+k;
             for (int bin=0; bin<dd_SS->nbins(); bin++) 
               dr_SS->add_data1D(bin, dr[index]);
@@ -544,7 +544,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::X
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
+vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -559,8 +559,8 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::X
     nRandom_reg_weighted.push_back(m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
   }
 
-  uniform_int_distribution<int> uni(0, nRegions-1);
-  default_random_engine rng;
+  random::UniformRandomNumbers ran(0., nRegions-1, seed);
+  
   int val = 2; // see Norberg et al. 2009
 
   for (int i=0; i<nMocks; i++) {
@@ -574,7 +574,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::X
 
     vector<int> w(nRegions, 0);
     for (size_t n=0; n<val*nRegions; n++)
-      w[uni(rng)] ++;
+      w[ran()] ++;
 
     for (size_t j=0; j<nRegions; j++) {
       nData_SS += w[j]*nData_reg[j];
@@ -603,7 +603,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::X
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
+vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -618,8 +618,8 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::X
     nRandom_reg_weighted.push_back(m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
   }
 
-  uniform_int_distribution<int> uni(0, nRegions-1);
-  default_random_engine rng;
+  random::UniformRandomNumbers ran(0., nRegions-1, seed);
+  
   int val = 2; // see Norberg et al. 2009
 
   for (int i=0; i<nMocks; i++) {
@@ -634,12 +634,11 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::X
 
     vector<int> w(nRegions, 0);
     for (size_t n=0; n<val*nRegions; n++)
-      w[uni(rng)] ++;
+      w[ran()] ++;
 
-    
     for (size_t j=0; j<nRegions; j++) {
 
-      if(w[j]>0){
+      if (w[j]>0) {
 
         nData_SS += w[j]*nData_reg[j];
         nData_SS_weighted += w[j]*nData_reg_weighted[j];
@@ -647,7 +646,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::X
         nRandom_SS_weighted += w[j]*nRandom_reg_weighted[j];
 
         for (size_t k=j; k<nRegions; k++) {
-          if(w[k]>0){
+          if (w[k]>0) {
             int index = j*nRegions+k-(j-1)*j/2-j;
             double ww = w[j]*w[k]; //(k==j) ? w[k] : w[j]*w[k];
             for (int bin=0; bin<dd_SS->nbins(); bin++) {
@@ -658,7 +657,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation1D::X
         }
 
         for (size_t k=0; k<nRegions; k++) {
-          if(w[k]>0){
+          if (w[k]>0) {
             int index = j*nRegions+k;
             double ww = w[j]*w[k]; //(k==j) ? w[k] : w[j]*w[k];
             for (int bin=0; bin<dr_SS->nbins(); bin++)
@@ -700,7 +699,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D::compute_covariance (const v
 {
   vector<vector<double>> Xi;
 
-  for (size_t i=0; i<xi.size(); i++){
+  for (size_t i=0; i<xi.size(); i++) {
     vector<double> vv;
     xi[i]->data(vv);
     Xi.push_back(vv);

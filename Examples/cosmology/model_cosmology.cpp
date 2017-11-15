@@ -80,14 +80,16 @@ int main () {
     // ------------- run chains and write output chain and model ------------
     // ----------------------------------------------------------------------
 
-    const int chain_size = 2000;
-    const int nwalkers = 200;
+    const int chain_size = 1000;
+    const int nwalkers = 10;
     const int seed = 4232;
     vector<double> starting_parameters = {cosmology.Omega_matter(), cosmology.H0(), 150.};
     double radius = 1.e-3;
 
     modelCosmo.set_likelihood(cosmobl::statistics::LikelihoodType::_GaussianLikelihood_Covariance_);
-    modelCosmo.sample_likelihood(chain_size, nwalkers, seed, starting_parameters, radius);
+    
+    modelCosmo.run_MCMC(chain_size, nwalkers, seed, starting_parameters, radius);
+
     modelCosmo.show_results(500, 10, 3213);
   }
 

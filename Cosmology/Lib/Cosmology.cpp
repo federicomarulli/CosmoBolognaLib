@@ -239,6 +239,21 @@ cosmobl::cosmology::Cosmology::Cosmology (const CosmoModel CosmoModel, const str
     m_Omega_neutrinos = Omega_neutrinos(0.06); // baseline 
     break;
     
+    // Planck Collab 2015, Paper XIII: Table 4, TT+lowP+lensing
+  case(_Planck15_TT_):
+    m_Omega_matter = 0.308;                    // Omega_M = 0.308 ± 0.012
+    m_Omega_baryon = 0.0484;                   // Omega_b*h^2 = 0.02226 ± 0.0023
+    m_massless_neutrinos = 2.04;               // baseline
+    m_massive_neutrinos = 1;                   // baseline
+    m_Omega_DE = 0.692;                        // Omega_DE = 0.692 ± 0.012
+    m_hh = 0.6781;                             // h = 0.6781 ± 0.092 Km/s/Mpc
+    m_scalar_amp = 2.139e-9;                   // scalar amplitude = (2.139 ± 0.063)e-9 -> sigma8 = 0.849 ± 0.093
+    m_scalar_pivot = 0.05;                     // baseline
+    m_n_spec = 0.9677;                         // n = 0.9677 ± 0.060
+    m_tau = 0.066;                             // tau = 0.066 ± 0.016
+    m_Omega_neutrinos = Omega_neutrinos(0.06); // baseline
+    break;
+
   default:
     ErrorCBL("Error in cosmobl::cosmology::Cosmology::Cosmology() of Cosmology.cpp: the chosen built-in cosmological model is not implemented");
     

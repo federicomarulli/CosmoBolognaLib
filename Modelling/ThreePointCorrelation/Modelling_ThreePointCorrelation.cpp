@@ -28,9 +28,9 @@
  *  This file contains the implementation of the methods of the class
  *  Modelling_ThreePointCorrelation
  *
- *  @authors Federico Marulli
+ *  @authors Federico Marulli, Michele Moresco
  *
- *  @authors federico.marulli3@unbo.it
+ *  @authors federico.marulli3@unbo.it, michele.moresco@unibo.it
  */
 
 
@@ -96,5 +96,20 @@ shared_ptr<modelling::threept::Modelling_ThreePointCorrelation> modelling::three
 void cosmobl::modelling::threept::Modelling_ThreePointCorrelation::set_data_model (const vector<double> Q_DM)
 {
   m_data_model.Q_DM = Q_DM;
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::modelling::threept::Modelling_ThreePointCorrelation::set_data_Q_nonlocal (const cosmology::Cosmology cosmology, const double r1, const double r2, const vector<double> theta, const string model, const vector<double> kk, const vector<double> Pk_DM)
+{
+  m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  m_data_model.r1 = r1;
+  m_data_model.r2 = r2;
+  m_data_model.theta = theta;
+  m_data_model.model = model;
+  m_data_model.kk = kk;
+  m_data_model.Pk_DM = Pk_DM;
 }
 

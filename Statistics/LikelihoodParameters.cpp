@@ -106,7 +106,7 @@ void cosmobl::statistics::LikelihoodParameters::m_set_parameter_type (vector<sha
 
 void cosmobl::statistics::LikelihoodParameters::m_set_parameter_posterior (const int start, const int thin, const int seed)
 {
-  for (int i=0; i<m_nparameters; i++)
+  for (int i=0; i<m_nparameters; i++) 
     m_parameters[i]->set_posterior(start, thin, seed);
 }
 
@@ -591,7 +591,7 @@ void cosmobl::statistics::LikelihoodParameters::write_bestfit_info (const vector
 	break;
 
       case statistics::ParameterType::_DerivedParameter_:
-	coutCBL << "Parameter: " << par::col_yellow << m_parameters[i]->name() << m_parameters[i]->name() << par::col_default << " --> status: " << par::col_bred << "OUTPUT" << endl;
+	coutCBL << "Parameter: " << par::col_yellow << m_parameters[i]->name() << par::col_default << " --> status: " << par::col_bred << "OUTPUT" << endl;
 	coutCBL << "value = " << m_parameters[i]->bestfit_value() << endl;
 	cout << endl;
 	break;
@@ -970,26 +970,25 @@ void cosmobl::statistics::LikelihoodParameters::show_results (const int start, c
 void cosmobl::statistics::LikelihoodParameters::write_results (const string dir, const string file, const int start, const int thin, const int seed)
 {
   m_set_parameter_posterior(start, thin, seed);
-
   m_set_parameter_covariance(start, thin);
-
-  string mkdir="mkdir -p "+dir; if (system(mkdir.c_str())) {}
+  
+  string mkdir = "mkdir -p "+dir; if (system(mkdir.c_str())) {}
 
   string file_parameters = dir+file+"_parameters.dat";
   string file_covariance = dir+file+"_covariance.dat";
 
   ofstream fout(file_parameters.c_str());
 
-  fout << "### Parameter # status # Posterior mean # Posterior standard deviation # Posterior median # Posterior 18th percentile # Posterior 82th percentile # Posterior mode ###" << endl;
-
+  fout << "### Parameter # status ###" << endl << "### Posterior mean # Posterior standard deviation # Posterior median # Posterior 18th percentile # Posterior 82th percentile # Posterior mode ###" << endl << endl;
+  
   for (int i=0; i<m_nparameters; i++) 
-    if (statistics::ParameterType::_BaseParameter_ && m_parameters[i]->fixed())
+    if (m_parameters[i]->parameterType()==statistics::ParameterType::_BaseParameter_ && m_parameters[i]->fixed())
       fout << "# " << m_parameters[i]->name() << " FIXED #" << endl;
     else 
       fout << "# " << m_parameters[i]->name() << " FREE #" << endl;
    
   for (int i=0; i<m_nparameters; i++) 
-    if (statistics::ParameterType::_BaseParameter_ && m_parameters[i]->fixed())
+    if (m_parameters[i]->parameterType()==statistics::ParameterType::_BaseParameter_ && m_parameters[i]->fixed())
       fout << m_parameters[i]->value() << " 0 0 0 0 0 0" << endl;
     else 
       fout << m_parameters[i]->posterior_mean() << " " << m_parameters[i]->posterior_std() << " " << m_parameters[i]->posterior_median() << " " << m_parameters[i]->posterior_median()-m_parameters[i]->posterior_percentile(18) << " " << m_parameters[i]->posterior_percentile(82)-m_parameters[i]->posterior_median() << " " << m_parameters[i]->posterior_mode() << endl;

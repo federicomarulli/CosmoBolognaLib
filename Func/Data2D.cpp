@@ -50,7 +50,7 @@ cosmobl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, c
   m_ysize = m_y.size();
 
   checkDim(data, m_xsize, "data");
-
+  
   for (int i=0; i<m_xsize; i++) {
     checkDim(data[i], m_ysize, "data["+conv(i,par::fINT)+"]");
     for (int j=0; j<m_ysize; j++)

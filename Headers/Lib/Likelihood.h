@@ -77,7 +77,7 @@ namespace cosmobl {
       LogLikelihood_function m_log_likelihood_function;
 
       /// value of the likelihood
-      vector<double> m_likelihood_values;
+      vector<double> m_likelihood_value;
 
       /// acceptance values
       vector<double> m_acceptance;
@@ -519,11 +519,11 @@ namespace cosmobl {
        *
        *  @param chain_size the chain size
        *
-       *  @param chain_values the value of the chain 
+       *  @param chain_value the value of the chain 
        *
        *  @return none
        */
-      void initialize_chains (const int chain_size, const vector<vector<double>> chain_values);
+      void initialize_chains (const int chain_size, const vector<vector<double>> chain_value);
 
       /**
        *  @brief function that initialize chains
@@ -560,7 +560,7 @@ namespace cosmobl {
        *
        *  @param dir name of the output directory
        *
-       *  @param file name of the output file
+       *  @param output name of the output file
        *
        *  @param start starting position in the chains
        *

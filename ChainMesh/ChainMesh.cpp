@@ -135,8 +135,10 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<doubl
   
   long nObj = data[0].size();
   m_List.erase(m_List.begin(), m_List.end()); m_List.resize(nObj, -1);
-    
+  m_NonEmpty_Cells.erase(m_NonEmpty_Cells.begin(), m_NonEmpty_Cells.end());  
+
   m_nCell_tot = pow(nMAX,3)+1;
+  m_nCell_NonEmpty = 0;
   
   double fact = 1.;
 
@@ -176,11 +178,14 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<doubl
     for (int j=0; j<m_nDim; j++)
       center[j] = data[j][i];
     long indx_tot = pos_to_index(center);
+    m_NonEmpty_Cells.push_back(indx_tot);
     m_List[i] = m_Label[indx_tot];
     m_Label[indx_tot] = i;
   }
 
   get_searching_region(rMAX);
+  m_NonEmpty_Cells = different_elements (m_NonEmpty_Cells);
+  m_nCell_NonEmpty = (long)m_NonEmpty_Cells.size();
 
 }
 
@@ -201,12 +206,17 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh_m2 (const vector<vector<do
   }
 
   m_List_index.erase(m_List_index.begin(),m_List_index.end()); m_List_index.resize(m_nCell_tot);
+  m_NonEmpty_Cells.erase(m_NonEmpty_Cells.begin(), m_NonEmpty_Cells.end());  
+  m_nCell_NonEmpty = 0;
 
   for (long i=0; i<nObj; i++) {
     long indx_tot = pos_to_index(data[i]);
+    m_NonEmpty_Cells.push_back(indx_tot);
     m_List_index[indx_tot].push_back(i);
   }
 
+  m_NonEmpty_Cells = different_elements (m_NonEmpty_Cells);
+  m_nCell_NonEmpty = (long)m_NonEmpty_Cells.size();
 }
 
 
@@ -249,6 +259,31 @@ void cosmobl::chainmesh::ChainMesh::get_searching_region (const double r_max, co
        m_search_region.erase(remove(m_search_region.begin(), m_search_region.end(), veto), m_search_region.end());
      }
    }
+}
+
+
+// ============================================================================
+
+
+vector<long> cosmobl::chainmesh::ChainMesh::close_objects_cell (const int cell_index, const long ii) const
+{
+  // r2 != -1 ---> search in a nDim annulus from r1 to r2
+  // r2 == -1 ---> search in a nDim sphere from center to r1
+
+  vector<long> list;
+
+   for (unsigned long i=0; i<m_search_region.size(); i++) {
+
+     long k = min(max(m_search_region[i]+cell_index, (long)0), m_nCell_tot-1);
+     long j = m_Label[k];
+
+     while (j>-1 && j>ii) {
+       list.push_back(j);
+       j = m_List[j];
+     }
+   }
+
+   return list;
 }
 
 

@@ -262,7 +262,7 @@ namespace cosmobl {
        * \f$ Corr_{i,j} = \frac{Cov_{i,j}}{\sqrt{Cov_{i,i} \cdot Cov{j,j}}} \f$
        */
       vector<vector<double>> correlation () const;
-
+      
       /**
        *  @brief get the value of data inverse_covariance at index i,j
        *  @param i index
@@ -722,7 +722,7 @@ namespace cosmobl {
        * @param xmax vector containing maximum values for the independent variable x
        * @return pointer to an object of type Data1D_collection
        */
-      virtual shared_ptr<Data> cut(const vector<double> xmin, const vector<double> xmax) const
+      virtual shared_ptr<Data> cut (const vector<double> xmin, const vector<double> xmax) const
       { (void)xmin; (void)xmax; ErrorCBL("Error in cut of Data.h!"); shared_ptr<Data> dd; return dd;}
 
       ///@}
@@ -735,14 +735,14 @@ namespace cosmobl {
      *  @param dataset vector containing the dataset to merge
      *  @return pointer to an object of class Data
      */
-    shared_ptr<data::Data> join_dataset(vector<shared_ptr<data::Data>> dataset);	
+    shared_ptr<data::Data> join_dataset (vector<shared_ptr<data::Data>> dataset);	
 
     /**
      *  @brief merge dataset of type _1D_data_
      *  @param dataset vector containing the dataset to merge
      *  @return pointer to an object of class Data
      */
-    shared_ptr<data::Data> join_dataset_1D(vector<shared_ptr<data::Data>> dataset);	
+    shared_ptr<data::Data> join_dataset_1D (vector<shared_ptr<data::Data>> dataset);	
 
     /**
      *  @brief merge dataset of type _1D_data_extra_

@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import CosmoBolognaLib as cbl
 from CosmoBolognaLib import DoubleVector as dv
 from CosmoBolognaLib import EnumTypes as et
+import os
+
+print os.path.abspath(cbl.__file__)
 
 ''' Define cosmology '''
 cosmo = cbl.Cosmology()
@@ -19,11 +22,11 @@ r1, r2 = 20, 40
 
 ''' Slepian model '''
 zeta_DM_s = np.array( cosmo.zeta_DM(r1, r2, theta, "Slepian", kk, Pk_DM) )
-q_DM_s = np.array( cosmo.qu_DM(r1, r2, theta, "Slepian", kk, Pk_DM) )
+q_DM_s = np.array( cosmo.Q_DM(r1, r2, theta, "Slepian", kk, Pk_DM) )
 
 ''' Barriga-Gatzagnaga model '''
 zeta_DM_bg = np.array( cosmo.zeta_DM(r1, r2, theta, "BarrigaGatzanaga", kk, Pk_DM) )
-q_DM_bg = np.array( cosmo.qu_DM(r1, r2, theta, "BarrigaGatzanaga", kk, Pk_DM) )
+q_DM_bg = np.array( cosmo.Q_DM(r1, r2, theta, "BarrigaGatzanaga", kk, Pk_DM) )
 
 '''Plotting results'''
 plt.xlabel(r"$\theta/\pi$")
@@ -40,7 +43,7 @@ plt.legend(loc="best")
 plt.show(block=False)
 
 ''' NonLocal Term '''
-q_DM_NL = np.array( cosmo.qu_NonLocal(r1, r2, theta, kk, Pk_DM) )
+q_DM_NL = np.array( cosmo.Q_nonLocal(r1, r2, theta, kk, Pk_DM) )
 
 plt.xlabel(r"$\theta/\pi$")
 plt.ylabel(r"$Q_{NonLocal}(r1, r2, \theta)$")

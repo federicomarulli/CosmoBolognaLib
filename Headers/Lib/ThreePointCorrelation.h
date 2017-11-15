@@ -220,25 +220,26 @@ namespace cosmobl {
 	 * @param cat1 object of class \e Catalogue: the input catalogue
 	 * to analyse
 	 *
-	 * @param ChainMesh_rMAX1 object of class \e ChainMesh_Catalogue:
-	 * the chain mesh used to count the pairs relative to the first
-	 * side of the triangle (1-2)
+	 * @param ChainMesh_rMAX1 object of class \e
+	 * ChainMesh_Catalogue: the chain mesh used to count the pairs
+	 * relative to the first side of the triangle (1-2)
 	 *
-	 * @param ChainMesh_rMAX2 object of class \e ChainMesh_Catalogue:
-	 * the chain mesh used to count the pairs relative to the second
-	 * side of the triangle (1-3)
+	 * @param ChainMesh_rMAX2 object of class \e
+	 * ChainMesh_Catalogue: the chain mesh used to count the pairs
+	 * relative to the second side of the triangle (1-3)
 	 *
 	 * @param tt pointer to an object of class \e Triplet
 	 *
-	 * @param tt_regions pointer vector to objects of class \e Triplet
+	 * @param tt_regions pointer vector to objects of class \e
+	 * Triplet
 	 *
-	 *  @param weights region weights
+	 * @param weight region weights
 	 *
-	 * @param tcount 1 &rarr; activate the CPU time counter; 0 &rarr; no time counter
-	 * @return none
+	 * @param tcount true &rarr; activate the CPU time counter;
+	 * false &rarr; no time counter @return none
 	 *
-	 * @warning the angular three-point correlation function is not
-	 * implemented yet
+	 * @warning the angular three-point correlation function is
+	 * not implemented yet
 	 */
 	void count_triplets_region (const shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChainMesh_rMAX1, const chainmesh::ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<triplets::Triplet> tt, vector<shared_ptr<triplets::Triplet>> tt_regions, const vector<vector<double>> weight, const bool tcount=false);
 
@@ -248,7 +249,7 @@ namespace cosmobl {
 	 *  construct the estimator of the three-point correlation
 	 *  function
 	 *  
-	 *  @param weights region weights
+	 *  @param weight region weights
 	 *
 	 *  @param dir_output_triplets name of the output directory used to
 	 *  store the number of triplets
@@ -276,7 +277,7 @@ namespace cosmobl {
 	 *
 	 *  @return none
 	 */
-	void count_allTriplets_region (const vector<vector<double>> weights, const string dir_output_triplets=par::defaultString, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false);
+	void count_allTriplets_region (const vector<vector<double>> weight, const string dir_output_triplets=par::defaultString, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false);
 
 	/**
 	 *  @name Internal input/output member functions (customized in all the derived classes)
@@ -498,10 +499,12 @@ namespace cosmobl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param seed the seed for random number generation
+	 *
 	 * @return none
 	 */
-	virtual void measure (const string dir_output_triplets, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false)
-	{ (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
+	virtual void measure (const string dir_output_triplets, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
+	{ (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -516,8 +519,6 @@ namespace cosmobl {
 	 * 
 	 * @param dir_input_triplets name of the input directories
 	 * containing the number of triplets
-	 *
-	 * @param nResamplings number of resamplings
 	 *
 	 * @param count_ddd 1 &rarr; count the data-data-data
 	 * triplets; 0 &rarr; read the data-data-data triplets
@@ -538,10 +539,12 @@ namespace cosmobl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param seed the seed for random number generation
+	 *
 	 * @return none
 	 */
-	virtual void measure (const vector<vector<double>> weights, const bool doJK, const string dir_output_triplets=par::defaultString, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false)
-	{ (void)weights; (void)doJK; (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
+	virtual void measure (const vector<vector<double>> weight, const bool doJK, const string dir_output_triplets=par::defaultString, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
+	{ (void)weight; (void)doJK; (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -575,10 +578,12 @@ namespace cosmobl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param seed the seed for random number generation
+	 *
 	 * @return none
 	 */
-	virtual void measure (const ErrorType errorType, const string dir_output_triplets=par::defaultString, const vector<string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false)
-	{ (void)errorType; (void)dir_output_triplets; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
+	virtual void measure (const ErrorType errorType, const string dir_output_triplets=par::defaultString, const vector<string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
+	{ (void)errorType; (void)dir_output_triplets; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -611,10 +616,12 @@ namespace cosmobl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param seed the seed for random number generation
+	 *
 	 * @return none
 	 */
-	virtual void measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false)
-	{ (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
+	virtual void measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
+	{ (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
                 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -652,10 +659,12 @@ namespace cosmobl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param seed the seed for random number generation
+	 *
 	 * @return none
 	 */
-	virtual void measure (const vector<vector<double>> weights, const bool doJK, const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const bool count_ddd=1, const bool count_rrr=1, const bool count_ddr=1, const bool count_drr=1, const bool tcount=0)
-	{ (void)weights; (void)doJK; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
+	virtual void measure (const vector<vector<double>> weight, const bool doJK, const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
+	{ (void)weight; (void)doJK; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -692,10 +701,12 @@ namespace cosmobl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param seed the seed for random number generation
+	 *
 	 * @return none
 	 */
-	virtual void measure (const ErrorType errorType, const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false)
-	{ (void)errorType; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
+	virtual void measure (const ErrorType errorType, const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
+	{ (void)errorType; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cosmobl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
 
 	///@}
       
@@ -726,6 +737,14 @@ namespace cosmobl {
 	virtual void write (const string dir, const string file, const bool connected) const
 	{ (void)dir; (void)file; (void)connected; cosmobl::ErrorCBL("Error in write() of ThreePointCorrelation.h!"); }
       
+    /**
+    *  @brief write the measured three-point correlation covariance
+    *  @param dir output directory
+    *  @param file output file
+    *  @return none
+    */
+    virtual void write_covariance (const string dir, const string file) const = 0;
+
 	///@}
       
       };

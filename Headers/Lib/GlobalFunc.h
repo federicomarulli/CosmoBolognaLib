@@ -103,8 +103,6 @@ namespace cosmobl {
    *  @param [in] nObjRan number of random objects used to assess the
    *  smoothed distribution
    *
-   *  @param [in] idum the random seed
-   *
    *  @param [in] norm 0 &rarr; don't normalize; 1 &rarr; normalize
    *  the distribution to the number of objects
    *
@@ -114,9 +112,11 @@ namespace cosmobl {
    *  @param [in] delta_dc_Vmax &Delta;d<SUB>c</SUB>: the bin size of
    *  the output smoothed distribution
    *
+   *  @param [in] seed the random seed
+   *
    *  @return none
    */
-  void Vmax_DC_distribution (vector<double> &, vector<double> &, const vector<double>, const vector<double>, const vector<double>, const double, const double, const double, const double, cosmology::Cosmology &, const double, const int, const int, const bool norm=1, const string file_Vmax=par::defaultString, const double delta_dc_Vmax=100.);
+  void Vmax_DC_distribution (vector<double> &dc, vector<double> &nObj, const vector<double> D_C, const vector<double> zobj_min, const vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, cosmology::Cosmology &cosm, const double Area, const int nObjRan, const bool norm=1, const string file_Vmax=par::defaultString, const double delta_dc_Vmax=100., const int seed=3213);
 
   /**
    *  @brief the Alcock-Pacinski factor used to shift comoving
@@ -329,11 +329,11 @@ namespace cosmobl {
    *
    *  @param[in] redshift_max the maximum redshift
    *
-   *  @param[in] idum the random seed
+   *  @param[in] seed the random seed
    *
    *  @return none
    */
-  void coord_zSpace (vector<double> &, vector<double> &, vector<double> &, vector<double> &, vector<double> &, vector<double> &, const vector<double>, const vector<double>, const vector<double>, const double, cosmology::Cosmology &, const double, const double, const double, const int);
+  void coord_zSpace (vector<double> &ra, vector<double> &dec, vector<double> &redshift, vector<double> &xx, vector<double> &yy, vector<double> &zz, const vector<double> vx, const vector<double> vy, const vector<double> vz, const double sigmaV, cosmology::Cosmology &real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int seed=3213);
 
   /**
    *  @brief create a mock catalogue, subdividing a box into sub-boxes

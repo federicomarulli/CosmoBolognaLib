@@ -158,7 +158,7 @@ void cosmobl::statistics::Chain::set_values(const vector<vector<double>> values)
 
 shared_ptr<cosmobl::statistics::Posterior> cosmobl::statistics::Chain::PosteriorDistribution(const int seed) const
 {
-  const int nbins=50;
+  const int nbins = 50;
   return make_shared<cosmobl::statistics::Posterior> (cosmobl::statistics::Posterior(glob::DistributionType::_DiscreteDistribution_, m_values, {}, nbins, "Spline", seed));
 }
 
@@ -168,7 +168,7 @@ shared_ptr<cosmobl::statistics::Posterior> cosmobl::statistics::Chain::Posterior
 
 shared_ptr<cosmobl::statistics::Posterior> cosmobl::statistics::Chain::PosteriorDistribution(const int start, const int thin, const int seed) const
 {
-  const int nbins=50;
+  const int nbins = 50;
   vector<double> vv = values(start, thin);
   return make_shared<cosmobl::statistics::Posterior> (cosmobl::statistics::Posterior(glob::DistributionType::_DiscreteDistribution_, vv, {}, nbins, "Spline", seed));
 }

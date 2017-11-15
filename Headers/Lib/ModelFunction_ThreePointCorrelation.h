@@ -26,9 +26,9 @@
  *  This file contains the prototypes of the functions used to model
  *  the three-point correlation function
  *  
- *  @author Federico Marulli
+ *  @author Federico Marulli, Michele Moresco
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unbo.it, michele.moresco@unibo.it
  */
 
 #ifndef __MODFUNCTHREEP__
@@ -57,6 +57,27 @@ namespace cosmobl {
 
 	/// Q dark matter
 	vector<double> Q_DM;
+
+  /// cosmology
+  shared_ptr<cosmology::Cosmology> cosmology;
+
+  /// 1st side of the triangle
+  double r1;
+
+  /// 2nd side of the triangle
+  double r2;
+
+  /// theta
+  vector<double> theta;
+
+  /// model for the 3PCF
+  string model;
+
+  /// k vector
+  vector<double> kk;
+
+  /// Dark matter power spectrum
+  vector<double> Pk_DM;
 
 	/**
 	 *  @brief default constructor
