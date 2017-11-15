@@ -74,7 +74,6 @@ then:
     - make CLASSpy -> compile the Python wrapper for CLASS
     - make MPTbreeze -> compile MPTbreeze
     - make mangle -> compile mangle
-    - make venice -> compile venice
   - other Makefile options are:
     - make lib* -> compile the * library (e.g. make libFUNC will compile the library libFUNC.so)
     - make python -> compile the Python wrappers (SWIG >v3.0 is

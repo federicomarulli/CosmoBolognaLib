@@ -38,13 +38,16 @@ ES = so
 
 Dvar = -DLINUX
 
+
+FLAGS_PY:=$(shell python -c 'from distutils import sysconfig; print sysconfig.get_config_var("LIBDIR")')
+
 ifeq ($(SYS),MAC)
 	Dvar = -DMAC
 	FLAGS0 = -std=c++11 -fopenmp
 	FLAGS_FFTW = -lfftw3 
 	FLAGS_LINK = -dynamiclib -undefined suppress -flat_namespace
         ES = dylib
-	FLAGS_PY = -L/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -ldl	
+	FLAGS_PY = -L$(shell python -c 'from distutils import sysconfig; print sysconfig.get_config_var("LIBDIR")') -lpython2.7 -ldl	
 	CUBA_LIB = $(dir_CUBA)libcuba.a
 	FLAGS_CUBA = $(dir_CUBA)libcuba.a
 	CUBA_COMPILE = cd $(dir_CUBA) && ./configure && make lib

@@ -1,0 +1,1 @@
+I foil rm *.f

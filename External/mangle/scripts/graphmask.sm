@@ -1,0 +1,226 @@
+graphmask 28	# © M E C Swanson 2008
+		#An sm script to plot mangle graphics files
+		#first argument: mangle graphics file to read: *.grph
+		#second argument: postscript file for output graph: *.eps
+		#third and fourth arguments: optional range for right ascension to plot
+		# (use 0 0 to plot using range from data)
+		#fifth and sixth arguments: optional range for declination to plot
+		# (use 0 0 to plot with dec range adjusted to give equal scaling on x and y axes,
+		#   centered on the range of all the data.)
+		#seventh argument: title of graph: "I am a title"
+		#eighth argument: optional switch: 0 for outlines off, 1 for outlines on (default is 0)
+		#
+		#WARNINGS:
+		# -This script uses the opposite color scheme than the matlab script, i.e., 
+		#  weight 1 = black, weight 0 = white
+		# -RA and Dec are treated as linear variables (no spherical projection).  This means that 
+		#  ranges that span RA=0 won't plot properly.
+		# -SM can only plot square eps files, so if you define both RA and Dec range, they should
+		#  have the same length, otherwise your plot will appear stretched.
+		# -SM has a line length limit of 1500 characters, which SDSS tends to have no trouble overloading.  
+		#  If you get an error reading the file, try making your graphics file with lower precision and 
+		#  fewer points per 2pi, i.e., use poly2poly -og12 -p3 instead of poly2poly -og30.
+		#
+		#USAGE: sm -m $MANGLESCRIPTSDIR/graphmask.sm <infile> <outfile> [<ramin> <ramax>] [<decmin> <decmax>] [<title>] [<outlines>]
+		#EXAMPLES: 
+		#default range, no outlines: sm -m $MANGLESCRIPTSDIR/graphmask.sm sdss_slice.grph sdss_slice.eps
+		#defined RA range, outlines: sm -m $MANGLESCRIPTSDIR/graphmask.sm sdss_slice.grph sdss_slice.eps "SDSS slice" 0 35 0 0 1
+		#defined range, no outlines: sm -m $MANGLESCRIPTSDIR/graphmask.sm sdss_slice.grph sdss_slice.eps "SDSS slice" 10 20 10 20
+		#defined range, outlines: sm -m graphmask.sm sdss_slice.grph sdss_slice.eps "SDSS slice" 10 20 10 20 1
+		#
+		data $1
+		device postfilecolour $2
+		#location $gx1 $gx2 $gy1 $(.77*($gx2-$gx1))
+		if($?3) { define title $3 }
+		if($?3 && $?4) { 
+			if(!($3==0 && $4==0)){
+				define azmin $3
+				define azmax $4
+			}
+		}
+		if($?5 && $?6) { 
+			if(!($5==0 && $6==0)){
+				define elmin $5
+				define elmax $6
+			}
+		}
+		if($?7) { define title $7 }
+		if($?8) { define outlines $8 } else { define outlines 0 }
+
+		define i 0 			# i = current line to read in file
+		define in_header 1		# in_header = 1 if reading header of file
+	
+		#process header information
+		while{$in_header} {
+			define i ($i+1)
+			read row header $i.s
+			if (header[1]=='polygons'){
+				define npoly (ATOF((header[0])))
+			} else { if (header[0]=='unit'){
+				define unit (header[1])
+			} else { if (header[0]=='graphics'){	
+				#we've reached the body of the data file, so move on
+				define in_header 0
+			} else {
+				write standard Unrecognized format in line $i of $1.
+				write standard Please fix the data file and try again.
+				write smerr.temp 1
+				quit
+			}}}
+							
+		}
+		
+		define i_start $i		#i_start = first line of data
+		define polycount 0
+		define first_poly 1
+
+		#process polygon data
+		define numlines ($i_start+2*$npoly-1)
+		while { $i < $numlines } {
+			read row specs $i.s	
+			if(specs[0]!='graphics' || dimen(specs)!=12){
+				write standard Formatting error in line $i of $1
+				write standard Your data file probably contains a line over 1500 characters long.
+				write standard Please try to make your data file with shorter lines:
+				write standard i.e., use poly2poly -og10 -p3 instead of poly2poly -og30.
+				write smerr.temp 1
+				quit
+			}				
+			set id = ATOF(specs[1])
+			set n_tot = ATOF(specs[3])
+			set edges = ATOF(specs[5])
+			set w = ATOF(specs[7])
+			set midx = ATOF(specs[9])
+			set midy = ATOF(specs[10])
+                        
+			define numpoints (n_tot[0])				
+	
+			while{$numpoints>0}{
+				read row polypoints $($i+1)
+				set n = (dimen(polypoints)/2)
+				define numpoints ( $numpoints - n[0])
+				
+				#if there are still points to read in for this polygon,
+				#we need to read in another line
+				if($numpoints>0){
+					write standard "extra line for disconnected polygon"
+					define numlines ($numlines+1)
+				}	 
+		              
+				#separate list of points in x y x y x y ... format into x and y vectors
+				set ix = 0,2*n[0]-2,2		#even numbers
+				set iy = 1,2*n[0]-1,2		#odd numbers
+				# x = numbers with even list indices (indices start at 0)
+				# y = numbers with odd list indices
+				# tack first point on at end to close the polygon
+				set x=polypoints[ix] CONCAT polypoints[0] 
+				set y=polypoints[iy] CONCAT polypoints[1]
+						
+				# if polygon is in range to be plotted, add it to plot list
+				if($first_poly){
+					#if this is the first polygon in list, start the list
+					set x_all = x
+					set y_all = y	
+					set numpoints = n+1
+					set weight = w
+					define first_poly 0	
+				} else {	
+					#otherwise, tack this one on to the list
+					set x_all = x_all CONCAT x
+					set y_all =  y_all CONCAT y	
+					set numpoints = numpoints CONCAT (n+1)
+					set weight = weight CONCAT w
+				}
+				define i ($i+1)
+				define polycount ($polycount+1)
+			}
+			define i ($i+1)		
+		}	
+
+		limits x_all y_all		
+		#adjust limits so the axes have equal scaling
+		if( ($fx2-$fx1)/$nx > ($fy2-$fy1)/$ny ) {
+			define ymid (($fy1+$fy2)/2)
+			define ymin ($ymid - .5*($fx2-$fx1)*$ny/$nx)
+			define ymax ($ymid + .5*($fx2-$fx1)*$ny/$nx)
+			define xmin $fx1
+			define xmax $fx2
+		} else { if( ($fx2-$fx1)/$nx < ($fy2-$fy1)/$ny ) {
+			define xmid (($fx1+$fx2)/2)
+			define xmin ($xmid - .5*($fy2-$fy1)*$nx/$ny)
+			define xmax ($xmid + .5*($fy2-$fy1)*$nx/$ny)
+			define ymin $fy1
+			define ymax $fy2
+		}}
+		limits $xmin $xmax $ymin $ymax 
+
+		#if limits have been specified as arguments, use them
+		if($?azmin && $?azmax) {
+			write standard using user-defined limits for RA
+			define scale (($azmax-$azmin)/($xmax-$xmin))
+			define ymid (($fy1+$fy2)/2)
+			define ymin ($ymid - .5*($fy2-$fy1)*$scale)
+			define ymax ($ymid + .5*($fy2-$fy1)*$scale)
+			define xmin $azmin
+			define xmax $azmax
+			if($?elmin && $?elmax) {
+				write standard using user-defined limits for dec
+				define ymin $elmin
+				define ymax $elmax
+			}	
+		}	
+		limits $xmin $xmax $ymin $ymax
+
+		expand 1.00001
+		ANGLE 0
+		AXIS $fx2 $fx1 0 0 $gx1 $gy1 $($gx2-$gx1) 1 $(0)
+		AXIS $fx2 $fx1 0 0 $gx1 $gy2 $($gx2-$gx1) 0 $(1)
+		ANGLE 90
+		AXIS $fy1 $fy2 0 0 $gx1 $gy1 $($gy2-$gy1) 2 $(1)
+		AXIS $fy1 $fy2 0 0 $gx2 $gy1 $($gy2-$gy1) 0 $(0)
+		ANGLE 0
+
+		#box
+		xlabel Right Ascension ($unit)
+		ylabel Declination ($unit)	
+		identification
+		if ($?title) {
+			define titlepos ($gy2+100)
+			relocate ($gx1 $titlepos)
+			putlabel 9 $title
+		}
+
+		define j 0
+		do i=0,$polycount-1 {
+			set k = $j, $j+numpoints[$i]-1
+			set x=x_all[k]
+			set y=y_all[k]
+			#flip so that RA increases from right to left
+			set x = $fx1+$fx2-x
+			define j ($j+numpoints[$i])
+			define gray (int(50+ 200*(1-weight[$i])))
+			ctype = <0 $gray 255> + 256*<0 $gray 255> + 256*256*<0 $gray 255>
+		#check if polygon is clockwise or counterclockwise
+			set ii=0,numpoints[$i]-2
+			set iplus=1,numpoints[$i]-1
+			set cross=((x[ii]*y[iplus])-(x[iplus]*y[ii]))
+			#ishole should be positive if polygon is a hole
+			set ishole=(.5*sum(cross))
+			if($outlines){
+				ctype 0
+				connect x y
+			} else {
+				ctype 1
+				connect x y
+			}
+			if (ishole > 0){
+				ctype 2
+				shade 0 x y
+			} else {
+				ctype 1
+				shade 0 x y
+			}
+
+		}
+		quit
+		#end 

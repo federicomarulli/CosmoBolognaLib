@@ -1,0 +1,33 @@
+Read INSTALL for instructions on compilation.
+
+Documentation on mangle is at
+
+http://space.mit.edu/home/tegmark/mangle/
+
+To get started, try creating the mask for an example slice of the SDSS survey:
+cd <mangle_directory>/masks/sdss
+and follow the README, 
+or follow the QuickStart section on the website.
+
+Typing a command with no arguments will give you a brief summary of its usage. 
+
+Typing a command with the -d switch will tell you what the defaults are.
+
+The mathematical algorithms are described by
+Hamilton A J S & Tegmark M (2004)
+"A scheme to deal accurately and efficiently with complex angular masks
+in galaxy surveys", MNRAS, 349, 115-128
+and 
+Swanson M E C, Tegmark M, Hamilton A J S, and Hill J C (2008)
+"Methods for rapidly processing angular masks of next-generation galaxy 
+surveys", MNRAS, 387, 1391-1402.
+
+The intention is that the probability of the mangle software failing,
+once successfully compiled, should be comparable to the probability
+of a piece of spacejunk falling on your head (let's hope it ain't true).
+If it fails, please check out Troubleshooting at
+http://space.mit.edu/home/tegmark/mangle/manual/troubleshooting.html
+If you still have a problem, please contact the mangle development team via
+Andrew.Hamilton@colorado.edu or tegmark@mit.edu
+
+Updated by mecs 24 July 2008
