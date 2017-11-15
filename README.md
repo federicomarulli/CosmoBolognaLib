@@ -31,3 +31,5 @@ V3.1 bugs fixed in clustering measurements and modelling
 V3.2 new functions to model the void size function and to clean void catalogues (Ronconi & Marulli 2017)
 
 V4.0 classes used to model clustering functions substantially restructured
+
+V4.1 classes used to model two-point and three-point correlation functions significantly updated; python building fully restructured; various bugs fixed
