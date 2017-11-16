@@ -38,9 +38,6 @@ ES = so
 
 Dvar = -DLINUX
 
-
-FLAGS_PY:=$(shell python -c 'from distutils import sysconfig; print sysconfig.get_config_var("LIBDIR")')
-
 ifeq ($(SYS),MAC)
 	Dvar = -DMAC
 	FLAGS0 = -std=c++11 -fopenmp
@@ -300,10 +297,11 @@ allExamples:
 
 swig_wrapper: $(dir_Python)CBL_wrap.cxx
 
-python: $(dir_Python)CBL_wrap.o $(OBJ_CBL) $(dir_Python)CBL.i 
+python: $(dir_Python)CBL_wrap.o $(OBJ_CBL) $(dir_Python)CBL.i
+	make ALL
 	$(C) -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(dir_Python)/_CosmoBolognaLib.so $(FLAGS_CUBA) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY) -lgfortran
-	mv $(dir_Python)/_CosmoBolognaLib.so $(dir_Python)/CosmoBolognaLib/
-	mv $(dir_Python)/CosmoBolognaLib.py $(dir_Python)/CosmoBolognaLib/
+	cp $(dir_Python)/_CosmoBolognaLib.so $(dir_Python)/CosmoBolognaLib/
+	cp $(dir_Python)/CosmoBolognaLib.py $(dir_Python)/CosmoBolognaLib/
 
 doc:
 	rm Doc/html/* Doc/xml/* -rf
@@ -337,9 +335,7 @@ cleanpy:
 	rm -rf $(dir_Python)dist $(dir_Python)build $(dir_Python)CosmoBolognaLib.egg-info
 	rm -f $(dir_Python)Lib/*~ $(dir_Python)Lib/*.o $(dir_Python)Lib/*.cxx $(dir_Python)Lib/*.py
 	rm -f $(dir_Python)/CosmoBolognaLib/*CosmoBolognaLib* $(dir_Python)CosmoBolognaLib/*~ $(dir_Python)CosmoBolognaLib/*.pyc
-
-purgepy:
-	make cleanpy
+	rm -f $(dir_Python)/_CosmoBolognaLib.so $(dir_Python)/CosmoBolognaLib.py
 
 cleanTEMP:
 	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_FUNC)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_TWOP)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_READP)*~ $(dir_H)*~ $(dir_O)*~ $(PWD)/\#* $(dir_FUNC)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_READP)\#* $(dir_H)\#* $(dir_O)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
@@ -355,26 +351,26 @@ purge:
 purgeALL:
 	make purge
 	make cleanpy
-	rm -rf Cosmology/Tables/* ;
-	cd External/CAMB ; make clean ; cd .. ;
+	rm -rf Cosmology/Tables/*
+	cd External/CAMB ; make clean 
 	rm -rf External/CAMB/camb
-	rm -rf External/CAMB/output_linear/* ;
-	rm -rf External/CAMB/output_nonlinear/* ;
-	rm -rf External/CAMB/test_* ; 
+	rm -rf External/CAMB/output_linear/*
+	rm -rf External/CAMB/output_nonlinear/*
+	rm -rf External/CAMB/test_* 
 	rm -rf External/VIPERS/venice3.9/venice
 	rm -rf External/mangle/bin/*
-	cd External/mangle/src; make cleaner ; cd .. ;
-	cd External/classgal_v1/ ; make clean ; cd .. ;
-	rm -rf External/classgal_v1/output_linear/* ;
-	rm -rf External/classgal_v1/output_nonlinear/* ;
-	cd External/fftlog-f90-master/ ; make clean ; cd .. ;
-	cd External/mangle/src ; make clean ; cd .. ;
-	cd External/MPTbreeze-v1/Cuba-1.4/ ; make distclean ;
-	rm -rf External/MPTbreeze-v1/mptbreeze ;
-	rm -rf External/MPTbreeze-v1/*~ ;
-	rm -rf External/MPTbreeze-v1/output_linear/* ;
-	rm -rf External/MPTbreeze-v1/output_nonlinear/* ;
-	cd External/Cuba-4.2 ; rm -rf config.h config.log config.status demo-fortran.dSYM/ libcuba.a libcuba.so makefile *~ ; cd .. ;
+	cd External/mangle/src; make cleaner ; true
+	cd External/classgal_v1/ ; make clean ; rm class ; true
+	rm -rf External/classgal_v1/output_linear/*
+	rm -rf External/classgal_v1/output_nonlinear/*
+	cd External/fftlog-f90-master/ ; make clean ; true
+	cd External/mangle/src ; make clean ; true
+	cd External/MPTbreeze-v1/Cuba-1.4/ ; rm -rf config.h config.log config.status demo-fortran.dSYM/ libcuba.a libcuba.so makefile *~ ; true
+	rm -rf External/MPTbreeze-v1/mptbreeze
+	rm -rf External/MPTbreeze-v1/*~
+	rm -rf External/MPTbreeze-v1/output_linear/*
+	rm -rf External/MPTbreeze-v1/output_nonlinear/*
+	cd External/Cuba-4.2 ; rm -rf config.h config.log config.status demo-fortran.dSYM/ libcuba.a libcuba.so makefile *~ ; true
 
 
 #################################################################### 
