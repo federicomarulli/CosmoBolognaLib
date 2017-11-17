@@ -106,7 +106,7 @@ OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $
 
 OBJ_LN = $(dir_LN)LogNormal.o $(dir_LN)LogNormalFull.o
 
-OBJ_TWOP = $(dir_TWOP)Pair.o $(dir_TWOP)Pair1D.o $(dir_TWOP)Pair2D.o $(dir_TWOP)Pair1D_extra.o $(dir_TWOP)Pair2D_extra.o $(dir_TWOP)TwoPointCorrelation.o $(dir_TWOP)TwoPointCorrelation1D.o $(dir_TWOP)TwoPointCorrelation1D_angular.o $(dir_TWOP)TwoPointCorrelation1D_monopole.o $(dir_TWOP)TwoPointCorrelation2D.o $(dir_TWOP)TwoPointCorrelation2D_cartesian.o $(dir_TWOP)TwoPointCorrelation2D_polar.o $(dir_TWOP)TwoPointCorrelation_projected.o $(dir_TWOP)TwoPointCorrelation_deprojected.o $(dir_TWOP)TwoPointCorrelation_multipoles.o $(dir_TWOP)TwoPointCorrelation_wedges.o $(dir_TWOP)TwoPointCorrelation1D_filtered.o $(dir_TWOP)TwoPointCorrelationCross.o $(dir_TWOP)TwoPointCorrelationCross1D.o $(dir_TWOP)TwoPointCorrelationCross1D_angular.o $(dir_TWOP)TwoPointCorrelationCross1D_monopole.o
+OBJ_TWOP = $(dir_TWOP)Pair.o $(dir_TWOP)Pair1D.o $(dir_TWOP)Pair2D.o $(dir_TWOP)Pair1D_extra.o $(dir_TWOP)Pair2D_extra.o $(dir_TWOP)TwoPointCorrelation.o $(dir_TWOP)TwoPointCorrelation1D.o $(dir_TWOP)TwoPointCorrelation1D_angular.o $(dir_TWOP)TwoPointCorrelation1D_monopole.o $(dir_TWOP)TwoPointCorrelation2D.o $(dir_TWOP)TwoPointCorrelation2D_cartesian.o $(dir_TWOP)TwoPointCorrelation2D_polar.o $(dir_TWOP)TwoPointCorrelation_projected.o $(dir_TWOP)TwoPointCorrelation_deprojected.o $(dir_TWOP)TwoPointCorrelation_multipoles_direct.o $(dir_TWOP)TwoPointCorrelation_multipoles_integrated.o $(dir_TWOP)TwoPointCorrelation_wedges.o $(dir_TWOP)TwoPointCorrelation1D_filtered.o $(dir_TWOP)TwoPointCorrelationCross.o $(dir_TWOP)TwoPointCorrelationCross1D.o $(dir_TWOP)TwoPointCorrelationCross1D_angular.o $(dir_TWOP)TwoPointCorrelationCross1D_monopole.o
 
 OBJ_THREEP = $(dir_THREEP)Triplet.o $(dir_THREEP)ThreePointCorrelation.o $(dir_THREEP)ThreePointCorrelation_angular_connected.o $(dir_THREEP)ThreePointCorrelation_angular_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_connected.o $(dir_THREEP)ThreePointCorrelation_comoving_reduced.o 
 
@@ -270,6 +270,8 @@ allExamples:
 	cd $(PWD)/Examples/clustering/codes ; make 2pt_monopole
 	$(call colorecho, "\n"Compiling the example code: 2pt_monopole_errors.cpp ... "\n")
 	cd $(PWD)/Examples/clustering/codes ; make 2pt_monopole_errors
+	$(call colorecho, "\n"Compiling the example code: 2pt_multipoles.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_multipoles
 	$(call colorecho, "\n"Compiling the example code: 2pt_2D.cpp ... "\n")
 	cd $(PWD)/Examples/clustering/codes ; make 2pt_2D
 	$(call colorecho, "\n"Compiling the example code: 2pt_projected.cpp ... "\n")
@@ -618,8 +620,11 @@ $(dir_TWOP)TwoPointCorrelation_projected.o: $(dir_TWOP)TwoPointCorrelation_proje
 $(dir_TWOP)TwoPointCorrelation_deprojected.o: $(dir_TWOP)TwoPointCorrelation_deprojected.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_TWOP)TwoPointCorrelation_deprojected.cpp -o $(dir_TWOP)TwoPointCorrelation_deprojected.o
 
-$(dir_TWOP)TwoPointCorrelation_multipoles.o: $(dir_TWOP)TwoPointCorrelation_multipoles.cpp $(HH) $(PWD)/Makefile
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_TWOP)TwoPointCorrelation_multipoles.cpp -o $(dir_TWOP)TwoPointCorrelation_multipoles.o
+$(dir_TWOP)TwoPointCorrelation_multipoles_direct.o: $(dir_TWOP)TwoPointCorrelation_multipoles_direct.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_TWOP)TwoPointCorrelation_multipoles_direct.cpp -o $(dir_TWOP)TwoPointCorrelation_multipoles_direct.o
+
+$(dir_TWOP)TwoPointCorrelation_multipoles_integrated.o: $(dir_TWOP)TwoPointCorrelation_multipoles_integrated.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_TWOP)TwoPointCorrelation_multipoles_integrated.cpp -o $(dir_TWOP)TwoPointCorrelation_multipoles_integrated.o
 
 $(dir_TWOP)TwoPointCorrelation_wedges.o: $(dir_TWOP)TwoPointCorrelation_wedges.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_TWOP)TwoPointCorrelation_wedges.cpp -o $(dir_TWOP)TwoPointCorrelation_wedges.o

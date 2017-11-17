@@ -1318,7 +1318,7 @@ double cosmobl::cosmology::Cosmology::xi_DM_DeWiggle (const double rr, const dou
 // =====================================================================================
 
 
-vector<vector<double> > cosmobl::cosmology::Cosmology::get_XiMonopole_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod)
+vector<vector<double> > cosmobl::cosmology::Cosmology::XiMonopole_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod)
 {
   int nbins_k = kk.size();
   vector<double> r = linear_bin_vector(nbins,rMin,rMax);
@@ -1394,7 +1394,7 @@ vector<vector<double> > cosmobl::cosmology::Cosmology::get_XiMonopole_covariance
 // =====================================================================================
 
 
-vector<vector<double> > cosmobl::cosmology::Cosmology::get_XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod)
+vector<vector<double> > cosmobl::cosmology::Cosmology::XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod)
 {
   int n_leg = 3;
   int nbins_k = kk.size();
@@ -1486,7 +1486,7 @@ vector<vector<double> > cosmobl::cosmology::Cosmology::get_XiMultipoles_covarian
 // =====================================================================================
 
 
-vector<vector<double> > cosmobl::cosmology::Cosmology::get_XiMultipoles (const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod)
+vector<vector<double> > cosmobl::cosmology::Cosmology::XiMultipoles (const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod)
 {
   int nbins_k = kk.size();
   vector<double> r = linear_bin_vector(nbins,rMin,rMax);

@@ -20,15 +20,15 @@
 
 /**
  *  @file
- *  CatalogueAnalysis/TwoPointCorrelation/TwoPointCorrelation_multipoles.cpp
+ *  CatalogueAnalysis/TwoPointCorrelation/TwoPointCorrelation_multipoles_integrated.cpp
  *
- *  @brief Methods of the class TwoPointCorrelation_multipoles used to
- *  measure the first three multipoles of the two-point correlation
- *  function
+ *  @brief Methods of the class
+ *  TwoPointCorrelation_multipoles_integrated used to measure the
+ *  first three multipoles of the two-point correlation function
  *
  *  This file contains the implementation of the methods of the class
- *  TwoPointCorrelation_multipoles used to measure the first three
- *  multipoles of the two-point correlation function
+ *  TwoPointCorrelation_multipoles_integrated used to measure the
+ *  first three multipoles of the two-point correlation function
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *
@@ -36,7 +36,7 @@
  */
 
 
-#include "TwoPointCorrelation_multipoles.h"
+#include "TwoPointCorrelation_multipoles_integrated.h"
 #include "Data1D_extra.h"
 
 using namespace cosmobl;
@@ -50,7 +50,7 @@ using namespace twopt;
 // ============================================================================
 
 
-shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::data_with_extra_info (const vector<double> rad, const vector<double> xil, const vector<double> error) const
+shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::data_with_extra_info (const vector<double> rad, const vector<double> xil, const vector<double> error) const
 {
   auto dd2D = cosmobl::measure::twopt::TwoPointCorrelation2D_polar::m_dd;
   
@@ -98,7 +98,7 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::xx () const
+vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::xx () const
 {
   vector<double> rad, xx;
   m_dataset->xx(xx);
@@ -113,7 +113,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::xx () co
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::xiMonopole () const
+vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::xiMonopole () const
 {
   vector<double> vv; 
   m_dataset->data(vv);
@@ -131,7 +131,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::xiMonopo
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::errorMonopole () const
+vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::errorMonopole () const
 {
   vector<double> vv; 
   m_dataset->error(vv);
@@ -150,7 +150,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::errorMon
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::xiQuadrupole () const 
+vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::xiQuadrupole () const 
 {
   vector<double> vv; 
   m_dataset->data(vv);
@@ -169,7 +169,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::xiQuadru
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::errorQuadrupole () const 
+vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::errorQuadrupole () const 
 {
   vector<double> vv; 
   m_dataset->error(vv);
@@ -188,7 +188,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::errorQua
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::xiHexadecapole () const
+vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::xiHexadecapole () const
 {
   vector<double> vv; 
   m_dataset->data(vv);
@@ -207,7 +207,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::xiHexade
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::errorHexadecapole () const 
+vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::errorHexadecapole () const 
 {
   vector<double> vv; 
   m_dataset->error(vv);
@@ -226,7 +226,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::errorHex
 // ============================================================================================
 
 
-shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::Multipoles (const vector<double> rr, const vector<double> mu, const vector<vector<double>> xi, const vector<vector<double>> error_xi)
+shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::Multipoles (const vector<double> rr, const vector<double> mu, const vector<vector<double>> xi, const vector<vector<double>> error_xi)
 {
   vector<double> rad, xil, error;
 
@@ -270,7 +270,7 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
     case (ErrorType::_Poisson_) :
@@ -283,7 +283,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::measure (const Err
       measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, seed);
       break;
     default:
-      ErrorCBL("Error in measure() of TwoPointCorrelation_multipoles.cpp, unknown type of error");
+      ErrorCBL("Error in measure() of TwoPointCorrelation_multipoles_integrated.cpp, unknown type of error");
   }
 }
 
@@ -291,7 +291,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::measure (const Err
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   // ----------- measure the 2D two-point correlation function, xi(r, mu) ----------- 
 
@@ -307,7 +307,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::measurePoisson (co
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   if (dir_output_resample != par::defaultString) {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -325,7 +325,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::measureJackknife (
   else if (estimator==_LandySzalay_)
     data = XiJackknife(dd_regions, rr_regions, dr_regions);
   else
-    ErrorCBL("Error in measurJackknife() of TwoPointCorrelation_multipoles.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("Error in measurJackknife() of TwoPointCorrelation_multipoles_integrated.cpp: the chosen estimator is not implemented!");
   
   vector<vector<double>> ww, covariance;
   for (size_t i=0; i<data.size(); i++) {
@@ -367,7 +367,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::measureJackknife (
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (dir_output_resample != par::defaultString) {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -385,7 +385,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::measureBootstrap (
   else if (estimator==_LandySzalay_)
     data = XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions, seed);
   else
-    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation_multipoles.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation_multipoles_integrated.cpp: the chosen estimator is not implemented!");
   
   vector<vector<double>> ww, covariance;
   for (size_t i=0; i<data.size(); i++) {
@@ -427,7 +427,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::measureBootstrap (
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
+vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
 {
   vector<shared_ptr<data::Data>> data;
   auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd, rr);
@@ -447,7 +447,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_mult
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
+vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
 {
   vector<shared_ptr<data::Data>> data;
   auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd, rr, dr);
@@ -467,7 +467,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_mult
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
+vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
 {
   vector<shared_ptr<data::Data>> data;
   auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks, dd, rr, seed);
@@ -486,7 +486,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_mult
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_multipoles::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
+vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
 {
   vector<shared_ptr<data::Data>> data;
   auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks, dd, rr, dr, seed);
@@ -506,7 +506,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_mult
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::write (const string dir, const string file, const int rank) const 
+void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::write (const string dir, const string file, const int rank) const 
 {
   (void)rank;
   
@@ -540,7 +540,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::write (const strin
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::read_covariance (const string dir, const string file)
+void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::read_covariance (const string dir, const string file)
 {
   m_dataset->set_covariance(dir+file);
 }
@@ -549,7 +549,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::read_covariance (c
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::write_covariance (const string dir, const string file) const
+void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::write_covariance (const string dir, const string file) const
 {
   m_dataset->write_covariance(dir, file);
 }
@@ -558,7 +558,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::write_covariance (
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK)
+void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK)
 {
   vector<vector<double>> Xi;
 
@@ -575,7 +575,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::compute_covariance
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles::compute_covariance (const vector<string> file, const bool JK)
+void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_integrated::compute_covariance (const vector<string> file, const bool JK)
 {
   vector<double> rad, mean;
   vector<vector<double>> cov_mat;

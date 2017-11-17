@@ -2940,7 +2940,7 @@ namespace cosmobl {
        *
        *  @param Mass_min minimum halo mass
        *
-       *  @param Mass_min maximum halo mass
+       *  @param Mass_max maximum halo mass
        *
        *  @param model_MF author(s) who proposed the mass function;
        *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
@@ -3023,7 +3023,7 @@ namespace cosmobl {
        *
        *  @param Mass_min minimum halo mass
        *
-       *  @param Mass_min maximum halo mass
+       *  @param Mass_max maximum halo mass
        *
        *  @param model_MF author(s) who proposed the mass function;
        *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
@@ -3107,7 +3107,7 @@ namespace cosmobl {
        *
        *  @param Mass_min minimum halo mass
        *
-       *  @param Mass_min maximum halo mass
+       *  @param Mass_max maximum halo mass
        *
        *  @param model_MF author(s) who proposed the mass function;
        *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
@@ -7990,8 +7990,8 @@ namespace cosmobl {
        ///@{
 
        /**
-	*  @brief get the covariance of the two-point correlation
-	*  function monopole
+	*  @brief the first three non-null multipoles of the two-point
+	*  correlation function
 	*
 	*  @param nbins the number of bins of the two-point
 	*  correlation function multipoles
@@ -8000,24 +8000,28 @@ namespace cosmobl {
 	*
 	*  @param rMax the maximum scale 
 	*
-	*  @param nn order of the moment
-	*
-	*  @param Volume the volume
-	*
 	*  @param kk vector containing the wave vector modules
 	*
 	*  @param Pk0 vector containing the monopole of the power
 	*  spectrum
 	*
+	*  @param Pk2 vector containing the quadrupole of the power
+	*  spectrum
+	* 
+	*  @param Pk4 vector containing the hexadecapole of the power
+	*  spectrum
+	*
 	*  @param IntegrationMethod the integration method
 	*
-	*  @return the matrix containing the covariance of the
-	*  two-point correlation function monopole
+	*  @return the matrix containing the first three non-null
+	*  multipoles of the two-point correlation function
+	*
 	*/
-       vector<vector<double>> get_XiMonopole_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod=1);
+       vector<vector<double>> XiMultipoles (const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
 
        /**
-	*  @brief get the two-point correlation function multipoles
+	*  @brief the covariance matrix of the first three non-null
+	*  multipoles of the two-point correlation function
 	*
 	*  @param nbins the number of bins of the two-point
 	*  correlation function multipoles
@@ -8026,28 +8030,25 @@ namespace cosmobl {
 	*
 	*  @param rMax the maximum scale 
 	*
+	*  @param nn order of the moment
+	*
+	*  @param Volume the volume
+	*
 	*  @param kk vector containing the wave vector modules
 	*
 	*  @param Pk0 vector containing the monopole of the power
 	*  spectrum
 	*
-	*  @param Pk2 vector containing the quadrupole of the power
-	*  spectrum
-	* 
-	*  @param Pk4 vector containing the hexadecapole of the power
-	*  spectrum
-	*
 	*  @param IntegrationMethod the integration method
 	*
-	*  @return the matrix containing the two-point correlation
-	*  function multipoles
-	*
+	*  @return the covariance matrix of the first three non-null
+	*  multipoles of the two-point correlation function
 	*/
-       vector<vector<double>> get_XiMultipoles (const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
+       vector<vector<double>> XiMonopole_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod=1);
        
        /**
-	*  @brief  get the covariance of the two-point correlation
-	*  function multipoles
+	*  @brief the covariance matrix of the first three non-null
+	*  multipole moments of the two-point correlation function
 	*
 	*  @param nbins the number of bins of the two-point
 	*  correlation function multipoles
@@ -8073,8 +8074,10 @@ namespace cosmobl {
 	*
 	*  @param IntegrationMethod the integration method
 	*
+	*  @return the covariance matrix of the first three non-null
+	*  multipole moments of the two-point correlation function
 	*/
-       vector<vector<double>> get_XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
+       vector<vector<double>> XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
 
        ///@}
             
@@ -8917,10 +8920,14 @@ namespace cosmobl {
 	*
 	*  @param r2_prime the scale \f$r_2^'\f$
 	*
+	*  @param kk vector of the wave vector modules
+	*
+	*  @param Pk the pdark matter ower spectrum
+	*
 	*  @param rr vector of scales
 	*
-	*  @param Xi, vector containing the two-point 
-	*  correlation function 
+	*  @param Xi vector containing the two-point correlation
+	*  function
 	*
 	*  @param prec the integral precision
 	*
@@ -8931,15 +8938,17 @@ namespace cosmobl {
 
        /**
 	*  @brief the dark matter three-point correlation function 
-	*  covariance model, by Slepian et al. 2015, as a function
-	*  of $\theta = r_1 \cdot r_2$.
+	*  covariance model
 	*
-	*  \f[
-	*  C(r_1, r_2, \vec{r_1}\cdot\vec{r_2} \equiv \cos(\theta) = \sum_{l=0}^{l=max_l} 
-	*  \sum_{l^'=0}^{l^'=max_l} C_{l, l^'}(r_1, r_2) P_l(\cos(\theta) P_{l^'}(\cos(theta)
-	*  \f]
+	*  this function computes the dark matter three-point
+	*  correlation function covariance model, by Slepian et
+	*  al. 2015, as a function of \f$\theta = r_1 \cdot r_2\f$:
 	*
-	*  where \f$C_{l, l^'}(r_1, r_2)\f$ is computed by 
+	*  \f[ C(r_1, r_2, \vec{r_1}\cdot\vec{r_2} \equiv \cos(\theta)
+	*  = \sum_{l=0}^{l=max_l} \sum_{l^'=0}^{l^'=max_l} C_{l,
+	*  l^'}(r_1, r_2) P_l(\cos(\theta) P_{l^'}(\cos(theta) \f]
+	*
+	*  where \f$C_{l, l^'}(r_1, r_2)\f$ is computed by
 	*  cosmobl::cosmology::Cosmology::zeta_multipoles_covariance
 	*
 	*  @param Volume the volume
@@ -8957,7 +8966,7 @@ namespace cosmobl {
 	*
 	*  @param Pk the pdark matter ower spectrum
 	*
-	*  @param  norders the maximum number of orders of multipoles
+	*  @param norders the maximum number of orders of multipoles
 	*  of the three point correlation function expansion
 	*
 	*  @param prec the integral precision

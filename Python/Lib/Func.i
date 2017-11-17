@@ -53,8 +53,8 @@
     enum {_comovingCoordinates_, _observedCoordinates_};
     enum {_1D_data_, _2D_data_, _1D_collection_data_, _1D_data_extra_, _2D_data_extra_};
     enum {_Likelihood_NotSet_, _GaussianLikelihood_Error_, _GaussianLikelihood_Covariance_, _UserDefinedLikelihood_};
-    enum {_angular_lin_, _angular_log_, _comoving_lin_, _comoving_log_, _comovingCartesian_linlin_, _comovingCartesian_linlog_, _comovingCartesian_loglin_, _comovingCartesian_loglog_, _comovingPolar_linlin_, _comovingPolar_linlog_, _comovingPolar_loglin_, _comovingPolar_loglog_};
-    enum {_1D_monopole_, _1D_projected_, _1D_deprojected_, _1D_multipoles_, _1D_wedges_, _1D_filtered_, _1D_angular_, _2D_Cartesian_, _2D_polar_};
+    enum {_angular_lin_, _angular_log_, _comoving_lin_, _comoving_log_, _comoving_multipoles_lin_, _comoving_multipoles_log_, _comovingCartesian_linlin_, _comovingCartesian_linlog_, _comovingCartesian_loglin_, _comovingCartesian_loglog_, _comovingPolar_linlin_, _comovingPolar_linlog_, _comovingPolar_loglin_, _comovingPolar_loglog_};
+    enum {_1D_monopole_, _1D_projected_, _1D_deprojected_, _multipoles_integrated_, _multipole_direct_, _1D_wedges_, _1D_filtered_, _1D_angular_, _2D_Cartesian_, _2D_polar_};
     enum {_natural_, _LandySzalay_};
     enum {_Poisson_, _Jackknife_, _Bootstrap_, _JackknifeTest_, _BootstrapTest_, _None_};
     enum {_comoving_theta_, _comoving_side_};
@@ -66,9 +66,9 @@
     enum {_ascii_, _binary_};
   };
   
-  string cosmobl::par::DirCosmo = "~/CosmoBolognaLib/";
-  string cosmobl::par::DirLoc = "./";
-      
+  string cosmobl::par::DirCosmo;
+  string cosmobl::par::DirLoc;
+ 
   static const double yotta = 1.e24;
   static const double zetta = 1.e21;
   static const double exa = 1.e18;
@@ -229,8 +229,8 @@ class EnumTypes {
   enum {_comovingCoordinates_, _observedCoordinates_};
   enum {_1D_data_, _2D_data_, _1D_collection_data_, _1D_data_extra_, _2D_data_extra_}; 
   enum {_Likelihood_NotSet_, _GaussianLikelihood_Error_, _GaussianLikelihood_Covariance_, _UserDefinedLikelihood_};
-  enum {_angular_lin_, _angular_log_, _comoving_lin_, _comoving_log_, _comovingCartesian_linlin_, _comovingCartesian_linlog_, _comovingCartesian_loglin_, _comovingCartesian_loglog_, _comovingPolar_linlin_, _comovingPolar_linlog_, _comovingPolar_loglin_, _comovingPolar_loglog_};
-  enum {_1D_monopole_, _1D_projected_, _1D_deprojected_, _1D_multipoles_, _1D_wedges_, _1D_filtered_, _1D_angular_, _2D_Cartesian_, _2D_polar_};
+  enum {_angular_lin_, _angular_log_, _comoving_lin_, _comoving_log_, _comoving_multipoles_lin_, _comoving_multipoles_log_, _comovingCartesian_linlin_, _comovingCartesian_linlog_, _comovingCartesian_loglin_, _comovingCartesian_loglog_, _comovingPolar_linlin_, _comovingPolar_linlog_, _comovingPolar_loglin_, _comovingPolar_loglog_};
+  enum {_1D_monopole_, _1D_projected_, _1D_deprojected_, _multipoles_integrated_, _multipole_direct_, _1D_wedges_, _1D_filtered_, _1D_angular_, _2D_Cartesian_, _2D_polar_};
   enum {_natural_, _LandySzalay_};
   enum {_Poisson_, _Jackknife_, _Bootstrap_, _JackknifeTest_, _BootstrapTest_, _None_};
   enum {_comoving_theta_, _comoving_side_};

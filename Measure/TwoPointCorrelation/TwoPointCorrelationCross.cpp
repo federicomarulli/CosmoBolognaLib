@@ -80,7 +80,7 @@ void cosmobl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const Tw
 
   double rMAX;
 
-  if (type==_1D_monopole_ || type==_1D_filtered_)
+  if (type==_1D_monopole_ || type==_1D_filtered_ || type==_multipoles_direct_)
     rMAX = m_dd->sMax();
 
   else if (type==_1D_angular_) {
@@ -89,7 +89,7 @@ void cosmobl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const Tw
     rMAX = max(xx, zz);
   }
 
-  else if (type==_2D_polar_ || type==_1D_multipoles_ || type ==_1D_wedges_) 
+  else if (type==_2D_polar_ || type==_multipoles_integrated_ || type ==_1D_wedges_) 
     rMAX = m_dd->sMax_D1();
   
   else if (type==_2D_Cartesian_ || type==_1D_projected_ || type==_1D_deprojected_)

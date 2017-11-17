@@ -21,9 +21,11 @@ https://arxiv.org/abs/1703.07848
 This is the full list of scientific publications that used the
 CosmoBolognaLib: <a href="../../Doc/papers.txt">publications</a>
 
+<BR>
 
 -----------------------------------------------------------------------------------------------------
 
+<BR>
 
 Author and BDFL:
   - @b Federico @b Marulli (federico.marulli3@unibo.it)
@@ -40,11 +42,13 @@ Other contributors:
   - Mauro Roncarelli (fast comoving distance estimates) 
   - Tommaso Ronconi (void number counts)
 
+<BR>
 
 -----------------------------------------------------------------------------------------------------
 
+<BR>
 
-To @b install the CosmoBolognaLib, please follow the instructions below:
+To @b install @b the @b CosmoBolognaLib, please follow the instructions below:
 
 first, make sure that the following external libraries are present in your system:
 - GSL (GNU Scientific Library) (v2.1 is required)
@@ -53,49 +57,73 @@ first, make sure that the following external libraries are present in your syste
 
 then:
 
-- download the CosmobolognaLib:
+--- for @b Python @b users ---
 
-   - either, clone the public GitHub repository of the CosmobolognaLib with:
-     - git clone git\@github.com:/federicomarulli/CosmoBolognaLib
+> <KBD> $ pip install CosmoBolognaLib --user </KBD> 
+ 
+  or with sudo privileges:
+  
+> <KBD> $ sudo pip install CosmoBolognaLib </KBD> 
 
-   - or, alternatively, download and untar the file:
-     - http://apps.difa.unibo.it/files/people/federico.marulli3/CosmoBolognaLib.tar
+<BR>
 
-- enter the folder CosmoBolognaLib/ and type: make
-  - by default, make will compile the full set of libraries using the GNU project g++ compiler
-  - both the compiler and the compilation flags can be specified by
-    modifying the variables C and FLAGS defined in the Makefile @n
-    (e.g.: make C=icpc FLAGS="-O0 -g")
-  - to compile on MAC OS, the command is: make SYS=MAC
-  - if needed, compile the following external softwares used by the CosmoBolognaLib:
-    - make fftlog-f90 -> compile FFTLog-f90
-    - make CAMB -> compile CAMB
-    - make CLASS -> compile CLASS
-    - make CLASSpy -> compile the Python wrapper for CLASS
-    - make MPTbreeze -> compile MPTbreeze
-    - make mangle -> compile mangle
-  - other Makefile options are:
-    - make lib* -> compile the * library (e.g. make libFUNC will compile the library libFUNC.so)
-    - make python -> compile the Python wrappers (SWIG >v3.0 is
-      required); in this case, CosmoBolognaLib/Python/ has to be added
-      in PYTHONPATH (e.g. in .bashrc add the following line: export
-      PYTHONPATH=$PYTHONPATH:/path_to/CosmoBolognaLib/Python/)
-    - make cleanpy -> remove useless files created by the Python wrappers
-    - make purgepy -> remove the Python wrappers
-    - make allExamples -> compile all the C++ example codes
-    - make cleanExamples -> remove all the object files of the examples
-    - make doc -> create the documentation (Doxygen is required)
-    - make clean -> cleanExamples + remove all the object files of the libraries
-    - make purge -> make clean + remove all the library files (i.e. *.so)
-    - make purgeALL -> make purge + make cleanpy + remove all the files stored for internal calculations
+--- for @b C++ @b users and @b C++/Python @b developers ---
+
+  - download the CosmobolognaLib:
+
+  either, clone the public GitHub repository of the CosmobolognaLib with:
+
+> <KBD> $ git clone git\@github.com:/federicomarulli/CosmoBolognaLib </KBD> 
+
+  or, alternatively, download and untar the file:
+  http://apps.difa.unibo.it/files/people/federico.marulli3/CosmoBolognaLib.tar
+
+  - enter the folder CosmoBolognaLib/ and type:
     
+> <KBD> $ make </KBD> 
+    
+  by default, make will compile the full set of libraries using the
+  GNU project g++ compile; both the compiler and the compilation flags
+  can be specified by modifying the variables C and FLAGS defined in
+  the Makefile @n (e.g.: make C=icpc FLAGS="-O0 -g")
 
-Alternatively, the Python version of the CosmoBolognaLib can be installed with @e pip:
+  - to compile on MAC OS, the command is:
 
-   - sudo pip install CosmoBolognaLib
+> <KBD> $ make SYS=MAC </KBD> 
 
-   or without sudo privileges:
-   
-   - pip install CosmoBolognaLib --user
+  - optionally, the following external softwares used by the CosmoBolognaLib can be compiled with the following commands:
+
+> <KBD> $ make fftlog-f90 </KBD> 
+
+> <KBD> $ make CAMB </KBD> 
+
+> <KBD> $ make CLASS </KBD> 
+
+> <KBD> $ make CLASSpy </KBD>  [ ---> compile the Python wrapper for CLASS) ]
+
+> <KBD> $ make MPTbreeze </KBD> 
+
+> <KBD> $ make mangle </KBD> 
+
+  - other Makefile options are:
+
+> <KBD> $ make lib* </KBD> [ ---> compile the * library (e.g. make libFUNC will compile the library libFUNC.so) ]
+
+> <KBD> $ make python </KBD> [ ---> compile the Python wrappers (SWIG
+  >v3.0 is required); in this case, CosmoBolognaLib/Python/ has to be added in PYTHONPATH (e.g. in .bashrc add the following line: export PYTHONPATH=$PYTHONPATH:/path_to/CosmoBolognaLib/Python/) ]
+
+> <KBD> $ make cleanpy </KBD> [ ---> remove the Python wrappers ]
+    
+> <KBD> $ make allExamples </KBD> [ ---> compile all the C++ example codes ]
+
+> <KBD> $ make cleanExamples </KBD>  [ ---> remove all the object files of the examples ]
+
+> <KBD> $ make doc </KBD> [ ---> create the documentation (Doxygen is required) ]
+
+> <KBD> $ make clean </KBD> [ ---> cleanExamples + remove all the object files of the libraries ]
+
+> <KBD> $ make purge </KBD> [ ---> make clean + remove all the library files (i.e. *.so) ]
+
+> <KBD> $ make purgeALL </KBD>  [---> make purge + make cleanpy + remove all the files stored for internal calculations ]
    
 */

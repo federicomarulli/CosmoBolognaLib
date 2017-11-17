@@ -20,12 +20,16 @@ OBJ2 = 2pt_monopole_errors.o
 OBJ3 = 2pt_2D.o
 OBJ4 = 2pt_projected.o
 OBJ5 = 2pt_angular.o
-OBJ6 = 3pt.o
-OBJ7 = model_2pt_monopole_BAO.o
-OBJ8 = model_2pt_monopole_RSD.o
-OBJ9 = model_2pt_projected.o
-OBJ10 = model_2pt_2D.o
-OBJ11 = model_3pt.o
+OBJ6 = 2pt_multipoles.o
+OBJ7 = 3pt.o
+OBJ8 = model_2pt_monopole_BAO.o
+OBJ9 = model_2pt_monopole_RSD.o
+OBJ10 = model_2pt_projected.o
+OBJ11 = model_2pt_2D.o
+OBJ12 = model_3pt.o
+OBJ13 = compute_pk_sanchez.o
+OBJ14 = MPTbreeze.o
+OBJ15 = EH_vs_CAMB.o
 
 ES = so
 
@@ -48,26 +52,29 @@ endif
 2pt_angular: $(OBJ5) 
 	$(CC) $(OBJ5) -o 2pt_angular $(FLAGS_LIB) 
 
-3pt: $(OBJ6) 
-	$(CC) $(OBJ6) -o 3pt $(FLAGS_LIB)
+2pt_multipoles: $(OBJ6) 
+	$(CC) $(OBJ6) -o 2pt_multipoles $(FLAGS_LIB) 
 
-model_2pt_monopole_BAO: $(OBJ7) 
-	$(CC) $(OBJ7) -o model_2pt_monopole_BAO $(FLAGS_LIB)
+3pt: $(OBJ7) 
+	$(CC) $(OBJ7) -o 3pt $(FLAGS_LIB)
 
-model_2pt_monopole_RSD: $(OBJ8) 
-	$(CC) $(OBJ8) -o model_2pt_monopole_RSD $(FLAGS_LIB)
+model_2pt_monopole_BAO: $(OBJ8) 
+	$(CC) $(OBJ8) -o model_2pt_monopole_BAO $(FLAGS_LIB)
 
-model_2pt_projected: $(OBJ9) 
-	$(CC) $(OBJ9) -o model_2pt_projected $(FLAGS_LIB)
+model_2pt_monopole_RSD: $(OBJ9) 
+	$(CC) $(OBJ9) -o model_2pt_monopole_RSD $(FLAGS_LIB)
 
-model_2pt_2D: $(OBJ10) 
-	$(CC) $(OBJ10) -o model_2pt_2D $(FLAGS_LIB)
+model_2pt_projected: $(OBJ10) 
+	$(CC) $(OBJ10) -o model_2pt_projected $(FLAGS_LIB)
 
-model_3pt: $(OBJ11) 
-	$(CC) $(OBJ11) -o model_3pt $(FLAGS_LIB)
+model_2pt_2D: $(OBJ11) 
+	$(CC) $(OBJ11) -o model_2pt_2D $(FLAGS_LIB)
+
+model_3pt: $(OBJ12) 
+	$(CC) $(OBJ12) -o model_3pt $(FLAGS_LIB)
 
 clean:
-	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 3pt model_2pt_monopole_BAO model_2pt_monopole_RSD model_2pt_projected model_2pt_2D model_3pt *~ \#* temp* core*
+	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 2pt_multipoles 3pt model_2pt_monopole_BAO model_2pt_monopole_RSD model_2pt_projected model_2pt_2D model_3pt *~ \#* temp* core*
 
 
 2pt_monopole.o: 2pt_monopole.cpp makefile $(dirLib)*.$(ES)
@@ -84,6 +91,9 @@ clean:
 
 2pt_angular.o: 2pt_angular.cpp makefile $(dirLib)*.$(ES)
 	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_angular.cpp
+
+2pt_multipoles.o: 2pt_multipoles.cpp makefile $(dirLib)*.$(ES)
+	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_multipoles.cpp
 
 3pt.o: 3pt.cpp makefile $(dirLib)*.$(ES)
 	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 3pt.cpp 

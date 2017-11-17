@@ -339,7 +339,6 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation1D::correlati
 
 shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation1D::correlation_LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
 {
-  vector<double> rad(m_dd->nbins()), xi(m_dd->nbins(), -1.), error(m_dd->nbins(), 1000.);
 
   // number of objects in the data catalogue
   int nD = (nData>0) ? nData : m_data->nObjects();
@@ -362,34 +361,83 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation1D::correlati
   // inverse of the total number of data-random pairs
   double nDRi = 1./(nDw*nRw);
   
-  for (int i=0; i<dd->nbins(); i++) {
-  
-    rad[i] = dd->scale(i);
+  if ( m_dd->pairType() == PairType::_comoving_lin_ || m_dd->pairType() == PairType::_comoving_log_ || m_dd->pairType() == PairType::_angular_lin_ || m_dd->pairType() == PairType::_angular_log_) 
+  {
+    vector<double> rad(m_dd->nbins()), xi(m_dd->nbins(), -1.), error(m_dd->nbins(), 1000.);
 
-    if (dd->PP1D_weighted(i)>0) {
+    for (int i=0; i<dd->nbins(); i++) {
 
-      if (rr->PP1D_weighted(i)<1.e-30) 
-	ErrorCBL("Error in correlation_LandySzalayEstimator() of TwoPointCorrelation1D.cpp: there are no random objects in the bin "+conv(i, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP1D_weighted(i), par::fDP3)+", rr="+conv(rr->PP1D_weighted(i), par::fDP3)+")");
+      rad[i] = dd->scale(i);
 
-      // normalised number of data-data weighted pairs
-      double DD_norm = dd->PP1D_weighted(i)*nDDi;
+      if (dd->PP1D_weighted(i)>0) {
 
-      // normalised number of random-random weighted pairs
-      double RR_norm = rr->PP1D_weighted(i)*nRRi;
+	if (rr->PP1D_weighted(i)<1.e-30) 
+	  ErrorCBL("Error in correlation_LandySzalayEstimator() of TwoPointCorrelation1D.cpp: there are no random objects in the bin "+conv(i, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP1D_weighted(i), par::fDP3)+", rr="+conv(rr->PP1D_weighted(i), par::fDP3)+")");
 
-      // normalised number of data-random weighted pairs
-      double DR_norm = dr->PP1D_weighted(i)*nDRi;
-      
-      // Landy & Szalay estimator
-      xi[i] = max(-1., (DD_norm-2.*DR_norm)/RR_norm+1.);
+	// normalised number of data-data weighted pairs
+	double DD_norm = dd->PP1D_weighted(i)*nDDi;
 
-      // Poisson error
-      error[i] = PoissonError(_LandySzalay_, dd->PP1D(i), rr->PP1D(i), dr->PP1D(i), nD, nR);
-      
+	// normalised number of random-random weighted pairs
+	double RR_norm = rr->PP1D_weighted(i)*nRRi;
+
+	// normalised number of data-random weighted pairs
+	double DR_norm = dr->PP1D_weighted(i)*nDRi;
+
+	// Landy & Szalay estimator
+	xi[i] = max(-1., (DD_norm-2.*DR_norm)/RR_norm+1.);
+
+	// Poisson error
+	error[i] = PoissonError(_LandySzalay_, dd->PP1D(i), rr->PP1D(i), dr->PP1D(i), nD, nR);
+
+      }
     }
+
+    return (!m_compute_extra_info) ? move(unique_ptr<data::Data1D>(new data::Data1D(rad, xi, error))) : data_with_extra_info(dd, rad, xi, error);
   }
+  else if ( m_dd->pairType() == PairType::_comoving_multipoles_lin_ || m_dd->pairType() == PairType::_comoving_multipoles_log_ )
+  {
+    vector<double> rad(3*m_dd->nbins()), xi(3*m_dd->nbins(), -1.), error(3*m_dd->nbins(), 1000.);
+
+
+    for (int l=0; l<3; l++) {
+      for (int i=0; i<dd->nbins(); i++) {
+	int idx = i+l*(dd->nbins()+1);
+
+	rad[i+l*dd->nbins()] = dd->scale(i+l*dd->nbins());
+
+	if (abs(dd->PP1D_weighted(idx))>0) {
+
+	  if (abs(rr->PP1D_weighted(i))<1.e-30) 
+	    ErrorCBL("Error in correlation_LandySzalayEstimator() of TwoPointCorrelation1D.cpp: there are no random objects in the bin "+conv(i, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP1D_weighted(idx), par::fDP3)+", rr="+conv(rr->PP1D_weighted(idx), par::fDP3)+")");
+
+	  // normalised number of data-data weighted pairs
+	  double DD_norm = dd->PP1D_weighted(idx)*nDDi;
+
+	  // normalised number of random-random weighted pairs
+	  double RR_norm = rr->PP1D_weighted(idx)*nRRi;
+
+	  // normalised number of random-random weighted pairs
+	  double RR_iso = rr->PP1D_weighted(i)*nRRi;
+
+	  // normalised number of data-random weighted pairs
+	  double DR_norm = dr->PP1D_weighted(idx)*nDRi;
+
+	  // Landy & Szalay estimator
+	  xi[i+l*dd->nbins()] = (DD_norm+RR_norm-2.*DR_norm)/RR_iso;
+
+	  // Poisson error
+	  error[i+l*dd->nbins()] = PoissonError(_LandySzalay_, dd->PP1D(idx), rr->PP1D(idx), dr->PP1D(idx), nD, nR); ///CHECK!!!!
+
+	  }
+      }
+    }
+
+    return (!m_compute_extra_info) ? move(unique_ptr<data::Data1D>(new data::Data1D(rad, xi, error))) : data_with_extra_info(dd, rad, xi, error);
+  }
+  else
+    ErrorCBL("Error in correlation_LandySzalayEstimator of TwoPointCorrelation.cpp: the chosen two-point correlation function type is uknown!");
   
-  return (!m_compute_extra_info) ? move(unique_ptr<data::Data1D>(new data::Data1D(rad, xi, error))) : data_with_extra_info(dd, rad, xi, error);
+  return move(unique_ptr<data::Data1D>(new data::Data1D()));
 }
 
 

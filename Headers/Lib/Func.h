@@ -204,6 +204,12 @@ using namespace std;
  * correlation function and estimate the errors with different methods
  */
 /**
+ * @example 2pt_multipoles.cpp 
+ *
+ * This example shows how to measure the multipoles of the two-point
+ * correlation function using the "direct" and "integrated" method.
+ */
+/**
  * @example 2pt_2D.cpp 
  *
  * This example shows how to measure the 2D two-point correlation
@@ -824,9 +830,11 @@ namespace cosmobl {
    *
    *  @param m the order m
    *
-   *  @param the angle theta
+   *  @param xx the variable x
    *
-   *  @param the angle phi
+   *  @param yy the variable y
+   *
+   *  @param zz the variable z
    *
    *  @return the order l, degree m spherical harmonics
    */

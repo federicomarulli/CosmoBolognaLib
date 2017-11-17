@@ -69,6 +69,12 @@ namespace cosmobl {
     
       /// 1D pair in comoving coordinates in logarithmic bins
       _comoving_log_,
+      
+      /// 1D pair in comoving coordinates in linear bins, multipoles
+      _comoving_multipoles_lin_,
+    
+      /// 1D pair in comoving coordinates in logarithmic bins, multipoles
+      _comoving_multipoles_log_,
     
       /// 2D pair in comoving Cartesian coordinates (r<SUB>p</SUB>, &pi;) in linear-linear bins
       _comovingCartesian_linlin_,
@@ -187,6 +193,7 @@ namespace cosmobl {
        *  
        *  @param type the pair type; it can be: \_angular_lin\_,
        *  \_angular_log\_, \_comoving_lin\_, \_comoving_log\_
+       *  \_comoving_multipoles_lin\_, \_comoving_multipoles_log\_
        *
        *  @param info the pair information; it can be: \_standard\_ or
        *  \_extra\_
@@ -209,7 +216,8 @@ namespace cosmobl {
        *  @brief static factory used to construct pairs of any type
        *
        *  @param type the pair type; it can be: \_angular_lin\_,
-       *  \_angular_log\_, \_comoving_lin\_, \_comoving_log\_
+       *  \_angular_log\_, \_comoving_lin\_, \_comoving_log\_, 
+       *  \_comoving_multipoles_lin\_, \_comoving_multipoles_log\_
        *
        *  @param info the pair information; it can be: \_standard\_ or
        *  \_extra\_
@@ -227,7 +235,7 @@ namespace cosmobl {
        *  @return a pointer to an object of class Pair of a given type
        */
       static shared_ptr<Pair> Create (const PairType type, const PairInfo info, const double Min, const double Max, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr);
-
+    
       /**
        *  @brief static factory used to construct pairs of any type
        *
@@ -915,6 +923,19 @@ namespace cosmobl {
        */
       virtual void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &kk, double &wkk)
       { (void)obj1; (void)obj2; (void)kk; (void)wkk; cosmobl::ErrorCBL("Error in get() of Pair.h!"); }
+        
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
+       *  @param kk index of the pairs
+       *  @param cosmu cosine of the angle between objects
+       *  @param wkk weight of the pair
+       *  @return none
+       */
+      virtual void get_pair (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, int &kk, double &cosmu, double &wkk) 
+      { (void)obj1; (void)obj2; (void)kk; (void)cosmu; (void)wkk; cosmobl::ErrorCBL("Error in get_pair() of Pair.h!"); }
 
       /**
        *  @brief estimate the distance between two objects and update the
@@ -939,6 +960,18 @@ namespace cosmobl {
        */
       virtual void set_pair (const int kk, const double wkk, const double weight=1)
       { (void)kk; (void)wkk; (void)weight; cosmobl::ErrorCBL("Error in set() of Pair.h!"); }
+
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param cosmu cosine of the angle between objects
+       *  @param kk index of the pairs
+       *  @param wkk weight of the pair
+       *  @param weight the weght of the region
+       *  @return none
+       */
+      virtual void set_pair (const double cosmu, const int kk, const double wkk, const double weight=1) 
+      { (void)cosmu;  (void)kk; (void)wkk; (void)weight; cosmobl::ErrorCBL("Error in set_pair() of Pair.h!"); }
 
       /**
        *  @brief estimate the distance between two objects and update the

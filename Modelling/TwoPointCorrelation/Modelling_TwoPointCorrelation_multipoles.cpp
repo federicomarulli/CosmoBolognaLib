@@ -123,7 +123,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fi
   m_data_fit = make_shared<cosmobl::data::Data1D>(cosmobl::data::Data1D(xx, data, covariance));
   m_fit_range = true; 
 
-  m_nmultipoles_fit=0;
+  m_nmultipoles_fit = 0;
   for (size_t i =0; i<use_pole.size(); i++)
     m_nmultipoles_fit += use_pole[i];
 }

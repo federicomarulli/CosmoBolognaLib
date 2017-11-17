@@ -36,7 +36,8 @@
 #include "TwoPointCorrelation1D_monopole.h"
 #include "TwoPointCorrelation1D_filtered.h"
 #include "TwoPointCorrelation_deprojected.h"
-#include "TwoPointCorrelation_multipoles.h"
+#include "TwoPointCorrelation_multipoles_direct.h"
+#include "TwoPointCorrelation_multipoles_integrated.h"
 #include "TwoPointCorrelation_wedges.h"
 
 using namespace cosmobl;
@@ -55,6 +56,8 @@ shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Cr
   if (type==_1D_angular_) return move(unique_ptr<TwoPointCorrelation1D_angular>(new TwoPointCorrelation1D_angular(data, random, binType, Min, Max, nbins, shift, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
   
   else if (type==_1D_monopole_) return move(unique_ptr<TwoPointCorrelation1D_monopole>(new TwoPointCorrelation1D_monopole(data, random, binType, Min, Max, nbins, shift, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
+
+  else if (type==_multipoles_direct_) return move(unique_ptr<TwoPointCorrelation_multipoles_direct>(new TwoPointCorrelation_multipoles_direct(data, random, binType, Min, Max, nbins, shift, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
   
   else ErrorCBL("Error in cosmobl::measure::twopt::TwoPointCorrelation::Create of TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!");
   
@@ -70,6 +73,8 @@ shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Cr
   if (type==_1D_angular_) return move(unique_ptr<TwoPointCorrelation1D_angular>(new TwoPointCorrelation1D_angular(data, random, binType, Min, Max, binSize, shift, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
   
   else if (type==_1D_monopole_) return move(unique_ptr<TwoPointCorrelation1D_monopole>(new TwoPointCorrelation1D_monopole(data, random, binType, Min, Max, binSize, shift, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
+
+  else if (type==_multipoles_direct_) return move(unique_ptr<TwoPointCorrelation_multipoles_direct>(new TwoPointCorrelation_multipoles_direct(data, random, binType, Min, Max, binSize, shift, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
   
   else ErrorCBL("Error in cosmobl::measure::twopt::TwoPointCorrelation::Create of TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!");
   
@@ -86,7 +91,7 @@ shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Cr
 
   else if (type==_1D_deprojected_) return move(unique_ptr<TwoPointCorrelation_deprojected>(new TwoPointCorrelation_deprojected(data, random, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, piMax_integral, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
-  else if (type==_1D_multipoles_) return move(unique_ptr<TwoPointCorrelation_multipoles>(new TwoPointCorrelation_multipoles(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
+  else if (type==_multipoles_integrated_) return move(unique_ptr<TwoPointCorrelation_multipoles_integrated>(new TwoPointCorrelation_multipoles_integrated(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
   else if (type==_1D_wedges_) return move(unique_ptr<TwoPointCorrelation_wedges>(new TwoPointCorrelation_wedges(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
@@ -107,7 +112,7 @@ shared_ptr<TwoPointCorrelation> cosmobl::measure::twopt::TwoPointCorrelation::Cr
 
   else if (type==_1D_deprojected_) return move(unique_ptr<TwoPointCorrelation_deprojected>(new TwoPointCorrelation_deprojected(data, random, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, piMax_integral, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
-  else if (type==_1D_multipoles_) return move(unique_ptr<TwoPointCorrelation_multipoles>(new TwoPointCorrelation_multipoles(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
+  else if (type==_multipoles_integrated_) return move(unique_ptr<TwoPointCorrelation_multipoles_integrated>(new TwoPointCorrelation_multipoles_integrated(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
   else if (type==_1D_wedges_) return move(unique_ptr<TwoPointCorrelation_wedges>(new TwoPointCorrelation_wedges(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
@@ -265,7 +270,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs (const TwoPTyp
 
   double rMAX;
 
-  if (type==_1D_monopole_ || type==_1D_filtered_)
+  if (type==_1D_monopole_ || type==_multipoles_direct_ || type==_1D_filtered_)
     rMAX = m_dd->sMax();
 
   else if (type==_1D_angular_) {
@@ -274,7 +279,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs (const TwoPTyp
     rMAX = max(xx, zz);
   }
 
-  else if (type==_2D_polar_ || type==_1D_multipoles_ || type ==_1D_wedges_) 
+  else if (type==_2D_polar_ || type==_multipoles_integrated_ || type ==_1D_wedges_) 
     rMAX = m_dd->sMax_D1();
   
   else if (type==_2D_Cartesian_ || type==_1D_projected_ || type==_1D_deprojected_)
@@ -708,7 +713,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs_region (vector
 
   double rMAX;
 
-  if (type==_1D_monopole_ || type==_1D_filtered_)
+  if (type==_1D_monopole_ || type==_multipoles_direct_ || type==_1D_filtered_)
     rMAX = m_dd->sMax();
 
   else if (type==_1D_angular_) {
@@ -717,7 +722,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs_region (vector
     rMAX = max(xx, zz);
   }
 
-  else if (type==_2D_polar_ || type==_1D_multipoles_ || type ==_1D_wedges_) 
+  else if (type==_2D_polar_ || type==_multipoles_integrated_ || type ==_1D_wedges_) 
     rMAX = m_dd->sMax_D1();
   
   else if (type==_2D_Cartesian_ || type==_1D_projected_ || type==_1D_deprojected_)
@@ -883,7 +888,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (c
     rMAX = max(xx, zz);
   }
 
-  else if (type==_2D_polar_ || type==_1D_multipoles_ || type ==_1D_wedges_) 
+  else if (type==_2D_polar_ || type==_multipoles_integrated_ || type ==_1D_wedges_) 
     rMAX = m_dd->sMax_D1();
   
   else if (type==_2D_Cartesian_ || type==_1D_projected_ || type==_1D_deprojected_)

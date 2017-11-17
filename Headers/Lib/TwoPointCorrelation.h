@@ -75,8 +75,11 @@ namespace cosmobl {
 	/// the deprojected two-point correlation function, &xi;(r)
 	_1D_deprojected_,
     
-	/// the multipoles of the two-point correlation function, &xi;<SUB>i</SUB>(r)
-	_1D_multipoles_,
+	/// the multipoles of the two-point correlation function, &xi;<SUB>i</SUB>(r), computed with the integrated estimator
+	_multipoles_integrated_,
+    
+	/// the multipoles of the two-point correlation function, &xi;<SUB>i</SUB>(r), computed with the direct estimator
+	_multipoles_direct_,
 
 	/// the wedges of the two-point correlation function, &xi;<SUB>i</SUB>(r)
 	_1D_wedges_,
@@ -1376,18 +1379,18 @@ namespace cosmobl {
 	{ cosmobl::ErrorCBL("Error in errorQuadrupole() of TwoPointCorrelation.h!"); vector<double> vv; return vv; }
 	
 	/**
-	 *  @brief get the octupole of the polar xi
-	 *  @return the xiOctupole
+	 *  @brief get the hexadecapole of the polar xi
+	 *  @return the xiHexadecapole
 	 */
-	virtual vector<double> xiOctupole () const 
-	{ cosmobl::ErrorCBL("Error in xiOctupole() of TwoPointCorrelation.h!"); vector<double> vv; return vv; }
+	virtual vector<double> xiHexadecapole () const 
+	{ cosmobl::ErrorCBL("Error in xiHexadecapole() of TwoPointCorrelation.h!"); vector<double> vv; return vv; }
 
 	/**
-	 *  @brief get the error on the octupole of the polar xi
+	 *  @brief get the error on the hexadecapole of the polar xi
 	 *  @return the error on xiOctupole
 	 */
-	virtual vector<double> errorOctupole () const 
-	{ cosmobl::ErrorCBL("Error in xiOctupole() of TwoPointCorrelation.h!"); vector<double> vv; return vv; }
+	virtual vector<double> errorHexadecapole () const 
+	{ cosmobl::ErrorCBL("Error in xiHexadecapole() of TwoPointCorrelation.h!"); vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the perpendicular wedge of the polar xi

@@ -340,6 +340,7 @@ namespace cosmobl {
 	 */
 	vector<double> error1D () const override { vector<double> vv; m_dataset->error(vv); return vv; }
 
+	///@}
 
 	/**
 	 *  @name Member functions to count measure the two-point correlation function
