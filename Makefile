@@ -26,9 +26,9 @@ FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dir_CUBA) -I$(dir_H) -I
 FLAGS_FFTW = -lfftw3 #-lfftw3_omp
 FLAGS_GSL = -lgsl -lgslcblas -lm -L$(HOME)/lib
 
-CUBA_LIB = $(dir_CUBA)libcuba.so
-FLAGS_CUBA = -Wl,-rpath,$(dir_CUBA) -L$(dir_CUBA) -lcuba
-CUBA_COMPILE = cd $(dir_CUBA) && ./makeshared.sh 
+CUBA_LIB = $(dir_CUBA)libcuba.a
+CUBA_COMPILE = cd $(dir_CUBA) && ./configure CFLAGS=-fPIC && make lib
+
 
 FLAGS_LINK = -shared
 
@@ -46,7 +46,6 @@ ifeq ($(SYS),MAC)
         ES = dylib
 	FLAGS_PY = -L$(shell python -c 'from distutils import sysconfig; print sysconfig.get_config_var("LIBDIR")') -lpython2.7 -ldl	
 	CUBA_LIB = $(dir_CUBA)libcuba.a
-	FLAGS_CUBA = $(dir_CUBA)libcuba.a
 	CUBA_COMPILE = cd $(dir_CUBA) && ./configure && make lib
 endif
 
@@ -176,7 +175,7 @@ ALL:
 	make -j3 libCBL
 
 libFUNC: $(OBJ_FUNC) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libFUNC.$(ES) $(OBJ_FUNC) $(FLAGS_CUBA) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
+	$(C) $(FLAGS_LINK) -o $(PWD)/libFUNC.$(ES) $(OBJ_FUNC) $(CUBA_LIB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
 
 libSTAT: $(OBJ_STAT) $(PWD)/Makefile
 	$(C) $(FLAGS_LINK) -o $(PWD)/libSTAT.$(ES) $(OBJ_STAT) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC
@@ -218,7 +217,7 @@ libREADP: $(OBJ_READP) $(PWD)/Makefile
 	$(C) $(FLAGS_LINK) -o $(PWD)/libREADP.$(ES) $(OBJ_READP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC
 
 libCBL: $(OBJ_CBL) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libCBL.$(ES) $(OBJ_CBL) $(FLAGS_CUBA) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
+	$(C) $(FLAGS_LINK) -o $(PWD)/libCBL.$(ES) $(OBJ_CBL) $(CUBA_LIB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
 
 conv: $(dir_FUNC)conv.o
 	$(F) -o $(dir_FUNC)conv $(dir_FUNC)conv.o 
@@ -301,9 +300,9 @@ swig_wrapper: $(dir_Python)CBL_wrap.cxx
 
 python: $(dir_Python)CBL_wrap.o $(OBJ_CBL) $(dir_Python)CBL.i
 	make ALL
-	$(C) -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(dir_Python)/_CosmoBolognaLib.so $(FLAGS_CUBA) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY) -lgfortran
-	cp $(dir_Python)/_CosmoBolognaLib.so $(dir_Python)/CosmoBolognaLib/
-	cp $(dir_Python)/CosmoBolognaLib.py $(dir_Python)/CosmoBolognaLib/
+	$(C) -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(dir_Python)/_CosmoBolognaLib.so $(CUBA_LIB) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY) -lgfortran
+	mv $(dir_Python)/_CosmoBolognaLib.so $(dir_Python)/CosmoBolognaLib/
+	mv $(dir_Python)/CosmoBolognaLib.py $(dir_Python)/CosmoBolognaLib/
 
 doc:
 	rm Doc/html/* Doc/xml/* -rf
@@ -367,12 +366,12 @@ purgeALL:
 	rm -rf External/classgal_v1/output_nonlinear/*
 	cd External/fftlog-f90-master/ ; make clean ; true
 	cd External/mangle/src ; make clean ; true
-	cd External/MPTbreeze-v1/Cuba-1.4/ ; rm -rf config.h config.log config.status demo-fortran.dSYM/ libcuba.a libcuba.so makefile *~ ; true
+	cd External/MPTbreeze-v1/Cuba-1.4/ ; rm -rf config.h config.log config.status demo-fortran.dSYM/ libcuba.a makefile *~ ; true
 	rm -rf External/MPTbreeze-v1/mptbreeze
 	rm -rf External/MPTbreeze-v1/*~
 	rm -rf External/MPTbreeze-v1/output_linear/*
 	rm -rf External/MPTbreeze-v1/output_nonlinear/*
-	cd External/Cuba-4.2 ; rm -rf config.h config.log config.status demo-fortran.dSYM/ libcuba.a libcuba.so makefile *~ ; true
+	cd External/Cuba-4.2 ; rm -rf config.h config.log config.status demo-fortran.dSYM/ libcuba.a makefile *~ ; true
 
 
 #################################################################### 
