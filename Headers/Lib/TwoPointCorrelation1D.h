@@ -80,7 +80,7 @@ namespace cosmobl {
 	 *  @param file output file
 	 *  @return none
 	 */
-	void write_pairs (const shared_ptr<pairs::Pair> PP, const string dir, const string file) const override;
+	virtual void write_pairs (const shared_ptr<pairs::Pair> PP, const string dir, const string file) const override;
 
 	/**
 	 *  @brief read the number of pairs
@@ -89,7 +89,7 @@ namespace cosmobl {
 	 *  @param [in] file input file
 	 *  @return none
 	 */
-	void read_pairs (shared_ptr<pairs::Pair> PP, const vector<string> dir, const string file) const override;
+	virtual void read_pairs (shared_ptr<pairs::Pair> PP, const vector<string> dir, const string file) const override;
 
 	/**
 	 *  @brief write the number of pairs
@@ -98,7 +98,7 @@ namespace cosmobl {
 	 *  @param file output file
 	 *  @return none
 	 */
-	void write_pairs (const vector<shared_ptr<pairs::Pair>> PP, const string dir, const string file) const override;
+	virtual void write_pairs (const vector<shared_ptr<pairs::Pair>> PP, const string dir, const string file) const override;
 
 	/**
 	 *  @brief read the number of pairs
@@ -107,7 +107,7 @@ namespace cosmobl {
 	 *  @param [in] file input file
 	 *  @return none
 	 */
-	void read_pairs (vector<shared_ptr<pairs::Pair>> PP, const vector<string> dir, const string file) const override;
+	virtual void read_pairs (vector<shared_ptr<pairs::Pair>> PP, const vector<string> dir, const string file) const override;
       
 	///@}
 
@@ -154,7 +154,7 @@ namespace cosmobl {
 	 *
 	 *  @return pointer to an object of type Data
 	 */
-	shared_ptr<data::Data> correlation_NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData=0, const double nData_weighted=0., const int nRandom=0, const double nRandom_weighted=0.) override;
+	virtual shared_ptr<data::Data> correlation_NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData=0, const double nData_weighted=0., const int nRandom=0, const double nRandom_weighted=0.) override;
 
 	/**
 	 *  @brief get a dataset containing the two-point correlation
@@ -182,7 +182,7 @@ namespace cosmobl {
 	 *
 	 *  @return pointer to an object of type Data
 	 */
-	shared_ptr<data::Data> correlation_LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData=0, const double nData_weighted=0., const int nRandom=0, const double nRandom_weighted=0.) override;
+	virtual shared_ptr<data::Data> correlation_LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData=0, const double nData_weighted=0., const int nRandom=0, const double nRandom_weighted=0.) override;
 
 	/**
 	 *  @brief measure the jackknife resampling of the two-point
@@ -194,7 +194,7 @@ namespace cosmobl {
 	 *
 	 *  @return pointer to a vector of Data object
 	 */
-	vector<shared_ptr<data::Data>> XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr) override;
+	virtual vector<shared_ptr<data::Data>> XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr) override;
 
 	/**
 	 *  @brief measure the jackknife resampling of the two-point
@@ -208,7 +208,7 @@ namespace cosmobl {
 	 *
 	 *  @return pointer to a vector of Data object
 	 */
-	vector<shared_ptr<data::Data>> XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
+	virtual vector<shared_ptr<data::Data>> XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
 
 	/**
 	 *  @brief measure the jackknife resampling of the two-point
@@ -220,7 +220,7 @@ namespace cosmobl {
 	 *
 	 *  @return pointer to a vector of Data object
 	 */
-	vector<shared_ptr<data::Data>> XiJackknifeTest (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr) override;
+	virtual vector<shared_ptr<data::Data>> XiJackknifeTest (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr) override;
 
 	/**
 	 *  @brief measure the jackknife resampling of the two-point
@@ -235,7 +235,7 @@ namespace cosmobl {
 	 *
 	 *  @return pointer to a vector of Data object
 	 */
-	vector<shared_ptr<data::Data>> XiJackknifeTest (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
+	virtual vector<shared_ptr<data::Data>> XiJackknifeTest (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
 
 	/**
 	 *  @brief measure the bootstrap resampling of the two-point
@@ -252,7 +252,7 @@ namespace cosmobl {
 	 *
 	 *  @return pointer to a vector of Data object
 	 */
-	vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed=3213) override;
+	virtual vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed=3213) override;
 
 	/**
 	 *  @brief measure the bootstrap resampling of the two-point
@@ -271,7 +271,7 @@ namespace cosmobl {
 	 *
 	 *  @return pointer to a vector of Data object
 	 */
-	vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed=3213) override;
+	virtual vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed=3213) override;
 
 	///@}
 

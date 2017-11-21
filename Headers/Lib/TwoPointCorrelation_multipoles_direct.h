@@ -74,6 +74,159 @@ namespace cosmobl {
        */
       class TwoPointCorrelation_multipoles_direct : public TwoPointCorrelation1D_monopole {
 
+        protected:
+
+          /**
+           *  @brief write the number of pairs
+           *  @param PP pointer to an object of class Pair
+           *  @param dir output directory
+           *  @param file output file
+           *  @return none
+           */
+          void write_pairs (const shared_ptr<pairs::Pair> PP, const string dir, const string file) const override;
+
+          /**
+           *  @brief read the number of pairs
+           *  @param [out] PP pointer to an object of class Pair
+           *  @param [in] dir vector of input directories
+           *  @param [in] file input file
+           *  @return none
+           */
+          void read_pairs (shared_ptr<pairs::Pair> PP, const vector<string> dir, const string file) const override;
+
+          /**
+           *  @brief write the number of pairs
+           *  @param PP pointer to a vector of objects of class Pair
+           *  @param dir output directory
+           *  @param file output file
+           *  @return none
+           */
+          void write_pairs (const vector<shared_ptr<pairs::Pair>> PP, const string dir, const string file) const override;
+
+          /**
+           *  @brief read the number of pairs
+           *  @param [out] PP pointer to a vector of objects of class Pair
+           *  @param [in] dir vector of input directories
+           *  @param [in] file input file
+           *  @return none
+           */
+          void read_pairs (vector<shared_ptr<pairs::Pair>> PP, const vector<string> dir, const string file) const override;
+
+          /**
+           *  @brief get a dataset containing the two-point correlation
+           *  function measured with the natural estimator, and its
+           *  Poisson errors
+           *  
+           *  @param dd pointer to an object of type Pair containing the
+           *  data-data pairs
+           *
+           *  @param rr pointer to an object of type Pair containing the
+           *  random-random pairs
+           *
+           *  @param nData number of objects in the data catalogue
+           *
+           *  @param nData_weighted weighted number of objects in the
+           *  data catalogue
+           *
+           *  @param nRandom number of objects in the random catalogue
+           *
+           *  @param nRandom_weighted weighted number of objects in the
+           *  random catalogue
+           *
+           *  @return pointer to an object of type Data
+           */
+          shared_ptr<data::Data> correlation_NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData=0, const double nData_weighted=0., const int nRandom=0, const double nRandom_weighted=0.) override;
+
+          /**
+           *  @brief get a dataset containing the two-point correlation
+           *  function measured with the Landy-Szalay estimator, and its
+           *  Poisson errors
+           *  
+           *  @param dd pointer to an object of type Pair containing the
+           *  data-data pairs
+           *
+           *  @param rr pointer to an object of type Pair containing the
+           *  random-random pairs
+           *
+           *  @param dr pointer to an object of type Pair containing the
+           *  data-random pairs
+           *
+           *  @param nData number of objects in the data catalogue
+           *
+           *  @param nData_weighted weighted number of objects in the
+           *  data catalogue
+           *
+           *  @param nRandom number of objects in the random catalogue
+           *
+           *  @param nRandom_weighted weighted number of objects in the
+           *  random catalogue
+           *
+           *  @return pointer to an object of type Data
+           */
+          shared_ptr<data::Data> correlation_LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData=0, const double nData_weighted=0., const int nRandom=0, const double nRandom_weighted=0.) override;
+
+	/**
+	 *  @brief measure the jackknife resampling of the two-point
+	 *  correlation function, &xi;(r)
+	 *
+	 *  @param dd vector of data-data pairs, divided per regions
+	 *
+	 *  @param rr vector of random-random pairs, divided per regions
+	 *
+	 *  @return pointer to a vector of Data object
+	 */
+	vector<shared_ptr<data::Data>> XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr) override;
+
+	/**
+	 *  @brief measure the jackknife resampling of the two-point
+	 *  correlation function, &xi;(r)
+	 *
+	 *  @param dd vector of data-data pairs, divided per regions
+	 *
+	 *  @param rr vector of random-random pairs, divided per regions
+	 *
+	 *  @param dr vector of data-random pairs, divided per regions
+	 *
+	 *  @return pointer to a vector of Data object
+	 */
+	vector<shared_ptr<data::Data>> XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr) override;
+
+        /**
+         *  @brief measure the bootstrap resampling of the two-point
+         *  correlation function, &xi;(r)
+         *
+         *  @param nMocks number of resampling
+         *
+         *  @param dd vector of data-data pairs, divided per regions
+         *
+         *  @param rr vector of random-random pairs, divided per
+         *  regions
+         *
+         *  @param seed the seed for random number generation
+         *
+         *  @return pointer to a vector of Data object
+         */
+        vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed=3213) override;
+
+        /**
+         *  @brief measure the bootstrap resampling of the two-point
+         *  correlation function, &xi;(r)
+         *
+         *  @param nMocks number of resampling
+         *
+         *  @param dd vector of data-data pairs, divided per regions
+         *
+         *  @param rr vector of random-random pairs, divided per
+         *  regions
+         *
+         *  @param dr vector of data-random pairs, divided per regions  
+         *
+         *  @param seed the seed for random number generation
+         *
+         *  @return pointer to a vector of Data object
+         */
+        vector<shared_ptr<data::Data>> XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed=3213) override;
+
         public:
 
           /**

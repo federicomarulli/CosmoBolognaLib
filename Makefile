@@ -38,15 +38,15 @@ ES = so
 
 Dvar = -DLINUX
 
-ifeq ($(SYS),MAC)
+SYS:=$(shell uname -s)
+
+ifeq ($(SYS),Darwin)
 	Dvar = -DMAC
 	FLAGS0 = -std=c++11 -fopenmp
 	FLAGS_FFTW = -lfftw3 
 	FLAGS_LINK = -dynamiclib -undefined suppress -flat_namespace
         ES = dylib
 	FLAGS_PY = -L$(shell python -c 'from distutils import sysconfig; print sysconfig.get_config_var("LIBDIR")') -lpython2.7 -ldl	
-	CUBA_LIB = $(dir_CUBA)libcuba.a
-	CUBA_COMPILE = cd $(dir_CUBA) && ./configure && make lib
 endif
 
 FLAGST = $(FLAGS0) $(FLAGS)
@@ -301,8 +301,6 @@ swig_wrapper: $(dir_Python)CBL_wrap.cxx
 python: $(dir_Python)CBL_wrap.o $(OBJ_CBL) $(dir_Python)CBL.i
 	make ALL
 	$(C) -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(dir_Python)/_CosmoBolognaLib.so $(CUBA_LIB) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY) -lgfortran
-	mv $(dir_Python)/_CosmoBolognaLib.so $(dir_Python)/CosmoBolognaLib/
-	mv $(dir_Python)/CosmoBolognaLib.py $(dir_Python)/CosmoBolognaLib/
 
 doc:
 	rm Doc/html/* Doc/xml/* -rf
@@ -851,9 +849,8 @@ $(PWD)/External/MPTbreeze-v1/mptbreeze:
 $(PWD)/External/fftlog-f90-master/fftlog-f90:
 	cd $(PWD)/External/fftlog-f90-master ; make clean && make "F90 = gfortran -g -w" && make clean && cd ../..
 
-
 $(PWD)/External/mangle/bin/ransack:
-	cd $(PWD)/External/mangle/src ; make cleaner ; ./configure && make && make clean && cd -
+	cd $(PWD)/External/mangle/src && mkdir -p ../bin && make cleaner ; chmod +x configure && ./configure && make && make clean && cd -
 
 
 $(PWD)/External/VIPERS/venice3.9/venice:

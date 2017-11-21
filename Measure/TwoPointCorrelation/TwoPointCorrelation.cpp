@@ -459,25 +459,25 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_pairs_region (const sha
   
 
   // sum the pairs of the entire sample
-  
+
   switch (pp->pairDim()) {
 
-  case _1D_:
-    for (int i=0; i<pp->nbins(); ++i)
-      for (size_t r=0; r<pp_regions.size(); ++r)
-	pp->add_data1D(i, pp_regions[r]);
-    break;
+    case _1D_:
+      for (size_t i=0; i<pp->PP1D().size(); ++i)
+        for (size_t r=0; r<pp_regions.size(); ++r)
+          pp->add_data1D(i, pp_regions[r]);
+      break;
 
-  case _2D_:
-    for (int i=0; i<pp->nbins_D1(); ++i)
-      for (int j=0; j<pp->nbins_D2(); ++j)
-	for (size_t r=0; r<pp_regions.size(); ++r)
-	  pp->add_data2D(i, j, pp_regions[r]);
-    break;
-      
-  default:
-    ErrorCBL("Error in count_pairs_region of TwoPointCorrelation.cpp, no such type of pair dimension");
-    break;
+    case _2D_:
+      for (int i=0; i<pp->nbins_D1(); ++i)
+        for (int j=0; j<pp->nbins_D2(); ++j)
+          for (size_t r=0; r<pp_regions.size(); ++r)
+            pp->add_data2D(i, j, pp_regions[r]);
+      break;
+
+    default:
+      ErrorCBL("Error in count_pairs_region of TwoPointCorrelation.cpp, no such type of pair dimension");
+      break;
   }
   
 }
