@@ -33,7 +33,9 @@ OBJ15 = EH_vs_CAMB.o
 
 ES = so
 
-ifeq ($(SYS),MAC)
+SYS:=$(shell uname -s)
+
+ifeq ($(SYS),Darwin)
         ES = dylib
 endif
 

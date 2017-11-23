@@ -257,7 +257,7 @@ namespace cosmobl {
            *
 	   *  @param nbins number of bins
 	   *
-           *  @param shift shift parameter, i.e. the radial shift is
+	   *  @param shift shift parameter, i.e. the radial shift is
            *  binSize*shift
 	   *
            *  @param angularUnits angular units

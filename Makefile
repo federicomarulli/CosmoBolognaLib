@@ -1,6 +1,6 @@
 C = g++
 F = gfortran
-SWIG = swig3.0
+SWIG = swig
 
 FLAGS0 = -std=c++11 -fopenmp
 
@@ -296,8 +296,6 @@ allExamples:
 	$(call colorecho, "\n"Compiling the example code: readParameterFile.cpp ... "\n")
 	cd $(PWD)/Examples/readParameterFile/ ; make 
 
-swig_wrapper: $(dir_Python)CBL_wrap.cxx
-
 python: $(dir_Python)CBL_wrap.o $(OBJ_CBL) $(dir_Python)CBL.i
 	make ALL
 	$(C) -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(dir_Python)/_CosmoBolognaLib.so $(CUBA_LIB) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY) -lgfortran
@@ -333,8 +331,8 @@ cleanpy:
 	rm -f $(dir_Python)*~ $(dir_Python)CBL_wrap.o $(dir_Python)CBL_wrap.cxx $(dir_Python)CosmoBolognaLib.py*
 	rm -rf $(dir_Python)dist $(dir_Python)build $(dir_Python)CosmoBolognaLib.egg-info
 	rm -f $(dir_Python)Lib/*~ $(dir_Python)Lib/*.o $(dir_Python)Lib/*.cxx $(dir_Python)Lib/*.py
-	rm -f $(dir_Python)/CosmoBolognaLib/*CosmoBolognaLib* $(dir_Python)CosmoBolognaLib/*~ $(dir_Python)CosmoBolognaLib/*.pyc
-	rm -f $(dir_Python)/_CosmoBolognaLib.so $(dir_Python)/CosmoBolognaLib.py
+	rm -f $(dir_Python)CosmoBolognaLib/*CosmoBolognaLib* $(dir_Python)CosmoBolognaLib/*~ $(dir_Python)CosmoBolognaLib/*.pyc
+	rm -f $(dir_Python)_CosmoBolognaLib.so $(dir_Python)CosmoBolognaLib.py
 
 cleanTEMP:
 	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_FUNC)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_TWOP)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_READP)*~ $(dir_H)*~ $(dir_O)*~ $(PWD)/\#* $(dir_FUNC)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_READP)\#* $(dir_H)\#* $(dir_O)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
@@ -826,7 +824,8 @@ $(dir_Python)CBL_wrap.o: $(dir_Python)CBL_wrap.cxx $(dir_Python)CBL.i $(HH)
 	$(call colorecho, "\n"Compiling the python wrapper. It may take a few minutes ... "\n")
 	$(C) $(FLAGST) -Wno-uninitialized $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)CBL_wrap.cxx -o $(dir_Python)CBL_wrap.o
 
-$(dir_Python)CBL_wrap.cxx: $(dir_Python)CBL.i $(HH) 
+$(dir_Python)CBL_wrap.cxx: $(dir_Python)CBL.i $(HH)
+	$(call colorecho, "\n"Running swig. It may take a few minutes ... "\n")
 	$(SWIG) -python -c++ -I$(dir_H) -I$(dir_O) -I$(dir_EH) $(dir_Python)CBL.i
 
 

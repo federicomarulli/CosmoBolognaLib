@@ -20,7 +20,9 @@ OBJ2 = cleanVoidCatalogue.o
 
 ES = so
 
-ifeq ($(SYS),MAC)
+SYS:=$(shell uname -s)
+
+ifeq ($(SYS),Darwin)
         ES = dylib
 endif
 

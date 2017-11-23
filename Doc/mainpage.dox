@@ -53,7 +53,11 @@ To @b install @b the @b CosmoBolognaLib, please follow the instructions below:
 first, make sure that the following external libraries are present in your system:
 - GSL (GNU Scientific Library) (v2.1 is required)
 - FFTW (Fastest Fourier Transform in the West)
-- OpenMP (Open Multiprocessing) 
+- OpenMP (Open Multiprocessing)
+
+if the paths of these libraries are not the default ones, then they
+have to be added to the LD_LIBRARY_PATH environment variable (e.g.
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/your_path)
 
 then:
 
@@ -83,13 +87,10 @@ then:
 > <KBD> $ make </KBD> 
     
   by default, make will compile the full set of libraries using the
-  GNU project g++ compile; both the compiler and the compilation flags
-  can be specified by modifying the variables C and FLAGS defined in
-  the Makefile @n (e.g.: make C=icpc FLAGS="-O0 -g")
-
-  - to compile on MAC OS, the command is:
-
-> <KBD> $ make SYS=MAC </KBD> 
+  GNU project g++ compile (>=v4.8.4 is required); both the compiler
+  and the compilation flags can be specified by modifying the
+  variables C and FLAGS defined in the Makefile @n (e.g.: make C=icpc
+  FLAGS="-O0 -g")
 
   - optionally, the following external softwares used by the CosmoBolognaLib can be compiled with the following commands:
 
