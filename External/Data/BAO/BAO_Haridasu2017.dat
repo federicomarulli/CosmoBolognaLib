@@ -1,0 +1,11 @@
+#redshift   data       error       data_type  survey             reference
+0.38	     9.980710  0.11380378  DV/rs      BOSS DR12	         Alam et al. 2017  
+0.38	     0.409682  0.01591967  F_AP       ""                 ""    
+0.51        12.668700  0.12887436  DV/rs      ""                 ""
+0.51         0.598924  0.02087891  F_AP       ""                 ""
+0.61        14.4966    0.15006299  DV/rs      ""                 ""
+0.61	     0.761459  0.02694084  F_AP       ""                 ""
+2.33        31.123     1.08722123  DV/rs      BOSS DR12 Ly-alpha Bautista el at. 2017
+2.33         4.164     0.89255812  F_AP       ""                 ""
+2.40        30.206     0.31719079  DV/rs      ""		 du Mas des Bourboux et al. 2017
+2.40         3.962     0.28759346  F_AP       ""                 ""

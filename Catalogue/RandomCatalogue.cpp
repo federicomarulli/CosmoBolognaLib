@@ -125,8 +125,8 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue
     if (ra.size()==0) {
       ra = catalogue.var(_RA_);
       dec = catalogue.var(_Dec_);
-      vector<double> raB = ra , decB = dec;
-    
+      vector<double> raB = ra, decB = dec;
+      
       // the R.A.-Dec coordinates of the random catalogue will be the same as the ones of the real catalogue
       for (int i=0; i<max(0, int(N_R)-1); i++) { // use N_R times more random objects
 	ra.insert(ra.end(), raB.begin(), raB.end());
@@ -335,4 +335,84 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const vector<st
     m_object.push_back(move(Object::Create(_RandomObject_, coord, cosm)));
   }
   
+}
+
+
+// ============================================================================
+
+
+cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const bool dndz_per_stripe, const int nbin, const cosmology::Cosmology cosm, const bool conv, const double sigma, const int seed)
+{
+  if (type!=_createRandom_SDSS_stripes_) ErrorCBL("Error in cosmobl::catalogue::Catalogue::Catalogue : the random catalogue has to be of type _SDSS_stripe_!");
+  
+  vector<double> lambda, eta;
+  vector<int> stripe, stripe_list;
+
+  vector<double> ra, dec;
+
+  for(size_t i=0; i<catalogue.nObjects(); i++){
+    ra.push_back(catalogue.ra(i));
+    dec.push_back(catalogue.dec(i));
+  }
+
+  eq2sdss (ra, dec, lambda, eta);
+
+  sdss_stripe (eta, lambda, stripe, stripe_list);
+
+  std::map< int, vector<double>> lambda_stripe, eta_stripe, redshift_stripe;
+  std::map< int, int> nObj_stripe;
+
+  for (size_t i=0; i<catalogue.nObjects(); i++) 
+  {
+    nObj_stripe[stripe[i]] +=1;
+    lambda_stripe[stripe[i]].push_back(lambda[i]);
+    eta_stripe[stripe[i]].push_back(eta[i]);
+    if(dndz_per_stripe)
+      redshift_stripe[stripe[i]].push_back(catalogue.redshift(i));
+  }
+
+  // Extract random points
+  
+  random::UniformRandomNumbers random(0., 1., seed);
+
+  vector<double> random_lambda, random_eta, random_ra, random_dec, random_redshift;
+
+  for(auto &&ss : stripe_list)
+  {
+    const double MinL = sin(cosmobl::Min(lambda_stripe[ss])*par::pi/180);
+    const double MaxL = sin(cosmobl::Max(lambda_stripe[ss])*par::pi/180);
+    const double deltaL = MaxL-MinL;
+    const double MinE = cosmobl::Min(eta_stripe[ss]);
+    const double MaxE = cosmobl::Max(eta_stripe[ss]);
+    const double deltaE = MaxE-MinE;
+
+    const int nObj = lambda_stripe[ss].size();
+    const int nRan = int(N_R*nObj);
+
+    for(int j=0; j<nRan; j++){
+      random_lambda.push_back(asin(MinL+deltaL*random())*180/par::pi);
+      random_eta.push_back(MinE+deltaE*random());
+      if(dndz_per_stripe)
+	random_redshift.push_back(redshift_stripe[ss][int(random()*(nObj-1))]);
+    }
+  }
+
+  sdss2eq (random_lambda, random_eta, random_ra, random_dec);
+
+  if(!dndz_per_stripe){
+    // generate the redshift distribution from the input catalogue
+
+    vector<double> redshift = catalogue.var(_Redshift_);
+    vector<double> xx, yy, err;
+    distribution(xx, yy, err, redshift, {}, nbin, true, par::defaultString, 1., cosmobl::Min(redshift), cosmobl::Max(redshift), true, conv, sigma);
+
+    // extract the random redshifts from the distribution
+
+    random_redshift = vector_from_distribution(random_ra.size(), xx, yy, catalogue.Min(Var::_Redshift_), catalogue.Max(Var::_Redshift_), seed);
+  }
+
+  for (size_t i =0; i<random_ra.size(); i++) {
+    observedCoordinates coord = {radians(random_ra[i]), radians(random_dec[i]), random_redshift[i]};
+    m_object.push_back(move(Object::Create(_RandomObject_, coord, cosm)));
+  }
 }

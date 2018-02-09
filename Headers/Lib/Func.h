@@ -99,6 +99,14 @@
 #include <fftw3.h>
 /// @endcond
 
+/// @cond FFTWinc
+#include <fftw3.h>
+/// @endcond
+
+/// @cond FFTWinc
+#include <Eigen/Dense>
+/// @endcond
+
 using namespace std;
 
 #include "Constants.h"
@@ -113,6 +121,11 @@ using namespace std;
  *
  *  This example shows how to print vectors and matrices, and how to
  *  remove elements
+ */
+/**
+ *  @example eigen.cpp 
+ *
+ *  This example shows how to use eigen vectorization
  */
 /**
  *  @example randomNumbers.cpp 
@@ -145,10 +158,9 @@ using namespace std;
  *  libraries
  */
 /**
- *  @example fft_fftlog.py
+ *  @example fits.cpp
  *
- *  This example shows how to computes the discrete Fourier
- * of a logarithmically spaced periodic sequence using the FFTlog libraries
+ *  This example shows how to read/write a fits file
  */
 /**
  *  @example covsample.cpp  
@@ -270,6 +282,17 @@ using namespace std;
  * file
  */
 /**
+ * @example numberCounts.cpp
+ *
+ * This example shows how to how to measure the number counts of a catalogue
+ */
+/**
+ * @example numberCounts_errors.cpp
+ *
+ * This example shows how to how to measure the number counts of a
+ * catalogue, computing Poissonian errors
+ */
+/**
  * @example sizeFunction.cpp
  *
  * This example shows how to compute the theoretical size function of
@@ -286,6 +309,18 @@ using namespace std;
  *
  *  This example shows how to convert redshifts into comoving
  *  distances 
+ */
+/**
+ *  @example catalogue.py
+ *
+ *  This example shows how to construct a catalogue of extragalactic
+ *  objects
+ */
+/**
+ *  @example fft_fftlog.py
+ *
+ *  This example shows how to computes the discrete Fourier
+ * of a logarithmically spaced periodic sequence using the FFTlog libraries
  */
 /**
  * @example sizeFunction.py
@@ -402,6 +437,11 @@ namespace cosmobl {
   struct comovingCoordinates { double xx; double yy; double zz; };
   struct observedCoordinates { double ra; double dec; double redshift; };
 
+  typedef Eigen::Matrix<double, 3, 1> Vector3D;
+
+  typedef Eigen::Matrix<double, 4, 1> Vector4D;
+
+  typedef Eigen::Matrix<complex<double>, 1, Eigen::Dynamic> VectorComplex;
 
   /**
    *  @name Functions of generic use  
@@ -838,7 +878,37 @@ namespace cosmobl {
    *
    *  @return the order l, degree m spherical harmonics
    */
-  vector<double> spherical_harmonics (const int l, const int m, const double xx, const double yy, const double zz);
+  complex<double> spherical_harmonics (const int l, const int m, const double xx, const double yy, const double zz);
+
+  /**
+   *  @brief the spherical harmonics up to \f$l_{max}\f$
+   * 
+   *  @param lmax the maximum degree l
+   *
+   *  @param xx the variable x
+   *
+   *  @param yy the variable y
+   *
+   *  @param zz the variable z
+   *
+   *  @return the spherical harmonics up to \f$l_{max}\f$
+   */
+  vector<vector<complex<double>>> spherical_harmonics (const int lmax, const double xx, const double yy, const double zz);
+
+  /**
+   *  @brief the spherical harmonics up to \f$l_{max}\f$
+   * 
+   *  @param lmax the maximum degree l 
+   *
+   *  @param xx the variable x
+   *
+   *  @param yy the variable y
+   *
+   *  @param zz the variable z
+   *
+   *  @return  the spherical harmonics up to \f$l_{max}\f$
+   */
+  vector<complex<double>> spherical_harmonics_array (const int lmax, const double xx, const double yy, const double zz);
 
   /**
    *  @brief the l=0 spherical Bessel function 
@@ -2108,20 +2178,20 @@ namespace cosmobl {
    *  @param [in] FF vector containing the given set of data
    *  @param [in] WW vector containing the weights
    *  @param [in] nbin the number of bins
-   *  @param [in] linear 1 &rarr; linear binning; 0 &rarr; logarithmic
+   *  @param [in] linear true &rarr; linear binning; false &rarr; logarithmic
    *  binning
    *  @param [in] file_out the output file where the distribution is
    *  stored
    *  @param [in] fact factor used to normalized the distribution
    *  @param [in] V1 the minimum limit of the distribution
    *  @param [in] V2 the maximum limit of the distribution
-   *  @param [in] bin_type 1 &rarr; dn/dvar; 0 &rarr; dn/dlogvar
-   *  @param [in] conv 1 &rarr; compute the Gaussian convolvolution of
-   *  the distribution; 0 &rarr; do not convolve
+   *  @param [in] bin_type true &rarr; dn/dvar; false &rarr; dn/dlogvar
+   *  @param [in] conv true &rarr; compute the Gaussian convolvolution of
+   *  the distribution; false &rarr; do not convolve
    *  @param [in] sigma &sigma; of the Gaussian kernel
    *  @return none
    */
-  void distribution (vector<double> &xx, vector<double> &fx, vector<double> &err, const vector<double> FF, const vector<double> WW, const int nbin, const bool linear=1, const string file_out=par::defaultString, const double fact=1., const double V1=par::defaultDouble, const double V2=par::defaultDouble, const bool bin_type=1, const bool conv=0, const double sigma=0);
+  void distribution (vector<double> &xx, vector<double> &fx, vector<double> &err, const vector<double> FF, const vector<double> WW, const int nbin, const bool linear=true, const string file_out=par::defaultString, const double fact=1., const double V1=par::defaultDouble, const double V2=par::defaultDouble, const bool bin_type=true, const bool conv=false, const double sigma=0.);
 
   /**
    *  @brief simple Monte Carlo integration of f(x)
@@ -2399,6 +2469,8 @@ namespace cosmobl {
   /* ======== Alfonso Veropalumbo ======== */
 
   // sdss<->eq transformation
+  void sdss_atbound(double &angle, const double minval, const double maxval);
+  void sdss_atbound2(double &theta, double &phi);
   void eq2sdss (const vector<double>, const vector<double>, vector<double> &, vector<double> &); 
   void sdss2eq (const vector<double>, const vector<double>, vector<double> &, vector<double> &);
   void sdss_stripe (const vector<double>, const vector<double>, vector<int> &, vector<int> &);
@@ -3608,6 +3680,7 @@ namespace cosmobl {
 
 #include "GSLwrapper.h"
 #include "CUBAwrapper.h"
+#include "FITSwrapper.h"
 #include "FuncGrid.h"
 #include "FuncClassFunc.h"
 #include "RandomNumbers.h"

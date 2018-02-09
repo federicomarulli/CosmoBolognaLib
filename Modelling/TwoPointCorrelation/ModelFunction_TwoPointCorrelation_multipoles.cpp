@@ -72,7 +72,7 @@ vector<double> cosmobl::modelling::twopt::xiMultipoles (const vector<double> rad
 
   vector<double> Xi;
 
-  vector<vector<double>> Xil = Xi_l(new_rad, pp->nmultipoles, alpha_perpendicular, alpha_parallel, pp->sigmaNL_perp, pp->sigmaNL_par, bsigma8/pp->sigma8_z, fsigma8/pp->sigma8_z, SigmaS, pp->kk, pp->func_Pk, pp->func_Pk_NW, pp->prec);
+  vector<vector<double>> Xil = Xi_l(new_rad, pp->nmultipoles, alpha_perpendicular, alpha_parallel, pp->sigmaNL_perp, pp->sigmaNL_par, bsigma8/pp->sigma8_z, fsigma8/pp->sigma8_z, SigmaS, 0, pp->kk, pp->func_Pk, pp->func_Pk_NW, pp->prec);
 
   for (size_t i=0; i<Xil.size(); i++)
     for (size_t j=0; j<Xil[i].size(); j++)
@@ -204,7 +204,7 @@ vector<double> cosmobl::modelling::twopt::xiMultipoles_sigma8_bias (const vector
 
   vector<double> Xi;
 
-  vector<vector<double>> Xil = Xi_l(new_rad, pp->nmultipoles, alpha_perpendicular, alpha_parallel, pp->sigmaNL_perp, pp->sigmaNL_par, bsigma8/pp->sigma8_z, fsigma8/pp->sigma8_z, SigmaS, pp->kk, pp->func_Pk, pp->func_Pk_NW, pp->prec);
+  vector<vector<double>> Xil = Xi_l(new_rad, pp->nmultipoles, alpha_perpendicular, alpha_parallel, pp->sigmaNL_perp, pp->sigmaNL_par, bsigma8/pp->sigma8_z, fsigma8/pp->sigma8_z, SigmaS, 0., pp->kk, pp->func_Pk, pp->func_Pk_NW, pp->prec);
 
   for (size_t i=0; i<Xil.size(); i++)
     for (size_t j=0; j<Xil[i].size(); j++)

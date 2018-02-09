@@ -788,14 +788,7 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE  = External/CAMB/
-EXCLUDE += External/classgal_v1/
-EXCLUDE += External/Cuba-4.2/
-EXCLUDE += External/EH/
-EXCLUDE += External/fftlog-f90-master/
-EXCLUDE += External/mangle/
-EXCLUDE += External/MPTbreeze-v1/
-EXCLUDE += External/VIPERS/
+EXCLUDE  = External/
 EXCLUDE += Python/
 EXCLUDE += Examples/
 

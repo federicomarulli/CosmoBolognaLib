@@ -81,6 +81,12 @@ shared_ptr<Pair> cosmobl::pairs::Pair::Create (const PairType type, const PairIn
     
     else if (type==_comoving_log_)
       return move(unique_ptr<Pair1D_comoving_log_extra>{new Pair1D_comoving_log_extra(Min, Max, nbins, shift, angularUnits, angularWeight)});
+    
+    else if (type==_comoving_multipoles_lin_)
+      return move(unique_ptr<Pair1D_comoving_multipoles_lin_extra>{new Pair1D_comoving_multipoles_lin_extra(Min, Max, nbins, shift, angularUnits, angularWeight)});
+    
+    else if (type==_comoving_multipoles_log_)
+      return move(unique_ptr<Pair1D_comoving_multipoles_log_extra>{new Pair1D_comoving_multipoles_log_extra(Min, Max, nbins, shift, angularUnits, angularWeight)});
 
     else ErrorCBL("Error in cosmobl::pairs::Create of Pairs.cpp: no such type of object!");
 
@@ -135,6 +141,12 @@ shared_ptr<Pair> cosmobl::pairs::Pair::Create (const PairType type, const PairIn
     else if (type==_comoving_log_) 
       return move(unique_ptr<Pair1D_comoving_log_extra>{new Pair1D_comoving_log_extra(Min, Max, binSize, shift, angularUnits, angularWeight)});
   
+    else if (type==_comoving_multipoles_lin_)
+      return move(unique_ptr<Pair1D_comoving_multipoles_lin_extra>{new Pair1D_comoving_multipoles_lin_extra(Min, Max, binSize, shift, angularUnits, angularWeight)});
+
+    else if (type==_comoving_multipoles_log_) 
+      return move(unique_ptr<Pair1D_comoving_multipoles_log_extra>{new Pair1D_comoving_multipoles_log_extra(Min, Max, binSize, shift, angularUnits, angularWeight)});
+
     else ErrorCBL("Error in cosmobl::pairs::Create of Pairs.cpp: no such type of object!");
     
   }

@@ -32,6 +32,9 @@
  */
 
 #include "Cosmology.h"
+#include "recombination.Recfast.h"
+#include "cosmology.Recfast.h"
+
 using namespace cosmobl;
 
 
@@ -54,16 +57,78 @@ double cosmobl::cosmology::Cosmology::z_decoupling() const
 // =====================================================================================
 
 
-//redshift at wich occurs baryon photon decoupling, see Hu & Sugiyama (1996).
 double cosmobl::cosmology::Cosmology::z_drag() const
 {
+  double wb = m_Omega_baryon*m_hh*m_hh;
+  double wb2 = wb*wb;
+  double dNeff = m_massless_neutrinos+m_massive_neutrinos-3.046;
+  double dNeff2 = dNeff*dNeff;
+
+  double Yp = 0.2311+0.9520*wb-11.27*wb2+dNeff*(0.01356+0.008581*wb-0.1810*wb2)+dNeff2*(-0.0009795-0.001370*wb+0.01746*wb2);
+
+  vector<double> params(14);
+  int npz=10000;
+  double zstart=1.0e+4, zend=0.001;
+
+  params[0]=npz;
+  params[1]=zstart;
+  params[2]=zend;
+  params[3] = Yp;  // Yp
+  params[4] = par::TCMB;  // Temperature of CMB at z=0
+  params[5] = m_Omega_matter;  // Omega matter 
+  params[6] = m_Omega_baryon;  // Omega Baryons 
+  params[7] = m_Omega_DE;  // Omega Lambda
+  params[8] = m_Omega_k;  // Omega Curvature 
+  params[9] = m_hh;  // h100
+  params[10] = m_massless_neutrinos+m_massive_neutrinos; // effective number of neutrinos 
+  params[11] = 1.14; // fudge-factor; normally F=1.14
+ 
+  params[12] = 0.; // fDM [eV/s] which gives annihilation efficiency; 
+              // typical value fDM=2.0e-24 eV/s (see Chluba 2010 for definitions)
+  params[13] = 0; // switch on/off recombination corrections (Chluba & Thomas 2010)
+
+  vector<double> zarr(npz), Xe_H(npz), Xe_He(npz), Xe(npz), TM(npz);
+
+  Xe_frac(&params[0], &zarr[0], &Xe_H[0], &Xe_He[0], &Xe[0], &TM[0], 0);
+
+  double HHc = m_hh*100*pow(cosmobl::par::kilo*cosmobl::par::pc, -1);
+  double cc_m = par::cc*1000.;
+
+  double rho_cr = 3.*pow(HHc, 2)/(8.*par::pi*par::GN);
+  
+  double rho_b = m_Omega_baryon*rho_cr;
+  double rho_rad = 4.*par::sSB*pow(par::TCMB, 4)*pow(cc_m, -3);
+  double R = 3./4*rho_b/rho_rad;
+
+  double Np = rho_b*(1.-Yp)/par::mp;
+  double kthom = 6.6524616e-29;
+
+  vector<double> zz(npz), dtau(npz), tau(npz);
+  for(int i=0; i<npz; i++){
+    zz[i] = zarr[npz-1-i];
+    double a = 1./(1+zz[i]);
+    dtau[i] = Xe[npz-1-i]*Np*kthom/R*a/(HHc*EE(zz[i]));
+  }
+
+  glob::FuncGrid interp_dtau(zz, dtau, "Spline");
+
+  auto integrand = [&] (double redshift) {return interp_dtau(redshift);};
+
+  auto func = [&] (double redshift)
+  {
+    return gsl::GSL_integrate_qag(integrand, 0., redshift);
+  };
+
+  return gsl::GSL_root_brent (func, 1., 500, 2000);
+  /*
   double wb = m_Omega_baryon*m_hh*m_hh;
   double wm = m_Omega_matter*m_hh*m_hh;
 
   double b1 = 0.313*pow(wm,-0.419)*(1+0.607*pow(wm,0.674));
   double b2 = 0.238*pow(wm,0.223);
-  double zd = 1291*pow(wm,0.251)*(1+b1*pow(wb,b2))/(1+0.659*pow(wm,0.828));
+  double zd = 1291.*pow(wm,0.251)*(1+b1*pow(wb,b2))/(1+0.659*pow(wm,0.828));
   return zd;
+*/
 }
 
 
@@ -126,7 +191,6 @@ double cosmobl::cosmology::Cosmology::rs_CAMB () const
 
 // =====================================================================================
 
-// Fiducial cosmology independent ratio rs/DV (rs,DV [Mpc])
 
 double cosmobl::cosmology::Cosmology::ys (const double redshift, const string method_Pk, const double T_CMB) const
 {
@@ -136,7 +200,6 @@ double cosmobl::cosmology::Cosmology::ys (const double redshift, const string me
 
 // =====================================================================================
 
-// Acoustic parameter (see Eisenstein 2005)
 
 double cosmobl::cosmology::Cosmology::Az (const double redshift) const
 {
@@ -149,8 +212,14 @@ double cosmobl::cosmology::Cosmology::Az (const double redshift) const
 
 double cosmobl::cosmology::Cosmology::sound_speed(const double redshift, const double T_CMB) const
 {
-  double R = 31500.*m_Omega_baryon*m_hh*m_hh*pow(T_CMB/2.7,-4)/(1+redshift);
-  double cs = 1./sqrt(3*(1+R));
+  double rho_b = 3.*pow(100.*m_hh/par::cc, 2)*m_Omega_baryon; // Mpc^-2
+
+  double cc_m = par::cc*1000.;
+  double Mpc = par::pc*1.e6;
+  double rho_rad = 8.*par::pi*par::GN*pow(cc_m, -2)*4.*par::sSB*pow(T_CMB, 4)*pow(cc_m, -3)*pow(Mpc, 2); // Mpc^-2
+  
+  double R = 3./4*rho_b/rho_rad/(1+redshift);
+  double cs = 1./sqrt(3.*(1.+R));
   return par::cc*cs;
 }
 
@@ -182,7 +251,7 @@ double cosmobl::cosmology::Cosmology::rs (const double redshift, const double T_
 {
   function<double(double)> integrand = bind(&Cosmology::rs_integrand, this, std::placeholders::_1, T_CMB);
   double a = 1./(1+redshift);
-  return gsl::GSL_integrate_qag(integrand,0, a)/m_H0;
+  return gsl::GSL_integrate_qag(integrand, 0, a)/m_H0;
 }
 
 

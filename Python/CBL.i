@@ -11,6 +11,7 @@
 %include Lib/Catalogue.i
 %include Lib/LogNormal.i
 %include Lib/Measure.i
+%include Lib/NumberCounts.i
 %include Lib/TwoPointCorrelation.i
 %include Lib/ThreePointCorrelation.i
 %include Lib/Modelling.i

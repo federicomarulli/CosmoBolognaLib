@@ -633,10 +633,10 @@ double cosmobl::cosmology::Cosmology::DD (const double redshift) const
 
 double cosmobl::cosmology::Cosmology::sigma8 (const double redshift) const 
 {
-  if(m_sigma8<0)
+  if (m_sigma8<0)
     ErrorCBL("Error in sigma8 of Cosmology.cpp, sigma8 at z=0 is not set");
 
-  double zero = 0.;
+  const double zero = 0.;
   return m_sigma8*DD(redshift)/DD(zero);
 }
 

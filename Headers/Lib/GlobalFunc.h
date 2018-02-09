@@ -392,6 +392,33 @@ namespace cosmobl {
   /**
    *  @brief set the object region in sub-boxes
    *  @param data input data catalogue
+   *  @param nx side fraction used to divide the box in the x direction 
+   *  @param ny side fraction used to divide the box in the y direction 
+   *  @param nz side fraction used to divide the box in the z direction 
+   *  @return none
+   */
+  void set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, const int nx, const int ny, const int nz);
+
+  /**
+   *  @brief set the object region in angular SubBoxes
+   *  @param data input data catalogue
+   *  @param Cell_size size of the cell in degrees
+   *  @return none
+   */
+  void set_ObjectRegion_RaDec (catalogue::Catalogue &data, const double Cell_size);
+
+  /**
+   *  @brief set the object region in sub-regions using mangle
+   *  @param data input data catalogue
+   *  @param nSamples number of sub-regions
+   *  @param polygonfile name of the input file with polygons
+   *  @return none
+   */
+  void set_ObjectRegion_mangle (catalogue::Catalogue &data, const int nSamples, const string polygonfile);
+
+  /**
+   *  @brief set the object region in sub-boxes
+   *  @param data input data catalogue
    *  @param random random catalogue
    *  @param nx side fraction used to divide the box in the x direction 
    *  @param ny side fraction used to divide the box in the y direction 
@@ -418,6 +445,14 @@ namespace cosmobl {
    *  @return none
    */
   void set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nSamples, const string polygonfile);
+
+  /**
+   *  @brief set the object region in SDSS stripes
+   *  @param data input data catalogue
+   *  @param random random catalogue
+   *  @return none
+   */
+  void set_ObjectRegion_SDSS_stripes (catalogue::Catalogue &data, catalogue::Catalogue &random);
 
   /**
    *  @brief check if the subdivision process produced the correct results
@@ -453,13 +488,87 @@ namespace cosmobl {
 
   ///@{
 
-  vector<double> fit_covariance_matrix_2PCF_monopole(const vector<double> mean, const vector<vector<double>> mock_xi0, const bool doJK, const cosmobl::cosmology::Cosmology cosmology, const double nObjects, const double Volume, const double bias, const double redshift, const double rMin, const double rMax, const int nbins, const cosmobl::binType bin_type, const string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
+  vector<double> fit_covariance_matrix_2PCF_monopole (const vector<double> mean, const vector<vector<double>> mock_xi0, const bool doJK, const cosmobl::cosmology::Cosmology cosmology, const double nObjects, const double Volume, const double bias, const double redshift, const double rMin, const double rMax, const int nbins, const cosmobl::binType bin_type, const string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
 
   shared_ptr<cosmobl::data::Data> generate_mock_2PCF_monopole (const cosmobl::cosmology::Cosmology cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cosmobl::binType bin_type, const string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
 
   shared_ptr<cosmobl::data::Data> generate_mock_2PCF_multipoles (const cosmobl::cosmology::Cosmology cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cosmobl::binType bin_type, const string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
 
   ///@}
+
+  class spherical_harmonics_coeff {
+
+    protected:
+      int m_nbins;
+
+      int m_norder;
+
+      int m_lmax;
+
+      int m_n_sph;
+
+      vector<int> m_n_sph_l;
+
+      vector<vector<complex<double>>> m_alm;
+
+    public:
+
+      spherical_harmonics_coeff () {}
+
+      spherical_harmonics_coeff (const int _norder, const int _nbins=1) { initialize(_norder, _nbins); }
+
+      ~spherical_harmonics_coeff () {}
+
+      double real (const int n, const int bin=0) { return m_alm[bin][n].real();} 
+
+      double imag (const int n, const int bin=0) { return m_alm[bin][n].imag();} 
+
+      void initialize (const int _norder, const int _nbins=1);
+
+      void add (const double xx, const double yy, const double zz, const double ww, const int bin=0);
+
+      double power (const int l, const int bin1, const int bin2);
+
+      void reset ();
+
+  };
+
+
+  /**
+   * @brief compute the triples using
+   * Slepian, Eisenstein 2015 approach
+   *
+   * @param r12_min
+   * @param r12_max
+   * @param r13_min
+   * @param r13_max
+   * @param norders
+   * @param catalogue
+   *
+   * @return the triplets
+   */
+  vector<double> count_triplets_SphericalHarmonics (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const catalogue::Catalogue catalogue);
+
+  /**
+   * @brief compute the triples using Slepian, Eisenstein 2015
+   * approach
+   *
+   * @param rmin
+   * @param rmax
+   * @param nbins
+   * @param norders
+   * @param catalogue
+   *
+   * @return the triplets
+   */
+  vector<vector<vector<double>>> count_triplets_SphericalHarmonics (const double rmin, const double rmax, const int nbins, const int norders, const catalogue::Catalogue catalogue);
+
+   void zeta_SphericalHarmonics (const double rmin, const double rmax, const int nbins , const int norders, const catalogue::Catalogue catalogue, const catalogue::Catalogue random_catalogue);
+
+   vector<double> zeta_SphericalHarmonics (const int nbins, const double side_s, const double side_u, const double perc_increase, const int norders, const catalogue::Catalogue catalogue, const catalogue::Catalogue random_catalogue, const string output_dir, const string output_file);
+
+  vector<double> zeta_SphericalHarmonics (const int nbins, const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const catalogue::Catalogue catalogue, const catalogue::Catalogue random_catalogue, const string output_dir, const string output_file);
+
 }
 
 

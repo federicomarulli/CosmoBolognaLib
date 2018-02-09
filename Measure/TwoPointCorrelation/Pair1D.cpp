@@ -320,7 +320,7 @@ void cosmobl::pairs::Pair1D_comoving_multipoles_lin::get_pair (const shared_ptr<
     
     wkk = obj1->weight()*obj2->weight()*angWeight;
 
-    cosmu = (obj2->zz()-obj1->zz())/dist;
+    cosmu = (obj2->dc()-obj1->dc())/dist;
   }
 }
 
@@ -343,7 +343,7 @@ void cosmobl::pairs::Pair1D_comoving_multipoles_log::get_pair (const shared_ptr<
 
     wkk = obj1->weight()*obj2->weight()*angWeight;
 
-    cosmu = (obj2->zz()-obj1->zz())/dist;
+    cosmu = (obj2->dc()-obj1->dc())/dist;
   }
 }
 
@@ -401,11 +401,17 @@ void cosmobl::pairs::Pair1D_comoving_log::set_pair (const int kk, const double w
 void cosmobl::pairs::Pair1D_comoving_multipoles_lin::set_pair (const double cosmu, const int kk, const double wkk, const double weight)
 {
   if (kk>-1) {
-    for(int l=0; l<3; l++){
-      double leg_pol = cosmobl::legendre_polynomial (cosmu, 2*l);
-      m_PP1D[l*(m_nbins+1)+kk] += leg_pol*weight;
-      m_PP1D_weighted[l*(m_nbins+1)+kk] += wkk*weight*leg_pol;
-    }
+    double cosmu2 = cosmu*cosmu;
+    m_PP1D[kk] += weight;
+    m_PP1D_weighted[kk] += wkk*weight;
+
+    double leg_pol_2 = 0.5*(3.*cosmu2-1);
+    m_PP1D[(m_nbins+1)+kk] += 5.*leg_pol_2*weight ;
+    m_PP1D_weighted[(m_nbins+1)+kk] += 5.*wkk*leg_pol_2*weight;
+
+    double leg_pol_4 = 0.125*(35.*cosmu2*cosmu2-30.*cosmu2+3.);
+    m_PP1D[2.*(m_nbins+1)+kk] += 9.*leg_pol_4*weight;
+    m_PP1D_weighted[2.*(m_nbins+1)+kk] += 9.*wkk*leg_pol_4*weight;
   }
 }
 
@@ -416,11 +422,17 @@ void cosmobl::pairs::Pair1D_comoving_multipoles_lin::set_pair (const double cosm
 void cosmobl::pairs::Pair1D_comoving_multipoles_log::set_pair (const double cosmu, const int kk, const double wkk, const double weight)
 {
   if (kk>-1) {
-    for(int l=0; l<3; l++){
-      double leg_pol = cosmobl::legendre_polynomial (cosmu, 2*l);
-      m_PP1D[l*(m_nbins+1)+kk] += leg_pol*weight;
-      m_PP1D_weighted[l*(m_nbins+1)+kk] += wkk*weight*leg_pol;
-    }
+    double cosmu2 = cosmu*cosmu;
+    m_PP1D[kk] += weight;
+    m_PP1D_weighted[kk] += wkk*weight;
+
+    double leg_pol_2 = 0.5*(3.*cosmu2-1);
+    m_PP1D[(m_nbins+1)+kk] += 5.*leg_pol_2*weight ;
+    m_PP1D_weighted[(m_nbins+1)+kk] += 5.*wkk*leg_pol_2*weight;
+
+    double leg_pol_4 = 0.125*(35.*cosmu2*cosmu2-30.*cosmu2+3.);
+    m_PP1D[2.*(m_nbins+1)+kk] += 9.*leg_pol_4*weight;
+    m_PP1D_weighted[2.*(m_nbins+1)+kk] += 9.*wkk*leg_pol_4*weight;
   }
 }
 
@@ -518,12 +530,20 @@ void cosmobl::pairs::Pair1D_comoving_multipoles_lin::put (const shared_ptr<Objec
     const double angWeight = (m_angularWeight==nullptr) ? 1.
       : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
 
-    double cosmu = (obj2->zz()-obj1->zz())/dist;
-    for(int l=0; l<3; l++){
-      double leg_pol = cosmobl::legendre_polynomial (cosmu, 2*l);
-      m_PP1D[l*(m_nbins+1)+kk] += leg_pol;
-      m_PP1D_weighted[l*(m_nbins+1)+kk] += obj1->weight()*obj2->weight()*angWeight*leg_pol;
-    }
+    const double ww = obj1->weight()*obj2->weight()*angWeight;
+    double cosmu2 = pow((obj2->dc()-obj1->dc())/dist, 2);
+
+    m_PP1D[kk] += 1.;
+    m_PP1D_weighted[kk] += ww;
+
+    double leg_pol_2 = 0.5*(3.*cosmu2-1.);
+    m_PP1D[(m_nbins+1)+kk] += 5.*leg_pol_2 ;
+    m_PP1D_weighted[(m_nbins+1)+kk] += 5.*ww*leg_pol_2;
+
+    double leg_pol_4 = 0.125*(35.*cosmu2*cosmu2-30.*cosmu2+3.);
+    m_PP1D[2.*(m_nbins+1)+kk] += 9.*leg_pol_4;
+    m_PP1D_weighted[2.*(m_nbins+1)+kk] += 9.*ww*leg_pol_4;
+
     
   }
 }
@@ -544,18 +564,18 @@ void cosmobl::pairs::Pair1D_comoving_multipoles_log::put (const shared_ptr<Objec
       : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
 
     const double ww = obj1->weight()*obj2->weight()*angWeight;
-    double cosmu2 = pow((obj2->zz()-obj1->zz())/dist, 2);
+    double cosmu2 = pow((obj2->dc()-obj1->dc())/dist, 2);
 
     m_PP1D[kk] += 1.;
     m_PP1D_weighted[kk] += ww;
 
     double leg_pol_2 = 0.5*(3.*cosmu2-1);
-    m_PP1D[(m_nbins+1)+kk] += leg_pol_2 ;
-    m_PP1D_weighted[(m_nbins+1)+kk] += ww*leg_pol_2;
+    m_PP1D[(m_nbins+1)+kk] += 5.*leg_pol_2 ;
+    m_PP1D_weighted[(m_nbins+1)+kk] += 5.*ww*leg_pol_2;
 
     double leg_pol_4 = 0.125*(35.*cosmu2*cosmu2-30.*cosmu2+3.);
-    m_PP1D[2.*(m_nbins+1)+kk] += leg_pol_4;
-    m_PP1D_weighted[2.*(m_nbins+1)+kk] += ww*leg_pol_4;
+    m_PP1D[2.*(m_nbins+1)+kk] += 9.*leg_pol_4;
+    m_PP1D_weighted[2.*(m_nbins+1)+kk] += 9.*ww*leg_pol_4;
 
   }
 }
@@ -599,7 +619,7 @@ void cosmobl::pairs::Pair1D::Sum (const shared_ptr<Pair> pair, const double ww)
 void cosmobl::pairs::Pair1D_comoving_multipoles_lin::Sum (const shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins != pair->nbins()) 
-    ErrorCBL("Error in cosmobl::pairs::Pair1D_comovinb_multipoles_lin::Sum of Pair.cpp: dimension problems!");
+    ErrorCBL("Error in cosmobl::pairs::Pair1D_comoving_multipoles_lin::Sum of Pair.cpp: dimension problems!");
   
   for (int l=0; l<3; ++l)
     for (int i=0; i<m_nbins; ++i)
@@ -613,7 +633,7 @@ void cosmobl::pairs::Pair1D_comoving_multipoles_lin::Sum (const shared_ptr<Pair>
 void cosmobl::pairs::Pair1D_comoving_multipoles_log::Sum (const shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins != pair->nbins()) 
-    ErrorCBL("Error in cosmobl::pairs::Pair1D_comovinb_multipoles_log::Sum of Pair.cpp: dimension problems!");
+    ErrorCBL("Error in cosmobl::pairs::Pair1D_comoving_multipoles_log::Sum of Pair.cpp: dimension problems!");
   
   for (int l=0; l<3; ++l)
     for (int i=0; i<m_nbins; ++i)

@@ -72,6 +72,7 @@ namespace cosmobl {
        *  - DV
        *  - DV/rs
        *  - rs/DV
+       *  - F_AP
        *  - DA
        *  - DA/rs
        *  - rs/DA
@@ -99,6 +100,7 @@ namespace cosmobl {
        *  - \f$D_V\f$
        *  - \f$D_V/r_s\f$
        *  - \f$r_s/D_V\f$
+       *  - \f$F_{AP}\f$
        *  - \f$D_A\f$
        *  - \f$D_A/r_s\f$
        *  - \f$r_s/D_A\f$

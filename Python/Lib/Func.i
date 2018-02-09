@@ -24,6 +24,13 @@
 %shared_ptr(cosmobl::glob::DistributionRandomNumbers);
 %shared_ptr(cosmobl::glob::CustomDistributionRandomNumbers);
 %shared_ptr(cosmobl::glob::Distribution);
+%shared_ptr(cosmobl::catalogue::Object);
+%shared_ptr(cosmobl::catalogue::RandomObject);
+%shared_ptr(cosmobl::catalogue::Halo);
+%shared_ptr(cosmobl::catalogue::Mock);
+%shared_ptr(cosmobl::catalogue::Galaxy);
+%shared_ptr(cosmobl::catalogue::Cluster);
+%shared_ptr(cosmobl::catalogue::Void);
 %shared_ptr(cosmobl::catalogue::Catalogue);
 
 %{
@@ -56,12 +63,13 @@
     enum {_angular_lin_, _angular_log_, _comoving_lin_, _comoving_log_, _comoving_multipoles_lin_, _comoving_multipoles_log_, _comovingCartesian_linlin_, _comovingCartesian_linlog_, _comovingCartesian_loglin_, _comovingCartesian_loglog_, _comovingPolar_linlin_, _comovingPolar_linlog_, _comovingPolar_loglin_, _comovingPolar_loglog_};
     enum {_1D_monopole_, _1D_projected_, _1D_deprojected_, _multipoles_integrated_, _multipole_direct_, _1D_wedges_, _1D_filtered_, _1D_angular_, _2D_Cartesian_, _2D_polar_};
     enum {_natural_, _LandySzalay_};
-    enum {_Poisson_, _Jackknife_, _Bootstrap_, _JackknifeTest_, _BootstrapTest_, _None_};
+    enum { _dn_dV_, _dn_dlogV_, _N_V_, _n_V_};
+    enum {_Poisson_, _Jackknife_, _Bootstrap_, _JackknifeTest_, _BootstrapTest_, _JackknifeObjects_, _BootstrapObjects_, _None_};
     enum {_comoving_theta_, _comoving_side_};
     enum {_angular_connected_, _angular_reduced_, _comoving_connected_, _comoving_reduced_};
     enum {_GenericObject_, _RandomObject_, _Mock_, _Halo_, _Galaxy_, _Cluster_, _Void_}; 
     enum {_X_, _Y_, _Z_, _RA_, _Dec_, _Redshift_, _Dc_, _Weight_, _Mass_, _Magnitude_, _SFR_, _sSFR_, _Richness_, _RichnessError_, _Vx_, Vy, Vz, _Region_, _Radius_, _DensityContrast_, _CentralDensity_, _Generic_};
-    enum {_createRandom_box_, _createRandom_square_, _createRandom_shuffle_, _createRandom_shuffleTOT_, _createRandom_cone_, _createRandom_MANGLE_, _createRandom_VIPERS_};
+    enum {_createRandom_box_, _createRandom_square_, _createRandom_shuffle_, _createRandom_shuffleTOT_, _createRandom_cone_, _createRandom_MANGLE_, _createRandom_VIPERS_, _createRandom_SDSS_stripes_};
     enum {_LaZeVo_, _RIVA_};
     enum {_ascii_, _binary_};
   };
@@ -232,12 +240,13 @@ class EnumTypes {
   enum {_angular_lin_, _angular_log_, _comoving_lin_, _comoving_log_, _comoving_multipoles_lin_, _comoving_multipoles_log_, _comovingCartesian_linlin_, _comovingCartesian_linlog_, _comovingCartesian_loglin_, _comovingCartesian_loglog_, _comovingPolar_linlin_, _comovingPolar_linlog_, _comovingPolar_loglin_, _comovingPolar_loglog_};
   enum {_1D_monopole_, _1D_projected_, _1D_deprojected_, _multipoles_integrated_, _multipole_direct_, _1D_wedges_, _1D_filtered_, _1D_angular_, _2D_Cartesian_, _2D_polar_};
   enum {_natural_, _LandySzalay_};
-  enum {_Poisson_, _Jackknife_, _Bootstrap_, _JackknifeTest_, _BootstrapTest_, _None_};
+  enum { _dn_dV_, _dn_dlogV_, _N_V_, _n_V_};
+  enum {_Poisson_, _Jackknife_, _Bootstrap_, _JackknifeTest_, _BootstrapTest_, _JackknifeObjects_, _BootstrapObjects_, _None_};
   enum {_comoving_theta_, _comoving_side_};
   enum {_angular_connected_, _angular_reduced_, _comoving_connected_, _comoving_reduced_};
   enum {_GenericObject_, _RandomObject_, _Mock_, _Halo_, _Galaxy_, _Cluster_, _Void_}; 
   enum {_X_, _Y_, _Z_, _RA_, _Dec_, _Redshift_, _Dc_, _Weight_, _Mass_, _Magnitude_, _SFR_, _sSFR_, _Richness_, _RichnessError_, _Vx_, Vy, Vz, _Region_, _Radius_, _DensityContrast_, _CentralDensity_, _Generic_};
-  enum {_createRandom_box_, _createRandom_square_, _createRandom_shuffle_, _createRandom_shuffleTOT_, _createRandom_cone_, _createRandom_MANGLE_, _createRandom_VIPERS_};
+  enum {_createRandom_box_, _createRandom_square_, _createRandom_shuffle_, _createRandom_shuffleTOT_, _createRandom_cone_, _createRandom_MANGLE_, _createRandom_VIPERS_, _createRandom_SDSS_stripes_};
   enum {_LaZeVo_, _RIVA_};
   enum {_ascii_, _binary_};
 };

@@ -72,6 +72,12 @@ namespace cosmobl {
 
 	/// Bootstrap resampling, test
 	_BootstrapTest_,
+  
+	/// Jackknife resampling, by objects
+	_JackknifeObjects_,
+
+	/// Bootstrap resampling, by objects
+	_BootstrapObjects_,
 
 	/// No error computed
 	_None_	

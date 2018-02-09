@@ -223,7 +223,7 @@ void cosmobl::data::Data::set_covariance (const string filename, const int cov_c
 // ======================================================================================
 
 
-void cosmobl::data::Data::cut(const vector<bool> mask, vector<double> &data, vector<double> &error, vector<vector<double>> &covariance_matrix) const
+void cosmobl::data::Data::cut (const vector<bool> mask, vector<double> &data, vector<double> &error, vector<vector<double>> &covariance_matrix) const
 {
   checkDim (mask, m_ndata, "mask");
 

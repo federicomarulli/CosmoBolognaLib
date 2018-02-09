@@ -182,13 +182,13 @@ namespace cosmobl {
     };
 
     /**
-     *  @class UniformRandomNumbers RandomNumbers.h
+     *  @class ConstantRandomNumbers RandomNumbers.h
      *  "Headers/Lib/RandomNumbers.h"
      *
-     *  @brief The class UniformRandomNumbers
+     *  @brief The class ConstantRandomNumbers
      *
-     *  The base class to generate random numbers
-     *  on a interval
+     *  This class return always the same value, 
+     *  written for consistency
      *
      */
     class ConstantRandomNumbers : public RandomNumbers

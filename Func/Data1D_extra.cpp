@@ -114,10 +114,13 @@ void cosmobl::data::Data1D_extra::write (const string dir, const string file, co
   
   fout << "### "<< header <<" ###" << endl;
 
-  for (size_t i=0; i<m_x.size(); ++i) { 
-    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(8) << m_x[i] << "  " << setw(8) << m_data[i] << "  " << setw(8) << m_error[i];
+  for (size_t i=0; i<m_x.size(); ++i) {
+    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << m_x[i] 
+	 << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << m_data[i] 
+	 << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << m_error[i];
+    
     for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-      fout << "  " << setw(8) << m_extra_info[ex][i];
+      fout << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << m_extra_info[ex][i];
     fout << endl;
   }
   

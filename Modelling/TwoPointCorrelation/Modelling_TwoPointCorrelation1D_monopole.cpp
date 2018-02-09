@@ -181,7 +181,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bi
       fin.clear(); fin.close();
       vector<double> mass_grid = logarithmic_bin_vector(m_data_model.cluster_mass_proxy->ndata()/10, Min(m_data_model.cluster_mass_proxy->data()), Max(m_data_model.cluster_mass_proxy->data()));
       vector<double> parameter, bias_eff;
-      m_data_model.cosmology->generate_bias_eff_grid_one_cosmopar(parameter, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], m_data_model.cluster_mass_proxy->data(), mass_grid, m_data_model.cluster_mass_proxy->xx(), m_data_model.model_bias, m_data_model.method_Pk, m_data_model.output_root, m_data_model.Delta, 1., "Spline", m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec);
+      m_data_model.cosmology->generate_bias_eff_grid_one_cosmopar(parameter, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], m_data_model.cluster_mass_proxy->data(), mass_grid, m_data_model.cluster_mass_proxy->xx(), m_data_model.model_bias, m_data_model.method_Pk, m_data_model.meanType, m_data_model.output_root, m_data_model.Delta, 1., "Spline", m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec);
 
       m_data_model.cosmopar_bias_interp_1D = bind(interpolated , placeholders::_1, parameter, bias_eff, "Spline");
 
@@ -193,9 +193,10 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bi
 
       vector<double> parameter1, parameter2;
       vector<vector<double>> bias_eff;
-      m_data_model.cosmology->generate_bias_eff_grid_two_cosmopars(parameter1, parameter2, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], cosmo_param[1], min_par[1], max_par[1], nbins_par[1], m_data_model.cluster_mass_proxy->data(), mass_grid, m_data_model.cluster_mass_proxy->xx(), m_data_model.model_bias, m_data_model.method_Pk, m_data_model.output_root, m_data_model.Delta, 1., "Spline", m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec);
+      m_data_model.cosmology->generate_bias_eff_grid_two_cosmopars(parameter1, parameter2, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], cosmo_param[1], min_par[1], max_par[1], nbins_par[1], m_data_model.cluster_mass_proxy->data(), mass_grid, m_data_model.cluster_mass_proxy->xx(), m_data_model.model_bias, m_data_model.method_Pk, m_data_model.meanType, m_data_model.output_root, m_data_model.Delta, 1., "Spline", m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec);
 
       m_data_model.cosmopar_bias_interp_2D = bind(interpolated_2D , placeholders::_1, placeholders::_2, parameter1, parameter2, bias_eff, "Cubic");
+
     }
     
     else 

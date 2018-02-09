@@ -30,12 +30,15 @@
  *
  *  @author tommaso.ronconi@studio.unibo.it
  */
+
 #include "Func.h"
 #include "Catalogue.h"
 #include "Object.h"
+
 using namespace cosmobl;
 
-cosmobl::catalogue::Gadget_Header cosmobl::catalogue::Catalogue::swap_header (cosmobl::catalogue::Gadget_Header header)
+
+cosmobl::catalogue::Gadget_Header cosmobl::catalogue::Catalogue::m_swap_header (cosmobl::catalogue::Gadget_Header header)
 {
   cosmobl::catalogue::Gadget_Header temp;
   for (int i=0; i<6; i++) temp.npart[i] = IntSwap(header.npart[i]);
@@ -60,15 +63,17 @@ cosmobl::catalogue::Gadget_Header cosmobl::catalogue::Catalogue::swap_header (co
   return temp;
 }
 
+
 //==============================================================================================
 
-void cosmobl::catalogue::Catalogue::check_it_in (ifstream& finr, bool swap)
+
+void cosmobl::catalogue::Catalogue::m_check_it_in (ifstream& finr, bool swap)
 {
   finr.read((char *)&m_blockheader, sizeof(m_blockheader));
   if (swap) m_blockheader = IntSwap(m_blockheader);
 }
 
-void cosmobl::catalogue::Catalogue::check_it_out (ifstream& finr, bool swap)
+void cosmobl::catalogue::Catalogue::m_check_it_out (ifstream& finr, bool swap)
 {
   int check;
   finr.read((char *)&check, sizeof(check));
@@ -83,10 +88,10 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const string fi
   Gadget_Header header;
   string gdgt_head = file_cn+".0";
   ifstream finhead(gdgt_head.c_str()); checkIO(finhead, gdgt_head);
-  check_it_in(finhead, swap);
+  m_check_it_in(finhead, swap);
   finhead.read((char *)&header, sizeof(header));
-  if (swap) header = swap_header(header);
-  check_it_out(finhead, swap);
+  if (swap) header = m_swap_header(header);
+  m_check_it_out(finhead, swap);
   finhead.clear(); finhead.close();
   
   vector<string> components_name = {"Gas", "Halo", "Disk", "Bulge", "Stars", "Boundary"};
@@ -120,16 +125,17 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const string fi
       ifstream finsnap(gdgt_snap.c_str()); checkIO(finsnap, gdgt_snap);
       coutCBL << "Reading file " << i << " of " << header.nfiles << " ..." << endl;
       
-      check_it_in(finsnap,swap);
+      m_check_it_in(finsnap,swap);
       Gadget_Header data;
       finsnap.read((char *)&data, sizeof(data));
-      if (swap) data = swap_header(data);
-      check_it_out(finsnap,swap);
+      if (swap) data = m_swap_header(data);
+      m_check_it_out(finsnap,swap);
       int dimsnap = 0;
       for (int j = 0; j < 6; j++) dimsnap += data.npart[j];
 
       //reading particle positions
-      check_it_in(finsnap,swap);
+      m_check_it_in(finsnap,swap);
+      
       for (int h = 0; h<dimsnap; h++) {
 	
 	comovingCoordinates coords;
@@ -148,11 +154,11 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const string fi
 
 	if (ran()<nSub) m_object.push_back(move(Object::Create(objType, coords)));
       }
-      check_it_out(finsnap,swap);
+      m_check_it_out(finsnap,swap);
       finsnap.clear(); finsnap.close();
     }
 
-  }//read_catalogue=true
+  } //read_catalogue=true
   
   else WarningMsg("Warning: The catalogue is empty!"); //read_catalogue=false
     

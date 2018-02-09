@@ -47,6 +47,25 @@ using namespace pairs;
 using namespace measure;
 using namespace twopt;
 
+// ============================================================================
+
+
+shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::data_with_extra_info (const shared_ptr<pairs::Pair> dd, const vector<double> rad, const vector<double> xi, const vector<double> error) const
+{
+  vector<vector<double>> extra(4);
+  
+  for (int l=0; l<3; l++)
+    for (int i=0; i<dd->nbins(); ++i) {
+      extra[0].push_back(dd->scale_mean(i));
+      extra[1].push_back(dd->scale_sigma(i));
+      extra[2].push_back(dd->z_mean(i));
+      extra[3].push_back(dd->z_sigma(i));
+    }
+
+  
+  return move(unique_ptr<data::Data1D_extra>(new data::Data1D_extra(rad, xi, error, extra)));
+}
+
 
 // ============================================================================
 
@@ -63,10 +82,32 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs
 
   if (PP->pairInfo()==_standard_)
     for (int i=0; i<PP->nbins(); i++) 
-      fout << setiosflags(ios::fixed) << setprecision(5) << setw(8) << i << "   " << setw(8) << PP->scale(i) << "   " << setw(13) << PP->PP1D(i) << "   " << setw(13) << PP->PP1D_weighted(i) << "   " << setw(13) << PP->PP1D(PP->nbins()+1+i) << "   " << setw(13) << PP->PP1D_weighted(PP->nbins()+1+i) << "   " << setw(13) << PP->PP1D(2*(PP->nbins()+1)+i) << "   " << setw(13) << PP->PP1D_weighted(2*(PP->nbins()+1)+i) << endl;
-
+      fout << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << i
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D_weighted(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D(i+PP->nbins()+1)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D_weighted(i+PP->nbins()+1)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D(i+2*(PP->nbins()+1))
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D_weighted(i+2*(PP->nbins()+1)) << endl;
+  else if (PP->pairInfo()==_extra_) 
+    for (int i=0; i<PP->nbins(); i++)
+      fout << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << i
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D_weighted(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D(i+PP->nbins()+1)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D_weighted(i+PP->nbins()+1)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D(i+2*(PP->nbins()+1))
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D_weighted(i+2*(PP->nbins()+1))
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_mean(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_sigma(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->z_mean(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->z_sigma(i) << endl;
   else
       ErrorCBL("Error in write_pairs() of TwoPointCorrelation_multipoles_direct.cpp: no such pairInfo!");
+
+  fout.clear(); fout.close(); coutCBL << "I wrote the file " << file_out << endl;
 }
   
 // ============================================================================
@@ -120,7 +161,54 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs 
 	  
       fin.clear(); fin.close(); coutCBL << "I read the file " << file_in << endl;
     }
-    
+
+  // ----- standard + extra info -----
+
+  else if (PP->pairInfo()==_extra_)
+
+    for (size_t dd=0; dd<dir.size(); dd++) {
+
+      string file_in = dir[dd]+file; 
+      ifstream fin(file_in.c_str()); checkIO(fin, file_in);
+
+      double scale_mean, scale_sigma, z_mean, z_sigma;
+
+      while (getline(fin, line)) {
+
+	stringstream ss(line);
+	vector<double> num;
+	double val;
+	while (ss >> val) num.emplace_back(val);
+
+	if (num.size()!=12)
+	  ErrorCBL("Error in read_pairs() of TwoPointCorrelation_multipoles_direct.cpp: the number of lines in the input pair file: "+file_in+" must be 12!");
+
+	i = int(num[0]);
+
+	scale_mean = num[8];
+	scale_sigma = num[9];
+	z_mean = num[10];
+	z_sigma = num[11];
+
+	pairs = num[2];
+	weighted_pairs = num[3];
+	
+	PP->add_data1D(i, {pairs, weighted_pairs, scale_mean, pow(scale_sigma, 2)*weighted_pairs, z_mean, pow(z_sigma, 2)*weighted_pairs});
+
+	pairs = num[4];
+	weighted_pairs = num[5];
+	
+	PP->add_data1D(PP->nbins()+1+i, {pairs, weighted_pairs, scale_mean, pow(scale_sigma, 2)*weighted_pairs, z_mean, pow(z_sigma, 2)*weighted_pairs});
+
+	pairs = num[6];
+	weighted_pairs = num[7];
+	
+	PP->add_data1D(2*(PP->nbins()+1)+i, {pairs, weighted_pairs, scale_mean, pow(scale_sigma, 2)*weighted_pairs, z_mean, pow(z_sigma, 2)*weighted_pairs});
+      }
+
+      fin.clear(); fin.close(); coutCBL << "I read the file " << file_in << endl;
+    }
+
   else
     ErrorCBL("Error in read_pairs() of TwoPointCorrelation_multipoles_direct.cpp: no such pairInfo!");
     
@@ -150,9 +238,44 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs
 	int index = (cross) ? i*nRegions+j : i*nRegions+j-(i-1)*i/2-i;
 	for (int r1=0; r1<PP[index]->nbins(); r1++)
 	  if (PP[index]->PP1D(r1)>0)
-	    fout << setiosflags(ios::fixed) << setprecision(5) << setw(8) << i << "   " << setw(8) << j << "   " << setw(8) << r1 << "   " << setw(8) << PP[index]->scale(r1) << "   " << setw(8) << PP[index]->PP1D(r1) << "   " << setw(8) << PP[index]->PP1D_weighted(r1) << "   " << setw(8) << PP[index]->PP1D(r1+PP[index]->nbins()+1) << "   " << setw(8) << PP[index]->PP1D_weighted(r1+PP[index]->nbins()+1) << "   " << setw(8) << PP[index]->PP1D(r1+(PP[index]->nbins()+1)*2) << "   " << setw(8) << PP[index]->PP1D_weighted(r1+(PP[index]->nbins()+1)*2) << endl;
+	    fout << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << i
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << j
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << r1
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->scale(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D_weighted(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D(r1+PP[index]->nbins()+1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D_weighted(r1+PP[index]->nbins()+1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D(r1+2*(PP[index]->nbins()+1))
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D_weighted(r1+2*(PP[index]->nbins()+1)) << endl;
       }
-      
+
+
+  // ----- standard + extra info -----
+
+  else if (PP[0]->pairInfo()==_extra_)
+
+    for (size_t i=0; i<nRegions; i++) 
+      for (size_t j=(cross) ? 0 : i; j<nRegions; j++) {
+	int index = (cross) ? i*nRegions+j : i*nRegions+j-(i-1)*i/2-i;
+	for (int r1=0; r1<PP[index]->nbins(); r1++)
+	  if (PP[index]->PP1D(r1)>0)
+	    fout << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << i
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << j
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << r1
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->scale(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D_weighted(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D(r1+PP[index]->nbins()+1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D_weighted(r1+PP[index]->nbins()+1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D(r1+2*(PP[index]->nbins()+1))
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D_weighted(r1+2*(PP[index]->nbins()+1))
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->scale_mean(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->scale_sigma(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->z_mean(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->z_sigma(r1) << endl;
+      }
+
   else
     ErrorCBL("Error in write_pairs() of TwoPointCorrelation_multipoles_direct.cpp: no such pairInfo!");
       
@@ -180,12 +303,33 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs 
       string ff = dir[dd]+file; 
       ifstream fin(ff.c_str()); checkIO(fin, ff);
       
-      while (fin >> i >> j >> bin >> rad >> pairs0 >> weighted_pairs0 >> pairs2 >> weighted_pairs2 >>  pairs4 >> weighted_pairs4) {
+      while (fin >> i >> j >> bin >> rad >> pairs0 >> weighted_pairs0 >> pairs2 >> weighted_pairs2 >> pairs4 >> weighted_pairs4) {
 	index = (cross) ? i*nRegions+j : i*nRegions+j-(i-1)*i/2-i;
 	PP[index]->add_data1D(bin, {pairs0, weighted_pairs0});
 	PP[index]->add_data1D(bin+PP[index]->nbins()+1, {pairs2, weighted_pairs2});
-	PP[index]->add_data1D(bin+(PP[index]->nbins()+1)*2, {pairs4, weighted_pairs4});
+	PP[index]->add_data1D(bin+2*(PP[index]->nbins()+1), {pairs4, weighted_pairs4});
       }
+      
+      fin.clear(); fin.close(); coutCBL << "I read the file " << ff << endl;
+    }
+  
+
+  // ----- standard + extra info -----
+
+  else if (PP[0]->pairInfo()==_extra_)
+
+    for (size_t dd=0; dd<dir.size(); dd++) {
+      string ff = dir[dd]+file; 
+      ifstream fin(ff.c_str()); checkIO(fin, ff);
+      
+      double scale_mean, scale_sigma, z_mean, z_sigma;
+
+      while (fin >> i >> j >> bin >> rad >> pairs0 >> weighted_pairs0 >> pairs2 >> weighted_pairs2 >> pairs4 >> weighted_pairs4 >> scale_mean >> scale_sigma >> z_mean >> z_sigma) {
+	index = (cross) ? i*nRegions+j : i*nRegions+j-(i-1)*i/2-i;
+	PP[index]->add_data1D(bin, {pairs0, weighted_pairs0, scale_mean, pow(scale_sigma, 2)*weighted_pairs0, z_mean, pow(z_sigma, 2)*weighted_pairs0});
+	PP[index]->add_data1D(bin+PP[index]->nbins()+1, {pairs2, weighted_pairs2, scale_mean, pow(scale_sigma, 2)*weighted_pairs0, z_mean, pow(z_sigma, 2)*weighted_pairs0});
+	PP[index]->add_data1D(bin+2*(PP[index]->nbins()+1), {pairs4, weighted_pairs4, scale_mean, pow(scale_sigma, 2)*weighted_pairs0, z_mean, pow(z_sigma, 2)*weighted_pairs0});
+      } 
       
       fin.clear(); fin.close(); coutCBL << "I read the file " << ff << endl;
     }
@@ -563,7 +707,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::set_paramet
   else 
     m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_multipoles_log_, _extra_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
       : move(Pair::Create(_comoving_multipoles_lin_, _extra_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
-    
+  
   m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_multipoles_log_, _standard_, rMin, rMax, nbins, shift, angularUnits))
     : move(Pair::Create(_comoving_multipoles_lin_, _standard_, rMin, rMax, nbins, shift, angularUnits));
   

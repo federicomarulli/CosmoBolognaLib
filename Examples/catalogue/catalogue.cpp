@@ -22,6 +22,9 @@ int main () {
   
     cosmobl::catalogue::Catalogue catalogue1 {cosmobl::catalogue::_Galaxy_, cosmobl::_comovingCoordinates_, {file_catalogue}};
 
+    cout << "The coordinates of the first galaxy in the catalogue are: " <<
+      catalogue1[0]->xx() << ", " << catalogue1[0]->yy() << ", " << catalogue1[0]->zz() << endl;
+
     
     // -----------------------------------------------------------------------------------------------------------------------
     // ------- method II : construct a galaxy catalogue directly from a file, choosing which quantity has to be read ---------

@@ -160,21 +160,21 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets (const 
   double rMAX1 = m_ddd->side_s()*(1.+2.*m_ddd->perc_increase());
   double rMAX2 = m_ddd->side_u()*m_ddd->side_s()*(1.+2.*m_ddd->perc_increase());
  
-  double cell_size = max(5., rMAX2*0.1);
+  double cell_size1 = max(5., rMAX1*0.1);
+  double cell_size2 = max(5., rMAX2*0.1);
   
   ChainMesh_Catalogue ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2;
   
-  if (count_ddd || count_ddr) {
-    ChainMesh_data_rMAX1.set_par(cell_size, m_data, rMAX2);
+  if (count_ddd || count_ddr || count_drr) {
+    ChainMesh_data_rMAX1.set_par(cell_size1, m_data, rMAX2);
     ChainMesh_data_rMAX1.get_searching_region(rMAX1);
-    ChainMesh_data_rMAX2.set_par(cell_size, m_data, rMAX2);
+    ChainMesh_data_rMAX2.set_par(cell_size2, m_data, rMAX2);
   }
-  if (count_rrr || count_drr) {
-    ChainMesh_random_rMAX1.set_par(cell_size, m_random, rMAX2);
+  if (count_rrr || count_ddr || count_drr) {
+    ChainMesh_random_rMAX1.set_par(cell_size1, m_random, rMAX2);
     ChainMesh_random_rMAX1.get_searching_region(rMAX1);
-    ChainMesh_random_rMAX2.set_par(cell_size, m_random, rMAX2);
+    ChainMesh_random_rMAX2.set_par(cell_size2, m_random, rMAX2);
   }
-
   
   // ----------- count the number of triplets ----------- 
 

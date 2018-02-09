@@ -124,7 +124,9 @@ void cosmobl::data::Data1D::write (const string dir, const string file, const st
     fout << "### " << header << " ###" << endl;
 
   for (size_t i=0; i<m_x.size(); i++)
-    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(8) << m_x[i] << "  " << setw(8) << m_data[i] << "  " << setw(8) << m_error[i] << endl;
+    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << m_x[i] 
+	 << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << m_data[i] 
+	 << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << m_error[i] << endl;
    
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
 }
@@ -144,10 +146,38 @@ void cosmobl::data::Data1D::write_covariance (const string dir, const string fil
 
   for (int i=0; i<m_ndata; ++i) 
     for (int j=0; j<m_ndata; ++j) 
-      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(8) << m_x[i] << "  " << setw(8) << m_x[j] << "  " << setw(8) << m_covariance[i][j] << " " << m_covariance[i][j]/sqrt(m_covariance[i][i]*m_covariance[j][j]) << " " << i << " " << j <<  endl;
+      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << m_x[i]
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << m_x[j]
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << m_covariance[i][j]
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << m_covariance[i][j]/sqrt(m_covariance[i][i]*m_covariance[j][j])
+	   << "  " << right << i
+	   << "  " << right << j <<  endl;
    
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
 }
+
+
+// ======================================================================================
+
+
+shared_ptr<Data> cosmobl::data::Data1D::cut(const vector<bool> mask) const
+{
+  checkDim(mask, m_ndata, "mask");
+
+  vector<double> xx;
+  for (size_t i=0; i<mask.size(); i++) 
+    if (mask[i])
+      xx.push_back(m_x[i]);
+
+  vector<double> data, error;
+  vector<vector<double>> covariance;
+  Data::cut(mask, data, error, covariance);
+
+  shared_ptr<Data> dd = make_shared<Data1D>(Data1D(xx, data, covariance));
+
+  return dd;
+}
+
 
 
 // ======================================================================================

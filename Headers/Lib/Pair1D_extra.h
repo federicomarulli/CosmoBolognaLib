@@ -289,7 +289,7 @@ namespace cosmobl {
        *  @param ww the weight
        *  @return none
        */
-      void Sum (const shared_ptr<Pair> pair, const double ww=1) override;
+      virtual void Sum (const shared_ptr<Pair> pair, const double ww=1) override;
       
       ///@}
     
@@ -783,7 +783,7 @@ namespace cosmobl {
     
     };
 
-  
+ 
     // ============================================================================================
     // ============================================================================================
 
@@ -895,7 +895,320 @@ namespace cosmobl {
       ///@}
     
     };
+  
+    // ============================================================================================
+    // ============================================================================================
 
+
+    /**
+     *  @class Pair1D_comoving_multipoles_extra Pair1D_extra.h "Headers/Lib/Pair1D_extra.h"
+     *
+     *  @brief The class Pair1D_comoving_multipoles_extra
+     *
+     *  This class is used to handle objects of type <EM> Pair1D_comoving_multipoles_extra
+     *  </EM>.
+     */
+    class Pair1D_comoving_multipoles_extra : public virtual Pair1D_extra, public virtual Pair1D_comoving_multipoles {
+  
+    public:
+  
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{
+
+      /**
+       *  @brief default constructor
+       *  @return object of class Pair1D_comoving_multipoles_extra
+       */
+      Pair1D_comoving_multipoles_extra () = default;
+    
+      /**
+       *  @brief constructor
+       *  @param rMin minimum separation used to count the pairs
+       *  @param rMax maximum separation used to count the pairs
+       *  @param nbins number of bins
+       *  @param shift shift parameter, i.e. the radial shift is
+       *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
+       *  @return object of class Pair1D_comoving_multipoles_extra
+       */
+      Pair1D_comoving_multipoles_extra (const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D_comoving_multipoles(rMin, rMax, nbins, shift, angularUnits, angularWeight) {} 
+  
+      /**
+       *  @brief constructor
+       *  @param rMin minimum separation used to count the pairs
+       *  @param rMax maximum separation used to count the pairs
+       *  @param binSize size of the bins
+       *  @param shift shift parameter, i.e. the radial shift is
+       *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
+       *  @return object of class Pair1D_comoving_multipoles_extra
+       */
+      Pair1D_comoving_multipoles_extra (const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D_comoving_multipoles(rMin, rMax, binSize, shift, angularUnits, angularWeight) {} 
+  
+      /**
+       *  @brief default destructor
+       *  @return none
+       */
+      virtual ~Pair1D_comoving_multipoles_extra () = default;
+
+      ///@}
+
+    };
+
+    // ============================================================================================
+    // ============================================================================================
+
+    /**
+     *  @class Pair1D_comoving_multipoles_lin_extra Pair1D_extra.h "Headers/Lib/Pair1D_extra.h"
+     *
+     *  @brief The class Pair1D_comoving_multipoles_lin_extra
+     *
+     *  This class is used to handle objects of type <EM> Pair1D_comoving_multipoles_lin_extra
+     *  </EM>.
+     */
+    class Pair1D_comoving_multipoles_lin_extra : public virtual Pair1D_comoving_multipoles_extra, public virtual Pair1D_comoving_multipoles_lin {
+
+    public:
+
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{
+
+      /**
+       *  @brief default constructor
+       *  @return object of class Pair1D_comoving_multipoles_lin_extra
+       */
+      Pair1D_comoving_multipoles_lin_extra ()
+	{
+	  m_pairType = _comoving_multipoles_lin_;
+	  m_pairInfo = _extra_;
+	} 
+
+      /**
+       *  @brief constructor
+       *  @param rMin minimum separation used to count the pairs
+       *  @param rMax maximum separation used to count the pairs
+       *  @param nbins number of bins
+       *  @param shift shift parameter, i.e. the radial shift is
+       *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
+       *  @return object of class Pair1D_comoving_multipoles_lin_extra
+       */
+      Pair1D_comoving_multipoles_lin_extra (const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D(1., nbins, shift, angularUnits, angularWeight), Pair1D_comoving_multipoles(rMin, rMax, nbins, shift, angularUnits, angularWeight)
+	{
+	  m_pairType = _comoving_multipoles_lin_;
+	  m_pairInfo = _extra_;
+	  m_set_parameters_nbins();
+	  m_PP1D.resize(3*(m_nbins+1), 0.);
+	  m_PP1D_weighted.resize(3*(m_nbins+1), 0.);
+	  m_scale_mean.resize(3*(m_nbins+1), 0.);
+	  m_scale_S.resize(3*(m_nbins+1), 0.);
+	  m_scale_sigma.resize(3*(m_nbins+1), 0.);
+	  m_z_mean.resize(3*(m_nbins+1), 0.);
+	  m_z_S.resize(3*(m_nbins+1), 0.);
+	  m_z_sigma.resize(3*(m_nbins+1), 0.);
+	  m_fact_scale.resize(3*(m_nbins+1), -1.);
+	  m_fact_z.resize(3*(m_nbins+1), -1.);
+	}
+  
+      /**
+       *  @brief constructor
+       *  @param rMin minimum separation used to count the pairs
+       *  @param rMax maximum separation used to count the pairs
+       *  @param binSize size of the bins
+       *  @param shift shift parameter, i.e. the radial shift is
+       *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
+       *  @return object of class Pair1D_comoving_multipoles_lin_extra
+       */
+      Pair1D_comoving_multipoles_lin_extra (const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), Pair1D_comoving_multipoles(rMin, rMax, binSize, shift, angularUnits, angularWeight)
+	{
+	  m_pairType = _comoving_multipoles_lin_;
+	  m_pairInfo = _extra_;
+	  m_set_parameters_binSize();
+	  m_PP1D.resize(3*(m_nbins+1), 0.);
+	  m_PP1D_weighted.resize(3*(m_nbins+1), 0.);
+	  m_scale_mean.resize(3*(m_nbins+1), 0.);
+	  m_scale_S.resize(3*(m_nbins+1), 0.);
+	  m_scale_sigma.resize(3*(m_nbins+1), 0.);
+	  m_z_mean.resize(3*(m_nbins+1), 0.);
+	  m_z_S.resize(3*(m_nbins+1), 0.);
+	  m_z_sigma.resize(3*(m_nbins+1), 0.);
+	  m_fact_scale.resize(3*(m_nbins+1), -1.);
+	  m_fact_z.resize(3*(m_nbins+1), -1.);
+	} 
+   
+  
+      /**
+       *  @brief default destructor
+       *  @return none
+       */
+      ~Pair1D_comoving_multipoles_lin_extra () = default;
+
+      ///@}
+  
+  
+      /**
+       *  @name Member functions used to handle pairs
+       */
+      ///@{
+  
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
+       *  @return none
+       */
+      void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
+
+      /**
+       *  @brief sum the number of binned pairs
+       *  @param pair an object of class Pair
+       *  @param ww the weight
+       *  @return none
+       */
+      virtual void Sum (const shared_ptr<Pair> pair, const double ww=1) override;
+  
+      ///@}
+    
+    }; 
+
+
+    // ============================================================================================
+    // ============================================================================================
+
+    /**
+     *  @class Pair1D_comoving_multipoles_log_extra Pair1D_extra.h "Headers/Lib/Pair1D_extra.h"
+     *
+     *  @brief The class Pair1D_comoving_multipoles_log_extra
+     *
+     *  This class is used to handle objects of type <EM> Pair1D_comoving_multipoles_log_extra
+     *  </EM>.
+     */
+    class Pair1D_comoving_multipoles_log_extra : public virtual Pair1D_comoving_multipoles_extra, public virtual Pair1D_comoving_multipoles_log {
+
+    public:
+
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{
+
+      /**
+       *  @brief default constructor
+       *  @return object of class Pair1D_comoving_multipoles_log_extra
+       */
+      Pair1D_comoving_multipoles_log_extra ()
+	{
+	  m_pairType = _comoving_multipoles_log_;
+	  m_pairInfo = _extra_;
+	} 
+
+      /**
+       *  @brief constructor
+       *  @param rMin minimum separation used to count the pairs
+       *  @param rMax maximum separation used to count the pairs
+       *  @param nbins number of bins
+       *  @param shift shift parameter, i.e. the radial shift is
+       *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
+       *  @return object of class Pair1D_comoving_multipoles_log_extra
+       */
+      Pair1D_comoving_multipoles_log_extra (const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D(1., nbins, shift, angularUnits, angularWeight), Pair1D_comoving_multipoles(rMin, rMax, nbins, shift, angularUnits, angularWeight)
+	{
+	  m_pairType = _comoving_multipoles_log_;
+	  m_pairInfo = _extra_;
+	  m_set_parameters_nbins();
+	  m_PP1D.resize(3*(m_nbins+1), 0.);
+	  m_PP1D_weighted.resize(3*(m_nbins+1), 0.);
+	  m_scale_mean.resize(3*(m_nbins+1), 0.);
+	  m_scale_S.resize(3*(m_nbins+1), 0.);
+	  m_scale_sigma.resize(3*(m_nbins+1), 0.);
+	  m_z_mean.resize(3*(m_nbins+1), 0.);
+	  m_z_S.resize(3*(m_nbins+1), 0.);
+	  m_z_sigma.resize(3*(m_nbins+1), 0.);
+	  m_fact_scale.resize(3*(m_nbins+1), -1.);
+	  m_fact_z.resize(3*(m_nbins+1), -1.);
+	}
+  
+      /**
+       *  @brief constructor
+       *  @param rMin minimum separation used to count the pairs
+       *  @param rMax maximum separation used to count the pairs
+       *  @param binSize size of the bins
+       *  @param shift shift parameter, i.e. the radial shift is
+       *  binSize*shift
+       *  @param angularUnits angular units
+       *  @param angularWeight angular weight function
+       *  @return object of class Pair1D_comoving_multipoles_log_extra
+       */
+      Pair1D_comoving_multipoles_log_extra (const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr)
+	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), Pair1D_comoving_multipoles(rMin, rMax, binSize, shift, angularUnits, angularWeight)
+	{
+	  m_pairType = _comoving_multipoles_log_;
+	  m_pairInfo = _extra_;
+	  m_set_parameters_binSize();
+	  m_PP1D.resize(3*(m_nbins+1), 0.);
+	  m_PP1D_weighted.resize(3*(m_nbins+1), 0.);
+	  m_scale_mean.resize(3*(m_nbins+1), 0.);
+	  m_scale_S.resize(3*(m_nbins+1), 0.);
+	  m_scale_sigma.resize(3*(m_nbins+1), 0.);
+	  m_z_mean.resize(3*(m_nbins+1), 0.);
+	  m_z_S.resize(3*(m_nbins+1), 0.);
+	  m_z_sigma.resize(3*(m_nbins+1), 0.);
+	  m_fact_scale.resize(3*(m_nbins+1), -1.);
+	  m_fact_z.resize(3*(m_nbins+1), -1.);
+	} 
+   
+  
+      /**
+       *  @brief default destructor
+       *  @return none
+       */
+      ~Pair1D_comoving_multipoles_log_extra () = default;
+
+      ///@}
+  
+  
+      /**
+       *  @name Member functions used to handle pairs
+       */
+      ///@{
+  
+      /**
+       *  @brief estimate the distance between two objects and update the
+       *  pair vector accordingly
+       *  @param obj1 pointer to an object of class Object
+       *  @param obj2 pointer to an object of class Object
+       *  @return none
+       */
+      void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
+
+      /**
+       *  @brief sum the number of binned pairs
+       *  @param pair an object of class Pair
+       *  @param ww the weight
+       *  @return none
+       */
+      virtual void Sum (const shared_ptr<Pair> pair, const double ww=1) override;
+  
+      ///@}
+    
+    }; 
   }
 }
 

@@ -258,6 +258,13 @@ namespace cosmobl {
        */
       shared_ptr<Data> cut(const double xmin, const double xmax) const override;
 
+      /**
+       * @brief cut the data, for Data1D
+       * @param [in] mask vector containing values to be masked
+       * @return pointer to an object of type Data1D
+       */
+      shared_ptr<Data> cut(const vector<bool> mask) const;
+
       ///@}
 
     };

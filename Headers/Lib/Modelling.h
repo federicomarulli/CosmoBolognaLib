@@ -117,6 +117,18 @@ namespace cosmobl {
        * @return pointer to the current dataset
        */
       shared_ptr<data::Data> data () { return m_data; }
+      
+      /**
+       * @brief return the dataset
+       * @return pointer to the current dataset
+       */
+      shared_ptr<data::Data> data_fit () 
+      { 
+	if (!m_fit_range) 
+	  ErrorCBL("Error in data_fit of Modelling, no fit range has been set!");
+
+	return m_data_fit; 
+      }
 
       /**
        * @brief return the model

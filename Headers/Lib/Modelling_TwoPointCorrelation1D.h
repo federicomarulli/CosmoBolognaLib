@@ -442,11 +442,15 @@ namespace cosmobl {
 	 *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
 	 *  correction of Warren 2004), Tinker (Tinker et al. 2010)
 	 *
+	 *  @param meanType meanType="mean_bias" \f$\rightarrow\f$ the
+	 *  effective bias is the mean bias; meanType="mean_pair_bias"
+	 *  \f$\rightarrow\f$ the effective bias is pair mean bias
+	 *
 	 *  @param seed seed for scatter in scaling relation
 	 *
 	 *  @return none
 	 */
-	void set_data_model (const cosmology::Cosmology cosmology={}, const double redshift=0., const string method_Pk="CAMB", const double sigmaNL_perp=0., const double sigmaNL_par=0., const bool NL=true, const double bias=1., const double pimax=40., const double r_min=1., const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=500,  const string output_dir=par::defaultString, const string output_root="test", const int norm=-1, const double aa=0., const bool GSL=true, const double prec=1.e-3, const string file_par=par::defaultString, const double Delta=200., const bool isDelta_vir=true, const vector<double> cluster_redshift={}, const vector<double> cluster_mass_proxy={}, const vector<double> cluster_mass_proxy_error={}, const string model_bias="Tinker", const int seed=744524123);
+	void set_data_model (const cosmology::Cosmology cosmology={}, const double redshift=0., const string method_Pk="CAMB", const double sigmaNL_perp=0., const double sigmaNL_par=0., const bool NL=true, const double bias=1., const double pimax=40., const double r_min=1., const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=500,  const string output_dir=par::defaultString, const string output_root="test", const int norm=-1, const double aa=0., const bool GSL=true, const double prec=1.e-3, const string file_par=par::defaultString, const double Delta=200., const bool isDelta_vir=true, const vector<double> cluster_redshift={}, const vector<double> cluster_mass_proxy={}, const vector<double> cluster_mass_proxy_error={}, const string model_bias="Tinker", const string meanType="mean_bias", const int seed=744524123);
 	
 	/**
 	 *  @brief set the data used to construct the HOD model

@@ -814,7 +814,7 @@ namespace cosmobl {
        *  @return none
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
-  
+
       ///@}
 
     };
@@ -973,7 +973,7 @@ namespace cosmobl {
        *  @return none
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
-  
+
       ///@}
 
     };
@@ -1132,7 +1132,7 @@ namespace cosmobl {
        *  @return none
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
-  
+
       ///@}
 
     };
@@ -1440,7 +1440,7 @@ namespace cosmobl {
        *  @return none
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
-  
+
       ///@}
 
     };
@@ -1596,7 +1596,7 @@ namespace cosmobl {
        *  @return none
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
-  
+
       ///@}
 
     };
@@ -1752,7 +1752,7 @@ namespace cosmobl {
        *  @return none
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
-  
+
       ///@}
 
     };
@@ -1907,7 +1907,7 @@ namespace cosmobl {
        *  @return none
        */
       void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) override;
-  
+
       ///@}
 
     };  

@@ -55,7 +55,7 @@ namespace cosmobl {
       /// Identity function
       _UniformDistribution_,
 
-      ///Gaussian function
+      /// Gaussian function
       _GaussianDistribution_,
 
       /// Poisson function
@@ -81,7 +81,7 @@ namespace cosmobl {
      *  This class is used to define the distribution
      */
     class Distribution {
-
+          
     protected:
 
       /// the type of distribution

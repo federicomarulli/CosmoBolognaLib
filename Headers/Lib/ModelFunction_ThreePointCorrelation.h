@@ -47,8 +47,9 @@ namespace cosmobl {
     namespace threept {
 
       /**
-       *  @struct STR_data_model
-       *  @brief the structure STR_data_model
+       *  @struct STR_data_model_threept
+       *
+       *  @brief the structure STR_data_model_threept
        *
        *  This structure contains the data used for statistical
        *  analyses of the two-point correlation function
@@ -58,30 +59,30 @@ namespace cosmobl {
 	/// Q dark matter
 	vector<double> Q_DM;
 
-  /// cosmology
-  shared_ptr<cosmology::Cosmology> cosmology;
+	/// cosmology
+	shared_ptr<cosmology::Cosmology> cosmology;
 
-  /// 1st side of the triangle
-  double r1;
+	/// 1st side of the triangle
+	double r1;
 
-  /// 2nd side of the triangle
-  double r2;
+	/// 2nd side of the triangle
+	double r2;
 
-  /// theta
-  vector<double> theta;
+	/// theta
+	vector<double> theta;
 
-  /// model for the 3PCF
-  string model;
+	/// model for the 3PCF
+	string model;
 
-  /// k vector
-  vector<double> kk;
+	/// k vector
+	vector<double> kk;
 
-  /// Dark matter power spectrum
-  vector<double> Pk_DM;
+	/// Dark matter power spectrum
+	vector<double> Pk_DM;
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of type STR_data_model
+	 *  @return object of type STR_data_model_threept
 	 */
 	STR_data_model_threept () = default;
       };

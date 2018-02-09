@@ -777,7 +777,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation::count_allPairs_region (vector
   string file, file_regions;
 
   cout << endl; coutCBL << par::col_green << "data-data" << par::col_default << endl;
-
+ 
   file = "dd.dat";
   file_regions = "dd_regions.dat";
 

@@ -1211,7 +1211,7 @@ namespace cosmobl {
        */
       void set_scalar_amp (const double scalar_amp=2.46e-9) { m_scalar_amp = scalar_amp; }; 
 
-       /**
+      /**
        *  @brief set the value of the scalar pivot
        *
        *  @param scalar_pivot the scalar pivot k in \f$Mpc^{-1}\f$
@@ -2286,7 +2286,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param input_file either the parameter file or the power
        *  spectrum file; if a parameter file is provided,
@@ -2375,7 +2375,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param input_file either the parameter file or the power
        *  spectrum file; if a parameter file is provided,
@@ -2458,7 +2458,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -2640,7 +2640,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param input_file either the parameter file or the power
        *  spectrum file; if a parameter file is provided,
@@ -2840,7 +2840,7 @@ namespace cosmobl {
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5
        */
-      vector<double> mass_function_vector (const vector<double> mass, const double z_min, const double z_max, const string model_MF, const string method_SS, const string output_root="test", const double Delta=200, const bool isDelta_vir=false, const string interpType="Linear", const double k_max=100., const string input_file=par::defaultString, const bool is_parameter_file=true);
+      vector<double> mass_function (const vector<double> mass, const double z_min, const double z_max, const string model_MF, const string method_SS, const string output_root="test", const double Delta=200, const bool isDelta_vir=false, const string interpType="Linear", const double k_max=100., const string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief mass function given a selection function
@@ -3013,11 +3013,8 @@ namespace cosmobl {
        *
        *  @author alfonso.veropalumbo@unibo.it
        *
-       *  @param z_min minimum redshift
-       *
-       *  @param z_max maximum redshift
-       *
-       *  @param step_z redshift step
+       *  @param redshift vector containing the redshift at which the
+       *  halo distribution will be computed
        *
        *  @param Area_degrees the survey area, in degrees
        *
@@ -3091,7 +3088,7 @@ namespace cosmobl {
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5
        */
-      vector<double> redshift_distribution_haloes_selection_function (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> column={}, const string output_root="test", const double Delta=200, const bool isDelta_vir=false, const string interpType="Linear", const double k_max=100., const string input_file=par::defaultString, const bool is_parameter_file=true);
+      vector<double> redshift_distribution_haloes_selection_function (const vector<double> redshift, const double Area_degrees, const double Mass_min, const double Mass_max, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> column={}, const string output_root="test", const double Delta=200, const bool isDelta_vir=false, const string interpType="Linear", const double k_max=100., const string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the mean redshift of a dark matter haloe sample,
@@ -3627,7 +3624,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param file_par name of the parameter file; if a parameter
        *  file is provided (i.e. file_par!=NULL), it will be used,
@@ -3671,7 +3668,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param file_par name of the parameter file; if a parameter
        *  file is provided (i.e. file_par!=NULL), it will be used,
@@ -3718,7 +3715,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param file_par name of the parameter file; if a parameter
        *  file is provided (i.e. file_par!=NULL), it will be used,
@@ -3772,7 +3769,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param file_par name of the parameter file; if a parameter
        *  file is provided (i.e. file_par!=NULL), it will be used,
@@ -3814,7 +3811,7 @@ namespace cosmobl {
        *
        *  @param aa parameter \e a of Eq. 24 of Anderson et al. 2012
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @return P;<SUB>DW</SUB>(k): the De-Wiggled power
        *  spectrum of dark matter
@@ -4256,10 +4253,10 @@ namespace cosmobl {
        *
        *  @param aa parameter \e a of Eq. 24 of Anderson et al. 2012
        *
-       *  @param GSL 0 \f$\rightarrow\f$ the Numerical libraries are used; 1 \f$\rightarrow\f$
-       *  the GSL libraries are used
+       *  @param GSL false \f$\rightarrow\f$ FFTlog is used; true
+       *  \f$\rightarrow\f$ the GSL libraries are used
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param file_par name of the parameter file; if a
        *  parameter file is provided (i.e. file_par!=NULL), it will be
@@ -4296,8 +4293,8 @@ namespace cosmobl {
        *
        *  @param coordUnits the angular separation units
        *
-       *  @param GSL 0 \f$\rightarrow\f$ FFTlog is used; 1 \f$\rightarrow\f$
-       *  the GSL libraries are used
+       *  @param GSL false \f$\rightarrow\f$ FFTlog is used; true
+       *  \f$\rightarrow\f$ the GSL libraries are used
        *
        *  @param method_Pk method used to compute the power spectrum;
        *  valid choices for method_Pk are: CAMB [http://camb.info/],
@@ -4305,8 +4302,8 @@ namespace cosmobl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
-       *  non-linear power spectrum
+       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1
+       *  \f$\rightarrow\f$ non-linear power spectrum
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -4322,14 +4319,14 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the power
        *  spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param file_par name of the parameter file; if a parameter
        *  file is provided (i.e. file_par!=NULL), it will be used,
        *  ignoring the cosmological parameters of the object
        *
-       *  @return \f$w_{DM}(\theta)\f$: the angular two point correlation 
-       *  function of dark matter
+       *  @return \f$w_{DM}(\theta)\f$: the angular two point
+       *  correlation function of dark matter
        */
       double wtheta_DM (const double theta, const vector<double> zz, const vector<double> phiz, const string interpolationMethod, const CoordUnits coordUnits = CoordUnits::_degrees_, const bool GSL=false, const string method_Pk="CAMB", const bool NL=false, const string output_root="test", const int norm=-1, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const string file_par=par::defaultString);
 
@@ -4386,6 +4383,57 @@ namespace cosmobl {
       double wtheta_DM (const double theta, const vector<double> kk, const vector<double> Pk, const vector<double> zz, const vector<double> nz, const vector<double> phiz, const string interpolationType="Spline", const CoordUnits coordUnits = CoordUnits::_degrees_, const bool GSL=false, const double redshift_Pk=0);
 
       /**
+       * @brief the dark matter angular linear power spectrum
+       * \f$C_l\f$.
+       *
+       * this function provides the angular linear power spectrum
+       * using the Limber approximation up to a given \f$l_{max}\f$:
+       * \f[ C_l = \int_{z_{min}}^{z_{max}}\phi^2(z) D^2(z) P(\frac{l}{D_C(z)}) \frac{H(z)}{c \cdot D_c(z)} dz \f]
+       *
+       * where l is the multipole order, \f$\phi(z)\f$ is the tracers redshift distribution, \f$P\f$ is the \f$z=0\f$ power
+       * spectrum and \f$D(z)\f$ is the growth factor. \f$D_C(z)\f$ and \f$H(z)\f$ are
+       * respectively the comoving function and the Hubble parameter.
+       *
+       * @param lmax the maximum multipole order
+       *
+       * @param zz the redshift range
+       *
+       * @param phiz the number density
+       *
+       * @param interpolationMethod the method in interpolation
+       *
+       * @param method_Pk method used to compute the power spectrum;
+       * valid choices for method_Pk are: CAMB [http://camb.info/],
+       * classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       * [http://arxiv.org/abs/1207.1465], EisensteinHu
+       * [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       * @param output_root output_root of the parameter file used to
+       * compute the power spectrum and &sigma;(mass); it can be any
+       * name
+       *
+       * @param norm 0 \f$\rightarrow\f$ don't normalize the power
+       * spectrum; 1 \f$\rightarrow\f$ normalize the power spectrum;
+       * -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       * @param k_min minimum wave vector module up to which the power
+       * spectrum is computed
+       *
+       * @param k_max maximum wave vector module up to which the power
+       * spectrum is computed
+       *
+       * @param prec accuracy of the integration
+       *
+       * @param file_par name of the parameter file; if a parameter
+       * file is provided (i.e. file_par!=NULL), it will be used,
+       * ignoring the cosmological parameters of the object
+       *
+       * @return vector containing the angular linear power spectrum up to \f$l_{max}\f$
+       *
+       */
+      vector<double> C_l_DM (const int lmax, const vector<double> zz, const vector<double> phiz, const string interpolationMethod, const string method_Pk="CAMB", const string output_root="test", const int norm=-1, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const string file_par=par::defaultString);
+
+      /**
        *  @brief the dark matter two-point correlation function,
        *  de-wiggled (see e.g. Anderson et al 2014)
        *
@@ -4402,8 +4450,9 @@ namespace cosmobl {
        *
        *  @param sigma_NL the non linear BAO damping
        *
-       *  @param output_root output_root of the parameter file used to compute
-       *  the power spectrum and &sigma;(mass); it can be any name
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4417,7 +4466,7 @@ namespace cosmobl {
        *
        *  @param aa parameter \e a of Eq. 24 of Anderson et al. 2012
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @return &xi;<SUB>DW</SUB>(r): the De-Wiggled spherically
        *  averaged (monopole) of the two-point correlation function of
@@ -4477,10 +4526,10 @@ namespace cosmobl {
        *  @param [in] aa parameter \e a of Eq. 24 of Anderson et
        *  al. 2012
        *
-       *  @param [in] GSL 0 \f$\rightarrow\f$ the Numerical libraries are used; 1 \f$\rightarrow\f$
-       *  the GSL libraries are used
+       *  @param [in] GSL false \f$\rightarrow\f$ FFTlog is used; true
+       *  \f$\rightarrow\f$ the GSL libraries are used
        *
-       *  @param [in] prec accuracy of the GSL integration
+       *  @param [in] prec accuracy of the integration
        *
        *  @param [in] file_par name of the parameter file; if a
        *  parameter file is provided (i.e. file_par!=NULL), it will be
@@ -4494,7 +4543,8 @@ namespace cosmobl {
        *  @brief get the barred dark matter correlation functions
        *
        *  this function provides the dark matter \e barred correlation
-       *  functions, used to model the two-point correlation function in redshift-space
+       *  functions, used to model the two-point correlation function
+       *  in redshift-space
        *
        *  @param [in] rr vector of r, the module of the comoving
        *  separation
@@ -4542,7 +4592,7 @@ namespace cosmobl {
        *  @param [in] aa parameter \e a of Eq. 24 of Anderson et
        *  al. 2012
        *
-       *  @param [in] prec accuracy of the GSL integration
+       *  @param [in] prec accuracy of the integration
        *
        *  @param [in] file_par name of the parameter file; if a
        *  parameter file is provided (i.e. file_par!=NULL), it will be
@@ -4597,10 +4647,10 @@ namespace cosmobl {
        *  @param aa parameter \e a of Eq. 24 of Anderson et
        *  al. 2012
        *
-       *  @param GSL 0 \f$\rightarrow\f$ the Numerical libraries are used; 1 \f$\rightarrow\f$
-       *  the GSL libraries are used
+       *  @param GSL false \f$\rightarrow\f$ FFTlog is used; true
+       *  \f$\rightarrow\f$ the GSL libraries are used
        *
-       *  @param prec accuracy of the GSL integration
+       *  @param prec accuracy of the integration
        *
        *  @param file_par name of the parameter file; if a
        *  parameter file is provided (i.e. file_par!=NULL), it will be
@@ -4688,10 +4738,10 @@ namespace cosmobl {
        *  @param aa parameter \e a of Eq. 24 of Anderson et
        *  al. 2012
        *
-       *  @param GSL 0 \f$\rightarrow\f$ the Numerical libraries are used; 1 \f$\rightarrow\f$
-       *  the GSL libraries are used
+       *  @param GSL false \f$\rightarrow\f$ FFTlog is used; true
+       *  \f$\rightarrow\f$ the GSL libraries are used
        *
-       *  @param prec accuracy of the GSL integration
+       *  @param prec accuracy of the integration
        *
        *  @param file_par name of the parameter file; if a
        *  parameter file is provided (i.e. file_par!=NULL), it will be
@@ -4729,7 +4779,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration
+       *  @param prec accuracy of the integration
        *
        *  @param file_par name of the parameter file; if a
        *  parameter file is provided (i.e. file_par!=NULL), it will be
@@ -4738,7 +4788,7 @@ namespace cosmobl {
        *  @return &sigma;<SUB>8</SUB>: the dark matter rms mass
        *  fluctuation within 8 Mpc/h
        */
-      double sigma8_Pk (const string, const double, const string output_root="test", const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString) const; 
+      double sigma8_Pk (const string method_Pk, const double redshift, const string output_root="test", const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString) const; 
 
       /**
        *  @brief bias of dark matter haloes
@@ -4779,7 +4829,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration
+       *  @param prec accuracy of the integration
        *
        *  @param input_file either the parameter file or the power
        *  spectrum file; if a parameter file is provided,
@@ -4841,7 +4891,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration
+       *  @param prec accuracy of the integration
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -4948,7 +4998,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param input_file either the parameter file or the power
        *  spectrum file; if a parameter file is provided,
@@ -5038,7 +5088,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param input_file either the parameter file or the power
        *  spectrum file; if a parameter file is provided,
@@ -5072,11 +5122,17 @@ namespace cosmobl {
        *  estimated from a grid
        *
        *  this function computes the effective bias of dark matter
-       *  haloes by simply averaging the bias of a set of haloes with
+       *  haloes by either averaging the bias of a set of haloes with
        *  a given mass:
        *
        *  \f[b_{eff}(z) = \frac{1}{N_{halo}}\sum_{i=1}^{N_{halo}}
-       *  b^{i}(M, z)\f]
+       *  b(M_i, z_i) \; , \; (1)\f]
+       *
+       *  or by averaging over halo pairs:
+       *
+       *  \f[b_{eff}(z) = \sqrt{ \frac{2}{N_{halo}(N_{halo}-1)}
+       *  \sum_{i=1}^{N_{halo}}\sum_{j=i+1}^{N_{halo}} b(M_i,
+       *  z_i)b(M_j, z_j)} \; , \; (2)\f]
        *
        *  where the linear bias of the \f$i\f$-th halo, \f$b^{i}(M,
        *  z)\f$, is computed by
@@ -5100,6 +5156,11 @@ namespace cosmobl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param meanType meanType="mean_bias" \f$\rightarrow\f$ the
+       *  effective bias is computed with Eq.(1);
+       *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
+       *  bias is computed with Eq.(2)
+       * 
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -5120,7 +5181,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param input_file either the parameter file or the power
        *  spectrum file; if a parameter file is provided,
@@ -5140,18 +5201,24 @@ namespace cosmobl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      vector<double> bias_eff_mass_grid (const vector<double> MM, const vector<double> redshift, const string model_bias, const string method_SS, const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      vector<double> bias_eff_mass_grid (const vector<double> MM, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType="mean_bias", const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief effective bias of dark matter haloes, computed by
        *  averaging the bias of a set of haloes
        *
        *  this function computes the effective bias of dark matter
-       *  haloes by simply averaging the bias of a set of haloes with
+       *  haloes by either averaging the bias of a set of haloes with
        *  a given mass:
        *
        *  \f[b_{eff}(z) = \frac{1}{N_{halo}}\sum_{i=1}^{N_{halo}}
-       *  b^{i}(M, z)\f]
+       *  b(M_i, z_i) \; , \; (1)\f]
+       *
+       *  or by averaging over halo pairs:
+       *
+       *  \f[b_{eff}(z) = \sqrt{ \frac{2}{N_{halo}(N_{halo}-1)}
+       *  \sum_{i=1}^{N_{halo}}\sum_{j=i+1}^{N_{halo}} b(M_i,
+       *  z_i)b(M_j, z_j)} \; , \; (2)\f]
        *
        *  where the linear bias of the \f$i\f$-th halo, \f$b^{i}(M,
        *  z)\f$, is computed by
@@ -5174,6 +5241,11 @@ namespace cosmobl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param meanType meanType="mean_bias" \f$\rightarrow\f$ the
+       *  effective bias is computed with Eq.(1);
+       *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
+       *  bias is computed with Eq.(2)
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -5194,7 +5266,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param input_file either the parameter file or the power
        *  spectrum file; if a parameter file is provided,
@@ -5214,7 +5286,7 @@ namespace cosmobl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      vector<double> bias_eff_mass (const vector<double> MM, const vector<double> redshift, const string model_bias, const string method_SS, const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      vector<double> bias_eff_mass (const vector<double> MM, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType="mean_bias", const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -5222,11 +5294,17 @@ namespace cosmobl {
        *  mass variance on a grid
        *
        *  this function computes the effective bias of dark matter
-       *  haloes by simply averaging the bias of a set of haloes with
+       *  haloes by either averaging the bias of a set of haloes with
        *  a given mass:
        *
        *  \f[b_{eff}(z) = \frac{1}{N_{halo}}\sum_{i=1}^{N_{halo}}
-       *  b^{i}(M, z)\f]
+       *  b(M_i, z_i) \; , \; (1)\f]
+       *
+       *  or by averaging over halo pairs:
+       *
+       *  \f[b_{eff}(z) = \sqrt{ \frac{2}{N_{halo}(N_{halo}-1)}
+       *  \sum_{i=1}^{N_{halo}}\sum_{j=i+1}^{N_{halo}} b(M_i,
+       *  z_i)b(M_j, z_j)} \; , \; (2)\f]
        *
        *  where the linear bias of the \f$i\f$-th halo, \f$b^{i}(M,
        *  z)\f$, is computed by
@@ -5252,6 +5330,11 @@ namespace cosmobl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param meanType meanType="mean_bias" \f$\rightarrow\f$ the
+       *  effective bias is computed with Eq.(1);
+       *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
+       *  bias is computed with Eq.(2)
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -5272,7 +5355,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param input_file either the parameter file or the power
        *  spectrum file; if a parameter file is provided,
@@ -5292,20 +5375,27 @@ namespace cosmobl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      vector<double> bias_eff_mass (const vector<double> mass, const vector<double> mass_grid, const vector<double> redshift, const string model_bias, const string method_SS, const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      vector<double> bias_eff_mass (const vector<double> mass, const vector<double> mass_grid, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType="mean_bias", const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
-       *  @brief effective bias of dark matter haloes, computed by
+       *  @brief compute the effective bias of dark matter haloes, by
        *  averaging the bias of a set of haloes, interpolating the
        *  mass variance on a grid of masses and of one input
-       *  cosmological parameter
+       *  cosmological parameter; this function is used when modelling
+       *  the two-point correlation function
        *
        *  this function computes the effective bias of dark matter
-       *  haloes by simply averaging the bias of a set of haloes with
+       *  haloes by either averaging the bias of a set of haloes with
        *  a given mass:
        *
        *  \f[b_{eff}(z) = \frac{1}{N_{halo}}\sum_{i=1}^{N_{halo}}
-       *  b^{i}(M, z)\f]
+       *  b(M_i, z_i) \; , \; (1)\f]
+       *
+       *  or by averaging over halo pairs:
+       *
+       *  \f[b_{eff}(z) = \sqrt{ \frac{2}{N_{halo}(N_{halo}-1)}
+       *  \sum_{i=1}^{N_{halo}}\sum_{j=i+1}^{N_{halo}} b(M_i,
+       *  z_i)b(M_j, z_j)} \; , \; (2)\f]
        *
        *  where the linear bias of the \f$i\f$-th halo, \f$b^{i}(M,
        *  z)\f$, is computed by
@@ -5355,6 +5445,11 @@ namespace cosmobl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param meanType meanType="mean_bias" \f$\rightarrow\f$ the
+       *  effective bias is computed with Eq.(1);
+       *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
+       *  bias is computed with Eq.(2)
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -5375,7 +5470,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param input_file either the parameter file or the power
        *  spectrum file; if a parameter file is provided,
@@ -5395,20 +5490,20 @@ namespace cosmobl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      void generate_bias_eff_grid_one_cosmopar (vector<double> &parameter, vector<double> &bias_eff, const string dir_output, const string file_bias_eff_grid, const cosmobl::cosmology::CosmoPar cosmoPar, const double min_par, const double max_par, const int nbin_par, const vector<double> mass, const vector<double> mass_grid, const vector<double> redshift, const string model_bias, const string method_SS, const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
-
-
+      void generate_bias_eff_grid_one_cosmopar (vector<double> &parameter, vector<double> &bias_eff, const string dir_output, const string file_bias_eff_grid, const cosmobl::cosmology::CosmoPar cosmoPar, const double min_par, const double max_par, const int nbin_par, const vector<double> mass, const vector<double> mass_grid, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType="mean_bias", const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      
       /**
        *  @brief effective bias of dark matter haloes, computed by
        *  weighting on the selection function on a grid of one input
-       *  cosmological parameter
+       *  cosmological parameter; this function is used when modelling
+       *  the two-point correlation function
        *
        *  this function computes the effective bias of dark matter
-       *  haloes by simply averaging the bias of a set of haloes with
-       *  a given mass:
+       *  haloes:
        *
-       *  \f[b_{eff}(z) = \frac{1}{N_{halo}}\sum_{i=1}^{N_{halo}}
-       *  b^{i}(M, z)\f]
+       *  \f[ b_{eff}(z) = \frac{\int_{M_{min}}^{M_{max}} {\rm d}M\,
+       *  b(M, z) \Phi(M, z) f(M, z)}{\int_{M_{min}}^{M_{max}} {\rm
+       *  d}M\,\Phi(M, z) f(M, z)} \f]
        *
        *  where the linear bias of the \f$i\f$-th halo, \f$b^{i}(M,
        *  z)\f$, is computed by
@@ -5500,7 +5595,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param input_file either the parameter file or the power
        *  spectrum file; if a parameter file is provided,
@@ -5525,15 +5620,22 @@ namespace cosmobl {
       /**
        *  @brief effective bias of dark matter haloes, computed by
        *  averaging the bias of a set of haloes, interpolating the
-       *  mass variance on a grid of masses and two input
-       *  cosmological parameters
+       *  mass variance on a grid of masses and two input cosmological
+       *  parameters; this function is used when modelling the
+       *  two-point correlation function
        *
        *  this function computes the effective bias of dark matter
-       *  haloes by simply averaging the bias of a set of haloes with
+       *  haloes by either averaging the bias of a set of haloes with
        *  a given mass:
        *
        *  \f[b_{eff}(z) = \frac{1}{N_{halo}}\sum_{i=1}^{N_{halo}}
-       *  b^{i}(M, z)\f]
+       *  b(M_i, z_i) \; , \; (1)\f]
+       *
+       *  or by averaging over halo pairs:
+       *
+       *  \f[b_{eff}(z) = \sqrt{ \frac{2}{N_{halo}(N_{halo}-1)}
+       *  \sum_{i=1}^{N_{halo}}\sum_{j=i+1}^{N_{halo}} b(M_i,
+       *  z_i)b(M_j, z_j)} \; , \; (2)\f]
        *
        *  where the linear bias of the \f$i\f$-th halo, \f$b^{i}(M,
        *  z)\f$, is computed by
@@ -5599,6 +5701,11 @@ namespace cosmobl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param meanType meanType="mean_bias" \f$\rightarrow\f$ the
+       *  effective bias is computed with Eq.(1);
+       *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
+       *  bias is computed with Eq.(2)
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -5620,7 +5727,7 @@ namespace cosmobl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param prec accuracy of the GSL integration 
+       *  @param prec accuracy of the integration 
        *
        *  @param input_file either the parameter file or the power
        *  spectrum file; if a parameter file is provided,
@@ -5640,3343 +5747,3353 @@ namespace cosmobl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-       void generate_bias_eff_grid_two_cosmopars (vector<double> &parameter1, vector<double> &parameter2, vector<vector<double>> &bias_eff, const string dir_output, const string file_bias_eff_grid, const cosmobl::cosmology::CosmoPar cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cosmobl::cosmology::CosmoPar cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const vector<double> mass, const vector<double> mass_grid, const vector<double> redshift, const string model_bias, const string method_SS, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      void generate_bias_eff_grid_two_cosmopars (vector<double> &parameter1, vector<double> &parameter2, vector<vector<double>> &bias_eff, const string dir_output, const string file_bias_eff_grid, const cosmobl::cosmology::CosmoPar cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cosmobl::cosmology::CosmoPar cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const vector<double> mass, const vector<double> mass_grid, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType="mean_bias", const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
 
-       /**
-	*  @brief effective bias of dark matter haloes, computed using
-	*  a given selection function; &sigma;(mass) and dln&sigma;/dM
-	*  are provided in input
-	*
-	*  this function computes the effective bias of dark matter
-	*  haloes:
-	*
-	*  \f[ b_{eff}(z) = \frac{\int_{M_{min}}^{M_{max}} {\rm d}M\,
-	*  b(M, z) \Phi(M, z) f(M, z)}{\int_{M_{min}}^{M_{max}} {\rm
-	*  d}M\,\Phi(M, z) f(M, z)} \f]
-	*
-	*  in the current implementation, the integral is actually
-	*  replaced by the Riemann sum, as follows:
-	*
-	*  \f[ b_{eff}(z) \simeq \frac{\sum_{i_{min}}^{i_{max}} b(M, z)
-	*  \Phi(M, z) f(M, z) (M_{i+1}-M_i)}{\sum_{i_{min}}^{i_{max}}
-	*  \Phi(M, z) f(M, z) (M_{i+1}-M_i)} \f]
-	*
-	*  where the halo mass function, \f$\Phi(M, z)\f$, is computed
-	*  by cosmobl::cosmology::Cosmology::mass_function, the linear
-	*  bias, \f$b(M, z)\f$, is computed by
-	*  cosmobl::cosmology::Cosmology::bias_halo, and f(M, z) is the
-	*  selection function
-	*
-	*  @param interp_sigma FuncGrid object containing the values
-	*  of &sigma;(mass) computed on a grid, used by interpolation
-	*
-	*  @param interp_DnSigma FuncGrid object containing the values
-	*  of dln&sigma;/dM computed on a grid, used by interpolation
-	*
-	*  @param interp_SF FuncGrid object containing the values of
-	*  the selection function computed on a grid in mass, at the
-	*  mean redshift, used by interpolation
-	*
-	*  @param Mass_min minimum halo mass
-	*
-	*  @param Mass_max maximum halo mass
-	*
-	*  @param redshift vector containing the input redshifts
-	*
-	*  @param model_bias author(s) who proposed the bias; valid
-	*  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
-	*  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
-	*  correction of Warren 2004), Tinker (Tinker et al. 2010)
-	*
-	*  @param model_MF author(s) who proposed the mass function;
-	*  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-	*  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-	*  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-	*  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-	*  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-	*  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
-	*  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-	*  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-	*  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
-	*  al. 2012), Manera (Manera et al. 2010), Bhattacharya
-	*  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-	*  Peacock (by Peacock at al. 2007)
-	*
-	*  @param method_SS method used to compute the power spectrum
-	*  and &sigma;(mass); valid method_SS are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param alpha the \f$\alpha\f$ parameter of the cluster mass
-	*  scaling relation
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param Delta_crit \f$\Delta\f$: the critical overdensity
-	*  
-	*  @param kk wave vector module
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the
-	*  input_file is a parameter file, used to compute the power
-	*  spectrum with the method specified by method_Pk; false
-	*  \f$\rightarrow\f$ the input_file is a file containing the
-	*  power spectrum
-	*
-	*  @return b<SUB>eff</SUB>: the effective dark matter bias
-	*
-	*  @warning interp_sigma and interp_DnSigma have to be
-	*  computed at the same cosmology of the object. They are
-	*  provided as an input just to improve the performances in
-	*  some applications (e.g. MCMC) where these quantities can be
-	*  computed once
-	*/
-       vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const vector<double> redshift, const string model_bias, const string model_MF, const string method_SS, const double alpha=1., const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      /**
+       *  @brief effective bias of dark matter haloes, computed using
+       *  a given selection function; &sigma;(mass) and dln&sigma;/dM
+       *  are provided in input
+       *
+       *  this function computes the effective bias of dark matter
+       *  haloes:
+       *
+       *  \f[ b_{eff}(z) = \frac{\int_{M_{min}}^{M_{max}} {\rm d}M\,
+       *  b(M, z) \Phi(M, z) f(M, z)}{\int_{M_{min}}^{M_{max}} {\rm
+       *  d}M\,\Phi(M, z) f(M, z)} \f]
+       *
+       *  in the current implementation, the integral is actually
+       *  replaced by the Riemann sum, as follows:
+       *
+       *  \f[ b_{eff}(z) \simeq \frac{\sum_{i_{min}}^{i_{max}} b(M, z)
+       *  \Phi(M, z) f(M, z) (M_{i+1}-M_i)}{\sum_{i_{min}}^{i_{max}}
+       *  \Phi(M, z) f(M, z) (M_{i+1}-M_i)} \f]
+       *
+       *  where the halo mass function, \f$\Phi(M, z)\f$, is computed
+       *  by cosmobl::cosmology::Cosmology::mass_function, the linear
+       *  bias, \f$b(M, z)\f$, is computed by
+       *  cosmobl::cosmology::Cosmology::bias_halo, and f(M, z) is the
+       *  selection function
+       *
+       *  @param interp_sigma FuncGrid object containing the values
+       *  of &sigma;(mass) computed on a grid, used by interpolation
+       *
+       *  @param interp_DnSigma FuncGrid object containing the values
+       *  of dln&sigma;/dM computed on a grid, used by interpolation
+       *
+       *  @param interp_SF FuncGrid object containing the values of
+       *  the selection function computed on a grid in mass, at the
+       *  mean redshift, used by interpolation
+       *
+       *  @param Mass_min minimum halo mass
+       *
+       *  @param Mass_max maximum halo mass
+       *
+       *  @param redshift vector containing the input redshifts
+       *
+       *  @param model_bias author(s) who proposed the bias; valid
+       *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+       *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+       *  correction of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
+       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
+       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
+       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
+       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
+       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
+       *  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
+       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
+       *  al. 2012), Manera (Manera et al. 2010), Bhattacharya
+       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
+       *  Peacock (by Peacock at al. 2007)
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param alpha the \f$\alpha\f$ parameter of the cluster mass
+       *  scaling relation
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param Delta_crit \f$\Delta\f$: the critical overdensity
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the
+       *  input_file is a parameter file, used to compute the power
+       *  spectrum with the method specified by method_Pk; false
+       *  \f$\rightarrow\f$ the input_file is a file containing the
+       *  power spectrum
+       *
+       *  @return b<SUB>eff</SUB>: the effective dark matter bias
+       *
+       *  @warning interp_sigma and interp_DnSigma have to be
+       *  computed at the same cosmology of the object. They are
+       *  provided as an input just to improve the performances in
+       *  some applications (e.g. MCMC) where these quantities can be
+       *  computed once
+       */
+      vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const vector<double> redshift, const string model_bias, const string model_MF, const string method_SS, const double alpha=1., const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
        
-       /**
-	*  @brief effective bias of dark matter haloes, computed using
-	*  a given selection function; &sigma;(mass) and dln&sigma;/dM
-	*  are provided in input
-	*
-	*  this function computes the effective bias of dark matter
-	*  haloes:
-	*
-	*  \f[ b_{eff}(z) = \frac{\int_{M_{min}}^{M_{max}} {\rm d}M\,
-	*  b(M, z) \Phi(M, z) f(M, z)}{\int_{M_{min}}^{M_{max}} {\rm
-	*  d}M\,\Phi(M, z) f(M, z)} \f]
-	*
-	*  in the current implementation, the integral is actually
-	*  replaced by the Riemann sum, as follows:
-	*
-	*  \f[ b_{eff}(z) \simeq \frac{\sum_{i_{min}}^{i_{max}} b(M, z)
-	*  \Phi(M, z) f(M, z) (M_{i+1}-M_i)}{\sum_{i_{min}}^{i_{max}}
-	*  \Phi(M, z) f(M, z) (M_{i+1}-M_i)} \f]
-	*
-	*  where the halo mass function, \f$\Phi(M, z)\f$, is computed
-	*  by cosmobl::cosmology::Cosmology::mass_function, the linear
-	*  bias, \f$b(M, z)\f$, is computed by
-	*  cosmobl::cosmology::Cosmology::bias_halo, and f(M, z) is the
-	*  selection function
-	*
-	*  @param interp_sigma FuncGrid object containing the values
-	*  of &sigma;(mass) computed on a grid, used by interpolation
-	*
-	*  @param interp_DnSigma FuncGrid object containing the values
-	*  of dln&sigma;/dM computed on a grid, used by interpolation
-	*
-	*  @param interp_SF FuncGrid2D object containing the values of
-	*  the selection function computed on a grid in mass and
-	*  redshift, used by interpolation
-	*
-	*  @param Mass_min minimum halo mass
-	*
-	*  @param Mass_max maximum halo mass
-	*
-	*  @param redshift vector containing the input redshifts
-	*
-	*  @param model_bias author(s) who proposed the bias; valid
-	*  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
-	*  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
-	*  correction of Warren 2004), Tinker (Tinker et al. 2010)
-	*
-	*  @param model_MF author(s) who proposed the mass function;
-	*  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-	*  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-	*  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-	*  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-	*  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-	*  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
-	*  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-	*  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-	*  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
-	*  al. 2012), Manera (Manera et al. 2010), Bhattacharya
-	*  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-	*  Peacock (by Peacock at al. 2007)
-	*
-	*  @param method_SS method used to compute the power spectrum
-	*  and &sigma;(mass); valid method_SS are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param alpha the \f$\alpha\f$ parameter of the cluster mass
-	*  scaling relation
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param Delta_crit \f$\Delta\f$: the critical overdensity
-	*  
-	*  @param kk wave vector module
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the
-	*  input_file is a parameter file, used to compute the power
-	*  spectrum with the method specified by method_Pk; false
-	*  \f$\rightarrow\f$ the input_file is a file containing the
-	*  power spectrum
-	*
-	*  @return b<SUB>eff</SUB>: the effective dark matter bias
-	*
-	*  @warning interp_sigma and interp_DnSigma have to be
-	*  computed at the same cosmology of the object. They are
-	*  provided as an input just to improve the performances in
-	*  some applications (e.g. MCMC) where these quantities can be
-	*  computed once
-	*/
-       vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid2D interp_SF, const double Mass_min, const double Mass_max, const vector<double> redshift, const string model_bias, const string model_MF, const string method_SS, const double alpha=1., const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      /**
+       *  @brief effective bias of dark matter haloes, computed using
+       *  a given selection function; &sigma;(mass) and dln&sigma;/dM
+       *  are provided in input
+       *
+       *  this function computes the effective bias of dark matter
+       *  haloes:
+       *
+       *  \f[ b_{eff}(z) = \frac{\int_{M_{min}}^{M_{max}} {\rm d}M\,
+       *  b(M, z) \Phi(M, z) f(M, z)}{\int_{M_{min}}^{M_{max}} {\rm
+       *  d}M\,\Phi(M, z) f(M, z)} \f]
+       *
+       *  in the current implementation, the integral is actually
+       *  replaced by the Riemann sum, as follows:
+       *
+       *  \f[ b_{eff}(z) \simeq \frac{\sum_{i_{min}}^{i_{max}} b(M, z)
+       *  \Phi(M, z) f(M, z) (M_{i+1}-M_i)}{\sum_{i_{min}}^{i_{max}}
+       *  \Phi(M, z) f(M, z) (M_{i+1}-M_i)} \f]
+       *
+       *  where the halo mass function, \f$\Phi(M, z)\f$, is computed
+       *  by cosmobl::cosmology::Cosmology::mass_function, the linear
+       *  bias, \f$b(M, z)\f$, is computed by
+       *  cosmobl::cosmology::Cosmology::bias_halo, and f(M, z) is the
+       *  selection function
+       *
+       *  @param interp_sigma FuncGrid object containing the values
+       *  of &sigma;(mass) computed on a grid, used by interpolation
+       *
+       *  @param interp_DnSigma FuncGrid object containing the values
+       *  of dln&sigma;/dM computed on a grid, used by interpolation
+       *
+       *  @param interp_SF FuncGrid2D object containing the values of
+       *  the selection function computed on a grid in mass and
+       *  redshift, used by interpolation
+       *
+       *  @param Mass_min minimum halo mass
+       *
+       *  @param Mass_max maximum halo mass
+       *
+       *  @param redshift vector containing the input redshifts
+       *
+       *  @param model_bias author(s) who proposed the bias; valid
+       *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+       *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+       *  correction of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
+       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
+       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
+       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
+       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
+       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
+       *  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
+       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
+       *  al. 2012), Manera (Manera et al. 2010), Bhattacharya
+       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
+       *  Peacock (by Peacock at al. 2007)
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param alpha the \f$\alpha\f$ parameter of the cluster mass
+       *  scaling relation
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param Delta_crit \f$\Delta\f$: the critical overdensity
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the
+       *  input_file is a parameter file, used to compute the power
+       *  spectrum with the method specified by method_Pk; false
+       *  \f$\rightarrow\f$ the input_file is a file containing the
+       *  power spectrum
+       *
+       *  @return b<SUB>eff</SUB>: the effective dark matter bias
+       *
+       *  @warning interp_sigma and interp_DnSigma have to be
+       *  computed at the same cosmology of the object. They are
+       *  provided as an input just to improve the performances in
+       *  some applications (e.g. MCMC) where these quantities can be
+       *  computed once
+       */
+      vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid2D interp_SF, const double Mass_min, const double Mass_max, const vector<double> redshift, const string model_bias, const string model_MF, const string method_SS, const double alpha=1., const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
 
-       /**
-	*  @brief effective bias of dark matter haloes, computed using
-	*  a given selection function
-	*
-	*  this function computes the effective bias of dark matter
-	*  haloes:
-	*
-	*  \f[ b_{eff}(z) = \frac{\int_{M_{min}}^{M_{max}} {\rm d}M\,
-	*  b(M, z) \Phi(M, z) f(M, z)}{\int_{M_{min}}^{M_{max}} {\rm
-	*  d}M\,\Phi(M, z) f(M, z)} \f]
-	*
-	*  in the current implementation, the integral is actually
-	*  replaced by the Riemann sum, as follows:
-	*
-	*  \f[ b_{eff}(z) \simeq \frac{\sum_{i_{min}}^{i_{max}} b(M, z)
-	*  \Phi(M, z) f(M, z) (M_{i+1}-M_i)}{\sum_{i_{min}}^{i_{max}}
-	*  \Phi(M, z) f(M, z) (M_{i+1}-M_i)} \f]
-	*
-	*  where the halo mass function, \f$\Phi(M, z)\f$, is computed
-	*  by cosmobl::cosmology::Cosmology::mass_function, the linear
-	*  bias, \f$b(M, z)\f$, is computed by
-	*  cosmobl::cosmology::Cosmology::bias_halo, and f(M, z) is the
-	*  selection function
-	*
-	*  @param Mass_min minimum halo mass
-	*
-	*  @param Mass_max maximum halo mass
-	*
-	*  @param redshift vector containing the input redshifts
-	*
-	*  @param model_bias author(s) who proposed the bias; valid
-	*  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
-	*  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
-	*  correction of Warren 2004), Tinker (Tinker et al. 2010)
-	*
-	*  @param model_MF author(s) who proposed the mass function;
-	*  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-	*  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-	*  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-	*  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-	*  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-	*  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
-	*  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-	*  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-	*  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
-	*  al. 2012), Manera (Manera et al. 2010), Bhattacharya
-	*  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-	*  Peacock (by Peacock at al. 2007)
-	*
-	*  @param method_SS method used to compute the power spectrum
-	*  and &sigma;(mass); valid method_SS are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param selection_function_file input file with the selection
-	*  functon
-	*
-	*  @param column vector containing the three columns of the
-	*  selection function file to be read
-	*
-	*  @param alpha the \f$\alpha\f$ parameter of the cluster mass
-	*  scaling relation
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param Delta_crit \f$\Delta\f$: the critical overdensity
-	*  
-	*  @param kk wave vector module
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the
-	*  input_file is a parameter file, used to compute the power
-	*  spectrum with the method specified by method_Pk; false
-	*  \f$\rightarrow\f$ the input_file is a file containing the
-	*  power spectrum
-	*
-	*  @return b<SUB>eff</SUB>: the effective dark matter bias
-	*/
-       vector<double> bias_eff_selection_function (const double Mass_min, const double Mass_max, const vector<double> redshift, const string model_bias, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> column={}, const double alpha=1., const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      /**
+       *  @brief effective bias of dark matter haloes, computed using
+       *  a given selection function
+       *
+       *  this function computes the effective bias of dark matter
+       *  haloes:
+       *
+       *  \f[ b_{eff}(z) = \frac{\int_{M_{min}}^{M_{max}} {\rm d}M\,
+       *  b(M, z) \Phi(M, z) f(M, z)}{\int_{M_{min}}^{M_{max}} {\rm
+       *  d}M\,\Phi(M, z) f(M, z)} \f]
+       *
+       *  in the current implementation, the integral is actually
+       *  replaced by the Riemann sum, as follows:
+       *
+       *  \f[ b_{eff}(z) \simeq \frac{\sum_{i_{min}}^{i_{max}} b(M, z)
+       *  \Phi(M, z) f(M, z) (M_{i+1}-M_i)}{\sum_{i_{min}}^{i_{max}}
+       *  \Phi(M, z) f(M, z) (M_{i+1}-M_i)} \f]
+       *
+       *  where the halo mass function, \f$\Phi(M, z)\f$, is computed
+       *  by cosmobl::cosmology::Cosmology::mass_function, the linear
+       *  bias, \f$b(M, z)\f$, is computed by
+       *  cosmobl::cosmology::Cosmology::bias_halo, and f(M, z) is the
+       *  selection function
+       *
+       *  @param Mass_min minimum halo mass
+       *
+       *  @param Mass_max maximum halo mass
+       *
+       *  @param redshift vector containing the input redshifts
+       *
+       *  @param model_bias author(s) who proposed the bias; valid
+       *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+       *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+       *  correction of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
+       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
+       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
+       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
+       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
+       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
+       *  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
+       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
+       *  al. 2012), Manera (Manera et al. 2010), Bhattacharya
+       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
+       *  Peacock (by Peacock at al. 2007)
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param selection_function_file input file with the selection
+       *  functon
+       *
+       *  @param column vector containing the three columns of the
+       *  selection function file to be read
+       *
+       *  @param alpha the \f$\alpha\f$ parameter of the cluster mass
+       *  scaling relation
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param Delta_crit \f$\Delta\f$: the critical overdensity
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the
+       *  input_file is a parameter file, used to compute the power
+       *  spectrum with the method specified by method_Pk; false
+       *  \f$\rightarrow\f$ the input_file is a file containing the
+       *  power spectrum
+       *
+       *  @return b<SUB>eff</SUB>: the effective dark matter bias
+       */
+      vector<double> bias_eff_selection_function (const double Mass_min, const double Mass_max, const vector<double> redshift, const string model_bias, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> column={}, const double alpha=1., const string output_root="test", const double Delta_crit=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
        
-       ///@}
+      ///@}
 
 
-       /**
-	*  @name Functions to model redshift-space distortions
-	*/
-       ///@{
+      /**
+       *  @name Functions to model redshift-space distortions
+       */
+      ///@{
 
-       /**
-	*  @brief the linear growth rate at a given redshift,
-	*  \f$f(z)\f$
-	*
-	*  this function computes the following function:
-	*
-	*  \f[ f(z) = \frac{{\rm d}\,\ln D}{{\rm d}\,\ln a} \f]
-	*
-	*  using approximated functions provided by Wang & Steinhardt
-	*  1998, Kiakotou, Elgarøy & Lahav 2008, Gong et al. 2009
-	*
-	*  @param redshift the redshift
-	*  @param kk wave vector module
-	*  @return the linear growth rate
-	*
-	*  @warning the current implementation is not correct if w_a is
-	*  different than 0
-	*/
-       double linear_growth_rate (const double redshift, const double kk=-1.) const;
+      /**
+       *  @brief the linear growth rate at a given redshift,
+       *  \f$f(z)\f$
+       *
+       *  this function computes the following function:
+       *
+       *  \f[ f(z) = \frac{{\rm d}\,\ln D}{{\rm d}\,\ln a} \f]
+       *
+       *  using approximated functions provided by Wang & Steinhardt
+       *  1998, Kiakotou, Elgarøy & Lahav 2008, Gong et al. 2009
+       *
+       *  @param redshift the redshift
+       *  @param kk wave vector module
+       *  @return the linear growth rate
+       *
+       *  @warning the current implementation is not correct if w_a is
+       *  different than 0
+       */
+      double linear_growth_rate (const double redshift, const double kk=-1.) const;
 
-       /**
-	*  @brief f*&sigma;<SUB>8</SUB>: the linear growth rate times
-	*  the dark matter rms mass fluctuation within 8 Mpc/h
-	*
-	*  @param redshift the redshift
-	*
-	*  @param method_Pk method used to compute the power spectrum and
-	*  &sigma;(mass); valid choices for method_Pk are: CAMB [http://camb.info/],
-	*  classgal_v1 [http://class-code.net/], MPTbreeze-v1
-	*  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*  
-	*  @param output_root output_root of the parameter file used to compute
-	*  the power spectrum and &sigma;(mass); it can be any name
-	*
-	*  @param kk wave vector module 
-	*
-	*  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$ non-linear power
-	*  spectrum
-	*
-	*  @param k_min minimum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*   
-	*  @param prec accuracy of the GSL integration
-	*
-	*  @param file_par name of the parameter file; if a
-	*  parameter file is provided (i.e. file_par!=NULL), it will be
-	*  used, ignoring the cosmological parameters of the object
-	*
-	*  @return f*&sigma;<SUB>8</SUB>
-	*/
-       double fsigma8 (const double redshift, const string method_Pk, const string output_root="test", const double kk=1., const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString) const;
+      /**
+       *  @brief f*&sigma;<SUB>8</SUB>: the linear growth rate times
+       *  the dark matter rms mass fluctuation within 8 Mpc/h
+       *
+       *  @param redshift the redshift
+       *
+       *  @param method_Pk method used to compute the power spectrum and
+       *  &sigma;(mass); valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *  
+       *  @param output_root output_root of the parameter file used to compute
+       *  the power spectrum and &sigma;(mass); it can be any name
+       *
+       *  @param kk wave vector module 
+       *
+       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$ non-linear power
+       *  spectrum
+       *
+       *  @param k_min minimum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *   
+       *  @param prec accuracy of the integration
+       *
+       *  @param file_par name of the parameter file; if a
+       *  parameter file is provided (i.e. file_par!=NULL), it will be
+       *  used, ignoring the cosmological parameters of the object
+       *
+       *  @return f*&sigma;<SUB>8</SUB>
+       */
+      double fsigma8 (const double redshift, const string method_Pk, const string output_root="test", const double kk=1., const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString) const;
 
-       /**
-	*  @brief the specific growth rate &beta;
-	*  @param redshift the redshift
-	*  @param bias bias
-	*  @param kk wave vector module
-	*  @return &beta;=f/b, where f is the linear growth rate and b is
-	*  the bias
-	*/
-       double beta (const double, const double, const double kk=-1.) const;
+      /**
+       *  @brief the specific growth rate &beta;
+       *  @param redshift the redshift
+       *  @param bias bias
+       *  @param kk wave vector module
+       *  @return &beta;=f/b, where f is the linear growth rate and b is
+       *  the bias
+       */
+      double beta (const double, const double, const double kk=-1.) const;
 
-       /**
-	*  @brief the error on the specific growth rate &beta;
-	*  @param redshift the redshift
-	*  @param bias bias
-	*  @param err_bias error on the bias
-	*  @param kk wave vector module
-	*  @return error on &beta;=f/b, where f is the linear growth rate
-	*  and b is the bias
-	*/
-       double error_beta (const double, const double, const double, const double kk=-1.) const;
+      /**
+       *  @brief the error on the specific growth rate &beta;
+       *  @param redshift the redshift
+       *  @param bias bias
+       *  @param err_bias error on the bias
+       *  @param kk wave vector module
+       *  @return error on &beta;=f/b, where f is the linear growth rate
+       *  and b is the bias
+       */
+      double error_beta (const double, const double, const double, const double kk=-1.) const;
 
-       /**
-	*  @brief the error on the specific growth rate &beta;
-	*
-	*  @param Mass_min minimum halo mass
-	* 
-	*  @param Mass_max maximum halo mass
-	*
-	*  @param redshift the redshift
-	*
-	*  @param model_bias author(s) who proposed the bias; valid
-	*  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
-	*  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
-	*  correction of Warren 2004), Tinker (Tinker et al. 2010)
-	*
-	*  @param model_MF author(s) who proposed the mass function;
-	*  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-	*  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-	*  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-	*  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-	*  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-	*  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-	*  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-	*  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-	*  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-	*  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-	*  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-	*  Peacock (by Peacock at al. 2007)
-	*
-	*  @param method_SS method used to compute the power spectrum
-	*  and &sigma;(mass); valid method_SS are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param Delta \f$\Delta\f$: the overdensity, defined as the
-	*  mean interior density relative to the background
-	*  
-	*  @param kk wave vector module
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return &beta;=f/b, where f is the linear growth rate and b is
-	*  the bias
-	*
-	*  @warning the input parameter \f$\Delta\f$ is the background
-	*  overdensity, not the critical overdensity
-	*  \f$\Delta_{crit}\f$; the function
-	*  cosmobl::Cosmology::Delta_vir can be used to convert
-	*  \f$\Delta_{crit}\f$ into \f$\Delta\f$
-	*
-	*  @warning the mass function by Manera et al. (2010) has been
-	*  tested only for z=0 and z=0.5
-	*/
-       double beta (const double Mass_min, const double Mass_max, const double redshift, const string model_bias, const string model_MF, const string method_SS, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      /**
+       *  @brief the error on the specific growth rate &beta;
+       *
+       *  @param Mass_min minimum halo mass
+       * 
+       *  @param Mass_max maximum halo mass
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_bias author(s) who proposed the bias; valid
+       *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+       *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+       *  correction of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
+       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
+       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
+       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
+       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
+       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
+       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
+       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
+       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
+       *  Peacock (by Peacock at al. 2007)
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return &beta;=f/b, where f is the linear growth rate and b is
+       *  the bias
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; the function
+       *  cosmobl::Cosmology::Delta_vir can be used to convert
+       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *
+       *  @warning the mass function by Manera et al. (2010) has been
+       *  tested only for z=0 and z=0.5
+       */
+      double beta (const double Mass_min, const double Mass_max, const double redshift, const string model_bias, const string model_MF, const string method_SS, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
 
-       /**
-	*  @brief the specific growth rate &beta;
-	*
-	*  @param Mass_min minimum halo mass
-	* 
-	*  @param Mass_max maximum halo mass
-	*
-	*  @param redshift the redshift
-	*
-	*  @param model_bias author(s) who proposed the bias; valid
-	*  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
-	*  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
-	*  correction of Warren 2004), Tinker (Tinker et al. 2010)
-	*
-	*  @param model_MF author(s) who proposed the mass function;
-	*  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-	*  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-	*  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-	*  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-	*  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-	*  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-	*  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-	*  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-	*  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-	*  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-	*  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-	*  Peacock (by Peacock at al. 2007)
-	*
-	*  @param method_SS method used to compute the power spectrum and
-	*  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
-	*  classgal_v1 [http://class-code.net/], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param err_bias error on the bias
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param Delta \f$\Delta\f$: the overdensity, defined as the
-	*  mean interior density relative to the background
-	*  
-	*  @param kk wave vector module
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return error on &beta;=f/b, where f is the linear growth
-	*  rate and b is the bias
-	*
-	*  @warning the input parameter \f$\Delta\f$ is the background
-	*  overdensity, not the critical overdensity
-	*  \f$\Delta_{crit}\f$; the function
-	*  cosmobl::Cosmology::Delta_vir can be used to convert
-	*  \f$\Delta_{crit}\f$ into \f$\Delta\f$
-	*
-	*  @warning the mass function by Manera et al. (2010) has been
-	*  tested only for z=0 and z=0.5
-	*/
-       double error_beta (const double, const double, const double, const string, const string, const string, const double, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true); 
+      /**
+       *  @brief the specific growth rate &beta;
+       *
+       *  @param Mass_min minimum halo mass
+       * 
+       *  @param Mass_max maximum halo mass
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_bias author(s) who proposed the bias; valid
+       *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+       *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+       *  correction of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
+       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
+       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
+       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
+       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
+       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
+       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
+       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
+       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
+       *  Peacock (by Peacock at al. 2007)
+       *
+       *  @param method_SS method used to compute the power spectrum and
+       *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param err_bias error on the bias
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return error on &beta;=f/b, where f is the linear growth
+       *  rate and b is the bias
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; the function
+       *  cosmobl::Cosmology::Delta_vir can be used to convert
+       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *
+       *  @warning the mass function by Manera et al. (2010) has been
+       *  tested only for z=0 and z=0.5
+       */
+      double error_beta (const double, const double, const double, const string, const string, const string, const double, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true); 
   
-       /**
-	*  @brief the specific growth rate &beta;
-	*
-	*  @param MM vector of halo masses
-	*
-	*  @param MF vector of mass function values, d&Phi;/dM=dn(M)/dM
-	*
-	*  @param redshift the redshift
-	*
-	*  @param model_bias author(s) who proposed the bias; valid
-	*  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
-	*  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
-	*  correction of Warren 2004), Tinker (Tinker et al. 2010)
-	*
-	*  @param method_SS method used to compute the power spectrum
-	*  and &sigma;(mass); valid method_SS are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param Delta \f$\Delta\f$: the overdensity, defined as the
-	*  mean interior density relative to the background
-	*  
-	*  @param kk wave vector module
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*      
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return &beta;=f/b, where f is the linear growth rate and b is
-	*  the bias
-	*
-	*  @warning the input parameter \f$\Delta\f$ is the background
-	*  overdensity, not the critical overdensity
-	*  \f$\Delta_{crit}\f$; the function
-	*  cosmobl::Cosmology::Delta_vir can be used to convert
-	*  \f$\Delta_{crit}\f$ into \f$\Delta\f$
-	*
-	*  @warning the mass function by Manera et al. (2010) has been
-	*  tested only for z=0 and z=0.5
-	*/
-       double beta (const vector<double>, const vector<double>, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      /**
+       *  @brief the specific growth rate &beta;
+       *
+       *  @param MM vector of halo masses
+       *
+       *  @param MF vector of mass function values, d&Phi;/dM=dn(M)/dM
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_bias author(s) who proposed the bias; valid
+       *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+       *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+       *  correction of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *      
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return &beta;=f/b, where f is the linear growth rate and b is
+       *  the bias
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; the function
+       *  cosmobl::Cosmology::Delta_vir can be used to convert
+       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *
+       *  @warning the mass function by Manera et al. (2010) has been
+       *  tested only for z=0 and z=0.5
+       */
+      double beta (const vector<double>, const vector<double>, const double, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
 
-       /**
-	*  @brief the error on the specific growth rate &beta;
-	*
-	*  @param MM vector of halo masses
-	*
-	*  @param MF vector of mass function values, d&Phi;/dM=dn(M)/dM
-	*
-	*  @param redshift the redshift
-	*
-	*  @param model_bias author(s) who proposed the bias; valid authors
-	*  are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo & Tormen
-	*  2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the correction
-	*  of Warren 2004), Tinker (Tinker et al. 2010)
-	*
-	*  @param method_SS method used to compute the power spectrum and
-	*  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
-	*  classgal_v1 [http://class-code.net/], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param err_bias error on the bias
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param Delta \f$\Delta\f$: the overdensity, defined as the
-	*  mean interior density relative to the background
-	*  
-	*  @param kk wave vector module
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return error on &beta;=f/b, where f is the linear growth
-	*  rate and b is the bias
-	*
-	*  @warning the input parameter \f$\Delta\f$ is the background
-	*  overdensity, not the critical overdensity
-	*  \f$\Delta_{crit}\f$; the function
-	*  cosmobl::Cosmology::Delta_vir can be used to convert
-	*  \f$\Delta_{crit}\f$ into \f$\Delta\f$
-	*
-	*  @warning the mass function by Manera et al. (2010) has been
-	*  tested only for z=0 and z=0.5
-	*/
-       double error_beta (const vector<double>, const vector<double>, const double, const string, const string, const double, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      /**
+       *  @brief the error on the specific growth rate &beta;
+       *
+       *  @param MM vector of halo masses
+       *
+       *  @param MF vector of mass function values, d&Phi;/dM=dn(M)/dM
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_bias author(s) who proposed the bias; valid authors
+       *  are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo & Tormen
+       *  2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the correction
+       *  of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param method_SS method used to compute the power spectrum and
+       *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param err_bias error on the bias
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return error on &beta;=f/b, where f is the linear growth
+       *  rate and b is the bias
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; the function
+       *  cosmobl::Cosmology::Delta_vir can be used to convert
+       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *
+       *  @warning the mass function by Manera et al. (2010) has been
+       *  tested only for z=0 and z=0.5
+       */
+      double error_beta (const vector<double>, const vector<double>, const double, const string, const string, const double, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
  
-       /**
-	*  @brief the error on the specific growth rate &beta; from
-	* Bianchi et al. 2012
-	*
-	*  @param Volume comoving volume 
-	*
-	*  @param density comoving density
-	*
-	*  @param Mass_min minimum halo mass
-	* 
-	*  @param Mass_max maximum halo mass
-	*
-	*  @param redshift the redshift
-	*
-	*  @param model_bias author(s) who proposed the bias; valid
-	*  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
-	*  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
-	*  correction of Warren 2004), Tinker (Tinker et al. 2010)
-	*
-	*  @param model_MF author(s) who proposed the mass function;
-	*  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-	*  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-	*  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-	*  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-	*  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-	*  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-	*  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-	*  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-	*  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-	*  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-	*  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-	*  Peacock (by Peacock at al. 2007)
-	*
-	*  @param method_SS method used to compute the power spectrum
-	*  and &sigma;(mass); valid method_SS are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param Delta \f$\Delta\f$: the overdensity, defined as the
-	*  mean interior density relative to the background
-	*  
-	*  @param kk wave vector module
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return error on &beta;=f/b, where f is the linear growth rate
-	*  and b is the bias
-	*
-	*  @warning the input parameter \f$\Delta\f$ is the background
-	*  overdensity, not the critical overdensity
-	*  \f$\Delta_{crit}\f$; the function
-	*  cosmobl::Cosmology::Delta_vir can be used to convert
-	*  \f$\Delta_{crit}\f$ into \f$\Delta\f$
-	*
-	*  @warning the mass function by Manera et al. (2010) has been
-	*  tested only for z=0 and z=0.5
-	*/
-       double error_beta_measured (const double, const double, const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true); 
+      /**
+       *  @brief the error on the specific growth rate &beta; from
+       * Bianchi et al. 2012
+       *
+       *  @param Volume comoving volume 
+       *
+       *  @param density comoving density
+       *
+       *  @param Mass_min minimum halo mass
+       * 
+       *  @param Mass_max maximum halo mass
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_bias author(s) who proposed the bias; valid
+       *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+       *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+       *  correction of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
+       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
+       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
+       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
+       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
+       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
+       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
+       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
+       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
+       *  Peacock (by Peacock at al. 2007)
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return error on &beta;=f/b, where f is the linear growth rate
+       *  and b is the bias
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; the function
+       *  cosmobl::Cosmology::Delta_vir can be used to convert
+       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *
+       *  @warning the mass function by Manera et al. (2010) has been
+       *  tested only for z=0 and z=0.5
+       */
+      double error_beta_measured (const double, const double, const double, const double, const double, const string, const string, const string, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true); 
 
-       /**
-	*  @brief the normalised quadrupole Q
-	*
-	*  @param Mass_min minimum halo mass
-	* 
-	*  @param Mass_max maximum halo mass
-	*
-	*  @param redshift the redshift
-	*
-	*  @param model_bias author(s) who proposed the bias; valid
-	*  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
-	*  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
-	*  correction of Warren 2004), Tinker (Tinker et al. 2010)
-	*
-	*  @param model_MF author(s) who proposed the mass function;
-	*  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-	*  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-	*  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-	*  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-	*  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-	*  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-	*  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-	*  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-	*  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-	*  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-	*  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-	*  Peacock (by Peacock at al. 2007)
-	*
-	*  @param method_SS method used to compute the power spectrum
-	*  and &sigma;(mass); valid method_SS are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param Delta \f$\Delta\f$: the overdensity, defined as the
-	*  mean interior density relative to the background
-	*  
-	*  @param kk wave vector module
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return Q: the normalised quadrupole
-	*
-	*  @warning the input parameter \f$\Delta\f$ is the background
-	*  overdensity, not the critical overdensity
-	*  \f$\Delta_{crit}\f$; the function
-	*  cosmobl::Cosmology::Delta_vir can be used to convert
-	*  \f$\Delta_{crit}\f$ into \f$\Delta\f$
-	*
-	*  @warning the mass function by Manera et al. (2010) has been
-	*  tested only for z=0 and z=0.5
-	*/
-       double quadrupole (const double Mass_min, const double Mass_max, const double redshift, const string model_bias, const string model_MF, const string method_SS, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true); 
+      /**
+       *  @brief the normalised quadrupole Q
+       *
+       *  @param Mass_min minimum halo mass
+       * 
+       *  @param Mass_max maximum halo mass
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_bias author(s) who proposed the bias; valid
+       *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+       *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+       *  correction of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
+       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
+       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
+       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
+       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
+       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
+       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
+       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
+       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
+       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
+       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
+       *  Peacock (by Peacock at al. 2007)
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return Q: the normalised quadrupole
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; the function
+       *  cosmobl::Cosmology::Delta_vir can be used to convert
+       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *
+       *  @warning the mass function by Manera et al. (2010) has been
+       *  tested only for z=0 and z=0.5
+       */
+      double quadrupole (const double Mass_min, const double Mass_max, const double redshift, const string model_bias, const string model_MF, const string method_SS, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true); 
 
-       /**
-	*  @brief the normalised quadrupole Q
-	*
-	*  @param MM vector of halo masses
-	*
-	*  @param MF vector of mass function values, d&Phi;/dM=dn(M)/dM
-	*
-	*  @param redshift the redshift
-	*
-	*  @param model_bias author(s) who proposed the bias; valid
-	*  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
-	*  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
-	*  correction of Warren 2004), Tinker (Tinker et al. 2010)
-	*
-	*  @param method_SS method used to compute the power spectrum
-	*  and &sigma;(mass); valid method_SS are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param Delta \f$\Delta\f$: the overdensity, defined as the
-	*  mean interior density relative to the background
-	*  
-	*  @param kk wave vector module
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return Q: the normalised quadrupole
-	*
-	*  @warning the input parameter \f$\Delta\f$ is the background
-	*  overdensity, not the critical overdensity
-	*  \f$\Delta_{crit}\f$; the function
-	*  cosmobl::Cosmology::Delta_vir can be used to convert
-	*  \f$\Delta_{crit}\f$ into \f$\Delta\f$
-	*/
-       double quadrupole (const vector<double> MM, const vector<double> MF, const double redshift, const string model_bias, const string method_SS, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      /**
+       *  @brief the normalised quadrupole Q
+       *
+       *  @param MM vector of halo masses
+       *
+       *  @param MF vector of mass function values, d&Phi;/dM=dn(M)/dM
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_bias author(s) who proposed the bias; valid
+       *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+       *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+       *  correction of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return Q: the normalised quadrupole
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; the function
+       *  cosmobl::Cosmology::Delta_vir can be used to convert
+       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       */
+      double quadrupole (const vector<double> MM, const vector<double> MF, const double redshift, const string model_bias, const string method_SS, const string output_root="test", const double Delta=200., const double kk=-1., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
 
-       /**
-	*  @brief the mean square bulk flow
-	*
-	*  @param rr comoving radius 
-	*
-	*  @param k_int_min minimum wave vector module up to which the
-	*  integral is computed
-	*
-	*  @param method_Pk method used to compute the power spectrum
-	*  and &sigma;(mass); valid choices for method_Pk are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param redshift the redshift
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration
-	*
-	*  @param file_par name of the parameter file; if a
-	*  parameter file is provided (i.e. file_par!=NULL), it will be
-	*  used, ignoring the cosmological parameters of the object
-	*
-	*  @return the mean square bulk flow
-	*/
-       double square_bulk_flow (const double rr, const double k_int_min, const string method_Pk, const double redshift, const string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
+      /**
+       *  @brief the mean square bulk flow
+       *
+       *  @param rr comoving radius 
+       *
+       *  @param k_int_min minimum wave vector module up to which the
+       *  integral is computed
+       *
+       *  @param method_Pk method used to compute the power spectrum
+       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param file_par name of the parameter file; if a
+       *  parameter file is provided (i.e. file_par!=NULL), it will be
+       *  used, ignoring the cosmological parameters of the object
+       *
+       *  @return the mean square bulk flow
+       */
+      double square_bulk_flow (const double rr, const double k_int_min, const string method_Pk, const double redshift, const string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
-       /**
-	*  @brief the mean square bulk flow
-	*
-	*  @param rr comoving radius 
-	*
-	*  @param k_int_min minimum wave vector module up to which the
-	*  integral is computed
-	*
-	*  @param lgkk vector of log(k)
-	*
-	*  @param lgPk vector of log(P(k))
-	*
-	*  @param redshift the redshift
-	*
-	*  @return the mean square bulk flow
-	*/
-       double square_bulk_flow_Table (const double rr, const double k_int_min, const vector<double> lgkk, const vector<double> lgPk, const double redshift) const; 
+      /**
+       *  @brief the mean square bulk flow
+       *
+       *  @param rr comoving radius 
+       *
+       *  @param k_int_min minimum wave vector module up to which the
+       *  integral is computed
+       *
+       *  @param lgkk vector of log(k)
+       *
+       *  @param lgPk vector of log(P(k))
+       *
+       *  @param redshift the redshift
+       *
+       *  @return the mean square bulk flow
+       */
+      double square_bulk_flow_Table (const double rr, const double k_int_min, const vector<double> lgkk, const vector<double> lgPk, const double redshift) const; 
 
-       /**
-	*  @brief the mean square velocity dispersion
-	*
-	*  @param rr comoving radius 
-	*
-	*  @param k_int_min minimum wave vector module up to which the
-	*  integral is computed
-	*
-	*  @param method_Pk method used to compute the power spectrum
-	*  and &sigma;(mass); valid choices for method_Pk are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param redshift the redshift
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration
-	*
-	*  @param file_par name of the parameter file; if a
-	*  parameter file is provided (i.e. file_par!=NULL), it will be
-	*  used, ignoring the cosmological parameters of the object
-	*
-	*  @return the mean square velocity dispersion
-	*/
-       double square_velocity_dispersion (const double rr, const double k_int_min, const string method_Pk, const double redshift, const string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
+      /**
+       *  @brief the mean square velocity dispersion
+       *
+       *  @param rr comoving radius 
+       *
+       *  @param k_int_min minimum wave vector module up to which the
+       *  integral is computed
+       *
+       *  @param method_Pk method used to compute the power spectrum
+       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param file_par name of the parameter file; if a
+       *  parameter file is provided (i.e. file_par!=NULL), it will be
+       *  used, ignoring the cosmological parameters of the object
+       *
+       *  @return the mean square velocity dispersion
+       */
+      double square_velocity_dispersion (const double rr, const double k_int_min, const string method_Pk, const double redshift, const string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
     
-       /**
-	*  @brief the Cosmic Mach Number
-	*
-	*  @param rr comoving radius 
-	*
-	*  @param k_int_min minimum wave vector module up to which the
-	*  integral is computed
-	*
-	*  @param method_Pk method used to compute the power spectrum
-	*  and &sigma;(mass); valid choices for method_Pk are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param redshift the redshift
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param file_par name of the parameter file; if a
-	*  parameter file is provided (i.e. file_par!=NULL), it will be
-	*  used, ignoring the cosmological parameters of the object
-	*
-	*  @return the Cosmic Mach Number
-	*/
-       double CMN (const double rr, const double k_int_min, const string method_Pk, const double redshift, const string output_root="test", const double k_max=100., const string file_par=par::defaultString) const;
+      /**
+       *  @brief the Cosmic Mach Number
+       *
+       *  @param rr comoving radius 
+       *
+       *  @param k_int_min minimum wave vector module up to which the
+       *  integral is computed
+       *
+       *  @param method_Pk method used to compute the power spectrum
+       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param file_par name of the parameter file; if a
+       *  parameter file is provided (i.e. file_par!=NULL), it will be
+       *  used, ignoring the cosmological parameters of the object
+       *
+       *  @return the Cosmic Mach Number
+       */
+      double CMN (const double rr, const double k_int_min, const string method_Pk, const double redshift, const string output_root="test", const double k_max=100., const string file_par=par::defaultString) const;
 
-       /**
-	*  @brief the hierarchical moments S<SUB>n</SUB>
-	*
-	*  this function provides the hierarchical moments S<SUB>n</SUB>
-	*  given by the perturbation theory (see e.g. Juszkiewicz et
-	*  al. 1993, Bernardeau 1994, Wolk 2013)
-	*
-	*  @param nn order of the moment
-	*
-	*  @param RR comoving separation
-	*
-	*  @param method_SS method used to compute the power spectrum
-	*  and &sigma;(mass); valid method_SS are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return the hierarchical moments, S<SUB>n</SUB>, given by the
-	*  perturbation theory
-	*/
-       double Sn_PT (const int nn, const double RR, const string method_SS, const string output_root="test", const string interpType="Linear", const double k_max=100., const string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      /**
+       *  @brief the hierarchical moments S<SUB>n</SUB>
+       *
+       *  this function provides the hierarchical moments S<SUB>n</SUB>
+       *  given by the perturbation theory (see e.g. Juszkiewicz et
+       *  al. 1993, Bernardeau 1994, Wolk 2013)
+       *
+       *  @param nn order of the moment
+       *
+       *  @param RR comoving separation
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return the hierarchical moments, S<SUB>n</SUB>, given by the
+       *  perturbation theory
+       */
+      double Sn_PT (const int nn, const double RR, const string method_SS, const string output_root="test", const string interpType="Linear", const double k_max=100., const string input_file=par::defaultString, const bool is_parameter_file=true) const;
   
-       /**
-	*  @brief the deprojected hierarchical moments
-	*  &Sigma;<SUB>n</SUB>
-	*
-	*  this function provides the deprojected hierarchical moments
-	*  &Sigma;<SUB>n</SUB> given by the perturbation theory (see
-	*  e.g. Juszkiewicz et al. 1993, Bernardeau 1994, Wolk 2013)
-	*
-	*  @param nn order of the moment
-	*
-	*  @param RR comoving separation
-	*
-	*  @param method_SS method used to compute the power spectrum
-	*  and &sigma;(mass); valid method_SS are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return the deprojected hierarchical moments,
-	*  &Sigma;<SUB>n</SUB>, given by the perturbation theory
-	*/
-       double Sigman_PT (const int nn, const double RR, const string method_SS, const string output_root="test", const string interpType="Linear", const double k_max=100., const string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      /**
+       *  @brief the deprojected hierarchical moments
+       *  &Sigma;<SUB>n</SUB>
+       *
+       *  this function provides the deprojected hierarchical moments
+       *  &Sigma;<SUB>n</SUB> given by the perturbation theory (see
+       *  e.g. Juszkiewicz et al. 1993, Bernardeau 1994, Wolk 2013)
+       *
+       *  @param nn order of the moment
+       *
+       *  @param RR comoving separation
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return the deprojected hierarchical moments,
+       *  &Sigma;<SUB>n</SUB>, given by the perturbation theory
+       */
+      double Sigman_PT (const int nn, const double RR, const string method_SS, const string output_root="test", const string interpType="Linear", const double k_max=100., const string input_file=par::defaultString, const bool is_parameter_file=true) const;
     
-       /**
-	*  @brief 1D monopole in the Kaiser limit
-	*
-	*  this function provides the monopole &xi;<SUB>0</SUB>(r)
-	*  predicted at large scales, in the Kaiser limit
-	*
-	*  @param rad comoving separation
-	*
-	*  @param f_sigma8 f*&sigma;<SUB>8</SUB>
-	*
-	*  @param bias_sigma8 b*&sigma;<SUB>8</SUB>
-	*
-	*  @param method_Pk method used to compute the power spectrum
-	*  and &sigma;(mass); valid choices for method_Pk are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param redshift the redshift
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param xiType 0 \f$\rightarrow\f$ standard; 1
-	*  \f$\rightarrow\f$ Chuang & Wang model
-	*
-	*  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
-	*
-	*  @param xiNL 0 \f$\rightarrow\f$ linear power spectrum; 1
-	*  \f$\rightarrow\f$ non-linear power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param r_min minimum separation up to which the
-	*  correlation function is computed
-	*
-	*  @param r_max maximum separation up to which the
-	*  correlation function is computed
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param aa parameter \e a of Eq. 24 of Anderson et
-	*  al. 2012
-	*
-	*  @param GSL 0 \f$\rightarrow\f$ the Numerical libraries are
-	*  used; 1 \f$\rightarrow\f$ the GSL libraries are used
-	*
-	*  @param prec accuracy of the GSL integration
-	*
-	*  @param file_par name of the parameter file; if a
-	*  parameter file is provided (i.e. file_par!=NULL), it will be
-	*  used, ignoring the cosmological parameters of the object
-	*
-	*  @return &xi;<SUB>0</SUB>
-	*
-	*/
-       double xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const string method_Pk, const double redshift, const string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const string file_par=par::defaultString);
+      /**
+       *  @brief 1D monopole in the Kaiser limit
+       *
+       *  this function provides the monopole &xi;<SUB>0</SUB>(r)
+       *  predicted at large scales, in the Kaiser limit
+       *
+       *  @param rad comoving separation
+       *
+       *  @param f_sigma8 f*&sigma;<SUB>8</SUB>
+       *
+       *  @param bias_sigma8 b*&sigma;<SUB>8</SUB>
+       *
+       *  @param method_Pk method used to compute the power spectrum
+       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param xiType 0 \f$\rightarrow\f$ standard; 1
+       *  \f$\rightarrow\f$ Chuang & Wang model
+       *
+       *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
+       *
+       *  @param xiNL 0 \f$\rightarrow\f$ linear power spectrum; 1
+       *  \f$\rightarrow\f$ non-linear power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param r_min minimum separation up to which the
+       *  correlation function is computed
+       *
+       *  @param r_max maximum separation up to which the
+       *  correlation function is computed
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param aa parameter \e a of Eq. 24 of Anderson et
+       *  al. 2012
+       *
+       *  @param GSL true \f$\rightarrow\f$ the GSL libraries are
+       *  used
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param file_par name of the parameter file; if a
+       *  parameter file is provided (i.e. file_par!=NULL), it will be
+       *  used, ignoring the cosmological parameters of the object
+       *
+       *  @return &xi;<SUB>0</SUB>
+       *
+       */
+      double xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const string method_Pk, const double redshift, const string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const string file_par=par::defaultString);
     
-       /**
-	*  @brief 1D monopole in the Kaiser limit
-	*
-	*  this function provides the monopole &xi;<SUB>0</SUB>(r)
-	*  predicted at large scales, in the Kaiser limit
-	*
-	*  @param rad comoving separations
-	*
-	*  @param bias b
-	*
-	*  @param method_Pk method used to compute the power spectrum
-	*  and &sigma;(mass); valid choices for method_Pk are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$ non-linear power
-	*  spectrum
-	*
-	*  @param redshift the redshift
-	*
-	*  @param output_dir the output_dir directory
-	*  where the output of external codes are written
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param step number of steps
-	*
-	*  @param prec accuracy of the GSL integration
-	*
-	*  @param file_par name of the parameter file; if a
-	*  parameter file is provided (i.e. file_par!=NULL), it will be
-	*  used, ignoring the cosmological parameters of the object
-	*
-	*  @return &xi;<SUB>0</SUB>
-	*
-	*/
-       vector<double> xi0_Kaiser (const vector<double> rad, const double bias, const string method_Pk, const bool NL, const double redshift, const string output_dir, const string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const string file_par);
+      /**
+       *  @brief 1D monopole in the Kaiser limit
+       *
+       *  this function provides the monopole &xi;<SUB>0</SUB>(r)
+       *  predicted at large scales, in the Kaiser limit
+       *
+       *  @param rad comoving separations
+       *
+       *  @param bias b
+       *
+       *  @param method_Pk method used to compute the power spectrum
+       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$ non-linear power
+       *  spectrum
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_dir the output_dir directory
+       *  where the output of external codes are written
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param step number of steps
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param file_par name of the parameter file; if a
+       *  parameter file is provided (i.e. file_par!=NULL), it will be
+       *  used, ignoring the cosmological parameters of the object
+       *
+       *  @return &xi;<SUB>0</SUB>
+       *
+       */
+      vector<double> xi0_Kaiser (const vector<double> rad, const double bias, const string method_Pk, const bool NL, const double redshift, const string output_dir, const string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const string file_par);
 
-       /**
-	*  @brief 2D correlation function, &xi;(r<SUB>p</SUB>,&pi;),
-	*  predicted by the dispersion model
-	*
-	*  @param rp r<SUB>p</SUB>: the comoving separation perpendicular
-	*  to the line-of-sight
-	*
-	*  @param pi &pi;: the comoving separation parallel to the
-	*  line-of-sight
-	*
-	*  @param f_sigma8 f*&sigma;<SUB>8</SUB>
-	*
-	*  @param bias_sigma8 b*&sigma;<SUB>8</SUB>
-	*
-	*  @param sigma12 &sigma;<SUB>12</SUB>: pairwise peculiar
-	*  velocity dispersion
-	*
-	*  @param method_Pk method used to compute the power spectrum
-	*  and &sigma;(mass); valid choices for method_Pk are: CAMB
-	*  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	*  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param redshift the redshift
-	*
-	*  @param FV 0 \f$\rightarrow\f$ exponential form for f(v); 1
-	*  \f$\rightarrow\f$ Gaussian form for f(v); where f(v) is the
-	*  velocity distribution function
-	*
-	*  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1
-	*  \f$\rightarrow\f$ non-linear power spectrum
-	*
-	*  @param rr vector of r, the module of the comoving
-	*  separation
-	*
-	*  @param Xi vector of &xi;(r), the two-point correlation
-	*  function of dark matter
-	*
-	*  @param Xi_ vector of barred &xi;(r),
-	*
-	*  @param Xi__ vector of double-barred &xi;(r)
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param index internal parameter used when minimizing the
-	*  &chi;<SUB>2</SUB>
-	*
-	*  @param bias_nl 0 \f$\rightarrow\f$ linear bias; 1
-	*  \f$\rightarrow\f$ non-linear bias
-	*
-	*  @param bA b<SUB>a</SUB> non-linear bias parameter
-	*
-	*  @param xiType 0 \f$\rightarrow\f$ standard; 1
-	*  \f$\rightarrow\f$ Chuang & Wang model
-	*
-	*  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
-	*
-	*  @param xiNL 0 \f$\rightarrow\f$ linear power spectrum; 1
-	*  \f$\rightarrow\f$ non-linear power spectrum
-	*
-	*  @param v_min minimum velocity used in the convolution of the
-	*  correlation function
-	*
-	*  @param v_max maximum velocity used in the convolution of the
-	*  correlation function
-	*
-	*  @param step_v number of steps used in the convolution of the
-	*  correlation function
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param r_min minimum separation up to which the
-	*  correlation function is computed
-	*
-	*  @param r_max maximum separation up to which the
-	*  correlation function is computed
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param aa parameter \e a of Eq. 24 of Anderson et
-	*  al. 2012
-	*
-	*  @param GSL 0 \f$\rightarrow\f$ the Numerical libraries are used; 1 \f$\rightarrow\f$
-	*  the GSL libraries are used
-	*
-	*  @param prec accuracy of the GSL integration
-	*
-	*  @param file_par name of the parameter file; if a
-	*  parameter file is provided (i.e. file_par!=NULL), it will be
-	*  used, ignoring the cosmological parameters of the object
-	*
-	*  @return &xi;(r<SUB>p</SUB>,&pi;)
-	*/
-       double xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const string method_Pk, const double redshift, const int FV, const bool NL, vector<double> rr, vector<double> &Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root="test", const int index=-1, const bool bias_nl=0, const double bA=-1., const bool xiType=0, const double k_star=-1., const bool xiNL=0, const double v_min=-3000., const double v_max=3000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const string file_par=par::defaultString);
+      /**
+       *  @brief 2D correlation function, &xi;(r<SUB>p</SUB>,&pi;),
+       *  predicted by the dispersion model
+       *
+       *  @param rp r<SUB>p</SUB>: the comoving separation perpendicular
+       *  to the line-of-sight
+       *
+       *  @param pi &pi;: the comoving separation parallel to the
+       *  line-of-sight
+       *
+       *  @param f_sigma8 f*&sigma;<SUB>8</SUB>
+       *
+       *  @param bias_sigma8 b*&sigma;<SUB>8</SUB>
+       *
+       *  @param sigma12 &sigma;<SUB>12</SUB>: pairwise peculiar
+       *  velocity dispersion
+       *
+       *  @param method_Pk method used to compute the power spectrum
+       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
+       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param FV 0 \f$\rightarrow\f$ exponential form for f(v); 1
+       *  \f$\rightarrow\f$ Gaussian form for f(v); where f(v) is the
+       *  velocity distribution function
+       *
+       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1
+       *  \f$\rightarrow\f$ non-linear power spectrum
+       *
+       *  @param rr vector of r, the module of the comoving
+       *  separation
+       *
+       *  @param Xi vector of &xi;(r), the two-point correlation
+       *  function of dark matter
+       *
+       *  @param Xi_ vector of barred &xi;(r),
+       *
+       *  @param Xi__ vector of double-barred &xi;(r)
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param index internal parameter used when minimizing the
+       *  &chi;<SUB>2</SUB>
+       *
+       *  @param bias_nl 0 \f$\rightarrow\f$ linear bias; 1
+       *  \f$\rightarrow\f$ non-linear bias
+       *
+       *  @param bA b<SUB>a</SUB> non-linear bias parameter
+       *
+       *  @param xiType 0 \f$\rightarrow\f$ standard; 1
+       *  \f$\rightarrow\f$ Chuang & Wang model
+       *
+       *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
+       *
+       *  @param xiNL 0 \f$\rightarrow\f$ linear power spectrum; 1
+       *  \f$\rightarrow\f$ non-linear power spectrum
+       *
+       *  @param v_min minimum velocity used in the convolution of the
+       *  correlation function
+       *
+       *  @param v_max maximum velocity used in the convolution of the
+       *  correlation function
+       *
+       *  @param step_v number of steps used in the convolution of the
+       *  correlation function
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param r_min minimum separation up to which the
+       *  correlation function is computed
+       *
+       *  @param r_max maximum separation up to which the
+       *  correlation function is computed
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param aa parameter \e a of Eq. 24 of Anderson et
+       *  al. 2012
+       *
+       *  @param GSL true \f$\rightarrow\f$ the GSL libraries are
+       *  used
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param file_par name of the parameter file; if a
+       *  parameter file is provided (i.e. file_par!=NULL), it will be
+       *  used, ignoring the cosmological parameters of the object
+       *
+       *  @return &xi;(r<SUB>p</SUB>,&pi;)
+       */
+      double xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const string method_Pk, const double redshift, const int FV, const bool NL, vector<double> rr, vector<double> &Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root="test", const int index=-1, const bool bias_nl=0, const double bA=-1., const bool xiType=0, const double k_star=-1., const bool xiNL=0, const double v_min=-3000., const double v_max=3000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const string file_par=par::defaultString);
 
-       /**
-	*  @brief the function &xi;<SUB>*</SUB> of the Chuang & Wang 2012
-	*  model
-	*
-	*  see Chuang & Wang 2012, 1209.0210
-	*
-	*  @param rr comoving separation
-	*
-	*  @param redshift the redshift
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration
-	*
-	*  @param file_par name of the parameter file; if a
-	*  parameter file is provided (i.e. file_par!=NULL), it will be
-	*  used, ignoring the cosmological parameters of the object
-	*
-	*  @return &xi;<SUB>*</SUB>
-	*/
-       double xi_star (const double rr, const double redshift, const string output_root="test", const double k_star=-1., const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
+      /**
+       *  @brief the function &xi;<SUB>*</SUB> of the Chuang & Wang 2012
+       *  model
+       *
+       *  see Chuang & Wang 2012, 1209.0210
+       *
+       *  @param rr comoving separation
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param file_par name of the parameter file; if a
+       *  parameter file is provided (i.e. file_par!=NULL), it will be
+       *  used, ignoring the cosmological parameters of the object
+       *
+       *  @return &xi;<SUB>*</SUB>
+       */
+      double xi_star (const double rr, const double redshift, const string output_root="test", const double k_star=-1., const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
   
-       /**
-	*  @brief the function &xi;<SUB>g,nw</SUB>(s) of the Chuang &
-	*  Wang 2012 model
-	*
-	*  see Chuang & Wang 2012, 1209.0210
-	*
-	*  @param rp r<SUB>p</SUB>: the comoving separation perpendicular
-	*  to the line-of-sight
-	*
-	*  @param pi &pi;: the comoving separation parallel to the
-	*  line-of-sight
-	*      
-	*  @param f_sigma8 f*&sigma;<SUB>8</SUB>
-	*
-	*  @param bias_sigma8 b*&sigma;<SUB>8</SUB>
-	*
-	*  @param bA b<SUB>a</SUB> non-linear bias parameter
-	*
-	*  @param redshift the redshift
-	*    
-	*  @param rr vector of r, the module of the comoving
-	*  separation
-	*
-	*  @param Xi vector of &xi;(r), the two-point correlation
-	*  function of dark matter
-	*
-	*  @param Xi_ vector of barred &xi;(r),
-	*
-	*  @param Xi__ vector of double-barred &xi;(r)
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @return &xi;<SUB>g,nw</SUB>(s)
-	*/
-       double xisnl_gnw (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double bA, const double redshift, vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root="test");
+      /**
+       *  @brief the function &xi;<SUB>g,nw</SUB>(s) of the Chuang &
+       *  Wang 2012 model
+       *
+       *  see Chuang & Wang 2012, 1209.0210
+       *
+       *  @param rp r<SUB>p</SUB>: the comoving separation perpendicular
+       *  to the line-of-sight
+       *
+       *  @param pi &pi;: the comoving separation parallel to the
+       *  line-of-sight
+       *      
+       *  @param f_sigma8 f*&sigma;<SUB>8</SUB>
+       *
+       *  @param bias_sigma8 b*&sigma;<SUB>8</SUB>
+       *
+       *  @param bA b<SUB>a</SUB> non-linear bias parameter
+       *
+       *  @param redshift the redshift
+       *    
+       *  @param rr vector of r, the module of the comoving
+       *  separation
+       *
+       *  @param Xi vector of &xi;(r), the two-point correlation
+       *  function of dark matter
+       *
+       *  @param Xi_ vector of barred &xi;(r),
+       *
+       *  @param Xi__ vector of double-barred &xi;(r)
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @return &xi;<SUB>g,nw</SUB>(s)
+       */
+      double xisnl_gnw (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double bA, const double redshift, vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root="test");
  
-       /**
-	*  @brief the function &xi;<SUB>g,BAO</SUB>(s) of the Chuang &
-	*  Wang 2012 model
-	*
-	*  see Chuang & Wang 2012, 1209.0210
-	*
-	*  @param rp r<SUB>p</SUB>: the comoving separation perpendicular
-	*  to the line-of-sight
-	*
-	*  @param pi &pi;: the comoving separation parallel to the
-	*  line-of-sight
-	*      
-	*  @param f_sigma8 f*&sigma;<SUB>8</SUB>
-	*
-	*  @param bias_sigma8 b*&sigma;<SUB>8</SUB>
-	*
-	*  @param redshift the redshift
-	*
-	*  @param rr vector of r, the module of the comoving
-	*  separation
-	*
-	*  @param Xi vector of &xi;(r), the two-point correlation
-	*  function of dark matter
-	*
-	*  @param Xi_ vector of barred &xi;(r),
-	*
-	*  @param Xi__ vector of double-barred &xi;(r)
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
-	*
-	*  @param x_min minimum velocity used in the integral of the
-	*  Chuang & Wang model
-	*
-	*  @param x_max maximum velocity used in the integral of the
-	*  Chuang & Wang model
-	*
-	*  @param step_x number of steps in the integral of the Chuang &
-	*  Wang model
-	*
-	*  @return &xi;<SUB>g,BAO</SUB>(s)
-	*/
-       double xis_gBAO (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double redshift, vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root="test", const double k_star=-1., const double x_min=-3000., const double x_max=3000., const int step_x=500);
+      /**
+       *  @brief the function &xi;<SUB>g,BAO</SUB>(s) of the Chuang &
+       *  Wang 2012 model
+       *
+       *  see Chuang & Wang 2012, 1209.0210
+       *
+       *  @param rp r<SUB>p</SUB>: the comoving separation perpendicular
+       *  to the line-of-sight
+       *
+       *  @param pi &pi;: the comoving separation parallel to the
+       *  line-of-sight
+       *      
+       *  @param f_sigma8 f*&sigma;<SUB>8</SUB>
+       *
+       *  @param bias_sigma8 b*&sigma;<SUB>8</SUB>
+       *
+       *  @param redshift the redshift
+       *
+       *  @param rr vector of r, the module of the comoving
+       *  separation
+       *
+       *  @param Xi vector of &xi;(r), the two-point correlation
+       *  function of dark matter
+       *
+       *  @param Xi_ vector of barred &xi;(r),
+       *
+       *  @param Xi__ vector of double-barred &xi;(r)
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
+       *
+       *  @param x_min minimum velocity used in the integral of the
+       *  Chuang & Wang model
+       *
+       *  @param x_max maximum velocity used in the integral of the
+       *  Chuang & Wang model
+       *
+       *  @param step_x number of steps in the integral of the Chuang &
+       *  Wang model
+       *
+       *  @return &xi;<SUB>g,BAO</SUB>(s)
+       */
+      double xis_gBAO (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double redshift, vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root="test", const double k_star=-1., const double x_min=-3000., const double x_max=3000., const int step_x=500);
  
-       /**
-	*  @brief 2D correlation function, &xi;(r<SUB>p</SUB>,&pi;),
-	*  predicted by the Chuang & Wang model
-	*
-	*  @param rp r<SUB>p</SUB>: the comoving separation perpendicular
-	*  to the line-of-sight
-	*
-	*  @param pi &pi;: the comoving separation parallel to the
-	*  line-of-sight
-	*
-	*  @param beta &beta;=f/b, where f is the linear growth rate
-	*  and b is the bias
-	*
-	*  @param bias_lin linear bias
-	*
-	*  @param bA b<SUB>a</SUB> non-linear bias parameter
-	*
-	*  @param sigmav0 &sigma;<SUB>0</SUB>(v): parameter of the
-	*  velocity distribution function, f(v)
-	*
-	*  @param cmu parameter of the velocity distribution function,
-	*  f(v)
-	*
-	*  @param cs1 parameter of the velocity distribution function,
-	*  f(v)
-	*
-	*  @param cs2 parameter of the velocity distribution function,
-	*  f(v)
-	*
-	*  @param redshift the redshift
-	*
-	*  @param rr1 vector of r, the module of the comoving separation
-	*
-	*  @param Xi1 vector of &xi;(r), the two-point correlation
-	*  function of dark matter
-	*
-	*  @param rr2 vector of r, the module of the comoving separation
-	*
-	*  @param Xi2 vector of &xi;(r), the two-point correlation
-	*  function of dark matter
-	*
-	*  @param Xi1_ vector of barred &xi;(r),
-	*
-	*  @param Xi1__ vector of double-barred &xi;(r)
-	*   
-	*  @param Xi2_ vector of barred &xi;(r),
-	*
-	*  @param Xi2__ vector of double-barred &xi;(r)
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param BAO 0 \f$\rightarrow\f$ no BAO convolution; 1 \f$\rightarrow\f$ BAO
-	*  convolution
-	*
-	*  @param xiType 0 \f$\rightarrow\f$ standard; 1 \f$\rightarrow\f$ Chuang & Wang model
-	*
-	*  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
-	*
-	*  @param xiNL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
-	*  non-linear power spectrum
-	*
-	*  @param r_min minimum separation up to which the
-	*  correlation function is computed
-	*
-	*  @param r_max maximum separation up to which the
-	*  correlation function is computed
-	*
-	*  @param v_min minimum velocity used in the convolution of the
-	*  correlation function
-	*
-	*  @param v_max maximum velocity used in the convolution of the
-	*  correlation function
-	*
-	*  @param step_v number of steps used in the convolution of the
-	*  correlation function
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param x_min minimum velocity used in the integral of the
-	*  Chuang & Wang model
-	*
-	*  @param x_max maximum velocity used in the integral of the
-	*  Chuang & Wang model
-	*
-	*  @param step_x number of steps in the integral of the Chuang &
-	*  Wang model
-	*
-	*  @param aa parameter \e a of Eq. 24 of Anderson et
-	*  al. 2012
-	*
-	*  @param GSL 0 \f$\rightarrow\f$ the Numerical libraries are used; 1 \f$\rightarrow\f$
-	*  the GSL libraries are used
-	*
-	*  @param prec accuracy of the GSL integration
-	*
-	*  @param file_par name of the parameter file; if a
-	*  parameter file is provided (i.e. file_par!=NULL), it will be
-	*  used, ignoring the cosmological parameters of the object
-	*
-	*  @return &xi;(r<SUB>p</SUB>,&pi;)
-	*/
-       double xi2D_CW (const double rp, const double pi, const double beta, const double bias_lin, const double bA, const double sigmav0, const double cmu, const double cs1, const double cs2, const double redshift, vector<double> rr1, vector<double> Xi1, vector<double> rr2, vector<double> Xi2, vector<double> &Xi1_, vector<double> &Xi1__, vector<double> &Xi2_, vector<double> &Xi2__, const string output_root="test", const bool BAO=1, const bool xiType=0, const double k_star=-1, const bool xiNL=0, const double r_min=0.1, const double r_max=150., const double v_min=-3000., const double v_max=3000., const int step_v=500, const double k_min=0., const double k_max=100., const double x_min=-3000., const double x_max=3000., const int step_x=500, const double aa=0., const bool GSL=false, const double prec=1.e-2, const string file_par=par::defaultString);
+      /**
+       *  @brief 2D correlation function, &xi;(r<SUB>p</SUB>,&pi;),
+       *  predicted by the Chuang & Wang model
+       *
+       *  @param rp r<SUB>p</SUB>: the comoving separation perpendicular
+       *  to the line-of-sight
+       *
+       *  @param pi &pi;: the comoving separation parallel to the
+       *  line-of-sight
+       *
+       *  @param beta &beta;=f/b, where f is the linear growth rate
+       *  and b is the bias
+       *
+       *  @param bias_lin linear bias
+       *
+       *  @param bA b<SUB>a</SUB> non-linear bias parameter
+       *
+       *  @param sigmav0 &sigma;<SUB>0</SUB>(v): parameter of the
+       *  velocity distribution function, f(v)
+       *
+       *  @param cmu parameter of the velocity distribution function,
+       *  f(v)
+       *
+       *  @param cs1 parameter of the velocity distribution function,
+       *  f(v)
+       *
+       *  @param cs2 parameter of the velocity distribution function,
+       *  f(v)
+       *
+       *  @param redshift the redshift
+       *
+       *  @param rr1 vector of r, the module of the comoving separation
+       *
+       *  @param Xi1 vector of &xi;(r), the two-point correlation
+       *  function of dark matter
+       *
+       *  @param rr2 vector of r, the module of the comoving separation
+       *
+       *  @param Xi2 vector of &xi;(r), the two-point correlation
+       *  function of dark matter
+       *
+       *  @param Xi1_ vector of barred &xi;(r),
+       *
+       *  @param Xi1__ vector of double-barred &xi;(r)
+       *   
+       *  @param Xi2_ vector of barred &xi;(r),
+       *
+       *  @param Xi2__ vector of double-barred &xi;(r)
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param BAO 0 \f$\rightarrow\f$ no BAO convolution; 1 \f$\rightarrow\f$ BAO
+       *  convolution
+       *
+       *  @param xiType 0 \f$\rightarrow\f$ standard; 1 \f$\rightarrow\f$ Chuang & Wang model
+       *
+       *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
+       *
+       *  @param xiNL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
+       *  non-linear power spectrum
+       *
+       *  @param r_min minimum separation up to which the
+       *  correlation function is computed
+       *
+       *  @param r_max maximum separation up to which the
+       *  correlation function is computed
+       *
+       *  @param v_min minimum velocity used in the convolution of the
+       *  correlation function
+       *
+       *  @param v_max maximum velocity used in the convolution of the
+       *  correlation function
+       *
+       *  @param step_v number of steps used in the convolution of the
+       *  correlation function
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param x_min minimum velocity used in the integral of the
+       *  Chuang & Wang model
+       *
+       *  @param x_max maximum velocity used in the integral of the
+       *  Chuang & Wang model
+       *
+       *  @param step_x number of steps in the integral of the Chuang &
+       *  Wang model
+       *
+       *  @param aa parameter \e a of Eq. 24 of Anderson et
+       *  al. 2012
+       *
+       *  @param GSL true \f$\rightarrow\f$ the GSL libraries are
+       *  used
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param file_par name of the parameter file; if a
+       *  parameter file is provided (i.e. file_par!=NULL), it will be
+       *  used, ignoring the cosmological parameters of the object
+       *
+       *  @return &xi;(r<SUB>p</SUB>,&pi;)
+       */
+      double xi2D_CW (const double rp, const double pi, const double beta, const double bias_lin, const double bA, const double sigmav0, const double cmu, const double cs1, const double cs2, const double redshift, vector<double> rr1, vector<double> Xi1, vector<double> rr2, vector<double> Xi2, vector<double> &Xi1_, vector<double> &Xi1__, vector<double> &Xi2_, vector<double> &Xi2__, const string output_root="test", const bool BAO=1, const bool xiType=0, const double k_star=-1, const bool xiNL=0, const double r_min=0.1, const double r_max=150., const double v_min=-3000., const double v_max=3000., const int step_v=500, const double k_min=0., const double k_max=100., const double x_min=-3000., const double x_max=3000., const int step_x=500, const double aa=0., const bool GSL=false, const double prec=1.e-2, const string file_par=par::defaultString);
 
-       ///@}
+      ///@}
 
 
-       /**
-	*  @name Functions to model baryon acoustic oscillations
-	*/
-       ///@{
+      /**
+       *  @name Functions to model baryon acoustic oscillations
+       */
+      ///@{
     
-       /**
-	*  @brief the sound horizon at the drag epoch
-	*  r<SUB>s</SUB>(z<SUB>d</SUB>), valid choices for method_Pk
-	*  are: EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html],
-	*  CAMB [http://camb.info/]
-	*
-	*  @author Alfonso Veropalumbo
-	*  @author alfonso.veropalumbo@unibo.it
-	*
-	*  @param method_Pk the method to compute the sound horizon
-	*  
-	*  @param T_CMB T<SUB>CMB</SUB>: the present day CMB temperature [K]
-	*     
-	*  @return r<SUB>s</SUB>
-	*/
-       double rs (const string, const double T_CMB=par::TCMB) const;
+      /**
+       *  @brief the sound horizon at the drag epoch
+       *  r<SUB>s</SUB>(z<SUB>d</SUB>), valid choices for method_Pk
+       *  are: EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html],
+       *  CAMB [http://camb.info/]
+       *
+       *  @author Alfonso Veropalumbo
+       *  @author alfonso.veropalumbo@unibo.it
+       *
+       *  @param method_Pk the method to compute the sound horizon
+       *  
+       *  @param T_CMB T<SUB>CMB</SUB>: the present day CMB temperature [K]
+       *     
+       *  @return r<SUB>s</SUB>
+       */
+      double rs (const string, const double T_CMB=par::TCMB) const;
 
-       /**
-	*  @brief the sound horizon at the drag epoch predicted by
-	*  Eisentein & Hu 1998 
-	*
-	*  see Eisentein & Hu 1998, Section 2.1
-	*
-	*  @author Alfonso Veropalumbo 
-	*  @author alfonso.veropalumbo@unibo.it 
-	*  @param T_CMB CMB temperature
-	*  @return r<SUB>s</SUB>
-	*/
-       double rs_EH (const double T_CMB=par::TCMB) const;
+      /**
+       *  @brief the sound horizon at the drag epoch predicted by
+       *  Eisentein & Hu 1998 
+       *
+       *  see Eisentein & Hu 1998, Section 2.1
+       *
+       *  @author Alfonso Veropalumbo 
+       *  @author alfonso.veropalumbo@unibo.it 
+       *  @param T_CMB CMB temperature
+       *  @return r<SUB>s</SUB>
+       */
+      double rs_EH (const double T_CMB=par::TCMB) const;
 
-       /**
-	*  @brief the sound horizon at the drag epoch estimated with CAMB [http://camb.info/],
-	*  analytical formula by Aubourg et al. 2014
-	*
-	*  see Anderson et al 2014, Eq. 16
-	*  
-	*  @author Alfonso Veropalumbo
-	*  @author alfonso.veropalumbo@unibo.it
-	*  @return r<SUB>s</SUB>
-	*/
-       double rs_CAMB () const;
+      /**
+       *  @brief the sound horizon at the drag epoch estimated with CAMB [http://camb.info/],
+       *  analytical formula by Aubourg et al. 2014
+       *
+       *  see Anderson et al 2014, Eq. 16
+       *  
+       *  @author Alfonso Veropalumbo
+       *  @author alfonso.veropalumbo@unibo.it
+       *  @return r<SUB>s</SUB>
+       */
+      double rs_CAMB () const;
   
-       /**
-	*  @brief the fiducial cosmology independent ratio
-	*  r<SUB>s</SUB>/D<SUB>V</SUB>,  valid choices for method_Pk are: EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html],
-	*  CAMB [http://camb.info/]
-	*
-	*  both r<SUB>s</SUB> and D<SUB>V</SUB> are in Mpc
-	*
-	*  @author Alfonso Veropalumbo
-	*  @author alfonso.veropalumbo@unibo.it
-	*
-	*  @param redshift the redshift
-	*  @param method_Pk method used to compute the sound horizon;
-	*  @param T_CMB CMB temperature
-	*
-	*  @return y<SUB>s</SUB>
-	*/
-       double ys (const double, const string, const double T_CMB=par::TCMB) const;
+      /**
+       *  @brief the fiducial cosmology independent ratio
+       *  r<SUB>s</SUB>/D<SUB>V</SUB>,  valid choices for method_Pk are: EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html],
+       *  CAMB [http://camb.info/]
+       *
+       *  both r<SUB>s</SUB> and D<SUB>V</SUB> are in Mpc
+       *
+       *  @author Alfonso Veropalumbo
+       *  @author alfonso.veropalumbo@unibo.it
+       *
+       *  @param redshift the redshift
+       *  @param method_Pk method used to compute the sound horizon;
+       *  @param T_CMB CMB temperature
+       *
+       *  @return y<SUB>s</SUB>
+       */
+      double ys (const double, const string, const double T_CMB=par::TCMB) const;
   
-       /**
-	*  @brief the acoustic parameter 
-	*
-	*  see Eisenstein 2005 
-	*
-	*  @author Alfonso Veropalumbo
-	*  @author alfonso.veropalumbo@unibo.it
-	*  @param redshift the redshift
-	*  @return the acoustic parameter 
-	*/
-       double Az (const double) const;
+      /**
+       *  @brief the acoustic parameter 
+       *
+       *  see Eisenstein 2005 
+       *
+       *  @author Alfonso Veropalumbo
+       *  @author alfonso.veropalumbo@unibo.it
+       *  @param redshift the redshift
+       *  @return the acoustic parameter 
+       */
+      double Az (const double) const;
   
-       /**
-	*  @brief the linear point  
-	*
-	*  see Anselmi et al. 2016 
-	*
-	*  @author Alfonso Veropalumbo
-	*  @author alfonso.veropalumbo@unibo.it
-	*
-	*  @param redshift the redshift
-	*
-	*  @param rmin the minimum scale
-	*
-	*  @param rmax the maximum scale
-	*
-	*  @param nbinr the number of scale bins
-	*
-	*  @param interpType the interpolation type
-	*
-	*  @return vector containing the linear point, the dip 
-	*  and the BAO peak for the correlation function at the redshift
-	*  provided
-	*
-	*/
-       vector<double> linear_point (const double redshift, const double rmin=60., const double rmax=150., const int nbinr=100, const string interpType="Spline");
+      /**
+       *  @brief the linear point  
+       *
+       *  see Anselmi et al. 2016 
+       *
+       *  @author Alfonso Veropalumbo
+       *  @author alfonso.veropalumbo@unibo.it
+       *
+       *  @param redshift the redshift
+       *
+       *  @param rmin the minimum scale
+       *
+       *  @param rmax the maximum scale
+       *
+       *  @param nbinr the number of scale bins
+       *
+       *  @param interpType the interpolation type
+       *
+       *  @return vector containing the linear point, the dip 
+       *  and the BAO peak for the correlation function at the redshift
+       *  provided
+       *
+       */
+      vector<double> linear_point (const double redshift, const double rmin=60., const double rmax=150., const int nbinr=100, const string interpType="Spline");
 
-       ///@}
+      ///@}
 
 
-       /**
-	*  @name Functions to model cosmological quantities in non-Gaussian cosmologies
-	*/
-       ///@{
+      /**
+       *  @name Functions to model cosmological quantities in non-Gaussian cosmologies
+       */
+      ///@{
 
-       /**
-	*  @brief the amplitude of the matter power spectrum
-	*
-	*  @author Cosimo Fedeli
-	*  @author cosimo.fedeli@oabo.inaf.it
-	*
-	*  @param method_Pk method used to compute the power spectrum;
-	*  valid choices for method_Pk are: CAMB [http://camb.info/],
-	*  classgal_v1 [http://class-code.net/], MPTbreeze-v1
-	*  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	* 
-	*  @param output_root the output_root parameter of the
-	*  parameter file used to compute the power spectrum; it can be
-	*  any name
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*       
-	*  @param file_par name of the parameter file; if a parameter
-	*  file is provided (i.e. file_par!=NULL), it will use be used,
-	*  ignoring the cosmological parameters of the object
-	*
-	*  @return A<SUB>m</SUB>
-	*/
-       double Am (const string method_Pk, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString); 
+      /**
+       *  @brief the amplitude of the matter power spectrum
+       *
+       *  @author Cosimo Fedeli
+       *  @author cosimo.fedeli@oabo.inaf.it
+       *
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       * 
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *       
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will use be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @return A<SUB>m</SUB>
+       */
+      double Am (const string method_Pk, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString); 
 
-       /**
-	*  @brief the potential spectral amplitude 
-	*
-	*  @author Cosimo Fedeli
-	*  @author cosimo.fedeli@oabo.inaf.it
-	*
-	*  @param method_Pk method used to compute the power spectrum;
-	*  valid choices for method_Pk are: CAMB [http://camb.info/],
-	*  classgal_v1 [http://class-code.net/], MPTbreeze-v1
-	*  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	* 
-	*  @param output_root the output_root parameter of the
-	*  parameter file used to compute the power spectrum; it can be
-	*  any name
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param file_par name of the parameter file; if a parameter
-	*  file is provided (i.e. file_par!=NULL), it will use be used,
-	*  ignoring the cosmological parameters of the object
-	*
-	*  @return the potential spectral amplitude
-	*/
-       double potential_spectral_amplitude (const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
+      /**
+       *  @brief the potential spectral amplitude 
+       *
+       *  @author Cosimo Fedeli
+       *  @author cosimo.fedeli@oabo.inaf.it
+       *
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       * 
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will use be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @return the potential spectral amplitude
+       */
+      double potential_spectral_amplitude (const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
-       /**
-	*  @brief the bispectrum
-	*
-	*  @author Cosimo Fedeli
-	*  @author cosimo.fedeli@oabo.inaf.it
-	*
-	*  @param kk wave vector module
-	*  
-	*  @param method_Pk method used to compute the power spectrum;
-	*  valid choices for method_Pk are: CAMB [http://camb.info/],
-	*  classgal_v1 [http://class-code.net/], MPTbreeze-v1
-	*  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	* 
-	*  @param output_root the output_root parameter of the
-	*  parameter file used to compute the power spectrum; it can be
-	*  any name
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param file_par name of the parameter file; if a parameter
-	*  file is provided (i.e. file_par!=NULL), it will use be used,
-	*  ignoring the cosmological parameters of the object
-	*
-	*  @return the potential spectral amplitude
-	*/
-       double bispectrum (const vector<double>, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
+      /**
+       *  @brief the bispectrum
+       *
+       *  @author Cosimo Fedeli
+       *  @author cosimo.fedeli@oabo.inaf.it
+       *
+       *  @param kk wave vector module
+       *  
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       * 
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will use be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @return the potential spectral amplitude
+       */
+      double bispectrum (const vector<double>, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
     
-       /**
-	*  @brief auxiliary function to estimate cosmological quantities
-	*  in non-Gaussian cosmologies
-	*
-	*  @author Cosimo Fedeli
-	*  @author cosimo.fedeli@oabo.inaf.it
-	*
-	*  @param kk wave vector module
-	*
-	*  @param mass halo mass
-	*  
-	*  @param method_Pk method used to compute the power spectrum; 
-	*  valid choices for method_Pk are: CAMB [http://camb.info/], classgal_v1
-	*  [http://class-code.net/], MPTbreeze-v1
-	*  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	* 
-	*  @param output_root the output_root parameter of the
-	*  parameter file used to compute the power spectrum; it can be
-	*  any name
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param file_par name of the parameter file; if a parameter
-	*  file is provided (i.e. file_par!=NULL), it will use be used,
-	*  ignoring the cosmological parameters of the object
-	*
-	*  @return mrk
-	*/
-       double mrk (const double, const double, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
+      /**
+       *  @brief auxiliary function to estimate cosmological quantities
+       *  in non-Gaussian cosmologies
+       *
+       *  @author Cosimo Fedeli
+       *  @author cosimo.fedeli@oabo.inaf.it
+       *
+       *  @param kk wave vector module
+       *
+       *  @param mass halo mass
+       *  
+       *  @param method_Pk method used to compute the power spectrum; 
+       *  valid choices for method_Pk are: CAMB [http://camb.info/], classgal_v1
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       * 
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will use be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @return mrk
+       */
+      double mrk (const double, const double, const string, const string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string file_par=par::defaultString);
 
-       /**
-	*  @brief auxiliary function to estimate cosmological quantities
-	*  in non-Gaussian cosmologies
-	*
-	*  @author Cosimo Fedeli
-	*  @author cosimo.fedeli@oabo.inaf.it
-	*
-	*  @param kk wave vector module
-	*
-	*  @param mass halo mass
-	*  
-	*  @param method_Pk method used to compute the power spectrum;
-	*  valid choices for method_Pk are: CAMB [http://camb.info/],
-	*  classgal_v1 [http://class-code.net/], MPTbreeze-v1
-	*  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	* 
-	*  @param output_root the output_root parameter of the
-	*  parameter file used to compute the power spectrum; it can be
-	*  any name
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return frk
-	*/
-       double frk (const double kk, const double mass, const string method_Pk, const string output_root="test", const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      /**
+       *  @brief auxiliary function to estimate cosmological quantities
+       *  in non-Gaussian cosmologies
+       *
+       *  @author Cosimo Fedeli
+       *  @author cosimo.fedeli@oabo.inaf.it
+       *
+       *  @param kk wave vector module
+       *
+       *  @param mass halo mass
+       *  
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       * 
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return frk
+       */
+      double frk (const double kk, const double mass, const string method_Pk, const string output_root="test", const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
 
-       /// @cond TEST_NG
-       double bias_kernel (const double, void *); 
+      /// @cond TEST_NG
+      double bias_kernel (const double, void *); 
 
-       double frk_test (const double, const double, const string, const string output_root="test", const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
-       /// @endcond
-
-
-       /**
-	*  @brief correction to the halo bias in non-Gaussian cosmologies
-	*
-	*  @author Cosimo Fedeli
-	*  @author cosimo.fedeli@oabo.inaf.it
-	*
-	*  @param kk wave vector module
-	*
-	*  @param mass halo mass
-	*  
-	*  @param method_Pk method used to compute the power spectrum;
-	*  valid choices for method_Pk are: CAMB [http://camb.info/],
-	*  classgal_v1 [http://class-code.net/], MPTbreeze-v1
-	*  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	* 
-	*  @param output_root the output_root parameter of the
-	*  parameter file used to compute the power spectrum; it can be
-	*  any name
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return bias correction
-	*/
-       double bias_correction (const double, const double, const string, const string  output_root="test", const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
-
-       /**
-	*  @brief the skewness
-	*
-	*  @author Cosimo Fedeli
-	*  @author cosimo.fedeli@oabo.inaf.it
-	*
-	*  @param mass halo mass
-	*  
-	*  @param method_Pk method used to compute the power spectrum;
-	*  valid choices for method_Pk are: CAMB [http://camb.info/],
-	*  classgal_v1 [http://class-code.net/], MPTbreeze-v1
-	*  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	* 
-	*  @param output_root the output_root parameter of the
-	*  parameter file used to compute the power spectrum; it can be
-	*  any name
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return skewness
-	*/
-       double skewness (const double, const string, const string output_root="test", const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
-
-       /**
-	*  @brief the derivative of the skewness, ds/dM
-	*
-	*  @author Cosimo Fedeli
-	*  @author cosimo.fedeli@oabo.inaf.it
-	*
-	*  @param mass halo mass
-	*  
-	*  @param method_Pk method used to compute the power spectrum; valid
-	*  choices for method_Pk are: CAMB [http://camb.info/], classgal_v1
-	*  [http://class-code.net/], MPTbreeze-v1
-	*  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	* 
-	*  @param output_root the output_root parameter of the
-	*  parameter file used to compute the power spectrum; it can be
-	*  any name
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return derivative of the skewness
-	*/
-       double dskewnessdM (const double, const string, const string  output_root="test", const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
-
-       /**
-	*  @brief correction to the halo mass in non-Gaussian cosmologies
-	*
-	*  @author Cosimo Fedeli
-	*  @author cosimo.fedeli@oabo.inaf.it
-	*
-	*  @param mass the halo mass
-	*  
-	*  @param redshift the redshift
-	*
-	*  @param method_Pk method used to compute the power spectrum;
-	*  valid choices for method_Pk are: CAMB [http://camb.info/],
-	*  classgal_v1 [http://class-code.net/], MPTbreeze-v1
-	*  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	* 
-	*  @param output_root the output_root parameter of the
-	*  parameter file used to compute the power spectrum; it can be
-	*  any name
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*   
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum
-	*
-	*  @param k_min minimum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration 
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return bias correction
-	*/
-       double MF_correction (const double, const double, const string, const string output_root="test", const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
-
-       ///@}
+      double frk_test (const double, const double, const string, const string output_root="test", const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      /// @endcond
 
 
-       /**
-	*  @name Functions to estimate the void size function
-	*/
-       ///@{
+      /**
+       *  @brief correction to the halo bias in non-Gaussian cosmologies
+       *
+       *  @author Cosimo Fedeli
+       *  @author cosimo.fedeli@oabo.inaf.it
+       *
+       *  @param kk wave vector module
+       *
+       *  @param mass halo mass
+       *  
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       * 
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return bias correction
+       */
+      double bias_correction (const double, const double, const string, const string  output_root="test", const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
 
-       /**
-	*  @brief \f$f_{\ln \sigma}(\sigma)\f$ (approximation)
-	*
-	*  @author Tommaso Ronconi
-	*  @author tommaso.ronconi@studio.unibo.it
-	*
-	*  @param SS variance of the linear density field
-	*  (\f$\sigma^2(R)\f$)
-	*
-	*  @param del_v linear density contrast defining a void
-	*
-	*  @param del_c critical value of the linear density field
-	*  
-	*  @return the fraction of trajectories that evolve into voids,
-	*  as given in equation (8) of Jennings et al. (2013)
-	*/
-       double f_nu (const double SS, const double del_v, const double del_c) const;
+      /**
+       *  @brief the skewness
+       *
+       *  @author Cosimo Fedeli
+       *  @author cosimo.fedeli@oabo.inaf.it
+       *
+       *  @param mass halo mass
+       *  
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       * 
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return skewness
+       */
+      double skewness (const double, const string, const string output_root="test", const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
 
-       /**
-	*  @brief the void size function
-	*
-	*  @author Tommaso Ronconi
-	*  @author tommaso.ronconi@studio.unibo.it
-	*
-	*  @param RV radius
-	*
-	*  @param redshift the redshift
-	*
-	*  @param del_v linear density contrast defining a void
-	*
-	*  @param del_c critical value of the linear density field
-	*
-	*  @param model size function model name; valid choices for
-	*  model name are SvdW (Sheth and van de Weygaert, 2004),
-	*  linear and Vdn (Jennings et al., 2013)
-	*
-	*  @param method_Pk method used to compute the power spectrum;
-	*  valid choices for method_Pk are: CAMB [http://camb.info/],
-	*  classgal_v1 [http://class-code.net/], MPTbreeze-v1
-	*  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*           
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	*  is a parameter file, used to compute the power spectrum with
-	*  the method specified by method_Pk; false \f$\rightarrow\f$
-	*  the input_file is a file containing the power spectrum
-	*
-	*  @return the number density of voids as a function of radius.
-	*  Volume Conserving Model, equation (17) from Jennings et
-	*  al.(2013)
-	*/
-       double size_function (const double RV, const double redshift, const double del_v, const double del_c, const string model, const string method_Pk="CAMB", const string output_root="test", const string interpType="Linear", const double k_max=100., const string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      /**
+       *  @brief the derivative of the skewness, ds/dM
+       *
+       *  @author Cosimo Fedeli
+       *  @author cosimo.fedeli@oabo.inaf.it
+       *
+       *  @param mass halo mass
+       *  
+       *  @param method_Pk method used to compute the power spectrum; valid
+       *  choices for method_Pk are: CAMB [http://camb.info/], classgal_v1
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       * 
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return derivative of the skewness
+       */
+      double dskewnessdM (const double, const string, const string  output_root="test", const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
 
-       /**
-	*  @brief the void size function
-	*
-	*  @author Tommaso Ronconi
-	*  @author tommaso.ronconi@studio.unibo.it
-	*
-	*  @param RV radius
-	*
-	*  @param redshift the redshift
-	*
-	*  @param model_mf author(s) who proposed the mass function;
-	*  valid authors are: PS (Press & Schechter), ST (Sheth &
-	*  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
-	*  al. 2006), Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH
-	*  (halo MF by Shen et al. 2006), ShenF (filaments MF by Shen
-	*  et al. 2006), ShenS (sheets MF by Shen et al. 2006), Tinker
-	*  (Tinker et al. 2008), Crocce (Crocce et al. 2010),
-	*  Angulo_FOF (FOF MF by Angulo et al. 2012), Angulo_Sub
-	*  (SUBFIND MF by Angulo et al. 2012), Watson_FOF(FOF MF by
-	*  Watson et al. 2012), Watson_SOH (MF for Spherical Overdensity
-	*  Haloes by Watson et al. 2012), Manera (Manera et al. 2010),
-	*  Bhattacharya (Bhattacharya et al. 2011), Courtin (Courtin 
-	*  et al. 2010), Peacock (by Peacock at al. 2007)
-	*
-	*  @param del_v linear density contrast defining a void
-	*
-	*  @param model_sf size function model name; valid choices for
-	*  model name are SvdW (Sheth and van de Weygaert, 2004),
-	*  linear and Vdn (Jennings et al., 2013)
-	*
-	*  @param method_Pk method used to compute the power spectrum;
-	*  valid choices for method_Pk are: CAMB [http://camb.info/],
-	*  classgal_v1 [http://class-code.net/], MPTbreeze-v1
-	*  [http://arxiv.org/abs/1207.1465], EisensteinHu
-	*  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-	*
-	*  @param output_root output_root of the parameter file used to
-	*  compute the power spectrum and &sigma;(mass); it can be any
-	*  name
-	*
-	*  @param Delta \f$\Delta\f$: the overdensity, defined as the
-	*  mean interior density relative to the background
-	*
-	*  @param interpType method to interpolate the power spectrum
-	*
-	*  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-	*  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-	*  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-	*
-	*  @param k_min minimum wave vector module up to which the
-	*  power spectrum is computed
-	*
-	*  @param k_max maximum wave vector module up to which the power
-	*  spectrum is computed
-	*
-	*  @param prec accuracy of the GSL integration
-	*
-	*  @param input_file either the parameter file or the power
-	*  spectrum file; if a parameter file is provided,
-	*  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	*  used to compute the power spectrum; if a power spectrum file
-	*  is provided, i.e. input_file!=NULL and
-	*  is_parameter_file=false, then the provided power spectrum
-	*  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	*  is computed by integrating the computed/provided power
-	*  spectrum ignoring the cosmological parameters of the object
-	*
-	*  @param is_parameter_file true \f$\rightarrow\f$ the
-	*  input_file is a parameter file, used to compute the power
-	*  spectrum with the method specified by method_Pk; false
-	*  \f$\rightarrow\f$ the input_file is a file containing the
-	*  power spectrum
-	*  
-	*  @return the number density of voids as a function of radius.
-	*  Volume Conserving Model, equation (17) from Jennings et
-	*  al.(2013)
-	*/
-       double size_function (const double RV, const double redshift, const string model_mf, const double del_v, const string model_sf, const string method_Pk="CAMB", const string output_root="test", const double Delta=200., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+      /**
+       *  @brief correction to the halo mass in non-Gaussian cosmologies
+       *
+       *  @author Cosimo Fedeli
+       *  @author cosimo.fedeli@oabo.inaf.it
+       *
+       *  @param mass the halo mass
+       *  
+       *  @param redshift the redshift
+       *
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       * 
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *   
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum
+       *
+       *  @param k_min minimum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return bias correction
+       */
+      double MF_correction (const double, const double, const string, const string output_root="test", const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
+
+      ///@}
+
+
+      /**
+       *  @name Functions to estimate the void size function
+       */
+      ///@{
+
+      /**
+       *  @brief \f$f_{\ln \sigma}(\sigma)\f$ (approximation)
+       *
+       *  @author Tommaso Ronconi
+       *  @author tommaso.ronconi@studio.unibo.it
+       *
+       *  @param SS variance of the linear density field
+       *  (\f$\sigma^2(R)\f$)
+       *
+       *  @param del_v linear density contrast defining a void
+       *
+       *  @param del_c critical value of the linear density field
+       *  
+       *  @return the fraction of trajectories that evolve into voids,
+       *  as given in equation (8) of Jennings et al. (2013)
+       */
+      double f_nu (const double SS, const double del_v, const double del_c) const;
+
+      /**
+       *  @brief the void size function
+       *
+       *  @author Tommaso Ronconi
+       *  @author tommaso.ronconi@studio.unibo.it
+       *
+       *  @param RV radius
+       *
+       *  @param redshift the redshift
+       *
+       *  @param del_v linear density contrast defining a void
+       *
+       *  @param del_c critical value of the linear density field
+       *
+       *  @param model size function model name; valid choices for
+       *  model name are SvdW (Sheth and van de Weygaert, 2004),
+       *  linear and Vdn (Jennings et al., 2013)
+       *
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *           
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return the number density of voids as a function of radius.
+       *  Volume Conserving Model, equation (17) from Jennings et
+       *  al.(2013)
+       */
+      double size_function (const double RV, const double redshift, const double del_v, const double del_c, const string model, const string method_Pk="CAMB", const string output_root="test", const string interpType="Linear", const double k_max=100., const string input_file=par::defaultString, const bool is_parameter_file=true) const;
+
+      /**
+       *  @brief the void size function
+       *
+       *  @author Tommaso Ronconi
+       *  @author tommaso.ronconi@studio.unibo.it
+       *
+       *  @param RV radius
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_mf author(s) who proposed the mass function;
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH
+       *  (halo MF by Shen et al. 2006), ShenF (filaments MF by Shen
+       *  et al. 2006), ShenS (sheets MF by Shen et al. 2006), Tinker
+       *  (Tinker et al. 2008), Crocce (Crocce et al. 2010),
+       *  Angulo_FOF (FOF MF by Angulo et al. 2012), Angulo_Sub
+       *  (SUBFIND MF by Angulo et al. 2012), Watson_FOF(FOF MF by
+       *  Watson et al. 2012), Watson_SOH (MF for Spherical Overdensity
+       *  Haloes by Watson et al. 2012), Manera (Manera et al. 2010),
+       *  Bhattacharya (Bhattacharya et al. 2011), Courtin (Courtin 
+       *  et al. 2010), Peacock (by Peacock at al. 2007)
+       *
+       *  @param del_v linear density contrast defining a void
+       *
+       *  @param model_sf size function model name; valid choices for
+       *  model name are SvdW (Sheth and van de Weygaert, 2004),
+       *  linear and Vdn (Jennings et al., 2013)
+       *
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the
+       *  input_file is a parameter file, used to compute the power
+       *  spectrum with the method specified by method_Pk; false
+       *  \f$\rightarrow\f$ the input_file is a file containing the
+       *  power spectrum
+       *  
+       *  @return the number density of voids as a function of radius.
+       *  Volume Conserving Model, equation (17) from Jennings et
+       *  al.(2013)
+       */
+      double size_function (const double RV, const double redshift, const string model_mf, const double del_v, const string model_sf, const string method_Pk="CAMB", const string output_root="test", const double Delta=200., const string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const string input_file=par::defaultString, const bool is_parameter_file=true);
       
-       ///@}
+      ///@}
 
       
-       /**
-	*  @name Functions to estimate the multipoles/wedges covariance matrix
-	*/
-       ///@{
+      /**
+       *  @name Functions to estimate the multipoles/wedges covariance matrix
+       */
+      ///@{
 
-       /**
-	*  @brief the first three non-null multipoles of the two-point
-	*  correlation function
-	*
-	*  @param nbins the number of bins of the two-point
-	*  correlation function multipoles
-	*
-	*  @param rMin the minimum scale
-	*
-	*  @param rMax the maximum scale 
-	*
-	*  @param kk vector containing the wave vector modules
-	*
-	*  @param Pk0 vector containing the monopole of the power
-	*  spectrum
-	*
-	*  @param Pk2 vector containing the quadrupole of the power
-	*  spectrum
-	* 
-	*  @param Pk4 vector containing the hexadecapole of the power
-	*  spectrum
-	*
-	*  @param IntegrationMethod the integration method
-	*
-	*  @return the matrix containing the first three non-null
-	*  multipoles of the two-point correlation function
-	*
-	*/
-       vector<vector<double>> XiMultipoles (const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
+      /**
+       *  @brief the first three non-null multipoles of the two-point
+       *  correlation function
+       *
+       *  @param nbins the number of bins of the two-point
+       *  correlation function multipoles
+       *
+       *  @param rMin the minimum scale
+       *
+       *  @param rMax the maximum scale 
+       *
+       *  @param kk vector containing the wave vector modules
+       *
+       *  @param Pk0 vector containing the monopole of the power
+       *  spectrum
+       *
+       *  @param Pk2 vector containing the quadrupole of the power
+       *  spectrum
+       * 
+       *  @param Pk4 vector containing the hexadecapole of the power
+       *  spectrum
+       *
+       *  @param IntegrationMethod the integration method
+       *
+       *  @return the matrix containing the first three non-null
+       *  multipoles of the two-point correlation function
+       *
+       */
+      vector<vector<double>> XiMultipoles (const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
 
-       /**
-	*  @brief the covariance matrix of the first three non-null
-	*  multipoles of the two-point correlation function
-	*
-	*  @param nbins the number of bins of the two-point
-	*  correlation function multipoles
-	*
-	*  @param rMin the minimum scale
-	*
-	*  @param rMax the maximum scale 
-	*
-	*  @param nn order of the moment
-	*
-	*  @param Volume the volume
-	*
-	*  @param kk vector containing the wave vector modules
-	*
-	*  @param Pk0 vector containing the monopole of the power
-	*  spectrum
-	*
-	*  @param IntegrationMethod the integration method
-	*
-	*  @return the covariance matrix of the first three non-null
-	*  multipoles of the two-point correlation function
-	*/
-       vector<vector<double>> XiMonopole_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod=1);
+      /**
+       *  @brief the covariance matrix of the first three non-null
+       *  multipoles of the two-point correlation function
+       *
+       *  @param nbins the number of bins of the two-point
+       *  correlation function multipoles
+       *
+       *  @param rMin the minimum scale
+       *
+       *  @param rMax the maximum scale 
+       *
+       *  @param nn order of the moment
+       *
+       *  @param Volume the volume
+       *
+       *  @param kk vector containing the wave vector modules
+       *
+       *  @param Pk0 vector containing the monopole of the power
+       *  spectrum
+       *
+       *  @param IntegrationMethod the integration method
+       *
+       *  @return the covariance matrix of the first three non-null
+       *  multipoles of the two-point correlation function
+       */
+      vector<vector<double>> XiMonopole_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod=1);
        
-       /**
-	*  @brief the covariance matrix of the first three non-null
-	*  multipole moments of the two-point correlation function
-	*
-	*  @param nbins the number of bins of the two-point
-	*  correlation function multipoles
-	*
-	*  @param rMin the minimum scale
-	*
-	*  @param rMax the maximum scale 
-	*
-	*  @param nn order of the moment
-	*
-	*  @param Volume the volume
-	*
-	*  @param kk vector containing the wave vector modules
-	*
-	*  @param Pk0 vector containing the monopole of the power
-	*  spectrum
-	*
-	*  @param Pk2 vector containing the quadrupole of the power
-	*  spectrum
-	* 
-	*  @param Pk4 vector containing the hexadecapole of the power
-	*  spectrum
-	*
-	*  @param IntegrationMethod the integration method
-	*
-	*  @return the covariance matrix of the first three non-null
-	*  multipole moments of the two-point correlation function
-	*/
-       vector<vector<double>> XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
+      /**
+       *  @brief the covariance matrix of the first three non-null
+       *  multipole moments of the two-point correlation function
+       *
+       *  @param nbins the number of bins of the two-point
+       *  correlation function multipoles
+       *
+       *  @param rMin the minimum scale
+       *
+       *  @param rMax the maximum scale 
+       *
+       *  @param nn order of the moment
+       *
+       *  @param Volume the volume
+       *
+       *  @param kk vector containing the wave vector modules
+       *
+       *  @param Pk0 vector containing the monopole of the power
+       *  spectrum
+       *
+       *  @param Pk2 vector containing the quadrupole of the power
+       *  spectrum
+       * 
+       *  @param Pk4 vector containing the hexadecapole of the power
+       *  spectrum
+       *
+       *  @param IntegrationMethod the integration method
+       *
+       *  @return the covariance matrix of the first three non-null
+       *  multipole moments of the two-point correlation function
+       */
+      vector<vector<double>> XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod=1);
 
-       ///@}
+      ///@}
             
-       /**
-	*  @name Functions to estimate the three-point correlation function
-	*/
-       ///@{
+      /**
+       *  @name Functions to estimate the three-point correlation function
+       */
+      ///@{
 
-       /**
-	*  @brief the normalization factor for reduced three-point
-	*  correlation function
-	*
-	*  this function computes the normalization factor for reduced
-	*  three-point correlation function:
-	*
-	*  \f[ \xi(r_1)\cdot\xi(r_2) + \xi(r_2)\cdot\xi(r_3) +
-	*  \xi(r_3)\cdot\xi(r_1) \f]
-	*
-	*  with \f$ r_3 = \sqrt{r_1^2+r_2^2-2 r_1 r_2 \cos(\theta)}
-	*  \f$
-	*
-	*  @param r1 the first side of the triangle
-	*
-	*  @param r2 the second side of the triangle
-	*
-	*  @param theta the angle between r1 and r2
-	*
-	*  @param rr vector containing the scales at which the
-	*  two-point correlation function is computed
-	*  
-	*  @param xi_DM vector containing the dark matter two-point
-	*  correlation function values, estimated at the scales given
-	*  in rr
-	*
-	*  @return the normalization factor for reduced three-point
-	*  correlation function
-	*/
-       double denominator_Q (const double r1, const double r2, const double theta, const vector<double> rr, const vector<double> xi_DM) const;
+      /**
+       *  @brief the normalization factor for reduced three-point
+       *  correlation function
+       *
+       *  this function computes the normalization factor for reduced
+       *  three-point correlation function:
+       *
+       *  \f[ \xi(r_1)\cdot\xi(r_2) + \xi(r_2)\cdot\xi(r_3) +
+       *  \xi(r_3)\cdot\xi(r_1) \f]
+       *
+       *  with \f$ r_3 = \sqrt{r_1^2+r_2^2-2 r_1 r_2 \cos(\theta)}
+       *  \f$
+       *
+       *  @param r1 the first side of the triangle
+       *
+       *  @param r2 the second side of the triangle
+       *
+       *  @param theta the angle between r1 and r2
+       *
+       *  @param rr vector containing the scales at which the
+       *  two-point correlation function is computed
+       *  
+       *  @param xi_DM vector containing the dark matter two-point
+       *  correlation function values, estimated at the scales given
+       *  in rr
+       *
+       *  @return the normalization factor for reduced three-point
+       *  correlation function
+       */
+      double denominator_Q (const double r1, const double r2, const double theta, const vector<double> rr, const vector<double> xi_DM) const;
 
-       /**
-	*  @brief integral functions for the three-point correlation
-	*  model
-	*
-	*  this function computes and store functons used to model the
-	*  three-point correlation model; specifically, it implements
-	*  Eq. 21, in polar coordinates, of Bel et al. 2015, MNRAS,
-	*  453, 259):
-	*
-	*  \f[ \xi_{DM}(r) = \frac{1}{2\pi^2}\int_0^\infty \mathrm{d}
-	*  k\, k^2 P_{DM}(k) j_0(k r), \\\
-	*
-	*  \Phi(r) = \frac{1}{2\pi^2}\int_0^\infty \mathrm{d} k\,
-	*  P_{DM}(k) W^2(kr) j_0(k r), \\ \f]
-	*
-	*  where \f$j_0(k r)=\sin(k r)/(kr)\f$ is the l=0 spherical
-	*  Bessel function, and \f$W(kr)\f$ is the top-hat window
-	*  function computed by cosmobl::TopHat_WF
-	*
-	*  @param [out] xi_DM vector containing the dark matter
-	*  two-point correlation function values
-	*
-	*  @param [out] Phi vector containing the \f$ \Phi(r)\f$
-	*  values, estimated at the scales given in rr
-	*
-	*  @param [in] rr vector or scales at which the dark matter
-	*  two-point correlation function (xi_DM) will be computed
-	*
-	*  @param [in] kk vector of the wave vector modules at which the
-	*  power spectrum is computed
-	*
-	*  @param [in] Pk_DM vector of containing the dark matter power
-	*  spectrum values, estimated at the wave vector modules given
-	*  in kk
-	*
-	*  @param prec the integral precision
-	*
-	*  @return none
-	*/
-       void integrals_Q_nonLocal (vector<double> &xi_DM, vector<double> &Phi, const vector<double> rr, const vector<double> kk, const vector<double> Pk_DM, const double prec) const;
+      /**
+       *  @brief integral functions for the three-point correlation
+       *  model
+       *
+       *  this function computes and store functons used to model the
+       *  three-point correlation model; specifically, it implements
+       *  Eq. 21, in polar coordinates, of Bel et al. 2015, MNRAS,
+       *  453, 259):
+       *
+       *  \f[ \xi_{DM}(r) = \frac{1}{2\pi^2}\int_0^\infty \mathrm{d}
+       *  k\, k^2 P_{DM}(k) j_0(k r), \\\
+       *
+       *  \Phi(r) = \frac{1}{2\pi^2}\int_0^\infty \mathrm{d} k\,
+       *  P_{DM}(k) W^2(kr) j_0(k r), \\ \f]
+       *
+       *  where \f$j_0(k r)=\sin(k r)/(kr)\f$ is the l=0 spherical
+       *  Bessel function, and \f$W(kr)\f$ is the top-hat window
+       *  function computed by cosmobl::TopHat_WF
+       *
+       *  @param [out] xi_DM vector containing the dark matter
+       *  two-point correlation function values
+       *
+       *  @param [out] Phi vector containing the \f$ \Phi(r)\f$
+       *  values, estimated at the scales given in rr
+       *
+       *  @param [in] rr vector or scales at which the dark matter
+       *  two-point correlation function (xi_DM) will be computed
+       *
+       *  @param [in] kk vector of the wave vector modules at which the
+       *  power spectrum is computed
+       *
+       *  @param [in] Pk_DM vector of containing the dark matter power
+       *  spectrum values, estimated at the wave vector modules given
+       *  in kk
+       *
+       *  @param prec the integral precision
+       *
+       *  @return none
+       */
+      void integrals_Q_nonLocal (vector<double> &xi_DM, vector<double> &Phi, const vector<double> rr, const vector<double> kk, const vector<double> Pk_DM, const double prec) const;
 
-       /**
-	*  @brief function to compute non-local contribution to
-	*  three-point correlation function; specifically, it
-	*  implements Eq. 20 of Bel el et al. 2015, MNRAS, 453, 259:
-	*
-	*  \f[ \Gamma_{123} = \left[
-	*  \xi(r_1)+3\frac{\Phi^\prime(r_1)}{r1}\right] \left[
-	*  \xi(r_2)+3\frac{\Phi^\prime(r_2)}{r_2}\right]P_2(\cos\theta)
-	*  \f]
-	*
-	*  where the prime indicates the derivative with respect to
-	*  \f$r\f$, \f$P_2\f$ is the second Legandre polynomial
-	*  computed by cosmobl::legendre_polynomial, and \f$\xi(r),
-	*  \Phi(r)\f$ are the integrals of the power spectrum computed
-	*  by cosmobl::cosmology::Cosmology::integrals_Q_nonLocal
-	*
-	*  @param r1 the first side of the triangle
-	*
-	*  @param r2 the second side of the triangle
-	*
-	*  @param theta the angle betwee r1 and r2
-	*
-	*  @param xi vector containing the value of xi at r1, r2
-	*
-	*  @param dPhi vector containing the value of the derivative
-	*  of Phi at r1, r2
-	*
-	*  @return the value of the \f$\Gamma_{123}\f$
-	*/
-       double Gamma_3PCF (const double r1, const double r2, const double theta, const vector<double> xi, const vector<double> dPhi) const;
+      /**
+       *  @brief function to compute non-local contribution to
+       *  three-point correlation function; specifically, it
+       *  implements Eq. 20 of Bel el et al. 2015, MNRAS, 453, 259:
+       *
+       *  \f[ \Gamma_{123} = \left[
+       *  \xi(r_1)+3\frac{\Phi^\prime(r_1)}{r1}\right] \left[
+       *  \xi(r_2)+3\frac{\Phi^\prime(r_2)}{r_2}\right]P_2(\cos\theta)
+       *  \f]
+       *
+       *  where the prime indicates the derivative with respect to
+       *  \f$r\f$, \f$P_2\f$ is the second Legandre polynomial
+       *  computed by cosmobl::legendre_polynomial, and \f$\xi(r),
+       *  \Phi(r)\f$ are the integrals of the power spectrum computed
+       *  by cosmobl::cosmology::Cosmology::integrals_Q_nonLocal
+       *
+       *  @param r1 the first side of the triangle
+       *
+       *  @param r2 the second side of the triangle
+       *
+       *  @param theta the angle betwee r1 and r2
+       *
+       *  @param xi vector containing the value of xi at r1, r2
+       *
+       *  @param dPhi vector containing the value of the derivative
+       *  of Phi at r1, r2
+       *
+       *  @return the value of the \f$\Gamma_{123}\f$
+       */
+      double Gamma_3PCF (const double r1, const double r2, const double theta, const vector<double> xi, const vector<double> dPhi) const;
 
-       /**
-	*  @brief the non-local contribution to the reduced dark
-	*  matter three-point correlation function
-	*
-	*  this function computes the non-local contribution to
-	*  three-point correlation function; specifically, it
-	*  implements Eq. 22 of Bel el et al. 2015, MNRAS, 453, 259:
-	*
-	*  \f[ Q_{non-local}(r_1, r_2, \theta) = \frac{2}{3} \left(
-	*  \frac{\Gamma_{123} + \Gamma_{312} + \Gamma_{231}}
-	*  {\xi(r_1)\cdot\xi(r_2) + \xi(r_2)\cdot\xi(r_3) +
-	*  \xi(r_3)\cdot\xi(r_1)}-1 \right) \f]
-	*
-	*  where the prime indicates the derivative with respect to
-	*  \f$r\f$, and \f$\xi(r), \Phi(r)\f$ are the integrals of the
-	*  power spectrum computed by
-	*  cosmobl::cosmology::Cosmology::integrals_Q_nonLocal
-	*
-	*  @param [in] r1 the first side of the triangle
-	*
-	*  @param [in] r2 the second side of the triangle
-	*
-	*  @param [in] theta the angle betwee r1 and r2
-	*
-	*  @param [out] rr vector or scales at which the dark matter
-	*  two-point correlation function is computed
-	*
-	*  @param [out] xi_DM vector containing the dark matter
-	*  two-point correlation function values
-	*
-	*  @param [out] Phi vector containing the \f$ \Phi(r)\f$
-	*  values, estimated at the scales given in rr
-	*
-	*  @param [in] kk vector of the wave vector modules at which
-	*  the power spectrum is computed
-	*
-	*  @param [in] Pk_DM vector of containing the dark matter
-	*  power spectrum values, estimated at the wave vector modules
-	*  given in kk
-	*
-	*  @return the value of non-local Q
-	*/
-       double Q_nonLocal (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &Phi, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief the non-local contribution to the reduced dark
+       *  matter three-point correlation function
+       *
+       *  this function computes the non-local contribution to
+       *  three-point correlation function; specifically, it
+       *  implements Eq. 22 of Bel el et al. 2015, MNRAS, 453, 259:
+       *
+       *  \f[ Q_{non-local}(r_1, r_2, \theta) = \frac{2}{3} \left(
+       *  \frac{\Gamma_{123} + \Gamma_{312} + \Gamma_{231}}
+       *  {\xi(r_1)\cdot\xi(r_2) + \xi(r_2)\cdot\xi(r_3) +
+       *  \xi(r_3)\cdot\xi(r_1)}-1 \right) \f]
+       *
+       *  where the prime indicates the derivative with respect to
+       *  \f$r\f$, and \f$\xi(r), \Phi(r)\f$ are the integrals of the
+       *  power spectrum computed by
+       *  cosmobl::cosmology::Cosmology::integrals_Q_nonLocal
+       *
+       *  @param [in] r1 the first side of the triangle
+       *
+       *  @param [in] r2 the second side of the triangle
+       *
+       *  @param [in] theta the angle betwee r1 and r2
+       *
+       *  @param [out] rr vector or scales at which the dark matter
+       *  two-point correlation function is computed
+       *
+       *  @param [out] xi_DM vector containing the dark matter
+       *  two-point correlation function values
+       *
+       *  @param [out] Phi vector containing the \f$ \Phi(r)\f$
+       *  values, estimated at the scales given in rr
+       *
+       *  @param [in] kk vector of the wave vector modules at which
+       *  the power spectrum is computed
+       *
+       *  @param [in] Pk_DM vector of containing the dark matter
+       *  power spectrum values, estimated at the wave vector modules
+       *  given in kk
+       *
+       *  @return the value of non-local Q
+       */
+      double Q_nonLocal (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &Phi, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief all the non-local contribution terms of the reduced
-	*  dark matter three-point correlation function
-	*  
-	*  this function computes all the the non-local contribution
-	*  terms of the reduced three-point correlation function,
-	*  computed by cosmobl::cosmology::Cosmology::Q_nonLocal
-	*
-	*  @param r1 the first side of the triangle
-	*
-	*  @param r2 the second side of the triangle
-	*
-	*  @param theta the angle betwee r1 and r2
-	*
-	*  @param kk vector of the wave vector modules at which the
-	*  power spectrum is computed
-	*
-	*  @param Pk_DM vector of containing the dark matter power
-	*  spectrum values, estimated at the wave vector modules given
-	*  in kk
-	*
-	*  @return vector containing the DM reduced three-point
-	*  correlation function
-	*/
-       vector<double> Q_nonLocal (const double r1, const double r2, const vector<double> theta, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief all the non-local contribution terms of the reduced
+       *  dark matter three-point correlation function
+       *  
+       *  this function computes all the the non-local contribution
+       *  terms of the reduced three-point correlation function,
+       *  computed by cosmobl::cosmology::Cosmology::Q_nonLocal
+       *
+       *  @param r1 the first side of the triangle
+       *
+       *  @param r2 the second side of the triangle
+       *
+       *  @param theta the angle betwee r1 and r2
+       *
+       *  @param kk vector of the wave vector modules at which the
+       *  power spectrum is computed
+       *
+       *  @param Pk_DM vector of containing the dark matter power
+       *  spectrum values, estimated at the wave vector modules given
+       *  in kk
+       *
+       *  @return vector containing the DM reduced three-point
+       *  correlation function
+       */
+      vector<double> Q_nonLocal (const double r1, const double r2, const vector<double> theta, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief integrals used to compute the Slepian et al. 2015
-	*  three-point correlation function model
-	*
-	*  this function computes the integrals used to
-	*  model the three-point correlation as described in Slepian
-	*  et. al 2015:
-	*
-	*  \f[ \xi_{DM}(r) = \frac{1}{2\pi^2}\int_0^\infty
-	*  \mathrm{d} k k^2 P_{DM}(k) j_0(k r), \\\
-	*  \xi^{[1\pm]}_{DM}(r) = \frac{1}{2\pi^2}\int_0^\infty
-	*  \mathrm{d} k k^2 P_{DM}(k) k^{\pm 1} j_1(k r), \\
-	*  \xi^{[2]}_{DM}(r) = \frac{1}{2\pi^2}\int_0^\infty
-	*  \mathrm{d} k k^2 P_{DM}(k) j_2(k r) . \f]
-	*
-	*  @param [out] xi_DM vector containing the dark matter
-	*  two-point correlation function
-	*
-	*  @param [out] xi_DM_m1 vector containing
-	*  \f$\xi^{[1-]}_{DM}(r)\f$
-	*
-	*  @param [out] xi_DM_p1 vector containing
-	*  \f$\xi^{[1+]}_{DM}(r)\f$
-	*
-	*  @param [out] xi_DM_2 vector containing
-	*  \f$\xi^{[2]}_{DM}(r)\f$
-	*
-	*  @param [in] rr vector or scales
-	*
-	*  @param [in] kk vector of the wave vector modules
-	*
-	*  @param [in] Pk_DM the dark matter power spectrum
-	*
-	*  @return none
-	*/
-       void integrals_zeta_Slepian (vector<double> &xi_DM, vector<double> &xi_DM_m1, vector<double> &xi_DM_p1, vector<double> &xi_DM_2, const vector<double> rr, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief integrals used to compute the Slepian et al. 2015
+       *  three-point correlation function model
+       *
+       *  this function computes the integrals used to
+       *  model the three-point correlation as described in Slepian
+       *  et. al 2015:
+       *
+       *  \f[ \xi_{DM}(r) = \frac{1}{2\pi^2}\int_0^\infty
+       *  \mathrm{d} k k^2 P_{DM}(k) j_0(k r), \\\
+       *  \xi^{[1\pm]}_{DM}(r) = \frac{1}{2\pi^2}\int_0^\infty
+       *  \mathrm{d} k k^2 P_{DM}(k) k^{\pm 1} j_1(k r), \\
+       *  \xi^{[2]}_{DM}(r) = \frac{1}{2\pi^2}\int_0^\infty
+       *  \mathrm{d} k k^2 P_{DM}(k) j_2(k r) . \f]
+       *
+       *  @param [out] xi_DM vector containing the dark matter
+       *  two-point correlation function
+       *
+       *  @param [out] xi_DM_m1 vector containing
+       *  \f$\xi^{[1-]}_{DM}(r)\f$
+       *
+       *  @param [out] xi_DM_p1 vector containing
+       *  \f$\xi^{[1+]}_{DM}(r)\f$
+       *
+       *  @param [out] xi_DM_2 vector containing
+       *  \f$\xi^{[2]}_{DM}(r)\f$
+       *
+       *  @param [in] rr vector or scales
+       *
+       *  @param [in] kk vector of the wave vector modules
+       *
+       *  @param [in] Pk_DM the dark matter power spectrum
+       *
+       *  @return none
+       */
+      void integrals_zeta_Slepian (vector<double> &xi_DM, vector<double> &xi_DM_m1, vector<double> &xi_DM_p1, vector<double> &xi_DM_2, const vector<double> rr, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief the pre-cyclic three-point correlation function as
-	*  described in Slepian et al. 2015
-	*
-	*  this function computes the pre-cyclic three-point
-	*  correlation function as described in Slepian et al. 2015, as
-	*  follows:
-	*
-	*  \f[ \zeta_{pc} = \sum_{l=0}^2 \zeta_{pc l}(r_1, r_2)
-	*		   P_l(\hat{r_1}\cdot \hat{r_2})+ \sum_{l=0}^2
-	*		   \zeta_{pc l}(r_2, r_3) P_l(\hat{r_2}\cdot
-	*		   \hat{r_3})+ \sum_{l=0}^2 \zeta_{pc l}(r_3,
-	*		   r_1) P_l(\hat{r_3}\cdot \hat{r_1}) \f]
-	*
-	*  with 
-	*
-	*  \f[r_3 = \sqrt{r_1^2+r_2^2-2 r_1 r_2 \cos(\theta)}\f]
-	*
-	*  and
-	*
-	*  \f[ \zeta_{pc0}(r_i, r_j) = \left[ 2 b_1^2 b_2 +
-	*  \frac{34}{21} b_1^3 \right] \xi(r_i) \xi(r_j), \f] \f[
-	*  \zeta_{pc1}(r_i, r_j) = -b_1^3\left[ \xi^{[1-]}(r_i)
-	*  \xi^{[1+]}(r_j) + \xi^{[1-]}(r_j) \xi^{[1+]}(r_i) \right] ,
-	*  \f] \f[ \zeta_{pc2}(r_i, r_j) = \frac{8}{21}
-	*  b_1^3\xi^{[2]}(r_i)\xi^{[2]}(r_j) . \f]
-	*
-	*  where \f$ b_1, b_2 \f$ are the linear and non-linear bias,
-	*  respectively, and \f$\xi_{DM}(r), \xi^{[1\pm]}_{DM}(r),
-	*  \xi^{[2]}_{DM}(r)\f$ are the integrals of the dark matter
-	*  power spectrum computed by
-	*  cosmobl::cosmology::Cosmology::integrals_zeta_Slepian
-	*
-	*  @param r1 the first side
-	*
-	*  @param r2 the second side
-	*
-	*  @param mu the cosine of the angle between r1 and r2
-	*
-	*  @param b1 the linear bias
-	*
-	*  @param b2 the non-linear bias
-	*
-	*  @param interp_xi_DM interpolating function
-	*  for \f$\xi_DM\f$
-	*
-	*  @param interp_xi_DM_m1 interpolating function
-	*  for \f$\xi^{[1-]}_{DM}(r)\f$      
-	*
-	*  @param interp_xi_DM_p1 interpolating function
-	*  for \f$\xi^{[1+]}_{DM}(r)\f$
-	*  
-	*  @param interp_xi_DM_2 interpolating function
-	*  for \f$\xi^{[2]}_{DM}(r)\f$
-	*
-	*  @return the pre-cyclic three-point
-	*  correlation function
-	*/
-       double zeta_precyclic_Slepian (const double r1, const double r2, const double mu, const double b1, const double b2, const glob::FuncGrid interp_xi_DM, const glob::FuncGrid interp_xi_DM_m1, const glob::FuncGrid interp_xi_DM_p1, const glob::FuncGrid interp_xi_DM_2) const;
+      /**
+       *  @brief the pre-cyclic three-point correlation function as
+       *  described in Slepian et al. 2015
+       *
+       *  this function computes the pre-cyclic three-point
+       *  correlation function as described in Slepian et al. 2015, as
+       *  follows:
+       *
+       *  \f[ \zeta_{pc} = \sum_{l=0}^2 \zeta_{pc l}(r_1, r_2)
+       *		   P_l(\hat{r_1}\cdot \hat{r_2})+ \sum_{l=0}^2
+       *		   \zeta_{pc l}(r_2, r_3) P_l(\hat{r_2}\cdot
+       *		   \hat{r_3})+ \sum_{l=0}^2 \zeta_{pc l}(r_3,
+       *		   r_1) P_l(\hat{r_3}\cdot \hat{r_1}) \f]
+       *
+       *  with 
+       *
+       *  \f[r_3 = \sqrt{r_1^2+r_2^2-2 r_1 r_2 \cos(\theta)}\f]
+       *
+       *  and
+       *
+       *  \f[ \zeta_{pc0}(r_i, r_j) = \left[ 2 b_1^2 b_2 +
+       *  \frac{34}{21} b_1^3 \right] \xi(r_i) \xi(r_j), \f] \f[
+       *  \zeta_{pc1}(r_i, r_j) = -b_1^3\left[ \xi^{[1-]}(r_i)
+       *  \xi^{[1+]}(r_j) + \xi^{[1-]}(r_j) \xi^{[1+]}(r_i) \right] ,
+       *  \f] \f[ \zeta_{pc2}(r_i, r_j) = \frac{8}{21}
+       *  b_1^3\xi^{[2]}(r_i)\xi^{[2]}(r_j) . \f]
+       *
+       *  where \f$ b_1, b_2 \f$ are the linear and non-linear bias,
+       *  respectively, and \f$\xi_{DM}(r), \xi^{[1\pm]}_{DM}(r),
+       *  \xi^{[2]}_{DM}(r)\f$ are the integrals of the dark matter
+       *  power spectrum computed by
+       *  cosmobl::cosmology::Cosmology::integrals_zeta_Slepian
+       *
+       *  @param r1 the first side
+       *
+       *  @param r2 the second side
+       *
+       *  @param mu the cosine of the angle between r1 and r2
+       *
+       *  @param b1 the linear bias
+       *
+       *  @param b2 the non-linear bias
+       *
+       *  @param interp_xi_DM interpolating function
+       *  for \f$\xi_DM\f$
+       *
+       *  @param interp_xi_DM_m1 interpolating function
+       *  for \f$\xi^{[1-]}_{DM}(r)\f$      
+       *
+       *  @param interp_xi_DM_p1 interpolating function
+       *  for \f$\xi^{[1+]}_{DM}(r)\f$
+       *  
+       *  @param interp_xi_DM_2 interpolating function
+       *  for \f$\xi^{[2]}_{DM}(r)\f$
+       *
+       *  @return the pre-cyclic three-point
+       *  correlation function
+       */
+      double zeta_precyclic_Slepian (const double r1, const double r2, const double mu, const double b1, const double b2, const glob::FuncGrid interp_xi_DM, const glob::FuncGrid interp_xi_DM_m1, const glob::FuncGrid interp_xi_DM_p1, const glob::FuncGrid interp_xi_DM_2) const;
 
-       /**
-	*  @brief the terms of the \f$\zeta(r_1, r_2)\f$ expansion 
-	*
-	*  this function computes the terms of the \f$\zeta(r_1,
-	*  r_2)\f$ expansion up to an arbitrary order \f$l\f$ (the
-	*  default value is \f$l_{max}=9\f$), as described in Slepian
-	*  et al. 2015:
-	* 
-	*  \f[\zeta_l(r_1, r_2) = \frac{2l+1}{2} \int_{-1}^{1}
-	*  \mathrm{d}\mu_{12} \left[\zeta_{pc}(r_1, r_2,
-	*  \mu_{12})+\zeta_{pc}(r_2, r_3, \mu_{23})+ \zeta_{pc}(r_3,
-	*  r_1, \mu_{31})\right] P_l(\mu_{12}) .\f] 
-	* 
-	*  the terms in square brackets is computed by
-	*  cosmobl::cosmology::Cosmology::zeta_precyclic_Slepian
-	*
-	*  @param [in] r1 the first side of the triangle
-	*
-	*  @param [in] r2 the second side of the triangle
-	*
-	*  @param [in] b1 the linear bias of the triangle
-	*
-	*  @param [in] b2 the non-linear bias
-	*
-	*  @param [out] rr vector or scales
-	*
-	*  @param [out] xi_DM vector containing the dark matter
-	*  two-point correlation function
-	*
-	*  @param [out] xi_DM_m1 vector containing
-	*  \f$\xi^{[1-]}_{DM}(r)\f$
-	*
-	*  @param [out] xi_DM_p1 vector containing
-	*  \f$\xi^{[1+]}_{DM}(r)\f$
-	*
-	*  @param [out] xi_DM_2 vector containing
-	*  \f$\xi^{[2]}_{DM}(r)\f$
-	*
-	*  @param [in] norders the maximum numbers of orders
-	*
-	*  @param [in] prec the integral precision
-	*
-	*  @return vector containing the terms of legendre expansion
-	*/
-       vector<double> zeta_expansion_Slepian (const double r1, const double r2, const double b1, const double b2, vector<double> &rr, vector<double> &xi_DM, vector<double> &xi_DM_m1, vector<double> &xi_DM_p1, vector<double> &xi_DM_2, const int norders=9, const double prec=1.e-3) const;
+      /**
+       *  @brief the terms of the \f$\zeta(r_1, r_2)\f$ expansion 
+       *
+       *  this function computes the terms of the \f$\zeta(r_1,
+       *  r_2)\f$ expansion up to an arbitrary order \f$l\f$ (the
+       *  default value is \f$l_{max}=9\f$), as described in Slepian
+       *  et al. 2015:
+       * 
+       *  \f[\zeta_l(r_1, r_2) = \frac{2l+1}{2} \int_{-1}^{1}
+       *  \mathrm{d}\mu_{12} \left[\zeta_{pc}(r_1, r_2,
+       *  \mu_{12})+\zeta_{pc}(r_2, r_3, \mu_{23})+ \zeta_{pc}(r_3,
+       *  r_1, \mu_{31})\right] P_l(\mu_{12}) .\f] 
+       * 
+       *  the terms in square brackets is computed by
+       *  cosmobl::cosmology::Cosmology::zeta_precyclic_Slepian
+       *
+       *  @param [in] r1 the first side of the triangle
+       *
+       *  @param [in] r2 the second side of the triangle
+       *
+       *  @param [in] b1 the linear bias of the triangle
+       *
+       *  @param [in] b2 the non-linear bias
+       *
+       *  @param [out] rr vector or scales
+       *
+       *  @param [out] xi_DM vector containing the dark matter
+       *  two-point correlation function
+       *
+       *  @param [out] xi_DM_m1 vector containing
+       *  \f$\xi^{[1-]}_{DM}(r)\f$
+       *
+       *  @param [out] xi_DM_p1 vector containing
+       *  \f$\xi^{[1+]}_{DM}(r)\f$
+       *
+       *  @param [out] xi_DM_2 vector containing
+       *  \f$\xi^{[2]}_{DM}(r)\f$
+       *
+       *  @param [in] norders the maximum numbers of orders
+       *
+       *  @param [in] prec the integral precision
+       *
+       *  @return vector containing the terms of legendre expansion
+       */
+      vector<double> zeta_expansion_Slepian (const double r1, const double r2, const double b1, const double b2, vector<double> &rr, vector<double> &xi_DM, vector<double> &xi_DM_m1, vector<double> &xi_DM_p1, vector<double> &xi_DM_2, const int norders=9, const double prec=1.e-3) const;
 
-       /**
-	*  @brief the dark matter three-point correlation function
-	*  model by Slepian et al. 2015
-	*
-	*  this function computes \f$\zeta_{DM} (r_1, r_2, \hat{r_1}
-	*  \cdot \hat{r_2})\f$, as described in Slepian et al. 2015:
-	*
-	*  \f[ \zeta_{DM} (r_1, r_2, \hat{r_1} \cdot \hat{r_2}) = 
-	*  \sum_l \zeta_l(r_1, r_2) P_l(\hat{r_1} \cdot \hat{r_2}) .\f]
-	*
-	*  The coefficients of the expansion are computed by
-	*  cosmobl::cosmology::Cosmology::zeta_expansion_Slepian
-	*
-	*  @param [in] r1 the first side of the triangle
-	*
-	*  @param [in] r2 the second side of the triangle
-	*
-	*  @param [in] theta the angle between r1 and r2
-	*
-	*  @param [out] rr vector or scales
-	*
-	*  @param [out] xi_DM vector containing the dark matter
-	*  two-point correlation function
-	*
-	*  @param [out] xi_DM_m1 vector containing
-	*  \f$\xi^{[1-]}_{DM}(r)\f$
-	*
-	*  @param [out] xi_DM_p1 vector containing
-	*  \f$\xi^{[1+]}_{DM}(r)\f$
-	*
-	*  @param [out] xi_DM_2 vector containing
-	*  \f$\xi^{[2]}_{DM}(r)\f$
-	*
-	*  @param [in] kk vector of the wave vector modules
-	*
-	*  @param [in] Pk_DM the dark matter power spectrum
-	*
-	*  @param [in] norders the maximum number of orders
-	*
-	*  @param [in] prec the integral precision
-	*
-	*  @return the connected dark matter three-point correlation
-	*  function
-	*/
-       double zeta_DM_Slepian (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &xi_DM_m1, vector<double> &xi_DM_p1, vector<double> &xi_DM_2, const vector<double> kk, const vector<double> Pk_DM, const int norders=9, const double prec=1.e-3) const;
+      /**
+       *  @brief the dark matter three-point correlation function
+       *  model by Slepian et al. 2015
+       *
+       *  this function computes \f$\zeta_{DM} (r_1, r_2, \hat{r_1}
+       *  \cdot \hat{r_2})\f$, as described in Slepian et al. 2015:
+       *
+       *  \f[ \zeta_{DM} (r_1, r_2, \hat{r_1} \cdot \hat{r_2}) = 
+       *  \sum_l \zeta_l(r_1, r_2) P_l(\hat{r_1} \cdot \hat{r_2}) .\f]
+       *
+       *  The coefficients of the expansion are computed by
+       *  cosmobl::cosmology::Cosmology::zeta_expansion_Slepian
+       *
+       *  @param [in] r1 the first side of the triangle
+       *
+       *  @param [in] r2 the second side of the triangle
+       *
+       *  @param [in] theta the angle between r1 and r2
+       *
+       *  @param [out] rr vector or scales
+       *
+       *  @param [out] xi_DM vector containing the dark matter
+       *  two-point correlation function
+       *
+       *  @param [out] xi_DM_m1 vector containing
+       *  \f$\xi^{[1-]}_{DM}(r)\f$
+       *
+       *  @param [out] xi_DM_p1 vector containing
+       *  \f$\xi^{[1+]}_{DM}(r)\f$
+       *
+       *  @param [out] xi_DM_2 vector containing
+       *  \f$\xi^{[2]}_{DM}(r)\f$
+       *
+       *  @param [in] kk vector of the wave vector modules
+       *
+       *  @param [in] Pk_DM the dark matter power spectrum
+       *
+       *  @param [in] norders the maximum number of orders
+       *
+       *  @param [in] prec the integral precision
+       *
+       *  @return the connected dark matter three-point correlation
+       *  function
+       */
+      double zeta_DM_Slepian (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &xi_DM_m1, vector<double> &xi_DM_p1, vector<double> &xi_DM_2, const vector<double> kk, const vector<double> Pk_DM, const int norders=9, const double prec=1.e-3) const;
 
-       /**
-	*  @brief the dark matter reduced three-point correlation
-	*  function model by Slepian et al. 2015
-	*
-	*  this function computes \f$Q_{DM} (r_1, r_2, \hat{r_1} \cdot
-	*  \hat{r_2})\f$ as described in Slepian et al. 2015:
-	*
-	*  \f[ Q_{DM} (r_1, r_2, \hat{r_1} \cdot \hat{r_2}) =
-	*  \frac{\zeta_{DM} (r_1, r_2, \hat{r_1} \cdot \hat{r_2})}
-	*  {\left(
-	*  \xi(r_1)\xi(r_2)+\xi(r_2)\xi(r_3)+\xi(r_3)\xi(r_1)\right)}
-	*  \f]
-	*
-	*  see cosmobl::cosmology::Cosmology::zeta_DM_Slepian for
-	*  more details
-	*
-	*  @param [in] r1 the first side of the triangle
-	*
-	*  @param [in] r2 the second side of the triangle
-	*
-	*  @param [in] theta the angle between r1 and r2
-	*
-	*  @param [out] rr vector or scales
-	*
-	*  @param [out] xi_DM vector containing the dark matter
-	*  two-point orrelation function
-	*
-	*  @param [out] xi_DM_m1 vector containing
-	*  \f$\xi^{[1-]}_{DM}(r)\f$
-	*
-	*  @param [out] xi_DM_p1 vector containing
-	*  \f$\xi^{[1+]}_{DM}(r)\f$
-	*
-	*  @param [out] xi_DM_2 vector containing
-	*  \f$\xi^{[2]}_{DM}(r)\f$
-	*
-	*  @param [out] kk vector of the wave vector modules
-	*
-	*  @param [out] Pk_DM the dark matter power spectrum
-	*
-	*  @param [in] norders the maximum numbers of orders
-	*
-	*  @param [in] prec the integral precision
-	*
-	*  @return the dark matter reduced three-point correlation
-	*  function
-	*/
-       double Q_DM_Slepian (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &xi_DM_m1, vector<double> &xi_DM_p1, vector<double> &xi_DM_2, const vector<double> kk, const vector<double> Pk_DM, const int norders=9, const double prec=1.e-3) const;
+      /**
+       *  @brief the dark matter reduced three-point correlation
+       *  function model by Slepian et al. 2015
+       *
+       *  this function computes \f$Q_{DM} (r_1, r_2, \hat{r_1} \cdot
+       *  \hat{r_2})\f$ as described in Slepian et al. 2015:
+       *
+       *  \f[ Q_{DM} (r_1, r_2, \hat{r_1} \cdot \hat{r_2}) =
+       *  \frac{\zeta_{DM} (r_1, r_2, \hat{r_1} \cdot \hat{r_2})}
+       *  {\left(
+       *  \xi(r_1)\xi(r_2)+\xi(r_2)\xi(r_3)+\xi(r_3)\xi(r_1)\right)}
+       *  \f]
+       *
+       *  see cosmobl::cosmology::Cosmology::zeta_DM_Slepian for
+       *  more details
+       *
+       *  @param [in] r1 the first side of the triangle
+       *
+       *  @param [in] r2 the second side of the triangle
+       *
+       *  @param [in] theta the angle between r1 and r2
+       *
+       *  @param [out] rr vector or scales
+       *
+       *  @param [out] xi_DM vector containing the dark matter
+       *  two-point orrelation function
+       *
+       *  @param [out] xi_DM_m1 vector containing
+       *  \f$\xi^{[1-]}_{DM}(r)\f$
+       *
+       *  @param [out] xi_DM_p1 vector containing
+       *  \f$\xi^{[1+]}_{DM}(r)\f$
+       *
+       *  @param [out] xi_DM_2 vector containing
+       *  \f$\xi^{[2]}_{DM}(r)\f$
+       *
+       *  @param [out] kk vector of the wave vector modules
+       *
+       *  @param [out] Pk_DM the dark matter power spectrum
+       *
+       *  @param [in] norders the maximum numbers of orders
+       *
+       *  @param [in] prec the integral precision
+       *
+       *  @return the dark matter reduced three-point correlation
+       *  function
+       */
+      double Q_DM_Slepian (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &xi_DM_m1, vector<double> &xi_DM_p1, vector<double> &xi_DM_2, const vector<double> kk, const vector<double> Pk_DM, const int norders=9, const double prec=1.e-3) const;
 
-       /**
-	*  @brief integrals used to compute the Barriga & Gatzanaga
-	*  al. 2002 three-point correlation function model
-	* 
-	*  this function computes the integrals used to model the
-	*  three-point correlation as described in Barriga & Gatzanaga
-	*  2002:
-	*
-	*  \f[ \xi_{DM}(r) = \frac{1}{2\pi^2}\int_0^\infty \mathrm{d}
-	*  k\, k^2 P_{DM}(k) j_0(k r), \f] \f[ \Phi(r) =
-	*  \frac{1}{2\pi^2}\int_0^\infty \mathrm{d} k\, P_{DM}(k)
-	*  j_0(k r). \f]
-	*
-	*  @param [out] xi_DM vector containing the dark matter
-	*  two-point correlation function
-	*
-	*  @param [out] Phi vector containing \f$ \Phi(r)\f$
-	*
-	*  @param [in] rr vector or scales
-	*
-	*  @param [in] kk vector of the wave vector modules
-	*
-	*  @param [in] Pk_DM the dark matter power spectrum
-	*
-	*  @return none
-	*/
-       void integrals_zeta_BarrigaGatzanaga (vector<double> &xi_DM, vector<double> &Phi, const vector<double> rr, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief integrals used to compute the Barriga & Gatzanaga
+       *  al. 2002 three-point correlation function model
+       * 
+       *  this function computes the integrals used to model the
+       *  three-point correlation as described in Barriga & Gatzanaga
+       *  2002:
+       *
+       *  \f[ \xi_{DM}(r) = \frac{1}{2\pi^2}\int_0^\infty \mathrm{d}
+       *  k\, k^2 P_{DM}(k) j_0(k r), \f] \f[ \Phi(r) =
+       *  \frac{1}{2\pi^2}\int_0^\infty \mathrm{d} k\, P_{DM}(k)
+       *  j_0(k r). \f]
+       *
+       *  @param [out] xi_DM vector containing the dark matter
+       *  two-point correlation function
+       *
+       *  @param [out] Phi vector containing \f$ \Phi(r)\f$
+       *
+       *  @param [in] rr vector or scales
+       *
+       *  @param [in] kk vector of the wave vector modules
+       *
+       *  @param [in] Pk_DM the dark matter power spectrum
+       *
+       *  @return none
+       */
+      void integrals_zeta_BarrigaGatzanaga (vector<double> &xi_DM, vector<double> &Phi, const vector<double> rr, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief the single term of the dark matter three-point
-	*  correlation function model by Barriga & Gatzanaga et
-	*  al. 2002
-	*
-	*  this function computes the single term of the dark matter
-	*  three-point correlation function, following Barriga &
-	*  Gatzanaga et al.  2002:
-	*
-	*  \f[ f(r_1, r_2) = \frac{10}{7}\xi(r_1) \xi(r_2)+\frac{4}{7}
-	*  \left\{ -3 \frac{\Phi^\prime(r_1) \Phi^\prime(r_2)}{r_1
-	*  r_2} -\frac{\xi(r_1) \Phi^\prime(r_2)}{r_2}-\frac{\xi(r_2)
-	*  \Phi^\prime(r_1)}{r_1} +\mu^2\left[
-	*  \xi(r_1)+3\frac{\Phi^\prime(r_1)}{r1}\right]\left[
-	*  \xi(r_2)+3\frac{\Phi^\prime(r_2)}{r_3}\right] \right\}
-	*  -\mu\left[ \xi^\prime(r_1)\Phi^\prime(r_2) +
-	*  \xi^\prime(r_2)\Phi^\prime(r_1)\right] \f]
-	*
-	*  where the prime indicates the derivative with respect to
-	*  \f$r\f$, and \f$\xi(r), \Phi(r)\f$ are the integrals of the
-	*  power spectrum computed by
-	*  cosmobl::cosmology::Cosmology::integrals_zeta_BarrigaGatzanaga
-	*
-	*  @param r1 the first side of the triangle
-	*
-	*  @param r2 the second side of the triangle
-	*
-	*  @param theta the angle betwee r1 and r2
-	*
-	*  @param xi vector containing the value of xi at r1, r2
-	*
-	*  @param dxi vector containing the value of the derivative of
-	*  xi at r1, r2
-	*
-	*  @param dPhi vector containing the value of the derivative
-	*  of Phi at r1, r2
-	*
-	*  @return the dark matter reduced three-point correlation
-	*  function
-	*/
-       double zeta_single_BarrigaGatzanaga (const double r1, const double r2, const double theta, const vector<double> xi, const vector<double> dxi, const vector<double> dPhi) const;
+      /**
+       *  @brief the single term of the dark matter three-point
+       *  correlation function model by Barriga & Gatzanaga et
+       *  al. 2002
+       *
+       *  this function computes the single term of the dark matter
+       *  three-point correlation function, following Barriga &
+       *  Gatzanaga et al.  2002:
+       *
+       *  \f[ f(r_1, r_2) = \frac{10}{7}\xi(r_1) \xi(r_2)+\frac{4}{7}
+       *  \left\{ -3 \frac{\Phi^\prime(r_1) \Phi^\prime(r_2)}{r_1
+       *  r_2} -\frac{\xi(r_1) \Phi^\prime(r_2)}{r_2}-\frac{\xi(r_2)
+       *  \Phi^\prime(r_1)}{r_1} +\mu^2\left[
+       *  \xi(r_1)+3\frac{\Phi^\prime(r_1)}{r1}\right]\left[
+       *  \xi(r_2)+3\frac{\Phi^\prime(r_2)}{r_3}\right] \right\}
+       *  -\mu\left[ \xi^\prime(r_1)\Phi^\prime(r_2) +
+       *  \xi^\prime(r_2)\Phi^\prime(r_1)\right] \f]
+       *
+       *  where the prime indicates the derivative with respect to
+       *  \f$r\f$, and \f$\xi(r), \Phi(r)\f$ are the integrals of the
+       *  power spectrum computed by
+       *  cosmobl::cosmology::Cosmology::integrals_zeta_BarrigaGatzanaga
+       *
+       *  @param r1 the first side of the triangle
+       *
+       *  @param r2 the second side of the triangle
+       *
+       *  @param theta the angle betwee r1 and r2
+       *
+       *  @param xi vector containing the value of xi at r1, r2
+       *
+       *  @param dxi vector containing the value of the derivative of
+       *  xi at r1, r2
+       *
+       *  @param dPhi vector containing the value of the derivative
+       *  of Phi at r1, r2
+       *
+       *  @return the dark matter reduced three-point correlation
+       *  function
+       */
+      double zeta_single_BarrigaGatzanaga (const double r1, const double r2, const double theta, const vector<double> xi, const vector<double> dxi, const vector<double> dPhi) const;
 
-       /**
-	*  @brief the dark matter three-point correlation function
-	*  model by Barriga & Gatzanaga et al. 2002
-	*
-	*  this functions computes the dark matter three-point
-	*  correlation function model by Barriga & Gatzanaga et al
-	*  2002:
- 	*
-	*  \f[ f(r_1, r_2) = \frac{10}{7}\xi(r_1) \xi(r_2)+\frac{4}{7}
-	*  \left\{ -3 \frac{\Phi^\prime(r_1) \Phi^\prime(r_2)}{r_1
-	*  r_2} -\frac{\xi(r1) \Phi^\prime(r_2)}{r_2}-\frac{\xi(r2)
-	*  \Phi^\prime(r_1)}{r_1} +\mu^2\left[
-	*  \xi(r_1)+3\frac{\Phi^\prime(r_1)}{r1}\right]\left[
-	*  \xi(r_2)+3\frac{\Phi^\prime(r_2)}{r_3}\right] \right\}
-	*  -\mu\left[ \xi^\prime(r_1)\Phi^\prime(r_2) +
-	*  \xi^\prime(r_2)\Phi^\prime(r_1)\right] +
-	*  \mathrm{permutations} \f]
-	*
-	*  where the prime indicates the derivative with respect to
-	*  \f$r\f$, and \f$\xi(r), \Phi(r)\f$ are the integrals of the
-	*  power spectrum computed by
-	*  cosmobl::cosmology::Cosmology::integrals_zeta_BarrigaGatzanaga.
-	*
-	*  @param [in] r1 the first side of the triangle
-	*
-	*  @param [in] r2 the second side of the triangle
-	*
-	*  @param [in] theta the angle between r1 and r2
-	*
-	*  @param [out] rr vector or scales
-	*
-	*  @param [out] xi_DM vector containing the dark matter
-	*  two-point correlation function
-	*
-	*  @param [out] Phi vector containing \f$ \Phi(r)\f$
-	*
-	*  @param [in] kk vector of the wave vector modules
-	*
-	*  @param [in] Pk_DM the dark matter power spectrum
-	*
-	*  @return the dark matter three-point correlation function
-	*/
-       double zeta_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &Phi, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief the dark matter three-point correlation function
+       *  model by Barriga & Gatzanaga et al. 2002
+       *
+       *  this functions computes the dark matter three-point
+       *  correlation function model by Barriga & Gatzanaga et al
+       *  2002:
+       *
+       *  \f[ f(r_1, r_2) = \frac{10}{7}\xi(r_1) \xi(r_2)+\frac{4}{7}
+       *  \left\{ -3 \frac{\Phi^\prime(r_1) \Phi^\prime(r_2)}{r_1
+       *  r_2} -\frac{\xi(r1) \Phi^\prime(r_2)}{r_2}-\frac{\xi(r2)
+       *  \Phi^\prime(r_1)}{r_1} +\mu^2\left[
+       *  \xi(r_1)+3\frac{\Phi^\prime(r_1)}{r1}\right]\left[
+       *  \xi(r_2)+3\frac{\Phi^\prime(r_2)}{r_3}\right] \right\}
+       *  -\mu\left[ \xi^\prime(r_1)\Phi^\prime(r_2) +
+       *  \xi^\prime(r_2)\Phi^\prime(r_1)\right] +
+       *  \mathrm{permutations} \f]
+       *
+       *  where the prime indicates the derivative with respect to
+       *  \f$r\f$, and \f$\xi(r), \Phi(r)\f$ are the integrals of the
+       *  power spectrum computed by
+       *  cosmobl::cosmology::Cosmology::integrals_zeta_BarrigaGatzanaga.
+       *
+       *  @param [in] r1 the first side of the triangle
+       *
+       *  @param [in] r2 the second side of the triangle
+       *
+       *  @param [in] theta the angle between r1 and r2
+       *
+       *  @param [out] rr vector or scales
+       *
+       *  @param [out] xi_DM vector containing the dark matter
+       *  two-point correlation function
+       *
+       *  @param [out] Phi vector containing \f$ \Phi(r)\f$
+       *
+       *  @param [in] kk vector of the wave vector modules
+       *
+       *  @param [in] Pk_DM the dark matter power spectrum
+       *
+       *  @return the dark matter three-point correlation function
+       */
+      double zeta_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &Phi, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief the dark matter reduced three-point correlation
-	*  function model by Barriga & Gatzanaga et al. 2002
-	*
-	*  this functions computes \f$Q_{DM} (r_1, r_2, \hat{r_1}
-	*  \cdot \hat{r_2})\f$, as described in Barriga & Gatzanaga et
-	*  al. 2002:
-	*
-	*  \f[ Q_{DM} (r_1, r_2, \hat{r_1} \cdot \hat{r_2}) =
-	*  \frac{\zeta_{DM} (r_1, r_2, \hat{r_1} \cdot \hat{r_2})}
-	*  {\left(
-	*  \xi(r_1)\xi(r_2)+\xi(r_2)\xi(r_3)+\xi(r_3)\xi(r_1)\right)}
-	*  \f]
-	*
-	*  see cosmobl::cosmology::Cosmology::zeta_DM_BarrigaGatzanaga
-	*  for more details
-	*
-	*  @param [in] r1 the first side of the triangle
-	*
-	*  @param [in] r2 the second side of the triangle
-	*
-	*  @param [in] theta the angle between r1 and r2
-	* 
-	*  @param [out] rr vector or scales
-	* 
-	*  @param [out] xi_DM vector containing the dark matter
-	*  two-point correlation function
-	* 
-	*  @param [out] Phi vector containing \f$ \Phi(r)\f$
-	* 
-	*  @param [in] kk vector of the wave vector modules
-	* 
-	*  @param [in] Pk_DM the dark matter power spectrum
-	*
-	*  @return the dark matter reduced three-point correlation
-	*  function
-	*/
-       double Q_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &Phi, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief the dark matter reduced three-point correlation
+       *  function model by Barriga & Gatzanaga et al. 2002
+       *
+       *  this functions computes \f$Q_{DM} (r_1, r_2, \hat{r_1}
+       *  \cdot \hat{r_2})\f$, as described in Barriga & Gatzanaga et
+       *  al. 2002:
+       *
+       *  \f[ Q_{DM} (r_1, r_2, \hat{r_1} \cdot \hat{r_2}) =
+       *  \frac{\zeta_{DM} (r_1, r_2, \hat{r_1} \cdot \hat{r_2})}
+       *  {\left(
+       *  \xi(r_1)\xi(r_2)+\xi(r_2)\xi(r_3)+\xi(r_3)\xi(r_1)\right)}
+       *  \f]
+       *
+       *  see cosmobl::cosmology::Cosmology::zeta_DM_BarrigaGatzanaga
+       *  for more details
+       *
+       *  @param [in] r1 the first side of the triangle
+       *
+       *  @param [in] r2 the second side of the triangle
+       *
+       *  @param [in] theta the angle between r1 and r2
+       * 
+       *  @param [out] rr vector or scales
+       * 
+       *  @param [out] xi_DM vector containing the dark matter
+       *  two-point correlation function
+       * 
+       *  @param [out] Phi vector containing \f$ \Phi(r)\f$
+       * 
+       *  @param [in] kk vector of the wave vector modules
+       * 
+       *  @param [in] Pk_DM the dark matter power spectrum
+       *
+       *  @return the dark matter reduced three-point correlation
+       *  function
+       */
+      double Q_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &Phi, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief the dark matter three-point correlation function
-	*
-	*  this function computes the dark matter three-point
-	*  correlation function with either the Slepian et al 2015 or
-	*  the Barriga & Gatzagnaga 2002 model
-	*
-	*  @param r1 the first side of the triangle
-	*
-	*  @param r2 the second side of the triangle
-	*
-	*  @param theta vector containing angles between r1 and r2, in
-	*  radians
-	*
-	*  @param model the model to compute the three-point
-	*  correlation function, can be "Slepian" or
-	*  "BarrigaGatzanaga"
-	*
-	*  @param kk vector of the wave vector modules
-	*
-	*  @param Pk_DM the dark matter power spectrum
-	*
-	*  @return vector containing the dark matter three-point
-	*  correlation function
-	*/
-       vector<double> zeta_DM (const double r1, const double r2, const vector<double> theta, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief the dark matter three-point correlation function
+       *
+       *  this function computes the dark matter three-point
+       *  correlation function with either the Slepian et al 2015 or
+       *  the Barriga & Gatzagnaga 2002 model
+       *
+       *  @param r1 the first side of the triangle
+       *
+       *  @param r2 the second side of the triangle
+       *
+       *  @param theta vector containing angles between r1 and r2, in
+       *  radians
+       *
+       *  @param model the model to compute the three-point
+       *  correlation function, can be "Slepian" or
+       *  "BarrigaGatzanaga"
+       *
+       *  @param kk vector of the wave vector modules
+       *
+       *  @param Pk_DM the dark matter power spectrum
+       *
+       *  @return vector containing the dark matter three-point
+       *  correlation function
+       */
+      vector<double> zeta_DM (const double r1, const double r2, const vector<double> theta, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief the dark matter reduced three-point correlation
-	*  function
-	*
-	*  this function computes the dark matter reduced three-point
-	*  reduced correlation function with either the Slepian et al.
-	*  2015 or the Barriga & Gatzagnaga 2002 model
-	*
-	*  @param r1 the first side of the triangle 
-	*
-	*  @param r2 the second side of the triangle
-	*
-	*  @param theta vector containing angles between r1 and r2, in
-	*  radians
-	*
-	*  @param model the model to compute the three-point
-	*  correlation function, can be "Slepian" or
-	*  "BarrigaGatzanaga"
-	*
-	*  @param kk vector of the wave vector modules
-	*
-	*  @param Pk_DM the dark matter power spectrum
-	*
-	*  @return vector containing the dark matter reduced
-	*  three-point correlation function
-	*/
-       vector<double> Q_DM (const double r1, const double r2, const vector<double> theta, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief the dark matter reduced three-point correlation
+       *  function
+       *
+       *  this function computes the dark matter reduced three-point
+       *  reduced correlation function with either the Slepian et al.
+       *  2015 or the Barriga & Gatzagnaga 2002 model
+       *
+       *  @param r1 the first side of the triangle 
+       *
+       *  @param r2 the second side of the triangle
+       *
+       *  @param theta vector containing angles between r1 and r2, in
+       *  radians
+       *
+       *  @param model the model to compute the three-point
+       *  correlation function, can be "Slepian" or
+       *  "BarrigaGatzanaga"
+       *
+       *  @param kk vector of the wave vector modules
+       *
+       *  @param Pk_DM the dark matter power spectrum
+       *
+       *  @return vector containing the dark matter reduced
+       *  three-point correlation function
+       */
+      vector<double> Q_DM (const double r1, const double r2, const vector<double> theta, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief the local-bias model of the three-point correlation
-	*  function of dark matter haloes
-	*
-	*  this function computes the three-point correlation function
-	*  of dark matter haloes with either the Slepian et al.  2015
-	*  or the Barriga & Gatzagnaga 2002 model, as follows:
-	*
-	*  \f[ \zeta_h (r_1, r_2, \hat{r_1} \cdot \hat{r_2}) = b_1^3
-	*  \zeta_{DM}(r_1, r_2, \hat{r_1} \cdot \hat{r_2}) + b_1^2 b_2
-	*  \left[ \xi(r_1)\cdot\xi(r_2) + \xi(r_2)\cdot\xi(r_3) +
-	*  \xi(r_3)\cdot\xi(r_1) \right] \f]
-	*
-	*  with \f$r_3 = \sqrt{r_1^2+r_2^2-2 r_1 r_2 \cos(\theta)}\f$
-	*  and \f$b_1, b_2\f$ the linear and non-linear halo bias,
-	*  respectively; \f$\zeta_{DM}\f$ is compute by
-	*  cosmobl::cosmology::Cosmology::zeta_DM
-	*
-	*  @param r1 the first side of the triangle
-	*
-	*  @param r2 the second side of the triangle
-	*  
-	*  @param theta vector containing angles between r1 and r2, in
-	*  radians 
-	*
-	*  @param b1 the linear bias
-	*
-	*  @param b2 the non-linear bias
-	*
-	*  @param model the model to compute the three-point
-	*  correlation function, can be "Slepian" or
-	*  "BarrigaGatzanaga"
-	*
-	*  @param kk vector of the wave vector modules
-	*
-	*  @param Pk_DM the dark matter power spectrum
-	*
-	*  @return vector containing the three-point correlation
-	*  function of dark matter haloes
-	*/
-       vector<double> zeta_halo (const double r1, const double r2, const vector<double> theta, const double b1, const double b2, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief the local-bias model of the three-point correlation
+       *  function of dark matter haloes
+       *
+       *  this function computes the three-point correlation function
+       *  of dark matter haloes with either the Slepian et al.  2015
+       *  or the Barriga & Gatzagnaga 2002 model, as follows:
+       *
+       *  \f[ \zeta_h (r_1, r_2, \hat{r_1} \cdot \hat{r_2}) = b_1^3
+       *  \zeta_{DM}(r_1, r_2, \hat{r_1} \cdot \hat{r_2}) + b_1^2 b_2
+       *  \left[ \xi(r_1)\cdot\xi(r_2) + \xi(r_2)\cdot\xi(r_3) +
+       *  \xi(r_3)\cdot\xi(r_1) \right] \f]
+       *
+       *  with \f$r_3 = \sqrt{r_1^2+r_2^2-2 r_1 r_2 \cos(\theta)}\f$
+       *  and \f$b_1, b_2\f$ the linear and non-linear halo bias,
+       *  respectively; \f$\zeta_{DM}\f$ is compute by
+       *  cosmobl::cosmology::Cosmology::zeta_DM
+       *
+       *  @param r1 the first side of the triangle
+       *
+       *  @param r2 the second side of the triangle
+       *  
+       *  @param theta vector containing angles between r1 and r2, in
+       *  radians 
+       *
+       *  @param b1 the linear bias
+       *
+       *  @param b2 the non-linear bias
+       *
+       *  @param model the model to compute the three-point
+       *  correlation function, can be "Slepian" or
+       *  "BarrigaGatzanaga"
+       *
+       *  @param kk vector of the wave vector modules
+       *
+       *  @param Pk_DM the dark matter power spectrum
+       *
+       *  @return vector containing the three-point correlation
+       *  function of dark matter haloes
+       */
+      vector<double> zeta_halo (const double r1, const double r2, const vector<double> theta, const double b1, const double b2, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief the local-bias model of the reduced three-point
-	*  correlation function of dark matter haloes
-	*
-	*  this function computes the reduced three-point correlation
-	*  function of dark matter haloes with either the Slepian et
-	*  al.  2015 or the Barriga & Gatzagnaga 2002 model, as
-	*  follows:
-	*
-	*  \f[ Q_h (r_1, r_2, \hat{r_1} \cdot \hat{r_2}) =
-	*  \frac{Q_{DM}(r_1, r_2, \hat{r_1} \cdot
-	*  \hat{r_2})}{b_1}+\frac{b_2}{b_1^2}\f]
-	*
-	*  \f$Q_{DM}\f$ is compute by
-	*  cosmobl::cosmology::Cosmology::Q_DM
-	*
-	*  @param r1 the first side of the triangle
-	*
-	*  @param r2 the second side of the triangle
-	*
-	*  @param theta vector containing angles between r1 and r2, in
-	*  radians
-	*
-	*  @param b1 the linear bias
-	*
-	*  @param b2 the non-linear bias
-	*
-	*  @param model the model to compute the three-point
-	*  correlation function, can be "Slepian" or
-	*  "BarrigaGatzanaga"
-	*
-	*  @param kk vector of the wave vector modules
-	*
-	*  @param Pk_DM the dark matter power spectrum
-	*
-	*  @return vector containing the reduced three-point
-	*  correlation function of dark matter haloes
-	*/
-       vector<double> Q_halo (const double r1, const double r2, const vector<double> theta, const double b1, const double b2, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief the local-bias model of the reduced three-point
+       *  correlation function of dark matter haloes
+       *
+       *  this function computes the reduced three-point correlation
+       *  function of dark matter haloes with either the Slepian et
+       *  al.  2015 or the Barriga & Gatzagnaga 2002 model, as
+       *  follows:
+       *
+       *  \f[ Q_h (r_1, r_2, \hat{r_1} \cdot \hat{r_2}) =
+       *  \frac{Q_{DM}(r_1, r_2, \hat{r_1} \cdot
+       *  \hat{r_2})}{b_1}+\frac{b_2}{b_1^2}\f]
+       *
+       *  \f$Q_{DM}\f$ is compute by
+       *  cosmobl::cosmology::Cosmology::Q_DM
+       *
+       *  @param r1 the first side of the triangle
+       *
+       *  @param r2 the second side of the triangle
+       *
+       *  @param theta vector containing angles between r1 and r2, in
+       *  radians
+       *
+       *  @param b1 the linear bias
+       *
+       *  @param b2 the non-linear bias
+       *
+       *  @param model the model to compute the three-point
+       *  correlation function, can be "Slepian" or
+       *  "BarrigaGatzanaga"
+       *
+       *  @param kk vector of the wave vector modules
+       *
+       *  @param Pk_DM the dark matter power spectrum
+       *
+       *  @return vector containing the reduced three-point
+       *  correlation function of dark matter haloes
+       */
+      vector<double> Q_halo (const double r1, const double r2, const vector<double> theta, const double b1, const double b2, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief the non-local-bias model of the three-point
-	*  correlation function of dark matter haloes
-	*
-	*  this function computes the reduced three-point correlation
-	*  function of dark matter haloes, with non-local bias
-	*  corrections, with either the Slepian et al. 2015 or the
-	*  Barriga & Gatzagnaga 2002 model, as follows:
-	*
-	*  \f[ Q_h (r_1, r_2, \hat{r_1} \cdot \hat{r_2}) =
-	*  \frac{Q_{DM}(r_1, r_2, \hat{r_1} \cdot \hat{r_2})}{b_1}+
-	*  \frac{b_2}{b_1^2}+\frac{g_2}{b_1}Q_{non-local} \f]
-	*
-	*  \f$Q_{DM}\f$ is compute by
-	*  cosmobl::cosmology::Cosmology::Q_DM and \f$Q_{non-local}\f$
-	*  is the non-local contirbuion term, computed by
-	*  cosmobl::cosmology::Cosmology::Q_nonLocal
-	*
-	*  @param r1 the first side of the triangle
-	*
-	*  @param r2 the second side of the triangle
-	*
-	*  @param theta vector containing angles between r1 and r2, in
-	*  radians
-	*
-	*  @param b1 the linear bias
-	*
-	*  @param b2 the non-linear bias
-	*
-	*  @param g2 the non-local bias
-	*
-	*  @param model the model to compute the three-point
-	*  correlation function, can be "Slepian" or
-	*  "BarrigaGatzanaga"
-	*
-	*  @param kk vector of the wave vector modules 
-	*
-	*  @param Pk_DM the dark matter power spectrum
-	*
-	*  @return vector containing the reduced three-point
-	*  correlation function of dark matter haloes
-	*/
-       vector<double> Q_halo (const double r1, const double r2, const vector<double> theta, const double b1, const double b2, const double g2, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief the non-local-bias model of the three-point
+       *  correlation function of dark matter haloes
+       *
+       *  this function computes the reduced three-point correlation
+       *  function of dark matter haloes, with non-local bias
+       *  corrections, with either the Slepian et al. 2015 or the
+       *  Barriga & Gatzagnaga 2002 model, as follows:
+       *
+       *  \f[ Q_h (r_1, r_2, \hat{r_1} \cdot \hat{r_2}) =
+       *  \frac{Q_{DM}(r_1, r_2, \hat{r_1} \cdot \hat{r_2})}{b_1}+
+       *  \frac{b_2}{b_1^2}+\frac{g_2}{b_1}Q_{non-local} \f]
+       *
+       *  \f$Q_{DM}\f$ is compute by
+       *  cosmobl::cosmology::Cosmology::Q_DM and \f$Q_{non-local}\f$
+       *  is the non-local contirbuion term, computed by
+       *  cosmobl::cosmology::Cosmology::Q_nonLocal
+       *
+       *  @param r1 the first side of the triangle
+       *
+       *  @param r2 the second side of the triangle
+       *
+       *  @param theta vector containing angles between r1 and r2, in
+       *  radians
+       *
+       *  @param b1 the linear bias
+       *
+       *  @param b2 the non-linear bias
+       *
+       *  @param g2 the non-local bias
+       *
+       *  @param model the model to compute the three-point
+       *  correlation function, can be "Slepian" or
+       *  "BarrigaGatzanaga"
+       *
+       *  @param kk vector of the wave vector modules 
+       *
+       *  @param Pk_DM the dark matter power spectrum
+       *
+       *  @return vector containing the reduced three-point
+       *  correlation function of dark matter haloes
+       */
+      vector<double> Q_halo (const double r1, const double r2, const vector<double> theta, const double b1, const double b2, const double g2, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief the dark matter equilateral three-point correlation
-	*  function
-	*
-	*  this function computes the dark matter equilateral
-	*  three-point correlation function with either the Slepian et
-	*  al 2015 or the Barriga & Gatzagnaga 2002 model
-	*
-	*  @param rr vector of sides
-	*
-	*  @param model the model to compute the three-point
-	*  correlation function, can be "Slepian" or "BarrigaGatzanaga"
-	*
-	*  @param kk vector of the wave vector modules
-	*
-	*  @param Pk_DM the dark matter power spectrum
-	*
-	*  @return vector containing the dark matter three-point
-	*  correlation function
-	*/
-       vector<double> zeta_DM_eq (const vector<double> rr, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief the dark matter equilateral three-point correlation
+       *  function
+       *
+       *  this function computes the dark matter equilateral
+       *  three-point correlation function with either the Slepian et
+       *  al 2015 or the Barriga & Gatzagnaga 2002 model
+       *
+       *  @param rr vector of sides
+       *
+       *  @param model the model to compute the three-point
+       *  correlation function, can be "Slepian" or "BarrigaGatzanaga"
+       *
+       *  @param kk vector of the wave vector modules
+       *
+       *  @param Pk_DM the dark matter power spectrum
+       *
+       *  @return vector containing the dark matter three-point
+       *  correlation function
+       */
+      vector<double> zeta_DM_eq (const vector<double> rr, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief the dark matter equilateral reduced three-point
-	*  correlation function
-	*
-	*  this function computes the dark matter equilateral reduced
-	*  three-point correlation function with either the Slepian et
-	*  al 2015 or the Barriga & Gatzagnaga 2002 model
-	*
-	*  @param rr vector of sides
-	*
-	*  @param model the model to compute the three-point
-	*  correlation function, can be "Slepian" or
-	*  "BarrigaGatzanaga"
-	*
-	*  @param kk vector of the wave vector modules
-	*
-	*  @param Pk_DM the dark matter power spectrum
-	*
-	*  @return vector containing the dark matter three-point
-	*  correlation function
-	*/
-       vector<double> Q_DM_eq (const vector<double> rr, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
+      /**
+       *  @brief the dark matter equilateral reduced three-point
+       *  correlation function
+       *
+       *  this function computes the dark matter equilateral reduced
+       *  three-point correlation function with either the Slepian et
+       *  al 2015 or the Barriga & Gatzagnaga 2002 model
+       *
+       *  @param rr vector of sides
+       *
+       *  @param model the model to compute the three-point
+       *  correlation function, can be "Slepian" or
+       *  "BarrigaGatzanaga"
+       *
+       *  @param kk vector of the wave vector modules
+       *
+       *  @param Pk_DM the dark matter power spectrum
+       *
+       *  @return vector containing the dark matter three-point
+       *  correlation function
+       */
+      vector<double> Q_DM_eq (const vector<double> rr, const string model, const vector<double> kk, const vector<double> Pk_DM) const;
 
-       /**
-	*  @brief the dark matter three-point correlation function 
-	*  multipoles covariance model, by Slepian et al. 2015
-	*
-	*  \f[
-	*  C_{{\rm GRF}, ll'}(r_{1},r_{2};r_{1}',r_{2}')=\frac{4\pi}{V}(2l+1)(2l'+1)(-1)^{l+l'} \times\int r^{2}dr\sum_{l_{2}}(2l_{2}+1)
-	*  \left(\begin{array}{ccc} 
-  	*  l & l' & l_{2}\\
-  	*  0 & 0 & 0
-	*   \end{array}\right)^2\nonumber\\
-	*   \times\bigg\{(-1)^{l_2}\xi(r)\bigg[f_{l_{2}ll'}(r;r_{1},r_{1}')f_{l_{2}ll'}(r;r_{2},r_{2}')
-	*   +f_{l_{2}ll'}(r;r_{2},r_{1}')f_{l_{2}ll'}(r;r_{1},r_{2}')\bigg]+(-1)^{(l+l'+l_{2})/2}
-	*   \times\bigg[f_{ll}(r;r_{1})f_{l'l'}(r;r_{1}')f_{l_{2}ll'}(r;r_{2},r_{2}')
-	*   +f_{ll}(r;r_{1})f_{l'l'}(r;r_{2}')f_{l_{2}ll'}(r;r_{2},r_{1}')
-	*   +f_{ll}(r;r_{2})f_{l'l'}(r;r_{1}')f_{l_{2}ll'}(r;r_{1},r_{2}')
-	*   +f_{ll}(r;r_{2})f_{l'l'}(r;r_{2}')f_{l_{2}ll'}(r;r_{1},r_{1}')\bigg]\bigg\}
-	*  \f]
-	*
-	*  with:
-	*  \f[
-        *   f_{ll}(r;r_{1})=\int\frac{k^{2}dk}{2\pi^{2}}\left[P(k)+\frac{1}{n}\right]j_{l}(kr_{1})j_{l}(kr)
-	*  \f]
-	*   and:
-	*   \f[
-	*   f_{l_{2}ll'}(r;r_{1},r_{1}')=\int\frac{k^{2}dk}{2\pi^{2}} \left[P(k)+\frac{1}{n}\right] j_{l}(kr_{1})j_{l'}(kr_{1}')j_{l_{2}}(kr),
-	*   \f]
-	*   where \f$V\f$ is the effective survey volume, and  \f$n\f$ is the effective number density of the survey.
-	*
-	*  @param Volume the volume
-	*
-	*  @param nObjects the number of objects
-	*
-	*  @param l the order l of the multipoles expansion
-	*
-	*  @param l_prime the order \f$l^'\f$ of the multipoles expansion
-	*
-	*  @param r1 the scale \f$r_1\f$
-	*  
-	*  @param r2 the scale \f$r_2\f$
-	*  
-	*  @param r1_prime the scale \f$r_1^'\f$
-	*
-	*  @param r2_prime the scale \f$r_2^'\f$
-	*
-	*  @param kk vector of the wave vector modules
-	*
-	*  @param Pk the pdark matter ower spectrum
-	*
-	*  @param rr vector of scales
-	*
-	*  @param Xi vector containing the two-point correlation
-	*  function
-	*
-	*  @param prec the integral precision
-	*
-	*  @return the covariance of the multipole expansion of 
-	*  the dark matter three-point correlation function
-	*/
-       double zeta_multipoles_covariance (const double Volume, const double nObjects, const int l, const int l_prime, const double r1, const double r2, const double r1_prime, const double r2_prime, const vector<double> kk, const vector<double> Pk, const vector<double> rr, const vector<double> Xi, const double prec=1.e-3);
+      /**
+       *  @brief the dark matter three-point correlation function 
+       *  multipoles covariance model, by Slepian et al. 2015
+       *
+       *  \f[
+       *  C_{{\rm GRF}, ll'}(r_{1},r_{2};r_{1}',r_{2}')=\frac{4\pi}{V}(2l+1)(2l'+1)(-1)^{l+l'} \times\int r^{2}dr\sum_{l_{2}}(2l_{2}+1)
+       *  \left(\begin{array}{ccc} 
+       *  l & l' & l_{2}\\
+       *  0 & 0 & 0
+       *   \end{array}\right)^2\nonumber\\
+       *   \times\bigg\{(-1)^{l_2}\xi(r)\bigg[f_{l_{2}ll'}(r;r_{1},r_{1}')f_{l_{2}ll'}(r;r_{2},r_{2}')
+       *   +f_{l_{2}ll'}(r;r_{2},r_{1}')f_{l_{2}ll'}(r;r_{1},r_{2}')\bigg]+(-1)^{(l+l'+l_{2})/2}
+       *   \times\bigg[f_{ll}(r;r_{1})f_{l'l'}(r;r_{1}')f_{l_{2}ll'}(r;r_{2},r_{2}')
+       *   +f_{ll}(r;r_{1})f_{l'l'}(r;r_{2}')f_{l_{2}ll'}(r;r_{2},r_{1}')
+       *   +f_{ll}(r;r_{2})f_{l'l'}(r;r_{1}')f_{l_{2}ll'}(r;r_{1},r_{2}')
+       *   +f_{ll}(r;r_{2})f_{l'l'}(r;r_{2}')f_{l_{2}ll'}(r;r_{1},r_{1}')\bigg]\bigg\}
+       *  \f]
+       *
+       *  with:
+       *  \f[
+       *   f_{ll}(r;r_{1})=\int\frac{k^{2}dk}{2\pi^{2}}\left[P(k)+\frac{1}{n}\right]j_{l}(kr_{1})j_{l}(kr)
+       *  \f]
+       *   and:
+       *   \f[
+       *   f_{l_{2}ll'}(r;r_{1},r_{1}')=\int\frac{k^{2}dk}{2\pi^{2}} \left[P(k)+\frac{1}{n}\right] j_{l}(kr_{1})j_{l'}(kr_{1}')j_{l_{2}}(kr),
+       *   \f]
+       *   where \f$V\f$ is the effective survey volume, and  \f$n\f$ is the effective number density of the survey.
+       *
+       *  @param Volume the volume
+       *
+       *  @param nObjects the number of objects
+       *
+       *  @param l the order l of the multipoles expansion
+       *
+       *  @param l_prime the order \f$l^'\f$ of the multipoles expansion
+       *
+       *  @param r1 the scale \f$r_1\f$
+       *  
+       *  @param r2 the scale \f$r_2\f$
+       *  
+       *  @param r1_prime the scale \f$r_1^'\f$
+       *
+       *  @param r2_prime the scale \f$r_2^'\f$
+       *
+       *  @param kk vector of the wave vector modules
+       *
+       *  @param Pk the pdark matter ower spectrum
+       *
+       *  @param rr vector of scales
+       *
+       *  @param Xi vector containing the two-point correlation
+       *  function
+       *
+       *  @param prec the integral precision
+       *
+       *  @return the covariance of the multipole expansion of 
+       *  the dark matter three-point correlation function
+       */
+      double zeta_multipoles_covariance (const double Volume, const double nObjects, const int l, const int l_prime, const double r1, const double r2, const double r1_prime, const double r2_prime, const vector<double> kk, const vector<double> Pk, const vector<double> rr, const vector<double> Xi, const double prec=1.e-3);
 
-       /**
-	*  @brief the dark matter three-point correlation function 
-	*  covariance model
-	*
-	*  this function computes the dark matter three-point
-	*  correlation function covariance model, by Slepian et
-	*  al. 2015, as a function of \f$\theta = r_1 \cdot r_2\f$:
-	*
-	*  \f[ C(r_1, r_2, \vec{r_1}\cdot\vec{r_2} \equiv \cos(\theta)
-	*  = \sum_{l=0}^{l=max_l} \sum_{l^'=0}^{l^'=max_l} C_{l,
-	*  l^'}(r_1, r_2) P_l(\cos(\theta) P_{l^'}(\cos(theta) \f]
-	*
-	*  where \f$C_{l, l^'}(r_1, r_2)\f$ is computed by
-	*  cosmobl::cosmology::Cosmology::zeta_multipoles_covariance
-	*
-	*  @param Volume the volume
-	*
-	*  @param nObjects the number of objects
-	*
-	*  @param theta vector of angles at which the covariance is
-	*  computed
-	*
-	*  @param r1 the scale \f$r_1\f$
-	*  
-	*  @param r2 the scale \f$r_2\f$
-	*
-	*  @param kk vector of the wave vector modules
-	*
-	*  @param Pk the pdark matter ower spectrum
-	*
-	*  @param norders the maximum number of orders of multipoles
-	*  of the three point correlation function expansion
-	*
-	*  @param prec the integral precision
-	*
-	*  @return the covariance of the dark matter 
-	*   three-point correlation function
-	*/
-       vector<vector<double>> zeta_covariance (const double Volume, const double nObjects, const vector<double> theta, const double r1, const double r2, const vector<double> kk, const vector<double> Pk, const int norders=10, const double prec=1.e-3);
+      /**
+       *  @brief the dark matter three-point correlation function 
+       *  covariance model
+       *
+       *  this function computes the dark matter three-point
+       *  correlation function covariance model, by Slepian et
+       *  al. 2015, as a function of \f$\theta = r_1 \cdot r_2\f$:
+       *
+       *  \f[ C(r_1, r_2, \vec{r_1}\cdot\vec{r_2} \equiv \cos(\theta)
+       *  = \sum_{l=0}^{l=max_l} \sum_{l^'=0}^{l^'=max_l} C_{l,
+       *  l^'}(r_1, r_2) P_l(\cos(\theta) P_{l^'}(\cos(theta) \f]
+       *
+       *  where \f$C_{l, l^'}(r_1, r_2)\f$ is computed by
+       *  cosmobl::cosmology::Cosmology::zeta_multipoles_covariance
+       *
+       *  @param Volume the volume
+       *
+       *  @param nObjects the number of objects
+       *
+       *  @param theta vector of angles at which the covariance is
+       *  computed
+       *
+       *  @param r1 the scale \f$r_1\f$
+       *  
+       *  @param r2 the scale \f$r_2\f$
+       *
+       *  @param kk vector of the wave vector modules
+       *
+       *  @param Pk the pdark matter ower spectrum
+       *
+       *  @param norders the maximum number of orders of multipoles
+       *  of the three point correlation function expansion
+       *
+       *  @param prec the integral precision
+       *
+       *  @param method false \f$\rightarrow\f$ applyt method 1; true
+       *  \f$\rightarrow\f$ applyt method 2
+       *
+       *  @param nExtractions the number of mock extraction
+       *  from zeta multipoles coefficient covariance matrix
+       *
+       *  @param mean vector containing the mean values
+       *
+       *  @param seed random number generator seed
+       *
+       *  @return the covariance of the dark matter 
+       *   three-point correlation function
+       */
+      vector<vector<double>> zeta_covariance (const double Volume, const double nObjects, const vector<double> theta, const double r1, const double r2, const vector<double> kk, const vector<double> Pk, const int norders=10, const double prec=1.e-3, const bool method=false, const int nExtractions=10000, const vector<double> mean={}, const int seed=543);
 
-       ///@}
+      ///@}
        
     };
     

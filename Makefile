@@ -7,28 +7,38 @@ FLAGS0 = -std=c++11 -fopenmp
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 
 FLAGS_FFTLOG = -fPIC -w
+FLAGS_Recfast = -Wall -O3 -fPIC -D RECFASTPPPATH=\"$(PWD)/External/Recfast/\"
+
 
 Dir_H = Headers/Lib/
 Dir_O = Headers/Objects/
+Dir_CCfits = External/CCfits/
 Dir_CUBA = External/Cuba-4.2/
 Dir_FFTLOG = External/fftlog-f90-master/
+Dir_Eigen = External/eigen-3.3.4/
+Dir_Recfast = External/Recfast/
 
 dir_H = $(addprefix $(PWD)/,$(Dir_H))
 dir_O = $(addprefix $(PWD)/,$(Dir_O))
+dir_CCfits = $(addprefix $(PWD)/,$(Dir_CCfits))
 dir_CUBA = $(addprefix $(PWD)/,$(Dir_CUBA))
 dir_FFTLOG = $(addprefix $(PWD)/,$(Dir_FFTLOG))
+dir_Eigen = $(addprefix $(PWD)/, $(Dir_Eigen))
+dir_Recfast = $(addprefix $(PWD)/, $(Dir_Recfast))
 
 dir_Python = $(PWD)/Python/
 
 HH = $(dir_H)*.h $(dir_O)*.h
 
-FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dir_CUBA) -I$(dir_H) -I$(dir_O)
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H) -I$(dir_O)
 FLAGS_FFTW = -lfftw3 #-lfftw3_omp
 FLAGS_GSL = -lgsl -lgslcblas -lm -L$(HOME)/lib
-
+FLAGS_CCFITS = -Wl,-rpath,$(dir_CCfits)/lib -L$(dir_CCfits)/lib -lCCfits
 CUBA_LIB = $(dir_CUBA)libcuba.a
 CUBA_COMPILE = cd $(dir_CUBA) && ./configure CFLAGS=-fPIC && make lib
 
+CCfits_LIB = $(dir_CCfits)/lib/libCCfits.$(ES)
+CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits && ./configure --prefix=$(dir_CCfits) && make && make install
 
 FLAGS_LINK = -shared
 
@@ -50,6 +60,7 @@ ifeq ($(SYS),Darwin)
 endif
 
 FLAGST = $(FLAGS0) $(FLAGS)
+FLAGST_Recfast = $(FLAGS0) $(FLAGS_Recfast)
 
 
 ####################################################################
@@ -63,6 +74,7 @@ Dir_COSM = Cosmology/Lib/
 Dir_CM = ChainMesh/
 Dir_CAT = Catalogue/
 Dir_LN = LogNormal/
+Dir_NC = Measure/NumberCounts/
 Dir_TWOP = Measure/TwoPointCorrelation/
 Dir_THREEP = Measure/ThreePointCorrelation/
 Dir_MODEL_GLOB = Modelling/Global/
@@ -78,6 +90,7 @@ dir_COSM = $(addprefix $(PWD)/,$(Dir_COSM))
 dir_CM = $(addprefix $(PWD)/,$(Dir_CM))
 dir_CAT = $(addprefix $(PWD)/,$(Dir_CAT))
 dir_LN = $(addprefix $(PWD)/,$(Dir_LN))
+dir_NC = $(addprefix $(PWD)/,$(Dir_NC))
 dir_TWOP = $(addprefix $(PWD)/,$(Dir_TWOP))
 dir_THREEP = $(addprefix $(PWD)/,$(Dir_THREEP))
 dir_MODEL_GLOB = $(addprefix $(PWD)/,$(Dir_MODEL_GLOB))
@@ -91,19 +104,30 @@ dir_READP = $(addprefix $(PWD)/,$(Dir_READP))
 
 OBJ_FFTLOG = $(dir_FFTLOG)drffti.o $(dir_FFTLOG)drfftb.o $(dir_FFTLOG)drfftf.o $(dir_FFTLOG)fftlog.o $(dir_FFTLOG)cdgamma.o
 
+##### RECfast++ object files #####
+
+OBJ_RECfast = $(dir_Recfast)/src/cosmology.Recfast.o \
+	   	$(dir_Recfast)/src/evalode.Recfast.o \
+	   	$(dir_Recfast)/src/recombination.Recfast.o \
+	   	$(dir_Recfast)/src/ODE_solver.Recfast.o \
+	   	$(dir_Recfast)/src/DM_annihilation.Recfast.o \
+	  	$(dir_Recfast)/src/Rec_corrs_CT.Recfast.o 
+
 ##### CBL object files #####
 
-OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)GSLfunction.o  $(dir_FUNC)Data.o $(dir_FUNC)Data1D.o $(dir_FUNC)Data1D_collection.o $(dir_FUNC)Data2D.o $(dir_FUNC)Data1D_extra.o $(dir_FUNC)Data2D_extra.o $(dir_FUNC)Field3D.o $(dir_FUNC)FuncGrid.o $(dir_FUNC)GSLwrapper.o $(dir_FUNC)CUBAwrapper.o $(dir_FUNC)RandomNumbers.o $(dir_FUNC)Distribution.o $(OBJ_FFTLOG) $(dir_FUNC)FFTlog.o
+OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)GSLfunction.o  $(dir_FUNC)Data.o $(dir_FUNC)Data1D.o $(dir_FUNC)Data1D_collection.o $(dir_FUNC)Data2D.o $(dir_FUNC)Data1D_extra.o $(dir_FUNC)Data2D_extra.o $(dir_FUNC)Field3D.o $(dir_FUNC)FuncGrid.o $(dir_FUNC)GSLwrapper.o $(dir_FUNC)CUBAwrapper.o $(dir_FUNC)RandomNumbers.o $(dir_FUNC)Distribution.o $(OBJ_FFTLOG) $(dir_FUNC)FFTlog.o $(dir_FUNC)FITSwrapper.o
 
 OBJ_STAT = $(dir_STAT)Model.o $(dir_STAT)Model1D.o $(dir_STAT)Model2D.o $(dir_STAT)Chain.o $(dir_STAT)Parameter.o $(dir_STAT)BaseParameter.o $(dir_STAT)DerivedParameter.o $(dir_STAT)LikelihoodParameters.o $(dir_STAT)LikelihoodFunction.o $(dir_STAT)Sampler.o  $(dir_STAT)Likelihood.o
 
-OBJ_COSM = $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)MassFunction.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)DensityProfile.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)SizeFunction.o  $(dir_COSM)3PCF.o
+OBJ_COSM = $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)MassFunction.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)DensityProfile.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)SizeFunction.o  $(dir_COSM)3PCF.o $(OBJ_RECfast)
 
 OBJ_CM = $(dir_CM)ChainMesh.o
 
-OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $(dir_CAT)ChainMesh_Catalogue.o $(dir_CAT)RandomCatalogueVIPERS.o $(dir_CAT)VoidCatalogue.o $(dir_CAT)GadgetCatalogue.o
+OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $(dir_CAT)ChainMesh_Catalogue.o $(dir_CAT)RandomCatalogueVIPERS.o $(dir_CAT)VoidCatalogue.o $(dir_CAT)GadgetCatalogue.o $(dir_CAT)FITSCatalogue.o
 
 OBJ_LN = $(dir_LN)LogNormal.o $(dir_LN)LogNormalFull.o
+
+OBJ_NC = $(dir_NC)NumberCounts.o 
 
 OBJ_TWOP = $(dir_TWOP)Pair.o $(dir_TWOP)Pair1D.o $(dir_TWOP)Pair2D.o $(dir_TWOP)Pair1D_extra.o $(dir_TWOP)Pair2D_extra.o $(dir_TWOP)TwoPointCorrelation.o $(dir_TWOP)TwoPointCorrelation1D.o $(dir_TWOP)TwoPointCorrelation1D_angular.o $(dir_TWOP)TwoPointCorrelation1D_monopole.o $(dir_TWOP)TwoPointCorrelation2D.o $(dir_TWOP)TwoPointCorrelation2D_cartesian.o $(dir_TWOP)TwoPointCorrelation2D_polar.o $(dir_TWOP)TwoPointCorrelation_projected.o $(dir_TWOP)TwoPointCorrelation_deprojected.o $(dir_TWOP)TwoPointCorrelation_multipoles_direct.o $(dir_TWOP)TwoPointCorrelation_multipoles_integrated.o $(dir_TWOP)TwoPointCorrelation_wedges.o $(dir_TWOP)TwoPointCorrelation1D_filtered.o $(dir_TWOP)TwoPointCorrelationCross.o $(dir_TWOP)TwoPointCorrelationCross1D.o $(dir_TWOP)TwoPointCorrelationCross1D_angular.o $(dir_TWOP)TwoPointCorrelationCross1D_monopole.o
 
@@ -117,12 +141,12 @@ OBJ_MODEL_TWOP = $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation.o $(dir_MODEL_TW
 
 OBJ_MODEL_THREEP = $(dir_MODEL_THREEP)Modelling_ThreePointCorrelation.o $(dir_MODEL_THREEP)ModelFunction_ThreePointCorrelation.o $(dir_MODEL_THREEP)Modelling_ThreePointCorrelation_angular_connected.o $(dir_MODEL_THREEP)ModelFunction_ThreePointCorrelation_angular_connected.o $(dir_MODEL_THREEP)Modelling_ThreePointCorrelation_angular_reduced.o $(dir_MODEL_THREEP)ModelFunction_ThreePointCorrelation_angular_reduced.o $(dir_MODEL_THREEP)Modelling_ThreePointCorrelation_comoving_connected.o $(dir_MODEL_THREEP)ModelFunction_ThreePointCorrelation_comoving_connected.o $(dir_MODEL_THREEP)Modelling_ThreePointCorrelation_comoving_reduced.o $(dir_MODEL_THREEP)ModelFunction_ThreePointCorrelation_comoving_reduced.o 
 
-OBJ_GLOB = $(dir_GLOB)FuncCosmology.o $(dir_GLOB)Func.o $(dir_GLOB)SubSample.o $(dir_GLOB)Reconstruction.o $(dir_GLOB)Forecast.o
+OBJ_GLOB = $(dir_GLOB)FuncCosmology.o $(dir_GLOB)Func.o $(dir_GLOB)SubSample.o $(dir_GLOB)Reconstruction.o $(dir_GLOB)Forecast.o $(dir_GLOB)3PCF_SphericalHarmonics.o
 
 OBJ_READP = $(dir_READP)ReadParameters.o
 
 
-OBJ_CBL = $(OBJ_FUNC) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_READP)
+OBJ_CBL = $(OBJ_FUNC) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_READP)
 
 OBJ_ALL = $(OBJ_CBL) $(dir_FUNC)conv.o $(PWD)/External/CAMB/*.o $(PWD)/External/classgal_v1/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o 
 
@@ -143,6 +167,7 @@ endef
 
 ALL:
 	make CUBA  
+	make CCfits
 	$(call colorecho, "\n"Compiling the library: libFUNC... "\n")
 	make -j3 libFUNC
 	$(call colorecho, "\n"Compiling the library: libSTAT... "\n")
@@ -155,6 +180,8 @@ ALL:
 	make -j3 libCAT
 	$(call colorecho, "\n"Compiling the library: libLN... "\n")
 	make -j3 libLN
+	$(call colorecho, "\n"Compiling the library: libNC... "\n")
+	make -j3 libNC
 	$(call colorecho, "\n"Compiling the library: libTWOP... "\n")
 	make -j3 libTWOP
 	$(call colorecho, "\n"Compiling the library: libTHREEP... "\n")
@@ -175,7 +202,7 @@ ALL:
 	make -j3 libCBL
 
 libFUNC: $(OBJ_FUNC) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libFUNC.$(ES) $(OBJ_FUNC) $(CUBA_LIB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
+	$(C) $(FLAGS_LINK) -o $(PWD)/libFUNC.$(ES) $(OBJ_FUNC) $(FLAGS_CCFITS) $(CUBA_LIB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
 
 libSTAT: $(OBJ_STAT) $(PWD)/Makefile
 	$(C) $(FLAGS_LINK) -o $(PWD)/libSTAT.$(ES) $(OBJ_STAT) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC
@@ -192,26 +219,29 @@ libCAT: $(OBJ_CAT) $(PWD)/Makefile
 libLN: $(OBJ_LN) $(PWD)/Makefile
 	$(C) $(FLAGS_LINK) -o $(PWD)/libLN.$(ES) $(OBJ_LN) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT 
 
+libNC: $(OBJ_NC) $(PWD)/Makefile
+	$(C) $(FLAGS_LINK) -o $(PWD)/libNC.$(ES) $(OBJ_NC) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN
+
 libTWOP: $(OBJ_TWOP) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libTWOP.$(ES) $(OBJ_TWOP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN
+	$(C) $(FLAGS_LINK) -o $(PWD)/libTWOP.$(ES) $(OBJ_TWOP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC
 
 libTHREEP: $(OBJ_THREEP) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libTHREEP.$(ES) $(OBJ_THREEP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lTWOP
-
+	$(C) $(FLAGS_LINK) -o $(PWD)/libTHREEP.$(ES) $(OBJ_THREEP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP
+ 
 libMODEL_GLOB: $(OBJ_MODEL_GLOB) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_GLOB.$(ES) $(OBJ_MODEL_GLOB) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lTWOP -lTHREEP
+	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_GLOB.$(ES) $(OBJ_MODEL_GLOB) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP
 
 libMODEL_COSM: $(OBJ_MODEL_COSM) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_COSM.$(ES) $(OBJ_MODEL_COSM) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lTWOP -lTHREEP -lMODEL_GLOB
+	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_COSM.$(ES) $(OBJ_MODEL_COSM) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB
 
 libMODEL_TWOP: $(OBJ_MODEL_TWOP) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_TWOP.$(ES) $(OBJ_MODEL_TWOP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lTWOP -lTHREEP -lMODEL_GLOB
+	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_TWOP.$(ES) $(OBJ_MODEL_TWOP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB
 
 libMODEL_THREEP: $(OBJ_MODEL_THREEP) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_THREEP.$(ES) $(OBJ_MODEL_THREEP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lTWOP -lTHREEP -lMODEL_GLOB
+	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_THREEP.$(ES) $(OBJ_MODEL_THREEP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB
 
 libGLOB: $(OBJ_GLOB) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libGLOB.$(ES) $(OBJ_GLOB) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_TWOP -lMODEL_THREEP
+	$(C) $(FLAGS_LINK) -o $(PWD)/libGLOB.$(ES) $(OBJ_GLOB) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_TWOP -lMODEL_THREEP
 
 libREADP: $(OBJ_READP) $(PWD)/Makefile
 	$(C) $(FLAGS_LINK) -o $(PWD)/libREADP.$(ES) $(OBJ_READP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC
@@ -223,6 +253,8 @@ conv: $(dir_FUNC)conv.o
 	$(F) -o $(dir_FUNC)conv $(dir_FUNC)conv.o 
 
 CUBA: $(CUBA_LIB)
+
+CCfits: $(CCfits_LIB)
 
 CAMB: $(PWD)/External/CAMB/camb
 
@@ -236,9 +268,13 @@ mangle: $(PWD)/External/mangle/bin/ransack
 
 venice: $(PWD)/External/VIPERS/venice3.9/venice
 
+Recfast: $(PWD)/External/Recfast/Recfast++
+
 allExamples:
 	$(call colorecho, "\n"Compiling the example code: vector.cpp ... "\n")
 	cd $(PWD)/Examples/vectors ; make
+	$(call colorecho, "\n"Compiling the example code: eigen.cpp ... "\n")
+	cd $(PWD)/Examples/eigen ; make
 	$(call colorecho, "\n"Compiling the example code: randomNumbers.cpp ... "\n")
 	cd $(PWD)/Examples/randomNumbers ; make 
 	$(call colorecho, "\n"Compiling the example code: integration_gsl.cpp ... "\n")
@@ -247,6 +283,8 @@ allExamples:
 	cd $(PWD)/Examples/wrappers ; make integration_cuba
 	$(call colorecho, "\n"Compiling the example code: minimisation.cpp ... "\n")
 	cd $(PWD)/Examples/wrappers ; make minimisation
+	$(call colorecho, "\n"Compiling the example code: fits.cpp ... "\n")
+	cd $(PWD)/Examples/wrappers ; make fits
 	$(call colorecho, "\n"Compiling the example code: distances.cpp ... "\n")
 	cd $(PWD)/Examples/distances ; make 
 	$(call colorecho, "\n"Compiling the example code: covsample.cpp ... "\n")
@@ -265,6 +303,10 @@ allExamples:
 	cd $(PWD)/Examples/statistics/codes ; make sampler
 	$(call colorecho, "\n"Compiling the example code: catalogue.cpp ... "\n")
 	cd $(PWD)/Examples/catalogue ; make catalogue 
+	$(call colorecho, "\n"Compiling the example code: numberCounts.cpp ... "\n")
+	cd $(PWD)/Examples/numberCounts/codes ; make numberCounts
+	$(call colorecho, "\n"Compiling the example code: numberCounts_errors.cpp ... "\n")
+	cd $(PWD)/Examples/numberCounts/codes ; make numberCounts_errors
 	$(call colorecho, "\n"Compiling the example code: 2pt_monopole.cpp ... "\n")
 	cd $(PWD)/Examples/clustering/codes ; make 2pt_monopole
 	$(call colorecho, "\n"Compiling the example code: 2pt_monopole_errors.cpp ... "\n")
@@ -298,7 +340,7 @@ allExamples:
 
 python: $(dir_Python)CBL_wrap.o $(OBJ_CBL) $(dir_Python)CBL.i
 	make ALL
-	$(C) -shared $(OBJ_CBL) $(dir_Python)CBL_wrap.o -o $(dir_Python)/_CosmoBolognaLib.so $(CUBA_LIB) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY) -lgfortran
+	$(C) $(FLAGS_LINK) -o $(dir_Python)_CosmoBolognaLib.so $(OBJ_CBL) $(dir_Python)CBL_wrap.o $(FLAGS_CCFITS) $(CUBA_LIB) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY) -lgfortran
 
 doc:
 	rm Doc/html/* Doc/xml/* -rf
@@ -314,6 +356,7 @@ doct:
 
 cleanExamples:
 	cd $(PWD)/Examples/vectors ; make clean && cd ../..
+	cd $(PWD)/Examples/eigen ; make clean && cd ../..
 	cd $(PWD)/Examples/randomNumbers ; make clean && cd ../..
 	cd $(PWD)/Examples/wrappers ; make clean && cd ../..
 	cd $(PWD)/Examples/distances ; make clean && cd ../..
@@ -321,6 +364,7 @@ cleanExamples:
 	cd $(PWD)/Examples/cosmology ; make clean && cd ../..
 	cd $(PWD)/Examples/statistics/codes ; make clean && cd ../..
 	cd $(PWD)/Examples/catalogue ; make clean && cd ../..
+	cd $(PWD)/Examples/numberCounts/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/cosmicVoids/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/readParameterFile ; make clean && cd ../..
@@ -335,7 +379,8 @@ cleanpy:
 	rm -f $(dir_Python)_CosmoBolognaLib.so $(dir_Python)CosmoBolognaLib.py
 
 cleanTEMP:
-	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_FUNC)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_TWOP)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_READP)*~ $(dir_H)*~ $(dir_O)*~ $(PWD)/\#* $(dir_FUNC)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_READP)\#* $(dir_H)\#* $(dir_O)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
+	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_FUNC)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_NC)*~ $(dir_TWOP)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_READP)*~ $(dir_H)*~ $(dir_O)*~ $(PWD)/\#* $(dir_FUNC)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_READP)\#* $(dir_H)\#* $(dir_O)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
+	cd External/Recfast; make tidy
 
 clean:
 	make cleanExamples
@@ -349,6 +394,7 @@ purgeALL:
 	make purge
 	make cleanpy
 	rm -rf Cosmology/Tables/*
+	rm -rf External/EisensteinHu/output_linear/*
 	cd External/CAMB ; make clean 
 	rm -rf External/CAMB/camb
 	rm -rf External/CAMB/output_linear/*
@@ -368,6 +414,8 @@ purgeALL:
 	rm -rf External/MPTbreeze-v1/output_linear/*
 	rm -rf External/MPTbreeze-v1/output_nonlinear/*
 	cd External/Cuba-4.2 ; rm -rf config.h config.log config.status demo-fortran.dSYM/ libcuba.a makefile *~ ; true
+	cd External/CCfits ; rm -rf bin lib include CCfits *.fit .deps .libs; true
+	cd External/Recfast ; make tidy
 
 
 #################################################################### 
@@ -375,6 +423,9 @@ purgeALL:
 
 $(CUBA_LIB):
 	$(CUBA_COMPILE)
+
+$(CCfits_LIB):
+	$(CCfits_COMPILE)
 
 $(dir_FUNC)Func.o: $(dir_FUNC)Func.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Func.cpp -o $(dir_FUNC)Func.o 
@@ -445,6 +496,8 @@ $(dir_FFTLOG)cdgamma.o: $(dir_FFTLOG)cdgamma.f
 $(dir_FUNC)FFTlog.o:  $(OBJ_FFTLOG) $(dir_FUNC)FFTlog.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)FFTlog.cpp -o $(dir_FUNC)FFTlog.o 
 
+$(dir_FUNC)FITSwrapper.o: $(dir_FUNC)FITSwrapper.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)FITSwrapper.cpp -o $(dir_FUNC)FITSwrapper.o 
 
 #################################################################### 
 
@@ -522,6 +575,24 @@ $(dir_COSM)MassGrowth.o: $(dir_COSM)MassGrowth.cpp $(HH) $(PWD)/Makefile
 $(dir_COSM)NG.o: $(dir_COSM)NG.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)NG.cpp -o $(dir_COSM)NG.o
 
+$(dir_Recfast)/src/cosmology.Recfast.o: $(dir_Recfast)/src/cosmology.Recfast.cpp
+	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/cosmology.Recfast.cpp -o $(dir_Recfast)/src/cosmology.Recfast.o
+
+$(dir_Recfast)/src/evalode.Recfast.o: $(dir_Recfast)/src/evalode.Recfast.cpp
+	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/evalode.Recfast.cpp -o $(dir_Recfast)/src/evalode.Recfast.o
+
+$(dir_Recfast)/src/recombination.Recfast.o: $(dir_Recfast)/src/recombination.Recfast.cpp
+	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/recombination.Recfast.cpp -o $(dir_Recfast)/src/recombination.Recfast.o
+
+$(dir_Recfast)/src/ODE_solver.Recfast.o: $(dir_Recfast)/src/ODE_solver.Recfast.cpp
+	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/ODE_solver.Recfast.cpp -o $(dir_Recfast)/src/ODE_solver.Recfast.o
+
+$(dir_Recfast)/src/DM_annihilation.Recfast.o: $(dir_Recfast)/src/DM_annihilation.Recfast.cpp
+	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/DM_annihilation.Recfast.cpp -o $(dir_Recfast)/src/DM_annihilation.Recfast.o
+
+$(dir_Recfast)/src/Rec_corrs_CT.Recfast.o: $(dir_Recfast)/src/Rec_corrs_CT.Recfast.cpp
+	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/Rec_corrs_CT.Recfast.cpp -o $(dir_Recfast)/src/Rec_corrs_CT.Recfast.o
+
 $(dir_COSM)BAO.o: $(dir_COSM)BAO.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)BAO.cpp -o $(dir_COSM)BAO.o
 
@@ -559,6 +630,9 @@ $(dir_CAT)VoidCatalogue.o: $(dir_CAT)VoidCatalogue.cpp $(HH) $(PWD)/Makefile
 $(dir_CAT)GadgetCatalogue.o: $(dir_CAT)GadgetCatalogue.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)GadgetCatalogue.cpp -o $(dir_CAT)GadgetCatalogue.o
 
+$(dir_CAT)FITSCatalogue.o: $(dir_CAT)FITSCatalogue.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)FITSCatalogue.cpp -o $(dir_CAT)FITSCatalogue.o
+
 
 #################################################################### 
 
@@ -568,6 +642,13 @@ $(dir_LN)LogNormal.o: $(dir_LN)LogNormal.cpp $(HH) $(PWD)/Makefile
 
 $(dir_LN)LogNormalFull.o: $(dir_LN)LogNormalFull.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_LN)LogNormalFull.cpp -o $(dir_LN)LogNormalFull.o
+
+
+#################################################################### 
+
+
+$(dir_NC)NumberCounts.o: $(dir_NC)NumberCounts.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_NC)NumberCounts.cpp -o $(dir_NC)NumberCounts.o
 
 
 #################################################################### 
@@ -810,6 +891,9 @@ $(dir_GLOB)Reconstruction.o: $(dir_GLOB)Reconstruction.cpp $(HH) $(PWD)/Makefile
 $(dir_GLOB)Forecast.o: $(dir_GLOB)Forecast.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_GLOB)Forecast.cpp -o $(dir_GLOB)Forecast.o
 
+$(dir_GLOB)3PCF_SphericalHarmonics.o: $(dir_GLOB)3PCF_SphericalHarmonics.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_GLOB)3PCF_SphericalHarmonics.cpp -o $(dir_GLOB)3PCF_SphericalHarmonics.o
+
 #################################################################### 
 
 
@@ -854,4 +938,7 @@ $(PWD)/External/mangle/bin/ransack:
 
 $(PWD)/External/VIPERS/venice3.9/venice:
 	cd $(PWD)/External/VIPERS/venice3.9 ; make clean && make "CC = gcc" && make && make clean && cd -
+
+$(PWD)/External/Recfast/Recfast++:
+	cd $(PWD)/External/Recfast ; make clean && make && cd -
 

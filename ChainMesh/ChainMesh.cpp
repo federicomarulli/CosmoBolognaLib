@@ -272,14 +272,16 @@ vector<long> cosmobl::chainmesh::ChainMesh::close_objects_cell (const int cell_i
 
   vector<long> list;
 
-   for (unsigned long i=0; i<m_search_region.size(); i++) {
+   for (size_t i=0; i<m_search_region.size(); i++) {
 
      long k = min(max(m_search_region[i]+cell_index, (long)0), m_nCell_tot-1);
-     long j = m_Label[k];
 
-     while (j>-1 && j>ii) {
-       list.push_back(j);
-       j = m_List[j];
+     if (k!=ii) {
+       long j = m_Label[k];
+       while (j>-1) {
+	 list.push_back(j);
+	 j = m_List[j];
+       }
      }
    }
 

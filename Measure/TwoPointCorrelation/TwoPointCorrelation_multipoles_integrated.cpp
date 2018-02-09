@@ -258,8 +258,8 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_i
     } 
 
     error[i] = sqrt(error[i]);
-    error[i+rr.size()] = sqrt(error[i]);
-    error[i+2*rr.size()] = sqrt(error[i]);
+    error[i+rr.size()] = sqrt(error[i+rr.size()]);
+    error[i+2*rr.size()] = sqrt(error[i+2.*rr.size()]);
 
   } 
   

@@ -20,9 +20,8 @@ cosmology = cbl.Cosmology()
 
 ### Input/Output files and directories ###
 
-HOME = os.getenv("HOME")
-file_catalogue = (HOME+"/CosmoBolognaLib/Examples/clustering/input/cat.dat",)
-dir_output = HOME+"/CosmoBolognaLib/Examples/clustering/output/"
+file_catalogue = ("../input/cat.dat",)
+dir_output = "../output/"
 dir_pairs = dir_output+"pairs/"
 dir_random_cat = dir_output
 

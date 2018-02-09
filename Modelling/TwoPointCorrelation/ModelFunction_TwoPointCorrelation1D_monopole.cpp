@@ -625,7 +625,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_cosmology_clusters (const v
  
   vector<double> mass_grid = logarithmic_bin_vector(pp->cluster_mass_proxy->ndata()/10, Min(pp->cluster_mass_proxy->data()), Max(pp->cluster_mass_proxy->data()));
 
-  const double bias = cosmo.bias_eff_mass(pp->cluster_mass_proxy->data(), mass_grid, pp->cluster_mass_proxy->xx(), pp->model_bias, pp->method_Pk, pp->output_root, pp->Delta)[0];
+  const double bias = cosmo.bias_eff_mass(pp->cluster_mass_proxy->data(), mass_grid, pp->cluster_mass_proxy->xx(), pp->model_bias, pp->method_Pk, pp->meanType, pp->output_root, pp->Delta)[0];
 
   
   // fixed parameters 

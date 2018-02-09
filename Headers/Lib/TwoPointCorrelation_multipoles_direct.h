@@ -54,7 +54,7 @@ namespace cosmobl {
        *  TwoPointCorrelation_multipoles_direct.h
        *  "Headers/Lib/TwoPointCorrelation_multipoles_direct.h"
        *
-       *  @brief The class TwoPointCorrelation_multipoles
+       *  @brief The class TwoPointCorrelation_multipoles_direct
        *
        *  This class is used to handle objects of type <EM>
        *  TwoPointCorrelation_multipoles_direct </EM>. It is used to
@@ -70,7 +70,7 @@ namespace cosmobl {
        *  angular separation between the objects
        *  
        *  The monopole estimated with the <EM> direct </EM> method can
-       *  be obtained with the class TwoPointCorrelation_monopole.
+       *  be obtained with the class TwoPointCorrelation_monopole
        */
       class TwoPointCorrelation_multipoles_direct : public TwoPointCorrelation1D_monopole {
 
@@ -279,7 +279,6 @@ namespace cosmobl {
           TwoPointCorrelation_multipoles_direct (const catalogue::Catalogue data, const catalogue::Catalogue random, const binType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits=_radians_, function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.) 
 	    : TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelation1D(data, random, compute_extra_info, random_dilution_fraction)
 	  { m_twoPType = _multipoles_direct_; set_parameters(binType, rMin, rMax, nbins, shift, angularUnits, angularWeight, compute_extra_info); }
- 
 
           /**
            *  @brief constructor
@@ -457,7 +456,21 @@ namespace cosmobl {
            *  @param rank cpu index (for MPI usage)
            *  @return none
            */
-          void write (const string dir=par::defaultString, const string file=par::defaultString, const int rank=0) const override;
+	  void write (const string dir=par::defaultString, const string file=par::defaultString, const int rank=0) const override;
+
+	  /**
+	   *  @brief return a data object with extra info
+	   *  
+	   *  @param dd pointer to an object of type Pair containing the
+	   *  data-data pairs
+	   *  @param rad vector containing the binned scales
+	   *  @param xi vector containing the binned two-point correlation
+	   *  function
+	   *  @param error vector containing the errors
+	   *
+	   *  @return pointer to an object of type Data
+	   */
+	  shared_ptr<data::Data> data_with_extra_info (const shared_ptr<pairs::Pair> dd, const vector<double> rad, const vector<double> xi, const vector<double> error) const;
 
           ///@}
 

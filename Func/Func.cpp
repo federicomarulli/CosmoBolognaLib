@@ -768,7 +768,7 @@ void cosmobl::read_matrix (const string file_matrix, vector<double> &xx, vector<
     stringstream ss(line);
     vector<double> num; double NN = -1.e30;
     while (ss>>NN) num.push_back(NN);
-    if (num.size()>=max_col){
+    if (num.size()>=max_col) {
       _xx.push_back(num[cols[0]]);
       _yy.push_back(num[cols[1]]);
       matrix[i].push_back(num[cols[2]]);
@@ -1641,8 +1641,38 @@ double cosmobl::func_grid_log_2D (double *xx, size_t dim, void *params)
 
 /* ======== Alfonso Veropalumbo ======== */
 
+void cosmobl::sdss_atbound(double &angle, const double minval, const double maxval)
+{
+  while (angle < minval)
+    angle += 360.;
+
+  while (angle > maxval)
+    angle -= 360.0;
+}
+
+void cosmobl::sdss_atbound2(double &theta, double &phi)
+{
+
+  sdss_atbound(theta, -180.0, 180.0);
+
+  if (fabs(theta)>90){
+    theta = 180.0 - theta;
+    phi += 180.0;
+  }
+
+  sdss_atbound(theta, -180.0, 180.0);
+  sdss_atbound(phi, 0.0, 360.0);
+
+  if (fabs(theta)==90.)
+    phi = 0.0;
+}
+
+
 void cosmobl::eq2sdss (const vector<double> ra, const vector<double> dec, vector<double> &lambda, vector<double> &eta) 
 {
+  lambda.resize(ra.size());
+  eta.resize(ra.size());
+
   double SurveyCenterRa = 185.-90, SurveyCenterDec = 32.5;
   double d2r = par::pi/180.;
   
@@ -1650,12 +1680,11 @@ void cosmobl::eq2sdss (const vector<double> ra, const vector<double> dec, vector
     double x = cos((ra[i]-SurveyCenterRa*d2r))*cos(dec[i]);
     double y = sin((ra[i]-SurveyCenterRa*d2r))*cos(dec[i]);
     double z = sin(dec[i]);
-  
+
     lambda[i] = -asin(x)/d2r;
     eta[i] = atan2(z, y)/d2r - SurveyCenterDec;
-    
-    if (eta[i] < -180.0) eta[i] += 360.0;
-    if (eta[i] > 180.0) eta[i] -= 360.0;
+
+    sdss_atbound(eta[i], -180.0, 180.0);
   }
 }
 
@@ -1665,6 +1694,9 @@ void cosmobl::eq2sdss (const vector<double> ra, const vector<double> dec, vector
 
 void cosmobl::sdss2eq (const vector<double> lambda, const vector<double> eta, vector<double> &ra, vector<double> &dec) 
 {
+  ra.resize(lambda.size());
+  dec.resize(lambda.size());
+
   double SurveyCenterRa = 185., SurveyCenterDec = 32.5;
   double d2r = par::pi/180.;
   
@@ -1674,9 +1706,8 @@ void cosmobl::sdss2eq (const vector<double> lambda, const vector<double> eta, ve
     double z = cos(lambda[i]*d2r)*sin(eta[i]*d2r+SurveyCenterDec*d2r);
   
     ra[i] = atan2(y,x)/d2r + SurveyCenterRa-90;
-
-    if (ra[i] < 0) ra[i] += 360;
     dec[i] = asin(z)/d2r;
+    sdss_atbound2(dec[i], ra[i]);
   }
 }
 
@@ -1686,6 +1717,9 @@ void cosmobl::sdss2eq (const vector<double> lambda, const vector<double> eta, ve
 
 void cosmobl::sdss_stripe (const vector<double> eta, const vector<double> lambda, vector<int> &stripe, vector<int> &str_u)
 {
+  stripe.resize(eta.size());
+  str_u.resize(eta.size());
+
   double stripe_sep=2.5;
   double cen = 58.75;
 
@@ -1994,7 +2028,6 @@ void cosmobl::distribution (vector<double> &xx, vector<double> &fx, vector<doubl
     for (size_t i=0; i<xx.size(); i++)
       fout << xx[i] << "   " << fx[i] << "   " << err[i] << endl;
 
-
     fout.clear(); fout.close(); coutCBL << "I wrote the file: " << file_out << endl;
   }
 
@@ -2041,7 +2074,7 @@ double cosmobl::Legendre_polynomial_mu_average (const int ll, const double mu, c
 // ============================================================================
 
 
-vector<double> cosmobl::spherical_harmonics (const int l, const int m, const double xx, const double yy, const double zz)
+complex<double> cosmobl::spherical_harmonics (const int l, const int m, const double xx, const double yy, const double zz)
 {
   const double sintheta = sin(acos(zz));
   complex<double> exp_iphi(xx/(sintheta), yy/(sintheta));
@@ -2049,9 +2082,75 @@ vector<double> cosmobl::spherical_harmonics (const int l, const int m, const dou
 
   double fact = pow(-1., m)*gsl_sf_legendre_sphPlm (l, m, zz);
 
-  return { fact*pow_exp.real(), fact*pow_exp.imag()};
+  return fact*pow_exp;
 }
 
+
+// ============================================================================
+
+
+vector<vector<complex<double>>> cosmobl::spherical_harmonics (const int lmax, const double xx, const double yy, const double zz)
+{
+  const int nl = lmax+1;
+
+  const double sintheta = sin(acos(zz));
+  complex<double> exp_iphi(xx/(sintheta), yy/(sintheta));
+
+  vector<complex<double>> pow_exp(nl+1);
+  vector<double> norm(nl+1);
+
+  for (int mm=0; mm<nl+1; mm++){
+    norm[mm] = pow(-1., mm);
+    pow_exp[mm] = pow(exp_iphi, mm);
+  }
+
+  vector<vector<complex<double>>> coeff(nl);
+
+  for(int ll=0; ll< nl; ll++){
+    
+    vector<complex<double>> ylm(ll+1);
+    
+    for (int mm=0; mm<ll+1; mm++){
+      double fact = norm[mm]*gsl_sf_legendre_sphPlm (ll, mm, zz);
+      ylm[mm] = fact*pow_exp[mm];
+    }
+
+    coeff[ll] = ylm;
+  }
+
+  return coeff;
+}
+
+
+// ============================================================================
+
+
+vector<complex<double>> cosmobl::spherical_harmonics_array (const int lmax, const double xx, const double yy, const double zz)
+{
+  const int n_sph = gsl_sf_legendre_array_n(lmax);
+
+  vector<double> Plm(n_sph, 0);
+  vector<complex<double>> sph(n_sph);
+
+  double phi = atan2(yy, xx);
+
+  vector<complex<double>> pow_exp(lmax+2, complex<double>(cos(phi), sin(phi)));
+
+  for (int mm=0; mm<lmax+2; mm++)
+    pow_exp[mm] = pow(pow_exp[mm], mm);
+
+  gsl_sf_legendre_array_e(GSL_SF_LEGENDRE_SPHARM, lmax, zz, 1., Plm.data());
+
+  
+  int n=0;
+  for(int l=0; l<lmax+1; l++)
+    for (int m=0; m<l+1; m++){
+      sph[n] = pow_exp[m]*Plm[n]; 
+      n++;
+    }
+
+  return sph;
+}
 
 // ============================================================================
 
@@ -2164,8 +2263,12 @@ vector<double> cosmobl::generate_correlated_data (const vector<double> mean, con
   for (size_t i=0; i<sample_size; i++) {
     std.push_back(sqrt(covariance[i][i]));
     sample.push_back(ran());
-    for (size_t j=0; j<sample_size; j++) 
-      gsl_matrix_set(correlation,i,j,covariance[i][j]/sqrt(covariance[i][i]*covariance[j][j]));
+    for (size_t j=0; j<sample_size; j++) {
+      double corr = covariance[i][j]/sqrt(covariance[i][i]*covariance[j][j]);
+      if (corr!=corr)
+        ErrorCBL("Error in generate_correlated_data!, negative value on the covariance diagonal!");
+      gsl_matrix_set(correlation,i,j, corr);
+    }
   }
 
   
@@ -2183,6 +2286,8 @@ vector<double> cosmobl::generate_correlated_data (const vector<double> mean, con
 
   for (size_t j = 0; j<sample_size; j++) {
     for (size_t i = 0; i<sample_size; i++) {
+      if (gsl_vector_get(eigenvalues, j)<0)
+        ErrorCBL("Error in generate_correlated_data of Func.h! Covariance matrix must be positive (semi-)definite but has at least one negative eigenvalue!");
       double v1 = gsl_matrix_get(eigenvectors, i, j);
       double v2 = sqrt(gsl_vector_get(eigenvalues, j));
       gsl_matrix_set(VV, i, j, v1*v2);
@@ -2231,8 +2336,12 @@ vector< vector<double> > cosmobl::generate_correlated_data (const int nExtractio
   
   for (size_t i=0; i<sample_size; i++) {
     std.push_back(sqrt(covariance[i][i]));
-    for (size_t j=0; j<sample_size; j++)
-      gsl_matrix_set(correlation,i,j,covariance[i][j]/sqrt(covariance[i][i]*covariance[j][j]));
+    for (size_t j=0; j<sample_size; j++) {
+      double corr = covariance[i][j]/sqrt(covariance[i][i]*covariance[j][j]);
+      if (corr!=corr)
+        ErrorCBL("Error in generate_correlated_data!, negative value on the covariance diagonal!");
+      gsl_matrix_set(correlation,i,j, corr);
+    }
   }
 
   vector<vector<double>> sample;
@@ -2258,6 +2367,9 @@ vector< vector<double> > cosmobl::generate_correlated_data (const int nExtractio
 
   for (size_t j=0; j<sample_size; j++) {
     for (size_t i=0; i<sample_size; i++) {
+      if (gsl_vector_get(eigenvalues, j)<0)
+        ErrorCBL("Error in generate_correlated_data of Func.h! Covariance matrix must be positive (semi-)definite but has at least one negative eigenvalue!");
+        
       double v1 = gsl_matrix_get(eigenvectors, i, j);
       double v2 = sqrt(gsl_vector_get(eigenvalues, j));
       gsl_matrix_set(VV, i, j, v1*v2);

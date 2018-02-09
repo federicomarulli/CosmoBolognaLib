@@ -49,8 +49,8 @@ namespace cosmobl {
   namespace modelling {
 
     /**
-     *  @brief The namespace of the <B> three-point correlation function
-     *  modelling </B>
+     *  @brief The namespace of the <B> three-point correlation
+     *  function modelling </B>
      *  
      *  The \e modelling::threept namespace contains all the functions
      *  and classes to model the three-point correlation function

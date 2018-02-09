@@ -200,7 +200,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fi
   }
 
 
-  vector<vector<double>> xil = Xi_l(rad, m_data_model.nmultipoles, 1., 1., m_data_model.sigmaNL_perp, m_data_model.sigmaNL_par, m_data_model.bias, m_data_model.linear_growth_rate_z, 0., m_data_model.kk, m_data_model.func_Pk, m_data_model.func_Pk_NW, m_data_model.prec);
+  vector<vector<double>> xil = Xi_l(rad, m_data_model.nmultipoles, 1., 1., m_data_model.sigmaNL_perp, m_data_model.sigmaNL_par, m_data_model.bias, m_data_model.linear_growth_rate_z, 0., 0., m_data_model.kk, m_data_model.func_Pk, m_data_model.func_Pk_NW, m_data_model.prec);
 
   m_data_model.func_multipoles.erase(m_data_model.func_multipoles.begin(), m_data_model.func_multipoles.end());
   for (int i=0; i< m_data_model.nmultipoles; i++)

@@ -129,7 +129,7 @@ namespace cosmobl {
 	 *
 	 *  @return pointer to an object of type Data
 	 */
-	shared_ptr<data::Data> data_with_extra_info (const shared_ptr<pairs::Pair> dd, const vector<double> rad, const vector<double> xi, const vector<double> error) const;
+	virtual shared_ptr<data::Data> data_with_extra_info (const shared_ptr<pairs::Pair> dd, const vector<double> rad, const vector<double> xi, const vector<double> error) const;
       
 	/**
 	 *  @brief get a dataset containing the two-point correlation

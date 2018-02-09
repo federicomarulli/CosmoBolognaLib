@@ -266,11 +266,12 @@ cosmobl::glob::FuncGrid2D::FuncGrid2D (const vector<double> x, const vector<doub
   shared_ptr<gsl_interp_accel> acc_x(gsl_interp_accel_alloc(), gsl_interp_accel_free);
   shared_ptr<gsl_interp_accel> acc_y(gsl_interp_accel_alloc(), gsl_interp_accel_free);
   m_acc_x = acc_x;
-  m_acc_y = acc_x;
+  m_acc_y = acc_y;
 
   shared_ptr<gsl_interp2d> interp(gsl_interp2d_alloc(m_type, m_size_x, m_size_y), gsl_interp2d_free);
   gsl_interp2d_init(interp.get(), m_x.data(), m_y.data(), m_fxy.get(), m_size_x, m_size_y);
   m_interp = interp;
+
 }
 
 

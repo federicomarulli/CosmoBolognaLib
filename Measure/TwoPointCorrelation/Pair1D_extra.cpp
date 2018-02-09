@@ -182,6 +182,105 @@ void cosmobl::pairs::Pair1D_comoving_log_extra::put (const shared_ptr<Object> ob
 // ============================================================================================
 
 
+void cosmobl::pairs::Pair1D_comoving_multipoles_lin_extra::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2)
+{
+  const double dist = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()); 
+  
+  if (m_rMin < dist && dist < m_rMax) {
+
+    const int kk = max(0, min(int((dist-m_rMin)*m_binSize_inv), m_nbins));
+    
+    const double angWeight = (m_angularWeight==nullptr) ? 1.
+      : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
+
+    const double WeightTOT = obj1->weight()*obj2->weight()*angWeight;
+    const double cosmu2 = pow((obj2->dc()-obj1->dc())/dist, 2);
+ 
+    m_PP1D[kk] ++;
+    m_PP1D_weighted[kk] += WeightTOT;
+
+    double leg_pol_2 = 0.5*(3.*cosmu2-1.);
+    m_PP1D[(m_nbins+1)+kk] += 5.*leg_pol_2 ;
+    m_PP1D_weighted[(m_nbins+1)+kk] += 5.*WeightTOT*leg_pol_2;
+
+    double leg_pol_4 = 0.125*(35.*cosmu2*cosmu2-30.*cosmu2+3.);
+    m_PP1D[2.*(m_nbins+1)+kk] += 9.*leg_pol_4;
+    m_PP1D_weighted[2.*(m_nbins+1)+kk] += 9.*WeightTOT*leg_pol_4;
+    
+    if (m_PP1D_weighted[kk]>0) {
+      
+      const double scale_mean_p = m_scale_mean[kk];    
+      m_scale_mean[kk] += WeightTOT/m_PP1D_weighted[kk]*(dist-scale_mean_p);
+      m_scale_S[kk] += WeightTOT*(dist-scale_mean_p)*(dist-m_scale_mean[kk]);
+      
+      const double pair_redshift = (obj1->redshift()>0 && obj2->redshift()>0) ? (obj1->redshift()+obj2->redshift())*0.5 : -1.;
+      const double z_mean_p = m_z_mean[kk];
+      m_z_mean[kk] += WeightTOT/m_PP1D_weighted[kk]*(pair_redshift-z_mean_p); 
+      m_z_S[kk] += WeightTOT*(pair_redshift-z_mean_p)*(pair_redshift-m_z_mean[kk]);
+      
+      m_scale_mean[kk+(m_nbins+1)] += WeightTOT/m_PP1D_weighted[kk]*(dist-scale_mean_p);
+      m_scale_S[kk+(m_nbins+1)] += WeightTOT*(dist-scale_mean_p)*(dist-m_scale_mean[kk]);
+
+      m_scale_mean[kk+2*(m_nbins+1)] += WeightTOT/m_PP1D_weighted[kk]*(dist-scale_mean_p);
+      m_scale_S[kk+2*(m_nbins+1)] += WeightTOT*(dist-scale_mean_p)*(dist-m_scale_mean[kk]);
+    }
+  }
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::pairs::Pair1D_comoving_multipoles_log_extra::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2)
+{
+  const double dist = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()); 
+  
+  if (m_rMin < dist && dist < m_rMax) {
+
+    const int kk = max(0, min(int((log10(dist)-log10(m_rMin))*m_binSize_inv), m_nbins));
+    
+    const double angWeight = (m_angularWeight==nullptr) ? 1.
+      : max(0., m_angularWeight(converted_angle(angular_distance(obj1->xx()/obj1->dc(), obj2->xx()/obj2->dc(), obj1->yy()/obj1->dc(), obj2->yy()/obj2->dc(), obj1->zz()/obj1->dc(), obj2->zz()/obj2->dc()), _radians_, m_angularUnits)));
+
+    const double WeightTOT = obj1->weight()*obj2->weight()*angWeight;
+    const double cosmu2 = pow((obj2->dc()-obj1->dc())/dist, 2);
+ 
+    m_PP1D[kk] ++;
+    m_PP1D_weighted[kk] += WeightTOT;
+
+    double leg_pol_2 = 0.5*(3.*cosmu2-1.);
+    m_PP1D[(m_nbins+1)+kk] += 5.*leg_pol_2 ;
+    m_PP1D_weighted[(m_nbins+1)+kk] += 5.*WeightTOT*leg_pol_2;
+
+    double leg_pol_4 = 0.125*(35.*cosmu2*cosmu2-30.*cosmu2+3.);
+    m_PP1D[2.*(m_nbins+1)+kk] += 9.*leg_pol_4;
+    m_PP1D_weighted[2.*(m_nbins+1)+kk] += 9.*WeightTOT*leg_pol_4;
+    
+    if (m_PP1D_weighted[kk]>0) {
+      
+      const double scale_mean_p = m_scale_mean[kk];    
+      m_scale_mean[kk] += WeightTOT/m_PP1D_weighted[kk]*(dist-scale_mean_p);
+      m_scale_S[kk] += WeightTOT*(dist-scale_mean_p)*(dist-m_scale_mean[kk]);
+      
+      const double pair_redshift = (obj1->redshift()>0 && obj2->redshift()>0) ? (obj1->redshift()+obj2->redshift())*0.5 : -1.;
+      const double z_mean_p = m_z_mean[kk];
+      m_z_mean[kk] += WeightTOT/m_PP1D_weighted[kk]*(pair_redshift-z_mean_p); 
+      m_z_S[kk] += WeightTOT*(pair_redshift-z_mean_p)*(pair_redshift-m_z_mean[kk]);
+            
+      m_scale_mean[kk+(m_nbins+1)] += WeightTOT/m_PP1D_weighted[kk]*(dist-scale_mean_p);
+      m_scale_S[kk+(m_nbins+1)] += WeightTOT*(dist-scale_mean_p)*(dist-m_scale_mean[kk]);
+
+      m_scale_mean[kk+2*(m_nbins+1)] += WeightTOT/m_PP1D_weighted[kk]*(dist-scale_mean_p);
+      m_scale_S[kk+2*(m_nbins+1)] += WeightTOT*(dist-scale_mean_p)*(dist-m_scale_mean[kk]);
+    }
+
+  }
+}
+
+
+// ============================================================================================
+
+
 void cosmobl::pairs::Pair1D_extra::add_data1D (const int i, const vector<double> data)
 {
   /*
@@ -247,4 +346,32 @@ void cosmobl::pairs::Pair1D_extra::Sum (const shared_ptr<Pair> pair, const doubl
 
   for (int i=0; i<m_nbins; ++i) 
     add_data1D(i, pair, ww);   
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::pairs::Pair1D_comoving_multipoles_lin_extra::Sum (const shared_ptr<Pair> pair, const double ww)
+{
+  if (m_nbins != pair->nbins()) 
+    ErrorCBL("Error in cosmobl::pairs::Pair1D_comoving_multipoles_lin_extra::Sum of Pair.cpp: dimension problems!");
+  
+  for (int l=0; l<3; ++l)
+    for (int i=0; i<m_nbins; ++i)
+      add_data1D(l*(m_nbins+1)+i, pair, ww);
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::pairs::Pair1D_comoving_multipoles_log_extra::Sum (const shared_ptr<Pair> pair, const double ww)
+{
+  if (m_nbins != pair->nbins()) 
+    ErrorCBL("Error in cosmobl::pairs::Pair1D_comoving_multipoles_log_extra::Sum of Pair.cpp: dimension problems!");
+  
+  for (int l=0; l<3; ++l)
+    for (int i=0; i<m_nbins; ++i)
+      add_data1D(l*(m_nbins+1)+i, pair, ww);
 }

@@ -76,7 +76,7 @@ vector<double> cosmobl::modelling::twopt::xiWedges (const vector<double> rad, co
 
   vector<double> Xi;
 
-  vector<vector<double>> Xiw = Xi_wedges( new_rad, pp->nwedges, alpha_perpendicular, alpha_parallel, pp->sigmaNL_perp, pp->sigmaNL_par, bias, linear_growth_rate, SigmaS, pp->kk, pp->func_Pk, pp->func_Pk_NW, pp->prec);
+  vector<vector<double>> Xiw = Xi_wedges( new_rad, pp->nwedges, alpha_perpendicular, alpha_parallel, pp->sigmaNL_perp, pp->sigmaNL_par, bias, linear_growth_rate, SigmaS, 0., pp->kk, pp->func_Pk, pp->func_Pk_NW, pp->prec);
 
   for(int i=0; i<pp->nwedges; i++)
     for(int j=0; j<nrad; j++)

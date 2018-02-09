@@ -111,6 +111,10 @@ vector<double> cosmobl::modelling::cosmology::cosmological_measurements_model(co
   for (size_t i=0; i<pp->Cpar.size(); ++i)
     cosmo.set_parameter(pp->Cpar[i], parameter[i]);
 
+  // set rs as derived parameter
+  parameter[pp->Cpar.size()] = cosmo.z_drag();
+  parameter[pp->Cpar.size()+1] = cosmo.rs(parameter[pp->Cpar.size()]);
+
   vector<double> output;
 
   for(size_t i=0; i<redshift.size(); i++)

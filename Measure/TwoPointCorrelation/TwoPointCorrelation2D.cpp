@@ -62,7 +62,12 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::write_pairs (const shared_p
   if (PP->pairInfo()==_standard_)
     for (int i=0; i<PP->nbins_D1(); i++)
       for (int j=0; j<PP->nbins_D2(); j++) 
-	fout << setiosflags(ios::fixed) << setprecision(5) << setw(8) << i << "   " << setw(8) << j << "   " << setw(8) << PP->scale_D1(i) << "   " << setw(8) << PP->scale_D2(j) << "   " << setw(13) << PP->PP2D(i, j) << "   " << setw(13) << PP->PP2D_weighted(i, j) << endl;
+	fout << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << i
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << j
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D1(i)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D2(j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP2D(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP2D_weighted(i, j) << endl;
   
 
   // ----- standard + extra info -----
@@ -70,7 +75,18 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::write_pairs (const shared_p
   else if (PP->pairInfo()==_extra_)
     for (int i=0; i<PP->nbins_D1(); i++)
       for (int j=0; j<PP->nbins_D2(); j++) 
-	fout << setiosflags(ios::fixed) << setprecision(5) << setw(8) << i << "   " << setw(8) << j << "   " << setw(8) << PP->scale_D1(i) << "   " << setw(8) << PP->scale_D2(j) << "   " << setw(13) << PP->PP2D(i, j) << "   " << setw(13) << PP->PP2D_weighted(i, j) << "   " << setw(8) << PP->scale_D1_mean(i, j) << "   " << setw(8) << PP->scale_D1_sigma(i, j) << "   " << setw(8) << PP->scale_D2_mean(i, j) << "   " << setw(8) << PP->scale_D2_sigma(i, j) << "   " << setw(8) << PP->z_mean(i, j) << "   " << setw(8) << PP->z_sigma(i, j) << endl;
+	fout << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << i
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << j
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D1(i)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D2(j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP2D(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP2D_weighted(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D1_mean(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D1_sigma(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D2_mean(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D2_sigma(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->z_mean(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->z_sigma(i, j) << endl;
 
   else
     ErrorCBL("Error in write_pairs() of TwoPointCorrelation2D.cpp: no such pairInfo!");
@@ -195,7 +211,14 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::write_pairs (const vector<s
 	for (int r1=0; r1<PP[index]->nbins_D1(); r1++)
 	  for (int r2=0; r2<PP[index]->nbins_D2(); r2++)
 	    if (PP[index]->PP2D(r1, r2)>0)
-	      fout << setiosflags(ios::fixed) << setprecision(5) << setw(8) << i << "   " << setw(8) << j << "   " << setw(8) << r1 << "   " << setw(8) << r2 << "   " << setw(8) << PP[index]->scale_D1(r1) << "   " << setw(8) << "   " << PP[index]->scale_D2(r2) << "   " << setw(8) << PP[index]->PP2D(r1, r2) << "   " << setw(8) << PP[index]->PP2D_weighted(r1, r2) << endl;
+	      fout << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << i
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << j
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << r1
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << r2
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D1(r1)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D2(r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->PP2D(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->PP2D_weighted(r1, r2) << endl;
       }
 
   
@@ -209,7 +232,20 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::write_pairs (const vector<s
 	for (int r1=0; r1<PP[index]->nbins_D1(); r1++)
 	  for (int r2=0; r2<PP[index]->nbins_D2(); r2++)
 	    if (PP[index]->PP2D(r1, r2)>0)
-	      fout << setiosflags(ios::fixed) << setprecision(5) << setw(8) << i << "   " << setw(8) << j << "   " << setw(8) << r1 << "   " << setw(8) << r2 << "   " << setw(8) << PP[index]->scale_D1(r1) << setw(8) << "   " << PP[index]->scale_D2(r2) << "   " << setw(8) << PP[index]->PP2D(r1, r2) << "   " << setw(8) << PP[index]->PP2D_weighted(r1, r2) << "   " << setw(8) << PP[index]->scale_D1_mean(r1, r2) << "   " << setw(8) << PP[index]->scale_D1_sigma(r1, r2) << "   " << setw(8) << PP[index]->scale_D2_mean(r1, r2) << "   " << setw(8) << PP[index]->scale_D2_sigma(r1, r2) << "   " << setw(8) << PP[index]->z_mean(r1, r2) << "   " << setw(8) << PP[index]->z_sigma(r1, r2) << endl;
+	      fout << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << i
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << j
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << r1
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << r2
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D1(r1) 
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D2(r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->PP2D(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->PP2D_weighted(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D1_mean(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D1_sigma(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D2_mean(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D2_sigma(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->z_mean(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->z_sigma(r1, r2) << endl;
       }
 
   else

@@ -1,7 +1,8 @@
 // SWIG Interface to Catalogue
 
-%{
+%ignore *::operator[];
 
+%{
 #include "Object.h"
 #include "RandomObject.h"
 #include "Halo.h"
@@ -28,8 +29,6 @@
 %template(HaloVec) vector<cosmobl::catalogue::Halo>;
 %template(GalaxyVec) vector<cosmobl::catalogue::Galaxy>;
 %template(ClusterVec) vector<cosmobl::catalogue::Cluster>;
-%template(ObjectPtr) shared_ptr<cosmobl::catalogue::Object>;
-%template(VoidPtr) shared_ptr<cosmobl::catalogue::Void>;
 
 %template(VarVec) std::vector<enum cosmobl::catalogue::Var>;
 
@@ -56,5 +55,8 @@
   %template(replace_objects) replace_objects< Galaxy >;
   %template(replace_objects) replace_objects< Cluster >;
   %template(replace_objects) replace_objects< Void >;
-}
 
+  shared_ptr<cosmobl::catalogue::Object> __getitem__(const size_t i) {
+    return (*self)[i];
+  }
+}

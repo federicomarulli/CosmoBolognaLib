@@ -738,7 +738,7 @@ double cosmobl::cosmology::Cosmology::xi_DM (const double rr, const string metho
 {
   bool gsl = GSL;
   if (gsl==false && method_Pk=="EisensteinHu") {
-    WarningMsg("Attention in cosmobl::cosmology::Cosmology::xi_DM() of PkXi.cpp: EisensteinHu method only works with GSL integration");
+    //WarningMsg("Attention in cosmobl::cosmology::Cosmology::xi_DM() of PkXi.cpp: EisensteinHu method only works with GSL integration");
     gsl = true;
   }
   
@@ -750,7 +750,7 @@ double cosmobl::cosmology::Cosmology::xi_DM (const double rr, const string metho
 
   double Int = -1.; 
   double fact = (gsl) ? 1./(2.*pow(par::pi,2)) : 1.;
-
+ 
   if (gsl) {
     int limit_size = 1000;
     gsl_integration_workspace *ww = gsl_integration_workspace_alloc(limit_size);
@@ -795,8 +795,8 @@ double cosmobl::cosmology::Cosmology::xi_DM (const double rr, const string metho
     else if (method_Pk=="CAMB" || method_Pk=="MPTbreeze-v1" || method_Pk=="classgal_v1") {
       vector<double> lgkk, lgPk;
       Table_PkCodes(method_Pk, NL, lgkk, lgPk, redshift, output_root, k_max, file_par);
-
-      cosmobl::glob::STR_xi str;
+      
+      glob::STR_xi str;
       str.rr = rr;
       str.aa = aa;
       str.lgkk = lgkk;
@@ -1715,3 +1715,95 @@ double cosmobl::cosmology::Cosmology::wtheta_DM (const double theta, const vecto
 
   return integral/normalization;
 }
+
+
+// =====================================================================================
+
+
+vector<double> cosmobl::cosmology::Cosmology::C_l_DM (const int lmax, const vector<double> zz, const vector<double> phiz, const string interpolationMethod, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+{
+  const double zmin = Min(zz);
+  const double zmax = Max(zz);
+
+  vector<double> kk = cosmobl::logarithmic_bin_vector(200, k_min, k_max);
+
+  vector<double> Pk;
+  for(size_t i=0; i<kk.size(); i++)
+    Pk.push_back( this->Pk(kk[i], method_Pk, false, 0., output_root, norm, k_min, k_max, prec, file_par));
+  cosmobl::glob::FuncGrid Pk_interp(kk, Pk, interpolationMethod);
+
+  auto integrand_sbao = [&] (const double kk) 
+  {
+    return Pk_interp(kk);
+  };
+
+  double sbao = sqrt(4.*par::pi*cosmobl::gsl::GSL_integrate_qag(integrand_sbao, 1.e-4, 1)/3./pow(2*par::pi,3));
+
+  cosmobl::glob::FuncGrid phi(zz, phiz, interpolationMethod);
+
+  vector<double> C_l;
+
+  for (int l=0; l<lmax+1; l++) {
+    double integral;
+    
+    if (l<60) {
+      auto integrand = [&] ( const double kk)
+      {
+	auto integrand_z = [&] (const double zz)
+	{
+	  return DD(zz)*jl(kk*D_C(zz), l);
+	};
+
+	double integral_z = cosmobl::gsl::GSL_integrate_qag(integrand_z, zmin, zmax);
+	return kk*kk*Pk_interp(kk)*pow(integral_z, 2)*exp(-kk*kk*sbao*sbao);
+      };
+
+      integral = 2*cosmobl::gsl::GSL_integrate_qag(integrand, 1.e-4, 10)/par::pi;
+    }
+    else {
+    
+      auto integrand = [&] (const double zz)
+      {
+	double dc = D_C(zz);
+	double kk = (l+0.5)/dc;
+	return pow(DD(zz)*phi(zz), 2)*Pk_interp(kk)*HH(zz)/(par::cc*dc*dc);
+      };
+
+      integral = cosmobl::gsl::GSL_integrate_qag(integrand, zmin, zmax);
+    }
+    cout << l << " " << integral << endl;
+    C_l.push_back(integral);
+  }
+
+  return C_l;
+}
+
+/*
+vector<double> cosmobl::cosmology::Cosmology::C_l_DM (const int lmax, const vector<double> zz, const vector<double> phiz, const string interpolationMethod, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+{
+  const double zmin = Min(zz);
+  const double zmax = Max(zz);
+
+  vector<double> kk = cosmobl::logarithmic_bin_vector(200, k_min, k_max);
+  vector<double> Pk;
+  for(size_t i=0; i<kk.size(); i++)
+    Pk.push_back( this->Pk(kk[i], method_Pk, false, 0., output_root, norm, k_min, k_max, prec, file_par));
+
+  cosmobl::glob::FuncGrid Pk_interp(kk, Pk, interpolationMethod);
+  cosmobl::glob::FuncGrid phi(zz, phiz, interpolationMethod);
+
+  vector<double> C_l;
+
+  for (int l=0; l<lmax+1; l++) {
+    auto integrand = [&] ( const double redshift)
+    {
+      double dc = D_C(redshift);
+      double _kk = double(l)/dc;
+      return pow(phi(redshift), 2)*HH(redshift)/pow(dc, 2)*pow(DD(redshift),2)*Pk_interp(_kk);
+    };
+    C_l.push_back(cosmobl::gsl::GSL_integrate_qag(integrand, zmin, zmax)/par::cc);
+  }
+
+  return C_l;
+ }
+*/

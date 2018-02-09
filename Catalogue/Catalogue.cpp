@@ -112,7 +112,6 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const int col1, const int col2, const int col3, const int colWeight, const int colRegion, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordUnits inputUnits, const CharEncode charEncode, const int seed) 
 { 
   // parameters for random numbers used in case nSub!=1
-  
   random::UniformRandomNumbers ran(0., 1., seed);
 
   
@@ -246,7 +245,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
       observedCoordinates defaultObservedCoord = { par::defaultDouble, par::defaultDouble, par::defaultDouble};
 
       // start reading catalogue
-      for (int cc = 0; cc < comments; cc++) getline(finr, line); // ignore commented lines at the beginning of file
+      for (int cc=0; cc<comments; cc++) getline(finr, line); // ignore commented lines at the beginning of file
       while (getline(finr, line)) { // read the lines
 
 	if (ran()<nSub) { // extract a subsample
@@ -1150,6 +1149,54 @@ Catalogue cosmobl::catalogue::Catalogue::cutted_catalogue (const Var var_name, c
   return Catalogue{objects};
 }
 
+
+// ============================================================================
+
+
+Catalogue cosmobl::catalogue::Catalogue::mangle_cut (const string mangle_mask, const bool excl) const
+{
+
+  vector<shared_ptr<Object>> objects;
+
+  string mangle_dir = par::DirCosmo+"/External/mangle/";
+
+  string mangle_working_dir = mangle_dir+"output/";
+  string mkdir = "mkdir -p "+mangle_working_dir;
+  if (system(mkdir.c_str())) {}
+
+  string input = mangle_working_dir+"temporary.dat";
+  string output = mangle_working_dir+"temporary_output.dat";
+
+  write_obs_coordinates(input);
+
+  string polyid = mangle_dir+"/bin/polyid -ur "+mangle_mask+" "+input+" "+output;
+  if (system(polyid.c_str())) {}
+
+  ifstream fin(output);
+  string line;
+
+  int nn=0;
+  getline(fin, line);
+
+  while(getline(fin, line))
+  {
+    stringstream ss(line);
+    vector<double> num; double NN = par::defaultDouble;
+    while (ss>>NN) num.push_back(NN);
+    
+    if( !excl && num.size()>2)
+      objects.push_back(m_object[nn]);
+    if( excl && num.size()<3)
+      objects.push_back(m_object[nn]);
+    nn++;
+  }
+  fin.clear(); fin.close();
+  
+  string rm = "rm "+input+" "+output;
+  if (system(rm.c_str())) {}
+
+  return Catalogue{objects};
+}
 
 // ============================================================================
 

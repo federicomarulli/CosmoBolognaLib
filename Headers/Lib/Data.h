@@ -688,6 +688,14 @@ namespace cosmobl {
 
       /**
        * @brief cut the data, for Data1D
+       * @param [in] mask vector containing values to be masked
+       * @return pointer to an object of type Data1D
+       */
+      virtual shared_ptr<Data> cut(const vector<bool> mask) const
+      { (void)mask; ErrorCBL("Error in cut of Data.h!"); shared_ptr<Data> dd; return dd;}
+
+      /**
+       * @brief cut the data, for Data1D
        * @param xmin minumum value for the independet variable x
        * @param xmax maximum value for the independent variable x
        * @return pointer to an object of type Data1D

@@ -1,4 +1,4 @@
-CC = g++
+C = g++
 
 FLAGS0 = -std=c++11 -fopenmp 
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror 
@@ -8,12 +8,14 @@ dirH = $(dirLib)Headers/Lib/
 dirHO = $(dirLib)Headers/Objects/
 dirHM = $(dirLib)Headers/Models/
 dirEH = $(dirLib)External/EH/
+dir_Eigen = $(dirLib)External/eigen-3.3.4/
+dir_CCfits = $(dirLib)External/CCfits/include
 dirCUBA = $(dirLib)External/Cuba-4.2/
 
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
 FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC -lREADP
-FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirEH) -I$(dirCUBA)
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirEH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
 
 OBJ = readParameterFile.o
 
@@ -26,12 +28,12 @@ ifeq ($(SYS),Darwin)
 endif
 
 readParameterFile: $(OBJ) 
-	$(CC) $(OBJ) -o readParameterFile $(FLAGS_LIB)
+	$(C) $(OBJ) -o readParameterFile $(FLAGS_LIB)
 
 clean:
 	rm -f *.o readParameterFile *~ \#* temp* core*
 
 
 readParameterFile.o: readParameterFile.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c readParameterFile.cpp
+	$(C) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c readParameterFile.cpp
 

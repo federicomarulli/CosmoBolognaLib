@@ -169,8 +169,10 @@ namespace cosmobl {
       _createRandom_MANGLE_,
 
       /// random catalogue for VIPERS
-      _createRandom_VIPERS_
-      
+      _createRandom_VIPERS_,
+	
+     /// create random for SDSS, using stripes
+      _createRandom_SDSS_stripes_    
     };
   
     /**
@@ -203,7 +205,7 @@ namespace cosmobl {
 
     /**
      *  @struct Gadget_Header
-     *  @brief This structure allows to store GADGET-2.0 header
+     *  @brief This structure allows to store @b GADGET-2.0 @b header
      */
     struct Gadget_Header {
 
@@ -306,7 +308,8 @@ namespace cosmobl {
 
       /// catalogue mean particle separation
       double m_mps;
-    
+
+      
       /**
        *  @name private variables and functions used to read catalogues from standard GADGET-2.0 files
        */
@@ -316,29 +319,39 @@ namespace cosmobl {
       int m_blockheader;
 
       /**
-       * @brief swap endianism of the GADGET snapshot header
-       * @param header the un-swapped header
-       * @return an object of type cosmobl::catalogue::Gadget_Header
+       *  @brief swap endianism of the GADGET snapshot header
+       *
+       *  @param header the un-swapped header
+       *
+       *  @return an object of type cosmobl::catalogue::Gadget_Header
        */
-      Gadget_Header swap_header (Gadget_Header header) ;
+      Gadget_Header m_swap_header (Gadget_Header header);
 
       /**
-       * @brief Input function to check consistency in reading block-headers
-       * in binary GADGET snapshots
-       * @param finr a pointer to an input stream class object
-       * @param swap true = swap endianism, false = do not swap endianism
-       * @return none
+       *  @brief Input function to check consistency in reading
+       *  block-headers in binary GADGET snapshots
+       *
+       *  @param finr a pointer to an input stream class object
+       *
+       *  @param swap true \f$\rightarrow\f$ swap endianism, false
+       *  \f$\rightarrow\f$ do not swap endianism
+       *
+       *  @return none
        */
-      void check_it_in (ifstream& finr, const bool swap);
+      void m_check_it_in (ifstream& finr, const bool swap);
 
       /**
-       * @brief Ouput function to check consistency in reading block-headers
-       * in binary GADGET snapshots
-       * @param finr a pointer to an input stream class object
-       * @param swap true = swap endianism, false = do not swap endianism
-       * @return none
+       *  @brief Ouput function to check consistency in reading
+       *  block-headers in binary GADGET snapshots
+       *
+       *  @param finr a pointer to an input stream class object
+       *
+       *  @param swap true \f$\rightarrow\f$ swap endianism, false
+       *  \f$\rightarrow\f$ do not swap endianism
+       *
+       *  @return none
        */
-      void check_it_out (ifstream &finr, const bool swap);
+      void m_check_it_out (ifstream &finr, const bool swap);
       
       ///@}   
 
@@ -496,7 +509,8 @@ namespace cosmobl {
 	: Catalogue(objType, coordType, file, 1, 2, 3, -1, -1, 1.1, 1., cosm, inputUnits, _ascii_) {}
 
       /**
-       *  @brief constructor, reading a file with attributes of the catalogue
+       *  @brief constructor, reading a file with attributes of the
+       *  catalogue
        *
        *  @param objType the object type, specified in the
        *  cosmobl::catalogue::ObjType enumeration
@@ -513,8 +527,8 @@ namespace cosmobl {
        *  @param file vector containing the files where the input
        *  catalogues are stored
        *
-       *  @param comments number of rows to ignore at the beginning of the
-       *  input file if its character encoding is ascii
+       *  @param comments number of rows to ignore at the beginning of
+       *  the input file if its character encoding is ascii
        *
        *  @param nSub the fracton of objects that will be randomly
        *  selected (nSub=1 &rArr; all objects are selected)
@@ -535,6 +549,51 @@ namespace cosmobl {
        */
       Catalogue (const ObjType objType, const CoordType coordType, const vector<Var> attribute, const vector<int> column, const vector<string> file, const int comments=0, const double nSub=1.1, const double fact=1, const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const CharEncode charEncode=_ascii_, const int seed=3213);
 
+      /**
+       *  @brief constructor, reading a file in FITS format
+       *
+       *  @param objType the object type, specified in the
+       *  cosmobl::catalogue::ObjType enumeration
+       *
+       *  @param coordType the coordinate type, specified in the
+       *  cosmobl::CoordType enumeration
+       *
+       *  @param file vector containing the files where the input
+       *  catalogues are stored
+       *
+       *  @param Coordinate vector containing the names of the
+       *  coordinate columns in the FITS table
+       *
+       *  @param Weight the name of the weight column in the FITS
+       *  table
+       *
+       *  @param Region the name of the region column in the FITS
+       *  table
+       *
+       *  @param next number of the table extension in the FITS file; a
+       *  FITS can contain more the one extension; the extension 0 is
+       *  the primary header
+       *
+       *  @param fill_value the value used to fill non-existing
+       *  columns, if fill_value==par::defaultDouble, an error is
+       *  raised when a column is not found
+       *  
+       *  @param nSub the fracton of objects that will be randomly
+       *  selected (nSub=1 &rArr; all objects are selected)
+       *
+       *  @param fact a factor used to multiply the coordinates,
+       *  i.e. coordinate_i=coordinate_i*fact
+       *
+       *  @param cosm object of class Cosmology 
+       *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param seed the seed for random number generation
+       *
+       *  @return an object of class Catalogue
+       */
+      Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const vector<string> Coordinate, const string Weight, const string Region, const int next=1, const double fill_value=par::defaultDouble, const double nSub=1.1, const double fact=1, const cosmology::Cosmology &cosm={}, const CoordUnits inputUnits=_radians_, const int seed=3213);
+      
       /**
        *  @brief constructor, using vectors of generic objects
        *  @param object objects of class T, specified in the
@@ -669,8 +728,8 @@ namespace cosmobl {
        *
        *  @param cosm object of class Cosmology
        *
-       *  @param conv 1 &rarr; compute the Gaussian convolvolution of
-       *  the distribution; 0 &rarr; do not convolve
+       *  @param conv true &rarr; compute the Gaussian convolvolution of
+       *  the distribution; false &rarr; do not convolve
        *
        *  @param sigma the standard deviation, &sigma;, of the
        *  Gaussian kernel
@@ -721,8 +780,8 @@ namespace cosmobl {
        *
        *  @param cosm object of class Cosmology 
        *
-       *  @param conv 1 &rarr; compute the Gaussian convolvolution of
-       *  the distribution; 0 &rarr; do not convolve
+       *  @param conv true &rarr; compute the Gaussian convolvolution of
+       *  the distribution; false &rarr; do not convolve
        *
        *  @param sigma the standard deviation, &sigma;, of the
        *  Gaussian kernel
@@ -756,8 +815,8 @@ namespace cosmobl {
        *
        *  @param cosm object of class Cosmology
        *
-       *  @param conv 1 &rarr; compute the Gaussian convolvolution of
-       *  the distribution; 0 &rarr; do not convolve
+       *  @param conv true &rarr; compute the Gaussian convolvolution of
+       *  the distribution; false &rarr; do not convolve
        *
        *  @param sigma the standard deviation, &sigma;, of the
        *  Gaussian kernel
@@ -771,6 +830,43 @@ namespace cosmobl {
        */
       Catalogue (const RandomType type, const vector<string> mangle_mask, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology cosm, const bool conv=false, const double sigma=0., const int seed=3213);   
 
+      /**
+       *  @brief constructor that creates a random catalogue using
+       *  the SDSS stripes.
+       * 
+       *  @param type the type of random catalogue, that must be
+       *  set to \_createRandom_SDSS_stripes\_
+       *
+       *  @param catalogue object of class Catalogue
+       *
+       *  @param N_R fraction of random objects, i.e.
+       *  N<SUB>R</SUB>=N<SUB>random</SUB>/N<SUB>objects</SUB>
+       *
+       *  @param dndz_per_stripe true &rarr; set the redshift for
+       *  the random sample shuffling redshift of data catalogue
+       *  in each stripe; false &rarr; set the redshift for
+       *  the random sample extracting from the total \f$ dn/dz\f$.
+       *
+       *  @param nbin number of redshift bins used to compute the
+       *  redshift distribution
+       *
+       *  @param cosm object of class Cosmology
+       *
+       *  @param conv true &rarr; compute the Gaussian convolvolution of
+       *  the distribution; false &rarr; do not convolve
+       *
+       *  @param sigma the standard deviation, &sigma;, of the
+       *  Gaussian kernel
+       *
+       *  @param seed the seed for random number generation
+       *
+       *  @return an object of class Catalogue
+       *
+       *  @warning the input parameter \e type is used only to make
+       *  the constructor type explicit
+       */
+      Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const bool dndz_per_stripe, const int nbin, const cosmology::Cosmology cosm, const bool conv=false, const double sigma=0, const int seed=3213);
+	
       /// @cond extrandom
       
       Catalogue (const RandomType type, const string WField, const bool isSpectroscopic, const Catalogue catalogue, const Catalogue catalogue_for_nz, const double N_R, const cosmology::Cosmology &cosm, const int step_redshift, const vector<double> lim, const double redshift_min, const double redshift_max, const bool do_convol, const double sigma, const bool use_venice, const bool do_zdistr_with_venice, const string file_random, const string mask, const string pointing_file, const string dir_venice, const int seed); 
@@ -829,7 +925,7 @@ namespace cosmobl {
        * 
        *  @return an object of class Catalogue
        */
-      Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean={false, false, false}, const vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale = false, const shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=_DensityContrast_);
+      Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean={false, false, false}, const vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=_DensityContrast_);
 
       ///@} 
 
@@ -848,14 +944,14 @@ namespace cosmobl {
        *  @param file_cn the the name common to all the files in which
        *  the gadget snapshot is divided (path/to/file/common_name)
        *
-       *  @param swap true = swap endianism, false = do not swap
+       *  @param swap true=swap endianism, false=do not swap
        *  endianism
        *
        *  @param fact a factor used to multiply the coordinates,
        *  i.e. coordinate_i=coordinate_i*fact
        *
-       *  @param read_catalogue true = the constructor actually reads
-       *  the GADGET snapshot false = the constructor only reads the
+       *  @param read_catalogue true=the constructor actually reads
+       *  the GADGET snapshot false=the constructor only reads the
        *  snapshot header and prints it on the screan
        *
        *  @param nSub the fraction of objects that will be randomly
@@ -865,7 +961,7 @@ namespace cosmobl {
        *
        *  @return object of type catalogue
        */
-      Catalogue (const ObjType objType, const string file_cn = par::defaultString, const bool swap = false, const double fact = 0.001, const bool read_catalogue = true, const double nSub=1.1, const int seed=3213);
+      Catalogue (const ObjType objType, const string file_cn=par::defaultString, const bool swap=false, const double fact=0.001, const bool read_catalogue=true, const double nSub=1.1, const int seed=3213);
 
       ///@}
     
@@ -1122,14 +1218,21 @@ namespace cosmobl {
        * @param i the object index
        * @return pointer to an object of the catalogue
        */
-      shared_ptr<Object> catalogue_object (const int i) const { return m_object[i]; }
+      inline shared_ptr<Object> catalogue_object (const int i) const { return m_object[i]; }
 
+      /**
+       *  @brief access the i-th Catalogue object
+       *  @param i object index
+       *  @return reference to Catalogue object
+       */
+      inline shared_ptr<Object> operator[] (const size_t i) const { return m_object[i]; };
+      
       /**
        * @brief get the object vector
        * @return vector of pointers to objects of the catalogue
        */
-      vector<shared_ptr<Object>> catalogue_object () const { return m_object; }   
-
+      inline vector<shared_ptr<Object>> catalogue_object () const { return m_object; }   
+      
       /**
        * @brief get the X, Y, Z coordinates of the i-th object of the
        * catalogue
@@ -1193,24 +1296,24 @@ namespace cosmobl {
        * @param [out] dist vector of values of f(varibles)
        * @param [out] err vector of Poissonian errors of f(varibles)
        * @param [in] nbin number of bins
-       * @param [in] linear 1 &rarr; linear binning; 0 &rarr;
+       * @param [in] linear true &rarr; linear binning; false &rarr;
        * logarithmic binning
        * @param [in] file_out the output file where the distribution is
        * stored
        * @param [in] Volume the volume of the catalogue
-       * @param [in] norm 1 &rarr; normalize to the number of objects;
-       * 0 &rarr; do not normalize
+       * @param [in] norm true &rarr; normalize to the number of objects;
+       * false &rarr; do not normalize
        * @param [in] V1 the minimum limit of the distribution
        * @param [in] V2 the maximum limit of the distribution
-       * @param [in] bin_type 1 &rarr; dn/dvar; 0 &rarr; dn/dlogvar; 
-       * @param [in] convolution 0 &rarr; don't convolve the
-       * distribution; 1 &rarr; convolve the distribution with a
+       * @param [in] bin_type true &rarr; dn/dvar; false &rarr; dn/dlogvar; 
+       * @param [in] convolution false &rarr; don't convolve the
+       * distribution; true &rarr; convolve the distribution with a
        * gaussian function
        * @param [in] sigma &sigma;: the standard deviation of the
        * gaussian function used to convolve the distribution
        * @return none
        */
-      void var_distr (const Var var_name, vector<double> &_var, vector<double> &dist, vector<double> &err, const int nbin, const bool linear=1, const string file_out=par::defaultString, const double Volume=1., const bool norm=0, const double V1=par::defaultDouble, const double V2=par::defaultDouble, const bool bin_type=1, const bool convolution=0, const double sigma=0.) const;
+      void var_distr (const Var var_name, vector<double> &_var, vector<double> &dist, vector<double> &err, const int nbin, const bool linear=true, const string file_out=par::defaultString, const double Volume=1., const bool norm=false, const double V1=par::defaultDouble, const double V2=par::defaultDouble, const bool bin_type=true, const bool convolution=false, const double sigma=0.) const;
     
       /**
        * @brief get the total weight of the objects of the catalogue
@@ -1585,6 +1688,16 @@ namespace cosmobl {
       Catalogue cutted_catalogue (const Var var_name, const double down, const double up, const bool excl=0) const;
 
       /**
+       *  @brief create a sub-catalogue
+       *  @param mangle_mask name of the mangle polygon file
+       *  @param excl false &rarr; create a subcatalogue with objects
+       *  inside the mask; true &rarr; create a subcatalogue outside 
+       *  the mask
+       *  @return object of class catalogue
+       */
+      Catalogue mangle_cut (const string mangle_mask, const bool excl=0) const;
+
+      /**
        *  @brief create a diluted catalogue
        * 
        *  @param nSub the fracton of objects that will be randomly
@@ -1609,7 +1722,7 @@ namespace cosmobl {
        * chain-mesh (use SUB>1 when there could be memory problems)
        * @return object of class catalogue
        */
-      shared_ptr<Catalogue> smooth (const double, const vector<Var> vars={}, const int SUB=1);
+      shared_ptr<Catalogue> smooth (const double gridsize, const vector<Var> vars={}, const int SUB=1);
 
       /**
        * @brief return the number of objectes following a condition
@@ -1617,37 +1730,38 @@ namespace cosmobl {
        * @param var_name the variable name
        * @param down minimum variable used to cut the catalogue
        * @param up maximum variable used to cut the catalogue
-       * @param excl 0 &rarr; count objects inside down-up; 1
+       * @param excl false &rarr; count objects inside down-up; true
        * &rarr; count objects outside down-up;
        * @return number of objects following the condition
        */
-      int nObjects_condition (const Var, const double, const double, const bool excl=0);
+      int nObjects_condition (const Var var_name, const double down, const double up, const bool excl=false);
 
       /**
-       * @brief return the weighted number of objectes following a condition
-       * on the variable VAR
+       * @brief return the weighted number of objectes following a
+       * condition on the variable VAR
        * @param var_name the variable name
        * @param down minimum variable used to cut the catalogue
        * @param up maximum variable used to cut the catalogue
-       * @param excl 0 &rarr; count objects inside down-up; 1
+       * @param excl false &rarr; count objects inside down-up; true
        * &rarr; count objects outside down-up;
        * @return weighted number of objects following the condition
        */
-      double weightedN_condition (const Var, const double, const double, const bool excl=0);
+      double weightedN_condition (const Var var_name, const double down, const double up, const bool excl=false);
 
       /**
        * @brief compute catalogue volume, number density and mean particle separation
        * @param boxside side lenght of the cubic catalogue box
        * @return none
        */
-      void compute_catalogueProperties (const double boxside = par::defaultDouble);
+      void compute_catalogueProperties (const double boxside=par::defaultDouble);
 
       /**
        *  @brief return the density field from object positions
        *  @param cell_size the minimum size of the density field
-       *  @param interpolation_type the type of interpolation 0 &rarr; nearest-grid-point;
-       *  1 &rarr; cloud-in-cell
-       *  @param useMass generate the density field using the mass information
+       *  @param interpolation_type the type of interpolation false
+       *  &rarr; nearest-grid-point; true &rarr; cloud-in-cell
+       *  @param useMass generate the density field using the mass
+       *  information
        *  @param minX minimum value of the x coordinate
        *  @param maxX maximum value of the x coordinate
        *  @param minY minimum value of the y coordinate
@@ -1663,10 +1777,12 @@ namespace cosmobl {
        *  @param cell_size the minimum size of the density field
        *  @param mask_catalogue catalogue containing points sampling
        *  the selecion function of the catalogue
-       *  @param interpolation_type the type of interpolation 0 &rarr;
-       *  nearest-grid-point; 1 &rarr; cloud-in-cell
-       *  @param kernel_radius size of the kernel for the gaussian smoothing
-       *  @param useMass generate the density field using the mass information
+       *  @param interpolation_type the type of interpolation false
+       *  &rarr; nearest-grid-point; true &rarr; cloud-in-cell
+       *  @param kernel_radius size of the kernel for the gaussian
+       *  smoothing
+       *  @param useMass generate the density field using the mass
+       *  information
        *  @return the density field
        */
       data::ScalarField3D density_field (const double cell_size, const Catalogue mask_catalogue, const int interpolation_type=0, const double kernel_radius=0., const bool useMass=false) const;

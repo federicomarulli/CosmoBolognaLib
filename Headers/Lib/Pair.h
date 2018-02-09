@@ -993,7 +993,7 @@ namespace cosmobl {
        *  @return none
        */
       virtual void put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2) = 0;
-  
+
       /**
        *  @brief sum the number of binned pairs
        *  @param pp an object of class Pair

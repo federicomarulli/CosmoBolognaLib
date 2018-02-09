@@ -234,6 +234,9 @@ namespace cosmobl {
 	/// method to estimate the bias
 	string model_bias;
 
+	/// meanType, either the mean bias or the pair mean bias
+	string meanType;
+					       
 	///  pointer to a function of FuncGrid class, used to interpolate the \f$\sigma(M)\f$
 	shared_ptr<glob::FuncGrid> func_sigma;
 
@@ -317,13 +320,17 @@ namespace cosmobl {
        *
        *  @param SigmaS streaming scale
        *
+       *  @param zErr parameter controlling the
+       *  redshift-space damping due to photometric redshift: 
+       *  zErr \f$ = c \sigma_z/H(z)\f$ 
+       *
        *  @param Pk linear power spectrum interpolator
        *
        *  @param Pk_NW de-wiggled power spectrum interpolator
        *
        *  @return \f$P(k, \mu)\f$
        */
-      double Pkmu (const double kk, const double mu, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const shared_ptr<cosmobl::glob::FuncGrid> Pk, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW);
+      double Pkmu (const double kk, const double mu, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const shared_ptr<cosmobl::glob::FuncGrid> Pk, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW);
 
       /**
        *  @brief the multipole of order l of the power spectrum
@@ -359,6 +366,10 @@ namespace cosmobl {
        *
        *  @param SigmaS streaming scale
        *
+       *  @param zErr parameter controlling the
+       *  redshift-space damping due to photometric redshift: 
+       *  zErr \f$ = c \sigma_z/H(z)\f$ 
+       *
        *  @param Pk_lin linear power spectrum interpolator
        *
        *  @param Pk_NW de-wiggled power spectrum interpolator
@@ -368,7 +379,7 @@ namespace cosmobl {
        *  @return the multipole expansion of \f$P(k, \mu)\f$ at given
        *  \f$k\f$
        */
-      double Pk_l (const double kk, const int l, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const shared_ptr<cosmobl::glob::FuncGrid> Pk_lin, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW, const double prec);
+      double Pk_l (const double kk, const int l, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const shared_ptr<cosmobl::glob::FuncGrid> Pk_lin, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW, const double prec);
 
 
       /**
@@ -405,6 +416,10 @@ namespace cosmobl {
        *
        *  @param SigmaS streaming scale
        *
+       *  @param zErr parameter controlling the
+       *  redshift-space damping due to photometric redshift: 
+       *  zErr \f$ = c \sigma_z/H(z)\f$ 
+       *
        *  @param kk the binned wave vector modules
        *
        *  @param Pk_lin linear power spectrum interpolator
@@ -416,7 +431,7 @@ namespace cosmobl {
        *  @return the multipole expansion of \f$P(k, \mu)\f$ at given
        *  \f$k\f$
        */
-      vector<vector<double>> Xi_l (const vector<double> rr, const int nmultipoles, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const vector<double> kk, const shared_ptr<cosmobl::glob::FuncGrid> Pk_lin, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW, const double prec=1.e-5);
+      vector<vector<double>> Xi_l (const vector<double> rr, const int nmultipoles, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const vector<double> kk, const shared_ptr<cosmobl::glob::FuncGrid> Pk_lin, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW, const double prec=1.e-5);
 
 
       /**
@@ -453,6 +468,10 @@ namespace cosmobl {
        *
        *  @param SigmaS streaming scale
        *
+       *  @param zErr parameter controlling the
+       *  redshift-space damping due to photometric redshift: 
+       *  zErr \f$ = c \sigma_z/H(z)\f$ 
+       *
        *  @param kk the binned wave vector modules
        *
        *  @param Pk_lin linear power spectrum interpolator
@@ -464,7 +483,7 @@ namespace cosmobl {
        *  @return the multipole expansion of \f$P(k, \mu)\f$ at given
        *  \f$k\f$
        */
-      vector<vector<double>> Xi_l (const vector<vector<double>> rr, const int nmultipoles, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const vector<double> kk, const shared_ptr<cosmobl::glob::FuncGrid> Pk_lin, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW, const double prec=1.e-5);
+      vector<vector<double>> Xi_l (const vector<vector<double>> rr, const int nmultipoles, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const vector<double> kk, const shared_ptr<cosmobl::glob::FuncGrid> Pk_lin, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW, const double prec=1.e-5);
 
       /**
        *  @brief the wedge of the two-point correlation function
@@ -502,6 +521,10 @@ namespace cosmobl {
        *
        *  @param SigmaS streaming scale
        *
+       *  @param zErr parameter controlling the
+       *  redshift-space damping due to photometric redshift: 
+       *  zErr \f$ = c \sigma_z/H(z)\f$ 
+       *
        *  @param kk the binned wave vector modules
        * 
        *  @param Pk_lin linear power spectrum interpolator
@@ -512,7 +535,7 @@ namespace cosmobl {
        *
        *  @return the wedges of the two-point correlation function.
        */
-      vector<vector<double>> Xi_wedges (const vector<double> rr, const int nwedges, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const vector<double> kk, const shared_ptr<cosmobl::glob::FuncGrid> Pk_lin, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW, const double prec=1.e-5);
+      vector<vector<double>> Xi_wedges (const vector<double> rr, const int nwedges, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const vector<double> kk, const shared_ptr<cosmobl::glob::FuncGrid> Pk_lin, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW, const double prec=1.e-5);
 
       /**
        *  @brief the cartesian two-point correlation function
@@ -547,6 +570,10 @@ namespace cosmobl {
        *
        *  @param SigmaS streaming scale
        *
+       *  @param zErr parameter controlling the
+       *  redshift-space damping due to photometric redshift: 
+       *  zErr \f$ = c \sigma_z/H(z)\f$ 
+       *
        *  @param kk the binned wave vector modules
        *
        *  @param Pk_lin linear power spectrum interpolator
@@ -557,7 +584,7 @@ namespace cosmobl {
        *
        *  @return the cartesian two-point correlation function.
        */
-      vector<vector<double>> Xi_rppi (const vector<double> rp, const vector<double> pi, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const vector<double> kk, const shared_ptr<cosmobl::glob::FuncGrid> Pk_lin, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW, const double prec);
+      vector<vector<double>> Xi_rppi (const vector<double> rp, const vector<double> pi, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const vector<double> kk, const shared_ptr<cosmobl::glob::FuncGrid> Pk_lin, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW, const double prec);
 
       /**
        *  @brief the projected two-point correlation function
@@ -591,6 +618,10 @@ namespace cosmobl {
        *
        *  @param SigmaS streaming scale
        *
+       *  @param zErr parameter controlling the
+       *  redshift-space damping due to photometric redshift: 
+       *  zErr \f$ = c \sigma_z/H(z)\f$ 
+       *
        *  @param kk the binned wave vector modules
        *
        *  @param Pk_lin linear power spectrum interpolator
@@ -601,7 +632,7 @@ namespace cosmobl {
        *
        *  @return the cartesian two-point correlation function.
        */
-      vector<double> wp_from_Xi_rppi (const vector<double> rp, const double pimax, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const vector<double> kk, const shared_ptr<cosmobl::glob::FuncGrid> Pk_lin, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW, const double prec);
+      vector<double> wp_from_Xi_rppi (const vector<double> rp, const double pimax, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const vector<double> kk, const shared_ptr<cosmobl::glob::FuncGrid> Pk_lin, const shared_ptr<cosmobl::glob::FuncGrid> Pk_NW, const double prec);
 
       /**
        *  @brief the power spectrum terms

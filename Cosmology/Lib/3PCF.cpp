@@ -547,7 +547,7 @@ double cosmobl::cosmology::Cosmology::zeta_multipoles_covariance (const double V
 
   vector<double> kk_sn, pk_sn;
   for (size_t i=0; i<kk.size(); i++)
-    if(kk[i]<=1){
+    if (kk[i]<=1) {
       kk_sn.push_back(kk[i]);
       pk_sn.push_back(Pk[i]+inverse_density);
     }
@@ -558,7 +558,7 @@ double cosmobl::cosmology::Cosmology::zeta_multipoles_covariance (const double V
 
   // l2
   vector<int> l2;
-  for(int ll=abs(l-l_prime); ll<l+l_prime+1; ll++)
+  for (int ll=abs(l-l_prime); ll<l+l_prime+1; ll++)
     l2.push_back(ll);
 
   const int n_l2 = (int)l2.size();
@@ -567,14 +567,14 @@ double cosmobl::cosmology::Cosmology::zeta_multipoles_covariance (const double V
   
   vector<double> pk_r1(nk, 0), pk_r2(nk, 0), pk_r1p(nk, 0), pk_r2p(nk, 0);
 
-  for (int i=0; i<nk; i++){
+  for (int i=0; i<nk; i++) {
     pk_r1[i] = pk_sn[i]*jl(kk_sn[i]*r1, l);
     pk_r2[i] = pk_sn[i]*jl(kk_sn[i]*r2, l);
     pk_r1p[i] = pk_sn[i]*jl(kk_sn[i]*r1_prime, l_prime);
     pk_r2p[i] = pk_sn[i]*jl(kk_sn[i]*r2_prime, l_prime);
   }
 
-  const double kr0 = 0.1; //check
+  const double kr0 = par::pi; //check
 
   vector<double> f_r_r1 = fftlog::transform_FFTlog(rr, 1, kk_sn, pk_r1, l, 0, kr0, 1);
   vector<double> f_r_r2 = fftlog::transform_FFTlog(rr, 1, kk_sn, pk_r2, l, 0, kr0, 1);
@@ -588,7 +588,7 @@ double cosmobl::cosmology::Cosmology::zeta_multipoles_covariance (const double V
   
 
   vector<double> pk_r1_r1p(nk, 0), pk_r2_r2p(nk, 0), pk_r2_r1p(nk, 0), pk_r1_r2p(nk, 0);
-  for (int i=0; i<nk; i++){
+  for (int i=0; i<nk; i++) {
     pk_r1_r1p[i] = pk_sn[i]*jl(kk_sn[i]*r1, l)*jl(kk_sn[i]*r1_prime, l_prime);
     pk_r2_r2p[i] = pk_sn[i]*jl(kk_sn[i]*r2, l)*jl(kk_sn[i]*r2_prime, l_prime);
     pk_r2_r1p[i] = pk_sn[i]*jl(kk_sn[i]*r2, l)*jl(kk_sn[i]*r1_prime, l_prime);
@@ -597,7 +597,7 @@ double cosmobl::cosmology::Cosmology::zeta_multipoles_covariance (const double V
 
   vector<shared_ptr<glob::FuncGrid>> interp_f_r_r1_r1p(n_l2), interp_f_r_r2_r2p(n_l2), interp_f_r_r1_r2p(n_l2), interp_f_r_r2_r1p(n_l2);
 
-  for(int ll=0; ll<n_l2; ll++){
+  for (int ll=0; ll<n_l2; ll++) {
 
     vector<double> f_r_r1_r1p = fftlog::transform_FFTlog(rr, 1, kk_sn, pk_r1_r1p, l2[ll], 0, kr0, 1);
     vector<double> f_r_r2_r2p = fftlog::transform_FFTlog(rr, 1, kk_sn, pk_r2_r2p, l2[ll], 0, kr0, 1);
@@ -622,9 +622,9 @@ double cosmobl::cosmology::Cosmology::zeta_multipoles_covariance (const double V
     
     double sum = 0;
 
-    for(int ll=0; ll<n_l2; ll++){
+    for (int ll=0; ll<n_l2; ll++) {
       double t1 = (2*l2[ll]+1)*pow(gsl_sf_coupling_3j(2*l, 2*l_prime, 2*l2[ll], 0, 0, 0),2);
-      if(t1>0) {
+      if (t1>0) {
 	double f_r_r1_r1p = interp_f_r_r1_r1p[ll]->operator()(rr);
 	double f_r_r2_r2p = interp_f_r_r2_r2p[ll]->operator()(rr);
 	double f_r_r2_r1p = interp_f_r_r2_r1p[ll]->operator()(rr);
@@ -640,16 +640,18 @@ double cosmobl::cosmology::Cosmology::zeta_multipoles_covariance (const double V
   };
   
   double fact = 4.*par::pi/Volume*(2*l+1)*(2*l_prime+1)*pow(-1, l+l_prime);
-  return fact*gsl::GSL_integrate_qag(integrand, 0., 300, prec);
+  
+  return fact*gsl::GSL_integrate_qag(integrand, 0., 1000, prec);
 }
+
 
 // =====================================================================================
 
- 
-vector<vector<double>> cosmobl::cosmology::Cosmology::zeta_covariance (const double Volume, const double nObjects, const vector<double> theta, const double r1, const double r2, const vector<double> kk, const vector<double> Pk, const int norders, const double prec)
+
+vector<vector<double>> cosmobl::cosmology::Cosmology::zeta_covariance (const double Volume, const double nObjects, const vector<double> theta, const double r1, const double r2, const vector<double> kk, const vector<double> Pk, const int norders, const double prec, const bool method, const int nExtractions, vector<double> mean, const int seed)
 {
-  vector<double> rr, Xi;
-  fftlog::transform_FFTlog(rr, Xi, 1, kk, Pk, 0);
+  vector<double> rr = linear_bin_vector(4100, 1.e-5, 1.e3);
+  vector<double> Xi = fftlog::transform_FFTlog(rr, 1, kk, Pk, 0);
 
   vector<vector<double>> zeta_l1l2_covariance(norders, vector<double>(norders, 0.));
 
@@ -660,19 +662,46 @@ vector<vector<double>> cosmobl::cosmology::Cosmology::zeta_covariance (const dou
     }
 
   const int ntheta = int(theta.size());
-  vector<vector<double>> Pl_theta(ntheta, vector<double>(norders, 0));
-  vector<vector<double>> zeta_covariance(ntheta, vector<double>(ntheta, 0));
 
+  vector<vector<double>> Pl_theta(ntheta, vector<double>(norders, 0));
   for (int i=0; i<ntheta; i++)
     for (int j=0; j<norders; j++)
       Pl_theta[i][j] = legendre_polynomial (cos(theta[i]), j);
 
-  for (int i=0; i<ntheta; i++)
-    for (int j=0; j<ntheta; j++)
-      for (int l1=0; l1<norders; l1++)
-	for (int l2=0; l2<norders; l2++)
-	  zeta_covariance[i][j] += zeta_l1l2_covariance[l1][l2]*Pl_theta[i][l1]*Pl_theta[j][l2];
+  if (!method) {
 
-  return zeta_covariance;
+    coutCBL << "method 1" << endl;
+    vector<vector<double>> zeta_covariance(ntheta, vector<double>(ntheta, 0));
+    for (int i=0; i<ntheta; i++)
+      for (int j=0; j<ntheta; j++)
+	for (int l1=0; l1<norders; l1++)
+	  for (int l2=0; l2<norders; l2++)
+	    zeta_covariance[i][j] += zeta_l1l2_covariance[l1][l2]*Pl_theta[i][l1]*Pl_theta[j][l2];
+
+    return zeta_covariance;
+  }
+  
+  else
+  {
+    coutCBL << "method 2" << endl;
+    vector<vector<double>> zeta_covariance;
+    vector<double> mean_signal(norders, 0.);
+    mean_signal = (mean.size()==0) ? mean_signal : mean; 
+
+    vector<vector<double>> zeta_l_extracted = generate_correlated_data (nExtractions, mean_signal, zeta_l1l2_covariance, seed);
+    
+    vector<vector<double>> zeta_extracted(nExtractions, vector<double>(ntheta, 0));
+    for (int i=0; i<nExtractions; i++)
+      for (int j=0; j<ntheta; j++)
+	for (int l=0; l<norders; l++)
+	  zeta_extracted[i][j] += zeta_l_extracted[i][l]*Pl_theta[j][l];
+
+    covariance_matrix (zeta_extracted, zeta_covariance); 
+    coutCBL <<"Done!"<<endl;
+
+    return zeta_covariance;
+  }
+
+  vector<vector<double>> vv; return vv;
 }
 

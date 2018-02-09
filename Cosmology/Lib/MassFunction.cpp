@@ -484,13 +484,15 @@ double cosmobl::cosmology::Cosmology::n_haloes_selection_function (const double 
   glob::FuncGrid interp_sigma(mass, sigma, "Spline");
   glob::FuncGrid interp_dlnsigma(mass, dlnsigma, "Spline");
 
+  
   // ---------- read the selection function ---------- 
 
   vector<double> mass_SF, redshift_SF;
   vector<vector<double>> selection_function;
 
   read_matrix(selection_function_file, mass_SF, redshift_SF, selection_function, cols);
-  function<double(const double, const double)> interp_SF = bind(interpolated_2D, std::placeholders::_1, std::placeholders::_2, mass_SF, redshift_SF, selection_function, "Linear"); 
+  function<double(const double, const double)> interp_SF = bind(interpolated_2D, std::placeholders::_1, std::placeholders::_2, mass_SF, redshift_SF, selection_function, "Linear");
+  
 
   // ---------- compute the number of haloes ---------- 
 
@@ -501,7 +503,6 @@ double cosmobl::cosmology::Cosmology::n_haloes_selection_function (const double 
   double redshift = z_min;
   double N_haloes = 0.;
   //double norm_SF = 0.;
-
 
   for (int Red=0; Red<step_z; Red++) {
     double Int = 0.;
@@ -523,7 +524,7 @@ double cosmobl::cosmology::Cosmology::n_haloes_selection_function (const double 
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::mass_function_vector (const vector<double> mass, const double z_min, const double z_max, const string model_MF, const string method_SS, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
+vector<double> cosmobl::cosmology::Cosmology::mass_function (const vector<double> mass, const double z_min, const double z_max, const string model_MF, const string method_SS, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
 {
   vector<double> MF(mass.size());
 
@@ -688,7 +689,7 @@ vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes (cons
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes_selection_function (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> cols, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
+vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes_selection_function (const vector<double> redshift, const double Area_degrees, const double Mass_min, const double Mass_max, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> cols, const string output_root, const double Delta, const bool isDelta_vir, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) 
 {
 
   // ---------- read the grid file ---------- 
@@ -711,6 +712,7 @@ vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes_selec
   glob::FuncGrid interp_sigma(mass, sigma, "Spline");
   glob::FuncGrid interp_dlnsigma(mass, dlnsigma, "Spline");
 
+  
   // ---------- read the selection function ---------- 
 
   vector<double> mass_SF, redshift_SF;
@@ -719,38 +721,37 @@ vector<double> cosmobl::cosmology::Cosmology::redshift_distribution_haloes_selec
   read_matrix(selection_function_file, mass_SF, redshift_SF, selection_function, cols);
   //function<double(const double, const double)> interp_SF = bind(interpolated_2D, std::placeholders::_1, std::placeholders::_2, mass_SF, redshift_SF, selection_function, "Linear"); 
 
-  glob::FuncGrid2D interp_SF( mass_SF, redshift_SF, selection_function, "Linear");
+  glob::FuncGrid2D interp_SF(mass_SF, redshift_SF, selection_function, "Linear");
 
+  
   // ---------- compute the number of haloes ---------- 
 
-  vector<double> redshift_distribution(step_z, 0);
-  double delta_z = (z_max-z_min)/(step_z); 
-  double redshift = z_min;
-
-  for (int Red=0; Red<step_z; Red++) {
-
+  vector<double> redshift_distribution(redshift.size(), 0.);
+  
+  for (size_t zz=0; zz<redshift.size()-1; ++zz) {
+    
     vector<vector<double>> integration_limits(2);
-    integration_limits[0] = {redshift, redshift+delta_z};
+    integration_limits[0] = {redshift[zz], redshift[zz+1]};
     integration_limits[1] = {Mass_min, Mass_max};
 
     auto integrand = [&] (const vector<double> parameters) 
     {
-      double redshift = parameters[0];
-      double mass = parameters[1];
+      const double redshift = parameters[0];
+      const double mass = parameters[1];
 
-      double DD = (isDelta_vir) ? Delta_vir(Delta, redshift) : Delta;
-      double sigma = interp_sigma(mass);
-      double dlnsigma = interp_dlnsigma(mass);
-      double SF = interp_SF(mass, redshift);
+      const double DD = (isDelta_vir) ? Delta_vir(Delta, redshift) : Delta;
+      const double sigma = interp_sigma(mass);
+      const double dlnsigma = interp_dlnsigma(mass);
+      const double SF = interp_SF(mass, redshift);
+      
       return SF*Area_degrees*dV_dZdOmega(redshift, false)*mass_function(mass, sigma, dlnsigma, redshift, model_MF, output_root, DD);
     };
 
-    cosmobl::cuba::CUBAwrapper CubaIntegrand(integrand, 2);
-
-    redshift_distribution[Red] = CubaIntegrand.IntegrateVegas(integration_limits);
-    redshift += delta_z;
+    cuba::CUBAwrapper CubaIntegrand(integrand, 2);
+    const double distr = CubaIntegrand.IntegrateVegas(integration_limits);
+    redshift_distribution[zz] = (distr!=distr) ? 0. : distr;
   }
-
+ 
   return redshift_distribution;
 }
 

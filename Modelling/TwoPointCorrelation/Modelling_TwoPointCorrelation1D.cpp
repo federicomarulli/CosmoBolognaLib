@@ -43,7 +43,7 @@ using namespace cosmobl;
 // ============================================================================================
 
 
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const string method_Pk, const double sigmaNL_perp, const double sigmaNL_par, const bool NL, const double bias, const double pimax, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const string output_dir, const string output_root, const int norm, const double aa, const bool GSL, const double prec, const string file_par, const double Delta, const bool isDelta_vir, const vector<double> cluster_redshift, const vector<double> cluster_mass_proxy, const vector<double> cluster_mass_proxy_error, const string model_bias, const int seed)
+void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const string method_Pk, const double sigmaNL_perp, const double sigmaNL_par, const bool NL, const double bias, const double pimax, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const string output_dir, const string output_root, const int norm, const double aa, const bool GSL, const double prec, const string file_par, const double Delta, const bool isDelta_vir, const vector<double> cluster_redshift, const vector<double> cluster_mass_proxy, const vector<double> cluster_mass_proxy_error, const string model_bias, const string meanType, const int seed)
 {
   m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model.redshift = redshift;
@@ -68,6 +68,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model 
   m_data_model.bias = bias;
   m_data_model.Delta = (isDelta_vir) ? m_data_model.cosmology->Delta_vir(Delta, redshift) : Delta;
   m_data_model.model_bias = model_bias;
+  m_data_model.meanType = meanType;
   m_data_model.gau_ran = make_shared<random::NormalRandomNumbers>(random::NormalRandomNumbers(0., 1., seed));
 
   m_data_model.sigma8_z = m_data_model.cosmology->sigma8_Pk(m_data_model.method_Pk, m_data_model.redshift, m_data_model.output_root);  

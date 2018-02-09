@@ -1,4 +1,4 @@
-CC = g++
+C = g++
 
 FLAGS0 = -std=c++11 -fopenmp 
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
@@ -8,12 +8,14 @@ dirH = $(dirLib)Headers/Lib/
 dirHO = $(dirLib)Headers/Objects/
 dirHM = $(dirLib)Headers/Models/
 dirEH = $(dirLib)External/EH/
+dir_Eigen = $(dirLib)External/eigen-3.3.4/
+dir_CCfits = $(dirLib)External/CCfits/include
 dirCUBA = $(dirLib)External/Cuba-4.2/
 
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
 FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC -lSTAT -lCOSM -lCM -lCAT
-FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirEH) -I$(dirCUBA) 
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirEH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits) 
 
 OBJ1 = sizeFunction.o
 OBJ2 = cleanVoidCatalogue.o
@@ -27,18 +29,18 @@ ifeq ($(SYS),Darwin)
 endif
 
 sizeFunction: $(OBJ1) 
-	$(CC) $(OBJ1) -o sizeFunction $(FLAGS_LIB)
+	$(C) $(OBJ1) -o sizeFunction $(FLAGS_LIB)
 
 cleanVoidCatalogue: $(OBJ2) 
-	$(CC) $(OBJ2) -o cleanVoidCatalogue $(FLAGS_LIB)
+	$(C) $(OBJ2) -o cleanVoidCatalogue $(FLAGS_LIB)
 
 clean:
 	rm -f *.o sizeFunction cleanVoidCatalogue *~ \#* temp* core*
 
 
 sizeFunction.o: sizeFunction.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c sizeFunction.cpp
+	$(C) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c sizeFunction.cpp
 
 cleanVoidCatalogue.o: cleanVoidCatalogue.cpp makefile $(dirLib)*.$(ES)
-	$(CC) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c cleanVoidCatalogue.cpp
+	$(C) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c cleanVoidCatalogue.cpp
 
