@@ -56,6 +56,16 @@ void cosmobl::measure::threept::ThreePointCorrelation_angular_connected::set_par
 }
 
 
+// ============================================================================================
+
+
+void cosmobl::measure::threept::ThreePointCorrelation_angular_connected::set_parameters (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
+{
+  (void)r12; (void)r12_binSize; (void)r13; (void)r13_binSize; (void)nbins;
+  ErrorCBL("Error in threept::ThreePointCorrelation_angular_connected::set_parameters() of ThreePointCorrelation_angular_connected.cpp", ExitCode::_workInProgress_);
+}
+
+
 // ============================================================================
 
 

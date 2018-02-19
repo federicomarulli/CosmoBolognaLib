@@ -881,32 +881,52 @@ void cosmobl::statistics::LikelihoodParameters::initialize_chains_around_bestfit
 
 void cosmobl::statistics::LikelihoodParameters::initialize_chains_around_values (const vector<double> values, const double radius, const int seed)
 {
-  if ((int)values.size()!=nparameters())
-    ErrorCBL("Error in initialize_chains_around_values of LikelihoodParameeres, starting values must have the same dimension of the number of parameters");
+  cosmobl::random::NormalRandomNumbers rn(0, radius, seed);
+  if ( ((int)values.size()==nparameters()) || ((int)values.size()==nparameters_free()+nparameters_fixed() )){
 
-   cosmobl::random::NormalRandomNumbers rn(0, radius, seed);
+    for (int p=0;p<nparameters_free(); p++) {
+      int ii = m_free_parameters[p];
+      vector<double> vv(nwalkers(), 0);
 
-  for (int p=0;p<nparameters_free(); p++) {
-    int ii = m_free_parameters[p];
-    vector<double> vv(nwalkers(), 0);
-
-    if (m_parameters[ii]->parameterType()==statistics::ParameterType::_BaseParameter_) {
-      for (int i=0;i<nwalkers(); i++){
-	bool ok = false;
-	while(!ok){
-	  vv[i] = rn()+values[ii];
-	  ok = m_parameters[ii]->prior()->isIncluded (vv[i]);
+      if (m_parameters[ii]->parameterType()==statistics::ParameterType::_BaseParameter_) {
+	for (int i=0;i<nwalkers(); i++){
+	  bool ok = false;
+	  while(!ok){
+	    vv[i] = rn()+values[ii];
+	    ok = m_parameters[ii]->prior()->isIncluded (vv[i]);
+	  }
 	}
       }
+      set_chain_values(0, ii, vv);
     }
-    set_chain_values(0, ii, vv);
+
+    for (int p=0;p<nparameters_fixed(); p++) {
+      int ii = m_fixed_parameters[p];
+      vector<double> vv(nwalkers(), m_parameters[ii]->value());
+      set_chain_values(0, ii, vv);
+    }
+  }
+  else if  ((int)values.size()==nparameters_free()) {
+
+    for (int p=0;p<nparameters_free(); p++) {
+      int ii = m_free_parameters[p];
+      vector<double> vv(nwalkers(), 0);
+
+      if (m_parameters[ii]->parameterType()==statistics::ParameterType::_BaseParameter_) {
+	for (int i=0;i<nwalkers(); i++){
+	  bool ok = false;
+	  while(!ok){
+	    vv[i] = rn()+values[ii];
+	    ok = m_parameters[ii]->prior()->isIncluded (vv[i]);
+	  }
+	}
+      }
+      set_chain_values(0, ii, vv);
+    }
   }
 
-  for (int p=0;p<nparameters_fixed(); p++) {
-    int ii = m_fixed_parameters[p];
-    vector<double> vv(nwalkers(), m_parameters[ii]->value());
-    set_chain_values(0, ii, vv);
-  }
+  else
+    ErrorCBL("Error in initialize_chains_around_values of LikelihoodParameters, starting values must have the same dimension of the number of parameters");
 }
 
 

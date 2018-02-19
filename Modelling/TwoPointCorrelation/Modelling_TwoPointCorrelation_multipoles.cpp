@@ -45,6 +45,8 @@ using namespace cosmobl;
 cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::Modelling_TwoPointCorrelation_multipoles (const shared_ptr<cosmobl::measure::twopt::TwoPointCorrelation> twop)
   : Modelling_TwoPointCorrelation1D_monopole(twop), m_nmultipoles(3), m_nmultipoles_fit(3)
 {
+  m_ModelIsSet = false;
+
   m_multipoles_order.erase(m_multipoles_order.begin(), m_multipoles_order.end());
 
   int size = m_data->ndata()/m_nmultipoles;
@@ -62,6 +64,8 @@ cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::Modelling_T
 cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::Modelling_TwoPointCorrelation_multipoles (const shared_ptr<data::Data> twop_dataset, const int nmultipoles)
   : Modelling_TwoPointCorrelation1D_monopole(twop_dataset), m_nmultipoles(nmultipoles), m_nmultipoles_fit(nmultipoles)
 {
+  m_ModelIsSet = false;
+
   m_multipoles_order.erase(m_multipoles_order.begin(), m_multipoles_order.end());
 
   int size = m_data->ndata()/m_nmultipoles;
@@ -126,6 +130,12 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fi
   m_nmultipoles_fit = 0;
   for (size_t i =0; i<use_pole.size(); i++)
     m_nmultipoles_fit += use_pole[i];
+
+  if (m_ModelIsSet) {
+    m_data_model.dataset_order = m_multipoles_order;
+    auto inputs = make_shared<STR_data_model>(m_data_model);
+    m_model->set_fixed_parameters(inputs);
+  }
 }
 
 
@@ -235,6 +245,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_mo
 
   // construct the model
   m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiMultipoles, inputs));
+  m_ModelIsSet = true;
 
 }
 
@@ -273,6 +284,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_mo
 
   // construct the model
   m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiMultipoles_BAO, inputs));
+  m_ModelIsSet = true;
 }
 
 
@@ -300,6 +312,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_mo
 
   // construct the model
   m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiMultipoles_sigma8_bias, inputs));
+  m_ModelIsSet = true;
 }
 
 

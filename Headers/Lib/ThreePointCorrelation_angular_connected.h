@@ -114,6 +114,22 @@ namespace cosmobl {
 	  : ThreePointCorrelation(data, random) { ErrorCBL("Error in ThreePointCorrelation_angular_connected() of ThreePointCorrelation_angular_connected.h", cosmobl::glob::ExitCode::_workInProgress_); set_parameters(side_s, side_u, perc_increase, nbins); }
 
 	/**
+	 *  @brief constructor
+	 *  @param data object of class Catalogue containing the input
+	 *  catalogue
+	 *  @param random of class Catalogue containing the random data
+	 *  catalogue
+	 *  @param r12 the size of r<SUB>12</SUB>
+	 *  @param r12_binSize the size of r<SUB>12</SUB> bin
+	 *  @param r13 the size of r<SUB>13</SUB>
+	 *  @param r13_binSize the size of r<SUB>13</SUB> bin
+	 *  @param nbins number of bins
+	 *  @return object of class ThreePointCorrelation_angular_connected
+	 */
+	ThreePointCorrelation_angular_connected (const catalogue::Catalogue data, const catalogue::Catalogue random, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
+	  : ThreePointCorrelation(data, random) { ErrorCBL("Error in ThreePointCorrelation_angular_connected() of ThreePointCorrelation_angular_connected.h", cosmobl::glob::ExitCode::_workInProgress_); set_parameters(r12, r12_binSize, r13, r13_binSize, nbins); }
+
+	/**
 	 *  @brief default destructor
 	 *  @return none
 	 */
@@ -139,6 +155,19 @@ namespace cosmobl {
 	 *  @warning This method has not been implemented yet
 	 */
 	void set_parameters (const double side_s, const double side_u, const double perc_increase, const int nbins);
+
+	/**
+	 *  @brief set the binning parameters
+	 *  @param r12 the size of r<SUB>12</SUB>
+	 *  @param r12_binSize the size of r<SUB>12</SUB> bin 
+	 *  @param r13 the size of r<SUB>13</SUB>
+	 *  @param r13_binSize the size of r<SUB>13</SUB> bin 
+	 *  @param nbins number of bins
+	 *  @return none
+	 *
+	 *  @warning This method has not been implemented yet
+	 */
+	void set_parameters (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins);
 
 	///@}
 
@@ -222,7 +251,7 @@ namespace cosmobl {
 	 *  @name Input/Output methods
 	 */
 	///@{
-    
+
 	/**
 	 *  @brief write the monopole of the two-point correlation
 	 *  function
@@ -234,16 +263,16 @@ namespace cosmobl {
 	 */
 	void write (const string dir, const string file) const override;
 
-    /**
-    *  @brief write the measured three-point correlation covariance
-    *  @param dir output directory
-    *  @param file output file
-    *  @return none
-    */
-    void write_covariance (const string dir, const string file) const override;
-    
+	/**
+	 *  @brief write the measured three-point correlation covariance
+	 *  @param dir output directory
+	 *  @param file output file
+	 *  @return none
+	 */
+	void write_covariance (const string dir, const string file) const override;
+
 	///@}
-      
+
       };
     }
   }

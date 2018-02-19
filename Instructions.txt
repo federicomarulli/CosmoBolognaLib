@@ -28,6 +28,6 @@
 
    to speed up the test, valgrind can be removed from the above
    commands, and/or one or more of the following options can be added
-   (in any order): nocompile nopy nopy2 nodoc
+   (in any order): nocompile nopy nodoc
 
 10) if everything is OK, push the new code into the DIFA git repository!

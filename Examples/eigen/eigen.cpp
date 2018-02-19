@@ -17,7 +17,7 @@ int main () {
     
     const double BoxSize = 500.;
     
-    const long nran = 50000;
+    const long nran = 40000;
     const int seed = 666;
     
     cosmobl::random::UniformRandomNumbers random(0, BoxSize, seed);

@@ -66,7 +66,7 @@ double statistics::LogLikelihood_Gaussian_1D_error (vector<double> &likelihood_p
   // ----- estimate the Gaussian log-likelihood -----
   
   double LogLikelihood = 0.;
-  for (int i=0; i<pp->data->ndata(); i++) 
+  for (int i=0; i<pp->data->ndata(); i++)  
     LogLikelihood += pow((pp->data->data(i)-computed_model[i])/pp->data->error(i), 2);
 
   return -0.5*LogLikelihood;
@@ -134,7 +134,6 @@ double statistics::LogLikelihood_Gaussian_2D_error (vector<double> &likelihood_p
     pp->data->xx(xx);
     pp->data->yy(yy);
   }
-
   else if (pp->data->dataType()==data::_2D_data_extra_) {
 
     int scaleD1_index = pp->x_index[0];
@@ -146,7 +145,6 @@ double statistics::LogLikelihood_Gaussian_2D_error (vector<double> &likelihood_p
       yy.push_back(pp->data->extra_info(scaleD2_index, i));
     
   }
-
   else ErrorCBL("Error in LogLikelihood_Gaussian_2D_Error of LikelihoodFunction.cpp: wrong dataType!");  
 
   vector<vector<double>> computed_model = pp->model->operator()(xx, yy, likelihood_parameters);

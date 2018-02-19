@@ -124,14 +124,14 @@ namespace cosmobl {
        *  
        *  @param type the triplet type; it can be: _comoving_theta,
        *  _comoving_side
-       *  @param side_s the size of r<SUB>12</SUB>
-       *  @param side_u the ratio r<SUB>13</SUB>/r<SUB>12</SUB>
-       *  @param perc_increase the ratio
-       *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
+       *  @param r12 the size of r<SUB>12</SUB>
+       *  @param r12_binSize the r<SUB>12</SUB> bin size
+       *  @param r13 the ratio r<SUB>13</SUB>
+       *  @param r12_binSize the r<SUB>12</SUB> bin size
        *  @param nbins the number of bins
        *  @return a pointer to an object of class Triplet of a given type
        */
-      static shared_ptr<Triplet> Create (const TripletType type, const double side_s, const double side_u, const double perc_increase, const int nbins);
+      static shared_ptr<Triplet> Create (const TripletType type, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins);
 
       ///@}
     
@@ -223,27 +223,32 @@ namespace cosmobl {
       virtual vector<vector<double> > TT2D () const { cosmobl::ErrorCBL("Error in Triplet::TT2D() of Triplet.h!"); vector<vector<double> > vv; return vv; }
       
       /**
-       *  @brief get the private member \e m_side_s
+       *  @brief get the private member \e m_r12
        *  @return the size of r<SUB>12</SUB>, or an error message if the
        *  derived object does not have this member
        */
-      virtual double side_s () const { cosmobl::ErrorCBL("Error in Triplet::side_s() of Triplet.h!"); return 0; }
+      virtual double r12 () const { cosmobl::ErrorCBL("Error in Triplet::r12_binSize() of Triplet.h!"); return 0; }
+      
+      /**
+       *  @brief get the private member \e m_r12
+       *  @return the size of the r<SUB>12</SUB> bin, or an error message if the
+       *  derived object does not have this member
+       */
+      virtual double r12_binSize () const { cosmobl::ErrorCBL("Error in Triplet::r12_binSize() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the private member \e m_side_u
-       *  @return the ratio r<SUB>13</SUB>/r<SUB>12</SUB>, or an error
-       *  message if the derived object does not have this member
+       *  @return the size of r<SUB>13</SUB>, or an error message if the
+       *  derived object does not have this member
        */
-      virtual double side_u () const { cosmobl::ErrorCBL("Error in Triplet::side_u() of Triplet.h!"); return 0; }
+      virtual double r13 () const { cosmobl::ErrorCBL("Error in Triplet::r13_binSize() of Triplet.h!"); return 0; }
 
       /**
-       *  @brief get the private member \e m_perc_increase
-       *  @return the ratio
-       *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>,
-       *  or an error message if the derived object does not have this
-       *  member
+       *  @brief get the private member \e m_side_u
+       *  @return the size of r<SUB>13</SUB> bin, or an error message if the
+       *  derived object does not have this member
        */
-      virtual double perc_increase () const { cosmobl::ErrorCBL("Error in Triplet::perc_increase() of Triplet.h!"); return 0; }
+      virtual double r13_binSize () const { cosmobl::ErrorCBL("Error in Triplet::r13_binSize() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the private member \e m_nbins
@@ -260,29 +265,36 @@ namespace cosmobl {
       virtual double binSize () const { cosmobl::ErrorCBL("Error in Triplet::binSize() of Triplet.h!"); return 0; }
 
       /**
-       *  @brief get the protected member Triplet1D::m_side_s_D1
+       *  @brief get the protected member Triplet1D::m_r12_D1
        *  @return the size of r<SUB>12</SUB> in the first dimension,
        *  or an error message if the derived object does not have this
        *  member
        */
-      virtual double side_s_D1 () const { cosmobl::ErrorCBL("Error in Triplet::m_side_s_D1() of Triplet.h!"); return 0; }
+      virtual double r12_D1 () const { cosmobl::ErrorCBL("Error in Triplet::r12_D1() of Triplet.h!"); return 0; }
 
       /**
-       *  @brief get the protected member Triplet1D::m_side_u_D1
-       *  @return the ratio r<SUB>13</SUB>/r<SUB>12</SUB> in the first
-       *  dimension, or an error message if the derived object does
+       *  @brief get the protected member Triplet1D::m_r12_binSize_D1
+       *  @return the size of r<SUB>12</SUB> bin in the first dimension,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual double r12_binSize_D1 () const { cosmobl::ErrorCBL("Error in Triplet::r12_binSize_D1() of Triplet.h!"); return 0; }
+
+      /**
+       *  @brief get the protected member Triplet1D::m_r13_D1
+       *  @return the size of r<SUB>13</SUB> in the first dimension,
+       *  or an error message if the derived object does
        *  not have this member
        */
-      virtual double side_u_D1 () const { cosmobl::ErrorCBL("Error in Triplet::side_u_D1() of Triplet.h!"); return 0; }
+      virtual double r13_D1 () const { cosmobl::ErrorCBL("Error in Triplet::r13_D1() of Triplet.h!"); return 0; }
 
       /**
-       *  @brief get the protected member Triplet1D::m_perc_increase_D1
-       *  @return the ratio
-       *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
-       *  in the first dimension, or an error message if the derived
-       *  object does not have this member
-       */    
-      virtual double perc_increase_D1 () const { cosmobl::ErrorCBL("Error in Triplet::perc_increase_D1() of Triplet.h!"); return 0; }
+       *  @brief get the protected member Triplet1D::m_r13_binSize_D1
+       *  @return the size of r<SUB>13</SUB> bin in the first dimension,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual double r13_binSize_D1 () const { cosmobl::ErrorCBL("Error in Triplet::r13_binSize_D1() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_nbins_D1
@@ -301,29 +313,36 @@ namespace cosmobl {
       virtual double binSize_D1 () const { cosmobl::ErrorCBL("Error in Triplet::binSize_D1() of Triplet.h!"); return 0; }
 
       /**
-       *  @brief get the protected member Triplet1D::m_side_s_D2
+       *  @brief get the protected member Triplet1D::m_r12_D1
        *  @return the size of r<SUB>12</SUB> in the second dimension,
        *  or an error message if the derived object does not have this
        *  member
        */
-      virtual double side_s_D2 () const { cosmobl::ErrorCBL("Error in Triplet::side_s_D2() of Triplet.h!"); return 0; }
+      virtual double r12_D2 () const { cosmobl::ErrorCBL("Error in Triplet::r12_D2() of Triplet.h!"); return 0; }
 
       /**
-       *  @brief get the protected member Triplet1D::m_side_u_D2
-       *  @return the ratio r<SUB>13</SUB>/r<SUB>12</SUB> in the
-       *  second dimension, or an error message if the derived object
-       *  does not have this member
+       *  @brief get the protected member Triplet1D::m_r12_binSize_D1
+       *  @return the size of r<SUB>12</SUB> bin in the second dimension,
+       *  or an error message if the derived object does not have this
+       *  member
        */
-      virtual double side_u_D2 () const { cosmobl::ErrorCBL("Error in Triplet::side_u_D2() of Triplet.h!"); return 0; }
+      virtual double r12_binSize_D2 () const { cosmobl::ErrorCBL("Error in Triplet::r12_binSize_D2() of Triplet.h!"); return 0; }
 
       /**
-       *  @brief get the protected member Triplet1D::m_perc_increase_D2
-       *  @return the ratio
-       *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
-       *  in the second dimension, or an error message if the derived
-       *  object does not have this member
-       */    
-      virtual double perc_increase_D2 () const { cosmobl::ErrorCBL("Error in Triplet::perc_increase_D2() of Triplet.h!"); return 0; }
+       *  @brief get the protected member Triplet1D::m_r13_D2
+       *  @return the size of r<SUB>13</SUB> in the second dimension,
+       *  or an error message if the derived object does
+       *  not have this member
+       */
+      virtual double r13_D2 () const { cosmobl::ErrorCBL("Error in Triplet::r13_D2() of Triplet.h!"); return 0; }
+
+      /**
+       *  @brief get the protected member Triplet1D::m_r13_binSize_D2
+       *  @return the size of r<SUB>13</SUB> bin in the second dimension,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual double r13_binSize_D2 () const { cosmobl::ErrorCBL("Error in Triplet::r13_binSize_D2() of Triplet.h!"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_nbins_D2

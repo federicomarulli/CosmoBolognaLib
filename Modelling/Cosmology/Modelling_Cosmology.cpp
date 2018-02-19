@@ -91,12 +91,6 @@ void cosmobl::modelling::cosmology::Modelling_Cosmology::set_cosmological_parame
     ll_parameters.push_back(m_map_cosmoPar[cosmoPar_name[i]]);
   }
 
-  auto z_drag = make_shared<statistics::DerivedParameter>(statistics::DerivedParameter("z_drag"));
-  ll_parameters.push_back(z_drag);
-
-  auto rs = make_shared<statistics::DerivedParameter>(statistics::DerivedParameter("rs"));
-  ll_parameters.push_back(rs);
-
   set_parameters(ll_parameters);
 
   m_data_model.cosmology = m_cosmology;

@@ -368,7 +368,7 @@ cleanExamples:
 	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/cosmicVoids/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/readParameterFile ; make clean && cd ../..
-	rm -rf $(PWD)/Examples/statistics/output/* $(PWD)/Examples/clustering/output/* $(PWD)/Examples/cosmicVoids/output/*
+	rm -rf $(PWD)/Examples/statistics/output/* $(PWD)/Examples/numberCounts/output/* $(PWD)/Examples/clustering/output/* $(PWD)/Examples/cosmicVoids/output/*
 
 
 cleanpy:

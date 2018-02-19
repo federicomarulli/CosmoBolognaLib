@@ -359,6 +359,30 @@ namespace cosmobl {
 	 */
 	static shared_ptr<ThreePointCorrelation> Create (const ThreePType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const triplets::TripletType tripletType, const double side_s, const double side_u, const double perc_increase, const int nbins);
       
+	/**
+	 *  @brief static factory used to construct three-point correlation
+	 *  functions of any type
+	 *
+	 *  @param type the type of three-point correlation function; it
+	 *  can be: _angular_connected_, _angular_reduced_,
+	 *  _comoving_connected_, _comoving_reduced_
+	 *
+	 *  @param data object of class Catalogue containing the input
+	 *  catalogue
+	 *  @param random of class Catalogue containing the random data
+	 *  catalogue
+	 *  @param tripletType the triplet type; it can be:
+	 *  _comoving_theta_, _comoving_side_
+	 *  @param r12 the size of r<SUB>12</SUB>
+	 *  @param r12_binSize the size of r<SUB>12</SUB> bin
+	 *  @param r13 the size of r<SUB>13</SUB>
+	 *  @param r13_binSize the size of r<SUB>13</SUB> bin
+	 *  @param nbins the number of bins
+	 *  @return a pointer to an object of class
+	 *  ThreePointCorrelation of a given type
+	 */
+	static shared_ptr<ThreePointCorrelation> Create (const ThreePType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const triplets::TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins);
+      
 	///@}
       
 
@@ -736,14 +760,14 @@ namespace cosmobl {
 	 */
 	virtual void write (const string dir, const string file, const bool connected) const
 	{ (void)dir; (void)file; (void)connected; cosmobl::ErrorCBL("Error in write() of ThreePointCorrelation.h!"); }
-      
-    /**
-    *  @brief write the measured three-point correlation covariance
-    *  @param dir output directory
-    *  @param file output file
-    *  @return none
-    */
-    virtual void write_covariance (const string dir, const string file) const = 0;
+
+	/**
+	 *  @brief write the measured three-point correlation covariance
+	 *  @param dir output directory
+	 *  @param file output file
+	 *  @return none
+	 */
+	virtual void write_covariance (const string dir, const string file) const = 0;
 
 	///@}
       

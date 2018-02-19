@@ -516,8 +516,8 @@ double cosmobl::gsl::GSL_minimize_1D (function<double(double)> func, const doubl
 {
   int status = 0;
   int iter = 0;
-  const gsl_min_fminimizer_type *T;
-  gsl_min_fminimizer *s;
+  const gsl_min_fminimizer_type * T = gsl_min_fminimizer_brent;
+  gsl_min_fminimizer *s = NULL;
   double m = start;
 
   STR_generic_func_GSL params;
@@ -527,7 +527,6 @@ double cosmobl::gsl::GSL_minimize_1D (function<double(double)> func, const doubl
   F.function = generic_function;
   F.params = &func;
 
-  T = gsl_min_fminimizer_brent;
   s = gsl_min_fminimizer_alloc(T);
   gsl_min_fminimizer_set(s, &F, m, min, max);
   

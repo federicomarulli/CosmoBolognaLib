@@ -23,18 +23,18 @@ int main () {
 
 
     // ----------------------------------------------
-    // ---------------- Read the dataset ------------
+    // ---------------- read the dataset ------------
     // ---------------------------------------------- 
 
-    string data_file = cosmobl::par::DirCosmo+"/External/Data/BAO/BAO_Addison2013.dat";
-    string covariance_file = cosmobl::par::DirCosmo+"/External/Data/BAO/BAO_Addison2013_covariance.dat";
+    const string data_file = cosmobl::par::DirCosmo+"/External/Data/BAO/BAO_Addison2013.dat";
+    const string covariance_file = cosmobl::par::DirCosmo+"/External/Data/BAO/BAO_Addison2013_covariance.dat";
 
     auto data = make_shared<cosmobl::data::Data1D>(cosmobl::data::Data1D(data_file, 1));
     data->set_covariance(covariance_file, 2, 1);
 
 
     // ------------------------------------------------
-    // ---------------- Read the data type ------------
+    // ---------------- read the data type ------------
     // ------------------------------------------------
 
     vector<string> data_type;

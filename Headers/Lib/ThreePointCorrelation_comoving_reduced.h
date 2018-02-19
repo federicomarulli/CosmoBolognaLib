@@ -111,7 +111,26 @@ namespace cosmobl {
 	 *  @return object of class ThreePointCorrelation_comoving_reduced
 	 */
 	ThreePointCorrelation_comoving_reduced (const catalogue::Catalogue data, const catalogue::Catalogue random, const triplets::TripletType tripletType, const double side_s, const double side_u, const double perc_increase, const int nbins)
-	  : ThreePointCorrelation_comoving_connected(data, random, tripletType, side_s, side_u, perc_increase, nbins) {m_QQ.push_back(0);}
+	  : ThreePointCorrelation_comoving_connected(data, random, tripletType, side_s, side_u, perc_increase, nbins) {m_QQ.push_back(0);} 
+
+	/**
+	 *  @brief constructor
+	 *  @param data object of class Catalogue containing the input
+	 *  catalogue
+	 *  @param random of class Catalogue containing the random data
+	 *  catalogue
+	 *  @param tripletType the triplet type; it can be:
+	 *  _comoving_theta_, _comoving_side_
+	 *  @param r12 the size of r<SUB>12</SUB>
+	 *  @param r12_binSize the size of r<SUB>12</SUB> bin
+	 *  @param r13 the size of r<SUB>13</SUB>
+	 *  @param r13_binSize the size of r<SUB>13</SUB> bin
+	 *  @param nbins number of bins
+	 *  @return object of class
+	 *  ThreePointCorrelation_comoving_reduced
+	 */
+	ThreePointCorrelation_comoving_reduced (const catalogue::Catalogue data, const catalogue::Catalogue random, const triplets::TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
+	  : ThreePointCorrelation_comoving_connected(data, random, tripletType, r12, r12_binSize, r13, r13_binSize, nbins) {m_QQ.push_back(0);}
 
 	/**
 	 *  @brief default destructor

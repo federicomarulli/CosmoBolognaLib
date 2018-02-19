@@ -226,6 +226,8 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh_m2 (const vector<vector<do
 void cosmobl::chainmesh::ChainMesh::get_searching_region (const double r_max, const double r_min) 
 {
    int n_max = nint(r_max/m_cell_size);
+   n_max = (n_max*m_cell_size<r_max) ? n_max+1 : n_max;
+
    int n_min = nint(r_min/m_cell_size)-2; // exclusive
    vector<long> n_incl(m_nDim);
 

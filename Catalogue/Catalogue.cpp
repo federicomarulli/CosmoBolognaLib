@@ -265,7 +265,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 	  size_t ii = nObjects()-1;
 	  while (ss>>Value) {
 	    column_counter ++;
-	    if (column_counter==column[attribute_index]) {
+	    if (attribute_index<(int)column.size() && column_counter==column[attribute_index]) {
 	      ((attribute[attribute_index] == Var::_X_) ||
 	       (attribute[attribute_index] == Var::_Y_) ||
 	       (attribute[attribute_index] == Var::_Z_) ||

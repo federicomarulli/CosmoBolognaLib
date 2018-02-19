@@ -525,6 +525,10 @@ namespace cosmobl {
 
       void initialize (const int _norder, const int _nbins=1);
 
+      vector<complex<double>> alm(const double xx, const double yy, const double zz);
+
+      void add (const vector<complex<double>> alm, const double ww, const int bin=0);
+
       void add (const double xx, const double yy, const double zz, const double ww, const int bin=0);
 
       double power (const int l, const int bin1, const int bin2);
@@ -568,6 +572,13 @@ namespace cosmobl {
    vector<double> zeta_SphericalHarmonics (const int nbins, const double side_s, const double side_u, const double perc_increase, const int norders, const catalogue::Catalogue catalogue, const catalogue::Catalogue random_catalogue, const string output_dir, const string output_file);
 
   vector<double> zeta_SphericalHarmonics (const int nbins, const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const catalogue::Catalogue catalogue, const catalogue::Catalogue random_catalogue, const string output_dir, const string output_file);
+
+
+  void  count_triplets_SphericalHarmonics (vector<double> &NNN, vector<double> &RRR, const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const catalogue::Catalogue catalogue);
+
+   vector<double> zeta_SphericalHarmonics_AllInOne (const int nbins, const double side_s, const double side_u, const double perc_increase, const int norders, const catalogue::Catalogue catalogue, const catalogue::Catalogue random_catalogue, const string output_dir, const string output_file);
+
+  vector<double> zeta_SphericalHarmonics_AllInOne (const int nbins, const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const catalogue::Catalogue catalogue, const catalogue::Catalogue random_catalogue, const string output_dir, const string output_file);
 
 }
 

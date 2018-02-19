@@ -73,6 +73,9 @@ namespace cosmobl {
 
 	/// vector containing the ordering of the data vector
 	vector<int> m_multipoles_order;
+
+	/// check if the model has been set
+	bool m_ModelIsSet;
 	
 	/**
 	 *  @name free parameters to model the two-point correlation function

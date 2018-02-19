@@ -64,8 +64,8 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
 
   Catalogue data = *m_data;
   Catalogue random = *m_random;
-  double rMin = m_ddd->side_s();
-  double rMax = (1+m_ddd->side_u())*m_ddd->side_s()*(1.+2.*m_ddd->perc_increase());
+  double rMin = m_ddd->r12();
+  double rMax = m_ddd->r12()+m_ddd->r13()+m_ddd->r13_binSize();
   double binSize = 0.05;
   double shift = 0.5;
   twopt::TwoPointCorrelation1D_monopole TwoP {data, random, _logarithmic_, rMin, rMax, binSize, shift};
@@ -79,14 +79,14 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
   
   vector<double> values_interp(m_ddd->nbins()+2, 0.), xi_real_lin(m_ddd->nbins()+2, 0.);
   
-  values_interp[0] = log10(m_ddd->side_s());
-  values_interp[1] = log10(m_ddd->side_u()*m_ddd->side_s());
+  values_interp[0] = log10(m_ddd->r12());
+  values_interp[1] = log10(m_ddd->r13());
   
   vector<double> theta(m_ddd->nbins(),0.);
 
   for (int i=0; i<m_ddd->nbins(); i++) {
     theta[i]=(i+0.5)*m_ddd->binSize();
-    double tmp_value = m_ddd->side_s()*sqrt(1+(m_ddd->side_u()*m_ddd->side_u())-(2*m_ddd->side_u()*cos(theta[i])));
+    double tmp_value = sqrt(m_ddd->r12()*m_ddd->r12()+m_ddd->r13()*m_ddd->r13()-2.*m_ddd->r12()*m_ddd->r13()*cos(theta[i]));
     //double tmp_value = (m_ddd->side_s()+((i+0.5)*m_ddd->binSize()));
     values_interp[i+2] = log10(tmp_value);
   }
@@ -133,8 +133,8 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
 
   Catalogue data = *m_data;
   Catalogue random = *m_random;
-  double rMin = m_ddd->side_s();
-  double rMax = (1+m_ddd->side_u())*m_ddd->side_s()*(1.+2.*m_ddd->perc_increase());
+  double rMin = m_ddd->r12();
+  double rMax = m_ddd->r12()+m_ddd->r13()+m_ddd->r13_binSize();
   double binSize = 0.05;
   double shift = 0.5;
   twopt::TwoPointCorrelation1D_monopole TwoP {data, random, _logarithmic_, rMin, rMax, binSize, shift};
@@ -147,15 +147,15 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
   }
   
   vector<double> values_interp(m_ddd->nbins()+2, 0.), xi_real_lin(m_ddd->nbins()+2, 0.);
-  
-  values_interp[0] = log10(m_ddd->side_s());
-  values_interp[1] = log10(m_ddd->side_u()*m_ddd->side_s());
+
+  values_interp[0] = log10(m_ddd->r12());
+  values_interp[1] = log10(m_ddd->r13());
   
   vector<double> theta(m_ddd->nbins(),0.);
 
   for (int i=0; i<m_ddd->nbins(); i++) {
     theta[i]=(i+0.5)*m_ddd->binSize();
-    double tmp_value = m_ddd->side_s()*sqrt(1+(m_ddd->side_u()*m_ddd->side_u())-(2*m_ddd->side_u()*cos(theta[i])));
+    double tmp_value = sqrt(m_ddd->r12()*m_ddd->r12()+m_ddd->r13()*m_ddd->r13()-2.*m_ddd->r12()*m_ddd->r13()*cos(theta[i]));
     //double tmp_value = (m_ddd->side_s()+((i+0.5)*m_ddd->binSize()));
     values_interp[i+2] = log10(tmp_value);
   }

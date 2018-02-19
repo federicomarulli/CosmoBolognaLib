@@ -540,7 +540,8 @@ double cosmobl::glob::Distribution::mode ()
       return -this->operator()(param);
     };
 
-    val= gsl::GSL_minimize_1D(func, (m_xmax+m_xmin)*0.5, m_xmin, m_xmax);
+    double start = (m_xmax+m_xmin)*0.5;
+    val= gsl::GSL_minimize_1D(func, start, m_xmin, m_xmax);
   }
   return val;
 }

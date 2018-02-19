@@ -65,7 +65,6 @@ vector<vector<double>> cosmobl::modelling::twopt::xi2D_dispersionModel (const ve
   // the dispersion in the pairwise random peculiar velocities
   double sigma12 = parameter[4];
 
-  
   // ----- derived parameters -----
 
   // the linear bias
@@ -77,9 +76,14 @@ vector<vector<double>> cosmobl::modelling::twopt::xi2D_dispersionModel (const ve
   vector<vector<double>> model(rp.size(), vector<double>(pi.size(), 0.));
 
   // return the 2D correlation function in Cartesian coordinates modelled with the dispersion model
-  for (size_t i=0; i<rp.size(); i++)
-    for (size_t j=0; j<pi.size(); j++)
-      model[i][j] = xi2D_model(AP1*rp[i], AP2*pi[j], beta, bias, sigma12, pp->func_xi, pp->func_xi_, pp->func_xi__, pp->var, pp->FV, pp->bias_nl, pp->bA, pp->v_min, pp->v_max, pp->step_v);
+  if (sigma12 == 0)
+    for (size_t i=0; i<rp.size(); i++)
+      for (size_t j=0; j<pi.size(); j++) 
+	model[i][j] = xi2D_lin_model(AP1*rp[i], AP2*pi[j], beta, bias, pp->func_xi, pp->func_xi_, pp->func_xi__, pp->bias_nl, pp->bA);
+  else
+    for (size_t i=0; i<rp.size(); i++)
+      for (size_t j=0; j<pi.size(); j++) 
+	model[i][j] = xi2D_model(AP1*rp[i], AP2*pi[j], beta, bias, sigma12, pp->func_xi, pp->func_xi_, pp->func_xi__, pp->var, pp->FV, pp->bias_nl, pp->bA, pp->v_min, pp->v_max, pp->step_v);
 
   return model;
 }

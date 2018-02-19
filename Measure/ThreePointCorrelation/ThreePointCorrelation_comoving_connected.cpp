@@ -52,10 +52,28 @@ using namespace glob;
 
 void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::set_parameters (const TripletType tripletType, const double side_s, const double side_u, const double perc_increase, const int nbins) 
 {
-  m_ddd = move(Triplet::Create(tripletType, side_s, side_u, perc_increase, nbins));
-  m_rrr = move(Triplet::Create(tripletType, side_s, side_u, perc_increase, nbins));
-  m_ddr = move(Triplet::Create(tripletType, side_s, side_u, perc_increase, nbins));
-  m_drr = move(Triplet::Create(tripletType, side_s, side_u, perc_increase, nbins));
+  double r12 = side_s;
+  double r12_binSize = r12*2.*perc_increase;
+  double r13 = side_s*side_u;
+  double r13_binSize = r13*2.*perc_increase;
+
+
+  m_ddd = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
+  m_rrr = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
+  m_ddr = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
+  m_drr = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
+}
+
+
+// ============================================================================================
+
+
+void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::set_parameters (const TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
+{
+  m_ddd = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
+  m_rrr = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
+  m_ddr = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
+  m_drr = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
 }
 
 

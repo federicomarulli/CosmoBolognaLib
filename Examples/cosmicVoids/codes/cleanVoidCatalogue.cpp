@@ -26,10 +26,10 @@ int main () {
     
     // vector containing the columns corresponding to each attribute
     vector<int> columns_voids = {1, 2, 3, 5};
-
+    
     // catalogue constructor
     cosmobl::catalogue::Catalogue void_catalogue_in {cosmobl::catalogue::_Void_, cosmobl::_comovingCoordinates_, var_names_voids, columns_voids, {file_voids_in}, 1};
-    
+     
     // make a shared pointer to void_catalogue_in
     auto input_voidCata = make_shared<cosmobl::catalogue::Catalogue> (cosmobl::catalogue::Catalogue(move(void_catalogue_in)));
 

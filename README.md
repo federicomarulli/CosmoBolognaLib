@@ -35,3 +35,5 @@ V4.0 classes used to model clustering functions substantially restructured
 V4.1\* classes used to model two-point and three-point correlation functions significantly improved; python building fully restructured; various bugs fixed
 
 V4.2 Python support improved, new functions for input/output in FITS format, some minor bugs fixed
+
+V4.21 V4.21 minor bugs fixed in likelihood modules

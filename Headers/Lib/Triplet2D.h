@@ -97,13 +97,16 @@ namespace cosmobl {
       ///@{
 
       /// the size of r<SUB>12</SUB> in the first dimension
-      double m_side_s_D1;
+      double m_r12_D1;
 
-      /// the ratio r<SUB>13</SUB>/<SUB>r12</SUB> in the first dimension
-      double m_side_u_D1; 
+      /// the size of r<SUB>12</SUB> bin in the first dimension
+      double m_r12_binSize_D1; 
 
-      /// the ratio &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB> in the first dimension
-      double m_perc_increase_D1;
+      /// the size of r<SUB>13</SUB> in the first dimension
+      double m_r13_D1;
+
+      /// the size of r<SUB>13</SUB> bin in the first dimension
+      double m_r13_binSize_D1; 
 
       /// the number of bins in the first dimension
       int m_nbins_D1;
@@ -111,14 +114,17 @@ namespace cosmobl {
       /// the bin size in the first dimension
       double m_binSize_D1;
 
-       /// the size of r<SUB>12</SUB> in the second dimension
-      double m_side_s_D2;
+      /// the size of r<SUB>12</SUB> in the second dimension
+      double m_r12_D2;
 
-      /// the ratio r<SUB>13</SUB>/<SUB>r12</SUB> in the second dimension
-      double m_side_u_D2; 
+      /// the size of r<SUB>12</SUB> bin in the second dimension
+      double m_r12_binSize_D2; 
 
-      /// the ratio &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB> in the second dimension
-      double m_perc_increase_D2;
+      /// the size of r<SUB>13</SUB> in the second dimension
+      double m_r13_D2;
+
+      /// the size of r<SUB>13</SUB> bin in the second dimension
+      double m_r13_binSize_D2; 
 
       /// the number of bins in the second dimension
       int m_nbins_D2;
@@ -142,31 +148,33 @@ namespace cosmobl {
        *  members set to -1
        */
       Triplet2D () 
-	: m_side_s_D1(-1), m_side_u_D1(-1.), m_perc_increase_D1(-1.), m_nbins_D1(-1), m_binSize_D1(-1), m_side_s_D2(-1), m_side_u_D2(-1.), m_perc_increase_D2(-1.), m_nbins_D2(-1), m_binSize_D2(-1)
+	: m_r12_D1(-1), m_r12_binSize_D1(-1), m_r13_D1(-1), m_r13_binSize_D1(-1), m_nbins_D1(-1), m_binSize_D1(-1), m_r12_D2(-1), m_r12_binSize_D2(-1), m_r13_D2(-1), m_r13_binSize_D2(-1), m_nbins_D2(-1), m_binSize_D2(-1)
 	{ m_tripletDim = _2D_; }
                                                                 
       /**
        *  @brief constructor
-       *  @param side_s_D1 the size of r<SUB>12</SUB> in the first
+       *  @param r12_D1 the size of r<SUB>12</SUB> in the first
        *  dimension
-       *  @param side_u_D1 the ratio r<SUB>13</SUB>/r<SUB>12</SUB> in
+       *  @param r12_binSize_D1 the size of r<SUB>12</SUB> bin in
        *  the first dimension
-       *  @param perc_increase_D1 the ratio
-       *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
-       *  in the first dimension
-       *  @param nbins_D1 the number of bins in the first dimension
-       *  @param side_s_D2 the size of r<SUB>12</SUB> in the second
+       *  @param r13_D1 the size of r<SUB>13</SUB> in the first
        *  dimension
-       *  @param side_u_D2 the ratio r<SUB>13</SUB>/r<SUB>12</SUB> in
+       *  @param r13_binSize_D1 the size of r<SUB>13</SUB> bin in
+       *  the first dimension
+       *  @param nbins_D1 the number of bins in the first dimension
+       *  @param r12_D2 the size of r<SUB>12</SUB> in the second
+       *  dimension
+       *  @param r12_binSize_D2 the size of r<SUB>12</SUB> bin in
        *  the second dimension
-       *  @param perc_increase_D2 the ratio
-       *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
-       *  in the second dimension
+       *  @param r13_D2 the size of r<SUB>13</SUB> in the second
+       *  dimension
+       *  @param r13_binSize_D2 the size of r<SUB>13</SUB> bin in
+       *  the second dimension
        *  @param nbins_D2 the number of bins in the second dimension
        *  @return object of class Triplet2D
        */
-      Triplet2D (const double side_s_D1, const double side_u_D1, const double perc_increase_D1, const int nbins_D1, const double side_s_D2, const double side_u_D2, const double perc_increase_D2, const int nbins_D2) 
-	: m_side_s_D1(side_s_D1), m_side_u_D1(side_u_D1), m_perc_increase_D1(perc_increase_D1), m_nbins_D1(nbins_D1), m_side_s_D2(side_s_D2), m_side_u_D2(side_u_D2), m_perc_increase_D2(perc_increase_D2), m_nbins_D2(nbins_D2)
+      Triplet2D (const double r12_D1, const double r12_binSize_D1, const double r13_D1, const double r13_binSize_D1, const int nbins_D1, const double r12_D2, const double r12_binSize_D2, const double r13_D2, const double r13_binSize_D2, const int nbins_D2) 
+	: m_r12_D1(r12_D1), m_r12_binSize_D1(r12_binSize_D1), m_r13_D1(r13_D1), m_r13_binSize_D1(r13_binSize_D1), m_nbins_D1(nbins_D1), m_r12_D2(r12_D2), m_r12_binSize_D2(r12_binSize_D2), m_r13_D2(r13_D2), m_r13_binSize_D2(r13_binSize_D2), m_nbins_D2(nbins_D2)
       { m_tripletDim = _2D_; m_TT2D.resize(m_nbins_D1+1, vector<double>(m_nbins_D2+1, 0.)); }
 
       /**
@@ -224,25 +232,28 @@ namespace cosmobl {
       vector<vector<double> > TT2D () const override { return m_TT2D; }
       
       /**
-       *  @brief get the protected member \e m_side_s_D1
+       *  @brief get the protected member Triplet1D::m_r12_D1
        *  @return the size of r<SUB>12</SUB> in the first dimension
        */
-      double side_s_D1 () const override { return m_side_s_D1; }
-      
-      /**
-       *  @brief get the protected member \e m_side_u_D1
-       *  @return the ratio r<SUB>13</SUB>/r<SUB>12</SUB> in the first
-       *  dimension
-       */
-      double side_u_D1 () const override { return m_side_u_D1; }
+      double r12_D1 () const override { return m_r12_D1; }
 
       /**
-       *  @brief get the protected member \e m_perc_increase_D1
-       *  @return the ratio
-       *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
-       *  in the first dimension
-       */    
-      double perc_increase_D1 () const override { return m_perc_increase_D1; }
+       *  @brief get the protected member Triplet1D::m_r12_binSize_D1
+       *  @return the size of r<SUB>12</SUB> bin in the first dimension
+       */
+      double r12_binSize_D1 () const override { return m_r12_binSize_D1; }
+
+      /**
+       *  @brief get the protected member Triplet1D::m_r13_D1
+       *  @return the size of r<SUB>13</SUB> in the first dimension
+       */
+      double r13_D1 () const override { return m_r13_D1; }
+
+      /**
+       *  @brief get the protected member Triplet1D::m_r13_binSize_D1
+       *  @return the size of r<SUB>13</SUB> bin in the first dimension
+       */
+      double r13_binSize_D1 () const override { return m_r13_binSize_D1; }
 
       /**
        *  @brief get the protected member \e m_binSize_D1
@@ -251,25 +262,28 @@ namespace cosmobl {
       double binSize_D1 () const override { return m_binSize_D1; }
 
       /**
-       *  @brief get the protected member \e m_side_s_D2
+       *  @brief get the protected member Triplet1D::m_r12_D2
        *  @return the size of r<SUB>12</SUB> in the second dimension
        */
-      double side_s_D2 () const override { return m_side_s_D2; }
+      double r12_D2 () const override { return m_r12_D2; }
 
       /**
-       *  @brief get the protected member \e m_side_u_D2
-       *  @return the ratio r<SUB>13</SUB>/r<SUB>12</SUB> in the second
-       *  dimension
+       *  @brief get the protected member Triplet1D::m_r12_binSize_D2
+       *  @return the size of r<SUB>12</SUB> bin in the second dimension
        */
-      double side_u_D2 () const override { return m_side_u_D2; }
+      double r12_binSize_D2 () const override { return m_r12_binSize_D2; }
 
       /**
-       *  @brief get the protected member \e m_perc_increase_D2
-       *  @return the ratio
-       *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
-       *  in the second dimension
-       */    
-      double perc_increase_D2 () const override { return m_perc_increase_D2; }
+       *  @brief get the protected member Triplet1D::m_r13_D2
+       *  @return the size of r<SUB>13</SUB> in the second dimension
+       */
+      double r13_D2 () const override { return m_r13_D2; }
+
+      /**
+       *  @brief get the protected member Triplet1D::m_r13_binSize_D2
+       *  @return the size of r<SUB>13</SUB> bin in the second dimension
+       */
+      double r13_binSize_D2 () const override { return m_r13_binSize_D2; }
 
       /**
        *  @brief get the protected member \e m_binSize_D2

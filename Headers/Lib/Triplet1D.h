@@ -92,14 +92,17 @@ namespace cosmobl {
       ///@{
 
       /// the size of r<SUB>12</SUB>
-      double m_side_s;
+      double m_r12;
 
-      /// the ratio r<SUB>13</SUB>/<SUB>r12</SUB>
-      double m_side_u; 
+      /// the size of r<SUB>12</SUB> bin
+      double m_r12_binSize;
 
-      /// the ratio &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
-      double m_perc_increase;
-      
+      /// the size of r<SUB>13</SUB>
+      double m_r13;
+   
+      /// the size of r<SUB>13</SUB> bin
+      double m_r13_binSize;   
+
       /// the number of bins
       int m_nbins;
 
@@ -122,19 +125,20 @@ namespace cosmobl {
        *  members set to -1
        */
       Triplet1D () 
-	: m_side_s(-1), m_side_u(-1.), m_perc_increase(-1.), m_nbins(-1), m_binSize(-1)
+	: m_r12(-1), m_r12_binSize(-1), m_r13(-1), m_r13_binSize(-1), m_nbins(-1), m_binSize(-1)
 	{ m_tripletDim = _1D_; }
                                                                 
       /**
        *  @brief constructor
-       *  @param side_s the size of r<SUB>12</SUB>
-       *  @param side_u the ratio r<SUB>13</SUB>/r<SUB>12</SUB>
-       *  @param perc_increase the ratio &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
+       *  @param r12 the size of r<SUB>12</SUB>
+       *  @param r12_binSize the size of r<SUB>12</SUB> bin
+       *  @param r13 the size of r<SUB>13</SUB>
+       *  @param r13_binSize the size of r<SUB>13</SUB> bin
        *  @param nbins the number of bins
        *  @return object of class Triplet1D
        */
-      Triplet1D (const double side_s, const double side_u, const double perc_increase, const int nbins) 
-	: m_side_s(side_s), m_side_u(side_u), m_perc_increase(perc_increase), m_nbins(nbins)
+      Triplet1D (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
+	: m_r12(r12), m_r12_binSize(r12_binSize), m_r13(r13), m_r13_binSize(r13_binSize) , m_nbins(nbins)
 	{ m_tripletDim = _1D_; }
 
       /**
@@ -178,22 +182,28 @@ namespace cosmobl {
       vector<double> TT1D () const override { return m_TT1D; }
       
       /**
-       *  @brief get the protected member \e m_side_s
+       *  @brief get the private member \e m_r12
        *  @return the size of r<SUB>12</SUB>
        */
-      double side_s () const override { return m_side_s; }
-
+      double r12 () const override { return m_r12; }
+      
       /**
-       *  @brief get the protected member \e m_side_u
-       *  @return the ratio r<SUB>13</SUB>/r<SUB>12</SUB>
+       *  @brief get the private member \e m_r12_binSize
+       *  @return the size of the r<SUB>12</SUB> bin
        */
-      double side_u () const override { return m_side_u; }
+      double r12_binSize () const override { return m_r12_binSize; }
 
       /**
-       *  @brief get the protected member \e m_perc_increase
-       *  @return the ratio &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
-       */    
-      double perc_increase () const override { return m_perc_increase; }
+       *  @brief get the private member \e m_r13
+       *  @return the size of r<SUB>13</SUB>
+       */
+      double r13 () const override { return m_r13;  }
+
+      /**
+       *  @brief get the private member \e m_r13_binSize
+       *  @return the size of r<SUB>13</SUB> bin
+       */
+      double r13_binSize () const override { return m_r13_binSize; }
 
       /**
        *  @brief get the protected member \e m_nbins
@@ -300,14 +310,15 @@ namespace cosmobl {
                                                                 
       /**
        *  @brief constructor
-       *  @param side_s the size of r<SUB>12</SUB>
-       *  @param side_u the ratio r<SUB>13</SUB>/r<SUB>12</SUB>
-       *  @param perc_increase the ratio &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
+       *  @param r12 the size of r<SUB>12</SUB>
+       *  @param r12_binSize the size of r<SUB>12</SUB> bin
+       *  @param r13 the size of r<SUB>13</SUB>
+       *  @param r13_binSize the size of r<SUB>13</SUB> bin
        *  @param nbins the number of bins
        *  @return object of class Triplet1D_comoving
        */
-      Triplet1D_comoving (const double side_s, const double side_u, const double perc_increase, const int nbins) 
-	: Triplet1D(side_s, side_u, perc_increase, nbins) {}
+      Triplet1D_comoving (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
+	: Triplet1D(r12, r12_binSize, r13, r13_binSize, nbins) {}
       
       /**
        *  @brief default destructor
@@ -371,14 +382,15 @@ namespace cosmobl {
                                                                 
       /**
        *  @brief constructor
-       *  @param side_s the size of r<SUB>12</SUB>
-       *  @param side_u the ratio r<SUB>13</SUB>/r<SUB>12</SUB>
-       *  @param perc_increase the ratio &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
+       *  @param r12 the size of r<SUB>12</SUB>
+       *  @param r12_binSize the size of r<SUB>12</SUB> bin
+       *  @param r13 the size of r<SUB>13</SUB>
+       *  @param r13_binSize the size of r<SUB>13</SUB> bin
        *  @param nbins the number of bins
        *  @return object of class Triplet1D_comoving_theta
        */
-      Triplet1D_comoving_theta (const double side_s, const double side_u, const double perc_increase, const int nbins) 
-	: Triplet1D_comoving(side_s, side_u, perc_increase, nbins)
+      Triplet1D_comoving_theta (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
+	: Triplet1D_comoving(r12, r12_binSize, r13, r13_binSize, nbins)
 	{ m_tripletType = _comoving_theta_; set_parameters(); m_scale.resize(m_nbins+1, 0.); m_TT1D.resize(nbins+1, 0.); }
 
       ///@}
@@ -483,19 +495,20 @@ namespace cosmobl {
        *  protected members set to -1
        */
       Triplet1D_comoving_side () 
-	{ m_tripletType = _comoving_side_; }
-      
+      { m_tripletType = _comoving_side_; }
+
       /**
        *  @brief constructor
-       *  @param side_s the size of r<SUB>12</SUB>
-       *  @param side_u the ratio r<SUB>13</SUB>/r<SUB>12</SUB>
-       *  @param perc_increase the ratio &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
+       *  @param r12 the size of r<SUB>12</SUB>
+       *  @param r12_binSize the size of r<SUB>12</SUB> bin
+       *  @param r13 the size of r<SUB>13</SUB>
+       *  @param r13_binSize the size of r<SUB>13</SUB> bin
        *  @param nbins the number of bins
        *  @return object of class Triplet1D_comoving_side
        */
-      Triplet1D_comoving_side (const double side_s, const double side_u, const double perc_increase, const int nbins) 
-	: Triplet1D_comoving(side_s, side_u, perc_increase, nbins)
-      { m_tripletType = _comoving_side_; set_parameters(); m_TT1D.resize(nbins+1, 0.); }
+      Triplet1D_comoving_side (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
+	: Triplet1D_comoving(r12, r12_binSize, r13, r13_binSize, nbins)
+      { m_tripletType = _comoving_side_; set_parameters(); m_scale.resize(m_nbins+1, 0.); m_TT1D.resize(nbins+1, 0.); }
 
       ///@}
 
@@ -600,17 +613,18 @@ namespace cosmobl {
        *  @return object of class Triplet1D_angular
        */
       Triplet1D_angular () = default;
-                                                                
+           
       /**
        *  @brief constructor
-       *  @param side_s the size of r<SUB>12</SUB>
-       *  @param side_u the ratio r<SUB>13</SUB>/r<SUB>12</SUB>
-       *  @param perc_increase the ratio &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
+       *  @param r12 the size of r<SUB>12</SUB>
+       *  @param r12_binSize the size of r<SUB>12</SUB> bin
+       *  @param r13 the size of r<SUB>13</SUB>
+       *  @param r13_binSize the size of r<SUB>13</SUB> bin
        *  @param nbins the number of bins
        *  @return object of class Triplet1D_angular
        */
-      Triplet1D_angular (const double side_s, const double side_u, const double perc_increase, const int nbins) 
-	: Triplet1D(side_s, side_u, perc_increase, nbins) {}
+      Triplet1D_angular (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
+	: Triplet1D(r12, r12_binSize, r13, r13_binSize, nbins) {}
 
       /**
        *  @brief default destructor
