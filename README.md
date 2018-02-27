@@ -37,3 +37,5 @@ V4.1\* classes used to model two-point and three-point correlation functions sig
 V4.2 Python support improved, new functions for input/output in FITS format, some minor bugs fixed
 
 V4.21 minor bugs fixed in likelihood modules
+
+V4.22 minor bugs fixed in some python examples
