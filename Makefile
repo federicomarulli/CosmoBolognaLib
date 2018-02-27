@@ -399,11 +399,12 @@ purgeALL:
 	rm -rf External/CAMB/camb
 	rm -rf External/CAMB/output_linear/*
 	rm -rf External/CAMB/output_nonlinear/*
-	rm -rf External/CAMB/test_* 
+	rm -rf External/CAMB/test_*
+	rm -rf External/CAMB/NULL*
 	rm -rf External/VIPERS/venice3.9/venice
 	rm -rf External/mangle/bin/*
 	cd External/mangle/src; make cleaner ; true
-	cd External/classgal_v1/ ; make clean ; rm class ; true
+	cd External/classgal_v1/ ; make clean ; rm -f class libclass.a ; true
 	rm -rf External/classgal_v1/output_linear/*
 	rm -rf External/classgal_v1/output_nonlinear/*
 	cd External/fftlog-f90-master/ ; make clean ; true

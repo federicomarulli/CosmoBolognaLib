@@ -1,7 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import CosmoBolognaLib as cbl
+
+# import the CosmoBolognaLib #
+import CosmoBolognaLib as cbl 
 from CosmoBolognaLib import DoubleVector as dv
+
+# set the CosmoBolognaLib and the current directories
+cbl.SetDirs("../../", "./")
 
 # set the cosmological model, with default parameters
 cosmology = cbl.Cosmology()

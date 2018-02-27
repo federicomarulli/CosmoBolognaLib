@@ -2,11 +2,14 @@
 # Example code: how to compute the theoretical size function of cosmic voids
 # ==========================================================================
 
-# import cosmological functions #
-from CosmoBolognaLib import Cosmology 
+# import the CosmoBolognaLib #
+import CosmoBolognaLib as cbl 
+
+# set the CosmoBolognaLib and the current directories
+cbl.SetDirs("../../../", "./")
 
 # define a cosmological model, using default parameters #
-cosm = Cosmology()
+cosm = cbl.Cosmology()
 
 # effective void radius at which the size function is computed
 R = 10.

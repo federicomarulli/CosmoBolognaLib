@@ -5,6 +5,8 @@ from CosmoBolognaLib import DoubleVector as dv
 from CosmoBolognaLib import EnumTypes as et
 import os
 
+cbl.SetDirs("../../../", "./")
+
 print os.path.abspath(cbl.__file__)
 
 ''' Define cosmology '''

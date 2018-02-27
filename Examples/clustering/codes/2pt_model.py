@@ -13,12 +13,17 @@ import matplotlib.pyplot as plt
 
 ### import the CosmoBolognaLib ###
 
-from CosmoBolognaLib import Cosmology
+import CosmoBolognaLib as cbl
+
+
+# set the CosmoBolognaLib and the current directories
+
+cbl.SetDirs("../../../", "./")
 
 
 ### create an object of class Cosmology ###
 
-cosmo = Cosmology()
+cosmo = cbl.Cosmology()
 
 
 ### define k and r for the computation of dark matter power spectrum and  two point correlation correlation function ###
