@@ -2,7 +2,7 @@
 @mainpage The CosmoBolognaLib documentation
 
 Here you can find the full documentation of the @b CosmoBolognaLib, a
-large set of Open Source C++ libraries for cosmological
+large set of @e free @e software C++ libraries for cosmological
 calculations. Among many other things, these libraries can be used to
 measure the two-point and three-point correlation functions, and to
 model redshift-space distortions and baryon acoustic oscillations.
