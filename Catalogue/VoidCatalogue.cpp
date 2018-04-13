@@ -1092,71 +1092,41 @@ cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_void
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void cosmobl::catalogue::Catalogue::compute_centralDensity (const shared_ptr<Catalogue> tracers_catalogue, cosmobl::chainmesh::ChainMesh3D ChM, const double density, const double ratio) {
-  ///
-  //coutCBL << "check1" << endl;
-  ///
+
   //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
   vector<bool> remove(m_object.size(), false);
-  ///
-  //coutCBL << "check2" << endl;
-  ///
+
   //counter for regions without any tracer:
   int void_voids = 0;
   
-  for (size_t j = 0/*27971*/; j<m_object.size(); j++) {
-    ///
-    //vector<double> coords = m_object[j]->coords();
-    //coutCBL << m_object[j]->radius() << "  " << coords[0] << "  " << coords[1] << "  " << coords[2] << endl;
-    ///
+  for (size_t j = 0; j<m_object.size(); j++) {
+	  
     ChM.get_searching_region(m_object[j]->radius());
     vector<long> close = ChM.close_objects(m_object[j]->coords());
-    ///
-    //coutCBL << close.size() << endl;
-    ///
+	  
     //compute distances between the void and the surrounding particles
       vector<double> distances;
       for (auto&& k : close) {
 	double distance = cosmobl::catalogue::Catalogue::distance(j, tracers_catalogue->catalogue_object(k));
 	if (distance < m_object[j]->radius()) distances.emplace_back(distance);
       }
-      ///
-      //coutCBL << distances.size() << endl;
-      ///
+
       //FIND CENTRAL DENSITY
       if (distances.size() > 0) {
 	std::sort (distances.begin(), distances.end());
 	int NN = 0;
 	while (distances[NN]<ratio*m_object[j]->radius()) NN++;
-	///
-	//coutCBL << (NN/cosmobl::volume_sphere(distances[NN]))/density << endl;
-	///
 	m_object[j]->set_centralDensity((NN/cosmobl::volume_sphere(distances[NN]))/density);
       }
       else {
 	void_voids ++;
 	remove[j] = true;
       }
-      //coutCBL << j << "/" << m_object.size() << ": " << m_object << endl;
-      /*
-      if (distances.size() > 3) {
-	std::sort (distances.begin(), distances.end());
-	int NN = (int(ratio*distances.size())>3) ? int(ratio*distances.size())-1 : 3;
-	m_object[j]->set_centralDensity((NN/cosmobl::volume_sphere(distances[NN]))/density);
-      }   
-      else {
-	void_voids ++;
-	remove[j] = true;
-      } 
-      */
-      }//for
-  ///
-  //coutCBL << "check3" << endl;
-  ///
+  }//for
+
   for (size_t j = 0; j<m_object.size(); j++)
     if (remove[j]) m_object.erase(m_object.begin()+j);
-  ///
-  //coutCBL << "check4" << endl;
-  ///
+
   coutCBL << "I removed " << void_voids << " voids in calculating the central density!" << endl;
   
 }
@@ -1188,10 +1158,7 @@ void cosmobl::catalogue::Catalogue::compute_densityContrast (const shared_ptr<Ca
 	std::sort (distances.begin(), distances.end());
 	int NN = 0;
 	while (distances[NN]<ratio*m_object[j]->radius()) NN++;
-	/*
-	  if (distances.size() > 3) {
-	  std::sort (distances.begin(), distances.end());
-	  int NN = (int(ratio*distances.size())>3) ? int(ratio*distances.size())-1 : 3;*/
+
 	if (NN > 0) {
 	  double delta_in = NN/cosmobl::volume_sphere(distances[NN]);
 	  double delta_out = distances.size()/cosmobl::volume_sphere(distances[distances.size()-1]);
