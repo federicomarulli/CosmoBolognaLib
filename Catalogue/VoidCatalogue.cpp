@@ -991,7 +991,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_void
         auto kk = std::distance(distances.begin(), up);
 
 	// shrink or expand to match the required threshold
-	if (kk/(volume_sphere(distances[kk-1])*density > threshold))
+	if (kk/(volume_sphere(distances[kk-1])*density) > threshold)
 	  while (kk/(volume_sphere(distances[kk-1])*density) > threshold && kk > 1) kk--; // either you shrink
 	else while (kk/(volume_sphere(distances[kk-1])*density) < threshold && kk < (int) distances.size()) kk++; // or you expand
 	  
