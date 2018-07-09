@@ -13,7 +13,7 @@
 4) test the new software on local environment, both in C++ and Python
 
 5) add one or more example codes (updating the Makefile and adding the
-   example(s) documentation in Header/Func.h)
+   example(s) documentation in Header/Kernel.h)
 
 6) update test.py, adding the command for the new example(s)
 
