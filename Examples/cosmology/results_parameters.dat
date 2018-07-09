@@ -1,9 +1,0 @@
-### Parameter # status ###
-### Posterior mean # Posterior standard deviation # Posterior median # Posterior 18th percentile # Posterior 82th percentile # Posterior mode ###
-
-# Omega_matter_LCDM FREE #
-# H0 FREE #
-# rs FREE #
-0.273178 0.0458224 0.265336 0.0297042 0.046837 0.265312
-70.094 5.23576 70.3286 4.42855 4.2286 69.5729
-148.851 9.17278 147.714 7.65649 9.96728 144.244
