@@ -33,7 +33,10 @@
  */
 
 #include "Cosmology.h"
-using namespace cosmobl;
+
+using namespace std;
+
+using namespace cbl;
 
 
 // =====================================================================================
@@ -45,7 +48,7 @@ using namespace cosmobl;
 
 // Differential rescaled and generalized formation redshift distribution
 
-double cosmobl::cosmology::Cosmology::pw (const double ww, const double ff, const string author) const 
+double cbl::cosmology::Cosmology::pw (const double ww, const double ff, const string author) const 
 {
   if (author=="NS") {
     if (ff<0.5) coutCBL <<"Warning you are calling pw function for NS with f = "<<ff<<endl;
@@ -65,7 +68,7 @@ double cosmobl::cosmology::Cosmology::pw (const double ww, const double ff, cons
 
 // Probability that a halo of a given mass m0 at redshift z0 make a mass fraction f at redshift z
 
-double cosmobl::cosmology::Cosmology::pz (const double m0, const double z0, const double frac, const double redshift, const string model_model, const string method_SS, const string output_root) const
+double cbl::cosmology::Cosmology::pz (const double m0, const double z0, const double frac, const double redshift, const string model_model, const string method_SS, const string output_root) const
 {
   double dcz0 = deltac(z0)/DD(z0)*DD(0.);
   double dcz = deltac(redshift)/DD(redshift)*DD(0.);
@@ -91,7 +94,7 @@ double cosmobl::cosmology::Cosmology::pz (const double m0, const double z0, cons
 
 // Cumulative rescaled and generalized formation redshift distribution
  
-double cosmobl::cosmology::Cosmology::cumPw (const double ww, const double ff, const string author) const
+double cbl::cosmology::Cosmology::cumPw (const double ww, const double ff, const string author) const
 {
   if(author=="NS"){
     if(ff<0.5) coutCBL <<"Warning you are calling cumPw function for NS with f = "<<ff<<endl;
@@ -112,7 +115,7 @@ double cosmobl::cosmology::Cosmology::cumPw (const double ww, const double ff, c
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::medianwf (const double ff, const string model_model, vector<double> &wf) const
+void cbl::cosmology::Cosmology::medianwf (const double ff, const string model_model, vector<double> &wf) const
 {
   wf.resize(3);
 
@@ -147,7 +150,7 @@ void cosmobl::cosmology::Cosmology::medianwf (const double ff, const string mode
 // Conditional variable w = \delta_c(zf) - \delta_c(z)/\sqrt(s(fm)-s(m))
 // we recall that \delta_c(z) = delta_c0(z)/D+(z)
 
-double cosmobl::cosmology::Cosmology::wf (const double mm, const double redshift, const double ff, const double zf, const string method_SS, const string output_root) const
+double cbl::cosmology::Cosmology::wf (const double mm, const double redshift, const double ff, const double zf, const string method_SS, const string output_root) const
 {
   double deltacz = deltac(redshift)/DD(redshift)*DD(0.);
   double deltaczf = deltac(zf)/DD(zf)*DD(0.);
@@ -162,7 +165,7 @@ double cosmobl::cosmology::Cosmology::wf (const double mm, const double redshift
 
 // with this routine you can estimate the redshift from w given the parent halo mass (at z=z_0), z_0 and its assembled fraction f
 
-double cosmobl::cosmology::Cosmology::Redshift (const double mm, const double redshift, const double ff, const string method_SS, const double wwf, const string output_root) const
+double cbl::cosmology::Cosmology::Redshift (const double mm, const double redshift, const double ff, const string method_SS, const double wwf, const string output_root) const
 {
   int const nn = 128;
   vector<double> lzi = linear_bin_vector(nn, 0., 1.7);
@@ -186,7 +189,7 @@ double cosmobl::cosmology::Cosmology::Redshift (const double mm, const double re
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::medianzf (const double ff, const double mass, const double z0, const string model_model, const string method_SS, vector<double> &zf, const string output_root) const
+void cbl::cosmology::Cosmology::medianzf (const double ff, const double mass, const double z0, const string model_model, const string method_SS, vector<double> &zf, const string output_root) const
 {
   vector<double> wf;
   zf.resize(3);

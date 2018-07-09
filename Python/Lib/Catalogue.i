@@ -2,6 +2,15 @@
 
 %ignore *::operator[];
 
+%shared_ptr(cbl::catalogue::Object);
+%shared_ptr(cbl::catalogue::RandomObject);
+%shared_ptr(cbl::catalogue::Halo);
+%shared_ptr(cbl::catalogue::Mock);
+%shared_ptr(cbl::catalogue::Galaxy);
+%shared_ptr(cbl::catalogue::Cluster);
+%shared_ptr(cbl::catalogue::Void);
+%shared_ptr(cbl::catalogue::Catalogue);
+
 %{
 #include "Object.h"
 #include "RandomObject.h"
@@ -24,16 +33,16 @@
 %include "ChainMesh_Catalogue.h"
 %include "Void.h"
 
-%template(RandomObjVec) vector<cosmobl::catalogue::RandomObject>;
-%template(MockVec) vector<cosmobl::catalogue::Mock>;
-%template(HaloVec) vector<cosmobl::catalogue::Halo>;
-%template(GalaxyVec) vector<cosmobl::catalogue::Galaxy>;
-%template(ClusterVec) vector<cosmobl::catalogue::Cluster>;
+%template(RandomObjVector) std::vector<cbl::catalogue::RandomObject>;
+%template(MockVector) std::vector<cbl::catalogue::Mock>;
+%template(HaloVector) std::vector<cbl::catalogue::Halo>;
+%template(GalaxyVector) std::vector<cbl::catalogue::Galaxy>;
+%template(ClusterVector) std::vector<cbl::catalogue::Cluster>;
 
-%template(VarVec) std::vector<enum cosmobl::catalogue::Var>;
+%template(VarVector) std::vector<enum cbl::catalogue::Var>;
 
 
-%extend cosmobl::catalogue::Catalogue
+%extend cbl::catalogue::Catalogue
 {  
   %template(add_object) add_object< RandomObject >;
   %template(add_object) add_object< Mock >;
@@ -56,7 +65,8 @@
   %template(replace_objects) replace_objects< Cluster >;
   %template(replace_objects) replace_objects< Void >;
 
-  shared_ptr<cosmobl::catalogue::Object> __getitem__(const size_t i) {
-    return (*self)[i];
-  }
+  std::shared_ptr<cbl::catalogue::Object> __getitem__(const size_t i)
+    {
+      return (*self)[i];
+    }
 }

@@ -33,17 +33,19 @@
 
 #include "Model1D.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ======================================================================================
 
 
-void cosmobl::statistics::Model1D::set_model (const model_function_1D model)
+void cbl::statistics::Model1D::set_function (const model_function_1D function)
 {
-  m_function = [model](vector<vector<double>> xx, shared_ptr<void> fixed_parameters, vector<double> &free_parameters) 
+  m_function = [this, function](vector<vector<double>> xx, shared_ptr<void> inputs, vector<double> &parameters) 
     {
-      vector<vector<double>> res(1, model(xx[0], fixed_parameters, free_parameters));
+      vector<vector<double>> res(1, function(xx[0], inputs, parameters));
       return res;
     };
 }
@@ -52,18 +54,83 @@ void cosmobl::statistics::Model1D::set_model (const model_function_1D model)
 // ======================================================================================
 
 
-void cosmobl::statistics::Model1D::write_model (const string output_dir, const string output_file, const vector<double> xx, vector<double> &parameter) const
+void cbl::statistics::Model1D::stats_from_chains (const vector<double> xx, vector<double> &median_model, vector<double> &low_model, vector<double> &up_model, const int start, const int thin) 
 {
-  string mkdir = "mkdir -p "+output_dir; if (system(mkdir.c_str())) {}
-
-  string file_out = output_dir+output_file;
-  ofstream fout(file_out.c_str()); checkIO(fout, file_out);
-
-  vector<double> model = this->operator()(xx, parameter);
+  vector<vector<double>> _median, _low, _up;
   
-  for (size_t i=0; i<xx.size(); i++) 
-    fout << xx[i] << " " << model[i] << endl;
-  
-  fout.clear(); fout.close();
-  coutCBL << "I wrote the file: " << output_dir+file_out << endl;
+  Model::stats_from_chains({1, xx}, _median, _low, _up, start, thin);
+
+  median_model = _median[0];
+  low_model = _low[0];
+  up_model = _up[0];
+}
+
+
+// ======================================================================================
+
+
+void cbl::statistics::Model1D::write (const string output_dir, const string output_file, const vector<double> xx, const vector<double> parameters)
+{
+  vector<double> pp = parameters;
+  vector<double> model = this->operator()(xx, pp);
+
+  if (model.size() % xx.size() != 0)
+    ErrorCBL("Error in write of Model1D: model.size() is not a multiple of xx.size().");
+
+  int nmodels = model.size()/xx.size();
+
+  string mkdir = "mkdir -p "+output_dir;
+  string file = output_dir+output_file;
+
+  if(system(mkdir.c_str())) {}
+
+  ofstream fout(file.c_str());
+
+  for(size_t i=0; i<xx.size(); i++){
+    fout << xx[i]; 
+    for (int nn=0; nn<nmodels; nn++)
+      fout << "  " << model[i+nn*xx.size()];
+    fout << endl;
+  }
+  fout.close();
+}
+
+
+// ======================================================================================
+
+
+void cbl::statistics::Model1D::write_at_bestfit (const string output_dir, const string output_file, const vector<double> xx)
+{
+  vector<double> bf = m_parameters->bestfit_values();
+  write(output_dir, output_file, xx, bf);  
+}
+
+
+// ======================================================================================
+
+
+void cbl::statistics::Model1D::write_from_chains (const string output_dir, const string output_file, const vector<double> xx, const int start, const int thin)
+{
+  vector<double> median_model, low_model, up_model;
+  stats_from_chains(xx, median_model, low_model, up_model, start, thin);
+
+  if (median_model.size() % xx.size() != 0)
+    ErrorCBL("Error in write of Model1D: model.size() is not a multiple of xx.size().");
+
+  int nmodels = median_model.size()/xx.size();
+
+  string mkdir = "mkdir -p "+output_dir;
+  string file = output_dir+output_file;
+
+  if(system(mkdir.c_str())) {}
+
+  ofstream fout(file.c_str());
+
+  for(size_t i=0; i<xx.size(); i++){
+    fout << xx[i]; 
+    for (int nn=0; nn<nmodels; nn++)
+      fout << "  " << median_model[i+nn*xx.size()] << " " << low_model[i+nn*xx.size()] << " " << up_model[i+nn*xx.size()] << " ";
+    fout << endl;
+  }
+  fout.close();
 }

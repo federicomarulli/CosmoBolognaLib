@@ -38,7 +38,9 @@
 
 #include "TwoPointCorrelationCross1D_angular.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace chainmesh;
 using namespace data;

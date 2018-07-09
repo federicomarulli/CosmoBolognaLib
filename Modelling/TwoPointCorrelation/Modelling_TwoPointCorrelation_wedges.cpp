@@ -38,13 +38,15 @@
 #include "ModelFunction_TwoPointCorrelation_wedges.h"
 #include "Modelling_TwoPointCorrelation_wedges.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
 
 
-cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::Modelling_TwoPointCorrelation_wedges (const shared_ptr<cosmobl::measure::twopt::TwoPointCorrelation> twop)
+cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::Modelling_TwoPointCorrelation_wedges (const shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
   : Modelling_TwoPointCorrelation1D_monopole(twop), m_nwedges(2), m_nwedges_fit(2), m_deltamu(0.5)
 { 
   m_wedges_order.erase(m_wedges_order.begin(), m_wedges_order.end());
@@ -60,7 +62,7 @@ cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::Modelling_TwoPo
 // ============================================================================================
 
 
-cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::Modelling_TwoPointCorrelation_wedges (const shared_ptr<data::Data> twop_dataset, const int nwedges)
+cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::Modelling_TwoPointCorrelation_wedges (const shared_ptr<data::Data> twop_dataset, const int nwedges)
   : Modelling_TwoPointCorrelation1D_monopole(twop_dataset), m_nwedges(nwedges), m_nwedges_fit(m_nwedges), m_deltamu(1./m_nwedges)
 {
   m_wedges_order.erase(m_wedges_order.begin(), m_wedges_order.end());
@@ -76,7 +78,7 @@ cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::Modelling_TwoPo
 // ============================================================================================
 
 
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range (const double xmin, const double xmax, const int nwedges)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range (const double xmin, const double xmax, const int nwedges)
 {
   vector<vector<double>> fr(m_nwedges, vector<double>(2, -1.));
 
@@ -94,7 +96,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_ra
 // ============================================================================================
 
 
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range (const vector<vector<double>> fit_range)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range (const vector<vector<double>> fit_range)
 {
   if ((int)fit_range.size() != m_nwedges)
     ErrorCBL("Error in set_fit_range of :Modelling_TwoPointCorrelation_wedges.cpp, wrong number of wedges provided!");
@@ -121,7 +123,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_ra
   vector<vector<double>> covariance;
   m_data->cut(mask, data, error, covariance);
 
-  m_data_fit = make_shared<cosmobl::data::Data1D>(cosmobl::data::Data1D(xx, data, covariance));
+  m_data_fit = make_shared<cbl::data::Data1D>(cbl::data::Data1D(xx, data, covariance));
   m_fit_range = true; 
 
   m_nwedges_fit=0;
@@ -133,7 +135,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_ra
 // ============================================================================================
 
 
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_PkDM ()
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_PkDM ()
 {
   m_data_model.nmultipoles = 3;
   m_data_model.nwedges = 2;
@@ -144,7 +146,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiduci
     for (size_t i=0; i<(size_t)m_data_model.step; i++) 
       Pk[i] =  m_data_model.cosmology->Pk(kk[i], m_data_model.method_Pk, m_data_model.NL, m_data_model.redshift, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec, m_data_model.file_par);
 
-    m_data_model.func_Pk = make_shared<cosmobl::glob::FuncGrid>(cosmobl::glob::FuncGrid(kk, Pk, "Spline"));
+    m_data_model.func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(kk, Pk, "Spline"));
   }
   else {
     vector<double> kk = logarithmic_bin_vector(m_data_model.step, max(m_data_model.k_min, 1.e-4), min(m_data_model.k_max, 500.)), Pk(m_data_model.step,0), PkNW(m_data_model.step,0);
@@ -154,8 +156,8 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiduci
     }
 
     m_data_model.kk = kk;
-    m_data_model.func_Pk = make_shared<cosmobl::glob::FuncGrid>(cosmobl::glob::FuncGrid(kk, Pk, "Spline"));
-    m_data_model.func_Pk_NW = make_shared<cosmobl::glob::FuncGrid>(cosmobl::glob::FuncGrid(kk, PkNW, "Spline"));
+    m_data_model.func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(kk, Pk, "Spline"));
+    m_data_model.func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(kk, PkNW, "Spline"));
   }
 }
 
@@ -163,7 +165,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiduci
 // ============================================================================================
 
 
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_xiDM ()
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_xiDM ()
 {
 
   m_data_model.nmultipoles = 3;
@@ -182,7 +184,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiduci
     for (size_t i=0; i<(size_t)m_data_model.step; i++) 
       Pk[i] =  m_data_model.cosmology->Pk(kk[i], m_data_model.method_Pk, m_data_model.NL, m_data_model.redshift, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec, m_data_model.file_par);
 
-    m_data_model.func_Pk = make_shared<cosmobl::glob::FuncGrid>(cosmobl::glob::FuncGrid(kk, Pk, "Spline"));
+    m_data_model.func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(kk, Pk, "Spline"));
 
   }
 
@@ -196,8 +198,8 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiduci
       PkNW[i] =  m_data_model.cosmology->Pk(m_data_model.kk[i], "EisensteinHu", false, m_data_model.redshift, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec, m_data_model.file_par);
     }
 
-    m_data_model.func_Pk = make_shared<cosmobl::glob::FuncGrid>(cosmobl::glob::FuncGrid(m_data_model.kk, Pk, "Spline"));
-    m_data_model.func_Pk_NW = make_shared<cosmobl::glob::FuncGrid>(cosmobl::glob::FuncGrid(m_data_model.kk, PkNW, "Spline"));
+    m_data_model.func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model.kk, Pk, "Spline"));
+    m_data_model.func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model.kk, PkNW, "Spline"));
 
   }
 
@@ -206,7 +208,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiduci
   m_data_model.func_multipoles.erase(m_data_model.func_multipoles.begin(), m_data_model.func_multipoles.end());
 
   for(int i=0; i< m_data_model.nmultipoles; i++)
-    m_data_model.func_multipoles.push_back(make_shared<cosmobl::glob::FuncGrid>(cosmobl::glob::FuncGrid(rad, xil[i], "Spline")));
+    m_data_model.func_multipoles.push_back(make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(rad, xil[i], "Spline")));
 
 }
 
@@ -215,7 +217,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiduci
 // ============================================================================================
 
 
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_fullShape (const statistics::Prior alpha_perpendicular_prior, const statistics::Prior alpha_parallel_prior, statistics::Prior fsigma8_prior, statistics::Prior bsigma8_prior, const statistics::Prior SigmaS_prior, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_fullShape (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, statistics::PriorDistribution fsigma8_prior, statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution SigmaS_prior, const bool compute_PkDM)
 {
   // compute the fiducial dark matter two-point correlation function
   if (compute_PkDM) set_fiducial_PkDM();
@@ -224,20 +226,28 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_
   m_data_model.dataset_order = m_wedges_order;
   m_data_model.nmultipoles = 2;
 
-  m_alpha_perpendicular = make_shared<statistics::BaseParameter>(statistics::BaseParameter(alpha_perpendicular_prior, "alpha_perpendicular"));
-  m_alpha_parallel = make_shared<statistics::BaseParameter>(statistics::BaseParameter(alpha_parallel_prior, "alpha_parallel"));
-  m_fsigma8 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(fsigma8_prior, "f*sigma8"));
-  m_bsigma8 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(bsigma8_prior, "b*sigma8"));
-  m_SigmaS = make_shared<statistics::BaseParameter>(statistics::BaseParameter(SigmaS_prior, "b*sigma8"));
-  vector<shared_ptr<statistics::Parameter>> ll_parameters = {m_alpha_perpendicular, m_alpha_parallel, m_fsigma8, m_bsigma8, m_SigmaS};
+  // set the model parameters
+  const int nparameters = 5;
 
-  set_parameters(ll_parameters);
+  vector<statistics::ParameterType> parameterType = {statistics::ParameterType::_Base_};
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "alpha_perpendicular";
+  parameterName[1] = "alpha_parallel";
+  parameterName[2] = "f*sigma8";
+  parameterName[3] = "b*sigma8";
+  parameterName[4] = "Sigma_S";
+
+  vector<statistics::PriorDistribution> priors = {alpha_perpendicular_prior, alpha_parallel_prior, fsigma8_prior, bsigma8_prior, SigmaS_prior};
 
   // input data used to construct the model
   auto inputs = make_shared<STR_data_model>(m_data_model);
 
+  //set the priors
+  m_set_prior(priors);
+
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, inputs));
 
 }
 
@@ -245,7 +255,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_
 // ============================================================================================
 
 
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_BAO (const statistics::Prior alpha_perpendicular_prior, const statistics::Prior alpha_parallel_prior, const statistics::Prior Bperp_prior, const statistics::Prior Bpar_prior, const statistics::Prior Aperp0_prior, const statistics::Prior Apar0_prior, const statistics::Prior Aperp1_prior, const statistics::Prior Apar1_prior, const statistics::Prior Aperp2_prior, const statistics::Prior Apar2_prior, const bool compute_XiDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_BAO (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution Bperp_prior, const statistics::PriorDistribution Bpar_prior, const statistics::PriorDistribution Aperp0_prior, const statistics::PriorDistribution Apar0_prior, const statistics::PriorDistribution Aperp1_prior, const statistics::PriorDistribution Apar1_prior, const statistics::PriorDistribution Aperp2_prior, const statistics::PriorDistribution Apar2_prior, const bool compute_XiDM)
 {
   // compute the fiducial dark matter two-point correlation function
   if (compute_XiDM) set_fiducial_xiDM();
@@ -253,139 +263,31 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_
   m_data_model.nwedges = m_nwedges_fit;
   m_data_model.dataset_order = m_wedges_order;
 
-  m_alpha_perpendicular = make_shared<statistics::BaseParameter>(statistics::BaseParameter(alpha_perpendicular_prior, "alpha_perpendicular"));
-  m_alpha_parallel = make_shared<statistics::BaseParameter>(statistics::BaseParameter(alpha_parallel_prior, "alpha_parallel"));
-  m_Bperp = make_shared<statistics::BaseParameter>(statistics::BaseParameter(Bperp_prior, "Bperp"));
-  m_Bpar = make_shared<statistics::BaseParameter>(statistics::BaseParameter(Bpar_prior, "Bpar"));
-  m_Aperp0 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(Aperp0_prior, "Aperp0"));
-  m_Apar0 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(Apar0_prior, "Apar0"));
-  m_Aperp1 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(Aperp1_prior, "Aperp1"));
-  m_Apar1 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(Apar1_prior, "Apar1"));
-  m_Apar2 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(Apar2_prior, "Apar2"));
-  m_Aperp2 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(Aperp2_prior, "Aperp2"));
-  vector<shared_ptr<statistics::Parameter>> ll_parameters = {m_alpha_perpendicular, m_alpha_parallel, m_Bperp, m_Bpar, m_Aperp0, m_Apar0, m_Aperp1, m_Apar1, m_Aperp2, m_Apar2};
+  // set the model parameters
+  const int nparameters = 10;
 
-  set_parameters(ll_parameters);
+  vector<statistics::ParameterType> parameterType = {statistics::ParameterType::_Base_};
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "alpha_perpendicular";
+  parameterName[1] = "alpha_parallel";
+  parameterName[2] = "Bperp";
+  parameterName[3] = "Bpar";
+  parameterName[4] = "Aperp0";
+  parameterName[5] = "Apar0";
+  parameterName[6] = "Aperp1";
+  parameterName[7] = "Apar1";
+  parameterName[8] = "Aperp2";
+  parameterName[9] = "Apar2";
+
+  vector<statistics::PriorDistribution> priors = {alpha_perpendicular_prior, alpha_parallel_prior, Bperp_prior, Bpar_prior, Aperp0_prior, Apar0_prior, Aperp1_prior, Apar1_prior, Aperp2_prior, Apar2_prior};
 
   // input data used to construct the model
   auto inputs = make_shared<STR_data_model>(m_data_model);
+
+  //set the priors
+  m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges_BAO, inputs));
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::write_model (const string dir, const string file, const vector<double> xx, const vector<double> parameter, const int start, const int thin)
-{
-
-  auto stored_inputs = m_model->fixed_parameters();
-
-  vector<double> rad = (xx.size()==0) ? logarithmic_bin_vector(100, 0.1, 100.) : xx;
-
-  // compute the model with best-fit parameters
-  
-  if (parameter.size()==0) {
-    
-    string mkdir = "mkdir -p "+dir; if (system(mkdir.c_str())) {}
-    string file_out = dir+file;
-    ofstream fout(file_out.c_str()); checkIO(fout, file_out);
-    
-    vector<double> median_model, low_model, up_model;
-    compute_model_from_chains(rad, start, thin, median_model, low_model, up_model); // check!!!
-  
-    for (size_t i=0; i<rad.size(); i++){
-      fout << rad[i] << "  ";
-      for(int j=0; j<m_nwedges_fit; j++)
-	fout << median_model[i+j*rad.size()] << "  " << low_model[i+j*rad.size()] << "  " << up_model[i+j*rad.size()] << " ";
-      fout << endl;
-    }
-    
-    fout.clear(); fout.close();
-    coutCBL << "I wrote the file: " << dir+file << endl;
-  }
-
-  
-  // compute the model with input parameters
-  
-  else{
-
-    vector<double> new_rad;
-
-    for(int i=0; i<m_nwedges_fit; i++)
-      for(size_t j=0; j<rad.size(); j++)
-	new_rad.push_back(rad[j]);
-
-    vector<int> wedges_order;
-
-    for (int j=0; j<m_nwedges_fit; j++)
-      for (size_t i=0; i<rad.size(); i++)
-	wedges_order.push_back(j);
-
-    m_data_model.dataset_order = wedges_order;
-
-    // input data used to construct the model
-    auto inputs = make_shared<STR_data_model>(m_data_model);
-
-    m_model->set_fixed_parameters(inputs);
-
-    vector<double> par = parameter;
-    vector<double> model = m_model->operator()(new_rad, par);
-
-    string file_out = dir+file;
-    ofstream fout(file_out.c_str()); checkIO(fout, file_out);
-  
-    for (size_t i=0; i<rad.size(); i++){
-      fout << rad[i] << "  ";
-      for(int j=0; j<m_nwedges_fit; j++)
-	fout << model[i+j*rad.size()] << " ";
-      fout << endl;
-    }
-
-    fout.clear(); fout.close();
-    coutCBL << "I wrote the file: " << dir+file << endl;
-
-    m_data_model.dataset_order = m_wedges_order;
-    m_model->set_fixed_parameters(stored_inputs);
-  }
-
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::compute_model_from_chains (const vector<double> xx, const int start, const int thin, vector<double> &median_model, vector<double> &low_model, vector<double> &up_model)
-{
-  auto stored_inputs = m_model->fixed_parameters();
-
-  vector<double> rad = (xx.size()==0) ? logarithmic_bin_vector(100, 0.1, 100.) : xx;
-
-  vector<double> new_rad;
-
-  for(int i=0; i<m_nwedges_fit; i++)
-    for(size_t j=0; j<rad.size(); j++)
-      new_rad.push_back(rad[j]);
-  
-  vector<int> wedges_order;
-
-  for (int j=0; j<m_nwedges_fit; j++)
-    for (size_t i=0; i<rad.size(); i++)
-      wedges_order.push_back(j);
-
-  m_data_model.dataset_order = wedges_order;
-  
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
-  m_model->set_fixed_parameters(inputs);
-
-  // compute the model with best-fit parameters
-
-  Modelling_TwoPointCorrelation1D_monopole::compute_model_from_chains(new_rad, start, thin, median_model, low_model, up_model); // check!!!
-
-  m_data_model.dataset_order = m_wedges_order;
-  m_model->set_fixed_parameters(stored_inputs);
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges_BAO, nparameters, parameterType, parameterName, inputs));
 }

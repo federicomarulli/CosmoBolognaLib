@@ -36,7 +36,7 @@
 
 #include "ModelFunction_TwoPointCorrelation2D.h"
 
-using namespace cosmobl;
+using namespace cbl;
 
 
 // ============================================================================================

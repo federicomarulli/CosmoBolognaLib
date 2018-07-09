@@ -36,7 +36,7 @@
 
 #include "ModelFunction_TwoPointCorrelation1D_angular.h"
 
-using namespace cosmobl;
+using namespace cbl;
 
 
 // ============================================================================================

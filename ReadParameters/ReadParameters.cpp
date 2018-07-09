@@ -34,14 +34,16 @@
 
 #include "ReadParameters.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace glob;
 
 
 // ============================================================================
 
 
-cosmobl::glob::ReadParameters::ReadParameters (const string parameter_file)
+cbl::glob::ReadParameters::ReadParameters (const string parameter_file)
 {      
   // open the input parameter file
   ifstream fin(parameter_file.c_str()); checkIO(fin, parameter_file);
@@ -80,7 +82,7 @@ cosmobl::glob::ReadParameters::ReadParameters (const string parameter_file)
 // ============================================================================
 
 
-string cosmobl::glob::ReadParameters::m_trim (const string inStr)
+std::string cbl::glob::ReadParameters::m_trim (const string inStr)
 {
   return inStr.substr(inStr.find_first_not_of(' '), inStr.find_last_not_of(' ')+1);
 }
@@ -88,7 +90,7 @@ string cosmobl::glob::ReadParameters::m_trim (const string inStr)
 
 // ============================================================================
 
-vector<string> cosmobl::glob::ReadParameters::m_trim_vect (const string inStr)
+vector<string> cbl::glob::ReadParameters::m_trim_vect (const string inStr)
 {
   string str = inStr;
   str = m_trim(str);

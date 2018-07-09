@@ -39,7 +39,9 @@
 #include "Data1D.h"
 #include "ThreePointCorrelation_comoving_connected.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace triplets;
 using namespace measure;
@@ -50,7 +52,7 @@ using namespace glob;
 // ============================================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::set_parameters (const TripletType tripletType, const double side_s, const double side_u, const double perc_increase, const int nbins) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::set_parameters (const TripletType tripletType, const double side_s, const double side_u, const double perc_increase, const int nbins) 
 {
   double r12 = side_s;
   double r12_binSize = r12*2.*perc_increase;
@@ -68,7 +70,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::set_pa
 // ============================================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::set_parameters (const TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::set_parameters (const TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
 {
   m_ddd = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
   m_rrr = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
@@ -80,7 +82,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::set_pa
 // ============================================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
 {
   (void)seed;
   
@@ -121,7 +123,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::measur
 // ============================================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const vector<vector<double>> weight, const bool doJK, const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const vector<vector<double>> weight, const bool doJK, const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
 {
   (void)seed;
   
@@ -188,7 +190,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::measur
   }
 
   vector<vector<double>> cov_mat;
-  cosmobl::covariance_matrix(resampling_threept, cov_mat, doJK);
+  cbl::covariance_matrix(resampling_threept, cov_mat, doJK);
   m_dataset = move(unique_ptr<data::Data1D>(new data::Data1D(m_scale, m_zeta, cov_mat)));
 
   m_dataset->error(m_error);
@@ -199,18 +201,18 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::measur
 // ============================================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const cosmobl::measure::ErrorType errorType, const string dir_output_triplets, const vector<string> dir_input_triplets, const int nResamplings, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const cbl::measure::ErrorType errorType, const string dir_output_triplets, const vector<string> dir_input_triplets, const int nResamplings, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
 {  
 
   switch(errorType) {
     
-    case cosmobl::measure::ErrorType::_None_:
+    case cbl::measure::ErrorType::_None_:
       {
 	measure(dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
 	break;
       }
     
-    case cosmobl::measure::ErrorType::_Jackknife_:
+    case cbl::measure::ErrorType::_Jackknife_:
       {
 	const int nRegions = m_data->nRegions();
 
@@ -222,11 +224,11 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::measur
 	break;
       }
 
-    case cosmobl::measure::ErrorType::_Bootstrap_:
+    case cbl::measure::ErrorType::_Bootstrap_:
       {
 	const int nRegions = m_data->nRegions();
 
-	random::UniformRandomNumbers ran(0., nRegions-1, seed);
+	random::UniformRandomNumbers_Int ran(0., nRegions-1, seed);
 	
 	int val = 2; // see Norberg et al. 2009
 
@@ -249,7 +251,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::measur
 // ============================================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::write (const string dir, const string file) const
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::write (const string dir, const string file) const
 {      
   checkDim(m_scale, m_ddd->nbins(), "scale");
 
@@ -259,7 +261,9 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::write 
   fout << "# scale  zeta  error(work in progress)" << endl;
   
   for (size_t i=0; i<m_scale.size(); i++) 
-    fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_scale[i] << "  " << setw(8) << m_zeta[i] << "  " << setw(8) << m_error[i] << endl;
+    fout << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << m_scale[i]
+	 << "   " << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << m_zeta[i]
+	 << "   " << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << m_error[i] << endl;
     
   fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl << endl;
 }  
@@ -268,7 +272,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::write 
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_connected::write_covariance (const string dir, const string file) const
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::write_covariance (const string dir, const string file) const
 {
   m_dataset->write_covariance(dir, file);
 }

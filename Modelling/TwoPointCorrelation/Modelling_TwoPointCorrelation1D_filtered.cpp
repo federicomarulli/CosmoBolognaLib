@@ -37,7 +37,7 @@
 
 #include "Modelling_TwoPointCorrelation1D_filtered.h"
 
-using namespace cosmobl;
+using namespace cbl;
 
 
 // ============================================================================================

@@ -46,9 +46,10 @@
 #include "Object.h"
 #include "TwoPointCorrelation.h"
 #include "TwoPointCorrelation1D_monopole.h"
-#include <time.h>
-#include <algorithm>
-using namespace cosmobl;
+
+using namespace std;
+
+using namespace cbl;
 
 /////////////////////////////////// Carlo Cannarozzo //////////////////////////////////////////
 
@@ -65,7 +66,7 @@ typedef vector< vector< vector < vector <int> > > > Tensor4Di;
 
 /// @cond extvoid
 
-cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catalogue halo_catalogue, const vector<string> file, const double nSub, const int n_rec, const string mode, const string dir_output, const string output, const double rmax, const int cellsize, const int n_iter, const double delta_movement)
+cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catalogue halo_catalogue, const vector<string> file, const double nSub, const int n_rec, const string mode, const string dir_output, const string output, const double rmax, const int cellsize, const int n_iter, const double delta_movement)
 {
   // -------------------------------------------- //
   // ---------------- First Step ---------------- //
@@ -81,7 +82,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   Catalogue total_catalogue;
   Catalogue displacement_catalogue;
   
-  if (algorithm==_LaZeVo_) // Begin of LaZeVo method
+  if (algorithm==VoidAlgorithm::_LaZeVo_) // Begin of LaZeVo method
   {
     cout << endl; coutCBL << par::col_green << "LaZeVo algorithm" << par::col_default << endl << endl;
 
@@ -93,7 +94,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
 
     if (rand_file!="not_provided") 
     {
-      Catalogue rand_tempcatalogue {_RandomObject_, _comovingCoordinates_, {rand_file}, 1, 2, 3, -1, -1, nSub};
+      Catalogue rand_tempcatalogue {ObjectType::_Random_, CoordinateType::_comoving_, {rand_file}, 1, 2, 3, -1, -1, nSub};
       coutCBL << " Number of halos extracted from " << rand_file << " catalogue: " << rand_tempcatalogue.nObjects() << endl << endl;
       rand_catalogue = rand_tempcatalogue;
     }
@@ -108,7 +109,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
 
       if (rand_file=="not_provided" && (mode=="non_periodic"||mode=="periodic"))
       {
-        Catalogue rand_tempcatalogue {_createRandom_box_, halo_catalogue, 1., 10, cosm, false, 10., {}, {}, {}, 10, seed};
+        Catalogue rand_tempcatalogue {RandomType::_createRandom_box_, halo_catalogue, 1., 10, cosm, false, 10., {}, {}, {}, 10, seed};
         
         rand_catalogue = rand_tempcatalogue;      
       }
@@ -127,27 +128,27 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
 //       name.append(output);
 //       ofstream fout_displ(name.c_str());
 
-      auto halo_cat = make_shared<cosmobl::catalogue::Catalogue> (cosmobl::catalogue::Catalogue(move(halo_catalogue)));
-      auto rand_cat = make_shared<cosmobl::catalogue::Catalogue> (cosmobl::catalogue::Catalogue(move(rand_catalogue)));
+      auto halo_cat = make_shared<cbl::catalogue::Catalogue> (cbl::catalogue::Catalogue(move(halo_catalogue)));
+      auto rand_cat = make_shared<cbl::catalogue::Catalogue> (cbl::catalogue::Catalogue(move(rand_catalogue)));
       
       int unpaired=0; int old_unpaired = __INT_MAX__;
       
       vector<int> index_halo_cat;
       for (size_t i = 0; i<halo_cat->nObjects(); i++) index_halo_cat.push_back(i);
             
-      cosmobl::chainmesh::ChainMesh_Catalogue ChM (cellsize, rand_cat, rmax);
+      cbl::chainmesh::ChainMesh_Catalogue ChM (cellsize, rand_cat, rmax);
       
-      vector<shared_ptr<cosmobl::catalogue::Object>> initial_catalogue_object;
-      vector<shared_ptr<cosmobl::catalogue::Object>> total_catalogue_object;
-      vector<shared_ptr<cosmobl::catalogue::Object>> displacement_catalogue_object;
+      vector<shared_ptr<cbl::catalogue::Object>> initial_catalogue_object;
+      vector<shared_ptr<cbl::catalogue::Object>> total_catalogue_object;
+      vector<shared_ptr<cbl::catalogue::Object>> displacement_catalogue_object;
       
       cout << endl;
       unsigned int iteration_number= n_iter; /// <<<
       for (unsigned int iter=0; iter<iteration_number; iter++) /// <<<
       {        
-        vector<shared_ptr<cosmobl::catalogue::Object>> temp_initial_catalogue_object;
-        vector<shared_ptr<cosmobl::catalogue::Object>> temp_total_catalogue_object;
-        vector<shared_ptr<cosmobl::catalogue::Object>> temp_displacement_catalogue_object;
+        vector<shared_ptr<cbl::catalogue::Object>> temp_initial_catalogue_object;
+        vector<shared_ptr<cbl::catalogue::Object>> temp_total_catalogue_object;
+        vector<shared_ptr<cbl::catalogue::Object>> temp_displacement_catalogue_object;
         
         coutCBL << iter+1 << " / "<< iteration_number << " \r"; cout.flush(); /// <<<
         
@@ -177,7 +178,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
             {
               if (!used[k])
               {
-                distance.push_back(cosmobl::Euclidean_distance(halo_cat->xx(i), rand_cat->xx(k), halo_cat->yy(i), rand_cat->yy(k), halo_cat->zz(i), rand_cat->zz(k)));
+                distance.push_back(cbl::Euclidean_distance(halo_cat->xx(i), rand_cat->xx(k), halo_cat->yy(i), rand_cat->yy(k), halo_cat->zz(i), rand_cat->zz(k)));
                 vect_k.push_back(k);
                 vect_i.push_back(i);
               }
@@ -192,16 +193,16 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   //             fout_displ.precision(7);
   //             fout_displ<<halo_cat->xx(vect_i[0])<<" "<<halo_cat->yy(vect_i[0])<<" "<<halo_cat->zz(vect_i[0])<<" "<<rand_cat->xx(vect_k[0])<<" "<<rand_cat->yy(vect_k[0])<<" "<<rand_cat->zz(vect_k[0])<<" "<<rand_cat->xx(vect_k[0])-halo_cat->xx(vect_i[0])<<" "<<rand_cat->yy(vect_k[0])-halo_cat->yy(vect_i[0])<<" "<<rand_cat->zz(vect_k[0])-halo_cat->zz(vect_i[0])<<" "<<distance[0]<<endl;
 
-              cosmobl::comovingCoordinates initial_coordinates = {halo_cat->xx(vect_i[0]), halo_cat->yy(vect_i[0]), halo_cat->zz(vect_i[0])};
-              auto inital_halo_coord = make_shared<cosmobl::catalogue::Halo>(initial_coordinates);
+              cbl::comovingCoordinates initial_coordinates = {halo_cat->xx(vect_i[0]), halo_cat->yy(vect_i[0]), halo_cat->zz(vect_i[0])};
+              auto inital_halo_coord = make_shared<cbl::catalogue::Halo>(initial_coordinates);
               temp_initial_catalogue_object.push_back(inital_halo_coord);
               
-              cosmobl::comovingCoordinates final_coordinates = {rand_cat->xx(vect_k[0]), rand_cat->yy(vect_k[0]), rand_cat->zz(vect_k[0])};
-              auto halo_coord = make_shared<cosmobl::catalogue::Halo>(final_coordinates);
+              cbl::comovingCoordinates final_coordinates = {rand_cat->xx(vect_k[0]), rand_cat->yy(vect_k[0]), rand_cat->zz(vect_k[0])};
+              auto halo_coord = make_shared<cbl::catalogue::Halo>(final_coordinates);
               temp_total_catalogue_object.push_back(halo_coord);
 
-              cosmobl::comovingCoordinates displacement_values = {rand_cat->xx(vect_k[0])-halo_cat->xx(vect_i[0]), rand_cat->yy(vect_k[0])-halo_cat->yy(vect_i[0]), rand_cat->zz(vect_k[0])-halo_cat->zz(vect_i[0])};
-              auto halo_displ = make_shared<cosmobl::catalogue::Halo>(displacement_values);
+              cbl::comovingCoordinates displacement_values = {rand_cat->xx(vect_k[0])-halo_cat->xx(vect_i[0]), rand_cat->yy(vect_k[0])-halo_cat->yy(vect_i[0]), rand_cat->zz(vect_k[0])-halo_cat->zz(vect_i[0])};
+              auto halo_displ = make_shared<cbl::catalogue::Halo>(displacement_values);
               temp_displacement_catalogue_object.push_back(halo_displ);
               
               used[vect_k[0]] = true;            
@@ -259,7 +260,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
     }
   } // End of LaZeVo method
 
-  else if (algorithm==_RIVA_) // Begin of RIVA method
+  else if (algorithm==VoidAlgorithm::_RIVA_) // Begin of RIVA method
   {
 
     (void)delta_movement;
@@ -270,7 +271,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
 
     const double N_R = 1.; // random/data ratio
 
-    const cosmobl::catalogue::Catalogue test_random_catalogue {cosmobl::catalogue::_createRandom_box_, halo_catalogue, N_R};
+    const cbl::catalogue::Catalogue test_random_catalogue {cbl::catalogue::_box_, halo_catalogue, N_R};
 
     const double rMin  = 1e3; // minimum separation 
     const double rMax  = 5e4; // maximum separation 
@@ -278,18 +279,18 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
     const double shift = 0.5; // spatial shift used to set the bin centre
 
     string w_file = "xi_RIVA_pre.dat";
-    cosmobl::twopt::TwoPointCorrelation1D_monopole TPCF_catalogue {halo_catalogue, test_random_catalogue, cosmobl::_logarithmic_, rMin, rMax, nbins, shift};
-// // //     TPCF_catalogue.measure_for_RIVA(cosmobl::twopt::_Poisson_, dir_output);
-    TPCF_catalogue.measure(cosmobl::twopt::_Poisson_, dir_output);
+    cbl::twopt::TwoPointCorrelation1D_monopole TPCF_catalogue {halo_catalogue, test_random_catalogue, cbl::_logarithmic_, rMin, rMax, nbins, shift};
+// // //     TPCF_catalogue.measure_for_RIVA(cbl::twopt::_Poisson_, dir_output);
+    TPCF_catalogue.measure(cbl::twopt::_Poisson_, dir_output);
 
     TPCF_catalogue.write(dir_output, w_file);
     
     
 // // // // // WHILE CYCLE - - - while (2pcf_peak/max(xi[i])<1e-2) {...}
     
-    auto halo_cat = make_shared<cosmobl::catalogue::Catalogue> (cosmobl::catalogue::Catalogue(move(halo_catalogue)));
+    auto halo_cat = make_shared<cbl::catalogue::Catalogue> (cbl::catalogue::Catalogue(move(halo_catalogue)));
 
-    vector<shared_ptr<cosmobl::catalogue::Object>> total_catalogue_object; // vector shared pointer for the constructor 'total_catalogue'
+    vector<shared_ptr<cbl::catalogue::Object>> total_catalogue_object; // vector shared pointer for the constructor 'total_catalogue'
     
     vector<double> x_position, y_position, z_position;
 
@@ -313,22 +314,22 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
         z_position[i]=z_position[i]+delta_movement*randomDirection;
     }
     
-    vector<shared_ptr<cosmobl::catalogue::Object>> temp_initial_catalogue_object;
+    vector<shared_ptr<cbl::catalogue::Object>> temp_initial_catalogue_object;
 
     for (size_t i = 0; i<x_position.size(); i++)
     {
-        cosmobl::comovingCoordinates initial_coordinates = {x_position[i], y_position[i], z_position[i]};
-        auto inital_halo_coord = make_shared<cosmobl::catalogue::Halo>(initial_coordinates);
+        cbl::comovingCoordinates initial_coordinates = {x_position[i], y_position[i], z_position[i]};
+        auto inital_halo_coord = make_shared<cbl::catalogue::Halo>(initial_coordinates);
         temp_initial_catalogue_object.push_back(inital_halo_coord);
     }
 
-    const cosmobl::catalogue::Catalogue test_random_catalogue_post {cosmobl::catalogue::_createRandom_box_, halo_catalogue, N_R};
+    const cbl::catalogue::Catalogue test_random_catalogue_post {cbl::catalogue::_box_, halo_catalogue, N_R};
 
 
     string w_file_post = "xi_RIVA_post.dat";
-    cosmobl::twopt::TwoPointCorrelation1D_monopole TPCF_catalogue_post {temp_initial_catalogue_object, test_random_catalogue_post, cosmobl::_logarithmic_, rMin, rMax, nbins, shift};
+    cbl::twopt::TwoPointCorrelation1D_monopole TPCF_catalogue_post {temp_initial_catalogue_object, test_random_catalogue_post, cbl::_logarithmic_, rMin, rMax, nbins, shift};
 
-    TPCF_catalogue_post.measure(cosmobl::twopt::_Poisson_, dir_output);
+    TPCF_catalogue_post.measure(cbl::twopt::_Poisson_, dir_output);
 
     TPCF_catalogue_post.write(dir_output, w_file_post);
 
@@ -343,9 +344,9 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   // ---------------- Second Step ---------------- //
   // --------------------------------------------- //
     
-  auto start_cat = make_shared<cosmobl::catalogue::Catalogue> (cosmobl::catalogue::Catalogue(move(initial_catalogue)));
-  auto total_cat = make_shared<cosmobl::catalogue::Catalogue> (cosmobl::catalogue::Catalogue(move(total_catalogue)));
-  auto displ_cat = make_shared<cosmobl::catalogue::Catalogue> (cosmobl::catalogue::Catalogue(move(displacement_catalogue)));
+  auto start_cat = make_shared<cbl::catalogue::Catalogue> (cbl::catalogue::Catalogue(move(initial_catalogue)));
+  auto total_cat = make_shared<cbl::catalogue::Catalogue> (cbl::catalogue::Catalogue(move(total_catalogue)));
+  auto displ_cat = make_shared<cbl::catalogue::Catalogue> (cbl::catalogue::Catalogue(move(displacement_catalogue)));
 
   coutCBL << "Number of all paired halos: " << total_catalogue.nObjects() << endl << endl;
   
@@ -356,7 +357,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
 // 
 //   const double N_R = 1.; // random/data ratio
 //   
-//   const cosmobl::catalogue::Catalogue test_random_catalogue {cosmobl::catalogue::_createRandom_box_, total_catalogue, N_R};
+//   const cbl::catalogue::Catalogue test_random_catalogue {cbl::catalogue::_box_, total_catalogue, N_R};
 // 
 //   const double rMin  = 1e3; // minimum separation 
 //   const double rMax  = 5e4; // maximum separation 
@@ -365,9 +366,9 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
 //   
 //   string w_file = "xi.dat";
 //   
-//   cosmobl::twopt::TwoPointCorrelation1D_monopole TPCF_total_catalogue {total_catalogue, test_random_catalogue, cosmobl::_logarithmic_, rMin, rMax, nbins, shift};
+//   cbl::twopt::TwoPointCorrelation1D_monopole TPCF_total_catalogue {total_catalogue, test_random_catalogue, cbl::_logarithmic_, rMin, rMax, nbins, shift};
 //       
-//   TPCF_total_catalogue.measure(cosmobl::twopt::_Poisson_, dir_output);
+//   TPCF_total_catalogue.measure(cbl::twopt::_Poisson_, dir_output);
 //   
 //   TPCF_total_catalogue.write(dir_output, w_file);
 // 
@@ -400,9 +401,9 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   fout_local_minima.precision(7);
 
   
-  double min_x       = total_cat->catalogue::Catalogue::Min(_X_), max_x = total_cat->catalogue::Catalogue::Max(_X_);
-  double min_y       = total_cat->catalogue::Catalogue::Min(_Y_), max_y = total_cat->catalogue::Catalogue::Max(_Y_);
-  double min_z       = total_cat->catalogue::Catalogue::Min(_Z_), max_z = total_cat->catalogue::Catalogue::Max(_Z_);
+  double min_x       = total_cat->catalogue::Catalogue::Min(Var::_X_), max_x = total_cat->catalogue::Catalogue::Max(Var::_X_);
+  double min_y       = total_cat->catalogue::Catalogue::Min(Var::_Y_), max_y = total_cat->catalogue::Catalogue::Max(Var::_Y_);
+  double min_z       = total_cat->catalogue::Catalogue::Min(Var::_Z_), max_z = total_cat->catalogue::Catalogue::Max(Var::_Z_);
   
   double delta_x     = max_x-min_x;
   double delta_y     = max_y-min_y;
@@ -813,7 +814,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
     }
   }
  
-  if (2*control3<control1+control2+control3+control4+control5) ErrorCBL("Error in cosmobl::catalogue::Catalogue VoidCatalogue.cpp: too sparse sample or too small/large range of values");
+  if (2*control3<control1+control2+control3+control4+control5) ErrorCBL("Error in cbl::catalogue::Catalogue VoidCatalogue.cpp: too sparse sample or too small/large range of values");
    
   fout_subvoids.clear(); fout_subvoids.close();
 
@@ -825,7 +826,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
   cout << endl;
   coutCBL << "* * * Identification of voids * * *" << endl;
   
-  if (subvoids_number==0) ErrorCBL ("Error in cosmobl::catalogue::Catalogue VoidCatalogue.cpp: no subvoids were found");
+  if (subvoids_number==0) ErrorCBL ("Error in cbl::catalogue::Catalogue VoidCatalogue.cpp: no subvoids were found");
   
 // // //   int max_ID = *max_element(number_host_subvoids.begin(), number_host_subvoids.end());
 // // //   
@@ -896,7 +897,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const C
 
 /////////////////////////////////// Tommaso Ronconi //////////////////////////////////////////
 
-cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean, const vector<double> delta_r, const double threshold, const double statistical_relevance, bool rescale, const shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const double ratio, const bool checkoverlap, const Var ol_criterion)
+cbl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean, const vector<double> delta_r, const double threshold, const double statistical_relevance, bool rescale, const shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const double ratio, const bool checkoverlap, const Var ol_criterion)
 {
 
   auto catalogue = input_voidCatalogue;
@@ -1005,7 +1006,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_void
 	  negative++;
 	  remove[j] = true;
 	}
-	else catalogue->set_var(j, _Radius_, abs(new_radius));
+	else catalogue->set_var(j, Var::_Radius_, abs(new_radius));
       }
       else {
 	void_voids ++;
@@ -1053,7 +1054,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_void
 
     if (ol_criterion == Var::_CentralDensity_) catalogue->sort(ol_criterion, false);
     else if (ol_criterion == Var::_DensityContrast_) catalogue->sort(ol_criterion, true);
-    else ErrorCBL("Error in cosmobl::catalogue::Catalogue::Catalogue()! Allowed overlap criteria are '_CentralDensity_' or '_DensityContrast_' .");
+    else ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue()! Allowed overlap criteria are '_CentralDensity_' or '_DensityContrast_' .");
     
     vector<bool> remove(catalogue->nObjects(), false);
     
@@ -1091,50 +1092,79 @@ cosmobl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_void
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void cosmobl::catalogue::Catalogue::compute_centralDensity (const shared_ptr<Catalogue> tracers_catalogue, cosmobl::chainmesh::ChainMesh3D ChM, const double density, const double ratio) {
-
+void cbl::catalogue::Catalogue::compute_centralDensity (const shared_ptr<Catalogue> tracers_catalogue, cbl::chainmesh::ChainMesh3D ChM, const double density, const double ratio) {
+  ///
+  //coutCBL << "check1" << endl;
+  ///
   //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
   vector<bool> remove(m_object.size(), false);
-
+  ///
+  //coutCBL << "check2" << endl;
+  ///
   //counter for regions without any tracer:
   int void_voids = 0;
   
   for (size_t j = 0/*27971*/; j<m_object.size(); j++) {
-
+    ///
+    //vector<double> coords = m_object[j]->coords();
+    //coutCBL << m_object[j]->radius() << "  " << coords[0] << "  " << coords[1] << "  " << coords[2] << endl;
+    ///
     ChM.get_searching_region(m_object[j]->radius());
     vector<long> close = ChM.close_objects(m_object[j]->coords());
-
+    ///
+    //coutCBL << close.size() << endl;
+    ///
     //compute distances between the void and the surrounding particles
       vector<double> distances;
       for (auto&& k : close) {
-	double distance = cosmobl::catalogue::Catalogue::distance(j, tracers_catalogue->catalogue_object(k));
+	double distance = cbl::catalogue::Catalogue::distance(j, tracers_catalogue->catalogue_object(k));
 	if (distance < m_object[j]->radius()) distances.emplace_back(distance);
       }
-
+      ///
+      //coutCBL << distances.size() << endl;
+      ///
       //FIND CENTRAL DENSITY
       if (distances.size() > 0) {
 	std::sort (distances.begin(), distances.end());
 	int NN = 0;
 	while (distances[NN]<ratio*m_object[j]->radius()) NN++;
-
-	m_object[j]->set_centralDensity((NN/cosmobl::volume_sphere(distances[NN]))/density);
+	///
+	//coutCBL << (NN/cbl::volume_sphere(distances[NN]))/density << endl;
+	///
+	m_object[j]->set_centralDensity((NN/cbl::volume_sphere(distances[NN]))/density);
       }
       else {
 	void_voids ++;
 	remove[j] = true;
       }
-  }//for
-
+      //coutCBL << j << "/" << m_object.size() << ": " << m_object << endl;
+      /*
+      if (distances.size() > 3) {
+	std::sort (distances.begin(), distances.end());
+	int NN = (int(ratio*distances.size())>3) ? int(ratio*distances.size())-1 : 3;
+	m_object[j]->set_centralDensity((NN/cbl::volume_sphere(distances[NN]))/density);
+      }   
+      else {
+	void_voids ++;
+	remove[j] = true;
+      } 
+      */
+      }//for
+  ///
+  //coutCBL << "check3" << endl;
+  ///
   for (size_t j = 0; j<m_object.size(); j++)
     if (remove[j]) m_object.erase(m_object.begin()+j);
-
+  ///
+  //coutCBL << "check4" << endl;
+  ///
   coutCBL << "I removed " << void_voids << " voids in calculating the central density!" << endl;
   
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void cosmobl::catalogue::Catalogue::compute_densityContrast (const shared_ptr<Catalogue> tracers_catalogue, cosmobl::chainmesh::ChainMesh3D ChM, const double ratio) {
+void cbl::catalogue::Catalogue::compute_densityContrast (const shared_ptr<Catalogue> tracers_catalogue, cbl::chainmesh::ChainMesh3D ChM, const double ratio) {
   
   //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
   vector<bool> remove(m_object.size(), false);
@@ -1150,7 +1180,7 @@ void cosmobl::catalogue::Catalogue::compute_densityContrast (const shared_ptr<Ca
     //compute distances between the void and the surrounding particles
       vector<double> distances;
       for (auto&& k : close) {
-	double distance = cosmobl::catalogue::Catalogue::distance(j, tracers_catalogue->catalogue_object(k));
+	double distance = cbl::catalogue::Catalogue::distance(j, tracers_catalogue->catalogue_object(k));
 	if (distance < m_object[j]->radius()) distances.emplace_back(distance);
       }
       
@@ -1159,10 +1189,13 @@ void cosmobl::catalogue::Catalogue::compute_densityContrast (const shared_ptr<Ca
 	std::sort (distances.begin(), distances.end());
 	int NN = 0;
 	while (distances[NN]<ratio*m_object[j]->radius()) NN++;
-
+	/*
+	  if (distances.size() > 3) {
+	  std::sort (distances.begin(), distances.end());
+	  int NN = (int(ratio*distances.size())>3) ? int(ratio*distances.size())-1 : 3;*/
 	if (NN > 0) {
-	  double delta_in = NN/cosmobl::volume_sphere(distances[NN]);
-	  double delta_out = distances.size()/cosmobl::volume_sphere(distances[distances.size()-1]);
+	  double delta_in = NN/cbl::volume_sphere(distances[NN]);
+	  double delta_out = distances.size()/cbl::volume_sphere(distances[distances.size()-1]);
 	  if (delta_out/delta_in < 1.) {
 	    cloud_in_void ++;
 	    remove[j] = true;

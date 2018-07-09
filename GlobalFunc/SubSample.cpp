@@ -33,13 +33,15 @@
 
 #include "GlobalFunc.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================
 
 
-void cosmobl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, const int nx, const int ny, const int nz)
+void cbl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, const int nx, const int ny, const int nz)
 {
   const double xMin = data.Min(catalogue::Var::_X_);
   const double yMin = data.Min(catalogue::Var::_Y_);
@@ -67,7 +69,7 @@ void cosmobl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, const int n
 // ============================================================================
 
 
-void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, const int nSamples, const string polygonfile)
+void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, const int nSamples, const string polygonfile)
 {
   string mangle_dir = fullpath(par::DirCosmo)+"/External/mangle/";
 
@@ -99,7 +101,7 @@ void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, const int nSa
     ss >> NUM; 
     ss >> NUM; 
     ss >> pp;
-    if (pp==-100) ErrorCBL("Error in cosmobl::set_ObjectRegion_mangle!");
+    if (pp==-100) ErrorCBL("Error in cbl::set_ObjectRegion_mangle!");
     poly_data.push_back(pp);
   }
   fin.clear(); fin.close();
@@ -132,7 +134,7 @@ void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, const int nSa
 // ============================================================================
 
 
-void cosmobl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, const double Cell_size)
+void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, const double Cell_size)
 {
   vector<double> Lim;
   
@@ -191,7 +193,7 @@ void cosmobl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, const double C
 // ============================================================================
 
 
-void cosmobl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nx, const int ny, const int nz)
+void cbl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nx, const int ny, const int nz)
 {
   const double xMin = data.Min(catalogue::Var::_X_);
   const double yMin = data.Min(catalogue::Var::_Y_);
@@ -223,14 +225,14 @@ void cosmobl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::
     }
   }
 
-  cosmobl::check_regions(data, random);
+  cbl::check_regions(data, random);
 }
 
 
 // ============================================================================
 
 
-void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nSamples, const string polygonfile)
+void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nSamples, const string polygonfile)
 {
   string mangle_dir = fullpath(par::DirCosmo)+"/External/mangle/";
 
@@ -270,7 +272,7 @@ void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Ca
     ss >> NUM; 
     ss >> NUM; 
     ss >> pp;
-    if (pp==-100) ErrorCBL("Error in cosmobl::set_ObjectRegion_mangle!");
+    if (pp==-100) ErrorCBL("Error in cbl::set_ObjectRegion_mangle!");
     poly_data.push_back(pp);
   }
   fin.clear(); fin.close();
@@ -282,7 +284,7 @@ void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Ca
     ss >> NUM; 
     ss >> NUM; 
     ss >> pp;
-    if (pp==-100) ErrorCBL("Error in cosmobl::set_ObjectRegion_mangle!");
+    if (pp==-100) ErrorCBL("Error in cbl::set_ObjectRegion_mangle!");
     poly_random.push_back(pp);
     poly_list.push_back(pp);
   }
@@ -314,14 +316,14 @@ void cosmobl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Ca
   string RM = "rm -rf "+mangle_working_dir;
   if (system(RM.c_str())) {}
 
-  cosmobl::check_regions(data, random);
+  cbl::check_regions(data, random);
 }
 
 
 // ============================================================================
 
 
-void cosmobl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalogue &random, const double Cell_size)
+void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalogue &random, const double Cell_size)
 {
   vector<double> Lim;
   
@@ -386,14 +388,14 @@ void cosmobl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Cat
     }
   }
 
-  cosmobl::check_regions(data, random);
+  cbl::check_regions(data, random);
 }
 
 
 // ============================================================================
 
 
-void cosmobl::check_regions (catalogue::Catalogue &data, catalogue::Catalogue &random)
+void cbl::check_regions (catalogue::Catalogue &data, catalogue::Catalogue &random)
 {
   coutCBL << "Checking if the regions have been assigned correctly..." << endl;
   
@@ -441,7 +443,7 @@ void cosmobl::check_regions (catalogue::Catalogue &data, catalogue::Catalogue &r
 // ============================================================================
 
 
-void cosmobl::set_ObjectRegion_SDSS_stripes (catalogue::Catalogue &data, catalogue::Catalogue &random)
+void cbl::set_ObjectRegion_SDSS_stripes (catalogue::Catalogue &data, catalogue::Catalogue &random)
 {
   vector<double> lambda, eta, random_lambda, random_eta;
   vector<int> stripe, random_stripe, str_u, random_str_u;
@@ -468,5 +470,5 @@ void cosmobl::set_ObjectRegion_SDSS_stripes (catalogue::Catalogue &data, catalog
   for(size_t i=0; i<random.nObjects(); i++)
     random.set_var(i, catalogue::Var::_Region_, random_stripe[i]);
 
-  //cosmobl::check_regions(data, random);
+  //cbl::check_regions(data, random);
 } 

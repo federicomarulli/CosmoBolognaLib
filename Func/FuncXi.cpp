@@ -33,16 +33,18 @@
 
 #include "Func.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // =====================================================================================
 
 /// @cond glob
 
-double cosmobl::glob::func_xi_GSL (double kk, void *params)
+double cbl::glob::func_xi_GSL (double kk, void *params)
 {
-  struct cosmobl::glob::STR_xi *pp = (struct cosmobl::glob::STR_xi *) params;
+  struct cbl::glob::STR_xi *pp = (struct cbl::glob::STR_xi *) params;
   
   double lgk = log10(kk);
   
@@ -57,9 +59,9 @@ double cosmobl::glob::func_xi_GSL (double kk, void *params)
 // =====================================================================================
 
 
-double cosmobl::glob::func_SSM_GSL (double kk, void *params)
+double cbl::glob::func_SSM_GSL (double kk, void *params)
 {
-  struct cosmobl::glob::STR_SSM *pp = (struct cosmobl::glob::STR_SSM *) params;
+  struct cbl::glob::STR_SSM *pp = (struct cbl::glob::STR_SSM *) params;
 
   double fact = (pp->unit) ? 1. : pp->hh;
   double lgk = log10(kk/fact);
@@ -75,14 +77,14 @@ double cosmobl::glob::func_SSM_GSL (double kk, void *params)
 // =====================================================================================
 
 
-double cosmobl::xi_from_Pk (const double rr, const vector<double> lgkk, const vector<double> lgPk, const double k_min, const double k_max, const double aa, const double prec) 
+double cbl::xi_from_Pk (const double rr, const vector<double> lgkk, const vector<double> lgPk, const double k_min, const double k_max, const double aa, const double prec) 
 { 
   double Int = -1.;
 
   int limit_size = 1000;
   gsl_integration_workspace *ww = gsl_integration_workspace_alloc(limit_size);
 
-  cosmobl::glob::STR_xi str;
+  cbl::glob::STR_xi str;
   str.rr = rr;
   str.aa = aa;
   str.lgkk = lgkk;
@@ -104,7 +106,7 @@ double cosmobl::xi_from_Pk (const double rr, const vector<double> lgkk, const ve
 // =====================================================================================
 
 
-double cosmobl::xi_from_Pk (const double rr, const string file, const int c1, const int c2, const double k_min, const double k_max, const double aa, const double prec) 
+double cbl::xi_from_Pk (const double rr, const string file, const int c1, const int c2, const double k_min, const double k_max, const double aa, const double prec) 
 {
   int C1 = c1-1, C2 = c2-1;
 
@@ -136,13 +138,17 @@ double cosmobl::xi_from_Pk (const double rr, const string file, const int c1, co
 // ============================================================================
 
 
-double cosmobl::Pk_from_xi (const double kk, const vector<double> lgrr, const vector<double> lgxi, const double r_min, const double r_max) 
+double cbl::Pk_from_xi (const double kk, const vector<double> lgrr, const vector<double> lgxi, const double r_min, const double r_max) 
 {
-  cosmobl::classfunc::func_Pk func (lgrr, lgxi, kk);
-    
-  function<double(double) > ff = bind(&cosmobl::classfunc::func_Pk::operator(), func, std::placeholders::_1);
-  double prec = 0.0001;
-  double Int = gsl::GSL_integrate_qag (ff, r_min, r_max, prec);
+  auto ff = [&] (const double rr)
+    {
+      const double lgr = log10(rr);
+      const double lgxiR = interpolated(lgr, lgrr, lgxi, "Linear");
+      return pow(10., lgxiR)*sin(rr*kk)*rr/kk;
+    };
+
+  const double prec = 0.0001;
+  const double Int = gsl::GSL_integrate_qag(ff, r_min, r_max, prec);
   
   return 4.*par::pi*Int;
 } 
@@ -151,7 +157,7 @@ double cosmobl::Pk_from_xi (const double kk, const vector<double> lgrr, const ve
 // ============================================================================
 
 
-double cosmobl::Pk_from_xi (const double kk, const string file, const  int c1, const int c2, const double r_min, const double r_max) 
+double cbl::Pk_from_xi (const double kk, const string file, const  int c1, const int c2, const double r_min, const double r_max) 
 {
   int C1 = c1-1, C2 = c2-1;
 
@@ -183,13 +189,14 @@ double cosmobl::Pk_from_xi (const double kk, const string file, const  int c1, c
 // ============================================================================
 
 
-double cosmobl::wp (const double rp, const vector<double> rr, const vector<double> xi, const double r_max) 
+double cbl::wp (const double rp, const vector<double> rr, const vector<double> xi, const double r_max) 
 {
-  cosmobl::classfunc::func_wp func(rr, xi, rp);
+  auto ff = [&] (const double rrr)
+    {   
+      return interpolated(rrr, rr, xi, "Linear")/sqrt(rrr*rrr-rp*rp)*rrr;
+    };
 
-  function<double(double)> ff = bind(&cosmobl::classfunc::func_wp::operator(), func, std::placeholders::_1);
-  double prec = 0.0001;
-
+  const double prec = 0.0001;
   return 2.*gsl::GSL_integrate_qag(ff, rp, r_max, prec);
 }
 
@@ -197,7 +204,7 @@ double cosmobl::wp (const double rp, const vector<double> rr, const vector<doubl
 // ============================================================================
 
 
-double cosmobl::wp (const double rp, const string file, const double r_max) 
+double cbl::wp (const double rp, const string file, const double r_max) 
 {
   ifstream fin(file.c_str()); checkIO(fin, file); 
   
@@ -217,28 +224,43 @@ double cosmobl::wp (const double rp, const string file, const double r_max)
 // ============================================================================
 
 
-double cosmobl::sigmaR (const double RR, const int corrType, const vector<double> rr, const vector<double> corr) 
+double cbl::sigmaR (const double RR, const int corrType, const vector<double> rr, const vector<double> corr) 
 {
   double sigmaR = -1;
 
   if (corrType==1) { // using the spherically averaged correlation function
-    cosmobl::classfunc::func_sigma_xi func (rr, corr, RR); 
 
-    function<double(double) > ff = bind(&cosmobl::classfunc::func_sigma_xi::operator(), func, std::placeholders::_1);
-    double prec = 0.0001;
-    double Int = gsl::GSL_integrate_qaws (ff, 0., 2*RR, 1, 0, 0, 0, prec);
+    auto ff = [&] (const double rad)
+      {
+	const double xiR = interpolated(rad, rr, corr, "Poly"); 
+	return (3.-2.25*rad/RR+0.1875*pow(rad/RR, 3))*rad*rad*xiR;
+      };
+
+    const double prec = 0.0001;
+    const double Int = gsl::GSL_integrate_qaws (ff, 0., 2*RR, 1, 0, 0, 0, prec);
 
     if (1./pow(RR,3)*Int<0) ErrorCBL("Error in sigmaR with xi of Func.cpp!,"+conv(1./pow(RR,3)*Int,par::fDP4)+"<0");
     sigmaR = sqrt(1./pow(RR,3)*Int);
   }
 
   else if (corrType==2) { // using the projected correlation function
-    cosmobl::classfunc::func_sigma_wp func (rr, corr, RR); 
-    function<double(double) > ff = bind(&cosmobl::classfunc::func_sigma_wp::operator(), func, std::placeholders::_1);
 
-    double prec = 0.0001;
-    double Int1 = gsl::GSL_integrate_qaws (ff, 0., 1., prec);
-    double Int2 = gsl::GSL_integrate_qaws (ff, 1., 100., prec);
+    auto ff = [&] (const double rad)
+      {
+	const double wpR = interpolated(rad, rr, corr, "Poly"); 
+
+	const double xx = rad/RR;
+	
+	const double gg = (xx<=2)
+	? 1./(2.*par::pi)*(3.*par::pi-9.*xx+pow(xx,3))
+	: 1./(2.*par::pi)*((-pow(xx,4)+11.*pow(xx,2)-28.)/sqrt(pow(xx,2)-4.)+pow(xx,3)-9.*xx+6.*asin(2./xx));
+	
+	return wpR*rad*gg;
+      };
+
+    const double prec = 0.0001;
+    const double Int1 = gsl::GSL_integrate_qaws(ff, 0., 1., prec);
+    const double Int2 = gsl::GSL_integrate_qaws(ff, 1., 100., prec);
 
     if (1./pow(RR,3)*(Int1+Int2)<0) ErrorCBL("Error in sigmaR with wp of Func.cpp!,"+conv(1./pow(RR,3)*(Int1+Int2),par::fDP4)+"<0");
     sigmaR = sqrt(1./pow(RR,3)*(Int1+Int2));
@@ -253,7 +275,7 @@ double cosmobl::sigmaR (const double RR, const int corrType, const vector<double
 // ============================================================================
 
 
-double cosmobl::xi_projected_powerlaw (const double rp, const double r0, const double gamma) 
+double cbl::xi_projected_powerlaw (const double rp, const double r0, const double gamma) 
 {
   return rp*pow(r0/rp,gamma)*exp(lgamma(0.5))*exp(lgamma((gamma-1.)*0.5))/exp(lgamma(gamma*0.5));
 }
@@ -262,7 +284,7 @@ double cosmobl::xi_projected_powerlaw (const double rp, const double r0, const d
 // ============================================================================
 
 
-double cosmobl::xi_ratio (const double beta)
+double cbl::xi_ratio (const double beta)
 { 
   return 1.+2./3.*beta+0.2*beta*beta;
 }
@@ -271,7 +293,7 @@ double cosmobl::xi_ratio (const double beta)
 // ============================================================================
 
 
-double cosmobl::xi_ratio (const double f_sigma8, const double bias_sigma8)
+double cbl::xi_ratio (const double f_sigma8, const double bias_sigma8)
 { 
   return (bias_sigma8!=0) ? 1.+2./3.*f_sigma8/bias_sigma8+0.2*pow(f_sigma8/bias_sigma8,2) : -1.e30;
 }
@@ -281,7 +303,7 @@ double cosmobl::xi_ratio (const double f_sigma8, const double bias_sigma8)
 
 /// @cond glob
 
-double cosmobl::xi_ratio (double xx, shared_ptr<void> pp, vector<double> par) 
+double cbl::xi_ratio (double xx, shared_ptr<void> pp, vector<double> par) 
 {
   (void)xx; (void)pp;
   
@@ -297,7 +319,7 @@ double cosmobl::xi_ratio (double xx, shared_ptr<void> pp, vector<double> par)
 // ============================================================================
 
 
-double cosmobl::error_xi_ratio (const double beta, const double error_beta) 
+double cbl::error_xi_ratio (const double beta, const double error_beta) 
 { 
   return (2./3.+0.4*beta)*error_beta;
 }
@@ -306,7 +328,7 @@ double cosmobl::error_xi_ratio (const double beta, const double error_beta)
 // ============================================================================
 
 
-double cosmobl::barred_xi_direct (const double RR, const vector<double> rr, const vector<double> xi, const double rAPP, const double r0, const double gamma) 
+double cbl::barred_xi_direct (const double RR, const vector<double> rr, const vector<double> xi, const double rAPP, const double r0, const double gamma) 
 { 
   vector<double> xi_;
 
@@ -336,7 +358,7 @@ double cosmobl::barred_xi_direct (const double RR, const vector<double> rr, cons
 // ============================================================================
 
 
-double cosmobl::barred_xi__direct (const double RR, const vector<double> rr, const vector<double> xi, const double rAPP, const double r0, const double gamma) 
+double cbl::barred_xi__direct (const double RR, const vector<double> rr, const vector<double> xi, const double rAPP, const double r0, const double gamma) 
 { 
   vector<double> xi__;
 
@@ -367,14 +389,14 @@ double cosmobl::barred_xi__direct (const double RR, const vector<double> rr, con
 // ============================================================================
 
 
-double cosmobl::barred_xi_ (const double RR, const vector<double> rr, const vector<double> xi, const double rApp, const double r0, const double gamma) 
+double cbl::barred_xi_ (const double RR, const vector<double> rr, const vector<double> xi, const double rApp, const double r0, const double gamma) 
 {   
   vector<double> xi_;
 
   for (unsigned int i=0; i<xi.size(); i++) 
     xi_.push_back(xi[i]*rr[i]*rr[i]);
   
-  cosmobl::glob::FuncGrid func(rr, xi_, "Spline");
+  cbl::glob::FuncGrid func(rr, xi_, "Spline");
 
   double int_an = (RR<rApp) ?  1./((3.-gamma)*pow(r0,-gamma))*pow(RR,3.-gamma) : 1./((3.-gamma)*pow(r0,-gamma))*pow(rApp,3.-gamma);
 
@@ -387,14 +409,14 @@ double cosmobl::barred_xi_ (const double RR, const vector<double> rr, const vect
 // ============================================================================
 
 
-double cosmobl::barred_xi__ (const double RR, const vector<double> rr, const vector<double> xi, const double rApp, const double r0, const double gamma) 
+double cbl::barred_xi__ (const double RR, const vector<double> rr, const vector<double> xi, const double rApp, const double r0, const double gamma) 
 {   
   vector<double> xi__;
 
   for (unsigned int i=0; i<xi.size(); i++) 
     xi__.push_back(xi[i]*rr[i]*rr[i]*rr[i]*rr[i]);
   
-  cosmobl::glob::FuncGrid func(rr, xi__, "Spline");
+  cbl::glob::FuncGrid func(rr, xi__, "Spline");
 
   double int_an = (RR<rApp) ? 1./((5.-gamma)*pow(r0,-gamma))*pow(RR,5.-gamma) : 1./((5.-gamma)*pow(r0,-gamma))*pow(rApp,5.-gamma);
 
@@ -408,7 +430,7 @@ double cosmobl::barred_xi__ (const double RR, const vector<double> rr, const vec
 
 /// @cond glob
 
-double cosmobl::xi2D_lin_model (double rp, double pi, shared_ptr<void> pp, vector<double> par)
+double cbl::xi2D_lin_model (double rp, double pi, shared_ptr<void> pp, vector<double> par)
 { 
   if (par.size()!=2 && par.size()!=3 && par.size()!=4) {
     string Err = "Error in xi2D_lin_model! par.size() = " + conv(par.size(),par::fINT) + "!";
@@ -419,7 +441,7 @@ double cosmobl::xi2D_lin_model (double rp, double pi, shared_ptr<void> pp, vecto
   double bias = (par.size()==3) ? par[1] : 1;
   int index = par[par.size()-1];
 
-  shared_ptr<cosmobl::glob::STR_xi2D_model> vec = static_pointer_cast<cosmobl::glob::STR_xi2D_model>(pp);
+  shared_ptr<cbl::glob::STR_xi2D_model> vec = static_pointer_cast<cbl::glob::STR_xi2D_model>(pp);
 
   
   if (vec->bias_nl) {
@@ -451,7 +473,7 @@ double cosmobl::xi2D_lin_model (double rp, double pi, shared_ptr<void> pp, vecto
 // ============================================================================
 
 
-double cosmobl::xi2D_lin_model (const double beta, const double bias, const double xi_real, const double xi_, const double xi__, const double P_2, const double P_4)
+double cbl::xi2D_lin_model (const double beta, const double bias, const double xi_real, const double xi_, const double xi__, const double P_2, const double P_4)
 {
   double bias2 = bias*bias;
   double Xi_real = xi_real * bias2;
@@ -469,7 +491,7 @@ double cosmobl::xi2D_lin_model (const double beta, const double bias, const doub
 // ============================================================================
 
 
-double cosmobl::xi2D_lin_model (const double rp, const double pi, const double beta, const double bias, const vector<double> rad_real, const vector<double> xi_real, const vector<double> xi_, const vector<double> xi__, const int index, const bool bias_nl, const double bA)
+double cbl::xi2D_lin_model (const double rp, const double pi, const double beta, const double bias, const vector<double> rad_real, const vector<double> xi_real, const vector<double> xi_, const vector<double> xi__, const int index, const bool bias_nl, const double bA)
 { 
   double rr = sqrt(rp*rp+pi*pi);
   double cos = pi/rr;
@@ -504,7 +526,7 @@ double cosmobl::xi2D_lin_model (const double rp, const double pi, const double b
 
 /// @cond glob
 
-double cosmobl::xi2D_model (double rp, double pi, shared_ptr<void> pp, vector<double> par)
+double cbl::xi2D_model (double rp, double pi, shared_ptr<void> pp, vector<double> par)
 {
   (void)rp; (void)pi;
   
@@ -513,7 +535,7 @@ double cosmobl::xi2D_model (double rp, double pi, shared_ptr<void> pp, vector<do
     ErrorCBL(Err);
   }
 
-  shared_ptr<cosmobl::glob::STR_xi2D_model> vec = static_pointer_cast<cosmobl::glob::STR_xi2D_model>(pp);
+  shared_ptr<cbl::glob::STR_xi2D_model> vec = static_pointer_cast<cbl::glob::STR_xi2D_model>(pp);
     
   int index = par[par.size()-1];
   int ind_min = index*vec->step_v;
@@ -555,7 +577,7 @@ double cosmobl::xi2D_model (double rp, double pi, shared_ptr<void> pp, vector<do
 // ============================================================================
 
 
-double cosmobl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const vector<double> rad_real, const vector<double> xi_real, const vector<double> xi_, const vector<double> xi__, const double var, const int FV, int index, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
+double cbl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const vector<double> rad_real, const vector<double> xi_real, const vector<double> xi_, const vector<double> xi__, const double var, const int FV, int index, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
 {
   double delta_v = (v_max-v_min)/step_v;
 
@@ -597,7 +619,7 @@ double cosmobl::xi2D_model (const double rp, const double pi, const double beta,
 // ============================================================================
 
 
-double cosmobl::f_v (const double vel, const double sigma12, const int FV) 
+double cbl::f_v (const double vel, const double sigma12, const int FV) 
 {
   if (FV==0) return 1./(sigma12*sqrt(2.))*exp(-sqrt(2.)*fabs(vel)/sigma12); // exponential
   
@@ -608,7 +630,7 @@ double cosmobl::f_v (const double vel, const double sigma12, const int FV)
 // ============================================================================
 
 
-double cosmobl::f_v (const double vel, const double rp, const double pi, const double var, const double sigmav0, const double cmu, const double cs1, const double cs2)
+double cbl::f_v (const double vel, const double rp, const double pi, const double var, const double sigmav0, const double cmu, const double cs1, const double cs2)
 {
   
   double sp = sqrt(pow(rp,2)+pow(pi-vel*var,2));
@@ -623,7 +645,7 @@ double cosmobl::f_v (const double vel, const double rp, const double pi, const d
 // ============================================================================
 
 
-double cosmobl::f_star (const double xx, const double f_g, const double k_star) 
+double cbl::f_star (const double xx, const double f_g, const double k_star) 
 {
   double sigma_star = sqrt((4.*f_g+2.*f_g*f_g)/(k_star*k_star));
   
@@ -634,7 +656,7 @@ double cosmobl::f_star (const double xx, const double f_g, const double k_star)
 // ============================================================================
 
 
-double cosmobl::b_nl (const double rr, const double bA, const double bB, const double bC)
+double cbl::b_nl (const double rr, const double bA, const double bB, const double bC)
 {
   double FF = 1./(1.+pow(rr/bB,bC));
   
@@ -645,7 +667,7 @@ double cosmobl::b_nl (const double rr, const double bA, const double bB, const d
 // ============================================================================
 
 
-double cosmobl::xi2D_lin_model (const double rp, const double pi, const double beta, const double bias, const shared_ptr<void> funcXiR, const shared_ptr<void> funcXiR_, const shared_ptr<void> funcXiR__, const bool bias_nl, const double bA)
+double cbl::xi2D_lin_model (const double rp, const double pi, const double beta, const double bias, const shared_ptr<void> funcXiR, const shared_ptr<void> funcXiR_, const shared_ptr<void> funcXiR__, const bool bias_nl, const double bA)
 {
   shared_ptr<glob::FuncGrid> pfuncXiR = static_pointer_cast<glob::FuncGrid>(funcXiR);
   shared_ptr<glob::FuncGrid> pfuncXiR_ = static_pointer_cast<glob::FuncGrid>(funcXiR_);
@@ -677,7 +699,7 @@ double cosmobl::xi2D_lin_model (const double rp, const double pi, const double b
 // ============================================================================
 
 
-double cosmobl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const shared_ptr<void> funcXiR, const shared_ptr<void> funcXiR_, const shared_ptr<void> funcXiR__, const double var, const int FV, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
+double cbl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const shared_ptr<void> funcXiR, const shared_ptr<void> funcXiR_, const shared_ptr<void> funcXiR__, const double var, const int FV, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
 {
   shared_ptr<glob::FuncGrid> pfuncXiR = static_pointer_cast<glob::FuncGrid>(funcXiR);
   shared_ptr<glob::FuncGrid> pfuncXiR_ = static_pointer_cast<glob::FuncGrid>(funcXiR_);
@@ -710,5 +732,3 @@ double cosmobl::xi2D_model (const double rp, const double pi, const double beta,
  	
   return xi2D;
 }
-
-

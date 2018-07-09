@@ -2,12 +2,12 @@
 // Example code: how to measure the number counts of a catalogue, i.e. the redshift distribution 
 // ==============================================================================================
 
-#include "NumberCounts.h"
+#include "NumberCounts1D_Redshift.h"
 
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
 // launching the code on remote systems)
-string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 
 
 int main () {
@@ -18,16 +18,16 @@ int main () {
     // ---------------- use default cosmological parameters ------------
     // -----------------------------------------------------------------
 
-    const cosmobl::cosmology::Cosmology cosmology {cosmobl::cosmology::_Planck15_};
+    const cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
 
     
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
   
-    const string file_catalogue = cosmobl::par::DirLoc+"../input/cat.dat";
+    const std::string file_catalogue = cbl::par::DirLoc+"../input/cat.dat";
 
-    const cosmobl::catalogue::Catalogue catalogue {cosmobl::catalogue::_Galaxy_, cosmobl::_observedCoordinates_, {file_catalogue}, cosmology};
+    const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
     
     // -------------------------------------------------------------------
@@ -37,15 +37,15 @@ int main () {
     // binning parameters and output data
 
     const int nbin = 10;
-    const string dir = cosmobl::par::DirLoc+"../output/";
-    const string file = "redshift_distribution.dat";
+    const std::string dir = cbl::par::DirLoc+"../output/";
+    const std::string file = "redshift_distribution.dat";
 
     
     // measure the redshift distribution and compute Poisson errors
 
-    cosmobl::measure::numbercounts::NumberCounts NC {catalogue, cosmobl::catalogue::Var::_Redshift_};
+    cbl::measure::numbercounts::NumberCounts1D_Redshift NC {catalogue, nbin};
 
-    NC.measure(cosmobl::measure::ErrorType::_Poisson_, nbin);
+    NC.measure(cbl::measure::ErrorType::_Poisson_);
 
     
     // store the output data
@@ -54,7 +54,7 @@ int main () {
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

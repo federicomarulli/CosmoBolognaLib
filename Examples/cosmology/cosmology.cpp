@@ -7,7 +7,7 @@
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
 // launching the code on remote systems)
-string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 
 int main () {
 
@@ -17,14 +17,14 @@ int main () {
     // ---------------- using default parameters ------------
     // ------------------------------------------------------
     
-    cosmobl::cosmology::Cosmology cosmo1;
-
+    cbl::cosmology::Cosmology cosmo1;
+    
     
     // ---------------------------------------------------------------------------
     // ---------------- using one of the built-in cosmological models ------------
     // ---------------------------------------------------------------------------
     
-    cosmobl::cosmology::Cosmology cosmo2 {cosmobl::cosmology::_Planck15_};
+    cbl::cosmology::Cosmology cosmo2 {cbl::cosmology::CosmologicalModel::_Planck15_};
 
     
     // -----------------------------------------------------------------
@@ -45,11 +45,11 @@ int main () {
     const double wa = 0.;
     const double w0 = -1.;   
 
-    cosmobl::cosmology::Cosmology cosmo3 {OmegaM, Omega_b, Omega_nu, massless_neutrinos, massive_neutrinos, OmegaL, Omega_radiation, hh, scalar_amp, scalar_pivot, n_s, w0, wa};
+    cbl::cosmology::Cosmology cosmo3 {OmegaM, Omega_b, Omega_nu, massless_neutrinos, massive_neutrinos, OmegaL, Omega_radiation, hh, scalar_amp, scalar_pivot, n_s, w0, wa};
     
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 } 

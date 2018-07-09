@@ -37,13 +37,32 @@
 #include "Data1D_extra.h"
 #include "Modelling_TwoPointCorrelation1D.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
 
 
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const string method_Pk, const double sigmaNL_perp, const double sigmaNL_par, const bool NL, const double bias, const double pimax, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const string output_dir, const string output_root, const int norm, const double aa, const bool GSL, const double prec, const string file_par, const double Delta, const bool isDelta_vir, const vector<double> cluster_redshift, const vector<double> cluster_mass_proxy, const vector<double> cluster_mass_proxy_error, const string model_bias, const string meanType, const int seed)
+cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::Modelling_TwoPointCorrelation1D (const shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
+{
+  m_data = twop->dataset();
+  m_twoPType = twop->twoPType();
+}
+// ============================================================================================
+
+
+cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::Modelling_TwoPointCorrelation1D (const shared_ptr<cbl::data::Data> dataset, const measure::twopt::TwoPType twoPType)
+{
+  m_data = dataset;
+  m_twoPType = twoPType;
+}
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const string method_Pk, const double sigmaNL_perp, const double sigmaNL_par, const bool NL, const double bias, const double pimax, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const string output_dir, const string output_root, const int norm, const double aa, const bool GSL, const double prec, const string file_par, const double Delta, const bool isDelta_vir, const vector<double> cluster_redshift, const vector<double> cluster_mass_proxy, const vector<double> cluster_mass_proxy_error, const string model_bias, const string meanType, const int seed, const cosmology::Cosmology cosmology_mass, const vector<double> redshift_source)
 {
   m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model.redshift = redshift;
@@ -71,7 +90,14 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model 
   m_data_model.meanType = meanType;
   m_data_model.gau_ran = make_shared<random::NormalRandomNumbers>(random::NormalRandomNumbers(0., 1., seed));
 
-  m_data_model.sigma8_z = m_data_model.cosmology->sigma8_Pk(m_data_model.method_Pk, m_data_model.redshift, m_data_model.output_root);  
+  try {
+    m_data_model.sigma8_z = m_data_model.cosmology->sigma8(m_data_model.redshift);
+  }
+  catch (cbl::glob::Exception &exc) { 
+    coutCBL << "sigma8 is not set, it will be computed from the power spectrum with " << m_data_model.method_Pk << endl;
+    m_data_model.sigma8_z = m_data_model.cosmology->sigma8_Pk(m_data_model.method_Pk, m_data_model.redshift, m_data_model.output_root);
+    coutCBL << "--> sigma8(z=" << m_data_model.redshift << ") = " << m_data_model.sigma8_z << endl << endl;
+  }
   m_data_model.linear_growth_rate_z = m_data_model.cosmology->linear_growth_rate(m_data_model.redshift, 1.);
 
   m_data_model.DVfid = m_data_model.cosmology->D_V(m_data_model.redshift);
@@ -85,7 +111,10 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model 
     for (size_t i=0; i<cl_sigma.size(); ++i)
       cl_sigma[i] = sqrt(m_data_model.cosmology->sigma2M(cluster_mass_proxy[i], m_data_model.method_Pk, 0., m_data_model.output_root, "Spline", m_data_model.k_max));
     
-    m_data_model.cluster_mass_proxy = make_shared<data::Data1D_extra>(data::Data1D_extra(cl_zz, cluster_mass_proxy, cluster_mass_proxy_error, {cl_sigma})); 
+    m_data_model.cluster_mass_proxy = make_shared<data::Data1D_extra>(data::Data1D_extra(cl_zz, cluster_mass_proxy, cluster_mass_proxy_error, {cl_sigma}));
+
+    m_data_model.cosmology_mass = cosmology_mass;
+    m_data_model.redshift_source = redshift_source;
   }
 }
 
@@ -93,7 +122,7 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model 
 // ============================================================================================
 
 
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_HOD (const cosmology::Cosmology cosmology, const double redshift, const string model_MF, const string model_bias, const double Mh_min, const double Mh_max, const double pi_max, const double r_max_int, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const string method_Pk, const bool NL, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double prec, const string input_file, const bool is_parameter_file, const string model_cM, const string profile, const string halo_def)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_HOD (const cosmology::Cosmology cosmology, const double redshift, const string model_MF, const string model_bias, const double Mh_min, const double Mh_max, const double pi_max, const double r_max_int, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const string method_Pk, const bool NL, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double prec, const string input_file, const bool is_parameter_file, const string model_cM, const string profile, const string halo_def)
 {
   m_data_HOD.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_HOD.redshift = redshift;
@@ -127,102 +156,8 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_HOD (c
 // ============================================================================================
 
 
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D::write_model (const string dir, const string file, const vector<double> xx, const vector<double> parameter, const int start, const int thin)
-{
-  vector<double> rad = (xx.size()==0) ? logarithmic_bin_vector(100, 0.1, 100.) : xx;
-  
 
-  // compute the model with best-fit parameters
-  
-  if (parameter.size()==0) {
-    vector<double> median_model, low_model, up_model;
-
-    vector<double> mode;
-
-   for (int k=0; k<m_parameters->nparameters(); k++) {
-     if (m_parameters->parameter(k)->parameterType()==statistics::_BaseParameter_)
-       if (m_parameters->parameter(k)->fixed()) 
-         mode.push_back(m_parameters->parameter(k)->value());
-       else 
-         mode.push_back(m_parameters->parameter(k)->posterior_mode());
-     else
-         mode.push_back(m_parameters->parameter(k)->posterior_mode());
-   }
-
-    vector<double> mode_model = m_model->operator()(xx, mode);
-
-    compute_model_from_chains(rad, start, thin, median_model, low_model, up_model); // check!!!
-    
-    
-    string mkdir = "mkdir -p "+dir; if (system(mkdir.c_str())) {}
-    string file_out = dir+file;
-    ofstream fout(file_out.c_str()); checkIO(fout, file_out);
-
-    fout << "### scale # median model # model at 16th percentile # model at 84th percentile # mode of the model ###" << endl;
-    for (size_t i=0; i<rad.size(); i++){
-      fout << setw(10) << setiosflags(ios::fixed) << setprecision(5) << rad[i] << "  " << setw(10) << median_model[i] << "  " << setw(10) << low_model[i] << "  " << setw(10) << up_model[i] << " " << setw(10) << mode_model[i] << endl;
-    }
-    
-    fout.clear(); fout.close();
-    coutCBL << "I wrote the file: " << dir+file << endl;
-  }
-
-  
-  // compute the model with input parameters
-  
-  else {
-    vector<double> par = parameter;
-    m_model->write_model(dir, file, rad, par);
-  }
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D::compute_model_from_chains (const vector<double> xx, const int start, const int thin, vector<double> &median_model, vector<double> &low_model, vector<double> &up_model)
-{
-  median_model.erase(median_model.begin(), median_model.end());
-  median_model.resize(xx.size(), 0);
-  
-  low_model.erase(low_model.begin(), low_model.end());
-  low_model.resize(xx.size(), 0);
-
-  up_model.erase(up_model.begin(), up_model.end());
-  up_model.resize(xx.size(), 0);
-
-  vector<vector<double>> models;
-
-  for (int j=start; j<m_parameters->chain_size(); j+=thin) {
-    for (int i=0; i<m_parameters->nwalkers(); i++) {
-      vector<double> parameters;
-
-      for (int k=0; k<m_parameters->nparameters(); k++) 
-	parameters.push_back(m_parameters->chain_value(j, i, k));
-      models.push_back(m_model->operator()(xx, parameters));
-    }
-  }
-
-  vector<vector<double>> tr_models = transpose(models);
-  
-  for (size_t i=0; i<tr_models.size(); i++) {
-    vector<double> vv = tr_models[i];
-    sort(vv.begin(), vv.end());
-    int low = vv.size()*0.16;
-    int up = vv.size()*0.84;
-    int median = vv.size()*0.5;
-    median_model[i] = vv[median];
-    low_model[i] = vv[low];
-    up_model[i] = vv[up];
-  }
-}
-
-
-// ============================================================================================
-
-
-
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model_cluster_selection_function (const cosmology::Cosmology cosmology, const cosmology::Cosmology test_cosmology, const double mean_redshift, const string model_MF, const string model_bias, const string selection_function_file, const vector<int> selection_function_column, const double z_min, const double z_max, const double Mass_min, const double Mass_max, const double Delta, const bool isDelta_vir, const string method_Pk, const string output_dir, const double k_min, const double k_max, const double prec, const int step, const int mass_step)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model_cluster_selection_function (const cosmology::Cosmology cosmology, const cosmology::Cosmology test_cosmology, const double mean_redshift, const string model_MF, const string model_bias, const string selection_function_file, const vector<int> selection_function_column, const double z_min, const double z_max, const double Mass_min, const double Mass_max, const double Delta, const bool isDelta_vir, const string method_Pk, const string output_dir, const double k_min, const double k_max, const double prec, const int step, const int mass_step)
 
 {
   m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);

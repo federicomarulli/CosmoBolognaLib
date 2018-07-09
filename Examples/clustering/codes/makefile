@@ -4,18 +4,15 @@ FLAGS0 = -std=c++11 -fopenmp
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 
 dirLib = $(PWD)/../../../
-dirH = $(dirLib)Headers/Lib/
-dirHO = $(dirLib)Headers/Objects/
-dirHM = $(dirLib)Headers/Models/
-dirEH = $(dirLib)External/EH/
+dirH = $(dirLib)Headers/
 dir_Eigen = $(dirLib)External/eigen-3.3.4/
 dir_CCfits = $(dirLib)External/CCfits/include
 dirCUBA = $(dirLib)External/Cuba-4.2/
 
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
-FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_TWOP -lMODEL_THREEP -lGLOB
-FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirEH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
+FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lCBL
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
 
 OBJ1 = 2pt_monopole.o
 OBJ2 = 2pt_monopole_errors.o
@@ -32,7 +29,6 @@ OBJ12 = model_3pt.o
 OBJ13 = compute_pk_sanchez.o
 OBJ14 = MPTbreeze.o
 OBJ15 = EH_vs_CAMB.o
-OBJ16 = 2pt_extra_info.o
 
 ES = so
 
@@ -41,6 +37,8 @@ SYS:=$(shell uname -s)
 ifeq ($(SYS),Darwin)
         ES = dylib
 endif
+
+all: 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 2pt_multipoles 3pt model_2pt_monopole_BAO model_2pt_monopole_RSD model_2pt_projected model_2pt_2D model_3pt
 
 2pt_monopole: $(OBJ1) 
 	$(C) $(OBJ1) -o 2pt_monopole $(FLAGS_LIB)
@@ -78,11 +76,8 @@ model_2pt_2D: $(OBJ11)
 model_3pt: $(OBJ12) 
 	$(C) $(OBJ12) -o model_3pt $(FLAGS_LIB)
 
-2pt_extra_info: $(OBJ16) 
-	$(C) $(OBJ16) -o 2pt_extra_info $(FLAGS_LIB)
-
 clean:
-	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 2pt_multipoles 3pt model_2pt_monopole_BAO model_2pt_monopole_RSD model_2pt_projected model_2pt_2D model_3pt 2pt_extra_info *~ \#* temp* core*
+	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 2pt_multipoles 3pt model_2pt_monopole_BAO model_2pt_monopole_RSD model_2pt_projected model_2pt_2D model_3pt *~ \#* temp* core*
 
 
 2pt_monopole.o: 2pt_monopole.cpp makefile $(dirLib)*.$(ES)
@@ -120,6 +115,3 @@ model_2pt_2D.o: model_2pt_2D.cpp makefile $(dirLib)*.$(ES)
 
 model_3pt.o: model_3pt.cpp makefile $(dirLib)*.$(ES)
 	$(C) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_3pt.cpp 
-
-2pt_extra_info.o: 2pt_extra_info.cpp makefile $(dirLib)*.$(ES)
-	$(C) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c 2pt_extra_info.cpp

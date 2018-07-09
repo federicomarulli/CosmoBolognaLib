@@ -4,10 +4,7 @@ FLAGS0 = -std=c++11 -fopenmp
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 
 dirLib = $(PWD)/../../../
-dirH = $(dirLib)Headers/Lib/
-dirHO = $(dirLib)Headers/Objects/
-dirHM = $(dirLib)Headers/Models/
-dirEH = $(dirLib)External/EH/
+dirH = $(dirLib)Headers/
 dir_Eigen = $(dirLib)External/eigen-3.3.4/
 dir_CCfits = $(dirLib)External/CCfits/include
 dirCUBA = $(dirLib)External/Cuba-4.2/
@@ -15,7 +12,7 @@ dirCUBA = $(dirLib)External/Cuba-4.2/
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
 FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lGLOB
-FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirHO) -I$(dirHM) -I$(dirEH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
 
 OBJ1 = numberCounts.o
 OBJ2 = numberCounts_errors.o

@@ -22,9 +22,9 @@
  *  @file
  *  CatalogueAnalysis/TwoPointCorrelation/TwoPointCorrelation_multipoles_direct.cpp
  *
- *  @brief Methods of the class
- *  TwoPointCorrelation_multipoles_direct used to measure the
- *  multipoles of the two-point correlation function
+ *  @brief Methods of the class TwoPointCorrelation_multipoles_direct
+ *  used to measure the multipoles of the two-point correlation
+ *  function
  *
  *  This file contains the implementation of the methods of the class
  *  TwoPointCorrelation_multipoles_direct used to measure the
@@ -39,7 +39,9 @@
 #include "Data1D_extra.h"
 #include "TwoPointCorrelation_multipoles_direct.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace chainmesh;
 using namespace data;
@@ -50,7 +52,7 @@ using namespace twopt;
 // ============================================================================
 
 
-shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::data_with_extra_info (const shared_ptr<pairs::Pair> dd, const vector<double> rad, const vector<double> xi, const vector<double> error) const
+shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::data_with_extra_info (const shared_ptr<pairs::Pair> dd, const vector<double> rad, const vector<double> xi, const vector<double> error) const
 {
   vector<vector<double>> extra(4);
   
@@ -70,7 +72,7 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_d
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (const shared_ptr<pairs::Pair> PP, const string dir, const string file) const 
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (const shared_ptr<pairs::Pair> PP, const string dir, const string file) const 
 {  
   string MK = "mkdir -p "+dir; if (system (MK.c_str())) {}
   
@@ -80,30 +82,30 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs
   
   // ----- standard info: scales at the bin centre + number of pairs -----
 
-  if (PP->pairInfo()==_standard_)
+  if (PP->pairInfo()==PairInfo::_standard_)
     for (int i=0; i<PP->nbins(); i++) 
-      fout << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << i
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale(i)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D(i)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D_weighted(i)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D(i+PP->nbins()+1)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D_weighted(i+PP->nbins()+1)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D(i+2*(PP->nbins()+1))
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D_weighted(i+2*(PP->nbins()+1)) << endl;
-  else if (PP->pairInfo()==_extra_) 
+      fout << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << i
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->scale(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP1D(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP1D_weighted(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP1D(i+PP->nbins()+1)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP1D_weighted(i+PP->nbins()+1)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP1D(i+2*(PP->nbins()+1))
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP1D_weighted(i+2*(PP->nbins()+1)) << endl;
+  else if (PP->pairInfo()==PairInfo::_extra_) 
     for (int i=0; i<PP->nbins(); i++)
-      fout << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << i
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale(i)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D(i)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D_weighted(i)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D(i+PP->nbins()+1)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D_weighted(i+PP->nbins()+1)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D(i+2*(PP->nbins()+1))
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP1D_weighted(i+2*(PP->nbins()+1))
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_mean(i)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_sigma(i)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->z_mean(i)
-	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->z_sigma(i) << endl;
+      fout << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << i
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->scale(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP1D(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP1D_weighted(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP1D(i+PP->nbins()+1)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP1D_weighted(i+PP->nbins()+1)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP1D(i+2*(PP->nbins()+1))
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP1D_weighted(i+2*(PP->nbins()+1))
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->scale_mean(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->scale_sigma(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->z_mean(i)
+	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->z_sigma(i) << endl;
   else
       ErrorCBL("Error in write_pairs() of TwoPointCorrelation_multipoles_direct.cpp: no such pairInfo!");
 
@@ -113,10 +115,10 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (shared_ptr<pairs::Pair> PP, const vector<string> dir, const string file) const
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (shared_ptr<pairs::Pair> PP, const vector<string> dir, const string file) const
 {
   if (dir.size()==0)
-    ErrorCBL("Error in cosmobl::measure::twopt::TwoPointCorrelation1D::read_pairs of TwoPointCorrelation_multipoles_direct! dir.size()=0!");
+    ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation1D::read_pairs of TwoPointCorrelation_multipoles_direct! dir.size()=0!");
 
   string line;
   int i;
@@ -125,7 +127,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs 
   
   // ----- standard info: scales at the bin centre + number of pairs -----
   
-  if (PP->pairInfo()==_standard_)
+  if (PP->pairInfo()==PairInfo::_standard_)
   
     for (size_t dd=0; dd<dir.size(); dd++) {
       
@@ -164,7 +166,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs 
 
   // ----- standard + extra info -----
 
-  else if (PP->pairInfo()==_extra_)
+  else if (PP->pairInfo()==PairInfo::_extra_)
 
     for (size_t dd=0; dd<dir.size(); dd++) {
 
@@ -218,7 +220,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs 
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (const vector<shared_ptr<pairs::Pair>> PP, const string dir, const string file) const 
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (const vector<shared_ptr<pairs::Pair>> PP, const string dir, const string file) const 
 {  
   size_t nRegions = m_data->region_list().size();
 
@@ -231,49 +233,49 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs
 
   // ----- standard info: scales at the bin centre + number of pairs -----
 
-  if (PP[0]->pairInfo()==_standard_)
+  if (PP[0]->pairInfo()==PairInfo::_standard_)
     
     for (size_t i=0; i<nRegions; i++) 
       for (size_t j=(cross) ? 0 : i; j<nRegions; j++) {
 	int index = (cross) ? i*nRegions+j : i*nRegions+j-(i-1)*i/2-i;
 	for (int r1=0; r1<PP[index]->nbins(); r1++)
 	  if (PP[index]->PP1D(r1)>0)
-	    fout << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << i
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << j
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << r1
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->scale(r1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D(r1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D_weighted(r1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D(r1+PP[index]->nbins()+1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D_weighted(r1+PP[index]->nbins()+1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D(r1+2*(PP[index]->nbins()+1))
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D_weighted(r1+2*(PP[index]->nbins()+1)) << endl;
+	    fout << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << i
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << j
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << r1
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->scale(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP1D(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP1D_weighted(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP1D(r1+PP[index]->nbins()+1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP1D_weighted(r1+PP[index]->nbins()+1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP1D(r1+2*(PP[index]->nbins()+1))
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP1D_weighted(r1+2*(PP[index]->nbins()+1)) << endl;
       }
 
 
   // ----- standard + extra info -----
 
-  else if (PP[0]->pairInfo()==_extra_)
+  else if (PP[0]->pairInfo()==PairInfo::_extra_)
 
     for (size_t i=0; i<nRegions; i++) 
       for (size_t j=(cross) ? 0 : i; j<nRegions; j++) {
 	int index = (cross) ? i*nRegions+j : i*nRegions+j-(i-1)*i/2-i;
 	for (int r1=0; r1<PP[index]->nbins(); r1++)
 	  if (PP[index]->PP1D(r1)>0)
-	    fout << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << i
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << j
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << r1
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->scale(r1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D(r1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D_weighted(r1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D(r1+PP[index]->nbins()+1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D_weighted(r1+PP[index]->nbins()+1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D(r1+2*(PP[index]->nbins()+1))
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->PP1D_weighted(r1+2*(PP[index]->nbins()+1))
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->scale_mean(r1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->scale_sigma(r1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->z_mean(r1)
-	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(12) << right << PP[index]->z_sigma(r1) << endl;
+	    fout << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << i
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << j
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << r1
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->scale(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP1D(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP1D_weighted(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP1D(r1+PP[index]->nbins()+1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP1D_weighted(r1+PP[index]->nbins()+1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP1D(r1+2*(PP[index]->nbins()+1))
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP1D_weighted(r1+2*(PP[index]->nbins()+1))
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->scale_mean(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->scale_sigma(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->z_mean(r1)
+	      << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->z_sigma(r1) << endl;
       }
 
   else
@@ -286,7 +288,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (vector<shared_ptr<pairs::Pair>> PP, const vector<string> dir, const string file) const
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (vector<shared_ptr<pairs::Pair>> PP, const vector<string> dir, const string file) const
 {
   size_t nRegions = m_data->region_list().size();
 
@@ -297,7 +299,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs 
     
   // ----- standard info: scales at the bin centre + number of pairs -----
 
-  if (PP[0]->pairInfo()==_standard_)
+  if (PP[0]->pairInfo()==PairInfo::_standard_)
     
     for (size_t dd=0; dd<dir.size(); dd++) {
       string ff = dir[dd]+file; 
@@ -316,7 +318,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs 
 
   // ----- standard + extra info -----
 
-  else if (PP[0]->pairInfo()==_extra_)
+  else if (PP[0]->pairInfo()==PairInfo::_extra_)
 
     for (size_t dd=0; dd<dir.size(); dd++) {
       string ff = dir[dd]+file; 
@@ -342,7 +344,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs 
 // ============================================================================
 
 
-shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::correlation_NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
+shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::correlation_NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
 {
   // number of objects in the data catalogue
   int nD = (nData>0) ? nData : m_data->nObjects();
@@ -385,7 +387,7 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_d
         xi[i+l*dd->nbins()] = (DD_norm/RR_iso)-1;
 
         // Poisson error
-        error[i+l*dd->nbins()] = PoissonError(_LandySzalay_, dd->PP1D(i), rr->PP1D(i), 0, nD, nR); ///CHECK!!!!
+        error[i+l*dd->nbins()] = PoissonError(Estimator::_LandySzalay_, dd->PP1D(i), rr->PP1D(i), 0, nD, nR); ///CHECK!!!!
 
       }
     }
@@ -399,7 +401,7 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_d
 // ============================================================================
 
 
-shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::correlation_LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
+shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::correlation_LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
 {
   // number of objects in the data catalogue
   int nD = (nData>0) ? nData : m_data->nObjects();
@@ -451,7 +453,7 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_d
         xi[i+l*dd->nbins()] = (DD_norm+RR_norm-2.*DR_norm)/RR_iso;
 
         // Poisson error
-        error[i+l*dd->nbins()] = PoissonError(_LandySzalay_, dd->PP1D(i), rr->PP1D(i), dr->PP1D(i), nD, nR); ///CHECK!!!!
+        error[i+l*dd->nbins()] = PoissonError(Estimator::_LandySzalay_, dd->PP1D(i), rr->PP1D(i), dr->PP1D(i), nD, nR); ///CHECK!!!!
 
       //}
 
@@ -466,7 +468,7 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_d
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
+vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -509,7 +511,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_mult
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
+vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -566,7 +568,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_mult
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
+vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -574,16 +576,16 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_mult
   vector<shared_ptr<data::Data>> data;
   vector<double> nData_reg, nData_reg_weighted, nRandom_reg, nRandom_reg_weighted;
 
-  for (int i=0; i<nMocks; i++) {
+  for (size_t i=0; i<nRegions; i++) {
     nData_reg.push_back(m_data->nObjects_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
     nData_reg_weighted.push_back(m_data->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
     nRandom_reg.push_back(m_random->nObjects_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
     nRandom_reg_weighted.push_back(m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
   }
 
-  random::UniformRandomNumbers ran(0., nRegions-1, seed);
+  random::UniformRandomNumbers_Int ran(0., nRegions-1, seed);
   
-  int val = 2; // see Norberg et al. 2009
+  int val = 3; // see Norberg et al. 2009
 
   for (int i=0; i<nMocks; i++) {
 
@@ -599,25 +601,29 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_mult
       w[ran()] ++;
 
     for (size_t j=0; j<nRegions; j++) {
-      nData_SS += w[j]*nData_reg[j];
-      nData_SS_weighted += w[j]*nData_reg_weighted[j];
-      nRandom_SS += w[j]*nRandom_reg[j];
-      nRandom_SS_weighted += w[j]*nRandom_reg_weighted[j];
-      
-      for (size_t k=j; k<nRegions; k++) {
-	int index = j*nRegions+k-(j-1)*j/2-j;
-	double ww = (k==j) ? w[k] : w[j]*w[k];
-	if (ww>0) 
-          for (size_t bin=0; bin<dd_SS->PP1D().size(); bin++) {
-            dd_SS->add_data1D(bin, dd[index], ww);
-            rr_SS->add_data1D(bin, rr[index], ww);
+
+      if (w[j]>0) {
+
+        nData_SS += w[j]*nData_reg[j];
+        nData_SS_weighted += w[j]*nData_reg_weighted[j];
+        nRandom_SS += w[j]*nRandom_reg[j];
+        nRandom_SS_weighted += w[j]*nRandom_reg_weighted[j];
+
+        for (size_t k=j; k<nRegions; k++) {
+          if (w[k]>0) {
+            int index = j*nRegions+k-(j-1)*j/2-j;
+            double ww = w[j]*w[k]; //(k==j) ? w[k] : w[j]*w[k];
+            for (size_t bin=0; bin<dd_SS->PP1D().size(); bin++) {
+              dd_SS->add_data1D(bin, dd[index], ww);
+              rr_SS->add_data1D(bin, rr[index], ww);
+            }
           }
+        }
       }
     }
-      
+    
     data.push_back(move(correlation_NaturalEstimator(dd_SS, rr_SS, nData_SS, nData_SS_weighted, nRandom_SS, nRandom_SS_weighted)));
-  }
-  
+  }  
   return data;
 }
 
@@ -625,7 +631,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_mult
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
+vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -633,16 +639,16 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_mult
   vector<shared_ptr<data::Data>> data;
   vector<double> nData_reg, nData_reg_weighted, nRandom_reg, nRandom_reg_weighted;
 
-  for (int i=0; i<nMocks; i++) {
+  for (size_t i=0; i<nRegions; i++) {
     nData_reg.push_back(m_data->nObjects_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
     nData_reg_weighted.push_back(m_data->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
     nRandom_reg.push_back(m_random->nObjects_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
     nRandom_reg_weighted.push_back(m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
   }
 
-  random::UniformRandomNumbers ran(0., nRegions-1, seed);
+  random::UniformRandomNumbers_Int ran(0., nRegions-1, seed);
   
-  int val = 2; // see Norberg et al. 2009
+  int val = 3; // see Norberg et al. 2009
 
   for (int i=0; i<nMocks; i++) {
 
@@ -699,47 +705,47 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_mult
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::set_parameters (const binType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info) 
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::set_parameters (const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info) 
 {
   if (!compute_extra_info) 
-    m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_multipoles_log_, _standard_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
-      : move(Pair::Create(_comoving_multipoles_lin_, _standard_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
+    m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_multipoles_log_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
+      : move(Pair::Create(PairType::_comoving_multipoles_lin_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
   else 
-    m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_multipoles_log_, _extra_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
-      : move(Pair::Create(_comoving_multipoles_lin_, _extra_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
+    m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_multipoles_log_, PairInfo::_extra_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
+      : move(Pair::Create(PairType::_comoving_multipoles_lin_, PairInfo::_extra_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
   
-  m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_multipoles_log_, _standard_, rMin, rMax, nbins, shift, angularUnits))
-    : move(Pair::Create(_comoving_multipoles_lin_, _standard_, rMin, rMax, nbins, shift, angularUnits));
+  m_rr = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_multipoles_log_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits))
+    : move(Pair::Create(PairType::_comoving_multipoles_lin_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits));
   
-  m_dr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_multipoles_log_, _standard_, rMin, rMax, nbins, shift, angularUnits))
-    : move(Pair::Create(_comoving_multipoles_lin_, _standard_, rMin, rMax, nbins, shift, angularUnits));
+  m_dr = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_multipoles_log_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits))
+    : move(Pair::Create(PairType::_comoving_multipoles_lin_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits));
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::set_parameters (const binType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info)
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::set_parameters (const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info)
 {
   if (!compute_extra_info) 
-    m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_multipoles_log_, _standard_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
-      : move(Pair::Create(_comoving_multipoles_lin_, _standard_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
+    m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_multipoles_log_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
+      : move(Pair::Create(PairType::_comoving_multipoles_lin_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
   else 
-    m_dd = (binType==_logarithmic_) ? move(Pair::Create(_comoving_multipoles_log_, _extra_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
-      : move(Pair::Create(_comoving_multipoles_lin_, _extra_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
+    m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_multipoles_log_, PairInfo::_extra_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
+      : move(Pair::Create(PairType::_comoving_multipoles_lin_, PairInfo::_extra_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
     
-  m_rr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_multipoles_log_, _standard_, rMin, rMax, binSize, shift, angularUnits))
-    : move(Pair::Create(_comoving_multipoles_lin_, _standard_, rMin, rMax, binSize, shift, angularUnits));
+  m_rr = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_multipoles_log_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits))
+    : move(Pair::Create(PairType::_comoving_multipoles_lin_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits));
   
-  m_dr = (binType==_logarithmic_) ? move(Pair::Create(_comoving_multipoles_log_, _standard_, rMin, rMax, binSize, shift, angularUnits))
-    : move(Pair::Create(_comoving_multipoles_lin_, _standard_, rMin, rMax, binSize, shift, angularUnits));
+  m_dr = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_multipoles_log_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits))
+    : move(Pair::Create(PairType::_comoving_multipoles_lin_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits));
 }
 
 
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::xx () const
+vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xx () const
 {
   vector<double> rad, xx;
   m_dataset->xx(xx);
@@ -754,7 +760,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::x
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiMonopole () const
+vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiMonopole () const
 {
   vector<double> vv; 
   m_dataset->data(vv);
@@ -772,7 +778,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::x
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorMonopole () const
+vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorMonopole () const
 {
   vector<double> vv; 
   m_dataset->error(vv);
@@ -791,7 +797,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::e
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiQuadrupole () const 
+vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiQuadrupole () const 
 {
   vector<double> vv; 
   m_dataset->data(vv);
@@ -810,7 +816,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::x
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorQuadrupole () const 
+vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorQuadrupole () const 
 {
   vector<double> vv; 
   m_dataset->error(vv);
@@ -829,7 +835,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::e
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiHexadecapole () const
+vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiHexadecapole () const
 {
   vector<double> vv; 
   m_dataset->data(vv);
@@ -848,7 +854,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::x
 // ============================================================================================
 
 
-vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorHexadecapole () const 
+vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorHexadecapole () const 
 {
   vector<double> vv; 
   m_dataset->error(vv);
@@ -867,7 +873,7 @@ vector<double> cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::e
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::write (const string dir, const string file, const int rank) const 
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write (const string dir, const string file, const int rank) const 
 {
   (void)rank;
   
@@ -877,9 +883,11 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::write (cons
 
   checkDim(rad, m_dd->nbins()*3, "rad");
   
-  string file_out = dir+file;
+  const string file_out = dir+file;
   ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
+  const int precision = 5;
+ 
   string header = "[1] separation at the bin centre # [2] monopole # [3] error on the monopole # [4] quadrupole # [5] error on the quadrupole # [6] hexadecapole # [7] error on the hexadecapole";
   
   if (m_compute_extra_info) header += " # [8] mean separation # [9] standard deviation of the separation distribution # [10] mean redshift # [11] standard deviation of the redshift distribution";
@@ -887,10 +895,16 @@ void cosmobl::measure::twopt::TwoPointCorrelation_multipoles_direct::write (cons
   fout << "### " << header << " ###" <<endl;
 
   for (int i=0; i<m_dd->nbins(); i++) {
-    fout << setiosflags(ios::fixed) << setprecision(5) << setw(8) << rad[i] << "  " << setw(8) << xil[i] << "  " << setw(8) << error[i] << "  " << setw(8) << xil[i+m_dd->nbins()] << "  " << setw(8) << error[i+m_dd->nbins()] << "  " << setw(8) << xil[i+2*m_dd->nbins()] << "  " << setw(8) << error[i+2*m_dd->nbins()];
+    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << rad[i]
+	 << "  "  << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << xil[i]
+	 << "  "  << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << error[i]
+	 << "  "  << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << xil[i+m_dd->nbins()]
+	 << "  "  << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << error[i+m_dd->nbins()]
+	 << "  "  << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << xil[i+2*m_dd->nbins()]
+	 << "  "  << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << error[i+2*m_dd->nbins()];
     if (m_compute_extra_info)
       for (size_t ex=0; ex<m_dataset->extra_info().size(); ++ex)
-	fout << "   " << setw(8) << m_dataset->extra_info(ex, i);
+	fout << setiosflags(ios::fixed) << setprecision(precision) << setw(10) << right << m_dataset->extra_info(ex, i);
     fout << endl;
   }
    

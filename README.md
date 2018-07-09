@@ -39,3 +39,5 @@ V4.2 Python support improved, new functions for input/output in FITS format, som
 V4.21 minor bugs fixed in likelihood modules
 
 V4.22 minor bugs fixed in some python examples
+
+V5.0 classes for statistical analyses substantially improved; new estimators for the three-point correlation function

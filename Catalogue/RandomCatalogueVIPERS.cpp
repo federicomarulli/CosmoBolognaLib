@@ -34,7 +34,9 @@
 
 #include "Catalogue.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================
@@ -42,9 +44,9 @@ using namespace cosmobl;
 
 /// @cond extrandom
 
-cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField, const bool isSpectroscopic, const Catalogue catalogue, const Catalogue catalogue_for_nz, const double N_R, const cosmology::Cosmology &cosm, const int step_redshift, const vector<double> lim, const double redshift_min, const double redshift_max, const bool do_convol, const double sigma, const bool use_venice, const bool do_zdistr_with_venice, const string file_random, const string mask, const string pointing_file, const string dir_venice, const int seed) 
+cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField, const bool isSpectroscopic, const Catalogue catalogue, const Catalogue catalogue_for_nz, const double N_R, const cosmology::Cosmology &cosm, const int step_redshift, const vector<double> lim, const double redshift_min, const double redshift_max, const bool do_convol, const double sigma, const bool use_venice, const bool do_zdistr_with_venice, const string file_random, const string mask, const string pointing_file, const string dir_venice, const int seed) 
 {
-  if (type!=_createRandom_VIPERS_) ErrorCBL("Error in cosmobl::catalogue::Catalogue::Catalogue : the random catalogue has to be of type _VIPERS_ !");
+  if (type!=RandomType::_createRandom_VIPERS_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue : the random catalogue has to be of type _VIPERS_ !");
   
   coutCBL << par::col_green << "I'm creating the random catalogue..." << par::col_default << endl;
 
@@ -59,7 +61,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const string WF
     vector<double> redshift = catalogue_for_nz.var(Var::_Redshift_); 
     vector<double> weight = catalogue_for_nz.var(Var::_Weight_); 
     const double weightedN = catalogue_for_nz.weightedN();  
-    distribution(xx, yy, err, redshift, weight, step_redshift, true, file_nz, weightedN, cosmobl::Min(redshift), cosmobl::Max(redshift), true, do_convol, sigma);
+    distribution(xx, yy, err, redshift, weight, step_redshift, true, file_nz, weightedN, cbl::Min(redshift), cbl::Max(redshift), true, do_convol, sigma);
   }
   
   
@@ -191,7 +193,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const string WF
 	  ss >> RA; ss >> DEC; ss >> REDSHIFT; ss >> FIELD;
 	  if (redshift_min<REDSHIFT && REDSHIFT<redshift_max && lim[0]<RA && RA<lim[1] && lim[2]<DEC && DEC<lim[3]) {
 	    observedCoordinates coord = {RA, DEC, REDSHIFT};
-	    m_object.push_back(move(Object::Create(_RandomObject_, coord, _degrees_, cosm, 1., 0, FIELD)));
+	    m_object.push_back(move(Object::Create(ObjectType::_Random_, coord, CoordinateUnits::_degrees_, cosm, 1., 0, FIELD)));
 	  }
 	}
     }
@@ -223,7 +225,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const RandomType type, const string WF
       // construct the objects
       for (size_t i=0; i<random_ra.size(); ++i) {
 	observedCoordinates coord = {random_ra[i], random_dec[i], random_redshift[i]};
-	m_object.push_back(move(Object::Create(_RandomObject_, coord, _degrees_, cosm, 1., 0, field[i])));
+	m_object.push_back(move(Object::Create(ObjectType::_Random_, coord, CoordinateUnits::_degrees_, cosm, 1., 0, field[i])));
       }
       
     }

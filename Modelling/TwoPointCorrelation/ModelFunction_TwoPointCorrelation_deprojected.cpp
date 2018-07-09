@@ -36,7 +36,7 @@
 
 #include "ModelFunction_TwoPointCorrelation_deprojected.h"
 
-using namespace cosmobl;
+using namespace cbl;
 
 
 // ============================================================================================

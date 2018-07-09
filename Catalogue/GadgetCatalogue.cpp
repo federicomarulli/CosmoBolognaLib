@@ -35,12 +35,17 @@
 #include "Catalogue.h"
 #include "Object.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
-cosmobl::catalogue::Gadget_Header cosmobl::catalogue::Catalogue::m_swap_header (cosmobl::catalogue::Gadget_Header header)
+// =====================================================================================
+
+
+cbl::catalogue::Gadget_Header cbl::catalogue::Catalogue::m_swap_header (cbl::catalogue::Gadget_Header header)
 {
-  cosmobl::catalogue::Gadget_Header temp;
+  cbl::catalogue::Gadget_Header temp;
   for (int i=0; i<6; i++) temp.npart[i] = IntSwap(header.npart[i]);
   for (int i=0; i<6; i++) temp.massarr[i] = DoubleSwap(header.massarr[i]);
   temp.time = DoubleSwap(header.time);
@@ -67,13 +72,13 @@ cosmobl::catalogue::Gadget_Header cosmobl::catalogue::Catalogue::m_swap_header (
 //==============================================================================================
 
 
-void cosmobl::catalogue::Catalogue::m_check_it_in (ifstream& finr, bool swap)
+void cbl::catalogue::Catalogue::m_check_it_in (ifstream& finr, bool swap)
 {
   finr.read((char *)&m_blockheader, sizeof(m_blockheader));
   if (swap) m_blockheader = IntSwap(m_blockheader);
 }
 
-void cosmobl::catalogue::Catalogue::m_check_it_out (ifstream& finr, bool swap)
+void cbl::catalogue::Catalogue::m_check_it_out (ifstream& finr, bool swap)
 {
   int check;
   finr.read((char *)&check, sizeof(check));
@@ -81,9 +86,11 @@ void cosmobl::catalogue::Catalogue::m_check_it_out (ifstream& finr, bool swap)
   if (check != m_blockheader) ErrorCBL("Error in reading gadget snapshot, block-headers do not match!");
 }
 
+
 //==============================================================================================
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const string file_cn, const bool swap, const double fact, const bool read_catalogue, const double nSub, const int seed)
+
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objType, const string file_cn, const bool swap, const double fact, const bool read_catalogue, const double nSub, const int seed)
 {
   Gadget_Header header;
   string gdgt_head = file_cn+".0";

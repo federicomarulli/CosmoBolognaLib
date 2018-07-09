@@ -33,28 +33,30 @@
 
 #include "Func.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace glob;
 
 
 // ============================================================================
 
 
-double cosmobl::closest_probability (double xx, shared_ptr<void> pp, vector<double> par)
+double cbl::closest_probability (double xx, shared_ptr<void> pp, vector<double> par)
 {
   (void)par;
-  shared_ptr<cosmobl::glob::STR_closest_probability> pars = static_pointer_cast<cosmobl::glob::STR_closest_probability>(pp);
-  return pars->weights[(cosmobl::index_closest(xx, pars->values))];
+  shared_ptr<cbl::glob::STR_closest_probability> pars = static_pointer_cast<cbl::glob::STR_closest_probability>(pp);
+  return pars->weights[(cbl::index_closest(xx, pars->values))];
 }
 
 
 // ============================================================================
 
 
-double cosmobl::distribution_probability (double xx, shared_ptr<void> pp, vector<double> par)
+double cbl::distribution_probability (double xx, shared_ptr<void> pp, vector<double> par)
 {
   (void)par;
-  shared_ptr<cosmobl::glob::STR_distribution_probability> pars = static_pointer_cast<cosmobl::glob::STR_distribution_probability>(pp);
+  shared_ptr<cbl::glob::STR_distribution_probability> pars = static_pointer_cast<cbl::glob::STR_distribution_probability>(pp);
   return pars->func->operator()(xx);
 }
 
@@ -62,260 +64,152 @@ double cosmobl::distribution_probability (double xx, shared_ptr<void> pp, vector
 // ============================================================================
 
 
-string cosmobl::fullpath (string path, const bool isDir)
-{ 
-  string find = "~";
-  string replace = getenv("HOME");
-  char buff[PATH_MAX];
-
-  size_t pos = 0;
-  while((pos = path.find(find, pos)) != std::string::npos) {
-    path.replace(pos, find.length(), replace);
-    pos += replace.length();
-  }
-
-  return string(realpath(path.c_str(),buff))+((isDir) ? "/" : "");
-}
-
-
-// ============================================================================
-
-
-double cosmobl::Filter (const double r, const double rc)
+double cbl::Filter (const double r, const double rc)
 {
   double x = pow(r/rc, 3);
   return pow(2*x*(1.-x), 2)*(0.5-x)*pow(rc, -3);
 }
 
 
-// ============================================================================
-
-
-void cosmobl::unique_unsorted (vector<int> &vv) // erase all equal elements
-{
-  sort(vv.begin(),vv.end());
-  vector<int>::iterator it;
-  it = unique(vv.begin(),vv.end());
-  vv.resize(it-vv.begin()); 
-}
-
-void cosmobl::unique_unsorted (vector<double> &vv) // erase all equal elements
-{
-  sort(vv.begin(),vv.end());
-  vector<double>::iterator it;
-  it = unique(vv.begin(),vv.end());
-  vv.resize(it-vv.begin()); 
-}
-
-void cosmobl::unique_unsorted (vector<string> &vv) // erase all equal elements
-{
-  sort(vv.begin(),vv.end());
-  vector<string>::iterator it;
-  it = unique(vv.begin(),vv.end());
-  vv.resize(it-vv.begin()); 
-}
-
-
-// ============================================================================
-
-/// @cond glob
-bool cosmobl::glob::operator<(const cosmobl::glob::CL &c1, const cosmobl::glob::CL &c2) {return c1.VV[0] < c2.VV[0];}
-/// @endcond
-
-void cosmobl::sort_2vectors (vector<double>::iterator p1, vector<double>::iterator p2, const int dim) 
-{
-  int temp = 0;
-  vector<cosmobl::glob::CL> ccc; 
-  for (int i=0; i<dim; i++) { 
-    vector<double> vect = {*p1, *p2}; 
-    cosmobl::glob::CL cl(vect); 
-    ccc.push_back(cl);
-    if (i+1<dim) {*p1 ++; *p2 ++; temp ++;}
-  }
-  sort (ccc.begin(),ccc.end());
-  p1 -= temp; p2 -= temp;
-  for (int i=0; i<dim; i++) { 
-    *p1 = ccc[i].VV[0]; *p2 = ccc[i].VV[1];
-    if (i+1<dim) {*p1 ++; *p2 ++;} 
-  }
-}
-
-void cosmobl::sort_3vectors (vector<double>::iterator p1, vector<double>::iterator p2, vector<double>::iterator p3, const int dim) 
-{
-  int temp = 0;
-  vector<cosmobl::glob::CL> ccc;
-  for (int i=0; i<dim; i++) { 
-    vector<double> vect = {*p1, *p2, *p3};
-    cosmobl::glob::CL cl(vect); 
-    ccc.push_back(cl);
-    if (i+1<dim) {*p1 ++; *p2 ++; *p3 ++; temp ++;}
-  }
-  sort (ccc.begin(),ccc.end());
-  p1 -= temp; p2 -= temp; p3 -= temp;
-  for (int i=0; i<dim; i++) { 
-    *p1 = ccc[i].VV[0]; *p2 = ccc[i].VV[1]; *p3 = ccc[i].VV[2];
-    if (i+1<dim) {*p1 ++; *p2 ++; *p3 ++;} 
-  }
-}
-
-void cosmobl::sort_4vectors (vector<double>::iterator p1, vector<double>::iterator p2, vector<double>::iterator p3, vector<double>::iterator p4, const int dim) 
-{
-  int temp = 0;
-  vector<cosmobl::glob::CL> ccc;
-  for (int i=0; i<dim; i++) { 
-    vector<double> vect = {*p1, *p2, *p3, *p4};
-    cosmobl::glob::CL cl(vect); 
-    ccc.push_back(cl);
-    if (i+1<dim) {*p1 ++; *p2 ++; *p3 ++; *p4 ++; temp ++;}
-  }
-  sort (ccc.begin(),ccc.end());
-  p1 -= temp; p2 -= temp; p3 -= temp; p4 -= temp;
-  for (int i=0; i<dim; i++) { 
-    *p1 = ccc[i].VV[0]; *p2 = ccc[i].VV[1]; *p3 = ccc[i].VV[2]; *p4 = ccc[i].VV[3];
-    if (i+1<dim) {*p1 ++; *p2 ++; *p3 ++; *p4 ++;} 
-  }
-}
-
-
 // ============================================================================================
 
 
-double cosmobl::degrees (const double angle, const CoordUnits inputUnits)
+double cbl::degrees (const double angle, const CoordinateUnits inputUnits)
 {
-  if (inputUnits==_radians_) 
+  if (inputUnits==CoordinateUnits::_radians_) 
     return angle*180./par::pi;
       
-  else if (inputUnits==_arcseconds_)
+  else if (inputUnits==CoordinateUnits::_arcseconds_)
     return angle/3600.;
       
-  else if (inputUnits==_arcminutes_)
+  else if (inputUnits==CoordinateUnits::_arcminutes_)
     return angle/60.;
 
-  else if (inputUnits==_degrees_)
+  else if (inputUnits==CoordinateUnits::_degrees_)
     return angle;
   
   else 
-    { ErrorCBL("Error in cosmobl::degrees of Func.cpp: inputUnits type not allowed!"); return 0; }
+    { ErrorCBL("Error in cbl::degrees of Func.cpp: inputUnits type not allowed!"); return 0; }
 }
 
 
 // ============================================================================================
 
 
-double cosmobl::radians (const double angle, const CoordUnits inputUnits)
+double cbl::radians (const double angle, const CoordinateUnits inputUnits)
 {
-  if (inputUnits==_degrees_)
+  if (inputUnits==CoordinateUnits::_degrees_)
     return angle/180.*par::pi;
   
-  else if (inputUnits==_arcseconds_)
+  else if (inputUnits==CoordinateUnits::_arcseconds_)
     return angle/180.*par::pi/3600.;
   
-  else if (inputUnits==_arcminutes_)
+  else if (inputUnits==CoordinateUnits::_arcminutes_)
     return angle/180.*par::pi/60.;
 
-  else if (inputUnits==_radians_)
+  else if (inputUnits==CoordinateUnits::_radians_)
     return angle;
   
   else 
-    { ErrorCBL("Error in cosmobl::radians of Func.cpp: inputUnits type not allowed!"); return 0; }
+    { ErrorCBL("Error in cbl::radians of Func.cpp: inputUnits type not allowed!"); return 0; }
 }
 
 
 // ============================================================================================
 
 
-double cosmobl::arcseconds (const double angle, const CoordUnits inputUnits)
+double cbl::arcseconds (const double angle, const CoordinateUnits inputUnits)
 {
-  if (inputUnits==_radians_)
+  if (inputUnits==CoordinateUnits::_radians_)
     return angle*180./par::pi*3600.;
       
-  else if (inputUnits==_degrees_)
+  else if (inputUnits==CoordinateUnits::_degrees_)
     return angle*3600.;
   
-  else if (inputUnits==_arcminutes_)
+  else if (inputUnits==CoordinateUnits::_arcminutes_)
     return angle*60.;
 
-  else if (inputUnits==_arcseconds_)
+  else if (inputUnits==CoordinateUnits::_arcseconds_)
     return angle;
       
   else 
-    { ErrorCBL("Error in cosmobl::arcseconds of Func.cpp: inputUnits type not allowed!"); return 0; }
+    { ErrorCBL("Error in cbl::arcseconds of Func.cpp: inputUnits type not allowed!"); return 0; }
 }
 
 
 // ============================================================================================
 
 
-double cosmobl::arcminutes (const double angle, const CoordUnits inputUnits)
+double cbl::arcminutes (const double angle, const CoordinateUnits inputUnits)
 {
-  if (inputUnits==_radians_)
+  if (inputUnits==CoordinateUnits::_radians_)
     return angle*180./par::pi*60.;
       
-  else if (inputUnits==_degrees_)
+  else if (inputUnits==CoordinateUnits::_degrees_)
     return angle*60.;
   
-  else if (inputUnits==_arcseconds_)
+  else if (inputUnits==CoordinateUnits::_arcseconds_)
     return angle/60.;
 
-  else if (inputUnits==_arcminutes_)
+  else if (inputUnits==CoordinateUnits::_arcminutes_)
     return angle;
 
   else 
-    { ErrorCBL("Error in cosmobl::arcminutes of Func.cpp: inputUnits type not allowed!"); return 0; }
+    { ErrorCBL("Error in cbl::arcminutes of Func.cpp: inputUnits type not allowed!"); return 0; }
 }
 
 
 // ============================================================================================
 
 
-double cosmobl::converted_angle (const double angle, const CoordUnits inputUnits, const CoordUnits outputUnits)
+double cbl::converted_angle (const double angle, const CoordinateUnits inputUnits, const CoordinateUnits outputUnits)
 {
-  if (outputUnits==_radians_)
+  if (outputUnits==CoordinateUnits::_radians_)
     return radians(angle, inputUnits);
       
-  else if (outputUnits==_degrees_)
+  else if (outputUnits==CoordinateUnits::_degrees_)
     return degrees(angle, inputUnits);
   
-  else if (outputUnits==_arcseconds_)
+  else if (outputUnits==CoordinateUnits::_arcseconds_)
     return arcseconds(angle, inputUnits);
 
-  else if (outputUnits==_arcminutes_)
+  else if (outputUnits==CoordinateUnits::_arcminutes_)
     return arcminutes(angle, inputUnits);
   
   else 
-    { ErrorCBL("Error in cosmobl:: converted_angle of Func.cpp: outputUnits type not allowed!"); return 0; }
+    { ErrorCBL("Error in cbl:: converted_angle of Func.cpp: outputUnits type not allowed!"); return 0; }
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::polar_coord (const double XX, const double YY, const double ZZ, double &ra, double &dec, double &dd) 
+void cbl::polar_coord (const double XX, const double YY, const double ZZ, double &ra, double &dec, double &dd) 
 {   
   dd = sqrt(XX*XX+YY*YY+ZZ*ZZ);
   ra = atan2(XX,YY);
   dec = asin(ZZ/dd);  
 }
 
-void cosmobl::cartesian_coord (const double ra, const double dec, const double dd, double &XX, double &YY, double &ZZ) 
+void cbl::cartesian_coord (const double ra, const double dec, const double dd, double &XX, double &YY, double &ZZ) 
 {
   XX = dd*cos(dec)*sin(ra);
   YY = dd*cos(dec)*cos(ra);
   ZZ = dd*sin(dec);
 }
 
-void cosmobl::polar_coord (const vector<double> XX, const vector<double> YY, const vector<double> ZZ, vector<double> &ra, vector<double> &dec, vector<double> &dd) 
+void cbl::polar_coord (const vector<double> XX, const vector<double> YY, const vector<double> ZZ, vector<double> &ra, vector<double> &dec, vector<double> &dd) 
 {     
-  for (unsigned int i=0; i<XX.size(); i++) {
+  for (size_t i=0; i<XX.size(); i++) {
     dd[i] = sqrt(XX[i]*XX[i]+YY[i]*YY[i]+ZZ[i]*ZZ[i]);
     ra[i] = atan2(XX[i],YY[i]);
     dec[i] = asin(ZZ[i]/dd[i]);
   }  
 }
 
-void cosmobl::cartesian_coord (const vector<double> ra, const vector<double> dec, const vector<double> dd, vector<double> &XX, vector<double> &YY, vector<double> &ZZ) 
+void cbl::cartesian_coord (const vector<double> ra, const vector<double> dec, const vector<double> dd, vector<double> &XX, vector<double> &YY, vector<double> &ZZ) 
 {
-  for (unsigned int i=0; i<XX.size(); i++) {
+  for (size_t i=0; i<XX.size(); i++) {
     XX[i] = dd[i]*cos(dec[i])*sin(ra[i]);
     YY[i] = dd[i]*cos(dec[i])*cos(ra[i]);
     ZZ[i] = dd[i]*sin(dec[i]);
@@ -326,7 +220,7 @@ void cosmobl::cartesian_coord (const vector<double> ra, const vector<double> dec
 // ============================================================================================
 
 
-double cosmobl::Euclidean_distance (const double x1, const double x2, const double y1, const double y2, const double z1, const double z2)
+double cbl::Euclidean_distance (const double x1, const double x2, const double y1, const double y2, const double z1, const double z2)
 {
   return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)+(z1-z2)*(z1-z2));
 }
@@ -335,7 +229,7 @@ double cosmobl::Euclidean_distance (const double x1, const double x2, const doub
 // ============================================================================================
 
 
-double cosmobl::perpendicular_distance (const double ra1, const double ra2, const double dec1, const double dec2, const double d1, const double d2)
+double cbl::perpendicular_distance (const double ra1, const double ra2, const double dec1, const double dec2, const double d1, const double d2)
 {
   double costheta = sin(dec1)*sin(dec2)+cos(dec1)*cos(dec2)*(cos(ra1)*cos(ra2)+sin(ra1)*sin(ra2));
   double theta = 0.;
@@ -353,7 +247,7 @@ double cosmobl::perpendicular_distance (const double ra1, const double ra2, cons
 // ============================================================================================
 
 
-double cosmobl::angular_distance (const double x1, const double x2, const double y1, const double y2, const double z1, const double z2)
+double cbl::angular_distance (const double x1, const double x2, const double y1, const double y2, const double z1, const double z2)
 {
   return 2.*asin(0.5*Euclidean_distance(x1, x2, y1, y2, z1, z2));
 }
@@ -362,7 +256,7 @@ double cosmobl::angular_distance (const double x1, const double x2, const double
 // ============================================================================================
 
 
-double cosmobl::haversine_distance (const double ra1, const double ra2, const double dec1, const double dec2)
+double cbl::haversine_distance (const double ra1, const double ra2, const double dec1, const double dec2)
 {
   return 2*asin(sqrt(pow(sin((dec2-dec1)*0.5),2.)+cos(dec1)*cos(dec2)*pow(sin((ra2-ra1)*0.5),2.)));
 }
@@ -371,7 +265,7 @@ double cosmobl::haversine_distance (const double ra1, const double ra2, const do
 // ============================================================================================
 
 
-double cosmobl::MC_Int (double func(const double), const double x1, const double x2, const int seed) 
+double cbl::MC_Int (double func(const double), const double x1, const double x2, const int seed) 
 {
   int step = 100000;
   double delta_x = (x2-x1)/step;
@@ -421,7 +315,7 @@ double cosmobl::MC_Int (double func(const double), const double x1, const double
 // ============================================================================================
 
 
-double cosmobl::MC_Int (double func(const double, const double AA), const double AA, const double x1, const double x2, const int seed) 
+double cbl::MC_Int (double func(const double, const double AA), const double AA, const double x1, const double x2, const int seed) 
 {
   int step = 100000;
   double delta_x = (x2-x1)/step;
@@ -471,7 +365,7 @@ double cosmobl::MC_Int (double func(const double, const double AA), const double
 // ============================================================================================
 
 
-double cosmobl::MC_Int (double func(const double, const double AA, const double BB, const double CC, const double DD, const double EE), const double AA, const double BB, const double CC, const double DD, const double EE, const double x1, const double x2, const int seed) 
+double cbl::MC_Int (double func(const double, const double AA, const double BB, const double CC, const double DD, const double EE), const double AA, const double BB, const double CC, const double DD, const double EE, const double x1, const double x2, const int seed) 
 {
   int step = 100000;
   double delta_x = (x2-x1)/step;
@@ -518,115 +412,16 @@ double cosmobl::MC_Int (double func(const double, const double AA, const double 
 }
 
 
-// ============================================================================================
-
-
-short cosmobl::ShortSwap (const short s)
-{
-  unsigned char b1, b2;
-  b1 = s & 255;
-  b2 = (s>>8) & 255;
-  return (b1<<8) + b2;
-}
-
-int cosmobl::IntSwap (const int i)
-{
-  unsigned char b1, b2, b3, b4;
-  b1 = i & 255;
-  b2 = (i>>8) & 255;
-  b3 = (i>>16) & 255;
-  b4 = (i>>24) & 255;
-  return ((int)b1<<24) + ((int)b2<<16) + ((int)b3<<8) + b4;
-}
-
-long cosmobl::LongSwap (const long i)
-{
-  unsigned char b1, b2, b3, b4, b5, b6, b7, b8;
-  b1 = i & 255;
-  b2 = (i>>8) & 255;
-  b3 = (i>>16) & 255;
-  b4 = (i>>24) & 255;
-  b5 = (i>>32) & 255;
-  b6 = (i>>40) & 255;
-  b7 = (i>>48) & 255;
-  b8 = (i>>56) & 255;
-  return ((long)b1<<56) + ((long)b2<<48) + ((long)b3<<40) + ((long)b4<<32) + ((long)b5<<24) + ((long)b6<<16) + ((long)b7<<8) + b8;
-}
-
-float cosmobl::FloatSwap (const float f)
-{
-  union {
-    float f;
-    unsigned char b[4];
-  } dat1, dat2;
-  
-  dat1.f = f;
-  dat2.b[0] = dat1.b[3];
-  dat2.b[1] = dat1.b[2];
-  dat2.b[2] = dat1.b[1];
-  dat2.b[3] = dat1.b[0];
-  
-  return dat2.f;
-}
-
-double cosmobl::DoubleSwap (const double d)
-{
-  union {
-    double d;
-    unsigned char b[8];
-  } dat1, dat2;
-  
-  dat1.d = d;
-  dat2.b[0] = dat1.b[7];
-  dat2.b[1] = dat1.b[6];
-  dat2.b[2] = dat1.b[5];
-  dat2.b[3] = dat1.b[4];
-  dat2.b[4] = dat1.b[3];
-  dat2.b[5] = dat1.b[2];
-  dat2.b[6] = dat1.b[1];
-  dat2.b[7] = dat1.b[0];
-  
-  return dat2.d;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::round_to_digits (const double num, const int ndigits)
-{
-  int exp_base10 = round(log10(num));
-  double man_base10 = num*pow(10., -exp_base10);
-  double factor = pow(10., -ndigits+1);  
-  double truncated_man_base10 = man_base10-fmod(man_base10, factor);
-  double rounded_remainder = fmod(man_base10, factor)/factor;
-
-  rounded_remainder = rounded_remainder > 0.5 ? 1.0*factor : 0.0;
-
-  return (truncated_man_base10+rounded_remainder)*pow(10.0, exp_base10);
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::round_to_precision (const double num, const int ndigits)
-{
-  const double tenth = pow(10., ndigits);
-  return floor(num*tenth)/tenth;
-}
-
-
 // ============================================================================
 
 
-double cosmobl::interpolated (const double _xx, const vector<double> xx, const vector<double> yy, const string type)
+double cbl::interpolated (const double _xx, const vector<double> xx, const vector<double> yy, const string type)
 {
-  if (xx.size()!=yy.size()) 
-    ErrorCBL("Error in interpolated of Func.cpp)!");
+  if (xx.size()!=yy.size() || xx.size()<2) 
+    ErrorCBL("Error in cbl::interpolated() of Func.cpp: "+conv(xx.size(), par::fINT)+"!");
 
   size_t size = xx.size();
-
+  
   if (_xx<xx[0]) // perform a linear extrapolation
     return yy[0]+(_xx-xx[0])/(xx[1]-xx[0])*(yy[1]-yy[0]);
 
@@ -677,14 +472,14 @@ double cosmobl::interpolated (const double _xx, const vector<double> xx, const v
 // ============================================================================
 
 
-double cosmobl::interpolated_2D (const double _x1, const double _x2, const vector<double> x1, const vector<double> x2, const vector<vector<double> > yy, const string type)
+double cbl::interpolated_2D (const double _x1, const double _x2, const vector<double> x1, const vector<double> x2, const vector<vector<double> > yy, const string type)
 {
   bool extr = false;
 
   const size_t size_x1 = x1.size();
   const size_t size_x2 = x2.size();
   double *ydata = new double[size_x1*size_x2];
-
+  
   if ((_x1>Max(x1) || Min(x1)>_x1) ||(_x2>Max(x2) || Min(x2)>_x2))
     extr = 1;
 
@@ -723,33 +518,37 @@ double cosmobl::interpolated_2D (const double _x1, const double _x2, const vecto
 // ============================================================================
 
 
-void cosmobl::checkIO (const ifstream &fin, const string file)
+void cbl::read_vector (const string file_vector, vector<double> &xx, vector<double> &vec, const vector<int> col)
 {
-  if (fin.fail()) {    
-    string Err = "Error in opening the input file";
-    if (file!="NULL") Err += ": " + file;
-    ErrorCBL(Err, ExitCode::_IO_); 
+  vector<int> cols = {0, 1};
+  cols = (col.size() != 2) ? cols : col; 
+  const size_t max_col = Max(cols);
+
+  xx.erase(xx.begin(), xx.end());
+  vec.erase(vec.begin(), vec.end());
+
+  ifstream fin(file_vector.c_str()); checkIO(fin, file_vector);
+
+  string line;
+
+  while (getline(fin, line)) {
+    stringstream ss(line);
+    vector<double> num; double NN = -1.e30;
+    while (ss>>NN) num.push_back(NN);
+    if (num.size()>=max_col) {
+      xx.push_back(num[cols[0]]);
+      vec.push_back(num[cols[1]]);
+    }
   }
+
+  fin.clear(); fin.close();
 }
 
 
 // ============================================================================
 
 
-void cosmobl::checkIO (const ofstream &fout, const string file)
-{
-  if (fout.fail()) {    
-    string Err = "Error in opening the output file";
-    if (file!="NULL") Err += ": " + file;
-    ErrorCBL(Err, ExitCode::_IO_); 
-  }
-}
-
-
-// ============================================================================
-
-
-void cosmobl::read_matrix (const string file_matrix, vector<double> &xx, vector<double> &yy, vector<vector<double>> &matrix, const vector<int> col)
+void cbl::read_matrix (const string file_matrix, vector<double> &xx, vector<double> &yy, vector<vector<double>> &matrix, const vector<int> col)
 {
   vector<int> cols = {0, 1, 2};
   cols = (col.size() != 3) ? cols : col; 
@@ -779,12 +578,14 @@ void cosmobl::read_matrix (const string file_matrix, vector<double> &xx, vector<
   xx = different_elements(_xx);
   yy = different_elements(_yy);
 
+  fin.clear(); fin.close();
+
 }
 
 
 // ============================================================================
 
-double cosmobl::determinant_matrix (const vector<vector<double> > mat)
+double cbl::determinant_matrix (const vector<vector<double> > mat)
 {
   int n = mat.size();
   int s;
@@ -807,7 +608,7 @@ double cosmobl::determinant_matrix (const vector<vector<double> > mat)
 // ============================================================================
 
 
-void cosmobl::invert_matrix (const vector<vector<double> > mat, vector<vector<double> > &mat_inv, const double prec)
+void cbl::invert_matrix (const vector<vector<double> > mat, vector<vector<double> > &mat_inv, const double prec)
 {
   int n = mat.size();
   int s;
@@ -856,7 +657,7 @@ void cosmobl::invert_matrix (const vector<vector<double> > mat, vector<vector<do
 // ============================================================================
 
 
-void cosmobl::invert_matrix (const vector<vector<double> > mat, vector<vector<double> > &mat_inv, const int i1, const int i2, const double prec)
+void cbl::invert_matrix (const vector<vector<double> > mat, vector<vector<double> > &mat_inv, const int i1, const int i2, const double prec)
 {
   int n = i2-i1;
   int s;
@@ -906,7 +707,7 @@ void cosmobl::invert_matrix (const vector<vector<double> > mat, vector<vector<do
 // ============================================================================
 
 
-void cosmobl::covariance_matrix (const vector<vector<double> > mat, vector< vector<double> > &cov, const bool JK) 
+void cbl::covariance_matrix (const vector<vector<double> > mat, vector< vector<double> > &cov, const bool JK) 
 {  
   cov.erase(cov.begin(), cov.end());
   vector<double> vv (mat[0].size(), 0.);
@@ -951,7 +752,7 @@ void cosmobl::covariance_matrix (const vector<vector<double> > mat, vector< vect
 // ============================================================================
 
 
-void cosmobl::covariance_matrix (const vector<string> file, vector<double> &rad, vector<double> &mean, vector< vector<double> > &cov, const bool JK) 
+void cbl::covariance_matrix (const vector<string> file, vector<double> &rad, vector<double> &mean, vector< vector<double> > &cov, const bool JK) 
 {  
   vector<vector<double> > xi_mocks;
 
@@ -993,7 +794,7 @@ void cosmobl::covariance_matrix (const vector<string> file, vector<double> &rad,
 // ============================================================================
 
 
-void cosmobl::covariance_matrix (const vector<string> file, const string covariance_matrix_file, const bool JK) 
+void cbl::covariance_matrix (const vector<string> file, const string covariance_matrix_file, const bool JK) 
 {  
 
   vector<double> rad, mean;
@@ -1015,7 +816,7 @@ void cosmobl::covariance_matrix (const vector<string> file, const string covaria
 // ============================================================================
 
  
-double cosmobl::Average (const vector<double> vect) 
+double cbl::Average (const vector<double> vect) 
 {
   if (vect.size()==0) ErrorCBL("Error in Average() of Func.h");
 
@@ -1042,7 +843,7 @@ double cosmobl::Average (const vector<double> vect)
 // ============================================================================
 
 
-double cosmobl::Average (const vector<double> vect, const vector<double> weight) 
+double cbl::Average (const vector<double> vect, const vector<double> weight) 
 {
   if (vect.size()==0 || vect.size()!=weight.size())
     ErrorCBL("Error in Average() of Func.h");
@@ -1070,7 +871,7 @@ double cosmobl::Average (const vector<double> vect, const vector<double> weight)
 // ============================================================================
 
 
-double cosmobl::Sigma (const vector<double> vect) 
+double cbl::Sigma (const vector<double> vect) 
 {
   if (vect.size()==0) ErrorCBL("Error in Sigma() of Func.h");
   
@@ -1108,7 +909,7 @@ double cosmobl::Sigma (const vector<double> vect)
 // ============================================================================
 
 
-double cosmobl::Sigma (const vector<double> vect, const vector<double> weight) 
+double cbl::Sigma (const vector<double> vect, const vector<double> weight) 
 {
   if (vect.size()==0 || vect.size()!=weight.size()) ErrorCBL("Error in Sigma() of Func.h");
   
@@ -1146,7 +947,7 @@ double cosmobl::Sigma (const vector<double> vect, const vector<double> weight)
 // ============================================================================
 
 
-vector<double> cosmobl::Quartile (const vector<double> Vect) 
+vector<double> cbl::Quartile (const vector<double> Vect) 
 {
   vector<double> vect = Vect;
   sort(vect.begin(), vect.end()); 
@@ -1202,7 +1003,7 @@ vector<double> cosmobl::Quartile (const vector<double> Vect)
 // ============================================================================
 
 
-void cosmobl::Moment (const vector<double> data, double &ave, double &adev, double &sdev, double &var, double &skew, double &curt) 
+void cbl::Moment (const vector<double> data, double &ave, double &adev, double &sdev, double &var, double &skew, double &curt) 
 {
   ave = gsl_stats_mean(data.data(), 1, data.size());  
   adev = gsl_stats_absdev_m(data.data(), 1, data.size(), ave);
@@ -1216,7 +1017,7 @@ void cosmobl::Moment (const vector<double> data, double &ave, double &adev, doub
 // ============================================================================
 
 
-double cosmobl::relative_error_beta (const double bias, const double Volume, const double density) // from Eq. 20 of Bianchi et al. 2012
+double cbl::relative_error_beta (const double bias, const double Volume, const double density) // from Eq. 20 of Bianchi et al. 2012
 { 
   double n0 = 1.7e-4; // in (h/Mpc)^3
   double CC = 4.9e2;  // in (Mpc/h)^1.5
@@ -1228,7 +1029,7 @@ double cosmobl::relative_error_beta (const double bias, const double Volume, con
 // ============================================================================
 
 
-void cosmobl::measure_var_function (const vector<double> var, const int bin, const double V_min, const double V_max, const double Volume, vector<double> &Var, vector<double> &Phi, vector<double> &err)
+void cbl::measure_var_function (const vector<double> var, const int bin, const double V_min, const double V_max, const double Volume, vector<double> &Var, vector<double> &Phi, vector<double> &err)
 {
   if (var.size()==0) ErrorCBL("Error in measure_var_functions of Func.cpp: there are no objectes in the catalogue!");
 
@@ -1243,7 +1044,7 @@ void cosmobl::measure_var_function (const vector<double> var, const int bin, con
   for (int y=0; y<bin; y++) {
     double nHalo = 0.;
 
-    for (unsigned int k=0; k<var.size(); k++) 
+    for (size_t k=0; k<var.size(); k++) 
       if (V1<var[k] && var[k]<=V2) nHalo ++; 
 
     double PHI = nHalo/(V2-V1)/Volume;
@@ -1262,147 +1063,7 @@ void cosmobl::measure_var_function (const vector<double> var, const int bin, con
 // ============================================================================================
 
 
-void cosmobl::set_EnvVar (vector<string> Var) 
-{
-  for (unsigned int vv=0; vv<Var.size(); vv++) 
-    putenv(&Var[0][0]);
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::check_EnvVar (const string Var) 
-{
-  string COM = "if [ $"+Var+" ]; then touch tmp; fi";
-  if (system (COM.c_str())) {};
-  ifstream fin_check("tmp");
-  if (!fin_check) { 
-    string Warn = "Attention: the variable " + Var + " has not been defined! (see check_EnvVar of Func.cpp)";
-    WarningMsg(Warn);
-  }
-  fin_check.clear(); fin_check.close();
-  if (system ("rm -f tmp")) {};
-}
-
-
-// ============================================================================================
-
-
-int cosmobl::used_memory (const int type)
-{
-#ifdef LINUX
-  int memory = -1;
-
-  string mem;
-  if (type==1) mem = "VmRSS:";
-  else if (type==2) mem = "VmSize:";
-  else ErrorCBL("Error in cosmobl::used_memory of Func.cpp: the input value of type is not allowed!");
-  
-  string file = "/proc/self/status";
-  ifstream fin(file.c_str()); checkIO(fin, file);
-  
-  string line, aa;
-  while (getline(fin, line)) {
-    stringstream ss(line);
-    vector<string> val;
-    while (ss>>aa) val.push_back(aa);
-    if (val.size()==3 && val[0]==mem) {
-      memory = atoi(val[1].c_str());
-      break;
-    }
-  }
-  
-  fin.clear(); fin.close();
-  
-  return memory;
-
-#else 
-  (void)type;
-  //WarningMsg("Attention: used_memory of Func.cpp works only on Linux systems");
-  return 1;
-
-#endif
-  
-}
-
-
-// ============================================================================
-
-
-int cosmobl::check_memory (const double frac, const bool exit, const string func, const int type)
-{
-#ifdef LINUX
-  struct sysinfo memInfo;
-  sysinfo (&memInfo);
-  
-  long long freePhysMem = memInfo.freeram;
-  freePhysMem *= memInfo.mem_unit;
-  int used = used_memory(type);
-  
-  if (used > freePhysMem*0.001*frac) { // 0.001 is to convert kbytes in bytes
-    string Err = "Attention: possible memory problem";
-    Err += (func.empty()) ? "!\n" : " in "+func+" !\n";
-    Err += "freePhysMem = "+conv((double)freePhysMem*1.e-9, par::fDP3)+" GB\n";
-    Err += "memory used by the process: = "+conv((double)used*1.e-6, par::fDP3)+" GB\n";
-    if (exit) ErrorCBL(Err);
-    else { WarningMsg(Err); return 0; }
-  }
-  return 1;
-  
-#else
-  (void)frac; (void)exit; (void)func; (void)type;
-  //WarningMsg("Attention: check_memory of Func.cpp works only on Linux systems");
-  return 1;
-  
-#endif
-}
-
-  
-// ============================================================================
-
-
-void cosmobl::convert_map_gnuplot_sm (const string file_gnu, const string file_sm)
-{
-  string dir = par::DirCosmo+"Func/";
-  string file1 = dir+"file1";
-  string file2 = dir+"file2";
-
-  ifstream fin(file_gnu.c_str()); checkIO(fin, file_gnu); 
-  
-  ofstream fout(file1.c_str()); checkIO(fout, file1); 
-  
-  string line; 
-  int ind_i = 0, ind_j = 0, dim2 = 0;
-  bool count = 1;
-
-  while (getline(fin,line)) {
-    double XX = -1.e30, YY, FF;
-    stringstream ss(line);
-    ss >>XX>>YY>>FF;
-    if (XX>-1.e10) {
-      fout <<ind_i<<"   "<<ind_j++<<"   "<<FF<<endl;
-      if (count) dim2 = ind_j;
-    }
-    else {ind_i ++; count = 0;}
-  }
-  fin.clear(); fin.close();
-
-  int dim1 = ind_i;
-  
-  string CONV = dir+"conv "+conv(dim1,par::fINT)+" "+conv(dim2,par::fINT)+" "+dir;
-  if (system (CONV.c_str())) {};
-  string MV = "cp "+file2+" "+file_sm+"; rm -f "+file2+" "+file1;
-  if (system (MV.c_str())) {};
-  coutCBL <<"I wrote the file: "<<file_sm<<endl;
-  
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::bin_function (const string file_grid, double func(double, void *), void *par, const int bin, const double x_min, const double x_max, const string binning, vector<double> &xx, vector<double> &yy) 
+void cbl::bin_function (const string file_grid, double func(double, void *), void *par, const int bin, const double x_min, const double x_max, const string binning, vector<double> &xx, vector<double> &yy) 
 {
   if (binning != "lin" && binning != "loglin" && binning != "log") 
     ErrorCBL("Error in bin_function of Func.cpp: binning can only be: lin, loglin or log !");
@@ -1472,7 +1133,7 @@ void cosmobl::bin_function (const string file_grid, double func(double, void *),
 // ============================================================================================
 
 
-void cosmobl::bin_function_2D (const string file_grid, double func(double *, size_t, void *), void *par, const int bin, const double x1_min, const double x1_max, const double x2_min, const double x2_max, const string binning, vector<double> &xx1, vector<double> &xx2, vector<vector<double> > &yy) 
+void cbl::bin_function_2D (const string file_grid, double func(double *, size_t, void *), void *par, const int bin, const double x1_min, const double x1_max, const double x2_min, const double x2_max, const string binning, vector<double> &xx1, vector<double> &xx2, vector<vector<double> > &yy) 
 {
   if (binning != "lin" && binning != "loglin" && binning != "log") 
     ErrorCBL("Error in bin_function of Func.cpp: binning can only be: lin, loglin or log !");
@@ -1557,9 +1218,9 @@ void cosmobl::bin_function_2D (const string file_grid, double func(double *, siz
 
 /// @cond glob
 
-double cosmobl::func_grid_lin (double xx, void *params)
+double cbl::func_grid_lin (double xx, void *params)
 {
-  struct cosmobl::glob::STR_grid *pp = (struct cosmobl::glob::STR_grid *) params;
+  struct cbl::glob::STR_grid *pp = (struct cbl::glob::STR_grid *) params;
 
   return interpolated(xx, pp->_xx, pp->_yy, "Linear");
 }
@@ -1568,9 +1229,9 @@ double cosmobl::func_grid_lin (double xx, void *params)
 // ============================================================================================
 
 
-double cosmobl::func_grid_loglin (double xx, void *params)
+double cbl::func_grid_loglin (double xx, void *params)
 {
-  struct cosmobl::glob::STR_grid *pp = (struct cosmobl::glob::STR_grid *) params;
+  struct cbl::glob::STR_grid *pp = (struct cbl::glob::STR_grid *) params;
  
   double lgx = log10(xx);
 
@@ -1581,9 +1242,9 @@ double cosmobl::func_grid_loglin (double xx, void *params)
 // ============================================================================================
 
 
-double cosmobl::func_grid_log (double xx, void *params)
+double cbl::func_grid_log (double xx, void *params)
 {
-  struct cosmobl::glob::STR_grid *pp = (struct cosmobl::glob::STR_grid *) params;
+  struct cbl::glob::STR_grid *pp = (struct cbl::glob::STR_grid *) params;
  
   double lgx = log10(xx);
 
@@ -1594,11 +1255,11 @@ double cosmobl::func_grid_log (double xx, void *params)
 // ============================================================================================
 
 
-double cosmobl::func_grid_lin_2D (double *xx, size_t dim, void *params)
+double cbl::func_grid_lin_2D (double *xx, size_t dim, void *params)
 {
   (void)dim;
   
-  struct cosmobl::glob::STR_grid_2D *pp = (struct cosmobl::glob::STR_grid_2D *) params;
+  struct cbl::glob::STR_grid_2D *pp = (struct cbl::glob::STR_grid_2D *) params;
    
   return interpolated_2D(xx[0], xx[1], pp->_xx1, pp->_xx2, pp->_yy, "Linear");
 }
@@ -1607,11 +1268,11 @@ double cosmobl::func_grid_lin_2D (double *xx, size_t dim, void *params)
 // ============================================================================================
 
 
-double cosmobl::func_grid_loglin_2D (double *xx, size_t dim, void *params)
+double cbl::func_grid_loglin_2D (double *xx, size_t dim, void *params)
 {
   (void)dim;
   
-  struct cosmobl::glob::STR_grid_2D *pp = (struct cosmobl::glob::STR_grid_2D *) params;
+  struct cbl::glob::STR_grid_2D *pp = (struct cbl::glob::STR_grid_2D *) params;
  
   double lgx1 = log10(xx[0]);
   double lgx2 = log10(xx[1]);
@@ -1623,11 +1284,11 @@ double cosmobl::func_grid_loglin_2D (double *xx, size_t dim, void *params)
 // ============================================================================================
 
 
-double cosmobl::func_grid_log_2D (double *xx, size_t dim, void *params)
+double cbl::func_grid_log_2D (double *xx, size_t dim, void *params)
 {
   (void)dim;
   
-  struct cosmobl::glob::STR_grid_2D *pp = (struct cosmobl::glob::STR_grid_2D *) params;
+  struct cbl::glob::STR_grid_2D *pp = (struct cbl::glob::STR_grid_2D *) params;
 
   double lgx1 = log10(xx[0]);
   double lgx2 = log10(xx[1]);
@@ -1639,9 +1300,8 @@ double cosmobl::func_grid_log_2D (double *xx, size_t dim, void *params)
 
 // ============================================================================================
 
-/* ======== Alfonso Veropalumbo ======== */
 
-void cosmobl::sdss_atbound(double &angle, const double minval, const double maxval)
+void cbl::sdss_atbound(double &angle, const double minval, const double maxval)
 {
   while (angle < minval)
     angle += 360.;
@@ -1650,7 +1310,7 @@ void cosmobl::sdss_atbound(double &angle, const double minval, const double maxv
     angle -= 360.0;
 }
 
-void cosmobl::sdss_atbound2(double &theta, double &phi)
+void cbl::sdss_atbound2(double &theta, double &phi)
 {
 
   sdss_atbound(theta, -180.0, 180.0);
@@ -1668,7 +1328,7 @@ void cosmobl::sdss_atbound2(double &theta, double &phi)
 }
 
 
-void cosmobl::eq2sdss (const vector<double> ra, const vector<double> dec, vector<double> &lambda, vector<double> &eta) 
+void cbl::eq2sdss (const vector<double> ra, const vector<double> dec, vector<double> &lambda, vector<double> &eta) 
 {
   lambda.resize(ra.size());
   eta.resize(ra.size());
@@ -1692,7 +1352,7 @@ void cosmobl::eq2sdss (const vector<double> ra, const vector<double> dec, vector
 // ============================================================================
 
 
-void cosmobl::sdss2eq (const vector<double> lambda, const vector<double> eta, vector<double> &ra, vector<double> &dec) 
+void cbl::sdss2eq (const vector<double> lambda, const vector<double> eta, vector<double> &ra, vector<double> &dec) 
 {
   ra.resize(lambda.size());
   dec.resize(lambda.size());
@@ -1715,7 +1375,7 @@ void cosmobl::sdss2eq (const vector<double> lambda, const vector<double> eta, ve
 // ============================================================================
 
 
-void cosmobl::sdss_stripe (const vector<double> eta, const vector<double> lambda, vector<int> &stripe, vector<int> &str_u)
+void cbl::sdss_stripe (const vector<double> eta, const vector<double> lambda, vector<int> &stripe, vector<int> &str_u)
 {
   stripe.resize(eta.size());
   str_u.resize(eta.size());
@@ -1741,27 +1401,36 @@ void cosmobl::sdss_stripe (const vector<double> eta, const vector<double> lambda
 // ============================================================================
 
 
-vector<double> cosmobl::vector_from_distribution (const int nRan, const vector<double> xx, const vector<double> fx, const double xmin, const double xmax, const int seed)
+double cbl::number_from_distribution (const vector<double> xx, const vector<double> fx, const double xmin, const double xmax, const int seed)
+{
+  return vector_from_distribution(1, xx, fx, xmin, xmax, seed)[0];
+}
+
+
+// ============================================================================
+
+
+vector<double> cbl::vector_from_distribution (const int nRan, const vector<double> xx, const vector<double> fx, const double xmin, const double xmax, const int seed)
 {
   random::UniformRandomNumbers ran(0., 1., seed);
   
-  int sz = 100;
+  const int sz = 100;
   vector<double> Fx(sz, 0.);
-  vector<double> new_x = linear_bin_vector(sz, xmin, xmax); 
+  const vector<double> new_x = linear_bin_vector(sz, xmin, xmax); 
 
-  cosmobl::glob::FuncGrid dist(xx, fx, "Spline");
-  double NN = dist.integrate_qag(xmin, xmax);
+  glob::FuncGrid dist(xx, fx, "Spline");
+  const double NN = dist.integrate_qag(xmin, xmax);
 
-  for (int i=1; i<sz; i++) 
+  for (int i=1; i<sz; ++i) 
     Fx[i] = dist.integrate_qag(xmin, new_x[i])/NN;
   
-  cosmobl::glob::FuncGrid ff(Fx, new_x, "Spline");
+  glob::FuncGrid ff(Fx, new_x, "Spline");
+  
+  vector<double> varRandom(nRan);
 
-  vector<double> varRandom;
-  
-  for (int i=0; i<nRan; i++)
-    varRandom.emplace_back(ff(ran()));
-  
+  for (auto &&vR : varRandom)
+    vR = ff(ran());
+ 
   return varRandom;
 }
 
@@ -1769,7 +1438,7 @@ vector<double> cosmobl::vector_from_distribution (const int nRan, const vector<d
 // ============================================================================
 
 
-vector<size_t> cosmobl::minimum_maximum_indexes (const vector<double> xx, const double x_min, const double x_max)
+vector<size_t> cbl::minimum_maximum_indexes (const vector<double> xx, const double x_min, const double x_max)
 {
   size_t ind1 = xx.size(), ind2 = 0;
   
@@ -1788,7 +1457,7 @@ vector<size_t> cosmobl::minimum_maximum_indexes (const vector<double> xx, const 
 // ============================================================================
 
 
-void cosmobl::read_invert_covariance (const string filecov, vector< vector<double>> &cov, vector<vector<double>> &cov_inv, const size_t i1, const size_t i2)
+void cbl::read_invert_covariance (const string filecov, vector< vector<double>> &cov, vector<vector<double>> &cov_inv, const size_t i1, const size_t i2)
 {
   size_t size = i2-i1+1;
 
@@ -1846,10 +1515,10 @@ void cosmobl::read_invert_covariance (const string filecov, vector< vector<doubl
 // ============================================================================
 
 
-void cosmobl::convolution (const vector<double> f1, const vector<double> f2, vector<double> &res, const double deltaX)
+void cbl::convolution (const vector<double> f1, const vector<double> f2, vector<double> &res, const double deltaX)
 {
   size_t nn = f1.size();
-  if (nn!=f2.size()) ErrorCBL("Error in cosmobl::convolution of Func.cpp! The two functions have to have equal sizes");
+  if (nn!=f2.size()) ErrorCBL("Error in cbl::convolution of Func.cpp! The two functions have to have equal sizes");
 
   double *ff1 = new double[nn];
   double *ff2 = new double[nn];
@@ -1920,12 +1589,12 @@ void cosmobl::convolution (const vector<double> f1, const vector<double> f2, vec
 // ============================================================================
 
 
-void cosmobl::distribution (vector<double> &xx, vector<double> &fx, vector<double> &err, const vector<double> FF, const vector<double> WW, const int nbin, const bool linear, const string file_out, const double fact, const double V1, const double V2, const bool bin_type, const bool conv, const double sigma)
+void cbl::distribution (vector<double> &xx, vector<double> &fx, vector<double> &err, const vector<double> FF, const vector<double> WW, const int nbin, const bool linear, const string file_out, const double fact, const double V1, const double V2, const bool bin_type, const bool conv, const double sigma)
 {
   if (xx.size()>0 || fx.size()>0 || FF.size()<=0 || nbin<=0) ErrorCBL("Error in distribution of Func.cpp!");
   
-  double minFF = (V1>cosmobl::par::defaultDouble) ? V1 : Min(FF)*0.9999;
-  double maxFF = (V2>cosmobl::par::defaultDouble) ? V2 : Max(FF)*1.0001;
+  double minFF = (V1>cbl::par::defaultDouble) ? V1 : Min(FF)*0.9999;
+  double maxFF = (V2>cbl::par::defaultDouble) ? V2 : Max(FF)*1.0001;
 
   
   // using GSL to create the histogram 
@@ -2040,7 +1709,7 @@ void cosmobl::distribution (vector<double> &xx, vector<double> &fx, vector<doubl
 // ============================================================================
 
 
-double cosmobl::legendre_polynomial (const double mu, const int l)
+double cbl::legendre_polynomial (const double mu, const int l)
 {
   return gsl_sf_legendre_Pl(l,mu);
 }
@@ -2049,9 +1718,9 @@ double cosmobl::legendre_polynomial (const double mu, const int l)
 // ============================================================================
 
 
-double cosmobl::legendre_polynomial_integral (double mu, void *params)
+double cbl::legendre_polynomial_integral (double mu, void *params)
 {
-  //  cosmobl::glob::STR_jl_distance_average *par = (cosmobl::glob::STR_jl_distance_average *)(params);
+  //  cbl::glob::STR_jl_distance_average *par = (cbl::glob::STR_jl_distance_average *)(params);
   int *l = (int *)(params);
   return legendre_polynomial(mu, *l);
 }
@@ -2060,10 +1729,10 @@ double cosmobl::legendre_polynomial_integral (double mu, void *params)
 // ============================================================================
 
 
-double cosmobl::Legendre_polynomial_mu_average (const int ll, const double mu, const double delta_mu)
+double cbl::Legendre_polynomial_mu_average (const int ll, const double mu, const double delta_mu)
 {
   gsl_function Func;
-  Func.function = &cosmobl::legendre_polynomial_integral;
+  Func.function = &cbl::legendre_polynomial_integral;
   int lll = ll;
   Func.params = &lll;
 
@@ -2074,7 +1743,22 @@ double cosmobl::Legendre_polynomial_mu_average (const int ll, const double mu, c
 // ============================================================================
 
 
-complex<double> cosmobl::spherical_harmonics (const int l, const int m, const double xx, const double yy, const double zz)
+double cbl::Legendre_polynomial_mu_average (const double mu_min, const double mu_max, const int ll)
+{
+  gsl_function Func;
+  Func.function = &cbl::legendre_polynomial_integral;
+  int lll = ll;
+  Func.params = &lll;
+
+  return gsl::GSL_integrate_qag(Func, mu_min, mu_max, 1.e-3, 1000, 6)/(mu_max-mu_min);
+}
+
+
+
+// ============================================================================
+
+
+complex<double> cbl::spherical_harmonics (const int l, const int m, const double xx, const double yy, const double zz)
 {
   const double sintheta = sin(acos(zz));
   complex<double> exp_iphi(xx/(sintheta), yy/(sintheta));
@@ -2089,7 +1773,7 @@ complex<double> cosmobl::spherical_harmonics (const int l, const int m, const do
 // ============================================================================
 
 
-vector<vector<complex<double>>> cosmobl::spherical_harmonics (const int lmax, const double xx, const double yy, const double zz)
+vector<vector<complex<double>>> cbl::spherical_harmonics (const int lmax, const double xx, const double yy, const double zz)
 {
   const int nl = lmax+1;
 
@@ -2125,7 +1809,7 @@ vector<vector<complex<double>>> cosmobl::spherical_harmonics (const int lmax, co
 // ============================================================================
 
 
-vector<complex<double>> cosmobl::spherical_harmonics_array (const int lmax, const double xx, const double yy, const double zz)
+vector<complex<double>> cbl::spherical_harmonics_array (const int lmax, const double xx, const double yy, const double zz)
 {
   const int n_sph = gsl_sf_legendre_array_n(lmax);
 
@@ -2155,7 +1839,7 @@ vector<complex<double>> cosmobl::spherical_harmonics_array (const int lmax, cons
 // ============================================================================
 
 
-double cosmobl::j0 (const double xx)
+double cbl::j0 (const double xx)
 {
   return gsl_sf_bessel_jl(0, xx);
 }
@@ -2164,7 +1848,7 @@ double cosmobl::j0 (const double xx)
 // ============================================================================
 
 
-double cosmobl::j2 (const double xx)
+double cbl::j2 (const double xx)
 {
   return gsl_sf_bessel_jl(2, xx);
 }
@@ -2173,7 +1857,7 @@ double cosmobl::j2 (const double xx)
 // ============================================================================
 
 
-double cosmobl::j4 (const double xx)
+double cbl::j4 (const double xx)
 {
   return gsl_sf_bessel_jl(4, xx);
 }
@@ -2182,7 +1866,7 @@ double cosmobl::j4 (const double xx)
 // ============================================================================
 
 
-double cosmobl::jl (const double xx, const int order)
+double cbl::jl (const double xx, const int order)
 {
   return gsl_sf_bessel_jl(order, xx);
 }
@@ -2191,7 +1875,7 @@ double cosmobl::jl (const double xx, const int order)
 // ============================================================================
 
 
-double cosmobl::j0_distance_average (const double kk, const double r_down, const double r_up)
+double cbl::j0_distance_average (const double kk, const double r_down, const double r_up)
 {
   double volume = (pow(r_up,3)-pow(r_down,3))/3;
   double up = (sin(kk*r_up)-kk*r_up*cos(kk*r_up))*pow(kk,-3);
@@ -2203,7 +1887,7 @@ double cosmobl::j0_distance_average (const double kk, const double r_down, const
 // ============================================================================
 
 
-double cosmobl::j2_distance_average (const double kk, const double r_down, const double r_up)
+double cbl::j2_distance_average (const double kk, const double r_down, const double r_up)
 {
   double volume = (pow(r_up,3)-pow(r_down,3))/3;
   double up = (3*gsl_sf_Si(kk*r_up)-4*sin(kk*r_up)+kk*r_up*cos(kk*r_up))*pow(kk,-3);
@@ -2215,9 +1899,9 @@ double cosmobl::j2_distance_average (const double kk, const double r_down, const
 // ============================================================================
 
 
-double cosmobl::jl_spherical_integrand (double rr, void *params)
+double cbl::jl_spherical_integrand (double rr, void *params)
 {
-  cosmobl::glob::STR_jl_distance_average *par = (cosmobl::glob::STR_jl_distance_average *)(params);
+  cbl::glob::STR_jl_distance_average *par = (cbl::glob::STR_jl_distance_average *)(params);
   return rr*rr*gsl_sf_bessel_jl(par->order, par->k*rr);
 }
 
@@ -2225,23 +1909,23 @@ double cosmobl::jl_spherical_integrand (double rr, void *params)
 // ============================================================================
 
 
-double cosmobl::jl_distance_average (const double kk, const int order, const double r_down, const double r_up)
+double cbl::jl_distance_average (const double kk, const int order, const double r_down, const double r_up)
 {
   double volume = (pow(r_up,3)-pow(r_down,3))/3;
 
-  cosmobl::glob::STR_jl_distance_average str;
+  cbl::glob::STR_jl_distance_average str;
   str.order = order;
   str.k = kk;
 
   gsl_function Func;
    
-  Func.function=&cosmobl::jl_spherical_integrand;
+  Func.function=&cbl::jl_spherical_integrand;
   Func.params=&str;
 
   double prec=1.e-2;
   int limit_size = 1000;
 
-  double Int = cosmobl::gsl::GSL_integrate_qag(Func, r_down, r_up, prec, limit_size, 6);
+  double Int = cbl::gsl::GSL_integrate_qag(Func, r_down, r_up, prec, limit_size, 6);
 
   return Int/volume;
 }
@@ -2250,7 +1934,7 @@ double cosmobl::jl_distance_average (const double kk, const int order, const dou
 // ============================================================================
 
 
-vector<double> cosmobl::generate_correlated_data (const vector<double> mean, const vector<vector<double>> covariance, const int seed)
+vector<double> cbl::generate_correlated_data (const vector<double> mean, const vector<vector<double>> covariance, const int seed)
 {
   random::UniformRandomNumbers ran(0., 1., seed);
   
@@ -2311,7 +1995,7 @@ vector<double> cosmobl::generate_correlated_data (const vector<double> mean, con
 // ============================================================================
 
 
-double cosmobl::trapezoid_integration (const vector<double> xx, const vector<double> yy)
+double cbl::trapezoid_integration (const vector<double> xx, const vector<double> yy)
 {
   double Int = 0.;
 
@@ -2325,7 +2009,7 @@ double cosmobl::trapezoid_integration (const vector<double> xx, const vector<dou
 // ============================================================================
 
 
-vector< vector<double> > cosmobl::generate_correlated_data (const int nExtractions, const vector<double> mean, const vector<vector<double> > covariance, const int seed)
+vector< vector<double> > cbl::generate_correlated_data (const int nExtractions, const vector<double> mean, const vector<vector<double> > covariance, const int seed)
 {
   random::UniformRandomNumbers ran(0., 1., seed);
   
@@ -2405,7 +2089,7 @@ vector< vector<double> > cosmobl::generate_correlated_data (const int nExtractio
 
 /// @cond glob
 
-void cosmobl::gauleg (const double x1, const double x2, double *x, double *w, const int n)
+void cbl::gauleg (const double x1, const double x2, double *x, double *w, const int n)
 {
   const double eps = 3.0e-11;
   int m = (n+1)/2;

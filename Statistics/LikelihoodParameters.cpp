@@ -33,31 +33,40 @@
 
 #include "LikelihoodParameters.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
+
+// ============================================================================================
+
+
+void cbl::statistics::LikelihoodParameters::reset()
+{
+  set_parameters(m_nparameters, m_parameter_type, m_parameter_name);
+}
 
 
 // ============================================================================================
 
 
-vector<double> cosmobl::statistics::LikelihoodParameters::full_parameters (const vector<double> free_parameter_values) const
+vector<double> cbl::statistics::LikelihoodParameters::full_parameters (const vector<double> parameter_values) const
 {
-
-  if((int)free_parameter_values.size() == (int)m_nparameters_free){
+  if(parameter_values.size() == m_nparameters_free){
     vector<double> all_parameters(m_nparameters, 0);
 
-    for(int i=0; i<m_nparameters_free; i++)
-      all_parameters[m_free_parameters[i]] = free_parameter_values[i];
+    for(size_t i=0; i<m_nparameters_free; i++)
+      all_parameters[m_free_parameters[i]] = parameter_values[i];
 
-    for(int i=0; i<m_nparameters_fixed; i++)
-      all_parameters[m_fixed_parameters[i]] = parameter(m_fixed_parameters[i])->value();
+    for(size_t i=0; i<m_nparameters_fixed; i++)
+      all_parameters[m_fixed_parameters[i]] = m_parameter_fixed_value[m_fixed_parameters[i]];
 
-    for(int i=0; i<m_nparameters_output; i++)
-      all_parameters[m_output_parameters[i]] = 0.;
+    for(size_t i=0; i<m_nparameters_derived; i++)
+      all_parameters[m_derived_parameters[i]] = 0.;
 
     return all_parameters;
   }
-  else if ((int)free_parameter_values.size() == (int)m_nparameters)
-    return free_parameter_values;
+  else if (parameter_values.size() == m_nparameters)
+    return parameter_values;
   else
     ErrorCBL("Error in parameters of LikelihoodParameters.cpp, the vector of values of free parameters has the wrong size!");
 
@@ -69,15 +78,22 @@ vector<double> cosmobl::statistics::LikelihoodParameters::full_parameters (const
 // ============================================================================================
 
 
-void cosmobl::statistics::LikelihoodParameters::m_set_parameter_type (vector<shared_ptr<Parameter>> parameters)
+void cbl::statistics::LikelihoodParameters::m_set_parameter_type ()
 {
-  m_parameters = parameters;
+  m_nparameters_free = 0;
+  m_nparameters_fixed = 0;
+  m_nparameters_base = 0;
+  m_nparameters_derived = 0;
 
-  m_nparameters = m_parameters.size();
-  for (int i=0; i<m_nparameters; i++) {
-    switch (m_parameters[i]->parameterType()) {
-      case statistics::ParameterType::_BaseParameter_:
-	if (m_parameters[i]->fixed()) {
+  m_base_parameters.erase(m_base_parameters.begin(), m_base_parameters.end());
+  m_fixed_parameters.erase(m_fixed_parameters.begin(), m_fixed_parameters.end());
+  m_free_parameters.erase(m_free_parameters.begin(), m_free_parameters.end());
+  m_derived_parameters.erase(m_derived_parameters.begin(), m_derived_parameters.end());
+
+  for (size_t i=0; i<m_nparameters; i++) {
+    switch (m_parameter_type[i]) {
+      case statistics::ParameterType::_Base_:
+	if (m_parameter_isFixed[i]) {
 	  m_nparameters_fixed +=1;
 	  m_fixed_parameters.push_back(i);
 	}
@@ -85,18 +101,18 @@ void cosmobl::statistics::LikelihoodParameters::m_set_parameter_type (vector<sha
 	  m_nparameters_free +=1;
 	  m_free_parameters.push_back(i);
 	}
+	m_nparameters_base +=1;
+	m_base_parameters.push_back(i);
 	break;
 
-      case statistics::ParameterType::_DerivedParameter_:
-	m_nparameters_output += 1;
-	m_output_parameters.push_back(i);
+      case statistics::ParameterType::_Derived_:
+	m_nparameters_derived += 1;
+	m_derived_parameters.push_back(i);
 	break;
 
       default:
-	ErrorCBL("Error in cosmobl::statistics::LikelihoodParameters of LikelihoodParameters.cpp: no such kind of parameter!");
+	ErrorCBL("Error in cbl::statistics::LikelihoodParameters of LikelihoodParameters.cpp: no such kind of parameter!");
     }
-
-	
   }
 }
 
@@ -104,49 +120,16 @@ void cosmobl::statistics::LikelihoodParameters::m_set_parameter_type (vector<sha
 // ============================================================================================
 
 
-void cosmobl::statistics::LikelihoodParameters::m_set_parameter_posterior (const int start, const int thin, const int seed)
+cbl::statistics::LikelihoodParameters::LikelihoodParameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames) 
 {
-  for (int i=0; i<m_nparameters; i++) 
-    m_parameters[i]->set_posterior(start, thin, seed);
+  set_parameters(nparameters, parameterTypes, parameterNames);
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::statistics::LikelihoodParameters::m_set_parameter_covariance(const int start, const int thin)
-{
-  vector<vector<double>> chains;
-
-  for (int i=0; i<m_nparameters; i++)
-    chains.push_back(m_parameters[i]->chain_values(start, thin));
-
-  cosmobl::covariance_matrix(transpose(chains), m_parameter_covariance, false);
-}
-
-
-// ============================================================================================
-
-
-cosmobl::statistics::LikelihoodParameters::LikelihoodParameters (const vector<shared_ptr<Parameter>> parameters)
-{
-  set_parameters(parameters);
-}
-
-
-// ============================================================================================
-
-  
-int cosmobl::statistics::LikelihoodParameters::nparameters () const
-{
-  return m_nparameters;
-}
-
-
-// ============================================================================================
-
-
-int cosmobl::statistics::LikelihoodParameters::nparameters_free () const
+size_t cbl::statistics::LikelihoodParameters::nparameters_free () const
 {
   return m_nparameters_free;
 }
@@ -155,7 +138,7 @@ int cosmobl::statistics::LikelihoodParameters::nparameters_free () const
 // ============================================================================================
 
 
-int cosmobl::statistics::LikelihoodParameters::nparameters_fixed () const
+size_t cbl::statistics::LikelihoodParameters::nparameters_fixed () const
 {
   return m_nparameters_fixed;
 }
@@ -164,864 +147,182 @@ int cosmobl::statistics::LikelihoodParameters::nparameters_fixed () const
 // ============================================================================================
 
 
-int cosmobl::statistics::LikelihoodParameters::nparameters_output () const
+void cbl::statistics::LikelihoodParameters::set_parameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames)
 {
-  return m_nparameters_output;
-}
-
-
-// ============================================================================================
-
-
-shared_ptr<cosmobl::statistics::Parameter> cosmobl::statistics::LikelihoodParameters::parameter (const unsigned int i) const
-{
-  return m_parameters[i];
-}
-
-
-
-// ============================================================================================
-
-
-vector<shared_ptr<cosmobl::statistics::Parameter>> cosmobl::statistics::LikelihoodParameters::parameters () const
-{
-  return m_parameters;
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::set_parameters (const vector<shared_ptr<cosmobl::statistics::Parameter>> parameters)
-{
-  m_set_parameter_type(parameters);
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::statistics::LikelihoodParameters::parameter_covariance (const int i, const int j) const
-{
-  return m_parameter_covariance[i][j];
-}
-
-
-// ============================================================================================
-
-
-vector<vector<double>> cosmobl::statistics::LikelihoodParameters::parameter_covariance () const 
-{
-  return m_parameter_covariance;
-}
-
-
-// ============================================================================================
-
-
-int cosmobl::statistics::LikelihoodParameters::chain_size () const
-{
-  return m_chain_size;
-}
-
-
-// ============================================================================================
-
-
-int cosmobl::statistics::LikelihoodParameters::nwalkers () const
-{
-  return m_nwalkers;
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::free (const int p)
-{
-  switch (m_parameters[p]->parameterType()) {
-
-    case statistics::ParameterType::_BaseParameter_:
-      m_parameters[p]->free();
-      break;
-
-    case statistics::ParameterType::_DerivedParameter_:
-      WarningMsg("Warning in fix of LikelihoodParameters, "+m_parameters[p]->name()+" is an output parameter");
-      break;
-
-    default:
-      ErrorCBL("Error in cosmobl::statistics::fix of LikelihoodParameters.cpp: no such kind of parameter!");
-  }
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::fix (const int p)
-{
-  switch (m_parameters[p]->parameterType()) {
-
-    case statistics::ParameterType::_BaseParameter_:
-      m_parameters[p]->fix();
-      break;
-
-    case statistics::ParameterType::_DerivedParameter_:
-      WarningMsg("Warning in fix of LikelihoodParameters, "+m_parameters[p]->name()+" is an output parameter");
-      break;
-
-    default:
-      ErrorCBL("Error in cosmobl::statistics::fix of LikelihoodParameters.cpp: no such kind of parameter!");
-  }
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::fix (const int p, const double value)
-{
-  switch (m_parameters[p]->parameterType()) {
-
-    case statistics::ParameterType::_BaseParameter_:
-      m_parameters[p]->fix(value);
-      break;
-
-    case statistics::ParameterType::_DerivedParameter_:
-      WarningMsg("Warning in fix of LikelihoodParameters, "+m_parameters[p]->name()+" is an output parameter");
-      break;
-
-    default:
-      ErrorCBL("Error in cosmobl::statistics::fix of LikelihoodParameters.cpp: no such kind of parameter!");
-  }
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::fix_at_bestfit (const int p)
-{
-  switch (m_parameters[p]->parameterType()) {
-
-    case statistics::ParameterType::_BaseParameter_:
-      m_parameters[p]->fix_at_bestfit();
-      break;
-
-    case statistics::ParameterType::_DerivedParameter_:
-      WarningMsg("Warning in fix of LikelihoodParameters, "+m_parameters[p]->name()+" is an output parameter");
-      break;
-
-    default:
-      ErrorCBL("Error in cosmobl::statistics::fix of LikelihoodParameters.cpp: no such kind of parameter!");
-  }
-
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::statistics::LikelihoodParameters::PriorProbability (const int p, const double value) const
-{
-  switch (m_parameters[p]->parameterType()) {
-
-    case statistics::ParameterType::_BaseParameter_:
-      m_parameters[p]->PriorProbability(value);
-      break;
-
-    case statistics::ParameterType::_DerivedParameter_:
-      WarningMsg("Warning in fix of LikelihoodParameters, "+m_parameters[p]->name()+" is an output parameter");
-      break;
-
-    default:
-      ErrorCBL("Error in cosmobl::statistics::fix of LikelihoodParameters.cpp: no such kind of parameter!");
-  }
-  return 0;
-}
-
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::statistics::LikelihoodParameters::PriorProbability (const vector<double> value) const
-{
-  vector<double> prior(m_nparameters, 1);
-
-  for (int i=0; i<m_nparameters_free; i++) {
-    int pp = m_free_parameters[i];
-    prior[pp] = m_parameters[pp]->PriorProbability(value[pp]);
-  }
-
-  return prior;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::statistics::LikelihoodParameters::LogPriorProbability (const int p, const double value) const
-{
-  switch (m_parameters[p]->parameterType()) {
-
-    case statistics::ParameterType::_BaseParameter_:
-      m_parameters[p]->LogPriorProbability(value);
-      break;
-
-    case statistics::ParameterType::_DerivedParameter_:
-      WarningMsg("Warning in fix of LikelihoodParameters, "+m_parameters[p]->name()+" is an output parameter");
-      break;
-
-    default:
-      ErrorCBL("Error in cosmobl::statistics::fix of LikelihoodParameters.cpp: no such kind of parameter!");
-  }
-  return 0;
-}
-
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::statistics::LikelihoodParameters::LogPriorProbability (const vector<double> value) const
-{
-  vector<double> prior(m_nparameters, 1);
-
-  for (int i=0; i<m_nparameters_free; i++) {
-    int pp = m_free_parameters[i];
-    prior[pp] = m_parameters[pp]->LogPriorProbability(value[pp]);
-  }
-
-  return prior;
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::set_prior_seed (const int seed)
-{
-  cosmobl::random::UniformRandomNumbers ran(0, 321434523, seed);
+  //Check parameterTypes size
   
-  for (int i=0; i<m_nparameters_free; i++) {
-    int pp = m_free_parameters[i];
-    m_parameters[pp]->set_prior_seed(int(ran()));
-  }
-  
-  for (int i=0; i<m_nparameters_fixed; i++) {
-    int pp = m_fixed_parameters[i];
-    m_parameters[pp]->set_prior_seed(int(ran()));
-  }
+  if (nparameters==0)
+    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::set_parameters of ModelParameters.cpp! nparameters should be > 0.");
+
+  if ((parameterTypes.size()!=nparameters) && (parameterTypes.size()!=0))
+    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::set_parameters of ModelParameters.cpp! Wrong size for the vector parameterTypes.");
+
+  if ((parameterNames.size()!=nparameters) && (parameterNames.size()!=0))
+    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::set_parameters of ModelParameters.cpp! Wrong size for the vector parameterNames.");
 
 
+  if ((parameterTypes.size()==nparameters) && (parameterNames.size()==nparameters)){
+    m_nparameters=nparameters;
+    m_parameter_type = parameterTypes;
+    m_parameter_name = parameterNames;
+  }
+  else if ((parameterTypes.size()==0) && (parameterNames.size()==0)){
+    m_nparameters=nparameters;
+    vector<ParameterType> pTypes(m_nparameters);
+    vector<string> pNames(m_nparameters);
+    for(size_t i=0; i<m_nparameters; i++){
+      pTypes[i] = ParameterType::_Base_;
+      pNames[i] = "par_"+conv(i+1, par::fINT);
+    }
+    m_parameter_type = pTypes;
+    m_parameter_name = pNames;
+  }
+  else if ((parameterTypes.size()==nparameters) && (parameterNames.size()==0)){
+    m_nparameters=nparameters;
+    vector<string> pNames(m_nparameters);
+    for(size_t i=0; i<m_nparameters; i++)
+      pNames[i] = "par_"+conv(i+1, par::fINT);
+    
+    m_parameter_type = parameterTypes;
+    m_parameter_name = pNames;
+  }
+  else if ((parameterTypes.size()==0) && (parameterNames.size()==0)){
+    m_nparameters=nparameters;
+    vector<ParameterType> pTypes(m_nparameters);
+    for(size_t i=0; i<m_nparameters; i++)
+      pTypes[i] = ParameterType::_Base_;
+    
+    m_parameter_type = pTypes;
+    m_parameter_name = parameterNames;
+  }
+
+  m_parameter_bestfit_value.erase(m_parameter_bestfit_value.begin(), m_parameter_bestfit_value.end());
+  m_parameter_isFixed.resize(m_nparameters, false);
+  m_parameter_fixed_value.resize(m_nparameters, 0);
+  m_set_parameter_type();
 }
 
 
 // ============================================================================================
 
 
-double cosmobl::statistics::LikelihoodParameters::prior_sample (const int p)
+void cbl::statistics::LikelihoodParameters::free (const int p)
 {
-  switch (m_parameters[p]->parameterType()) {
+  switch (m_parameter_type[p]) {
 
-    case statistics::ParameterType::_BaseParameter_:
-      return m_parameters[p]->prior_sample();
+    case ParameterType::_Base_:
+      m_parameter_isFixed[p] = false;
+      m_set_parameter_type();
       break;
 
-    case statistics::ParameterType::_DerivedParameter_:
-      WarningMsg("Warning in fix of LikelihoodParameters, "+m_parameters[p]->name()+" is an output parameter");
-      break;
-
-    default:
-      ErrorCBL("Error in cosmobl::statistics::fix of LikelihoodParameters.cpp: no such kind of parameter!");
-  }
-
-  return 0;
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::statistics::LikelihoodParameters::prior_sample (const int p, const int sample_size)
-{
-  switch (m_parameters[p]->parameterType()) {
-
-    case statistics::ParameterType::_BaseParameter_:
-      return m_parameters[p]->prior_sample(sample_size);
-      break;
-
-    case statistics::ParameterType::_DerivedParameter_:
-      WarningMsg("Warning in fix of LikelihoodParameters, "+m_parameters[p]->name()+" is an output parameter");
-      break;
-
-    default:
-      ErrorCBL("Error in cosmobl::statistics::fix of LikelihoodParameters.cpp: no such kind of parameter!");
-  }
-
-  vector<double> vv;
-  return vv;
-}
-
-// ============================================================================================
-
-
-vector<double> cosmobl::statistics::LikelihoodParameters::prior_sample ()
-{
-  vector<double> prior_values(nparameters(), 0);
-  
-  for (int i=0; i<m_nparameters_free; i++) {
-    int pp = m_free_parameters[i];
-    prior_values[pp] = m_parameters[pp]->prior_sample();
-  }
-  
-  for (int i=0; i<m_nparameters_fixed; i++) {
-    int pp = m_fixed_parameters[i];
-    prior_values[pp] = m_parameters[pp]->prior_sample();
-  }
-
-  return prior_values;
-}
-
-
-// ============================================================================================
-	
-
-double cosmobl::statistics::LikelihoodParameters::prior_range (const int p, const double epsilon)
-{
-  switch (m_parameters[p]->parameterType()) {
-    case statistics::ParameterType::_BaseParameter_:
-      if (m_parameters[p]->fixed()) {
-	return 0.;
-      }
-      else {
-	return m_parameters[p]->prior_range(epsilon); 
-      }
-      break;
-
-    case statistics::ParameterType::_DerivedParameter_:
-      return 0;
+    case ParameterType::_Derived_:
+      WarningMsg("Warning in fix of LikelihoodParameters, "+m_parameter_name[p]+" is a derived parameter");
       break;
 
     default:
-      ErrorCBL("Error in cosmobl::statistics::LikelihoodParameters of LikelihoodParameters.cpp: no such kind of parameter!");
+      ErrorCBL("Error in cbl::statistics::fix of LikelihoodParameters.cpp: no such kind of parameter!");
   }
-  return 0;
 }
 
 
 // ============================================================================================
 
 
-vector<double> cosmobl::statistics::LikelihoodParameters::prior_range (const double epsilon)
+void cbl::statistics::LikelihoodParameters::fix (const int p, const double value)
 {
-  vector<double> ss(m_nparameters, 0);
-  for (int i=0; i<m_nparameters_free; i++)
-    ss[m_free_parameters[i]] = prior_range(m_free_parameters[i], epsilon);
+  switch (m_parameter_type[p]) {
 
-  return ss;
-}
+    case statistics::ParameterType::_Base_:
+      m_parameter_isFixed[p]=true;
+      m_parameter_fixed_value[p] = value;
+      m_set_parameter_type();
+      break;
 
+    case statistics::ParameterType::_Derived_:
+      WarningMsg("Warning in fix of LikelihoodParameters, "+m_parameter_name[p]+" is a derived parameter");
+      break;
 
-// ============================================================================================
-
-  
-double cosmobl::statistics::LikelihoodParameters::bestfit_value (const int p) const
-{
-  return m_parameters[p]->bestfit_value();
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::statistics::LikelihoodParameters::bestfit_values () const
-{
-  vector<double> bestfit(nparameters(),0);
-
-  for (int i=0; i<m_nparameters; i++)
-    bestfit[i] = bestfit_value(i);
-
-  return bestfit;
+    default:
+      ErrorCBL("Error in cbl::statistics::fix of LikelihoodParameters.cpp: no such kind of parameter!");
+  }
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::statistics::LikelihoodParameters::set_bestfit_value (const int p, const double bestfit_value)
+void cbl::statistics::LikelihoodParameters::fix_at_bestfit (const int p)
 {
-  m_parameters[p]->set_bestfit_value(bestfit_value);
+  fix(p, m_parameter_bestfit_value[p]);
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::statistics::LikelihoodParameters::set_bestfit_value (const vector<double> bestfit_value)
+double cbl::statistics::LikelihoodParameters::bestfit_value (const int p) const
 {
-  for (int i=0; i<m_nparameters; i++)
-    m_parameters[i]->set_bestfit_value(bestfit_value[i]);
+  if (m_parameter_bestfit_value.size() == 0) 
+    ErrorCBL("Error in bestfit_values of LikelihoodParameters! Can't found best fit values!"); 
+
+  return m_parameter_bestfit_value[p];
+}
+
+// ============================================================================================
+
+
+vector<double> cbl::statistics::LikelihoodParameters::bestfit_values () const
+{
+  if (m_parameter_bestfit_value.size() == 0) 
+    ErrorCBL("Error in bestfit_values of LikelihoodParameters! Can't found best fit values!"); 
+
+  return m_parameter_bestfit_value;
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::statistics::LikelihoodParameters::write_bestfit_info (const vector<double> bestfit_value)
+void cbl::statistics::LikelihoodParameters::set_bestfit_value (const vector<double> bestfit_value)
 {
-  set_bestfit_value(bestfit_value);
-  for (int i=0; i<m_nparameters; i++) {
+  if (bestfit_value.size() != m_nparameters)
+    ErrorCBL("Error in set_bestfit_value of LikelihoodParameters! Wrong size for the input vector!"); 
 
-    switch (m_parameters[i]->parameterType()) {
+  m_parameter_bestfit_value.erase(m_parameter_bestfit_value.begin(), m_parameter_bestfit_value.end());
+  for (size_t i=0; i<m_nparameters; i++) 
+    m_parameter_bestfit_value.push_back(bestfit_value[i]);
+}
 
-      case statistics::ParameterType::_BaseParameter_:
-	if (m_parameters[i]->fixed()) {
-	  coutCBL << "Parameter: " << par::col_yellow << m_parameters[i]->name() << par::col_default << " --> status: " << par::col_purple << "FIXED" << endl;
-	  coutCBL << "value = " << m_parameters[i]->bestfit_value() << endl;
-	  cout << endl;
-	}
-	else {
-	  coutCBL << "Parameter: " << par::col_yellow << m_parameters[i]->name() << par::col_default << " --> status: " << par::col_green << "FREE" << endl;
-	  coutCBL << "value = " << m_parameters[i]->bestfit_value() << endl;
-	  cout << endl;
-	}
-	
+
+// ============================================================================================
+
+
+void cbl::statistics::LikelihoodParameters::write_bestfit_info ()
+{
+  if (m_parameter_bestfit_value.size() == m_nparameters) {
+    for (size_t i=0; i<m_nparameters; i++) {
+
+      switch (m_parameter_type[i]) {
+	case statistics::ParameterType::_Base_:
+	if (m_parameter_isFixed[i]) 
+	  coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_purple << "FIXED" << endl;
+	else 
+	  coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " <<  par::col_green << "FREE" << endl;
 	break;
 
-      case statistics::ParameterType::_DerivedParameter_:
-	coutCBL << "Parameter: " << par::col_yellow << m_parameters[i]->name() << par::col_default << " --> status: " << par::col_bred << "OUTPUT" << endl;
-	coutCBL << "value = " << m_parameters[i]->bestfit_value() << endl;
-	cout << endl;
+	case statistics::ParameterType::_Derived_:
+	coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: "  << par::col_bred << "OUTPUT" << endl;
 	break;
 
-      default:
-	ErrorCBL("Error in cosmobl::statistics::LikelihoodParameters of LikelihoodParameters.cpp: no such kind of parameter!");
-    }
-  }
-
-}
-
-
-// ============================================================================================
-
-  
-double cosmobl::statistics::LikelihoodParameters::PosteriorProbability (const int p, const double value) const
-{
-  return m_parameters[p]->PosteriorProbability(value);
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::statistics::LikelihoodParameters::PosteriorProbability (const vector<double> value) const
-{
-  vector<double> vv;
-
-  for (int i=0; i<m_nparameters; i++)
-    vv.push_back(PosteriorProbability(i, value[i]));
-
-  return vv;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::statistics::LikelihoodParameters::posterior_mean (const int p) const
-{
-  return m_parameters[p]->posterior_mean();
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::statistics::LikelihoodParameters::posterior_mean () const
-{
-  vector<double> vv;
-
-  for (int i=0; i<m_nparameters; i++)
-    vv.push_back(posterior_mean(i));
-
-  return vv;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::statistics::LikelihoodParameters::posterior_median (const int p) const
-{
-  return m_parameters[p]->posterior_median();
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::statistics::LikelihoodParameters::posterior_median () const
-{ 
-  vector<double> vv;
-
-  for (int i=0; i<m_nparameters; i++)
-    vv.push_back(posterior_median(i));
-
-  return vv;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::statistics::LikelihoodParameters::posterior_std (const int p) const
-{
-  return m_parameters[p]->posterior_std();
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::statistics::LikelihoodParameters::posterior_std () const
-{
-  vector<double> vv;
-
-  for (int i=0; i<m_nparameters; i++)
-    vv.push_back(posterior_std(i));
-
-  return vv;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::statistics::LikelihoodParameters::posterior_percentile (const int p, const unsigned int i) const
-{
-  return m_parameters[p]->posterior_percentile(i);
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::statistics::LikelihoodParameters::posterior_percentile (const unsigned int i) const
-{
-  vector<double> vv;
-
-  for (int p=0; p<m_nparameters; p++)
-    vv.push_back(posterior_percentile(p, i));
-
-  return vv;
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::statistics::LikelihoodParameters::posterior_sample (const int p)
-{
-  return m_parameters[p]->posterior_sample();
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::statistics::LikelihoodParameters::posterior_sample (const int p, const int sample_size)
-{
-  return m_parameters[p]->posterior_sample(sample_size);
-}
-
-
-// ============================================================================================
-
-
-double cosmobl::statistics::LikelihoodParameters::chain_value (const int pos, const int ww, const int par)
-{
-  return m_parameters[par]->chain_value(pos, ww);
-}
-
-
-// ============================================================================================
-
-
-vector<double> cosmobl::statistics::LikelihoodParameters::chain_values (const int pos, const int par)
-{
-  vector<double> vv(nwalkers(),0);
-  for (int i=0; i<nwalkers(); i++)
-    vv[i] = m_parameters[par]->chain_value(pos, i);
-  return vv;
-}
-
-
-// ============================================================================================
-
-
-vector<vector<double>> cosmobl::statistics::LikelihoodParameters::chain_values (const int pos)
-{
-  vector<vector<double>> vv;
-
-  for (int i=0;i<m_nparameters;i++)
-    vv.push_back(chain_values(pos, i));
-
-  return cosmobl::transpose(vv);
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::set_chain_value (const int pos, const int ww, const int par, const double value)
-{
-  m_parameters[par]->set_chain_value(pos, ww, value);
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::set_chain_values (const int pos, const int par, const vector<double> values)
-{
-  for (size_t i=0;i<values.size();i++)
-    m_parameters[par]->set_chain_value(pos, i, values[i]);
-}
-
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::set_chain_values (const int pos, const vector<vector<double>> values)
-{
-  for (int p=0;p<m_nparameters;p++)
-      set_chain_values(pos, p, values[p]);
-
-}
-  
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::set_chains (const int chain_size, const int nwalkers)
-{
-  for (int p=0;p<m_nparameters;p++)
-    m_parameters[p]->set_chain(chain_size, nwalkers);
-
-  m_nwalkers = nwalkers;
-  m_chain_size = chain_size;
-}
-  
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::set_chains (const vector<vector<double>> chain_values, const int nwalkers)
-{
-  for (int p=0;p<m_nparameters;p++)
-    m_parameters[p]->set_chain(chain_values[p], nwalkers);
-
-  m_nwalkers = nwalkers;
-  m_chain_size = m_parameters[0]->chain_size();
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::set_chains (const vector<vector<vector<double>>> chain_values)
-{
-  for (int p=0;p<m_nparameters;p++)
-    m_parameters[p]->set_chain(chain_values[p]);
-
-  m_nwalkers = m_parameters[0]->nwalkers();
-  m_chain_size = m_parameters[0]->chain_size();
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::initialize_chains_from_prior (const int seed)
-{
-  set_prior_seed(seed);
-
-  for (int p=0;p<nparameters_free(); p++) {
-    int ii = m_free_parameters[p];
-    vector<double> vv(nwalkers(), 0);
-
-    if (m_parameters[ii]->parameterType()==statistics::ParameterType::_BaseParameter_) {
-      vv = m_parameters[ii]->prior_sample(nwalkers());
-    }
-    set_chain_values(0, ii, vv);
-  }
-
-  for (int p=0;p<nparameters_fixed(); p++) {
-    int ii = m_fixed_parameters[p];
-    vector<double> vv(nwalkers(), m_parameters[ii]->value());
-    set_chain_values(0, ii, vv);
-  }
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::initialize_chains_around_bestfit_values (const double radius, const int seed)
-{
-  initialize_chains_around_values(bestfit_values(), radius, seed);
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::initialize_chains_around_values (const vector<double> values, const double radius, const int seed)
-{
-  cosmobl::random::NormalRandomNumbers rn(0, radius, seed);
-  if ( ((int)values.size()==nparameters()) || ((int)values.size()==nparameters_free()+nparameters_fixed() )){
-
-    for (int p=0;p<nparameters_free(); p++) {
-      int ii = m_free_parameters[p];
-      vector<double> vv(nwalkers(), 0);
-
-      if (m_parameters[ii]->parameterType()==statistics::ParameterType::_BaseParameter_) {
-	for (int i=0;i<nwalkers(); i++){
-	  bool ok = false;
-	  while(!ok){
-	    vv[i] = rn()+values[ii];
-	    ok = m_parameters[ii]->prior()->isIncluded (vv[i]);
-	  }
-	}
+	default:
+	ErrorCBL("Error in write_bestfit_info() of LikelihoodParameters.cpp: no such kind of parameter!");
       }
-      set_chain_values(0, ii, vv);
-    }
 
-    for (int p=0;p<nparameters_fixed(); p++) {
-      int ii = m_fixed_parameters[p];
-      vector<double> vv(nwalkers(), m_parameters[ii]->value());
-      set_chain_values(0, ii, vv);
+      coutCBL << "value = " << m_parameter_bestfit_value[i] << endl;
+      cout << endl;
     }
   }
-  else if  ((int)values.size()==nparameters_free()) {
-
-    for (int p=0;p<nparameters_free(); p++) {
-      int ii = m_free_parameters[p];
-      vector<double> vv(nwalkers(), 0);
-
-      if (m_parameters[ii]->parameterType()==statistics::ParameterType::_BaseParameter_) {
-	for (int i=0;i<nwalkers(); i++){
-	  bool ok = false;
-	  while(!ok){
-	    vv[i] = rn()+values[ii];
-	    ok = m_parameters[ii]->prior()->isIncluded (vv[i]);
-	  }
-	}
-      }
-      set_chain_values(0, ii, vv);
-    }
-  }
-
   else
-    ErrorCBL("Error in initialize_chains_around_values of LikelihoodParameters, starting values must have the same dimension of the number of parameters");
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::show_results (const int start, const int thin, const int seed)
-{
-  m_set_parameter_posterior(start, thin, seed);
-
-  m_set_parameter_covariance(start, thin);
-
-  const int dp = cout.precision(); cout.precision(4);
-  cout << endl;
-  
-  for (int i=0; i<m_nparameters; i++) {
-
-    switch (m_parameters[i]->parameterType()) {
-
-      case statistics::ParameterType::_BaseParameter_:
-	if (m_parameters[i]->fixed()) {
-	  coutCBL << "Parameter: " << par::col_yellow << m_parameters[i]->name() << par::col_default << " --> status: " << par::col_purple << "FIXED" << endl;
-	  coutCBL << "value = " << m_parameters[i]->value() << endl;
-	  cout << endl;
-	}
-	else {
-	  coutCBL << "Parameter: " << par::col_yellow << m_parameters[i]->name() << par::col_default << " --> status: " << par::col_green << "FREE" << endl;
-	  coutCBL << "Posterior mean = " << m_parameters[i]->posterior_mean() << endl;
-	  coutCBL << "Posterior standard deviation = " << m_parameters[i]->posterior_std() << endl;
-	  coutCBL << "Posterior median = " << m_parameters[i]->posterior_median() << endl;
-	  coutCBL << "Posterior 18th percentile = " << m_parameters[i]->posterior_median()-m_parameters[i]->posterior_percentile(18) << endl;
-	  coutCBL << "Posterior 82th percentile = " << m_parameters[i]->posterior_percentile(82)-m_parameters[i]->posterior_median() << endl;
-	  coutCBL << "Posterior mode = " << m_parameters[i]->posterior_mode() << endl;
-	  cout << endl;
-	}
-	break;
-
-      case statistics::ParameterType::_DerivedParameter_:
-	coutCBL << "Parameter: " << par::col_yellow << m_parameters[i]->name() << par::col_default << " --> status: " << par::col_bred << "OUTPUT" << endl;
-	coutCBL << "Posterior mean = " << m_parameters[i]->posterior_mean() << endl;
-	coutCBL << "Posterior standard deviation = " << m_parameters[i]->posterior_std() << endl;
-	coutCBL << "Posterior median = " << m_parameters[i]->posterior_median() << endl;
-	coutCBL << "Posterior 18th percentile = " << m_parameters[i]->posterior_median()-m_parameters[i]->posterior_percentile(18) << endl;
-	coutCBL << "Posterior 82th percentile = " << m_parameters[i]->posterior_percentile(82)-m_parameters[i]->posterior_median() << endl;
-	coutCBL << "Posterior mode = " << m_parameters[i]->posterior_mode() << endl;
-	coutCBL << endl;
-	break;
-
-      default:
-	ErrorCBL("Error in cosmobl::statistics::LikelihoodParameters of LikelihoodParameters.cpp: no such kind of parameter!");
-    }
-  }
-  
-  cout.precision(dp);
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::statistics::LikelihoodParameters::write_results (const string dir, const string file, const int start, const int thin, const int seed)
-{
-  m_set_parameter_posterior(start, thin, seed);
-  m_set_parameter_covariance(start, thin);
-  
-  string mkdir = "mkdir -p "+dir; if (system(mkdir.c_str())) {}
-
-  string file_parameters = dir+file+"_parameters.dat";
-  string file_covariance = dir+file+"_covariance.dat";
-
-  ofstream fout(file_parameters.c_str());
-
-  fout << "### Parameter # status ###" << endl << "### Posterior mean # Posterior standard deviation # Posterior median # Posterior 18th percentile # Posterior 82th percentile # Posterior mode ###" << endl << endl;
-  
-  for (int i=0; i<m_nparameters; i++) 
-    if (m_parameters[i]->parameterType()==statistics::ParameterType::_BaseParameter_ && m_parameters[i]->fixed())
-      fout << "# " << m_parameters[i]->name() << " FIXED #" << endl;
-    else 
-      fout << "# " << m_parameters[i]->name() << " FREE #" << endl;
-   
-  for (int i=0; i<m_nparameters; i++) 
-    if (m_parameters[i]->parameterType()==statistics::ParameterType::_BaseParameter_ && m_parameters[i]->fixed())
-      fout << m_parameters[i]->value() << " 0 0 0 0 0 0" << endl;
-    else 
-      fout << m_parameters[i]->posterior_mean() << " " << m_parameters[i]->posterior_std() << " " << m_parameters[i]->posterior_median() << " " << m_parameters[i]->posterior_median()-m_parameters[i]->posterior_percentile(18) << " " << m_parameters[i]->posterior_percentile(82)-m_parameters[i]->posterior_median() << " " << m_parameters[i]->posterior_mode() << endl;
-  
-  fout.clear(); fout.close(); coutCBL << "I wrote the file: " << file_parameters << endl;
-
-
-  fout.open(file_covariance.c_str());
-  for (int i=0; i<m_nparameters; i++) {
-    for (int j=0; j<m_nparameters; j++)
-      fout << i << " " << j << " " << m_parameter_covariance[i][j] << endl;
-    fout << endl;
-  }
-  fout.clear(); fout.close(); coutCBL << "I wrote the file: " << file_covariance << endl;
+    ErrorCBL("Error in write_bestfit_info of LikelihoodParameters! Can't found best fit values!"); 
 
 }

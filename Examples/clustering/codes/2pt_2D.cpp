@@ -7,7 +7,7 @@
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
 // launching the code on remote systems)
-string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 
 
 int main () {
@@ -18,16 +18,16 @@ int main () {
     // ---------------- set the cosmological parameters ------------
     // -------------------------------------------------------------
   
-    const cosmobl::cosmology::Cosmology cosmology {cosmobl::cosmology::_Planck15_};
+    const cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
   
   
     // ----------------------------------------------------------
     // ---------------- read the input catalogue ----------------
     // ----------------------------------------------------------
   
-    const string file_catalogue = cosmobl::par::DirLoc+"../input/cat.dat";
+    const std::string file_catalogue = cbl::par::DirLoc+"../input/cat.dat";
 
-    const cosmobl::catalogue::Catalogue catalogue {cosmobl::catalogue::_Galaxy_, cosmobl::_observedCoordinates_, {file_catalogue}, cosmology};
+    const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
   
   
     // --------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ int main () {
 
     const double N_R = 3.; // random/data ratio
  
-    const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
+    const cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::RandomType::_createRandom_box_, catalogue, N_R};
   
   
     // -----------------------------------------------------------------------------------------------
@@ -45,8 +45,8 @@ int main () {
 
     // ----- output data ----- 
 
-    const string dir_pairs = cosmobl::par::DirLoc+"../output/";
-    const string dir_output = cosmobl::par::DirLoc+"../output/";
+    const std::string dir_pairs = cbl::par::DirLoc+"../output/";
+    const std::string dir_output = cbl::par::DirLoc+"../output/";
 
   
     // ----- measure the 2D correlation function in Cartesian coordinates, xi(rp,pi), and store the outputs ----- 
@@ -61,15 +61,15 @@ int main () {
     const double shift_D2 = 0.5; // spatial shift used to set the bin centre in the second dimension
   
     // construct the object using a static factory
-    const auto xi2DCart = cosmobl::measure::twopt::TwoPointCorrelation::Create(cosmobl::measure::twopt::_2D_Cartesian_, catalogue, random_catalogue, cosmobl::_linear_, rpMin, rpMax, nbins_D1, shift_D1, cosmobl::_linear_, piMin, piMax, nbins_D2, shift_D2);
+    const auto xi2DCart = cbl::measure::twopt::TwoPointCorrelation::Create(cbl::measure::twopt::TwoPType::_2D_Cartesian_, catalogue, random_catalogue, cbl::BinType::_linear_, rpMin, rpMax, nbins_D1, shift_D1, cbl::BinType::_linear_, piMin, piMax, nbins_D2, shift_D2);
 
     // measure the 2D correlation function and compute Poisson errors
-    xi2DCart->measure(cosmobl::measure::ErrorType::_Poisson_, dir_pairs);
+    xi2DCart->measure(cbl::measure::ErrorType::_Poisson_, dir_pairs);
     xi2DCart->write(dir_output, "xi_rp_pi_linlin.dat");
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

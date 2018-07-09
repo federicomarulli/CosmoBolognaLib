@@ -34,13 +34,16 @@
  */
 
 #include "Cosmology.h"
-using namespace cosmobl;
+
+using namespace std;
+
+using namespace cbl;
 
 
 // =====================================================================================
 
  
-double cosmobl::cosmology::Cosmology::xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const string method_Pk, const double redshift, const string output_root, const bool xiType, const double k_star, const bool xiNL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+double cbl::cosmology::Cosmology::xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const string method_Pk, const double redshift, const string output_root, const bool xiType, const double k_star, const bool xiNL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
 {
   // ----- get the real-space DM xi(r) ----- 
 
@@ -56,7 +59,7 @@ double cosmobl::cosmology::Cosmology::xi0_Kaiser (const double rad, const double
 // =====================================================================================
 
  
-vector<double> cosmobl::cosmology::Cosmology::xi0_Kaiser (const vector<double> rad, const double bias, const string method_Pk, const bool NL, const double redshift, const string output_dir, const string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const string file_par)
+vector<double> cbl::cosmology::Cosmology::xi0_Kaiser (const vector<double> rad, const double bias, const string method_Pk, const bool NL, const double redshift, const string output_dir, const string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const string file_par)
 {
   const vector<double> kk = logarithmic_bin_vector(step, k_min, k_max);
   const vector<double> Pk = this->Pk(kk, method_Pk, NL, redshift, output_dir, output_root, norm, k_min, k_max, prec, file_par);
@@ -75,9 +78,9 @@ vector<double> cosmobl::cosmology::Cosmology::xi0_Kaiser (const vector<double> r
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const string method_Pk, const double redshift, const int FV, const bool NL, vector<double> rr, vector<double> &Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root, const int index, const bool bias_nl, const double bA, const bool xiType, const double k_star, const bool xiNL, const double v_min, const double v_max, const int step_v, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par) 
+double cbl::cosmology::Cosmology::xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const string method_Pk, const double redshift, const int FV, const bool NL, vector<double> rr, vector<double> &Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root, const int index, const bool bias_nl, const double bA, const bool xiType, const double k_star, const bool xiNL, const double v_min, const double v_max, const int step_v, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par) 
 {
-  if (m_sigma8<0) return ErrorCBL("Error in cosmobl::cosmology::Cosmology::xi2D_DispersionModel of PkXi_zSpace.cpp!");
+  if (m_sigma8<0) return ErrorCBL("Error in cbl::cosmology::Cosmology::xi2D_DispersionModel of PkXi_zSpace.cpp!");
   
   double bias = bias_sigma8/m_sigma8; 
   double beta = f_sigma8/bias_sigma8;
@@ -116,7 +119,7 @@ double cosmobl::cosmology::Cosmology::xi2D_DispersionModel (const double rp, con
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::xi_star (const double rr, const double redshift, const string output_root, const double k_star, const double k_min, const double k_max, const double prec, const string file_par) 
+double cbl::cosmology::Cosmology::xi_star (const double rr, const double redshift, const string output_root, const double k_star, const double k_min, const double k_max, const double prec, const string file_par) 
 {
   string method_Pk1 = "EisensteinHu"; 
   string method_Pk2 = "CAMB";
@@ -139,7 +142,7 @@ double cosmobl::cosmology::Cosmology::xi_star (const double rr, const double red
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::xisnl_gnw (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double bA, const double redshift, vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root)
+double cbl::cosmology::Cosmology::xisnl_gnw (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double bA, const double redshift, vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root)
 {
   string method_Pk = "EisensteinHu";
   
@@ -150,9 +153,9 @@ double cosmobl::cosmology::Cosmology::xisnl_gnw (const double rp, const double p
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::xis_gBAO (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double redshift, vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root, const double k_star, const double x_min, const double x_max, const int step_x)
+double cbl::cosmology::Cosmology::xis_gBAO (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double redshift, vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string output_root, const double k_star, const double x_min, const double x_max, const int step_x)
 {
-  if (m_sigma8<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::xis_gBAO of PkXi_zSpace.cpp!");
+  if (m_sigma8<0) ErrorCBL("Error in cbl::cosmology::Cosmology::xis_gBAO of PkXi_zSpace.cpp!");
 
   int FV = -1;
   bool NL = 0;
@@ -181,7 +184,7 @@ double cosmobl::cosmology::Cosmology::xis_gBAO (const double rp, const double pi
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::xi2D_CW (const double rp, const double pi, const double beta, const double bias_lin, const double bA, const double sigmav0, const double cmu, const double cs1, const double cs2, const double redshift, vector<double> rr1, vector<double> Xi1, vector<double> rr2, vector<double> Xi2, vector<double> &Xi1_, vector<double> &Xi1__, vector<double> &Xi2_, vector<double> &Xi2__, const string output_root, const bool BAO, const bool xiType, const double k_star, const bool xiNL, const double r_min, const double r_max, const double v_min, const double v_max, const int step_v, const double k_min, const double k_max, const double x_min, const double x_max, const int step_x, const double aa, const bool GSL, const double prec, const string file_par)
+double cbl::cosmology::Cosmology::xi2D_CW (const double rp, const double pi, const double beta, const double bias_lin, const double bA, const double sigmav0, const double cmu, const double cs1, const double cs2, const double redshift, vector<double> rr1, vector<double> Xi1, vector<double> rr2, vector<double> Xi2, vector<double> &Xi1_, vector<double> &Xi1__, vector<double> &Xi2_, vector<double> &Xi2__, const string output_root, const bool BAO, const bool xiType, const double k_star, const bool xiNL, const double r_min, const double r_max, const double v_min, const double v_max, const int step_v, const double k_min, const double k_max, const double x_min, const double x_max, const int step_x, const double aa, const bool GSL, const double prec, const string file_par)
 {
   if (rr1.size()==0) {
     string method_Pk1 = "EisensteinHu"; 

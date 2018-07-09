@@ -2,11 +2,11 @@
 
 %module cblThreePointCorrelation
  /*
-%shared_ptr(cosmobl::measure::threept::ThreePointCorrelation);
-%shared_ptr(cosmobl::measure::threept::ThreePointCorrelation_angular_connected);
-%shared_ptr(cosmobl::measure::threept::ThreePointCorrelation_angular_reduced);
-%shared_ptr(cosmobl::measure::threept::ThreePointCorrelation_comoving_connected);
-%shared_ptr(cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced);
+%shared_ptr(cbl::measure::threept::ThreePointCorrelation);
+%shared_ptr(cbl::measure::threept::ThreePointCorrelation_angular_connected);
+%shared_ptr(cbl::measure::threept::ThreePointCorrelation_angular_reduced);
+%shared_ptr(cbl::measure::threept::ThreePointCorrelation_comoving_connected);
+%shared_ptr(cbl::measure::threept::ThreePointCorrelation_comoving_reduced);
  */
 %{
 #include "Triplet.h"

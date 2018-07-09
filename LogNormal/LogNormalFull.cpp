@@ -33,7 +33,9 @@
 
 #include "LogNormalFull.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace cosmology;
 using namespace catalogue;
 
@@ -41,7 +43,7 @@ using namespace catalogue;
 // ============================================================================
 
 
-cosmobl::lognormal::LogNormalFull::LogNormalFull (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const string author)
+cbl::lognormal::LogNormalFull::LogNormalFull (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const string author)
 {
   set_cosmo_function(cosmology, redshift_min, redshift_max, nredshift, author);
 }
@@ -50,7 +52,7 @@ cosmobl::lognormal::LogNormalFull::LogNormalFull (const Cosmology cosmology, con
 // ============================================================================
 
 
-cosmobl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const string author)
+cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const string author)
 {
   set_grid_parameters(rmin, xMin, xMax, yMin, yMax, zMin, zMax);
 
@@ -61,7 +63,7 @@ cosmobl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const doubl
 // ============================================================================
 
 
-cosmobl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const vector<shared_ptr<catalogue::Catalogue>> random, const double pad, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const string author)
+cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const vector<shared_ptr<catalogue::Catalogue>> random, const double pad, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const string author)
 {
   set_grid_parameters(rmin, random, pad);
 
@@ -72,7 +74,7 @@ cosmobl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const vecto
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const string author)
+void cbl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const string author)
 {
 
   m_cosmology = make_shared<Cosmology>(cosmology);
@@ -116,7 +118,7 @@ void cosmobl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosm
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormalFull::set_grid_parameters ()
+void cbl::lognormal::LogNormalFull::set_grid_parameters ()
 {
   m_nx = (m_xMax-m_xMin)/m_rmin;
   m_nx = (m_nx%2==0) ? m_nx : m_nx+1; 
@@ -134,7 +136,7 @@ void cosmobl::lognormal::LogNormalFull::set_grid_parameters ()
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax)
+void cbl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax)
 {
   m_rmin = rmin;
 
@@ -153,7 +155,7 @@ void cosmobl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, 
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, const vector<shared_ptr<catalogue::Catalogue>> random, const double pad)
+void cbl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, const vector<shared_ptr<catalogue::Catalogue>> random, const double pad)
 {
 
   m_rmin = rmin;
@@ -187,7 +189,7 @@ void cosmobl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, 
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormalFull::set_fields (const bool use_random, const bool doRSD)
+void cbl::lognormal::LogNormalFull::set_fields (const bool use_random, const bool doRSD)
 {
   m_clustering_signal = make_shared<data::ScalarField3D> (data::ScalarField3D(m_nx, m_ny, m_nz, m_xMin, m_xMax, m_yMin, m_yMax, m_zMin, m_zMax));
 
@@ -213,7 +215,7 @@ void cosmobl::lognormal::LogNormalFull::set_fields (const bool use_random, const
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormalFull::reset_fields (const bool use_random, const bool doRSD)
+void cbl::lognormal::LogNormalFull::reset_fields (const bool use_random, const bool doRSD)
 {
   m_clustering_signal->reset();
 
@@ -243,7 +245,7 @@ void cosmobl::lognormal::LogNormalFull::reset_fields (const bool use_random, con
 // ============================================================================
 
 /*
-void cosmobl::lognormal::LogNormalFull::write_XiMultipoles(const vector<double> rr, const string file_out)
+void cbl::lognormal::LogNormalFull::write_XiMultipoles(const vector<double> rr, const string file_out)
 {
   vector<double> kk = logarithmic_bin_vector(200, 1.e-4, 1.e1);
   
@@ -253,7 +255,7 @@ void cosmobl::lognormal::LogNormalFull::write_XiMultipoles(const vector<double> 
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormalFull::set_clustering_signal()
+void cbl::lognormal::LogNormalFull::set_clustering_signal()
 {
   double Volume = m_clustering_signal->Volume();
 
@@ -293,7 +295,7 @@ void cosmobl::lognormal::LogNormalFull::set_clustering_signal()
 // ============================================================================
 
       
-void cosmobl::lognormal::LogNormalFull::set_density_field (const double smoothing_radius)
+void cbl::lognormal::LogNormalFull::set_density_field (const double smoothing_radius)
 {
   random::NormalRandomNumbers normal(0., 1., m_generator());
 
@@ -379,7 +381,7 @@ void cosmobl::lognormal::LogNormalFull::set_density_field (const double smoothin
 // ============================================================================
 
       
-void cosmobl::lognormal::LogNormalFull::set_radial_velocity ()
+void cbl::lognormal::LogNormalFull::set_radial_velocity ()
 {
   for (int i=0; i<m_nx; i++) {
     double kx = m_clustering_signal->kX(i);
@@ -451,7 +453,7 @@ void cosmobl::lognormal::LogNormalFull::set_radial_velocity ()
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormalFull::set_visibility ()
+void cbl::lognormal::LogNormalFull::set_visibility ()
 {
   double mmax = max(max((m_xMax-m_xMin)/2, (m_yMax-m_yMin)/2),(m_xMax-m_xMin)/2); 
   m_nCells_eff=0;
@@ -487,7 +489,7 @@ void cosmobl::lognormal::LogNormalFull::set_visibility ()
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormalFull::set_visibility_from_random ()
+void cbl::lognormal::LogNormalFull::set_visibility_from_random ()
 {
   coutCBL << "I'm setting the visibility from random sample..." << endl;
   int nsamples = m_random.size();
@@ -515,7 +517,7 @@ void cosmobl::lognormal::LogNormalFull::set_visibility_from_random ()
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormalFull::set_visibility_from_random_RSD ()
+void cbl::lognormal::LogNormalFull::set_visibility_from_random_RSD ()
 {
   coutCBL << "I'm setting the visibility from random sample, using velocity field..." << endl;
   int nsamples = m_random.size();
@@ -553,7 +555,7 @@ void cosmobl::lognormal::LogNormalFull::set_visibility_from_random_RSD ()
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormalFull::extract_points_lognormal_field (const double nObjects, const bool doRSD, const vector<double> redshift, const vector<double> bias, const shared_ptr<data::Field3D> visibility, const string file_out)
+void cbl::lognormal::LogNormalFull::extract_points_lognormal_field (const double nObjects, const bool doRSD, const vector<double> redshift, const vector<double> bias, const shared_ptr<data::Field3D> visibility, const string file_out)
 {
 
   ofstream fout(file_out.c_str());
@@ -625,7 +627,7 @@ void cosmobl::lognormal::LogNormalFull::extract_points_lognormal_field (const do
 // ============================================================================
 
 
-void cosmobl::lognormal::LogNormalFull::generate_lognormal (const int start, const int stop, const bool doRSD, const double smoothing_radius, const vector<double> nObjects, const vector<vector<double>> redshift, const vector<vector<double> > bias, const string dir, const string filename, const int seed, const bool setfields, const bool use_random)
+void cbl::lognormal::LogNormalFull::generate_lognormal (const int start, const int stop, const bool doRSD, const double smoothing_radius, const vector<double> nObjects, const vector<vector<double>> redshift, const vector<vector<double> > bias, const string dir, const string filename, const int seed, const bool setfields, const bool use_random)
 {
   m_generator.seed(seed);
 
@@ -662,7 +664,7 @@ void cosmobl::lognormal::LogNormalFull::generate_lognormal (const int start, con
 // ============================================================================
 /*
       
-void cosmobl::lognormal::LogNormalFull::set_potential()
+void cbl::lognormal::LogNormalFull::set_potential()
 {
   double OmH02 = m_cosmology->OmegaM()*pow(m_cosmology->H0(),2);
 
@@ -700,7 +702,7 @@ void cosmobl::lognormal::LogNormalFull::set_potential()
 
 
       
-void cosmobl::lognormal::LogNormalFull::set_displacement_field()
+void cbl::lognormal::LogNormalFull::set_displacement_field()
 {
 
   m_density->FourierTransformField ();
@@ -755,7 +757,7 @@ void cosmobl::lognormal::LogNormalFull::set_displacement_field()
 // ============================================================================
 
       
-void cosmobl::lognormal::LogNormalFull::set_rsd_displacement_field()
+void cbl::lognormal::LogNormalFull::set_rsd_displacement_field()
 {
   for (int i=0; i<m_nx; i++) {
     double xx = m_displacement->XX(i);

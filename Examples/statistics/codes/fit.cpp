@@ -1,85 +1,145 @@
-// ====================================================================
-// Example code: how to fit a set of data points with a generic model
-// ====================================================================
+// ========================================================================================
+// Example code: how to perform a Bayesian fit to a set of data points with a generic model
+// ========================================================================================
 
 #include "Cosmology.h"
 #include "Data1D.h"
-#include "Likelihood.h"
+#include "Posterior.h"
+
+using namespace std;
 
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
 // launching the code on remote systems)
-string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
+string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 
-vector<double> model_function (const vector<double> x, const shared_ptr<void> modelInput, const vector<double> parameter)
+
+// =====================================================================
+
+
+// this example model has 4 parameters: A, B, C, D; A and B are free parameters, C is fixed, D is a derived parameter
+
+vector<double> model_function (const vector<double> x, const shared_ptr<void> modelInput, std::vector<double> &parameter)
 {
-  cosmobl::cosmology::Cosmology &cosm = *static_pointer_cast<cosmobl::cosmology::Cosmology>(modelInput);
+  // the object Cosmology, used in this example to compute Omega_matter
+  cbl::cosmology::Cosmology &cosm = *static_pointer_cast<cbl::cosmology::Cosmology>(modelInput);
 
   vector<double> model(x.size(), 0.);
-  for (size_t i=0; i<x.size(); i++)
-    model[i] = parameter[0] * x[i] + parameter[1] + parameter[2] * cosm.Omega_matter();
+  for (size_t i=0; i<x.size(); ++i)
+    model[i] = parameter[0]*x[i]+parameter[1]+parameter[2]*cosm.Omega_matter(); // the model
+
+  parameter[3] = parameter[0]+parameter[1]+parameter[2]; // parameter[3] is a derived parameter
 
   return model;
 }
 
 
+// =====================================================================
+
+
 int main () {
 
   try {
-  
-    // construct the dataset (by reading an input file, in this example case)
-    cosmobl::data::Data1D data(cosmobl::par::DirLoc+"../input/data.dat");
-    auto ptr_data = make_shared<cosmobl::data::Data1D>(data);
 
-    // set parameters of the model: A and B are free, C is fixed
-    double A = 1., B = 1., C = 1.;
+    // --- set the input/output file/directories ---
+    
+    const string dir_input = cbl::par::DirLoc+"../input/";
+    const string dir_output = cbl::par::DirLoc+"../output/";
+    const string file_data = "data.dat";
+    const string file_output_start = "model_starting_values.dat";
+    const string file_output_bestfit = "model_bestfit.dat";
+    
 
-    // prior limits for A and B
-    double minA = -10., maxA = 10.;
-    double minB = -10., maxB = 10.;
-  
-    // construction the free parameters A and B
-    auto parameterA = make_shared<cosmobl::statistics::BaseParameter>(cosmobl::statistics::BaseParameter(minA, maxA, 24314, "parameter A"));
-    auto parameterB = make_shared<cosmobl::statistics::BaseParameter>(cosmobl::statistics::BaseParameter(minB, maxB, 5635, "parameter B"));
+    // --- construct the dataset by reading an input file ---
+    
+    const cbl::data::Data1D data(dir_input+"data.dat");
+    auto ptr_data = make_shared<cbl::data::Data1D>(data);
 
-    // construction of the fixed parameter C
-    auto parameterC = make_shared<cosmobl::statistics::BaseParameter>(cosmobl::statistics::BaseParameter(C, "parameter C"));
-  
+
+    // --- set the model to construct the likelihood ---
+    
+    // number of model parameters
+    const int nparameters = 4;
+
+    // names of the model parameters
+    const vector<string> parNames = {"A", "B", "C", "D"};
+    
+    // starting values for A and B, and fixed values for C
+    double valA = 1., valB = 1., valC = 1.; 
+     
+    // vector containing the 4 model parameters
+    vector<cbl::statistics::ParameterType> parType(nparameters-1, cbl::statistics::ParameterType::_Base_);
+    parType.emplace_back(cbl::statistics::ParameterType::_Derived_);   
+
     // set the stuff used to construct the model: here an object of class cosmology, just as an example 
-    cosmobl::cosmology::Cosmology cosmology;
-    auto ptr_modelInput = make_shared<cosmobl::cosmology::Cosmology>(cosmology);
-  
+    const cbl::cosmology::Cosmology cosmology;
+    auto ptr_modelInput = make_shared<cbl::cosmology::Cosmology>(cosmology);
+
     // construct the model
-    cosmobl::statistics::Model1D model(&model_function, ptr_modelInput);
-    auto ptr_model = make_shared<cosmobl::statistics::Model1D>(model);
+    const cbl::statistics::Model1D model(&model_function, nparameters, parType, parNames, ptr_modelInput);
+    auto ptr_model = make_shared<cbl::statistics::Model1D>(model);
 
-    // define a gaussian likelihood
-    cosmobl::statistics::Likelihood likelihood(ptr_data, ptr_model, {parameterA, parameterB, parameterC}, cosmobl::statistics::LikelihoodType::_GaussianLikelihood_Error_);
 
-    // minimize the logarithm of the Likelihood
-    vector<double> guess = {A, B, C};
+    // --- construct and maximize the likelihood ---
+    
+    // define a Gaussian likelihood
+    cbl::statistics::Likelihood likelihood(ptr_data, ptr_model, cbl::statistics::LikelihoodType::_Gaussian_Error_);
 
-    likelihood.maximize(guess);
+    // write the model used to construct the likelihood, at the starting parameter values (A=1, B=1, C=1=fixed)
+    const vector<double> start = {valA, valB};
+    likelihood.parameters()->fix(2, valC); // fix the parameter C, i.e. parameter[2], to valC=1
+    likelihood.write_model(dir_output, file_output_start, start);
 
-    // sample the likelihood
-    int nwalkers=100, chain_size = 10000;
-    double radius = 1.e-3;
-    int seed = 43333213;
-    likelihood.initialize_chains(chain_size, nwalkers, seed, guess, radius);
-    likelihood.sample_stretch_move(seed);
+    // limits for A and B
+    const double minA = -10., maxA = 10.;
+    const double minB = -10., maxB = 10.;
+    const vector<vector<double>> limits = { {minA, maxA} , {minB, maxB} };
+    
+    // maximize the likelihood and write the output
+    likelihood.maximize(start, limits);
+    likelihood.write_model_at_bestfit(dir_output, file_output_bestfit);
 
-    // write the chain output
-    const int burn_in = 100;
-    const int thin = 10;
+    
+    // --- construct the priors ---
+    
+    // (remember to give different seed to priors!)
+    auto prior_A = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Uniform_, minA, maxA, 666));
+    auto prior_B = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Uniform_, minB, maxB, 999));
+    auto prior_C = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Constant_, valC));
+    const vector<shared_ptr<cbl::statistics::PriorDistribution>> prior_distributions = {prior_A, prior_B, prior_C};
 
-    likelihood.show_results(burn_in, thin, seed);
-    likelihood.write_results(cosmobl::par::DirLoc+"../output/", "chains_linear_relation.dat", burn_in, thin, seed);
+    
+    // --- construct, maximize and sample the posterior ---
+    
+    cbl::statistics::Posterior posterior(prior_distributions, likelihood, 696);
+
+    // maximize the posterior
+    posterior.maximize({valA, valB});
+
+    // sample the posterior
+    const int nwalkers = 10;
+    const int chain_size = 1000;
+    posterior.initialize_chains(chain_size, nwalkers);
+    posterior.sample_stretch_move(2, true);
+
+    // show the results on screen
+    const int burn_in = 0;
+    const int thin = 1;
+    const int nbins_posterior = 50;
+    posterior.show_results(burn_in, thin, nbins_posterior);
+
+    // write the chain ouput
+    const bool fits = true;
+    posterior.write_results(cbl::par::DirLoc+"../output/", "chains_linear_relation", burn_in, thin, nbins_posterior, fits);
+
+    // write the best-fit model
+    posterior.write_model_from_chain(cbl::par::DirLoc+"../output/", "model_from_chain", {}, {}, burn_in, thin);
 
   }
-
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
 
   return 0;
 }
 
- 
+

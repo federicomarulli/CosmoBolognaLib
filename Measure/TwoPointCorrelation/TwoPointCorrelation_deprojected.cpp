@@ -38,7 +38,9 @@
 #include "TwoPointCorrelation_deprojected.h"
 #include "Data1D_extra.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace chainmesh;
 using namespace pairs;
@@ -49,23 +51,22 @@ using namespace twopt;
 // ============================================================================================
 
 
-shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_deprojected::Deprojected (const vector<double> rp, const vector<double> ww, const vector<double> error_ww)
+shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_deprojected::Deprojected (const vector<double> rp, const vector<double> ww, const vector<double> error_ww)
 {
-
   vector<double> rad(rp.size(),0), xi(rp.size(),0), error(rp.size(),0);
 
   for (size_t i=0; i<rp.size(); i++) {
     
-    double ri = rp[i];
+    const double ri = rp[i];
     rad[i] = ri;
 
     for (size_t j=i; j<rp.size()-1; j++) {
-      double rj = rp[j];
-      double rj1 = rp[j+1];
-      double fact = 1./(rj1-rj)*log((rj1+sqrt(max(0., rj1*rj1-ri*ri)))/(rj+sqrt(max(0., rj*rj-ri*ri))));
+      const double rj = rp[j];
+      const double rj1 = rp[j+1];
+      const double fact = 1./(rj1-rj)*log((rj1+sqrt(max(0., rj1*rj1-ri*ri)))/(rj+sqrt(max(0., rj*rj-ri*ri))));
 
-      xi[i] -= (ww[j+1]-ww[j])*fact;
-      error[i] += pow(error_ww[j+1]*fact, 2)+pow(error_ww[j]*fact, 2);
+      xi[i] -= (ww[j+1]>-1. && ww[j]>-1.) ? (ww[j+1]-ww[j])*fact : 0.;
+      error[i] += (ww[j+1]>-1. && ww[j]>-1.) ? pow(error_ww[j+1]*fact, 2)+pow(error_ww[j]*fact, 2) : 0.;
     }
     
   }
@@ -74,14 +75,13 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation_deprojected:
   for_each( error.begin(), error.end(), [] (double &vv) { vv = sqrt(vv/par::pi);} );
 
   return (!m_compute_extra_info) ? move(unique_ptr<data::Data1D>(new data::Data1D(rad, xi, error))) : data_with_extra_info(rad, xi, error);
-
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation_deprojected::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
     case (ErrorType::_Poisson_) :
@@ -102,7 +102,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::measure (const Er
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation_deprojected::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   // ----------- measure the 2D two-point correlation function, xi(rp,pi) ----------- 
 
@@ -120,7 +120,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::measurePoisson (c
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   if (dir_output_resample != par::defaultString && dir_output_resample != "") {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -131,7 +131,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife 
   vector<shared_ptr<pairs::Pair>> dd_regions, rr_regions, dr_regions;
   count_allPairs_region(dd_regions, rr_regions, dr_regions, TwoPType::_2D_Cartesian_, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
-  auto data_cart = (estimator==_natural_) ? correlation_NaturalEstimator(m_dd, m_rr) : correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
+  auto data_cart = (estimator==Estimator::_natural_) ? correlation_NaturalEstimator(m_dd, m_rr) : correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
 
   vector<double> xx_cart, yy_cart; 
   vector<vector<double> > dd_cart, error_cart;
@@ -141,9 +141,9 @@ void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife 
 
   auto data_proj = TwoPointCorrelation_projected::Projected(xx_cart, yy_cart, dd_cart, error_cart);
 
-  if (estimator==_natural_) 
+  if (estimator==Estimator::_natural_) 
     data = XiJackknife(dd_regions, rr_regions);
-  else if (estimator==_LandySzalay_)
+  else if (estimator==Estimator::_LandySzalay_)
     data = XiJackknife(dd_regions, rr_regions, dr_regions);
   else
     ErrorCBL("Error in measureJackknife() of TwoPointCorrelation_deprojected.cpp: the chosen estimator is not implemented!");
@@ -173,7 +173,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife 
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (dir_output_resample != par::defaultString && dir_output_resample != "") {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -184,7 +184,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::measureBootstrap 
   vector<shared_ptr<pairs::Pair>> dd_regions, rr_regions, dr_regions;
   count_allPairs_region(dd_regions, rr_regions, dr_regions, TwoPType::_2D_Cartesian_, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
-  auto data_cart = (estimator==_natural_) ? correlation_NaturalEstimator(m_dd, m_rr) : correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
+  auto data_cart = (estimator==Estimator::_natural_) ? correlation_NaturalEstimator(m_dd, m_rr) : correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
 
   vector<double> xx_cart, yy_cart; 
   vector<vector<double> > dd_cart, error_cart;
@@ -194,9 +194,9 @@ void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::measureBootstrap 
 
   auto data_proj = TwoPointCorrelation_projected::Projected(xx_cart, yy_cart, dd_cart, error_cart);
 
-  if (estimator==_natural_) 
+  if (estimator==Estimator::_natural_) 
     data = XiBootstrap(nMocks, dd_regions, rr_regions, seed);
-  else if (estimator==_LandySzalay_)
+  else if (estimator==Estimator::_LandySzalay_)
     data = XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions, seed);
   else
     ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation_deprojected.cpp: the chosen estimator is not implemented!");
@@ -225,7 +225,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::measureBootstrap 
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_deprojected::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
+vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojected::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
 {
   vector<shared_ptr<data::Data>> data;
   
@@ -243,7 +243,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_depr
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_deprojected::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
+vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojected::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
 {
   vector<shared_ptr<data::Data>> data;
 
@@ -260,7 +260,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_depr
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_deprojected::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
+vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojected::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
 {
   vector<shared_ptr<data::Data>> data;
 
@@ -278,7 +278,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_depr
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_deprojected::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
+vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojected::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
 {
   vector<shared_ptr<data::Data>> data;
 
@@ -295,7 +295,7 @@ vector<shared_ptr<data::Data>> cosmobl::measure::twopt::TwoPointCorrelation_depr
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::read (const string dir, const string file) 
+void cbl::measure::twopt::TwoPointCorrelation_deprojected::read (const string dir, const string file) 
 {
   m_dataset->read(dir+file);
 }
@@ -304,7 +304,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::read (const strin
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation_deprojected::write (const string dir, const string file, const int rank) const 
+void cbl::measure::twopt::TwoPointCorrelation_deprojected::write (const string dir, const string file, const int rank) const 
 {
   vector<double> xx; m_dataset->xx(xx);
 

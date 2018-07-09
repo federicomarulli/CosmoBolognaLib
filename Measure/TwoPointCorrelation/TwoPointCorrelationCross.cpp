@@ -34,7 +34,9 @@
 
 #include "TwoPointCorrelationCross.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace chainmesh;
 using namespace data; 
@@ -46,7 +48,7 @@ using namespace twopt;
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPType type, const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_d1d2, const bool count_rr, const bool count_d1r, const bool count_d2r, const bool tcount, const Estimator estimator)  
+void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPType type, const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_d1d2, const bool count_rr, const bool count_d1r, const bool count_d2r, const bool tcount, const Estimator estimator)  
 {
   // ----------- compute polar coordinates, if necessary ----------- 
 
@@ -59,7 +61,7 @@ void cosmobl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const Tw
   if (!isSet(m_random->var(Var::_RA_)) || !isSet(m_random->var(Var::_Dec_)) || !isSet(m_random->var(Var::_Dc_))) 
     m_random->computePolarCoordinates();
 
-  if (type == _1D_angular_) {
+  if (type == TwoPType::_1D_angular_) {
     m_data->normalizeComovingCoordinates();
     m_data2->normalizeComovingCoordinates();
     m_random->normalizeComovingCoordinates();
@@ -68,7 +70,7 @@ void cosmobl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const Tw
   
   // ----------- dilute the random catalogue used to compute the RR pairs (to improve the performance) ----------- 
 
-  if (estimator==_natural_ && m_random_dilution_fraction!=1.) {
+  if (estimator==Estimator::_natural_ && m_random_dilution_fraction!=1.) {
     m_random_dilution_fraction = 1.;
     WarningMsg("Attention: --> m_random_dilution_fraction = 1, since the random catalogue is not diluted when using the natural estimator!");
   }
@@ -80,19 +82,19 @@ void cosmobl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const Tw
 
   double rMAX;
 
-  if (type==_1D_monopole_ || type==_1D_filtered_ || type==_multipoles_direct_)
+  if (type==TwoPType::_1D_monopole_ || type==TwoPType::_1D_filtered_ || type==TwoPType::_multipoles_direct_)
     rMAX = m_dd->sMax();
 
-  else if (type==_1D_angular_) {
+  else if (type==TwoPType::_1D_angular_) {
     double xx, yy, zz;
     cartesian_coord(radians(m_dd->sMax(), m_dd->angularUnits()), radians(m_dd->sMax(), m_dd->angularUnits()), 1., xx, yy, zz);
     rMAX = max(xx, zz);
   }
 
-  else if (type==_2D_polar_ || type==_multipoles_integrated_ || type ==_1D_wedges_) 
+  else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_1D_wedges_) 
     rMAX = m_dd->sMax_D1();
   
-  else if (type==_2D_Cartesian_ || type==_1D_projected_ || type==_1D_deprojected_)
+  else if (type==TwoPType::_2D_Cartesian_ || type==TwoPType::_1D_projected_ || type==TwoPType::_1D_deprojected_)
     rMAX = max(m_dd->sMax_D1(), m_dd->sMax_D2())*sqrt(2.);
 
   else
@@ -167,7 +169,7 @@ void cosmobl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const Tw
   if (count_rr || count_d1r || count_d2r)
     m_random->Order();
 
-  if (type==_1D_angular_) {
+  if (type==TwoPType::_1D_angular_) {
     m_data->restoreComovingCoordinates();
     m_data2->restoreComovingCoordinates();
     m_random->restoreComovingCoordinates();

@@ -33,13 +33,16 @@
  */
 
 #include "GlobalFunc.h"
-using namespace cosmobl;
+
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================
 
 
-void cosmobl::redshift_range (const double mean_redshift, const double boxSide, cosmology::Cosmology &real_cosm, double &redshift_min, double &redshift_max) 
+void cbl::redshift_range (const double mean_redshift, const double boxSide, cosmology::Cosmology &real_cosm, double &redshift_min, double &redshift_max) 
 {
   coutCBL <<"I'm computing the redshift range..."<<endl; 
 
@@ -72,7 +75,7 @@ void cosmobl::redshift_range (const double mean_redshift, const double boxSide, 
 // ============================================================================
 
 
-double cosmobl::volume (const double boxSize, const int frac, const double Bord, const double mean_redshift, cosmology::Cosmology &real_cosm)
+double cbl::volume (const double boxSize, const int frac, const double Bord, const double mean_redshift, cosmology::Cosmology &real_cosm)
 {
   double redshift_min, redshift_max;
   double boxSide = boxSize/double(frac);
@@ -88,13 +91,33 @@ double cosmobl::volume (const double boxSize, const int frac, const double Bord,
 // ============================================================================
 
 
-void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<double> &redshift, vector<double> &xx, vector<double> &yy, vector<double> &zz, const vector<double> vx, const vector<double> vy, const vector<double> vz, const double sigmaV, cosmology::Cosmology &real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int seed) 
+void cbl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<double> &redshift, vector<double> &xx, vector<double> &yy, vector<double> &zz, const vector<double> vx, const vector<double> vy, const vector<double> vz, const double sigmaV, cosmology::Cosmology &real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int seed) 
 {
-  (void)redshift_min; (void)redshift_max;
+  if (ra.size()==0 && xx.size()==0)
+    ErrorCBL("Error in cbl::coord_zSpace of GlobalFunc/Func.cpp: both ra.size() and xx.size() are equal 0!"); 
   
-  if (ra.size()==0) ErrorCBL("Error in coord_zSpace of GlobalFunc.cpp: ra.size()=0!");
+  vector<double> redshift_bin = linear_bin_vector(10000, redshift_min, redshift_max);
+  vector<double> DC_bin(10000);
+
+  for (int i=0; i<10000; i++)
+    DC_bin[i] = real_cosm.D_C(redshift_bin[i]);
+
+  glob::FuncGrid interp_DC(redshift_bin, DC_bin, "Spline");
+  glob::FuncGrid interp_Z(DC_bin, redshift_bin, "Spline");
+  
+  if (ra.size()==0 && xx.size()>0) { 
+    ra.resize(xx.size(), 0);
+    dec.resize(xx.size(), 0);
+    redshift.resize(xx.size(), 0);
+    vector<double> dc(xx.size(), 0);
+
+    cbl::polar_coord(xx, yy, zz, ra, dec, dc); 
+    for (size_t i=0; i<dc.size(); ++i) 
+      redshift[i] = interp_Z(dc[i]);
+  }
   
 
+  
   // ----- real-space --> redshift-space -----
 
   vector<double> dc;
@@ -143,9 +166,11 @@ void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<doub
 
       double vrad = vx[i]*cos(dec[i])*sin(ra[i])+vy[i]*cos(dec[i])*cos(ra[i])+vz[i]*sin(dec[i]);
    
-      redshift[i] += vrad/par::cc*(1.+mean_redshift)+ran()/par::cc; // peculiar velocities + gaussian error
+      double gerr = (SigmaV>0) ? ran()/par::cc : 0.;
+      redshift[i] += vrad/par::cc*(1.+mean_redshift)+gerr; // peculiar velocities + gaussian error
 
-      dc.push_back(real_cosm.D_C(redshift[i]));          
+     // dc.push_back(real_cosm.D_C(redshift[i]));          
+      dc.push_back(interp_DC(redshift[i]));          
     
     }
   }
@@ -159,7 +184,7 @@ void cosmobl::coord_zSpace (vector<double> &ra, vector<double> &dec, vector<doub
 // ============================================================================
 
 
-void cosmobl::create_mocks (const vector<double> xx, const vector<double> yy, const vector<double> zz,  const vector<double> vx, const vector<double> vy, const vector<double> vz, const vector<double> var1, const vector<double> var2, const vector<double> var3, const string output_dir, const double boxSize, const int frac, const double Bord, const double mean_redshift, cosmology::Cosmology &real_cosm, const int REAL, const double sigmaV, const int idum, double &Volume) 
+void cbl::create_mocks (const vector<double> xx, const vector<double> yy, const vector<double> zz,  const vector<double> vx, const vector<double> vy, const vector<double> vz, const vector<double> var1, const vector<double> var2, const vector<double> var3, const string output_dir, const double boxSize, const int frac, const double Bord, const double mean_redshift, cosmology::Cosmology &real_cosm, const int REAL, const double sigmaV, const int idum, double &Volume) 
 {   
   coutCBL <<endl<<"I'm creating the mock files..."<<endl;
 
@@ -242,8 +267,10 @@ void cosmobl::create_mocks (const vector<double> xx, const vector<double> yy, co
   Lmin = real_cosm.D_C(redshift_min);
   Lmax = real_cosm.D_C(redshift_max);
   double Lnew = (Lmax-Lmin)*0.5;
-  Volume = pow(Lmax-Lmin,3.);
-  if (Lnew<0) ErrorCBL("Error in create_mocks of GlobalFunc.h!");
+  Volume = pow(Lmax-Lmin, 3.);
+  
+  if (Lnew<0) ErrorCBL("Error in cbl::create_mocks of GlobalFunc/Func.cpp!");
+  
   coutCBL <<redshift_min<<" < z < "<<redshift_max<<" --> L = "<<Lnew*2.<<" --> Volume = "<<Volume<<endl;
 
   vector<double> vx_new, vy_new, vz_new, var1_new, var2_new, var3_new;

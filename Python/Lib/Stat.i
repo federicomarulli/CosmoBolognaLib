@@ -2,49 +2,59 @@
 
 %module cblStat
 
-%shared_ptr(cosmobl::statistics::Chain);
-%shared_ptr(cosmobl::statistics::Prior);
-%shared_ptr(cosmobl::statistics::Posterior);
-%shared_ptr(cosmobl::statistics::Parameter);
-%shared_ptr(cosmobl::statistics::BaseParameter);
-%shared_ptr(cosmobl::statistics::DerivedParameter);
-%shared_ptr(cosmobl::statistics::Model);
-%shared_ptr(cosmobl::statistics::Model1D);
-%shared_ptr(cosmobl::statistics::Model2D);
-%shared_ptr(cosmobl::statistics::LikelihoodParameters);
-%shared_ptr(cosmobl::statistics::Likelihood);
+%include "stl.i"
+%include "stdint.i"
+%include "std_string.i"
+%include "std_vector.i"
+%include <std_shared_ptr.i>
+
+%shared_ptr(cbl::statistics::PriorDistribution);
+%shared_ptr(cbl::statistics::PosteriorDistribution);
+%shared_ptr(cbl::statistics::Prior);
+%shared_ptr(cbl::statistics::ModelParameters);
+%shared_ptr(cbl::statistics::LikelihoodParameters);
+%shared_ptr(cbl::statistics::PosteriorParameters);
+%shared_ptr(cbl::statistics::Model);
+%shared_ptr(cbl::statistics::Model1D);
+%shared_ptr(cbl::statistics::Model2D);
+%shared_ptr(cbl::statistics::LikelihoodFunction);
+%shared_ptr(cbl::statistics::Likelihood);
+%shared_ptr(cbl::statistics::Chi2);
+%shared_ptr(cbl::statistics::Sampler);
+%shared_ptr(cbl::statistics::Posterior);
 
 %{
+#include "PriorDistribution.h"
+#include "PosteriorDistribution.h"
+#include "Prior.h"
+#include "ModelParameters.h"
+#include "LikelihoodParameters.h"
+#include "PosteriorParameters.h"
 #include "Model.h"
 #include "Model1D.h"
 #include "Model2D.h"
-#include "Chain.h"
-#include "Prior.h"
-#include "Posterior.h"
-#include "Parameter.h"
-#include "BaseParameter.h"
-#include "DerivedParameter.h"
-#include "LikelihoodParameters.h"
-#include "Sampler.h"
 #include "LikelihoodFunction.h"
 #include "Likelihood.h"
+#include "Chi2.h"
+#include "Sampler.h"
+#include "Posterior.h"
 %}
 
+%include "PriorDistribution.h"
+%include "PosteriorDistribution.h"
+%include "Prior.h"
+%include "ModelParameters.h"
+%include "LikelihoodParameters.h"
+%include "PosteriorParameters.h"
 %include "Model.h"
 %include "Model1D.h"
 %include "Model2D.h"
-%include "Chain.h"
-%include "Prior.h"
-%include "Posterior.h"
-%include "Parameter.h"
-%include "BaseParameter.h"
-%include "DerivedParameter.h"
-%include "LikelihoodParameters.h"
-%include "Sampler.h"
 %include "LikelihoodFunction.h"
 %include "Likelihood.h"
+%include "Chi2.h"
+%include "Sampler.h"
+%include "Posterior.h"
 
-%template(PriorVector) std::vector<cosmobl::statistics::Prior>;
-%template(ParameterVector) std::vector<cosmobl::statistics::Parameter>;
-%template(BaseParameterVector) std::vector<cosmobl::statistics::BaseParameter>;
-%template(DerivedParameterVector) std::vector<cosmobl::statistics::DerivedParameter>;
+%template(ParameterTypeVector) std::vector<cbl::statistics::ParameterType>;
+%template(PriorDistributionVector) std::vector<cbl::statistics::PriorDistribution>;
+%template(PosteriorDistributionVector) std::vector<cbl::statistics::PosteriorDistribution>;

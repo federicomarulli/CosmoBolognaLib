@@ -40,7 +40,9 @@
 #include "TwoPointCorrelation1D_monopole.h"
 #include "Data1D.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace measure;
 using namespace triplets;
@@ -50,7 +52,7 @@ using namespace threept;
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
 {   
   (void)seed;
   
@@ -68,7 +70,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
   double rMax = m_ddd->r12()+m_ddd->r13()+m_ddd->r13_binSize();
   double binSize = 0.05;
   double shift = 0.5;
-  twopt::TwoPointCorrelation1D_monopole TwoP {data, random, _logarithmic_, rMin, rMax, binSize, shift};
+  twopt::TwoPointCorrelation1D_monopole TwoP {data, random, BinType::_logarithmic_, rMin, rMax, binSize, shift};
   TwoP.measure(ErrorType::_Poisson_,dir_output_triplets, {}, par::defaultString,0, 1, 1, 1, tcount);
 
   vector<double> log_r(TwoP.dd()->nbins()), log_xi(TwoP.dd()->nbins());
@@ -119,7 +121,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const vector<vector<double>> weight, const bool doJK, const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const vector<vector<double>> weight, const bool doJK, const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
 {
   (void)seed;
 
@@ -137,7 +139,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
   double rMax = m_ddd->r12()+m_ddd->r13()+m_ddd->r13_binSize();
   double binSize = 0.05;
   double shift = 0.5;
-  twopt::TwoPointCorrelation1D_monopole TwoP {data, random, _logarithmic_, rMin, rMax, binSize, shift};
+  twopt::TwoPointCorrelation1D_monopole TwoP {data, random, BinType::_logarithmic_, rMin, rMax, binSize, shift};
   TwoP.measure(ErrorType::_Poisson_,dir_output_triplets, {}, par::defaultString,0, 1, 1, 1, tcount);
 
   vector<double> log_r(TwoP.dd()->nbins()), log_xi(TwoP.dd()->nbins());
@@ -218,7 +220,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
   }
 
   vector<vector<double>> cov_mat;
-  cosmobl::covariance_matrix(resampling_threept, cov_mat, doJK);
+  cbl::covariance_matrix(resampling_threept, cov_mat, doJK);
   m_dataset = move(unique_ptr<data::Data1D>(new data::Data1D(m_scale, m_zeta, cov_mat)));
 
   m_dataset->error(m_error);
@@ -229,18 +231,18 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
 
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const cosmobl::measure::ErrorType errorType, const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const int nResamplings, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const cbl::measure::ErrorType errorType, const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const int nResamplings, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
 {  
 
   switch (errorType) {
     
-    case cosmobl::measure::ErrorType::_None_:
+    case cbl::measure::ErrorType::_None_:
       {
 	measure(dir_output_triplets, dir_output_2pt, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
 	break;
       }
     
-    case cosmobl::measure::ErrorType::_Jackknife_:
+    case cbl::measure::ErrorType::_Jackknife_:
       {
 	const int nRegions = m_data->nRegions();
 
@@ -252,11 +254,11 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
 	break;
       }
 
-    case cosmobl::measure::ErrorType::_Bootstrap_:
+    case cbl::measure::ErrorType::_Bootstrap_:
       {
 	const int nRegions = m_data->nRegions();
 
-	random::UniformRandomNumbers ran(0., nRegions-1, seed);
+	random::UniformRandomNumbers_Int ran(0., nRegions-1, seed);
 	
 	int val = 3; // see Norberg et al. 2009
 
@@ -279,7 +281,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::measure 
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::write (const string dir, const string file, bool connected) const
+void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::write (const string dir, const string file, bool connected) const
 {      
   checkDim(m_scale, m_ddd->nbins(), "scale");
   
@@ -289,13 +291,19 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::write (c
   if (!connected) {  
     fout << "# scale  Q  error(work in progress)" << endl;
     for (size_t i=0; i<m_scale.size(); i++) 
-      fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_scale[i] << "  " << setw(8) << m_QQ[i] << "  " << setw(8) << m_error[i] << endl;
+      fout << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << m_scale[i] 
+	   << "   " << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << m_QQ[i]
+	   << "   " << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << m_error[i] << endl;
   }
   
   else {
     fout << "# scale  z  error(work in progrss)  Q  error(work in progress)" << endl;
     for (size_t i=0; i<m_scale.size(); i++) 
-      fout << setiosflags(ios::fixed) << setprecision(4) << setw(8) << m_scale[i] << "  " << setw(8) << m_zeta[i] << "  " << setw(8) << ThreePointCorrelation_comoving_connected::m_error[i] << setw(8) << m_QQ[i] << "  " << setw(8) << m_error[i] << endl;
+      fout << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << m_scale[i]
+	   << "   " << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << m_zeta[i]
+	   << "   " << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << ThreePointCorrelation_comoving_connected::m_error[i]
+	   << "   " << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << m_QQ[i]
+	   << "   " << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << m_error[i] << endl;
   }
   
   fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl << endl;
@@ -305,7 +313,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::write (c
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_comoving_reduced::write_covariance (const string dir, const string file) const
+void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::write_covariance (const string dir, const string file) const
 {
   m_dataset->write_covariance(dir, file);
 }

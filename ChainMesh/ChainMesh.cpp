@@ -33,19 +33,21 @@
 
 #include "ChainMesh.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================
 
 
-void cosmobl::chainmesh::ChainMesh::set_par (const double cell_size, const long nDim)  
+void cbl::chainmesh::ChainMesh::set_par (const double cell_size, const long nDim)  
 {
   m_nDim = nDim;
   m_cell_size = cell_size;
   
   if (m_cell_size<=0) {
-    string Err = "Error in cosmobl::chainmesh::ChainMesh::set_par of ChainMesh.cpp: forbidden value for cell_size = "+conv(cell_size, par::fDP2);
+    string Err = "Error in cbl::chainmesh::ChainMesh::set_par of ChainMesh.cpp: forbidden value for cell_size = "+conv(cell_size, par::fDP2);
     ErrorCBL(Err);
   }
 
@@ -60,7 +62,7 @@ void cosmobl::chainmesh::ChainMesh::set_par (const double cell_size, const long 
 // ============================================================================
 
 
-cosmobl::chainmesh::ChainMesh::ChainMesh (const double cell_size, const long nDim) : m_nDim(nDim), m_cell_size(cell_size) 
+cbl::chainmesh::ChainMesh::ChainMesh (const double cell_size, const long nDim) : m_nDim(nDim), m_cell_size(cell_size) 
 {
   set_par(cell_size, nDim);
 }
@@ -69,7 +71,7 @@ cosmobl::chainmesh::ChainMesh::ChainMesh (const double cell_size, const long nDi
 // ============================================================================
 
 
-long cosmobl::chainmesh::ChainMesh::pos_to_index (const vector<double> center) const
+long cbl::chainmesh::ChainMesh::pos_to_index (const vector<double> center) const
 {
   vector<long> indx(m_nDim);
 
@@ -91,7 +93,7 @@ long cosmobl::chainmesh::ChainMesh::pos_to_index (const vector<double> center) c
 // ============================================================================
 
 
-long cosmobl::chainmesh::ChainMesh::inds_to_index (const vector<long> indx) const
+long cbl::chainmesh::ChainMesh::inds_to_index (const vector<long> indx) const
 {
   long indx_tot = indx[m_nDim-1];
 
@@ -108,7 +110,7 @@ long cosmobl::chainmesh::ChainMesh::inds_to_index (const vector<long> indx) cons
 // ============================================================================
 
 
-void cosmobl::chainmesh::ChainMesh::index_to_inds (const long index, const vector<long> nn, vector<long> &indx) const
+void cbl::chainmesh::ChainMesh::index_to_inds (const long index, const vector<long> nn, vector<long> &indx) const
 {
   indx.resize(m_nDim, 0);
   long mult = 1;
@@ -129,7 +131,7 @@ void cosmobl::chainmesh::ChainMesh::index_to_inds (const long index, const vecto
 // ============================================================================
 
 
-void cosmobl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<double> > data, const double rMAX, const long nMIN, const long nMAX) 
+void cbl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<double> > data, const double rMAX, const long nMIN, const long nMAX) 
 { 
   // setting stuff, generalized for n(=nDim) dimensions 
   
@@ -142,11 +144,11 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<doubl
   
   double fact = 1.;
 
-  check_memory(3.0, true, "cosmobl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp");
+  check_memory(3.0, true, "cbl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp");
   
   while (m_nCell_tot>pow(nMAX, 3) || m_nCell_tot<nMIN
-	 || !check_memory(3.0, false, "cosmobl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp")) {
- 
+	 || !check_memory(3.0, false, "cbl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp")) {
+  
     m_nCell_tot = 1;
     m_cell_size *= fact;
     for (int i=0; i<m_nDim; i++) {
@@ -160,16 +162,8 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<doubl
     fact *= 1.1;
 
     m_Label.erase(m_Label.begin(), m_Label.end()); 
-
-    if (m_nCell_tot<10) {
-      string ERR = "Error in cosmobl::chainmesh::ChainMesh::create_chain_mesh! m_nCell_tot = "+conv(m_nCell_tot, par::fINT)+"!";
-      ErrorCBL(ERR);
-    }
     
   }
- 
-  if (m_nCell_tot>pow(nMAX, 3) || m_nCell_tot<nMIN) 
-    ErrorCBL("Error in cosmobl::chainmesh::ChainMesh::create_chain_mesh! m_nCell_tot = "+conv(m_nCell_tot, par::fINT)+", possible memory problems!");
 
   m_Label.resize(m_nCell_tot, -1);
   
@@ -193,7 +187,7 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<doubl
 // ============================================================================
 
 
-void cosmobl::chainmesh::ChainMesh::create_chain_mesh_m2 (const vector<vector<double> > data) 
+void cbl::chainmesh::ChainMesh::create_chain_mesh_m2 (const vector<vector<double> > data) 
 {
   // setting stuff, generalized for n(=nDim) dimensions
   long nObj = data[0].size();
@@ -223,7 +217,7 @@ void cosmobl::chainmesh::ChainMesh::create_chain_mesh_m2 (const vector<vector<do
 // ============================================================================
 
 
-void cosmobl::chainmesh::ChainMesh::get_searching_region (const double r_max, const double r_min) 
+void cbl::chainmesh::ChainMesh::get_searching_region (const double r_max, const double r_min) 
 {
    int n_max = nint(r_max/m_cell_size);
    n_max = (n_max*m_cell_size<r_max) ? n_max+1 : n_max;
@@ -267,7 +261,7 @@ void cosmobl::chainmesh::ChainMesh::get_searching_region (const double r_max, co
 // ============================================================================
 
 
-vector<long> cosmobl::chainmesh::ChainMesh::close_objects_cell (const int cell_index, const long ii) const
+vector<long> cbl::chainmesh::ChainMesh::close_objects_cell (const int cell_index, const long ii) const
 {
   // r2 != -1 ---> search in a nDim annulus from r1 to r2
   // r2 == -1 ---> search in a nDim sphere from center to r1
@@ -294,7 +288,7 @@ vector<long> cosmobl::chainmesh::ChainMesh::close_objects_cell (const int cell_i
 // ============================================================================
 
 
-vector<long> cosmobl::chainmesh::ChainMesh::close_objects (const vector<double> center, const long ii) const
+vector<long> cbl::chainmesh::ChainMesh::close_objects (const vector<double> center, const long ii) const
 {
   // r2 != -1 ---> search in a nDim annulus from r1 to r2
   // r2 == -1 ---> search in a nDim sphere from center to r1
@@ -323,7 +317,7 @@ vector<long> cosmobl::chainmesh::ChainMesh::close_objects (const vector<double> 
 // ============================================================================
 
 
-vector<long> cosmobl::chainmesh::ChainMesh::get_list (const long cell_index) const
+vector<long> cbl::chainmesh::ChainMesh::get_list (const long cell_index) const
 {
   vector<long> list;
   long j = m_Label[cell_index];
@@ -340,7 +334,7 @@ vector<long> cosmobl::chainmesh::ChainMesh::get_list (const long cell_index) con
 // ============================================================================
 
 
-void cosmobl::chainmesh::ChainMesh1D::set_par (const double cell_size, const vector<double> xx, const double rMAX, const long nMIN, const long nMAX) 
+void cbl::chainmesh::ChainMesh1D::set_par (const double cell_size, const vector<double> xx, const double rMAX, const long nMIN, const long nMAX) 
 {
   ChainMesh::set_par(cell_size, 1);
   
@@ -353,7 +347,7 @@ void cosmobl::chainmesh::ChainMesh1D::set_par (const double cell_size, const vec
 // ============================================================================
 
 
-cosmobl::chainmesh::ChainMesh1D::ChainMesh1D (const double cell_size, const vector<double> xx, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size,1)
+cbl::chainmesh::ChainMesh1D::ChainMesh1D (const double cell_size, const vector<double> xx, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size,1)
 {
   set_par(cell_size, xx, rMAX, nMIN, nMAX);
 }
@@ -362,7 +356,7 @@ cosmobl::chainmesh::ChainMesh1D::ChainMesh1D (const double cell_size, const vect
 // ============================================================================
 
 
-void cosmobl::chainmesh::ChainMesh2D::set_par (const double cell_size, const vector<double> xx, const vector<double> yy, const double rMAX, const long nMIN, const long nMAX) 
+void cbl::chainmesh::ChainMesh2D::set_par (const double cell_size, const vector<double> xx, const vector<double> yy, const double rMAX, const long nMIN, const long nMAX) 
 {
   ChainMesh::set_par(cell_size, 2);
   
@@ -376,7 +370,7 @@ void cosmobl::chainmesh::ChainMesh2D::set_par (const double cell_size, const vec
 // ============================================================================
 
 
-cosmobl::chainmesh::ChainMesh2D::ChainMesh2D (const double cell_size, const vector<double> xx, const vector<double> yy, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size,2)
+cbl::chainmesh::ChainMesh2D::ChainMesh2D (const double cell_size, const vector<double> xx, const vector<double> yy, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size,2)
 {
   set_par(cell_size, xx, yy, rMAX, nMIN, nMAX);
 }
@@ -385,7 +379,7 @@ cosmobl::chainmesh::ChainMesh2D::ChainMesh2D (const double cell_size, const vect
 // ============================================================================
 
 
-void cosmobl::chainmesh::ChainMesh3D::set_par (const double cell_size, const vector<double> xx, const vector<double> yy, const vector<double> zz, const double rMAX, const long nMIN, const long nMAX) 
+void cbl::chainmesh::ChainMesh3D::set_par (const double cell_size, const vector<double> xx, const vector<double> yy, const vector<double> zz, const double rMAX, const long nMIN, const long nMAX) 
 {
   ChainMesh::set_par(cell_size, 3);
   vector<vector<double>> data;
@@ -399,7 +393,7 @@ void cosmobl::chainmesh::ChainMesh3D::set_par (const double cell_size, const vec
 // ============================================================================
 
 
-cosmobl::chainmesh::ChainMesh3D::ChainMesh3D (const double cell_size, const vector<double> xx, const vector<double> yy, const vector<double> zz, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size, 3)
+cbl::chainmesh::ChainMesh3D::ChainMesh3D (const double cell_size, const vector<double> xx, const vector<double> yy, const vector<double> zz, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size, 3)
 {
   set_par(cell_size, xx, yy, zz, rMAX, nMIN, nMAX);
 }

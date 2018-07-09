@@ -34,7 +34,47 @@
  *  @authors federico.marulli3@unbo.it
  */
 
+#include "ModelFunction_ThreePointCorrelation.h"
+
 #include "ModelFunction_ThreePointCorrelation_comoving_connected.h"
+
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
+
+
+vector<double> cbl::modelling::threept::zeta_RSD (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
+{
+  // structure contaning the required input data
+  shared_ptr<STR_data_model_threept> pp = static_pointer_cast<STR_data_model_threept>(inputs);
+
+  // input likelihood parameters
+
+  // bias
+  double b1 = parameter[0];
+  double b2 = parameter[1];
+  double bt = parameter[2];
+
+  //beta
+  double beta = parameter[3];
+
+  vector<double> model = pp->cosmology->zeta_RSD (pp->r1, pp->r2, theta.size(), b1, b2, bt, beta, pp->rr, pp->kk, pp->Pk_DM, false, pp->max_ll, pp->use_k);
+  return model;
+  /*
+  double theta_binSize = 1./theta.size();
+
+  vector<double> xx = cosmobl::linear_bin_vector(model.size(), 0., 1.);
+  cosmobl::glob::FuncGrid interp_zeta(xx, model, "Spline");
+
+  vector<double> zeta(theta.size());
+
+  for (size_t i=0; i<theta.size(); i++)
+    zeta[i] = interp_zeta.integrate_qag(double(i)*theta_binSize, double(i+1)*theta_binSize, 1.e-4)/theta_binSize;
+
+  return zeta;
+  */
+  //return pp->cosmology->zeta_RSD (pp->r1, pp->r2, theta.size(), b1, b2, bt, beta, pp->rr, pp->kk, pp->Pk_DM, false, pp->max_ll, pp->use_k);
+}

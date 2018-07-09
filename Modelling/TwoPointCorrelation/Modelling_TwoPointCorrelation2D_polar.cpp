@@ -35,7 +35,7 @@
 
 #include "Modelling_TwoPointCorrelation2D_polar.h"
 
-using namespace cosmobl;
+using namespace cbl;
 
 
 // ============================================================================================

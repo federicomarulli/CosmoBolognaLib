@@ -37,7 +37,9 @@
 #include "TwoPointCorrelation2D.h"
 #include "Data2D_extra.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace chainmesh;
 using namespace data;
@@ -49,7 +51,7 @@ using namespace twopt;
 // ===================================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D::write_pairs (const shared_ptr<pairs::Pair> PP, const string dir, const string file) const 
+void cbl::measure::twopt::TwoPointCorrelation2D::write_pairs (const shared_ptr<pairs::Pair> PP, const string dir, const string file) const 
 {  
   string MK = "mkdir -p "+dir; if (system (MK.c_str())) {}
   
@@ -59,34 +61,34 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::write_pairs (const shared_p
   
   // ----- standard info: scales at the bin centre + number of pairs -----
   
-  if (PP->pairInfo()==_standard_)
+  if (PP->pairInfo()==PairInfo::_standard_)
     for (int i=0; i<PP->nbins_D1(); i++)
       for (int j=0; j<PP->nbins_D2(); j++) 
-	fout << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << i
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << j
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D1(i)
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D2(j)
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP2D(i, j)
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP2D_weighted(i, j) << endl;
+	fout << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << i
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << j
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->scale_D1(i)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->scale_D2(j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP2D(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP2D_weighted(i, j) << endl;
   
 
   // ----- standard + extra info -----
   
-  else if (PP->pairInfo()==_extra_)
+  else if (PP->pairInfo()==PairInfo::_extra_)
     for (int i=0; i<PP->nbins_D1(); i++)
       for (int j=0; j<PP->nbins_D2(); j++) 
-	fout << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << i
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << j
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D1(i)
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D2(j)
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP2D(i, j)
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->PP2D_weighted(i, j)
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D1_mean(i, j)
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D1_sigma(i, j)
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D2_mean(i, j)
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->scale_D2_sigma(i, j)
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->z_mean(i, j)
-	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP->z_sigma(i, j) << endl;
+	fout << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << i
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << j
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->scale_D1(i)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->scale_D2(j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP2D(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->PP2D_weighted(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->scale_D1_mean(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->scale_D1_sigma(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->scale_D2_mean(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->scale_D2_sigma(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->z_mean(i, j)
+	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->z_sigma(i, j) << endl;
 
   else
     ErrorCBL("Error in write_pairs() of TwoPointCorrelation2D.cpp: no such pairInfo!");
@@ -99,10 +101,10 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::write_pairs (const shared_p
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D::read_pairs (shared_ptr<pairs::Pair> PP, const vector<string> dir, const string file) const
+void cbl::measure::twopt::TwoPointCorrelation2D::read_pairs (shared_ptr<pairs::Pair> PP, const vector<string> dir, const string file) const
 {
   if (dir.size()==0)
-    ErrorCBL("Error in cosmobl::measure::twopt::TwoPointCorrelation2D::read_pairs of TwoPointCorrelation2D.cpp! dir.size()=0!");
+    ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation2D::read_pairs of TwoPointCorrelation2D.cpp! dir.size()=0!");
 
   string line;
   int i, j;
@@ -111,7 +113,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::read_pairs (shared_ptr<pair
 
   // ----- standard info: scales at the bin centre + number of pairs -----
   
-  if (PP->pairInfo()==_standard_)
+  if (PP->pairInfo()==PairInfo::_standard_)
   
     for (size_t dd=0; dd<dir.size(); dd++) {
         
@@ -143,7 +145,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::read_pairs (shared_ptr<pair
   
   // ----- standard + extra info -----
 
-  else if (PP->pairInfo()==_extra_)
+  else if (PP->pairInfo()==PairInfo::_extra_)
   
     for (size_t dd=0; dd<dir.size(); dd++) {
         
@@ -189,7 +191,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::read_pairs (shared_ptr<pair
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D::write_pairs (const vector<shared_ptr<pairs::Pair>> PP, const string dir, const string file) const 
+void cbl::measure::twopt::TwoPointCorrelation2D::write_pairs (const vector<shared_ptr<pairs::Pair>> PP, const string dir, const string file) const 
 {  
   size_t nRegions = m_data->region_list().size();
 
@@ -203,7 +205,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::write_pairs (const vector<s
   
   // ----- standard info: scales at the bin centre + number of pairs -----
   
-  if (PP[0]->pairInfo()==_standard_) 
+  if (PP[0]->pairInfo()==PairInfo::_standard_) 
 
     for (size_t i=0; i<nRegions; i++) 
       for (size_t j=(cross) ? 0 : i; j<nRegions; j++) {
@@ -211,20 +213,20 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::write_pairs (const vector<s
 	for (int r1=0; r1<PP[index]->nbins_D1(); r1++)
 	  for (int r2=0; r2<PP[index]->nbins_D2(); r2++)
 	    if (PP[index]->PP2D(r1, r2)>0)
-	      fout << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << i
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << j
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << r1
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << r2
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D1(r1)
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D2(r2)
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->PP2D(r1, r2)
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->PP2D_weighted(r1, r2) << endl;
+	      fout << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << i
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << j
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << r1
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << r2
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->scale_D1(r1)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->scale_D2(r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP2D(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP2D_weighted(r1, r2) << endl;
       }
 
   
   // ----- standard + extra info -----
   
-  else if (PP[0]->pairInfo()==_extra_) 
+  else if (PP[0]->pairInfo()==PairInfo::_extra_) 
 
     for (size_t i=0; i<nRegions; i++) 
       for (size_t j=(cross) ? 0 : i; j<nRegions; j++) {
@@ -232,20 +234,20 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::write_pairs (const vector<s
 	for (int r1=0; r1<PP[index]->nbins_D1(); r1++)
 	  for (int r2=0; r2<PP[index]->nbins_D2(); r2++)
 	    if (PP[index]->PP2D(r1, r2)>0)
-	      fout << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << i
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << j
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << r1
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << r2
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D1(r1) 
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D2(r2)
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->PP2D(r1, r2)
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->PP2D_weighted(r1, r2)
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D1_mean(r1, r2)
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D1_sigma(r1, r2)
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D2_mean(r1, r2)
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->scale_D2_sigma(r1, r2)
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->z_mean(r1, r2)
-		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(15) << right << PP[index]->z_sigma(r1, r2) << endl;
+	      fout << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << i
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << j
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << r1
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << r2
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->scale_D1(r1) 
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->scale_D2(r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP2D(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->PP2D_weighted(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->scale_D1_mean(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->scale_D1_sigma(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->scale_D2_mean(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->scale_D2_sigma(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->z_mean(r1, r2)
+		   << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP[index]->z_sigma(r1, r2) << endl;
       }
 
   else
@@ -259,7 +261,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::write_pairs (const vector<s
 // ============================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D::read_pairs (vector<shared_ptr<pairs::Pair>> PP, const vector<string> dir, const string file) const
+void cbl::measure::twopt::TwoPointCorrelation2D::read_pairs (vector<shared_ptr<pairs::Pair>> PP, const vector<string> dir, const string file) const
 {
   size_t nRegions = m_data->region_list().size();
   
@@ -271,7 +273,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::read_pairs (vector<shared_p
     
   // ----- standard info: scales at the bin centre + number of pairs -----
 
-  if (PP[0]->pairInfo()==_standard_)
+  if (PP[0]->pairInfo()==PairInfo::_standard_)
 	
     for (size_t dd=0; dd<dir.size(); dd++) {
 
@@ -290,7 +292,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::read_pairs (vector<shared_p
 
   // ----- standard + extra info -----
   
-  else if (PP[0]->pairInfo()==_extra_) 
+  else if (PP[0]->pairInfo()==PairInfo::_extra_) 
 
     for (size_t dd=0; dd<dir.size(); dd++) {
 
@@ -317,7 +319,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D::read_pairs (vector<shared_p
 // ============================================================================
 
 
-shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation2D::data_with_extra_info (const shared_ptr<pairs::Pair> dd, const vector<double> scale_D1, const vector<double> scale_D2, const vector<vector<double>> xi, const vector<vector<double>> error) const
+shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation2D::data_with_extra_info (const shared_ptr<pairs::Pair> dd, const vector<double> scale_D1, const vector<double> scale_D2, const vector<vector<double>> xi, const vector<vector<double>> error) const
 {
   vector<vector<double>> extra(6);
   
@@ -338,7 +340,7 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation2D::data_with
 // ============================================================================
 
 
-shared_ptr<Data> cosmobl::measure::twopt::TwoPointCorrelation2D::correlation_NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
+shared_ptr<Data> cbl::measure::twopt::TwoPointCorrelation2D::correlation_NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
 {
   vector<double> scale_D1, scale_D2;
   vector<vector<double>> xi, error;
@@ -389,7 +391,7 @@ shared_ptr<Data> cosmobl::measure::twopt::TwoPointCorrelation2D::correlation_Nat
 	xi[i][j] = max(-1., DD_norm/RR_norm-1.);
 	
 	// Poisson error
-	error[i][j]= PoissonError(_natural_, dd->PP2D(i, j), rr->PP2D(i, j), 0, nD, nR); 
+	error[i][j]= PoissonError(Estimator::_natural_, dd->PP2D(i, j), rr->PP2D(i, j), 0, nD, nR); 
       }
     }
   }
@@ -401,7 +403,7 @@ shared_ptr<Data> cosmobl::measure::twopt::TwoPointCorrelation2D::correlation_Nat
 // ============================================================================
 
 
-shared_ptr<Data> cosmobl::measure::twopt::TwoPointCorrelation2D::correlation_LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
+shared_ptr<Data> cbl::measure::twopt::TwoPointCorrelation2D::correlation_LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
 {
   vector<double> scale_D1, scale_D2;
   vector<vector<double>> xi, error;
@@ -443,7 +445,7 @@ shared_ptr<Data> cosmobl::measure::twopt::TwoPointCorrelation2D::correlation_Lan
       if (dd->PP2D_weighted(i, j)>0) {
 
 	if (rr->PP2D_weighted(i, j)<1.e-30) 
-	  ErrorCBL("Error in correlation_NaturalEstimator() of TwoPointCorrelation2D.cpp: there are no random objects in the bin "+conv(i, par::fINT)+","+conv(j, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP2D_weighted(i, j), par::fDP3)+", rr="+conv(rr->PP2D_weighted(i, j), par::fDP3)+")");
+	  ErrorCBL("Error in correlation_LandySzalayEstimator() of TwoPointCorrelation2D.cpp: there are no random objects in the bin "+conv(i, par::fINT)+","+conv(j, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP2D_weighted(i, j), par::fDP3)+", rr="+conv(rr->PP2D_weighted(i, j), par::fDP3)+")");
 		   
 	// normalised number of data-data weighted pairs
 	double DD_norm = dd->PP2D_weighted(i, j)*nDDi;
@@ -458,7 +460,7 @@ shared_ptr<Data> cosmobl::measure::twopt::TwoPointCorrelation2D::correlation_Lan
 	xi[i][j] = max(-1., (DD_norm-2.*DR_norm)/RR_norm+1.);
 
 	// Poisson error
-	error[i][j]= PoissonError(_LandySzalay_, dd->PP2D(i, j), rr->PP2D(i, j), dr->PP2D(i, j), nD, nR);
+	error[i][j]= PoissonError(Estimator::_LandySzalay_, dd->PP2D(i, j), rr->PP2D(i, j), dr->PP2D(i, j), nD, nR);
 	
       }
     }
@@ -471,7 +473,7 @@ shared_ptr<Data> cosmobl::measure::twopt::TwoPointCorrelation2D::correlation_Lan
 // ============================================================================
 
 
-vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
+vector<shared_ptr<Data>> cbl::measure::twopt::TwoPointCorrelation2D::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -516,7 +518,7 @@ vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiJackk
 // ============================================================================
 
 
-vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
+vector<shared_ptr<Data>> cbl::measure::twopt::TwoPointCorrelation2D::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -575,7 +577,7 @@ vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiJackk
 // ============================================================================
 
 
-vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
+vector<shared_ptr<Data>> cbl::measure::twopt::TwoPointCorrelation2D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -590,44 +592,53 @@ vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBoots
     nRandom_reg_weighted.push_back(m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
   }
 
-  random::UniformRandomNumbers ran(0., nRegions-1, seed);
-  
-  int val = 2; // see Norberg et al. 2009
+  random::UniformRandomNumbers_Int ran(0., nRegions-1, seed);
+
+  int val = 3; // see Norberg et al. 2009
+
+  int nbins_D1 = m_dd->nbins_D1();
+  int nbins_D2 = m_dd->nbins_D2();
 
   for (int i=0; i<nMocks; i++) {
 
     coutCBL << "analysing mock: " << i << " of " << nMocks << "\r"; cout.flush();
-    
+
     auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->pairInfo(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2(), m_dd->angularUnits(), m_dd->angularWeight());
     auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->pairInfo(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2(), m_rr->angularUnits(), m_rr->angularWeight());
-    
+
     double nData_SS = 0., nData_SS_weighted = 0., nRandom_SS = 0., nRandom_SS_weighted = 0.;
-    
+
     vector<int> w(nRegions, 0);
     for (size_t n=0; n<val*nRegions; n++)
       w[ran()] ++;
 
     for (size_t j=0; j<nRegions; j++) {
-      nData_SS += w[j]*nData_reg[j];
-      nData_SS_weighted += w[j]*nData_reg_weighted[j];
-      nRandom_SS += w[j]*nRandom_reg[j];
-      nRandom_SS_weighted += w[j]*nRandom_reg_weighted[j];
 
-      for (size_t k=j; k<nRegions; k++) {
-	int index = j*nRegions-(j-1)*j/2+k-j;
-	double ww = (k==j) ? w[k] : w[j]*w[k];
-	if (ww>0) 
-	  for (int bin1=0; bin1<dd_SS->nbins_D1(); bin1++) 
-	    for (int bin2=0; bin2<dd_SS->nbins_D2(); bin2++) {
-	      dd_SS->add_data2D(bin1, bin2, dd[index], ww);
-	      rr_SS->add_data2D(bin1, bin2, rr[index], ww);
-	    }
+      if (w[j]>0) {
+
+	nData_SS += w[j]*nData_reg[j];
+	nData_SS_weighted += w[j]*nData_reg_weighted[j];
+	nRandom_SS += w[j]*nRandom_reg[j];
+	nRandom_SS_weighted += w[j]*nRandom_reg_weighted[j];
+
+	for (size_t k=j; k<nRegions; k++) {
+	  if(w[k]>0){
+	    int index = j*nRegions-(j-1)*j/2+k-j;
+	    double ww = w[j]*w[k];
+	    for (int bin1=0; bin1<nbins_D1; bin1++) 
+	      for (int bin2=0; bin2<nbins_D2; bin2++) {
+		dd_SS->add_data2D(bin1, bin2, dd[index], ww);
+		rr_SS->add_data2D(bin1, bin2, rr[index], ww);
+	      }
+	  }
+	}
       }
     }
-    
+
     data.push_back(move(correlation_NaturalEstimator(dd_SS, rr_SS, nData_SS, nData_SS_weighted, nRandom_SS, nRandom_SS_weighted)));
   }
-  
+
+
   return data;
 }
 
@@ -635,14 +646,14 @@ vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBoots
 // ============================================================================
 
 
-vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
+vector<shared_ptr<Data>> cbl::measure::twopt::TwoPointCorrelation2D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
 
   vector<shared_ptr<Data>> data;
   vector<double> nData_reg, nData_reg_weighted, nRandom_reg, nRandom_reg_weighted;
-  
+
   for (size_t i=0; i<nRegions; i++) {
     nData_reg.push_back(m_data->nObjects_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
     nData_reg_weighted.push_back(m_data->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
@@ -650,59 +661,64 @@ vector<shared_ptr<Data>> cosmobl::measure::twopt::TwoPointCorrelation2D::XiBoots
     nRandom_reg_weighted.push_back(m_random->weightedN_condition(Var::_Region_, region_list[i], region_list[i]+1, 0));
   }
 
-  random::UniformRandomNumbers ran(0., nRegions-1, seed);
-  
-  int val = 2; // see Norberg et al. 2009
+  random::UniformRandomNumbers_Int ran(0., nRegions-1, seed);
+
+  int val = 3; // see Norberg et al. 2009
 
   int nbins_D1 = m_dd->nbins_D1();
   int nbins_D2 = m_dd->nbins_D2();
-  
+
   for (int i=0; i<nMocks; i++) {
 
     coutCBL << "analysing mock: " << i << " of " << nMocks << "\r"; cout.flush();
-    
+
     auto dd_SS = Pair::Create(m_dd->pairType(), m_dd->pairInfo(), m_dd->sMin_D1(), m_dd->sMax_D1(), m_dd->nbins_D1(), m_dd->shift_D1(), m_dd->sMin_D2(), m_dd->sMax_D2(), m_dd->nbins_D2(), m_dd->shift_D2(), m_dd->angularUnits(), m_dd->angularWeight());
     auto rr_SS = Pair::Create(m_rr->pairType(), m_rr->pairInfo(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2(), m_rr->angularUnits(), m_rr->angularWeight());
     auto dr_SS = Pair::Create(m_rr->pairType(), m_rr->pairInfo(), m_rr->sMin_D1(), m_rr->sMax_D1(), m_rr->nbins_D1(), m_rr->shift_D1(), m_rr->sMin_D2(), m_rr->sMax_D2(), m_rr->nbins_D2(), m_rr->shift_D2(), m_rr->angularUnits(), m_rr->angularWeight());
-    
+
     double nData_SS = 0., nData_SS_weighted = 0., nRandom_SS = 0., nRandom_SS_weighted = 0.;
-    
+
     vector<int> w(nRegions, 0);
     for (size_t n=0; n<val*nRegions; n++)
       w[ran()] ++;
 
     for (size_t j=0; j<nRegions; j++) {
-      nData_SS += w[j]*nData_reg[j];
-      nData_SS_weighted += w[j]*nData_reg_weighted[j];
-      nRandom_SS += w[j]*nRandom_reg[j];
-      nRandom_SS_weighted += w[j]*nRandom_reg_weighted[j];
 
-      for (size_t k=j; k<nRegions; k++) {
-	int index = j*nRegions-(j-1)*j/2+k-j;
-	double ww = (k==j) ? w[k] : w[j]*w[k];
-	if (ww>0) 
-	  for (int bin1=0; bin1<nbins_D1; bin1++) 
-	    for (int bin2=0; bin2<nbins_D2; bin2++) {
-	      dd_SS->add_data2D(bin1, bin2, dd[index], ww);
-	      rr_SS->add_data2D(bin1, bin2, rr[index], ww);
-	    }
+      if (w[j]>0) {
+
+	nData_SS += w[j]*nData_reg[j];
+	nData_SS_weighted += w[j]*nData_reg_weighted[j];
+	nRandom_SS += w[j]*nRandom_reg[j];
+	nRandom_SS_weighted += w[j]*nRandom_reg_weighted[j];
+
+	for (size_t k=j; k<nRegions; k++) {
+	  if(w[k]>0){
+	    int index = j*nRegions-(j-1)*j/2+k-j;
+	    double ww = w[j]*w[k];
+	    for (int bin1=0; bin1<nbins_D1; bin1++) 
+	      for (int bin2=0; bin2<nbins_D2; bin2++) {
+		dd_SS->add_data2D(bin1, bin2, dd[index], ww);
+		rr_SS->add_data2D(bin1, bin2, rr[index], ww);
+	      }
+	  }
+	}
       }
 
       for (size_t k=0; k<nRegions; k++) {
-	int index = j*nRegions+k;
-	double ww = (k==j) ? w[k] : w[j]*w[k];
-	if (ww>0) 
+	if (w[k]>0) {
+	  int index = j*nRegions+k;
+	  double ww = w[j]*w[k];
 	  for (int bin1=0; bin1<nbins_D1; bin1++) 
 	    for (int bin2=0; bin2<nbins_D2; bin2++){
 	      dr_SS->add_data2D(bin1, bin2, dr[index], ww);
 	    }
+	}
+
       }
     }
-    
     data.push_back(move(correlation_LandySzalayEstimator(dd_SS, rr_SS, dr_SS, nData_SS, nData_SS_weighted, nRandom_SS, nRandom_SS_weighted)));
   }
 
-  
   return data;
 }
 

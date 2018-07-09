@@ -7,7 +7,7 @@
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
 // launching the code on remote systems)
-string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 
 
 int main () {
@@ -18,7 +18,7 @@ int main () {
     // ---------------- use default cosmological parameters and set sigma8 ------------
     // --------------------------------------------------------------------------------
   
-    cosmobl::cosmology::Cosmology cosmology;
+    cbl::cosmology::Cosmology cosmology;
     cosmology.set_sigma8(0.8);
 
   
@@ -26,9 +26,9 @@ int main () {
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
 
-    const string file_catalogue = cosmobl::par::DirLoc+"../input/cat.dat";
+    const std::string file_catalogue = cbl::par::DirLoc+"../input/cat.dat";
   
-    const cosmobl::catalogue::Catalogue catalogue {cosmobl::catalogue::_Galaxy_, cosmobl::_observedCoordinates_, {file_catalogue}, cosmology};
+    const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
   
     // ----------------------------------------------------------------
@@ -37,7 +37,7 @@ int main () {
 
     const double N_R = 3.; // random/data ratio
   
-    const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
+    const cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::RandomType::_createRandom_box_, catalogue, N_R};
 
 
     // --------------------------------------------------------------------------------------
@@ -51,15 +51,15 @@ int main () {
     const int nbins = 10;     // number of bins
     const double shift = 0.5; // spatial shift used to set the bin centre 
 
-    const string dir = cosmobl::par::DirLoc+"../output/";
-    const string file = "xi2D.dat";
+    const std::string dir = cbl::par::DirLoc+"../output/";
+    const std::string file = "xi2D.dat";
 
   
     // measure the 2D Cartesian two-point correlation function and estimate Poissonian errors
 
-    const auto TwoP = cosmobl::measure::twopt::TwoPointCorrelation::Create(cosmobl::measure::twopt::TwoPType::_2D_Cartesian_, catalogue, random_catalogue, cosmobl::_linear_, rMin, rMax, nbins, shift, cosmobl::_linear_, rMin, rMax, nbins, shift);
+    const auto TwoP = cbl::measure::twopt::TwoPointCorrelation::Create(cbl::measure::twopt::TwoPType::_2D_Cartesian_, catalogue, random_catalogue, cbl::BinType::_linear_, rMin, rMax, nbins, shift, cbl::BinType::_linear_, rMin, rMax, nbins, shift);
 
-    TwoP->measure(cosmobl::measure::ErrorType::_Poisson_, dir, {dir});
+    TwoP->measure(cbl::measure::ErrorType::_Poisson_, dir, {dir});
     TwoP->write(dir, file);
   
 
@@ -67,20 +67,20 @@ int main () {
     // ----------------- model the Cartesian 2D two-point correlation function and estimate the linear bias and sigma12 ----------------- 
     // ----------------------------------------------------------------------------------------------------------------------------------
 
-    cosmobl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian model_twop(TwoP); // object used for modelling
+    cbl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian model_twop(TwoP); // object used for modelling
 
   
     // flat prior for f*sigma8
-    const vector<double> fsigma8_limits = {0., 1.}; 
-    const cosmobl::statistics::Prior fsigma8_prior {cosmobl::glob::DistributionType::_UniformDistribution_, fsigma8_limits[0], fsigma8_limits[1]}; 
+    const std::vector<double> fsigma8_limits = {0., 1.}; 
+    const cbl::statistics::PriorDistribution fsigma8_prior {cbl::glob::DistributionType::_Uniform_, fsigma8_limits[0], fsigma8_limits[1], 413414}; 
   
     // flat prior for b*sigma8
-    const vector<double> bsigma8_limits = {0.8*cosmology.sigma8(), 3.*cosmology.sigma8()}; 
-    const cosmobl::statistics::Prior bsigma8_prior {cosmobl::glob::DistributionType::_UniformDistribution_, bsigma8_limits[0], bsigma8_limits[1]}; 
+    const std::vector<double> bsigma8_limits = {0.8*cosmology.sigma8(), 3.*cosmology.sigma8()}; 
+    const cbl::statistics::PriorDistribution bsigma8_prior {cbl::glob::DistributionType::_Uniform_, bsigma8_limits[0], bsigma8_limits[1],63656}; 
   
     // flat prior for sigma12
-    const vector<double> sigma12_limits = {1., 1000.}; 
-    const cosmobl::statistics::Prior sigma12_prior {cosmobl::glob::DistributionType::_UniformDistribution_, sigma12_limits[0], sigma12_limits[1]}; 
+    const std::vector<double> sigma12_limits = {1., 1000.}; 
+    const cbl::statistics::PriorDistribution sigma12_prior {cbl::glob::DistributionType::_Uniform_, sigma12_limits[0], sigma12_limits[1], 5411}; 
 
     // mean redshift of the sample
     const double redshift = 1.;
@@ -100,28 +100,27 @@ int main () {
   
     model_twop.set_fit_range(min, max, min, max);
     
+    const int chain_size = 100;
+    const int nwalkers = 10;
+    const int seed = 666;
 
-    const int chain_size = 200;
-    const int nwalkers = 20;
-    const int seed = 4232;
+    std::vector<double> starting_parameters = {0.5, 1.5, 100.};
+    
+    const std::string chain_file = "chain_cartesian_bias_sigma12.dat";
+    
+    model_twop.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_);
+    
+    model_twop.sample_posterior(chain_size, nwalkers, seed);
 
-    vector<double> starting_parameters = {1., 1., 0.5, 1.5, 100.};
-    const double radius = 1.e-3;
-    
-    const string chain_file = "chain_cartesian_bias_sigma12.dat";
-    
-    model_twop.set_likelihood(cosmobl::statistics::LikelihoodType::_GaussianLikelihood_Error_);
-    
-    model_twop.run_MCMC(chain_size, nwalkers, seed, starting_parameters, radius);
-
-    const int burn_in = 20;
-    const int thin = 10; 
-    model_twop.show_results(burn_in, thin, seed);
-    model_twop.write_results(dir, chain_file, burn_in, thin, seed);
+    const int burn_in = 0;
+    const int thin = 1; 
+    model_twop.show_results(burn_in, thin);
+    model_twop.write_chain(dir, chain_file, burn_in, thin);
+    model_twop.write_model_from_chains(dir, "model", {}, {}, burn_in, thin);
 
   }
   
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

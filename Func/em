@@ -1,1 +1,1 @@
-emacs ../Headers/Lib/Func.h ../Headers/Lib/Constants.h ../Headers/Lib/Exception.h ../Headers/Lib/FuncClassFunc.h ../Headers/Lib/Chi2ClassFunc.h ../Headers/Lib/RandomNumbers.h ../Headers/Lib/Field3D.h ../Headers/Lib/Data*.h ../Headers/Lib/GSL*.h ../Headers/Lib/CUBAwrapper.h ../Headers/Lib/FuncGrid.h ../Headers/Lib/Distribution.h ../Headers/Lib/FFTlog.h ../Headers/Lib/EisensteinHu.h ../Headers/Lib/FITSwrapper.h *cpp &
+emacs ../Headers/Func.h *cpp &

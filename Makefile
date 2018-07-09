@@ -1,17 +1,10 @@
 C = g++
 F = gfortran
+
 SWIG = swig
+Doxygen = doxygen
 
-FLAGS0 = -std=c++11 -fopenmp
-
-FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
-
-FLAGS_FFTLOG = -fPIC -w
-FLAGS_Recfast = -Wall -O3 -fPIC -D RECFASTPPPATH=\"$(PWD)/External/Recfast/\"
-
-
-Dir_H = Headers/Lib/
-Dir_O = Headers/Objects/
+Dir_H = Headers/
 Dir_CCfits = External/CCfits/
 Dir_CUBA = External/Cuba-4.2/
 Dir_FFTLOG = External/fftlog-f90-master/
@@ -19,7 +12,6 @@ Dir_Eigen = External/eigen-3.3.4/
 Dir_Recfast = External/Recfast/
 
 dir_H = $(addprefix $(PWD)/,$(Dir_H))
-dir_O = $(addprefix $(PWD)/,$(Dir_O))
 dir_CCfits = $(addprefix $(PWD)/,$(Dir_CCfits))
 dir_CUBA = $(addprefix $(PWD)/,$(Dir_CUBA))
 dir_FFTLOG = $(addprefix $(PWD)/,$(Dir_FFTLOG))
@@ -28,12 +20,18 @@ dir_Recfast = $(addprefix $(PWD)/, $(Dir_Recfast))
 
 dir_Python = $(PWD)/Python/
 
-HH = $(dir_H)*.h $(dir_O)*.h
+HH = $(dir_H)*.h 
 
-FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H) -I$(dir_O)
+FLAGS0 = -std=c++11 -fopenmp
+FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
+
+FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H)
 FLAGS_FFTW = -lfftw3 #-lfftw3_omp
 FLAGS_GSL = -lgsl -lgslcblas -lm -L$(HOME)/lib
 FLAGS_CCFITS = -Wl,-rpath,$(dir_CCfits)/lib -L$(dir_CCfits)/lib -lCCfits
+FLAGS_FFTLOG = -fPIC -w
+FLAGS_Recfast = -Wall -O3 -fPIC -D RECFASTPPPATH=\"$(PWD)/External/Recfast/\"
+
 CUBA_LIB = $(dir_CUBA)libcuba.a
 CUBA_COMPILE = cd $(dir_CUBA) && ./configure CFLAGS=-fPIC && make lib
 
@@ -68,7 +66,16 @@ FLAGST_Recfast = $(FLAGS0) $(FLAGS_Recfast)
 
 ##### CBL directories #####
 
+Dir_KERNEL = Kernel/
+Dir_WRAP = Wrappers/
+Dir_FUNCGRID = FuncGrid/
+Dir_FFT = FFT/
+Dir_RAN = RandomNumbers/
 Dir_FUNC = Func/
+Dir_DATA = Data/
+Dir_FIELD = Field/
+Dir_HIST = Histogram/
+Dir_DISTR = Distribution/
 Dir_STAT = Statistics/
 Dir_COSM = Cosmology/Lib/
 Dir_CM = ChainMesh/
@@ -79,12 +86,22 @@ Dir_TWOP = Measure/TwoPointCorrelation/
 Dir_THREEP = Measure/ThreePointCorrelation/
 Dir_MODEL_GLOB = Modelling/Global/
 Dir_MODEL_COSM = Modelling/Cosmology/
+Dir_MODEL_NC = Modelling/NumberCounts/
 Dir_MODEL_TWOP = Modelling/TwoPointCorrelation/
 Dir_MODEL_THREEP = Modelling/ThreePointCorrelation/
 Dir_GLOB = GlobalFunc/
 Dir_READP = ReadParameters/
 
+dir_KERNEL = $(addprefix $(PWD)/,$(Dir_KERNEL))
+dir_WRAP = $(addprefix $(PWD)/,$(Dir_WRAP))
+dir_FUNCGRID = $(addprefix $(PWD)/,$(Dir_FUNCGRID))
+dir_FFT = $(addprefix $(PWD)/,$(Dir_FFT))
+dir_RAN = $(addprefix $(PWD)/,$(Dir_RAN))
 dir_FUNC = $(addprefix $(PWD)/,$(Dir_FUNC))
+dir_DATA = $(addprefix $(PWD)/,$(Dir_DATA))
+dir_FIELD = $(addprefix $(PWD)/,$(Dir_FIELD))
+dir_HIST = $(addprefix $(PWD)/,$(Dir_HIST))
+dir_DISTR = $(addprefix $(PWD)/,$(Dir_DISTR))
 dir_STAT = $(addprefix $(PWD)/,$(Dir_STAT))
 dir_COSM = $(addprefix $(PWD)/,$(Dir_COSM))
 dir_CM = $(addprefix $(PWD)/,$(Dir_CM))
@@ -95,14 +112,17 @@ dir_TWOP = $(addprefix $(PWD)/,$(Dir_TWOP))
 dir_THREEP = $(addprefix $(PWD)/,$(Dir_THREEP))
 dir_MODEL_GLOB = $(addprefix $(PWD)/,$(Dir_MODEL_GLOB))
 dir_MODEL_COSM = $(addprefix $(PWD)/,$(Dir_MODEL_COSM))
+dir_MODEL_NC = $(addprefix $(PWD)/,$(Dir_MODEL_NC))
 dir_MODEL_TWOP = $(addprefix $(PWD)/,$(Dir_MODEL_TWOP))
 dir_MODEL_THREEP = $(addprefix $(PWD)/,$(Dir_MODEL_THREEP))
 dir_GLOB = $(addprefix $(PWD)/,$(Dir_GLOB))
 dir_READP = $(addprefix $(PWD)/,$(Dir_READP))
 
+
 ##### FFTlog object files #####
 
 OBJ_FFTLOG = $(dir_FFTLOG)drffti.o $(dir_FFTLOG)drfftb.o $(dir_FFTLOG)drfftf.o $(dir_FFTLOG)fftlog.o $(dir_FFTLOG)cdgamma.o
+
 
 ##### RECfast++ object files #####
 
@@ -113,11 +133,30 @@ OBJ_RECfast = $(dir_Recfast)/src/cosmology.Recfast.o \
 	   	$(dir_Recfast)/src/DM_annihilation.Recfast.o \
 	  	$(dir_Recfast)/src/Rec_corrs_CT.Recfast.o 
 
+
 ##### CBL object files #####
 
-OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)GSLfunction.o  $(dir_FUNC)Data.o $(dir_FUNC)Data1D.o $(dir_FUNC)Data1D_collection.o $(dir_FUNC)Data2D.o $(dir_FUNC)Data1D_extra.o $(dir_FUNC)Data2D_extra.o $(dir_FUNC)Field3D.o $(dir_FUNC)FuncGrid.o $(dir_FUNC)GSLwrapper.o $(dir_FUNC)CUBAwrapper.o $(dir_FUNC)RandomNumbers.o $(dir_FUNC)Distribution.o $(OBJ_FFTLOG) $(dir_FUNC)FFTlog.o $(dir_FUNC)FITSwrapper.o
+OBJ_KERNEL = $(dir_KERNEL)Kernel.o
 
-OBJ_STAT = $(dir_STAT)Model.o $(dir_STAT)Model1D.o $(dir_STAT)Model2D.o $(dir_STAT)Chain.o $(dir_STAT)Parameter.o $(dir_STAT)BaseParameter.o $(dir_STAT)DerivedParameter.o $(dir_STAT)LikelihoodParameters.o $(dir_STAT)LikelihoodFunction.o $(dir_STAT)Sampler.o  $(dir_STAT)Likelihood.o
+OBJ_WRAP = $(dir_WRAP)GSLwrapper.o $(dir_WRAP)CUBAwrapper.o $(dir_WRAP)FITSwrapper.o 
+
+OBJ_FUNCGRID = $(dir_FUNCGRID)FuncGrid.o
+
+OBJ_FFT = $(OBJ_FFTLOG) $(dir_FFT)FFTlog.o 
+
+OBJ_RAN = $(dir_RAN)RandomNumbers.o
+
+OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o
+
+OBJ_DATA = $(dir_DATA)Data.o $(dir_DATA)Data1D.o $(dir_DATA)Data1D_collection.o $(dir_DATA)Data2D.o $(dir_DATA)Data1D_extra.o $(dir_DATA)Data2D_extra.o
+
+OBJ_FIELD = $(dir_FIELD)Field3D.o
+
+OBJ_HIST = $(dir_HIST)Histogram.o 
+
+OBJ_DISTR = $(dir_DISTR)Distribution.o 
+
+OBJ_STAT =  $(dir_STAT)Prior.o $(dir_STAT)ModelParameters.o $(dir_STAT)LikelihoodParameters.o $(dir_STAT)PosteriorParameters.o $(dir_STAT)Model.o $(dir_STAT)Model1D.o $(dir_STAT)Model2D.o $(dir_STAT)LikelihoodFunction.o $(dir_STAT)Likelihood.o $(dir_STAT)Chi2.o $(dir_STAT)Sampler.o $(dir_STAT)Posterior.o
 
 OBJ_COSM = $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)MassFunction.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)DensityProfile.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)SizeFunction.o  $(dir_COSM)3PCF.o $(OBJ_RECfast)
 
@@ -127,15 +166,17 @@ OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $
 
 OBJ_LN = $(dir_LN)LogNormal.o $(dir_LN)LogNormalFull.o
 
-OBJ_NC = $(dir_NC)NumberCounts.o 
+OBJ_NC = $(dir_NC)NumberCounts.o $(dir_NC)NumberCounts1D.o $(dir_NC)NumberCounts2D.o $(dir_NC)NumberCounts1D_Redshift.o $(dir_NC)NumberCounts1D_Mass.o $(dir_NC)NumberCounts2D_RedshiftMass.o
 
 OBJ_TWOP = $(dir_TWOP)Pair.o $(dir_TWOP)Pair1D.o $(dir_TWOP)Pair2D.o $(dir_TWOP)Pair1D_extra.o $(dir_TWOP)Pair2D_extra.o $(dir_TWOP)TwoPointCorrelation.o $(dir_TWOP)TwoPointCorrelation1D.o $(dir_TWOP)TwoPointCorrelation1D_angular.o $(dir_TWOP)TwoPointCorrelation1D_monopole.o $(dir_TWOP)TwoPointCorrelation2D.o $(dir_TWOP)TwoPointCorrelation2D_cartesian.o $(dir_TWOP)TwoPointCorrelation2D_polar.o $(dir_TWOP)TwoPointCorrelation_projected.o $(dir_TWOP)TwoPointCorrelation_deprojected.o $(dir_TWOP)TwoPointCorrelation_multipoles_direct.o $(dir_TWOP)TwoPointCorrelation_multipoles_integrated.o $(dir_TWOP)TwoPointCorrelation_wedges.o $(dir_TWOP)TwoPointCorrelation1D_filtered.o $(dir_TWOP)TwoPointCorrelationCross.o $(dir_TWOP)TwoPointCorrelationCross1D.o $(dir_TWOP)TwoPointCorrelationCross1D_angular.o $(dir_TWOP)TwoPointCorrelationCross1D_monopole.o
 
 OBJ_THREEP = $(dir_THREEP)Triplet.o $(dir_THREEP)ThreePointCorrelation.o $(dir_THREEP)ThreePointCorrelation_angular_connected.o $(dir_THREEP)ThreePointCorrelation_angular_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_connected.o $(dir_THREEP)ThreePointCorrelation_comoving_reduced.o 
 
-OBJ_MODEL_GLOB = $(dir_MODEL_GLOB)Modelling.o
+OBJ_MODEL_GLOB = $(dir_MODEL_GLOB)Modelling.o  $(dir_MODEL_GLOB)Modelling1D.o $(dir_MODEL_GLOB)Modelling2D.o
 
 OBJ_MODEL_COSM = $(dir_MODEL_COSM)ModelFunction_Cosmology.o $(dir_MODEL_COSM)Modelling_Cosmology.o
+
+OBJ_MODEL_NC =  $(dir_MODEL_NC)Modelling_NumberCounts.o $(dir_MODEL_NC)ModelFunction_NumberCounts.o $(dir_MODEL_NC)Modelling_NumberCounts1D.o $(dir_MODEL_NC)Modelling_NumberCounts2D.o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Redshift.o $(dir_MODEL_NC)Modelling_NumberCounts1D_Redshift.o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Mass.o $(dir_MODEL_NC)Modelling_NumberCounts1D_Mass.o $(dir_MODEL_NC)ModelFunction_NumberCounts2D_RedshiftMass.o $(dir_MODEL_NC)Modelling_NumberCounts2D_RedshiftMass.o
 
 OBJ_MODEL_TWOP = $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation1D.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation1D.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation1D_angular.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation1D_angular.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation1D_monopole.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation1D_monopole.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation2D.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation2D.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation2D_cartesian.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation2D_cartesian.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation2D_polar.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation2D_polar.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation_projected.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation_projected.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation_deprojected.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation_deprojected.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation_multipoles.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation_multipoles.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation_wedges.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation_wedges.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation1D_filtered.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation1D_filtered.o 
 
@@ -145,10 +186,9 @@ OBJ_GLOB = $(dir_GLOB)FuncCosmology.o $(dir_GLOB)Func.o $(dir_GLOB)SubSample.o $
 
 OBJ_READP = $(dir_READP)ReadParameters.o
 
+OBJ_CBL = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_READP)
 
-OBJ_CBL = $(OBJ_FUNC) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_READP)
-
-OBJ_ALL = $(OBJ_CBL) $(dir_FUNC)conv.o $(PWD)/External/CAMB/*.o $(PWD)/External/classgal_v1/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o 
+OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/*.o $(PWD)/External/classgal_v1/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o 
 
 
 ##### CBL source files #####
@@ -168,8 +208,31 @@ endef
 ALL:
 	make CUBA  
 	make CCfits
+	make CAMB
+	make CLASS
+	make CLASSpy
+	make MPTbreeze
+	make mangle
+	$(call colorecho, "\n"Compiling the library: libKERNEL... "\n")
+	make -j3 libKERNEL
+	$(call colorecho, "\n"Compiling the library: libWRAP... "\n")
+	make -j3 libWRAP
+	$(call colorecho, "\n"Compiling the library: libFUNCGRID... "\n")
+	make -j3 libFUNCGRID
+	$(call colorecho, "\n"Compiling the library: libFFT... "\n")
+	make -j3 libFFT
+	$(call colorecho, "\n"Compiling the library: libRAN... "\n")
+	make -j3 libRAN
 	$(call colorecho, "\n"Compiling the library: libFUNC... "\n")
 	make -j3 libFUNC
+	$(call colorecho, "\n"Compiling the library: libDATA... "\n")
+	make -j3 libDATA
+	$(call colorecho, "\n"Compiling the library: libFIELD... "\n")
+	make -j3 libFIELD
+	$(call colorecho, "\n"Compiling the library: libHIST... "\n")
+	make -j3 libHIST
+	$(call colorecho, "\n"Compiling the library: libDISTR... "\n")
+	make -j3 libDISTR
 	$(call colorecho, "\n"Compiling the library: libSTAT... "\n")
 	make -j3 libSTAT
 	$(call colorecho, "\n"Compiling the library: libCOSM... "\n")
@@ -190,6 +253,8 @@ ALL:
 	make -j3 libMODEL_GLOB
 	$(call colorecho, "\n"Compiling the library: libMODEL_COSM... "\n")
 	make -j3 libMODEL_COSM
+	$(call colorecho, "\n"Compiling the library: libMODEL_NC... "\n")
+	make -j3 libMODEL_NC
 	$(call colorecho, "\n"Compiling the library: libMODEL_TWOP... "\n")
 	make -j3 libMODEL_TWOP
 	$(call colorecho, "\n"Compiling the library: libMODEL_THREEP... "\n")
@@ -201,56 +266,83 @@ ALL:
 	$(call colorecho, "\n"Compiling the full library: libCBL... "\n")
 	make -j3 libCBL
 
+libKERNEL: $(OBJ_KERNEL) $(PWD)/Makefile
+	$(C) $(FLAGS_LINK) -o $(PWD)/libKERNEL.$(ES) $(OBJ_KERNEL) -lgfortran
+
+libWRAP: $(OBJ_WRAP) $(PWD)/Makefile
+	$(C) $(FLAGS_LINK) -o $(PWD)/libWRAP.$(ES) $(OBJ_WRAP) $(CUBA_LIB) $(FLAGS_CCFITS) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL
+
+libFUNCGRID: $(OBJ_FUNCGRID) $(PWD)/Makefile
+	$(C) $(FLAGS_LINK) -o $(PWD)/libFUNCGRID.$(ES) $(OBJ_FUNCGRID) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP
+
+libFFT: $(OBJ_FFT) $(PWD)/Makefile
+	$(C) $(FLAGS_LINK) -o $(PWD)/libFFT.$(ES) $(OBJ_FFT) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lgfortran
+
+libRAN: $(OBJ_RAN) $(PWD)/Makefile
+	$(C) $(FLAGS_LINK) -o $(PWD)/libRAN.$(ES) $(OBJ_RAN) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT
+
 libFUNC: $(OBJ_FUNC) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libFUNC.$(ES) $(OBJ_FUNC) $(FLAGS_CCFITS) $(CUBA_LIB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
+	$(C) $(FLAGS_LINK) -o $(PWD)/libFUNC.$(ES) $(OBJ_FUNC) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN
+
+libDATA: $(OBJ_DATA) $(PWD)/Makefile
+	$(C) $(FLAGS_LINK) -o $(PWD)/libDATA.$(ES) $(OBJ_DATA) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC
+
+libFIELD: $(OBJ_FIELD) $(PWD)/Makefile
+	$(C) $(FLAGS_LINK) -o $(PWD)/libFIELD.$(ES) $(OBJ_FIELD) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA
+
+libHIST: $(OBJ_HIST) $(PWD)/Makefile
+	$(C) $(FLAGS_LINK) -o $(PWD)/libHIST.$(ES) $(OBJ_HIST) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD 
+
+libDISTR: $(OBJ_DISTR) $(PWD)/Makefile
+	$(C) $(FLAGS_LINK) -o $(PWD)/libDISTR.$(ES) $(OBJ_DISTR) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST
 
 libSTAT: $(OBJ_STAT) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libSTAT.$(ES) $(OBJ_STAT) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC
+	$(C) $(FLAGS_LINK) -o $(PWD)/libSTAT.$(ES) $(OBJ_STAT) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR 
 
 libCOSM: $(OBJ_COSM) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libCOSM.$(ES) $(OBJ_COSM) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT
+	$(C) $(FLAGS_LINK) -o $(PWD)/libCOSM.$(ES) $(OBJ_COSM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT
 
 libCM: $(OBJ_CM) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libCM.$(ES) $(OBJ_CM) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM
+	$(C) $(FLAGS_LINK) -o $(PWD)/libCM.$(ES) $(OBJ_CM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM
 
 libCAT: $(OBJ_CAT) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libCAT.$(ES) $(OBJ_CAT) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM
+	$(C) $(FLAGS_LINK) -o $(PWD)/libCAT.$(ES) $(OBJ_CAT) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM
 
 libLN: $(OBJ_LN) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libLN.$(ES) $(OBJ_LN) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT 
+	$(C) $(FLAGS_LINK) -o $(PWD)/libLN.$(ES) $(OBJ_LN) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT 
 
 libNC: $(OBJ_NC) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libNC.$(ES) $(OBJ_NC) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN
+	$(C) $(FLAGS_LINK) -o $(PWD)/libNC.$(ES) $(OBJ_NC) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN
 
 libTWOP: $(OBJ_TWOP) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libTWOP.$(ES) $(OBJ_TWOP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC
+	$(C) $(FLAGS_LINK) -o $(PWD)/libTWOP.$(ES) $(OBJ_TWOP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC
 
 libTHREEP: $(OBJ_THREEP) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libTHREEP.$(ES) $(OBJ_THREEP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP
- 
+	$(C) $(FLAGS_LINK) -o $(PWD)/libTHREEP.$(ES) $(OBJ_THREEP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP
+
 libMODEL_GLOB: $(OBJ_MODEL_GLOB) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_GLOB.$(ES) $(OBJ_MODEL_GLOB) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP
+	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_GLOB.$(ES) $(OBJ_MODEL_GLOB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP
 
 libMODEL_COSM: $(OBJ_MODEL_COSM) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_COSM.$(ES) $(OBJ_MODEL_COSM) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB
+	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_COSM.$(ES) $(OBJ_MODEL_COSM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB
+
+libMODEL_NC: $(OBJ_MODEL_NC) $(PWD)/Makefile
+	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_NC.$(ES) $(OBJ_MODEL_NC) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM
 
 libMODEL_TWOP: $(OBJ_MODEL_TWOP) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_TWOP.$(ES) $(OBJ_MODEL_TWOP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB
+	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_TWOP.$(ES) $(OBJ_MODEL_TWOP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_NC
 
 libMODEL_THREEP: $(OBJ_MODEL_THREEP) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_THREEP.$(ES) $(OBJ_MODEL_THREEP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB
+	$(C) $(FLAGS_LINK) -o $(PWD)/libMODEL_THREEP.$(ES) $(OBJ_MODEL_THREEP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_NC -lMODEL_TWOP
 
 libGLOB: $(OBJ_GLOB) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libGLOB.$(ES) $(OBJ_GLOB) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_TWOP -lMODEL_THREEP
+	$(C) $(FLAGS_LINK) -o $(PWD)/libGLOB.$(ES) $(OBJ_GLOB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP
 
 libREADP: $(OBJ_READP) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libREADP.$(ES) $(OBJ_READP) $(FLAGS_GSL) -lgomp -Wl,-rpath,$(PWD) -L$(PWD)/ -lFUNC
+	$(C) $(FLAGS_LINK) -o $(PWD)/libREADP.$(ES) $(OBJ_READP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP -lGLOB
 
 libCBL: $(OBJ_CBL) $(PWD)/Makefile
-	$(C) $(FLAGS_LINK) -o $(PWD)/libCBL.$(ES) $(OBJ_CBL) $(CUBA_LIB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
-
-conv: $(dir_FUNC)conv.o
-	$(F) -o $(dir_FUNC)conv $(dir_FUNC)conv.o 
+	$(C) $(FLAGS_LINK) -o $(PWD)/libCBL.$(ES) $(OBJ_CBL) $(CUBA_LIB) $(FLAGS_CCFITS) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran 
 
 CUBA: $(CUBA_LIB)
 
@@ -260,15 +352,14 @@ CAMB: $(PWD)/External/CAMB/camb
 
 CLASS: $(PWD)/External/classgal_v1/class
 
-MPTbreeze:  $(PWD)/External/MPTbreeze-v1/mptbreeze
+CLASSpy:
+	cd $(PWD)/External/classgal_v1/python/ ; python setup.py install --user
 
-fftlog-f90: $(PWD)/External/fftlog-f90-master/fftlog-f90
+MPTbreeze: $(PWD)/External/MPTbreeze-v1/mptbreeze
 
 mangle: $(PWD)/External/mangle/bin/ransack
 
 venice: $(PWD)/External/VIPERS/venice3.9/venice
-
-Recfast: $(PWD)/External/Recfast/Recfast++
 
 allExamples:
 	$(call colorecho, "\n"Compiling the example code: vector.cpp ... "\n")
@@ -279,20 +370,20 @@ allExamples:
 	cd $(PWD)/Examples/randomNumbers ; make 
 	$(call colorecho, "\n"Compiling the example code: integration_gsl.cpp ... "\n")
 	cd $(PWD)/Examples/wrappers ; make integration_gsl
+	$(call colorecho, "\n"Compiling the example code: minimisation_gsl.cpp ... "\n")
+	cd $(PWD)/Examples/wrappers ; make minimisation_gsl
 	$(call colorecho, "\n"Compiling the example code: integration_cuba.cpp ... "\n")
 	cd $(PWD)/Examples/wrappers ; make integration_cuba
-	$(call colorecho, "\n"Compiling the example code: minimisation.cpp ... "\n")
-	cd $(PWD)/Examples/wrappers ; make minimisation
 	$(call colorecho, "\n"Compiling the example code: fits.cpp ... "\n")
 	cd $(PWD)/Examples/wrappers ; make fits
-	$(call colorecho, "\n"Compiling the example code: distances.cpp ... "\n")
-	cd $(PWD)/Examples/distances ; make 
 	$(call colorecho, "\n"Compiling the example code: covsample.cpp ... "\n")
 	cd $(PWD)/Examples/covsample ; make 
 	$(call colorecho, "\n"Compiling the example code: cosmology.cpp ... "\n")
 	cd $(PWD)/Examples/cosmology ; make cosmology
 	$(call colorecho, "\n"Compiling the example code: fsigma8.cpp ... "\n")
 	cd $(PWD)/Examples/cosmology ; make fsigma8
+	$(call colorecho, "\n"Compiling the example code: distances.cpp ... "\n")
+	cd $(PWD)/Examples/cosmology ; make distances
 	$(call colorecho, "\n"Compiling the example code: model_cosmology.cpp ... "\n")
 	cd $(PWD)/Examples/cosmology ; make model_cosmology
 	$(call colorecho, "\n"Compiling the example code: prior.cpp ... "\n")
@@ -338,28 +429,29 @@ allExamples:
 	$(call colorecho, "\n"Compiling the example code: readParameterFile.cpp ... "\n")
 	cd $(PWD)/Examples/readParameterFile/ ; make 
 
+
 python: $(dir_Python)CBL_wrap.o $(OBJ_CBL) $(dir_Python)CBL.i
 	make ALL
 	$(C) $(FLAGS_LINK) -o $(dir_Python)_CosmoBolognaLib.so $(OBJ_CBL) $(dir_Python)CBL_wrap.o $(FLAGS_CCFITS) $(CUBA_LIB) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY) -lgfortran
 
+
 doc:
-	rm Doc/html/* Doc/xml/* -rf
-	doxygen Doc/dconfig
-	rm Doc/doxygen_sqlite3.db -f 
+	rm -rf Doc/html/* Doc/xml/*
+	$(Doxygen) Doc/dconfig
+	rm -f Doc/doxygen_sqlite3.db 
 #	python ../bin/doxy2swig2.py Doc/xml/index.xml Doc/documentation.i
 #	python ../doxy2swig/doxy2swig.py Doc/xml/index.xml Doc/documentation.i
 
 doct:
-	rm Doc/html/* Doc/xml/* -rf
+	rm -rf Doc/html/* Doc/xml/*
 	doxygen Doc/dconfigT
-	rm Doc/doxygen_sqlite3.db -f 
+	rm -f Doc/doxygen_sqlite3.db
 
 cleanExamples:
 	cd $(PWD)/Examples/vectors ; make clean && cd ../..
 	cd $(PWD)/Examples/eigen ; make clean && cd ../..
 	cd $(PWD)/Examples/randomNumbers ; make clean && cd ../..
 	cd $(PWD)/Examples/wrappers ; make clean && cd ../..
-	cd $(PWD)/Examples/distances ; make clean && cd ../..
 	cd $(PWD)/Examples/covsample ; make clean && cd ../..
 	cd $(PWD)/Examples/cosmology ; make clean && cd ../..
 	cd $(PWD)/Examples/statistics/codes ; make clean && cd ../..
@@ -373,14 +465,14 @@ cleanExamples:
 
 cleanpy:
 	rm -f $(dir_Python)*~ $(dir_Python)CBL_wrap.o $(dir_Python)CBL_wrap.cxx $(dir_Python)CosmoBolognaLib.py*
-	rm -rf $(dir_Python)dist $(dir_Python)build $(dir_Python)CosmoBolognaLib.egg-info
 	rm -f $(dir_Python)Lib/*~ $(dir_Python)Lib/*.o $(dir_Python)Lib/*.cxx $(dir_Python)Lib/*.py
 	rm -f $(dir_Python)CosmoBolognaLib/*CosmoBolognaLib* $(dir_Python)CosmoBolognaLib/*~ $(dir_Python)CosmoBolognaLib/*.pyc
 	rm -f $(dir_Python)_CosmoBolognaLib.so $(dir_Python)CosmoBolognaLib.py
+	rm -rf $(dir_Python)dist $(dir_Python)build $(dir_Python)CosmoBolognaLib.egg-info $(dir_Python)__pycache__
+
 
 cleanTEMP:
-	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_FUNC)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_NC)*~ $(dir_TWOP)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_READP)*~ $(dir_H)*~ $(dir_O)*~ $(PWD)/\#* $(dir_FUNC)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_READP)\#* $(dir_H)\#* $(dir_O)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
-	cd External/Recfast; make tidy
+	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_KERNEL)*~ $(dir_WRAP)*~ $(dir_FUNCGRID)*~ $(dir_FFT)*~ $(dir_RAN)*~ $(dir_FUNC)*~ $(dir_DATA)*~ $(dir_FIELD)*~ $(dir_HIST)*~ $(dir_DISTR)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_NC)*~ $(dir_TWOP)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_NC)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_READP)*~ $(dir_H)*~ $(PWD)/\#* $(dir_KERNEL)\#* $(dir_WRAP)\#* $(dir_FUNCGRID)\#* $(dir_FFT)\#* $(dir_RAN)\#* $(dir_FUNC)\#* $(dir_DATA)\#* $(dir_FIELD)\#* $(dir_HIST)\#*  $(dir_DISTR)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_NC)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_READP)\#* $(dir_H)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
 
 clean:
 	make cleanExamples
@@ -393,6 +485,7 @@ purge:
 purgeALL:
 	make purge
 	make cleanpy
+	rm -rf Doc/html/* Doc/xml/* 
 	rm -rf Cosmology/Tables/*
 	rm -rf External/EisensteinHu/output_linear/*
 	cd External/CAMB ; make clean 
@@ -402,21 +495,20 @@ purgeALL:
 	rm -rf External/CAMB/test_*
 	rm -rf External/CAMB/NULL*
 	rm -rf External/VIPERS/venice3.9/venice
-	rm -rf External/mangle/bin/*
-	cd External/mangle/src; make cleaner ; true
+	rm -rf External/mangle/bin
+	cd External/mangle/src; make cleaner ; rm -f Makefile ; true
 	cd External/classgal_v1/ ; make clean ; rm -f class libclass.a ; true
 	rm -rf External/classgal_v1/output_linear/*
 	rm -rf External/classgal_v1/output_nonlinear/*
-	cd External/fftlog-f90-master/ ; make clean ; true
-	cd External/mangle/src ; make clean ; true
+	cd External/fftlog-f90-master/ ; make clean ; rm -f fftlog-f90 ; true
 	cd External/MPTbreeze-v1/Cuba-1.4/ ; rm -rf config.h config.log config.status demo-fortran.dSYM/ libcuba.a makefile *~ ; true
 	rm -rf External/MPTbreeze-v1/mptbreeze
 	rm -rf External/MPTbreeze-v1/*~
 	rm -rf External/MPTbreeze-v1/output_linear/*
 	rm -rf External/MPTbreeze-v1/output_nonlinear/*
-	cd External/Cuba-4.2 ; rm -rf config.h config.log config.status demo-fortran.dSYM/ libcuba.a makefile *~ ; true
+	cd External/Cuba-4.2 ; make distclean ; rm -rf config.h config.log config.status demo-fortran.dSYM/ libcuba.a makefile *~ ; true
 	cd External/CCfits ; rm -rf bin lib include CCfits *.fit .deps .libs; true
-	cd External/Recfast ; make tidy
+	cd External/Recfast; make tidy
 
 
 #################################################################### 
@@ -428,8 +520,46 @@ $(CUBA_LIB):
 $(CCfits_LIB):
 	$(CCfits_COMPILE)
 
+
+#################################################################### 
+
+
+$(dir_KERNEL)Kernel.o: $(dir_KERNEL)Kernel.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_KERNEL)Kernel.cpp -o $(dir_KERNEL)Kernel.o 
+
+
+####################################################################
+
+
+$(dir_WRAP)GSLwrapper.o: $(dir_WRAP)GSLwrapper.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP)GSLwrapper.cpp -o $(dir_WRAP)GSLwrapper.o 
+
+$(dir_WRAP)CUBAwrapper.o: $(dir_WRAP)CUBAwrapper.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP)CUBAwrapper.cpp -o $(dir_WRAP)CUBAwrapper.o
+
+$(dir_WRAP)FITSwrapper.o: $(dir_WRAP)FITSwrapper.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP)FITSwrapper.cpp -o $(dir_WRAP)FITSwrapper.o
+
+
+#################################################################### 
+
+
+$(dir_FUNCGRID)FuncGrid.o: $(dir_FUNCGRID)FuncGrid.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNCGRID)FuncGrid.cpp -o $(dir_FUNCGRID)FuncGrid.o
+
+
+####################################################################
+
+
+$(dir_FFT)FFTlog.o: $(OBJ_FFTLOG) $(dir_FFT)FFTlog.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FFT)FFTlog.cpp -o $(dir_FFT)FFTlog.o 
+
+
+#################################################################### 
+
+
 $(dir_FUNC)Func.o: $(dir_FUNC)Func.cpp $(HH) $(PWD)/Makefile
-	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Func.cpp -o $(dir_FUNC)Func.o 
+	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Func.cpp -o $(dir_FUNC)Func.o
 
 $(dir_FUNC)FuncXi.o: $(dir_FUNC)FuncXi.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)FuncXi.cpp -o $(dir_FUNC)FuncXi.o
@@ -437,71 +567,71 @@ $(dir_FUNC)FuncXi.o: $(dir_FUNC)FuncXi.cpp $(HH) $(PWD)/Makefile
 $(dir_FUNC)FuncMultipoles.o: $(dir_FUNC)FuncMultipoles.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)FuncMultipoles.cpp -o $(dir_FUNC)FuncMultipoles.o
 
-$(dir_FUNC)GSLfunction.o: $(dir_FUNC)GSLfunction.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)GSLfunction.cpp -o $(dir_FUNC)GSLfunction.o
-
-$(dir_FUNC)Data.o: $(dir_FUNC)Data.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Data.cpp -o $(dir_FUNC)Data.o
-
-$(dir_FUNC)Data1D.o: $(dir_FUNC)Data1D.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Data1D.cpp -o $(dir_FUNC)Data1D.o
-
-$(dir_FUNC)Data1D_collection.o: $(dir_FUNC)Data1D_collection.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Data1D_collection.cpp -o $(dir_FUNC)Data1D_collection.o
-
-$(dir_FUNC)Data2D.o: $(dir_FUNC)Data2D.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Data2D.cpp -o $(dir_FUNC)Data2D.o
-
-$(dir_FUNC)Data1D_extra.o: $(dir_FUNC)Data1D_extra.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Data1D_extra.cpp -o $(dir_FUNC)Data1D_extra.o
-
-$(dir_FUNC)Data2D_extra.o: $(dir_FUNC)Data2D_extra.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Data2D_extra.cpp -o $(dir_FUNC)Data2D_extra.o
-
-$(dir_FUNC)Field3D.o: $(dir_FUNC)Field3D.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Field3D.cpp -o $(dir_FUNC)Field3D.o
-
-$(dir_FUNC)FuncGrid.o: $(dir_FUNC)FuncGrid.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)FuncGrid.cpp -o $(dir_FUNC)FuncGrid.o
-
-$(dir_FUNC)GSLwrapper.o: $(dir_FUNC)GSLwrapper.cpp $(HH) $(PWD)/Makefile
-	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)GSLwrapper.cpp -o $(dir_FUNC)GSLwrapper.o 
-
-$(dir_FUNC)CUBAwrapper.o: $(dir_FUNC)CUBAwrapper.cpp $(HH) $(PWD)/Makefile
-	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)CUBAwrapper.cpp -o $(dir_FUNC)CUBAwrapper.o
-
-$(dir_FUNC)RandomNumbers.o: $(dir_FUNC)RandomNumbers.cpp $(HH) $(PWD)/Makefile
-	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)RandomNumbers.cpp -o $(dir_FUNC)RandomNumbers.o 
-
-$(dir_FUNC)Distribution.o: $(dir_FUNC)Distribution.cpp $(HH) $(PWD)/Makefile
-	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)Distribution.cpp -o $(dir_FUNC)Distribution.o 
-
-$(dir_FUNC)conv.o: $(dir_FUNC)conv.f90 
-	$(F) -c $(dir_FUNC)conv.f90 -o $(dir_FUNC)conv.o
-
-$(dir_FFTLOG)drffti.o: $(dir_FFTLOG)drffti.f
-	$(F) $(FLAGS_FFTLOG) -c $(dir_FFTLOG)drffti.f -o $(dir_FFTLOG)drffti.o
-
-$(dir_FFTLOG)drfftb.o: $(dir_FFTLOG)drfftb.f
-	$(F) $(FLAGS_FFTLOG) -c $(dir_FFTLOG)drfftb.f -o $(dir_FFTLOG)drfftb.o
-
-$(dir_FFTLOG)drfftf.o: $(dir_FFTLOG)drfftf.f
-	$(F) $(FLAGS_FFTLOG) -c $(dir_FFTLOG)drfftf.f -o $(dir_FFTLOG)drfftf.o
-
-$(dir_FFTLOG)fftlog.o: $(dir_FFTLOG)fftlog.f
-	$(F) $(FLAGS_FFTLOG) -c $(dir_FFTLOG)fftlog.f -o $(dir_FFTLOG)fftlog.o
-
-$(dir_FFTLOG)cdgamma.o: $(dir_FFTLOG)cdgamma.f
-	$(F) $(FLAGS_FFTLOG) -c $(dir_FFTLOG)cdgamma.f -o $(dir_FFTLOG)cdgamma.o
-
-$(dir_FUNC)FFTlog.o:  $(OBJ_FFTLOG) $(dir_FUNC)FFTlog.cpp $(HH) $(PWD)/Makefile
-	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)FFTlog.cpp -o $(dir_FUNC)FFTlog.o 
-
-$(dir_FUNC)FITSwrapper.o: $(dir_FUNC)FITSwrapper.cpp $(HH) $(PWD)/Makefile
-	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_FUNC)FITSwrapper.cpp -o $(dir_FUNC)FITSwrapper.o 
 
 #################################################################### 
 
+
+$(dir_DATA)Data.o: $(dir_DATA)Data.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_DATA)Data.cpp -o $(dir_DATA)Data.o
+
+$(dir_DATA)Data1D.o: $(dir_DATA)Data1D.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_DATA)Data1D.cpp -o $(dir_DATA)Data1D.o
+
+$(dir_DATA)Data1D_collection.o: $(dir_DATA)Data1D_collection.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_DATA)Data1D_collection.cpp -o $(dir_DATA)Data1D_collection.o
+
+$(dir_DATA)Data2D.o: $(dir_DATA)Data2D.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_DATA)Data2D.cpp -o $(dir_DATA)Data2D.o
+
+$(dir_DATA)Data1D_extra.o: $(dir_DATA)Data1D_extra.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_DATA)Data1D_extra.cpp -o $(dir_DATA)Data1D_extra.o
+
+$(dir_DATA)Data2D_extra.o: $(dir_DATA)Data2D_extra.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_DATA)Data2D_extra.cpp -o $(dir_DATA)Data2D_extra.o
+
+
+#################################################################### 
+
+
+$(dir_FIELD)Field3D.o: $(dir_FIELD)Field3D.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FIELD)Field3D.cpp -o $(dir_FIELD)Field3D.o
+
+
+#################################################################### 
+
+
+$(dir_HIST)Histogram.o: $(dir_HIST)Histogram.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_HIST)Histogram.cpp -o $(dir_HIST)Histogram.o
+
+
+#################################################################### 
+
+
+$(dir_RAN)RandomNumbers.o: $(dir_RAN)RandomNumbers.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_RAN)RandomNumbers.cpp -o $(dir_RAN)RandomNumbers.o 
+
+
+#################################################################### 
+
+
+$(dir_DISTR)Distribution.o: $(dir_DISTR)Distribution.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_DISTR)Distribution.cpp -o $(dir_DISTR)Distribution.o 
+
+
+#################################################################### 
+
+
+$(dir_STAT)Prior.o: $(dir_STAT)Prior.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Prior.cpp -o $(dir_STAT)Prior.o
+
+$(dir_STAT)ModelParameters.o: $(dir_STAT)ModelParameters.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)ModelParameters.cpp -o $(dir_STAT)ModelParameters.o
+
+$(dir_STAT)LikelihoodParameters.o: $(dir_STAT)LikelihoodParameters.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)LikelihoodParameters.cpp -o $(dir_STAT)LikelihoodParameters.o
+
+$(dir_STAT)PosteriorParameters.o: $(dir_STAT)PosteriorParameters.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)PosteriorParameters.cpp -o $(dir_STAT)PosteriorParameters.o
 
 $(dir_STAT)Model.o: $(dir_STAT)Model.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Model.cpp -o $(dir_STAT)Model.o
@@ -512,29 +642,20 @@ $(dir_STAT)Model1D.o: $(dir_STAT)Model1D.cpp $(HH) $(PWD)/Makefile
 $(dir_STAT)Model2D.o: $(dir_STAT)Model2D.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Model2D.cpp -o $(dir_STAT)Model2D.o
 
-$(dir_STAT)Chain.o: $(dir_STAT)Chain.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Chain.cpp -o $(dir_STAT)Chain.o
-
-$(dir_STAT)Parameter.o: $(dir_STAT)Parameter.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Parameter.cpp -o $(dir_STAT)Parameter.o
-
-$(dir_STAT)BaseParameter.o: $(dir_STAT)BaseParameter.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)BaseParameter.cpp -o $(dir_STAT)BaseParameter.o
-
-$(dir_STAT)DerivedParameter.o: $(dir_STAT)DerivedParameter.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)DerivedParameter.cpp -o $(dir_STAT)DerivedParameter.o
-
-$(dir_STAT)LikelihoodParameters.o: $(dir_STAT)LikelihoodParameters.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)LikelihoodParameters.cpp -o $(dir_STAT)LikelihoodParameters.o
-
 $(dir_STAT)LikelihoodFunction.o: $(dir_STAT)LikelihoodFunction.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)LikelihoodFunction.cpp -o $(dir_STAT)LikelihoodFunction.o
+
+$(dir_STAT)Likelihood.o: $(dir_STAT)Likelihood.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Likelihood.cpp -o $(dir_STAT)Likelihood.o
+
+$(dir_STAT)Chi2.o: $(dir_STAT)Chi2.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Chi2.cpp -o $(dir_STAT)Chi2.o
 
 $(dir_STAT)Sampler.o: $(dir_STAT)Sampler.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Sampler.cpp -o $(dir_STAT)Sampler.o
 
-$(dir_STAT)Likelihood.o: $(dir_STAT)Likelihood.cpp $(HH) $(PWD)/Makefile 
-	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Likelihood.cpp -o $(dir_STAT)Likelihood.o
+$(dir_STAT)Posterior.o: $(dir_STAT)Posterior.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Posterior.cpp -o $(dir_STAT)Posterior.o
 
 
 #################################################################### 
@@ -576,29 +697,12 @@ $(dir_COSM)MassGrowth.o: $(dir_COSM)MassGrowth.cpp $(HH) $(PWD)/Makefile
 $(dir_COSM)NG.o: $(dir_COSM)NG.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)NG.cpp -o $(dir_COSM)NG.o
 
-$(dir_Recfast)/src/cosmology.Recfast.o: $(dir_Recfast)/src/cosmology.Recfast.cpp
-	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/cosmology.Recfast.cpp -o $(dir_Recfast)/src/cosmology.Recfast.o
-
-$(dir_Recfast)/src/evalode.Recfast.o: $(dir_Recfast)/src/evalode.Recfast.cpp
-	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/evalode.Recfast.cpp -o $(dir_Recfast)/src/evalode.Recfast.o
-
-$(dir_Recfast)/src/recombination.Recfast.o: $(dir_Recfast)/src/recombination.Recfast.cpp
-	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/recombination.Recfast.cpp -o $(dir_Recfast)/src/recombination.Recfast.o
-
-$(dir_Recfast)/src/ODE_solver.Recfast.o: $(dir_Recfast)/src/ODE_solver.Recfast.cpp
-	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/ODE_solver.Recfast.cpp -o $(dir_Recfast)/src/ODE_solver.Recfast.o
-
-$(dir_Recfast)/src/DM_annihilation.Recfast.o: $(dir_Recfast)/src/DM_annihilation.Recfast.cpp
-	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/DM_annihilation.Recfast.cpp -o $(dir_Recfast)/src/DM_annihilation.Recfast.o
-
-$(dir_Recfast)/src/Rec_corrs_CT.Recfast.o: $(dir_Recfast)/src/Rec_corrs_CT.Recfast.cpp
-	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/Rec_corrs_CT.Recfast.cpp -o $(dir_Recfast)/src/Rec_corrs_CT.Recfast.o
-
 $(dir_COSM)BAO.o: $(dir_COSM)BAO.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)BAO.cpp -o $(dir_COSM)BAO.o
 
 $(dir_COSM)3PCF.o: $(dir_COSM)3PCF.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)3PCF.cpp -o $(dir_COSM)3PCF.o
+
 
 #################################################################### 
 
@@ -651,6 +755,20 @@ $(dir_LN)LogNormalFull.o: $(dir_LN)LogNormalFull.cpp $(HH) $(PWD)/Makefile
 $(dir_NC)NumberCounts.o: $(dir_NC)NumberCounts.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_NC)NumberCounts.cpp -o $(dir_NC)NumberCounts.o
 
+$(dir_NC)NumberCounts1D.o: $(dir_NC)NumberCounts1D.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_NC)NumberCounts1D.cpp -o $(dir_NC)NumberCounts1D.o
+
+$(dir_NC)NumberCounts2D.o: $(dir_NC)NumberCounts2D.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_NC)NumberCounts2D.cpp -o $(dir_NC)NumberCounts2D.o
+
+$(dir_NC)NumberCounts1D_Redshift.o: $(dir_NC)NumberCounts1D_Redshift.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_NC)NumberCounts1D_Redshift.cpp -o $(dir_NC)NumberCounts1D_Redshift.o
+
+$(dir_NC)NumberCounts1D_Mass.o: $(dir_NC)NumberCounts1D_Mass.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_NC)NumberCounts1D_Mass.cpp -o $(dir_NC)NumberCounts1D_Mass.o
+
+$(dir_NC)NumberCounts2D_RedshiftMass.o: $(dir_NC)NumberCounts2D_RedshiftMass.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_NC)NumberCounts2D_RedshiftMass.cpp -o $(dir_NC)NumberCounts2D_RedshiftMass.o
 
 #################################################################### 
 
@@ -753,6 +871,12 @@ $(dir_THREEP)ThreePointCorrelation_comoving_reduced.o: $(dir_THREEP)ThreePointCo
 $(dir_MODEL_GLOB)Modelling.o: $(dir_MODEL_GLOB)Modelling.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_GLOB)Modelling.cpp -o $(dir_MODEL_GLOB)Modelling.o
 
+$(dir_MODEL_GLOB)Modelling1D.o: $(dir_MODEL_GLOB)Modelling1D.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_GLOB)Modelling1D.cpp -o $(dir_MODEL_GLOB)Modelling1D.o
+
+$(dir_MODEL_GLOB)Modelling2D.o: $(dir_MODEL_GLOB)Modelling2D.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_GLOB)Modelling2D.cpp -o $(dir_MODEL_GLOB)Modelling2D.o
+
 
 #################################################################### 
 
@@ -763,6 +887,39 @@ $(dir_MODEL_COSM)Modelling_Cosmology.o: $(dir_MODEL_COSM)Modelling_Cosmology.cpp
 $(dir_MODEL_COSM)ModelFunction_Cosmology.o: $(dir_MODEL_COSM)ModelFunction_Cosmology.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_COSM)ModelFunction_Cosmology.cpp -o $(dir_MODEL_COSM)ModelFunction_Cosmology.o
 
+
+#################################################################### 
+
+
+$(dir_MODEL_NC)Modelling_NumberCounts.o: $(dir_MODEL_NC)Modelling_NumberCounts.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)Modelling_NumberCounts.cpp -o $(dir_MODEL_NC)Modelling_NumberCounts.o
+
+$(dir_MODEL_NC)ModelFunction_NumberCounts.o: $(dir_MODEL_NC)ModelFunction_NumberCounts.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)ModelFunction_NumberCounts.cpp -o $(dir_MODEL_NC)ModelFunction_NumberCounts.o
+
+$(dir_MODEL_NC)Modelling_NumberCounts1D.o: $(dir_MODEL_NC)Modelling_NumberCounts1D.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)Modelling_NumberCounts1D.cpp -o $(dir_MODEL_NC)Modelling_NumberCounts1D.o
+
+$(dir_MODEL_NC)Modelling_NumberCounts2D.o: $(dir_MODEL_NC)Modelling_NumberCounts2D.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)Modelling_NumberCounts2D.cpp -o $(dir_MODEL_NC)Modelling_NumberCounts2D.o
+
+$(dir_MODEL_NC)Modelling_NumberCounts1D_Redshift.o: $(dir_MODEL_NC)Modelling_NumberCounts1D_Redshift.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)Modelling_NumberCounts1D_Redshift.cpp -o $(dir_MODEL_NC)Modelling_NumberCounts1D_Redshift.o
+
+$(dir_MODEL_NC)ModelFunction_NumberCounts1D_Redshift.o: $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Redshift.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Redshift.cpp -o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Redshift.o
+
+$(dir_MODEL_NC)Modelling_NumberCounts1D_Mass.o: $(dir_MODEL_NC)Modelling_NumberCounts1D_Mass.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)Modelling_NumberCounts1D_Mass.cpp -o $(dir_MODEL_NC)Modelling_NumberCounts1D_Mass.o
+
+$(dir_MODEL_NC)ModelFunction_NumberCounts1D_Mass.o: $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Mass.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Mass.cpp -o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Mass.o
+
+$(dir_MODEL_NC)ModelFunction_NumberCounts2D_RedshiftMass.o: $(dir_MODEL_NC)ModelFunction_NumberCounts2D_RedshiftMass.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)ModelFunction_NumberCounts2D_RedshiftMass.cpp -o $(dir_MODEL_NC)ModelFunction_NumberCounts2D_RedshiftMass.o
+
+$(dir_MODEL_NC)Modelling_NumberCounts2D_RedshiftMass.o: $(dir_MODEL_NC)Modelling_NumberCounts2D_RedshiftMass.cpp $(HH) $(PWD)/Makefile
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)Modelling_NumberCounts2D_RedshiftMass.cpp -o $(dir_MODEL_NC)Modelling_NumberCounts2D_RedshiftMass.o
 
 #################################################################### 
 
@@ -895,11 +1052,53 @@ $(dir_GLOB)Forecast.o: $(dir_GLOB)Forecast.cpp $(HH) $(PWD)/Makefile
 $(dir_GLOB)3PCF_SphericalHarmonics.o: $(dir_GLOB)3PCF_SphericalHarmonics.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_GLOB)3PCF_SphericalHarmonics.cpp -o $(dir_GLOB)3PCF_SphericalHarmonics.o
 
+
 #################################################################### 
 
 
 $(dir_READP)ReadParameters.o: $(dir_READP)ReadParameters.cpp $(HH) $(PWD)/Makefile
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_READP)ReadParameters.cpp -o $(dir_READP)ReadParameters.o
+
+
+#################################################################### 
+
+
+$(dir_FFTLOG)drffti.o: $(dir_FFTLOG)drffti.f
+	$(F) $(FLAGS_FFTLOG) -c $(dir_FFTLOG)drffti.f -o $(dir_FFTLOG)drffti.o
+
+$(dir_FFTLOG)drfftb.o: $(dir_FFTLOG)drfftb.f
+	$(F) $(FLAGS_FFTLOG) -c $(dir_FFTLOG)drfftb.f -o $(dir_FFTLOG)drfftb.o
+
+$(dir_FFTLOG)drfftf.o: $(dir_FFTLOG)drfftf.f
+	$(F) $(FLAGS_FFTLOG) -c $(dir_FFTLOG)drfftf.f -o $(dir_FFTLOG)drfftf.o
+
+$(dir_FFTLOG)fftlog.o: $(dir_FFTLOG)fftlog.f
+	$(F) $(FLAGS_FFTLOG) -c $(dir_FFTLOG)fftlog.f -o $(dir_FFTLOG)fftlog.o
+
+$(dir_FFTLOG)cdgamma.o: $(dir_FFTLOG)cdgamma.f
+	$(F) $(FLAGS_FFTLOG) -c $(dir_FFTLOG)cdgamma.f -o $(dir_FFTLOG)cdgamma.o
+
+
+#################################################################### 
+
+
+$(dir_Recfast)/src/cosmology.Recfast.o: $(dir_Recfast)/src/cosmology.Recfast.cpp
+	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/cosmology.Recfast.cpp -o $(dir_Recfast)/src/cosmology.Recfast.o
+
+$(dir_Recfast)/src/evalode.Recfast.o: $(dir_Recfast)/src/evalode.Recfast.cpp
+	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/evalode.Recfast.cpp -o $(dir_Recfast)/src/evalode.Recfast.o
+
+$(dir_Recfast)/src/recombination.Recfast.o: $(dir_Recfast)/src/recombination.Recfast.cpp
+	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/recombination.Recfast.cpp -o $(dir_Recfast)/src/recombination.Recfast.o
+
+$(dir_Recfast)/src/ODE_solver.Recfast.o: $(dir_Recfast)/src/ODE_solver.Recfast.cpp
+	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/ODE_solver.Recfast.cpp -o $(dir_Recfast)/src/ODE_solver.Recfast.o
+
+$(dir_Recfast)/src/DM_annihilation.Recfast.o: $(dir_Recfast)/src/DM_annihilation.Recfast.cpp
+	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/DM_annihilation.Recfast.cpp -o $(dir_Recfast)/src/DM_annihilation.Recfast.o
+
+$(dir_Recfast)/src/Rec_corrs_CT.Recfast.o: $(dir_Recfast)/src/Rec_corrs_CT.Recfast.cpp
+	$(C) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/Rec_corrs_CT.Recfast.cpp -o $(dir_Recfast)/src/Rec_corrs_CT.Recfast.o
 
 
 #################################################################### 
@@ -911,7 +1110,7 @@ $(dir_Python)CBL_wrap.o: $(dir_Python)CBL_wrap.cxx $(dir_Python)CBL.i $(HH)
 
 $(dir_Python)CBL_wrap.cxx: $(dir_Python)CBL.i $(HH)
 	$(call colorecho, "\n"Running swig. It may take a few minutes ... "\n")
-	$(SWIG) -python -c++ -I$(dir_H) -I$(dir_O) -I$(dir_EH) $(dir_Python)CBL.i
+	$(SWIG) -python -c++ -I$(dir_H) -I$(dir_EH) $(dir_Python)CBL.i
 
 
 #################################################################### 
@@ -923,23 +1122,14 @@ $(PWD)/External/CAMB/camb:
 $(PWD)/External/classgal_v1/class:
 	cd $(PWD)/External/classgal_v1 ; make clean && make && make clean && cd ../..
 
-CLASSpy:
-	cd $(PWD)/External/classgal_v1/python/ ; python setup.py install --user
-
 $(PWD)/External/MPTbreeze-v1/mptbreeze:
 	cd External/MPTbreeze-v1/Cuba-1.4/ ; ./configure && make lib && cd ../../../
 	cd $(PWD)/External/MPTbreeze-v1 ; ./compile.sh && cd ../..
 
-$(PWD)/External/fftlog-f90-master/fftlog-f90:
-	cd $(PWD)/External/fftlog-f90-master ; make clean && make "F90 = gfortran -g -w" && make clean && cd ../..
-
 $(PWD)/External/mangle/bin/ransack:
-	cd $(PWD)/External/mangle/src && mkdir -p ../bin && make cleaner ; chmod +x configure && ./configure && make && make clean && cd -
-
+	cd $(PWD)/External/mangle/src && mkdir -p ../bin && chmod +x configure && ./configure && make && make clean && cd -
 
 $(PWD)/External/VIPERS/venice3.9/venice:
 	cd $(PWD)/External/VIPERS/venice3.9 ; make clean && make "CC = gcc" && make && make clean && cd -
 
-$(PWD)/External/Recfast/Recfast++:
-	cd $(PWD)/External/Recfast ; make clean && make && cd -
 

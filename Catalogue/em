@@ -1,1 +1,1 @@
-emacs ../Headers/Lib/Catalogue.h ../Headers/Lib/ChainMesh_Catalogue.h ../Headers/Objects/*.h *.cpp &
+emacs ../Headers/Object.h ../Headers/Cluster.h ../Headers/Galaxy.h ../Headers/Halo.h ../Headers/Mock.h ../Headers/RandomObject.h ../Headers/Void.h ../Headers/Catalogue.h ../Headers/ChainMesh_Catalogue.h *.cpp &

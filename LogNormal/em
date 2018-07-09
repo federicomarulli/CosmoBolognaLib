@@ -1,1 +1,1 @@
-emacs ../Headers/Lib/LogNormal.h ../Headers/Lib/LogNormalFull.h LogNormal.cpp LogNormalFull.cpp &
+emacs ../Headers/LogNormal.h ../Headers/LogNormalFull.h LogNormal.cpp LogNormalFull.cpp &

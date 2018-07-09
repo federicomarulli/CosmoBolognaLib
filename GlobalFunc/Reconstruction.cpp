@@ -34,13 +34,15 @@
 
 #include "GlobalFunc.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================
 
 
-void cosmobl::reconstruction_fourier_space (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool random_RSD, const cosmology::Cosmology cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type)
+void cbl::reconstruction_fourier_space (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool random_RSD, const cosmology::Cosmology cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type)
 {
   double ff = cosmology.linear_growth_rate(redshift);
   double beta = ff/bias;
@@ -51,7 +53,7 @@ void cosmobl::reconstruction_fourier_space (const catalogue::Catalogue data, con
 
   double rsd_term = 3*beta/(7+3*beta);
   
-data::ScalarField3D density_field = data.density_field(cell_size, random, interpolation_type, smoothing_radius);
+  data::ScalarField3D density_field = data.density_field(cell_size, random, interpolation_type, smoothing_radius);
 
   density_field.FourierTransformField();
 
@@ -140,7 +142,7 @@ data::ScalarField3D density_field = data.density_field(cell_size, random, interp
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue cosmobl::displaced_catalogue (const catalogue::Catalogue input_catalogue) 
+cbl::catalogue::Catalogue cbl::displaced_catalogue (const catalogue::Catalogue input_catalogue) 
 {
   catalogue::Catalogue displaced_cat(input_catalogue);
 

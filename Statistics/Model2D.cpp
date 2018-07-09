@@ -33,17 +33,19 @@
 
 #include "Model2D.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ======================================================================================
 
 
-void cosmobl::statistics::Model2D::set_model (const model_function_2D model)
+void cbl::statistics::Model2D::set_function (const model_function_2D function)
 {
-  m_function = [model](vector<vector<double>> xx, shared_ptr<void> fixed_parameters, vector<double> &free_parameters) 
+  m_function = [this, function](vector<vector<double>> xx, shared_ptr<void> inputs, vector<double> &parameters) 
     {
-      return model(xx[0], xx[1], fixed_parameters, free_parameters);
+      return function(xx[0], xx[1], inputs, parameters);
     };
 }
 
@@ -51,20 +53,64 @@ void cosmobl::statistics::Model2D::set_model (const model_function_2D model)
 // ======================================================================================
 
 
-void cosmobl::statistics::Model2D::write_model (const string output_dir, const string output_file, const vector<double> xx, const vector<double> yy, vector<double> &parameter) const
+void cbl::statistics::Model2D::stats_from_chains (const vector<double> xx, const vector<double> yy, vector<vector<double>> &median_model, vector<vector<double>> &low_model, vector<vector<double>> &up_model, const int start, const int thin) 
 {
-  string mkdir = "mkdir -p "+output_dir; if (system(mkdir.c_str())) {}
+  Model::stats_from_chains({xx, yy}, median_model, low_model, up_model, start, thin);
+}
 
-  string file_out = output_dir+output_file;
-  ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
-  vector<vector<double>> model = this->operator()(xx, yy, parameter);
+// ======================================================================================
+
+
+void cbl::statistics::Model2D::write (const string output_dir, const string output_file, const vector<double> xx, const vector<double> yy, const vector<double> parameters)
+{
+  vector<double> pp = parameters;
+  vector<vector<double>> model = this->operator()(xx, yy, pp);
+
+  string mkdir = "mkdir -p "+output_dir;
+  string file = output_dir+output_file;
+
+  if (system(mkdir.c_str())) {}
+
+  ofstream fout(file.c_str());
 
   for (size_t i=0; i<xx.size(); i++)
     for (size_t j=0; j<yy.size(); j++)
       fout << xx[i] << " " << yy[j] << " " << model[i][j] << endl;
+  
+  fout.close();
+}
 
-  fout.clear(); fout.close();
-  coutCBL << "I wrote the file: " << output_dir+file_out << endl;
+
+// ======================================================================================
+
+
+void cbl::statistics::Model2D::write_at_bestfit (const string output_dir, const string output_file, const vector<double> xx, const vector<double> yy)
+{
+  vector<double> bf = m_parameters->bestfit_values();
+  write(output_dir, output_file, xx, yy, bf);  
+}
+
+
+// ======================================================================================
+
+
+void cbl::statistics::Model2D::write_from_chains (const string output_dir, const string output_file, const vector<double> xx, const vector<double> yy, const int start, const int thin)
+{
+  vector<vector<double>> median_model, low_model, up_model;
+  stats_from_chains(xx, yy, median_model, low_model, up_model, start, thin);
+
+  string mkdir = "mkdir -p "+output_dir;
+  string file = output_dir+output_file;
+
+  if (system(mkdir.c_str())) {}
+
+  ofstream fout(file.c_str());
+
+  for (size_t i=0; i<xx.size(); i++)
+    for (size_t j=0; j<yy.size(); j++)
+      fout << xx[i] << " " << yy[j] << " " << median_model[i][j] << " " << low_model[i][j] << "  " << up_model[i][j] << endl;
+ 
+  fout.close();
 }
 

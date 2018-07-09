@@ -33,7 +33,76 @@
 
 #include "Model.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
+
+// ======================================================================================
+
+
+vector<vector<double>> cbl::statistics::Model::operator() (const std::vector<std::vector<double>> xx, std::vector<double> &parameters) const
+{
+  parameters = m_parameters->full_parameters(parameters);
+  return m_function(xx, m_inputs, parameters);
+}
 
 
 // ======================================================================================
+
+
+void cbl::statistics::Model::set_parameters (const size_t nparameters, vector<ParameterType> parameterTypes, vector<string> parameterNames)
+{
+  m_parameters = make_shared<cbl::statistics::ModelParameters>(cbl::statistics::ModelParameters(nparameters, parameterTypes, parameterNames));
+}
+
+
+// ======================================================================================
+
+
+void cbl::statistics::Model::stats_from_chains (const vector<vector<double>> xx, vector<vector<double>> &median_model, vector<vector<double>> &low_model, vector<vector<double>> &up_model, const int start, const int thin) 
+{
+  int sz1, sz2;
+  if (m_dimension == Dim::_1D_) {
+    sz1 = 1;
+    sz2 = int(xx[0].size());
+  }
+  else if (m_dimension == Dim::_2D_) {
+    sz1 = int(xx[0].size());
+    sz2 = int(xx[1].size());
+  }
+  else
+    ErrorCBL("Error in stats_from_chains() of Model.cpp. Wrong size for xx vector!");
+
+  vector<double> _median(sz1*sz2, 0);
+  vector<double> _low(sz1*sz2, 0);
+  vector<double> _up(sz1*sz2, 0);
+
+  vector<vector<double>> models;
+
+  for (size_t j=start; j<m_parameters->chain_size(); j+=thin) {
+    for (size_t i=0; i<m_parameters->chain_nwalkers(); i++) {
+      vector<double> parameters;
+
+      for (size_t k=0; k<m_parameters->nparameters(); k++) 
+	parameters.push_back(m_parameters->chain_value(k, j, i));
+      models.push_back(flatten(this->operator()(xx, parameters)));
+    }
+  }
+
+  vector<vector<double>> tr_models = transpose(models);
+  
+  for (size_t i=0; i<tr_models.size(); i++) {
+    vector<double> vv = tr_models[i];
+    sort(vv.begin(), vv.end());
+    int low = vv.size()*0.16;
+    int up = vv.size()*0.84;
+    int median = vv.size()*0.5;
+    _median[i] = vv[median];
+    _low[i] = vv[low];
+    _up[i] = vv[up];
+  }
+
+  median_model = reshape(_median, sz1, sz2);
+  low_model = reshape(_low, sz1, sz2);
+  up_model = reshape(_up, sz1, sz2);
+}

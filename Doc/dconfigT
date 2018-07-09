@@ -791,6 +791,9 @@ RECURSIVE              = YES
 EXCLUDE  = External/
 EXCLUDE += Python/
 EXCLUDE += Examples/
+EXCLUDE += test.py
+EXCLUDE += Headers/genCBL.py
+EXCLUDE += Headers/CBL.h
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded

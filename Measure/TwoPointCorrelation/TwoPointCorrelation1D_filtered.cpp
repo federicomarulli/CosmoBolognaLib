@@ -39,7 +39,9 @@
 #include "TwoPointCorrelation1D_filtered.h"
 #include "Data1D_extra.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace chainmesh;
 using namespace data;
@@ -51,17 +53,17 @@ using namespace twopt;
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters (const binType binType, const double rMin, const double rMax, const int nbins, const double shift) 
+void cbl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters (const BinType binType, const double rMin, const double rMax, const int nbins, const double shift) 
 {
-  if (binType==_linear_){
+  if (binType==BinType::_linear_){
     double binSize = ((rMax-rMin)/nbins);
 
     m_rc.resize(nbins);
     for (int i=0; i<nbins; i++)
       m_rc[i] = binSize*(i+shift)+rMin;
   }
-  else if (binType==_logarithmic_){
-    if (rMin<1.e-30) ErrorCBL("Error in cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters of TwoPointCorrelation1D_filtered.cpp: Min must be >0!");
+  else if (binType==BinType::_logarithmic_){
+    if (rMin<1.e-30) ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters of TwoPointCorrelation1D_filtered.cpp: Min must be >0!");
 
     double binSize = ((log10(rMax)-log10(rMin))/nbins);
 
@@ -69,7 +71,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters (co
     for (int i=0; i<nbins; i++)
       m_rc[i] = pow(10.,(i+shift)*binSize+log10(rMin));
   }
-  else ErrorCBL("Error in cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters of TwoPointCorrelation1D_filtered.cpp: no such type of binning!");
+  else ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters of TwoPointCorrelation1D_filtered.cpp: no such type of binning!");
 
 }
 
@@ -77,9 +79,9 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters (co
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters (const binType binType, const double rMin, const double rMax, const double binSize, const double shift)
+void cbl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters (const BinType binType, const double rMin, const double rMax, const double binSize, const double shift)
 {
-  if (binType==_linear_) {
+  if (binType==BinType::_linear_) {
     int nbins = nint((rMax-rMin)/binSize);
 
     m_rc.resize(nbins);
@@ -87,8 +89,8 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters (co
       m_rc[i] = (i+shift)*binSize+rMin;
   }
   
-  else if (binType==_logarithmic_) {
-    if (rMin<1.e-30) ErrorCBL("Error in cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters of TwoPointCorrelation1D_filtered.cpp: Min must be >0!");
+  else if (binType==BinType::_logarithmic_) {
+    if (rMin<1.e-30) ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters of TwoPointCorrelation1D_filtered.cpp: Min must be >0!");
 
     int nbins = nint((log10(rMax)-log10(rMin))/binSize);
 
@@ -98,14 +100,14 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters (co
 
   }
 
-  else ErrorCBL("Error in cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters of TwoPointCorrelation1D_filtered.cpp: no such type of binning!");
+  else ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters of TwoPointCorrelation1D_filtered.cpp: no such type of binning!");
 }
 
 
 // ============================================================================================
 
 
-shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::Filtered (const shared_ptr<data::Data> monopole)
+shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D_filtered::Filtered (const shared_ptr<data::Data> monopole)
 {
   vector<double> rad; 
   if(!m_compute_extra_info)
@@ -124,7 +126,7 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::
     for (size_t j=0; j<rad.size(); j++) {
       if (rad[j]<m_rc[i]) {
 	wc[i] += rad[j]*rad[j]*binSize*xi[j]*Filter(rad[j], m_rc[i]);
-	error_wc[i] += pow(rad[j]*rad[j]*binSize*error_xi[j]*Filter(rad[j], m_rc[i]),2);
+	error_wc[i] += (xi[j]>-1.) ? pow(rad[j]*rad[j]*binSize*error_xi[j]*Filter(rad[j], m_rc[i]), 2) : 0.;
       }
     }
 
@@ -137,7 +139,7 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_ResampleXi, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation1D_filtered::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_ResampleXi, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
   case (ErrorType::_Poisson_) :
@@ -157,7 +159,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measure (const Err
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator) 
+void cbl::measure::twopt::TwoPointCorrelation1D_filtered::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator) 
 {
   // ----------- count the data-data, random-random and data-random pairs, or read them from file ----------- 
   
@@ -166,9 +168,9 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measurePoisson (co
   
   // ----------- compute the monopole of the two-point correlation function ----------- 
 
-  if (estimator==_natural_)
+  if (estimator==Estimator::_natural_)
     m_dataset = Filtered(correlation_NaturalEstimator(m_dd, m_rr));
-  else if (estimator==_LandySzalay_)
+  else if (estimator==Estimator::_LandySzalay_)
     m_dataset = Filtered(correlation_LandySzalayEstimator(m_dd, m_rr, m_dr));
   else
     ErrorCBL("Error in measurePoisson() of TwoPointCorrelation1D_filtered.cpp: the chosen estimator is not implemented!");
@@ -178,7 +180,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measurePoisson (co
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation1D_filtered::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -193,7 +195,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measureJackknife (
   vector<shared_ptr<Pair> > dd_regions, rr_regions, dr_regions;
   count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount);
   
-  vector<shared_ptr<Data> > data_SS = (estimator==_natural_) ? XiJackknife(dd_regions, rr_regions) : XiJackknife(dd_regions, rr_regions, dr_regions);
+  vector<shared_ptr<Data> > data_SS = (estimator==Estimator::_natural_) ? XiJackknife(dd_regions, rr_regions) : XiJackknife(dd_regions, rr_regions, dr_regions);
   
   for (size_t i=0; i<nRegions; i++) {
     shared_ptr<Data> data_filtered = Filtered(data_SS[i]);
@@ -210,9 +212,9 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measureJackknife (
 
   covariance_matrix(xi_SubSamples, covariance, true);
   
-  if (estimator==_natural_)
+  if (estimator==Estimator::_natural_)
     m_dataset = Filtered(correlation_NaturalEstimator(m_dd, m_rr));
-  else if (estimator==_LandySzalay_)
+  else if (estimator==Estimator::_LandySzalay_)
     m_dataset = Filtered(correlation_LandySzalayEstimator(m_dd, m_rr, m_dr));
   else
     ErrorCBL("Error in measureJackknife() of TwoPointCorrelation1D_filtered.cpp: the chosen estimator is not implemented!");
@@ -224,7 +226,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measureJackknife (
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation1D_filtered::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (nMocks<=0)
     ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_filtered.cpp, number of mocks must be >0");
@@ -238,7 +240,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measureBootstrap (
 
   vector<shared_ptr<Pair> > dd_regions, rr_regions, dr_regions;
   count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount);
-  vector<shared_ptr<Data> > data_SS = (estimator==_natural_) ? XiBootstrap(nMocks, dd_regions, rr_regions, seed) : XiBootstrap(nMocks,dd_regions,rr_regions,dr_regions, seed);
+  vector<shared_ptr<Data> > data_SS = (estimator==Estimator::_natural_) ? XiBootstrap(nMocks, dd_regions, rr_regions, seed) : XiBootstrap(nMocks,dd_regions,rr_regions,dr_regions, seed);
 
   for (int i=0; i<nMocks; i++) {
     shared_ptr<Data> data_filtered = Filtered(data_SS[i]);
@@ -255,9 +257,9 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measureBootstrap (
 
   covariance_matrix(xi_SubSamples, covariance, 0);
   
-  if (estimator==_natural_)
+  if (estimator==Estimator::_natural_)
     m_dataset = Filtered(correlation_NaturalEstimator(m_dd, m_rr));
-  else if (estimator==_LandySzalay_)
+  else if (estimator==Estimator::_LandySzalay_)
     m_dataset = Filtered(correlation_LandySzalayEstimator(m_dd, m_rr, m_dr));
   ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_filtered.cpp: the chosen estimator is not implemented!");
   
@@ -269,7 +271,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::measureBootstrap (
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::read (const string dir, const string file) 
+void cbl::measure::twopt::TwoPointCorrelation1D_filtered::read (const string dir, const string file) 
 {
   m_dataset->read(dir+file);
 }
@@ -278,7 +280,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::read (const string
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation1D_filtered::write (const string dir, const string file, const int rank) const 
+void cbl::measure::twopt::TwoPointCorrelation1D_filtered::write (const string dir, const string file, const int rank) const 
 {
   string header = "[1] separation at the bin centre # [2] filtered two-point correlation function # [3] error";
   if (m_compute_extra_info) header += " # [4] mean separation # [5] standard deviation of the separation distribution # [6] mean redshift # [7] standard deviation of the redshift distribution";

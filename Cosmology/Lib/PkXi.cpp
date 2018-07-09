@@ -35,14 +35,16 @@
 
 #include "Cosmology.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace cosmology;
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::As (const double sigma8) const
+double cbl::cosmology::Cosmology::As (const double sigma8) const
 { 
   return pow(sigma8/1.79e4*pow(m_Omega_baryon*m_hh*m_hh/0.024, 1./3.)*pow(m_Omega_matter*m_hh*m_hh/0.14, -0.563)*pow(7.808*m_hh, 0.5*(1.-m_n_spec))*pow(m_hh/0.72, -0.693)*0.76/gg(0.), 2);
 }
@@ -51,7 +53,7 @@ double cosmobl::cosmology::Cosmology::As (const double sigma8) const
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::sigma8_interpolated (const double redshift) const
+double cbl::cosmology::Cosmology::sigma8_interpolated (const double redshift) const
 {
   double wm = m_Omega_matter*m_hh*m_hh;
   double wb = m_Omega_baryon*m_hh*m_hh;
@@ -64,7 +66,7 @@ double cosmobl::cosmology::Cosmology::sigma8_interpolated (const double redshift
 // =====================================================================================
 
 
-string cosmobl::cosmology::Cosmology::Pk_output_file (const string code, const bool NL, const double redshift, const bool run, const string output_root, const double k_max, const string file_par)
+std::string cbl::cosmology::Cosmology::Pk_output_file (const string code, const bool NL, const double redshift, const bool run, const string output_root, const double k_max, const string file_par)
 {
   string dir_loc = fullpath(par::DirLoc);
   string dir_cosmo = fullpath(par::DirCosmo);
@@ -72,7 +74,7 @@ string cosmobl::cosmology::Cosmology::Pk_output_file (const string code, const b
   string dir_grid;
   if (NL==0) dir_grid = "output_linear/";
   else if (NL==1) dir_grid= "output_nonlinear/";
-  else ErrorCBL("Error in cosmobl::cosmology::Cosmology::Table_PkCodes of PkXi.cpp!");
+  else ErrorCBL("Error in cbl::cosmology::Cosmology::Table_PkCodes of PkXi.cpp!");
   dir_grid += "h"+conv(m_hh, par::fDP6)+"_OmB"+conv(m_Omega_baryon, par::fDP6)+"_OmCDM"+conv(m_Omega_CDM, par::fDP6)+"_OmL"+conv(m_Omega_DE, par::fDP6)+"_OmN"+conv(m_Omega_neutrinos, par::fDP6)+"_Z"+conv(redshift, par::fDP6)+"_scalar_amp"+conv(m_scalar_amp, par::ee3)+"_scalar_pivot"+conv(m_scalar_pivot, par::fDP6)+"_n"+conv(m_n_spec, par::fDP6)+"_w0"+conv(m_w0, par::fDP6)+"_wa"+conv(m_wa, par::fDP6)+"/";
 
   string dir = dir_cosmo+"External/"+code+"/";
@@ -93,7 +95,7 @@ string cosmobl::cosmology::Cosmology::Pk_output_file (const string code, const b
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, const string output_root, const string output_dir, const double k_max, const string file_par) const 
+void cbl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, const string output_root, const string output_dir, const double k_max, const string file_par) const 
 {
   string dir = par::DirCosmo+"External/CAMB/";
 
@@ -160,7 +162,7 @@ void cosmobl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshi
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::run_CAMB (vector<double> &kk, vector<double> &Pk, const bool NL, const double redshift, const string output_root, const string output_dir, const double k_max, const string file_par) const 
+void cbl::cosmology::Cosmology::run_CAMB (vector<double> &kk, vector<double> &Pk, const bool NL, const double redshift, const string output_root, const string output_dir, const double k_max, const string file_par) const 
 {
   string dir = par::DirCosmo+"External/CAMB/";
 
@@ -245,10 +247,10 @@ void cosmobl::cosmology::Cosmology::run_CAMB (vector<double> &kk, vector<double>
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::Table_PkCodes (const string code, const bool NL, vector<double> &lgkk, vector<double> &lgPk, const double redshift, const string output_root, const double k_max, string file_par) const 
-{ 
+void cbl::cosmology::Cosmology::Table_PkCodes (const string code, const bool NL, vector<double> &lgkk, vector<double> &lgPk, const double redshift, const string output_root, const double k_max, string file_par) const 
+{
   if (code=="MPTbreeze-v1" && m_sigma8<0) 
-    ErrorCBL("Error in cosmobl::cosmology::Cosmology::Table_PkCodes of PkXi.cpp: sigma8 must be >0 if MPTbreeze-v1 is used!"); 
+    ErrorCBL("Error in cbl::cosmology::Cosmology::Table_PkCodes of PkXi.cpp: sigma8 must be >0 if MPTbreeze-v1 is used!"); 
   
   lgkk.erase(lgkk.begin(), lgkk.end());
   lgPk.erase(lgPk.begin(), lgPk.end());
@@ -258,7 +260,7 @@ void cosmobl::cosmology::Cosmology::Table_PkCodes (const string code, const bool
   string dir_grid;
   if (NL==0) dir_grid = "output_linear/";
   else if (NL==1) dir_grid= "output_nonlinear/";
-  else ErrorCBL("Error in cosmobl::cosmology::Cosmology::Table_PkCodes of PkXi.cpp!");
+  else ErrorCBL("Error in cbl::cosmology::Cosmology::Table_PkCodes of PkXi.cpp!");
   dir_grid += "h"+conv(m_hh, par::fDP6)+"_OmB"+conv(m_Omega_baryon, par::fDP6)+"_OmCDM"+conv(m_Omega_CDM, par::fDP6)+"_OmL"+conv(m_Omega_DE, par::fDP6)+"_OmN"+conv(m_Omega_neutrinos, par::fDP6)+"_Z"+conv(redshift, par::fDP6)+"_scalar_amp"+conv(m_scalar_amp, par::ee3)+"_scalar_pivot"+conv(m_scalar_pivot, par::fDP6)+"_n"+conv(m_n_spec, par::fDP6)+"_w0"+conv(m_w0, par::fDP6)+"_wa"+conv(m_wa, par::fDP6)+"/";
 
   string dir = dir_cosmo+"External/"+code+"/";
@@ -267,14 +269,14 @@ void cosmobl::cosmology::Cosmology::Table_PkCodes (const string code, const bool
 
   string dir_output = dir+dir_grid;
   
-  string file_in = dir_output+"Pk.dat";
+  string file_in = dir_output+"Pk.dat"; 
   ifstream fin;
   fin.open(file_in.c_str());
 
   string file_par0;
 
   if (!fin) {
-   
+    
     string dirCr = (code!="MPTbreeze-v1") ? dir : dirC;
     if (chdir (dirCr.c_str())) {}
     
@@ -471,7 +473,7 @@ void cosmobl::cosmology::Cosmology::Table_PkCodes (const string code, const bool
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::Table_XiCodes (const string code, const bool NL, vector<double> &rr, vector<double> &xi, const double redshift, const string output_root, const double k_max, const string file_par) const
+void cbl::cosmology::Cosmology::Table_XiCodes (const string code, const bool NL, vector<double> &rr, vector<double> &xi, const double redshift, const string output_root, const double k_max, const string file_par) const
 {
   vector<double> lgkk, lgPk;
   Table_PkCodes(code, NL, lgkk, lgPk, redshift, output_root, k_max, file_par);
@@ -480,9 +482,9 @@ void cosmobl::cosmology::Cosmology::Table_XiCodes (const string code, const bool
   string dir_cosmo = fullpath(par::DirCosmo);
 
   string dir_grid;
-  if (NL==0) dir_grid = "output_linear/";
-  else if (NL==1) dir_grid= "output_nonlinear/";
-  else ErrorCBL("Error in cosmobl::cosmology::Cosmology::Table_XiCodes of PkXi.cpp!");
+  if (NL==false) dir_grid = "output_linear/";
+  else dir_grid= "output_nonlinear/";
+  
   dir_grid += "h"+conv(m_hh, par::fDP6)+"_OmB"+conv(m_Omega_baryon, par::fDP6)+"_OmCDM"+conv(m_Omega_CDM, par::fDP6)+"_OmL"+conv(m_Omega_DE, par::fDP6)+"_OmN"+conv(m_Omega_neutrinos, par::fDP6)+"_Z"+conv(redshift, par::fDP6)+"_scalar_amp"+conv(m_scalar_amp, par::ee3)+"_scalar_pivot"+conv(m_scalar_pivot, par::fDP6)+"_n"+conv(m_n_spec, par::fDP6)+"_w0"+conv(m_w0, par::fDP6)+"_wa"+conv(m_wa, par::fDP6)+"/";
 
   string dir = dir_cosmo+"External/"+code+"/";
@@ -497,8 +499,20 @@ void cosmobl::cosmology::Cosmology::Table_XiCodes (const string code, const bool
   fin.open(file_out.c_str());
   
   if (!fin) {
-    string cmd = "./fftlog-f90 "+file_in+" "+file_out+" 600";
-    if (system(cmd.c_str())) {}
+    
+    vector<double> kk = lgkk, Pk = lgPk;
+    for_each( kk.begin(), kk.end(), [] (double &vv) { vv = pow(10., vv); } );
+    for_each( Pk.begin(), Pk.end(), [] (double &vv) { vv = pow(10., vv); } );
+    
+    cbl::fftlog::transform_FFTlog(rr, xi, 1, kk, Pk);
+
+    ofstream fout(file_out.c_str()); checkIO(fout, file_out);
+
+    for (size_t i=0; i<rr.size(); ++i) 
+      fout << rr[i] << "   " << xi[i] << endl;
+    
+    fout.clear(); fout.close();
+    
   }
   
   if (chdir(dir_loc.c_str())) {}
@@ -517,15 +531,16 @@ void cosmobl::cosmology::Cosmology::Table_XiCodes (const string code, const bool
   }
 
   fin.clear(); fin.close();
+
 }
 
 
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::Pk_0 (const string method_Pk, const double redshift, const string output_root, const double k_min, const double k_max, const double prec, const string file_par)
+void cbl::cosmology::Cosmology::Pk_0 (const string method_Pk, const double redshift, const string output_root, const double k_min, const double k_max, const double prec, const string file_par)
 {  
-  if (m_sigma8<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::Pk_0 of PkXi.cpp, sigma8<0!");
+  if (m_sigma8<0) ErrorCBL("Error in cbl::cosmology::Cosmology::Pk_0 of PkXi.cpp, sigma8<0!");
 
   double RR = 8.; // sigma_8 = sigma(8Mpc/h)
   double RHO = rho_m(0., true); 
@@ -557,7 +572,7 @@ void cosmobl::cosmology::Cosmology::Pk_0 (const string method_Pk, const double r
     gsl_integration_workspace *ww = gsl_integration_workspace_alloc(limit_size);
     gsl_function Func;
 
-    cosmobl::glob::STR_SSM str;
+    cbl::glob::STR_SSM str;
     str.unit = true;
     str.hh = m_hh;
     str.n_spec = m_n_spec;
@@ -572,7 +587,7 @@ void cosmobl::cosmology::Cosmology::Pk_0 (const string method_Pk, const double r
     gsl_integration_workspace_free (ww);
   }
 
-  else ErrorCBL("Error in cosmobl::cosmology::Cosmology::sigma8_Pk of PkXi.cpp: method_Pk is wrong!");
+  else ErrorCBL("Error in cbl::cosmology::Cosmology::sigma8_Pk of PkXi.cpp: method_Pk is wrong!");
 
 
   if (method_Pk=="EisensteinHu") m_Pk0_EH = 2.*pow(par::pi*m_sigma8,2)/Int*pow(DD(redshift)/DD(0),2);
@@ -586,9 +601,13 @@ void cosmobl::cosmology::Cosmology::Pk_0 (const string method_Pk, const double r
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::Pk (const double kk, const string method_Pk, const bool NL, const double redshift, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+double cbl::cosmology::Cosmology::Pk (const double kk, const string method_Pk, const bool NL, const double redshift, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par, const bool unit1)
 { 
   int Norm = norm;
+
+  double fact1 = (m_unit || unit1) ? 1. : m_hh;
+  double fact2 = pow(fact1, 3);
+
   if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
  
   if (method_Pk=="MPTbreeze-v1") Norm = 0; // check!!!
@@ -601,12 +620,11 @@ double cosmobl::cosmology::Cosmology::Pk (const double kk, const string method_P
 
     eh.TFmdm_set_cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massive_neutrinos, m_Omega_DE, m_hh, redshift, m_scalar_amp, m_scalar_pivot, m_n_spec); 
 
-    return m_Pk0_EH*eh.Pk(kk);
+    return m_Pk0_EH*eh.Pk(kk/fact1)/fact2;
   }
   
   if (method_Pk=="CAMB" || method_Pk=="MPTbreeze-v1" || method_Pk=="classgal_v1") {
-    double fact = (m_unit) ? 1. : m_hh;
-    double lgk = log10(kk/fact);
+    double lgk = log10(kk/fact1);
     vector<double> lgkk, lgPk;
     Table_PkCodes(method_Pk, NL, lgkk, lgPk, redshift, output_root, k_max, file_par);
 
@@ -617,18 +635,27 @@ double cosmobl::cosmology::Cosmology::Pk (const double kk, const string method_P
     if (method_Pk=="MPTbreeze-v1") PP0 = m_Pk0_MPTbreeze;
     if (method_Pk=="classgal_v1") PP0 = m_Pk0_CLASS;
 
-    return PP0*pow(10., lgPK)/pow(fact, 3);
+    return PP0*pow(10., lgPK)/fact2;
   }
 
-  else { ErrorCBL("Error in cosmobl::cosmology::Cosmology::Pk of PkXi.cpp: method_Pk is wrong!"); return 0; }
+  else { ErrorCBL("Error in cbl::cosmology::Cosmology::Pk of PkXi.cpp: method_Pk is wrong!"); return 0; }
 
 }
 
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::Pk (const vector<double> kk, const string method_Pk, const bool NL, const double redshift, const string output_dir, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
+vector<double> cbl::cosmology::Cosmology::Pk (const vector<double> kk, const string method_Pk, const bool NL, const double redshift, const string output_dir, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par, const bool unit1) 
 {
+
+  double fact1 = (m_unit || unit1) ? 1. : 1./m_hh;
+  double fact2 = pow(fact1, 3);
+
+  vector<double> newk = kk;
+  if (fact1!=1)
+    for(size_t i=0; i<newk.size(); i++)
+      newk[i] *= fact1;
+
   // define the normalization
   int Norm = norm;
   if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
@@ -644,37 +671,45 @@ vector<double> cosmobl::cosmology::Cosmology::Pk (const vector<double> kk, const
 
     eh.TFmdm_set_cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massive_neutrinos, m_Omega_DE, m_hh, redshift, m_scalar_amp, m_scalar_pivot, m_n_spec); 
 
-    Pk = eh.Pk(kk);
-    for (size_t i=0; i<kk.size(); i++)
-      Pk[i] *= m_Pk0_EH;
+    for (size_t i=0; i<kk.size(); i++) {
+      Pk[i] = m_Pk0_EH*eh.Pk(newk[i])*fact2;
+    }
   }
 
   else if (method_Pk=="CAMB") {
 
     vector<double> _kk, _pk;
-    run_CAMB(_kk, _pk, NL, redshift, output_root, output_dir, k_max, file_par);
+
+    run_CAMB(_kk, _pk, NL, redshift, output_root, output_dir, Max(newk), file_par);
     glob::FuncGrid interp_Pk(_kk, _pk, "Spline");
-    Pk = interp_Pk.eval_func(kk);
+    Pk = interp_Pk.eval_func(newk);
 
     if (Norm==1) {
-      const double RR = 8.;
-      glob::FuncGrid interpPk(_kk, _pk, "Spline");
-      auto func_sigma = [&] (double _k){
-	return pow(TopHat_WF(_k*RR)*_k, 2)*interp_Pk(_k); 
-      };
-      double Int = gsl::GSL_integrate_qag (func_sigma, k_min, k_max, prec);
 
-      m_Pk0_CAMB = 2.*pow(par::pi*m_sigma8,2)/Int*pow(DD(redshift)/DD(0),2);
+      double sigma8;
+
+      if (NL==true)
+	sigma8 = sigma8_Pk ("CAMB", 0., "test", false, k_min, k_max, prec);
+      else {
+
+	const double RR = 8.;
+	glob::FuncGrid interpPk(newk, Pk, "Spline");
+	auto func_sigma = [&] (double _k){
+	  return pow(TopHat_WF(_k*RR)*_k, 2)*interpPk(_k); 
+	};
+	sigma8 = sqrt(1./(2.*pow(par::pi, 2))*gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))*DD(0.)/DD(redshift);
+      }
+
+      m_Pk0_CAMB = pow(m_sigma8/sigma8,2);
     }
-
     else { m_Pk0_CAMB = 1.;}
 
     for (size_t i=0; i<kk.size(); i++)
-      Pk[i] *= m_Pk0_CAMB;
+      Pk[i] *= m_Pk0_CAMB*fact2;
   
   }
 
-  else { ErrorCBL("Error in cosmobl::cosmology::Cosmology::Pk of PkXi.cpp: method_Pk is wrong!");  vector<double> vv; return vv; }
+  else { ErrorCBL("Error in cbl::cosmology::Cosmology::Pk of PkXi.cpp: method_Pk is wrong!");  vector<double> vv; return vv; }
 
   return Pk;
 }
@@ -682,7 +717,7 @@ vector<double> cosmobl::cosmology::Cosmology::Pk (const vector<double> kk, const
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::Pk_Kaiser_multipoles (vector<double> &Pk0, vector<double> &Pk2, vector<double> &Pk4, const vector<double> kk, const string method_Pk, const bool NL, const double redshift, const double bias, const double sigma_NL, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+void cbl::cosmology::Cosmology::Pk_Kaiser_multipoles (vector<double> &Pk0, vector<double> &Pk2, vector<double> &Pk4, const vector<double> kk, const string method_Pk, const bool NL, const double redshift, const double bias, const double sigma_NL, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
 { 
   vector<double> Pk_arr;
   size_t nbin_k = kk.size();
@@ -697,7 +732,7 @@ void cosmobl::cosmology::Cosmology::Pk_Kaiser_multipoles (vector<double> &Pk0, v
       Pk_arr.push_back(Pk_DeWiggle(kk[i], redshift, sigma_NL , output_root, norm, k_min, k_max, prec));
   }
 
-  vector<vector<double>> Pk_multipoles = cosmobl::Pkl_Kaiser({0,2,4}, kk, Pk_arr, bias, f);
+  vector<vector<double>> Pk_multipoles = cbl::Pkl_Kaiser({0,2,4}, kk, Pk_arr, bias, f);
   
   Pk0.erase(Pk0.begin(), Pk0.end());
   Pk2.erase(Pk2.begin(), Pk2.end());
@@ -716,9 +751,9 @@ void cosmobl::cosmology::Cosmology::Pk_Kaiser_multipoles (vector<double> &Pk0, v
 
 /// @cond glob
 
-double cosmobl::glob::func_xi_EH_GSL (double kk, void *params) 
+double cbl::glob::func_xi_EH_GSL (double kk, void *params) 
 {
-  struct cosmobl::glob::STR_xi_EH *pp = (struct cosmobl::glob::STR_xi_EH *) params;
+  struct cbl::glob::STR_xi_EH *pp = (struct cbl::glob::STR_xi_EH *) params;
 
   EisensteinHu eh;
 
@@ -734,11 +769,11 @@ double cosmobl::glob::func_xi_EH_GSL (double kk, void *params)
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::xi_DM (const double rr, const string method_Pk, const double redshift, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par) 
+double cbl::cosmology::Cosmology::xi_DM (const double rr, const string method_Pk, const double redshift, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par) 
 {
   bool gsl = GSL;
   if (gsl==false && method_Pk=="EisensteinHu") {
-    //WarningMsg("Attention in cosmobl::cosmology::Cosmology::xi_DM() of PkXi.cpp: EisensteinHu method only works with GSL integration");
+    //WarningMsg("Attention in cbl::cosmology::Cosmology::xi_DM() of PkXi.cpp: EisensteinHu method only works with GSL integration");
     gsl = true;
   }
   
@@ -746,7 +781,7 @@ double cosmobl::cosmology::Cosmology::xi_DM (const double rr, const string metho
   if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
 
   if (method_Pk=="MPTbreeze-v1") Norm = 0; // check!!!
-  if (method_Pk=="MPTbreeze-v1" && NL==0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::xi_DM of PkXi.cpp: MPTbreeze is non-linear!");  
+  if (method_Pk=="MPTbreeze-v1" && NL==0) ErrorCBL("Error in cbl::cosmology::Cosmology::xi_DM of PkXi.cpp: MPTbreeze is non-linear!");  
 
   double Int = -1.; 
   double fact = (gsl) ? 1./(2.*pow(par::pi,2)) : 1.;
@@ -760,10 +795,10 @@ double cosmobl::cosmology::Cosmology::xi_DM (const double rr, const string metho
  
     if (method_Pk=="EisensteinHu") {
    
-      if (m_sigma8<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::xi_DM of PkXi.cpp: sigma8<0!");
+      if (m_sigma8<0) ErrorCBL("Error in cbl::cosmology::Cosmology::xi_DM of PkXi.cpp: sigma8<0!");
       if (NL==1) WarningMsg("Attention: the correlation function by Eisenstein&Hu is linear (see xi_DM of PkXi.cpp)!");
   
-      cosmobl::glob::STR_xi_EH str;
+      cbl::glob::STR_xi_EH str;
       str.Omega_matter = m_Omega_matter; 
       str.Omega_baryon = m_Omega_baryon; 
       str.Omega_neutrinos = m_Omega_neutrinos; 
@@ -807,21 +842,20 @@ double cosmobl::cosmology::Cosmology::xi_DM (const double rr, const string metho
       gsl_integration_qag(&Func, k_min, k_max, 0., prec, limit_size, 5, ww, &Int, &error); 
     }
 
-    else ErrorCBL("Error in cosmobl::cosmology::Cosmology::xi_DM() of PkXi.cpp: method_Pk is wrong!");
+    else ErrorCBL("Error in cbl::cosmology::Cosmology::xi_DM() of PkXi.cpp: method_Pk is wrong!");
 
     gsl_integration_workspace_free(ww);
   }
 
 
   else { // using FFTLOG
-
     if (method_Pk=="CAMB" || method_Pk=="MPTbreeze-v1" || method_Pk=="classgal_v1") {
       vector<double> r, xi;
       Table_XiCodes(method_Pk, NL, r, xi, redshift, output_root, k_max, file_par);
       Int = interpolated(rr, r, xi, "Spline");
     }
     
-    else ErrorCBL("Error in cosmobl::cosmology::Cosmology::xi_DM() of PkXi.cpp: method_Pk is wrong!");
+    else ErrorCBL("Error in cbl::cosmology::Cosmology::xi_DM() of PkXi.cpp: method_Pk is wrong!");
     
   }
   
@@ -841,13 +875,13 @@ double cosmobl::cosmology::Cosmology::xi_DM (const double rr, const string metho
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::wp_DM (const double rp, const string method_Pk, const double redshift, const double pimax, const string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+double cbl::cosmology::Cosmology::wp_DM (const double rp, const string method_Pk, const double redshift, const double pimax, const string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
 {
   int Norm = norm;
   if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
 
   if (method_Pk=="MPTbreeze-v1") Norm = 0; // check!!!
-  if (method_Pk=="MPTbreeze-v1" && NL==0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::xi_DM of PkXi.cpp: MPTbreeze is non-linear!");  
+  if (method_Pk=="MPTbreeze-v1" && NL==0) ErrorCBL("Error in cbl::cosmology::Cosmology::xi_DM of PkXi.cpp: MPTbreeze is non-linear!");  
 
   // check if the table with lg(r)-lg(xi) already exists
 
@@ -909,7 +943,7 @@ double cosmobl::cosmology::Cosmology::wp_DM (const double rp, const string metho
 // =====================================================================================
 
                             
-double cosmobl::cosmology::Cosmology::sigmaR_DM (const double RR, const int corrType, const string method_Pk, const double redshift, const double pimax, const string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+double cbl::cosmology::Cosmology::sigmaR_DM (const double RR, const int corrType, const string method_Pk, const double redshift, const double pimax, const string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
 {
   // check if the table with lg(r)-lg(xi) already exists
 
@@ -963,9 +997,9 @@ double cosmobl::cosmology::Cosmology::sigmaR_DM (const double RR, const int corr
 
 /// @cond glob
 
-double cosmobl::glob::func_sigma2M_EH_GSL (double kk, void *params) 
+double cbl::glob::func_sigma2M_EH_GSL (double kk, void *params) 
 {
-  struct cosmobl::glob::STR_sigma2M_EH *pp = (struct cosmobl::glob::STR_sigma2M_EH *) params;
+  struct cbl::glob::STR_sigma2M_EH *pp = (struct cbl::glob::STR_sigma2M_EH *) params;
 
   Cosmology cosm(pp->Omega_matter, pp->Omega_baryon, pp->Omega_neutrinos, pp->massless_neutrinos, pp->massive_neutrinos, pp->Omega_DE, pp->Omega_radiation, pp->hh, pp->scalar_amp, pp->scalar_pivot, pp->n_spec, pp->w0, pp->wa, pp->fNL, pp->type_NG, pp->tau, pp->model, pp->unit);
 
@@ -984,9 +1018,9 @@ double cosmobl::glob::func_sigma2M_EH_GSL (double kk, void *params)
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::sigma8_Pk (const string method_Pk, const double redshift, const string output_root, const bool NL, const double k_min, const double k_max, const double prec, const string file_par) const 
+double cbl::cosmology::Cosmology::sigma8_Pk (const string method_Pk, const double redshift, const string output_root, const bool NL, const double k_min, const double k_max, const double prec, const string file_par) const 
 {  
-  if (NL) WarningMsg("Warning in cosmobl::cosmology::Cosmology::sigma8_Pk of PkXi.cpp: sigma8 is defined for the linear P(k)!");
+  if (NL) WarningMsg("Warning in cbl::cosmology::Cosmology::sigma8_Pk of PkXi.cpp: sigma8 is defined for the linear P(k)!");
 
   double RR = 8.; // sigma_8 = sigma(8Mpc/h)
   double RHO = rho_m(0., true); 
@@ -1018,7 +1052,7 @@ double cosmobl::cosmology::Cosmology::sigma8_Pk (const string method_Pk, const d
     vector<double> lgkk, lgPk;
     Table_PkCodes(method_Pk, NL, lgkk, lgPk, redshift, output_root, k_max, file_par);
 
-    cosmobl::glob::STR_SSM str;
+    cbl::glob::STR_SSM str;
     str.unit = true;
     str.hh = m_hh;
     str.n_spec = m_n_spec;
@@ -1032,7 +1066,7 @@ double cosmobl::cosmology::Cosmology::sigma8_Pk (const string method_Pk, const d
     gsl_integration_qag(&Func, k_min, k_max, 0., prec, limit_size, 6, ww, &Int, &error); 
   }
 
-  else ErrorCBL("Error in cosmobl::cosmology::Cosmology::sigma8_Pk of PkXi.cpp: method_Pk is wrong!");
+  else ErrorCBL("Error in cbl::cosmology::Cosmology::sigma8_Pk of PkXi.cpp: method_Pk is wrong!");
 
   gsl_integration_workspace_free (ww);
 
@@ -1043,9 +1077,9 @@ double cosmobl::cosmology::Cosmology::sigma8_Pk (const string method_Pk, const d
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::Sn_PT (const int nn, const double RR, const string method_SS, const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const 
+double cbl::cosmology::Cosmology::Sn_PT (const int nn, const double RR, const string method_SS, const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const 
 {
-  if (3>nn || nn>5) { string Err = "Error in cosmobl::cosmology::Cosmology::Sn_PT of PkXi.cpp: nn = " + conv(nn, par::fINT); ErrorCBL(Err); }
+  if (3>nn || nn>5) { string Err = "Error in cbl::cosmology::Cosmology::Sn_PT of PkXi.cpp: nn = " + conv(nn, par::fINT); ErrorCBL(Err); }
   
   double redshift = 0.; // (the hierarchical moments predicted by the PT do not depend on the redshift)
 
@@ -1078,9 +1112,9 @@ double cosmobl::cosmology::Cosmology::Sn_PT (const int nn, const double RR, cons
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::Sigman_PT (const int nn, const double RR, const string method_SS, const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const 
+double cbl::cosmology::Cosmology::Sigman_PT (const int nn, const double RR, const string method_SS, const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const 
 {
-  if (3>nn || nn>5) { string Err = "Error in cosmobl::cosmology::Cosmology::Sigma_PT of PkXi.cpp: nn = " + conv(nn, par::fINT); ErrorCBL(Err); }
+  if (3>nn || nn>5) { string Err = "Error in cbl::cosmology::Cosmology::Sigma_PT of PkXi.cpp: nn = " + conv(nn, par::fINT); ErrorCBL(Err); }
  
   double redshift = 0.; // (the hierarchical moments predicted by the PT do not depend on the redshift)
   
@@ -1103,7 +1137,7 @@ double cosmobl::cosmology::Cosmology::Sigman_PT (const int nn, const double RR, 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::k_star (const string method_Pk, const double redshift, const string output_root, const double k_max, const string file_par) const 
+double cbl::cosmology::Cosmology::k_star (const string method_Pk, const double redshift, const string output_root, const double k_max, const string file_par) const 
 {  
   if (method_Pk=="EisensteinHu") ErrorCBL("Work in progress... (in k_star of PkXi.cpp)", glob::ExitCode::_workInProgress_);
 
@@ -1111,9 +1145,9 @@ double cosmobl::cosmology::Cosmology::k_star (const string method_Pk, const doub
   bool do_nonlinear = 0;
   Table_PkCodes(method_Pk, do_nonlinear, lgkk, lgPk, redshift, output_root, k_max, file_par);
 
-  cosmobl::classfunc::func_kstar func (m_hh, m_unit, lgkk, lgPk);
+  cbl::classfunc::func_kstar func (m_hh, m_unit, lgkk, lgPk);
 
-  function<double(double)> ff = bind(&cosmobl::classfunc::func_kstar::operator(), func, std::placeholders::_1);
+  function<double(double)> ff = bind(&cbl::classfunc::func_kstar::operator(), func, std::placeholders::_1);
   double Int1 = gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4);
   double Int2 = gsl::GSL_integrate_qag(ff, 1., 1.e30, 1.e-4);
   
@@ -1126,7 +1160,7 @@ double cosmobl::cosmology::Cosmology::k_star (const string method_Pk, const doub
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::get_xi (vector<double> &rr, vector<double> &Xi, const string method_Pk, const double redshift, const string output_root, const bool xiType, const double k_star, const bool xiNL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+void cbl::cosmology::Cosmology::get_xi (vector<double> &rr, vector<double> &Xi, const string method_Pk, const double redshift, const string output_root, const bool xiType, const double k_star, const bool xiNL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
 {
   int Norm = norm;
   if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
@@ -1194,7 +1228,7 @@ void cosmobl::cosmology::Cosmology::get_xi (vector<double> &rr, vector<double> &
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::get_barred_xi (vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string method_Pk, const double redshift, const bool xiType, const double k_star, const bool xiNL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const double prec, const string file_par) const
+void cbl::cosmology::Cosmology::get_barred_xi (vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string method_Pk, const double redshift, const bool xiType, const double k_star, const bool xiNL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const double prec, const string file_par) const
 {
   (void)k_star; (void)k_min; (void)k_max; (void)aa; (void)prec; (void)file_par;
   
@@ -1274,7 +1308,7 @@ void cosmobl::cosmology::Cosmology::get_barred_xi (vector<double> rr, vector<dou
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::Pk_DeWiggle (const double kk, const double redshift, const double sigma_NL, const string output_root, const bool norm, const double k_min, const double k_max, const double aa, const double prec)
+double cbl::cosmology::Cosmology::Pk_DeWiggle (const double kk, const double redshift, const double sigma_NL, const string output_root, const bool norm, const double k_min, const double k_max, const double aa, const double prec)
 {
   (void) aa;
   
@@ -1294,7 +1328,7 @@ double cosmobl::cosmology::Cosmology::Pk_DeWiggle (const double kk, const double
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::xi_DM_DeWiggle (const double rr, const double redshift, const double sigma_NL, const string output_root, const bool norm, const double k_min, const double k_max, const double aa, const double prec)
+double cbl::cosmology::Cosmology::xi_DM_DeWiggle (const double rr, const double redshift, const double sigma_NL, const string output_root, const bool norm, const double k_min, const double k_max, const double aa, const double prec)
 {
   bool NL = false;
 
@@ -1318,14 +1352,14 @@ double cosmobl::cosmology::Cosmology::xi_DM_DeWiggle (const double rr, const dou
 // =====================================================================================
 
 
-vector<vector<double> > cosmobl::cosmology::Cosmology::XiMonopole_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod)
+vector<vector<double> > cbl::cosmology::Cosmology::XiMonopole_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod)
 {
   int nbins_k = kk.size();
   vector<double> r = linear_bin_vector(nbins,rMin,rMax);
   vector<vector<double>> covariance(nbins,vector<double>(nbins,0));
   double dr=r[1]-r[0];
 
-  vector<vector<double>> sigma2 = cosmobl::sigma2_k(nn, Volume,kk,{Pk0},{0});
+  vector<vector<double>> sigma2 = cbl::sigma2_k(nn, Volume,kk,{Pk0},{0});
   vector<vector<double>> jr(nbins,vector<double>(nbins_k,0));
 
   for (size_t j=0; j<r.size(); j++) {
@@ -1354,7 +1388,7 @@ vector<vector<double> > cosmobl::cosmology::Cosmology::XiMonopole_covariance (co
     }
   else if (IntegrationMethod==1) //Perform integration with GSL
     {
-      cosmobl::glob::STR_covariance_XiMultipoles_integrand params;
+      cbl::glob::STR_covariance_XiMultipoles_integrand params;
       int limit_size = 1000;
 
       gsl_function Func;
@@ -1394,14 +1428,14 @@ vector<vector<double> > cosmobl::cosmology::Cosmology::XiMonopole_covariance (co
 // =====================================================================================
 
 
-vector<vector<double> > cosmobl::cosmology::Cosmology::XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod)
+vector<vector<double> > cbl::cosmology::Cosmology::XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod)
 {
   int n_leg = 3;
   int nbins_k = kk.size();
   vector<double> r = linear_bin_vector(nbins, rMin, rMax);
   vector<vector<double>> covariance(n_leg*nbins, vector<double>(n_leg*nbins, 0));
 
-  vector<vector<double>> sigma2 = cosmobl::sigma2_k(nn, Volume, kk, {Pk0, Pk2, Pk4}, {0,2,4});
+  vector<vector<double>> sigma2 = cbl::sigma2_k(nn, Volume, kk, {Pk0, Pk2, Pk4}, {0,2,4});
   double dr = r[1]-r[0];
 
   vector<vector<vector<double> >> jr(n_leg, vector<vector<double>>(nbins, vector<double>(nbins_k, 0)));
@@ -1440,7 +1474,7 @@ vector<vector<double> > cosmobl::cosmology::Cosmology::XiMultipoles_covariance (
   
   else if (IntegrationMethod==1) // perform integration with GSL
     {
-      cosmobl::glob::STR_covariance_XiMultipoles_integrand params;
+      cbl::glob::STR_covariance_XiMultipoles_integrand params;
       int limit_size = 1000;
 
       gsl_function Func;
@@ -1486,7 +1520,7 @@ vector<vector<double> > cosmobl::cosmology::Cosmology::XiMultipoles_covariance (
 // =====================================================================================
 
 
-vector<vector<double> > cosmobl::cosmology::Cosmology::XiMultipoles (const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod)
+vector<vector<double> > cbl::cosmology::Cosmology::XiMultipoles (const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod)
 {
   int nbins_k = kk.size();
   vector<double> r = linear_bin_vector(nbins,rMin,rMax);
@@ -1527,7 +1561,7 @@ vector<vector<double> > cosmobl::cosmology::Cosmology::XiMultipoles (const int n
   
   else if (IntegrationMethod==1) { // perform integration with GSL
     
-    cosmobl::glob::STR_XiMultipoles_integrand params;
+    cbl::glob::STR_XiMultipoles_integrand params;
     int limit_size = 1000;
     
     gsl_function Func;
@@ -1578,36 +1612,36 @@ vector<vector<double> > cosmobl::cosmology::Cosmology::XiMultipoles (const int n
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::wtheta_DM (const double theta, const vector<double> zz, const vector<double> phiz, const string interpolationType, const CoordUnits coordUnits, const bool GSL, const string method_Pk, const bool NL, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const vector<double> zz, const vector<double> phiz, const string interpolationType, const CoordinateUnits coordUnits, const bool GSL, const string method_Pk, const bool NL, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
 {
   if (NL)
     ErrorCBL("Error in wtheta_DM, non linearities in angular correlation function not yet implemented!");
 
-  double theta_rad = cosmobl::converted_angle (theta, coordUnits, cosmobl::CoordUnits::_radians_);
+  double theta_rad = cbl::converted_angle (theta, coordUnits, cbl::CoordinateUnits::_radians_);
 
-  vector<double> kk = cosmobl::logarithmic_bin_vector(200, k_min, k_max);
+  vector<double> kk = cbl::logarithmic_bin_vector(200, k_min, k_max);
   vector<double> Pk;
 
   vector<double> dc;
-  vector<double> _zz = cosmobl::linear_bin_vector(1000, 0., 2*Max(zz));
+  vector<double> _zz = cbl::linear_bin_vector(1000, 0., 2*Max(zz));
 
   for(size_t i=0; i<_zz.size(); i++)
     dc.push_back(this->D_C(_zz[i]));
-  cosmobl::glob::FuncGrid DC_interp(_zz, dc, interpolationType);
+  cbl::glob::FuncGrid DC_interp(_zz, dc, interpolationType);
 
-  cosmobl::glob::Distribution phi(cosmobl::glob::DistributionType::_InterpolatedDistribution_, zz, phiz, 0, interpolationType);
+  cbl::glob::Distribution phi(cbl::glob::DistributionType::_Interpolated_, zz, phiz, 0, interpolationType);
 
   double zmin, zmax, zmean;
-  zmin = cosmobl::Min(zz);
-  zmax = cosmobl::Max(zz);
+  zmin = cbl::Min(zz);
+  zmax = cbl::Max(zz);
   zmean = phi.mean();
 
-  for(size_t i=0; i<kk.size(); i++)
+  for (size_t i=0; i<kk.size(); i++)
     Pk.push_back( this->Pk(kk[i], method_Pk, NL, zmean, output_root, norm, k_min, k_max, prec, file_par));
 
   vector<double> r, xi;
-  cosmobl::fftlog::transform_FFTlog(r, xi, 1, kk, Pk);
-  cosmobl::glob::FuncGrid xi_interp(r, xi, interpolationType);
+  cbl::fftlog::transform_FFTlog(r, xi, 1, kk, Pk);
+  cbl::glob::FuncGrid xi_interp(r, xi, interpolationType);
 
   if (GSL) {
     auto integrand = [&] (double z1)
@@ -1620,9 +1654,9 @@ double cosmobl::cosmology::Cosmology::wtheta_DM (const double theta, const vecto
 	  return xi_interp(ss)*phi(z2);
 	};
 
-	return cosmobl::gsl::GSL_integrate_qag(integrand_z2, zmin, zmax)*phi(z1);
+	return cbl::gsl::GSL_integrate_qag(integrand_z2, zmin, zmax)*phi(z1);
       };
-    return cosmobl::gsl::GSL_integrate_qag(integrand, zmin, zmax);
+    return cbl::gsl::GSL_integrate_qag(integrand, zmin, zmax);
   }
   else{
     auto integrand = [&] (vector<double> zz)
@@ -1633,7 +1667,7 @@ double cosmobl::cosmology::Cosmology::wtheta_DM (const double theta, const vecto
 	return xi_interp(ss)*phi(zz[0])*phi(zz[1]);
       };
 
-    cosmobl::cuba::CUBAwrapper integrator(integrand, 2);
+    cbl::cuba::CUBAwrapper integrator(integrand, 2);
 
     return integrator.IntegrateCuhre( {{zmin, zmax}, {zmin, zmax}});
   }
@@ -1643,12 +1677,12 @@ double cosmobl::cosmology::Cosmology::wtheta_DM (const double theta, const vecto
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::wtheta_DM (const double theta, const vector<double> kk, const vector<double> Pk, const vector<double> zz, const vector<double> nz, const vector<double> phiz, const string interpolationType, const CoordUnits coordUnits, const bool GSL, const double redshift_Pk)
+double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const vector<double> kk, const vector<double> Pk, const vector<double> zz, const vector<double> nz, const vector<double> phiz, const string interpolationType, const CoordinateUnits coordUnits, const bool GSL, const double redshift_Pk)
 {
-  const double theta_rad = cosmobl::converted_angle (theta, coordUnits, cosmobl::CoordUnits::_radians_);
+  const double theta_rad = cbl::converted_angle (theta, coordUnits, cbl::CoordinateUnits::_radians_);
 
-  const double zmin = cosmobl::Min(zz);
-  const double zmax = cosmobl::Max(zz);
+  const double zmin = cbl::Min(zz);
+  const double zmax = cbl::Max(zz);
 
 
   // set the distribution function
@@ -1658,7 +1692,7 @@ double cosmobl::cosmology::Cosmology::wtheta_DM (const double theta, const vecto
   for(size_t i=0; i<nphi.size(); i++)
     nphi[i] = (phiz.size()!=0) ? phiz[i]*nz[i] : nz[i];
 
-  cosmobl::glob::Distribution phi(cosmobl::glob::DistributionType::_InterpolatedDistribution_, zz, nphi, 0, interpolationType);
+  cbl::glob::Distribution phi(cbl::glob::DistributionType::_Interpolated_, zz, nphi, 0, interpolationType);
   //const double zmean = phi.mean();
 
   
@@ -1675,8 +1709,8 @@ double cosmobl::cosmology::Cosmology::wtheta_DM (const double theta, const vecto
   // compute the 2PCF model
 
   vector<double> r, xi;
-  cosmobl::fftlog::transform_FFTlog(r, xi, 1, kk, Pk);
-  cosmobl::glob::FuncGrid xi_interp(r, xi, interpolationType);
+  cbl::fftlog::transform_FFTlog(r, xi, 1, kk, Pk);
+  cbl::glob::FuncGrid xi_interp(r, xi, interpolationType);
   double integral;
 
   if (GSL) {
@@ -1691,10 +1725,10 @@ double cosmobl::cosmology::Cosmology::wtheta_DM (const double theta, const vecto
 	  return DD*DD*xi_interp(ss)*normalization_integrand(z2);
 	};
 
-	return cosmobl::gsl::GSL_integrate_qag(integrand_z2, zmin, zmax)*normalization_integrand(z1);
+	return cbl::gsl::GSL_integrate_qag(integrand_z2, zmin, zmax)*normalization_integrand(z1);
       };
 
-    integral = cosmobl::gsl::GSL_integrate_qag(integrand, zmin, zmax);
+    integral = cbl::gsl::GSL_integrate_qag(integrand, zmin, zmax);
 
   }
   
@@ -1708,7 +1742,7 @@ double cosmobl::cosmology::Cosmology::wtheta_DM (const double theta, const vecto
 	return DD*DD*xi_interp(ss)*normalization_integrand(zz[0])*normalization_integrand(zz[1]);
       };
 
-    cosmobl::cuba::CUBAwrapper integrator(integrand, 2);
+    cbl::cuba::CUBAwrapper integrator(integrand, 2);
 
     integral = integrator.IntegrateCuhre( {{zmin, zmax}, {zmin, zmax}});
   }
@@ -1720,26 +1754,26 @@ double cosmobl::cosmology::Cosmology::wtheta_DM (const double theta, const vecto
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::C_l_DM (const int lmax, const vector<double> zz, const vector<double> phiz, const string interpolationMethod, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+vector<double> cbl::cosmology::Cosmology::C_l_DM (const int lmax, const vector<double> zz, const vector<double> phiz, const string interpolationMethod, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
 {
   const double zmin = Min(zz);
   const double zmax = Max(zz);
 
-  vector<double> kk = cosmobl::logarithmic_bin_vector(200, k_min, k_max);
+  vector<double> kk = cbl::logarithmic_bin_vector(200, k_min, k_max);
 
   vector<double> Pk;
   for(size_t i=0; i<kk.size(); i++)
     Pk.push_back( this->Pk(kk[i], method_Pk, false, 0., output_root, norm, k_min, k_max, prec, file_par));
-  cosmobl::glob::FuncGrid Pk_interp(kk, Pk, interpolationMethod);
+  cbl::glob::FuncGrid Pk_interp(kk, Pk, interpolationMethod);
 
   auto integrand_sbao = [&] (const double kk) 
   {
     return Pk_interp(kk);
   };
 
-  double sbao = sqrt(4.*par::pi*cosmobl::gsl::GSL_integrate_qag(integrand_sbao, 1.e-4, 1)/3./pow(2*par::pi,3));
+  double sbao = sqrt(4.*par::pi*cbl::gsl::GSL_integrate_qag(integrand_sbao, 1.e-4, 1)/3./pow(2*par::pi,3));
 
-  cosmobl::glob::FuncGrid phi(zz, phiz, interpolationMethod);
+  cbl::glob::FuncGrid phi(zz, phiz, interpolationMethod);
 
   vector<double> C_l;
 
@@ -1754,11 +1788,11 @@ vector<double> cosmobl::cosmology::Cosmology::C_l_DM (const int lmax, const vect
 	  return DD(zz)*jl(kk*D_C(zz), l);
 	};
 
-	double integral_z = cosmobl::gsl::GSL_integrate_qag(integrand_z, zmin, zmax);
+	double integral_z = cbl::gsl::GSL_integrate_qag(integrand_z, zmin, zmax);
 	return kk*kk*Pk_interp(kk)*pow(integral_z, 2)*exp(-kk*kk*sbao*sbao);
       };
 
-      integral = 2*cosmobl::gsl::GSL_integrate_qag(integrand, 1.e-4, 10)/par::pi;
+      integral = 2*cbl::gsl::GSL_integrate_qag(integrand, 1.e-4, 10)/par::pi;
     }
     else {
     
@@ -1769,9 +1803,8 @@ vector<double> cosmobl::cosmology::Cosmology::C_l_DM (const int lmax, const vect
 	return pow(DD(zz)*phi(zz), 2)*Pk_interp(kk)*HH(zz)/(par::cc*dc*dc);
       };
 
-      integral = cosmobl::gsl::GSL_integrate_qag(integrand, zmin, zmax);
-    }
-    cout << l << " " << integral << endl;
+      integral = cbl::gsl::GSL_integrate_qag(integrand, zmin, zmax);
+    }   
     C_l.push_back(integral);
   }
 
@@ -1779,18 +1812,18 @@ vector<double> cosmobl::cosmology::Cosmology::C_l_DM (const int lmax, const vect
 }
 
 /*
-vector<double> cosmobl::cosmology::Cosmology::C_l_DM (const int lmax, const vector<double> zz, const vector<double> phiz, const string interpolationMethod, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+vector<double> cbl::cosmology::Cosmology::C_l_DM (const int lmax, const vector<double> zz, const vector<double> phiz, const string interpolationMethod, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
 {
   const double zmin = Min(zz);
   const double zmax = Max(zz);
 
-  vector<double> kk = cosmobl::logarithmic_bin_vector(200, k_min, k_max);
+  vector<double> kk = cbl::logarithmic_bin_vector(200, k_min, k_max);
   vector<double> Pk;
   for(size_t i=0; i<kk.size(); i++)
     Pk.push_back( this->Pk(kk[i], method_Pk, false, 0., output_root, norm, k_min, k_max, prec, file_par));
 
-  cosmobl::glob::FuncGrid Pk_interp(kk, Pk, interpolationMethod);
-  cosmobl::glob::FuncGrid phi(zz, phiz, interpolationMethod);
+  cbl::glob::FuncGrid Pk_interp(kk, Pk, interpolationMethod);
+  cbl::glob::FuncGrid phi(zz, phiz, interpolationMethod);
 
   vector<double> C_l;
 
@@ -1801,7 +1834,7 @@ vector<double> cosmobl::cosmology::Cosmology::C_l_DM (const int lmax, const vect
       double _kk = double(l)/dc;
       return pow(phi(redshift), 2)*HH(redshift)/pow(dc, 2)*pow(DD(redshift),2)*Pk_interp(_kk);
     };
-    C_l.push_back(cosmobl::gsl::GSL_integrate_qag(integrand, zmin, zmax)/par::cc);
+    C_l.push_back(cbl::gsl::GSL_integrate_qag(integrand, zmin, zmax)/par::cc);
   }
 
   return C_l;

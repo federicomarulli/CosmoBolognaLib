@@ -4,15 +4,14 @@
 
 ### import the CosmoBolognaLib ###
 import CosmoBolognaLib as cbl
-from CosmoBolognaLib import EnumTypes as et
 from CosmoBolognaLib import StringVector as sv
 
-### define a vector of input files (in this case with dim=1) ###
+### define a std::vector of input files (in this case with dim=1) ###
 file_cat = "cat.dat"
 file_cat_vec = sv(1, file_cat)
 
 ### create a catalogue of galaxies, retrieving their comoving coordinates from an input file ###
-catalogue = cbl.Catalogue(et._Galaxy_, et._comovingCoordinates_, file_cat_vec)
+catalogue = cbl.Catalogue(cbl.ObjectType__Galaxy_, cbl.CoordinateType__comoving_, file_cat_vec)
 catalogue2 = cbl.Catalogue(catalogue)
 
 ### print the coordinates of the first object ###

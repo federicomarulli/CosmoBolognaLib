@@ -1,1 +1,1 @@
-emacs ../Headers/Lib/ChainMesh.h ChainMesh.cpp &
+emacs ../Headers/ChainMesh.h ChainMesh.cpp &

@@ -1,1 +1,1 @@
-emacs ../../Headers/Lib/Modelling_TwoPointCorrelation*.h ../../Headers/Lib/ModelFunction_TwoPointCorrelation*.h *.cpp &
+emacs ../../Headers/Modelling_TwoPointCorrelation*.h ../../Headers/ModelFunction_TwoPointCorrelation*.h *.cpp &

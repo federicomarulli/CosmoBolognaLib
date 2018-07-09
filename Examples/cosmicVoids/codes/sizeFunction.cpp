@@ -7,7 +7,7 @@
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
 // launching the code on remote systems)
-string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
  
  
 int main () {
@@ -18,7 +18,7 @@ int main () {
     // ----- use default cosmological parameters ----- 
     // -----------------------------------------------
     
-    cosmobl::cosmology::Cosmology cosm;
+    cbl::cosmology::Cosmology cosm;
 
 
     // -------------------------------------------------------------
@@ -31,11 +31,11 @@ int main () {
     double del_v = cosm.deltav_L(); // linear underdensity threshold
     double del_c = cosm.deltac(0.); // linear overdensity threshold
     
-    cout << cosm.size_function(RR, redshift, del_v, del_c, "SvdW") << endl;
+    std::cout << cosm.size_function(RR, redshift, del_v, del_c, "SvdW") << std::endl;
    
   }
   
-  catch (cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch (cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
    
   return 0;
 }

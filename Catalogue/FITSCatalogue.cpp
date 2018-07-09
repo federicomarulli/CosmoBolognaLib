@@ -35,13 +35,15 @@
 #include "FITSwrapper.h"
 #include "Catalogue.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================
 
 
-cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType coordType, const vector<string> file, const vector<string> Coordinates, const string Weight, const string Region, const int next, const double fill_value, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordUnits inputUnits, const int seed)
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objType, const CoordinateType coordType, const vector<string> file, const vector<string> Coordinates, const string Weight, const string Region, const int next, const double fill_value, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const int seed)
 {
   // parameters for random numbers used in case nSub!=1
   random::UniformRandomNumbers ran(0., 1., seed);
@@ -50,7 +52,7 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
   // name of the columns in the Table
 
   if (Coordinates.size()!=3)
-    ErrorCBL("Error in cosmobl::catalogue::Catalogue::Catalogue of FITSCatalogue.cpp! colCoordinates.size()!=3");
+    ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue of FITSCatalogue.cpp! colCoordinates.size()!=3");
 
   const vector<string> column_names = {Coordinates[0], Coordinates[1], Coordinates[2], Weight, Region};
 
@@ -68,11 +70,11 @@ cosmobl::catalogue::Catalogue::Catalogue (const ObjType objType, const CoordType
 
       if (ran()<nSub) { // extract a subsample
 	
-	if (coordType==_comovingCoordinates_) { // comoving coordinates (x, y, z)
+	if (coordType==CoordinateType::_comoving_) { // comoving coordinates (x, y, z)
 	  comovingCoordinates coord = {table[0][i]*fact, table[1][i]*fact, table[2][i]*fact};
 	  m_object.push_back(move(Object::Create(objType, coord, table[3][i], (long)table[4][i])));
 	}
-	else if (coordType==_observedCoordinates_) { // observed coordinates (R.A., Dec, redshift)
+	else if (coordType==CoordinateType::_observed_) { // observed coordinates (R.A., Dec, redshift)
 	  observedCoordinates coord = {table[0][i]*fact, table[1][i]*fact, table[2][i]*fact};
 	  m_object.push_back(move(Object::Create(objType, coord, inputUnits, cosm, table[3][i], (long)table[4][i])));
 	}

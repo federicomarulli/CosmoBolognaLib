@@ -37,12 +37,15 @@
  *  alfonso.veropalumbo@unibo.it
  */
 
+#include "ThreePointCorrelation.h"
 #include "ThreePointCorrelation_angular_connected.h"
 #include "ThreePointCorrelation_angular_reduced.h"
 #include "ThreePointCorrelation_comoving_connected.h"
 #include "ThreePointCorrelation_comoving_reduced.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace chainmesh;
 using namespace triplets;
@@ -52,17 +55,17 @@ using namespace measure::threept;
 // ============================================================================
 
 
-shared_ptr<ThreePointCorrelation> cosmobl::measure::threept::ThreePointCorrelation::Create (const ThreePType type, const Catalogue data, const Catalogue random, const TripletType tripletType, const double side_s, const double side_u, const double perc_increase, const int nbins)
+shared_ptr<ThreePointCorrelation> cbl::measure::threept::ThreePointCorrelation::Create (const ThreePType type, const Catalogue data, const Catalogue random, const TripletType tripletType, const double side_s, const double side_u, const double perc_increase, const int nbins)
 {
-  if (type==_angular_connected_) return move(unique_ptr<ThreePointCorrelation_angular_connected>(new ThreePointCorrelation_angular_connected(data, random, side_s, side_u, perc_increase, nbins)));
+  if (type==ThreePType::_angular_connected_) return move(unique_ptr<ThreePointCorrelation_angular_connected>(new ThreePointCorrelation_angular_connected(data, random, side_s, side_u, perc_increase, nbins)));
  
-  if (type==_angular_reduced_) return move(unique_ptr<ThreePointCorrelation_angular_reduced>(new ThreePointCorrelation_angular_reduced(data, random, side_s, side_u, perc_increase, nbins)));
+  if (type==ThreePType::_angular_reduced_) return move(unique_ptr<ThreePointCorrelation_angular_reduced>(new ThreePointCorrelation_angular_reduced(data, random, side_s, side_u, perc_increase, nbins)));
  
-  if (type==_comoving_connected_) return move(unique_ptr<ThreePointCorrelation_comoving_connected>(new ThreePointCorrelation_comoving_connected(data, random, tripletType, side_s, side_u, perc_increase, nbins)));
+  if (type==ThreePType::_comoving_connected_) return move(unique_ptr<ThreePointCorrelation_comoving_connected>(new ThreePointCorrelation_comoving_connected(data, random, tripletType, side_s, side_u, perc_increase, nbins)));
  
-  if (type==_comoving_reduced_) return move(unique_ptr<ThreePointCorrelation_comoving_reduced>(new ThreePointCorrelation_comoving_reduced(data, random, tripletType, side_s, side_u, perc_increase, nbins)));
+  if (type==ThreePType::_comoving_reduced_) return move(unique_ptr<ThreePointCorrelation_comoving_reduced>(new ThreePointCorrelation_comoving_reduced(data, random, tripletType, side_s, side_u, perc_increase, nbins)));
  
-  else ErrorCBL("Error in cosmobl::measure::threept::ThreePointCorrelation::Create of ThreePointCorrelation.cpp: no such type of object!");
+  else ErrorCBL("Error in cbl::measure::threept::ThreePointCorrelation::Create of ThreePointCorrelation.cpp: no such type of object!");
   
   return NULL;
 }
@@ -71,17 +74,17 @@ shared_ptr<ThreePointCorrelation> cosmobl::measure::threept::ThreePointCorrelati
 // ============================================================================
 
 
-shared_ptr<ThreePointCorrelation> cosmobl::measure::threept::ThreePointCorrelation::Create (const ThreePType type, const Catalogue data, const Catalogue random, const TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
+shared_ptr<ThreePointCorrelation> cbl::measure::threept::ThreePointCorrelation::Create (const ThreePType type, const Catalogue data, const Catalogue random, const cbl::triplets::TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
 {
-  if (type==_angular_connected_) return move(unique_ptr<ThreePointCorrelation_angular_connected>(new ThreePointCorrelation_angular_connected(data, random, r12, r12_binSize, r13, r13_binSize, nbins)));
+  if (type==ThreePType::_angular_connected_) return move(unique_ptr<ThreePointCorrelation_angular_connected>(new ThreePointCorrelation_angular_connected(data, random, r12, r12_binSize, r13, r13_binSize, nbins)));
  
-  if (type==_angular_reduced_) return move(unique_ptr<ThreePointCorrelation_angular_reduced>(new ThreePointCorrelation_angular_reduced(data, random, r12, r12_binSize, r13, r13_binSize, nbins)));
+  if (type==ThreePType::_angular_reduced_) return move(unique_ptr<ThreePointCorrelation_angular_reduced>(new ThreePointCorrelation_angular_reduced(data, random, r12, r12_binSize, r13, r13_binSize, nbins)));
  
-  if (type==_comoving_connected_) return move(unique_ptr<ThreePointCorrelation_comoving_connected>(new ThreePointCorrelation_comoving_connected(data, random, tripletType, r12, r12_binSize, r13, r13_binSize, nbins)));
+  if (type==ThreePType::_comoving_connected_) return move(unique_ptr<ThreePointCorrelation_comoving_connected>(new ThreePointCorrelation_comoving_connected(data, random, tripletType, r12, r12_binSize, r13, r13_binSize, nbins)));
  
-  if (type==_comoving_reduced_) return move(unique_ptr<ThreePointCorrelation_comoving_reduced>(new ThreePointCorrelation_comoving_reduced(data, random, tripletType, r12, r12_binSize, r13, r13_binSize, nbins)));
+  if (type==ThreePType::_comoving_reduced_) return move(unique_ptr<ThreePointCorrelation_comoving_reduced>(new ThreePointCorrelation_comoving_reduced(data, random, tripletType, r12, r12_binSize, r13, r13_binSize, nbins)));
  
-  else ErrorCBL("Error in cosmobl::measure::threept::ThreePointCorrelation::Create of ThreePointCorrelation.cpp: no such type of object!");
+  else ErrorCBL("Error in cbl::measure::threept::ThreePointCorrelation::Create of ThreePointCorrelation.cpp: no such type of object!");
   
   return NULL;
 }
@@ -89,7 +92,7 @@ shared_ptr<ThreePointCorrelation> cosmobl::measure::threept::ThreePointCorrelati
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation::count_triplets (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<Triplet> tt, const bool tcount) 
+void cbl::measure::threept::ThreePointCorrelation::count_triplets (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<Triplet> tt, const bool tcount) 
 {
   time_t start; time (&start);
   
@@ -122,31 +125,41 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_triplets (const sha
     
       // get the indexes of the objects at r12
       vector<long> close_objects12 = ChainMesh_rMAX1.close_objects(cat1->coordinate(i), -1);
-    
+
+      // get the indexes of objects at r13
+      vector<long> close_objects13 = ChainMesh_rMAX2.close_objects(cat1->coordinate(i), -1);
+
+      vector<double> x2, y2, z2, r12, w2, x3, y3, z3, r13, w3;
+
       for (auto &&j : close_objects12) { // loop on the objects at r12 
 
-	double r12 = cat1->distance(i, cat2->catalogue_object(j));
-      
-	if (r12_min<r12 && r12<r12_max) {
-
-	  // get the indexes of objects at r13
-	  vector<long> close_objects13 = ChainMesh_rMAX2.close_objects(cat1->coordinate(i), -1);
-	
-	  for (auto &&k : close_objects13) { // loop on the objects at r13
-
-	    double r13 = cat1->distance(i, cat3->catalogue_object(k));
-	  
-	    if (r13_min<r13 && r13<r13_max) {
-
-	      double r23 = cat2->distance(j, cat3->catalogue_object(k));
-	    
-	      double ww = cat1->weight(i)*cat2->weight(j)*cat3->weight(k);
-	    
-	      tt_thread->put(r12, r13, r23, ww);
-	    }
-	  }
+	double rr = cat1->distance(i, cat2->catalogue_object(j));
+	if (r12_min<rr && rr<r12_max){
+	  x2.push_back(cat2->xx(j));
+	  y2.push_back(cat2->yy(j));
+	  z2.push_back(cat2->zz(j));
+	  r12.push_back(rr);
+	  w2.push_back(cat2->weight(j));
 	}
       }
+
+      for (auto &&k : close_objects13) { // loop on the objects at r13
+	double rr = cat1->distance(i, cat3->catalogue_object(k));
+	if (r13_min<rr && rr<r13_max){ 
+	  x3.push_back(cat3->xx(k));
+	  y3.push_back(cat3->yy(k));
+	  z3.push_back(cat3->zz(k));
+	  r13.push_back(rr);
+	  w3.push_back(cat3->weight(k));
+	}
+      }
+
+      for (size_t j=0; j<r12.size(); j++)
+	for (size_t k=0; k<r13.size(); k++){
+	  double r23 = sqrt( pow(x2[j]-x3[k],2)+pow(y2[j]-y3[k],2)+pow(z2[j]-z3[k],2));
+	  double ww = cat1->weight(i)*w2[j]*w3[k];
+	  tt_thread->put(r12[j], r13[k], r23, ww);
+	}
 
       time_t end_temp; time (&end_temp); double diff_temp = difftime(end_temp, start);
       if (tcount && tid==0) { coutCBL <<"\r..."<<float(i)*fact_count<<"% completed  ("<<diff_temp/60<<" minutes)\r"; cout.flush(); }
@@ -176,27 +189,29 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_triplets (const sha
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
+void cbl::measure::threept::ThreePointCorrelation::count_allTriplets (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
 {
   // ----- double chain-mesh -----
   
   double rMAX1 = m_ddd->r12()+m_ddd->r12_binSize();
   double rMAX2 = m_ddd->r13()+m_ddd->r13_binSize();
- 
+
   double cell_size1 = max(5., rMAX1*0.1);
   double cell_size2 = max(5., rMAX2*0.1);
-  
+
   ChainMesh_Catalogue ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2;
-  
+
   if (count_ddd || count_ddr || count_drr) {
-    ChainMesh_data_rMAX1.set_par(cell_size1, m_data, rMAX2);
-    ChainMesh_data_rMAX1.get_searching_region(rMAX1);
-    ChainMesh_data_rMAX2.set_par(cell_size2, m_data, rMAX2);
+    auto data_rMAX1 = make_shared<catalogue::Catalogue>(*m_data);
+    auto data_rMAX2 = make_shared<catalogue::Catalogue>(*m_data);
+    ChainMesh_data_rMAX1.set_par(cell_size1, data_rMAX1, rMAX1);
+    ChainMesh_data_rMAX2.set_par(cell_size2, data_rMAX2, rMAX2);
   }
   if (count_rrr || count_ddr || count_drr) {
-    ChainMesh_random_rMAX1.set_par(cell_size1, m_random, rMAX2);
-    ChainMesh_random_rMAX1.get_searching_region(rMAX1);
-    ChainMesh_random_rMAX2.set_par(cell_size2, m_random, rMAX2);
+    auto random_rMAX1 = make_shared<catalogue::Catalogue>(*m_random);
+    auto random_rMAX2 = make_shared<catalogue::Catalogue>(*m_random);
+    ChainMesh_random_rMAX1.set_par(cell_size1, random_rMAX1, rMAX1);
+    ChainMesh_random_rMAX2.set_par(cell_size2, random_rMAX2, rMAX2);
   }
   
   // ----------- count the number of triplets ----------- 
@@ -274,7 +289,7 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets (const 
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation::count_triplets_region (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<Triplet> tt, vector<shared_ptr<Triplet>> tt_region, const vector<vector<double>> weight, const bool tcount) 
+void cbl::measure::threept::ThreePointCorrelation::count_triplets_region (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<Triplet> tt, vector<shared_ptr<Triplet>> tt_region, const vector<vector<double>> weight, const bool tcount) 
 {
   time_t start; time (&start);
   
@@ -313,42 +328,51 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_triplets_region (co
     
       // get the indexes of the objects at r12
       vector<long> close_objects12 = ChainMesh_rMAX1.close_objects(cat1->coordinate(i), -1);
-    
+
+      // get the indexes of objects at r13
+      vector<long> close_objects13 = ChainMesh_rMAX2.close_objects(cat1->coordinate(i), -1);
+
+      vector<double> x2, y2, z2, r12, w2, x3, y3, z3, r13, w3;
+      vector<long> reg2, reg3;
+
       for (auto &&j : close_objects12) { // loop on the objects at r12 
+	double rr = cat1->distance(i, cat2->catalogue_object(j));
 
-	int reg2 = cat2->region(j);
-	double r12 = cat1->distance(i, cat2->catalogue_object(j));
-      
-	if (r12_min<r12 && r12<r12_max) {
-
-	  // get the indexes of objects at r13
-	  vector<long> close_objects13 = ChainMesh_rMAX2.close_objects(cat1->coordinate(i), -1);
-	
-	  for (auto &&k : close_objects13) { // loop on the objects at r13
-
-	    int reg3 = cat3->region(k);
-	    double r13 = cat1->distance(i, cat3->catalogue_object(k));
-	  
-	    if (r13_min<r13 && r13<r13_max) {
-	      int klin;
-
-	      double r23 = cat2->distance(j, cat3->catalogue_object(k));
-	    
-	      double ww = cat1->weight(i)*cat2->weight(j)*cat3->weight(k);
-	    
-	      tt_thread->get_triplet(r12, r13, r23, klin);
-	      tt_thread->set_triplet(klin, ww);
-	      
-	      for (size_t r=0; r<weight.size(); r++) {
-		double region_weight = weight[r][reg1]*weight[r][reg2]*weight[r][reg3];
-		tt_region_thread[r]->set_triplet(klin, ww*region_weight);
-	      }
-	      
-	    }
-	  }
+	if (r12_min<rr && rr<r12_max) {
+	  x2.push_back(cat2->xx(j));
+	  y2.push_back(cat2->yy(j));
+	  z2.push_back(cat2->zz(j));
+	  r12.push_back(rr);
+	  w2.push_back(cat2->weight(j));
+	  reg2.push_back(cat2->region(j));
 	}
       }
 
+      for (auto &&k : close_objects13) { // loop on the objects at r12 
+	double rr = cat1->distance(i, cat3->catalogue_object(k));
+
+	if (r13_min<rr && rr<r13_max) {
+	  x3.push_back(cat3->xx(k));
+	  y3.push_back(cat3->yy(k));
+	  z3.push_back(cat3->zz(k));
+	  r13.push_back(rr);
+	  w3.push_back(cat3->weight(k));
+	  reg3.push_back(cat3->region(k));
+	}
+      }
+
+      for (size_t j=0; j<r12.size(); j++)
+	for (size_t k=0; k<r13.size(); k++){
+	  int klin;
+	  double r23 = sqrt( pow(x2[j]-x3[k],2)+pow(y2[j]-y3[k],2)+pow(z2[j]-z3[k],2));
+	  double ww = cat1->weight(i)*w2[j]*w3[k];
+	  tt_thread->get_triplet(r12[j], r13[k], r23, klin);
+	  tt_thread->set_triplet(klin, ww);
+	  for (size_t r=0; r<weight.size(); r++) {
+	    double region_weight = weight[r][reg1]*weight[r][reg2[j]]*weight[r][reg3[k]];
+	    tt_region_thread[r]->set_triplet(klin, ww*region_weight);
+	  }
+	}
       time_t end_temp; time (&end_temp); double diff_temp = difftime(end_temp, start);
       if (tcount && tid==0) { coutCBL <<"\r..."<<float(i)*fact_count<<"% completed  ("<<diff_temp/60<<" minutes)\r"; cout.flush(); }
       if (i==int(nObj*0.25)) coutCBL <<".....25% completed"<<endl;
@@ -381,28 +405,31 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_triplets_region (co
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets_region (const vector<vector<double>> weight, const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
+void cbl::measure::threept::ThreePointCorrelation::count_allTriplets_region (const vector<vector<double>> weight, const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
 {
   // ----- double chain-mesh -----
 
   double rMAX1 = m_ddd->r12()+m_ddd->r12_binSize();
   double rMAX2 = m_ddd->r13()+m_ddd->r13_binSize();
- 
-  double cell_size = max(5., rMAX2*0.1);
-  
+
+  double cell_size1 = max(5., rMAX1*0.1);
+  double cell_size2 = max(5., rMAX2*0.1);
+
   ChainMesh_Catalogue ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2;
-  
-  if (count_ddd || count_ddr) {
-    ChainMesh_data_rMAX1.set_par(cell_size, m_data, rMAX2);
-    ChainMesh_data_rMAX1.get_searching_region(rMAX1);
-    ChainMesh_data_rMAX2.set_par(cell_size, m_data, rMAX2);
+
+  if (count_ddd || count_ddr || count_drr) {
+    auto data_rMAX1 = make_shared<catalogue::Catalogue>(*m_data);
+    auto data_rMAX2 = make_shared<catalogue::Catalogue>(*m_data);
+    ChainMesh_data_rMAX1.set_par(cell_size1, data_rMAX1, rMAX1);
+    ChainMesh_data_rMAX2.set_par(cell_size2, data_rMAX2, rMAX2);
   }
-  if (count_rrr || count_drr) {
-    ChainMesh_random_rMAX1.set_par(cell_size, m_random, rMAX2);
-    ChainMesh_random_rMAX1.get_searching_region(rMAX1);
-    ChainMesh_random_rMAX2.set_par(cell_size, m_random, rMAX2);
+  if (count_rrr || count_ddr || count_drr) {
+    auto random_rMAX1 = make_shared<catalogue::Catalogue>(*m_random);
+    auto random_rMAX2 = make_shared<catalogue::Catalogue>(*m_random);
+    ChainMesh_random_rMAX1.set_par(cell_size1, random_rMAX1, rMAX1);
+    ChainMesh_random_rMAX2.set_par(cell_size2, random_rMAX2, rMAX2);
   }
-  
+
   // ----------- initialize the triplet vectors used for resampling ----------- 
 
   m_ddd_regions.erase(m_ddd_regions.begin(), m_ddd_regions.end());
@@ -526,7 +553,7 @@ void cosmobl::measure::threept::ThreePointCorrelation::count_allTriplets_region 
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation::write_triplets (shared_ptr<triplets::Triplet> TT, const string dir, const string file) const
+void cbl::measure::threept::ThreePointCorrelation::write_triplets (shared_ptr<triplets::Triplet> TT, const string dir, const string file) const
 {  
   string MK = "mkdir -p "+dir;
   if (system (MK.c_str())) {}
@@ -545,10 +572,10 @@ void cosmobl::measure::threept::ThreePointCorrelation::write_triplets (shared_pt
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation::read_triplets (shared_ptr<triplets::Triplet> TT, const vector<string> dir, const string file) 
+void cbl::measure::threept::ThreePointCorrelation::read_triplets (shared_ptr<triplets::Triplet> TT, const vector<string> dir, const string file) 
 {
  if (dir.size()==0)
-    ErrorCBL("Error in cosmobl::twopt::TwoPointCorrelation1D::read_triplets of TwoPointCorrelation1D.cpp! dir.size()=0!");
+    ErrorCBL("Error in cbl::twopt::TwoPointCorrelation1D::read_triplets of TwoPointCorrelation1D.cpp! dir.size()=0!");
       
   for (size_t dd=0; dd<dir.size(); dd++) {
         

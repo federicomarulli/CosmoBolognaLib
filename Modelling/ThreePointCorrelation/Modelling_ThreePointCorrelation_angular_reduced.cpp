@@ -36,7 +36,7 @@
 
 #include "Modelling_ThreePointCorrelation_angular_reduced.h"
 
-using namespace cosmobl;
+using namespace cbl;
 
 
 // ============================================================================================

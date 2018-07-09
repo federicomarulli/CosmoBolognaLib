@@ -36,13 +36,15 @@
 
 #include "ModelFunction_TwoPointCorrelation1D_monopole.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_BAO_sigmaNL (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_BAO_sigmaNL (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -91,7 +93,7 @@ vector<double> cosmobl::modelling::twopt::xi0_BAO_sigmaNL (const vector<double> 
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_linear (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_linear (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -127,7 +129,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear (const vector<double> rad, 
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_polynomial_LinearPoint (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_polynomial_LinearPoint (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -212,7 +214,7 @@ vector<double> cosmobl::modelling::twopt::xi0_polynomial_LinearPoint (const vect
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_linear_LinearPoint (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_linear_LinearPoint (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -239,6 +241,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_LinearPoint (const vector<d
       poly += parameter[j+6]*pow(rad[i], -j);
 
     model[i] =  xi_ratio(fsigma8, bsigma8)*pow(bsigma8/pp->sigma8_z, 2)*pp->func_xi->operator()(rad[i]*alpha)+poly;
+
   }
 
   // Linear point section
@@ -262,7 +265,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_LinearPoint (const vector<d
       xmax += 2;
     else
       end=true;
-    if ((xmin<50) || (xmax>160)) {
+    if ((xmin<70) || (xmax>160)) {
       end = true;
       parameter[0] = 0;
     }
@@ -270,7 +273,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_LinearPoint (const vector<d
 
   parameter[1] = 0;
   if ((parameter[0]>xmin) && (parameter[0]<xmax)) {
-    parameter[1] = gsl::GSL_root_brent(model_derivative, 0., 60, parameter[0]-2, 1.e-10);
+    parameter[1] = gsl::GSL_root_brent(model_derivative, 0., 40, parameter[0]-2, 1.e-10);
     if (parameter[0]-parameter[1]<2.1) {
       parameter[1] = 0;
       parameter[0] = 0;
@@ -278,7 +281,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_LinearPoint (const vector<d
   }
 
   parameter[2] = (parameter[0]+parameter[1])*0.5;
-
+  
   return model;
 }
 
@@ -286,7 +289,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_LinearPoint (const vector<d
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_linear_sigma8_bias (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_linear_sigma8_bias (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -323,7 +326,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_sigma8_bias (const vector<d
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_linear_cosmology (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_linear_cosmology (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -366,7 +369,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_cosmology (const vector<dou
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_linear_bias_cosmology (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_linear_bias_cosmology (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -404,7 +407,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_bias_cosmology (const vecto
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_damped_scaling_relation_sigmaz (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_damped_scaling_relation_sigmaz (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -451,7 +454,7 @@ vector<double> cosmobl::modelling::twopt::xi0_damped_scaling_relation_sigmaz (co
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_damped_bias_sigmaz (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_damped_bias_sigmaz (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -471,7 +474,7 @@ vector<double> cosmobl::modelling::twopt::xi0_damped_bias_sigmaz (const vector<d
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_linear_sigma8_clusters (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_linear_sigma8_clusters (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -536,7 +539,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_sigma8_clusters (const vect
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_linear_one_cosmo_par_clusters (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_linear_one_cosmo_par_clusters (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -555,10 +558,10 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_one_cosmo_par_clusters (con
 
   // the AP parameter
   const double alpha = cosmo.D_V(pp->redshift)/pp->DVfid;
-
+  
 
   // return the redshift-space monopole of the two-point correlation function
-
+  
   vector<double> new_rad = rad;
   for (size_t i=0; i<rad.size(); i++)
     new_rad[i] *= alpha;
@@ -570,7 +573,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_one_cosmo_par_clusters (con
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_linear_two_cosmo_pars_clusters (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_linear_two_cosmo_pars_clusters (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
    // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -590,6 +593,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_two_cosmo_pars_clusters (co
   
   /// the AP parameter
   const double alpha = cosmo.D_V(pp->redshift)/pp->DVfid;
+  parameter[3] = alpha;
 
   
   // return the redshift-space monopole of the two-point correlation function
@@ -605,7 +609,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_two_cosmo_pars_clusters (co
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_linear_cosmology_clusters (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -661,7 +665,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_cosmology_clusters (const v
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi0_linear_cosmology_clusters_selection_function (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters_selection_function (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -748,7 +752,7 @@ vector<double> cosmobl::modelling::twopt::xi0_linear_cosmology_clusters_selectio
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::Ncen (const double Mass, const double Mmin, const double sigmalgM) 
+double cbl::modelling::twopt::Ncen (const double Mass, const double Mmin, const double sigmalgM) 
 {
   const double Nc = 0.5*(1.+gsl_sf_erf((log10(Mass)-log10(Mmin))/(sqrt(2.)*sigmalgM))); 
   return (Nc<0 || std::isnan(Nc)) ? 0. : Nc;
@@ -758,7 +762,7 @@ double cosmobl::modelling::twopt::Ncen (const double Mass, const double Mmin, co
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::Nsat (const double Mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha) 
+double cbl::modelling::twopt::Nsat (const double Mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha) 
 {
   const double Ns = Ncen(Mass, Mmin, sigmalgM)*pow((Mass-M0)/M1, alpha);
   return (Ns<0 || std::isnan(Ns)) ? 0. : Ns;
@@ -768,7 +772,7 @@ double cosmobl::modelling::twopt::Nsat (const double Mass, const double Mmin, co
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::Navg (const double Mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha) 
+double cbl::modelling::twopt::Navg (const double Mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha) 
 {
   return Ncen(Mass, Mmin, sigmalgM) + Nsat(Mass, Mmin, sigmalgM, M0, M1, alpha);
 }
@@ -777,7 +781,7 @@ double cosmobl::modelling::twopt::Navg (const double Mass, const double Mmin, co
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::ng_integrand (const double mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha, const shared_ptr<void> inputs)
+double cbl::modelling::twopt::ng_integrand (const double mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha, const shared_ptr<void> inputs)
 {
   // structure contaning the HOD input data
   shared_ptr<STR_data_HOD> pp = static_pointer_cast<STR_data_HOD>(inputs);
@@ -796,7 +800,7 @@ double cosmobl::modelling::twopt::ng_integrand (const double mass, const double 
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::ng (const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha, const shared_ptr<void> inputs)
+double cbl::modelling::twopt::ng (const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha, const shared_ptr<void> inputs)
 {
   return gsl::GSL_integrate_qag(bind(&modelling::twopt::ng_integrand, std::placeholders::_1, Mmin, sigmalgM, M0, M1, alpha, inputs), 1.e10, 1.e16);
 }
@@ -805,7 +809,7 @@ double cosmobl::modelling::twopt::ng (const double Mmin, const double sigmalgM, 
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::bias (const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha, const shared_ptr<void> inputs)
+double cbl::modelling::twopt::bias (const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha, const shared_ptr<void> inputs)
 {
   // structure contaning the HOD input data
   shared_ptr<STR_data_HOD> pp = static_pointer_cast<STR_data_HOD>(inputs);
@@ -832,7 +836,7 @@ double cosmobl::modelling::twopt::bias (const double Mmin, const double sigmalgM
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::NcNs (const double Mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha)
+double cbl::modelling::twopt::NcNs (const double Mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha)
 {
   return Ncen(Mass, Mmin, sigmalgM)*Nsat(Mass, Mmin, sigmalgM, M0, M1, alpha);
 }
@@ -841,7 +845,7 @@ double cosmobl::modelling::twopt::NcNs (const double Mass, const double Mmin, co
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::NsNs1 (const double Mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha)
+double cbl::modelling::twopt::NsNs1 (const double Mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha)
 {
   return pow(Nsat(Mass, Mmin, sigmalgM, M0, M1, alpha), 2);
 }
@@ -850,7 +854,7 @@ double cosmobl::modelling::twopt::NsNs1 (const double Mass, const double Mmin, c
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::Pk_cs_numerator_integrand (const double mass, const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
+double cbl::modelling::twopt::Pk_cs_numerator_integrand (const double mass, const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the HOD input data
   shared_ptr<STR_data_HOD> pp = static_pointer_cast<STR_data_HOD>(inputs);
@@ -879,7 +883,7 @@ double cosmobl::modelling::twopt::Pk_cs_numerator_integrand (const double mass, 
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::Pk_cs (const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
+double cbl::modelling::twopt::Pk_cs (const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the HOD input data
   shared_ptr<STR_data_HOD> pp = static_pointer_cast<STR_data_HOD>(inputs);
@@ -898,7 +902,7 @@ double cosmobl::modelling::twopt::Pk_cs (const double kk, const shared_ptr<void>
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::Pk_ss_numerator_integrand (const double mass, const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
+double cbl::modelling::twopt::Pk_ss_numerator_integrand (const double mass, const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the HOD input data
   shared_ptr<STR_data_HOD> pp = static_pointer_cast<STR_data_HOD>(inputs);
@@ -927,7 +931,7 @@ double cosmobl::modelling::twopt::Pk_ss_numerator_integrand (const double mass, 
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::Pk_ss (const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
+double cbl::modelling::twopt::Pk_ss (const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the HOD input data
   shared_ptr<STR_data_HOD> pp = static_pointer_cast<STR_data_HOD>(inputs);
@@ -946,7 +950,7 @@ double cosmobl::modelling::twopt::Pk_ss (const double kk, const shared_ptr<void>
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::Pk_1halo (const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
+double cbl::modelling::twopt::Pk_1halo (const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   return Pk_cs(kk, inputs, parameter)+Pk_ss(kk, inputs, parameter);   
 }
@@ -955,7 +959,7 @@ double cosmobl::modelling::twopt::Pk_1halo (const double kk, const shared_ptr<vo
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::Pk_2halo (const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
+double cbl::modelling::twopt::Pk_2halo (const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the HOD input data
   shared_ptr<STR_data_HOD> pp = static_pointer_cast<STR_data_HOD>(inputs);
@@ -992,7 +996,7 @@ double cosmobl::modelling::twopt::Pk_2halo (const double kk, const shared_ptr<vo
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::Pk_HOD (const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
+double cbl::modelling::twopt::Pk_HOD (const double kk, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   return Pk_1halo(kk, inputs, parameter)+Pk_2halo(kk, inputs, parameter);  
 }
@@ -1001,7 +1005,7 @@ double cosmobl::modelling::twopt::Pk_HOD (const double kk, const shared_ptr<void
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi_1halo (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi_1halo (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_HOD> pp = static_pointer_cast<STR_data_HOD>(inputs);
@@ -1053,7 +1057,7 @@ vector<double> cosmobl::modelling::twopt::xi_1halo (const vector<double> rad, co
 // ============================================================================================
 
 
-shared_ptr<glob::FuncGrid> cosmobl::modelling::twopt::func_2halo (const vector<double> kk, const shared_ptr<void> inputs, vector<double> &parameter)
+shared_ptr<glob::FuncGrid> cbl::modelling::twopt::func_2halo (const vector<double> kk, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the HOD input data
   shared_ptr<STR_data_HOD> pp = static_pointer_cast<STR_data_HOD>(inputs);
@@ -1096,7 +1100,7 @@ shared_ptr<glob::FuncGrid> cosmobl::modelling::twopt::func_2halo (const vector<d
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi_2halo (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi_2halo (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_HOD> pp = static_pointer_cast<STR_data_HOD>(inputs);
@@ -1136,7 +1140,7 @@ vector<double> cosmobl::modelling::twopt::xi_2halo (const vector<double> rad, co
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xi_HOD (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xi_HOD (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   const vector<double> xi1h = xi_1halo(rad, inputs, parameter);
   const vector<double> xi2h = xi_2halo(rad, inputs, parameter);
@@ -1156,7 +1160,7 @@ vector<double> cosmobl::modelling::twopt::xi_HOD (const vector<double> rad, cons
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::xi_zspace (function<vector<double>(const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)> func, const double rp, const double pi, const shared_ptr<void> inputs, vector<double> &parameter)
+double cbl::modelling::twopt::xi_zspace (FunctionVectorVectorPtrVectorRef func, const double rp, const double pi, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the HOD input data
 
@@ -1198,7 +1202,7 @@ double cosmobl::modelling::twopt::xi_zspace (function<vector<double>(const vecto
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::xi_1halo_zspace (const double rp, const double pi, const shared_ptr<void> inputs, vector<double> &parameter)
+double cbl::modelling::twopt::xi_1halo_zspace (const double rp, const double pi, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   return xi_zspace(xi_1halo, rp, pi, inputs, parameter);
 }
@@ -1207,7 +1211,7 @@ double cosmobl::modelling::twopt::xi_1halo_zspace (const double rp, const double
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::xi_2halo_zspace (const double rp, const double pi, const shared_ptr<void> inputs, vector<double> &parameter)
+double cbl::modelling::twopt::xi_2halo_zspace (const double rp, const double pi, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   return xi_zspace(xi_2halo, rp, pi, inputs, parameter);
 }
@@ -1216,7 +1220,7 @@ double cosmobl::modelling::twopt::xi_2halo_zspace (const double rp, const double
 // ============================================================================================
 
 
-double cosmobl::modelling::twopt::xi_HOD_zspace (const double rp, const double pi, const shared_ptr<void> inputs, vector<double> &parameter)
+double cbl::modelling::twopt::xi_HOD_zspace (const double rp, const double pi, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   return xi_zspace(xi_HOD, rp, pi, inputs, parameter);
 }

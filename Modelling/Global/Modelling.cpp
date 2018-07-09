@@ -35,27 +35,52 @@
 
 #include "Modelling.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::set_parameters (const vector<shared_ptr<cosmobl::statistics::Parameter>> parameters)
+void cbl::modelling::Modelling::m_set_prior (vector<statistics::PriorDistribution> prior_distribution)
 {
-  m_parameters = make_shared<cosmobl::statistics::LikelihoodParameters>(cosmobl::statistics::LikelihoodParameters(parameters));
+  // set the priors
+  m_parameter_priors.erase(m_parameter_priors.begin(), m_parameter_priors.end());
+  for (size_t i=0; i<prior_distribution.size(); i++)
+    m_parameter_priors.emplace_back(make_shared<statistics::PriorDistribution>(prior_distribution[i]));
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type)
+void cbl::modelling::Modelling::m_set_posterior (const int seed)
 {
-  if(m_fit_range)
-    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data_fit, m_model, m_parameters, likelihood_type));
-  else {
-    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, m_parameters, likelihood_type));
+  if (m_likelihood != NULL && m_parameter_priors.size()==m_model->parameters()->nparameters_base())
+    m_posterior = make_shared<statistics::Posterior>(statistics::Posterior(m_parameter_priors, *m_likelihood, seed));
+  else
+    ErrorCBL("Error in m_set_posterior of Modelling.cpp, likelihood is not defined or wrong number of prior distributions provided!");
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type, const vector<size_t> x_index, const int w_index)
+{
+  if(m_model == NULL)
+    ErrorCBL("Error in set_likelihood of Modelling.cpp. Undefined  model!");
+
+  if (m_fit_range){
+    if(m_data_fit == NULL)
+      ErrorCBL("Error in set_likelihood of Modelling.cpp. Undefined fit range!");
+    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data_fit, m_model, likelihood_type, x_index, w_index));
+  }
+  else  {
+    if(m_data == NULL)
+      ErrorCBL("Error in set_likelihood of Modelling.cpp. Undefined dataset!");
+    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, likelihood_type, x_index, w_index));
   }
 }
 
@@ -63,101 +88,106 @@ void cosmobl::modelling::Modelling::set_likelihood (const statistics::Likelihood
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::set_likelihood (const statistics::LogLikelihood_function likelihood_func)
+void cbl::modelling::Modelling::maximize_likelihood (const vector<double> start, const vector<vector<double>> parameter_ranges, const unsigned int max_iter, const double tol, const double epsilon)
 {
-  if (m_fit_range)
-    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data_fit, m_model, m_parameters, likelihood_func));
-  else
-    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, m_parameters, likelihood_func));
+  m_likelihood->maximize(start, parameter_ranges, max_iter, tol, epsilon);
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::maximize_likelihood (vector<double> &guess, const int ntry, const int prior_seed, const bool usePrior, const unsigned int max_iter, const double tol, const double epsilon)
+void cbl::modelling::Modelling::maximize_posterior (const std::vector<double> start, const unsigned int max_iter, const double tol, const int seed)
 {
-  m_likelihood->maximize(guess, ntry, prior_seed, usePrior, max_iter, tol, epsilon);
+  m_set_posterior(seed);
+  m_posterior->maximize(start, max_iter, tol);
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::maximize_likelihood (vector<double> &guess, const bool usePrior, const unsigned int max_iter, const double tol, const double epsilon)
+void cbl::modelling::Modelling::sample_posterior (const int chain_size, const int nwalkers, const int seed, const double aa, const bool parallel)
 {
-  m_likelihood->maximize(guess, usePrior, max_iter, tol, epsilon);
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::modelling::Modelling::run_MCMC (const int chain_size, const int nwalkers, const int seed, const double aa)
-{
-  if (nwalkers<2) ErrorCBL("Error in cosmobl::modelling::Modelling::run_MCMC of Modelling.cpp: the MCMC algorithms currently implemented require nwalkers>1");
-  
-  m_likelihood->initialize_chains(chain_size, nwalkers, seed);
-
-  m_likelihood->sample_stretch_move_parallel(seed, aa);
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::modelling::Modelling::run_MCMC (const int chain_size, const int nwalkers, const int seed, vector<double> &start, const double radius, const double aa)
-{
-  if (nwalkers<2) ErrorCBL("Error in cosmobl::modelling::Modelling::run_MCMC of Modelling.cpp: the MCMC algorithms currently implemented require nwalkers>1");
-  
-  m_likelihood->initialize_chains(chain_size, nwalkers, seed, start, radius);
-
-  m_likelihood->sample_stretch_move_parallel(seed, aa);
+  m_set_posterior(seed);
+  m_posterior->initialize_chains(chain_size, nwalkers);
+  m_posterior->sample_stretch_move(aa, parallel);
 }
 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::run_MCMC (const int chain_size, const vector<vector<double>> chain_values, const int seed, const double aa)
+void cbl::modelling::Modelling::sample_posterior (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter, const double tol, const int seed, const double aa, const bool parallel)
 { 
-  m_likelihood->initialize_chains(chain_size, chain_values);
-
-  m_likelihood->sample_stretch_move_parallel(seed, aa);
+  m_set_posterior(seed);
+  m_posterior->initialize_chains(chain_size, nwalkers, radius, start, max_iter, tol);
+  m_posterior->sample_stretch_move(aa, parallel);
 }
 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::run_MCMC (const int chain_size, const int nwalkers, const int seed, const string input_dir, const string input_file, const double aa)
+void cbl::modelling::Modelling::sample_posterior (const int chain_size, const int nwalkers, std::vector<double> &values, const double radius, const int seed, const double aa, const bool parallel)
 {
-  if (nwalkers<2) ErrorCBL("Error in cosmobl::modelling::Modelling::run_MCMC of Modelling.cpp: the MCMC algorithms currently implemented require nwalkers>1");
-  
-  m_likelihood->initialize_chains(chain_size, nwalkers, input_dir, input_file);
-
-  m_likelihood->sample_stretch_move_parallel(seed, aa);
+  m_set_posterior(seed);
+  m_posterior->initialize_chains(chain_size, nwalkers, values, radius);
+  m_posterior->sample_stretch_move(aa, parallel);
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::show_results (const int start, const int thin, const int seed)
+void cbl::modelling::Modelling::sample_posterior (const int chain_size, const std::vector<std::vector<double>> chain_values, const int seed, const double aa, const bool parallel)
 {
-  m_parameters->show_results(start, thin, seed);
+  m_set_posterior(seed);
+  m_posterior->initialize_chains(chain_size, chain_values);
+  m_posterior->sample_stretch_move(aa, parallel);
+}
+
+      
+// ============================================================================================
+
+
+void cbl::modelling::Modelling::sample_posterior (const int chain_size, const int nwalkers, const std::string input_dir, const std::string input_file, const int seed, const double aa, const bool parallel)
+{
+  m_set_posterior(seed);
+  m_posterior->initialize_chains(chain_size, nwalkers, input_dir, input_file);
+  m_posterior->sample_stretch_move(aa, parallel);
+}
+
+
+// ============================================================================================
+      
+
+void cbl::modelling::Modelling::write_chain (const string output_dir, const string output_file, const int start, const int thin, const bool fits)
+{
+  m_posterior->write_chain(output_dir, output_file, start, thin, fits);
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::Modelling::read_chain (const string input_dir, const string input_file, const int nwalkers, const int skip_header, const bool fits)
+{
+  m_posterior->read_chain(input_dir, input_file, nwalkers, skip_header, fits);
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::Modelling::show_results (const int start, const int thin, const int nbins)
+{
+  m_posterior->show_results(start, thin, nbins);
 }
 
 // ============================================================================================
 
 
-void cosmobl::modelling::Modelling::write_results (const string dir, const string file, const int start, const int thin, const int seed)
+void cbl::modelling::Modelling::write_results (const string dir, const string file, const int start, const int thin, const int nbins, const bool fits)
 {
-  m_likelihood->write_results(dir, file, start, thin, seed);
+  m_posterior->write_results(dir, file, start, thin, nbins, fits);
 }
 
-// ============================================================================================
-
-
-void cosmobl::modelling::Modelling::read_chain (const string dir, const string file, const int nwalkers, const int skip_header)
-{
-  m_likelihood->read_chain(dir, file, nwalkers, skip_header);
-}

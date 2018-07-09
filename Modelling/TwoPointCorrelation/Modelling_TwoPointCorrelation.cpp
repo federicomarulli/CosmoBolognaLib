@@ -40,7 +40,9 @@
 #include "Modelling_TwoPointCorrelation_projected.h"
 #include "Modelling_TwoPointCorrelation_deprojected.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
@@ -60,7 +62,7 @@ shared_ptr<modelling::twopt::Modelling_TwoPointCorrelation> modelling::twopt::Mo
   else if (twop->twoPType()==measure::twopt::TwoPType::_1D_deprojected_)
     return move(unique_ptr<Modelling_TwoPointCorrelation_deprojected> (new Modelling_TwoPointCorrelation_deprojected(twop)));
 
-  else ErrorCBL("Error in cosmobl::modelling::twopt::Modelling_TwoPointCorrelation::Create of Modelling_TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!");
+  else ErrorCBL("Error in cbl::modelling::twopt::Modelling_TwoPointCorrelation::Create of Modelling_TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!");
  
   return NULL;
 }
@@ -83,7 +85,7 @@ shared_ptr<modelling::twopt::Modelling_TwoPointCorrelation> modelling::twopt::Mo
   else if (twoPType==measure::twopt::TwoPType::_1D_deprojected_)
     return move(unique_ptr<Modelling_TwoPointCorrelation_deprojected> (new Modelling_TwoPointCorrelation_deprojected(twop_dataset)));
   
-  else ErrorCBL("Error in cosmobl::modelling::twopt::Modelling_TwoPointCorrelation::Create of Modelling_TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!");
+  else ErrorCBL("Error in cbl::modelling::twopt::Modelling_TwoPointCorrelation::Create of Modelling_TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!");
 
   return NULL;
 }

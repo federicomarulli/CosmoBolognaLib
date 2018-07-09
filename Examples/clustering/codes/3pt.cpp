@@ -8,7 +8,7 @@
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
 // launching the code on remote systems)
-string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 
 
 int main () {
@@ -19,31 +19,31 @@ int main () {
     // ---------------- set the cosmological parameters  ------------
     // --------------------------------------------------------------
 
-    cosmobl::cosmology::Cosmology cosmology {cosmobl::cosmology::_Planck15_};
+    cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
 
   
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
   
-    string file_catalogue = cosmobl::par::DirLoc+"../input/cat.dat";
+    std::string file_catalogue = cbl::par::DirLoc+"../input/cat.dat";
 
-    cosmobl::catalogue::Catalogue catalogue {cosmobl::catalogue::_Galaxy_, cosmobl::_observedCoordinates_, {file_catalogue}, cosmology};
+    cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
   
     // --------------------------------------------------------------------------------------
     // ---------------- construct the random catalogue (with cubic geometry) ----------------
     // --------------------------------------------------------------------------------------
 
-    const double N_R = 1.; // random/data ratio
+    const double N_R = 2.; // random/data ratio
    
-    cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
+    cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::RandomType::_createRandom_box_, catalogue, N_R};
   
     // construct the sub-regions used for jackknife and bootstrap
 
-    cout << "I'm constructing the sub-regions used for jackknife and bootstrap..." << endl;
+    std::cout << "I'm constructing the sub-regions used for jackknife and bootstrap..." << std::endl;
     const int nx = 3, ny = 3, nz = 3;
-    cosmobl::set_ObjectRegion_SubBoxes(catalogue, random_catalogue, nx, ny, nz);
+    cbl::set_ObjectRegion_SubBoxes(catalogue, random_catalogue, nx, ny, nz);
   
     // -------------------------------------------------------------------------------
     // ---------------- measure the three-point correlation functions ----------------
@@ -54,28 +54,28 @@ int main () {
     const double side_s = 20.;  // 1st side of the triangle
     const double side_u = 2.;   // ratio between the 1st and 2nd sides of the triangle (u*s)
     const double perc = 0.0225; // tolerance
-    const int nbins = 15;       // number of bins
+    const int nbins = 5;        // number of bins
 
   
     // output data
   
-    const string dir_output = cosmobl::par::DirLoc+"../output/";
-    const string dir_triplets = dir_output;
-    const string dir_2pt = dir_output;
-    const string file_output = "3ptJK.dat";
+    const std::string dir_output = cbl::par::DirLoc+"../output/";
+    const std::string dir_triplets = dir_output;
+    const std::string dir_2pt = dir_output;
+    const std::string file_output = "3ptJK.dat";
 
   
     // measure the connected and reduced three-point correlation functions and write the output
 
-    const auto ThreeP = cosmobl::measure::threept::ThreePointCorrelation::Create(cosmobl::measure::threept::_comoving_reduced_, catalogue, random_catalogue, cosmobl::triplets::_comoving_theta_, side_s, side_u, perc, nbins);
+    const auto ThreeP = cbl::measure::threept::ThreePointCorrelation::Create(cbl::measure::threept::ThreePType::_comoving_reduced_, catalogue, random_catalogue, cbl::triplets::TripletType::_comoving_theta_, side_s, side_u, perc, nbins);
 
-    ThreeP->measure(cosmobl::measure::ErrorType::_Jackknife_, dir_triplets, dir_2pt);
+    ThreeP->measure(cbl::measure::ErrorType::_Jackknife_, dir_triplets, dir_2pt);
   
     ThreeP->write(dir_output, file_output, 1);
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

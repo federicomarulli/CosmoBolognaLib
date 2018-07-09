@@ -38,7 +38,9 @@
 #include "TwoPointCorrelationCross1D.h"
 #include "Data1D_extra.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace chainmesh;
 using namespace pairs;
@@ -49,7 +51,7 @@ using namespace twopt;
 // ============================================================================
 
 
-shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelationCross1D::correlation_SzapudiSzalayEstimator (const shared_ptr<pairs::Pair> d1d2, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> d1r, const shared_ptr<pairs::Pair> d2r, const int nData1, const double nData1_weighted, const int nData2, const double nData2_weighted, const int nRandom, const double nRandom_weighted)
+shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelationCross1D::correlation_SzapudiSzalayEstimator (const shared_ptr<pairs::Pair> d1d2, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> d1r, const shared_ptr<pairs::Pair> d2r, const int nData1, const double nData1_weighted, const int nData2, const double nData2_weighted, const int nRandom, const double nRandom_weighted)
 {
   vector<double> rad(m_d1d2->nbins()), xi(m_d1d2->nbins(), -1.), error(m_d1d2->nbins(), 1000.);
 
@@ -108,7 +110,7 @@ shared_ptr<data::Data> cosmobl::measure::twopt::TwoPointCorrelationCross1D::corr
       xi[i] = max(-1., (D1D2_norm-D1R_norm-D2R_norm+RR_norm)/RR_norm);
 
       // Poisson error
-      error[i] = PoissonError(_SzapudiSzalay_, d1d2->PP1D(i), rr->PP1D(i), d1r->PP1D(i), d2r->PP1D(i), nD1, nD2, nR);
+      error[i] = PoissonError(Estimator::_SzapudiSzalay_, d1d2->PP1D(i), rr->PP1D(i), d1r->PP1D(i), d2r->PP1D(i), nD1, nD2, nR);
       
     }
   }

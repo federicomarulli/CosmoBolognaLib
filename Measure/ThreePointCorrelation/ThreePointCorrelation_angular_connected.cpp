@@ -38,7 +38,9 @@
 
 #include "ThreePointCorrelation_angular_connected.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace triplets;
 using namespace measure;
@@ -49,7 +51,7 @@ using namespace glob;
 // ============================================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_angular_connected::set_parameters (const double side_s, const double side_u, const double perc_increase, const int nbins) 
+void cbl::measure::threept::ThreePointCorrelation_angular_connected::set_parameters (const double side_s, const double side_u, const double perc_increase, const int nbins) 
 {
   (void)side_s; (void)side_u; (void)perc_increase; (void)nbins;
   ErrorCBL("Error in threept::ThreePointCorrelation_angular_connected::set_parameters() of ThreePointCorrelation_angular_connected.cpp", ExitCode::_workInProgress_);
@@ -59,7 +61,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_angular_connected::set_par
 // ============================================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_angular_connected::set_parameters (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
+void cbl::measure::threept::ThreePointCorrelation_angular_connected::set_parameters (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
 {
   (void)r12; (void)r12_binSize; (void)r13; (void)r13_binSize; (void)nbins;
   ErrorCBL("Error in threept::ThreePointCorrelation_angular_connected::set_parameters() of ThreePointCorrelation_angular_connected.cpp", ExitCode::_workInProgress_);
@@ -69,7 +71,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_angular_connected::set_par
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_angular_connected::measure (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_angular_connected::measure (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
 {
   (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed;
   ErrorCBL("Error in threept::ThreePointCorrelation_angular_connected::measure() of ThreePointCorrelation_angular_connected.cpp", ExitCode::_workInProgress_);
@@ -79,7 +81,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_angular_connected::measure
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_angular_connected::write (const string dir, const string file) const
+void cbl::measure::threept::ThreePointCorrelation_angular_connected::write (const string dir, const string file) const
 {
   (void)dir; (void)file;
   ErrorCBL("Error in threept::ThreePointCorrelation_angular_connected::write() of ThreePointCorrelation_angular_connected.cpp", ExitCode::_workInProgress_);
@@ -89,7 +91,7 @@ void cosmobl::measure::threept::ThreePointCorrelation_angular_connected::write (
 // ============================================================================
 
 
-void cosmobl::measure::threept::ThreePointCorrelation_angular_connected::write_covariance (const string dir, const string file) const
+void cbl::measure::threept::ThreePointCorrelation_angular_connected::write_covariance (const string dir, const string file) const
 {
   m_dataset->write_covariance(dir, file);
 }

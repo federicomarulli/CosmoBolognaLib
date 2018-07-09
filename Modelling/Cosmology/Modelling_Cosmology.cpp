@@ -37,18 +37,21 @@
 #include "Modelling_Cosmology.h"
 #include "Modelling_Cosmology_DistancePrior.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
+
 
 // ============================================================================================
 
 
-shared_ptr<cosmobl::modelling::cosmology::CMB_DistancePrior> cosmobl::modelling::cosmology::CMB_DistancePrior::Create (const string distance_prior_name)
+shared_ptr<cbl::modelling::cosmology::CMB_DistancePrior> cbl::modelling::cosmology::CMB_DistancePrior::Create (const string distance_prior_name)
 {
   if (distance_prior_name == "Aubourg15_Planck15")
-    return move(unique_ptr<cosmobl::modelling::cosmology::Aubourg15_Planck15>(new cosmobl::modelling::cosmology::Aubourg15_Planck15()));
+    return move(unique_ptr<cbl::modelling::cosmology::Aubourg15_Planck15>(new cbl::modelling::cosmology::Aubourg15_Planck15()));
   else if (distance_prior_name == "Aubourg15_WMAP09")
-    return move(unique_ptr<cosmobl::modelling::cosmology::Aubourg15_WMAP09>(new cosmobl::modelling::cosmology::Aubourg15_WMAP09()));
-  else ErrorCBL("Error in cosmobl::modelling::cosmology::CMB_DistancePrior::Create of Modelling_Cosmology_DistancePrior.h: no such type of CMB_DistancePrior!");
+    return move(unique_ptr<cbl::modelling::cosmology::Aubourg15_WMAP09>(new cbl::modelling::cosmology::Aubourg15_WMAP09()));
+  else ErrorCBL("Error in cbl::modelling::cosmology::CMB_DistancePrior::Create of Modelling_Cosmology_DistancePrior.h: no such type of CMB_DistancePrior!");
 
   return NULL;
 }
@@ -57,7 +60,7 @@ shared_ptr<cosmobl::modelling::cosmology::CMB_DistancePrior> cosmobl::modelling:
 // ============================================================================================
 
 
-cosmobl::modelling::cosmology::Modelling_Cosmology::Modelling_Cosmology(const shared_ptr<cosmobl::data::Data> dataset, const vector<string> data_type)
+cbl::modelling::cosmology::Modelling_Cosmology::Modelling_Cosmology(const shared_ptr<cbl::data::Data> dataset, const vector<string> data_type)
 {
   m_data = dataset;
   m_data_type = data_type;
@@ -67,48 +70,48 @@ cosmobl::modelling::cosmology::Modelling_Cosmology::Modelling_Cosmology(const sh
 // ============================================================================================
 
 
-void cosmobl::modelling::cosmology::Modelling_Cosmology::set_fiducial_cosmology(const cosmobl::cosmology::Cosmology cosmology)
+void cbl::modelling::cosmology::Modelling_Cosmology::set_fiducial_cosmology(const cbl::cosmology::Cosmology cosmology)
 {
-  m_cosmology = move(make_shared<cosmobl::cosmology::Cosmology>(cosmology));
+  m_cosmology = move(make_shared<cbl::cosmology::Cosmology>(cosmology));
 }
 
 
 // ============================================================================================
 
 
-void cosmobl::modelling::cosmology::Modelling_Cosmology::set_cosmological_parameters(const vector<cosmobl::cosmology::CosmoPar> cosmoPar_name, const vector<cosmobl::statistics::Prior> cosmoPar_prior, const string distance_prior, const vector<string> external_dataset)
+void cbl::modelling::cosmology::Modelling_Cosmology::set_cosmological_parameters(const vector<cbl::cosmology::CosmologicalParameter> cosmoPar_name, const vector<cbl::statistics::PriorDistribution> cosmoPar_prior, const string distance_prior, const vector<string> external_dataset)
 {
   (void)distance_prior;
   (void)external_dataset;
 
-  const int nParams = cosmoPar_name.size();
+  const size_t nParams = cosmoPar_name.size();
   checkDim(cosmoPar_prior, nParams, "cosmoPar_prior");
 
-  vector<shared_ptr<statistics::Parameter>> ll_parameters;
+  vector<statistics::ParameterType> cosmoPar_type(nParams, statistics::ParameterType::_Base_);
+  vector<string> cosmoPar_string(nParams);
 
-  for(int i=0; i<nParams; i++){
-    m_map_cosmoPar[cosmoPar_name[i]] = move(make_shared<statistics::BaseParameter>(cosmobl::statistics::BaseParameter(cosmoPar_prior[i], cosmobl::cosmology::CosmoPar_name (cosmoPar_name[i])))); 
-    ll_parameters.push_back(m_map_cosmoPar[cosmoPar_name[i]]);
-  }
-
-  set_parameters(ll_parameters);
+  for (size_t i=0; i<nParams; i++)
+    cosmoPar_string[i] = CosmologicalParameter_name(cosmoPar_name[i]);
 
   m_data_model.cosmology = m_cosmology;
   m_data_model.Cpar = cosmoPar_name;
   m_data_model.data_type = m_data_type;
 
   if(distance_prior != par::defaultString){
-    m_data_model.distance_prior = cosmobl::modelling::cosmology::CMB_DistancePrior::Create(distance_prior);
-    m_data_fit = cosmobl::data::join_dataset({m_data, m_data_model.distance_prior->dataset()});
+    m_data_model.distance_prior = cbl::modelling::cosmology::CMB_DistancePrior::Create(distance_prior);
+    m_data_fit = cbl::data::join_dataset({m_data, m_data_model.distance_prior->dataset()});
     m_fit_range = true;
   }
 
   // input data used to construct the model
   auto inputs = make_shared<STR_data_model_cosmology>(m_data_model);
 
+  // set the priors
+  m_set_prior(cosmoPar_prior);
+
   // construct the model
   if(distance_prior != par::defaultString)
-    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&cosmobl::modelling::cosmology::cosmological_measurements_model_CMB_DistancePrior, inputs));
+    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&cbl::modelling::cosmology::cosmological_measurements_model_CMB_DistancePrior, nParams, cosmoPar_type, cosmoPar_string, inputs));
   else
-    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&cosmobl::modelling::cosmology::cosmological_measurements_model, inputs));
+    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&cbl::modelling::cosmology::cosmological_measurements_model, nParams, cosmoPar_type, cosmoPar_string, inputs));
 }

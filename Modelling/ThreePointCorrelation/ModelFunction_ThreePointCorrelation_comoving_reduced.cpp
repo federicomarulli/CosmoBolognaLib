@@ -37,12 +37,14 @@
 
 #include "ModelFunction_ThreePointCorrelation_comoving_reduced.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
 
-vector<double> cosmobl::modelling::threept::Q_nonlinear_localbias (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::threept::Q_nonlinear_localbias (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   (void)theta;
 
@@ -65,7 +67,7 @@ vector<double> cosmobl::modelling::threept::Q_nonlinear_localbias (const vector<
 
 // ============================================================================================
 
-vector<double> cosmobl::modelling::threept::Q_nonlinear_nonlocalbias (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::threept::Q_nonlinear_nonlocalbias (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   (void)theta;
 
@@ -88,7 +90,7 @@ vector<double> cosmobl::modelling::threept::Q_nonlinear_nonlocalbias (const vect
 
 // ============================================================================================
 
-vector<double> cosmobl::modelling::threept::Q_nonlinear_nonlocalbias_alpha (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::threept::Q_nonlinear_nonlocalbias_alpha (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   (void)theta;
 

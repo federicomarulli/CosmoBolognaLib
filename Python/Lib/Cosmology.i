@@ -2,7 +2,7 @@
 
 %module cblCosmology
 
-%shared_ptr(cosmobl::cosmology::Cosmology);
+%shared_ptr(cbl::cosmology::Cosmology);
 
 %{
 #include "Cosmology.h"
@@ -10,4 +10,4 @@
 
 %include "Cosmology.h"
 
-%template(CosmoParVector) std::vector<cosmobl::cosmology::CosmoPar>;
+%template(CosmologicalParameterVector) std::vector<cbl::cosmology::CosmologicalParameter>;

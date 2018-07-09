@@ -1,1 +1,1 @@
-emacs ../../Headers/Lib/Modelling_ThreePointCorrelation*.h ../../Headers/Lib/ModelFunction_ThreePointCorrelation*.h *.cpp &
+emacs ../../Headers/Modelling_ThreePointCorrelation*.h ../../Headers/ModelFunction_ThreePointCorrelation*.h *.cpp &

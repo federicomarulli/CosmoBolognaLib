@@ -35,14 +35,16 @@
 #include "recombination.Recfast.h"
 #include "cosmology.Recfast.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // =====================================================================================
 
 
 //redshift at wich occurs baryon photon decoupling, see Hu & Sugiyama (1996).
-double cosmobl::cosmology::Cosmology::z_decoupling() const
+double cbl::cosmology::Cosmology::z_decoupling() const
 {
   double ombh2 = m_Omega_baryon*m_hh*m_hh;
   double omdmh2 = m_Omega_CDM*m_hh*m_hh;
@@ -57,7 +59,7 @@ double cosmobl::cosmology::Cosmology::z_decoupling() const
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::z_drag() const
+double cbl::cosmology::Cosmology::z_drag() const
 {
   double wb = m_Omega_baryon*m_hh*m_hh;
   double wb2 = wb*wb;
@@ -91,7 +93,7 @@ double cosmobl::cosmology::Cosmology::z_drag() const
 
   Xe_frac(&params[0], &zarr[0], &Xe_H[0], &Xe_He[0], &Xe[0], &TM[0], 0);
 
-  double HHc = m_hh*100*pow(cosmobl::par::kilo*cosmobl::par::pc, -1);
+  double HHc = m_hh*100*pow(cbl::par::kilo*cbl::par::pc, -1);
   double cc_m = par::cc*1000.;
 
   double rho_cr = 3.*pow(HHc, 2)/(8.*par::pi*par::GN);
@@ -136,7 +138,7 @@ double cosmobl::cosmology::Cosmology::z_drag() const
 
 // Sound horizon at drag epoch
 
-double cosmobl::cosmology::Cosmology::rs (const string method_Pk, const double T_CMB) const
+double cbl::cosmology::Cosmology::rs (const string method_Pk, const double T_CMB) const
 {
   if (method_Pk=="EisensteinHu") 
     return rs_EH(T_CMB);
@@ -145,7 +147,7 @@ double cosmobl::cosmology::Cosmology::rs (const string method_Pk, const double T
     return rs_CAMB();
 
   else
-    return ErrorCBL("Error in cosmobl::cosmology::Cosmology::rs of BAO.cpp: 'method_Pk' not allowed!");
+    return ErrorCBL("Error in cbl::cosmology::Cosmology::rs of BAO.cpp: 'method_Pk' not allowed!");
 }
 
 
@@ -153,7 +155,7 @@ double cosmobl::cosmology::Cosmology::rs (const string method_Pk, const double T
 
 // Sound horizon at drag epoch (Eisentein & Hu 1998, Section 2.1)
 
-double cosmobl::cosmology::Cosmology::rs_EH (const double T_CMB) const
+double cbl::cosmology::Cosmology::rs_EH (const double T_CMB) const
 {
   double Om0h2 = m_Omega_matter*pow(m_hh,2);
   double Ombh2 = m_Omega_baryon*pow(m_hh,2);
@@ -178,7 +180,7 @@ double cosmobl::cosmology::Cosmology::rs_EH (const double T_CMB) const
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::rs_CAMB () const
+double cbl::cosmology::Cosmology::rs_CAMB () const
 {
   double wcb= m_Omega_matter*pow(m_hh,2);
   double wb= m_Omega_baryon*pow(m_hh,2);
@@ -192,7 +194,7 @@ double cosmobl::cosmology::Cosmology::rs_CAMB () const
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::ys (const double redshift, const string method_Pk, const double T_CMB) const
+double cbl::cosmology::Cosmology::ys (const double redshift, const string method_Pk, const double T_CMB) const
 {
   return rs(method_Pk, T_CMB)/((m_unit) ? D_V(redshift)/m_hh : D_V(redshift));
 }
@@ -201,7 +203,7 @@ double cosmobl::cosmology::Cosmology::ys (const double redshift, const string me
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::Az (const double redshift) const
+double cbl::cosmology::Cosmology::Az (const double redshift) const
 {
   return ((m_unit) ? D_V(redshift)/m_hh : D_V(redshift))*1.e2*sqrt(m_Omega_matter*m_hh*m_hh)/(par::cc*redshift);
 }
@@ -210,7 +212,7 @@ double cosmobl::cosmology::Cosmology::Az (const double redshift) const
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::sound_speed(const double redshift, const double T_CMB) const
+double cbl::cosmology::Cosmology::sound_speed(const double redshift, const double T_CMB) const
 {
   double rho_b = 3.*pow(100.*m_hh/par::cc, 2)*m_Omega_baryon; // Mpc^-2
 
@@ -227,7 +229,7 @@ double cosmobl::cosmology::Cosmology::sound_speed(const double redshift, const d
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::rs_integrand (const double a, const double T_CMB) const
+double cbl::cosmology::Cosmology::rs_integrand (const double a, const double T_CMB) const
 {
   double redshift=1./a-1;
 
@@ -247,7 +249,7 @@ double cosmobl::cosmology::Cosmology::rs_integrand (const double a, const double
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::rs (const double redshift, const double T_CMB) const
+double cbl::cosmology::Cosmology::rs (const double redshift, const double T_CMB) const
 {
   function<double(double)> integrand = bind(&Cosmology::rs_integrand, this, std::placeholders::_1, T_CMB);
   double a = 1./(1+redshift);
@@ -258,7 +260,7 @@ double cosmobl::cosmology::Cosmology::rs (const double redshift, const double T_
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::linear_point (const double redshift, const double rmin, const double rmax, const int nbinr, const string interpType)
+vector<double> cbl::cosmology::Cosmology::linear_point (const double redshift, const double rmin, const double rmax, const int nbinr, const string interpType)
 {
   vector<double> rr = linear_bin_vector(nbinr, rmin, rmax);
 
@@ -269,9 +271,9 @@ vector<double> cosmobl::cosmology::Cosmology::linear_point (const double redshif
     Pk[i] = pow(10., Pk[i]);
   }
 
-  vector<double> xi = cosmobl::fftlog::transform_FFTlog(rr, 1, kk, Pk);
+  vector<double> xi = cbl::fftlog::transform_FFTlog(rr, 1, kk, Pk);
 
-  cosmobl::glob::FuncGrid xi_interp(rr, xi, interpType);
+  cbl::glob::FuncGrid xi_interp(rr, xi, interpType);
 
   double rsCAMB = rs_CAMB();
   vector<double> boundaries = {rsCAMB-5, rsCAMB+5};

@@ -40,10 +40,12 @@ Other contributors:
   - Jacopo Neri (mass function)
   - Mauro Roncarelli (fast comoving distance estimator) 
   - Tommaso Ronconi (void number counts)
+  - Akke Viitanen (code validation)
 
 
 -----------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------
+
 
 A @b configured @b virtual @b development @b environment to use the
 CosmoBolognaLib is avaliable here:
@@ -101,26 +103,12 @@ project g++ compile (>=v4.8.4 is required); both the compiler and the
 compilation flags can be specified by modifying the variables C and
 FLAGS defined in the Makefile (e.g.: make C=icpc FLAGS="-O0 -g")
 
-  - optionally, the following external softwares used by the CosmoBolognaLib can be compiled with the following commands:
-
-> <KBD> $ make fftlog-f90 </KBD> 
-
-> <KBD> $ make CAMB </KBD> 
-
-> <KBD> $ make CLASS </KBD> 
-
-> <KBD> $ make CLASSpy </KBD>  [ ---> compile the Python wrapper for CLASS) ]
-
-> <KBD> $ make MPTbreeze </KBD> 
-
-> <KBD> $ make mangle </KBD> 
-
   - other Makefile options are:
 
 > <KBD> $ make lib* </KBD> [ ---> compile the * library (e.g. make libFUNC will compile the library libFUNC.so) ]
 
 > <KBD> $ make python </KBD> [ ---> compile the Python wrappers (SWIG
-  >v3.0 is required); in this case, CosmoBolognaLib/Python/ has to be added in PYTHONPATH (e.g. in .bashrc add the following line: export PYTHONPATH=$PYTHONPATH:/path_to/CosmoBolognaLib/Python/) ]
+  >=v3.0.7 is required); in this case, CosmoBolognaLib/Python/ has to be added in PYTHONPATH (e.g. in .bashrc add the following line: export PYTHONPATH=$PYTHONPATH:/path_to/CosmoBolognaLib/Python/) ]
 
 > <KBD> $ make cleanpy </KBD> [ ---> remove the Python wrappers ]
     
@@ -136,5 +124,21 @@ FLAGS defined in the Makefile (e.g.: make C=icpc FLAGS="-O0 -g")
 
 > <KBD> $ make purgeALL </KBD>  [---> make purge + make cleanpy + remove all the files stored for internal calculations ]
    
+  - optionally, the following external softwares used by the CosmoBolognaLib can be compiled with the following commands:
+
+> <KBD> $ make CUBA </KBD>
+
+> <KBD> $ make CCfits </KBD>
+
+> <KBD> $ make CAMB </KBD> 
+
+> <KBD> $ make CLASS </KBD> 
+
+> <KBD> $ make CLASSpy </KBD>  [ ---> compile the Python wrapper for CLASS) ]
+
+> <KBD> $ make MPTbreeze </KBD> 
+
+> <KBD> $ make mangle </KBD>
+
 */
 	

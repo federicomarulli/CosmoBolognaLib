@@ -15,7 +15,7 @@ import CosmoBolognaLib as cbl
 
 ### define the cosmological model, with default parameters ###
 
-cosmology = cbl.Cosmology()
+cosmology = cbl.Cosmology(cbl.CosmologicalModel__Planck15_)
 
 
 ### Input/Output files and directories ###
@@ -32,7 +32,7 @@ os.system("mkdir -p "+dir_output+" "+dir_pairs)
 
 print ("I'm reading the input catalogue...")
 
-catalogue = cbl.Catalogue(cbl.EnumTypes._Galaxy_, cbl.EnumTypes._observedCoordinates_, file_catalogue, cosmology)
+catalogue = cbl.Catalogue(cbl.ObjectType__Galaxy_, cbl.CoordinateType__observed_, file_catalogue, cosmology)
 
 
 ### construct the random catalogue (with cubic geometry) ###
@@ -40,22 +40,22 @@ catalogue = cbl.Catalogue(cbl.EnumTypes._Galaxy_, cbl.EnumTypes._observedCoordin
 print ("I'm creating the catalogue...")
 
 N_R = 1 # random/object ratio
-random_catalogue = cbl.Catalogue(cbl.EnumTypes._createRandom_box_, catalogue, N_R)
+random_catalogue = cbl.Catalogue(cbl.RandomType__createRandom_box_, catalogue, N_R)
 
 
 ### measure the monopole of the two-point correlation function ###
   
 # binnig parameters #
-rMin = 1.   # minimum separation 
-rMax = 50.  # maximum separation 
-nbins = 20  # number of bins
+rMin = 5.   # minimum separation 
+rMax = 20.  # maximum separation 
+nbins = 5  # number of bins
 shift = 0.5 # spatial shift used to set the bin centre 
 
 # create the object used to measure the two-point correlation function #
-TwoP = cbl.TwoPointCorrelation1D_monopole(catalogue, random_catalogue, cbl.EnumTypes._logarithmic_, rMin, rMax, nbins, shift)
+TwoP = cbl.TwoPointCorrelation1D_monopole(catalogue, random_catalogue, cbl.BinType__logarithmic_, rMin, rMax, nbins, shift)
 
 # measure the two-point correlation function #
-TwoP.measure(cbl.EnumTypes._Poisson_, dir_pairs)
+TwoP.measure(cbl.ErrorType__Poisson_, dir_pairs)
 
 # store the output data #
 file_xi = "xi.dat"

@@ -33,13 +33,15 @@
 
 #include "Cosmology.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::bias_halo (const double Mass, const double redshift, const string author, const string method_SS, const string output_root, const string interpType, const double Delta, const double kk, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::Cosmology::bias_halo (const double Mass, const double redshift, const string author, const string method_SS, const string output_root, const string interpType, const double Delta, const double kk, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
   const double SSS = sigma2M(Mass, method_SS, 0., output_root, interpType, k_max, input_file, is_parameter_file); 
   const double Sigma = sqrt(SSS); 
@@ -56,7 +58,7 @@ double cosmobl::cosmology::Cosmology::bias_halo (const double Mass, const double
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::bias_halo (const double Mass, const double Sigma, const double redshift, const string model_bias, const string output_root, const string interpType, const double Delta, const double kk, const int norm, const double k_min, const double k_max, const double prec, const string method_SS, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::Cosmology::bias_halo (const double Mass, const double Sigma, const double redshift, const string model_bias, const string output_root, const string interpType, const double Delta, const double kk, const int norm, const double k_min, const double k_max, const double prec, const string method_SS, const string input_file, const bool is_parameter_file) 
 {
   double bias = m_bias_halo_generator(Sigma, redshift, model_bias, Delta); 
 
@@ -70,7 +72,7 @@ double cosmobl::cosmology::Cosmology::bias_halo (const double Mass, const double
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::m_bias_halo_generator (const double Sigma, const double redshift, const string author, const double Delta) const
+double cbl::cosmology::Cosmology::m_bias_halo_generator (const double Sigma, const double redshift, const string author, const double Delta) const
 {
   const double deltacz = deltac(redshift);
   const double sigmaz = Sigma*DD(redshift)/DD(0.);
@@ -83,8 +85,8 @@ double cosmobl::cosmology::Cosmology::m_bias_halo_generator (const double Sigma,
     double ni = pow(deltacz/sigmaz, 2); 
     bias = 1.+(aa*ni-1.)/deltacz+(2.*pp/deltacz)/(1.+pow(aa*ni,pp));
   }
-  
-  if (author=="SMT01") {
+
+  else if (author=="SMT01") {
     double aa = 0.707;
     double bb = 0.5;
     double cc = 0.6;
@@ -92,7 +94,7 @@ double cosmobl::cosmology::Cosmology::m_bias_halo_generator (const double Sigma,
     bias = 1.+1./(sqrt(aa)*deltacz)*(sqrt(aa)*aa*pow(ni,2.)+sqrt(aa)*bb*pow(aa*pow(ni,2.),1.-cc)-pow(aa*pow(ni,2.),cc)/(pow(aa*pow(ni,2.),cc)+bb*(1.-cc)*(1.-cc*0.5)));
   }
   
-  if (author=="SMT01_WL04") {
+  else if (author=="SMT01_WL04") {
     double aa = 0.707;
     double bb = 0.5;
     double cc = 0.6;
@@ -101,7 +103,7 @@ double cosmobl::cosmology::Cosmology::m_bias_halo_generator (const double Sigma,
     bias = 1.+1./deltacz*(pow(niI,2.)+bb*pow(niI,2.*(1.-cc))-pow(niI,2.*cc)/sqrt(aa)/(pow(niI,2.*cc)+bb*(1.-cc)*(1.-cc*0.5)));
   }
   
-  if (author=="Tinker") { // Tinker et al. (2010)
+  else if (author=="Tinker") { // Tinker et al. (2010)
     double yy = log10(Delta);
     double AA = 1.+0.24*yy*exp(-pow(4./yy,4));
     double aa = 0.44*yy-0.88;
@@ -113,10 +115,8 @@ double cosmobl::cosmology::Cosmology::m_bias_halo_generator (const double Sigma,
     bias = 1.-AA*pow(ni,aa)/(pow(ni,aa)+pow(1.686,aa))+BB*pow(ni,bb)+CC*pow(ni,ccc);
   }
   
-  if (bias<-100) {
-    string Err = "Error in cosmobl::cosmology::Cosmology::bias_halo of Bias.cpp: author = " + author + "!";
-    ErrorCBL(Err);
-  }
+  else
+    ErrorCBL("Error in cbl::cosmology::Cosmology::m_bias_halo_generator() of Bias.cpp: author = " + author + "!");
   
   return bias;
 }
@@ -125,7 +125,7 @@ double cosmobl::cosmology::Cosmology::m_bias_halo_generator (const double Sigma,
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::bias_eff (const double Mass_min, const double Mass_max, const double redshift, const string model_bias, const string model_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::Cosmology::bias_eff (const double Mass_min, const double Mass_max, const double redshift, const string model_bias, const string model_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
   // ---------- create/read the grid file with sigma(M) and its derivative ---------- 
   
@@ -145,7 +145,7 @@ double cosmobl::cosmology::Cosmology::bias_eff (const double Mass_min, const dou
   }
   
   if (mass.size()==0)
-    ErrorCBL("Error in cosmobl::cosmology::Cosmology::bias_eff() of Bias.cpp: mass.size()=0!");
+    ErrorCBL("Error in cbl::cosmology::Cosmology::bias_eff() of Bias.cpp: mass.size()=0!");
   
 
   // ---------- compute the effective bias ---------- 
@@ -168,7 +168,7 @@ double cosmobl::cosmology::Cosmology::bias_eff (const double Mass_min, const dou
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::bias_eff (const vector<double> MM, const vector<double> MF, const double redshift, const string model_bias, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::Cosmology::bias_eff (const vector<double> MM, const vector<double> MF, const double redshift, const string model_bias, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
   // ---------- create/read the grid file with sigma(M) and its derivative ---------- 
   
@@ -187,7 +187,7 @@ double cosmobl::cosmology::Cosmology::bias_eff (const vector<double> MM, const v
   }
   
   if (mass.size()==0) { 
-    string Err = "Error in cosmobl::cosmology::Cosmology::bias_eff of Bias.cpp: mass.size()=0, Min(MM) = " + conv(Min(MM),par::fDP3) + ", Max(MM) = " + conv(Max(MM),par::fDP3) + ", file_grid = " + file_grid;
+    string Err = "Error in cbl::cosmology::Cosmology::bias_eff of Bias.cpp: mass.size()=0, Min(MM) = " + conv(Min(MM),par::fDP3) + ", Max(MM) = " + conv(Max(MM),par::fDP3) + ", file_grid = " + file_grid;
     ErrorCBL(Err);
   }
   
@@ -202,7 +202,7 @@ double cosmobl::cosmology::Cosmology::bias_eff (const vector<double> MM, const v
     sig = interpolated(MM[k], mass, sigma, "Linear");
     
     if (err/sig>0.1) { 
-      string Err = "Error in cosmobl::cosmology::Cosmology::bias_eff of Bias.cpp: err/sig = " + conv(err/sig, par::fDP3) + "!";
+      string Err = "Error in cbl::cosmology::Cosmology::bias_eff of Bias.cpp: err/sig = " + conv(err/sig, par::fDP3) + "!";
       ErrorCBL(Err);
     } 
 
@@ -217,7 +217,7 @@ double cosmobl::cosmology::Cosmology::bias_eff (const vector<double> MM, const v
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::bias_eff_mass_grid (const vector<double> MM, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType, const string output_root, const double Delta_crit, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+vector<double> cbl::cosmology::Cosmology::bias_eff_mass_grid (const vector<double> MM, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType, const string output_root, const double Delta_crit, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
   // ---------- create/read the grid file with sigma(M) and its derivative ---------- 
   
@@ -236,7 +236,7 @@ vector<double> cosmobl::cosmology::Cosmology::bias_eff_mass_grid (const vector<d
   }
   
   if (mass.size()==0) { 
-    string Err = "Error in cosmobl::cosmology::Cosmology::bias_eff of Bias.cpp: mass.size()=0, Min(MM) = " + conv(Min(MM),par::fDP3) + ", Max(MM) = " + conv(Max(MM),par::fDP3) + ", file_grid = " + file_grid;
+    string Err = "Error in cbl::cosmology::Cosmology::bias_eff of Bias.cpp: mass.size()=0, Min(MM) = " + conv(Min(MM),par::fDP3) + ", Max(MM) = " + conv(Max(MM),par::fDP3) + ", file_grid = " + file_grid;
     ErrorCBL(Err);
   }
   
@@ -244,7 +244,7 @@ vector<double> cosmobl::cosmology::Cosmology::bias_eff_mass_grid (const vector<d
   // ---------- compute the effective bias ---------- 
 
   if (meanType!="mean_bias" && meanType!="pair_mean_bias")
-    ErrorCBL("Error in cosmobl::cosmology::Cosmology::bias_eff_mass_grid of Bias.cpp: the chosen meanType is not allowed!");
+    ErrorCBL("Error in cbl::cosmology::Cosmology::bias_eff_mass_grid of Bias.cpp: the chosen meanType is not allowed!");
   
   if (meanType=="mean_bias") {
     vector<double> bias(MM.size());
@@ -254,7 +254,7 @@ vector<double> cosmobl::cosmology::Cosmology::bias_eff_mass_grid (const vector<d
       bias[k] = bias_halo(MM[k], interpolated(MM[k], mass, sigma, "Linear"), zz, model_bias, output_root, interpType, Delta_vir(Delta_crit, zz), kk, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
     }
     
-    return {Average(bias), cosmobl::Sigma(bias)/sqrt(MM.size())};
+    return {Average(bias), cbl::Sigma(bias)/sqrt(MM.size())};
   }
 
   else {
@@ -268,7 +268,7 @@ vector<double> cosmobl::cosmology::Cosmology::bias_eff_mass_grid (const vector<d
       }
     }
     
-    return {sqrt(Average(bias2)), sqrt(cosmobl::Sigma(bias2)/sqrt(MM.size()))};
+    return {sqrt(Average(bias2)), sqrt(cbl::Sigma(bias2)/sqrt(MM.size()))};
   }
 }
 
@@ -276,37 +276,49 @@ vector<double> cosmobl::cosmology::Cosmology::bias_eff_mass_grid (const vector<d
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::bias_eff_mass (const vector<double> MM, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+vector<double> cbl::cosmology::Cosmology::bias_eff_mass (const vector<double> MM, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
   if (meanType!="mean_bias" && meanType!="pair_mean_bias")
-    ErrorCBL("Error in cosmobl::cosmology::Cosmology::bias_eff_mass_grid of Bias.cpp: the chosen meanType is not allowed!");
-
-  if (meanType=="mean_bias") {
+    ErrorCBL("Error in cbl::cosmology::Cosmology::bias_eff_mass of Bias.cpp: the chosen meanType is not allowed!");
   
+  if (meanType=="mean_bias") {
+
     vector<double> bias(MM.size());
 
-    for (size_t k=0; k<MM.size(); k++) {
-      const double sigma = sqrt(sigma2M(MM[k], method_SS, 0., output_root, interpType, k_max, input_file, is_parameter_file, true));	      
-      bias[k] = bias_halo(MM[k], sigma, (redshift.size()>1) ? redshift[k] : redshift[0], model_bias, output_root, interpType, Delta, kk, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
+#pragma omp parallel num_threads(omp_get_max_threads())
+    {
+      
+#pragma omp for schedule(static, 2)
+      for (size_t k=0; k<MM.size(); k++) {
+	const double sigma = sqrt(sigma2M(MM[k], method_SS, 0., output_root, interpType, k_max, input_file, is_parameter_file, true));	      
+	bias[k] = bias_halo(MM[k], sigma, (redshift.size()>1) ? redshift[k] : redshift[0], model_bias, output_root, interpType, Delta, kk, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
+      }
+
     }
     
-    return {Average(bias), cosmobl::Sigma(bias)/sqrt(MM.size())};
+    return {Average(bias), cbl::Sigma(bias)/sqrt(MM.size())};
   }
 
   else {
     vector<double> bias2(MM.size());
-    
-    for (size_t k=0; k<MM.size(); ++k)  {
-      const double z1 = (redshift.size()>1) ? redshift[k] : redshift[0];
-      const double sigma1 = sqrt(sigma2M(MM[k], method_SS, 0., output_root, interpType, k_max, input_file, is_parameter_file, true));
-      for (size_t l=k+1; l<MM.size(); ++l) {
-	const double z2 = (redshift.size()>1) ? redshift[l] : redshift[0];
-	const double sigma2 = sqrt(sigma2M(MM[l], method_SS, 0., output_root, interpType, k_max, input_file, is_parameter_file, true));
-	bias2[k] = bias_halo(MM[k], sigma1, z1, model_bias, output_root, interpType, Delta, kk, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file)*bias_halo(MM[l], sigma2, z2, model_bias, output_root, interpType, Delta, kk, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
+
+#pragma omp parallel num_threads(omp_get_max_threads())
+    {
+      
+#pragma omp for schedule(static, 2)
+      for (size_t k=0; k<MM.size(); ++k)  {
+	const double z1 = (redshift.size()>1) ? redshift[k] : redshift[0];
+	const double sigma1 = sqrt(sigma2M(MM[k], method_SS, 0., output_root, interpType, k_max, input_file, is_parameter_file, true));
+	for (size_t l=k+1; l<MM.size(); ++l) {
+	  const double z2 = (redshift.size()>1) ? redshift[l] : redshift[0];
+	  const double sigma2 = sqrt(sigma2M(MM[l], method_SS, 0., output_root, interpType, k_max, input_file, is_parameter_file, true));
+	  bias2[k] = bias_halo(MM[k], sigma1, z1, model_bias, output_root, interpType, Delta, kk, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file)*bias_halo(MM[l], sigma2, z2, model_bias, output_root, interpType, Delta, kk, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
+	}
       }
+
     }
     
-    return {sqrt(Average(bias2)), sqrt(cosmobl::Sigma(bias2)/sqrt(MM.size()))};
+    return {sqrt(Average(bias2)), sqrt(cbl::Sigma(bias2)/sqrt(MM.size()))};
   }
 
 }
@@ -315,31 +327,26 @@ vector<double> cosmobl::cosmology::Cosmology::bias_eff_mass (const vector<double
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::bias_eff_mass (const vector<double> mass,  const vector<double> mass_grid,  const vector<double> redshift, const string model_bias, const string method_SS, const string meanType, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+vector<double> cbl::cosmology::Cosmology::bias_eff_mass (const vector<double> mass,  const vector<double> mass_grid,  const vector<double> redshift, const string model_bias, const string method_SS, const string meanType, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
   if (meanType!="mean_bias" && meanType!="pair_mean_bias")
-    ErrorCBL("Error in cosmobl::cosmology::Cosmology::bias_eff_mass_grid of Bias.cpp: the chosen meanType is not allowed!");
-
+    ErrorCBL("Error in cbl::cosmology::Cosmology::bias_eff_mass of Bias.cpp: the chosen meanType is not allowed!");
+  
   vector<double> Sigma;
+  
   for (size_t k=0; k<mass_grid.size(); k++)
     Sigma.emplace_back(sqrt(sigma2M(mass_grid[k], method_SS, 0., output_root, interpType, k_max, input_file, is_parameter_file, true)));
   glob::FuncGrid sigma_interp(mass_grid, Sigma, "Spline");
 
-  
   if (meanType=="mean_bias") {
-    
     vector<double> bias(mass.size());
-    
     for (size_t k=0; k<mass.size(); k++) 
       bias[k] = bias_halo(mass[k], sigma_interp(mass[k]), (redshift.size()>1) ? redshift[k] : redshift[0], model_bias, output_root, interpType, Delta, kk, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
-    
-    return {Average(bias), cosmobl::Sigma(bias)/sqrt(mass.size())};
-
+    return {Average(bias), cbl::Sigma(bias)/sqrt(mass.size())};
   }
 
   else {
     vector<double> bias2(mass.size());
-    
     for (size_t k=0; k<mass.size(); k++) {
       const double z1 = (redshift.size()>1) ? redshift[k] : redshift[0];
       for (size_t l=k+1; l<mass.size(); ++l) {
@@ -348,7 +355,7 @@ vector<double> cosmobl::cosmology::Cosmology::bias_eff_mass (const vector<double
       }
     }
     
-    return {sqrt(Average(bias2)), sqrt(cosmobl::Sigma(bias2)/sqrt(mass.size()))};
+    return {sqrt(Average(bias2)), sqrt(cbl::Sigma(bias2)/sqrt(mass.size()))};
   }
 }
 
@@ -356,7 +363,7 @@ vector<double> cosmobl::cosmology::Cosmology::bias_eff_mass (const vector<double
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DlnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const vector<double> redshift, const string model_bias, const string model_MF, const string method_SS, const double alpha, const string output_root, const double Delta_crit, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
+vector<double> cbl::cosmology::Cosmology::bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DlnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const vector<double> redshift, const string model_bias, const string model_MF, const string method_SS, const double alpha, const string output_root, const double Delta_crit, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
 { 
   vector<double> Bias_eff(redshift.size(), 0.);
 
@@ -403,7 +410,7 @@ vector<double> cosmobl::cosmology::Cosmology::bias_eff_selection_function (const
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DlnSigma, const glob::FuncGrid2D interp_SF, const double Mass_min, const double Mass_max, const vector<double> redshift, const string model_bias, const string model_MF, const string method_SS, const double alpha, const string output_root, const double Delta_crit, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
+vector<double> cbl::cosmology::Cosmology::bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DlnSigma, const glob::FuncGrid2D interp_SF, const double Mass_min, const double Mass_max, const vector<double> redshift, const string model_bias, const string model_MF, const string method_SS, const double alpha, const string output_root, const double Delta_crit, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
 { 
   vector<double> Bias_eff(redshift.size(), 0.);
 
@@ -450,7 +457,7 @@ vector<double> cosmobl::cosmology::Cosmology::bias_eff_selection_function (const
 // =====================================================================================
 
 
-vector<double> cosmobl::cosmology::Cosmology::bias_eff_selection_function (const double Mass_min, const double Mass_max, const vector<double> redshift, const string model_bias, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> column, const double alpha, const string output_root, const double Delta_crit, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
+vector<double> cbl::cosmology::Cosmology::bias_eff_selection_function (const double Mass_min, const double Mass_max, const vector<double> redshift, const string model_bias, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> column, const double alpha, const string output_root, const double Delta_crit, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
 {  
   // ---------- create/read the grid file with sigmaM, dlnsigmaM ---------- 
   
@@ -470,7 +477,7 @@ vector<double> cosmobl::cosmology::Cosmology::bias_eff_selection_function (const
   }
   
   if (mass.size()==0) { 
-    string Err = "Error in cosmobl::cosmology::Cosmology::bias_eff of Bias.cpp: mass.size()=0, Mass_min = " + conv(Mass_min,par::fDP3) + ", Mass_max = " + conv(Mass_max,par::fDP3) + ", file_grid = " + file_grid;
+    string Err = "Error in cbl::cosmology::Cosmology::bias_eff of Bias.cpp: mass.size()=0, Mass_min = " + conv(Mass_min,par::fDP3) + ", Mass_max = " + conv(Mass_max,par::fDP3) + ", file_grid = " + file_grid;
     ErrorCBL(Err);
   }
   
@@ -498,27 +505,41 @@ vector<double> cosmobl::cosmology::Cosmology::bias_eff_selection_function (const
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar (vector<double> &parameter, vector<double> &bias_eff, const string dir_output, const string file_bias_eff_grid, const cosmobl::cosmology::CosmoPar cosmoPar, const double min_par, const double max_par, const int nbin_par, const vector<double> mass, const vector<double> mass_grid, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
+void cbl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar (vector<double> &parameter, vector<double> &bias_eff, const string dir_output, const string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const vector<double> mass, const vector<double> mass_grid, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file, const cbl::cosmology::Cosmology cosmology_mass, const vector<double> redshift_source)
 {
   const double defaultValue = value(cosmoPar);
-
+  
   const string file = dir_output+file_bias_eff_grid;
-
+ 
   ifstream fin(file.c_str());
-
+  
   if (!fin) {
-    vector<double> pp = linear_bin_vector(nbin_par, min_par, max_par);
     
-    ofstream fout(file.c_str());
+    vector<double> pp = linear_bin_vector(nbin_par, min_par, max_par);
+   
+    ofstream fout(file.c_str()); checkIO(fout, file);
+
     for (int i=0; i<nbin_par; i++) {
       set_parameter(cosmoPar, pp[i]);
-      fout << pp[i] << "  " << bias_eff_mass(mass, mass_grid, redshift, model_bias, method_SS, meanType, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)[0] << endl;
+      
+      (void)cosmology_mass;
+      (void)redshift_source;
+      /*
+      // convert the masses in the new cosmology, if they were computed in a different cosmology
+      vector<double> _mass(mass.size());
+      for (size_t mm=0; mm<mass.size(); mm++) 
+	_mass[mm] = converted_mass(mass[mm], cosmology_mass, redshift[mm], (redshift_source.size()==redshift.size()) ? redshift_source[mm] : 0.);
+      */
+      
+      fout << pp[i] << "  " << bias_eff_mass(/*_*/mass, mass_grid, redshift, model_bias, method_SS, meanType, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)[0] << endl;
+      
     }
     fout.clear(); fout.close();
   }
  
   fin.clear(); fin.close();
-  fin.open(file.c_str());
+
+  fin.open(file.c_str()); checkIO(fin, file);
   
   parameter.erase(parameter.begin(), parameter.end());
   bias_eff.erase(bias_eff.begin(), bias_eff.end());
@@ -532,7 +553,7 @@ void cosmobl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar (vector<
   }
   fin.clear(); fin.close();
 
-  if (parameter.size()<2) ErrorCBL("Error in cosmobl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar of Bias.cpp: parameter.size()<2; check the grid file: "+file+"!");
+  if (parameter.size()<2) ErrorCBL("Error in cbl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar of Bias.cpp: parameter.size()<2; check the grid file: "+file+"!");
   
   set_parameter(cosmoPar, defaultValue);
 }
@@ -541,23 +562,22 @@ void cosmobl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar (vector<
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar (vector<double> &parameter, vector<double> &bias_eff, const string dir_output, const string file_bias_eff_grid, const cosmobl::cosmology::CosmoPar cosmoPar, const double min_par, const double max_par, const int nbin_par, const double redshift, const double Mass_min, const double Mass_max, const string model_bias, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> column, const double alpha, const string output_root, const double Delta_crit, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
+void cbl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar (vector<double> &parameter, vector<double> &bias_eff, const string dir_output, const string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const double redshift, const double Mass_min, const double Mass_max, const string model_bias, const string model_MF, const string method_SS, const string selection_function_file, const vector<int> column, const double alpha, const string output_root, const double Delta_crit, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
 {
   const double defaultValue = value(cosmoPar);
 
   const string file = dir_output+file_bias_eff_grid;
 
   ifstream fin(file.c_str());
-
+  
   if (!fin) {
     const vector<double> pp = linear_bin_vector(nbin_par, min_par, max_par);
 
     ofstream fout(file.c_str());
 
-    if ((int)pp.size()<nbin_par) ErrorCBL("Error in cosmobl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar of Bias.cpp: "+conv(pp.size(), par::fINT)+" < nbin_par!");
+    if ((int)pp.size()<nbin_par) ErrorCBL("Error in cbl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar of Bias.cpp: "+conv(pp.size(), par::fINT)+" < nbin_par!");
 
     for (int i=0; i<nbin_par; i++) {
-
       set_parameter(cosmoPar, pp[i]);
 
       fout << pp[i] << "  " << bias_eff_selection_function(Mass_min, Mass_max, {redshift}, model_bias, model_MF, method_SS, selection_function_file, column, alpha, output_root, Delta_crit, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)[0] << endl;
@@ -583,7 +603,7 @@ void cosmobl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar (vector<
   }
   fin.clear(); fin.close();
   
-  if (parameter.size()<2) ErrorCBL("Error in cosmobl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar of Bias.cpp: parameter.size()<2; check the grid file: "+file+"!");
+  if (parameter.size()<2) ErrorCBL("Error in cbl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar of Bias.cpp: parameter.size()<2; check the grid file: "+file+"!");
   
   set_parameter(cosmoPar, defaultValue);
 }
@@ -592,8 +612,8 @@ void cosmobl::cosmology::Cosmology::generate_bias_eff_grid_one_cosmopar (vector<
 // =====================================================================================
 
 
-void cosmobl::cosmology::Cosmology::generate_bias_eff_grid_two_cosmopars (vector<double> &parameter1, vector<double> &parameter2, vector<vector<double>> &bias_eff, const string dir_output, const string file_bias_eff_grid, const cosmobl::cosmology::CosmoPar cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cosmobl::cosmology::CosmoPar cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const vector<double> mass, const vector<double> mass_grid, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
-{
+void cbl::cosmology::Cosmology::generate_bias_eff_grid_two_cosmopars (vector<double> &parameter1, vector<double> &parameter2, vector<vector<double>> &bias_eff, const string dir_output, const string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cbl::cosmology::CosmologicalParameter cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const vector<double> mass, const vector<double> mass_grid, const vector<double> redshift, const string model_bias, const string method_SS, const string meanType, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file, const cbl::cosmology::Cosmology cosmology_mass, const vector<double> redshift_source)
+{ 
   double defaultValue1 = value(cosmoPar1);
   double defaultValue2 = value(cosmoPar2);
   
@@ -605,13 +625,22 @@ void cosmobl::cosmology::Cosmology::generate_bias_eff_grid_two_cosmopars (vector
     vector<double> pp1 = linear_bin_vector(nbin_par1, min_par1, max_par1);
     vector<double> pp2 = linear_bin_vector(nbin_par2, min_par2, max_par2);
 
-    ofstream fout(file.c_str());
+    ofstream fout(file.c_str()); checkIO(fout, file);
 
     for (int i=0; i<nbin_par1; i++) {
       set_parameter(cosmoPar1, pp1[i]);
       for (int j=0; j<nbin_par2; j++) {
 	set_parameter(cosmoPar2, pp2[j]);
-	fout << pp1[i] << "  " << pp2[j] <<  "  " << bias_eff_mass(mass, mass_grid, redshift, model_bias, method_SS, meanType, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)[0] << endl;
+
+	// convert the masses in the new cosmology, if they were computed in a different cosmology
+	vector<double> _mass(mass.size());
+	for (size_t mm=0; mm<mass.size(); mm++) 
+	  _mass[mm] = converted_mass(mass[mm], cosmology_mass, redshift[mm], (redshift_source.size()==redshift.size()) ? redshift_source[mm] : 0.);
+	
+	const double bias = bias_eff_mass(/*_*/mass, mass_grid, redshift, model_bias, method_SS, meanType, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)[0];
+	
+	fout << pp1[i] << "  " << pp2[j] <<  "  " << bias << endl;
+	coutCBL << "parameter1 = " << pp1[i] << ",  parameter2 = " << pp2[j] <<  ", bias = " << bias << endl;
       }
       fout << endl;
     }

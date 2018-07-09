@@ -34,13 +34,15 @@
 
 #include "ModelFunction_Cosmology.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
 
 
-double cosmobl::modelling::cosmology::cosmological_measurements(const double redshift, const string data_type, const cosmobl::cosmology::Cosmology cosmology)
+double cbl::modelling::cosmology::cosmological_measurements(const double redshift, const string data_type, const cbl::cosmology::Cosmology cosmology)
 {
   if(data_type == "DV")
     return cosmology.D_V(redshift);
@@ -76,13 +78,13 @@ double cosmobl::modelling::cosmology::cosmological_measurements(const double red
     return cosmology.HH(redshift)*cosmology.rs();
 
   else if(data_type == "DH")
-    return cosmobl::par::cc/cosmology.HH(redshift);
+    return cbl::par::cc/cosmology.HH(redshift);
 
   else if (data_type == "DH/rs")
-    return cosmobl::par::cc/cosmology.HH(redshift)/cosmology.rs();
+    return cbl::par::cc/cosmology.HH(redshift)/cosmology.rs();
 
   else if (data_type == "rs/DH")
-    return cosmology.rs()/(cosmobl::par::cc/cosmology.HH(redshift));
+    return cosmology.rs()/(cbl::par::cc/cosmology.HH(redshift));
 
   else if (data_type == "DL")
     return cosmology.D_L(redshift);
@@ -96,13 +98,13 @@ double cosmobl::modelling::cosmology::cosmological_measurements(const double red
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::cosmology::cosmological_measurements_model(const vector<double> redshift, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::cosmology::cosmological_measurements_model(const vector<double> redshift, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model_cosmology> pp = static_pointer_cast<STR_data_model_cosmology>(inputs);
 
   // redefine the cosmology
-  cosmobl::cosmology::Cosmology cosmo = *pp->cosmology;
+  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
 
   // input likelihood parameters
 
@@ -113,8 +115,8 @@ vector<double> cosmobl::modelling::cosmology::cosmological_measurements_model(co
 
   vector<double> output;
 
-  for(size_t i=0; i<redshift.size(); i++)
-    output.push_back(cosmobl::modelling::cosmology::cosmological_measurements(redshift[i], pp->data_type[i], cosmo));
+  for(size_t i=0; i<redshift.size(); i++) 
+    output.push_back(cbl::modelling::cosmology::cosmological_measurements(redshift[i], pp->data_type[i], cosmo));
 
   return output;
 }
@@ -123,13 +125,13 @@ vector<double> cosmobl::modelling::cosmology::cosmological_measurements_model(co
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::cosmology::cosmological_measurements_model_CMB_DistancePrior(const vector<double> redshift, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::cosmology::cosmological_measurements_model_CMB_DistancePrior(const vector<double> redshift, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model_cosmology> pp = static_pointer_cast<STR_data_model_cosmology>(inputs);
 
   // redefine the cosmology
-  cosmobl::cosmology::Cosmology cosmo = *pp->cosmology;
+  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
 
   // input likelihood parameters
 
@@ -141,7 +143,7 @@ vector<double> cosmobl::modelling::cosmology::cosmological_measurements_model_CM
   vector<double> output;
 
   for(size_t i=0; i<redshift.size()-pp->distance_prior->dataset()->ndata(); i++)
-    output.push_back(cosmobl::modelling::cosmology::cosmological_measurements(redshift[i], pp->data_type[i], cosmo));
+    output.push_back(cbl::modelling::cosmology::cosmological_measurements(redshift[i], pp->data_type[i], cosmo));
 
   vector<double> mm = pp->distance_prior->model(cosmo);
   for(size_t i=0; i<mm.size(); i++)

@@ -23,7 +23,7 @@ cbl.SetDirs("../../../", "./")
 
 ### create an object of class Cosmology ###
 
-cosmo = cbl.Cosmology()
+cosmo = cbl.Cosmology(cbl.CosmologicalModel__Planck15_)
 
 
 ### define k and r for the computation of dark matter power spectrum and  two point correlation correlation function ###

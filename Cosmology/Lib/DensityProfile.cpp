@@ -34,20 +34,22 @@
 
 #include "Cosmology.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace glob;
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::concentration (const double Mass, const double redshift, const string author, const string profile, const string halo_def) const
+double cbl::cosmology::Cosmology::concentration (const double Mass, const double redshift, const string author, const string profile, const string halo_def) const
 {
   double AA, BB, CC;
   
   if (author=="Duffy") {
 
-    if (redshift>2) ErrorCBL("Error in cosmobl::cosmology::Cosmology::concentration() of DensityProfile.cpp: the concentration-mass relation by Duffy et al. has been tested only at z<2");
+    if (redshift>2) ErrorCBL("Error in cbl::cosmology::Cosmology::concentration() of DensityProfile.cpp: the concentration-mass relation by Duffy et al. has been tested only at z<2");
       
     if (profile=="NFW") {
       
@@ -69,7 +71,7 @@ double cosmobl::cosmology::Cosmology::concentration (const double Mass, const do
 	CC = -1.01;
       }
       
-      else return ErrorCBL("Error in cosmobl::cosmology::Cosmology::concentration() of DensityProfile.cpp: halo_def not allowed!");
+      else return ErrorCBL("Error in cbl::cosmology::Cosmology::concentration() of DensityProfile.cpp: halo_def not allowed!");
 
     }
     
@@ -93,15 +95,15 @@ double cosmobl::cosmology::Cosmology::concentration (const double Mass, const do
 	CC = -1.16;
       }
       
-      else return ErrorCBL("Error in cosmobl::cosmology::Cosmology::concentration() of DensityProfile.cpp: halo_def not allowed!");
+      else return ErrorCBL("Error in cbl::cosmology::Cosmology::concentration() of DensityProfile.cpp: halo_def not allowed!");
       
     }
 
-    else return ErrorCBL("Error in cosmobl::cosmology::Cosmology::profile() of DensityProfile.cpp: halo_def not allowed!");
+    else return ErrorCBL("Error in cbl::cosmology::Cosmology::profile() of DensityProfile.cpp: halo_def not allowed!");
     
   }
   
-  else return ErrorCBL("Error in cosmobl::cosmology::Cosmology::concentration() of DensityProfile.cpp: author not allowed!");
+  else return ErrorCBL("Error in cbl::cosmology::Cosmology::concentration() of DensityProfile.cpp: author not allowed!");
 
   
   const double Mpivot = 2.e12; // in Msun/h
@@ -113,10 +115,10 @@ double cosmobl::cosmology::Cosmology::concentration (const double Mass, const do
 // ============================================================================================
 
 
-double cosmobl::cosmology::Cosmology::density_profile (const double rad, const double Mass, const double redshift, const string model_cM, const string profile, const string halo_def) const
+double cbl::cosmology::Cosmology::density_profile (const double rad, const double Mass, const double redshift, const string model_cM, const string profile, const string halo_def) const
 {
   if (profile!="NFW")
-    return ErrorCBL("Error in cosmobl::cosmology::Cosmology::halo_def() of DensityProfile.cpp: profile not allowed!");
+    return ErrorCBL("Error in cbl::cosmology::Cosmology::halo_def() of DensityProfile.cpp: profile not allowed!");
   
   const double conc = concentration(Mass, redshift, model_cM, profile, halo_def);
 
@@ -131,7 +133,7 @@ double cosmobl::cosmology::Cosmology::density_profile (const double rad, const d
 // ============================================================================================
 
 
-double cosmobl::cosmology::Cosmology::density_profile_FourierSpace (const double kk, const double Mass, const double redshift, const string model_cM, const string profile, const string halo_def) const
+double cbl::cosmology::Cosmology::density_profile_FourierSpace (const double kk, const double Mass, const double redshift, const string model_cM, const string profile, const string halo_def) const
 {
   const double conc = concentration(Mass, redshift, model_cM, profile, halo_def);
 
@@ -148,7 +150,7 @@ double cosmobl::cosmology::Cosmology::density_profile_FourierSpace (const double
 // ============================================================================
 
 
-double cosmobl::cosmology::Cosmology::concentration2 (const double Vmax, const double Rmax) const
+double cbl::cosmology::Cosmology::concentration2 (const double Vmax, const double Rmax) const
 { 
   const int nn = 128;
   vector<double> xxi = linear_bin_vector(nn, 0.1, 50.);
@@ -159,4 +161,26 @@ double cosmobl::cosmology::Cosmology::concentration2 (const double Vmax, const d
     yyi[i] = 200./3.*pow(xxi[i],3.)/(log(1.+xxi[i])-xxi[i]/(1.+xxi[i]))-14.426*pow(Vmax/Rmax/m_H0,2.);
   
   return interpolated(0., yyi, xxi, "Poly");
+}
+
+
+// ============================================================================
+
+
+double cbl::cosmology::Cosmology::Mass_Delta (const double Mass, const double Delta_in, const double Delta_out, const double conc, const bool is_input_conc, const double rRmin_guess, const double rRmax_guess) const
+{
+  auto func = [&] (const double xx)
+    {
+      const double c_in = (is_input_conc) ? conc : conc*xx;
+      const double c_out = (!is_input_conc) ? conc : conc/xx;
+      const double AA = log(1.+c_out)-c_out/(1.+c_out);
+      const double BB = log(1.+c_in)-c_in/(1.+c_in);
+      return fabs(Delta_in/Delta_out*AA*pow(xx, 3)-BB);
+    };
+  
+  // R_[Delta_out]/R_[Delta_in]
+  const double Rratio = cbl::gsl::GSL_minimize_1D(func, 1., max(1.e-3, rRmin_guess), rRmax_guess);
+
+  // M_[Delta_out]
+  return Delta_out/Delta_in/pow(Rratio, 3)*Mass;
 }

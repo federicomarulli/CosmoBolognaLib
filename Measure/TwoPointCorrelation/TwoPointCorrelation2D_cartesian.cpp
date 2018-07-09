@@ -37,7 +37,9 @@
 
 #include "TwoPointCorrelation2D_cartesian.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace chainmesh;
 using namespace data;
@@ -49,63 +51,63 @@ using namespace twopt;
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::set_parameters (const binType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const binType binType_pi, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info) 
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::set_parameters (const BinType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const BinType binType_pi, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info) 
 {
   if (!compute_extra_info) {
-    if (binType_rp==_logarithmic_) {
-      if (binType_pi==_logarithmic_) {
-	m_dd = move(Pair::Create(_comovingCartesian_loglog_, _standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
+    if (binType_rp==BinType::_logarithmic_) {
+      if (binType_pi==BinType::_logarithmic_) {
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_loglog_, PairInfo::_standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
       }
       else {
-	m_dd = move(Pair::Create(_comovingCartesian_loglin_, _standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_loglin_, PairInfo::_standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
       }
     }
     else {
-      if (binType_pi==_logarithmic_) {
-	m_dd = move(Pair::Create(_comovingCartesian_linlog_, _standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
+      if (binType_pi==BinType::_logarithmic_) {
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_linlog_, PairInfo::_standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
       }
       else {
-	m_dd = move(Pair::Create(_comovingCartesian_linlin_, _standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_linlin_, PairInfo::_standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
       }
     }
   }
   else {
-    if (binType_rp==_logarithmic_) {
-      if (binType_pi==_logarithmic_) {
-	m_dd = move(Pair::Create(_comovingCartesian_loglog_, _extra_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
+    if (binType_rp==BinType::_logarithmic_) {
+      if (binType_pi==BinType::_logarithmic_) {
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_loglog_, PairInfo::_extra_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
       }
       else {
-	m_dd = move(Pair::Create(_comovingCartesian_loglin_, _extra_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_loglin_, PairInfo::_extra_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
       }
     }
     else {
-      if (binType_pi==_logarithmic_) {
-	m_dd = move(Pair::Create(_comovingCartesian_linlog_, _extra_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
+      if (binType_pi==BinType::_logarithmic_) {
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_linlog_, PairInfo::_extra_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
       }
       else {
-	m_dd = move(Pair::Create(_comovingCartesian_linlin_, _extra_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_linlin_, PairInfo::_extra_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight));
       }
     }
   }
   
-  if (binType_rp==_logarithmic_) {
-    if (binType_pi==_logarithmic_) {
-      m_rr = move(Pair::Create(_comovingCartesian_loglog_, _standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
-      m_dr = move(Pair::Create(_comovingCartesian_loglog_, _standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
+  if (binType_rp==BinType::_logarithmic_) {
+    if (binType_pi==BinType::_logarithmic_) {
+      m_rr = move(Pair::Create(PairType::_comovingCartesian_loglog_, PairInfo::_standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
+      m_dr = move(Pair::Create(PairType::_comovingCartesian_loglog_, PairInfo::_standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
     }
     else {
-      m_rr = move(Pair::Create(_comovingCartesian_loglin_, _standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
-      m_dr = move(Pair::Create(_comovingCartesian_loglin_, _standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
+      m_rr = move(Pair::Create(PairType::_comovingCartesian_loglin_, PairInfo::_standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
+      m_dr = move(Pair::Create(PairType::_comovingCartesian_loglin_, PairInfo::_standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
     }
   }
   else {
-    if (binType_pi==_logarithmic_) {
-      m_rr = move(Pair::Create(_comovingCartesian_linlog_, _standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
-      m_dr = move(Pair::Create(_comovingCartesian_linlog_, _standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
+    if (binType_pi==BinType::_logarithmic_) {
+      m_rr = move(Pair::Create(PairType::_comovingCartesian_linlog_, PairInfo::_standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
+      m_dr = move(Pair::Create(PairType::_comovingCartesian_linlog_, PairInfo::_standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
     }
     else {
-      m_rr = move(Pair::Create(_comovingCartesian_linlin_, _standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
-      m_dr = move(Pair::Create(_comovingCartesian_linlin_, _standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
+      m_rr = move(Pair::Create(PairType::_comovingCartesian_linlin_, PairInfo::_standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
+      m_dr = move(Pair::Create(PairType::_comovingCartesian_linlin_, PairInfo::_standard_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits));
     }
   }
 }
@@ -114,64 +116,64 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::set_parameters (c
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::set_parameters (const binType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const binType binType_pi, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const CoordUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info)
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::set_parameters (const BinType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const BinType binType_pi, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info)
 {
   if (!compute_extra_info) {
-    if (binType_rp==_logarithmic_) {
-      if (binType_pi==_logarithmic_) {
-	m_dd = move(Pair::Create(_comovingCartesian_loglog_, _standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
+    if (binType_rp==BinType::_logarithmic_) {
+      if (binType_pi==BinType::_logarithmic_) {
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_loglog_, PairInfo::_standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
       }
       else {
-	m_dd = move(Pair::Create(_comovingCartesian_loglin_, _standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_loglin_, PairInfo::_standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
       }
     }
     else {
-      if (binType_pi==_logarithmic_) {
-	m_dd = move(Pair::Create(_comovingCartesian_linlog_, _standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
+      if (binType_pi==BinType::_logarithmic_) {
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_linlog_, PairInfo::_standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
       }
       else {
-	m_dd = move(Pair::Create(_comovingCartesian_linlin_, _standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_linlin_, PairInfo::_standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
       }
     }
   }
   else {
-    if (binType_rp==_logarithmic_) {
-      if (binType_pi==_logarithmic_) {
-	m_dd = move(Pair::Create(_comovingCartesian_loglog_, _extra_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
+    if (binType_rp==BinType::_logarithmic_) {
+      if (binType_pi==BinType::_logarithmic_) {
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_loglog_, PairInfo::_extra_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
       }
       else {
-	m_dd = move(Pair::Create(_comovingCartesian_loglin_, _extra_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_loglin_, PairInfo::_extra_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
       }
     }
     else {
-      if (binType_pi==_logarithmic_) {
-	m_dd = move(Pair::Create(_comovingCartesian_linlog_, _extra_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
+      if (binType_pi==BinType::_logarithmic_) {
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_linlog_, PairInfo::_extra_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
       }
       else {
-	m_dd = move(Pair::Create(_comovingCartesian_linlin_, _extra_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
+	m_dd = move(Pair::Create(PairType::_comovingCartesian_linlin_, PairInfo::_extra_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight));
       }
     }
   }
 
 
-  if (binType_rp==_logarithmic_) {
-    if (binType_pi==_logarithmic_) {
-      m_rr = move(Pair::Create(_comovingCartesian_loglog_, _standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
-      m_dr = move(Pair::Create(_comovingCartesian_loglog_, _standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
+  if (binType_rp==BinType::_logarithmic_) {
+    if (binType_pi==BinType::_logarithmic_) {
+      m_rr = move(Pair::Create(PairType::_comovingCartesian_loglog_, PairInfo::_standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
+      m_dr = move(Pair::Create(PairType::_comovingCartesian_loglog_, PairInfo::_standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
     }
     else {
-      m_rr = move(Pair::Create(_comovingCartesian_loglin_, _standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
-      m_dr = move(Pair::Create(_comovingCartesian_loglin_, _standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
+      m_rr = move(Pair::Create(PairType::_comovingCartesian_loglin_, PairInfo::_standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
+      m_dr = move(Pair::Create(PairType::_comovingCartesian_loglin_, PairInfo::_standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
     }
   }
   else {
-    if (binType_pi==_logarithmic_) {
-      m_rr = move(Pair::Create(_comovingCartesian_linlog_, _standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
-      m_dr = move(Pair::Create(_comovingCartesian_linlog_, _standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
+    if (binType_pi==BinType::_logarithmic_) {
+      m_rr = move(Pair::Create(PairType::_comovingCartesian_linlog_, PairInfo::_standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
+      m_dr = move(Pair::Create(PairType::_comovingCartesian_linlog_, PairInfo::_standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
     }
     else {
-      m_rr = move(Pair::Create(_comovingCartesian_linlin_, _standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
-      m_dr = move(Pair::Create(_comovingCartesian_linlin_, _standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
+      m_rr = move(Pair::Create(PairType::_comovingCartesian_linlin_, PairInfo::_standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
+      m_dr = move(Pair::Create(PairType::_comovingCartesian_linlin_, PairInfo::_standard_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits));
     }
   }
 }
@@ -180,7 +182,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::set_parameters (c
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::read (const string dir, const string file) 
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::read (const string dir, const string file) 
 {
   m_dataset->read(dir+file);
 }
@@ -189,7 +191,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::read (const strin
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::write (const string dir, const string file, const bool full, const int rank) const 
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::write (const string dir, const string file, const bool full, const int rank) const 
 {
   vector<double> xx, yy;
   m_dataset->xx(xx); m_dataset->yy(yy);
@@ -206,7 +208,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::write (const stri
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
   case (ErrorType::_Poisson_) :
@@ -227,7 +229,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measure (const Er
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   // ----------- count the data-data, random-random and data-random pairs, or read them from file ----------- 
   
@@ -236,9 +238,9 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measurePoisson (c
   
   // ----------- compute the monopole of the two-point correlation function ----------- 
 
-  if (estimator==_natural_)
+  if (estimator==Estimator::_natural_)
     m_dataset = correlation_NaturalEstimator(m_dd, m_rr);
-  else if (estimator==_LandySzalay_) {
+  else if (estimator==Estimator::_LandySzalay_) {
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   }
   else
@@ -250,7 +252,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measurePoisson (c
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_JackknifeXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_JackknifeXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   if (dir_output_JackknifeXi!=par::defaultString) {
     string mkdir = "mkdir -p "+dir_output_JackknifeXi;
@@ -265,7 +267,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife 
   vector<shared_ptr<Pair> > dd_regions, rr_regions, dr_regions;
   count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
-  vector<shared_ptr<Data> > data_SS = (estimator==_natural_) ? XiJackknife(dd_regions, rr_regions) : XiJackknife(dd_regions, rr_regions, dr_regions);
+  vector<shared_ptr<Data> > data_SS = (estimator==Estimator::_natural_) ? XiJackknife(dd_regions, rr_regions) : XiJackknife(dd_regions, rr_regions, dr_regions);
 
   for (size_t i=0; i<nRegions; i++) {
 
@@ -281,9 +283,9 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife 
 
   covariance_matrix(xi_SubSamples, covariance, 1);
 
-  if (estimator==_natural_)
+  if (estimator==Estimator::_natural_)
     m_dataset = correlation_NaturalEstimator(m_dd, m_rr);
-  else if (estimator==_LandySzalay_)
+  else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
     ErrorCBL("Error in measurePoisson() of TwoPointCorrelation2D_cartesian.cpp: the chosen estimator is not implemented!");
@@ -294,7 +296,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife 
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_BootstrapXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_BootstrapXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (nMocks<1)
     ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation2D_cartesian.cpp, number of mocks must be >0");
@@ -309,7 +311,7 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap 
   vector<shared_ptr<Pair> > dd_regions, rr_regions, dr_regions;
   count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
-  vector<shared_ptr<Data> > data_SS = (estimator==_natural_) ? XiBootstrap(nMocks, dd_regions, rr_regions, seed) : XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions, seed);
+  vector<shared_ptr<Data> > data_SS = (estimator==Estimator::_natural_) ? XiBootstrap(nMocks, dd_regions, rr_regions, seed) : XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions, seed);
 
   for (int i=0; i<nMocks; i++) {
 
@@ -325,9 +327,9 @@ void cosmobl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap 
 
   covariance_matrix(xi_SubSamples, covariance, 1);
 
-  if (estimator==_natural_)
+  if (estimator==Estimator::_natural_)
     m_dataset = correlation_NaturalEstimator(m_dd, m_rr);
-  else if (estimator==_LandySzalay_)
+  else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
     ErrorCBL("Error in measurePoisson() of TwoPointCorrelation2D_cartesian.cpp: the chosen estimator is not implemented!");

@@ -2,12 +2,7 @@
 // Example code: how to use the NormalRandomNumbers class to generate random numbers
 // =================================================================================
 
-#include "Func.h" 
-
-// these two variables contain the name of the CosmoBolognaLib
-// directory and the name of the current directory (useful when
-// launching the code on remote systems)
-string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
+#include "Distribution.h" 
 
 int main () {
 
@@ -25,23 +20,23 @@ int main () {
     double sigma = 2.;
 
     // construct the object used to extract random numbers from a Normal distribution
-    cosmobl::random::NormalRandomNumbers ran(mean, sigma, seed, xmin, xmax);
+    cbl::random::NormalRandomNumbers ran(mean, sigma, seed, xmin, xmax);
 
     // extract the random numbers
-    vector<double> numbers(1000000);
+    std::vector<double> numbers(1000);
     for (auto && num : numbers) num = ran();
 
     // compute the distribution of the extracted random numbers
-    vector<double> xx, fx, error;
-    cosmobl::distribution(xx, fx, error, numbers, {}, 10);
+    std::vector<double> xx, fx, error;
+    cbl::distribution(xx, fx, error, numbers, {}, 10);
   
     // show the results
     for (size_t i=0; i<xx.size(); ++i)
-      cout << setprecision(1) << fixed << xx[i] << "  " << string(fx[i]*100./numbers.size(), '*') << endl;
+      std::cout << std::setprecision(1) << std::fixed << xx[i] << "  " << std::string(fx[i]*100./numbers.size(), '*') << std::endl;
 
   }
   
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

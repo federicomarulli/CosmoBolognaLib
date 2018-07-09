@@ -7,7 +7,7 @@
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
 // launching the code on remote systems)
-string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 
 
 int main () {
@@ -18,9 +18,9 @@ int main () {
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec) --------------------------------
     // -----------------------------------------------------------------------------------------------------------------
 
-    const string file_catalogue = cosmobl::par::DirLoc+"../input/cat2d.dat";
+    const std::string file_catalogue = cbl::par::DirLoc+"../input/cat2d.dat";
   
-    const cosmobl::catalogue::Catalogue catalogue {cosmobl::catalogue::_Galaxy_, cosmobl::_observedCoordinates_, {file_catalogue}};
+    const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}};
 
   
     // ----------------------------------------------------------------
@@ -29,7 +29,7 @@ int main () {
 
     const double N_R = 1.; // random/data ratio
   
-    const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_square_, catalogue, N_R};
+    const cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::RandomType::_createRandom_square_, catalogue, N_R};
     
   
     // --------------------------------------------------------------------------------------------
@@ -38,27 +38,27 @@ int main () {
 
     // binning parameters and output data
 
-    const double angMin = 0.01;                                  // minimum angular separation 
-    const double angMax = 1.;                                    // maximum angular separation 
-    const int nbins = 20;                                        // number of bins
-    const double shift = 0.5;                                    // shift used to set the bin centre 
-    const cosmobl::CoordUnits angularUnits = cosmobl::_degrees_; // angular units
+    const double angMin = 0.01;                                              // minimum angular separation 
+    const double angMax = 1.;                                                // maximum angular separation 
+    const int nbins = 20;                                                    // number of bins
+    const double shift = 0.5;                                                // shift used to set the bin centre 
+    const cbl::CoordinateUnits angularUnits = cbl::CoordinateUnits::_degrees_; // angular units
 
-    const string dir = cosmobl::par::DirLoc+"../output/";
-    const string file = "xi_angular.dat";
+    const std::string dir = cbl::par::DirLoc+"../output/";
+    const std::string file = "xi_angular.dat";
 
   
     // measure the angular two-point correlation function
   
-    cosmobl::measure::twopt::TwoPointCorrelation1D_angular TwoP {catalogue, random_catalogue, cosmobl::_linear_, angMin, angMax, nbins, shift, angularUnits};
+    cbl::measure::twopt::TwoPointCorrelation1D_angular TwoP {catalogue, random_catalogue, cbl::BinType::_linear_, angMin, angMax, nbins, shift, angularUnits};
   
-    TwoP.measure(cosmobl::measure::ErrorType::_Poisson_, dir);
+    TwoP.measure(cbl::measure::ErrorType::_Poisson_, dir);
 
     TwoP.write(dir, file);
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

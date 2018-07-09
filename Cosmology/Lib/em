@@ -1,1 +1,1 @@
-emacs ../../Headers/Lib/Cosmology.h ../../Headers/Lib/EisensteinHu.h ../../Headers/Lib/CosmClassFunc.h *.cpp &
+emacs ../../Headers/Cosmology.h ../../Headers/EisensteinHu.h ../../Headers/CosmClassFunc.h *.cpp &

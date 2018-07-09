@@ -35,20 +35,22 @@
 #include "GlobalFunc.h"
 #include <chrono>
 
+using namespace std;
+
 /// time_point_type
 using time_point_type=std::chrono::time_point < std::chrono::system_clock, std::chrono::milliseconds > ;
 
-using namespace cosmobl;
+using namespace cbl;
 
 
 // ============================================================================
 
 
-void cosmobl::spherical_harmonics_coeff::initialize (const int _norder, const int _nbins)
+void cbl::spherical_harmonics_coeff::initialize (const int norder, const int nbins)
 {
 
-  m_nbins = _nbins;
-  m_norder = _norder;
+  m_nbins = nbins;
+  m_norder = norder;
   m_lmax = m_norder-1;
   m_n_sph = gsl_sf_legendre_array_n(m_lmax);
 
@@ -70,7 +72,7 @@ void cosmobl::spherical_harmonics_coeff::initialize (const int _norder, const in
 // ============================================================================
 
 
-void cosmobl::spherical_harmonics_coeff::reset ()
+void cbl::spherical_harmonics_coeff::reset ()
 {
   for (int b=0; b<m_nbins; b++)
     for (int k1=0; k1<m_n_sph; k1++)
@@ -81,7 +83,7 @@ void cosmobl::spherical_harmonics_coeff::reset ()
 // ============================================================================
 
 
-vector<complex<double>> cosmobl::spherical_harmonics_coeff::alm (const double xx, const double yy, const double zz)
+vector<complex<double>> cbl::spherical_harmonics_coeff::alm (const double xx, const double yy, const double zz)
 {
   return spherical_harmonics_array (m_lmax, xx, yy, zz);
 }
@@ -90,7 +92,7 @@ vector<complex<double>> cosmobl::spherical_harmonics_coeff::alm (const double xx
 // ============================================================================
 
 
-void cosmobl::spherical_harmonics_coeff::add (const vector<complex<double>> alm, const double ww, const int bin)
+void cbl::spherical_harmonics_coeff::add (const vector<complex<double>> alm, const double ww, const int bin)
 {
   for(int n=0; n<m_n_sph; n++)
     m_alm[bin][n] += ww*alm[n];
@@ -100,7 +102,7 @@ void cosmobl::spherical_harmonics_coeff::add (const vector<complex<double>> alm,
 // ============================================================================
 
 
-void cosmobl::spherical_harmonics_coeff::add (const double xx, const double yy, const double zz, const double ww, const int bin)
+void cbl::spherical_harmonics_coeff::add (const double xx, const double yy, const double zz, const double ww, const int bin)
 {
   vector<complex<double>> alm = spherical_harmonics_array (m_lmax, xx, yy, zz);
   for(int n=0; n<m_n_sph; n++)
@@ -111,7 +113,7 @@ void cosmobl::spherical_harmonics_coeff::add (const double xx, const double yy, 
 // ============================================================================
 
 
-double cosmobl::spherical_harmonics_coeff::power (const int l, const int bin1, const int bin2)
+double cbl::spherical_harmonics_coeff::power (const int l, const int bin1, const int bin2)
 {
   const int min_n = m_n_sph_l[l-1];
   double power = (real(min_n, bin1)*real(min_n, bin2)+imag(min_n, bin1)*imag(min_n, bin2));
@@ -127,11 +129,11 @@ double cosmobl::spherical_harmonics_coeff::power (const int l, const int bin1, c
 // ============================================================================
 
 
-vector<double> cosmobl::count_triplets_SphericalHarmonics (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const cosmobl::catalogue::Catalogue catalogue)
+vector<double> cbl::count_triplets_SphericalHarmonics (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const cbl::catalogue::Catalogue catalogue)
 {
   vector<double> zeta_l(norders, 0);
 
-  shared_ptr<catalogue::Catalogue> cc(new catalogue::Catalogue(catalogue));
+  std::shared_ptr<catalogue::Catalogue> cc(new catalogue::Catalogue(catalogue));
 
   chainmesh::ChainMesh_Catalogue cm;
 
@@ -173,11 +175,15 @@ vector<double> cosmobl::count_triplets_SphericalHarmonics (const double r12_min,
 
 	double rr = sqrt(xx*xx+yy*yy+zz*zz);
 
-	if (rr>=r12_min && rr<=r12_max)
-	  alm.add (xx/rr, yy/rr, zz/rr, cat->weight(close_objects[j]), 0);
+	if(rr>0) {
 
-	if (rr>=r13_min && rr<=r13_max)
-	  alm.add (xx/rr, yy/rr, zz/rr, cat->weight(close_objects[j]), 1);
+	  if (rr>=r12_min && rr<=r12_max) 
+	    alm.add (xx/rr, yy/rr, zz/rr, cat->weight(close_objects[j]), 0);
+
+	  if (rr>=r13_min && rr<=r13_max) 
+	    alm.add (xx/rr, yy/rr, zz/rr, cat->weight(close_objects[j]), 1);
+	  
+	}
       }
 
       for (int l=0; l<norders; l++)
@@ -200,11 +206,15 @@ vector<double> cosmobl::count_triplets_SphericalHarmonics (const double r12_min,
 // ============================================================================
 
 
-vector<vector<vector<double>>> cosmobl::count_triplets_SphericalHarmonics (const double rmin, const double rmax, const int nbins, const int norders, const cosmobl::catalogue::Catalogue catalogue)
+void cbl::count_triplets_SphericalHarmonics (vector<double> &pairs, vector<vector<vector<double>>> &triplets, const double rmin, const double rmax, const int nbins, const int norders, const cbl::catalogue::Catalogue catalogue)
 {
-  vector<vector<vector<double>>> zeta_l(nbins, vector<vector<double>>(nbins, vector<double>(norders, 0)));
+  pairs.erase(pairs.begin(), pairs.end());
+  triplets.erase(triplets.begin(), triplets.end());
 
-  shared_ptr<catalogue::Catalogue> cc(new catalogue::Catalogue(catalogue));
+  pairs.resize(nbins, 0);
+  triplets.resize(nbins, vector<vector<double>>(nbins, vector<double>(norders, 0)));
+
+  std::shared_ptr<catalogue::Catalogue> cc(new catalogue::Catalogue(catalogue));
 
   chainmesh::ChainMesh_Catalogue cm;
 
@@ -222,7 +232,8 @@ vector<vector<vector<double>>> cosmobl::count_triplets_SphericalHarmonics (const
   {
     spherical_harmonics_coeff alm(norders, nbins+1);
 
-    vector<vector<vector<double>>> _zeta_l(nbins, vector<vector<double>>(nbins, vector<double>(norders, 0)));
+    vector<double> _pairs(nbins, 0);
+    vector<vector<vector<double>>> _triplets(nbins, vector<vector<double>>(nbins, vector<double>(norders, 0)));
 
     // parallelized loop
 #pragma omp for schedule(static, 2)
@@ -252,154 +263,75 @@ vector<vector<vector<double>>> cosmobl::count_triplets_SphericalHarmonics (const
 
 	if (rr>=rmin && rr<=rmax && i!=close_objects[j]) {
 
-	  int jbin = int((rr-rmin)*binSize_inv);
+	  int jbin = max(0, min(int((rr-rmin)*binSize_inv), nbins));
+
+	  _pairs[jbin] += iww*jww;
 
 	  alm.add (xx/rr, yy/rr, zz/rr, jww, jbin);
 	}
       }
 
       for (int b1=0; b1<nbins; b1++)
-	for (int b2=b1; b2>-1; b2--)
+	for (int b2=0; b2<nbins; b2++)
 	  for (int l=0; l<norders; l++)
-	    _zeta_l[b1][b2][l] += iww*alm.power(l, b1, b2);
-
+	    _triplets[b1][b2][l] += iww*alm.power(l, b1, b2);
     }
 #pragma omp critical
     {
-      for (int b1=0; b1<nbins; b1++)
-	for (int b2=b1; b2>-1; b2--)
+      for (int b1=0; b1<nbins; b1++){
+	pairs[b1] += _pairs[b1];
+	for (int b2=0; b2<nbins; b2++)
 	  for (int l=0; l<norders; l++)
-	    zeta_l[b1][b2][l] += _zeta_l[b1][b2][l];
+	    triplets[b1][b2][l] += _triplets[b1][b2][l];
+      }
     }
 
-
   }
-
-  return zeta_l;
 }
 
 
 // ============================================================================
 
 
-void cosmobl::zeta_SphericalHarmonics (const double rmin, const double rmax, const int nbins , const int norders, const cosmobl::catalogue::Catalogue catalogue, const cosmobl::catalogue::Catalogue random_catalogue)
+void cbl::count_triplets_SphericalHarmonics (const double rmin, const double rmax, const int nbins, const int norders, const cbl::catalogue::Catalogue catalogue, const string output_dir, const string output_file_pairs, const string output_file_triplets)
 {
-  // ---------------------------------------------------------------
-  // ---------------- construct the mixed catalogue ----------------
-  // ---------------------------------------------------------------
-
-  double N_R = double(random_catalogue.nObjects())/catalogue.nObjects();
-
-  catalogue::Catalogue mixed_catalogue (catalogue);
-
-  for(size_t i=0; i<random_catalogue.nObjects(); i++){
-    double xx = random_catalogue.xx(i);
-    double yy = random_catalogue.yy(i);
-    double zz = random_catalogue.zz(i);
-    double ww = -random_catalogue.weight(i)/N_R;
-
-    auto obj = make_shared<catalogue::Object>( catalogue::Object());
-    obj->set_xx(xx);
-    obj->set_yy(yy);
-    obj->set_zz(zz);
-    obj->set_weight(ww);
-    mixed_catalogue.add_object(obj);
-  }
-
-  // ------------------------------------------------------------------------------------
-  // ---------------- measure triplet multipoles expansion for R and D-R ----------------
-  // ------------------------------------------------------------------------------------
+  // ----------------------------------------------------------------------
+  // ---------------- measure triplet multipoles expansion ----------------
+  // ----------------------------------------------------------------------
 
   coutCBL << endl;
-  coutCBL << "Counting triplet multipoles DDD" << endl;
-  vector<vector<vector<double>>> _DDD = count_triplets_SphericalHarmonics(rmin, rmax, nbins, norders, catalogue);
-  coutCBL << "Done!" << endl;
-  coutCBL << endl;
-  coutCBL << "Counting triplet multipoles RRR" << endl;
-  vector<vector<vector<double>>> _RRR = count_triplets_SphericalHarmonics(rmin, rmax, nbins, norders, random_catalogue);
-  coutCBL << "Done!" << endl;
-  coutCBL << endl;
-  coutCBL << "Counting triplet multipoles NNN" << endl;
-  vector<vector<vector<double>>> _NNN = count_triplets_SphericalHarmonics(rmin, rmax, nbins, norders, random_catalogue);
+  coutCBL << "Counting triplets" << endl;
+  vector<double> pairs;
+  vector<vector<vector<double>>> triplets;
+  count_triplets_SphericalHarmonics(pairs, triplets, rmin, rmax, nbins, norders, catalogue);
   coutCBL << "Done!" << endl;
   coutCBL << endl;
 
-  
-  for(int b1=0; b1<nbins; b1++){
-    for(int b2=b1-1; b2>-1; b2--){
-      vector<double> RRR = _RRR[b1][b2];
-      vector<double> NNN = _NNN[b1][b2];
+  const string mkdir = "mkdir -p "+output_dir;
+  if(system(mkdir.c_str())) {}
 
-      for(int l=1; l<norders; l++){
-	RRR[l] *= RRR[0];
-	NNN[l] *= NNN[0];
-      }
+  string file_out = output_dir+output_file_pairs;
+  ofstream fout(file_out.c_str());
 
-      for(int l=0; l<norders; l++){
-	RRR[l] *= (2.*l+1)/2;
-	NNN[l] *= (2.*l+1)/2;
-      }
+  for (int b1=0; b1<nbins; b1++)
+    fout << b1 << " " << pairs[b1] << endl;
+  fout.clear(); fout.close();
 
-      // ------------------------------------------------------
-      // ---------------- compute the matrix A ----------------
-      // ------------------------------------------------------
+  file_out = output_dir+output_file_triplets;
+  fout.open(file_out.c_str());
 
-      vector<double> fl = RRR;
-      for(int i=0; i<norders; i++)
-	fl[i] = fl[i]/RRR[0];
-
-      vector<vector<double>> A(norders, vector<double>(norders, 0)), A_inverse;
-
-      for(int k=0; k<norders; k++)
-	for(int l=0; l<norders; l++)
-	  for(int lp=1; lp<norders; lp++)
-	    A[k][l] += (2*k+1)*pow(gsl_sf_coupling_3j(2*l, 2*lp, 2*k, 0, 0, 0),2)*fl[lp];
-
-      for(int k=0; k<norders; k++)
-	A[k][k] += 1.;
-
-      invert_matrix(A, A_inverse);
-
-      // ----------------------------------------------------
-      // ---------------- compute the zeta_l ----------------
-      // ----------------------------------------------------
-
-      vector<double> zeta_l(norders, 0);
-
-      for(int l=0; l<norders; l++)
-	for(int k=0; k<norders; k++)
-	  zeta_l[l] += NNN[k]*A_inverse[l][k]/RRR[0];
-
-      // --------------------------------------------------
-      // ---------------- compute the zeta ----------------
-      // --------------------------------------------------
-
-      vector<double> zeta(nbins, 0);
-      cout << b1 << " " << b2 << " ";
-
-      for (int i=0; i<nbins; i++){
-	double angle = (i+0.5)/nbins*par::pi;
-
-	double NNNt =0, RRRt=0;
-
-	for (int l=0; l<norders; l++){
-	  zeta[i] += zeta_l[l]*legendre_polynomial(cos(angle), l);
-	  NNNt += NNN[l]*legendre_polynomial(cos(angle), l);
-	  RRRt += RRR[l]*legendre_polynomial(cos(angle), l);
-	  cout << zeta_l[l] << " ";
-	}
-      }
-      cout << endl;
-    }
-  }
-
+  for (int b1=0; b1<nbins; b1++)
+    for (int b2=0; b2<nbins; b2++)
+      for (int l=0; l<norders; l++) 
+	fout << b1 << " " << b2 << " " << l << " " << setprecision(10) << triplets[b1][b2][l] <<endl;
+  fout.clear(); fout.close();
 }
 
 
 // ============================================================================
 
 
-vector<double> cosmobl::zeta_SphericalHarmonics (const int nbins, const double side_s, const double side_u, const double perc_increase, const int norders, const cosmobl::catalogue::Catalogue catalogue, const cosmobl::catalogue::Catalogue random_catalogue, const string output_dir, const string output_file)
+vector<double> cbl::zeta_SphericalHarmonics (const int nbins, const double side_s, const double side_u, const double perc_increase, const int norders, const cbl::catalogue::Catalogue catalogue, const cbl::catalogue::Catalogue random_catalogue, const string output_dir, const string output_file)
 {
   double r12_min = side_s*(1-perc_increase); 
   double r12_max = side_s*(1+perc_increase); 
@@ -413,7 +345,7 @@ vector<double> cosmobl::zeta_SphericalHarmonics (const int nbins, const double s
 // ============================================================================
 
 
-vector<double> cosmobl::zeta_SphericalHarmonics (const int nbins, const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const cosmobl::catalogue::Catalogue catalogue, const cosmobl::catalogue::Catalogue random_catalogue, const string output_dir, const string output_file)
+vector<double> cbl::zeta_SphericalHarmonics (const int nbins, const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const cbl::catalogue::Catalogue catalogue, const cbl::catalogue::Catalogue random_catalogue, const string output_dir, const string output_file)
 {
 
   // ---------------------------------------------------------------
@@ -529,7 +461,7 @@ vector<double> cosmobl::zeta_SphericalHarmonics (const int nbins, const double r
 // ============================================================================
 
 
-void cosmobl::count_triplets_SphericalHarmonics (vector<double> &NNN, vector<double> &RRR, const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const cosmobl::catalogue::Catalogue catalogue)
+void cbl::count_triplets_SphericalHarmonics (vector<double> &NNN, vector<double> &RRR, const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const cbl::catalogue::Catalogue catalogue)
 {
   NNN.erase(NNN.begin(), NNN.end());
   NNN.resize(norders, 0);
@@ -537,7 +469,7 @@ void cosmobl::count_triplets_SphericalHarmonics (vector<double> &NNN, vector<dou
   RRR.erase(RRR.begin(), RRR.end());
   RRR.resize(norders, 0);
 
-  shared_ptr<catalogue::Catalogue> cc(new catalogue::Catalogue(catalogue));
+  std::shared_ptr<catalogue::Catalogue> cc(new catalogue::Catalogue(catalogue));
 
   chainmesh::ChainMesh_Catalogue cm;
 
@@ -583,14 +515,14 @@ void cosmobl::count_triplets_SphericalHarmonics (vector<double> &NNN, vector<dou
 
 	double rr = sqrt(xx*xx+yy*yy+zz*zz);
 
-	if (rr>=r12_min && rr<=r12_max){
+	if (rr>r12_min && rr<r12_max){
 	  vector<complex<double>> _alm = sph.alm(xx/rr, yy/rr, zz/rr);
 	  sph.add (_alm, jww, 0);
 	  if(iww<0 && jww <0)
 	    sph_random.add(_alm, -jww, 0);
 	}
 
-	if (rr>=r13_min && rr<=r13_max){
+	if (rr>r13_min && rr<r13_max){
 	  vector<complex<double>> _alm = sph.alm(xx/rr, yy/rr, zz/rr);
 	  sph.add (_alm, jww, 1);
 	  if(iww<0 && jww <0)
@@ -621,28 +553,28 @@ void cosmobl::count_triplets_SphericalHarmonics (vector<double> &NNN, vector<dou
 // ============================================================================
 
 
-vector<double> cosmobl::zeta_SphericalHarmonics_AllInOne (const int nbins, const double side_s, const double side_u, const double perc_increase, const int norders, const cosmobl::catalogue::Catalogue catalogue, const cosmobl::catalogue::Catalogue random_catalogue, const string output_dir, const string output_file)
+vector<double> cbl::zeta_SphericalHarmonics_AllInOne (const int nbins, const double side_s, const double side_u, const double perc_increase, const int norders, const cbl::catalogue::Catalogue catalogue, const cbl::catalogue::Catalogue random_catalogue, const string output_dir, const string output_file, const bool count_triplets, const string dir_triplets)
 {
   double r12_min = side_s*(1-perc_increase); 
   double r12_max = side_s*(1+perc_increase); 
   double r13_min = side_s*side_u*(1-perc_increase); 
   double r13_max = side_s*side_u*(1+perc_increase);
 
-  return zeta_SphericalHarmonics_AllInOne (nbins, r12_min, r12_max, r13_min, r13_max, norders, catalogue, random_catalogue, output_dir, output_file);
+  return zeta_SphericalHarmonics_AllInOne (nbins, r12_min, r12_max, r13_min, r13_max, norders, catalogue, random_catalogue, output_dir, output_file, count_triplets, dir_triplets);
 }
 
 
 // ============================================================================
 
 
-vector<double> cosmobl::zeta_SphericalHarmonics_AllInOne (const int nbins, const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const cosmobl::catalogue::Catalogue catalogue, const cosmobl::catalogue::Catalogue random_catalogue, const string output_dir, const string output_file)
+vector<double> cbl::zeta_SphericalHarmonics_AllInOne (const int nbins, const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const cbl::catalogue::Catalogue catalogue, const cbl::catalogue::Catalogue random_catalogue, const string output_dir, const string output_file, const bool count_triplets, const string dir_triplets)
 {
 
   // ---------------------------------------------------------------
   // ---------------- construct the mixed catalogue ----------------
   // ---------------------------------------------------------------
 
-  double N_R = double(random_catalogue.nObjects())/catalogue.nObjects();
+  double N_R = double(random_catalogue.weightedN())/catalogue.weightedN();
 
   catalogue::Catalogue ran_catalogue (random_catalogue);
   catalogue::Catalogue mixed_catalogue (catalogue);
@@ -662,23 +594,68 @@ vector<double> cosmobl::zeta_SphericalHarmonics_AllInOne (const int nbins, const
     mixed_catalogue.add_object(obj);
   }
 
+  ofstream fouttemp("mixed_catalogue.dat");
+
+  for(size_t i=0; i<mixed_catalogue.nObjects(); i++)
+    fouttemp << mixed_catalogue.xx(i) << " " << mixed_catalogue.yy(i) << " " << mixed_catalogue.zz(i) << " " << mixed_catalogue.weight(i) << endl;
+  fouttemp.close();
+
   // ------------------------------------------------------------------------------------
   // ---------------- measure triplet multipoles expansion for R and D-R ----------------
   // ------------------------------------------------------------------------------------
 
-  coutCBL << endl;
-  coutCBL << "Counting triplets multipoles NNN, RRR" << endl;
   vector<double> NNN, RRR;
-  count_triplets_SphericalHarmonics(NNN, RRR, r12_min, r12_max, r13_min, r13_max, norders, mixed_catalogue);
-  coutCBL << "Done!" << endl;
-  coutCBL << endl;
+
+  if (count_triplets) {
+    coutCBL << endl;
+    coutCBL << "Counting triplets multipoles NNN, RRR" << endl;
+    count_triplets_SphericalHarmonics(NNN, RRR, r12_min, r12_max, r13_min, r13_max, norders, mixed_catalogue);
+    coutCBL << "Done!" << endl;
+    coutCBL << endl;
+
+    if(dir_triplets!=par::defaultString) {
+      string mkdir = "mkdir -p "+dir_triplets;
+      if (system(mkdir.c_str())) {}
+
+      string triplet_file = dir_triplets+"triplets.dat";
+      ofstream fout(triplet_file.c_str());
+
+      for (int i=0; i<norders; i++) 
+	fout << i << " " << NNN[i] << " " << RRR[i] << endl;
+
+      fout.close();
+
+      coutCBL << "I wrote the file " << triplet_file << endl;
+      coutCBL << endl;
+    }
+  }
+  else { 
+    string triplet_file = dir_triplets+"triplets.dat";
+    coutCBL << "I'm reading the file " << triplet_file << endl;
+
+    ifstream fin (triplet_file.c_str());
+
+    for (int i=0; i<norders; i++) {
+      int l;
+      double _NNN, _RRR;
+      fin >> l >> _NNN >> _RRR;
+      NNN.push_back(_NNN);
+      RRR.push_back(_RRR);
+    }
+
+    fin.close();
+
+    coutCBL << "Done" << endl;
+
+    coutCBL << endl;
+  }
+
 
   for (int l=0; l<norders; l++) {
     RRR[l] *= (2.*l+1)/2;
     NNN[l] *= (2.*l+1)/2;
   }
 
-  
   // ------------------------------------------------------
   // ---------------- compute the matrix A ----------------
   // ------------------------------------------------------
@@ -705,12 +682,10 @@ vector<double> cosmobl::zeta_SphericalHarmonics_AllInOne (const int nbins, const
   // ----------------------------------------------------
 
   vector<double> zeta_l(norders, 0);
-
   for (int l=0; l<norders; l++)
     for (int k=0; k<norders; k++)
       zeta_l[l] += NNN[k]*A_inverse[l][k]/RRR[0];
 
-  
   // --------------------------------------------------
   // ---------------- compute the zeta ----------------
   // --------------------------------------------------
@@ -719,23 +694,144 @@ vector<double> cosmobl::zeta_SphericalHarmonics_AllInOne (const int nbins, const
   if(system(mkdir.c_str())) {}
   
   const string file = output_dir+output_file;
-  ofstream fout(file.c_str());
+  const string file2 = output_dir+"reconstructed_"+output_file;
+  const string file3 = output_dir+"NNN_"+output_file;
+  const string file4 = output_dir+"RRR_"+output_file;
+
+  ofstream fout2(file2.c_str());
+  ofstream fout3(file3.c_str());
+  ofstream fout4(file4.c_str());
+
   vector<double> zeta(nbins, 0);
 
   for (int i=0; i<nbins; i++) {
-    
+
+    double mu_min = cos(double(i)/nbins*par::pi) ;
+    double mu_max = cos(double(i+1)/nbins*par::pi);
+
     double angle = (i+0.5)/nbins*par::pi;
-    fout << setprecision(10) << angle/par::pi;
+    fout2 << setprecision(10) << angle/par::pi;
+    fout3 << setprecision(10) << angle/par::pi;
+    fout4 << setprecision(10) << angle/par::pi;
+
+    double nnn_theta = 0;
+    double rrr_theta = 0;
     for (int l=0; l<norders; l++){
-      zeta[i] += zeta_l[l]*legendre_polynomial(cos(angle), l);
-      fout << setprecision(10) << " " << zeta[i];
+      double fact = cbl::Legendre_polynomial_mu_average (mu_min, mu_max, l);
+      nnn_theta += NNN[l]*fact;
+      rrr_theta += RRR[l]*fact;
+      fout2 << setprecision(10) << " " << nnn_theta/rrr_theta;
+      fout3 << setprecision(10) << " " << nnn_theta;
+      fout4 << setprecision(10) << " " << rrr_theta;
     }
 
-    fout << endl;
+    fout2 << endl;
+    fout3 << endl;
+    fout4 << endl;
   }
-  fout.clear(); fout.close();
+  fout2.clear(); fout2.close();
+  fout3.clear(); fout3.close();
+  fout4.clear(); fout4.close();
+
+
+  ofstream fout(file.c_str());
+  for (int l=0; l<norders; l++)
+    fout << l << " " << zeta_l[l] << endl;
 
   coutCBL << "I wrote the file: "<< file << endl;
+  fout.clear(); fout.close();
 
   return zeta;
+}
+
+
+// ============================================================================
+
+
+vector<double> cbl::count_triplets_classic (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int nbins, const cbl::catalogue::Catalogue catalogue, const cbl::triplets::TripletType tripletType)
+{
+  double r12 = 0.5*(r12_max-r12_min); 
+  double r13 = 0.5*(r13_max+r13_min); 
+  const double r12_binSize = r12_max-r12_min;
+  const double r13_binSize = r13_max-r13_min;
+
+  shared_ptr<triplets::Triplet> tt = move(triplets::Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
+  int nn=0;
+  int np=0;
+
+  std::shared_ptr<catalogue::Catalogue> cc(new catalogue::Catalogue(catalogue));
+
+  chainmesh::ChainMesh_Catalogue cm;
+
+  cm.set_par(r13_max*0.5, cc, r13_max);
+
+  auto cat = cm.catalogue();
+
+  const int nObjects = catalogue.nObjects();
+
+  // start the multithreading parallelization
+#pragma omp parallel num_threads(omp_get_max_threads())
+  {
+    // internal object used by each thread to handle triplets
+    shared_ptr<triplets::Triplet> tt_thread = move(triplets::Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
+    int _nn =0;
+    int _np =0;
+
+    // parallelized loop
+#pragma omp for schedule(static, 2)
+    for (int i=0; i<nObjects; i++)
+    {
+
+      double ixx = cat->xx(i);
+      double iyy = cat->yy(i);
+      double izz = cat->zz(i);
+
+      vector<int> r12_object, r13_object;
+
+      vector<long> close_objects = cm.close_objects({ixx, iyy, izz}, -1);
+
+      for (size_t j=0; j<close_objects.size(); j++) {
+	double jxx = cat->xx(close_objects[j]);
+	double jyy = cat->yy(close_objects[j]);
+	double jzz = cat->zz(close_objects[j]);
+
+	double xx = jxx-ixx;
+	double yy = jyy-iyy;
+	double zz = jzz-izz;
+
+	double rr = sqrt(xx*xx+yy*yy+zz*zz);
+
+	if(rr>0) {
+	  if (rr>=r12_min && rr<=r12_max) 
+	    r12_object.push_back(close_objects[j]);
+          
+	  if (rr>=r13_min && rr<=r13_max)
+	    r13_object.push_back(close_objects[j]);
+	}
+      }
+      _np += (int)r12_object.size();
+
+      for (size_t j=0; j<r12_object.size(); j++)
+	for (size_t k=0; k<r13_object.size(); k++) {
+	  tt_thread->put(cat->operator[](i), cat->operator[](r12_object[j]), cat->operator[](r13_object[k]));
+	  if ((r13_object[k] == r12_object[j]))
+	    _nn+=cat->weight(i)*cat->weight(r12_object[j])*cat->weight(r13_object[k]);
+	}
+    }
+
+    #pragma omp critical
+    {
+      // sum all the object triplets computed by each thread
+      tt->Sum(tt_thread);
+      nn += _nn;
+      np += _np;
+    }
+
+
+  }
+
+  coutCBL << "Number of pairs: " << np << endl;
+  coutCBL << "Number of degenerate triangles: " << nn << endl;
+
+  return tt->TT1D();
 }

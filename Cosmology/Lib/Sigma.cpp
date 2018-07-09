@@ -35,32 +35,34 @@
 
 #include "Cosmology.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, function<double(double)> filter, const bool unit1) const 
+double cbl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, function<double(double)> filter, const bool unit1) const 
 {
   function<double(double)> func;
-  
+ 
   vector<double> kk, Pk;
   
   double fact = (m_unit || unit1) ? 1. : m_hh;
-
+ 
   
   // the power spectrum is read from file
   
   if (input_file!=par::defaultString && !is_parameter_file) {
-   
+    
     string line;
     double KK, PK;
     
     ifstream fin(input_file.c_str()); checkIO(fin, input_file);
 
     while (getline(fin, line)) {
-      if (line.find("#") == string::npos) { // skip comments
+      if (line.find("#")==string::npos) { // skip comments
 	stringstream ss(line);
 	vector<double> num;
 	ss >> KK >> PK;
@@ -73,7 +75,7 @@ double cosmobl::cosmology::Cosmology::m_func_sigma (const string method_Pk, cons
 
     fin.clear(); fin.close();
 
-    func = glob::FuncGrid(kk, Pk, interpType, cosmobl::binType::_logarithmic_);
+    func = glob::FuncGrid(kk, Pk, interpType, cbl::BinType::_logarithmic_);
   }
     
 
@@ -86,7 +88,7 @@ double cosmobl::cosmology::Cosmology::m_func_sigma (const string method_Pk, cons
       EisensteinHu eh;
       eh.TFmdm_set_cosm(m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massive_neutrinos, m_Omega_DE, m_hh, redshift, m_scalar_amp, m_scalar_pivot, m_n_spec);
       
-      if (eh.Pk(kk)!=eh.Pk(kk)) ErrorCBL("Error in cosmobl::cosmology::Cosmology::m_func_sigma() of Sigma.cpp: eh.Pk=nan!");
+      if (eh.Pk(kk)!=eh.Pk(kk)) ErrorCBL("Error in cbl::cosmology::Cosmology::m_func_sigma() of Sigma.cpp: eh.Pk=nan!");
 
       return eh.Pk(kk*fact)*pow(fact, -3.);
     };
@@ -95,22 +97,22 @@ double cosmobl::cosmology::Cosmology::m_func_sigma (const string method_Pk, cons
   }
 
   else if (method_Pk=="CAMB" || method_Pk=="classgal_v1") {
-
-    vector<double> lgkk, lgPk;
+    
+    vector<double> lgkk, lgPk; 
     Table_PkCodes(method_Pk, false, lgkk, lgPk, redshift, output_root, kmax, input_file);
 
     for (size_t i=0; i<lgkk.size(); i++) {
       const double KK = pow(10., lgkk[i])*fact;
-	if (KK<kmax) {
-	  kk.emplace_back(KK);
-          Pk.emplace_back(pow(10., lgPk[i])*pow(fact, -3.));
-	}
+      if (KK<kmax) {
+	kk.emplace_back(KK);
+	Pk.emplace_back(pow(10., lgPk[i])*pow(fact, -3.));
+      }
     }
 
-    func = glob::FuncGrid(kk, Pk, interpType, cosmobl::binType::_linear_);
+    func = glob::FuncGrid(kk, Pk, interpType, cbl::BinType::_linear_);
   }
   
-  else ErrorCBL("Error in cosmobl::cosmology::Cosmology::sigma2M_notNormalised of Sigma.cpp: the chosen method_Pk is not available!");
+  else ErrorCBL("Error in cbl::cosmology::Cosmology::sigma2M_notNormalised of Sigma.cpp: the chosen method_Pk is not available!");
 
   auto ff = [&] (const double kk)
     {
@@ -128,7 +130,7 @@ double cosmobl::cosmology::Cosmology::m_func_sigma (const string method_Pk, cons
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::m_sigma2R_notNormalised (const double radius, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+double cbl::cosmology::Cosmology::m_sigma2R_notNormalised (const double radius, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
   auto filter = [&] (const double k)
   {
@@ -143,9 +145,9 @@ double cosmobl::cosmology::Cosmology::m_sigma2R_notNormalised (const double radi
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::sigma2R (const double radius, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+double cbl::cosmology::Cosmology::sigma2R (const double radius, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
-  if (radius<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::sigma2R() of Sigma.cpp: the radius must be >0!");
+  if (radius<0) ErrorCBL("Error in cbl::cosmology::Cosmology::sigma2R() of Sigma.cpp: the radius must be >0!");
   
   // the normalisation factor
   double fact = 1.;
@@ -171,9 +173,9 @@ double cosmobl::cosmology::Cosmology::sigma2R (const double radius, const string
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::dnsigma2R (const int nd, const double radius, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+double cbl::cosmology::Cosmology::dnsigma2R (const int nd, const double radius, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
-  if (radius<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::dnsigma2R() of Sigma.cpp: the radius must be >0!");
+  if (radius<0) ErrorCBL("Error in cbl::cosmology::Cosmology::dnsigma2R() of Sigma.cpp: the radius must be >0!");
   
   // the normalisation factor
   double fact = 1.;
@@ -196,32 +198,32 @@ double cosmobl::cosmology::Cosmology::dnsigma2R (const int nd, const double radi
 
     auto filter = [&] (const double k)
     {
-      return 2.*cosmobl::TopHat_WF(k*radius)*cosmobl::TopHat_WF_D1(k*radius)*k;
+      return 2.*cbl::TopHat_WF(k*radius)*cbl::TopHat_WF_D1(k*radius)*k;
     };
 
-    return cosmobl::cosmology::Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1)*fact;
+    return cbl::cosmology::Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1)*fact;
 
   }
 
   else
-    return ErrorCBL("Work in progress in cosmobl::cosmology::Cosmology::dnsigma2R of Sigma.cpp...", glob::ExitCode::_workInProgress_);
+    return ErrorCBL("Work in progress in cbl::cosmology::Cosmology::dnsigma2R of Sigma.cpp...", glob::ExitCode::_workInProgress_);
 }
 
 
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::m_sigma2M_notNormalised (const double mass, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+double cbl::cosmology::Cosmology::m_sigma2M_notNormalised (const double mass, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
-  if (mass<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::m_sigma2M_notNormalised() of Sigma.cpp: the mass must be >0!");
+  if (mass<0) ErrorCBL("Error in cbl::cosmology::Cosmology::m_sigma2M_notNormalised() of Sigma.cpp: the mass must be >0!");
   
-  const double radius = (input_file!=par::defaultString && !is_parameter_file) ? cosmobl::Radius(mass, m_RhoZero) : cosmobl::Radius(mass, rho_m(redshift, unit1)); 
-
+  const double radius = (input_file!=par::defaultString && !is_parameter_file) ? cbl::Radius(mass, m_RhoZero) : cbl::Radius(mass, rho_m(redshift, unit1)); 
+  
   auto filter = [&] (const double k)
   {
     return pow(TopHat_WF(k*radius), 2);
   };
-
+  
   return Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1);
 }
 
@@ -229,13 +231,13 @@ double cosmobl::cosmology::Cosmology::m_sigma2M_notNormalised (const double mass
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::sigma2M (const double mass, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+double cbl::cosmology::Cosmology::sigma2M (const double mass, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
-  if (mass<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::sigma2M() of Sigma.cpp: the mass must be >0!");
+  if (mass<0) ErrorCBL("Error in cbl::cosmology::Cosmology::sigma2M() of Sigma.cpp: the mass must be >0!");
   
   // the normalisation factor
   double fact = 1.;
-
+  
   // if the power spectrum is read from file or m_sigma8<0, then the
   // mass variance does not need to be normalised (hence fact=1 and
   // sigma2M=sigma2M_unnormalised); otherwise the normalisation factor
@@ -245,7 +247,7 @@ double cosmobl::cosmology::Cosmology::sigma2M (const double mass, const string m
       // (sigma8 = sigma(8Mpc/h))
       fact = pow(m_sigma8, 2)/m_sigma2M_notNormalised(Mass(8., rho_m(0., true)), method_Pk, 0., output_root, interpType, kmax, input_file, is_parameter_file, true);
   }
-
+  
   return m_sigma2M_notNormalised(mass, method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, unit1)*fact;
 }
 
@@ -253,9 +255,9 @@ double cosmobl::cosmology::Cosmology::sigma2M (const double mass, const string m
 // =====================================================================================
 
 
-double cosmobl::cosmology::Cosmology::dnsigma2M (const int nd, const double mass, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+double cbl::cosmology::Cosmology::dnsigma2M (const int nd, const double mass, const string method_Pk, const double redshift, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
-  if (mass<0) ErrorCBL("Error in cosmobl::cosmology::Cosmology::dnsigma2M() of Sigma.cpp: the mass must be >0!");
+  if (mass<0) ErrorCBL("Error in cbl::cosmology::Cosmology::dnsigma2M() of Sigma.cpp: the mass must be >0!");
   
   // the normalisation factor
   double fact = 1.;
@@ -277,27 +279,27 @@ double cosmobl::cosmology::Cosmology::dnsigma2M (const int nd, const double mass
 
     const double rho = (input_file!=par::defaultString && !is_parameter_file) ?  m_RhoZero : rho_m(redshift, unit1);
 
-    const double radius = cosmobl::Radius(mass, rho); 
+    const double radius = cbl::Radius(mass, rho); 
 
-    const double dRdM = pow(3./(4.*cosmobl::par::pi*rho), 1./3.)*pow(mass, -2./3.)/3.;
+    const double dRdM = pow(3./(4.*cbl::par::pi*rho), 1./3.)*pow(mass, -2./3.)/3.;
 
     auto filter = [&] (const double k)
     {
-      return 2.*cosmobl::TopHat_WF(k*radius)*cosmobl::TopHat_WF_D1(k*radius)*k*dRdM;
+      return 2.*cbl::TopHat_WF(k*radius)*cbl::TopHat_WF_D1(k*radius)*k*dRdM;
     };
 
     return cosmology::Cosmology::m_func_sigma(method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1)*fact;
 
   }
   else
-    return ErrorCBL("Work in progress in cosmobl::cosmology::Cosmology::dnsigma2M of Sigma.cpp...", glob::ExitCode::_workInProgress_);
+    return ErrorCBL("Work in progress in cbl::cosmology::Cosmology::dnsigma2M of Sigma.cpp...", glob::ExitCode::_workInProgress_);
 }
 
 
 // =====================================================================================
 
 
-string cosmobl::cosmology::Cosmology::create_grid_sigmaM (const string method_SS, const double redshift, const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const 
+std::string cbl::cosmology::Cosmology::create_grid_sigmaM (const string method_SS, const double redshift, const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const 
 {
   string norm = (m_sigma8>0) ? "_sigma8"+conv(m_sigma8, par::fDP3) : "_scalar_amp"+conv(m_scalar_amp, par::ee3);
 

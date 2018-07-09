@@ -36,67 +36,90 @@
 
 #include "Modelling_ThreePointCorrelation_comoving_reduced.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
 	
 
-void cosmobl::modelling::threept::Modelling_ThreePointCorrelation_comoving_reduced::set_model_nonlinear_localbias (const statistics::Prior bias1_prior, const statistics::Prior bias2_prior)
+void cbl::modelling::threept::Modelling_ThreePointCorrelation_comoving_reduced::set_model_nonlinear_localbias (const statistics::PriorDistribution bias1_prior, const statistics::PriorDistribution bias2_prior)
 {
-  auto bias1 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(bias1_prior, "b1"));
-  auto bias2 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(bias2_prior, "b2"));
+  // set the model parameters
+  const int nparameters = 2;
 
-  vector<shared_ptr<statistics::Parameter>> ll_parameters = {bias1, bias2};
-  
-  set_parameters(ll_parameters);
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "b1";
+  parameterName[1] = "b2";
+
+  vector<statistics::PriorDistribution> priors = {bias1_prior, bias2_prior};
 
   // input data used to construct the model
   auto inputs = make_shared<STR_data_model_threept>(m_data_model);
 
+  //set the priors
+  m_set_prior(priors);
+
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&Q_nonlinear_localbias, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&Q_nonlinear_localbias, nparameters, parameterType, parameterName, inputs));
 }
 
 
 // ============================================================================================
 	
 
-void cosmobl::modelling::threept::Modelling_ThreePointCorrelation_comoving_reduced::set_model_nonlinear_nonlocalbias (const statistics::Prior bias1_prior, const statistics::Prior bias2_prior, const statistics::Prior g2_prior)
+void cbl::modelling::threept::Modelling_ThreePointCorrelation_comoving_reduced::set_model_nonlinear_nonlocalbias (const statistics::PriorDistribution bias1_prior, const statistics::PriorDistribution bias2_prior, const statistics::PriorDistribution g2_prior)
 {
-  auto bias1 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(bias1_prior, "b1"));
-  auto bias2 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(bias2_prior, "b2"));
-  auto g2 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(g2_prior, "g2"));
+  // set the model parameters
+  const int nparameters = 3;
 
-  vector<shared_ptr<statistics::Parameter>> ll_parameters = {bias1, bias2, g2};
-  
-  set_parameters(ll_parameters);
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "b1";
+  parameterName[1] = "b2";
+  parameterName[2] = "g2";
+
+  vector<statistics::PriorDistribution> priors = {bias1_prior, bias2_prior, g2_prior};
 
   // input data used to construct the model
   auto inputs = make_shared<STR_data_model_threept>(m_data_model);
 
+  //set the priors
+  m_set_prior(priors);
+
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&Q_nonlinear_nonlocalbias, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&Q_nonlinear_nonlocalbias, nparameters, parameterType, parameterName, inputs));
 }
 
 
 // ============================================================================================
   
 
-void cosmobl::modelling::threept::Modelling_ThreePointCorrelation_comoving_reduced::set_model_nonlinear_nonlocalbias_alpha (const statistics::Prior bias1_prior, const statistics::Prior bias2_prior, const statistics::Prior g2_prior, const statistics::Prior alpha_prior)
+void cbl::modelling::threept::Modelling_ThreePointCorrelation_comoving_reduced::set_model_nonlinear_nonlocalbias_alpha (const statistics::PriorDistribution bias1_prior, const statistics::PriorDistribution bias2_prior, const statistics::PriorDistribution g2_prior, const statistics::PriorDistribution alpha_prior)
 {
-  auto bias1 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(bias1_prior, "b1"));
-  auto bias2 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(bias2_prior, "b2"));
-  auto g2 = make_shared<statistics::BaseParameter>(statistics::BaseParameter(g2_prior, "g2"));
-  auto alpha = make_shared<statistics::BaseParameter>(statistics::BaseParameter(alpha_prior, "alpha"));
+  // set the model parameters
+  const int nparameters = 4;
 
-  vector<shared_ptr<statistics::Parameter>> ll_parameters = {bias1, bias2, g2, alpha};
-  
-  set_parameters(ll_parameters);
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "b1";
+  parameterName[1] = "b2";
+  parameterName[2] = "g2";
+  parameterName[3] = "alpha";
+
+  vector<statistics::PriorDistribution> priors = {bias1_prior, bias2_prior, g2_prior, alpha_prior};
 
   // input data used to construct the model
   auto inputs = make_shared<STR_data_model_threept>(m_data_model);
 
+  //set the priors
+  m_set_prior(priors);
+
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&Q_nonlinear_nonlocalbias_alpha, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&Q_nonlinear_nonlocalbias_alpha, nparameters, parameterType, parameterName, inputs));
 }

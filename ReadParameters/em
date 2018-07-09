@@ -1,1 +1,1 @@
-emacs ../Headers/Lib/ReadParameters.h ReadParameters.cpp &
+emacs ../Headers/ReadParameters.h ReadParameters.cpp &

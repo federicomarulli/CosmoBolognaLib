@@ -37,19 +37,22 @@
 
 #include "ModelFunction_TwoPointCorrelation2D_cartesian.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
 
 
-vector<vector<double>> cosmobl::modelling::twopt::xi2D_dispersionModel (const vector<double> rp, const vector<double> pi, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<vector<double>> cbl::modelling::twopt::xi2D_dispersionModel (const vector<double> rp, const vector<double> pi, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
 
+
   // ----- input parameters -----
-  
+
   // AP parameter: D_A,1(z)/D_A,2(z)
   double AP1 = parameter[0];
 
@@ -64,6 +67,7 @@ vector<vector<double>> cosmobl::modelling::twopt::xi2D_dispersionModel (const ve
 
   // the dispersion in the pairwise random peculiar velocities
   double sigma12 = parameter[4];
+
 
   // ----- derived parameters -----
 

@@ -38,7 +38,9 @@
 
 #include "TwoPointCorrelationCross1D_monopole.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 using namespace chainmesh;
 using namespace data;
@@ -50,7 +52,7 @@ using namespace twopt;
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelationCross1D_monopole::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_d1d2, const bool count_rr, const bool count_d1r, const bool count_d2r, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_d1d2, const bool count_rr, const bool count_d1r, const bool count_d2r, const bool tcount, const Estimator estimator)
 {
   (void)dir_output_resample, (void)nMocks;
   
@@ -67,7 +69,7 @@ void cosmobl::measure::twopt::TwoPointCorrelationCross1D_monopole::measure (cons
 // ============================================================================================
 
 
-void cosmobl::measure::twopt::TwoPointCorrelationCross1D_monopole::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_d1d2, const bool count_rr, const bool count_d1r, const bool count_d2r, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_d1d2, const bool count_rr, const bool count_d1r, const bool count_d2r, const bool tcount, const Estimator estimator)
 {
   // ----------- count the data1-data2, random-random, data1-random and data2-random pairs, or read them from file ----------- 
   
@@ -76,7 +78,7 @@ void cosmobl::measure::twopt::TwoPointCorrelationCross1D_monopole::measurePoisso
   
   // ----------- compute the monopole of the two-point cross correlation function ----------- 
 
-  if (estimator==_SzapudiSzalay_)
+  if (estimator==Estimator::_SzapudiSzalay_)
     m_dataset = correlation_SzapudiSzalayEstimator(m_d1d2, m_rr, m_d1r, m_d2r);
   else
     ErrorCBL("Error in measurePoisson() of TwoPointCorrelationCross1D_monopole.cpp: the chosen estimator is not implemented!");

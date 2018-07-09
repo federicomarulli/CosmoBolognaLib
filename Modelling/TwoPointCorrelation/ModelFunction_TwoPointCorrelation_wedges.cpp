@@ -36,13 +36,15 @@
 #include "ModelFunction_TwoPointCorrelation.h"
 #include "ModelFunction_TwoPointCorrelation_wedges.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xiWedges (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xiWedges (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -89,7 +91,7 @@ vector<double> cosmobl::modelling::twopt::xiWedges (const vector<double> rad, co
 // ============================================================================================
 
 
-vector<double> cosmobl::modelling::twopt::xiWedges_BAO (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xiWedges_BAO (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -107,10 +109,10 @@ vector<double> cosmobl::modelling::twopt::xiWedges_BAO (const vector<double> rad
   // AP parameter that contains the distance information
   double alpha_parallel = parameter[1];
 
-  vector<vector<double>> xiww = cosmobl::XiWedges_AP ({0., 0.5}, {0.5, 0.5}, alpha_perpendicular, alpha_parallel,  pp->rr, pp->func_multipoles[0], pp->func_multipoles[1], pp->func_multipoles[2]);
+  vector<vector<double>> xiww = cbl::XiWedges_AP ({0., 0.5}, {0.5, 0.5}, alpha_perpendicular, alpha_parallel,  pp->rr, pp->func_multipoles[0], pp->func_multipoles[1], pp->func_multipoles[2]);
 
-  cosmobl::glob::FuncGrid xiperp(pp->rr, xiww[0], "Spline");
-  cosmobl::glob::FuncGrid xipar(pp->rr, xiww[1], "Spline");
+  cbl::glob::FuncGrid xiperp(pp->rr, xiww[0], "Spline");
+  cbl::glob::FuncGrid xipar(pp->rr, xiww[1], "Spline");
 
   vector<vector<double>> Xiw(2);
 
@@ -130,7 +132,7 @@ vector<double> cosmobl::modelling::twopt::xiWedges_BAO (const vector<double> rad
 }
 
 /*
-vector<double> cosmobl::modelling::twopt::xiWedges_BAO (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+vector<double> cbl::modelling::twopt::xiWedges_BAO (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -159,11 +161,11 @@ vector<double> cosmobl::modelling::twopt::xiWedges_BAO (const vector<double> rad
       double mup = mu*alpha_parallel/fact;
       double val=0;
       for(int j=0; j<pp->nwedges; j++)
-	val += pp->func_multipoles[j]->operator()(sp)*cosmobl::legendre_polynomial(mup, j*2);
+	val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
       return val;
     };
 
-    Xiw[0].push_back(0.5*parameter[2]*cosmobl::gsl::GSL_integrate_qag(xi_mu, 0, 0.5)+parameter[4]+parameter[6]/new_rad[0][i]+parameter[8]/(new_rad[0][i]*new_rad[0][i]));
+    Xiw[0].push_back(0.5*parameter[2]*cbl::gsl::GSL_integrate_qag(xi_mu, 0, 0.5)+parameter[4]+parameter[6]/new_rad[0][i]+parameter[8]/(new_rad[0][i]*new_rad[0][i]));
   }
 
   for(size_t i=0; i<new_rad[1].size(); i++){
@@ -175,11 +177,11 @@ vector<double> cosmobl::modelling::twopt::xiWedges_BAO (const vector<double> rad
       double mup = mu*alpha_parallel/fact;
       double val=0;
       for(int j=0; j<pp->nwedges; j++)
-	val += pp->func_multipoles[j]->operator()(sp)*cosmobl::legendre_polynomial(mup, j*2);
+	val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
       return val;
     };
 
-    Xiw[1].push_back(0.5*parameter[3]*cosmobl::gsl::GSL_integrate_qag(xi_mu, 0.5, 1)+parameter[5]+parameter[7]/new_rad[1][i]+parameter[9]/(new_rad[1][i]*new_rad[1][i]));
+    Xiw[1].push_back(0.5*parameter[3]*cbl::gsl::GSL_integrate_qag(xi_mu, 0.5, 1)+parameter[5]+parameter[7]/new_rad[1][i]+parameter[9]/(new_rad[1][i]*new_rad[1][i]));
   }
 
   vector<double> Xi;

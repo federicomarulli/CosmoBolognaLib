@@ -7,46 +7,46 @@
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
 // launching the code on remote systems)
-string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 
 int main () {
 
   try {
   
-    string file_catalogue = "cat.dat";
+    std::string file_catalogue = "cat.dat";
   
   
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- method I : construct a galaxy catalogue directly by reading an input file ----------------
     // ----------------------------------------------------------------------------------------.........----------
   
-    cosmobl::catalogue::Catalogue catalogue1 {cosmobl::catalogue::_Galaxy_, cosmobl::_comovingCoordinates_, {file_catalogue}};
+    cbl::catalogue::Catalogue catalogue1 {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_comoving_, {file_catalogue}};
 
-    cout << "The coordinates of the first galaxy in the catalogue are: " <<
-      catalogue1[0]->xx() << ", " << catalogue1[0]->yy() << ", " << catalogue1[0]->zz() << endl;
+    std::cout << "The coordinates of the first galaxy in the catalogue are: " <<
+      catalogue1[0]->xx() << ", " << catalogue1[0]->yy() << ", " << catalogue1[0]->zz() << std::endl;
 
     
     // -----------------------------------------------------------------------------------------------------------------------
     // ------- method II : construct a galaxy catalogue directly from a file, choosing which quantity has to be read ---------
     // -----------------------------------------------------------------------------------------------------------------------
 
-    // vector containing the quantities to be read
-    vector<cosmobl::catalogue::Var> attribute = {cosmobl::catalogue::Var::_X_, cosmobl::catalogue::Var::_Y_, cosmobl::catalogue::Var::_Z_};
+    // std::vector containing the quantities to be read
+    std::vector<cbl::catalogue::Var> attribute = {cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_};
 
-    // vector containing the columns corresponding to each quantity
-    vector<int> column = {1, 2, 3};
+    // std::vector containing the columns corresponding to each quantity
+    std::vector<int> column = {1, 2, 3};
     
-    cosmobl::catalogue::Catalogue catalogue2 {cosmobl::catalogue::_Galaxy_, cosmobl::_comovingCoordinates_, attribute, column, {file_catalogue}};
+    cbl::catalogue::Catalogue catalogue2 {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_comoving_, attribute, column, {file_catalogue}};
 
     
     // -------------------------------------------------------------------------------------------------------------------------
-    // ---------------- method III : construct a galaxy catalogue using vectors to specify the galaxy properties ---------------
+    // ---------------- method III : construct a galaxy catalogue using std::vectors to specify the galaxy properties ---------------
     // -------------------------------------------------------------------------------------------------------------------------
 
-    ifstream fin; fin.open(file_catalogue.c_str()); cosmobl::checkIO(fin, file_catalogue);
+    std::ifstream fin; fin.open(file_catalogue.c_str()); cbl::checkIO(fin, file_catalogue);
   
     double X, Y, Z;
-    vector<double> x, y, z;
+    std::vector<double> x, y, z;
   
     while (fin >> X >> Y >> Z) {
       x.emplace_back(X);
@@ -56,36 +56,36 @@ int main () {
   
     fin.clear();
   
-    cosmobl::catalogue::Catalogue catalogue3 {cosmobl::catalogue::_Galaxy_, cosmobl::_comovingCoordinates_, x, y, z};
+    cbl::catalogue::Catalogue catalogue3 {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_comoving_, x, y, z};
 
   
     // ------------------------------------------------------------------------------------------------------------------
-    // ---------------- method IV : construct a vector of galaxies and add them into an empty catalogue -----------------
+    // ---------------- method IV : construct a std::vector of galaxies and add them into an empty catalogue -----------------
     // ------------------------------------------------------------------------------------------------------------------
 
-    vector<shared_ptr<cosmobl::catalogue::Object>> object;
+    std::vector<std::shared_ptr<cbl::catalogue::Object>> object;
   
-    fin.seekg(ios::beg);
+    fin.seekg(std::ios::beg);
   
     while (fin >> X >> Y >> Z) {
-      cosmobl::comovingCoordinates coord = {X, Y, Z};
-      auto galaxy = make_shared<cosmobl::catalogue::Galaxy>(coord);
+      cbl::comovingCoordinates coord = {X, Y, Z};
+      auto galaxy = std::make_shared<cbl::catalogue::Galaxy>(coord);
       object.emplace_back(galaxy);
     }
   
     fin.clear(); fin.close();
 
-    cosmobl::catalogue::Catalogue catalogue4; catalogue4.add_objects(object);
+    cbl::catalogue::Catalogue catalogue4; catalogue4.add_objects(object);
 
   
-    cout << "The number of galaxy in catalogue1 is " << catalogue1.nObjects() << endl;
-    cout << "The number of galaxy in catalogue2 is " << catalogue2.nObjects() << endl;
-    cout << "The number of galaxy in catalogue3 is " << catalogue3.nObjects() << endl;
-    cout << "The number of galaxy in catalogue4 is " << catalogue4.nObjects() << endl;
+    std::cout << "The number of galaxy in catalogue1 is " << catalogue1.nObjects() << std::endl;
+    std::cout << "The number of galaxy in catalogue2 is " << catalogue2.nObjects() << std::endl;
+    std::cout << "The number of galaxy in catalogue3 is " << catalogue3.nObjects() << std::endl;
+    std::cout << "The number of galaxy in catalogue4 is " << catalogue4.nObjects() << std::endl;
 
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

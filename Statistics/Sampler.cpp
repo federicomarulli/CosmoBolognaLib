@@ -32,13 +32,15 @@
 
 #include "Sampler.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
 
 
-shared_ptr<random::DistributionRandomNumbers> cosmobl::statistics::Sampler::m_set_gz(const int seed, const double aa)
+shared_ptr<random::DistributionRandomNumbers> cbl::statistics::Sampler::m_set_gz(const int seed, const double aa)
 {
   if(aa<=1)
     ErrorCBL("Error in Sampler, the stretch move parameter must be >1!");
@@ -57,7 +59,7 @@ shared_ptr<random::DistributionRandomNumbers> cosmobl::statistics::Sampler::m_se
 
 
 
-void cosmobl::statistics::Sampler::m_initialize_chains(const vector< vector<double> > start)
+void cbl::statistics::Sampler::m_initialize_chains(const vector< vector<double> > start)
 {
   for (int i=0; i<m_nwalkers; i++) { 
     vector<double> pp = start[i];
@@ -70,7 +72,7 @@ void cosmobl::statistics::Sampler::m_initialize_chains(const vector< vector<doub
 // ============================================================================================
 
 
-void cosmobl::statistics::Sampler::set_chain(const int npar, const int npar_free, const int chain_size, const int nwalkers)
+void cbl::statistics::Sampler::set_chain(const int npar, const int npar_free, const int chain_size, const int nwalkers)
 {
   m_npar = npar;
   m_npar_free = npar_free;
@@ -92,7 +94,7 @@ void cosmobl::statistics::Sampler::set_chain(const int npar, const int npar_free
 // ============================================================================================
 
 
-void cosmobl::statistics::Sampler::set_function (const function<double(vector<double> &)> function)
+void cbl::statistics::Sampler::set_function (const function<double(vector<double> &)> function)
 {
   m_function = function;
   m_use_python = false;
@@ -102,7 +104,7 @@ void cosmobl::statistics::Sampler::set_function (const function<double(vector<do
 // ============================================================================================
 
 /*
-void cosmobl::statistics::Sampler::set_function (PyObject *pp)
+void cbl::statistics::Sampler::set_function (PyObject *pp)
 {
   PyCallback pc(pp);
   m_function = bind(&PyCallback::V2D, pc, placeholders::_1);
@@ -113,17 +115,14 @@ void cosmobl::statistics::Sampler::set_function (PyObject *pp)
 // ============================================================================================
 
 
-void cosmobl::statistics::Sampler::sample_stretch_move (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
+void cbl::statistics::Sampler::sample_stretch_move (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
 {
   set_chain(m_npar, m_npar_free, chain_size, nwalkers);
 
   // set seed for random_numbers
-  random::UniformRandomNumbers seeds(0, 23412432, seed);
+  random::UniformRandomNumbers_Int seeds(0, 23412432, seed);
  
-  vector<double> chains_index = linear_bin_vector(m_nwalkers, 0., m_nwalkers-1.);
-  vector<double> chains_weights(m_nwalkers,1);
-  random::DiscreteRandomNumbers chains(chains_index, chains_weights, int(seeds()), 0, m_nwalkers-1);
-
+  random::UniformRandomNumbers_Int chains(0, m_nwalkers-1, int(seeds()));
   random::UniformRandomNumbers MH_random(0., 1., int(seeds()));
 
   auto gz = m_set_gz(int(seeds()), aa);
@@ -131,7 +130,6 @@ void cosmobl::statistics::Sampler::sample_stretch_move (const int chain_size, co
   // initialize chains
   m_initialize_chains(start);
   
-
   for (int n=1; n<m_chain_size; n++) {
     for (int i=0; i<m_nwalkers; i++)
     {
@@ -182,25 +180,25 @@ void cosmobl::statistics::Sampler::sample_stretch_move (const int chain_size, co
 // ============================================================================================
 
 
-void cosmobl::statistics::Sampler::m_sample_stretch_move_parallel_cpp (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
+void cbl::statistics::Sampler::m_sample_stretch_move_parallel_cpp (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
 {
   set_chain(m_npar, m_npar_free, chain_size, nwalkers);
 
   // set seeds and random_numbers
-  random::UniformRandomNumbers seeds(0, 23412432, seed);
+  random::UniformRandomNumbers_Int seeds(0, 23412432, seed);
 
   vector<double> chains_index = linear_bin_vector(m_nwalkers, 0., m_nwalkers-1.);
   vector<double> chains_weights(m_nwalkers,1);
 
   int half = m_nwalkers/2;
-  random::DiscreteRandomNumbers chains_first_half(chains_index, chains_weights, int(seeds()), 0, half-1);
-  random::DiscreteRandomNumbers chains_second_half(chains_index, chains_weights, int(seeds()), half, m_nwalkers-1);
+  random::UniformRandomNumbers_Int chains_first_half(0, half-1, seeds());
+  random::UniformRandomNumbers_Int chains_second_half(half, m_nwalkers-1, seeds());
 
-  vector<random::DiscreteRandomNumbers> chains_sample = {chains_second_half, chains_first_half};
+  vector<random::UniformRandomNumbers_Int> chains_sample = {chains_second_half, chains_first_half};
 
-  random::UniformRandomNumbers MH_random(0., 1., int(seeds()));
+  random::UniformRandomNumbers MH_random(0., 1., seeds());
 
-  auto gz = m_set_gz(int(seeds()), aa);
+  auto gz = m_set_gz(seeds(), aa);
 
   // initialise the chains
   m_initialize_chains(start);
@@ -238,7 +236,7 @@ void cosmobl::statistics::Sampler::m_sample_stretch_move_parallel_cpp (const int
 	  m_chains[n][i] = parameters_i;
 	  m_acceptance[i] += 1./m_chain_size;
 	}
-	else{
+	else {
 	  m_function_chain[n][i] = m_function_chain[n-1][i];
 	  m_chains[n][i] = m_chains[n-1][i]; 
 	}
@@ -257,10 +255,10 @@ void cosmobl::statistics::Sampler::m_sample_stretch_move_parallel_cpp (const int
 // ============================================================================================
 
 
-void cosmobl::statistics::Sampler::m_sample_stretch_move_parallel_py (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
+void cbl::statistics::Sampler::m_sample_stretch_move_parallel_py (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
 {
   (void)chain_size; (void)nwalkers; (void)start; (void)seed; (void)aa;
-  cosmobl::ErrorCBL("Work in progress", glob::ExitCode::_workInProgress_);
+  cbl::ErrorCBL("Work in progress", glob::ExitCode::_workInProgress_);
 
 
   /*
@@ -341,7 +339,7 @@ void cosmobl::statistics::Sampler::m_sample_stretch_move_parallel_py (const int 
 // ============================================================================================
 
 
-void cosmobl::statistics::Sampler::sample_stretch_move_parallel (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
+void cbl::statistics::Sampler::sample_stretch_move_parallel (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
 {
   if(m_use_python)
     m_sample_stretch_move_parallel_py(chain_size, nwalkers, start, seed, aa);
@@ -353,7 +351,7 @@ void cosmobl::statistics::Sampler::sample_stretch_move_parallel (const int chain
 // ============================================================================================
 
 
-void cosmobl::statistics::Sampler::get_chain_function_acceptance(vector<vector<double>> &chains, vector<double> &function, vector<double> &acceptance, const int start, const int thin)
+void cbl::statistics::Sampler::get_chain_function_acceptance (vector<vector<double>> &chains, vector<double> &function, vector<double> &acceptance, const int start, const int thin)
 {
   chains.resize(m_npar);
   function.erase(function.begin(), function.end());
@@ -374,19 +372,18 @@ void cosmobl::statistics::Sampler::get_chain_function_acceptance(vector<vector<d
 // ============================================================================================
 
 
-void cosmobl::statistics::Sampler::write_chain(const string dir_output, const string file, const int start, const int thin)
+void cbl::statistics::Sampler::write_chain (const string dir_output, const string file, const int start, const int thin)
 {
   string file_out = dir_output+file;
   ofstream fout(file_out.c_str());
   fout.precision(10);
 
-  for(int i=start;i<m_chain_size; i+=thin){
-    for(int j=0;j<m_nwalkers;j++){
-      fout << i*m_nwalkers+j << " ";
-      for(int k=0;k<m_npar;k++){
-	fout <<  m_chains[i][j][k] << "  ";
-      }
-      fout << m_function_chain[i][j] << " " << m_acceptance[j] << endl;
+  for (int i=start;i<m_chain_size; i+=thin) {
+    for (int j=0;j<m_nwalkers;j++) {
+      fout << i*m_nwalkers+j << "  ";
+      for (int k=0;k<m_npar;k++) 
+	fout <<  m_chains[i][j][k] << "  ";   
+      fout << m_function_chain[i][j] << "  " << m_acceptance[j] << endl;
     }
   } 
   fout.clear(); fout.close();

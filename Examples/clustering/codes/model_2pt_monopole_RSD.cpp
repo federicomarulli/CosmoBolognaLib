@@ -7,7 +7,7 @@
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
 // launching the code on remote systems)
-string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 
 
 int main () {
@@ -18,7 +18,7 @@ int main () {
     // ---------------- use default cosmological parameters and set sigma8 ------------
     // --------------------------------------------------------------------------------
   
-    cosmobl::cosmology::Cosmology cosmology;
+    cbl::cosmology::Cosmology cosmology;
     cosmology.set_sigma8(0.8);
 
   
@@ -26,9 +26,9 @@ int main () {
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
 
-    const string file_catalogue = cosmobl::par::DirLoc+"../input/cat.dat";
+    const std::string file_catalogue = cbl::par::DirLoc+"../input/cat.dat";
   
-    const cosmobl::catalogue::Catalogue catalogue {cosmobl::catalogue::_Galaxy_, cosmobl::_observedCoordinates_, {file_catalogue}, cosmology};
+    const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
   
     // ----------------------------------------------------------------
@@ -37,7 +37,7 @@ int main () {
 
     const double N_R = 1.; // random/data ratio
   
-    const cosmobl::catalogue::Catalogue random_catalogue {cosmobl::catalogue::_createRandom_box_, catalogue, N_R};
+    const cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::RandomType::_createRandom_box_, catalogue, N_R};
 
 
     // --------------------------------------------------------------------------------------------
@@ -46,20 +46,20 @@ int main () {
 
     // binning parameters and output data
 
-    const double rMin = 0.1;  // minimum separation 
-    const double rMax = 50.;  // maximum separation 
-    const int nbins = 25;     // number of bins
+    const double rMin = 10.;  // minimum separation 
+    const double rMax = 30.;  // maximum separation 
+    const int nbins = 10;     // number of bins
     const double shift = 0.5; // spatial shift used to set the bin centre 
 
-    const string dir = cosmobl::par::DirLoc+"../output/";
-    const string file = "xi.dat";
+    const std::string dir = cbl::par::DirLoc+"../output/";
+    const std::string file = "xi.dat";
 
   
     // measure the monopole of the two-point correlation function and estimate Poissonian errors
 
-    auto TwoP = cosmobl::measure::twopt::TwoPointCorrelation::Create(cosmobl::measure::twopt::TwoPType::_1D_monopole_, catalogue, random_catalogue, cosmobl::_linear_, rMin, rMax, nbins, shift);
+    auto TwoP = cbl::measure::twopt::TwoPointCorrelation::Create(cbl::measure::twopt::TwoPType::_1D_monopole_, catalogue, random_catalogue, cbl::BinType::_linear_, rMin, rMax, nbins, shift);
 
-    TwoP->measure(cosmobl::measure::ErrorType::_Poisson_, dir);
+    TwoP->measure(cbl::measure::ErrorType::_Poisson_, dir);
     TwoP->write(dir, file);
 
 
@@ -69,7 +69,7 @@ int main () {
     // ----------------------------------------------------------------------------------------------------------------------------
 
     // object used for modelling
-    cosmobl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole model_twop(TwoP); 
+    cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole model_twop(TwoP); 
 
     // mean redshift of the sample
     const double redshift = 1.; 
@@ -78,10 +78,9 @@ int main () {
     model_twop.set_data_model(cosmology, redshift);
   
     // set the priors and the model
-    const cosmobl::statistics::Prior fsigma8_prior {cosmobl::glob::DistributionType::_UniformDistribution_, 0., 2.}; // flat prior for the f*sigma8
-    const cosmobl::statistics::Prior bsigma8_prior {cosmobl::glob::DistributionType::_UniformDistribution_, 0., 2.}; // flat prior for the b*sigma8
+    const cbl::statistics::PriorDistribution fsigma8_prior {cbl::glob::DistributionType::_Uniform_, 0., 2.}; // flat prior for the f*sigma8
+    const cbl::statistics::PriorDistribution bsigma8_prior {cbl::glob::DistributionType::_Uniform_, 0., 2.}; // flat prior for the b*sigma8
     model_twop.set_model_Kaiser(fsigma8_prior, bsigma8_prior);
-
   
     // ----------------------------------------------------------------------
     // ------------- run chains and write output chain and model ------------
@@ -92,30 +91,30 @@ int main () {
     const double xmax = 40.;
     model_twop.set_fit_range(xmin, xmax);
 
-    const int chain_size = 10000; // the size the chain lenght
-    const int nwalkers = 200;     // the number of parallel walkers in the MCMC chains
-    const int seed = 4232;        // the base seed for initialization
+    const int chain_size = 1000; // the size the chain lenght
+    const int nwalkers = 10;     // the number of parallel walkers in the MCMC chains
+    const int seed = 666;        // the base seed for initialization
 
     // set the likelihood type
-    model_twop.set_likelihood(cosmobl::statistics::LikelihoodType::_GaussianLikelihood_Error_);
+    model_twop.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_);
 
     // run the MCMC method to sample the posterior
-    model_twop.run_MCMC(chain_size, nwalkers, seed);
+    model_twop.sample_posterior(chain_size, nwalkers, seed);
 
     const int burn_in = 100; // discard the first 100 chain steps 
     const int thin = 10;     // take 1 step every 10
 
     // write the results on screen 
-    model_twop.show_results(burn_in, thin, seed);
+    model_twop.show_results(burn_in, thin);
 
     // store the results in file
-    model_twop.write_results(dir, "model_RSD", burn_in, thin, seed);
+    model_twop.write_results(dir, "model_RSD", burn_in, thin);
 
     // store the best-fit model
-    model_twop.write_model(dir, "bestfit_model.dat", cosmobl::logarithmic_bin_vector(100, 0.1, 100.));
+    model_twop.write_model_from_chains(dir, "bestfit_model.dat", cbl::logarithmic_bin_vector(100, 0.1, 100.), burn_in, thin);
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 }

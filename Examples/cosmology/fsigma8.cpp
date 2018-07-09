@@ -7,7 +7,7 @@
 // these two variables contain the name of the CosmoBolognaLib
 // directory and the name of the current directory (useful when
 // launching the code on remote systems)
-string cosmobl::par::DirCosmo = DIRCOSMO, cosmobl::par::DirLoc = DIRL;
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 
 int main () {
 
@@ -17,7 +17,7 @@ int main () {
     // ---------------- set the cosmological parameters ------------
     // ------------------------------------------------------------- 
 
-    cosmobl::cosmology::Cosmology cosmology {cosmobl::cosmology::_Planck15_};
+    cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
 
 
     // ----------------------------------------------------------------
@@ -25,14 +25,14 @@ int main () {
     // ----------------------------------------------------------------
 
     double redshift = 1.;
-    string method = "CAMB";
+    std::string method = "CAMB";
 
     double fs8 = cosmology.fsigma8(redshift, method);
 
-    cout << "f*sigma8(z=" << redshift << ") = " << fs8 << endl;
+    std::cout << "f*sigma8(z=" << redshift << ") = " << fs8 << std::endl;
   }
 
-  catch(cosmobl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
   
   return 0;
 } 

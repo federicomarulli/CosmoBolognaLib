@@ -34,21 +34,23 @@
 
 #include "Catalogue.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 using namespace catalogue;
 
 
 // ============================================================================
 
 
-shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, const comovingCoordinates coord, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
+shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType)
 {
-  if (objType==_RandomObject_) return move(unique_ptr<RandomObject>(new RandomObject(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Mock_)    return move(unique_ptr<Mock>(new Mock(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Halo_)    return move(unique_ptr<Halo>(new Halo(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Void_)    return move(unique_ptr<Void>(new Void(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  if (objType==ObjectType::_Random_) return move(unique_ptr<RandomObject>(new RandomObject));
+  else if (objType==ObjectType::_Mock_)    return move(unique_ptr<Mock>(new Mock()));
+  else if (objType==ObjectType::_Halo_)    return move(unique_ptr<Halo>(new Halo()));
+  else if (objType==ObjectType::_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy()));
+  else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster()));
+  else if (objType==ObjectType::_Void_)    return move(unique_ptr<Void>(new Void()));
   else ErrorCBL("Error in Create of Object.cpp: no such type of object!");
   return NULL;
 }
@@ -57,14 +59,30 @@ shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, co
 // ============================================================================
 
 
-shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess, const double z2_guess, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
+shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType, const comovingCoordinates coord, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
 {
-  if (objType==_RandomObject_) return move(unique_ptr<RandomObject>(new RandomObject(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Mock_)    return move(unique_ptr<Mock>(new Mock(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Halo_)    return move(unique_ptr<Halo>(new Halo(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Void_)    return move(unique_ptr<Void>(new Void(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  if (objType==ObjectType::_Random_) return move(unique_ptr<RandomObject>(new RandomObject(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Mock_)    return move(unique_ptr<Mock>(new Mock(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Halo_)    return move(unique_ptr<Halo>(new Halo(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Void_)    return move(unique_ptr<Void>(new Void(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else ErrorCBL("Error in Create of Object.cpp: no such type of object!");
+  return NULL;
+}
+
+
+// ============================================================================
+
+
+shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess, const double z2_guess, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
+{
+  if (objType==ObjectType::_Random_) return move(unique_ptr<RandomObject>(new RandomObject(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Mock_)    return move(unique_ptr<Mock>(new Mock(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Halo_)    return move(unique_ptr<Halo>(new Halo(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Void_)    return move(unique_ptr<Void>(new Void(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement)));
   else ErrorCBL("Error in Create of Object.cpp: no such type of object!");
   return NULL;
 }
@@ -72,14 +90,14 @@ shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, co
 // ============================================================================
 
 
-shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, const observedCoordinates coord, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
+shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType, const observedCoordinates coord, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
 {
-  if (objType==_RandomObject_) return move(unique_ptr<RandomObject>(new RandomObject(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Mock_)    return move(unique_ptr<Mock>(new Mock(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Halo_)    return move(unique_ptr<Halo>(new Halo(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Void_)    return move(unique_ptr<Void>(new Void(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  if (objType==ObjectType::_Random_) return move(unique_ptr<RandomObject>(new RandomObject(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Mock_)    return move(unique_ptr<Mock>(new Mock(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Halo_)    return move(unique_ptr<Halo>(new Halo(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Void_)    return move(unique_ptr<Void>(new Void(coord, weight, region, field, x_displacement, y_displacement, z_displacement)));
   else ErrorCBL("Error in Create of Object.cpp: no such type of object!");
   return NULL;
 }
@@ -87,14 +105,14 @@ shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, co
 // ============================================================================
 
 
-shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, const observedCoordinates coord, const CoordUnits inputUnits, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
+shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType, const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
 {
-  if (objType==_RandomObject_) return move(unique_ptr<RandomObject>(new RandomObject(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Mock_)    return move(unique_ptr<Mock>(new Mock(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Halo_)    return move(unique_ptr<Halo>(new Halo(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Void_)    return move(unique_ptr<Void>(new Void(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  if (objType==ObjectType::_Random_) return move(unique_ptr<RandomObject>(new RandomObject(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Mock_)    return move(unique_ptr<Mock>(new Mock(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Halo_)    return move(unique_ptr<Halo>(new Halo(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Void_)    return move(unique_ptr<Void>(new Void(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement)));
   else ErrorCBL("Error in Create of Object.cpp: no such type of object!");
   return NULL;
 }
@@ -102,14 +120,14 @@ shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, co
 // ============================================================================
 
 
-shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
+shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType, const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
 {
-  if (objType==_RandomObject_) return move(unique_ptr<RandomObject>(new RandomObject(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Mock_)    return move(unique_ptr<Mock>(new Mock(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Halo_)    return move(unique_ptr<Halo>(new Halo(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Void_)    return move(unique_ptr<Void>(new Void(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  if (objType==ObjectType::_Random_) return move(unique_ptr<RandomObject>(new RandomObject(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Mock_)    return move(unique_ptr<Mock>(new Mock(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Halo_)    return move(unique_ptr<Halo>(new Halo(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Void_)    return move(unique_ptr<Void>(new Void(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
   else ErrorCBL("Error in Create of Object.cpp: no such type of object!");
   return NULL;
 }
@@ -117,14 +135,14 @@ shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, co
 // ============================================================================
 
 
-shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, const observedCoordinates coord, const CoordUnits inputUnits, const cosmology::Cosmology &cosm, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
+shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType, const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
 {
-  if (objType==_RandomObject_) return move(unique_ptr<RandomObject>(new RandomObject(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Mock_)    return move(unique_ptr<Mock>(new Mock(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Halo_)    return move(unique_ptr<Halo>(new Halo(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Void_)    return move(unique_ptr<Void>(new Void(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  if (objType==ObjectType::_Random_) return move(unique_ptr<RandomObject>(new RandomObject(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Mock_)    return move(unique_ptr<Mock>(new Mock(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Halo_)    return move(unique_ptr<Halo>(new Halo(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Void_)    return move(unique_ptr<Void>(new Void(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement)));
   else ErrorCBL("Error in Create of Object.cpp: no such type of object!");
   return NULL;
 }
@@ -132,14 +150,14 @@ shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, co
 // ============================================================================
 
 
-shared_ptr<Object> cosmobl::catalogue::Object::Create (const ObjType objType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
+shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight, const long region, const string field, const double x_displacement, const double y_displacement, const double z_displacement)
 {
-  if (objType==_RandomObject_) return move(unique_ptr<RandomObject>(new RandomObject(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Mock_)    return move(unique_ptr<Mock>(new Mock(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Halo_)    return move(unique_ptr<Halo>(new Halo(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Cluster_) return move(unique_ptr<Cluster>(new Cluster(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement)));
-  else if (objType==_Void_)    return move(unique_ptr<Void>(new Void(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  if (objType==ObjectType::_Random_) return move(unique_ptr<RandomObject>(new RandomObject(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Mock_)    return move(unique_ptr<Mock>(new Mock(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Halo_)    return move(unique_ptr<Halo>(new Halo(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Galaxy_)  return move(unique_ptr<Galaxy>(new Galaxy(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement)));
+  else if (objType==ObjectType::_Void_)    return move(unique_ptr<Void>(new Void(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement)));
   else ErrorCBL("Error in Create of Object.cpp: no such type of object!");
   return NULL;
 }

@@ -36,7 +36,35 @@
 
 #include "Modelling_ThreePointCorrelation_comoving_connected.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
+	
+
+void cbl::modelling::threept::Modelling_ThreePointCorrelation_comoving_connected::set_model_RSD (const statistics::PriorDistribution b1_prior, const statistics::PriorDistribution b2_prior, const statistics::PriorDistribution bt_prior, const statistics::PriorDistribution beta_prior)
+{
+  // set the model parameters
+  const int nparameters = 4;
+
+  vector<statistics::ParameterType> parameterType = {statistics::ParameterType::_Base_};
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "b1";
+  parameterName[1] = "b2";
+  parameterName[2] = "bt";
+  parameterName[3] = "beta";
+
+  vector<statistics::PriorDistribution> priors = {b1_prior, b2_prior, bt_prior, beta_prior};
+
+  // input data used to construct the model
+  auto inputs = make_shared<STR_data_model_threept>(m_data_model);
+
+  //set the priors
+  m_set_prior(priors);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&zeta_RSD, nparameters, parameterType, parameterName, inputs));
+}

@@ -1,1 +1,1 @@
-emacs ../../Headers/Lib/Modelling.h *.cpp &
+emacs ../../Headers/Modelling.h ../../Headers/Modelling1D.h ../../Headers/Modelling2D.h *.cpp &

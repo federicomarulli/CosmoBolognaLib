@@ -36,13 +36,35 @@
 
 #include "Modelling_TwoPointCorrelation2D.h"
 
-using namespace cosmobl;
+using namespace std;
+
+using namespace cbl;
 
 
 // ============================================================================================
 
 
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation2D::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const string method_Pk, const double sigmaNL, const bool NL, const int FV, const string output_root, const bool bias_nl, const double bA, const bool xiType, const double k_star, const bool xiNL, const double v_min, const double v_max, const int step_v, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const double aa, const bool GSL, const double prec, const string file_par)
+cbl::modelling::twopt::Modelling_TwoPointCorrelation2D::Modelling_TwoPointCorrelation2D (const shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
+{
+  m_data = twop->dataset();
+  m_twoPType = twop->twoPType();
+}
+
+
+// ============================================================================================
+
+
+cbl::modelling::twopt::Modelling_TwoPointCorrelation2D::Modelling_TwoPointCorrelation2D (const shared_ptr<cbl::data::Data> dataset, const measure::twopt::TwoPType twoPType)
+{
+  m_data = dataset;
+  m_twoPType = twoPType;
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const string method_Pk, const double sigmaNL, const bool NL, const int FV, const string output_root, const bool bias_nl, const double bA, const bool xiType, const double k_star, const bool xiNL, const double v_min, const double v_max, const int step_v, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const double aa, const bool GSL, const double prec, const string file_par)
 {
   m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model.redshift = redshift;
@@ -70,59 +92,14 @@ void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation2D::set_data_model 
   m_data_model.prec = prec;
   m_data_model.file_par = file_par;
 
-  m_data_model.sigma8_z = m_data_model.cosmology->sigma8_Pk(m_data_model.method_Pk, m_data_model.redshift, m_data_model.output_root);
+  try {
+    m_data_model.sigma8_z = m_data_model.cosmology->sigma8(m_data_model.redshift);
+  }
+  catch(cbl::glob::Exception &exc) { 
+    coutCBL << "sigma8 is not set, it will be computed from the power spectrum with " << m_data_model.method_Pk << endl; 
+    m_data_model.sigma8_z = m_data_model.cosmology->sigma8_Pk(m_data_model.method_Pk, m_data_model.redshift, m_data_model.output_root);
+    coutCBL << "--> sigma8(z=" << m_data_model.redshift << ") = " << m_data_model.sigma8_z << endl << endl;
+  }
   m_data_model.linear_growth_rate_z = m_data_model.cosmology->linear_growth_rate(m_data_model.redshift);
   m_data_model.var = (1.+ m_data_model.redshift)/m_data_model.cosmology->HH(m_data_model.redshift);
 }
-
-
-// ============================================================================================
-
-
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation2D::write_model (const string dir, const string file, const vector<double> xx, const vector<double> yy, const vector<double> parameter, const int start, const int thin)
-{
-  vector<double> r1 = (xx.size()==0) ? logarithmic_bin_vector(100, 0.1, 100.) : xx;
-  vector<double> r2 = (yy.size()==0) ? logarithmic_bin_vector(100, 0.1, 100.) : yy;
-
-
-  // compute the model with best-fit parameters
-  
-  if (parameter.size()==0) {
-    
-    vector<vector<double>> median_model, low_model, up_model;
-    compute_model_from_chains(r1, r2, start, thin, median_model, low_model, up_model); // check!!!
-    
-  
-    string mkdir = "mkdir -p "+dir; if (system(mkdir.c_str())) {}
-    string file_out = dir+file;
-    ofstream fout(file_out.c_str()); checkIO(fout, file_out);
-
-    fout << "### scale in the first dimension # scale in the second dimension # median model # model at 16th percentile # model at 84th percentile ###" << endl;
-    
-    for (size_t i=0; i<r1.size(); i++)
-      for (size_t j=0; j<r2.size(); j++) 
-	fout << setw(10) << setiosflags(ios::fixed) << setprecision(5) << r1[i] << "  " << r2[j] << "  " << median_model[i][j] << "  " << low_model[i][j] << "  " << up_model[i][j] << endl;
-    
-    fout.clear(); fout.close();
-    coutCBL << "I wrote the file: " << dir+file << endl;
-  }
-
-  
-  // compute the model with input parameters
-  
-  else{
-    vector<double> par = parameter;
-    m_model->write_model(dir, file, r1, r2, par);
-  }
-}
-
-
-// ============================================================================================
-
-
-void cosmobl::modelling::twopt::Modelling_TwoPointCorrelation2D::compute_model_from_chains (const vector<double> xx, const vector<double> yy, const int start, const int thin, vector<vector<double>> &median_model, vector<vector<double>> &low_model, vector<vector<double>> &up_model)
-{
-  (void)xx; (void)yy; (void)start; (void)thin; (void)median_model; (void)low_model; (void)up_model;
-  ErrorCBL("Work in progress in compute_model_from_chains() of ModellingTwoPointCorrelation2D.cpp...", glob::_workInProgress_);
-}
-
