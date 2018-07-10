@@ -125,12 +125,10 @@ int main () {
     // show the results on screen
     const int burn_in = 0;
     const int thin = 1;
-    const int nbins_posterior = 50;
-    posterior.show_results(burn_in, thin, nbins_posterior);
+    posterior.show_results(burn_in, thin);
 
     // write the chain ouput
-    const bool fits = true;
-    posterior.write_results(cbl::par::DirLoc+"../output/", "chains_linear_relation", burn_in, thin, nbins_posterior, fits);
+    posterior.write_results(cbl::par::DirLoc+"../output/", "chains_linear_relation", burn_in, thin);
 
     // write the best-fit model
     posterior.write_model_from_chain(cbl::par::DirLoc+"../output/", "model_from_chain", {}, {}, burn_in, thin);

@@ -264,6 +264,12 @@
  * function in redshift space
  */
 /**
+ * @example model_2pt_multipoles.cpp
+ *
+ * This example shows how to model the multipoles of the two-point
+ * correlation function in redshift space
+ */
+/**
  * @example model_3pt.cpp
  *
  * This example shows how to model the reduced 

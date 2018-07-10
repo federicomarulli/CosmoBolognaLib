@@ -229,7 +229,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_full
   // set the model parameters
   const int nparameters = 5;
 
-  vector<statistics::ParameterType> parameterType = {statistics::ParameterType::_Base_};
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
 
   vector<string> parameterName(nparameters);
   parameterName[0] = "alpha_perpendicular";
@@ -266,7 +266,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_BAO 
   // set the model parameters
   const int nparameters = 10;
 
-  vector<statistics::ParameterType> parameterType = {statistics::ParameterType::_Base_};
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
 
   vector<string> parameterName(nparameters);
   parameterName[0] = "alpha_perpendicular";

@@ -25,10 +25,8 @@ OBJ8 = model_2pt_monopole_BAO.o
 OBJ9 = model_2pt_monopole_RSD.o
 OBJ10 = model_2pt_projected.o
 OBJ11 = model_2pt_2D.o
-OBJ12 = model_3pt.o
-OBJ13 = compute_pk_sanchez.o
-OBJ14 = MPTbreeze.o
-OBJ15 = EH_vs_CAMB.o
+OBJ12 = model_2pt_multipoles.o
+OBJ13 = model_3pt.o
 
 ES = so
 
@@ -38,7 +36,7 @@ ifeq ($(SYS),Darwin)
         ES = dylib
 endif
 
-all: 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 2pt_multipoles 3pt model_2pt_monopole_BAO model_2pt_monopole_RSD model_2pt_projected model_2pt_2D model_3pt
+all: 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 2pt_multipoles 3pt model_2pt_monopole_BAO model_2pt_monopole_RSD model_2pt_projected model_2pt_2D model_2pt_multipoles model_3pt
 
 2pt_monopole: $(OBJ1) 
 	$(C) $(OBJ1) -o 2pt_monopole $(FLAGS_LIB)
@@ -73,11 +71,14 @@ model_2pt_projected: $(OBJ10)
 model_2pt_2D: $(OBJ11) 
 	$(C) $(OBJ11) -o model_2pt_2D $(FLAGS_LIB)
 
-model_3pt: $(OBJ12) 
-	$(C) $(OBJ12) -o model_3pt $(FLAGS_LIB)
+model_2pt_multipoles: $(OBJ12) 
+	$(C) $(OBJ12) -o model_2pt_multipoles $(FLAGS_LIB)
+
+model_3pt: $(OBJ13) 
+	$(C) $(OBJ13) -o model_3pt $(FLAGS_LIB)
 
 clean:
-	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 2pt_multipoles 3pt model_2pt_monopole_BAO model_2pt_monopole_RSD model_2pt_projected model_2pt_2D model_3pt *~ \#* temp* core*
+	rm -f *.o 2pt_monopole 2pt_monopole_errors 2pt_2D 2pt_projected 2pt_angular 2pt_multipoles 3pt model_2pt_monopole_BAO model_2pt_monopole_RSD model_2pt_projected model_2pt_2D model_2pt_multipoles model_3pt *~ \#* temp* core*
 
 
 2pt_monopole.o: 2pt_monopole.cpp makefile $(dirLib)*.$(ES)
@@ -112,6 +113,9 @@ model_2pt_projected.o: model_2pt_projected.cpp makefile $(dirLib)*.$(ES)
 
 model_2pt_2D.o: model_2pt_2D.cpp makefile $(dirLib)*.$(ES)
 	$(C) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_2D.cpp
+
+model_2pt_multipoles.o: model_2pt_multipoles.cpp makefile $(dirLib)*.$(ES)
+	$(C) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_2pt_multipoles.cpp
 
 model_3pt.o: model_3pt.cpp makefile $(dirLib)*.$(ES)
 	$(C) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_3pt.cpp 

@@ -455,11 +455,12 @@ namespace cbl {
 	 *
 	 * @param thin the step used for dilution on screen
 	 *
-	 * @param nbins the number of bins
+	 * @param nbins the number of bins to estimate the posterior
+	 * distribution, used to assess its properties
 	 *
 	 * @return none
 	 */
-	void show_results (const int start, const int thin, const int nbins);
+	void show_results (const int start, const int thin, const int nbins=50);
 
 	/**
 	 * @brief show results of the MCMC sampling
@@ -473,9 +474,11 @@ namespace cbl {
 	 *
 	 * @param thin the step used for dilution on screen
 	 *
-	 * @param nbins the number of bins
+	 * @param nbins the number of bins to estimate the posterior
+	 * distribution, used to assess its properties
 	 *
-	 * @param fits false \f$\rightarrow\f$ ascii file; true \f$\rightarrow\f$ fits file 
+	 * @param fits false \f$\rightarrow\f$ ascii file; true
+	 * \f$\rightarrow\f$ fits file
 	 *
 	 * @return none
 	 */

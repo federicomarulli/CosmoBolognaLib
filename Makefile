@@ -418,6 +418,8 @@ allExamples:
 	cd $(PWD)/Examples/clustering/codes ; make model_2pt_monopole_RSD
 	$(call colorecho, "\n"Compiling the example code: model_2pt_projected.cpp ... "\n")
 	cd $(PWD)/Examples/clustering/codes ; make model_2pt_projected
+	$(call colorecho, "\n"Compiling the example code: model_2pt_multipoles.cpp ... "\n")
+	cd $(PWD)/Examples/clustering/codes ; make model_2pt_multipoles
 	$(call colorecho, "\n"Compiling the example code: model_2pt_2D.cpp ... "\n")
 	cd $(PWD)/Examples/clustering/codes ; make model_2pt_2D
 	$(call colorecho, "\n"Compiling the example code: model_3pt.cpp ... "\n")
