@@ -351,6 +351,16 @@
  *  This example shows how to clean a cosmic void catalogue, in order
  *  to extract cosmological constraints from void counting 
  */
+/**
+ *  @example 2pt_monopole.ipynb 
+ *  
+ *  This \b notebook explains how to compute the monopole of the
+ *  two-point correlation function
+ *
+ *  To see the notebook, click here: <a
+ *  href="https://drive.google.com/open?id=1tpQ1Tj06RRwOfZtxYXPC1Sr_Hdb679w8">
+ *  notebook</a>
+ */
 
 /**
  *  @brief The global namespace of the <B> \e CosmoBolognaLib </B>
