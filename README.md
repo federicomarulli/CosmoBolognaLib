@@ -1,4 +1,4 @@
-# CosmoBolognaLib
+## CosmoBolognaLib
 
 The CosmoBolognaLib is a large set of *free software* C++ libraries for cosmological calculations.
 
@@ -7,7 +7,23 @@ Please have a look at the example codes in CosmoBolognaLib/Examples/ that show h
 The full documentation is provided here:
 [CBL documentation](http://apps.difa.unibo.it/files/people/federico.marulli3/CosmoBolognaLib/Doc/html/index.html)
 
---- Versions ---
+
+## Copiright
+
+Copyright (C) 2010 by Federico Marulli
+
+This library is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3.0 of the License, or (at your option)
+any later version.
+
+This library is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+details.
+
+
+## Versions
 
 V1.0 first version of the CosmoBolognaLib uploaded on github
 
