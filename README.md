@@ -8,8 +8,9 @@ The full documentation is provided here:
 [CBL documentation](http://apps.difa.unibo.it/files/people/federico.marulli3/CosmoBolognaLib/Doc/html/index.html)
 
 
-## Copiright
+## Copyright
 
+CosmoBolognaLib - C++ libraries for cosmological calculations
 Copyright (C) 2010 by Federico Marulli
 
 This library is free software; you can redistribute it and/or modify it under
@@ -19,8 +20,8 @@ any later version.
 
 This library is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
-details.
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+<https://www.gnu.org/licenses/>.
 
 
 ## Versions
