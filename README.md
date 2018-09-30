@@ -2,9 +2,9 @@
 
 The CosmoBolognaLib is a large set of *free software* C++ libraries for cosmological calculations.
 
-> **The example codes in CosmoBolognaLib/Examples/ show how to use the CosmoBolognaLib in either C++ or Python codes.
+The example codes in CosmoBolognaLib/Examples/ show how to use the CosmoBolognaLib in either C++ or Python codes.
 
-> **The full documentation is provided here:
+The full documentation is provided here:
 [CBL documentation](http://apps.difa.unibo.it/files/people/federico.marulli3/CosmoBolognaLib/Doc/html/index.html)
 
 
