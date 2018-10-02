@@ -1,8 +1,0 @@
-digraph "Catalogue" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  dir_4fd9055ac4d0fe04b32dec3e8a4e79a4 [shape=box, label="Catalogue", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_4fd9055ac4d0fe04b32dec3e8a4e79a4.html"];
-  dir_692516b589a32b3bfce781ca9f6d1534 [shape=box label="Headers" URL="dir_692516b589a32b3bfce781ca9f6d1534.html"];
-  dir_4fd9055ac4d0fe04b32dec3e8a4e79a4->dir_692516b589a32b3bfce781ca9f6d1534 [headlabel="19", labeldistance=1.5 headhref="dir_000000_000011.html"];
-}

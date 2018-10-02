@@ -1,8 +1,0 @@
-digraph "Histogram" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  dir_a00e2153dfcd12fb9a3b34f149f06307 [shape=box, label="Histogram", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_a00e2153dfcd12fb9a3b34f149f06307.html"];
-  dir_692516b589a32b3bfce781ca9f6d1534 [shape=box label="Headers" URL="dir_692516b589a32b3bfce781ca9f6d1534.html"];
-  dir_a00e2153dfcd12fb9a3b34f149f06307->dir_692516b589a32b3bfce781ca9f6d1534 [headlabel="1", labeldistance=1.5 headhref="dir_000012_000011.html"];
-}

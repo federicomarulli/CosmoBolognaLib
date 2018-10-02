@@ -1,8 +1,0 @@
-digraph "Distribution" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  dir_126ac545585d7ea7831c4d4a0b466d21 [shape=box, label="Distribution", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_126ac545585d7ea7831c4d4a0b466d21.html"];
-  dir_692516b589a32b3bfce781ca9f6d1534 [shape=box label="Headers" URL="dir_692516b589a32b3bfce781ca9f6d1534.html"];
-  dir_126ac545585d7ea7831c4d4a0b466d21->dir_692516b589a32b3bfce781ca9f6d1534 [headlabel="1", labeldistance=1.5 headhref="dir_000005_000011.html"];
-}
