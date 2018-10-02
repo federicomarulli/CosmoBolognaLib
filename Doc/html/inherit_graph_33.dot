@@ -1,0 +1,7 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="cbl::statistics::STR\l_likelihood_inputs",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$db/d5a/structcbl_1_1statistics_1_1STR__likelihood__inputs.html",tooltip="the struct STR_likelihood_inputs "];
+}
