@@ -1,0 +1,15 @@
+digraph "Headers/Modelling_ThreePointCorrelation_comoving_connected.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node73 [label="Headers/Modelling_ThreePoint\lCorrelation_comoving_connected.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node73 -> Node74 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node74 [label="Headers/Modelling_ThreePoint\lCorrelation_comoving_reduced.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$da/d6c/Modelling__ThreePointCorrelation__comoving__reduced_8h.html",tooltip="The class Modelling_ThreePointCorrelation_comoving_reduced. "];
+  Node74 -> Node75 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node75 [label="Modelling/ThreePointCorrelation\l/Modelling_ThreePointCorrelation.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d6/d4c/Modelling__ThreePointCorrelation_8cpp.html",tooltip="Methods of the class Modelling_ThreePointCorrelation, used to model three-point correlation functions..."];
+  Node74 -> Node76 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node76 [label="Modelling/ThreePointCorrelation\l/Modelling_ThreePointCorrelation\l_comoving_reduced.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$df/d6a/Modelling__ThreePointCorrelation__comoving__reduced_8cpp.html",tooltip="Methods of the class Modelling_ThreePointCorrelation_comoving_reduced. "];
+  Node73 -> Node75 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node73 -> Node77 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node77 [label="Modelling/ThreePointCorrelation\l/Modelling_ThreePointCorrelation\l_comoving_connected.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$df/d0c/Modelling__ThreePointCorrelation__comoving__connected_8cpp.html",tooltip="Methods of the class Modelling_ThreePointCorrelation_comoving_connected. "];
+}
