@@ -1,0 +1,7 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="cbl::modelling::threept\l::STR_data_model_threept",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dd/d2b/structcbl_1_1modelling_1_1threept_1_1STR__data__model__threept.html",tooltip="the structure STR_data_model_threept "];
+}

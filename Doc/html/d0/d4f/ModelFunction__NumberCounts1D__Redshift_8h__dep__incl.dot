@@ -1,0 +1,10 @@
+digraph "Headers/ModelFunction_NumberCounts1D_Redshift.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node51 [label="Headers/ModelFunction\l_NumberCounts1D_Redshift.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node51 -> Node52 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node52 [label="Modelling/NumberCounts\l/ModelFunction_NumberCounts1\lD_Redshift.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d7/dae/ModelFunction__NumberCounts1D__Redshift_8cpp.html",tooltip="Functions to model the redshift number counts. "];
+  Node51 -> Node53 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node53 [label="Modelling/NumberCounts\l/Modelling_NumberCounts1D\l_Redshift.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$df/d6c/Modelling__NumberCounts1D__Redshift_8cpp.html",tooltip="Methods of the class Modelling_NumberCounts1D_Redshift. "];
+}

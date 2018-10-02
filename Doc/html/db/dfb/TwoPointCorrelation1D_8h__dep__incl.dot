@@ -1,0 +1,47 @@
+digraph "Headers/TwoPointCorrelation1D.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node69 [label="Headers/TwoPointCorrelation1D.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node69 -> Node70 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node70 [label="Headers/TwoPointCorrelation1\lD_angular.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d7/d9c/TwoPointCorrelation1D__angular_8h.html",tooltip="The class TwoPointCorrelation1D_angular. "];
+  Node70 -> Node71 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node71 [label="Headers/TwoPointCorrelation\lCross1D_angular.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d4/de9/TwoPointCorrelationCross1D__angular_8h.html",tooltip="The class TwoPointCorrelationCross1D_angular. "];
+  Node71 -> Node72 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node72 [label="Measure/TwoPointCorrelation\l/TwoPointCorrelationCross1D\l_angular.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d7/d1f/TwoPointCorrelationCross1D__angular_8cpp.html",tooltip="Methods of the class TwoPointCorrelationCross1D_angular used to measure the angular cross two-point c..."];
+  Node70 -> Node73 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node73 [label="Measure/TwoPointCorrelation\l/TwoPointCorrelation.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d1/df0/TwoPointCorrelation_8cpp.html",tooltip="Methods of the class TwoPointCorrelation. "];
+  Node70 -> Node74 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node74 [label="Measure/TwoPointCorrelation\l/TwoPointCorrelation1D_angular.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d7/d7f/TwoPointCorrelation1D__angular_8cpp.html",tooltip="Methods of the class TwoPointCorrelation1D_angular used to measure the angular two-point correlation ..."];
+  Node69 -> Node75 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node75 [label="Headers/TwoPointCorrelation1\lD_monopole.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dc/d46/TwoPointCorrelation1D__monopole_8h.html",tooltip="The class TwoPointCorrelation1D_monopole. "];
+  Node75 -> Node76 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node76 [label="Catalogue/VoidCatalogue.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$db/db6/VoidCatalogue_8cpp.html",tooltip="Methods of the class Catalogue to construct Void catalogues. "];
+  Node75 -> Node77 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node77 [label="Headers/TwoPointCorrelation1\lD_filtered.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d2/d5f/TwoPointCorrelation1D__filtered_8h.html",tooltip="The class TwoPointCorrelation1D_filtered. "];
+  Node77 -> Node73 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node77 -> Node78 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node78 [label="Measure/TwoPointCorrelation\l/TwoPointCorrelation1D_filtered.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$da/d20/TwoPointCorrelation1D__filtered_8cpp.html",tooltip="Methods of the class TwoPointCorrelation1D_filtered used to measure the filtered monopole of the two-..."];
+  Node75 -> Node79 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node79 [label="Headers/TwoPointCorrelation\l_multipoles_direct.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dd/d01/TwoPointCorrelation__multipoles__direct_8h.html",tooltip="The class TwoPointCorrelation_multipoles_direct. "];
+  Node79 -> Node73 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node79 -> Node80 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node80 [label="Measure/TwoPointCorrelation\l/TwoPointCorrelation_multipoles\l_direct.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$da/d9b/TwoPointCorrelation__multipoles__direct_8cpp.html",tooltip="Methods of the class TwoPointCorrelation_multipoles_direct used to measure the multipoles of the two-..."];
+  Node75 -> Node81 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node81 [label="Headers/TwoPointCorrelation\lCross1D_monopole.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d4/d0e/TwoPointCorrelationCross1D__monopole_8h.html",tooltip="The class TwoPointCorrelationCross1D_monopole. "];
+  Node81 -> Node82 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node82 [label="Measure/TwoPointCorrelation\l/TwoPointCorrelationCross1D\l_monopole.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dd/d6e/TwoPointCorrelationCross1D__monopole_8cpp.html",tooltip="Methods of the class TwoPointCorrelationCross1D_monopole used to measure the monopole of the cross tw..."];
+  Node75 -> Node83 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node83 [label="Measure/ThreePointCorrelation\l/ThreePointCorrelation_comoving\l_reduced.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d7/d43/ThreePointCorrelation__comoving__reduced_8cpp.html",tooltip="Methods of the class ThreePointCorrelation_comoving_reduced used to measure the monopole of the three..."];
+  Node75 -> Node73 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node75 -> Node84 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node84 [label="Measure/TwoPointCorrelation\l/TwoPointCorrelation1D_monopole.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d0/d95/TwoPointCorrelation1D__monopole_8cpp.html",tooltip="Methods of the class TwoPointCorrelation1D_monopole used to measure the monopole of the two-point cor..."];
+  Node69 -> Node85 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node85 [label="Headers/TwoPointCorrelation\lCross1D.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$da/d97/TwoPointCorrelationCross1D_8h.html",tooltip="The class TwoPointCorrelationCross1D. "];
+  Node85 -> Node71 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node85 -> Node81 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node85 -> Node86 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node86 [label="Measure/TwoPointCorrelation\l/TwoPointCorrelationCross1D.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/dca/TwoPointCorrelationCross1D_8cpp.html",tooltip="Methods of the class TwoPointCorrelationCross1D used to measure the 1D cross of the two-point correla..."];
+  Node69 -> Node87 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node87 [label="Measure/TwoPointCorrelation\l/TwoPointCorrelation1D.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dc/de9/TwoPointCorrelation1D_8cpp.html",tooltip="Methods of the class TwoPointCorrelation1D used to measure the monopole of the two-point correlation ..."];
+}
