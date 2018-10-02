@@ -1,0 +1,21 @@
+digraph "cbl::catalogue::Object"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="cbl::catalogue::Object",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node0 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 [label="cbl::catalogue::Cluster",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d9/db7/classcbl_1_1catalogue_1_1Cluster.html",tooltip="The class Cluster. "];
+  Node0 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="cbl::catalogue::Galaxy",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$df/d29/classcbl_1_1catalogue_1_1Galaxy.html",tooltip="The class Galaxy. "];
+  Node0 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="cbl::catalogue::Halo",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$db/d9f/classcbl_1_1catalogue_1_1Halo.html",tooltip="The class Halo. "];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="cbl::catalogue::HostHalo",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dc/d9f/classcbl_1_1catalogue_1_1HostHalo.html",tooltip="The class HostHalo. "];
+  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="cbl::catalogue::Mock",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d2/dd7/classcbl_1_1catalogue_1_1Mock.html",tooltip="The class Mock. "];
+  Node0 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="cbl::catalogue::RandomObject",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$df/d01/classcbl_1_1catalogue_1_1RandomObject.html",tooltip="The class RandomObject. "];
+  Node0 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="cbl::catalogue::Void",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$de/d88/classcbl_1_1catalogue_1_1Void.html",tooltip="The class Void. "];
+}

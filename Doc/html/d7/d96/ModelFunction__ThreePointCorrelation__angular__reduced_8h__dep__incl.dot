@@ -1,0 +1,14 @@
+digraph "Headers/ModelFunction_ThreePointCorrelation_angular_reduced.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node50 [label="Headers/ModelFunction\l_ThreePointCorrelation\l_angular_reduced.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node50 -> Node51 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node51 [label="Headers/Modelling_ThreePoint\lCorrelation_angular_reduced.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d0a/Modelling__ThreePointCorrelation__angular__reduced_8h.html",tooltip="The class Modelling_ThreePointCorrelation_angular_reduced. "];
+  Node51 -> Node52 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node52 [label="Modelling/ThreePointCorrelation\l/Modelling_ThreePointCorrelation.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d6/d4c/Modelling__ThreePointCorrelation_8cpp.html",tooltip="Methods of the class Modelling_ThreePointCorrelation, used to model three-point correlation functions..."];
+  Node51 -> Node53 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node53 [label="Modelling/ThreePointCorrelation\l/Modelling_ThreePointCorrelation\l_angular_reduced.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d9/d68/Modelling__ThreePointCorrelation__angular__reduced_8cpp.html",tooltip="Methods of the class Modelling_ThreePointCorrelation_angular_reduced. "];
+  Node50 -> Node54 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node54 [label="Modelling/ThreePointCorrelation\l/ModelFunction_ThreePointCorrelation\l_angular_reduced.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d7/da5/ModelFunction__ThreePointCorrelation__angular__reduced_8cpp.html",tooltip="Functions to model the reduced three-point correlation function in angular coordinates. "];
+}
