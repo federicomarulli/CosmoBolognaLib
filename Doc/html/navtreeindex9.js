@@ -1,8 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"d6/d4c/Modelling__ThreePointCorrelation_8cpp.html":[4,0,15,3,5],
-"d6/d4c/Modelling__ThreePointCorrelation_8cpp_source.html":[4,0,15,3,5],
-"d6/d68/ModelFunction__TwoPointCorrelation1D__angular_8h.html":[4,0,10,53],
 "d6/d68/ModelFunction__TwoPointCorrelation1D__angular_8h_source.html":[4,0,10,53],
 "d6/d6c/Modelling2D_8h.html":[4,0,10,65],
 "d6/d6c/Modelling2D_8h_source.html":[4,0,10,65],
@@ -249,5 +246,8 @@ var NAVTREEINDEX9 =
 "d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#a9b3b97f04a42afed2d182414aeb5e741":[3,0,0,11,2,14],
 "d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#aa112cb400b6eca39a269f079b58f9ffe":[3,0,0,11,2,7],
 "d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#aaafb4571295ae19214e7c900c1cf29e4":[3,0,0,11,2,21],
-"d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#ab5dde277eec38f6a48bd8d1d24a3f30c":[3,0,0,11,2,17]
+"d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#ab5dde277eec38f6a48bd8d1d24a3f30c":[3,0,0,11,2,17],
+"d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#ab9de9c96541ff3b950e8efda96867993":[3,0,0,11,2,18],
+"d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#aba53c1d6dd0033ed02ca137d296847ad":[3,0,0,11,2,6],
+"d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#abd6ad8f49a96c504ebad3d5c3cc693ff":[3,0,0,11,2,10]
 };

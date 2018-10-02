@@ -1,7 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"d2/d8a/Func_8h.html#a3caec05502230f4ba161d2e6e60a4d43":[4,0,10,22,151],
-"d2/d8a/Func_8h.html#a3cf59592bb65a3176c2e9f1c63ea6455":[4,0,10,22,15],
 "d2/d8a/Func_8h.html#a3d0001cf798345414ce44124dd394836":[4,0,10,22,140],
 "d2/d8a/Func_8h.html#a3d1a5ffb291ea0d25c8f275170e814f5":[4,0,10,22,74],
 "d2/d8a/Func_8h.html#a3e2dbc517426e01e9ed2c0484cff3297":[4,0,10,22,109],
@@ -118,7 +116,6 @@ var NAVTREEINDEX4 =
 "d2/d8f/classcbl_1_1chainmesh_1_1ChainMesh1D.html#af27c61c6eba2311d0e7edb7204ca87fa":[3,0,0,1,1,3],
 "d2/d9b/ModelFunction__ThreePointCorrelation__angular__reduced_8h.html":[4,0,10,48],
 "d2/d9b/ModelFunction__ThreePointCorrelation__angular__reduced_8h_source.html":[4,0,10,48],
-"d2/dae/GlobalFunc_2Func_8cpp.html":[4,0,9,2],
 "d2/dae/GlobalFunc_2Func_8cpp_source.html":[4,0,9,2],
 "d2/db3/Modelling__TwoPointCorrelation2D__polar_8cpp.html":[4,0,15,4,19],
 "d2/db3/Modelling__TwoPointCorrelation2D__polar_8cpp_source.html":[4,0,15,4,19],
@@ -249,5 +246,8 @@ var NAVTREEINDEX4 =
 "d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a07287699b8a62b34c13d3871ba9d9dc0":[3,0,0,12,0,16],
 "d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a0bcda7212b835bbef16da80fc4e04346":[3,0,0,12,0,17],
 "d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a124cee93cc6c2b00d612e776bf4bfdbf":[3,0,0,12,0,12],
-"d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a19ea5a267308fcf4e4b51aa90ba99e4f":[3,0,0,12,0,21]
+"d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a19ea5a267308fcf4e4b51aa90ba99e4f":[3,0,0,12,0,21],
+"d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a216944872dba832c458a9b67d0cc9512":[3,0,0,12,0,22],
+"d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a2b776e9ac10a1a69a7af86b3abe21af3":[3,0,0,12,0,32],
+"d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a2d9030a54a34a7658e619738767f6e50":[3,0,0,12,0,3]
 };

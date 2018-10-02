@@ -1,6 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"d1/d31/classcbl_1_1pairs_1_1Pair2D__comovingCartesian__loglog.html#a60ac01a85b688266d24843e9ea6bfdaf":[3,0,0,9,30,8],
 "d1/d31/classcbl_1_1pairs_1_1Pair2D__comovingCartesian__loglog.html#abb1738fa2a6714e0e0650f32862bf45e":[3,0,0,9,30,7],
 "d1/d31/classcbl_1_1pairs_1_1Pair2D__comovingCartesian__loglog.html#aefbdbf65cc5eed66ee39d8b8754c9ed9":[3,0,0,9,30,1],
 "d1/d3a/namespacecbl_1_1pairs.html":[3,0,0,9],
@@ -205,7 +204,6 @@ var NAVTREEINDEX2 =
 "d1/dfe/Data2D_8h_source.html":[4,0,10,13],
 "d1/dfe/Sampler_8cpp.html":[4,0,18,11],
 "d1/dfe/Sampler_8cpp_source.html":[4,0,18,11],
-"d2/d00/Kernel_8cpp.html":[4,0,12,0],
 "d2/d00/Kernel_8cpp_source.html":[4,0,12,0],
 "d2/d02/classcbl_1_1statistics_1_1Model2D.html":[3,0,0,11,5],
 "d2/d02/classcbl_1_1statistics_1_1Model2D.html#a0e5f764ff38b96dff45eb57d72c02af4":[3,0,0,11,5,4],
@@ -249,5 +247,7 @@ var NAVTREEINDEX2 =
 "d2/d0f/classcbl_1_1glob_1_1FuncGrid2D.html#aaaa3464f602ca028fd137ec91132372f":[3,0,0,5,3,21],
 "d2/d0f/classcbl_1_1glob_1_1FuncGrid2D.html#aab54b0f1def0db5100829b87e16f202f":[3,0,0,5,3,33],
 "d2/d0f/classcbl_1_1glob_1_1FuncGrid2D.html#acc2684a5959866a42ff6ad8513ab4c1f":[3,0,0,5,3,6],
-"d2/d0f/classcbl_1_1glob_1_1FuncGrid2D.html#acef31b0a313de642dbfe4a2cbba82e4d":[3,0,0,5,3,16]
+"d2/d0f/classcbl_1_1glob_1_1FuncGrid2D.html#acef31b0a313de642dbfe4a2cbba82e4d":[3,0,0,5,3,16],
+"d2/d0f/classcbl_1_1glob_1_1FuncGrid2D.html#ad5e6772b7665214ed7f456b7b00e1e52":[3,0,0,5,3,10],
+"d2/d0f/classcbl_1_1glob_1_1FuncGrid2D.html#adc16cea728298dcc1be08ca1a6948773":[3,0,0,5,3,2]
 };

@@ -226,7 +226,6 @@ var NAVTREEINDEX1 =
 "d0/dee/group__col.html#gad7ea0062a55735a1e4307afe03e4edf8":[1,3,5],
 "d0/dfd/cleanVoidCatalogue_8cpp-example.html":[5,13],
 "d0/dff/namespacecbl_1_1gsl.html":[2,0,0,8],
-"d1/d00/Func_2Func_8cpp.html":[4,0,7,0],
 "d1/d00/Func_2Func_8cpp_source.html":[4,0,7,0],
 "d1/d02/sizeFunction_8cpp-example.html":[5,41],
 "d1/d18/Modelling__NumberCounts2D_8h.html":[4,0,10,72],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "d1/d31/classcbl_1_1pairs_1_1Pair2D__comovingCartesian__loglog.html#a23bc4f2c688bdaa3c1a37699f6bc486a":[3,0,0,9,30,4],
 "d1/d31/classcbl_1_1pairs_1_1Pair2D__comovingCartesian__loglog.html#a26924476e7e86d704f9b6b80df612c1e":[3,0,0,9,30,2],
 "d1/d31/classcbl_1_1pairs_1_1Pair2D__comovingCartesian__loglog.html#a414a394ccd7f9dca6ffc2dc41f07f58e":[3,0,0,9,30,6],
-"d1/d31/classcbl_1_1pairs_1_1Pair2D__comovingCartesian__loglog.html#a5eb3b7ea08d7e43840395a7de51ab3b8":[3,0,0,9,30,3]
+"d1/d31/classcbl_1_1pairs_1_1Pair2D__comovingCartesian__loglog.html#a5eb3b7ea08d7e43840395a7de51ab3b8":[3,0,0,9,30,3],
+"d1/d31/classcbl_1_1pairs_1_1Pair2D__comovingCartesian__loglog.html#a60ac01a85b688266d24843e9ea6bfdaf":[3,0,0,9,30,8]
 };

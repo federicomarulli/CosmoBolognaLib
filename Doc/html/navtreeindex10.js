@@ -1,8 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#ab9de9c96541ff3b950e8efda96867993":[3,0,0,11,2,18],
-"d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#aba53c1d6dd0033ed02ca137d296847ad":[3,0,0,11,2,6],
-"d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#abd6ad8f49a96c504ebad3d5c3cc693ff":[3,0,0,11,2,10],
 "d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#ac4bf31007dd44299b9034fe3278ef0dc":[3,0,0,11,2,12],
 "d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#ac61a700edc66fe403c54fd2b72171f67":[3,0,0,11,2,13],
 "d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html#af9fc48f74d407cc99fbe1a4809c3b480":[3,0,0,11,2,16],
@@ -249,5 +246,8 @@ var NAVTREEINDEX10 =
 "d7/d9f/Catalogue_8h.html#a10d0871fa6b145b2d3b8ed127d121369afa80456852ecde9148a9c59d4d586b11":[4,0,10,0,6,10],
 "d7/d9f/Catalogue_8h.html#a10d0871fa6b145b2d3b8ed127d121369afb55cae94ab07485aed9e29e4a46e4b7":[4,0,10,0,6,18],
 "d7/d9f/Catalogue_8h.html#a10d0871fa6b145b2d3b8ed127d121369afedac228316eebf5ed304fecd6555227":[4,0,10,0,6,9],
-"d7/d9f/Catalogue_8h.html#a19a5d01b43fe4fdb5d3421d9ccd575ed":[4,0,10,0,21]
+"d7/d9f/Catalogue_8h.html#a19a5d01b43fe4fdb5d3421d9ccd575ed":[4,0,10,0,21],
+"d7/d9f/Catalogue_8h.html#a1a44a30bfb41633676dbbb9e57d62ca1":[4,0,10,0,10],
+"d7/d9f/Catalogue_8h.html#a1d7b1584c9e8ad4572a14d41adc16dfa":[4,0,10,0,8],
+"d7/d9f/Catalogue_8h.html#a23cdd8710ca5d5f9a6b8f6c27391a61f":[4,0,10,0,13]
 };

@@ -1,8 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a216944872dba832c458a9b67d0cc9512":[3,0,0,12,0,22],
-"d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a2b776e9ac10a1a69a7af86b3abe21af3":[3,0,0,12,0,32],
-"d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a2d9030a54a34a7658e619738767f6e50":[3,0,0,12,0,3],
 "d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a3ff0618d01e7284e6847f360d602732c":[3,0,0,12,0,37],
 "d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a41d82d674ac895c742404f586d8e7d4e":[3,0,0,12,0,35],
 "d3/d3c/classcbl_1_1triplets_1_1Triplet.html#a5baf99d7b3359ddca535b5ee2c35ff8c":[3,0,0,12,0,15],
@@ -249,5 +246,8 @@ var NAVTREEINDEX5 =
 "d3/de8/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation1D__monopole.html#a1289bd246c340c5c2af081a8a3762e76":[3,0,0,7,2,4,0],
 "d3/de8/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation1D__monopole.html#a1e69a1961cd26d09e5aa9e4dc8cd2c28":[3,0,0,7,2,4,2],
 "d3/de8/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation1D__monopole.html#a4f2af0276890db73e7c6dc6836c495b4":[3,0,0,7,2,4,8],
-"d3/de8/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation1D__monopole.html#a54e353865048637c062144343781e187":[3,0,0,7,2,4,7]
+"d3/de8/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation1D__monopole.html#a54e353865048637c062144343781e187":[3,0,0,7,2,4,7],
+"d3/de8/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation1D__monopole.html#a693984e12c770f4c17948f05c363afdd":[3,0,0,7,2,4,3],
+"d3/de8/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation1D__monopole.html#a90861ff39b7f7f51ca2df3ec62dc331e":[3,0,0,7,2,4,11],
+"d3/de8/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation1D__monopole.html#a9f78b228a0fd673d3c95c3484b5ede35":[3,0,0,7,2,4,6]
 };

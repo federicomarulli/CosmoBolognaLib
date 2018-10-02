@@ -96,7 +96,7 @@ digraph "Headers/Data2D.h"
   Node78 -> Node80 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node80 [label="GlobalFunc/Forecast.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d2/d22/Forecast_8cpp.html",tooltip="Functions to generate mock 2PCF/3PCF signal and provide forecasts. "];
   Node78 -> Node81 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node81 [label="GlobalFunc/Func.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d2/dae/GlobalFunc_2Func_8cpp.html",tooltip="Generic functions that use one or more classes of the CosmoBolognaLib. "];
+  Node81 [label="GlobalFunc/Func.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d2/dae/GlobalFunc_2Func_8cpp_source.html"];
   Node77 -> Node85 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node85 [label="Headers/Modelling_ThreePoint\lCorrelation.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d0/dd4/Modelling__ThreePointCorrelation_8h.html",tooltip="The class Modelling_ThreePointCorrelation. "];
   Node85 -> Node86 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];

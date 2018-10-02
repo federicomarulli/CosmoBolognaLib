@@ -1,8 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"dd/d2b/structcbl_1_1modelling_1_1threept_1_1STR__data__model__threept.html#a77d0364565d79100274fce619afe5191":[3,0,0,8,2,5,19],
-"dd/d2b/structcbl_1_1modelling_1_1threept_1_1STR__data__model__threept.html#a8b98742663b5ca4b37f89dbf311d0217":[3,0,0,8,2,5,17],
-"dd/d2b/structcbl_1_1modelling_1_1threept_1_1STR__data__model__threept.html#a92eb429bac8818ce84f9f1e0d944a23a":[3,0,0,8,2,5,15],
 "dd/d2b/structcbl_1_1modelling_1_1threept_1_1STR__data__model__threept.html#ab4fe254449fe2d3a769b9fe80363415d":[3,0,0,8,2,5,12],
 "dd/d2b/structcbl_1_1modelling_1_1threept_1_1STR__data__model__threept.html#ab5296a92de50dc2234c0990fc218a102":[3,0,0,8,2,5,24],
 "dd/d2b/structcbl_1_1modelling_1_1threept_1_1STR__data__model__threept.html#abb0df5f4f46e7c7d7dddfd1a47e6e4bd":[3,0,0,8,2,5,10],
@@ -249,5 +246,8 @@ var NAVTREEINDEX18 =
 "dd/ddf/classcbl_1_1statistics_1_1Sampler.html#a4a1c013a2d115239f3ff0c5bfc49b90c":[3,0,0,11,12,1],
 "dd/ddf/classcbl_1_1statistics_1_1Sampler.html#a4e12c32f5d02ce07eba106fd66fd782e":[3,0,0,11,12,24],
 "dd/ddf/classcbl_1_1statistics_1_1Sampler.html#a5423cb6e90c02d60c6bdc14a22e82096":[3,0,0,11,12,25],
-"dd/ddf/classcbl_1_1statistics_1_1Sampler.html#a5d1819cdd0f40588dc19ec5ceecf9b5b":[3,0,0,11,12,16]
+"dd/ddf/classcbl_1_1statistics_1_1Sampler.html#a5d1819cdd0f40588dc19ec5ceecf9b5b":[3,0,0,11,12,16],
+"dd/ddf/classcbl_1_1statistics_1_1Sampler.html#a5fdab3eb919e8ed3f495a139d22f282a":[3,0,0,11,12,14],
+"dd/ddf/classcbl_1_1statistics_1_1Sampler.html#a7f7795a2d2afe191b9e20fffeb5c90b2":[3,0,0,11,12,0],
+"dd/ddf/classcbl_1_1statistics_1_1Sampler.html#a85ccf33340309de4709537a6fc2bb257":[3,0,0,11,12,23]
 };

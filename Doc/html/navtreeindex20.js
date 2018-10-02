@@ -1,8 +1,5 @@
 var NAVTREEINDEX20 =
 {
-"de/dc4/GSLwrapper_8h.html#a1e629de3f2050f906facd5a28f0979b4":[4,0,10,26,11],
-"de/dc4/GSLwrapper_8h.html#a1f616e3b0aab5aa6addf02b5a421bd16":[4,0,10,26,3],
-"de/dc4/GSLwrapper_8h.html#a2cbdc2221c2ebd240c8907cffe005f2a":[4,0,10,26,16],
 "de/dc4/GSLwrapper_8h.html#a4e46ca88ffbd3f21b73d1721292993bb":[4,0,10,26,23],
 "de/dc4/GSLwrapper_8h.html#a5ad5f5a018fa4c64ee68d388de7ca830":[4,0,10,26,22],
 "de/dc4/GSLwrapper_8h.html#a5eea68934e6ffb3b266014876edbc1d4":[4,0,10,26,0],
@@ -249,5 +246,8 @@ var NAVTREEINDEX20 =
 "df/db9/NumberCounts1D__Redshift_8cpp.html":[4,0,14,0,3],
 "df/db9/NumberCounts1D__Redshift_8cpp_source.html":[4,0,14,0,3],
 "df/dbb/model_3pt_8cpp-example.html":[5,32],
-"df/dc1/TwoPointCorrelation1D_8h.html":[4,0,10,122]
+"df/dc1/TwoPointCorrelation1D_8h.html":[4,0,10,122],
+"df/dc1/TwoPointCorrelation1D_8h_source.html":[4,0,10,122],
+"df/dcd/Data1D__extra_8h.html":[4,0,10,12],
+"df/dcd/Data1D__extra_8h_source.html":[4,0,10,12]
 };

@@ -1,8 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"d5/da8/structcbl_1_1catalogue_1_1SubFindTab__Header.html#ab1c158777ad6f170f909de1355f406f9":[3,0,0,0,9,0],
-"d5/da8/structcbl_1_1catalogue_1_1SubFindTab__Header.html#acbf7b330ca3f69ebab7c77436b1abe69":[3,0,0,0,9,3],
-"d5/da8/structcbl_1_1catalogue_1_1SubFindTab__Header.html#accf1863fe3b1932c4e76d80f9d4c450b":[3,0,0,0,9,4],
 "d5/dae/Modelling__TwoPointCorrelation1D__monopole_8cpp.html":[4,0,15,4,16],
 "d5/dae/Modelling__TwoPointCorrelation1D__monopole_8cpp_source.html":[4,0,15,4,16],
 "d5/db0/ThreePointCorrelation_8cpp.html":[4,0,14,1,0],
@@ -249,5 +246,8 @@ var NAVTREEINDEX8 =
 "d6/d39/classcbl_1_1pairs_1_1Pair2D__comovingPolar__linlin.html#acad1065dcf42bf1bbe27e6d8daeac39c":[3,0,0,9,34,2],
 "d6/d39/classcbl_1_1pairs_1_1Pair2D__comovingPolar__linlin.html#ad7969e554e197ea6eefbe85fc61f241d":[3,0,0,9,34,1],
 "d6/d3e/ModelFunction__NumberCounts1D__Mass_8cpp.html":[4,0,15,2,1],
-"d6/d3e/ModelFunction__NumberCounts1D__Mass_8cpp_source.html":[4,0,15,2,1]
+"d6/d3e/ModelFunction__NumberCounts1D__Mass_8cpp_source.html":[4,0,15,2,1],
+"d6/d4c/Modelling__ThreePointCorrelation_8cpp.html":[4,0,15,3,5],
+"d6/d4c/Modelling__ThreePointCorrelation_8cpp_source.html":[4,0,15,3,5],
+"d6/d68/ModelFunction__TwoPointCorrelation1D__angular_8h.html":[4,0,10,53]
 };

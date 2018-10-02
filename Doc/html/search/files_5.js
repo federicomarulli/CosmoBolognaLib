@@ -8,7 +8,6 @@ var searchData=
   ['fitswrapper_2ecpp',['FITSwrapper.cpp',['../da/db1/FITSwrapper_8cpp.html',1,'']]],
   ['fitswrapper_2eh',['FITSwrapper.h',['../da/d3d/FITSwrapper_8h.html',1,'']]],
   ['forecast_2ecpp',['Forecast.cpp',['../d2/d22/Forecast_8cpp.html',1,'']]],
-  ['func_2ecpp',['Func.cpp',['../d1/d00/Func_2Func_8cpp.html',1,'(Global Namespace)'],['../d2/dae/GlobalFunc_2Func_8cpp.html',1,'(Global Namespace)']]],
   ['func_2eh',['Func.h',['../d2/d8a/Func_8h.html',1,'']]],
   ['funccosmology_2ecpp',['FuncCosmology.cpp',['../d3/d84/FuncCosmology_8cpp.html',1,'']]],
   ['funcgrid_2ecpp',['FuncGrid.cpp',['../d5/df4/FuncGrid_8cpp.html',1,'']]],

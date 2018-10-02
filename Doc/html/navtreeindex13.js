@@ -1,8 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"d8/d51/2pt_monopole_8py-example.html":[5,5],
-"d8/d61/ModelFunction__NumberCounts1D__Redshift_8h.html":[4,0,10,44],
-"d8/d61/ModelFunction__NumberCounts1D__Redshift_8h.html#aad258e73e2922c46598cc3bbf4d7e0e6":[4,0,10,44,0],
 "d8/d61/ModelFunction__NumberCounts1D__Redshift_8h.html#ae2e93058c90c39711cdf2c7197b72470":[4,0,10,44,1],
 "d8/d61/ModelFunction__NumberCounts1D__Redshift_8h_source.html":[4,0,10,44],
 "d8/d77/Cluster_8h.html":[4,0,10,4],
@@ -249,5 +246,8 @@ var NAVTREEINDEX13 =
 "d9/d87/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation__multipoles__integrated.html#adb3575fd708e7fb13ea933efd9a4103b":[3,0,0,7,2,10,15],
 "d9/d87/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation__multipoles__integrated.html#ae0b1151b09b3a321e5089ac9ea2d1bf4":[3,0,0,7,2,10,4],
 "d9/d87/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation__multipoles__integrated.html#aede0fbd106e453b761fa95938fb96b6e":[3,0,0,7,2,10,2],
-"d9/d87/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation__multipoles__integrated.html#aee3774678a73eb1d6e82716802fbd68f":[3,0,0,7,2,10,29]
+"d9/d87/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation__multipoles__integrated.html#aee3774678a73eb1d6e82716802fbd68f":[3,0,0,7,2,10,29],
+"d9/d87/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation__multipoles__integrated.html#af52398b39451df4b4476f8c363ce6890":[3,0,0,7,2,10,18],
+"d9/d87/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation__multipoles__integrated.html#af75e68e10b15498aa1029839c8508e25":[3,0,0,7,2,10,10],
+"d9/d93/Modelling__TwoPointCorrelation__wedges_8cpp.html":[4,0,15,4,23]
 };

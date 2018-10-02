@@ -1,8 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"dd/ddf/classcbl_1_1statistics_1_1Sampler.html#a5fdab3eb919e8ed3f495a139d22f282a":[3,0,0,11,12,14],
-"dd/ddf/classcbl_1_1statistics_1_1Sampler.html#a7f7795a2d2afe191b9e20fffeb5c90b2":[3,0,0,11,12,0],
-"dd/ddf/classcbl_1_1statistics_1_1Sampler.html#a85ccf33340309de4709537a6fc2bb257":[3,0,0,11,12,23],
 "dd/ddf/classcbl_1_1statistics_1_1Sampler.html#ac6c4f05202667dcab19a2580cc7df88b":[3,0,0,11,12,11],
 "dd/ddf/classcbl_1_1statistics_1_1Sampler.html#acf6522c84c9fefe08026f915eec0356c":[3,0,0,11,12,12],
 "dd/ddf/classcbl_1_1statistics_1_1Sampler.html#add17f6605cd849c576827ef4401198e8":[3,0,0,11,12,21],
@@ -90,8 +87,8 @@ var NAVTREEINDEX19 =
 "de/d65/classcbl_1_1modelling_1_1Modelling2D.html#a7436ee6cd2b94f09fefbc0fc6203986b":[3,0,0,8,6,1],
 "de/d65/classcbl_1_1modelling_1_1Modelling2D.html#aae8b03717958a9b64fe16e9f88b443d8":[3,0,0,8,6,5],
 "de/d65/classcbl_1_1modelling_1_1Modelling2D.html#ab93fbe7db857d3592dd43517ed0ad700":[3,0,0,8,6,3],
-"de/d65/namespacecbl_1_1modelling_1_1cosmology.html":[2,0,0,11,0],
 "de/d65/namespacecbl_1_1modelling_1_1cosmology.html":[3,0,0,8,0],
+"de/d65/namespacecbl_1_1modelling_1_1cosmology.html":[2,0,0,11,0],
 "de/d66/PosteriorParameters_8cpp.html":[4,0,18,9],
 "de/d66/PosteriorParameters_8cpp_source.html":[4,0,18,9],
 "de/d6a/Posterior_8cpp.html":[4,0,18,8],
@@ -249,5 +246,8 @@ var NAVTREEINDEX19 =
 "de/dc4/GSLwrapper_8h.html#a1308d28413f08eb063f41ff05aa16e10":[4,0,10,26,25],
 "de/dc4/GSLwrapper_8h.html#a155287e205e7fdf63efdfc1b97a2f8f9":[4,0,10,26,7],
 "de/dc4/GSLwrapper_8h.html#a18a8455fd893426fac84beed9601966a":[4,0,10,26,12],
-"de/dc4/GSLwrapper_8h.html#a1b1fa92ca1f5f5b9209aae37441991bb":[4,0,10,26,19]
+"de/dc4/GSLwrapper_8h.html#a1b1fa92ca1f5f5b9209aae37441991bb":[4,0,10,26,19],
+"de/dc4/GSLwrapper_8h.html#a1e629de3f2050f906facd5a28f0979b4":[4,0,10,26,11],
+"de/dc4/GSLwrapper_8h.html#a1f616e3b0aab5aa6addf02b5a421bd16":[4,0,10,26,3],
+"de/dc4/GSLwrapper_8h.html#a2cbdc2221c2ebd240c8907cffe005f2a":[4,0,10,26,16]
 };

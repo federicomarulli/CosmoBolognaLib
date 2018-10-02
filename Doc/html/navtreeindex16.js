@@ -1,8 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a46fd884aed7f2e48e7a32866598e48ee":[3,0,0,7,1,3,2],
-"db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a50067216e00fa708d5775a697f442200":[3,0,0,7,1,3,7],
-"db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a5744ee1d03ac0b4b68d77f80898140cb":[3,0,0,7,1,3,1],
 "db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a5b2279f3baa97cece65f73c2bc304fcb":[3,0,0,7,1,3,10],
 "db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a6a4cba8dbdd7cf2509b8302620304189":[3,0,0,7,1,3,4],
 "db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a7cba98d470442284a21f8a0d89d5eb20":[3,0,0,7,1,3,11],
@@ -249,5 +246,8 @@ var NAVTREEINDEX16 =
 "dc/d0c/ModelFunction__NumberCounts_8h.html#a183fa031b41d96cc4870fdeb31d6cfa3":[4,0,10,42,3],
 "dc/d0c/ModelFunction__NumberCounts_8h.html#a1c3ce57f6caf78f737923fd320e7eafb":[4,0,10,42,7],
 "dc/d0c/ModelFunction__NumberCounts_8h.html#a22b870999b6338413ea1425f30769afc":[4,0,10,42,5],
-"dc/d0c/ModelFunction__NumberCounts_8h.html#a9c3b1e1ca03892b315e5db32cec88c4e":[4,0,10,42,4]
+"dc/d0c/ModelFunction__NumberCounts_8h.html#a9c3b1e1ca03892b315e5db32cec88c4e":[4,0,10,42,4],
+"dc/d0c/ModelFunction__NumberCounts_8h.html#a9f240c5c933bae4f8feefc95cf9171dc":[4,0,10,42,6],
+"dc/d0c/ModelFunction__NumberCounts_8h.html#aa38161d8d0fb1dc774824cd3dd0e9efa":[4,0,10,42,9],
+"dc/d0c/ModelFunction__NumberCounts_8h.html#ab745dc4a6cc96d9aa7c92a175bd6ed4f":[4,0,10,42,8]
 };

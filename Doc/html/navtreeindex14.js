@@ -1,8 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"d9/d87/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation__multipoles__integrated.html#af52398b39451df4b4476f8c363ce6890":[3,0,0,7,2,10,18],
-"d9/d87/classcbl_1_1measure_1_1twopt_1_1TwoPointCorrelation__multipoles__integrated.html#af75e68e10b15498aa1029839c8508e25":[3,0,0,7,2,10,10],
-"d9/d93/Modelling__TwoPointCorrelation__wedges_8cpp.html":[4,0,15,4,23],
 "d9/d93/Modelling__TwoPointCorrelation__wedges_8cpp_source.html":[4,0,15,4,23],
 "d9/d97/classcbl_1_1lognormal_1_1LogNormal.html":[3,0,0,6,0],
 "d9/d97/classcbl_1_1lognormal_1_1LogNormal.html#a08a22b8c728f030b2a7acfb8743fa86e":[3,0,0,6,0,21],
@@ -249,5 +246,8 @@ var NAVTREEINDEX14 =
 "da/dcf/classcbl_1_1glob_1_1Histogram.html#a9d83779350f1606cc85aac32ef134633":[3,0,0,5,4,19],
 "da/dcf/classcbl_1_1glob_1_1Histogram.html#aa66c9f535d3fc909dd907aeef3047a53":[3,0,0,5,4,50],
 "da/dcf/classcbl_1_1glob_1_1Histogram.html#aa8340bdb2d933cefbad05f63ea48b3e7":[3,0,0,5,4,2],
-"da/dcf/classcbl_1_1glob_1_1Histogram.html#aa8edb92723fc8d994b300fc45ecd8fde":[3,0,0,5,4,8]
+"da/dcf/classcbl_1_1glob_1_1Histogram.html#aa8edb92723fc8d994b300fc45ecd8fde":[3,0,0,5,4,8],
+"da/dcf/classcbl_1_1glob_1_1Histogram.html#aaac3b00bc5f275906d55204efc75932b":[3,0,0,5,4,11],
+"da/dcf/classcbl_1_1glob_1_1Histogram.html#ab3950a7e0631c5294da00a64ffc456ed":[3,0,0,5,4,29],
+"da/dcf/classcbl_1_1glob_1_1Histogram.html#ab9fe1411ae34e2a019c7a8265a8db1f6":[3,0,0,5,4,15]
 };

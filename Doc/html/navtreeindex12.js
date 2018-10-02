@@ -1,8 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"d7/dc4/classcbl_1_1cosmology_1_1Cosmology.html#a8a4eb894205f6c53e72c5bf7fa2278c2":[3,0,0,2,0,310],
-"d7/dc4/classcbl_1_1cosmology_1_1Cosmology.html#a8c1fad37c893032532c030d692e6ad2c":[3,0,0,2,0,186],
-"d7/dc4/classcbl_1_1cosmology_1_1Cosmology.html#a8c7752a83b3b1fe48dc0921187a928c3":[3,0,0,2,0,4],
 "d7/dc4/classcbl_1_1cosmology_1_1Cosmology.html#a8c93010ca739d6a3a717617514833b0c":[3,0,0,2,0,55],
 "d7/dc4/classcbl_1_1cosmology_1_1Cosmology.html#a8deadacb1bdde01234fec30fa5de87dc":[3,0,0,2,0,154],
 "d7/dc4/classcbl_1_1cosmology_1_1Cosmology.html#a8e0ba7754c278e67722ae2fb0de9627e":[3,0,0,2,0,238],
@@ -249,5 +246,8 @@ var NAVTREEINDEX12 =
 "d8/d3a/NumberCounts1D__Mass_8h.html":[4,0,10,94],
 "d8/d3a/NumberCounts1D__Mass_8h_source.html":[4,0,10,94],
 "d8/d45/LikelihoodFunction_8cpp.html":[4,0,18,2],
-"d8/d45/LikelihoodFunction_8cpp_source.html":[4,0,18,2]
+"d8/d45/LikelihoodFunction_8cpp_source.html":[4,0,18,2],
+"d8/d51/2pt_monopole_8py-example.html":[5,5],
+"d8/d61/ModelFunction__NumberCounts1D__Redshift_8h.html":[4,0,10,44],
+"d8/d61/ModelFunction__NumberCounts1D__Redshift_8h.html#aad258e73e2922c46598cc3bbf4d7e0e6":[4,0,10,44,0]
 };

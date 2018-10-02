@@ -1,8 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"da/dcf/classcbl_1_1glob_1_1Histogram.html#aaac3b00bc5f275906d55204efc75932b":[3,0,0,5,4,11],
-"da/dcf/classcbl_1_1glob_1_1Histogram.html#ab3950a7e0631c5294da00a64ffc456ed":[3,0,0,5,4,29],
-"da/dcf/classcbl_1_1glob_1_1Histogram.html#ab9fe1411ae34e2a019c7a8265a8db1f6":[3,0,0,5,4,15],
 "da/dcf/classcbl_1_1glob_1_1Histogram.html#abb995b5be353dc9945ffd854e9252881":[3,0,0,5,4,23],
 "da/dcf/classcbl_1_1glob_1_1Histogram.html#ac1aa7f1eed2b310a8e1b5667bd513d55":[3,0,0,5,4,5],
 "da/dcf/classcbl_1_1glob_1_1Histogram.html#acc7b5c93231b8970ac8c5d770baf2929":[3,0,0,5,4,4],
@@ -168,8 +165,8 @@ var NAVTREEINDEX15 =
 "db/d1c/SubSample_8cpp_source.html":[4,0,9,5],
 "db/d1d/Triplet1D_8h.html":[4,0,10,119],
 "db/d1d/Triplet1D_8h_source.html":[4,0,10,119],
-"db/d21/namespacecbl_1_1data.html":[2,0,0,5],
 "db/d21/namespacecbl_1_1data.html":[3,0,0,4],
+"db/d21/namespacecbl_1_1data.html":[2,0,0,5],
 "db/d27/ModelFunction__NumberCounts_8cpp.html":[4,0,15,2,0],
 "db/d27/ModelFunction__NumberCounts_8cpp_source.html":[4,0,15,2,0],
 "db/d2c/integration_cuba_8cpp-example.html":[5,24],
@@ -249,5 +246,8 @@ var NAVTREEINDEX15 =
 "db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a05b7bfbc6fd1147163543ab022422213":[3,0,0,7,1,3,13],
 "db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a13eb731c405232e61991566bc86cf522":[3,0,0,7,1,3,6],
 "db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a239460febad82ea554627136ab0a53b1":[3,0,0,7,1,3,9],
-"db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a3512a46292f0e7b1cf2f11dae8bfbfc1":[3,0,0,7,1,3,0]
+"db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a3512a46292f0e7b1cf2f11dae8bfbfc1":[3,0,0,7,1,3,0],
+"db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a46fd884aed7f2e48e7a32866598e48ee":[3,0,0,7,1,3,2],
+"db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a50067216e00fa708d5775a697f442200":[3,0,0,7,1,3,7],
+"db/d62/classcbl_1_1measure_1_1threept_1_1ThreePointCorrelation__comoving__connected.html#a5744ee1d03ac0b4b68d77f80898140cb":[3,0,0,7,1,3,1]
 };
