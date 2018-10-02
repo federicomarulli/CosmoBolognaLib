@@ -116,7 +116,7 @@ FLAGS defined in the Makefile (e.g.: make C=icpc FLAGS="-O0 -g")
 
 > <KBD> $ make cleanExamples </KBD>  [ ---> remove all the object files of the examples ]
 
-> <KBD> $ make doc </KBD> [ ---> create the documentation (Doxygen is required) ]
+> <KBD> $ make documentation </KBD> [ ---> create the documentation (Doxygen is required) ]
 
 > <KBD> $ make clean </KBD> [ ---> cleanExamples + remove all the object files of the libraries ]
 

@@ -1,0 +1,7 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="cbl::cosmology::Cosmology",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d7/dc4/classcbl_1_1cosmology_1_1Cosmology.html",tooltip="The class Cosmology. "];
+}

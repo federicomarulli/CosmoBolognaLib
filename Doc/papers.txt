@@ -2,6 +2,11 @@
 ----- the list of publications that used the CosmoBolognaLib -----
 ------------------------------------------------------------------
 
+18. Marulli and the XXL team
+    The XXL Survey: XVI. The clustering of X-ray selected galaxy
+    clusters at z~0.3
+    2018, A&A, in press
+
 17. Moresco, Marulli
     Cosmological constraints from a joint analysis of cosmic growth
     and expansion
@@ -17,13 +22,13 @@
     Towards a cosmological exploitation of cosmic void statistics -
     New numerical tools in the CosmoBolognaLib to extract cosmological
     constraints from the void size function
-    2017, A&A in press
+    2017, A&A, 607, 24
 
 14. Sridhar, Maurogordato, Benoist, Cappi, Marulli
     Evolution of the real-space correlation function from next
     generation cluster surveys. Recovering the real-space correlation
     function from photometric redshifts
-    2017, A&A, 600, 32S
+    2017, A&A, 600, 32
  
 13. Marulli, Veropalumbo, Moscardini, Cimatti, Dolag
     Redshift-space distortions of galaxies, clusters and AGN: testing
