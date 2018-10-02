@@ -1,0 +1,7 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="cbl::cuba::STR_CUBA\l_integrand",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dc/d01/structcbl_1_1cuba_1_1STR__CUBA__integrand.html",tooltip="support object for cuba integrand "];
+}
