@@ -1,8 +1,0 @@
-digraph "Kernel" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  dir_52bed8acfaac088d5968cb2c84d7645d [shape=box, label="Kernel", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_52bed8acfaac088d5968cb2c84d7645d.html"];
-  dir_692516b589a32b3bfce781ca9f6d1534 [shape=box label="Headers" URL="dir_692516b589a32b3bfce781ca9f6d1534.html"];
-  dir_52bed8acfaac088d5968cb2c84d7645d->dir_692516b589a32b3bfce781ca9f6d1534 [headlabel="1", labeldistance=1.5 headhref="dir_000013_000011.html"];
-}
