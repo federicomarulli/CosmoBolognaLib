@@ -1,0 +1,28 @@
+var classcbl_1_1catalogue_1_1Cluster =
+[
+    [ "Cluster", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#a66bb4a3494d14473f8314e627ed576d8", null ],
+    [ "Cluster", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#a0759ac48d7b39f9a992a5f36b422a2f1", null ],
+    [ "Cluster", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#a0f0e6a97d703468fe47c7b87afdcd135", null ],
+    [ "Cluster", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#ac1f9a0af0c07ab8c6d80b4e6cace1a33", null ],
+    [ "Cluster", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#ad5a1b2c8de69f2004966d893312a04ee", null ],
+    [ "Cluster", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#a66ff3b548c32cd8d92a5ba179e5a945b", null ],
+    [ "Cluster", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#a71b2c178221db3e4a39fac703ce5c264", null ],
+    [ "Cluster", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#ae7063523db8e7e0d3630c48e2d7b9af0", null ],
+    [ "~Cluster", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#a5e4722b6e5af2088f718b7f74fcbaa06", null ],
+    [ "bias", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#ad120f899e5af541e3e6e0ea95c8c9a36", null ],
+    [ "isSet_bias", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#ae9958cdc0ef8f29302448b8e9f4d25f6", null ],
+    [ "isSet_mass", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#a90838d5d0187392c2ccfcfa15ab4c55a", null ],
+    [ "isSet_richness", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#a8407a71e94d07ccaf7b48b6f6a989b64", null ],
+    [ "isSet_richness_error", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#a2fa8c616afe75110fc62321aee5166e9", null ],
+    [ "mass", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#ad38f03d61de23b2743acd6573cc0b49e", null ],
+    [ "richness", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#aada36e4c02bd9448545901df5744e10c", null ],
+    [ "richness_error", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#a0fdad5eb2d2a1fb3999d9147e77e3f1c", null ],
+    [ "set_bias", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#afddcc39e142497568f8c36330b16b4f8", null ],
+    [ "set_mass", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#aadbf7ab8533b8f0f693b246ecd53ba6f", null ],
+    [ "set_richness", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#ae18b118745daf92c0971249bd5e928cc", null ],
+    [ "set_richness_error", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#a523c2f317e72cc83e7621e4a2c9a7803", null ],
+    [ "m_bias", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#aaee1189750cdec558e2b4c2b9d33b479", null ],
+    [ "m_mass", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#a8cf044c960fd01a5ef4797b5d1f836e2", null ],
+    [ "m_richness", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#afc65019a04914b951473b48add6f5efd", null ],
+    [ "m_richness_error", "d9/db7/classcbl_1_1catalogue_1_1Cluster.html#ae97374d22e2352aa68d039a114c26d47", null ]
+];
