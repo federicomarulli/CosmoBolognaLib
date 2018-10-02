@@ -1,8 +1,0 @@
-digraph "Headers/Modelling_Cosmology.h"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node56 [label="Headers/Modelling_Cosmology.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-  Node56 -> Node57 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node57 [label="Modelling/Cosmology\l/Modelling_Cosmology.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d5/d9a/Modelling__Cosmology_8cpp.html",tooltip="Methods of the class Modelling_Cosmology. "];
-}

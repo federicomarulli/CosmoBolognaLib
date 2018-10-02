@@ -1,8 +1,0 @@
-digraph "ChainMesh" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  dir_3f2c70e23fc8cbd48736f67851cdd6dc [shape=box, label="ChainMesh", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_3f2c70e23fc8cbd48736f67851cdd6dc.html"];
-  dir_692516b589a32b3bfce781ca9f6d1534 [shape=box label="Headers" URL="dir_692516b589a32b3bfce781ca9f6d1534.html"];
-  dir_3f2c70e23fc8cbd48736f67851cdd6dc->dir_692516b589a32b3bfce781ca9f6d1534 [headlabel="1", labeldistance=1.5 headhref="dir_000001_000011.html"];
-}
