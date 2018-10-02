@@ -1,0 +1,8 @@
+digraph "Statistics" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  dir_5a1d16ff3b4cfe7cfc3272d03ed0695d [shape=box, label="Statistics", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_5a1d16ff3b4cfe7cfc3272d03ed0695d.html"];
+  dir_692516b589a32b3bfce781ca9f6d1534 [shape=box label="Headers" URL="dir_692516b589a32b3bfce781ca9f6d1534.html"];
+  dir_5a1d16ff3b4cfe7cfc3272d03ed0695d->dir_692516b589a32b3bfce781ca9f6d1534 [headlabel="16", labeldistance=1.5 headhref="dir_000027_000011.html"];
+}

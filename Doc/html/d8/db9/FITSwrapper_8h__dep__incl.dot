@@ -1,0 +1,12 @@
+digraph "Headers/FITSwrapper.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node27 [label="Headers/FITSwrapper.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node27 -> Node28 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node28 [label="Catalogue/FITSCatalogue.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$da/d74/FITSCatalogue_8cpp.html",tooltip="Methods of the class Catalogue to construct catalogues from FITS files. "];
+  Node27 -> Node29 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node29 [label="Statistics/Posterior.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$de/d6a/Posterior_8cpp.html",tooltip="Methods of the class Posterior. "];
+  Node27 -> Node30 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node30 [label="Wrappers/FITSwrapper.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$da/db1/FITSwrapper_8cpp.html",tooltip="functions that wrap FITS routines to manage .fits files "];
+}
