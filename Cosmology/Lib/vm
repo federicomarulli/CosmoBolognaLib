@@ -1,1 +1,0 @@
-gvim ../../Headers/Cosmology.h ../../Headers/EisensteinHu.h ../../Headers/CosmClassFunc.h *.cpp &
