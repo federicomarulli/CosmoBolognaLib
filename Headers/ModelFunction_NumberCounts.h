@@ -56,6 +56,9 @@ namespace cbl {
        */
       struct STR_NC_data_model {
 
+	/// false &rarr; data not from a simulation snapshot; true &rarr; data from a simulation snapshot 
+	bool isSnapshot;
+
 	/// fiducial cosmology
 	std::shared_ptr<cosmology::Cosmology> cosmology;
 

@@ -43,7 +43,7 @@ using namespace cbl;
 // ============================================================================
 
 
-vector<double> cbl::fit_covariance_matrix_2PCF_monopole (const vector<double> mean, const vector<vector<double>> mock_xi0, const bool doJK, const cbl::cosmology::Cosmology cosmology, const double nObjects, const double Volume, const double bias, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const string method_Pk, const double sigma_NL, const bool NL)
+std::vector<double> cbl::fit_covariance_matrix_2PCF_monopole (const std::vector<double> mean, const std::vector<std::vector<double>> mock_xi0, const bool doJK, const cbl::cosmology::Cosmology cosmology, const double nObjects, const double Volume, const double bias, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const std::string method_Pk, const double sigma_NL, const bool NL)
 {
   coutCBL << "Fitting the Covariance Matrix" << endl;
   const int nmock = mock_xi0.size();
@@ -119,7 +119,7 @@ vector<double> cbl::fit_covariance_matrix_2PCF_monopole (const vector<double> me
 // ============================================================================
 
 
-std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_monopole (const cbl::cosmology::Cosmology cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const string method_Pk, const double sigma_NL, const bool NL)
+std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_monopole (const cbl::cosmology::Cosmology cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const std::string method_Pk, const double sigma_NL, const bool NL)
 {
   auto data = cbl::generate_mock_2PCF_multipoles(cosmology, bias, nObjects, Volume, redshift, rMin, rMax, nbins, bin_type, method_Pk, sigma_NL, NL);
 
@@ -141,7 +141,7 @@ std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_monopole (const cbl::co
 // ============================================================================
 
 
-std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_multipoles (const cbl::cosmology::Cosmology cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const string method_Pk, const double sigma_NL, const bool NL)
+std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_multipoles (const cbl::cosmology::Cosmology cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const std::string method_Pk, const double sigma_NL, const bool NL)
 {
   cbl::cosmology::Cosmology cosmo = cosmology;
   vector<double> kk = cbl::logarithmic_bin_vector(200, 1.e-4, 1.e2);

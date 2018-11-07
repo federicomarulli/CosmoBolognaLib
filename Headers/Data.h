@@ -201,60 +201,7 @@ namespace cbl {
        *  @name Non-virtual member functions
        */
       ///@{
-
-      /**
-       *  @brief get the data type
-       *  @return the data type
-       */
-      DataType dataType () const
-      { return m_dataType; }
-
-      /**
-       *   @brief the total number of data
-       *   @return total data number
-       */
-      int ndata () const { return m_ndata; }
-
-      /**
-       *  @brief get data at index i
-       *  @param i index
-       *  @return the value of the data vector at position i
-       */
-      double data (const int i) const { return m_data[i]; }
-
-      /**
-       *  @brief get data
-       *  @return the dataset
-       */
-      std::vector<double> data () const { return m_data; }
-
-      /**
-       *  @brief get value of data standard deviation at index i
-       *  @param i index
-       *  @return the value of the error vector at position i
-       */
-      double error (const int i) const { return m_error[i]; }
-
-      /**
-       *  @brief get standard deviation
-       *  @return the standard deviation
-       */
-      std::vector<double> error () const { return m_error; }
-
-      /**
-       *  @brief get the value of the data covariance at index i,j
-       *  @param i index
-       *  @param j index
-       *  @return the value of the m_covariance matrix at position i,j
-       */
-      double covariance (const int i, const int j) const { return m_covariance[i][j]; }
-
-      /**
-       *  @brief get the m_covariance vector
-       *  @return the vector containing the covariance matrix
-       */
-      std::vector<std::vector<double>> covariance () const { return m_covariance; }
-
+      
       /**
        *  @brief get the value of the data correlation at index i,j
        *  @param i index
@@ -450,6 +397,59 @@ namespace cbl {
        */
       virtual void data (std::vector<double> &data) const
       { (void)data; ErrorCBL("Error in data of Data.h!"); }
+      
+      /**
+       *  @brief get the data type
+       *  @return the data type
+       */
+      virtual DataType dataType () const
+      { return m_dataType; }
+
+      /**
+       *   @brief the total number of data
+       *   @return total data number
+       */
+      virtual int ndata () const { return m_ndata; }
+
+      /**
+       *  @brief get data at index i
+       *  @param i index
+       *  @return the value of the data vector at position i
+       */
+      virtual double data (const int i) const { return m_data[i]; }
+
+      /**
+       *  @brief get data
+       *  @return the dataset
+       */
+      virtual std::vector<double> data () const { return m_data; }
+
+      /**
+       *  @brief get value of data standard deviation at index i
+       *  @param i index
+       *  @return the value of the error vector at position i
+       */
+      virtual double error (const int i) const { return m_error[i]; }
+
+      /**
+       *  @brief get standard deviation
+       *  @return the standard deviation
+       */
+      virtual std::vector<double> error () const { return m_error; }
+
+      /**
+       *  @brief get the value of the data covariance at index i,j
+       *  @param i index
+       *  @param j index
+       *  @return the value of the m_covariance matrix at position i,j
+       */
+      virtual double covariance (const int i, const int j) const { return m_covariance[i][j]; }
+
+      /**
+       *  @brief get the m_covariance vector
+       *  @return the vector containing the covariance matrix
+       */
+      virtual std::vector<std::vector<double>> covariance () const { return m_covariance; }
 
       /**
        *  @brief get data for Data1D_collection, Data2D

@@ -44,54 +44,40 @@ using namespace cbl;
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::xiWedges (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::xiWedges (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
 
-  const int nrad = rad.size()/pp->nwedges;
-
-  vector<double> new_rad(rad.begin(), rad.begin()+nrad);
-
   // input parameters
+  vector<double> pars;
+  vector<shared_ptr<glob::FuncGrid>> pk_interp(2);
 
-  // AP parameter that contains the distance information
-  double alpha_perpendicular = parameter[0];
+  if (pp->Pk_mu_model == 0) { // de-wiggled model 
+    pk_interp[0] = pp->func_Pk;
+    pk_interp[1] = pp->func_Pk_NW;
+  }
+  else if (pp->Pk_mu_model == 1) { // mode-coupling model 
+    pk_interp[0] = pp->func_Pk;
+    pk_interp[1] = pp->func_Pk1loop;
+  }
 
-  // AP parameter that contains the distance information
-  double alpha_parallel = parameter[1];
+  vector<double> Xiw = Xi_wedges(rad, pp->dataset_order, pp->nwedges, pp->Pk_mu_model, parameter, pk_interp, pp->prec);
 
-  // f(z)*sigma8(z)
-  double fsigma8 = parameter[2];
+  const double norm = pow(pp->sigma8_z, -2);
   
-  // bias(z)*sigma8(z)
-  double bsigma8 = parameter[3];
+  for (size_t i=0; i<Xiw.size(); i++)
+      Xiw[i] *= norm;
 
-  // streaming scale
-  double SigmaS = parameter[4];
+  return Xiw;
 
-  // bias
-  double bias = bsigma8/pp->sigma8_z;
-
-  // f(z)
-  double linear_growth_rate = fsigma8/pp->sigma8_z;
-
-  vector<double> Xi;
-
-  vector<vector<double>> Xiw = Xi_wedges( new_rad, pp->nwedges, alpha_perpendicular, alpha_parallel, pp->sigmaNL_perp, pp->sigmaNL_par, bias, linear_growth_rate, SigmaS, 0., pp->kk, pp->func_Pk, pp->func_Pk_NW, pp->prec);
-
-  for(int i=0; i<pp->nwedges; i++)
-    for(int j=0; j<nrad; j++)
-      Xi.push_back(Xiw[i][j]);
-
-  return Xi;
 }
 
 
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::xiWedges_BAO (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::xiWedges_BAO (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -130,66 +116,3 @@ vector<double> cbl::modelling::twopt::xiWedges_BAO (const vector<double> rad, co
 
   return Xi;
 }
-
-/*
-vector<double> cbl::modelling::twopt::xiWedges_BAO (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
-{
-  // structure contaning the required input data
-  shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
-
-  vector<vector<double>> new_rad(pp->nwedges);
-
-  for(size_t i=0; i<rad.size(); i++)
-      new_rad[pp->dataset_order[i]].push_back(rad[i]);
-  
-  // input parameters
-
-  // AP parameter that contains the distance information
-  double alpha_perpendicular = parameter[0];
-
-  // AP parameter that contains the distance information
-  double alpha_parallel = parameter[1];
-
-  vector<vector<double>> Xiw(2);
-
-  for(size_t i=0; i<new_rad[0].size(); i++){
-
-    auto xi_mu = [&] (const double mu)
-    {
-      double fact =sqrt(mu*mu*alpha_parallel*alpha_parallel+(1-mu*mu)*alpha_perpendicular*alpha_perpendicular);
-      double sp = new_rad[0][i]*fact;
-      double mup = mu*alpha_parallel/fact;
-      double val=0;
-      for(int j=0; j<pp->nwedges; j++)
-	val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
-      return val;
-    };
-
-    Xiw[0].push_back(0.5*parameter[2]*cbl::gsl::GSL_integrate_qag(xi_mu, 0, 0.5)+parameter[4]+parameter[6]/new_rad[0][i]+parameter[8]/(new_rad[0][i]*new_rad[0][i]));
-  }
-
-  for(size_t i=0; i<new_rad[1].size(); i++){
-
-    auto xi_mu = [&] (const double mu)
-    {
-      double fact =sqrt(mu*mu*alpha_parallel*alpha_parallel+(1-mu*mu)*alpha_perpendicular*alpha_perpendicular);
-      double sp = new_rad[1][i]*fact;
-      double mup = mu*alpha_parallel/fact;
-      double val=0;
-      for(int j=0; j<pp->nwedges; j++)
-	val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
-      return val;
-    };
-
-    Xiw[1].push_back(0.5*parameter[3]*cbl::gsl::GSL_integrate_qag(xi_mu, 0.5, 1)+parameter[5]+parameter[7]/new_rad[1][i]+parameter[9]/(new_rad[1][i]*new_rad[1][i]));
-  }
-
-  vector<double> Xi;
-
-  for (size_t i=0; i<Xiw.size(); i++)
-    for (size_t j=0; j<Xiw[i].size(); j++)
-      Xi.push_back(Xiw[i][j]);
-
-  return Xi;
-}
-*/

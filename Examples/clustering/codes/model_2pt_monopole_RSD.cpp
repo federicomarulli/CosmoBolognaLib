@@ -81,7 +81,8 @@ int main () {
     const cbl::statistics::PriorDistribution fsigma8_prior {cbl::glob::DistributionType::_Uniform_, 0., 2.}; // flat prior for the f*sigma8
     const cbl::statistics::PriorDistribution bsigma8_prior {cbl::glob::DistributionType::_Uniform_, 0., 2.}; // flat prior for the b*sigma8
     model_twop.set_model_Kaiser(fsigma8_prior, bsigma8_prior);
-  
+
+    
     // ----------------------------------------------------------------------
     // ------------- run chains and write output chain and model ------------
     // ----------------------------------------------------------------------
@@ -91,20 +92,18 @@ int main () {
     const double xmax = 40.;
     model_twop.set_fit_range(xmin, xmax);
 
-    const int chain_size = 1000; // the size the chain lenght
-    const int nwalkers = 10;     // the number of parallel walkers in the MCMC chains
-    const int seed = 666;        // the base seed for initialization
-
     // set the likelihood type
     model_twop.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_);
 
     // run the MCMC method to sample the posterior
+    const int chain_size = 1000; // the size the chain lenght
+    const int nwalkers = 10;     // the number of parallel walkers in the MCMC chains
+    const int seed = 666;        // the base seed for initialization
     model_twop.sample_posterior(chain_size, nwalkers, seed);
 
+    // write the results on screen
     const int burn_in = 100; // discard the first 100 chain steps 
     const int thin = 10;     // take 1 step every 10
-
-    // write the results on screen 
     model_twop.show_results(burn_in, thin);
 
     // store the results in file
@@ -112,6 +111,7 @@ int main () {
 
     // store the best-fit model
     model_twop.write_model_from_chains(dir, "bestfit_model.dat", cbl::logarithmic_bin_vector(100, 0.1, 100.), burn_in, thin);
+    
   }
 
   catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }

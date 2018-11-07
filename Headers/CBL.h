@@ -111,6 +111,7 @@
 #include "NumberCounts1D.h"
 #include "ModelFunction_ThreePointCorrelation_angular_reduced.h"
 #include "Halo.h"
+#include "HostHalo.h"
 #include "Cluster.h"
 #include "TwoPointCorrelationCross1D_monopole.h"
 #include "ModelFunction_ThreePointCorrelation_comoving_reduced.h"

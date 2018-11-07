@@ -204,12 +204,26 @@ namespace cbl {
 	size_t nparameters_base() const;
 
 	/**
+	 * @brief return the private member
+	 * m_base_parameters
+	 * @return the private member m_base_parameters
+	 */
+	std::vector<unsigned int> base_parameters() const {return m_base_parameters;}
+
+	/**
 	 * @brief return the number of derived
 	 * parameters
 	 *
 	 * @return the number of derived parameters
 	 */
 	size_t nparameters_derived() const;
+
+	/**
+	 * @brief return the private member
+	 * m_derived_parameters
+	 * @return the private member m_derived_parameters
+	 */
+	std::vector<unsigned int> derived_parameters() const {return m_derived_parameters;}
 
 	/**
 	 * @brief return the model parameter type
@@ -298,6 +312,14 @@ namespace cbl {
 	{ErrorCBL("Error in nparameters_free() of ModelParameters.h!"); return 1;}
 
 	/**
+	 * @brief return the private member
+	 * m_free_parameters
+	 * @return the private member m_free_parameters
+	 */
+	virtual std::vector<unsigned int> free_parameters() const
+	{ErrorCBL("Error in free_parameters() of ModelParameters.h!"); std::vector<unsigned int> vv; return vv;}
+
+	/**
 	 * @brief return the number of fixed
 	 * parameters
 	 *
@@ -305,6 +327,14 @@ namespace cbl {
 	 */
 	virtual size_t nparameters_fixed() const
 	{ErrorCBL("Error in nparameters_fixed() of ModelParameters.h!"); return 1;}
+
+	/**
+	 * @brief return the private member
+	 * m_fixed_parameters
+	 * @return the private member m_fixed_parameters
+	 */
+	virtual std::vector<unsigned int> fixed_parameters() const
+	{ErrorCBL("Error in fixed_parameters() of ModelParameters.h!"); std::vector<unsigned int> vv; return vv;}
 
 	///@}
 	
@@ -438,7 +468,7 @@ namespace cbl {
 	 * parameter
 	 */
 	virtual std::shared_ptr<PriorDistribution> prior_distribution (const int p) const
-	{(void)p; ErrorCBL("Error in set_prior_distribution() of ModelParameters.h!"); return NULL;}
+	{(void)p; ErrorCBL("Error in prior_distribution() of ModelParameters.h!"); return NULL;}
 
 	/**
 	 * @brief get the prior distribution for the p-th 
@@ -448,7 +478,7 @@ namespace cbl {
 	 * parameter
 	 */
 	virtual std::vector<std::shared_ptr<PriorDistribution>> prior_distribution () const
-	{ErrorCBL("Error in set_prior_distribution() of ModelParameters.h!"); std::vector<std::shared_ptr<PriorDistribution>> vv; return vv;}
+	{ErrorCBL("Error in prior_distribution() of ModelParameters.h!"); std::vector<std::shared_ptr<PriorDistribution>> vv; return vv;}
 
 	/**
 	 * @brief get the prior function
@@ -572,7 +602,7 @@ namespace cbl {
 	 * @return the chain size
 	 */
 	virtual size_t chain_size () const
-	{ErrorCBL("Error in size() of ModelParameters.h!"); return 0;}
+	{ErrorCBL("Error in chain_size() of ModelParameters.h!"); return 0;}
 
 	/**
 	 * @brief return the private member m_chain_nwalkers
@@ -580,7 +610,7 @@ namespace cbl {
 	 * @return the chain size
 	 */
 	virtual size_t chain_nwalkers () const
-	{ErrorCBL("Error in nwalkers() of ModelParameters.h!"); return 0; }
+	{ErrorCBL("Error in chain_nwalkers() of ModelParameters.h!"); return 0; }
 
 	/**
 	 * @brief set the chain

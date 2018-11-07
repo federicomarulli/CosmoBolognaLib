@@ -76,7 +76,10 @@ namespace cbl {
       _Planck15_,
       
       /// Planck collaboration 2015, paper XIII: Table 4, TT+lowP+lensing
-      _Planck15_TT_
+      _Planck15_TT_,
+
+      /// Planck collaboration 2018, Paper VI: Table 2, TT,TE,EE+lowE+lensing
+      _Planck18_	
       
     };
 
@@ -86,7 +89,7 @@ namespace cbl {
      * @return a vector containing the
      * CosmologicalModel names
      */
-    inline std::vector<std::string> CosmologicalModelNames () { return {"WMAP5", "WMAP7", "WMAP9", "Planck13", "Planck15", "Planck15_TT"}; }
+    inline std::vector<std::string> CosmologicalModelNames () { return {"WMAP5", "WMAP7", "WMAP9", "Planck13", "Planck15", "Planck15_TT", "Planck18"}; }
 
     /**
      *
@@ -568,16 +571,16 @@ namespace cbl {
        *  @param model_MF author(s) who proposed the mass function;
        *  valid authors are: PS (Press & Schechter), ST (Sheth &
        *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
-       *  al. 2006), Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH
-       *  (halo MF by Shen et al. 2006), ShenF (filament MF by Shen et
-       *  al. 2006), ShenS (sheet MF by Shen et al. 2006), Tinker
+       *  al. 2006), Reed (Reed et al. 2007), Pan (Pan 2007), ShenH
+       *  (halo MF, Shen et al. 2006), ShenF (filament MF, Shen et
+       *  al. 2006), ShenS (sheet MF, Shen et al. 2006), Tinker
        *  (Tinker et al. 2008), Crocce (Crocce et al. 2010),
-       *  Angulo_FOF (FoF MF by Angulo et al. 2012), Angulo_Sub
-       *  (SUBFIND MF by Angulo et al. 2012), Watson_FOF (FoF MF by
-       *  Watson et al. 2012), Watson_SOH (Spherical Overdensity halo
-       *  MF by Watson et al. 2012), Manera (Manera et al. 2010),
-       *  Bhattacharya (Bhattacharya et al. 2011), Courtin (Courtin et
-       *  al. 2010), Peacock (by Peacock at al. 2007)
+       *  Angulo_FOF (FoF MF, Angulo et al. 2012), Angulo_Sub (SUBFIND
+       *  MF, Angulo et al. 2012), Watson_FOF (FoF MF, Watson et
+       *  al. 2012), Watson_SOH (Spherical Overdensity halo MF, Watson
+       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya
+       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
+       *  Peacock (Peacock at al. 2007), Despali (Despali et al. 2016)
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -597,7 +600,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double m_MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const double Delta=200., const bool default_delta=true, const double delta_t=1.686); 
 
@@ -1108,7 +1113,7 @@ namespace cbl {
 
       /**
        *  @brief set the value of &Omega;<SUB>M</SUB>, keeping
-       *  &Omega;<SUB>DE</SUB>=1-&Omega;<SUB>M</SUB>
+       *  &Omega;<SUB>DE</SUB>=1-&Omega;<SUB>M</SUB>-&Omega;<SUB>rad</SUB>-&Omega;<SUB>k</SUB>
        *
        *  @param Omega_matter &Omega;<SUB>M</SUB>: density of baryons,
        *  cold dark matter and massive neutrinos (in units of the
@@ -1118,8 +1123,7 @@ namespace cbl {
        */
       void set_Omega (const double Omega_matter=0.27) {
 	m_Omega_matter = Omega_matter; 
-	m_Omega_DE = 1.-m_Omega_matter; 
-	m_Omega_k = 1.-m_Omega_matter-m_Omega_radiation-m_Omega_DE;
+	m_Omega_DE = 1.-m_Omega_matter-m_Omega_radiation-m_Omega_k;
 	m_Omega_CDM = m_Omega_matter-m_Omega_baryon-m_Omega_neutrinos;
       };
 
@@ -2350,16 +2354,16 @@ namespace cbl {
        *  @param model_MF author(s) who proposed the mass function;
        *  valid authors are: PS (Press & Schechter), ST (Sheth &
        *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
-       *  al. 2006), Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH
-       *  (halo MF by Shen et al. 2006), ShenF (filament MF by Shen et
-       *  al. 2006), ShenS (sheet MF by Shen et al. 2006), Tinker
+       *  al. 2006), Reed (Reed et al. 2007), Pan (Pan 2007), ShenH
+       *  (halo MF, Shen et al. 2006), ShenF (filament MF, Shen et
+       *  al. 2006), ShenS (sheet MF, Shen et al. 2006), Tinker
        *  (Tinker et al. 2008), Crocce (Crocce et al. 2010),
-       *  Angulo_FOF (FoF MF by Angulo et al. 2012), Angulo_Sub
-       *  (SUBFIND MF by Angulo et al. 2012), Watson_FOF (FoF MF by
-       *  Watson et al. 2012), Watson_SOH (Spherical Overdensity halo
-       *  MF by Watson et al. 2012), Manera (Manera et al. 2010),
-       *  Bhattacharya (Bhattacharya et al. 2011), Courtin (Courtin et
-       *  al. 2010), Peacock (by Peacock at al. 2007)
+       *  Angulo_FOF (FoF MF, Angulo et al. 2012), Angulo_Sub (SUBFIND
+       *  MF, Angulo et al. 2012), Watson_FOF (FoF MF, Watson et
+       *  al. 2012), Watson_SOH (Spherical Overdensity halo MF, Watson
+       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya
+       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
+       *  Peacock (Peacock at al. 2007), Despali (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -2418,7 +2422,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double mass_function (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
 
@@ -2439,16 +2445,16 @@ namespace cbl {
        *  @param model_MF author(s) who proposed the mass function;
        *  valid authors are: PS (Press & Schechter), ST (Sheth &
        *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
-       *  al. 2006), Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH
-       *  (halo MF by Shen et al. 2006), ShenF (filament MF by Shen et
-       *  al. 2006), ShenS (sheet MF by Shen et al. 2006), Tinker
+       *  al. 2006), Reed (Reed et al. 2007), Pan (Pan 2007), ShenH
+       *  (halo MF, Shen et al. 2006), ShenF (filament MF, Shen et
+       *  al. 2006), ShenS (sheet MF, Shen et al. 2006), Tinker
        *  (Tinker et al. 2008), Crocce (Crocce et al. 2010),
-       *  Angulo_FOF (FoF MF by Angulo et al. 2012), Angulo_Sub
-       *  (SUBFIND MF by Angulo et al. 2012), Watson_FOF (FoF MF by
-       *  Watson et al. 2012), Watson_SOH (Spherical Overdensity halo
-       *  MF by Watson et al. 2012), Manera (Manera et al. 2010),
-       *  Bhattacharya (Bhattacharya et al. 2011), Courtin (Courtin et
-       *  al. 2010), Peacock (by Peacock at al. 2007)
+       *  Angulo_FOF (FoF MF, Angulo et al. 2012), Angulo_Sub (SUBFIND
+       *  MF, Angulo et al. 2012), Watson_FOF (FoF MF, Watson et
+       *  al. 2012), Watson_SOH (Spherical Overdensity halo MF, Watson
+       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya
+       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
+       *  Peacock (Peacock at al. 2007), Despali (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -2501,7 +2507,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double mass_function_fast (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
@@ -2590,7 +2598,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
     
@@ -2671,7 +2681,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double n_haloes (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
@@ -2772,7 +2784,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double n_haloes (const double Mass_min, const double Mass_max, const double Volume, const double redshift, const std::string model_MF, const std::string method_SS, const int nbin_mass=0, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
       
@@ -2862,7 +2876,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double n_haloes_selection_function (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
@@ -2938,7 +2954,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       std::vector<double> mass_function (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
@@ -3019,7 +3037,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       std::vector<double> mass_function_selection_function_vector (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
@@ -3101,7 +3121,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       std::vector<double> redshift_distribution_haloes (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
@@ -3186,7 +3208,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       std::vector<double> redshift_distribution_haloes_selection_function (const std::vector<double> redshift, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
@@ -3270,7 +3294,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double mean_redshift_haloes_selection_function (const double z_min, const double z_max, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
   
@@ -3359,7 +3385,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double MhaloMin (const int n_halo, const double Area, const bool angle_rad, const double z_min, const double z_max, const double Mmax, const double lgM1_guess, const double lgM2_guess, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
 
@@ -5249,7 +5277,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double bias_eff (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
  
@@ -6503,7 +6533,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
@@ -6590,7 +6622,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double error_beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double err_bias, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
   
@@ -6662,7 +6696,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
@@ -6735,7 +6771,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double error_beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const double err_bias, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
  
@@ -6826,7 +6864,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
@@ -6911,7 +6951,9 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        *
        *  @warning the mass function by Manera et al. (2010) has been
-       *  tested only for z=0 and z=0.5
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
        */
       double quadrupole (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
@@ -7722,7 +7764,7 @@ namespace cbl {
        *  @param redshift the redshift
        *  @return the acoustic parameter 
        */
-      double Az (const double) const;
+      double Az (const double redshift) const;
   
       /**
        *  @brief the linear point  
@@ -8432,6 +8474,161 @@ namespace cbl {
        *  multipole moments of the two-point correlation function
        */
       std::vector<std::vector<double>> XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const std::vector<double> kk, const std::vector<double> Pk0, const std::vector<double> Pk2, const std::vector<double> Pk4, const int IntegrationMethod=1);
+
+      ///@}
+      /**
+       *  @name Functions to estimate the non linear power spectrum
+       */
+      ///@{
+
+      double F2 (const double k, const double q, const double kq);
+
+      double G2 (const double k, const double q, const double kq);
+
+      double f_k (const double k, const std::shared_ptr<cbl::glob::FuncGrid> PkLin, const double qmin, const double qmax, const double prec=1.e-3);
+
+      double g_k (const double k, const std::shared_ptr<cbl::glob::FuncGrid> PkLin, const double qmin, const double qmax, const double prec=1.e-3);
+
+      double Pk_1loop (const double kk, const std::shared_ptr<cbl::glob::FuncGrid> PkLin, const int corrtype, const double qmin, const double qmax, const double prec=1.e-3);
+
+      /**
+       * @brief compute the Delta-Delta non linear power spectrum 
+       * at 1-loop following MPTbreeze scheme (Crocce & Scoccimarro 2012)
+       *
+       * \f[
+       *    P_{\delta \delta} (k) = \exp(f(k))^2 (P_L(k)+P_{1loop}(k))
+       * \f]
+       *
+       * where \f$ f(k) \f$ is the second order correction of the non-linear
+       * propagator, \f$\P_L(k)\f$ is the linear power spectrum
+       * and \f$ P_{1loop} \f$ is the one loop power spectrum correction,
+       * computed by cbl::cosmology::Cosmology::Pk_1loop.
+       *
+       * @param kk the wavevector module
+       *
+       * @param Pk pointer to a FuncGrid object to interpolate
+       * the linear power spectrum
+       *
+       * @param qmin the lower integration limit
+       *
+       * @param qmax the upper integration limit
+       *
+       * @param prec the integral precision
+       *
+       * @return the Delta-Delta non-linear power spectrum
+       */
+      double Pk_DeltaDelta (const double kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const double qmin, const double qmax, const double prec=1.e-3);
+
+      /**
+       * @brief compute the Delta-Delta non linear power spectrum 
+       * at 1-loop following MPTbreeze scheme (Crocce & Scoccimarro 2012)
+       *
+       * \f[
+       *    P_{\delta \theta} (k) = \exp(f(k))^2 (P_L(k)+P_{1loop}(k))
+       * \f]
+       *
+       * where \f$ f(k) \f$ is the second order correction of the non-linear
+       * propagator, \f$\P_L(k)\f$ is the linear power spectrum
+       * and \f$ P_{1loop} \f$ is the one loop power spectrum correction,
+       * computed by cbl::cosmology::Cosmology::Pk_1loop.
+       *
+       * @param kk the wavevector module
+       *
+       * @param Pk pointer to a FuncGrid object to interpolate
+       * the linear power spectrum
+       *
+       * @param qmin the lower integration limit
+       *
+       * @param qmax the upper integration limit
+       *
+       * @param prec the integral precision
+       *
+       * @return the Delta-Delta non-linear power spectrum
+       */
+      double Pk_DeltaTheta (const double kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const double qmin, const double qmax, const double prec=1.e-3);
+
+      /**
+       * @brief compute the Delta-Delta non linear power spectrum 
+       * at 1-loop following MPTbreeze scheme (Crocce & Scoccimarro 2012)
+       *
+       * \f[
+       *    P_{\theta \theta} (k) = \exp(g(k))^2 (P_L(k)+P_{1loop}(k))
+       * \f]
+       *
+       * where \f$ g(k) \f$ is the second order correction of the non-linear
+       * propagator, \f$\P_L(k)\f$ is the linear power spectrum
+       * and \f$ P_{1loop} \f$ is the one loop power spectrum correction,
+       * computed by cbl::cosmology::Cosmology::Pk_1loop.
+       *
+       * @param kk the wavevector module
+       *
+       * @param Pk pointer to a FuncGrid object to interpolate
+       * the linear power spectrum
+       *
+       * @param qmin the lower integration limit
+       *
+       * @param qmax the upper integration limit
+       *
+       * @param prec the integral precision
+       *
+       * @return the Delta-Delta non-linear power spectrum
+       */
+      double Pk_ThetaTheta (const double kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const double qmin, const double qmax, const double prec=1.e-3);
+
+      std::vector<double> Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      
+      std::vector<double> Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+
+      /**
+       *  @brief compute the Delta-Delta non linear power spectrum 
+       *  at 1-loop following MPTbreeze scheme (Crocce & Scoccimarro 2012)
+       *
+       *  \f[ P_{\theta \theta} (k) = \exp(g(k))^2
+       *    (P_L(k)+P_{1loop}(k)) \f]
+       *
+       *  where \f$ g(k) \f$ is the second order correction of the
+       *  non-linear propagator, \f$\P_L(k)\f$ is the linear power
+       *  spectrum and \f$ P_{1loop} \f$ is the one loop power
+       *  spectrum correction, computed by
+       *  cbl::cosmology::Cosmology::Pk_1loop.
+       *
+       *  @param kk vector of wavevector modules
+       *
+       *  @param redshift the redshift
+       * 
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_dir the output directory
+       *
+        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will use be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @param unit1 true \f$\rightarrow\f$ force cosmological units
+       *
+       *  @return the \f$\Theta-\Theta\f$ non-linear power spectrum
+       */
+      std::vector<double> Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
 
       ///@}
             

@@ -1,1 +1,1 @@
-gvim ../Headers/Object.h ../Headers/Cluster.h ../Headers/Galaxy.h ../Headers/Halo.h ../Headers/Mock.h ../Headers/RandomObject.h ../Headers/Void.h ../Headers/Catalogue.h ../Headers/ChainMesh_Catalogue.h *.cpp &
+gvim ../Headers/Object.h ../Headers/Cluster.h ../Headers/Galaxy.h ../Headers/Halo.h ../Headers/Mock.h ../Headers/RandomObject.h ../Headers/Void.h ../Headers/HostHalo.h ../Headers/Catalogue.h ../Headers/ChainMesh_Catalogue.h *.cpp &

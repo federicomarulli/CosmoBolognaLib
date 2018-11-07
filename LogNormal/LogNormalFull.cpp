@@ -43,7 +43,7 @@ using namespace catalogue;
 // ============================================================================
 
 
-cbl::lognormal::LogNormalFull::LogNormalFull (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const string author)
+cbl::lognormal::LogNormalFull::LogNormalFull (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const std::string author)
 {
   set_cosmo_function(cosmology, redshift_min, redshift_max, nredshift, author);
 }
@@ -52,7 +52,7 @@ cbl::lognormal::LogNormalFull::LogNormalFull (const Cosmology cosmology, const d
 // ============================================================================
 
 
-cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const string author)
+cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const std::string author)
 {
   set_grid_parameters(rmin, xMin, xMax, yMin, yMax, zMin, zMax);
 
@@ -63,7 +63,7 @@ cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const double xM
 // ============================================================================
 
 
-cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const vector<shared_ptr<catalogue::Catalogue>> random, const double pad, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const string author)
+cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const std::string author)
 {
   set_grid_parameters(rmin, random, pad);
 
@@ -74,7 +74,7 @@ cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const vector<sh
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const string author)
+void cbl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const std::string author)
 {
 
   m_cosmology = make_shared<Cosmology>(cosmology);
@@ -155,7 +155,7 @@ void cbl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, cons
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, const vector<shared_ptr<catalogue::Catalogue>> random, const double pad)
+void cbl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad)
 {
 
   m_rmin = rmin;
@@ -245,7 +245,7 @@ void cbl::lognormal::LogNormalFull::reset_fields (const bool use_random, const b
 // ============================================================================
 
 /*
-void cbl::lognormal::LogNormalFull::write_XiMultipoles(const vector<double> rr, const string file_out)
+void cbl::lognormal::LogNormalFull::write_XiMultipoles(const std::vector<double> rr, const std::string file_out)
 {
   vector<double> kk = logarithmic_bin_vector(200, 1.e-4, 1.e1);
   
@@ -555,7 +555,7 @@ void cbl::lognormal::LogNormalFull::set_visibility_from_random_RSD ()
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::extract_points_lognormal_field (const double nObjects, const bool doRSD, const vector<double> redshift, const vector<double> bias, const shared_ptr<data::Field3D> visibility, const string file_out)
+void cbl::lognormal::LogNormalFull::extract_points_lognormal_field (const double nObjects, const bool doRSD, const std::vector<double> redshift, const std::vector<double> bias, const std::shared_ptr<data::Field3D> visibility, const std::string file_out)
 {
 
   ofstream fout(file_out.c_str());
@@ -627,7 +627,7 @@ void cbl::lognormal::LogNormalFull::extract_points_lognormal_field (const double
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::generate_lognormal (const int start, const int stop, const bool doRSD, const double smoothing_radius, const vector<double> nObjects, const vector<vector<double>> redshift, const vector<vector<double> > bias, const string dir, const string filename, const int seed, const bool setfields, const bool use_random)
+void cbl::lognormal::LogNormalFull::generate_lognormal (const int start, const int stop, const bool doRSD, const double smoothing_radius, const std::vector<double> nObjects, const std::vector<std::vector<double>> redshift, const std::vector<std::vector<double> > bias, const std::string dir, const std::string filename, const int seed, const bool setfields, const bool use_random)
 {
   m_generator.seed(seed);
 

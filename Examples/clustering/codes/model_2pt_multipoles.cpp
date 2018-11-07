@@ -71,8 +71,10 @@ int main () {
     cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles model_multipoles(ptr_TwoP);
 
     // set the priors
-    const cbl::statistics::PriorDistribution alpha_perpendicular_prior {cbl::glob::DistributionType::_Constant_, 1.}; // flat prior 
-    const cbl::statistics::PriorDistribution alpha_parallel_prior {cbl::glob::DistributionType::_Constant_, 1.};      // flat prior 
+    const cbl::statistics::PriorDistribution alpha_perpendicular_prior {cbl::glob::DistributionType::_Constant_, 1.}; // constant prior 
+    const cbl::statistics::PriorDistribution alpha_parallel_prior {cbl::glob::DistributionType::_Constant_, 1.};      // constant prior 
+    const cbl::statistics::PriorDistribution SigmaNL_perpendicular_prior {cbl::glob::DistributionType::_Constant_, 0.}; // constant prior 
+    const cbl::statistics::PriorDistribution SigmaNL_parallel_prior {cbl::glob::DistributionType::_Constant_, 0.};  // constant prior 
     const cbl::statistics::PriorDistribution fsigma8_prior {cbl::glob::DistributionType::_Uniform_, 0., 2.}; // Uniform prior for the f*sigma8
     const cbl::statistics::PriorDistribution bsigma8_prior {cbl::glob::DistributionType::_Uniform_, 0., 2.}; // Uniform prior for the b*sigma8
     const cbl::statistics::PriorDistribution SigmaS_prior {cbl::glob::DistributionType::_Uniform_, 0., 2.}; // Uniform prior for the SigmaS
@@ -86,7 +88,7 @@ int main () {
     model_multipoles.set_fit_range(xmin, xmax, 3);
 
     // set the model for the full-shape analyses fo the clustering multipoles    
-    model_multipoles.set_model_fullShape(alpha_perpendicular_prior, alpha_parallel_prior, fsigma8_prior, bsigma8_prior, SigmaS_prior);
+    model_multipoles.set_model_fullShape_DeWiggled(alpha_perpendicular_prior, alpha_parallel_prior, SigmaNL_perpendicular_prior, SigmaNL_parallel_prior, fsigma8_prior, bsigma8_prior, SigmaS_prior);
     
     // set the likelihood type
     model_multipoles.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_);

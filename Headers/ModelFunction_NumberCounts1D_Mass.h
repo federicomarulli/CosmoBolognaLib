@@ -87,6 +87,20 @@ namespace cbl {
        * @return the number counts as a function of mass
        */
       std::vector<double> number_counts_mass (const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+
+      /**
+       * @brief compute the number counts as a function
+       * of the mass for a simulation snapshot
+       *
+       * @param mass mass bins
+       *
+       * @param inputs inputs to compute the mass function
+       *
+       * @param parameter vector containing cosmological parameters
+       *
+       * @return the number counts as a function of mass
+       */
+      std::vector<double> number_counts_mass_snapshot (const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
     }
   }
 }

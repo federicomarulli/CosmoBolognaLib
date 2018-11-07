@@ -62,7 +62,7 @@ int cbl::cuba::CUBAIntegrand (const int *ndim, const cubareal xx[], const int *n
 // ============================================================================
 
 
-cbl::cuba::CUBAwrapper::CUBAwrapper (FunctionDoubleVectorPtrVectorRef func, const shared_ptr<void> function_parameters, vector<double> &parameters, const int ndim)
+cbl::cuba::CUBAwrapper::CUBAwrapper (FunctionDoubleVectorPtrVectorRef func, const std::shared_ptr<void> function_parameters, std::vector<double> &parameters, const int ndim)
 {
   set_integrand(func, function_parameters, parameters, ndim);
 }
@@ -80,7 +80,7 @@ cbl::cuba::CUBAwrapper::CUBAwrapper (FunctionDoubleVector func, const int ndim)
 // ============================================================================
 
 
-void cbl::cuba::CUBAwrapper::set_integrand (FunctionDoubleVectorPtrVectorRef func, const shared_ptr<void> function_parameters, vector<double> &parameters, const int ndim)
+void cbl::cuba::CUBAwrapper::set_integrand (FunctionDoubleVectorPtrVectorRef func, const std::shared_ptr<void> function_parameters, std::vector<double> &parameters, const int ndim)
 {
   m_integrand = std::bind(func, std::placeholders::_1, function_parameters, parameters);
   m_ndim = ndim;

@@ -44,7 +44,8 @@ using namespace cbl;
 
 // ============================================================================================
 
-vector<double> cbl::modelling::threept::Q_nonlinear_localbias (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
+
+std::vector<double> cbl::modelling::threept::Q_nonlinear_localbias (const std::vector<double> theta, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   (void)theta;
 
@@ -67,7 +68,7 @@ vector<double> cbl::modelling::threept::Q_nonlinear_localbias (const vector<doub
 
 // ============================================================================================
 
-vector<double> cbl::modelling::threept::Q_nonlinear_nonlocalbias (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::threept::Q_nonlinear_nonlocalbias (const std::vector<double> theta, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   (void)theta;
 
@@ -90,7 +91,8 @@ vector<double> cbl::modelling::threept::Q_nonlinear_nonlocalbias (const vector<d
 
 // ============================================================================================
 
-vector<double> cbl::modelling::threept::Q_nonlinear_nonlocalbias_alpha (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
+
+std::vector<double> cbl::modelling::threept::Q_nonlinear_nonlocalbias_alpha (const std::vector<double> theta, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   (void)theta;
 

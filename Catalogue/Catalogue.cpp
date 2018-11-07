@@ -51,6 +51,7 @@ template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::Halo>);
 template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::Galaxy>);
 template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::Cluster>);
 template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::Void>);
+template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::HostHalo>);
 
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::RandomObject);
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Mock);
@@ -58,6 +59,7 @@ template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Halo);
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Galaxy);
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Cluster);
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Void);
+template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::HostHalo);
 
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::RandomObject>);
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Mock>);
@@ -65,6 +67,7 @@ template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Hal
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Galaxy>);
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Cluster>);
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Void>);
+template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::HostHalo>);
 
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::RandomObject>);
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::Mock>);
@@ -72,17 +75,18 @@ template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue:
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::Galaxy>);
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::Cluster>);
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::Void>);
+template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::HostHalo>);
 
 /// @endcond
 
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const vector<double> coord1, const vector<double> coord2, const vector<double> coord3, const vector<double> weight, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits)
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<double> coord1, const std::vector<double> coord2, const std::vector<double> coord3, const std::vector<double> weight, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits)
 { 
   // check the vector dimensions
   if (!(coord1.size()==coord2.size() && coord2.size()==coord3.size()))
-    ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: coordinates with different dimensions!"); 
+    ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in Catalogue.cpp: coordinates with different dimensions!"); 
   
   // weight[]=1, if are not used
   vector<double> _weight = weight;
@@ -101,7 +105,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
       observedCoordinates coord = {coord1[i], coord2[i], coord3[i]};
       m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosm, _weight[i])));
     }
-    else ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: CoordinateType is not valid!");
+    else ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in Catalogue.cpp: CoordinateType is not valid!");
 
   }
   
@@ -111,7 +115,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const vector<string> file, const int col1, const int col2, const int col3, const int colWeight, const int colRegion, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const CharEncode charEncode, const int seed) 
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const int col1, const int col2, const int col3, const int colWeight, const int colRegion, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const CharEncode charEncode, const std::string comment, const int seed) 
 { 
   // parameters for random numbers used in case nSub!=1
   random::UniformRandomNumbers ran(0., 1., seed);
@@ -121,45 +125,47 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
   for (size_t dd=0; dd<file.size(); ++dd) {
 
     string line, file_in = file[dd];
-    
-          
+         
     if (charEncode==CharEncode::_ascii_) {
 	  
       coutCBL << "I'm reading the catalogue: " << file_in << endl;
       ifstream finr(file_in.c_str()); checkIO(finr, file_in);
-
+      
       double Weight, Value; long Region;
-
+      
       while (getline(finr, line)) { // read the lines
-	
-	if (ran()<nSub) { // extract a subsample
-	  
-	  stringstream ss(line);
-	  vector<double> value; while (ss>>Value) value.emplace_back(Value);
-	  checkDim(value, col1, "value", false); checkDim(value, col2, "value", false); 
 
-	  if (coordinateType==cbl::CoordinateType::_comoving_) { // comoving coordinates (x, y, z)
-	    checkDim(value, col3, "value", false);
-	    comovingCoordinates coord;
-	    coord.xx = value[col1-1]*fact;
-	    coord.yy = value[col2-1]*fact;
-	    coord.zz = value[col3-1]*fact;
-	    Weight = (colWeight!=-1 && colWeight-1<(int)value.size()) ? value[colWeight-1] : 1.;
-	    Region = (colRegion!=-1 && colRegion-1<(int)value.size()) ? (long)value[colRegion-1] : 0;
-	    m_object.push_back(move(Object::Create(objectType, coord, Weight, Region)));
-	  }
+	if (line.find(comment)==string::npos) { // skip a comment
 
-	  else if (coordinateType==cbl::CoordinateType::_observed_) { // observed coordinates (R.A., Dec (redshift))
-	    observedCoordinates coord;
-	    coord.ra = value[col1-1]*fact;
-	    coord.dec = value[col2-1]*fact;
-	    coord.redshift = ((int)value.size()>=col3) ? value[col3-1] : 1.;
-	    Weight = (colWeight!=-1 && colWeight-1<(int)value.size()) ? value[colWeight-1] : 1.;
-	    Region = (colRegion!=-1 && colRegion-1<(int)value.size()) ? (long)value[colRegion-1] : 0;
-	    m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosm, Weight, Region)));
-	  }
+	  if (ran()<nSub) { // extract a subsample
 	  
-	  else ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: CoordinateType is not valid!");	
+	    stringstream ss(line);
+	    vector<double> value; while (ss>>Value) value.emplace_back(Value);
+	    checkDim(value, col1, "value", false); checkDim(value, col2, "value", false); 
+
+	    if (coordinateType==cbl::CoordinateType::_comoving_) { // comoving coordinates (x, y, z)
+	      checkDim(value, col3, "value", false);
+	      comovingCoordinates coord;
+	      coord.xx = value[col1-1]*fact;
+	      coord.yy = value[col2-1]*fact;
+	      coord.zz = value[col3-1]*fact;
+	      Weight = (colWeight!=-1 && colWeight-1<(int)value.size()) ? value[colWeight-1] : 1.;
+	      Region = (colRegion!=-1 && colRegion-1<(int)value.size()) ? (long)value[colRegion-1] : 0;
+	      m_object.push_back(move(Object::Create(objectType, coord, Weight, Region)));
+	    }
+
+	    else if (coordinateType==cbl::CoordinateType::_observed_) { // observed coordinates (R.A., Dec (redshift))
+	      observedCoordinates coord;
+	      coord.ra = value[col1-1]*fact;
+	      coord.dec = value[col2-1]*fact;
+	      coord.redshift = ((int)value.size()>=col3) ? value[col3-1] : 1.;
+	      Weight = (colWeight!=-1 && colWeight-1<(int)value.size()) ? value[colWeight-1] : 1.;
+	      Region = (colRegion!=-1 && colRegion-1<(int)value.size()) ? (long)value[colRegion-1] : 0;
+	      m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosm, Weight, Region)));
+	    }
+	  
+	    else ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in Catalogue.cpp: CoordinateType is not valid!");	
+	  }
 	}
       }
       
@@ -207,13 +213,13 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 
 	int n_objs2 = num_bin;
 	
-        if (n_objs2!=n_objs) ErrorCBL("Wrong reading of input binary file");
+        if (n_objs2!=n_objs) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in Catalogue.cpp: wrong reading of input binary file");
       }
       
       finr.clear(); finr.close();
     }
         
-    else ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: charEncode is not valid!");
+    else ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in Catalogue.cpp: charEncode is not valid!");
   }
 }
 
@@ -221,13 +227,13 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const vector<Var> attribute, const vector<int> column, const vector<string> file, const int comments, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const int seed) 
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const int seed) 
 {
   
   // preliminary check on vector sizes
   size_t nvar;
   if (attribute.size() == column.size()) nvar = attribute.size();
-  else ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: column vector and attribute vector must have equal size.");
+  else ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in Catalogue.cpp: column vector and attribute vector must have equal size!");
   
   // std::unordered_map to map columns and attributes
   unordered_map<int, Var> varMap;
@@ -264,7 +270,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 	else if (coordinateType==cbl::CoordinateType::_observed_) 
 	  m_object.push_back(move(Object::Create(objectType, defaultObservedCoord, inputUnits, cosm, 1.)));
 
-	else ErrorCBL("Error in Catalogue::Catalogue() of Catalogue.cpp: CoordinateType is not valid!");
+	else ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in Catalogue.cpp: CoordinateType is not valid!");
 
 	stringstream ss(line);
 
@@ -291,7 +297,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const vector<Var> attribute, const vector<int> column, const vector<string> file, const int comments, const double nSub, const int seed) 
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments, const double nSub, const int seed) 
 { 
   // parameters for random numbers used in case nSub!=1
   random::UniformRandomNumbers ran(0., 1., seed);
@@ -340,7 +346,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const vector<
 // ============================================================================
 
 
-vector<long> cbl::catalogue::Catalogue::region () const
+std::vector<long> cbl::catalogue::Catalogue::region () const
 { 
   vector<long> vv(m_object.size());
   
@@ -353,7 +359,7 @@ vector<long> cbl::catalogue::Catalogue::region () const
 // ============================================================================
 
 
-vector<string> cbl::catalogue::Catalogue::field () const
+std::vector<std::string> cbl::catalogue::Catalogue::field () const
 { 
   vector<string> vv(m_object.size());
   
@@ -367,7 +373,7 @@ vector<string> cbl::catalogue::Catalogue::field () const
 
 
 double cbl::catalogue::Catalogue::var (int index, Var var_name) const
-{ 
+{
   double vv = 0;
   
   switch (var_name) {
@@ -472,8 +478,72 @@ double cbl::catalogue::Catalogue::var (int index, Var var_name) const
     vv = m_object[index]->z_displacement();
     break;
 
+  case Var::_MassEstimate_:
+    vv = m_object[index]->mass_estimate();
+    break;
+    
+  case Var::_RadiusEstimate_:
+    vv = m_object[index]->radius_estimate();
+    break;
+    
+  case Var::_VeldispEstimate_:
+    vv = m_object[index]->veldisp_estimate();
+    break;
+
+  case Var::_XCM_:
+    vv = m_object[index]->xcm();
+    break;
+    
+  case Var::_YCM_:
+    vv = m_object[index]->ycm();
+    break;
+    
+  case Var::_ZCM_:
+    vv = m_object[index]->zcm();
+    break;
+
+  case Var::_XSpin_:
+    vv = m_object[index]->spin_x();
+    break;
+    
+  case Var::_YSpin_:
+    vv = m_object[index]->spin_y();
+    break;
+    
+  case Var::_ZSpin_:
+    vv = m_object[index]->spin_z();
+    break;
+
+  case Var::_VelDisp_:
+    vv = m_object[index]->veldisp();
+    break;
+    
+  case Var::_Vmax_:
+    vv = m_object[index]->vmax();
+    break;
+    
+  case Var::_VmaxRad_:
+    vv = m_object[index]->vmax_rad();
+    break;
+    
+  case Var::_TotMass_:
+    vv = m_object[index]->tot_mass();
+    break;
+
+  case Var::_ID_:
+    vv = m_object[index]->ID();
+    break;
+    
+  case Var::_Nsub_:
+    vv = m_object[index]->nsub();
+    break;
+    
+  case Var::_Parent_:
+    vv = m_object[index]->parent();
+    break;
+
   default:
-    ErrorCBL("Error in cbl::catalogue::Catalogue::var() of Catalogue.cpp: no such a variable in the list!");
+    ErrorCBL("Error in cbl::catalogue::Catalogue::var() in Catalogue.cpp: no such a variable in the list!");
   }
   
   return vv;
@@ -483,12 +553,12 @@ double cbl::catalogue::Catalogue::var (int index, Var var_name) const
 // ============================================================================
 
 
-vector<double> cbl::catalogue::Catalogue::var (Var var_name) const
+std::vector<double> cbl::catalogue::Catalogue::var (Var var_name) const
 { 
   vector<double> vv(m_object.size(), 0.);
-
-  for (size_t i=0; i<nObjects(); ++i) vv[i] = var(i, var_name);
   
+  for (size_t i=0; i<nObjects(); ++i) vv[i] = var(i, var_name);
+
   return vv;
 }
 
@@ -573,8 +643,47 @@ bool cbl::catalogue::Catalogue::isSetVar (int index, Var var_name) const
   else if (var_name==Var::_Z_displacement_)
     return m_object[index]->isSet_z_displacement();
 
+  else if (var_name==Var::_MassEstimate_)
+    return m_object[index]->isSet_mass_estimate();
+
+  else if (var_name==Var::_RadiusEstimate_)
+    return m_object[index]->isSet_radius_estimate();
+
+  else if (var_name==Var::_VeldispEstimate_)
+    return m_object[index]->isSet_veldisp_estimate();
+
+  else if (var_name==Var::_XCM_)
+    return m_object[index]->isSet_xcm();
+
+  else if (var_name==Var::_YCM_)
+    return m_object[index]->isSet_ycm();
+
+  else if (var_name==Var::_ZCM_)
+    return m_object[index]->isSet_zcm();
+
+  else if (var_name==Var::_XSpin_)
+    return m_object[index]->isSet_spin_x();
+
+  else if (var_name==Var::_YSpin_)
+    return m_object[index]->isSet_spin_y();
+
+  else if (var_name==Var::_ZSpin_)
+    return m_object[index]->isSet_spin_z();
+
+  else if (var_name==Var::_VelDisp_)
+    return m_object[index]->isSet_veldisp();
+
+  else if (var_name==Var::_Vmax_)
+    return m_object[index]->isSet_vmax();
+
+  else if (var_name==Var::_VmaxRad_)
+    return m_object[index]->isSet_vmax_rad();
+
+  else if (var_name==Var::_TotMass_)
+    return m_object[index]->isSet_tot_mass();
+
   else
-    return ErrorCBL("Error in cbl::catalogue::Catalogue::isSetVar() of Catalogue.cpp: no such a variable in the list!");
+    return ErrorCBL("Error in cbl::catalogue::Catalogue::isSetVar() in Catalogue.cpp: no such a variable in the list!");
 }
 
 
@@ -596,7 +705,7 @@ bool cbl::catalogue::Catalogue::isSetVar (Var var_name) const
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::set_region (const vector<long> region)
+void cbl::catalogue::Catalogue::set_region (const std::vector<long> region)
 {
   for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_region(region[i]);
 }
@@ -605,7 +714,7 @@ void cbl::catalogue::Catalogue::set_region (const vector<long> region)
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::set_field (const vector<string> field)
+void cbl::catalogue::Catalogue::set_field (const std::vector<std::string> field)
 {
   for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_field(field[i]);
 }
@@ -714,19 +823,72 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
   case Var::_Z_displacement_:
     m_object[index]->set_z_displacement(value);
     break;
+    
+  case Var::_MassEstimate_:
+    m_object[index]->set_mass_estimate(value);
+    break;
+    
+  case Var::_RadiusEstimate_:
+    m_object[index]->set_radius_estimate(value);
+    break;
+    
+  case Var::_VeldispEstimate_:
+    m_object[index]->set_veldisp_estimate(value);
+    break;
+    
+  case Var::_XCM_:
+    m_object[index]->set_xcm(value);
+    break;
+    
+  case Var::_YCM_:
+    m_object[index]->set_ycm(value);
+    break;
+    
+  case Var::_ZCM_:
+    m_object[index]->set_zcm(value);
+    break;
+    
+  case Var::_XSpin_:
+    m_object[index]->set_spin_x(value);
+    break;
+    
+  case Var::_YSpin_:
+    m_object[index]->set_spin_y(value);
+    break;
+    
+  case Var::_ZSpin_:
+    m_object[index]->set_spin_z(value);
+    break;
+    
+  case Var::_VelDisp_:
+    m_object[index]->set_veldisp(value);
+    break;
+    
+  case Var::_Vmax_:
+    m_object[index]->set_vmax(value);
+    break;
+    
+  case Var::_VmaxRad_:
+    m_object[index]->set_vmax_rad(value);
+    break;
+    
+  case Var::_TotMass_:
+    m_object[index]->set_tot_mass(value);
+    break;
 
   default:
-    ErrorCBL("Error in cbl::catalogue::Catalogue::set_var of Catalogue.cpp: no such a variable in the list!");
+    ErrorCBL("Error in cbl::catalogue::Catalogue::set_var() in Catalogue.cpp: no such a variable in the list!");
   }
 
 }
 
+
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::set_var (const Var var_name, const vector<double> var)
+void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<double> var)
 {
-  if (m_object.size()!=var.size()) ErrorCBL("Error in cbl::catalogue::Catalogue::set_var of Catalogue.cpp: different sizes!");
+  if (m_object.size()!=var.size()) ErrorCBL("Error in cbl::catalogue::Catalogue::set_var() in Catalogue.cpp: different sizes!");
   
   switch (var_name) {
 
@@ -829,9 +991,61 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const vector<double
   case Var::_Z_displacement_:
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_z_displacement(var[i]);
     break;
+    
+  case Var::_MassEstimate_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_mass_estimate(var[i]);
+    break;
+    
+  case Var::_RadiusEstimate_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_radius_estimate(var[i]);
+    break;
+    
+  case Var::_VeldispEstimate_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_veldisp_estimate(var[i]);
+    break;
+    
+  case Var::_XCM_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_xcm(var[i]);
+    break;
+    
+  case Var::_YCM_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_ycm(var[i]);
+    break;
+    
+  case Var::_ZCM_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_zcm(var[i]);
+    break;
+    
+  case Var::_XSpin_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_spin_x(var[i]);
+    break;
+    
+  case Var::_YSpin_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_spin_y(var[i]);
+    break;
+    
+  case Var::_ZSpin_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_spin_z(var[i]);
+    break;
+    
+  case Var::_VelDisp_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_veldisp(var[i]);
+    break;
+    
+  case Var::_Vmax_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_vmax(var[i]);
+    break;
+    
+  case Var::_VmaxRad_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_vmax_rad(var[i]);
+    break;
+    
+  case Var::_TotMass_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_tot_mass(var[i]);
+    break;
 
   default:
-    ErrorCBL("Error in cbl::catalogue::Catalogue::set_var of Catalogue.cpp: no such a variable in the list!");
+    ErrorCBL("Error in cbl::catalogue::Catalogue::set_var() in Catalogue.cpp: no such a variable in the list!");
   }
 
 }
@@ -840,7 +1054,7 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const vector<double
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::stats_var (const Var var_name, vector<double> &stats) const
+void cbl::catalogue::Catalogue::stats_var (const Var var_name, std::vector<double> &stats) const
 {
   stats.erase(stats.begin(), stats.end());
   stats.resize(4);
@@ -856,7 +1070,7 @@ void cbl::catalogue::Catalogue::stats_var (const Var var_name, vector<double> &s
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::stats_var (const vector<Var> var_name, vector<vector<double>> &stats) const
+void cbl::catalogue::Catalogue::stats_var (const std::vector<Var> var_name, std::vector<std::vector<double>> &stats) const
 {
   stats.erase(stats.begin(),stats.end());
 
@@ -873,7 +1087,7 @@ void cbl::catalogue::Catalogue::stats_var (const vector<Var> var_name, vector<ve
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::var_distr (const Var var_name, vector<double> &_var, vector<double> &dist, vector<double> &err, const int nbin, const bool linear, const string file_out, const double Volume, const bool norm, const double V1, const double V2, const bool bin_type, const bool convolution, const double sigma) const
+void cbl::catalogue::Catalogue::var_distr (const Var var_name, std::vector<double> &_var, std::vector<double> &dist, std::vector<double> &err, const int nbin, const bool linear, const std::string file_out, const double Volume, const bool norm, const double V1, const double V2, const std::string bin_type, const bool convolution, const double sigma) const
 {
   distribution(_var, dist, err, var(var_name), var(Var::_Weight_), nbin, linear, file_out, (norm) ? Volume*weightedN() : Volume, V1, V2, bin_type, convolution, sigma);
 }
@@ -959,7 +1173,7 @@ void cbl::catalogue::Catalogue::computePolarCoordinates (const CoordinateUnits o
         m_object[i]->set_dec(arcminutes(dec)); 		    
       }
 
-    else ErrorCBL("Error in cbl::catalogue::Catalogue::computePolarCoordinates: outputUnits type not allowed!");
+    else ErrorCBL("Error in cbl::catalogue::Catalogue::computePolarCoordinates() in Catalogue.cpp outputUnits type not allowed!");
   }
   
 }
@@ -1005,7 +1219,7 @@ void cbl::catalogue::Catalogue::computePolarCoordinates (const cosmology::Cosmol
 	m_object[i]->set_dec(arcminutes(dec)); 		    
       }
 
-    else ErrorCBL("Error in cbl::catalogue::Catalogue::computePolarCoordinates: outputUnits type not allowed!");
+    else ErrorCBL("Error in cbl::catalogue::Catalogue::computePolarCoordinates() in Catalogue.cpp: outputUnits type not allowed!");
   }
   
 }
@@ -1039,11 +1253,11 @@ void cbl::catalogue::Catalogue::restoreComovingCoordinates ()
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::Order (const vector<int> vv) 
+void cbl::catalogue::Catalogue::Order (const std::vector<int> vv) 
 {
   int nObj = m_object.size();
 
-  if (int(vv.size())!=nObj) ErrorCBL("Error in Catalogue::Order()!");
+  if (int(vv.size())!=nObj) ErrorCBL("Error in cbl::catalogue::Catalogue::Order() in Catalogue.cpp: different sizes!");
  
   vector<shared_ptr<Object>> obj(nObj);
   
@@ -1067,8 +1281,8 @@ void cbl::catalogue::Catalogue::Order ()
   
   vector<shared_ptr<Object>> obj(nObj);
   
-  if (m_index.size() != nObj) 
-    ErrorCBL("Error in Catalogue::Order() of Catalogue.cpp, order not found!");
+  if (m_index.size()!=nObj) 
+    ErrorCBL("Error in cbl::catalogue::Catalogue::Order() in Catalogue.cpp: m_index.size()="+conv(m_index.size(), par::fINT)+" and nObj="+conv(nObj, par::fINT)+" must be equal!");
   
   obj = m_object;
   
@@ -1092,9 +1306,9 @@ double cbl::catalogue::Catalogue::weightedN () const
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::write_comoving_coordinates (const string outputFile) const
+void cbl::catalogue::Catalogue::write_comoving_coordinates (const std::string outputFile) const
 {
-  if (m_object.size()==0) ErrorCBL("Error in cbl::catalogue::Catalogue::write_comoving_coordinates: m_object.size()=0!");
+  if (m_object.size()==0) ErrorCBL("Error in cbl::catalogue::Catalogue::write_comoving_coordinates() in Catalogue.cpp: m_object.size()=0!");
 
   coutCBL << "I'm writing the file: " << outputFile << "..." << endl;
   
@@ -1111,16 +1325,16 @@ void cbl::catalogue::Catalogue::write_comoving_coordinates (const string outputF
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::write_obs_coordinates (const string outputFile) const 
+void cbl::catalogue::Catalogue::write_obs_coordinates (const std::string outputFile) const 
 {
-  if (m_object.size()==0) ErrorCBL("Error in cbl::catalogue::Catalogue::write_obs_coordinates: m_object.size()=0!");
+  if (m_object.size()==0) ErrorCBL("Error in cbl::catalogue::Catalogue::write_obs_coordinates() in Catalogue.cpp: m_object.size()=0!");
 
   coutCBL << "I'm writing the file: " << outputFile << "..." << endl;
   
   ofstream fout(outputFile.c_str()); checkIO(fout, outputFile);
   
   if (!isSet(ra(0)) || !isSet(dec(0)) || !isSet(redshift(0)))
-    ErrorCBL("Error in cbl::catalogue::Catalogue::write_obs_coords of Catalogue.cpp! Polar coordinates are not set!");
+    ErrorCBL("Error in cbl::catalogue::Catalogue::write_obs_coords() of Catalogue.cpp: polar coordinates are not set!");
 
   for (size_t i=0; i<nObjects(); ++i) 
     fout << ra(i) << "   " << dec(i) << "   " << redshift(i) << endl;
@@ -1133,7 +1347,7 @@ void cbl::catalogue::Catalogue::write_obs_coordinates (const string outputFile) 
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::write_data (const string outputFile, const vector<Var> var_name) const 
+void cbl::catalogue::Catalogue::write_data (const std::string outputFile, const std::vector<Var> var_name) const 
 {
   coutCBL << "I'm writing the file: " << outputFile << "..." << endl;
   
@@ -1142,7 +1356,7 @@ void cbl::catalogue::Catalogue::write_data (const string outputFile, const vecto
   if (var_name.size()==0) {
     
     if (!isSet(ra(0)) || !isSet(dec(0)) || !isSet(redshift(0)) || !isSet(dc(0)))
-      ErrorCBL("Error in cbl::catalogue::Catalogue::write_coordinates of Catalogue.cpp! Polar coordinates are not set!");
+      ErrorCBL("Error in cbl::catalogue::Catalogue::write_data() in Catalogue.cpp: polar coordinates are not set!");
     
     if (!isSet(region(0)))
       for (size_t i=0; i<nObjects(); ++i) 
@@ -1197,7 +1411,7 @@ Catalogue cbl::catalogue::Catalogue::cutted_catalogue (const Var var_name, const
 // ============================================================================
 
 
-Catalogue cbl::catalogue::Catalogue::mangle_cut (const string mangle_mask, const bool excl) const
+Catalogue cbl::catalogue::Catalogue::mangle_cut (const std::string mangle_mask, const bool excl) const
 {
 
   vector<shared_ptr<Object>> objects;
@@ -1247,7 +1461,7 @@ Catalogue cbl::catalogue::Catalogue::mangle_cut (const string mangle_mask, const
 
 Catalogue cbl::catalogue::Catalogue::diluted_catalogue (const double nSub, const int seed) const
 {
-  if (nSub<=0 || nSub>1 || !isfinite(nSub)) ErrorCBL("Error in diluted_catalogue() of Catalogue.cpp: nSub must be in the range (0,1] !");
+  if (nSub<=0 || nSub>1 || !isfinite(nSub)) ErrorCBL("Error in cbl::catalogue::Catalogue::diluted_catalogue() in Catalogue.cpp: nSub must be in the range (0,1] !");
   
   // copy the catalogue into a new one 
   auto diluted_catalogue = *this;
@@ -1294,7 +1508,7 @@ double cbl::catalogue::Catalogue::angsep_xyz (const int i, shared_ptr<Object> ob
 // ============================================================================
 
 
-shared_ptr<Catalogue> cbl::catalogue::Catalogue::smooth (const double gridsize, const vector<Var> vars, const int SUB)
+shared_ptr<Catalogue> cbl::catalogue::Catalogue::smooth (const double gridsize, const std::vector<Var> vars, const int SUB)
 {
   (void)vars;
   
@@ -1656,9 +1870,9 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue input_catalogue, const Cat
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::remove_objects (const vector<bool> index)
+void cbl::catalogue::Catalogue::remove_objects (const std::vector<bool> index)
 {
-  if (index.size() != m_object.size()) ErrorCBL ("Error in remove_objects() of Catalogue.cpp: argument size not valid!");
+  if (index.size() != m_object.size()) ErrorCBL ("Error in cbl::catalogue::Catalogue::remove_objects() in Catalogue.cpp: argument size not valid!");
 
   decltype(m_object) object_temp;
   
@@ -1685,6 +1899,8 @@ void cbl::catalogue::Catalogue::swap_objects (const int ind1, const int ind2)
 
 void cbl::catalogue::Catalogue::sort (const Var var_name, const bool increasing)
 {
+  coutCBL << "I'm sorting the catalogue..." << endl;
+  
   vector<double> variable = var(var_name);
   bool swap = true;
   while (swap) {
@@ -1718,7 +1934,6 @@ void cbl::catalogue::Catalogue::sort (const Var var_name, const bool increasing)
 
 void cbl::catalogue::Catalogue::compute_catalogueProperties (const double boxside)
 {
-
   m_volume = (boxside > 0.) ? pow(boxside, 3.) :
     (cbl::Max(var(Var::_X_)) - cbl::Min(var(Var::_X_)))*
     (cbl::Max(var(Var::_Y_)) - cbl::Min(var(Var::_Y_)))*
@@ -1729,7 +1944,6 @@ void cbl::catalogue::Catalogue::compute_catalogueProperties (const double boxsid
   coutCBL << "Sample density = " << m_numdensity << " (Mpc/h)^-3" << endl;
   
   m_mps = pow(m_numdensity, -1./3.);
-  coutCBL << "Sample mps = " << m_mps << " Mpc/h" << endl;
-  
+  coutCBL << "Sample mps = " << m_mps << " Mpc/h" << endl; 
 }
 

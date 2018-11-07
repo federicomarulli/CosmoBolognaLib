@@ -66,7 +66,10 @@ namespace cbl {
       _Cluster_,
     
       /// cosmic void
-      _Void_
+      _Void_,
+    
+      /// host halo
+      _HostHalo_
     
     };
 
@@ -77,7 +80,7 @@ namespace cbl {
      * ObjectType names
      */
     inline std::vector<std::string> ObjectTypeNames ()
-    { return {"Random", "Mock", "Halo", "Galaxy", "Cluster", "Void"}; }
+    { return {"Random", "Mock", "Halo", "Galaxy", "Cluster", "Void", "HostHalo"}; }
 
     /**
      * @brief cast an enum of type ObjectType
@@ -392,7 +395,7 @@ namespace cbl {
        *  providing in input comoving coordinates
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        * 
        *  @return object of a given type
        */
@@ -403,7 +406,7 @@ namespace cbl {
        *  providing in input comoving coordinates
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param coord structure containing the comoving coordinates
        *  {x, y, z}
@@ -430,7 +433,7 @@ namespace cbl {
        *  model to estimate the redshift
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param coord structure containing the comoving coordinates
        *  {x, y, z}
@@ -463,7 +466,7 @@ namespace cbl {
        *  providing in input observed coordinates in radians
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
@@ -489,7 +492,7 @@ namespace cbl {
        *  providing in input observed coordinates in any angular units
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param coord structure containing the observed coordinates
        *  {ra Right Ascension}
@@ -518,7 +521,7 @@ namespace cbl {
        *  cosmological model to estimate the comoving coordinates
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
@@ -548,7 +551,7 @@ namespace cbl {
        *  model to estimate the comoving coordinates
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
@@ -579,7 +582,7 @@ namespace cbl {
        *  providing in input both comoving and observed coordinates
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param xx comoving coordinate
        *  @param yy comoving coordinate
@@ -825,7 +828,126 @@ namespace cbl {
        *  error message if the derived object does not have this member
        */
       virtual double centralDensity () const
-      { return cbl::ErrorCBL("Error in radius() of centralDensity.h!"); }
+      { return cbl::ErrorCBL("Error in radius() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_mass_estimate
+       *  @return the mass estimate of the group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double mass_estimate () const
+      { return cbl::ErrorCBL("Error in mass_estimate() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_radius_estimate
+       *  @return the radius estimate of the group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double radius_estimate () const
+      { return cbl::ErrorCBL("Error in radius_estimate() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_veldisp_estimate
+       *  @return the velocity dispersion estimate of the group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double veldisp_estimate () const
+      { return cbl::ErrorCBL("Error in veldisp_estimate() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_xcm
+       *  @return the x-axis coordinate of the centre of mass, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double xcm () const
+      { return cbl::ErrorCBL("Error in xcm() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_ycm
+       *  @return the y-axis coordinate of the centre of mass, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double ycm () const
+      { return cbl::ErrorCBL("Error in ycm() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_zcm
+       *  @return the z-axis coordinate of the centre of mass, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double zcm () const
+      { return cbl::ErrorCBL("Error in zcm() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_spin_x
+       *  @return the x-axis component of the spin, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double spin_x () const
+      { return cbl::ErrorCBL("Error in spin_x() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_spin_y
+       *  @return the y-axis component of the spin, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double spin_y () const
+      { return cbl::ErrorCBL("Error in spin_y() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_spin_z
+       *  @return the z-axis component of the spin, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double spin_z () const
+      { return cbl::ErrorCBL("Error in spin_z() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_veldisp
+       *  @return the velocity dispersion of the sub-group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double veldisp () const
+      { return cbl::ErrorCBL("Error in veldisp() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_vmax
+       *  @return the maximum total velocity of the sub-group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double vmax () const
+      { return cbl::ErrorCBL("Error in vmax() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_vmax_rad
+       *  @return the maximum radial velocity of the sub-group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double vmax_rad () const
+      { return cbl::ErrorCBL("Error in vmax_rad() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_tot_mass
+       *  @return the total mass of the host halo (sum over all contributions), or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double tot_mass () const
+      { return cbl::ErrorCBL("Error in tot_mass() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_parent
+       *  @return the id of the parent group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual int parent () const { return cbl::ErrorCBL("Error in parent() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_nsub
+       *  @return the number of sub-groups in the group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual int nsub () const
+      { return cbl::ErrorCBL("Error in nsub() of Object.h!"); }
     
       /**
        *  @brief get the member \e m_radius
@@ -834,6 +956,14 @@ namespace cbl {
        */
       virtual int ID () const
       { return cbl::ErrorCBL("Error in ID() of Objech.h!"); }
+    
+      /**
+       *  @brief get the member \e m_satellites
+       *  @return a vector of pointers to satellite objects of the derived object, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual std::vector<std::shared_ptr<Object>> satellites () const
+      { cbl::ErrorCBL("Error in satellites() of Objech.h!"); return {}; }
 
       ///@}
 
@@ -1096,6 +1226,142 @@ namespace cbl {
       { (void)centralDensity; cbl::ErrorCBL("Error in set_centralDensity() of Objech.h!"); }
     
       /**
+       *  @brief set the private member \e m_mass_estimate
+       *  @param mass_estimate the mass estimate of the group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_mass_estimate (const double mass_estimate=par::defaultDouble)
+      { (void)mass_estimate; cbl::ErrorCBL("Error in set_mass_estimate() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_radius_estimate
+       *  @param radius_estimate the radius estimate of the group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_radius_estimate (const double radius_estimate=par::defaultDouble)
+      { (void)radius_estimate; cbl::ErrorCBL("Error in set_radius_estimate() of Objech.h!"); }
+    
+    
+      /**
+       *  @brief set the private member \e m_veldisp_estimate
+       *  @param veldisp_estimate the velocity dispersion estimate of the group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_veldisp_estimate (const double veldisp_estimate=par::defaultDouble)
+      { (void)veldisp_estimate; cbl::ErrorCBL("Error in set_veldisp_estimate() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_xcm
+       *  @param xcm the x-axis coordinate of the centre of mass
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_xcm (const double xcm=par::defaultDouble)
+      { (void)xcm; cbl::ErrorCBL("Error in set_xcm() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_ycm
+       *  @param ycm the y-axis coordinate of the centre of mass
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_ycm (const double ycm=par::defaultDouble)
+      { (void)ycm; cbl::ErrorCBL("Error in set_ycm() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_zcm
+       *  @param zcm the z-axis coordinate of the centre of mass
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_zcm (const double zcm=par::defaultDouble)
+      { (void)zcm; cbl::ErrorCBL("Error in set_zcm() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_spin_x
+       *  @param spin_x the x-axis component of the spin
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_spin_x (const double spin_x=par::defaultDouble)
+      { (void)spin_x; cbl::ErrorCBL("Error in set_spin_x() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_spin_y
+       *  @param spin_y the y-axis component of the spin
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_spin_y (const double spin_y=par::defaultDouble)
+      { (void)spin_y; cbl::ErrorCBL("Error in set_spin_y() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_spin_z
+       *  @param spin_z the z-axis component of the spin
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_spin_z (const double spin_z=par::defaultDouble)
+      { (void)spin_z; cbl::ErrorCBL("Error in set_spin_z() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_veldisp
+       *  @param veldisp the velocity dispersion of the sub-group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_veldisp (const double veldisp=par::defaultDouble)
+      { (void)veldisp; cbl::ErrorCBL("Error in set_veldisp() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_vmax
+       *  @param vmax the maximum total velocity of the sub-group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_vmax (const double vmax=par::defaultDouble)
+      { (void)vmax; cbl::ErrorCBL("Error in set_vmax() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_vmax_rad
+       *  @param vmax_rad the maximum radial velocity of the sub-group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_vmax_rad (const double vmax_rad=par::defaultDouble)
+      { (void)vmax_rad; cbl::ErrorCBL("Error in set_vmax_rad() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_tot_mass
+       *  @param tot_mass the total mass of the parent halo
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_tot_mass (const double tot_mass=par::defaultDouble)
+      { (void)tot_mass; cbl::ErrorCBL("Error in set_tot_mass() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_parent
+       *  @param parent the id of the parent group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_parent (const int parent=par::defaultInt)
+      { (void)parent; cbl::ErrorCBL("Error in set_parent() of Objech.h!"); }
+      
+      /**
+       *  @brief set the private member \e m_nsub
+       *  @param nsub the number of sub-groups in the group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_nsub (const int nsub=par::defaultInt)
+      { (void)nsub; cbl::ErrorCBL("Error in set_nsub() of Objech.h!"); }
+    
+      /**
        *  @brief set the member \e m_ID
        *  @param ID the ID
        *  @return none, or an error message if the derived object does
@@ -1103,6 +1369,24 @@ namespace cbl {
        */
       virtual void set_ID (const int ID=par::defaultInt)
       { (void)ID; cbl::ErrorCBL("Error in set_ID() of Objech.h!"); }
+
+      /**
+       *  @brief set the private member \em m_satellites
+       *  @param satellite the shared pointers to be added to the satellite objects pointer vector
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_satellite (const std::shared_ptr<Object> satellite={})
+      {	(void)satellite; cbl::ErrorCBL("Error in set_satellite() of Objech.h!"); }
+
+      /**
+       *  @brief set the private member \em m_satellites
+       *  @param satellites the vector of shared pointers to satellite objects
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_satellites (const std::vector<std::shared_ptr<Object>> satellites={})
+      {	(void)satellites; cbl::ErrorCBL("Error in set_satellites() of Objech.h!"); }
       
       ///@}
 
@@ -1362,6 +1646,156 @@ namespace cbl {
        */
       virtual bool isSet_centralDensity ()
       { return cbl::ErrorCBL("Error in isSet_centralDensity() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_mass_estimate is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_mass_estimate ()
+      { return cbl::ErrorCBL("Error in isSet_mass_estimate() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_radius_estimate is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_radius_estimate ()
+      { return cbl::ErrorCBL("Error in isSet_radius_estimate() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_veldisp_estimate is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_veldisp_estimate ()
+      { return cbl::ErrorCBL("Error in isSet_veldisp_estimate() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_xcm is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_xcm ()
+      { return cbl::ErrorCBL("Error in isSet_xcm() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_ycm is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_ycm ()
+      { return cbl::ErrorCBL("Error in isSet_ycm() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_zcm is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_zcm ()
+      { return cbl::ErrorCBL("Error in isSet_zcm() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_spin_x is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_spin_x ()
+      { return cbl::ErrorCBL("Error in isSet_spin_x() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_spin_y is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_spin_y ()
+      { return cbl::ErrorCBL("Error in isSet_spin_y() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_spin_z is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_spin_z ()
+      { return cbl::ErrorCBL("Error in isSet_spin_z() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_veldisp is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_veldisp ()
+      { return cbl::ErrorCBL("Error in isSet_veldisp() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_vmax is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_vmax ()
+      { return cbl::ErrorCBL("Error in isSet_vmax() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_vmax_rad is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_vmax_rad ()
+      { return cbl::ErrorCBL("Error in isSet_vmax_rad() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_tot_mass is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_tot_mass ()
+      { return cbl::ErrorCBL("Error in isSet_tot_mass() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_parent is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_parent ()
+      { return cbl::ErrorCBL("Error in isSet_parent() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_nsub is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_nsub ()
+      { return cbl::ErrorCBL("Error in isSet_nsub() of Objech.h!"); }
     
       /**
        *  @brief check if the member \e m_ID is set

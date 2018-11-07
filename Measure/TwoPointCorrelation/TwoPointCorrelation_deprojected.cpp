@@ -51,7 +51,7 @@ using namespace twopt;
 // ============================================================================================
 
 
-shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_deprojected::Deprojected (const vector<double> rp, const vector<double> ww, const vector<double> error_ww)
+std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_deprojected::Deprojected (const std::vector<double> rp, const std::vector<double> ww, const std::vector<double> error_ww)
 {
   vector<double> rad(rp.size(),0), xi(rp.size(),0), error(rp.size(),0);
 
@@ -81,7 +81,7 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_deprojected::Dep
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_deprojected::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation_deprojected::measure (const ErrorType errorType, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
     case (ErrorType::_Poisson_) :
@@ -102,7 +102,7 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measure (const ErrorT
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_deprojected::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation_deprojected::measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   // ----------- measure the 2D two-point correlation function, xi(rp,pi) ----------- 
 
@@ -120,7 +120,7 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measurePoisson (const
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   if (dir_output_resample != par::defaultString && dir_output_resample != "") {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -173,7 +173,7 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife (con
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (dir_output_resample != par::defaultString && dir_output_resample != "") {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -225,7 +225,7 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureBootstrap (con
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojected::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojected::XiJackknife (const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr)
 {
   vector<shared_ptr<data::Data>> data;
   
@@ -243,7 +243,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojec
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojected::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojected::XiJackknife (const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const std::vector<std::shared_ptr<pairs::Pair>> dr)
 {
   vector<shared_ptr<data::Data>> data;
 
@@ -260,7 +260,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojec
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojected::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojected::XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const int seed)
 {
   vector<shared_ptr<data::Data>> data;
 
@@ -278,7 +278,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojec
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojected::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojected::XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const std::vector<std::shared_ptr<pairs::Pair>> dr, const int seed)
 {
   vector<shared_ptr<data::Data>> data;
 
@@ -295,7 +295,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_deprojec
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_deprojected::read (const string dir, const string file) 
+void cbl::measure::twopt::TwoPointCorrelation_deprojected::read (const std::string dir, const std::string file) 
 {
   m_dataset->read(dir+file);
 }
@@ -304,7 +304,7 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::read (const string di
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_deprojected::write (const string dir, const string file, const int rank) const 
+void cbl::measure::twopt::TwoPointCorrelation_deprojected::write (const std::string dir, const std::string file, const int rank) const 
 {
   vector<double> xx; m_dataset->xx(xx);
 

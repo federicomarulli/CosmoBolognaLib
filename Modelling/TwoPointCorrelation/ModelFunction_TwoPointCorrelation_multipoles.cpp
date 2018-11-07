@@ -22,8 +22,8 @@
  *  @file
  *  Modelling/TwoPointCorrelation/ModelFunction_TwoPointCorrelation_multipoles.cpp
  *
- *  @brief Functions to model the multipoles of the two-point correlation
- *  function
+ *  @brief Functions to model the multipoles of the two-point
+ *  correlation function
  *
  *  This file contains the implementation of the functions used to
  *  model the multipoles of the two-point correlation function
@@ -45,57 +45,41 @@ using namespace cbl;
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::xiMultipoles (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::xiMultipoles (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
-
-  vector<vector<double>> new_rad(pp->nmultipoles);
-
-  for(size_t i=0; i<rad.size(); i++)
-      new_rad[pp->dataset_order[i]].push_back(rad[i]);
   
   // input parameters
+  vector<shared_ptr<glob::FuncGrid>> pk_interp(2);
 
-  // AP parameter that contains the distance information
-  double alpha_perpendicular = parameter[0];
+  if (pp->Pk_mu_model == 0) { // de-wiggled model 
+    pk_interp[0] = pp->func_Pk;
+    pk_interp[1] = pp->func_Pk_NW;
+  }
+  else if (pp->Pk_mu_model == 1) { // mode-coupling model 
+    pk_interp[0] = pp->func_Pk;
+    pk_interp[1] = pp->func_Pk1loop;
+  }
 
-  // AP parameter that contains the distance information
-  double alpha_parallel = parameter[1];
+  vector<double> Xil = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, parameter, pk_interp, pp->prec);
 
-  // f(z)*sigma8(z)
-  double fsigma8 = parameter[2];
+  const double norm = pow(pp->sigma8_z, -2);
   
-  // bias(z)*sigma8(z)
-  double bsigma8 = parameter[3];
-
-  // streaming scale
-  double SigmaS = parameter[4];
-
-  vector<double> Xi;
-
-  vector<vector<double>> Xil = Xi_l(new_rad, pp->nmultipoles, alpha_perpendicular, alpha_parallel, pp->sigmaNL_perp, pp->sigmaNL_par, bsigma8/pp->sigma8_z, fsigma8/pp->sigma8_z, SigmaS, 0., pp->kk, pp->func_Pk, pp->func_Pk_NW, pp->prec);
-
   for (size_t i=0; i<Xil.size(); i++)
-    for (size_t j=0; j<Xil[i].size(); j++)
-      Xi.push_back(Xil[i][j]);
+      Xil[i] *= norm;
 
-  return Xi;
+  return Xil;
 }
 
 
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::xiMultipoles_sigma8_bias (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::xiMultipoles_sigma8_bias (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
-
-  vector<vector<double>> new_rad(pp->nmultipoles);
-
-  for (size_t i=0; i<rad.size(); i++)
-      new_rad[pp->dataset_order[i]].push_back(rad[i]);
 
   // input parameters
 
@@ -105,7 +89,6 @@ vector<double> cbl::modelling::twopt::xiMultipoles_sigma8_bias (const vector<dou
   // bias
   double bias = parameter[1];
 
-  
   // AP parameter that contains the distance information
   double alpha_perpendicular = 1.;
 
@@ -121,22 +104,14 @@ vector<double> cbl::modelling::twopt::xiMultipoles_sigma8_bias (const vector<dou
   // streaming scale
   double SigmaS = 0.;
 
-  vector<double> Xi;
-
-  vector<vector<double>> Xil = Xi_l(new_rad, pp->nmultipoles, alpha_perpendicular, alpha_parallel, pp->sigmaNL_perp, pp->sigmaNL_par, bsigma8/pp->sigma8_z, fsigma8/pp->sigma8_z, SigmaS, 0., pp->kk, pp->func_Pk, pp->func_Pk_NW, pp->prec);
-
-  for (size_t i=0; i<Xil.size(); i++)
-    for (size_t j=0; j<Xil[i].size(); j++)
-      Xi.push_back(Xil[i][j]);
-
-  return Xi;
+  return Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, {alpha_perpendicular, alpha_parallel, pp->sigmaNL_perp, pp->sigmaNL_par, fsigma8/pp->sigma8_z, bsigma8/pp->sigma8_z, SigmaS}, {pp->func_Pk, pp->func_Pk_NW}, pp->prec);
 }
 
 
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const vector<double> rad, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -214,5 +189,4 @@ vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const vector<double> rad
 
   return Xi;
 }
-
 

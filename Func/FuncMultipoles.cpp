@@ -42,7 +42,7 @@ using namespace cbl;
 // =====================================================================================
 
 
-double cbl::multipole_xi0 (const int indexR, const vector<double> mu, const vector< vector<double> > xi) 
+double cbl::multipole_xi0 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> xi) 
 {
   double bin = mu[1]-mu[0];
   double xi0 = 0.;
@@ -57,7 +57,7 @@ double cbl::multipole_xi0 (const int indexR, const vector<double> mu, const vect
 // ============================================================================
 
 
-double cbl::multipole_xi2 (const int indexR, const vector<double> mu, const vector< vector<double> > xi) 
+double cbl::multipole_xi2 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> xi) 
 {
   double bin = mu[1]-mu[0];
   double xi2 = 0.;
@@ -72,7 +72,7 @@ double cbl::multipole_xi2 (const int indexR, const vector<double> mu, const vect
 // ============================================================================
 
 
-double cbl::multipole_xi4 (const int indexR, const vector<double> mu, const vector< vector<double> > xi) 
+double cbl::multipole_xi4 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> xi) 
 {
   double bin = mu[1]-mu[0];
   double xi4 = 0.;
@@ -87,7 +87,7 @@ double cbl::multipole_xi4 (const int indexR, const vector<double> mu, const vect
 // ============================================================================
 
 
-double cbl::error_multipole_xi0 (const int indexR, const vector<double> mu, const vector<vector<double> > error) 
+double cbl::error_multipole_xi0 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> error) 
 {
   double bin = mu[1]-mu[0];
   double err = 0.;
@@ -102,7 +102,7 @@ double cbl::error_multipole_xi0 (const int indexR, const vector<double> mu, cons
 // ============================================================================
 
 
-double cbl::error_multipole_xi2 (const int indexR, const vector<double> mu, const vector<vector<double> > error) 
+double cbl::error_multipole_xi2 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> error) 
 {
   double bin = mu[1]-mu[0];
   double err = 0.;
@@ -117,7 +117,7 @@ double cbl::error_multipole_xi2 (const int indexR, const vector<double> mu, cons
 // ============================================================================
 
 
-double cbl::error_multipole_xi4 (const int indexR, const vector<double> mu, const vector<vector<double> > error) 
+double cbl::error_multipole_xi4 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> error) 
 {
   double bin = mu[1]-mu[0];
   double err = 0.;
@@ -132,7 +132,7 @@ double cbl::error_multipole_xi4 (const int indexR, const vector<double> mu, cons
 // ============================================================================
 
 
-double cbl::multipole_xi0 (const double ss, const vector<double> rp, const vector<double> pi, const vector<vector<double> > xi, const double delta_s) 
+double cbl::multipole_xi0 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> xi, const double delta_s) 
 {
   double xi0 = 0.;
   int Nbin = 0;
@@ -156,7 +156,7 @@ double cbl::multipole_xi0 (const double ss, const vector<double> rp, const vecto
 // ============================================================================
 
 
-double cbl::multipole_xi2 (const double ss, const vector<double> rp, const vector<double> pi, const vector<vector<double> > xi, const double delta_s) 
+double cbl::multipole_xi2 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> xi, const double delta_s) 
 {
   double xi2 = 0.;
   int Nbin = 0;
@@ -180,7 +180,7 @@ double cbl::multipole_xi2 (const double ss, const vector<double> rp, const vecto
 // ============================================================================
 
 
-double cbl::multipole_xi4 (const double ss, const vector<double> rp, const vector<double> pi, const vector<vector<double> > xi, const double delta_s) 
+double cbl::multipole_xi4 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> xi, const double delta_s) 
 {
   double xi4 = 0.;
   int Nbin = 0;
@@ -204,7 +204,7 @@ double cbl::multipole_xi4 (const double ss, const vector<double> rp, const vecto
 // ============================================================================
 
 
-double cbl::error_multipole_xi0 (const double ss, const vector<double> rp, const vector<double> pi, const vector<vector<double> > error, const double delta_s) 
+double cbl::error_multipole_xi0 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> error, const double delta_s) 
 {
   double err = 0.;
   int Nbin = 0;
@@ -228,7 +228,7 @@ double cbl::error_multipole_xi0 (const double ss, const vector<double> rp, const
 // ============================================================================
 
 
-double cbl::error_multipole_xi2 (const double ss, const vector<double> rp, const vector<double> pi, const vector<vector<double> > error, const double delta_s) 
+double cbl::error_multipole_xi2 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> error, const double delta_s) 
 {
   double err = 0.;
   int Nbin = 0;
@@ -252,7 +252,7 @@ double cbl::error_multipole_xi2 (const double ss, const vector<double> rp, const
 // ============================================================================
 
 
-double cbl::error_multipole_xi4 (const double ss, const vector<double> rp, const vector<double> pi, const vector<vector<double> > error, const double delta_s) 
+double cbl::error_multipole_xi4 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> error, const double delta_s) 
 {
   double err = 0.;
   int Nbin = 0;
@@ -277,7 +277,7 @@ double cbl::error_multipole_xi4 (const double ss, const vector<double> rp, const
 
 /// @cond glob
 
-double cbl::multipoles (double rr, shared_ptr<void> pp, vector<double> par)
+double cbl::multipoles (double rr, shared_ptr<void> pp, std::vector<double> par)
 { 
   
   int index = par[par.size()-1];
@@ -289,7 +289,7 @@ double cbl::multipoles (double rr, shared_ptr<void> pp, vector<double> par)
 
   shared_ptr<cbl::glob::STR_xi2D_model> vec = static_pointer_cast<cbl::glob::STR_xi2D_model >(pp);
   
-  vector< vector<double> > Xi (vec->dim, vector<double> (vec->dim,-1.e30));
+  vector<vector<double>> Xi (vec->dim, vector<double> (vec->dim,-1.e30));
  
   int index2 = 0;
   
@@ -304,7 +304,7 @@ double cbl::multipoles (double rr, shared_ptr<void> pp, vector<double> par)
   // ---- eliminate null bins ----
   // -----------------------------
  
-  vector< vector<double> > XiR = Xi;
+  vector<vector<double>> XiR = Xi;
   vector<double> rpp, pii;
 
   for (unsigned int i=0; i<vec->rp.size(); i++) {
@@ -326,7 +326,7 @@ double cbl::multipoles (double rr, shared_ptr<void> pp, vector<double> par)
   vector<double> cos_lin = linear_bin_vector(step_cos, cos_min, cos_max);
 
   double rp, pi;
-  vector< vector<double> > xi_cos(1);
+  vector<vector<double>> xi_cos(1);
 
   for (unsigned int i=0; i<cos_lin.size(); i++) {
     rp = rr*sqrt(1.-cos_lin[i]*cos_lin[i]);
@@ -369,7 +369,7 @@ double cbl::multipole_xi0_model (const double f_sigma8, const double bias_sigma8
 
 /// @cond glob
 
-double cbl::multipole_xi0_model (double xx, shared_ptr<void> pp, vector<double> par) 
+double cbl::multipole_xi0_model (double xx, shared_ptr<void> pp, std::vector<double> par) 
 { 
   (void)xx;
 
@@ -498,7 +498,7 @@ double cbl::Pkl_Kaiser_integral(const int order, const double bias, const double
 // ============================================================================
 
 
-vector<double> cbl::Pk0_Kaiser(const vector<double> kk, const vector<double> Pk, const double bias, const double f)
+std::vector<double> cbl::Pk0_Kaiser(const std::vector<double> kk, const std::vector<double> Pk, const double bias, const double f)
 {
   vector<double> Pk0(kk.size(),0);
   double factor = Pkl_Kaiser_integral(0,bias,f);
@@ -513,7 +513,7 @@ vector<double> cbl::Pk0_Kaiser(const vector<double> kk, const vector<double> Pk,
 // ============================================================================
 
 
-vector<double> cbl::Pk2_Kaiser(const vector<double> kk, const vector<double> Pk, const double bias, const double f)
+std::vector<double> cbl::Pk2_Kaiser(const std::vector<double> kk, const std::vector<double> Pk, const double bias, const double f)
 {
   vector<double> Pk2(kk.size(),0);
   double factor = Pkl_Kaiser_integral(2,bias,f);
@@ -528,7 +528,7 @@ vector<double> cbl::Pk2_Kaiser(const vector<double> kk, const vector<double> Pk,
 // ============================================================================
 
 
-vector<double> cbl::Pk4_Kaiser(const vector<double> kk, const vector<double> Pk, const double bias, const double f)
+std::vector<double> cbl::Pk4_Kaiser(const std::vector<double> kk, const std::vector<double> Pk, const double bias, const double f)
 {
   vector<double> Pk4(kk.size(),0);
   double factor = Pkl_Kaiser_integral(4,bias,f);
@@ -543,9 +543,9 @@ vector<double> cbl::Pk4_Kaiser(const vector<double> kk, const vector<double> Pk,
 // ============================================================================
 
 
-vector< vector<double>> cbl::Pkl_Kaiser(const vector<int> orders, const vector<double> kk, const vector<double> Pk, const double bias, const double f)
+std::vector< std::vector<double>> cbl::Pkl_Kaiser(const std::vector<int> orders, const std::vector<double> kk, const std::vector<double> Pk, const double bias, const double f)
 {
-  vector<vector<double> > Pk_multipoles(orders.size(),vector<double>(kk.size(),0));
+  vector<vector<double>> Pk_multipoles(orders.size(),vector<double>(kk.size(),0));
   size_t nbin_k = kk.size();
 
   for(size_t ll=0;ll<orders.size();ll++)
@@ -566,7 +566,7 @@ vector< vector<double>> cbl::Pkl_Kaiser(const vector<int> orders, const vector<d
 // ============================================================================
 
 
-vector<double> cbl::Xi0 (const vector<double> r, const vector<double> kk, const vector<double> Pk0, const double k_cut, const double cut_pow, const int IntegrationMethod)
+std::vector<double> cbl::Xi0 (const std::vector<double> r, const std::vector<double> kk, const std::vector<double> Pk0, const double k_cut, const double cut_pow, const int IntegrationMethod)
 {
   double f0 = 1./(2.*par::pi*par::pi); 
   int nbins = r.size();
@@ -608,7 +608,7 @@ vector<double> cbl::Xi0 (const vector<double> r, const vector<double> kk, const 
 
     for (int i=0; i<nbins; i++) {
       params.r = r[i];
-      xi0[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6)*f0;
+      xi0[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, 0., limit_size, 6)*f0;
     }
     
     Pk0_interp.free();
@@ -621,7 +621,7 @@ vector<double> cbl::Xi0 (const vector<double> r, const vector<double> kk, const 
 // ============================================================================
 
 
-vector<double> cbl::Xi2 (const vector<double> rr, const vector<double> kk, const vector<double> Pk2, const double k_cut, const double cut_pow, const int IntegrationMethod)
+std::vector<double> cbl::Xi2 (const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk2, const double k_cut, const double cut_pow, const int IntegrationMethod)
 {
   double f2 = -1./(2.*par::pi*par::pi); // f4=1./(2.*par::pi*par::pi);
   int nbins = rr.size();
@@ -664,7 +664,7 @@ vector<double> cbl::Xi2 (const vector<double> rr, const vector<double> kk, const
 
       for (int i=0; i<nbins; i++) {
         params.r = rr[i];
-	xi2[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6)*f2;
+	xi2[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, 0., limit_size, 6)*f2;
       }
       Pk2_interp.free();
 
@@ -677,7 +677,7 @@ vector<double> cbl::Xi2 (const vector<double> rr, const vector<double> kk, const
 // ============================================================================
 
 
-vector<double> cbl::Xi4(const vector<double> rr, const vector<double> kk, const vector<double> Pk4, const double k_cut, const double cut_pow, const int IntegrationMethod)
+std::vector<double> cbl::Xi4(const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk4, const double k_cut, const double cut_pow, const int IntegrationMethod)
 {
   double f4 = 1./(2.*par::pi*par::pi); 
   int nbins = rr.size();
@@ -720,7 +720,7 @@ vector<double> cbl::Xi4(const vector<double> rr, const vector<double> kk, const 
 
       for (int i=0; i<nbins; i++) {
         params.r = rr[i];
-	xi4[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6)*f4;
+	xi4[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, 0., limit_size, 6)*f4;
       }
       Pk4_interp.free();
 
@@ -733,7 +733,7 @@ vector<double> cbl::Xi4(const vector<double> rr, const vector<double> kk, const 
 // ============================================================================
 
 
-vector<vector<double>> cbl::Xi02_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const shared_ptr<glob::FuncGrid> xi0_interp, const shared_ptr<glob::FuncGrid> xi2_interp)
+std::vector<std::vector<double>> cbl::Xi02_AP (const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::shared_ptr<glob::FuncGrid> xi0_interp, const std::shared_ptr<glob::FuncGrid> xi2_interp)
 {
   vector<double> xi0_new, xi2_new;
 
@@ -769,7 +769,7 @@ vector<vector<double>> cbl::Xi02_AP (const double alpha_perpendicular, const dou
 // ============================================================================
 
 
-vector<vector<double>> cbl::Xi024_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const shared_ptr<glob::FuncGrid> xi0_interp, const shared_ptr<glob::FuncGrid> xi2_interp, const shared_ptr<glob::FuncGrid> xi4_interp)
+std::vector<std::vector<double>> cbl::Xi024_AP (const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::shared_ptr<glob::FuncGrid> xi0_interp, const std::shared_ptr<glob::FuncGrid> xi2_interp, const std::shared_ptr<glob::FuncGrid> xi4_interp)
 {
   vector<double> xi0_new, xi2_new, xi4_new;
 
@@ -808,7 +808,7 @@ vector<vector<double>> cbl::Xi024_AP (const double alpha_perpendicular, const do
 // ============================================================================
 
 
-vector<vector<double>> cbl::Xi02_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const vector<double> rl, const vector<double> Xi0, const vector<double> Xi2)
+std::vector<std::vector<double>> cbl::Xi02_AP (const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::vector<double> rl, const std::vector<double> Xi0, const std::vector<double> Xi2)
 {
   glob::FuncGrid xi0_interp(rl, Xi0, "Spline");
   glob::FuncGrid xi2_interp(rl, Xi2, "Spline");
@@ -850,7 +850,7 @@ vector<vector<double>> cbl::Xi02_AP (const double alpha_perpendicular, const dou
 // ============================================================================
 
 
-vector<vector<double>> cbl::Xi024_AP (const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const vector<double> rl, const vector<double> Xi0, const vector<double> Xi2, const vector<double> Xi4)
+std::vector<std::vector<double>> cbl::Xi024_AP (const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::vector<double> rl, const std::vector<double> Xi0, const std::vector<double> Xi2, const std::vector<double> Xi4)
 {
   glob::FuncGrid xi0_interp(rl, Xi0, "Spline");
   glob::FuncGrid xi2_interp(rl, Xi2, "Spline");
@@ -898,12 +898,12 @@ vector<vector<double>> cbl::Xi024_AP (const double alpha_perpendicular, const do
 // ============================================================================
 
 
-vector<vector<double>> cbl::XiWedges_AP (const vector<double> mu_min, const vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const shared_ptr<glob::FuncGrid> xi0_interp, const shared_ptr<glob::FuncGrid> xi2_interp, const shared_ptr<glob::FuncGrid> xi4_interp)
+std::vector<std::vector<double>> cbl::XiWedges_AP (const std::vector<double> mu_min, const std::vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::shared_ptr<glob::FuncGrid> xi0_interp, const std::shared_ptr<glob::FuncGrid> xi2_interp, const std::shared_ptr<glob::FuncGrid> xi4_interp)
 {
-  vector<vector<double> > xi_multipoles = cbl::Xi024_AP(alpha_perpendicular, alpha_parallel, rr, xi0_interp, xi2_interp, xi4_interp);
-  vector<vector<double> > xi_wedges(mu_min.size(), vector<double>(rr.size(), 0));
+  vector<vector<double>> xi_multipoles = cbl::Xi024_AP(alpha_perpendicular, alpha_parallel, rr, xi0_interp, xi2_interp, xi4_interp);
+  vector<vector<double>> xi_wedges(mu_min.size(), vector<double>(rr.size(), 0));
 
-  vector<vector<double> > legendre_integral(mu_min.size(), vector<double>(3, 0));
+  vector<vector<double>> legendre_integral(mu_min.size(), vector<double>(3, 0));
 
   for(size_t j=0; j<mu_min.size(); j++) {
     double leg_int_0 = Legendre_polynomial_mu_average(0, mu_min[j], delta_mu[j]);
@@ -920,12 +920,12 @@ vector<vector<double>> cbl::XiWedges_AP (const vector<double> mu_min, const vect
 // ============================================================================
 
 
-vector<vector<double>> cbl::XiWedges_AP (const vector<double> mu_min, const vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const vector<double> rr, const vector<double> rl, const vector<double> Xi0, const vector<double> Xi2, const vector<double> Xi4)
+std::vector<std::vector<double>> cbl::XiWedges_AP (const std::vector<double> mu_min, const std::vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::vector<double> rl, const std::vector<double> Xi0, const std::vector<double> Xi2, const std::vector<double> Xi4)
 {
-  vector<vector<double> > xi_multipoles = cbl::Xi024_AP(alpha_perpendicular, alpha_parallel, rr, rl, Xi0, Xi2, Xi4);
-  vector<vector<double> > xi_wedges(mu_min.size(), vector<double>(rr.size(), 0));
+  vector<vector<double>> xi_multipoles = cbl::Xi024_AP(alpha_perpendicular, alpha_parallel, rr, rl, Xi0, Xi2, Xi4);
+  vector<vector<double>> xi_wedges(mu_min.size(), vector<double>(rr.size(), 0));
 
-  vector<vector<double> > legendre_integral(mu_min.size(), vector<double>(3, 0));
+  vector<vector<double>> legendre_integral(mu_min.size(), vector<double>(3, 0));
 
   for(size_t j=0; j<mu_min.size(); j++) {
     double leg_int_0 = Legendre_polynomial_mu_average(0, mu_min[j], delta_mu[j]);
@@ -941,13 +941,13 @@ vector<vector<double>> cbl::XiWedges_AP (const vector<double> mu_min, const vect
 // ============================================================================
 
 
-vector< vector<double> > cbl::sigma2_k (const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double> > Pk_multipoles, const vector<int> orders)
+std::vector< std::vector<double>> cbl::sigma2_k (const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double>> Pk_multipoles, const std::vector<int> orders)
 {
   double prec = 1.e-3;
   size_t n_orders = orders.size();
   size_t nbin_k = kk.size();
 
-  vector< vector<double> > sigma2(n_orders*n_orders, vector<double>(nbin_k,0));
+  vector<vector<double>> sigma2(n_orders*n_orders, vector<double>(nbin_k,0));
   double density_inv = Volume/nObjects;
 
   int limit_size = 100;
@@ -991,7 +991,7 @@ vector< vector<double> > cbl::sigma2_k (const double nObjects, const double Volu
 // ============================================================================
 
 
-void cbl::Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>> &covariance, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double>> Pk_multipoles, const vector<int> orders, const cbl::BinType bin_type)
+void cbl::Covariance_XiMultipoles (std::vector<double> &rr, std::vector<std::vector<double>> &covariance, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double>> Pk_multipoles, const std::vector<int> orders, const cbl::BinType bin_type)
 {
   int n_orders = orders.size();
   int nbins_k = kk.size();
@@ -1010,7 +1010,7 @@ void cbl::Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>> &c
 
   vector<vector<double>> sigma2 = sigma2_k(nObjects, Volume, kk, Pk_multipoles, orders);
 
-  vector<vector<vector<double> >> jr(n_orders,vector<vector<double>>(nbins,vector<double>(nbins_k, 0)));
+  vector<vector<vector<double>>> jr(n_orders,vector<vector<double>>(nbins,vector<double>(nbins_k, 0)));
 
   for (int l=0; l<n_orders; l++) 
     for (int i=0; i<nbins; i++) 
@@ -1093,11 +1093,11 @@ void cbl::Covariance_XiMultipoles (vector<double> &rr, vector<vector<double>> &c
 // ============================================================================
 
 
-void cbl::Covariance_XiWedges (vector<double> &rr, vector<vector<double>> &covariance, const vector<double> mu, const vector<double> delta_mu, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const vector<double> kk, const vector<vector<double> > Pk_multipoles, const vector<int> orders, const cbl::BinType bin_type)
+void cbl::Covariance_XiWedges (std::vector<double> &rr, std::vector<std::vector<double>> &covariance, const std::vector<double> mu, const std::vector<double> delta_mu, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double>> Pk_multipoles, const std::vector<int> orders, const cbl::BinType bin_type)
 {
   int n_wedges = mu.size();
   vector<int> ord = orders;
-  vector<vector<double> > Pkl = Pk_multipoles;
+  vector<vector<double>> Pkl = Pk_multipoles;
   
   if (n_wedges>2 && ord.size()==3) {
     vector<double> Pk6(kk.size(), 0);
@@ -1107,7 +1107,7 @@ void cbl::Covariance_XiWedges (vector<double> &rr, vector<vector<double>> &covar
 
   int n_orders = ord.size();
 
-  vector<vector<double> > covariance_multipoles;
+  vector<vector<double>> covariance_multipoles;
 
   covariance.erase(covariance.begin(), covariance.end());
   covariance.resize(n_wedges*nbins, vector<double>(n_wedges*nbins, 0));

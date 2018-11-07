@@ -46,6 +46,8 @@ using namespace cbl;
 
 void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double k_min, const double k_max, const int step,  const std::string output_dir, const int norm, const double Delta, const bool isDelta_vir, const std::string model_MF, const std::string selection_function_file, const std::vector<int> selection_function_column, const double z_min, const double z_max, const int z_step, const double Mass_min, const double Mass_max, const int Mass_step, const double area_degrees, const double prec)
 {
+  m_data_model.isSnapshot = false;
+
   m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model.redshift = redshift;
   m_data_model.method_Pk = method_Pk;
@@ -76,7 +78,8 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
   m_data_model.prec = prec;
 
   m_data_model.area_rad = area_degrees*pow(par::pi/180.,2);
-  m_data_model.Volume = cosmology.Volume(z_min, z_max, area_degrees);
+  if (m_data_model.z_min>0)
+    m_data_model.Volume = cosmology.Volume(z_min, z_max, area_degrees);
 
   if(selection_function_file!=par::defaultString) {
     m_data_model.use_SF = true;
@@ -88,3 +91,4 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
   else
     m_data_model.use_SF = false;
 }
+

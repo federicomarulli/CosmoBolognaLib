@@ -40,10 +40,10 @@ using namespace cbl;
 // ============================================================================================
 
 
-shared_ptr<random::DistributionRandomNumbers> cbl::statistics::Sampler::m_set_gz(const int seed, const double aa)
+shared_ptr<random::DistributionRandomNumbers> cbl::statistics::Sampler::m_set_gz (const int seed, const double aa)
 {
-  if(aa<=1)
-    ErrorCBL("Error in Sampler, the stretch move parameter must be >1!");
+  if (aa<=1)
+    ErrorCBL("Error in cbl::statistics::Sampler::m_set_gz() of Sampler.cpp: the stretch move parameter must be >1!");
 
   double zmin = 1./aa;
   double zmax = aa;
@@ -341,7 +341,10 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_py (const int chai
 
 void cbl::statistics::Sampler::sample_stretch_move_parallel (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
 {
-  if(m_use_python)
+  if (nwalkers%2 != 0)
+    ErrorCBL("Error in cbl::statistics::Sampler::sample_stretch_move_parallel(): the number of walkers must be an even integer!");
+
+  if (m_use_python)
     m_sample_stretch_move_parallel_py(chain_size, nwalkers, start, seed, aa);
   else
     m_sample_stretch_move_parallel_cpp(chain_size, nwalkers, start, seed, aa);

@@ -60,7 +60,7 @@ cbl::data::Field3D::Field3D (const int nx, const int ny, const int nz, const dou
 // ============================================================================
 
 
-void cbl::data::Field3D::set_parameters(const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ)
+void cbl::data::Field3D::set_parameters (const double deltaR, const double minX, const double maxX, const double minY, const double maxY, const double minZ, const double maxZ)
 {
   m_MinX = minX;
   m_MaxX = maxX;
@@ -313,7 +313,7 @@ void cbl::data::ScalarField3D::set_ScalarField_FourierSpace_complex (const doubl
 // ============================================================================
 
 
-double  cbl::data::ScalarField3D::ScalarField (const int i, const int j, const int k) const 
+double cbl::data::ScalarField3D::ScalarField (const int i, const int j, const int k) const 
 {
   return m_field[inds_to_index(i,j,k)];
 }
@@ -322,7 +322,7 @@ double  cbl::data::ScalarField3D::ScalarField (const int i, const int j, const i
 // ============================================================================
 
 
-double  cbl::data::ScalarField3D::ScalarField_FourierSpace_real (const int i, const int j, const int k) const 
+double cbl::data::ScalarField3D::ScalarField_FourierSpace_real (const int i, const int j, const int k) const 
 {
   return m_field_FourierSpace[inds_to_index_Fourier(i,j,k)][0];
 }
@@ -331,7 +331,7 @@ double  cbl::data::ScalarField3D::ScalarField_FourierSpace_real (const int i, co
 // ============================================================================
 
 
-double  cbl::data::ScalarField3D::ScalarField_FourierSpace_complex (const int i, const int j, const int k) const 
+double cbl::data::ScalarField3D::ScalarField_FourierSpace_complex (const int i, const int j, const int k) const 
 {
   return m_field_FourierSpace[inds_to_index_Fourier(i,j,k)][1];
 }
@@ -340,7 +340,7 @@ double  cbl::data::ScalarField3D::ScalarField_FourierSpace_complex (const int i,
 // ============================================================================
 
 
-double  cbl::data::ScalarField3D::ScalarField (const vector<double> pos) const 
+double cbl::data::ScalarField3D::ScalarField (const std::vector<double> pos) const 
 {
   int i = min(int((pos[0]-m_MinX)/m_deltaX), m_nX-1);
   int j = min(int((pos[1]-m_MinY)/m_deltaY), m_nY-1);
@@ -575,7 +575,7 @@ vector<double> cbl::data::VectorField3D::VectorField_FourierSpace_complex(const 
 // ============================================================================
 
 
-vector<double> cbl::data::VectorField3D::VectorField(const vector<double> pos) const 
+std::vector<double> cbl::data::VectorField3D::VectorField (const std::vector<double> pos) const 
 {
   int i = min(int((pos[0]-m_MinX)/m_deltaX), m_nX-1);
   int j = min(int((pos[1]-m_MinY)/m_deltaY), m_nY-1);

@@ -54,7 +54,7 @@ void cbl::statistics::Posterior::m_set_seed (const int seed)
 // ============================================================================================
 
 
-cbl::statistics::Posterior::Posterior (const vector<shared_ptr<PriorDistribution>> prior_distributions, const shared_ptr<data::Data> data, const shared_ptr<Model> model, const LikelihoodType likelihood_type, const vector<size_t> x_index, const int w_index, const int seed)
+cbl::statistics::Posterior::Posterior (const std::vector<std::shared_ptr<PriorDistribution>> prior_distributions, const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const LikelihoodType likelihood_type, const std::vector<size_t> x_index, const int w_index, const int seed)
 {
   set(prior_distributions, data, model, likelihood_type, x_index, w_index, seed);
 }
@@ -63,7 +63,7 @@ cbl::statistics::Posterior::Posterior (const vector<shared_ptr<PriorDistribution
 // ============================================================================================
 
 
-cbl::statistics::Posterior::Posterior (const vector<shared_ptr<PriorDistribution>> prior_distributions, const Likelihood &likelihood, const int seed) : Likelihood(likelihood)
+cbl::statistics::Posterior::Posterior (const std::vector<std::shared_ptr<PriorDistribution>> prior_distributions, const Likelihood &likelihood, const int seed) : Likelihood(likelihood)
 {
   m_model_parameters = make_shared<PosteriorParameters>(PosteriorParameters(m_model->parameters()->nparameters(), prior_distributions, m_model->parameters()->type(), m_model->parameters()->name()));
 
@@ -80,11 +80,11 @@ cbl::statistics::Posterior::Posterior (const vector<shared_ptr<PriorDistribution
 // ============================================================================================
 
 
-double cbl::statistics::Posterior::operator() (vector<double> &pp) const
+double cbl::statistics::Posterior::operator() (std::vector<double> &pp) const
 {
   pp = m_model_parameters->full_parameters(pp);
   double prior = m_prior->operator()(pp);
-  if(prior>0) 
+  if (prior>0) 
     return (m_use_grid) ? m_likelihood_function_grid(pp, m_likelihood_inputs)*prior : m_likelihood_function(pp, m_likelihood_inputs)*prior;
   else
     return 0;
@@ -96,11 +96,11 @@ double cbl::statistics::Posterior::operator() (vector<double> &pp) const
 // ============================================================================================
 
 
-double cbl::statistics::Posterior::log (vector<double> &pp) const
+double cbl::statistics::Posterior::log (std::vector<double> &pp) const
 {
   pp = m_model_parameters->full_parameters(pp);
   double logprior = m_prior->log(pp);
-  if(logprior>par::defaultDouble) 
+  if (logprior>par::defaultDouble) 
     return (m_use_grid) ? m_log_likelihood_function_grid(pp, m_likelihood_inputs)+logprior : m_log_likelihood_function(pp, m_likelihood_inputs)+logprior;
   else
     return par::defaultDouble;
@@ -112,7 +112,7 @@ double cbl::statistics::Posterior::log (vector<double> &pp) const
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::set_model (const shared_ptr<Model> model, const shared_ptr<ModelParameters> model_parameters)
+void cbl::statistics::Posterior::set_model (const std::shared_ptr<Model> model, const std::shared_ptr<ModelParameters> model_parameters)
 {
   switch (model->dimension()) {
     case Dim::_1D_:
@@ -122,7 +122,7 @@ void cbl::statistics::Posterior::set_model (const shared_ptr<Model> model, const
       m_model = make_shared<Model2D>(*static_pointer_cast<Model2D>(model));
       break;
     default:
-      ErrorCBL("Error in cbl::statistics::Likelihood::set_model of set_model.cpp: dimension shoud be Dim::_1D_ or Dim::_2D_!");
+      ErrorCBL("Error in cbl::statistics::Posterior::set_model() of set_model.cpp: dimension shoud be Dim::_1D_ or Dim::_2D_!");
   }
 
   if (model_parameters!=NULL)
@@ -136,7 +136,7 @@ void cbl::statistics::Posterior::set_model (const shared_ptr<Model> model, const
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::set (const std::vector<std::shared_ptr<PriorDistribution>> prior_distributions, const shared_ptr<data::Data> data, const shared_ptr<Model> model, const LikelihoodType likelihood_type, const vector<size_t> x_index, const int w_index, const int seed)
+void cbl::statistics::Posterior::set (const std::vector<std::shared_ptr<PriorDistribution>> prior_distributions, const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const LikelihoodType likelihood_type, const std::vector<size_t> x_index, const int w_index, const int seed)
 {
   set_data(data);
   set_model(model);
@@ -159,21 +159,34 @@ void cbl::statistics::Posterior::set (const std::vector<std::shared_ptr<PriorDis
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::maximize (const vector<double> start, const unsigned int max_iter, const double tol)
+void cbl::statistics::Posterior::maximize (const std::vector<double> start, const unsigned int max_iter, const double tol, const double epsilon)
 {
-  unsigned int npar = m_model_parameters->nparameters_free();
+  vector<double> starting_par;
 
-  if (npar==0)
-    ErrorCBL("Error in maximize of Posterior.cpp: there is no parameter free to vary");
-  if (start.size() != npar)
-    ErrorCBL("Error in maximize of Posterior.cpp: wrong size for the vector of starting parameters");
+  unsigned int npar_free = m_model->parameters()->nparameters_free();
+  unsigned int npar = m_model->parameters()->nparameters();
+  
+  if (start.size()==npar_free) 
+    starting_par=start;
+  else if (start.size()==npar)
+    for (size_t i=0; i<npar_free; i++)
+      starting_par.push_back(start[m_model->parameters()->free_parameters()[i]]);
+  else
+    ErrorCBL("Error in cbl::statistics::Posterior::maximize() of Posterior.cpp: check your inputs!");
 
   function<double(vector<double> &)> post = [this](vector<double> & pp) { 
-    return -log(pp); 
+    return -this->log(pp); 
   };
 
+  vector<vector<double>> ranges;
+
+  for (size_t i=0; i<npar_free; i++) {
+    int index = m_model->parameters()->free_parameters()[i];
+    ranges.push_back( {m_model->parameters()->prior_distribution(index)->xmin(), m_model->parameters()->prior_distribution(index)->xmax()} ); 
+  }
+
   coutCBL << "Maximizing the posterior..." << endl;
-  vector<double> result = cbl::gsl::GSL_minimize_nD(post, start, {}, max_iter, tol);
+  vector<double> result = cbl::gsl::GSL_minimize_nD(post, starting_par, ranges, max_iter, tol, epsilon);
   coutCBL << "Done!" << endl << endl;
 
   m_model_parameters->set_bestfit_value(result);
@@ -226,6 +239,7 @@ void cbl::statistics::Posterior::write_chain_ascii (const string output_dir, con
   const int nparameters = m_model_parameters->nparameters();
   const int chain_size = m_model_parameters->chain_size();
   const int nwalkers = m_model_parameters->chain_nwalkers();
+  
   string MK = "mkdir -p "+output_dir;
   if (system(MK.c_str())) {}
   
@@ -236,7 +250,7 @@ void cbl::statistics::Posterior::write_chain_ascii (const string output_dir, con
 
   fout << "# step ";
   for (int k=0; k<nparameters; k++) 
-    fout << m_model_parameters->name(k) << " ";
+    fout << m_model_parameters->name(k) << "  ";
   fout << " log(Likelihood) log(Prior)  log(Posterior)" << endl;
 
   int nn = 0;
@@ -244,12 +258,12 @@ void cbl::statistics::Posterior::write_chain_ascii (const string output_dir, con
   for (int j=start; j<chain_size; j+=thin) {
     for (int i=0; i<nwalkers; i++) {
 
-      fout << setw(6) << setiosflags(ios::fixed) << nn++ << "  ";
+      fout << setw(6) << nn++ << "  ";
       vector<double> pp(nparameters);
 
       for (int k=0; k<nparameters; k++) {
 	pp[k] = m_model_parameters->chain_value(k, j, i);
-	fout << setw(10) << setiosflags(ios::fixed) << m_model_parameters->chain_value(k, j, i) << "  ";
+	fout << setw(10) << m_model_parameters->chain_value(k, j, i) << "  ";
       }
 
       const double pr = m_prior->log(pp);
@@ -314,7 +328,7 @@ void cbl::statistics::Posterior::write_chain_fits (const string output_dir, cons
 
 void cbl::statistics::Posterior::write_chain (const string output_dir, const string output_file, const int start, const int thin, const bool fits)
 {
-  if(!fits) 
+  if (!fits) 
     write_chain_ascii(output_dir, output_file, start, thin);
   else 
     write_chain_fits(output_dir, output_file, start, thin);
@@ -406,7 +420,7 @@ void cbl::statistics::Posterior::read_chain_fits (const string input_dir, const 
 
 void cbl::statistics::Posterior::read_chain (const string input_dir, const string input_file, const int nwalkers, const int skip_header, const bool fits)
 {
-  if(!fits) 
+  if (!fits) 
     read_chain_ascii(input_dir, input_file, nwalkers, skip_header);
   else 
     read_chain_fits(input_dir, input_file, nwalkers);
@@ -426,7 +440,7 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::initialize_chains (const int chain_size, const int nwalkers, const double radius, const vector<double> start, const unsigned int max_iter, const double tol)
+void cbl::statistics::Posterior::initialize_chains (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter, const double tol)
 {
   maximize(start, max_iter, tol);
 
@@ -438,7 +452,7 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::initialize_chains (const int chain_size, const int nwalkers, vector<double> &values, const double radius)
+void cbl::statistics::Posterior::initialize_chains (const int chain_size, const int nwalkers, std::vector<double> &values, const double radius)
 {
   m_model_parameters->set_chain(chain_size, nwalkers);
   m_model_parameters->initialize_chain_ball(values, radius, m_generate_seed());
@@ -448,7 +462,7 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::initialize_chains (const int chain_size, const vector<vector<double>> chain_value)
+void cbl::statistics::Posterior::initialize_chains (const int chain_size, const std::vector<std::vector<double>> chain_value)
 {
   const int nwalkers = chain_value[0].size();
   m_model_parameters->set_chain(chain_size, nwalkers);
@@ -462,7 +476,7 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::initialize_chains (const int chain_size, const int nwalkers, const string input_dir, const string input_file)
+void cbl::statistics::Posterior::initialize_chains (const int chain_size, const int nwalkers, const std::string input_dir, const std::string input_file)
 {
   string last_step_file = input_dir+input_file+"_LastStep";
   string get_last_step = "tail -n "+conv(nwalkers, par::fINT)+" "+input_dir+input_file+" > "+last_step_file;
@@ -528,8 +542,8 @@ void cbl::statistics::Posterior::write_model_from_chain (const std::string outpu
 
     case Dim::_1D_: 
       {
-	vector<double> xvec=xx;
-	if(xx.size()==0)
+	vector<double> xvec = xx;
+	if (xx.size()==0)
 	  m_data->xx(xvec);
 
 	m_model->write_from_chains(output_dir, output_file, xvec, start, thin);
@@ -538,10 +552,10 @@ void cbl::statistics::Posterior::write_model_from_chain (const std::string outpu
       break;
     case Dim::_2D_: 
       {
-	vector<double> xvec=xx, yvec=yy;
-	if(xx.size()==0)
+	vector<double> xvec = xx, yvec = yy;
+	if (xx.size()==0)
 	  m_data->xx(xvec);
-	if(yy.size()==0)
+	if (yy.size()==0)
 	  m_data->yy(yvec);
 
 	m_model->write_from_chains(output_dir, output_file, xvec, yvec, start, thin);

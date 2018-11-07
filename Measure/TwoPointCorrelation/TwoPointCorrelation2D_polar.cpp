@@ -51,7 +51,7 @@ using namespace twopt;
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameters (const BinType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const BinType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info) 
+void cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameters (const BinType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const BinType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info) 
 {
   if (muMin<0.) ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameter() of TwoPointCorrelation2D_polar.cpp: mMun must be >0 !");
   if (muMin>1.) ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameter() of TwoPointCorrelation2D_polar.cpp: mMun must be <1 !");
@@ -122,7 +122,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameters (const Bin
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameters (const BinType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const BinType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info)
+void cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameters (const BinType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const BinType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info)
 {
   if (muMin<0.) ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameter() of TwoPointCorrelation2D_polar.cpp: mMun must be >0 !");
   if (muMin>1.) ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameter() of TwoPointCorrelation2D_polar.cpp: mMun must be <1 !");
@@ -192,7 +192,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameters (const Bin
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_polar::read (const string dir, const string file) 
+void cbl::measure::twopt::TwoPointCorrelation2D_polar::read (const std::string dir, const std::string file) 
 {
   m_dataset->read(dir+file);
 }
@@ -201,7 +201,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::read (const string dir, c
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_polar::write (const string dir, const string file, const bool full, const int rank) const 
+void cbl::measure::twopt::TwoPointCorrelation2D_polar::write (const std::string dir, const std::string file, const bool full, const int rank) const 
 {
   vector<double> xx, yy;
   m_dataset->xx(xx); m_dataset->yy(yy);
@@ -218,7 +218,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::write (const string dir, 
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_polar::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, int nMocks, bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation2D_polar::measure (const ErrorType errorType, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, int nMocks, bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
   case (ErrorType::_Poisson_) :
@@ -239,7 +239,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measure (const ErrorType 
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_polar::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation2D_polar::measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 { 
   // ----------- count the data-data, random-random and data-random pairs, or read them from file ----------- 
   
@@ -261,7 +261,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measurePoisson (const str
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_JackknifeXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_JackknifeXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   if (dir_output_JackknifeXi!=par::defaultString) { 
     string mkdir = "mkdir -p "+dir_output_JackknifeXi;
@@ -306,7 +306,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureJackknife (const s
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_BootstrapXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_BootstrapXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (nMocks<=0)
     ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation2D_polar.cpp, number of mocks must be >0");

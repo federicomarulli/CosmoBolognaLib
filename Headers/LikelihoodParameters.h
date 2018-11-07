@@ -137,12 +137,26 @@ namespace cbl {
 	size_t nparameters_free () const override;
 
 	/**
+	 * @brief return the private member
+	 * m_free_parameters
+	 * @return the private member m_free_parameters
+	 */
+	std::vector<unsigned int> free_parameters() const {return m_free_parameters;}
+
+	/**
 	 * @brief return the number of fixed
 	 * parameters
 	 *
 	 * @return the number of fixed parameters
 	 */
 	size_t nparameters_fixed() const override;
+
+	/**
+	 * @brief return the private member
+	 * m_fixed_parameters
+	 * @return the private member m_fixed_parameters
+	 */
+	std::vector<unsigned int> fixed_parameters() const {return m_fixed_parameters;}
 
 	/**
 	 * @brief return all the model parameters

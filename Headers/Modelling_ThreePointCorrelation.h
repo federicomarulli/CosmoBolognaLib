@@ -111,7 +111,8 @@ namespace cbl {
 	 *  @brief static factory used to construct modelling of 
 	 *  three-point correlation functions of any type
 	 *
-	 *  @param threep the three-point correlation function to model
+	 *  @param threep the three-point correlation function to
+	 *  model
 	 *
 	 *  @return a pointer to an object of class 
 	 *  Modelling_ThreePointCorrelation of a given type

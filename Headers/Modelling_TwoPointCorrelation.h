@@ -77,7 +77,7 @@ namespace cbl {
 	measure::twopt::TwoPType m_twoPType;
 
 	/// the container of parameters for two-point correlation function model computation
-	modelling::twopt::STR_data_model m_data_model;
+	std::shared_ptr<modelling::twopt::STR_data_model> m_data_model;
 
 	
       public:
@@ -143,7 +143,7 @@ namespace cbl {
 	 * @return the container of parameters for two-point
 	 * correlation function model computation
 	 */
-	modelling::twopt::STR_data_model data_model () { return m_data_model; }
+	std::shared_ptr<modelling::twopt::STR_data_model> data_model () { return m_data_model; }
 	
 	///@}
 

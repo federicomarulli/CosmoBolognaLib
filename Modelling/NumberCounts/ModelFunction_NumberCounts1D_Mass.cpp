@@ -42,7 +42,7 @@ using namespace cbl;
 // ===========================================================================================
 
 
-std::vector<double> cbl::modelling::numbercounts::mass_function_mass (const std::vector<double> mass, const shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<double> cbl::modelling::numbercounts::mass_function_mass (const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
@@ -67,7 +67,7 @@ std::vector<double> cbl::modelling::numbercounts::mass_function_mass (const std:
 // ===========================================================================================
 
 
-std::vector<double> cbl::modelling::numbercounts::number_density_mass (const std::vector<double> mass, const shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<double> cbl::modelling::numbercounts::number_density_mass (const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
@@ -104,7 +104,7 @@ std::vector<double> cbl::modelling::numbercounts::number_density_mass (const std
 // ===========================================================================================
 
 
-std::vector<double> cbl::modelling::numbercounts::number_counts_mass (const std::vector<double> mass, const shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<double> cbl::modelling::numbercounts::number_counts_mass (const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
@@ -134,32 +134,43 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_mass (const std:
   }
 
   return number_counts;
+}
 
 
-  /*
+// ===========================================================================================
 
-  std::vector<std::vector<double>> mass_function = cbl::modelling::numbercounts::mass_function (pp->z_vector, mass, cosmo, pp->model_MF, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
 
-  double deltaz = pp->z_vector[1]-pp->z_vector[0];
-  for (size_t i=0; i<pp->z_vector.size(); i++){ 
-    double dV_dz = pp->area_rad*cosmo.dV_dZdOmega(pp->z_vector[i]+0.5*deltaz, true);
-    for (size_t j=0; j<mass.size(); j++)
-      mass_function[i][j] = mass_function[i][j]*dV_dz;
-  }
+std::vector<double> cbl::modelling::numbercounts::number_counts_mass_snapshot (const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
+{
+    // structure contaning the required input data
+  shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
 
-  mass_function = transpose(mass_function);
+  // redefine the cosmology
+  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
 
-  double logMinMass = log10(mass[0]);
-  double deltaLogM = 0.5*(log10(mass[1])-logMinMass);
+  // input likelihood parameters
+
+  // set the cosmological parameters used to compute the dark matter
+  // two-point correlation function in real space
+  for (size_t i=0; i<pp->Cpar.size(); ++i)
+    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
+
+  // compute the power spectrum
+  std::vector<double> Pk = cosmo.Pk(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+
+  std::vector<double> mass_function = cbl::modelling::numbercounts::mass_function (pp->Mass_vector, cosmo, pp->redshift, pp->model_MF, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
+
+  glob::FuncGrid interp_MF (pp->Mass_vector, mass_function, "Spline");
 
   std::vector<double> number_counts(mass.size());
-  
-  for (size_t j=0; j<mass.size(); j++){
-    double deltaM = (pow(10, log10(mass[j])+deltaLogM)-pow(10, log10(mass[j])-deltaLogM));
-    glob::FuncGrid interpMF(pp->z_vector, mass_function[j], "Spline");
-    number_counts[j] = interpMF.integrate_qag(pp->z_min, pp->z_max)*deltaM;
+
+  double deltaLogM = 0.5*(log10(mass[1])-log10(mass[0]));
+
+  for (size_t i=0; i<mass.size(); i++) {
+    double minM = pow(10, log10(mass[i])-deltaLogM);
+    double maxM = pow(10, log10(mass[i])+deltaLogM);
+    number_counts[i] = pp->Volume*interp_MF.integrate_qag(minM, maxM); //*(maxM-minM);
   }
-  */
 
   return number_counts;
 }

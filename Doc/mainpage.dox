@@ -35,6 +35,7 @@ Main contributors:
 
 Other contributors:
   - Carlo Cannarozzo (void detection)
+  - Sofia Contarini (void number counts)
   - Cosimo Fedeli (non-Gaussian cosmologies)
   - Carlo Giocoli (mass accretion history)
   - Jacopo Neri (mass function)
@@ -49,7 +50,8 @@ Other contributors:
 
 A @b configured @b virtual @b development @b environment to use the
 CosmoBolognaLib is avaliable here:
-https://apps.difa.unibo.it/files/people/Str957-cluster/CosmoBolognaLib_VM/
+\n
+https://apps.difa.unibo.it/files/people/Str957-cluster/CosmoBolognaLib_VM/Ubuntu_CBL.ova
 \n the password is: cbl
 
 Alternatively, to @b install @b the @b CosmoBolognaLib on a custom
@@ -91,8 +93,8 @@ with:
 
 > <KBD> $ git clone git\@github.com:/federicomarulli/CosmoBolognaLib </KBD> 
 
-or, alternatively, download and untar the file:
-http://apps.difa.unibo.it/files/people/federico.marulli3/CosmoBolognaLib.tar
+or, alternatively, download the unzip the CosmoBolognaLib-master.zip archive
+at https://github.com/federicomarulli/CosmoBolognaLib/archive/master.zip
 
   - enter the folder CosmoBolognaLib/ and type:
     

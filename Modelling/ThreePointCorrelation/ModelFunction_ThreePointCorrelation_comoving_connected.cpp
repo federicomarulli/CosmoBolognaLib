@@ -46,7 +46,7 @@ using namespace cbl;
 // ============================================================================================
 
 
-vector<double> cbl::modelling::threept::zeta_RSD (const vector<double> theta, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::threept::zeta_RSD (const std::vector<double> theta, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model_threept> pp = static_pointer_cast<STR_data_model_threept>(inputs);

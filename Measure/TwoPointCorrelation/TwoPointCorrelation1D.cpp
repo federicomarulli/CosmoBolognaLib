@@ -51,7 +51,7 @@ using namespace twopt;
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D::write_pairs (const shared_ptr<pairs::Pair> PP, const string dir, const string file) const 
+void cbl::measure::twopt::TwoPointCorrelation1D::write_pairs (const std::shared_ptr<pairs::Pair> PP, const std::string dir, const std::string file) const 
 {  
   string MK = "mkdir -p "+dir; if (system (MK.c_str())) {}
   
@@ -93,7 +93,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D::write_pairs (const shared_ptr<p
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D::read_pairs (shared_ptr<pairs::Pair> PP, const vector<string> dir, const string file) const
+void cbl::measure::twopt::TwoPointCorrelation1D::read_pairs (std::shared_ptr<pairs::Pair> PP, const std::vector<std::string> dir, const std::string file) const
 {
   if (dir.size()==0)
     ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation1D::read_pairs of TwoPointCorrelation1D.cpp! dir.size()=0!");
@@ -178,7 +178,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D::read_pairs (shared_ptr<pairs::P
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D::write_pairs (const vector<shared_ptr<pairs::Pair>> PP, const string dir, const string file) const 
+void cbl::measure::twopt::TwoPointCorrelation1D::write_pairs (const std::vector<std::shared_ptr<pairs::Pair>> PP, const std::string dir, const std::string file) const 
 {  
   size_t nRegions = m_data->region_list().size();
 
@@ -239,7 +239,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D::write_pairs (const vector<share
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D::read_pairs (vector<shared_ptr<pairs::Pair>> PP, const vector<string> dir, const string file) const
+void cbl::measure::twopt::TwoPointCorrelation1D::read_pairs (std::vector<std::shared_ptr<pairs::Pair>> PP, const std::vector<std::string> dir, const std::string file) const
 {
   size_t nRegions = m_data->region_list().size();
 
@@ -292,7 +292,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D::read_pairs (vector<shared_ptr<p
 // ============================================================================
 
 
-shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D::data_with_extra_info (const shared_ptr<pairs::Pair> dd, const vector<double> rad, const vector<double> xi, const vector<double> error) const
+std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D::data_with_extra_info (const std::shared_ptr<pairs::Pair> dd, const std::vector<double> rad, const std::vector<double> xi, const std::vector<double> error) const
 {
   vector<vector<double>> extra(4);
   
@@ -310,7 +310,7 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D::data_with_ext
 // ============================================================================
 
 
-shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D::correlation_NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
+std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D::correlation_NaturalEstimator (const std::shared_ptr<pairs::Pair> dd, const std::shared_ptr<pairs::Pair> rr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
 {
   vector<double> rad(m_dd->nbins()), xi(m_dd->nbins(), -1.), error(m_dd->nbins(), 1000.);
 
@@ -363,7 +363,7 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D::correlation_N
 // ============================================================================
 
 
-shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D::correlation_LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
+std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D::correlation_LandySzalayEstimator (const std::shared_ptr<pairs::Pair> dd, const std::shared_ptr<pairs::Pair> rr, const std::shared_ptr<pairs::Pair> dr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
 {
 
   // number of objects in the data catalogue
@@ -423,7 +423,7 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D::correlation_L
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiJackknife (const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -466,7 +466,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiJac
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiJackknife (const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const std::vector<std::shared_ptr<pairs::Pair>> dr)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -524,7 +524,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiJac
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiJackknifeTest (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiJackknifeTest (const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = dd.size();
@@ -548,7 +548,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiJac
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiJackknifeTest (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiJackknifeTest (const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const std::vector<std::shared_ptr<pairs::Pair>> dr)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = dd.size();
@@ -571,7 +571,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiJac
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const int seed)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -635,7 +635,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiBoo
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const std::vector<std::shared_ptr<pairs::Pair>> dr, const int seed)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -709,7 +709,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation1D::XiBoo
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D::read_covariance (const string dir, const string file)
+void cbl::measure::twopt::TwoPointCorrelation1D::read_covariance (const std::string dir, const std::string file)
 {
   m_dataset->set_covariance(dir+file);
 }
@@ -718,7 +718,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D::read_covariance (const string d
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D::write_covariance (const string dir, const string file) const
+void cbl::measure::twopt::TwoPointCorrelation1D::write_covariance (const std::string dir, const std::string file) const
 {
   m_dataset->write_covariance(dir, file);
 }
@@ -727,7 +727,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D::write_covariance (const string 
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D::compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK)
+void cbl::measure::twopt::TwoPointCorrelation1D::compute_covariance (const std::vector<std::shared_ptr<data::Data>> xi, const bool JK)
 {
   vector<vector<double>> Xi;
 
@@ -747,7 +747,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D::compute_covariance (const vecto
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D::compute_covariance (const vector<string> file, const bool JK)
+void cbl::measure::twopt::TwoPointCorrelation1D::compute_covariance (const std::vector<std::string> file, const bool JK)
 {
   vector<double> rad, mean;
   vector<vector<double>> cov_mat;

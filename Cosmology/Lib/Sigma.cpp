@@ -157,13 +157,9 @@ double cbl::cosmology::Cosmology::sigma2R (const double radius, const string met
   // sigma2R=sigma2R_unnormalised); otherwise the normalisation factor
   // is computed
   if (input_file==par::defaultString || is_parameter_file) {
-    
     if (m_sigma8>0) 
       // sigma_8 = sigma(8Mpc/h)
       fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor
-    
-    else if (method_Pk=="EisensteinHu") ErrorCBL("Error in sigma2R of Sigma.cpp: sigma8 must be >0 if method_Pk=Eisenstein&Hu!");
-      
   }
 
   return m_sigma2R_notNormalised(radius, method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, unit1)*fact;
@@ -185,13 +181,9 @@ double cbl::cosmology::Cosmology::dnsigma2R (const int nd, const double radius, 
   // sigma2R=sigma2R_unnormalised); otherwise the normalisation factor
   // is computed
   if (input_file==par::defaultString || is_parameter_file) {
-    
     if (m_sigma8>0) 
       // sigma_8 = sigma(8Mpc/h)
-      fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, 0., output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor
-    
-    else if (method_Pk=="EisensteinHu") ErrorCBL("Error in sigma2R of Sigma.cpp: sigma8 must be >0 if method_Pk=Eisenstein&Hu!");
-      
+      fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, 0., output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor    
   }
 
   if (nd==1) {

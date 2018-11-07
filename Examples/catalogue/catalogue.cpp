@@ -16,9 +16,9 @@ int main () {
     std::string file_catalogue = "cat.dat";
   
   
-    // -----------------------------------------------------------------------------------------------------------
-    // ---------------- method I : construct a galaxy catalogue directly by reading an input file ----------------
-    // ----------------------------------------------------------------------------------------.........----------
+    // -----------------------------------------------------------------------------------------
+    // ------- method I : construct a galaxy catalogue directly by reading an input file ------- 
+    // -----------------------------------------------------------------------------------------
   
     cbl::catalogue::Catalogue catalogue1 {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_comoving_, {file_catalogue}};
 
@@ -39,9 +39,9 @@ int main () {
     cbl::catalogue::Catalogue catalogue2 {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_comoving_, attribute, column, {file_catalogue}};
 
     
-    // -------------------------------------------------------------------------------------------------------------------------
-    // ---------------- method III : construct a galaxy catalogue using std::vectors to specify the galaxy properties ---------------
-    // -------------------------------------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+    // --------- method III : construct a galaxy catalogue using std::vectors to specify the galaxy properties ---------
+    // -----------------------------------------------------------------------------------------------------------------
 
     std::ifstream fin; fin.open(file_catalogue.c_str()); cbl::checkIO(fin, file_catalogue);
   
@@ -59,9 +59,9 @@ int main () {
     cbl::catalogue::Catalogue catalogue3 {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_comoving_, x, y, z};
 
   
-    // ------------------------------------------------------------------------------------------------------------------
-    // ---------------- method IV : construct a std::vector of galaxies and add them into an empty catalogue -----------------
-    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------
+    // -------- method IV : construct a std::vector of galaxies and add them into an empty catalogue --------
+    // ------------------------------------------------------------------------------------------------------
 
     std::vector<std::shared_ptr<cbl::catalogue::Object>> object;
   

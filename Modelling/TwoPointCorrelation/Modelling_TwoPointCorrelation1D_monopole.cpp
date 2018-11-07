@@ -49,38 +49,38 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
 {
   cout << endl; coutCBL << "Setting up the fiducial dark matter two-point correlation function model..." << endl;
 
-  const vector<double> rad = linear_bin_vector(m_data_model.step, m_data_model.r_min, m_data_model.r_max);
+  const vector<double> rad = linear_bin_vector(m_data_model->step, m_data_model->r_min, m_data_model->r_max);
   vector<double> xi0;
 
-  if (m_data_model.sigmaNL==0) {    
+  if (m_data_model->sigmaNL==0) {    
 
-    vector<double> kk = logarithmic_bin_vector(m_data_model.step, max(m_data_model.k_min, 1.e-4), min(m_data_model.k_max, 500.)), Pk(m_data_model.step,0);
+    vector<double> kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.)), Pk(m_data_model->step,0);
 
     for (size_t i=0; i<kk.size(); i++)
-      Pk[i] = m_data_model.cosmology->Pk(kk[i], m_data_model.method_Pk, m_data_model.NL, m_data_model.redshift, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec, m_data_model.file_par);
+      Pk[i] = m_data_model->cosmology->Pk(kk[i], m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
 
-    m_data_model.kk = kk;
-    m_data_model.func_Pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, Pk, "Spline"));
+    m_data_model->kk = kk;
+    m_data_model->func_Pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, Pk, "Spline"));
     xi0 = fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
   }
 
   else {
 
-    vector<double> kk = logarithmic_bin_vector(m_data_model.step, max(m_data_model.k_min, 1.e-4), min(m_data_model.k_max, 500.)), Pk(m_data_model.step,0), PkNW(m_data_model.step,0), PkDW(m_data_model.step,0);
+    vector<double> kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.)), Pk(m_data_model->step,0), PkNW(m_data_model->step,0), PkDW(m_data_model->step,0);
     for (size_t i=0; i<kk.size(); i++) {
-      Pk[i] = m_data_model.cosmology->Pk(kk[i], m_data_model.method_Pk, false, m_data_model.redshift, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec, m_data_model.file_par);
-      PkNW[i] = m_data_model.cosmology->Pk(kk[i], "EisensteinHu", false, m_data_model.redshift, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec, m_data_model.file_par);
-      PkDW[i] = PkNW[i]*(1+(Pk[i]/PkNW[i]-1)*exp(-0.5*pow(kk[i]*m_data_model.sigmaNL, 2)));
+      Pk[i] = m_data_model->cosmology->Pk(kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+      PkNW[i] = m_data_model->cosmology->Pk(kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+      PkDW[i] = PkNW[i]*(1+(Pk[i]/PkNW[i]-1)*exp(-0.5*pow(kk[i]*m_data_model->sigmaNL, 2)));
     }
 
-    m_data_model.kk = kk;
-    m_data_model.func_Pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, Pk, "Spline"));
-    m_data_model.func_Pk_NW = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, PkNW, "Spline"));
+    m_data_model->kk = kk;
+    m_data_model->func_Pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, Pk, "Spline"));
+    m_data_model->func_Pk_NW = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, PkNW, "Spline"));
 
     xi0 = fftlog::transform_FFTlog(rad, 1, kk, PkDW);
   }
 
-  m_data_model.func_xi = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, xi0, "Spline"));
+  m_data_model->func_xi = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, xi0, "Spline"));
   
   coutCBL << "Done!" << endl << endl;
 }
@@ -92,7 +92,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiducial_sigma_data_model ()
 {
   // create the grid file if it doesn't exist yet
-  const string file_grid = m_data_model.cosmology->create_grid_sigmaM(m_data_model.method_Pk, 0., m_data_model.output_root, "Spline", m_data_model.k_max);
+  const string file_grid = m_data_model->cosmology->create_grid_sigmaM(m_data_model->method_Pk, 0., m_data_model->output_root, "Spline", m_data_model->k_max);
 
   
   // read the grid file
@@ -110,7 +110,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
 
   // create the function to interpolate sigma(M) and dlg(sigma(M)
 
-  m_data_model.func_sigma = make_shared<glob::FuncGrid>(glob::FuncGrid(mass, sigma, "Linear", BinType::_logarithmic_));
+  m_data_model->func_sigma = make_shared<glob::FuncGrid>(glob::FuncGrid(mass, sigma, "Linear", BinType::_logarithmic_));
 }
 
 
@@ -167,9 +167,9 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_eff_grid (const vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const vector<double> min_par, const vector<double> max_par, const vector<int> nbins_par, const string dir, const string file_grid_bias)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_eff_grid (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<double> min_par, const std::vector<double> max_par, const std::vector<int> nbins_par, const std::string dir, const std::string file_grid_bias)
 {
-  if (m_data_model.cluster_mass_proxy->ndata()==0) ErrorCBL("Error in cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_eff_grid of Modelling_TwoPointCorrelation1D_monopole.cpp: m_data_model.cluster_mass_proxy->ndata() is not defined!");
+  if (m_data_model->cluster_mass_proxy->ndata()==0) ErrorCBL("Error in cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_eff_grid of Modelling_TwoPointCorrelation1D_monopole.cpp: m_data_model->cluster_mass_proxy->ndata() is not defined!");
   
   const int npar = cosmo_param.size(); 
  
@@ -181,24 +181,24 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_e
     if (npar==1) {
 
       fin.clear(); fin.close();
-      vector<double> mass_grid = logarithmic_bin_vector(m_data_model.cluster_mass_proxy->ndata()/10, Min(m_data_model.cluster_mass_proxy->data()), Max(m_data_model.cluster_mass_proxy->data()));
+      vector<double> mass_grid = logarithmic_bin_vector(m_data_model->cluster_mass_proxy->ndata()/10, Min(m_data_model->cluster_mass_proxy->data()), Max(m_data_model->cluster_mass_proxy->data()));
       vector<double> parameter, bias_eff;
      
-      m_data_model.cosmology->generate_bias_eff_grid_one_cosmopar(parameter, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], m_data_model.cluster_mass_proxy->data(), mass_grid, m_data_model.cluster_mass_proxy->xx(), m_data_model.model_bias, m_data_model.method_Pk, m_data_model.meanType, m_data_model.output_root, m_data_model.Delta, 1., "Spline", m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec, "NULL", false, m_data_model.cosmology_mass, m_data_model.redshift_source);
+      m_data_model->cosmology->generate_bias_eff_grid_one_cosmopar(parameter, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], m_data_model->cluster_mass_proxy->data(), mass_grid, m_data_model->cluster_mass_proxy->xx(), m_data_model->model_bias, m_data_model->method_Pk, m_data_model->meanType, m_data_model->output_root, m_data_model->Delta, 1., "Spline", m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, "NULL", false, m_data_model->cosmology_mass, m_data_model->redshift_source);
 
-      m_data_model.cosmopar_bias_interp_1D = bind(interpolated , placeholders::_1, parameter, bias_eff, "Spline");
+      m_data_model->cosmopar_bias_interp_1D = bind(interpolated , placeholders::_1, parameter, bias_eff, "Spline");
 
     }
     
     else if (npar==2) {
       
-      vector<double> mass_grid = logarithmic_bin_vector(m_data_model.cluster_mass_proxy->ndata()/10, Min(m_data_model.cluster_mass_proxy->data()), Max(m_data_model.cluster_mass_proxy->data()));
+      vector<double> mass_grid = logarithmic_bin_vector(m_data_model->cluster_mass_proxy->ndata()/10, Min(m_data_model->cluster_mass_proxy->data()), Max(m_data_model->cluster_mass_proxy->data()));
 
       vector<double> parameter1, parameter2;
       vector<vector<double>> bias_eff;
-      m_data_model.cosmology->generate_bias_eff_grid_two_cosmopars(parameter1, parameter2, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], cosmo_param[1], min_par[1], max_par[1], nbins_par[1], m_data_model.cluster_mass_proxy->data(), mass_grid, m_data_model.cluster_mass_proxy->xx(), m_data_model.model_bias, m_data_model.method_Pk, m_data_model.meanType, m_data_model.output_root, m_data_model.Delta, 1., "Spline", m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec, par::defaultString, false, m_data_model.cosmology_mass, m_data_model.redshift_source);
+      m_data_model->cosmology->generate_bias_eff_grid_two_cosmopars(parameter1, parameter2, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], cosmo_param[1], min_par[1], max_par[1], nbins_par[1], m_data_model->cluster_mass_proxy->data(), mass_grid, m_data_model->cluster_mass_proxy->xx(), m_data_model->model_bias, m_data_model->method_Pk, m_data_model->meanType, m_data_model->output_root, m_data_model->Delta, 1., "Spline", m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, par::defaultString, false, m_data_model->cosmology_mass, m_data_model->redshift_source);
       
-      m_data_model.cosmopar_bias_interp_2D = bind(interpolated_2D, placeholders::_1, placeholders::_2, parameter1, parameter2, bias_eff, "Cubic");
+      m_data_model->cosmopar_bias_interp_2D = bind(interpolated_2D, placeholders::_1, placeholders::_2, parameter1, parameter2, bias_eff, "Cubic");
 
     }
     
@@ -220,7 +220,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_e
       }
       fin.clear(); fin.close();
 
-      m_data_model.cosmopar_bias_interp_1D = bind(interpolated, placeholders::_1, parameter, bias_eff, "Spline");
+      m_data_model->cosmopar_bias_interp_1D = bind(interpolated, placeholders::_1, parameter, bias_eff, "Spline");
     }
     
     else if (npar==2) {
@@ -230,7 +230,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_e
       
       read_matrix(file, parameter1, parameter2, bias_eff);
 
-      m_data_model.cosmopar_bias_interp_2D = bind(interpolated_2D , placeholders::_1, placeholders::_2, parameter1, parameter2, bias_eff, "Cubic");
+      m_data_model->cosmopar_bias_interp_2D = bind(interpolated_2D , placeholders::_1, placeholders::_2, parameter1, parameter2, bias_eff, "Cubic");
     }
     
     else 
@@ -242,15 +242,15 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_e
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_eff_grid (const string file_selection_function, const vector<int> column, const vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const vector<double> min_par, const vector<double> max_par, const vector<int> nbins_par, const string dir, const string file_grid_bias)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_eff_grid (const std::string file_selection_function, const std::vector<int> column, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<double> min_par, const std::vector<double> max_par, const std::vector<int> nbins_par, const std::string dir, const std::string file_grid_bias)
 {
   const int npar = cosmo_param.size(); 
   
   if (npar==1) {
     vector<double> parameter, bias_eff;
-    m_data_model.cosmology->generate_bias_eff_grid_one_cosmopar(parameter, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], m_data_model.redshift,  m_data_model.Mass_min, m_data_model.Mass_max, m_data_model.model_bias, m_data_model.model_MF, m_data_model.method_Pk, file_selection_function, column, 1., m_data_model.output_root, m_data_model.Delta, 1., "Spline", m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec);
+    m_data_model->cosmology->generate_bias_eff_grid_one_cosmopar(parameter, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], m_data_model->redshift,  m_data_model->Mass_min, m_data_model->Mass_max, m_data_model->model_bias, m_data_model->model_MF, m_data_model->method_Pk, file_selection_function, column, 1., m_data_model->output_root, m_data_model->Delta, 1., "Spline", m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
       
-    m_data_model.cosmopar_bias_interp_1D = bind(interpolated , placeholders::_1, parameter, bias_eff, "Spline");
+    m_data_model->cosmopar_bias_interp_1D = bind(interpolated , placeholders::_1, parameter, bias_eff, "Spline");
   }
   
   else if (npar==2) {
@@ -285,26 +285,25 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 
   vector<statistics::PriorDistribution> priors = {sigmaNL_prior, alpha_prior, B_prior, A0_prior, A1_prior, A2_prior};
 
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_BAO_sigmaNL, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_BAO_sigmaNL, nparameters, parameterType, parameterName, m_data_model));
+
+  coutCBL << "Done!" << endl << endl;
 
 }
 
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear (const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const vector<statistics::PriorDistribution> polynomial_prior)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear (const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const std::vector<statistics::PriorDistribution> polynomial_prior)
 {
   // compute the fiducial dark matter two-point correlation function
   set_fiducial_xiDM();
 
-  m_data_model.poly_order = polynomial_prior.size(); 
+  m_data_model->poly_order = polynomial_prior.size(); 
 
   // set the model parameters
   const int nparameters = 3+polynomial_prior.size();
@@ -326,14 +325,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
     priors[i+3] = polynomial_prior[i];
   }
 
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear, nparameters, parameterType, parameterName, m_data_model));
 
 }
 
@@ -341,12 +337,12 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_LinearPoint (const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const vector<statistics::PriorDistribution> polynomial_prior)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_LinearPoint (const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const std::vector<statistics::PriorDistribution> polynomial_prior)
 {
   // compute the fiducial dark matter two-point correlation function
   set_fiducial_xiDM();
 
-  m_data_model.poly_order = polynomial_prior.size(); 
+  m_data_model->poly_order = polynomial_prior.size(); 
 
   // set the model parameters
   const int nparameters = 6+polynomial_prior.size();
@@ -374,14 +370,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
     priors[i+3] = polynomial_prior[i];
   }
 
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_LinearPoint, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_LinearPoint, nparameters, parameterType, parameterName, m_data_model));
 
 }
 
@@ -389,7 +382,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 // =========================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_polynomial_LinearPoint (const vector<statistics::PriorDistribution> polynomial_prior)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_polynomial_LinearPoint (const std::vector<statistics::PriorDistribution> polynomial_prior)
 {
   // set the model parameters
   const int nparameters = polynomial_prior.size()+3;
@@ -411,14 +404,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
     priors[i] = polynomial_prior[i];
   }
 
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_polynomial_LinearPoint, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_polynomial_LinearPoint, nparameters, parameterType, parameterName, m_data_model));
 }
 
 
@@ -434,7 +424,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 // ============================================================================================
 	
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_bias_cosmology (const statistics::PriorDistribution bias_prior, const vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const vector<statistics::PriorDistribution> cosmo_param_prior)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_bias_cosmology (const statistics::PriorDistribution bias_prior, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior)
 {
   // set the model parameters
   const int nparameters = cosmo_param.size()+1;
@@ -452,14 +442,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
     priors[i+1] = cosmo_param_prior[i];
   }
 
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_bias_cosmology, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_bias_cosmology, nparameters, parameterType, parameterName, m_data_model));
 }
 
 
@@ -486,24 +473,21 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 
   vector<statistics::PriorDistribution> priors = {sigma8_prior};
 
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_sigma8_clusters, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_sigma8_clusters, nparameters, parameterType, parameterName, m_data_model));
 }
 
 
 // ============================================================================================
 	
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_cosmology_clusters_grid (const cbl::cosmology::CosmologicalParameter cosmo_param, const statistics::PriorDistribution cosmo_param_prior, const string dir, const string file_grid_bias, const double min_par, const double max_par, const int nbins_par, const string file_selection_function, const vector<int> column)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_cosmology_clusters_grid (const cbl::cosmology::CosmologicalParameter cosmo_param, const statistics::PriorDistribution cosmo_param_prior, const std::string dir, const std::string file_grid_bias, const double min_par, const double max_par, const int nbins_par, const std::string file_selection_function, const std::vector<int> column)
 {
   // set the free cosmological parameter
-  m_data_model.Cpar = {cosmo_param};
+  m_data_model->Cpar = {cosmo_param};
   
   // compute the bias on a grid, using a selection function if provided
   if (file_selection_function!=par::defaultString)
@@ -525,24 +509,21 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 
   vector<statistics::PriorDistribution> priors = {cosmo_param_prior};
 
-  // set the input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_one_cosmo_par_clusters, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_one_cosmo_par_clusters, nparameters, parameterType, parameterName, m_data_model));
 }
 
 
 // ============================================================================================
 	
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_cosmology_clusters_grid (const cbl::cosmology::CosmologicalParameter cosmo_param1, const statistics::PriorDistribution cosmo_param_prior1, const cbl::cosmology::CosmologicalParameter cosmo_param2, const statistics::PriorDistribution cosmo_param_prior2, const string dir, const string file_grid_bias, const double min_par1, const double max_par1, const int nbins_par1, const double min_par2, const double max_par2, const int nbins_par2, const string file_selection_function, const vector<int> column)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_cosmology_clusters_grid (const cbl::cosmology::CosmologicalParameter cosmo_param1, const statistics::PriorDistribution cosmo_param_prior1, const cbl::cosmology::CosmologicalParameter cosmo_param2, const statistics::PriorDistribution cosmo_param_prior2, const std::string dir, const std::string file_grid_bias, const double min_par1, const double max_par1, const int nbins_par1, const double min_par2, const double max_par2, const int nbins_par2, const std::string file_selection_function, const std::vector<int> column)
 {
   // set the two free cosmological parameters
-  m_data_model.Cpar = {cosmo_param1, cosmo_param2};
+  m_data_model->Cpar = {cosmo_param1, cosmo_param2};
   
   // compute the bias on a grid, using a selection function if provided
   (void)column;
@@ -567,14 +548,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 
   vector<statistics::PriorDistribution> priors = {cosmo_param_prior1, cosmo_param_prior2};
 
-  // set the input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_two_cosmo_pars_clusters, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_two_cosmo_pars_clusters, nparameters, parameterType, parameterName, m_data_model));
 
 }
 
@@ -582,11 +560,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 // ============================================================================================
 	
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_cosmology_clusters (const vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const vector<statistics::PriorDistribution> cosmo_param_prior)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_cosmology_clusters (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior)
 {
   set_fiducial_xiDM();
 
-  m_data_model.Cpar = cosmo_param;
+  m_data_model->Cpar = cosmo_param;
 
   // set the model parameters
   const int nparameters = (cosmo_param.size());
@@ -600,14 +578,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 
   vector<statistics::PriorDistribution> priors = cosmo_param_prior;
 
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_cosmology_clusters, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_cosmology_clusters, nparameters, parameterType, parameterName, m_data_model));
 }
 
 
@@ -631,14 +606,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 
   vector<statistics::PriorDistribution> priors = {sigma8_prior, bias_prior};
 
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_sigma8_bias, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_sigma8_bias, nparameters, parameterType, parameterName, m_data_model));
 }
 
 
@@ -693,14 +665,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 
   vector<statistics::PriorDistribution> priors = {M0_prior, slope_prior, scatter_prior, sigmaz_prior};
 
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_damped_scaling_relation_sigmaz, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_damped_scaling_relation_sigmaz, nparameters, parameterType, parameterName, m_data_model));
 
 }
 
@@ -726,14 +695,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 
   vector<statistics::PriorDistribution> priors = {bias_prior, sigmaz_prior};
 
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_damped_bias_sigmaz, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_damped_bias_sigmaz, nparameters, parameterType, parameterName, m_data_model));
 
 }
 
@@ -763,22 +729,19 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
   parameterName[4] = "alpha";
 
   vector<statistics::PriorDistribution> priors = {Mmin_prior, sigmalgM_prior, M0_prior, M1_prior, alpha_prior};
-    
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_HOD>(m_data_HOD);
 
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi_HOD, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi_HOD, nparameters, parameterType, parameterName, m_data_model));
 }
 
 
 // ============================================================================================
 	
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_cosmology_cluster_selection_function (const statistics::PriorDistribution alpha_prior, const vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const vector<statistics::PriorDistribution> cosmo_param_prior)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_cosmology_cluster_selection_function (const statistics::PriorDistribution alpha_prior, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior)
 {
   // set the model parameters
   const int nparameters = (cosmo_param.size()+2);
@@ -800,14 +763,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
   parameterName[nparameters-1] = "bias";
 
   // add the cosmological parameters
-  m_data_model.Cpar = cosmo_param;
-
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
+  m_data_model->Cpar = cosmo_param;
 
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_cosmology_clusters_selection_function, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear_cosmology_clusters_selection_function, nparameters, parameterType, parameterName, m_data_model));
 }

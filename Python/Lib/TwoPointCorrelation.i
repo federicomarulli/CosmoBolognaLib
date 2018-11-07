@@ -2,6 +2,29 @@
 
 %module cblTwoPointCorrelation
 
+%shared_ptr(cbl::pairs::Pair);
+%shared_ptr(cbl::pairs::Pair1D);
+%shared_ptr(cbl::pairs::Pair1D_angular);
+%shared_ptr(cbl::pairs::Pair1D_angular_lin);
+%shared_ptr(cbl::pairs::Pair1D_angular_log);
+%shared_ptr(cbl::pairs::Pair1D_comoving);
+%shared_ptr(cbl::pairs::Pair1D_comoving_lin);
+%shared_ptr(cbl::pairs::Pair1D_comoving_log);
+%shared_ptr(cbl::pairs::Pair1D_comoving_multipoles);
+%shared_ptr(cbl::pairs::Pair1D_comoving_multipoles_lin);
+%shared_ptr(cbl::pairs::Pair1D_comoving_multipoles_log);
+%shared_ptr(cbl::pairs::Pair2D);
+%shared_ptr(cbl::pairs::Pair2D_comovingCartesian);
+%shared_ptr(cbl::pairs::Pair2D_comovingCartesian_linlin);
+%shared_ptr(cbl::pairs::Pair2D_comovingCartesian_linlog);
+%shared_ptr(cbl::pairs::Pair2D_comovingCartesian_loglin);
+%shared_ptr(cbl::pairs::Pair2D_comovingCartesian_loglog);
+%shared_ptr(cbl::pairs::Pair2D_comovingPolar);
+%shared_ptr(cbl::pairs::Pair2D_comovingPolar_linlin);
+%shared_ptr(cbl::pairs::Pair2D_comovingPolar_linlog);
+%shared_ptr(cbl::pairs::Pair2D_comovingPolar_loglin);
+%shared_ptr(cbl::pairs::Pair2D_comovingPolar_loglog);
+
 %{
 #include "Pair.h"
 #include "Pair1D.h"

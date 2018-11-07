@@ -148,7 +148,7 @@ namespace cbl {
        * @return none 
        */
       void set_function (const model_function_1D function)
-      { (void)function; ErrorCBL("Error in set_function of Model.h!"); } 
+      { (void)function; ErrorCBL("Error in set_function() of Model.h!"); } 
 
       /**
        * @brief set the model function, for Model2D
@@ -158,7 +158,7 @@ namespace cbl {
        * @return none 
        */
       void set_function (const model_function_2D function)
-      { (void)function; ErrorCBL("Error in set_function of Model.h!"); } 
+      { (void)function; ErrorCBL("Error in set_function() of Model.h!"); } 
 
       /**
        *  @brief set the model inputs
@@ -355,7 +355,7 @@ namespace cbl {
        *  @return none
        */
       virtual void write (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> parameters)
-      { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)parameters; cbl::ErrorCBL("Error in write of Model.h!"); }
+      { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)parameters; cbl::ErrorCBL("Error in write() of Model.h!"); }
 
       /**
        *  @brief write the model at xx 
@@ -369,7 +369,7 @@ namespace cbl {
        *  @return none
        */
       virtual void write_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx)
-      { (void)output_dir; (void)output_file; (void)xx; cbl::ErrorCBL("Error in write_at_bestfit of Model.h!"); }
+      { (void)output_dir; (void)output_file; (void)xx; cbl::ErrorCBL("Error in write_at_bestfit() of Model.h!"); }
 
       /**
        *  @brief write the model at xx, yy
@@ -386,7 +386,7 @@ namespace cbl {
        *  @return none
        */
       virtual void write_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy)
-      { (void)output_dir; (void)output_file; (void)xx; (void)yy; cbl::ErrorCBL("Error in write_at_bestfit of Model.h!"); }
+      { (void)output_dir; (void)output_file; (void)xx; (void)yy; cbl::ErrorCBL("Error in write_at_bestfit() of Model.h!"); }
 
       /**
        *  @brief write the model at xx 
@@ -402,7 +402,7 @@ namespace cbl {
        *  @return none
        */
       virtual void write_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start=0, const int thin=1)
-      { (void)output_dir; (void)output_file; (void)xx; (void)start; (void)thin; cbl::ErrorCBL("Error in write_from_chains of Model.h!"); }
+      { (void)output_dir; (void)output_file; (void)xx; (void)start; (void)thin; cbl::ErrorCBL("Error in write_from_chains() of Model.h!"); }
 
       /**
        *  @brief write the model at xx, yy
@@ -421,7 +421,7 @@ namespace cbl {
        *  @return none
        */
       virtual void write_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const int start=0, const int thin=1)
-      { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)start; (void)thin; cbl::ErrorCBL("Error in write_from_chains of Model.h!"); }
+      { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)start; (void)thin; cbl::ErrorCBL("Error in write_from_chains() of Model.h!"); }
 
 
     };

@@ -40,7 +40,7 @@ using namespace std;
 // ============================================================================
 
 
-vector<double> cbl::fftlog::transform_FFTlog (const vector<double> yy, const int dir, const vector<double> xx, const vector<double> fx, const double mu, const double q, const double kr, const int kropt)
+vector<double> cbl::fftlog::transform_FFTlog (const std::vector<double> yy, const int dir, const std::vector<double> xx, const std::vector<double> fx, const double mu, const double q, const double kr, const int kropt)
 {
   vector<double> _yy, _fy;
   cbl::fftlog::transform_FFTlog(_yy, _fy, dir, xx, fx, mu, q, kr, kropt);
@@ -58,7 +58,7 @@ vector<double> cbl::fftlog::transform_FFTlog (const vector<double> yy, const int
 // ============================================================================
 
 
-void cbl::fftlog::transform_FFTlog (vector<double> &yy, vector<double> &fy, const int dir, const vector<double> xx, const vector<double> fx, const double mu, const double q, const double kr, const int kropt)
+void cbl::fftlog::transform_FFTlog (std::vector<double> &yy, std::vector<double> &fy, const int dir, const std::vector<double> xx, const std::vector<double> fx, const double mu, const double q, const double kr, const int kropt)
 {
   const int NMAX = 4096;
 

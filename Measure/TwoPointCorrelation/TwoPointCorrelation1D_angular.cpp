@@ -51,7 +51,7 @@ using namespace twopt;
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_angular::set_parameters (const BinType binType, const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info) 
+void cbl::measure::twopt::TwoPointCorrelation1D_angular::set_parameters (const BinType binType, const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info) 
 {
   if (!compute_extra_info) 
     m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_angular_log_, PairInfo::_standard_, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight))
@@ -71,7 +71,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::set_parameters (const B
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_angular::set_parameters (const BinType binType, const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info)
+void cbl::measure::twopt::TwoPointCorrelation1D_angular::set_parameters (const BinType binType, const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info)
 {
   if (!compute_extra_info) 
     m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_angular_log_, PairInfo::_standard_, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight))

@@ -53,8 +53,7 @@ int main () {
     // --- construct the dataset by reading an input file ---
     
     const cbl::data::Data1D data(dir_input+"data.dat");
-    auto ptr_data = make_shared<cbl::data::Data1D>(data);
-
+    shared_ptr<cbl::data::Data> ptr_data = make_shared<cbl::data::Data1D>(data);
 
     // --- set the model to construct the likelihood ---
     

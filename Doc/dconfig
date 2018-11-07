@@ -51,7 +51,7 @@ PROJECT_BRIEF          = "Free Software C++/Python libraries for cosmological ca
 # and the maximum width should not exceed 200 pixels. Doxygen will copy the logo
 # to the output directory.
 
-PROJECT_LOGO           = "Doc/.logo.png"
+PROJECT_LOGO           = "Doc/logo.png"
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is
@@ -792,8 +792,34 @@ EXCLUDE  = External/
 EXCLUDE += Python/
 EXCLUDE += Examples/
 EXCLUDE += test.py
-EXCLUDE += Headers/genCBL.py
 EXCLUDE += Headers/CBL.h
+
+#EXCLUDE += Headers/
+#EXCLUDE += Kernel/
+#EXCLUDE += Wrappers/
+#EXCLUDE += FuncGrid/
+#EXCLUDE += FFT/
+#EXCLUDE += RandomNumbers/
+#EXCLUDE += Func/
+#EXCLUDE += Data/
+#EXCLUDE += Field/
+#EXCLUDE += Histogram/
+#EXCLUDE += Distribution/
+#EXCLUDE += Statistics/
+#EXCLUDE += Cosmology/Lib/
+#EXCLUDE += ChainMesh/
+#EXCLUDE += Catalogue/
+#EXCLUDE += LogNormal/
+#EXCLUDE += Measure/NumberCounts/
+#EXCLUDE += Measure/TwoPointCorrelation/
+#EXCLUDE += Measure/ThreePointCorrelation/
+#EXCLUDE += Modelling/Global/
+#EXCLUDE += Modelling/Cosmology/
+#EXCLUDE += Modelling/NumberCounts/
+#EXCLUDE += Modelling/TwoPointCorrelation/
+#EXCLUDE += Modelling/ThreePointCorrelation/
+#EXCLUDE += GlobalFunc/
+#EXCLUDE += ReadParameters/
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded

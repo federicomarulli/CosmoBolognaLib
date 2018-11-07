@@ -61,7 +61,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
     vector<double> redshift = catalogue_for_nz.var(Var::_Redshift_); 
     vector<double> weight = catalogue_for_nz.var(Var::_Weight_); 
     const double weightedN = catalogue_for_nz.weightedN();  
-    distribution(xx, yy, err, redshift, weight, step_redshift, true, file_nz, weightedN, cbl::Min(redshift), cbl::Max(redshift), true, do_convol, sigma);
+    distribution(xx, yy, err, redshift, weight, step_redshift, true, file_nz, weightedN, cbl::Min(redshift), cbl::Max(redshift), "Linear", do_convol, sigma);
   }
   
   

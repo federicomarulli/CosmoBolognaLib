@@ -48,13 +48,13 @@ namespace cbl {
    *  @brief The namespace of the <B> FITS wrappers </B>
    *  
    *  The \e FITS namespace contains all the wrapper functions of the
-   *  FITS routines. 
+   *  FITS routines.
    *
-   *  The CCfits headers are expected to be installed
-   *  in a subdirectory of the include path. The \<CCfits\> header file
+   *  The CCfits headers are expected to be installed in a
+   *  subdirectory of the include path. The \<CCfits\> header file
    *  contains all that is necessary to use both the CCfits library
    *  and the cfitsio library (for example, it includes fitsio.h),
-   *  thus making all of cfitsio's macro definitions available. 
+   *  thus making all of cfitsio's macro definitions available.
    *
    *  \<CCfits/CCfits\> includes 12 of the CCfits headers and will
    *  support all CCfits operations. The installed location of the

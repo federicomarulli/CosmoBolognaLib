@@ -77,7 +77,7 @@ double cbl::glob::func_SSM_GSL (double kk, void *params)
 // =====================================================================================
 
 
-double cbl::xi_from_Pk (const double rr, const vector<double> lgkk, const vector<double> lgPk, const double k_min, const double k_max, const double aa, const double prec) 
+double cbl::xi_from_Pk (const double rr, const std::vector<double> lgkk, const std::vector<double> lgPk, const double k_min, const double k_max, const double aa, const double prec) 
 { 
   double Int = -1.;
 
@@ -106,7 +106,7 @@ double cbl::xi_from_Pk (const double rr, const vector<double> lgkk, const vector
 // =====================================================================================
 
 
-double cbl::xi_from_Pk (const double rr, const string file, const int c1, const int c2, const double k_min, const double k_max, const double aa, const double prec) 
+double cbl::xi_from_Pk (const double rr, const std::string file, const int c1, const int c2, const double k_min, const double k_max, const double aa, const double prec) 
 {
   int C1 = c1-1, C2 = c2-1;
 
@@ -138,7 +138,7 @@ double cbl::xi_from_Pk (const double rr, const string file, const int c1, const 
 // ============================================================================
 
 
-double cbl::Pk_from_xi (const double kk, const vector<double> lgrr, const vector<double> lgxi, const double r_min, const double r_max) 
+double cbl::Pk_from_xi (const double kk, const std::vector<double> lgrr, const std::vector<double> lgxi, const double r_min, const double r_max) 
 {
   auto ff = [&] (const double rr)
     {
@@ -157,7 +157,7 @@ double cbl::Pk_from_xi (const double kk, const vector<double> lgrr, const vector
 // ============================================================================
 
 
-double cbl::Pk_from_xi (const double kk, const string file, const  int c1, const int c2, const double r_min, const double r_max) 
+double cbl::Pk_from_xi (const double kk, const std::string file, const  int c1, const int c2, const double r_min, const double r_max) 
 {
   int C1 = c1-1, C2 = c2-1;
 
@@ -189,7 +189,7 @@ double cbl::Pk_from_xi (const double kk, const string file, const  int c1, const
 // ============================================================================
 
 
-double cbl::wp (const double rp, const vector<double> rr, const vector<double> xi, const double r_max) 
+double cbl::wp (const double rp, const std::vector<double> rr, const std::vector<double> xi, const double r_max) 
 {
   auto ff = [&] (const double rrr)
     {   
@@ -204,7 +204,7 @@ double cbl::wp (const double rp, const vector<double> rr, const vector<double> x
 // ============================================================================
 
 
-double cbl::wp (const double rp, const string file, const double r_max) 
+double cbl::wp (const double rp, const std::string file, const double r_max) 
 {
   ifstream fin(file.c_str()); checkIO(fin, file); 
   
@@ -224,7 +224,7 @@ double cbl::wp (const double rp, const string file, const double r_max)
 // ============================================================================
 
 
-double cbl::sigmaR (const double RR, const int corrType, const vector<double> rr, const vector<double> corr) 
+double cbl::sigmaR (const double RR, const int corrType, const std::vector<double> rr, const std::vector<double> corr) 
 {
   double sigmaR = -1;
 
@@ -328,7 +328,7 @@ double cbl::error_xi_ratio (const double beta, const double error_beta)
 // ============================================================================
 
 
-double cbl::barred_xi_direct (const double RR, const vector<double> rr, const vector<double> xi, const double rAPP, const double r0, const double gamma) 
+double cbl::barred_xi_direct (const double RR, const std::vector<double> rr, const std::vector<double> xi, const double rAPP, const double r0, const double gamma) 
 { 
   vector<double> xi_;
 
@@ -358,7 +358,7 @@ double cbl::barred_xi_direct (const double RR, const vector<double> rr, const ve
 // ============================================================================
 
 
-double cbl::barred_xi__direct (const double RR, const vector<double> rr, const vector<double> xi, const double rAPP, const double r0, const double gamma) 
+double cbl::barred_xi__direct (const double RR, const std::vector<double> rr, const std::vector<double> xi, const double rAPP, const double r0, const double gamma) 
 { 
   vector<double> xi__;
 
@@ -389,7 +389,7 @@ double cbl::barred_xi__direct (const double RR, const vector<double> rr, const v
 // ============================================================================
 
 
-double cbl::barred_xi_ (const double RR, const vector<double> rr, const vector<double> xi, const double rApp, const double r0, const double gamma) 
+double cbl::barred_xi_ (const double RR, const std::vector<double> rr, const std::vector<double> xi, const double rApp, const double r0, const double gamma) 
 {   
   vector<double> xi_;
 
@@ -409,7 +409,7 @@ double cbl::barred_xi_ (const double RR, const vector<double> rr, const vector<d
 // ============================================================================
 
 
-double cbl::barred_xi__ (const double RR, const vector<double> rr, const vector<double> xi, const double rApp, const double r0, const double gamma) 
+double cbl::barred_xi__ (const double RR, const std::vector<double> rr, const std::vector<double> xi, const double rApp, const double r0, const double gamma) 
 {   
   vector<double> xi__;
 
@@ -491,7 +491,7 @@ double cbl::xi2D_lin_model (const double beta, const double bias, const double x
 // ============================================================================
 
 
-double cbl::xi2D_lin_model (const double rp, const double pi, const double beta, const double bias, const vector<double> rad_real, const vector<double> xi_real, const vector<double> xi_, const vector<double> xi__, const int index, const bool bias_nl, const double bA)
+double cbl::xi2D_lin_model (const double rp, const double pi, const double beta, const double bias, const std::vector<double> rad_real, const std::vector<double> xi_real, const std::vector<double> xi_, const std::vector<double> xi__, const int index, const bool bias_nl, const double bA)
 { 
   double rr = sqrt(rp*rp+pi*pi);
   double cos = pi/rr;
@@ -577,7 +577,7 @@ double cbl::xi2D_model (double rp, double pi, shared_ptr<void> pp, vector<double
 // ============================================================================
 
 
-double cbl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const vector<double> rad_real, const vector<double> xi_real, const vector<double> xi_, const vector<double> xi__, const double var, const int FV, int index, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
+double cbl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const std::vector<double> rad_real, const std::vector<double> xi_real, const std::vector<double> xi_, const std::vector<double> xi__, const double var, const int FV, int index, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
 {
   double delta_v = (v_max-v_min)/step_v;
 
@@ -667,7 +667,7 @@ double cbl::b_nl (const double rr, const double bA, const double bB, const doubl
 // ============================================================================
 
 
-double cbl::xi2D_lin_model (const double rp, const double pi, const double beta, const double bias, const shared_ptr<void> funcXiR, const shared_ptr<void> funcXiR_, const shared_ptr<void> funcXiR__, const bool bias_nl, const double bA)
+double cbl::xi2D_lin_model (const double rp, const double pi, const double beta, const double bias, const std::shared_ptr<void> funcXiR, const std::shared_ptr<void> funcXiR_, const std::shared_ptr<void> funcXiR__, const bool bias_nl, const double bA)
 {
   shared_ptr<glob::FuncGrid> pfuncXiR = static_pointer_cast<glob::FuncGrid>(funcXiR);
   shared_ptr<glob::FuncGrid> pfuncXiR_ = static_pointer_cast<glob::FuncGrid>(funcXiR_);
@@ -699,7 +699,7 @@ double cbl::xi2D_lin_model (const double rp, const double pi, const double beta,
 // ============================================================================
 
 
-double cbl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const shared_ptr<void> funcXiR, const shared_ptr<void> funcXiR_, const shared_ptr<void> funcXiR__, const double var, const int FV, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
+double cbl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const std::shared_ptr<void> funcXiR, const std::shared_ptr<void> funcXiR_, const std::shared_ptr<void> funcXiR__, const double var, const int FV, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
 {
   shared_ptr<glob::FuncGrid> pfuncXiR = static_pointer_cast<glob::FuncGrid>(funcXiR);
   shared_ptr<glob::FuncGrid> pfuncXiR_ = static_pointer_cast<glob::FuncGrid>(funcXiR_);

@@ -248,10 +248,12 @@ namespace cbl {
 	 *  @param max_iter the maximum number of iterations
 	 *
 	 *  @param tol the tolerance in finding convergence 
+	 *  
+	 *  @param epsilon the relative size of the initial trial step
 	 *
 	 *  @return none
 	 */
-	void maximize (const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6);
+	void maximize (const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-4);
 
 	/**
 	 * @brief initialize the chains sampling
@@ -490,9 +492,12 @@ namespace cbl {
 	 * from the chains.
 	 *
 	 * @param output_dir the output directory
+	 *
 	 * @param output_file the output file
-	 * @param xx vector of points at which the model is computed,
-	 * @param yy vector of points at which the model is computed,
+	 *
+	 * @param xx vector of points at which the model is computed
+	 *
+	 * @param yy vector of points at which the model is computed
 	 *
 	 * @param start the minimum chain position to be written
 	 *

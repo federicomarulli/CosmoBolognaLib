@@ -138,7 +138,7 @@ double cbl::cosmology::Cosmology::z_drag() const
 
 // Sound horizon at drag epoch
 
-double cbl::cosmology::Cosmology::rs (const string method_Pk, const double T_CMB) const
+double cbl::cosmology::Cosmology::rs (const std::string method_Pk, const double T_CMB) const
 {
   if (method_Pk=="EisensteinHu") 
     return rs_EH(T_CMB);
@@ -194,7 +194,7 @@ double cbl::cosmology::Cosmology::rs_CAMB () const
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::ys (const double redshift, const string method_Pk, const double T_CMB) const
+double cbl::cosmology::Cosmology::ys (const double redshift, const std::string method_Pk, const double T_CMB) const
 {
   return rs(method_Pk, T_CMB)/((m_unit) ? D_V(redshift)/m_hh : D_V(redshift));
 }
@@ -260,7 +260,7 @@ double cbl::cosmology::Cosmology::rs (const double redshift, const double T_CMB)
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::linear_point (const double redshift, const double rmin, const double rmax, const int nbinr, const string interpType)
+vector<double> cbl::cosmology::Cosmology::linear_point (const double redshift, const double rmin, const double rmax, const int nbinr, const std::string interpType)
 {
   vector<double> rr = linear_bin_vector(nbinr, rmin, rmax);
 

@@ -52,6 +52,77 @@ using namespace twopt;
 // ============================================================================================
 
 
+void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::set_parameters (const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info) 
+{
+  if (!compute_extra_info) 
+    m_d1d2 = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
+      : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
+  else 
+    m_d1d2 = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_extra_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
+      : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_extra_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
+    
+  m_rr = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits))
+    : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits));
+  
+  m_d1r = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits))
+    : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits));
+
+  m_d2r = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits))
+    : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits));
+}
+
+
+// ============================================================================================
+
+
+void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::set_parameters (const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info)
+{
+  if (!compute_extra_info) 
+    m_d1d2 = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
+      : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
+  else 
+    m_d1d2 = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_extra_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
+      : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_extra_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
+    
+  m_rr = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits))
+    : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits));
+  
+  m_d1r = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits))
+    : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits));
+
+  m_d2r = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits))
+    : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits));
+}
+
+
+// ============================================================================================
+
+
+void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::read (const std::string dir, const std::string file) 
+{
+  m_dataset->read(dir+file);
+}
+
+
+// ============================================================================================
+
+
+void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::write (const std::string dir, const std::string file, const int rank) const 
+{
+  vector<double> xx; m_dataset->xx(xx);
+
+  checkDim(xx, m_d1d2->nbins(), "rad");
+
+  string header = "[1] separation at the bin centre # [2] spherically averagerded two-point correlation function # [3] error";
+  if (m_compute_extra_info) header += " # [4] mean separation # [5] standard deviation of the separation distribution # [6] mean redshift # [7] standard deviation of the redshift distribution";
+  
+  m_dataset->write(dir, file, header, 5, rank);
+}
+
+
+// ============================================================================================
+
+
 void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_d1d2, const bool count_rr, const bool count_d1r, const bool count_d2r, const bool tcount, const Estimator estimator)
 {
   (void)dir_output_resample, (void)nMocks;

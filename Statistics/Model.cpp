@@ -50,7 +50,7 @@ vector<vector<double>> cbl::statistics::Model::operator() (const std::vector<std
 // ======================================================================================
 
 
-void cbl::statistics::Model::set_parameters (const size_t nparameters, vector<ParameterType> parameterTypes, vector<string> parameterNames)
+void cbl::statistics::Model::set_parameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames)
 {
   m_parameters = make_shared<cbl::statistics::ModelParameters>(cbl::statistics::ModelParameters(nparameters, parameterTypes, parameterNames));
 }
@@ -59,20 +59,20 @@ void cbl::statistics::Model::set_parameters (const size_t nparameters, vector<Pa
 // ======================================================================================
 
 
-void cbl::statistics::Model::stats_from_chains (const vector<vector<double>> xx, vector<vector<double>> &median_model, vector<vector<double>> &low_model, vector<vector<double>> &up_model, const int start, const int thin) 
+void cbl::statistics::Model::stats_from_chains (const std::vector<std::vector<double>> xx, std::vector<std::vector<double>> &median_model, std::vector<std::vector<double>> &low_model, std::vector<std::vector<double>> &up_model, const int start, const int thin) 
 {
   int sz1, sz2;
-  if (m_dimension == Dim::_1D_) {
+  if (m_dimension==Dim::_1D_) {
     sz1 = 1;
     sz2 = int(xx[0].size());
   }
-  else if (m_dimension == Dim::_2D_) {
+  else if (m_dimension==Dim::_2D_) {
     sz1 = int(xx[0].size());
     sz2 = int(xx[1].size());
   }
   else
-    ErrorCBL("Error in stats_from_chains() of Model.cpp. Wrong size for xx vector!");
-
+    ErrorCBL("Error in cbl::statistics::Model::stats_from_chains() of Model.cpp: wrong size for xx vector!");
+  
   vector<double> _median(sz1*sz2, 0);
   vector<double> _low(sz1*sz2, 0);
   vector<double> _up(sz1*sz2, 0);
@@ -85,6 +85,7 @@ void cbl::statistics::Model::stats_from_chains (const vector<vector<double>> xx,
 
       for (size_t k=0; k<m_parameters->nparameters(); k++) 
 	parameters.push_back(m_parameters->chain_value(k, j, i));
+
       models.push_back(flatten(this->operator()(xx, parameters)));
     }
   }

@@ -95,7 +95,7 @@ std::string cbl::cosmology::Cosmology::Pk_output_file (const string code, const 
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, const string output_root, const string output_dir, const double k_max, const string file_par) const 
+void cbl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, const std::string output_root, const std::string output_dir, const double k_max, const std::string file_par) const 
 {
   string dir = par::DirCosmo+"External/CAMB/";
 
@@ -162,7 +162,7 @@ void cbl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, 
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::run_CAMB (vector<double> &kk, vector<double> &Pk, const bool NL, const double redshift, const string output_root, const string output_dir, const double k_max, const string file_par) const 
+void cbl::cosmology::Cosmology::run_CAMB (std::vector<double> &kk, std::vector<double> &Pk, const bool NL, const double redshift, const std::string output_root, const std::string output_dir, const double k_max, const std::string file_par) const 
 {
   string dir = par::DirCosmo+"External/CAMB/";
 
@@ -247,7 +247,7 @@ void cbl::cosmology::Cosmology::run_CAMB (vector<double> &kk, vector<double> &Pk
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::Table_PkCodes (const string code, const bool NL, vector<double> &lgkk, vector<double> &lgPk, const double redshift, const string output_root, const double k_max, string file_par) const 
+void cbl::cosmology::Cosmology::Table_PkCodes (const std::string code, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const std::string output_root, const double k_max, string file_par) const 
 {
   if (code=="MPTbreeze-v1" && m_sigma8<0) 
     ErrorCBL("Error in cbl::cosmology::Cosmology::Table_PkCodes of PkXi.cpp: sigma8 must be >0 if MPTbreeze-v1 is used!"); 
@@ -413,7 +413,7 @@ void cbl::cosmology::Cosmology::Table_PkCodes (const string code, const bool NL,
 
   if (chdir(dir_loc.c_str())) {}
 
-  double KK, PK, PK0, PK1, PK2;
+  double KK, PK, PK0, PK1, PK2, fk;
   
   if (code=="CAMB" || code=="MPTbreeze-v1") {
 
@@ -430,30 +430,47 @@ void cbl::cosmology::Cosmology::Table_PkCodes (const string code, const bool NL,
     
     if (code=="MPTbreeze-v1") {
 
-      vector<double> lgkkM, lgPkM;
-      fin.open(file_in.c_str()); checkIO(fin, file_in); 
-
-      while (fin >>KK>>PK0>>PK1>>PK2) {
-	if (KK>0 && PK0>0) {
-	  lgkkM.push_back(log10(KK));
-	  lgPkM.push_back(log10(pow(2.*par::pi,3)*(PK0+PK1+PK2)));
-	} 
-      }
-      fin.clear(); fin.close();
-
-      double lgm = Min(lgkkM), lgM = Max(lgkkM);
-     
-      for (size_t i=0; i<lgkk.size(); i++)
-	if (lgm<lgkk[i] && lgkk[i]<lgM) 
-	  lgPk[i] = interpolated(lgkk[i], lgkkM, lgPkM, "Linear");
-
-      // store the full P(k) (MPTbreeze + CAMB)
       string fileMPT = dir_output+"Pk2.dat";
-      ofstream fout(fileMPT.c_str()); checkIO(fout, fileMPT);
-      for (size_t i=0; i<lgkk.size(); i++)
-	fout << pow(10.,lgkk[i]) << "   " << pow(10.,lgPk[i]) << endl;
-      fout.clear(); fout.close();
-      
+      ifstream finMPT;
+      finMPT.open(fileMPT.c_str());
+
+      if(!fin) {
+	finMPT.close();
+	vector<double> kkM, PkTree, Pk1loop, Pk2loop;
+	fin.open(file_in.c_str()); checkIO(fin, file_in); 
+
+	while (fin >>KK>>PK0>>PK1>>PK2>>fk) {
+	  if (KK>0 && PK0>0) {
+	    kkM.push_back(KK);
+	    PkTree.push_back(pow(2.*par::pi,3)*(PK0));
+	    Pk1loop.push_back(pow(2.*par::pi,3)*(PK0+PK1));
+	    Pk2loop.push_back(pow(2.*par::pi,3)*(PK0+PK1+PK2));
+	  } 
+	}
+	fin.clear(); fin.close();
+
+	glob::FuncGrid interp_PkTree(kkM, PkTree, "Spline", BinType::_logarithmic_);
+	glob::FuncGrid interp_Pk1loop(kkM, Pk1loop, "Spline", BinType::_logarithmic_);
+	glob::FuncGrid interp_Pk2loop(kkM, Pk2loop, "Spline", BinType::_logarithmic_);
+
+	// store the full P(k) (MPTbreeze + CAMB)
+	ofstream fout(fileMPT.c_str()); checkIO(fout, fileMPT);
+	for (size_t i=0; i<lgkk.size(); i++)
+	  fout << pow(10.,lgkk[i]) << "   " << interp_Pk2loop(pow(10, lgkk[i])) <<  "   " << interp_Pk1loop(pow(10, lgkk[i])) <<  "   " << interp_PkTree (pow(10, lgkk[i])) << endl;
+	fout.clear(); fout.close();
+      }
+      lgkk.erase(lgkk.begin(), lgkk.end());
+      lgPk.erase(lgPk.begin(), lgPk.end());
+      finMPT.close();
+      finMPT.open(fileMPT.c_str());
+
+      while(finMPT >> KK >> PK2 >> PK1 >> PK0)
+	if (KK>0 && PK>0) {
+	  lgkk.push_back(log10(KK));
+	  lgPk.push_back(log10(PK2));
+	} 
+
+      finMPT.close();
     }
   }
 
@@ -473,7 +490,7 @@ void cbl::cosmology::Cosmology::Table_PkCodes (const string code, const bool NL,
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::Table_XiCodes (const string code, const bool NL, vector<double> &rr, vector<double> &xi, const double redshift, const string output_root, const double k_max, const string file_par) const
+void cbl::cosmology::Cosmology::Table_XiCodes (const std::string code, const bool NL, std::vector<double> &rr, std::vector<double> &xi, const double redshift, const std::string output_root, const double k_max, const std::string file_par) const
 {
   vector<double> lgkk, lgPk;
   Table_PkCodes(code, NL, lgkk, lgPk, redshift, output_root, k_max, file_par);
@@ -538,7 +555,7 @@ void cbl::cosmology::Cosmology::Table_XiCodes (const string code, const bool NL,
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::Pk_0 (const string method_Pk, const double redshift, const string output_root, const double k_min, const double k_max, const double prec, const string file_par)
+void cbl::cosmology::Cosmology::Pk_0 (const std::string method_Pk, const double redshift, const std::string output_root, const double k_min, const double k_max, const double prec, const std::string file_par)
 {  
   if (m_sigma8<0) ErrorCBL("Error in cbl::cosmology::Cosmology::Pk_0 of PkXi.cpp, sigma8<0!");
 
@@ -601,7 +618,7 @@ void cbl::cosmology::Cosmology::Pk_0 (const string method_Pk, const double redsh
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Pk (const double kk, const string method_Pk, const bool NL, const double redshift, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par, const bool unit1)
+double cbl::cosmology::Cosmology::Pk (const double kk, const std::string method_Pk, const bool NL, const double redshift, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
 { 
   int Norm = norm;
 
@@ -645,7 +662,7 @@ double cbl::cosmology::Cosmology::Pk (const double kk, const string method_Pk, c
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::Pk (const vector<double> kk, const string method_Pk, const bool NL, const double redshift, const string output_dir, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par, const bool unit1) 
+std::vector<double> cbl::cosmology::Cosmology::Pk (const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1) 
 {
 
   double fact1 = (m_unit || unit1) ? 1. : 1./m_hh;
@@ -717,7 +734,7 @@ vector<double> cbl::cosmology::Cosmology::Pk (const vector<double> kk, const str
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::Pk_Kaiser_multipoles (vector<double> &Pk0, vector<double> &Pk2, vector<double> &Pk4, const vector<double> kk, const string method_Pk, const bool NL, const double redshift, const double bias, const double sigma_NL, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+void cbl::cosmology::Cosmology::Pk_Kaiser_multipoles (std::vector<double> &Pk0, std::vector<double> &Pk2, std::vector<double> &Pk4, const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const double bias, const double sigma_NL, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par)
 { 
   vector<double> Pk_arr;
   size_t nbin_k = kk.size();
@@ -769,7 +786,7 @@ double cbl::glob::func_xi_EH_GSL (double kk, void *params)
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::xi_DM (const double rr, const string method_Pk, const double redshift, const string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par) 
+double cbl::cosmology::Cosmology::xi_DM (const double rr, const std::string method_Pk, const double redshift, const std::string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const std::string file_par) 
 {
   bool gsl = GSL;
   if (gsl==false && method_Pk=="EisensteinHu") {
@@ -875,7 +892,7 @@ double cbl::cosmology::Cosmology::xi_DM (const double rr, const string method_Pk
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::wp_DM (const double rp, const string method_Pk, const double redshift, const double pimax, const string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+double cbl::cosmology::Cosmology::wp_DM (const double rp, const std::string method_Pk, const double redshift, const double pimax, const std::string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const std::string file_par)
 {
   int Norm = norm;
   if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
@@ -943,7 +960,7 @@ double cbl::cosmology::Cosmology::wp_DM (const double rp, const string method_Pk
 // =====================================================================================
 
                             
-double cbl::cosmology::Cosmology::sigmaR_DM (const double RR, const int corrType, const string method_Pk, const double redshift, const double pimax, const string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+double cbl::cosmology::Cosmology::sigmaR_DM (const double RR, const int corrType, const std::string method_Pk, const double redshift, const double pimax, const std::string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const std::string file_par)
 {
   // check if the table with lg(r)-lg(xi) already exists
 
@@ -1018,7 +1035,7 @@ double cbl::glob::func_sigma2M_EH_GSL (double kk, void *params)
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::sigma8_Pk (const string method_Pk, const double redshift, const string output_root, const bool NL, const double k_min, const double k_max, const double prec, const string file_par) const 
+double cbl::cosmology::Cosmology::sigma8_Pk (const std::string method_Pk, const double redshift, const std::string output_root, const bool NL, const double k_min, const double k_max, const double prec, const std::string file_par) const 
 {  
   if (NL) WarningMsg("Warning in cbl::cosmology::Cosmology::sigma8_Pk of PkXi.cpp: sigma8 is defined for the linear P(k)!");
 
@@ -1077,7 +1094,7 @@ double cbl::cosmology::Cosmology::sigma8_Pk (const string method_Pk, const doubl
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Sn_PT (const int nn, const double RR, const string method_SS, const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const 
+double cbl::cosmology::Cosmology::Sn_PT (const int nn, const double RR, const std::string method_SS, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file) const 
 {
   if (3>nn || nn>5) { string Err = "Error in cbl::cosmology::Cosmology::Sn_PT of PkXi.cpp: nn = " + conv(nn, par::fINT); ErrorCBL(Err); }
   
@@ -1112,7 +1129,7 @@ double cbl::cosmology::Cosmology::Sn_PT (const int nn, const double RR, const st
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Sigman_PT (const int nn, const double RR, const string method_SS, const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const 
+double cbl::cosmology::Cosmology::Sigman_PT (const int nn, const double RR, const std::string method_SS, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file) const 
 {
   if (3>nn || nn>5) { string Err = "Error in cbl::cosmology::Cosmology::Sigma_PT of PkXi.cpp: nn = " + conv(nn, par::fINT); ErrorCBL(Err); }
  
@@ -1137,7 +1154,7 @@ double cbl::cosmology::Cosmology::Sigman_PT (const int nn, const double RR, cons
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::k_star (const string method_Pk, const double redshift, const string output_root, const double k_max, const string file_par) const 
+double cbl::cosmology::Cosmology::k_star (const std::string method_Pk, const double redshift, const std::string output_root, const double k_max, const std::string file_par) const 
 {  
   if (method_Pk=="EisensteinHu") ErrorCBL("Work in progress... (in k_star of PkXi.cpp)", glob::ExitCode::_workInProgress_);
 
@@ -1160,7 +1177,7 @@ double cbl::cosmology::Cosmology::k_star (const string method_Pk, const double r
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::get_xi (vector<double> &rr, vector<double> &Xi, const string method_Pk, const double redshift, const string output_root, const bool xiType, const double k_star, const bool xiNL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const string file_par)
+void cbl::cosmology::Cosmology::get_xi (std::vector<double> &rr, std::vector<double> &Xi, const std::string method_Pk, const double redshift, const std::string output_root, const bool xiType, const double k_star, const bool xiNL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const std::string file_par)
 {
   int Norm = norm;
   if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
@@ -1228,7 +1245,7 @@ void cbl::cosmology::Cosmology::get_xi (vector<double> &rr, vector<double> &Xi, 
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::get_barred_xi (vector<double> rr, vector<double> Xi, vector<double> &Xi_, vector<double> &Xi__, const string method_Pk, const double redshift, const bool xiType, const double k_star, const bool xiNL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const double prec, const string file_par) const
+void cbl::cosmology::Cosmology::get_barred_xi (std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const std::string method_Pk, const double redshift, const bool xiType, const double k_star, const bool xiNL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const double prec, const std::string file_par) const
 {
   (void)k_star; (void)k_min; (void)k_max; (void)aa; (void)prec; (void)file_par;
   
@@ -1308,7 +1325,7 @@ void cbl::cosmology::Cosmology::get_barred_xi (vector<double> rr, vector<double>
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Pk_DeWiggle (const double kk, const double redshift, const double sigma_NL, const string output_root, const bool norm, const double k_min, const double k_max, const double aa, const double prec)
+double cbl::cosmology::Cosmology::Pk_DeWiggle (const double kk, const double redshift, const double sigma_NL, const std::string output_root, const bool norm, const double k_min, const double k_max, const double aa, const double prec)
 {
   (void) aa;
   
@@ -1328,7 +1345,7 @@ double cbl::cosmology::Cosmology::Pk_DeWiggle (const double kk, const double red
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::xi_DM_DeWiggle (const double rr, const double redshift, const double sigma_NL, const string output_root, const bool norm, const double k_min, const double k_max, const double aa, const double prec)
+double cbl::cosmology::Cosmology::xi_DM_DeWiggle (const double rr, const double redshift, const double sigma_NL, const std::string output_root, const bool norm, const double k_min, const double k_max, const double aa, const double prec)
 {
   bool NL = false;
 
@@ -1352,7 +1369,7 @@ double cbl::cosmology::Cosmology::xi_DM_DeWiggle (const double rr, const double 
 // =====================================================================================
 
 
-vector<vector<double> > cbl::cosmology::Cosmology::XiMonopole_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const int IntegrationMethod)
+std::vector<std::vector<double> > cbl::cosmology::Cosmology::XiMonopole_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const std::vector<double> kk, const std::vector<double> Pk0, const int IntegrationMethod)
 {
   int nbins_k = kk.size();
   vector<double> r = linear_bin_vector(nbins,rMin,rMax);
@@ -1428,7 +1445,7 @@ vector<vector<double> > cbl::cosmology::Cosmology::XiMonopole_covariance (const 
 // =====================================================================================
 
 
-vector<vector<double> > cbl::cosmology::Cosmology::XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod)
+std::vector<std::vector<double> > cbl::cosmology::Cosmology::XiMultipoles_covariance (const int nbins, const double rMin, const double rMax, const double nn, const double Volume, const std::vector<double> kk, const std::vector<double> Pk0, const std::vector<double> Pk2, const std::vector<double> Pk4, const int IntegrationMethod)
 {
   int n_leg = 3;
   int nbins_k = kk.size();
@@ -1520,7 +1537,7 @@ vector<vector<double> > cbl::cosmology::Cosmology::XiMultipoles_covariance (cons
 // =====================================================================================
 
 
-vector<vector<double> > cbl::cosmology::Cosmology::XiMultipoles (const int nbins, const double rMin, const double rMax, const vector<double> kk, const vector<double> Pk0, const vector<double> Pk2, const vector<double> Pk4, const int IntegrationMethod)
+std::vector<std::vector<double> > cbl::cosmology::Cosmology::XiMultipoles (const int nbins, const double rMin, const double rMax, const std::vector<double> kk, const std::vector<double> Pk0, const std::vector<double> Pk2, const std::vector<double> Pk4, const int IntegrationMethod)
 {
   int nbins_k = kk.size();
   vector<double> r = linear_bin_vector(nbins,rMin,rMax);
@@ -1612,7 +1629,7 @@ vector<vector<double> > cbl::cosmology::Cosmology::XiMultipoles (const int nbins
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const vector<double> zz, const vector<double> phiz, const string interpolationType, const CoordinateUnits coordUnits, const bool GSL, const string method_Pk, const bool NL, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const std::vector<double> zz, const std::vector<double> phiz, const std::string interpolationType, const CoordinateUnits coordUnits, const bool GSL, const std::string method_Pk, const bool NL, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par)
 {
   if (NL)
     ErrorCBL("Error in wtheta_DM, non linearities in angular correlation function not yet implemented!");
@@ -1677,7 +1694,7 @@ double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const vector<do
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const vector<double> kk, const vector<double> Pk, const vector<double> zz, const vector<double> nz, const vector<double> phiz, const string interpolationType, const CoordinateUnits coordUnits, const bool GSL, const double redshift_Pk)
+double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const std::vector<double> kk, const std::vector<double> Pk, const std::vector<double> zz, const std::vector<double> nz, const std::vector<double> phiz, const std::string interpolationType, const CoordinateUnits coordUnits, const bool GSL, const double redshift_Pk)
 {
   const double theta_rad = cbl::converted_angle (theta, coordUnits, cbl::CoordinateUnits::_radians_);
 
@@ -1754,7 +1771,7 @@ double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const vector<do
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::C_l_DM (const int lmax, const vector<double> zz, const vector<double> phiz, const string interpolationMethod, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+std::vector<double> cbl::cosmology::Cosmology::C_l_DM (const int lmax, const std::vector<double> zz, const std::vector<double> phiz, const std::string interpolationMethod, const std::string method_Pk, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par)
 {
   const double zmin = Min(zz);
   const double zmax = Max(zz);
@@ -1812,7 +1829,7 @@ vector<double> cbl::cosmology::Cosmology::C_l_DM (const int lmax, const vector<d
 }
 
 /*
-vector<double> cbl::cosmology::Cosmology::C_l_DM (const int lmax, const vector<double> zz, const vector<double> phiz, const string interpolationMethod, const string method_Pk, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+std::vector<double> cbl::cosmology::Cosmology::C_l_DM (const int lmax, const std::vector<double> zz, const std::vector<double> phiz, const std::string interpolationMethod, const std::string method_Pk, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par)
 {
   const double zmin = Min(zz);
   const double zmax = Max(zz);

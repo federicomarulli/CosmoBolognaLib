@@ -45,7 +45,7 @@ using namespace ccfitswrapper;
 // ============================================================================
 
 
-vector<vector<double>> cbl::ccfitswrapper::read_table_fits (const string input_fits, const vector<string> column_names, const int next, const double fill_value)
+vector<vector<double>> cbl::ccfitswrapper::read_table_fits (const std::string input_fits, const std::vector<std::string> column_names, const int next, const double fill_value)
 {
   ifstream check_input(input_fits); checkIO(check_input, input_fits); check_input.close();
   
@@ -88,9 +88,9 @@ vector<vector<double>> cbl::ccfitswrapper::read_table_fits (const string input_f
 // ============================================================================
 
 
-void cbl::ccfitswrapper::write_table_fits (const string output_dir, const string file_fits, const vector<string> column_names, const vector<vector<double>> table, const vector<string> column_units)
+void cbl::ccfitswrapper::write_table_fits (const std::string output_dir, const std::string file_fits, const std::vector<std::string> column_names, const std::vector<std::vector<double>> table, const std::vector<std::string> column_units)
 {
-  const string file_name = "!"+output_dir+file_fits;
+  const string file_name = output_dir+file_fits;
 
   shared_ptr<CCfits::FITS> pFits(0);
 
@@ -117,4 +117,5 @@ void cbl::ccfitswrapper::write_table_fits (const string output_dir, const string
   for (size_t i=0; i<ncolumns; i++)
     newTable->column(colName[i]).write(table[i], 1);  
 
+  coutCBL << "I wrote the file: " << file_name << endl;
 }

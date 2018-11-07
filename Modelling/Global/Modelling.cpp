@@ -67,6 +67,32 @@ void cbl::modelling::Modelling::m_set_posterior (const int seed)
 // ============================================================================================
 
 
+shared_ptr<cbl::statistics::ModelParameters> cbl::modelling::Modelling::likelihood_parameters ()
+{
+  if (m_likelihood != NULL)
+    return m_likelihood->parameters();
+  else
+    ErrorCBL("Error in likelihood_parameters of Modelling.cpp. Likelihood is not defined!");
+  return NULL;
+}
+
+
+// ============================================================================================
+
+
+shared_ptr<cbl::statistics::ModelParameters> cbl::modelling::Modelling::posterior_parameters ()
+{
+  if (m_posterior != NULL)
+    return m_posterior->parameters();
+  else
+    ErrorCBL("Error in likelihood_parameters of Modelling.cpp. Likelihood is not defined!");
+  return NULL;
+}
+
+
+// ============================================================================================
+
+
 void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type, const vector<size_t> x_index, const int w_index)
 {
   if(m_model == NULL)
@@ -97,10 +123,10 @@ void cbl::modelling::Modelling::maximize_likelihood (const vector<double> start,
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::maximize_posterior (const std::vector<double> start, const unsigned int max_iter, const double tol, const int seed)
+void cbl::modelling::Modelling::maximize_posterior (const std::vector<double> start, const unsigned int max_iter, const double tol, const double epsilon, const int seed)
 {
   m_set_posterior(seed);
-  m_posterior->maximize(start, max_iter, tol);
+  m_posterior->maximize(start, max_iter, tol, epsilon);
 }
 
 

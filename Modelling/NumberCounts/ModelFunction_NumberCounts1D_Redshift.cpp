@@ -43,7 +43,7 @@ using namespace cbl;
 // ===========================================================================================
 
 
-std::vector<double> cbl::modelling::numbercounts::number_density_redshift (const std::vector<double> redshift, const shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<double> cbl::modelling::numbercounts::number_density_redshift (const std::vector<double> redshift, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
@@ -77,7 +77,7 @@ std::vector<double> cbl::modelling::numbercounts::number_density_redshift (const
 // ===========================================================================================
 
 
-std::vector<double> cbl::modelling::numbercounts::number_counts_redshift (const std::vector<double> redshift, const shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<double> cbl::modelling::numbercounts::number_counts_redshift (const std::vector<double> redshift, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);

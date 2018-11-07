@@ -44,6 +44,7 @@
 #include "Galaxy.h"
 #include "Cluster.h"
 #include "Void.h"
+#include "HostHalo.h"
 
 
 // ============================================================================================
@@ -139,6 +140,54 @@ namespace cbl {
       /// zz displacement
       _Z_displacement_,
 
+      /// mass estimate
+      _MassEstimate_,
+
+      /// radius estimate
+      _RadiusEstimate_,
+
+      /// velocity dispersion estimate
+      _VeldispEstimate_,
+
+      /// centre of mass x-coordinate
+      _XCM_,
+
+      /// centre of mass y-coordinate
+      _YCM_,
+
+      /// centre of mass z-coordinate
+      _ZCM_,
+
+      /// spin x-coordinate
+      _XSpin_,
+
+      /// spin y-coordinate
+      _YSpin_,
+
+      /// spin z-coordinate
+      _ZSpin_,
+
+      /// velocity dispersion
+      _VelDisp_,
+
+      /// maximum velocity
+      _Vmax_,
+
+      /// maximum radial velocity
+      _VmaxRad_,
+
+      /// total halo mass
+      _TotMass_,
+
+      /// unique identification number
+      _ID_,
+
+      /// number of sub-groups
+      _Nsub_,
+
+      /// parent unique identification number
+      _Parent_,
+	
       /// generic property
       _Generic_
       
@@ -151,7 +200,7 @@ namespace cbl {
      * Var names
      */
     inline std::vector<std::string> VarNames ()
-    { return {"X", "Y", "Z", "RA", "Dec", "Redshift", "Dc", "Weight", "Mass", "Magnitude", "SFR", "sSFR", "Richness", "RichnessError", "Vx", "Vy", "Vz", "Region", "Radius", "DensityContrast", "CentralDensity", "X_displacement", "Y_displacement", "Z_displacement", "Generic"}; }
+    { return {"X", "Y", "Z", "RA", "Dec", "Redshift", "Dc", "Weight", "Mass", "Magnitude", "SFR", "sSFR", "Richness", "RichnessError", "Vx", "Vy", "Vz", "Region", "Radius", "DensityContrast", "CentralDensity", "X_displacement", "Y_displacement", "Z_displacement", "MassGas", "MassHalo", "MassDisk", "MassBulge", "MassStars", "MassBndry", "MassEstimate", "RadiusEstimate", "VeldispEstimate", "XCM", "YCM", "ZCM", "XSpin", "YSpin", "ZSpin", "VelDisp", "Vmax", "VmaxRad", "TotMass", "Generic"}; }
 
     /**
      * @brief cast an enum of type Var
@@ -189,6 +238,7 @@ namespace cbl {
     inline std::vector<Var> VarCast (const std::vector<std::string> varNames)
     { return castFromNames<Var>(varNames, VarNames()); }
 
+    
     /**
      *  @enum RandomType
      *  @brief the type of random catalogue
@@ -311,10 +361,72 @@ namespace cbl {
      */
     inline std::vector<std::string> CharEncodeNames ()
     { return {"ascii", "binary"}; }
+    
+    /**
+     *  @enum EstimateCriterion
+     *  @brief method used to estimate mass, radius and velocity of a halo
+     */
+    enum class EstimateCriterion {
+    
+      /// 
+      _m200_,
+      
+      /// 
+      _c200_,
+
+      ///
+      _t200_
+      
+    };
+
+    /**
+     * @brief return a vector containing the
+     * EstimateCriterion names
+     * @return a vector containing the
+     * EstimateCriterion names
+     */
+    inline std::vector<std::string> EstimateCriterionNames ()
+    { return {"m200", "c200", "t200"}; }
+
+    /**
+     * @brief cast an enum of type EstimateCriterion
+     * from its index
+     * @param estimateCriterionIndex the estimateCriterion index
+     * @return object of class EstimateCriterion
+     */
+    inline EstimateCriterion EstimateCriterionCast (const int estimateCriterionIndex)
+    { return castFromValue<EstimateCriterion>(estimateCriterionIndex); }
+
+    /**
+     * @brief cast an enum of type EstimateCriterion
+     * from its name
+     * @param estimateCriterionName the estimateCriterion name
+     * @return object of class EstimateCriterion
+     */
+    inline EstimateCriterion EstimateCriterionCast (const std::string estimateCriterionName)
+    { return castFromName<EstimateCriterion>(estimateCriterionName, EstimateCriterionNames()); }
+
+    /**
+     * @brief cast an enum of type EstimateCriterion
+     * from indeces
+     * @param estimateCriterionIndeces the estimateCriterion indeces
+     * @return object of class EstimateCriterion
+     */
+    inline std::vector<EstimateCriterion> EstimateCriterionCast (const std::vector<int> estimateCriterionIndeces)
+    { return castFromValues<EstimateCriterion>(estimateCriterionIndeces); } 
+
+    /**
+     * @brief cast an enum of type EstimateCriterion
+     * from thier names
+     * @param estimateCriterionNames the estimateCriterion names
+     * @return objects of class EstimateCriterion
+     */
+    inline std::vector<EstimateCriterion> EstimateCriterionCast (const std::vector<std::string> estimateCriterionNames)
+    { return castFromNames<EstimateCriterion>(estimateCriterionNames, EstimateCriterionNames()); }
 
     /**
      *  @struct Gadget_Header
-     *  @brief This structure allows to store @b GADGET-2.0 @b header
+     *  @brief This structure allows to store @b GADGET @b header
      */
     struct Gadget_Header {
 
@@ -372,6 +484,34 @@ namespace cbl {
       /// currently unused space which fills the header to a total length of 256 bytes leaving room for future additions
       short la[40]; 
     };
+
+    /**
+     *  @struct SubFindTab_Header
+     *  @brief This structure allows to store @b SUBFIND @b Tab file header
+     */
+    struct SubFindTab_Header {
+
+      /// number of groups in file
+      uint32_t Ngroups;
+
+      /// total number of groups 
+      uint32_t totNgroups;
+
+      /// number of particle IDs in corresponding file
+      uint32_t Nids;
+
+      /// total number of particle IDs
+      uint64_t totNids;
+
+      /// number of files in which the groups/subgroups are stored
+      uint32_t Ntask;
+
+      /// number of subgroups in file
+      uint32_t Nsubs;
+
+      /// total number of subgroups
+      uint32_t totNsubs;
+    };
     
     /**
      *  @class Catalogue Catalogue.h "Headers/Catalogue.h"
@@ -402,12 +542,23 @@ namespace cbl {
 
       
       /**
-       *  @name private variables and functions used to read catalogues from standard GADGET-2.0 files
+       *  @name private variables and functions used to read catalogues from standard GADGET files
        */
       ///@{
       
       /// contains the block-header temporary value
       int m_blockheader;
+
+      /**
+       * @brief read the GADGET subfind table header
+       *
+       * @param finh an object of class std::ifstream
+       *
+       * @param swap whether to swap or not the header
+       *
+       * @return an object of type cbl::catalogue::SubFindTab_Header
+       */
+      SubFindTab_Header m_read_header (std::ifstream& finh, const bool swap=false);
 
       /**
        *  @brief swap endianism of the GADGET snapshot header
@@ -417,6 +568,15 @@ namespace cbl {
        *  @return an object of type cbl::catalogue::Gadget_Header
        */
       Gadget_Header m_swap_header (Gadget_Header header);
+
+      /**
+       * @brief swap endianism of the GADGET subfind table header
+       *
+       * @param header the un-swapped header
+       *
+       * @return an object of type cbl::catalogue::SubFindTab_Header
+       */
+      SubFindTab_Header m_swap_header (SubFindTab_Header header) ;
 
       /**
        *  @brief Input function to check consistency in reading
@@ -572,11 +732,15 @@ namespace cbl {
        *  @param charEncode character encoding of input file,
        *  ascii or binary
        *
+       *  @param comment the string used to indicate a comment in the
+       *  input file; all the data occurring on a line after a comment
+       *  are discarded
+       *
        *  @param seed the seed for random number generation
        *
        *  @return an object of class Catalogue
        */
-      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const int col1=1, const int col2=2, const int col3=3, const int colWeight=-1, const int colRegion=-1, const double nSub=1.1, const double fact=1., const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const CharEncode charEncode=CharEncode::_ascii_, const int seed=3213);
+      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const int col1=1, const int col2=2, const int col3=3, const int colWeight=-1, const int colRegion=-1, const double nSub=1.1, const double fact=1., const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const CharEncode charEncode=CharEncode::_ascii_, const std::string comment="#", const int seed=3213);
 
       /**
        *  @brief constructor, reading a file with coordinates
@@ -640,6 +804,71 @@ namespace cbl {
       /**
        *  @brief constructor, reading a file in FITS format
        *
+       *  This constructors reads a FITS file that should the three
+       *  object coordinates, and possibly the weights and the
+       *  regions. The input file might contain also other data; the
+       *  user has to specify the indexes of the coordinates, weights
+       *  and regions.
+       *
+       *  @param objectType the object type, specified in the
+       *  cbl::catalogue::ObjectType enumeration
+       *
+       *  @param coordinateType the coordinate type, specified in the
+       *  cbl::CoordinateType enumeration
+       *
+       *  @param file vector containing the files where the input
+       *  catalogues are stored
+       *
+       *  @param column_names vector containing the column names to
+       *  read, i.e. at least the three coordinates, and possibly the
+       *  weights and regions
+       *
+       *  @param indCoord1 index of the object first coordinates in
+       *  the FITS file
+       *
+       *  @param indCoord2 index of the object second coordinates in
+       *  the FITS file
+       *
+       *  @param indCoord3 index of the object third coordinates in
+       *  the FITS file
+       *
+       *  @param indWeight index of the object weights in the FITS
+       *  file
+       *
+       *  @param indRegion index of the object regions in the FITS file
+       *
+       *  @param next number of the table extension in the FITS file; a
+       *  FITS can contain more the one extension; the extension 0 is
+       *  the primary header
+       *
+       *  @param fill_value the value used to fill non-existing
+       *  columns, if fill_value==par::defaultDouble, an error is
+       *  raised when a column is not found
+       *  
+       *  @param nSub the fracton of objects that will be randomly
+       *  selected (nSub=1 \f$ \rightarrow \f$ all objects are selected)
+       *
+       *  @param fact a factor used to multiply the coordinates,
+       *  i.e. coordinate_i=coordinate_i*fact
+       *
+       *  @param cosm object of class Cosmology 
+       *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param seed the seed for random number generation
+       *
+       *  @return an object of class Catalogue
+       */
+      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const int indCoord1, const int indCoord2, const int indCoord3, const int indWeight, const int indRegion, const int next, const double fill_value, const double nSub, const double fact, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
+      
+      /**
+       *  @brief constructor, reading a file in FITS format
+       *
+       *  This constructors reads a FITS file that should contain the
+       *  three object coordinates, and possibly the weights and the
+       *  regions, in exactly this order. No other data should be
+       *  present in the file.
+       *
        *  @param objectType the object type, specified in the
        *  cbl::catalogue::ObjectType enumeration
        *
@@ -679,8 +908,13 @@ namespace cbl {
        *  @param seed the seed for random number generation
        *
        *  @return an object of class Catalogue
+       *
+       *  @warning the dimension of the input vector Coordinate must
+       *  be equal (or larger than) 3; this condition is not checked
+       *  by the constructor!
        */
-      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> Coordinate, const std::string Weight, const std::string Region, const int next=1, const double fill_value=par::defaultDouble, const double nSub=1.1, const double fact=1, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
+      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> Coordinate, const std::string Weight, const std::string Region, const int next=1, const double fill_value=par::defaultDouble, const double nSub=1.1, const double fact=1, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213)
+	: Catalogue(objectType, coordinateType, file, {Coordinate[0], Coordinate[1], Coordinate[2], Weight, Region}, 0, 1, 2, 3, 4, next, fill_value, nSub, fact, cosm, inputUnits, seed) {}
       
       /**
        *  @brief constructor, using vectors of generic objects
@@ -1011,9 +1245,10 @@ namespace cbl {
        * 
        *  @param input_voidCatalogue the input void catalogue to be modified
        *
-       *  @param clean a 3 element bool vector. clean[0] = true, erase voids outside 
-       *  a given interval; clean[1] = true, erase voids with voids higher than a given threshold;
-       *  clean[2] = true, erase voids with density contrast lower than a given value. 
+       *  @param clean a 3 element bool vector. clean[0] = true, erase
+       *  voids outside a given interval; clean[1] = true, erase voids
+       *  with voids higher than a given threshold; clean[2] = true,
+       *  erase voids with density contrast lower than a given value.
        *
        *  @param delta_r the interval of accepted radii
        *
@@ -1031,8 +1266,8 @@ namespace cbl {
        *
        *  @param ratio
        *
-       *  @param checkoverlap true \f$\rightarray\f$ erase all the
-       *  voids wrt a given criterion, false \f$\rightarray\f$ skip
+       *  @param checkoverlap true \f$\rightarrow\f$ erase all the
+       *  voids wrt a given criterion, false \f$\rightarrow\f$ skip
        *  the step
        *
        *  @param ol_criterion the criterion for the overlap step
@@ -1047,12 +1282,12 @@ namespace cbl {
 
       
       /**
-       *  @name Constructors used to read catalogues from standar GADGET-2.0 files
+       *  @name Constructors used to read catalogues from standar GADGET files
        */
       ///@{
       
       /**
-       *  @brief constructor
+       *  @brief constructor that reads object of selected type from Gadget snapshots
        *
        *  @param objectType the object type, specified in the
        *  cbl::catalogue::ObjectType enumeration 
@@ -1060,24 +1295,64 @@ namespace cbl {
        *  @param file_cn the the name common to all the files in which
        *  the gadget snapshot is divided (path/to/file/common_name)
        *
-       *  @param swap true=swap endianism, false=do not swap
-       *  endianism
+       *  @param snapformat false -> gadget snapformat 1; true -> gadget snapformat 2; else -> wrong
+       *
+       *  @param swap true = swap endianism, false = do not swap endianism
        *
        *  @param fact a factor used to multiply the coordinates,
        *  i.e. coordinate_i=coordinate_i*fact
        *
-       *  @param read_catalogue true=the constructor actually reads
-       *  the GADGET snapshot false=the constructor only reads the
-       *  snapshot header and prints it on the screan
+       *  @param read_catalogue true = the constructor actually reads the GADGET snapshot
+       *  false = the constructor only reads the snapshot header and prints it on the screan
        *
        *  @param nSub the fraction of objects that will be randomly
-       *  selected (nSub=1 \f$ \rightarrow \f$ all objects are selected)
+       *  selected (nSub=1 &rArr; all objects are selected)
        *
-       *  @param seed the seed for random number generation
+       *  @param component_to_read which component to be read from the snapshot.
+       *  "ALL" = read all the components positions, else select one of the following:
+       *  "Gas", "Halo", "Disk", "Bulge", "Stars", "Boundary".
        *
        *  @return object of type catalogue
        */
-      Catalogue (const ObjectType objectType, const std::string file_cn=par::defaultString, const bool swap=false, const double fact=0.001, const bool read_catalogue=true, const double nSub=1.1, const int seed=3213);
+      Catalogue (const ObjectType objectType, const std::string file_cn=par::defaultString, const bool snapformat=false, const bool swap=false, const double fact=0.001, const bool read_catalogue=true, const double nSub=1.1, const std::string component_to_read="ALL");
+
+      
+      /**
+       *  @brief constructor that reads objects of class HostHalo with satellite dependencies
+       *  from group and subgroup files generated by the gadget implementation of the 
+       *  FoF and SUBFIND algorithms (respectively)
+       *
+       *  @param snap the snapshot number
+       *
+       *  @param basedir the directory in which all the GADGET outputs are stored
+       *
+       *  @param swap true = swap endianism, false = do not swap endianism
+       *
+       *  @param long_ids true = IDs are stored in double precision, 
+       *  false = IDs are stored in single precision
+       *
+       *  @param scaleFact a factor used to multiply the coordinates,
+       *  i.e. coordinate_i=coordinate_i*scaleFact 
+       *
+       *  @param massFact a factor used to multiply the masses,
+       *  i.e. mass_i=mass_i*scaleFact 
+       *
+       *  @param estimate_crit the criterion used to estimate mass, radius 
+       *  and velocity dispersion of the group 
+       *
+       *  @param veldisp whether the average velocity dispersion within the estimated radius
+       *  has been computed or not in the GADGET run considered
+       *
+       *  @param masstab whether the mass table is present or not 
+       *
+       *  @param add_satellites whether to add the satellites identified by the 
+       *  SUBFIND algorithm to the catalogue 
+       *
+       *  @param verbose true = build the catalogue verbosely, false = keep it quiet..
+       *
+       *  @return object of type catalogue
+       */
+      Catalogue (const int snap, const std::string basedir, const bool swap=false, const bool long_ids=false, const double scaleFact=1.0, const double massFact=1.0, const EstimateCriterion estimate_crit=EstimateCriterion::_m200_, const bool veldisp=false, const bool masstab=false, const bool add_satellites=false, const bool verbose=false);
 
       ///@}
     
@@ -1301,6 +1576,13 @@ namespace cbl {
        * @return generic properties of the i-th object
        */
       double generic (const int i) const { return m_object[i]->generic(); }
+    
+      /**
+       *  @brief get the private member Catalogue::m_object[ii]->m_tot_mass
+       *  @param i the object index
+       *  @return the total mass of the i-th object (sum over all contributions)
+       */
+      double tot_mass (const int i) const { return m_object[i]->tot_mass(); }
 
       /**
        * @brief get the values of the object regions  
@@ -1313,6 +1595,13 @@ namespace cbl {
        * @return the object fields
        */
       std::vector<std::string> field () const;
+    
+      /**
+       *  @brief get the private member Catalogue::m_object[ii]->m_satellites
+       *  @param index the object index
+       *  @return the vector of pointers to the satellite objects of the i-th object
+       */
+      std::vector<std::shared_ptr<Object>> satellites (const int index) const { return m_object[index]->satellites(); }
       
       /**
        * @brief get the value of the i-th object variable  
@@ -1336,7 +1625,8 @@ namespace cbl {
        *
        * @param var_name the variable name
        *
-       * @return if the variable is set \f$ \rightarrow \f$ true; else \f$ \rightarrow \f$ false
+       * @return if the variable is set \f$ \rightarrow \f$ true; else
+       * \f$ \rightarrow \f$ false
        */
       bool isSetVar (const int index, const Var var_name) const;
       
@@ -1345,8 +1635,8 @@ namespace cbl {
        *  
        * @param var_name the variable name
        *
-       * @return if the given variables are set \f$ \rightarrow \f$ true; else
-       * \f$ \rightarrow \f$ false
+       * @return if the given variables are set \f$ \rightarrow \f$
+       * true; else \f$ \rightarrow \f$ false
        */
       bool isSetVar (const Var var_name) const;
 
@@ -1442,7 +1732,7 @@ namespace cbl {
        * false &rarr; do not normalize
        * @param [in] V1 the minimum limit of the distribution
        * @param [in] V2 the maximum limit of the distribution
-       * @param [in] bin_type true &rarr; dn/dvar; false &rarr; dn/dlogvar; 
+       * @param [in] bin_type "Linear" &rarr; dn/dvar; "Log10" &rarr; dn/dlog(var); "Log" &rarr; dn/dln(var)
        * @param [in] convolution false &rarr; don't convolve the
        * distribution; true &rarr; convolve the distribution with a
        * gaussian function
@@ -1450,7 +1740,7 @@ namespace cbl {
        * gaussian function used to convolve the distribution
        * @return none
        */
-      void var_distr (const Var var_name, std::vector<double> &_var, std::vector<double> &dist, std::vector<double> &err, const int nbin, const bool linear=true, const std::string file_out=par::defaultString, const double Volume=1., const bool norm=false, const double V1=par::defaultDouble, const double V2=par::defaultDouble, const bool bin_type=true, const bool convolution=false, const double sigma=0.) const;
+      void var_distr (const Var var_name, std::vector<double> &_var, std::vector<double> &dist, std::vector<double> &err, const int nbin, const bool linear=true, const std::string file_out=par::defaultString, const double Volume=1., const bool norm=false, const double V1=par::defaultDouble, const double V2=par::defaultDouble, const std::string bin_type="Linear", const bool convolution=false, const double sigma=0.) const;
     
       /**
        * @brief get the total weight of the objects of the catalogue
@@ -1514,6 +1804,26 @@ namespace cbl {
        * @return none
        */
       void set_var (const Var var_name, const std::vector<double> var);
+
+      /**
+       *  @brief set the private member HostHalo::m_satellites
+       *  @param index index of the variable to set
+       *  @param satellite the vector of shared pointers to satellite objects
+       *  @return none
+       */
+      void set_satellite (const int index, const std::shared_ptr<Object> satellite={}) {
+	m_object[index]->set_satellite(satellite);
+      }
+
+      /**
+       *  @brief set the private member HostHalo::m_satellites
+       *  @param index index of the variable to set
+       *  @param satellites the vector of shared pointers to satellite objects
+       *  @return none
+       */
+      void set_satellites (const int index, const std::vector<std::shared_ptr<Object>> satellites={}) {
+	m_object[index]->set_satellites(satellites);
+      }
 
       /**
        *  @brief compute the central density of each object in a void catalogue.
@@ -1673,7 +1983,6 @@ namespace cbl {
        */
       void sort (const Var var_name, const bool increasing=false);
       
-      
       ///@}
 
     
@@ -1822,7 +2131,7 @@ namespace cbl {
        *  down-up; true &rarr; create a subcatalogue outside down-up
        *  @return object of class catalogue
        */
-      Catalogue cutted_catalogue (const Var var_name, const double down, const double up, const bool excl=0) const;
+      Catalogue cutted_catalogue (const Var var_name, const double down, const double up, const bool excl=false) const;
 
       /**
        *  @brief create a sub-catalogue
@@ -1832,7 +2141,7 @@ namespace cbl {
        *  the mask
        *  @return object of class catalogue
        */
-      Catalogue mangle_cut (const std::string mangle_mask, const bool excl=0) const;
+      Catalogue mangle_cut (const std::string mangle_mask, const bool excl=false) const;
 
       /**
        *  @brief create a diluted catalogue

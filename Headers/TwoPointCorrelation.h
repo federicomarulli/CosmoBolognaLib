@@ -66,9 +66,6 @@ namespace cbl {
 	/// the angle-averaged two-point correlation function, i.e. the monopole, &xi;(r)
 	_1D_monopole_,
 
-	/// the angle-averaged cross two-point correlation function, i.e. the cross monopole, &xi;<SUB>12</SUB>(r)
-	_Cross1D_monopole_,
-
 	/// the projected two-point correlation function, w(r<SUB>p</SUB>)
 	_1D_projected_,
     
@@ -95,7 +92,7 @@ namespace cbl {
 
 	/// 2D two-point correlation function in polar coordinates, &xi;(r,&mu;)
 	_2D_polar_
-
+	  
       };
 
       /**
@@ -104,7 +101,7 @@ namespace cbl {
        * @return a vector containing the
        * TwoPType names
        */
-      inline std::vector<std::string> TwoPTypeNames () {return {"1D_monopole", "Cross1D_monopole", "1D_projected", "1D_deprojected", "multipoles_integrated", "multipoles_direct", "1D_wedges", "1D_filtered", "1D_angular", "2D_Cartesian", "2D_polar"}; }
+      inline std::vector<std::string> TwoPTypeNames () {return {"1D_monopole", "1D_projected", "1D_deprojected", "multipoles_integrated", "multipoles_direct", "1D_wedges", "1D_filtered", "1D_angular", "2D_Cartesian", "2D_polar"}; }
 
       /**
        * @brief cast an enum of type TwoPType
@@ -952,7 +949,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const int seed=3213)
-	{ (void)nMocks; (void)dd; (void)rr; (void)seed; cbl::ErrorCBL("Error in std::vector<std::shared_ptr<data::Data> > XiJackknife of TwoPointCorrelation.h!"); std::vector<std::shared_ptr<data::Data> > data; return data; }
+	{ (void)nMocks; (void)dd; (void)rr; (void)seed; cbl::ErrorCBL("Error in std::vector<std::shared_ptr<data::Data> > XiBootstrap of TwoPointCorrelation.h!"); std::vector<std::shared_ptr<data::Data> > data; return data; }
 
 	/**
 	 *  @brief measure the Bootstrap resampling of the two-point

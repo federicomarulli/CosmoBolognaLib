@@ -52,14 +52,13 @@ using namespace glob;
 // ============================================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_connected::set_parameters (const TripletType tripletType, const double side_s, const double side_u, const double perc_increase, const int nbins) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::set_parameters (const triplets::TripletType tripletType, const double side_s, const double side_u, const double perc_increase, const int nbins) 
 {
   double r12 = side_s;
   double r12_binSize = r12*2.*perc_increase;
   double r13 = side_s*side_u;
   double r13_binSize = r13*2.*perc_increase;
 
-
   m_ddd = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
   m_rrr = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
   m_ddr = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
@@ -70,7 +69,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::set_parame
 // ============================================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_connected::set_parameters (const TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::set_parameters (const triplets::TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
 {
   m_ddd = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
   m_rrr = move(Triplet::Create(tripletType, r12, r12_binSize, r13, r13_binSize, nbins));
@@ -82,7 +81,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::set_parame
 // ============================================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
 {
   (void)seed;
   
@@ -123,7 +122,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (c
 // ============================================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const vector<vector<double>> weight, const bool doJK, const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
 {
   (void)seed;
   
@@ -201,7 +200,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (c
 // ============================================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const cbl::measure::ErrorType errorType, const string dir_output_triplets, const vector<string> dir_input_triplets, const int nResamplings, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const cbl::measure::ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
 {  
 
   switch(errorType) {
@@ -251,7 +250,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (c
 // ============================================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_connected::write (const string dir, const string file) const
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::write (const std::string dir, const std::string file) const
 {      
   checkDim(m_scale, m_ddd->nbins(), "scale");
 
@@ -272,7 +271,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::write (con
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_connected::write_covariance (const string dir, const string file) const
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::write_covariance (const std::string dir, const std::string file) const
 {
   m_dataset->write_covariance(dir, file);
 }

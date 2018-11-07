@@ -67,7 +67,7 @@ namespace cbl {
       protected:
 
         /// input data to be modelled
-        std::shared_ptr<data::Data> m_data=NULL;
+        std::shared_ptr<data::Data> m_data = NULL;
 
         /// check if fit range has been set
         bool m_fit_range = false;
@@ -76,7 +76,7 @@ namespace cbl {
         std::shared_ptr<data::Data> m_data_fit;
 
         /// input model
-        std::shared_ptr<statistics::Model> m_model=NULL;
+        std::shared_ptr<statistics::Model> m_model = NULL;
 
         /// likelihood
         std::shared_ptr<statistics::Likelihood> m_likelihood = NULL;
@@ -92,7 +92,7 @@ namespace cbl {
 	 *
 	 *  @param prior_distribution vector containing the prior distributions
          *
-         *  @return none
+	 *  @return none
          */
         void m_set_prior (std::vector<statistics::PriorDistribution> prior_distribution);
 
@@ -101,7 +101,7 @@ namespace cbl {
 	 *
 	 *  @param seed the seed
          *
-         *  @return none
+	 *  @return none
          */
         void m_set_posterior (const int seed);
 
@@ -150,10 +150,16 @@ namespace cbl {
         }
 
         /**
-         * @brief return the parameters
+         * @brief return the likelihood parameters
          * @return pointer to the likelihood parameters
          */    
-        std::shared_ptr<statistics::ModelParameters> parameters () { return m_model->parameters(); }
+        std::shared_ptr<statistics::ModelParameters> likelihood_parameters ();
+
+        /**
+         * @brief return the posterior parameters
+         * @return pointer to the posterior parameters
+         */    
+        std::shared_ptr<statistics::ModelParameters> posterior_parameters ();
 
         ///@}
 
@@ -256,11 +262,13 @@ namespace cbl {
 	 *
 	 *  @param tol the tolerance to find convergence
 	 *
+	 *  @param epsilon the relative fraction of the interval size
+	 *
 	 *  @param seed the seed
-         *
-         *  @return none
+	 *
+	 *  @return none
          */
-        void maximize_posterior (const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const int seed=34123);
+        void maximize_posterior (const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3, const int seed=34123);
 
         /**
          * @brief sample the posterior initializing the chains

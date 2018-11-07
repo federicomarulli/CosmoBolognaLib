@@ -63,14 +63,13 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_projected::set_model_l
   vector<statistics::PriorDistribution> priors = {alpha_prior, fsigma8_prior, bsigma8_prior};
 
   // input data used to construct the model
-  m_data_model.poly_order = 0;
-  auto inputs = make_shared<STR_data_model>(m_data_model);
+  m_data_model->poly_order = 0;
 
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear, nparameters, parameterType, parameterName, inputs));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi0_linear, nparameters, parameterType, parameterName, m_data_model));
 }
 
 
@@ -81,13 +80,13 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_projected::set_fiducia
 {
   coutCBL << "Setting up the fiducial model for the projected correlation function of the dark matter" << endl;
 
-  const vector<double> rad = logarithmic_bin_vector(m_data_model.step, max(m_data_model.r_min, 1.e-4), min(m_data_model.r_max, 100.));
-  vector<double> wpDM(m_data_model.step);
+  const vector<double> rad = logarithmic_bin_vector(m_data_model->step, max(m_data_model->r_min, 1.e-4), min(m_data_model->r_max, 100.));
+  vector<double> wpDM(m_data_model->step);
   
-  for (size_t i=0; i<(size_t)m_data_model.step; i++) 
-    wpDM[i] = m_data_model.cosmology->wp_DM(rad[i], m_data_model.method_Pk, m_data_model.redshift, m_data_model.pi_max, m_data_model.output_root, m_data_model.NL, m_data_model.norm, m_data_model.r_min, m_data_model.r_max, m_data_model.k_min, m_data_model.k_max, m_data_model.aa, m_data_model.GSL, m_data_model.prec, m_data_model.file_par);
+  for (size_t i=0; i<(size_t)m_data_model->step; i++) 
+    wpDM[i] = m_data_model->cosmology->wp_DM(rad[i], m_data_model->method_Pk, m_data_model->redshift, m_data_model->pi_max, m_data_model->output_root, m_data_model->NL, m_data_model->norm, m_data_model->r_min, m_data_model->r_max, m_data_model->k_min, m_data_model->k_max, m_data_model->aa, m_data_model->GSL, m_data_model->prec, m_data_model->file_par);
   
-  m_data_model.func_xi = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, wpDM, "Spline"));
+  m_data_model->func_xi = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, wpDM, "Spline"));
 }
 
 

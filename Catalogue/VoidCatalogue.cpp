@@ -338,7 +338,7 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
   */
   } // End of RIVA method
 
-  else ErrorCBL (" Algorithm type is not correct! ");
+  else ErrorCBL ("Error in cbl::catalogue::Catalogue::Catalogue() in VoidCatalogue.cpp: algorithm type is not correct!");
 
   // --------------------------------------------- //
   // ---------------- Second Step ---------------- //
@@ -814,7 +814,7 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
     }
   }
  
-  if (2*control3<control1+control2+control3+control4+control5) ErrorCBL("Error in cbl::catalogue::Catalogue VoidCatalogue.cpp: too sparse sample or too small/large range of values");
+  if (2*control3<control1+control2+control3+control4+control5) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in VoidCatalogue.cpp: too sparse sample or too small/large range of values");
    
   fout_subvoids.clear(); fout_subvoids.close();
 
@@ -826,7 +826,7 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
   cout << endl;
   coutCBL << "* * * Identification of voids * * *" << endl;
   
-  if (subvoids_number==0) ErrorCBL ("Error in cbl::catalogue::Catalogue VoidCatalogue.cpp: no subvoids were found");
+  if (subvoids_number==0) ErrorCBL ("Error in cbl::catalogue::Catalogue::Catalogue() in VoidCatalogue.cpp: no subvoids were found");
   
 // // //   int max_ID = *max_element(number_host_subvoids.begin(), number_host_subvoids.end());
 // // //   
@@ -897,7 +897,7 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 
 /////////////////////////////////// Tommaso Ronconi //////////////////////////////////////////
 
-cbl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_voidCatalogue, const vector<bool> clean, const vector<double> delta_r, const double threshold, const double statistical_relevance, bool rescale, const shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const double ratio, const bool checkoverlap, const Var ol_criterion)
+cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const std::vector<bool> clean, const std::vector<double> delta_r, const double threshold, const double statistical_relevance, bool rescale, const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const double ratio, const bool checkoverlap, const Var ol_criterion)
 {
 
   auto catalogue = input_voidCatalogue;
@@ -907,7 +907,7 @@ cbl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_voidCata
   // ---------------- Cleaning Procedure ---------------- //
   // ---------------------------------------------------- //
 
-  if (clean.size() != 3) ErrorCBL("Error in Catalogue of Catalogue.cpp: wrong vector size!");  
+  if (clean.size() != 3) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in Catalogue.cpp: wrong vector size!");  
   if (clean[0] || clean[1] || clean[2]) {
     vector<int> counter(clean.size(), 0);
     vector<bool> remove(catalogue->nObjects(), false);
@@ -1054,7 +1054,7 @@ cbl::catalogue::Catalogue::Catalogue (const shared_ptr<Catalogue> input_voidCata
 
     if (ol_criterion == Var::_CentralDensity_) catalogue->sort(ol_criterion, false);
     else if (ol_criterion == Var::_DensityContrast_) catalogue->sort(ol_criterion, true);
-    else ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue()! Allowed overlap criteria are '_CentralDensity_' or '_DensityContrast_' .");
+    else ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in VoidCatalogue.cpp: allowed overlap criteria are '_CentralDensity_' or '_DensityContrast_' .");
     
     vector<bool> remove(catalogue->nObjects(), false);
     

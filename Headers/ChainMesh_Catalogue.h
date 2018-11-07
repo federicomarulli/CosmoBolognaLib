@@ -74,7 +74,10 @@ namespace cbl {
        *  @param rmax the maximum separation
        *  @return object of class ChainMesh_Catalogue
        */
-      ChainMesh_Catalogue (const double cell_size, std::shared_ptr<catalogue::Catalogue> cat, const double rmax);
+      ChainMesh_Catalogue (const double cell_size, std::shared_ptr<catalogue::Catalogue> cat, const double rmax) : ChainMesh(cell_size, 3)
+	{
+	  set_par(cell_size, cat, rmax); 
+	}
 
       /**
        *  @brief default destructor

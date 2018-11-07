@@ -51,7 +51,7 @@ using namespace twopt;
 // ============================================================================
 
 
-shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_wedges::data_with_extra_info (const vector<double> rad, const vector<double> wedges, const vector<double> error) const
+std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_wedges::data_with_extra_info (const std::vector<double> rad, const std::vector<double> wedges, const std::vector<double> error) const
 {
   auto dd2D = cbl::measure::twopt::TwoPointCorrelation2D_polar::m_dd;
   
@@ -99,7 +99,7 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_wedges::data_wit
 // ============================================================================================
 
 
-vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xx () const
+std::vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xx () const
 {
   vector<double> rad, xx; m_dataset->xx(rad);
 
@@ -113,7 +113,7 @@ vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xx () const
 // ============================================================================================
 
 
-vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xiPerpendicular () const
+std::vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xiPerpendicular () const
 {
   vector<double> vv; 
   m_dataset->data(vv);
@@ -132,7 +132,7 @@ vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xiPerpendicular 
 // ============================================================================================
 
 
-vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::errorPerpendicular () const
+std::vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::errorPerpendicular () const
 {
 vector<double> vv; 
   m_dataset->error(vv);
@@ -151,7 +151,7 @@ vector<double> vv;
 // ============================================================================================
 
 
-vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xiParallel () const 
+std::vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xiParallel () const 
 {
 vector<double> vv; 
   m_dataset->data(vv);
@@ -170,7 +170,7 @@ vector<double> vv;
 // ============================================================================================
 
 
-vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::errorParallel () const 
+std::vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::errorParallel () const 
 {
   vector<double> vv; 
   m_dataset->error(vv);
@@ -189,7 +189,7 @@ vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::errorParallel ()
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_wedges::write (const string dir, const string file, const int rank) const 
+void cbl::measure::twopt::TwoPointCorrelation_wedges::write (const std::string dir, const std::string file, const int rank) const 
 {
   (void)rank;
   
@@ -227,7 +227,7 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::write (const string dir, c
 // ============================================================================================
 
 
-shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_wedges::Wedges (const vector<double> rr, const vector<double> mu, const vector<vector<double> > xi, const vector<vector<double> > error_xi)
+std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_wedges::Wedges (const std::vector<double> rr, const std::vector<double> mu, const std::vector<std::vector<double> > xi, const std::vector<std::vector<double> > error_xi)
 {
   double binSize = mu[1]-mu[0];
   int muSize = mu.size();
@@ -261,7 +261,7 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_wedges::Wedges (
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_wedges::measure(const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation_wedges::measure(const ErrorType errorType, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
     case (ErrorType::_Poisson_) :
@@ -282,7 +282,7 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::measure(const ErrorType er
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_wedges::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation_wedges::measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   // ----------- measure the 2D two-point correlation function, xi(rp,pi) ----------- 
 
@@ -298,7 +298,7 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::measurePoisson (const stri
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_wedges::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation_wedges::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   if (dir_output_resample != par::defaultString) {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -362,7 +362,7 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::measureJackknife (const st
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_wedges::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation_wedges::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (dir_output_resample != par::defaultString) {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -426,7 +426,7 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::measureBootstrap (const in
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelation_wedges::XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr)
+std::vector<std::shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelation_wedges::XiJackknife (const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr)
 {
   vector<shared_ptr<data::Data> > data;
 
@@ -447,7 +447,7 @@ vector<shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelation_wedges:
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelation_wedges::XiJackknife (const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr)
+std::vector<std::shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelation_wedges::XiJackknife (const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const std::vector<std::shared_ptr<pairs::Pair> > dr)
 {
   vector<shared_ptr<data::Data> > data;
   
@@ -468,7 +468,7 @@ vector<shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelation_wedges:
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelation_wedges::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const int seed)
+std::vector<std::shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelation_wedges::XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const int seed)
 {
   vector<shared_ptr<data::Data> > data;
   
@@ -489,7 +489,7 @@ vector<shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelation_wedges:
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelation_wedges::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair> > dd, const vector<shared_ptr<pairs::Pair> > rr, const vector<shared_ptr<pairs::Pair> > dr, const int seed)
+std::vector<std::shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelation_wedges::XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const std::vector<std::shared_ptr<pairs::Pair> > dr, const int seed)
 {
   vector<shared_ptr<data::Data> > data;
   
@@ -510,7 +510,7 @@ vector<shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelation_wedges:
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_wedges::read_covariance (const string dir, const string file)
+void cbl::measure::twopt::TwoPointCorrelation_wedges::read_covariance (const std::string dir, const std::string file)
 {
   m_dataset->set_covariance(dir+file);
 }
@@ -519,7 +519,7 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::read_covariance (const str
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_wedges::write_covariance (const string dir, const string file) const
+void cbl::measure::twopt::TwoPointCorrelation_wedges::write_covariance (const std::string dir, const std::string file) const
 {
   m_dataset->write_covariance(dir, file);
 }
@@ -528,7 +528,7 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::write_covariance (const st
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_wedges::compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK)
+void cbl::measure::twopt::TwoPointCorrelation_wedges::compute_covariance (const std::vector<std::shared_ptr<data::Data>> xi, const bool JK)
 {
   vector<vector<double>> Xi;
 
@@ -545,7 +545,7 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::compute_covariance (const 
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_wedges::compute_covariance (const vector<string> file, const bool JK)
+void cbl::measure::twopt::TwoPointCorrelation_wedges::compute_covariance (const std::vector<std::string> file, const bool JK)
 {
   vector<double> rad, mean;
   vector<vector<double>> cov_mat;

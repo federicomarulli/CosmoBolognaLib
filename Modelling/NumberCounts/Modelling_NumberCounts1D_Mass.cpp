@@ -47,6 +47,41 @@ using namespace modelling::numbercounts;
 // ===========================================================================================
 
 
+void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_data_model_snapshot (const cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double k_min, const double k_max, const int step,  const std::string output_dir, const int norm, const double Delta, const bool isDelta_vir, const std::string model_MF, const double Volume, const double Mass_min, const double Mass_max, const int Mass_step, const double prec)
+{
+  m_data_model.isSnapshot = true;
+
+  m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  m_data_model.redshift = redshift;
+  m_data_model.method_Pk = method_Pk;
+  m_data_model.k_min = k_min;
+  m_data_model.k_max = k_max;
+  m_data_model.step = step;
+  m_data_model.kk = logarithmic_bin_vector(step, k_min, k_max);
+  m_data_model.norm = norm;
+  
+  m_data_model.output_dir = output_dir;
+  m_data_model.output_root = "test";
+  m_data_model.file_par = par::defaultString;
+
+  m_data_model.isDelta_Vir = isDelta_vir;
+  m_data_model.Delta = Delta;
+  m_data_model.model_MF = model_MF;
+
+  m_data_model.Volume = Volume;
+
+  m_data_model.Mass_min = Mass_min;
+  m_data_model.Mass_max = Mass_max;
+  m_data_model.Mass_step = Mass_step;
+  m_data_model.Mass_vector = logarithmic_bin_vector(200, 1.e10, 1.e16);
+
+  m_data_model.prec = prec;
+}
+
+
+// ===========================================================================================
+
+
 void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior)
 {
   m_data_model.Cpar = cosmo_param;
@@ -70,13 +105,16 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_model_Numb
   switch (m_HistogramType) {
 
     case (glob::HistogramType::_N_V_):
-      m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
+      if (m_data_model.isSnapshot == true)
+	m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_mass_snapshot, nParams, cosmoPar_type, cosmoPar_string, inputs));
+      else
+	m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
       break;
     case (glob::HistogramType::_n_V_):
       m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_density_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
       break;
     case (glob::HistogramType::_dn_dV_):
-      m_model = make_shared<statistics::Model1D>(statistics::Model1D(&mass_function_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
+      m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_density_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
       break;
     default:
       ErrorCBL("Error in set_model_NumberCounts_cosmology of Modelling_NumberCounts1D_Mass.cpp: no such a variable in the list!");

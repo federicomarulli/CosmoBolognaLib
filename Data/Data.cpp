@@ -76,7 +76,7 @@ void cbl::data::Data::reset (const int ndata)
 // ======================================================================================
 
 
-cbl::data::Data::Data (const DataType dataType, const vector<double> data) 
+cbl::data::Data::Data (const DataType dataType, const std::vector<double> data) 
 {
   m_dataType = dataType;
   reset(data.size());
@@ -88,7 +88,7 @@ cbl::data::Data::Data (const DataType dataType, const vector<double> data)
 // ======================================================================================
 
 
-cbl::data::Data::Data (const DataType dataType, const vector<double> data, const vector<double> error) 
+cbl::data::Data::Data (const DataType dataType, const std::vector<double> data, const std::vector<double> error) 
 {
   m_dataType = dataType;
   reset(data.size());
@@ -102,7 +102,7 @@ cbl::data::Data::Data (const DataType dataType, const vector<double> data, const
 // ======================================================================================
 
 
-cbl::data::Data::Data (const DataType dataType, const vector<double> data, const vector<vector<double>> covariance) 
+cbl::data::Data::Data (const DataType dataType, const std::vector<double> data, const std::vector<std::vector<double>> covariance) 
 {
   m_dataType = dataType;
   reset(data.size());
@@ -116,7 +116,7 @@ cbl::data::Data::Data (const DataType dataType, const vector<double> data, const
 // ======================================================================================
 
 
-vector<vector<double>> cbl::data::Data::correlation() const
+std::vector<std::vector<double>> cbl::data::Data::correlation() const
 {
   vector<vector<double>> corr(m_ndata, vector<double>(m_ndata,0));
 
@@ -131,7 +131,7 @@ vector<vector<double>> cbl::data::Data::correlation() const
 // ======================================================================================
 
 
-void cbl::data::Data::set_data(const vector<double> data)
+void cbl::data::Data::set_data(const std::vector<double> data)
 {
   checkDim(data, m_ndata, "data");
   m_data = data;
@@ -141,7 +141,7 @@ void cbl::data::Data::set_data(const vector<double> data)
 // ======================================================================================
 
 
-void cbl::data::Data::set_error(const vector<double> error)
+void cbl::data::Data::set_error(const std::vector<double> error)
 {
   checkDim(error, m_ndata, "error");
   m_error = error;
@@ -151,7 +151,7 @@ void cbl::data::Data::set_error(const vector<double> error)
 // ======================================================================================
 
 
-void cbl::data::Data::set_error(const vector<vector<double>> covariance)
+void cbl::data::Data::set_error(const std::vector<std::vector<double>> covariance)
 {
   checkDim(covariance, m_ndata, m_ndata, "covariance");
 
@@ -164,7 +164,7 @@ void cbl::data::Data::set_error(const vector<vector<double>> covariance)
 // ======================================================================================
 
 
-void cbl::data::Data::set_covariance (const vector<double> error)
+void cbl::data::Data::set_covariance (const std::vector<double> error)
 {
   checkDim(error, m_ndata, "error");
 
@@ -176,7 +176,7 @@ void cbl::data::Data::set_covariance (const vector<double> error)
 // ======================================================================================
 
 
-void cbl::data::Data::set_covariance (const vector<vector<double>> covariance)
+void cbl::data::Data::set_covariance (const std::vector<std::vector<double>> covariance)
 {
   checkDim(covariance, m_ndata, m_ndata, "covariance");
 
@@ -188,7 +188,7 @@ void cbl::data::Data::set_covariance (const vector<vector<double>> covariance)
 // ======================================================================================
 
 
-void cbl::data::Data::set_covariance (const string filename, const int cov_col, const int skipped_lines)
+void cbl::data::Data::set_covariance (const std::string filename, const int cov_col, const int skipped_lines)
 {  
   ifstream fin(filename.c_str()); checkIO(fin, filename);
   string line;
@@ -219,7 +219,7 @@ void cbl::data::Data::set_covariance (const string filename, const int cov_col, 
 // ======================================================================================
 
 
-void cbl::data::Data::cut (const vector<bool> mask, vector<double> &data, vector<double> &error, vector<vector<double>> &covariance_matrix) const
+void cbl::data::Data::cut (const std::vector<bool> mask, std::vector<double> &data, std::vector<double> &error, std::vector<std::vector<double>> &covariance_matrix) const
 {
   checkDim (mask, m_ndata, "mask");
 
@@ -258,7 +258,7 @@ void cbl::data::Data::cut (const vector<bool> mask, vector<double> &data, vector
 // ============================================================================
 
 
-shared_ptr<data::Data> cbl::data::join_dataset (vector<shared_ptr<data::Data>> dataset)
+shared_ptr<data::Data> cbl::data::join_dataset (std::vector<std::shared_ptr<data::Data>> dataset)
 {
   if (dataset.size()<2)
     cbl::ErrorCBL("Error in join_dataset(). You must provide at least 2 dataset");
@@ -291,7 +291,7 @@ shared_ptr<data::Data> cbl::data::join_dataset (vector<shared_ptr<data::Data>> d
 // ============================================================================
 
 
-shared_ptr<data::Data> cbl::data::join_dataset_1D(vector<shared_ptr<data::Data>> dataset)
+shared_ptr<data::Data> cbl::data::join_dataset_1D(std::vector<std::shared_ptr<data::Data>> dataset)
 {
   int ndataset = (int)dataset.size();
   int ndata = 0;
@@ -327,7 +327,7 @@ shared_ptr<data::Data> cbl::data::join_dataset_1D(vector<shared_ptr<data::Data>>
 // ============================================================================
 
 
-shared_ptr<data::Data> data::join_dataset_1D_extra (vector<shared_ptr<data::Data>> dataset)
+shared_ptr<data::Data> data::join_dataset_1D_extra (std::vector<std::shared_ptr<data::Data>> dataset)
 {
   ErrorCBL("Error in join_dataset_1D_extra, work in progress!");
   int ndataset = (int)dataset.size();

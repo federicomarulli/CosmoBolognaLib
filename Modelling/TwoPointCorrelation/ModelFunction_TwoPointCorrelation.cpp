@@ -43,7 +43,7 @@ using namespace cbl;
 // ============================================================================================
 
 
-double cbl::modelling::twopt::Pkmu (const double kk, const double mu, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const shared_ptr<cbl::glob::FuncGrid> Pk, const shared_ptr<cbl::glob::FuncGrid> Pk_NW)
+double cbl::modelling::twopt::Pkmu_DeWiggled (const double kk, const double mu, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double linear_growth_rate, const double bias, const double SigmaS, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const std::shared_ptr<cbl::glob::FuncGrid> Pk_NW)
 {
   const double beta = linear_growth_rate/bias;
   const double FF = alpha_par/alpha_perp;
@@ -53,52 +53,116 @@ double cbl::modelling::twopt::Pkmu (const double kk, const double mu, const doub
   const double mup = mu/FF/fact;
 
   const double KaiserBoost = pow(1.+mup*mup*beta, 2);
-  const double sigmaNL2 = 0.5*((1.-mup*mup)*sigmaNL_perp*sigmaNL_perp+mup*mup*sigmaNL_par*sigmaNL_par);
+  const double sigmaNL2 = 0.5*((1.-mup*mup)*sigmaNL_perp*sigmaNL_perp+mu*mu*sigmaNL_par*sigmaNL_par);
 
   const double Fstreaming = pow(1+kp*kp*mup*mup*linear_growth_rate*linear_growth_rate*SigmaS*SigmaS, -2);
 
   const double sigmaNL = sqrt(sigmaNL_perp*sigmaNL_perp+sigmaNL_par*sigmaNL_par);
-  const double _Pk = (sigmaNL<1.e-5) ? Pk->operator()(kp) : (Pk->operator()(kp)-Pk_NW->operator()(kp))*exp(-kp*kp*sigmaNL2)+Pk_NW->operator()(kp);
+  const double _Pk = (sigmaNL<1.e-5) ? Pk->operator()(kp) : (Pk->operator()(kp)-Pk_NW->operator()(kp))*exp(-kk*kk*sigmaNL2)+Pk_NW->operator()(kp);
 
-  return bias*bias*KaiserBoost*Fstreaming*_Pk*exp(-kk*kk*mu*mu*zErr*zErr);
+  return bias*bias*KaiserBoost*Fstreaming*_Pk;
 }
 
 
 // ============================================================================================
 
 
-double cbl::modelling::twopt::Pk_l (const double kk, const int order, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const shared_ptr<cbl::glob::FuncGrid> Pk, const shared_ptr<cbl::glob::FuncGrid> Pk_NW, const double prec)
+double cbl::modelling::twopt::Pkmu_ModeCoupling (const double kk, const double mu, const double alpha_perp, const double alpha_par, const double linear_growth_rate, const double bias, const double SigmaV, const double AMC, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const std::shared_ptr<cbl::glob::FuncGrid> Pk_1loop)
+{
+  const double beta = linear_growth_rate/bias;
+  const double FF = alpha_par/alpha_perp;
+  const double fact = sqrt(1.+mu*mu*(pow(FF, -2)-1));
+
+  const double kp = kk/alpha_perp*fact;
+  const double mup = mu/FF/fact;
+
+  const double KaiserBoost = pow(1.+mup*mup*beta, 2);
+  const double Fstreaming = pow(1+kp*kp*mup*mup*linear_growth_rate*linear_growth_rate*SigmaV*SigmaV, -2);
+  double Pk_NL = bias*bias*(Pk->operator()(kp)*exp(-kp*kp*SigmaV*SigmaV));
+  if (kp<5)
+    Pk_NL += bias*bias*AMC*Pk_1loop->operator()(kp)*pow(2.*par::pi, -3);
+
+  return KaiserBoost*Fstreaming*Pk_NL;
+}
+
+
+// ============================================================================================
+
+
+double cbl::modelling::twopt::Pkmu (const double kk, const double mu, const int model, const std::vector<double> parameters, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp)
+{
+  if (model == 0) //Dewiggled model
+    return Pkmu_DeWiggled(kk, mu, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6], pk_interp[0], pk_interp[1]);
+  else if (model == 1) // Mode coupling model
+    return Pkmu_ModeCoupling(kk, mu, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], pk_interp[0], pk_interp[1]);
+  else 
+    ErrorCBL("Error in Pkmu of ModelFunction_TwoPointCorrelation.cpp, no such model for redshif-space distortion power spectrum!");
+  return 0.;
+}
+
+
+// ============================================================================================
+
+
+double cbl::modelling::twopt::Pk_l (const double kk, const int order, const int model, const std::vector<double> parameters, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
 {
   auto integrand = [&] (const double mu)
   {
-    return modelling::twopt::Pkmu(kk, mu, alpha_perp, alpha_par, sigmaNL_perp, sigmaNL_par, bias, linear_growth_rate, SigmaS, zErr, Pk, Pk_NW)*legendre_polynomial(mu, order);
+    return modelling::twopt::Pkmu(kk, mu, model, parameters, pk_interp)*legendre_polynomial(mu, order);
   };
 
   return 0.5*(2*order+1)*gsl::GSL_integrate_qag(integrand, -1., 1., prec);
 }
 
+// ============================================================================================
+
+
+std::vector<double> cbl::modelling::twopt::Pk_l (const std::vector<double> kk, const int order, const int model, const std::vector<double> parameters, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
+{
+  vector<double> Pkl(kk.size(), 0);
+
+  for (size_t i=0; i<kk.size(); i++) {
+
+    auto integrand = [&] (const double mu)
+    {
+      return modelling::twopt::Pkmu(kk[i], mu, model, parameters, pk_interp)*legendre_polynomial(mu, order);
+    };
+
+    Pkl[i] = 0.5*(2*order+1)*gsl::GSL_integrate_qag(integrand, -1., 1., prec);
+  }
+
+  return Pkl;
+}
+
 
 // ============================================================================================
 
 
-vector<vector<double>> cbl::modelling::twopt::Xi_l (const vector<vector<double>> rr, const int nmultipoles, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const vector<double> kk, const shared_ptr<cbl::glob::FuncGrid> Pk, const shared_ptr<cbl::glob::FuncGrid> Pk_NW, const double prec)
+cbl::glob::FuncGrid cbl::modelling::twopt::Xil_interp (const std::vector<double> kk, const int order, const int model, const std::vector<double> parameters, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
 {
-  checkDim(rr, nmultipoles, "rad");
-  vector<vector<double>> Xil(nmultipoles);
-  
+  vector<double> Pkl = Pk_l (kk, order, model, parameters, pk_interp, prec);
+  vector<double> rr, Xil;
+
+  cbl::fftlog::transform_FFTlog(rr, Xil, 1, kk, Pkl, order);
+
+  cbl::glob::FuncGrid interp(rr, Xil, "Spline");
+
+  return interp;
+}
+
+
+// ============================================================================================
+
+
+std::vector<std::vector<double>> cbl::modelling::twopt::Xi_l (const std::vector<double> rr, const int nmultipoles, const int model, const std::vector<double> parameters, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
+{
+  vector<vector<double>> Xil(3);
+
   for (int i=0; i<nmultipoles; i++) {
-    int order = i*2;
-    const int sign = pow(complex<double>(0., 1.), order).real();
-
-    vector<double> Pkl;
-
-    for (size_t j=0; j<kk.size(); j++)
-      Pkl.push_back(modelling::twopt::Pk_l(kk[j], order, alpha_perp, alpha_par, sigmaNL_perp, sigmaNL_par, bias, linear_growth_rate, SigmaS, zErr, Pk, Pk_NW, prec));
-
-    vector<double> xx = fftlog::transform_FFTlog(rr[i], 1, kk, Pkl, order);
-    
-    for (size_t j=0; j<rr[i].size(); j++)
-      Xil[i].push_back(sign*xx[j]);
+    double sign = (i%2==0) ? 1 : -1;
+    Xil[i] = Xil_interp(pk_interp[0]->x(), 2*i, model, parameters, pk_interp, prec).eval_func(rr);
+    for (size_t j=0; j<rr.size(); j++)
+      Xil[i][j] *= sign;
   }
 
   return Xil;
@@ -108,26 +172,62 @@ vector<vector<double>> cbl::modelling::twopt::Xi_l (const vector<vector<double>>
 // ============================================================================================
 
 
-vector<vector<double>> cbl::modelling::twopt::Xi_l (const vector<double> rr, const int nmultipoles, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const vector<double> kk, const shared_ptr<cbl::glob::FuncGrid> Pk, const shared_ptr<cbl::glob::FuncGrid> Pk_NW, const double prec)
+std::vector<double> cbl::modelling::twopt::Xi_l (const std::vector<double> rr, const std::vector<int> dataset_order, const std::vector<bool> use_pole, const int model, const std::vector<double> parameters, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
 {
-  vector<vector<double>> rad(nmultipoles, rr);
+  vector<cbl::glob::FuncGrid> interp_Xil(3);
+  vector<double> sign={1., -1., 1.};
+  
+  for (size_t i=0; i<3; i++){
+    if (use_pole[i])
+      interp_Xil[i] = Xil_interp(pk_interp[0]->x(), 2*i, model, parameters, pk_interp, prec);
+  }
 
-  return Xi_l(rad, nmultipoles, alpha_perp, alpha_par, sigmaNL_perp, sigmaNL_par, bias, linear_growth_rate, SigmaS, zErr, kk, Pk, Pk_NW, prec);
+  vector<double> Xil(rr.size());
+  
+  for (size_t i=0; i<rr.size(); i++) 
+    Xil[i] = sign[dataset_order[i]]*interp_Xil[dataset_order[i]](rr[i]);
+
+  return Xil;
 }
 
 
 // ============================================================================================
 
 
-vector<vector<double>> cbl::modelling::twopt::Xi_wedges (const vector<double> rr, const int nwedges, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const vector<double> kk, const shared_ptr<cbl::glob::FuncGrid> Pk, const shared_ptr<cbl::glob::FuncGrid> Pk_NW, const double prec)
+std::vector<double> cbl::modelling::twopt::Xi_wedges (const std::vector<double> rr, const std::vector<int> dataset_wedge, const int nwedges, const int model, const std::vector<double> parameters, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
 {
-  vector<vector<double>> Xil = modelling::twopt::Xi_l(rr, 3, alpha_perp, alpha_par, sigmaNL_perp, sigmaNL_par, bias, linear_growth_rate, SigmaS, zErr, kk, Pk, Pk_NW, prec);
+  vector<cbl::glob::FuncGrid> interp_Xil(3);
+  for (size_t i=0; i<3; i++)
+    interp_Xil[i] = Xil_interp(pk_interp[0]->x(), 2*i, model, parameters, pk_interp, prec);
 
-  vector<vector<double>> XiW(nwedges, vector<double>(rr.size(),0));
+  vector<double> XiW(rr.size());
+
+  for (size_t i=0; i<rr.size(); i++) {
+    double mu_min = double(dataset_wedge[i])/nwedges;
+    double mu_max = double(dataset_wedge[i]+1)/nwedges;
+
+    double f2 = -0.5*((pow(mu_max, 3)-pow(mu_min,3))/(mu_max-mu_min)-1.);
+    double f4 = 0.125*( ( 7.*(pow(mu_max, 5)-pow(mu_min,5)) - 10.*(pow(mu_max, 3)-pow(mu_min,3)))/(mu_max-mu_min)+3.);
+
+    XiW[i] = (interp_Xil[0](rr[i])+f2*interp_Xil[1](rr[i])+f4*interp_Xil[2](rr[i]));
+  }
+
+  return XiW;
+}
+
+
+// ============================================================================================
+
+
+std::vector<std::vector<double>> cbl::modelling::twopt::Xi_wedges (const std::vector<double> rr, const int nwedges, const int model, const std::vector<double> parameters, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
+{
+  vector<vector<double>> Xil = Xi_l(rr, 3, model, parameters, pk_interp, prec);
+
+  vector<vector<double>> XiW(nwedges, vector<double>(rr.size(), 0));
 
   for (int i=0; i<nwedges; i++) {
-    double mu_min = i*1./nwedges;
-    double mu_max = (i+1)*1./nwedges;
+    double mu_min = double(i)/nwedges;
+    double mu_max = double(i+1)/nwedges;
 
     double f2 = 0.5*((pow(mu_max, 3)-pow(mu_min,3))/(mu_max-mu_min)-1.);
     double f4 = 0.125*( ( 7.*(pow(mu_max, 5)-pow(mu_min,5)) - 10.*(pow(mu_max, 3)-pow(mu_min,3)))/(mu_max-mu_min)+3.);
@@ -143,18 +243,17 @@ vector<vector<double>> cbl::modelling::twopt::Xi_wedges (const vector<double> rr
 // ============================================================================================
 
 
-vector<vector<double>> cbl::modelling::twopt::Xi_rppi (const vector<double> rp, const vector<double> pi, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const vector<double> kk, const shared_ptr<cbl::glob::FuncGrid> Pk, const shared_ptr<cbl::glob::FuncGrid> Pk_NW, const double prec)
+std::vector<std::vector<double>> cbl::modelling::twopt::Xi_rppi (const std::vector<double> rp, const std::vector<double> pi, const int model, const std::vector<double> parameters, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
 {
   const int nr=200;
   const int nmultipoles = 3;
+  vector<double> sign = {1., -1., 1.};
   vector<double> rr = linear_bin_vector(nr, min(Min(rp), Min(pi))*0.999, sqrt(Max(rp)*Max(rp)+Max(pi)*Max(pi))*1.001);
-  
-  vector<vector<double>> Xil = Xi_l(rr, nmultipoles, alpha_perp, alpha_par, sigmaNL_perp, sigmaNL_par, bias, linear_growth_rate, SigmaS, zErr, kk, Pk, Pk_NW, prec); 
 
-  vector<shared_ptr<glob::FuncGrid>> Xil_interp(nmultipoles);
+  vector<glob::FuncGrid> interp_Xil(nmultipoles);
 
   for (size_t i=0; i<nmultipoles; i++)
-    Xil_interp[i] = make_shared<glob::FuncGrid>(glob::FuncGrid(rr, Xil[i], "Spline"));
+    interp_Xil[i] = Xil_interp(pk_interp[0]->x(), 2*i, model, parameters, pk_interp, prec);
 
   vector<vector<double>> xi_rppi(rp.size(), vector<double>(pi.size(), 0));
 
@@ -163,7 +262,7 @@ vector<vector<double>> cbl::modelling::twopt::Xi_rppi (const vector<double> rp, 
       double s = sqrt(rp[i]*rp[i]+pi[j]*pi[j]);
       double mu = pi[j]/s;
       for (int l=0; l<nmultipoles; l++)
-        xi_rppi[i][j] += Xil_interp[l]->operator()(s)*legendre_polynomial (mu, l*2);
+        xi_rppi[i][j] += sign[i]*interp_Xil[l](s)*legendre_polynomial (mu, l*2);
     }
 
   return xi_rppi;
@@ -173,11 +272,11 @@ vector<vector<double>> cbl::modelling::twopt::Xi_rppi (const vector<double> rp, 
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::wp_from_Xi_rppi (const vector<double> rp, const double pimax, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const vector<double> kk, const shared_ptr<cbl::glob::FuncGrid> Pk, const shared_ptr<cbl::glob::FuncGrid> Pk_NW, const double prec) {
+std::vector<double> cbl::modelling::twopt::wp_from_Xi_rppi (const std::vector<double> rp, const double pimax, const int model, const std::vector<double> parameters, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec) {
 
   vector<double> pi = linear_bin_vector(100, 1.e-4, pimax*1.001);
 
-  vector<vector<double>> xi_rppi = modelling::twopt::Xi_rppi(rp, pi, alpha_perp, alpha_par, sigmaNL_perp, sigmaNL_par, bias, linear_growth_rate, SigmaS, zErr, kk, Pk, Pk_NW, prec);
+  vector<vector<double>> xi_rppi = modelling::twopt::Xi_rppi(rp, pi, model, parameters, pk_interp, prec);
   vector<double> wp(rp.size());
 
   for (size_t i=0; i<rp.size(); i++) {
@@ -192,7 +291,7 @@ vector<double> cbl::modelling::twopt::wp_from_Xi_rppi (const vector<double> rp, 
 // ============================================================================================
 
 
-vector<vector<double>> cbl::modelling::twopt::damped_Pk_terms (const vector<double> kk, const double linear_growth_rate, const double SigmaS, const shared_ptr<cbl::glob::FuncGrid> PkDM)
+std::vector<std::vector<double>> cbl::modelling::twopt::damped_Pk_terms (const std::vector<double> kk, const double linear_growth_rate, const double SigmaS, const std::shared_ptr<cbl::glob::FuncGrid> PkDM)
 {
   (void)PkDM;
   double sqrt_pi = sqrt(par::pi);
@@ -215,7 +314,7 @@ vector<vector<double>> cbl::modelling::twopt::damped_Pk_terms (const vector<doub
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::damped_Xi (const vector<double> ss, const double bias, const double linear_growth_rate, const double SigmaS, const vector<double> kk, const shared_ptr<cbl::glob::FuncGrid> PkDM)
+std::vector<double> cbl::modelling::twopt::damped_Xi (const std::vector<double> ss, const double bias, const double linear_growth_rate, const double SigmaS, const std::vector<double> kk, const std::shared_ptr<cbl::glob::FuncGrid> PkDM)
 {
   vector<vector<double>> pk_terms = modelling::twopt::damped_Pk_terms(kk, linear_growth_rate, SigmaS, PkDM);
 

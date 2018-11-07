@@ -2,6 +2,11 @@
 ----- the list of publications that used the CosmoBolognaLib -----
 ------------------------------------------------------------------
 
+19. Sarpa, Schimd, Branchini, Matarrese
+    BAO reconstruction: a swift numerical action method for massive
+    spectroscopic surveys
+    2018, submitted to MNRAS
+
 18. Marulli and the XXL team
     The XXL Survey: XVI. The clustering of X-ray selected galaxy
     clusters at z~0.3

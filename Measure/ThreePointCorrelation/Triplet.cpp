@@ -48,7 +48,7 @@ using namespace triplets;
 // ============================================================================================
 
 
-shared_ptr<Triplet> cbl::triplets::Triplet::Create (const cbl::triplets::TripletType type, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
+std::shared_ptr<Triplet> cbl::triplets::Triplet::Create (const cbl::triplets::TripletType type, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
 {
   if (type==TripletType::_comoving_theta_) return move(unique_ptr<Triplet1D_comoving_theta>{new Triplet1D_comoving_theta(r12, r12_binSize, r13, r13_binSize, nbins)});
   else if (type==TripletType::_comoving_side_)  return move(unique_ptr<Triplet1D_comoving_side>{new Triplet1D_comoving_side(r12, r12_binSize, r13, r13_binSize, nbins)});
@@ -65,7 +65,7 @@ shared_ptr<Triplet> cbl::triplets::Triplet::Create (const cbl::triplets::Triplet
 // ============================================================================================
 
 
-void cbl::triplets::Triplet1D::Sum (const shared_ptr<Triplet> tt, const double ww)  
+void cbl::triplets::Triplet1D::Sum (const std::shared_ptr<Triplet> tt, const double ww)  
 {
   for (size_t i=0; i<m_TT1D.size(); i++) 
     m_TT1D[i] += ww*tt->TT1D(i);	 
@@ -78,13 +78,13 @@ void cbl::triplets::Triplet1D::Sum (const shared_ptr<Triplet> tt, const double w
 
 void cbl::triplets::Triplet1D_comoving_side::set_parameters () 
 {
-  double Lmin = (m_r13-0.5*m_r13_binSize)-(m_r12-0.5*m_r12_binSize);
-  double Lmax = (m_r13+0.5*m_r13_binSize)+(m_r12+0.5*m_r12_binSize);
-  m_binSize = (Lmax-Lmin)/m_nbins;
+  m_min = (m_r13-0.5*m_r13_binSize)-(m_r12+0.5*m_r12_binSize);
+  m_max = (m_r13+0.5*m_r13_binSize)+(m_r12+0.5*m_r12_binSize);
+  m_binSize = (m_max-m_min)/m_nbins;
 
   m_scale.resize(m_nbins);
   for (int i=0; i<m_nbins; i++)
-    m_scale[i] = (m_r12)*(m_r13-1)+((i+0.5)*m_binSize);
+    m_scale[i] = m_min+(i+0.5)*m_binSize;
 }
 
 
@@ -95,7 +95,7 @@ void cbl::triplets::Triplet1D_comoving_side::get_triplet (const double r12, cons
 {
   (void)r12; (void)r13;
   
-  klin = int((r23-m_r12)/m_binSize);
+  klin = int((r23-m_min)/m_binSize);
 }
 
 // ============================================================================================
@@ -113,7 +113,7 @@ void cbl::triplets::Triplet1D_comoving_side::put (const double r12, const double
 {
   (void)r12; (void)r13;
   
-  int klin = int((r23-m_r12)/m_binSize);
+  int klin = int((r23-m_min)/m_binSize);
 
   m_TT1D[klin] += ww;
 }
@@ -122,7 +122,7 @@ void cbl::triplets::Triplet1D_comoving_side::put (const double r12, const double
 // ============================================================================================
 
 
-void cbl::triplets::Triplet1D_comoving_side::put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, const shared_ptr<catalogue::Object> obj3)
+void cbl::triplets::Triplet1D_comoving_side::put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, const std::shared_ptr<catalogue::Object> obj3)
 {
   (void)obj1;
   
@@ -133,7 +133,7 @@ void cbl::triplets::Triplet1D_comoving_side::put (const shared_ptr<catalogue::Ob
   
   double ww = w2*w3;
 
-  int klin = int((r23-m_r12)/m_binSize);
+  int klin = int((r23-m_min)/m_binSize);
 
   m_TT1D[klin] += ww;
 }
@@ -192,7 +192,7 @@ void cbl::triplets::Triplet1D_comoving_theta::put (const double r12, const doubl
 // ============================================================================================
 
 
-void cbl::triplets::Triplet1D_comoving_theta::put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, const shared_ptr<catalogue::Object> obj3) 
+void cbl::triplets::Triplet1D_comoving_theta::put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, const std::shared_ptr<catalogue::Object> obj3) 
 {
   double x1 = obj1->xx(), y1 = obj1->yy(), z1 = obj1->zz(), w1 = obj1->weight();
   double x2 = obj2->xx(), y2 = obj2->yy(), z2 = obj2->zz(), w2 = obj2->weight();
@@ -266,7 +266,7 @@ void cbl::triplets::Triplet1D_comoving_costheta::put (const double r12, const do
 // ============================================================================================
 
 
-void cbl::triplets::Triplet1D_comoving_costheta::put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, const shared_ptr<catalogue::Object> obj3) 
+void cbl::triplets::Triplet1D_comoving_costheta::put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, const std::shared_ptr<catalogue::Object> obj3) 
 {
   double x1 = obj1->xx(), y1 = obj1->yy(), z1 = obj1->zz(), w1 = obj1->weight();
   double x2 = obj2->xx(), y2 = obj2->yy(), z2 = obj2->zz(), w2 = obj2->weight();
@@ -316,7 +316,7 @@ void cbl::triplets::Triplet1D_multipoles_direct::put (const double r12, const do
 // ============================================================================================
 
 
-void cbl::triplets::Triplet1D_multipoles_direct::put (const shared_ptr<catalogue::Object> obj1, const shared_ptr<catalogue::Object> obj2, const shared_ptr<catalogue::Object> obj3) 
+void cbl::triplets::Triplet1D_multipoles_direct::put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, const std::shared_ptr<catalogue::Object> obj3) 
 {
   double x1 = obj1->xx(), y1 = obj1->yy(), z1 = obj1->zz(), w1 = obj1->weight();
   double x2 = obj2->xx(), y2 = obj2->yy(), z2 = obj2->zz(), w2 = obj2->weight();

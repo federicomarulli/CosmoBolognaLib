@@ -68,7 +68,7 @@ vector<double> cbl::statistics::LikelihoodParameters::full_parameters (const vec
   else if (parameter_values.size() == m_nparameters)
     return parameter_values;
   else
-    ErrorCBL("Error in parameters of LikelihoodParameters.cpp, the vector of values of free parameters has the wrong size!");
+    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::full_parameters() of LikelihoodParameters.cpp: the vector of free parameters has the wrong size!");
 
   vector<double> vv;
   return vv;
@@ -111,7 +111,7 @@ void cbl::statistics::LikelihoodParameters::m_set_parameter_type ()
 	break;
 
       default:
-	ErrorCBL("Error in cbl::statistics::LikelihoodParameters of LikelihoodParameters.cpp: no such kind of parameter!");
+	ErrorCBL("Error in cbl::statistics::LikelihoodParameters::m_set_parameter_type() of LikelihoodParameters.cpp: no such kind of parameter!");
     }
   }
 }
@@ -152,16 +152,16 @@ void cbl::statistics::LikelihoodParameters::set_parameters (const size_t nparame
   //Check parameterTypes size
   
   if (nparameters==0)
-    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::set_parameters of ModelParameters.cpp! nparameters should be > 0.");
+    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::set_parameters() of ModelParameters.cpp! nparameters should be > 0.");
 
   if ((parameterTypes.size()!=nparameters) && (parameterTypes.size()!=0))
-    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::set_parameters of ModelParameters.cpp! Wrong size for the vector parameterTypes.");
+    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::set_parameters() of ModelParameters.cpp! Wrong size for the vector parameterTypes.");
 
   if ((parameterNames.size()!=nparameters) && (parameterNames.size()!=0))
-    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::set_parameters of ModelParameters.cpp! Wrong size for the vector parameterNames.");
+    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::set_parameters() of ModelParameters.cpp! Wrong size for the vector parameterNames.");
 
 
-  if ((parameterTypes.size()==nparameters) && (parameterNames.size()==nparameters)){
+  if ((parameterTypes.size()==nparameters) && (parameterNames.size()==nparameters)) {
     m_nparameters=nparameters;
     m_parameter_type = parameterTypes;
     m_parameter_name = parameterNames;
@@ -220,7 +220,7 @@ void cbl::statistics::LikelihoodParameters::free (const int p)
       break;
 
     default:
-      ErrorCBL("Error in cbl::statistics::fix of LikelihoodParameters.cpp: no such kind of parameter!");
+      ErrorCBL("Error in cbl::statistics::LikelihoodParameters::free() of LikelihoodParameters.cpp: no such kind of parameter!");
   }
 }
 
@@ -243,7 +243,7 @@ void cbl::statistics::LikelihoodParameters::fix (const int p, const double value
       break;
 
     default:
-      ErrorCBL("Error in cbl::statistics::fix of LikelihoodParameters.cpp: no such kind of parameter!");
+      ErrorCBL("Error in cbl::statistics::LikelihoodParameters::fix() of LikelihoodParameters.cpp: no such kind of parameter!");
   }
 }
 
@@ -263,7 +263,7 @@ void cbl::statistics::LikelihoodParameters::fix_at_bestfit (const int p)
 double cbl::statistics::LikelihoodParameters::bestfit_value (const int p) const
 {
   if (m_parameter_bestfit_value.size() == 0) 
-    ErrorCBL("Error in bestfit_values of LikelihoodParameters! Can't found best fit values!"); 
+    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::bestfit_values() of LikelihoodParameters.cpp: can't found best fit values!"); 
 
   return m_parameter_bestfit_value[p];
 }
@@ -274,7 +274,7 @@ double cbl::statistics::LikelihoodParameters::bestfit_value (const int p) const
 vector<double> cbl::statistics::LikelihoodParameters::bestfit_values () const
 {
   if (m_parameter_bestfit_value.size() == 0) 
-    ErrorCBL("Error in bestfit_values of LikelihoodParameters! Can't found best fit values!"); 
+    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::bestfit_values() of LikelihoodParameters.cpp: can't found best fit values!"); 
 
   return m_parameter_bestfit_value;
 }
@@ -286,7 +286,7 @@ vector<double> cbl::statistics::LikelihoodParameters::bestfit_values () const
 void cbl::statistics::LikelihoodParameters::set_bestfit_value (const vector<double> bestfit_value)
 {
   if (bestfit_value.size() != m_nparameters)
-    ErrorCBL("Error in set_bestfit_value of LikelihoodParameters! Wrong size for the input vector!"); 
+    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::set_bestfit_value() of LikelihoodParameters.cpp: wrong size for the input vector!"); 
 
   m_parameter_bestfit_value.erase(m_parameter_bestfit_value.begin(), m_parameter_bestfit_value.end());
   for (size_t i=0; i<m_nparameters; i++) 
@@ -315,7 +315,7 @@ void cbl::statistics::LikelihoodParameters::write_bestfit_info ()
 	break;
 
 	default:
-	ErrorCBL("Error in write_bestfit_info() of LikelihoodParameters.cpp: no such kind of parameter!");
+	ErrorCBL("Error in cbl::statistics::LikelihoodParameters::write_bestfit_info() of LikelihoodParameters.cpp: no such kind of parameter!");
       }
 
       coutCBL << "value = " << m_parameter_bestfit_value[i] << endl;
@@ -323,6 +323,6 @@ void cbl::statistics::LikelihoodParameters::write_bestfit_info ()
     }
   }
   else
-    ErrorCBL("Error in write_bestfit_info of LikelihoodParameters! Can't found best fit values!"); 
+    ErrorCBL("Error in cbl::statistics::LikelihoodParameters::write_bestfit_info of LikelihoodParameters: can't found best fit values!"); 
 
 }

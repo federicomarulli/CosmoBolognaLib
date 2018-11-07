@@ -162,7 +162,7 @@ void cbl::cosmology::Cosmology::set_default ()
 // =====================================================================================
 
 
-cbl::cosmology::Cosmology::Cosmology (const double Omega_matter, const double Omega_baryon, const double Omega_neutrinos, const double massless_neutrinos, const int massive_neutrinos, const double Omega_DE, const double Omega_radiation, const double hh, const double scalar_amp, const double scalar_pivot, const double n_spec, const double w0, const double wa, const double fNL, const int type_NG, const double tau, const string model, const bool unit)
+cbl::cosmology::Cosmology::Cosmology (const double Omega_matter, const double Omega_baryon, const double Omega_neutrinos, const double massless_neutrinos, const int massive_neutrinos, const double Omega_DE, const double Omega_radiation, const double hh, const double scalar_amp, const double scalar_pivot, const double n_spec, const double w0, const double wa, const double fNL, const int type_NG, const double tau, const std::string model, const bool unit)
   : m_Omega_matter(Omega_matter), m_Omega_baryon(Omega_baryon), m_Omega_neutrinos(Omega_neutrinos), m_massless_neutrinos(massless_neutrinos), m_massive_neutrinos(massive_neutrinos), m_Omega_DE(Omega_DE), m_Omega_radiation(Omega_radiation), m_hh(hh), m_sigma8(-1.), m_scalar_amp(scalar_amp), m_scalar_pivot(scalar_pivot), m_n_spec(n_spec), m_w0(w0), m_wa(wa), m_fNL(fNL), m_type_NG(type_NG), m_tau(tau), m_model(model), m_unit(unit)
 { set_default(); } 
 
@@ -170,7 +170,7 @@ cbl::cosmology::Cosmology::Cosmology (const double Omega_matter, const double Om
 // =====================================================================================
 
 
-cbl::cosmology::Cosmology::Cosmology (const CosmologicalModel cosmoModel, const string model, const bool unit)
+cbl::cosmology::Cosmology::Cosmology (const CosmologicalModel cosmoModel, const std::string model, const bool unit)
   :  m_Omega_neutrinos(0.), m_massless_neutrinos(3.04), m_massive_neutrinos(0.), m_sigma8(-1.), m_n_spec(0.96), m_w0(-1.), m_wa(0.), m_fNL(0.), m_type_NG(1.), m_tau(0.09), m_model(model), m_unit(unit)
 {
   switch(cosmoModel) {
@@ -217,7 +217,7 @@ cbl::cosmology::Cosmology::Cosmology (const CosmologicalModel cosmoModel, const 
     // Planck Collab 2013, Paper XVI: Table 2, Planck+WP
   case(CosmologicalModel::_Planck13_):
     m_Omega_matter = 0.315;                           // Omega_M = 0.315 ± 0.018
-    m_Omega_baryon = 0.0486;                          // Omega_b*h^2 = 0.02205 ± 0.00028
+    m_Omega_baryon = 0.0487;                          // Omega_b*h^2 = 0.02205 ± 0.00028
     m_massless_neutrinos = 2.04;                      // baseline (see Table 1)
     m_massive_neutrinos = 1;                          // baseline (see Table 1)
     m_Omega_radiation = OmegaR_zeq(3391.);            // z_eq = 3391 ± 60
@@ -259,6 +259,22 @@ cbl::cosmology::Cosmology::Cosmology (const CosmologicalModel cosmoModel, const 
     m_scalar_pivot = 0.05;                            // baseline
     m_n_spec = 0.9677;                                // n = 0.9677 ± 0.060
     m_tau = 0.066;                                    // tau = 0.066 ± 0.016
+    m_Omega_neutrinos = Omega_neutrinos(0.06);        // baseline
+    break;
+    
+     // Planck Collab 2018, Paper VI: Table 2, TT,TE,EE+lowE+lensing
+  case(CosmologicalModel::_Planck18_):
+    m_Omega_matter = 0.3153;                          // Omega_M = 0.3153 ± 0.0073
+    m_Omega_baryon = 0.0486;                          // Omega_b*h^2 = 0.02237 ± 0.00015
+    m_massless_neutrinos = 2.04;                      // baseline
+    m_massive_neutrinos = 1;                          // baseline
+    m_Omega_radiation = OmegaR_zeq(3402.);            // z_eq = 3402 ± 26
+    m_Omega_DE = 1.-m_Omega_matter-m_Omega_radiation; // assuming Omega_k = 0 (in Table 4: Omega_DE = 0.692 ± 0.012)
+    m_hh = 0.6736;                                    // h = 0.6736 ± 0.054 Km/s/Mpc
+    m_scalar_amp = 2.100e-9;                          // scalar amplitude = (2.100 ± 0.030)e-9 -> sigma8 = 0.8111 ± 0.0060
+    m_scalar_pivot = 0.05;                            // baseline
+    m_n_spec = 0.9649;                                // n = 0.9649 ± 0.0042
+    m_tau = 0.0544;                                   // tau = 0.0544 ± 0.0073
     m_Omega_neutrinos = Omega_neutrinos(0.06);        // baseline
     break;
 
@@ -506,7 +522,7 @@ void cbl::cosmology::Cosmology::set_parameter (const CosmologicalParameter param
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::set_parameters (const vector<CosmologicalParameter> parameter, const vector<double> value)
+void cbl::cosmology::Cosmology::set_parameters (const std::vector<CosmologicalParameter> parameter, const std::vector<double> value)
 {
   for (size_t i=0; i<parameter.size(); i++)
     set_parameter(parameter[i], value[i]);
@@ -738,7 +754,7 @@ double cbl::cosmology::Cosmology::D_C (const double redshift) const
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::D_C_table (const string file_table, const double z_min, const double z_max, const int step, vector<double> &Redshift, vector<double> &dc) const
+void cbl::cosmology::Cosmology::D_C_table (const std::string file_table, const double z_min, const double z_max, const int step, std::vector<double> &Redshift, std::vector<double> &dc) const
 {
   string File_table = par::DirCosmo+"Cosmology/Tables/dc/"+file_table;
  
@@ -845,7 +861,7 @@ double cbl::cosmology::Cosmology::F_AP (const double redshift) const
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Distance (const double redshift, const string distance_type) const 
+double cbl::cosmology::Cosmology::Distance (const double redshift, const std::string distance_type) const 
 {
   if (distance_type=="DC")
     return D_C(redshift);
@@ -1211,7 +1227,7 @@ double cbl::cosmology::Cosmology::rho_m (const double redshift, const bool unit1
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Delta_c (const double redshift, const string author) const
+double cbl::cosmology::Cosmology::Delta_c (const double redshift, const std::string author) const
 {
   if (author=="BryanNorman") {
     const double xx = OmegaM(redshift)-1.;
@@ -1259,7 +1275,7 @@ double cbl::cosmology::Cosmology::Delta_vir (const double Delta_c, const double 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Delta_vir (const double redshift, const string author) const
+double cbl::cosmology::Cosmology::Delta_vir (const double redshift, const std::string author) const
 {
   return Delta_vir(Delta_c(redshift, author), redshift);
 }
@@ -1268,7 +1284,7 @@ double cbl::cosmology::Cosmology::Delta_vir (const double redshift, const string
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::M_vir (const double r_vir, const double redshift, const string author, const bool unit1) const
+double cbl::cosmology::Cosmology::M_vir (const double r_vir, const double redshift, const std::string author, const bool unit1) const
 {
   return 4./3.*par::pi*pow(r_vir, 3)*Delta_c(redshift, author)*rho_crit(redshift, unit1);
 }
@@ -1277,7 +1293,7 @@ double cbl::cosmology::Cosmology::M_vir (const double r_vir, const double redshi
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::r_vir (const double M_vir, const double redshift, const string author, const bool unit1) const
+double cbl::cosmology::Cosmology::r_vir (const double M_vir, const double redshift, const std::string author, const bool unit1) const
 {
   return pow(3*M_vir/(4.*par::pi*Delta_c(redshift, author)*rho_crit(redshift, unit1)), 1./3.);
 }
@@ -1286,7 +1302,7 @@ double cbl::cosmology::Cosmology::r_vir (const double M_vir, const double redshi
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::c_vir (const double c_200, const double redshift, const string author) const
+double cbl::cosmology::Cosmology::c_vir (const double c_200, const double redshift, const std::string author) const
 {
   const double a = -1.119*log10(Delta_c(redshift, author))+3.537;
   const double b = -0.967*log10(Delta_c(redshift, author))+2.181;

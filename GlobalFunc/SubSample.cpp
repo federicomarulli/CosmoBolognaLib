@@ -69,7 +69,7 @@ void cbl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, const int nx, c
 // ============================================================================
 
 
-void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, const int nSamples, const string polygonfile)
+void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, const int nSamples, const std::string polygonfile)
 {
   string mangle_dir = fullpath(par::DirCosmo)+"/External/mangle/";
 
@@ -101,7 +101,7 @@ void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, const int nSample
     ss >> NUM; 
     ss >> NUM; 
     ss >> pp;
-    if (pp==-100) ErrorCBL("Error in cbl::set_ObjectRegion_mangle!");
+    if (pp==-100) ErrorCBL("Error in cbl::set_ObjectRegion_mangle()!");
     poly_data.push_back(pp);
   }
   fin.clear(); fin.close();
@@ -232,7 +232,7 @@ void cbl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::Cata
 // ============================================================================
 
 
-void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nSamples, const string polygonfile)
+void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nSamples, const std::string polygonfile)
 {
   string mangle_dir = fullpath(par::DirCosmo)+"/External/mangle/";
 
@@ -272,7 +272,7 @@ void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalo
     ss >> NUM; 
     ss >> NUM; 
     ss >> pp;
-    if (pp==-100) ErrorCBL("Error in cbl::set_ObjectRegion_mangle!");
+    if (pp==-100) ErrorCBL("Error in cbl::set_ObjectRegion_mangle()!");
     poly_data.push_back(pp);
   }
   fin.clear(); fin.close();
@@ -284,7 +284,7 @@ void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalo
     ss >> NUM; 
     ss >> NUM; 
     ss >> pp;
-    if (pp==-100) ErrorCBL("Error in cbl::set_ObjectRegion_mangle!");
+    if (pp==-100) ErrorCBL("Error in cbl::set_ObjectRegion_mangle()!");
     poly_random.push_back(pp);
     poly_list.push_back(pp);
   }
@@ -404,13 +404,13 @@ void cbl::check_regions (catalogue::Catalogue &data, catalogue::Catalogue &rando
   
   // check if data and random catalogues have the same number of regions
   if (data_regions.size() != random_regions.size()) 
-    ErrorCBL("Error in check_regions of Subsample.cpp, data and random have different number of regions: data_regions.size() = "+conv(data_regions.size(), par::fINT)+", random_regions.size = "+conv(random_regions.size(), par::fINT));
+    ErrorCBL("Error in cbl::check_regions() of Subsample.cpp, data and random have different number of regions: data_regions.size() = "+conv(data_regions.size(), par::fINT)+", random_regions.size = "+conv(random_regions.size(), par::fINT));
   
   // check if data and random catalogues have the same regions
   size_t nRegions = data_regions.size();
   for (size_t i=0; i<nRegions; ++i)
     if (data_regions[i] != random_regions[i])
-      ErrorCBL("Error in check_regions of Subsample.cpp, data and random have regions");
+      ErrorCBL("Error in cbl::check_regions() of Subsample.cpp, data and random have different regions!");
   
   // check if regions are consecutive and starting from 0
   bool cons = true;
@@ -456,18 +456,18 @@ void cbl::set_ObjectRegion_SDSS_stripes (catalogue::Catalogue &data, catalogue::
   eq2sdss(random.var(catalogue::Var::_RA_), random.var(catalogue::Var::_Dec_), random_lambda, random_eta);
   sdss_stripe (random_eta, random_lambda, random_stripe, random_str_u);
 
-  if(!isDimEqual(str_u, random_str_u))
-    ErrorCBL("Error in set_ObjectRegion_SDSS_stripes! Data and random catalogues have different stripes!");
+  if (!isDimEqual(str_u, random_str_u))
+    ErrorCBL("Error in cbl::set_ObjectRegion_SDSS_stripes()! Data and random catalogues have different stripes!");
 
   /*
   for(size_t i=0; i<str_u.size(); i++)
     stripe_to_index[str_u[i]] = i;
   */
 
-  for(size_t i=0; i<data.nObjects(); i++)
+  for (size_t i=0; i<data.nObjects(); i++)
     data.set_var(i, catalogue::Var::_Region_, stripe[i]);
 
-  for(size_t i=0; i<random.nObjects(); i++)
+  for (size_t i=0; i<random.nObjects(); i++)
     random.set_var(i, catalogue::Var::_Region_, random_stripe[i]);
 
   //cbl::check_regions(data, random);

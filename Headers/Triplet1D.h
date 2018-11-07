@@ -584,6 +584,12 @@ namespace cbl {
 
     private:
 
+      /// minimum scale
+      double m_min;
+
+      /// maximum scale
+      double m_max;
+
       /**
        *  @name Member functions used to set the binning parameters
        */

@@ -42,7 +42,7 @@ using namespace glob;
 // ============================================================================
 
 
-cbl::glob::FuncGrid::FuncGrid (const vector<double> x, const vector<double> y, const string interpType, const cbl::BinType bin_type)
+cbl::glob::FuncGrid::FuncGrid (const std::vector<double> x, const std::vector<double> y, const std::string interpType, const cbl::BinType bin_type)
   : m_x(x), m_y(y), m_size(x.size()), m_interpType(interpType), m_binType(bin_type)
 {
   if(!is_sorted(x.begin(), x.end()))
@@ -149,7 +149,7 @@ double cbl::glob::FuncGrid::operator () (const double xx) const
 // =====================================================================================
 
 
-vector<double> cbl::glob::FuncGrid::eval_func (const vector<double> xx) const
+std::vector<double> cbl::glob::FuncGrid::eval_func (const std::vector<double> xx) const
 {
   vector<double> yy;
   
@@ -238,7 +238,7 @@ double cbl::glob::FuncGrid::root_D2v (const double x_low, const double x_up, con
 // =====================================================================================
 
 
-cbl::glob::FuncGrid2D::FuncGrid2D (const vector<double> x, const vector<double> y, const vector<vector<double>> fxy, const string interpType)
+cbl::glob::FuncGrid2D::FuncGrid2D (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> fxy, const std::string interpType)
 {
   if(!is_sorted(x.begin(), x.end()))
     ErrorCBL("Error in constructor of FuncGrid in FuncGrid.h: the x array is not sorted");
@@ -326,7 +326,7 @@ double cbl::glob::FuncGrid2D::operator () (const double xx, const double yy) con
 // =====================================================================================
 
 
-vector<double> cbl::glob::FuncGrid2D::eval_func (const vector<vector<double>> xx) const
+std::vector<double> cbl::glob::FuncGrid2D::eval_func (const std::vector<std::vector<double>> xx) const
 {
   vector<double> yy;
   

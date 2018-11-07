@@ -72,27 +72,33 @@ void cbl::statistics::Model1D::stats_from_chains (const vector<double> xx, vecto
 void cbl::statistics::Model1D::write (const string output_dir, const string output_file, const vector<double> xx, const vector<double> parameters)
 {
   vector<double> pp = parameters;
+  vector<double> xx_unique = different_elements(xx);
+
+  if (xx.size() % xx_unique.size() != 0)
+    ErrorCBL("Error in cbl::statistics::Model1D::write() of Model1D.cpp: model.size() is not a multiple of xx.size().");
+
+  const int nmodels = xx.size()/xx_unique.size();
   vector<double> model = this->operator()(xx, pp);
 
-  if (model.size() % xx.size() != 0)
-    ErrorCBL("Error in write of Model1D: model.size() is not a multiple of xx.size().");
+  const string mkdir = "mkdir -p "+output_dir;
+  if (system(mkdir.c_str())) {}
+  
+  const string file = output_dir+output_file;
 
-  int nmodels = model.size()/xx.size();
+  ofstream fout(file.c_str()); checkIO(fout, file);
 
-  string mkdir = "mkdir -p "+output_dir;
-  string file = output_dir+output_file;
-
-  if(system(mkdir.c_str())) {}
-
-  ofstream fout(file.c_str());
-
-  for(size_t i=0; i<xx.size(); i++){
-    fout << xx[i]; 
+  fout << "### [1] x";
+  for (int nn=0; nn<nmodels; nn++) fout << " # [" << nn+2 << "] y_" << nn << "(x)";
+  fout << " ###" << endl;
+  
+  for (size_t i=0; i<xx_unique.size(); ++i) {
+    fout << setprecision(5) << setw(10) << right << xx_unique[i]; 
     for (int nn=0; nn<nmodels; nn++)
-      fout << "  " << model[i+nn*xx.size()];
+      fout << "  " << setprecision(5) << setw(10) << right << model[i+nn*xx_unique.size()];
     fout << endl;
   }
-  fout.close();
+  
+  fout.clear(); fout.close(); coutCBL << "I wrote the file: " << file << endl << endl;
 }
 
 
@@ -111,26 +117,35 @@ void cbl::statistics::Model1D::write_at_bestfit (const string output_dir, const 
 
 void cbl::statistics::Model1D::write_from_chains (const string output_dir, const string output_file, const vector<double> xx, const int start, const int thin)
 {
+  vector<double> xx_unique = different_elements(xx);
+
+  if (xx.size() % xx_unique.size() != 0)
+    ErrorCBL("Error in cbl::statistics::Model1D::write_from_chains() of Model1D.cpp: model.size() is not a multiple of xx.size().");
+
+  const int nmodels = xx.size()/xx_unique.size();
+
   vector<double> median_model, low_model, up_model;
   stats_from_chains(xx, median_model, low_model, up_model, start, thin);
 
-  if (median_model.size() % xx.size() != 0)
-    ErrorCBL("Error in write of Model1D: model.size() is not a multiple of xx.size().");
+  const string mkdir = "mkdir -p "+output_dir;
+  if (system(mkdir.c_str())) {}
+  
+  const string file = output_dir+output_file;
 
-  int nmodels = median_model.size()/xx.size();
-
-  string mkdir = "mkdir -p "+output_dir;
-  string file = output_dir+output_file;
-
-  if(system(mkdir.c_str())) {}
-
-  ofstream fout(file.c_str());
-
-  for(size_t i=0; i<xx.size(); i++){
-    fout << xx[i]; 
+  ofstream fout(file.c_str()); checkIO(fout, file);
+  
+  fout << "### [1] x";
+  for (int nn=0; nn<nmodels; nn++) fout << " # [" << nn+2 << "] median y(x) # [" << nn+3 << "] 16% percentile y(x)# [" << nn+4 << "] 84% percentile y(x)";
+  fout << " ###" << endl;
+  
+  for (size_t i=0; i<xx_unique.size(); i++) {
+    fout << setprecision(5) << setw(10) << right << xx_unique[i] << "  "; 
     for (int nn=0; nn<nmodels; nn++)
-      fout << "  " << median_model[i+nn*xx.size()] << " " << low_model[i+nn*xx.size()] << " " << up_model[i+nn*xx.size()] << " ";
+      fout << setprecision(5) << setw(10) << right << median_model[i+nn*xx_unique.size()] << "  "
+	   << setprecision(5) << setw(10) << right << low_model[i+nn*xx_unique.size()] << "  "
+	   << setprecision(5) << setw(10) << right <<  up_model[i+nn*xx_unique.size()] << "  ";
     fout << endl;
   }
-  fout.close();
+  
+  fout.clear(); fout.close(); coutCBL << "I wrote the file: " << file << endl;
 }

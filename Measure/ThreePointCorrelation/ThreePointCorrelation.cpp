@@ -55,7 +55,7 @@ using namespace measure::threept;
 // ============================================================================
 
 
-shared_ptr<ThreePointCorrelation> cbl::measure::threept::ThreePointCorrelation::Create (const ThreePType type, const Catalogue data, const Catalogue random, const TripletType tripletType, const double side_s, const double side_u, const double perc_increase, const int nbins)
+std::shared_ptr<ThreePointCorrelation> cbl::measure::threept::ThreePointCorrelation::Create (const ThreePType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const triplets::TripletType tripletType, const double side_s, const double side_u, const double perc_increase, const int nbins)
 {
   if (type==ThreePType::_angular_connected_) return move(unique_ptr<ThreePointCorrelation_angular_connected>(new ThreePointCorrelation_angular_connected(data, random, side_s, side_u, perc_increase, nbins)));
  
@@ -74,7 +74,7 @@ shared_ptr<ThreePointCorrelation> cbl::measure::threept::ThreePointCorrelation::
 // ============================================================================
 
 
-shared_ptr<ThreePointCorrelation> cbl::measure::threept::ThreePointCorrelation::Create (const ThreePType type, const Catalogue data, const Catalogue random, const cbl::triplets::TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
+std::shared_ptr<ThreePointCorrelation> cbl::measure::threept::ThreePointCorrelation::Create (const ThreePType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const triplets::TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
 {
   if (type==ThreePType::_angular_connected_) return move(unique_ptr<ThreePointCorrelation_angular_connected>(new ThreePointCorrelation_angular_connected(data, random, r12, r12_binSize, r13, r13_binSize, nbins)));
  
@@ -92,7 +92,7 @@ shared_ptr<ThreePointCorrelation> cbl::measure::threept::ThreePointCorrelation::
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation::count_triplets (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<Triplet> tt, const bool tcount) 
+void cbl::measure::threept::ThreePointCorrelation::count_triplets (const std::shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh_rMAX2, std::shared_ptr<Triplet> tt, const bool tcount) 
 {
   time_t start; time (&start);
   
@@ -189,7 +189,7 @@ void cbl::measure::threept::ThreePointCorrelation::count_triplets (const shared_
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation::count_allTriplets (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
+void cbl::measure::threept::ThreePointCorrelation::count_allTriplets (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
 {
   // ----- double chain-mesh -----
   
@@ -289,7 +289,7 @@ void cbl::measure::threept::ThreePointCorrelation::count_allTriplets (const stri
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation::count_triplets_region (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh_rMAX2, shared_ptr<Triplet> tt, vector<shared_ptr<Triplet>> tt_region, const vector<vector<double>> weight, const bool tcount) 
+void cbl::measure::threept::ThreePointCorrelation::count_triplets_region (const std::shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChainMesh_rMAX1, const ChainMesh_Catalogue &ChainMesh_rMAX2, std::shared_ptr<Triplet> tt, std::vector<std::shared_ptr<Triplet>> tt_region, const std::vector<std::vector<double>> weight, const bool tcount) 
 {
   time_t start; time (&start);
   
@@ -405,7 +405,7 @@ void cbl::measure::threept::ThreePointCorrelation::count_triplets_region (const 
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation::count_allTriplets_region (const vector<vector<double>> weight, const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
+void cbl::measure::threept::ThreePointCorrelation::count_allTriplets_region (const std::vector<std::vector<double>> weight, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
 {
   // ----- double chain-mesh -----
 
@@ -553,7 +553,7 @@ void cbl::measure::threept::ThreePointCorrelation::count_allTriplets_region (con
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation::write_triplets (shared_ptr<triplets::Triplet> TT, const string dir, const string file) const
+void cbl::measure::threept::ThreePointCorrelation::write_triplets (std::shared_ptr<triplets::Triplet> TT, const std::string dir, const std::string file) const
 {  
   string MK = "mkdir -p "+dir;
   if (system (MK.c_str())) {}
@@ -572,7 +572,7 @@ void cbl::measure::threept::ThreePointCorrelation::write_triplets (shared_ptr<tr
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation::read_triplets (shared_ptr<triplets::Triplet> TT, const vector<string> dir, const string file) 
+void cbl::measure::threept::ThreePointCorrelation::read_triplets (std::shared_ptr<triplets::Triplet> TT, const std::vector<std::string> dir, const std::string file) 
 {
  if (dir.size()==0)
     ErrorCBL("Error in cbl::twopt::TwoPointCorrelation1D::read_triplets of TwoPointCorrelation1D.cpp! dir.size()=0!");

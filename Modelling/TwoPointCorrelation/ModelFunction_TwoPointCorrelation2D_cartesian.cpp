@@ -45,7 +45,7 @@ using namespace cbl;
 // ============================================================================================
 
 
-vector<vector<double>> cbl::modelling::twopt::xi2D_dispersionModel (const vector<double> rp, const vector<double> pi, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<std::vector<double>> cbl::modelling::twopt::xi2D_dispersionModel (const std::vector<double> rp, const std::vector<double> pi, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);

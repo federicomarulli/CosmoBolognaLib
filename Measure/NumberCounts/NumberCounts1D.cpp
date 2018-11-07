@@ -263,11 +263,13 @@ void cbl::measure::numbercounts::NumberCounts1D::compute_covariance (const vecto
 
 void cbl::measure::numbercounts::NumberCounts1D::write (const string dir, const string file, const int rank) const 
 {
+  (void)rank;
+
   string mkdir = "mkdir -p "+dir;
   if (system(mkdir.c_str())) {}
 
   string header = "# bin_center counts error  r1   r2";
-  m_dataset->write(dir, file, header, 8, rank);
+  m_dataset->write(dir, file, header, 10, rank);
 }
 
 

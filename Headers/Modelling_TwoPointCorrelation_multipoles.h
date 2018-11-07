@@ -76,6 +76,9 @@ namespace cbl {
 
 	/// check if the model has been set
 	bool m_ModelIsSet;
+
+        /// vector of booleans
+        std::vector<bool> m_use_pole;
 	
       public:
 
@@ -170,7 +173,7 @@ namespace cbl {
 	 *  multipole moments of the two-point correlation function
 	 *
 	 *  the multipoles of the two-point correlation function will
-	 *  be computed as follows:
+	 *  be computed with the de-wiggled model as follows:
 	 *
 	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
 	 *  j_l(ks) \f]
@@ -178,9 +181,16 @@ namespace cbl {
 	 *  where \f$j_l(ks)\f$ are the bessel functions and
 	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
 	 *
+	 *  specifically, the model BAO-damped power spectrum \f$P(k,
+	 *  \mu)\f$ (see e.g. Vargas-Magana et al. 2018
+	 *  https://arxiv.org/pdf/1610.03506.pdf) is computed by
+	 *  cbl::modelling::twopt::Pkmu_DeWiggled
+	 *
 	 *  the model has 3+N parameters: 
 	 *    - \f$\alpha_{\perp}\f$
 	 *    - \f$\alpha_{\parallel}\f$
+	 *    - \f$\Sigma_{NL,\perp}\f$ 
+	 *    - \f$\Sigma_{NL,\parallel}\f$ 
 	 *    - \f$f(z)\sigma_8(z)\f$
 	 *    - \f$b(z)\sigma_8(z)\f$
 	 *    - \f$\Sigma_s\f$
@@ -190,6 +200,15 @@ namespace cbl {
 	 *
 	 *  @param alpha_perpendicular_prior prior for the parameter 
 	 *  \f$\alpha_{\perp}\f$
+	 *
+	 *  @param alpha_parallel_prior prior for the parameter 
+	 *  \f$\alpha_{\parallel}\f$
+	 *
+	 *  @param SigmaNL_perpendicular_prior prior for the parameter 
+	 *  \f$\Sigma_{NL, \perp}\f$
+	 *
+	 *  @param SigmaNL_parallel_prior prior for the parameter 
+	 *  \f$\Sigma_{NL, \parallel}\f$
 	 *
 	 *  @param alpha_parallel_prior prior for the parameter 
 	 *  \f$\alpha_{\parallel}\f$
@@ -208,7 +227,61 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_model_fullShape (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaS_prior={}, const bool compute_PkDM=true);
+	void set_model_fullShape_DeWiggled (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution SigmaNL_perpendicular_prior={}, const statistics::PriorDistribution SigmaNL_parallel_prior={}, statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaS_prior={}, const bool compute_PkDM=true);
+
+	/**
+	 *  @brief set the model to fit the full shape of the
+	 *  multipole moments of the two-point correlation function
+	 *
+	 *  the multipoles of the two-point correlation function will
+	 *  be computed with the mode-coupling model as follows:
+	 *
+	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
+	 *  j_l(ks) \f]
+	 *
+	 *  where \f$j_l(ks)\f$ are the bessel functions and
+	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
+	 *
+	 *  specifically, the redshift-space power spectrum \f$P(k,
+	 *  \mu)\f$ (see e.g. Sanchez et al. 2013
+	 *  https://arxiv.org/pdf/1312.4854.pdf) is computed by
+	 *  cbl::modelling::twopt::Pkmu_ModeCoupling
+	 *
+	 *  the model has 3+N parameters: 
+	 *    - \f$\alpha_{\perp}\f$
+	 *    - \f$\alpha_{\parallel}\f$
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_v\f$
+	 *    - \f$\A_{MC}\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @param alpha_perpendicular_prior prior for the parameter 
+	 *  \f$\alpha_{\perp}\f$
+	 *
+	 *  @param alpha_parallel_prior prior for the parameter 
+	 *  \f$\alpha_{\parallel}\f$
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param SigmaV_prior prior for the parameters
+	 *  \f$\sigma_v\f$
+	 *
+	 **  @param AMC_prior prior for the parameters
+	 *  \f$\A_{MC}\f$
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 *
+	 *  @return none
+	 */
+	void set_model_fullShape_ModeCoupling (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaV_prior={}, const statistics::PriorDistribution AMC_prior={}, const bool compute_PkDM=true);
 
 	/**
 	 *  @brief set the model to fit the full shape of the
@@ -310,6 +383,52 @@ namespace cbl {
 	 *  monopole and quadrupole
 	 */
 	void set_model_BAO (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution B0_prior={}, const statistics::PriorDistribution B2_prior={}, const statistics::PriorDistribution A00_prior={}, const statistics::PriorDistribution A20_prior={}, const statistics::PriorDistribution A01_prior={}, const statistics::PriorDistribution A21_prior={}, const statistics::PriorDistribution A02_prior={}, const statistics::PriorDistribution A22_prior={}, const bool compute_XiDM=true);
+
+        /**
+         *  @brief write the model at xx
+         *  for given parameters
+         *
+         *  @param output_dir the output directory
+         *  @param output_file the output file
+	 *  @param nmultipoles the number of multipoles in output
+         *  @param xx vector of points at which the model is computed,
+         *  @param parameters vector containing the input parameters
+         *  used to compute the model; if this vector is not provided,
+         *  the model will be computed using the best-fit parameters
+         *
+         *  @return none
+         */
+        void write_model (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const std::vector<double> parameters);
+
+        /**
+         *  @brief write the model at xx 
+         *  with best-fit parameters obtained from likelihood
+         *  maximization
+         *
+         *  @param output_dir the output directory
+         *  @param output_file the output file
+	 *  @param nmultipoles the number of multipoles in output
+         *  @param xx vector of points at which the model is computed
+         *
+         *  @return none
+         */
+        void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx);
+
+        /**
+         *  @brief write the model at xx 
+         *  computing 16th, 50th and 84th percentiles
+         *  from the chains.
+         *
+         *  @param output_dir the output directory
+         *  @param output_file the output file
+	 *  @param nmultipoles the number of multipoles in output
+         *  @param xx vector of points at which the model is computed,
+         *  @param start the starting position for each chain
+         *  @param thin the position step
+         *
+         *  @return none
+         */
+        void write_model_from_chains (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const int start=0, const int thin=1);
 	
       };
     }

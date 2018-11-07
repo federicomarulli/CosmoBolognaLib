@@ -264,7 +264,7 @@
          call gabqx(af,eps,kc,fk,tol,iwr)
          G    = dexp(fk)
          write(8,100) ak,powlin(ak)*G**2.d0,p1loop(ak)*G**2.d0,
-     &   p2loop(ak)*G**2.d0
+     &   p2loop(ak)*G**2.d0, fk
          i = i+1
       enddo
       close(8)     

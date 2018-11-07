@@ -131,7 +131,7 @@ double cbl::cosmology::Cosmology::error_beta (const double redshift, const doubl
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::beta (const double Mass_min, const double Mass_max, const double redshift, const string model_bias, const string model_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::Cosmology::beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string output_root, const double Delta, const double kk, const std::string interpType, const int norm, const double k_min, const double k_max, const double prec, const std::string input_file, const bool is_parameter_file) 
 {
   return linear_growth_rate(redshift)/bias_eff(Mass_min, Mass_max, redshift, model_bias, model_MF, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
 }
@@ -140,7 +140,7 @@ double cbl::cosmology::Cosmology::beta (const double Mass_min, const double Mass
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::error_beta (const double Mass_min, const double Mass_max, const double redshift, const string model_bias, const string model_MF, const string method_SS, const double err_bias, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
+double cbl::cosmology::Cosmology::error_beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double err_bias, const std::string output_root, const double Delta, const double kk, const std::string interpType, const int norm, const double k_min, const double k_max, const double prec, const std::string input_file, const bool is_parameter_file)
 {
   return linear_growth_rate(redshift)/pow(bias_eff(Mass_min, Mass_max, redshift, model_bias, model_MF, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file),2)*err_bias;
 }
@@ -149,7 +149,7 @@ double cbl::cosmology::Cosmology::error_beta (const double Mass_min, const doubl
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::beta (const vector<double> MM, const vector<double> MF, const double redshift, const string model_bias, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::Cosmology::beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const std::string output_root, const double Delta, const double kk, const std::string interpType, const int norm, const double k_min, const double k_max, const double prec, const std::string input_file, const bool is_parameter_file) 
 {
   return linear_growth_rate(redshift)/bias_eff(MM, MF, redshift, model_bias, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
 }
@@ -158,7 +158,7 @@ double cbl::cosmology::Cosmology::beta (const vector<double> MM, const vector<do
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::error_beta (const vector<double> MM, const vector<double> MF, const double redshift, const string model_bias, const string method_SS, const double err_bias, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::Cosmology::error_beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const double err_bias, const std::string output_root, const double Delta, const double kk, const std::string interpType, const int norm, const double k_min, const double k_max, const double prec, const std::string input_file, const bool is_parameter_file) 
 {
   return linear_growth_rate(redshift)/pow(bias_eff(MM, MF, redshift, model_bias, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file),2)*err_bias;
 }
@@ -167,7 +167,7 @@ double cbl::cosmology::Cosmology::error_beta (const vector<double> MM, const vec
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const string model_bias, const string model_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::Cosmology::error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string output_root, const double Delta, const double kk, const std::string interpType, const int norm, const double k_min, const double k_max, const double prec, const std::string input_file, const bool is_parameter_file) 
 { // from Eq. 20 of Bianchi et al. 2012
   
   double bias = bias_eff(Mass_min, Mass_max, redshift, model_bias, model_MF, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
@@ -179,7 +179,7 @@ double cbl::cosmology::Cosmology::error_beta_measured (const double Volume, cons
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::quadrupole (const double Mass_min, const double Mass_max, const double redshift, const string model_bias, const string model_MF, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::Cosmology::quadrupole (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string output_root, const double Delta, const double kk, const std::string interpType, const int norm, const double k_min, const double k_max, const double prec, const std::string input_file, const bool is_parameter_file) 
 {
   double Beta = beta(Mass_min, Mass_max, redshift, model_bias, model_MF, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
   return (4./3.*Beta+4./7.*Beta*Beta)/(1.+2./3*Beta+1./5.*Beta*Beta);
@@ -189,7 +189,7 @@ double cbl::cosmology::Cosmology::quadrupole (const double Mass_min, const doubl
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::quadrupole (const vector<double> MM, const vector<double> MF, const double redshift, const string model_bias, const string method_SS, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::Cosmology::quadrupole (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const std::string output_root, const double Delta, const double kk, const std::string interpType, const int norm, const double k_min, const double k_max, const double prec, const std::string input_file, const bool is_parameter_file) 
 {
   double Beta = beta(MM, MF, redshift, model_bias, method_SS, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
   return (4./3.*Beta+4./7.*Beta*Beta)/(1.+2./3*Beta+1./5.*Beta*Beta);

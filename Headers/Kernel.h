@@ -352,10 +352,11 @@
  * function
  */
 /**
- * @example cleanVoidCatalogue.py
+ * @example cleaner.py
  *
- *  This example shows how to clean a cosmic void catalogue, in order
- *  to extract cosmological constraints from void counting 
+ *  This example shows how to clean a cosmic void catalogue, making
+ *  use of a parameter file, in order to extract cosmological
+ *  constraints from void counting
  */
 /**
  *  @example 2pt_monopole.ipynb 
@@ -575,7 +576,7 @@ namespace cbl {
   typedef Eigen::Matrix<double, 3, 1> Vector3D;
 
   /// Eigen 4D matrix
-  typedef Eigen::Matrix<double, 4, 1> sVector4D;
+  typedef Eigen::Matrix<double, 4, 1> Vector4D;
 
   /// Eigen complex std::vector
   typedef Eigen::Matrix<std::complex<double>, 1, Eigen::Dynamic> VectorComplex;
@@ -965,7 +966,11 @@ namespace cbl {
     void print (const std::vector<T> vect, const int prec=4, const int ww=8) 
     {
       int bp = std::cout.precision(); 
-      for (auto &&i : vect) coutCBL << std::setprecision(prec) << std::setw(ww) << i << std::endl;
+      for (auto &&vi : vect) 
+	if (fabs(vi)<pow(10, -prec) || fabs(vi)>pow(10, prec))
+	  coutCBL << std::scientific << std::setprecision(prec) << std::setw(ww) << vi << std::endl;
+	else
+	  coutCBL << std::fixed << std::setprecision(prec) << std::setw(ww) << vi << std::endl;
       std::cout.precision(bp); 
     }
 
@@ -980,9 +985,25 @@ namespace cbl {
   template <typename T> 
     void print (const std::vector<T> vect1, const std::vector<T> vect2, const int prec=4, const int ww=8) 
     {
-      if (vect1.size()!=vect2.size()) ErrorCBL("Error in print of Func.h!");
-      int bp = std::cout.precision(); 
-      for (size_t i=0; i<vect1.size(); i++) coutCBL << std::setprecision(prec) << std::setw(ww) << vect1[i] << "   " << std::setw(ww) << vect2[i] << std::endl;
+      if (vect1.size()!=vect2.size())
+	ErrorCBL("Error in print() of Func.h: the two input vectors must have the same dimenion to be printed!");
+
+      int bp = std::cout.precision();
+      
+      for (size_t i=0; i<vect1.size(); i++) {
+	
+	if (fabs(vect1[i])<pow(10, -prec) || fabs(vect1[i])>pow(10, prec))
+	  coutCBL << std::scientific << std::setprecision(prec) << std::setw(ww) << vect1[i];
+	else
+	  coutCBL << std::fixed << std::setprecision(prec) << std::setw(ww) << vect1[i];
+
+	if (fabs(vect2[i])<pow(10, -prec) || fabs(vect2[i])>pow(10, prec))
+	  std::cout << "   " << std::scientific << std::setprecision(prec) << std::setw(ww) << vect2[i] << std::endl;
+	else
+	  std::cout << "   " << std::fixed << std::setprecision(prec) << std::setw(ww) << vect2[i] << std::endl;
+	
+      }
+      
       std::cout.precision(bp); 
     }
 
@@ -998,9 +1019,20 @@ namespace cbl {
     {
       const int bp = std::cout.precision(); 
       for (size_t i=0; i<mat.size(); i++) {
-	for (size_t j=0; j<mat[i].size(); j++) 
-	  if (j==0) coutCBL << std::setprecision(prec) << std::setw(ww) << mat[i][j] << "   ";
-	  else coutCBL << std::setprecision(prec) << std::setw(ww) << mat[i][j] << "   ";
+	for (size_t j=0; j<mat[i].size(); j++)
+	  if (j==0) {
+	    if (fabs(mat[i][j])<pow(10, -prec) || fabs(mat[i][j])>pow(10, prec))
+	      coutCBL << std::scientific << std::setprecision(prec) << std::setw(ww) << mat[i][j] << "   ";
+	    else
+	      coutCBL << std::fixed << std::setprecision(prec) << std::setw(ww) << mat[i][j] << "   ";
+	  }
+	  else {
+	    if (fabs(mat[i][j])<pow(10, -prec) || fabs(mat[i][j])>pow(10, prec))
+	      std::cout << std::scientific << std::setprecision(prec) << std::setw(ww) << mat[i][j] << "   ";
+	    else
+	      std::cout << std::fixed << std::setprecision(prec) << std::setw(ww) << mat[i][j] << "   ";
+	  }
+	
 	std::cout << std::endl;
       }
       std::cout.precision(bp); 
@@ -1318,24 +1350,6 @@ namespace cbl {
       std::vector<T> vv(nn);
       for (size_t i=0; i<nn; i++)
 	vv[i] = exp(log(min)+(log(max)-log(min))*T(i)/T(nn-1));
-      return vv;
-    }
-
-  /**
-   *  @brief fill a std::vector with logarithmically spaced values, in base 10
-   *  @param [in] nn the number of steps, i.e. the final dimension of
-   *  vv
-   *  @param [in] min the minimum value of the range of values
-   *  @param [in] max the maximum value of the range of values
-   *  @return none
-   */
-  template <typename T> 
-    std::vector<T> logarithmic_bin_vector_base10 (const size_t nn, const T min, const T max)
-    {
-      std::vector<T> vv(nn);
-      for (size_t i=0; i<nn; i++)
-	vv[i] = pow(10., log10(min)+(log10(max)-log10(min))*T(i)/T(nn-1));
-
       return vv;
     }
 
