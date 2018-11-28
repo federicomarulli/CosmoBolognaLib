@@ -222,9 +222,11 @@ namespace cbl {
          * @param likelihood_type the likelihood type, specified with the 
          * LikelihoodType object
          *
-         *  @param x_index index(s) of the extra info std::vector containing the point(s) where to evaluate the model
+         *  @param x_index index(s) of the extra info std::vector
+         *  containing the point(s) where to evaluate the model
          *
-         *  @param w_index index of the extra info std::vector containing the data point weight 
+         *  @param w_index index of the extra info std::vector
+         *  containing the data point weight
          *
          *  @return none
          */
@@ -283,7 +285,8 @@ namespace cbl {
          *
          * @param aa the parameter of the \f$g(z)\f$ distribution
          *
-         * @param parallel false \f$\rightarrow\f$ non-parallel sampler; true \f$\rightarrow\f$ parallel sampler
+         * @param parallel false \f$\rightarrow\f$ non-parallel
+         * sampler; true \f$\rightarrow\f$ parallel sampler
          *
          * @return none
          */
@@ -312,7 +315,8 @@ namespace cbl {
          *
          * @param aa the parameter of the \f$g(z)\f$ distribution
          *
-         * @param parallel false \f$\rightarrow\f$ non-parallel sampler; true \f$\rightarrow\f$ parallel sampler
+         * @param parallel false \f$\rightarrow\f$ non-parallel
+         * sampler; true \f$\rightarrow\f$ parallel sampler
 	 *
          * @return none
          */
@@ -336,7 +340,8 @@ namespace cbl {
          *
          * @param aa the parameter of the \f$g(z)\f$ distribution
          *
-         * @param parallel false \f$\rightarrow\f$ non-parallel sampler; true \f$\rightarrow\f$ parallel sampler
+         * @param parallel false \f$\rightarrow\f$ non-parallel
+         * sampler; true \f$\rightarrow\f$ parallel sampler
          *
          * @return none
          */
@@ -355,7 +360,8 @@ namespace cbl {
          *
          * @param aa the parameter of the \f$g(z)\f$ distribution
          *
-         * @param parallel false \f$\rightarrow\f$ non-parallel sampler; true \f$\rightarrow\f$ parallel sampler
+         * @param parallel false \f$\rightarrow\f$ non-parallel
+         * sampler; true \f$\rightarrow\f$ parallel sampler
          *
          * @return none
          */
@@ -380,7 +386,8 @@ namespace cbl {
          *
          * @param aa the parameter of the \f$g(z)\f$ distribution
          *
-         * @param parallel false \f$\rightarrow\f$ non-parallel sampler; true \f$\rightarrow\f$ parallel sampler
+         * @param parallel false \f$\rightarrow\f$ non-parallel
+         * sampler; true \f$\rightarrow\f$ parallel sampler
          *
          * @return none
          */
@@ -398,7 +405,8 @@ namespace cbl {
          *
          * @param thin the step used for dilution
          *
-         * @param fits false \f$\rightarrow\f$ ascii file; true \f$\rightarrow\f$ fits file 
+         * @param fits false \f$\rightarrow\f$ ascii file; true
+         * \f$\rightarrow\f$ fits file
          *
          * @return none
          */
@@ -416,15 +424,15 @@ namespace cbl {
          * @param skip_header the lines to be skipped in
          * the chain file
          *
-         * @param fits false \f$\rightarrow\f$ ascii file; true \f$\rightarrow\f$ fits file 
+         * @param fits false \f$\rightarrow\f$ ascii file; true
+         * \f$\rightarrow\f$ fits file
          *
          * @return none
          */
         void read_chain (const std::string input_dir, const std::string input_file, const int nwalkers, const int skip_header=1, const bool fits=false);
 
         /**
-         * @brief show results of the MCMC sampling
-         * on scree
+         * @brief show the results of the MCMC sampling on screen
          *
          * @param start the minimum chain position to be written
          *
@@ -432,35 +440,49 @@ namespace cbl {
          *
          * @param nbins the number of bins
          *
+	 * @param show_mode true \f$\rightarrow\f$ show the posterior
+	 * mode; false \f$\rightarrow\f$ do not show the posterior
+	 * mode
+	 *
          * @return none
          */
-        void show_results (const int start=0, const int thin=1, const int nbins=50);
+        void show_results (const int start=0, const int thin=1, const int nbins=50, const bool show_mode=false);
 
-        /**
-         * @brief write results of the MCMC sampling
-         * on files
-         *
-         * @param output_dir the output director
-         *
-         * @param root_file the root of the output files:
-         * - file_root_parameters.dat file containing the output of the 
-         *   MCMC sampling for each parameter
-         * - file_root_covariance.dat file containing the covariance of the
-         *   parameters
-         * - file_root_chain file containing the chains: the extention can be .dat 
-         *   or .fits
-         *
-         * @param start the minimum chain position to be written
-         *
-         * @param thin the step used for dilution on screen
-         *
-         * @param nbins the number of bins
-         *
-         * @param fits false \f$\rightarrow\f$ ascii file; true \f$\rightarrow\f$ fits file 
-         *
-         * @return none
-         */
-        void write_results (const std::string output_dir, const std::string root_file, const int start=0, const int thin=1, const int nbins=50, const bool fits=false);
+
+
+	/**
+	 * @brief write the results of the MCMC sampling to file
+	 * 
+	 * this function stores to file the posterior mean, standard
+	 * deviation, median, 18th and 82th percentiles, and
+	 * optionally the mode
+	 *
+	 * @param output_dir the output director
+	 *
+	 * @param root_file the root of the output files: 
+	 * - file_root_parameters.dat file containing the output of
+	 * the MCMC sampling for each parameter
+	 * - file_root_covariance.dat file containing the covariance
+	 * of the parameters
+	 * - file_root_chain file containing the chains: the extention
+	 * can be .dat or .fits
+	 *
+	 * @param start the minimum chain position to be written
+	 *
+	 * @param thin the step used for dilution on screen
+	 *
+	 * @param nbins the number of bins
+	 *
+	 * @param fits false \f$\rightarrow\f$ ascii file; true
+	 * \f$\rightarrow\f$ fits file
+	 *
+	 * @param compute_mode true \f$\rightarrow\f$ compute the
+	 * posterior mode; false \f$\rightarrow\f$ do not compute the
+	 * posterior mode
+	 *
+	 * @return none
+	 */
+        void write_results (const std::string output_dir, const std::string root_file, const int start=0, const int thin=1, const int nbins=50, const bool fits=false, const bool compute_mode=false);
 
         /**
          *  @brief write the model at xx

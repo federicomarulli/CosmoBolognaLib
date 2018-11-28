@@ -525,7 +525,7 @@ double cbl::glob::Distribution::mode ()
 
     int counts = -1;
     for (size_t i=0; i<unique_vv.size(); i++) {
-      int cc   = std::count(vv.begin(), vv.end(), unique_vv[i]);
+      int cc = std::count(vv.begin(), vv.end(), unique_vv[i]);
       if (cc>counts) {
 	val = unique_vv[i];
 	counts = cc;

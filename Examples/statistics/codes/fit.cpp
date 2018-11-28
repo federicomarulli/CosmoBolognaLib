@@ -22,7 +22,7 @@ string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 vector<double> model_function (const vector<double> x, const shared_ptr<void> modelInput, std::vector<double> &parameter)
 {
   // the object Cosmology, used in this example to compute Omega_matter
-  cbl::cosmology::Cosmology &cosm = *static_pointer_cast<cbl::cosmology::Cosmology>(modelInput);
+  cbl::cosmology::Cosmology cosm = *static_pointer_cast<cbl::cosmology::Cosmology>(modelInput);
 
   vector<double> model(x.size(), 0.);
   for (size_t i=0; i<x.size(); ++i)
@@ -52,9 +52,10 @@ int main () {
 
     // --- construct the dataset by reading an input file ---
     
-    const cbl::data::Data1D data(dir_input+"data.dat");
+    const cbl::data::Data1D data(dir_input+file_data);
     shared_ptr<cbl::data::Data> ptr_data = make_shared<cbl::data::Data1D>(data);
 
+    
     // --- set the model to construct the likelihood ---
     
     // number of model parameters
@@ -119,7 +120,7 @@ int main () {
     const int nwalkers = 10;
     const int chain_size = 1000;
     posterior.initialize_chains(chain_size, nwalkers);
-    posterior.sample_stretch_move(2, true);
+    posterior.sample_stretch_move(2);
 
     // show the results on screen
     const int burn_in = 0;
@@ -130,7 +131,7 @@ int main () {
     posterior.write_results(cbl::par::DirLoc+"../output/", "chains_linear_relation", burn_in, thin);
 
     // write the best-fit model
-    posterior.write_model_from_chain(cbl::par::DirLoc+"../output/", "model_from_chain", {}, {}, burn_in, thin);
+    posterior.write_model_from_chain(cbl::par::DirLoc+"../output/", "model_from_chain.dat", {}, {}, burn_in, thin);
 
   }
   

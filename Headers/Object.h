@@ -978,7 +978,7 @@ namespace cbl {
        *  @param xx the coordinate x of the object
        *  @return none
        */
-      void set_xx (const double xx=par::defaultDouble)
+      void set_xx (const double xx)
       { m_xx = xx; }
  
       /**
@@ -986,7 +986,7 @@ namespace cbl {
        *  @param yy the coordinate y of the object
        *  @return none
        */
-      void set_yy (const double yy=par::defaultDouble)
+      void set_yy (const double yy)
       { m_yy = yy; }
     
       /**
@@ -994,7 +994,7 @@ namespace cbl {
        *  @param zz the coordinate z of the object
        *  @return none
        */
-      void set_zz (const double zz=par::defaultDouble)
+      void set_zz (const double zz)
       { m_zz = zz; }
     
       /**
@@ -1004,7 +1004,7 @@ namespace cbl {
        *  @param inputUnits the units of the input coordinates
        *  @return none
        */
-      void set_ra (const double ra=par::defaultDouble, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
+      void set_ra (const double ra, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
       {
 	m_ra = radians(ra, inputUnits);
 	if (m_dc>par::defaultDouble) cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
@@ -1017,7 +1017,7 @@ namespace cbl {
        *  @param inputUnits the units of the input coordinates
        *  @return none
        */
-      void set_dec (const double dec=par::defaultDouble, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
+      void set_dec (const double dec, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
       {
 	m_dec = radians(dec, inputUnits);
 	if (m_dc>par::defaultDouble) cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
@@ -1026,15 +1026,18 @@ namespace cbl {
       /**
        *  @brief set the member \e m_redshift, updating
        *  the comoving coordinates accordingly (if already set)
+       *
        *  @param redshift the redshift of the object
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *
+       *  @param cosmology object of class Cosmology, used to estimate
+       *  the comoving distance from the given redshift
+       *
        *  @return none
        */
-      void set_redshift (const double redshift=par::defaultDouble, const cosmology::Cosmology &cosm={})
+      void set_redshift (const double redshift, const cosmology::Cosmology cosmology)
       {
 	m_redshift = redshift;
-	m_dc = cosm.D_C(m_redshift); 
+	m_dc = cosmology.D_C(m_redshift); 
 	cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
       }
     
@@ -1044,7 +1047,7 @@ namespace cbl {
        *  @param dc the comoving distance of the object
        *  @return none
        */
-      void set_dc (const double dc=par::defaultDouble)
+      void set_dc (const double dc)
       {
 	m_dc = dc;
 	cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
@@ -1055,7 +1058,7 @@ namespace cbl {
        *  @param weight the weight of the object
        *  @return none
        */
-      void set_weight (const double weight=par::defaultDouble)
+      void set_weight (const double weight)
       { m_weight = weight; }
       
       /**
@@ -1064,7 +1067,7 @@ namespace cbl {
        *  is located 
        *  @return none
        */
-      void set_region (const long region=par::defaultLong)
+      void set_region (const long region)
       { if (region<0) ErrorCBL("Error in Object.h: region must be >0 !"); m_region = region; }
       
       /**
@@ -1072,7 +1075,7 @@ namespace cbl {
        *  @param field the field were the object has been observed
        *  @return none
        */
-      void set_field (const std::string field=par::defaultString)
+      void set_field (const std::string field)
       { m_field = field; }
       
       /**
@@ -1080,7 +1083,7 @@ namespace cbl {
        *  @param x_displacement the displacement (in Mpc) of the x coordinate
        *  @return none
        */
-      void set_x_displacement (const double x_displacement=par::defaultDouble)
+      void set_x_displacement (const double x_displacement)
       { m_x_displacement = x_displacement; }
 
       /**
@@ -1088,7 +1091,7 @@ namespace cbl {
        *  @param y_displacement the displacement (in Mpc) of the y coordinate
        *  @return none
        */
-      void set_y_displacement (const double y_displacement=par::defaultDouble)
+      void set_y_displacement (const double y_displacement)
       { m_y_displacement = y_displacement; }
 
       /**
@@ -1096,7 +1099,7 @@ namespace cbl {
        *  @param z_displacement the displacement (in Mpc) of the x coordinate
        *  @return none
        */
-      void set_z_displacement (const double z_displacement=par::defaultDouble)
+      void set_z_displacement (const double z_displacement)
       { m_z_displacement = z_displacement; }
 
       /**
@@ -1105,7 +1108,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_vx (const double vx=par::defaultDouble)
+      virtual void set_vx (const double vx)
       { (void)vx; cbl::ErrorCBL("Error in set_vx() of Objech.h!"); }
       
       /**
@@ -1114,7 +1117,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_vy (const double vy=par::defaultDouble)
+      virtual void set_vy (const double vy)
       { (void)vy; cbl::ErrorCBL("Error in set_vy() of Objech.h!"); }
     
       /**
@@ -1123,7 +1126,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_vz (const double vz=par::defaultDouble)
+      virtual void set_vz (const double vz)
       { (void)vz; cbl::ErrorCBL("Error in set_vz() of Objech.h!"); }
 
       /**
@@ -1132,7 +1135,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_mass (const double mass=par::defaultDouble)
+      virtual void set_mass (const double mass)
       { (void)mass; cbl::ErrorCBL("Error in set_mass() of Objech.h!"); }
     
       /**
@@ -1141,7 +1144,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_magnitude (const double magnitude=par::defaultDouble)
+      virtual void set_magnitude (const double magnitude)
       { (void)magnitude; cbl::ErrorCBL("Error in set_magnitude() of Objech.h!"); }  
 
       /**
@@ -1150,7 +1153,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_SFR (const double SFR=par::defaultDouble)
+      virtual void set_SFR (const double SFR)
       { (void)SFR; cbl::ErrorCBL("Error in set_SFR() of Objech.h!"); }  
     
       /**
@@ -1159,7 +1162,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_sSFR (const double sSFR=par::defaultDouble)
+      virtual void set_sSFR (const double sSFR)
       { (void)sSFR; cbl::ErrorCBL("Error in set_sSFR() of Objech.h!"); }  
       
       /**
@@ -1168,7 +1171,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_richness (const double richness=par::defaultDouble)
+      virtual void set_richness (const double richness)
       { (void)richness; cbl::ErrorCBL("Error in set_richness() of Objech.h!"); }
 
       /**
@@ -1177,7 +1180,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_richness_error (const double richness_error=par::defaultDouble)
+      virtual void set_richness_error (const double richness_error)
       { (void)richness_error; cbl::ErrorCBL("Error in set_richness_error() of Objech.h!"); }
       
       /**
@@ -1186,7 +1189,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_bias (const double bias=par::defaultDouble)
+      virtual void set_bias (const double bias)
       { (void)bias; cbl::ErrorCBL("Error in set_bias() of Objech.h!"); }  
     
       /**
@@ -1195,7 +1198,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_generic (const double generic=par::defaultDouble)
+      virtual void set_generic (const double generic)
       { (void)generic; cbl::ErrorCBL("Error in set_generic() of Objech.h!"); }  
     
       /**
@@ -1204,7 +1207,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_radius (const double radius=par::defaultDouble)
+      virtual void set_radius (const double radius)
       { (void)radius; cbl::ErrorCBL("Error in set_radius() of Objech.h!"); }
     
       /**
@@ -1213,7 +1216,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_densityContrast (const double densityContrast=par::defaultDouble)
+      virtual void set_densityContrast (const double densityContrast)
       { (void)densityContrast; cbl::ErrorCBL("Error in set_densityContrast() of Objech.h!"); }
     
       /**
@@ -1222,7 +1225,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_centralDensity (const double centralDensity=par::defaultDouble)
+      virtual void set_centralDensity (const double centralDensity)
       { (void)centralDensity; cbl::ErrorCBL("Error in set_centralDensity() of Objech.h!"); }
     
       /**
@@ -1231,7 +1234,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_mass_estimate (const double mass_estimate=par::defaultDouble)
+      virtual void set_mass_estimate (const double mass_estimate)
       { (void)mass_estimate; cbl::ErrorCBL("Error in set_mass_estimate() of Objech.h!"); }
     
       /**
@@ -1240,7 +1243,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_radius_estimate (const double radius_estimate=par::defaultDouble)
+      virtual void set_radius_estimate (const double radius_estimate)
       { (void)radius_estimate; cbl::ErrorCBL("Error in set_radius_estimate() of Objech.h!"); }
     
     
@@ -1250,7 +1253,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_veldisp_estimate (const double veldisp_estimate=par::defaultDouble)
+      virtual void set_veldisp_estimate (const double veldisp_estimate)
       { (void)veldisp_estimate; cbl::ErrorCBL("Error in set_veldisp_estimate() of Objech.h!"); }
     
       /**
@@ -1259,7 +1262,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_xcm (const double xcm=par::defaultDouble)
+      virtual void set_xcm (const double xcm)
       { (void)xcm; cbl::ErrorCBL("Error in set_xcm() of Objech.h!"); }
     
       /**
@@ -1268,7 +1271,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_ycm (const double ycm=par::defaultDouble)
+      virtual void set_ycm (const double ycm)
       { (void)ycm; cbl::ErrorCBL("Error in set_ycm() of Objech.h!"); }
     
       /**
@@ -1277,7 +1280,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_zcm (const double zcm=par::defaultDouble)
+      virtual void set_zcm (const double zcm)
       { (void)zcm; cbl::ErrorCBL("Error in set_zcm() of Objech.h!"); }
     
       /**
@@ -1286,7 +1289,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_spin_x (const double spin_x=par::defaultDouble)
+      virtual void set_spin_x (const double spin_x)
       { (void)spin_x; cbl::ErrorCBL("Error in set_spin_x() of Objech.h!"); }
     
       /**
@@ -1295,7 +1298,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_spin_y (const double spin_y=par::defaultDouble)
+      virtual void set_spin_y (const double spin_y)
       { (void)spin_y; cbl::ErrorCBL("Error in set_spin_y() of Objech.h!"); }
     
       /**
@@ -1304,7 +1307,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_spin_z (const double spin_z=par::defaultDouble)
+      virtual void set_spin_z (const double spin_z)
       { (void)spin_z; cbl::ErrorCBL("Error in set_spin_z() of Objech.h!"); }
     
       /**
@@ -1313,7 +1316,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_veldisp (const double veldisp=par::defaultDouble)
+      virtual void set_veldisp (const double veldisp)
       { (void)veldisp; cbl::ErrorCBL("Error in set_veldisp() of Objech.h!"); }
     
       /**
@@ -1322,7 +1325,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_vmax (const double vmax=par::defaultDouble)
+      virtual void set_vmax (const double vmax)
       { (void)vmax; cbl::ErrorCBL("Error in set_vmax() of Objech.h!"); }
     
       /**
@@ -1331,7 +1334,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_vmax_rad (const double vmax_rad=par::defaultDouble)
+      virtual void set_vmax_rad (const double vmax_rad)
       { (void)vmax_rad; cbl::ErrorCBL("Error in set_vmax_rad() of Objech.h!"); }
     
       /**
@@ -1340,7 +1343,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_tot_mass (const double tot_mass=par::defaultDouble)
+      virtual void set_tot_mass (const double tot_mass)
       { (void)tot_mass; cbl::ErrorCBL("Error in set_tot_mass() of Objech.h!"); }
     
       /**
@@ -1349,7 +1352,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_parent (const int parent=par::defaultInt)
+      virtual void set_parent (const int parent)
       { (void)parent; cbl::ErrorCBL("Error in set_parent() of Objech.h!"); }
       
       /**
@@ -1358,7 +1361,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_nsub (const int nsub=par::defaultInt)
+      virtual void set_nsub (const int nsub)
       { (void)nsub; cbl::ErrorCBL("Error in set_nsub() of Objech.h!"); }
     
       /**
@@ -1367,7 +1370,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_ID (const int ID=par::defaultInt)
+      virtual void set_ID (const int ID)
       { (void)ID; cbl::ErrorCBL("Error in set_ID() of Objech.h!"); }
 
       /**
@@ -1376,7 +1379,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_satellite (const std::shared_ptr<Object> satellite={})
+      virtual void set_satellite (const std::shared_ptr<Object> satellite)
       {	(void)satellite; cbl::ErrorCBL("Error in set_satellite() of Objech.h!"); }
 
       /**
@@ -1385,7 +1388,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_satellites (const std::vector<std::shared_ptr<Object>> satellites={})
+      virtual void set_satellites (const std::vector<std::shared_ptr<Object>> satellites)
       {	(void)satellites; cbl::ErrorCBL("Error in set_satellites() of Objech.h!"); }
       
       ///@}

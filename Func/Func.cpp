@@ -1414,23 +1414,43 @@ std::vector<double> cbl::vector_from_distribution (const int nRan, const std::ve
 {
   random::UniformRandomNumbers ran(0., 1., seed);
   
-  const int sz = 100;
-  vector<double> Fx(sz, 0.);
-  const vector<double> new_x = linear_bin_vector(sz, xmin, xmax); 
+  int sz = 100;
+  bool Try = true;
 
-  glob::FuncGrid dist(xx, fx, "Spline");
-  const double NN = dist.integrate_qag(xmin, xmax);
-
-  for (int i=1; i<sz; ++i) 
-    Fx[i] = dist.integrate_qag(xmin, new_x[i])/NN;
+  vector<double> Fx, new_x;
   
+  while (Try) {
+
+    vector<double> Fx_test(sz, 0.);
+    const vector<double> new_x_test = linear_bin_vector(sz, xmin, xmax); 
+    
+    glob::FuncGrid dist(xx, fx, "Spline");
+    const double NN = dist.integrate_qag(xmin, xmax);
+    
+    for (int i=1; i<sz; ++i) 
+      Fx_test[i] = dist.integrate_qag(xmin, new_x_test[i])/NN;
+
+    if (is_sorted(Fx_test.begin(), Fx_test.end())) {
+      Fx = Fx_test;
+      new_x = new_x_test;
+      Try = false;
+    }
+   
+    sz --;
+    if (sz<30) ErrorCBL("Error in cbl::vector_from_distribution() of Func.cpp: the input distribution cannot be integrated properly!");
+
+  }
+
   glob::FuncGrid ff(Fx, new_x, "Spline");
   
-  vector<double> varRandom(nRan);
+  vector<double> varRandom;
+    
+  while (varRandom.size()<unsigned(nRan)) {
+    double xx = ff(ran());
+    if (xmin<=xx && xx<=xmax) 
+      varRandom.emplace_back(xx);
+  }
 
-  for (auto &&vR : varRandom)
-    vR = ff(ran());
- 
   return varRandom;
 }
 
@@ -1589,7 +1609,7 @@ void cbl::convolution (const std::vector<double> f1, const std::vector<double> f
 // ============================================================================
 
 
-void cbl::distribution (std::vector<double> &xx, std::vector<double> &fx, std::vector<double> &err, const std::vector<double> FF, const std::vector<double> WW, const int nbin, const bool linear, const std::string file_out, const double fact, const double V1, const double V2, const string bin_type, const bool conv, const double sigma)
+void cbl::distribution (std::vector<double> &xx, std::vector<double> &fx, std::vector<double> &err, const std::vector<double> FF, const std::vector<double> WW, const int nbin, const bool linear, const std::string file_out, const double fact, const double V1, const double V2, const std::string bin_type, const bool conv, const double sigma)
 {
   if (xx.size()>0 || fx.size()>0 || FF.size()<=0 || nbin<=0) ErrorCBL("Error in cbl::distribution() in Func.cpp:  the following conditions have to be satisfied: xx.size()<=0, fx.size()<=0, FF.size()>0 and nbin>0. The values recived are instead: xx.size() = " + cbl::conv(xx.size(), par::fINT) + ", fx.size() = " + cbl::conv(fx.size(), par::fINT) + ", FF.size() = " + cbl::conv(FF.size(), par::fINT) + "and nbin = " + cbl::conv(nbin, par::fINT) + "!");
   

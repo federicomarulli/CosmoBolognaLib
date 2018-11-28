@@ -723,7 +723,7 @@ void cbl::catalogue::Catalogue::set_field (const std::vector<std::string> field)
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, const double value)
+void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, const double value, const cosmology::Cosmology cosmology)
 {
   
   switch (var_name) {
@@ -749,7 +749,7 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
     break;
 
   case Var::_Redshift_:
-    m_object[index]->set_redshift(value);
+    m_object[index]->set_redshift(value, cosmology);
     break;
 
   case Var::_Dc_:
@@ -886,7 +886,7 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<double> var)
+void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<double> var, const cosmology::Cosmology cosmology)
 {
   if (m_object.size()!=var.size()) ErrorCBL("Error in cbl::catalogue::Catalogue::set_var() in Catalogue.cpp: different sizes!");
   
@@ -913,7 +913,7 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<d
     break;
 
   case Var::_Redshift_:
-    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_redshift(var[i]);
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_redshift(var[i], cosmology);
     break;
 
   case Var::_Dc_:
@@ -1148,7 +1148,7 @@ void cbl::catalogue::Catalogue::computePolarCoordinates (const CoordinateUnits o
   // ----- unit conversion -----
   
   if (outputUnits!=CoordinateUnits::_radians_) {    
-
+    
     if (outputUnits==CoordinateUnits::_degrees_)
       for (size_t i=0; i<nObjects(); ++i) {
         ra = m_object[i]->ra();
@@ -1173,7 +1173,7 @@ void cbl::catalogue::Catalogue::computePolarCoordinates (const CoordinateUnits o
         m_object[i]->set_dec(arcminutes(dec)); 		    
       }
 
-    else ErrorCBL("Error in cbl::catalogue::Catalogue::computePolarCoordinates() in Catalogue.cpp outputUnits type not allowed!");
+    else ErrorCBL("Error in cbl::catalogue::Catalogue::computePolarCoordinates() of Catalogue.cpp outputUnits type not allowed!");
   }
   
 }
@@ -1181,7 +1181,7 @@ void cbl::catalogue::Catalogue::computePolarCoordinates (const CoordinateUnits o
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::computePolarCoordinates (const cosmology::Cosmology &cosm, const double z1, const double z2, const CoordinateUnits outputUnits)
+void cbl::catalogue::Catalogue::computePolarCoordinates (const cosmology::Cosmology &cosmology, const double z1, const double z2, const CoordinateUnits outputUnits)
 {
   double ra, dec, dc;
 
@@ -1193,7 +1193,7 @@ void cbl::catalogue::Catalogue::computePolarCoordinates (const cosmology::Cosmol
     m_object[i]->set_ra(ra); 
     m_object[i]->set_dec(dec); 
     m_object[i]->set_dc(dc);
-    m_object[i]->set_redshift(cosm.Redshift(dc, z1, z2));
+    m_object[i]->set_redshift(cosmology.Redshift(dc, z1, z2), cosmology);
   }
 
   
@@ -1219,7 +1219,7 @@ void cbl::catalogue::Catalogue::computePolarCoordinates (const cosmology::Cosmol
 	m_object[i]->set_dec(arcminutes(dec)); 		    
       }
 
-    else ErrorCBL("Error in cbl::catalogue::Catalogue::computePolarCoordinates() in Catalogue.cpp: outputUnits type not allowed!");
+    else ErrorCBL("Error in cbl::catalogue::Catalogue::computePolarCoordinates() of Catalogue.cpp: outputUnits type not allowed!");
   }
   
 }
@@ -1388,7 +1388,7 @@ void cbl::catalogue::Catalogue::write_data (const std::string outputFile, const 
 // ============================================================================
 
 
-Catalogue cbl::catalogue::Catalogue::cutted_catalogue (const Var var_name, const double down, const double up, const bool excl) const
+Catalogue cbl::catalogue::Catalogue::sub_catalogue (const Var var_name, const double down, const double up, const bool excl) const
 {
   vector<shared_ptr<Object>> objects;
   vector<double> vvar = var(var_name);
@@ -1508,7 +1508,7 @@ double cbl::catalogue::Catalogue::angsep_xyz (const int i, shared_ptr<Object> ob
 // ============================================================================
 
 
-shared_ptr<Catalogue> cbl::catalogue::Catalogue::smooth (const double gridsize, const std::vector<Var> vars, const int SUB)
+shared_ptr<Catalogue> cbl::catalogue::Catalogue::smooth (const double gridsize, const cosmology::Cosmology cosmology, const std::vector<Var> vars, const int SUB)
 {
   (void)vars;
   
@@ -1549,7 +1549,7 @@ shared_ptr<Catalogue> cbl::catalogue::Catalogue::smooth (const double gridsize, 
   for (size_t i=0; i<nRegions; ++i) {
     double start = (double)cat->region_list()[i];
     double stop = start+1;
-    subSamples[i] = cutted_catalogue(Var::_Region_, start, stop);
+    subSamples[i] = sub_catalogue(Var::_Region_, start, stop);
   }
 
   
@@ -1588,7 +1588,7 @@ shared_ptr<Catalogue> cbl::catalogue::Catalogue::smooth (const double gridsize, 
 	ZZ /= nObj; obj->set_zz(ZZ);
 	RA /= nObj; obj->set_ra(RA);
 	DEC /= nObj; obj->set_dec(DEC);
-	REDSHIFT /= nObj; obj->set_redshift(REDSHIFT);
+	REDSHIFT /= nObj; obj->set_redshift(REDSHIFT, cosmology);
 	obj->set_weight(WEIGHT);
 	sample.push_back(obj);
 

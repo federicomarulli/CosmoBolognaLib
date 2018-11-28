@@ -797,7 +797,7 @@ namespace cbl {
        *  @param unit false \f$\rightarrow\f$ phyical units; true
        *  \f$\rightarrow\f$ cosmological units (i.e. without \e h)
        *
-       *  @return none
+       *  @return object of class Cosmology
        *
        *  @warning by default: \f$\Omega_k =
        *  1-\Omega_M-\Omega_{rad}-\Omega_{DM}\f$, \f$\Omega_{CDM} =

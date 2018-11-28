@@ -1792,18 +1792,22 @@ namespace cbl {
        * @brief set a private variable
        * @param index index of the variable to set
        * @param var_name name of the variable
-       * @param value variable value
+       * @param value variable value       
+       * @param cosmology object of class Cosmology, used to estimate
+       * the comoving distance from the given redshift
        * @return none
        */
-      void set_var (const int index, const Var var_name, const double value);
+      void set_var (const int index, const Var var_name, const double value, const cosmology::Cosmology cosmology={});
       
       /**
        * @brief set a private variable
        * @param var_name name of the variable
        * @param var vector of variables
+       * @param cosmology object of class Cosmology, used to estimate
+       * the comoving distance from the given redshift
        * @return none
        */
-      void set_var (const Var var_name, const std::vector<double> var);
+      void set_var (const Var var_name, const std::vector<double> var, const cosmology::Cosmology cosmology={});
 
       /**
        *  @brief set the private member HostHalo::m_satellites
@@ -2015,13 +2019,13 @@ namespace cbl {
        *  d<SUB>c</SUB>, redshift) from the comoving (x, y, z), and
        *  assuming a cosmological model
        *
-       *  @param cosm object of class Cosmology
+       *  @param cosmology object of class Cosmology
        *  @param z1 the minimum redshift used in the computation
        *  @param z2 the maximum redshift used in the computation
        *  @param outputUnits the units of the output coordinates
        *  @return none
        */
-      void computePolarCoordinates (const cosmology::Cosmology &cosm, const double z1=0., const double z2=10., const CoordinateUnits outputUnits=CoordinateUnits::_radians_); 
+      void computePolarCoordinates (const cosmology::Cosmology &cosmology, const double z1=0., const double z2=10., const CoordinateUnits outputUnits=CoordinateUnits::_radians_); 
 
       /**
        * @brief normalize (x, y, z) (i.e. &rarr; (x/dc, y/dc, z/dc))
@@ -2131,7 +2135,7 @@ namespace cbl {
        *  down-up; true &rarr; create a subcatalogue outside down-up
        *  @return object of class catalogue
        */
-      Catalogue cutted_catalogue (const Var var_name, const double down, const double up, const bool excl=false) const;
+      Catalogue sub_catalogue (const Var var_name, const double down, const double up, const bool excl=false) const;
 
       /**
        *  @brief create a sub-catalogue
@@ -2163,12 +2167,14 @@ namespace cbl {
        * WEIGHT; others quantities must be passed trough a vector
        *
        * @param gridsize the cell size 
+       * @param cosmology object of class Cosmology, used to estimate
+       * the comoving distance from the given redshift
        * @param vars the vector of variable to average on
        * @param SUB the number of sub-catalogue used to create the
        * chain-mesh (use SUB>1 when there could be memory problems)
        * @return object of class catalogue
        */
-      std::shared_ptr<Catalogue> smooth (const double gridsize, const std::vector<Var> vars={}, const int SUB=1);
+      std::shared_ptr<Catalogue> smooth (const double gridsize, const cosmology::Cosmology cosmology, const std::vector<Var> vars={}, const int SUB=1);
 
       /**
        * @brief return the number of objectes following a condition

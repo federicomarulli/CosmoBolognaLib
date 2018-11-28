@@ -162,9 +162,8 @@ namespace cbl {
       void m_initialize_chains (const std::vector<std::vector<double>> start);
 
       /**
-       *  @brief samples lthe input function, using stretch-move
-       *  algorithm
-       *  on n-dimensional parameter space. Parallel version
+       *  @brief sample the input function using the stretch-move
+       *  algorithm on n-dimensional parameter space. Parallel version
        *  
        *  @param chain_size number of step in each chain 
        *  @param nwalkers number of parallel walkers 
@@ -174,13 +173,15 @@ namespace cbl {
        *  @param aa the stretch-move distribution parameter
        *
        *  @return none
+       *
+       *  @warning pointers cannot be used inside the input function
        */
       void m_sample_stretch_move_parallel_cpp (const int chain_size, const int nwalkers, const std::vector<std::vector<double>> start, const int seed=4241, const double aa=2);
 
       /**
-       *  @brief samples lthe input function, using stretch-move
-       *  algorithm on n-dimensional parameter space. Parallel version
-       *  Special function for function written in python
+       *  @brief sample the input function using the stretch-move
+       *  algorithm on n-dimensional parameter space - parallel
+       *  version; it is used for functions written in python
        *
        *  @param chain_size number of step in each chain 
        *  @param nwalkers number of parallel walkers   
@@ -190,6 +191,8 @@ namespace cbl {
        *  @param aa the stretch-move distribution parameter
        *
        *  @return none
+       *
+       *  @warning pointers cannot be used inside the input function
        */
       void m_sample_stretch_move_parallel_py (const int chain_size, const int nwalkers, const std::vector<std::vector<double>> start, const int seed=4241, const double aa=2);
 
@@ -310,8 +313,8 @@ namespace cbl {
       void set_function (const std::function<double(std::vector<double> &)> function);
 
       /**
-       *  @brief samples lthe input function, using stretch-move
-       *  algorithm on n-dimensional parameter space 
+       *  @brief sample the input function using the stretch-move
+       *  algorithm on n-dimensional parameter space
        *
        *  @param chain_size number of step in each chain 
        *  @param nwalkers number of parallel walkers  
@@ -320,22 +323,27 @@ namespace cbl {
        *  @param seed the seed for random number generator
        *  @param aa the stretch-move distribution parameter
        *  
-       *  @return averace acceptance ratio
+       *  @return none
        */
       void sample_stretch_move (const int chain_size, const int nwalkers, const std::vector<std::vector<double>> start, const int seed=4241, const double aa=2);
 
       /**
-       *  @brief samples lthe input function, using stretch-move
-       *  algorithm on n-dimensional parameter space. Parallel version
+       *  @brief sample the input function using the stretch-move
+       *  algorithm on n-dimensional parameter space - parallel
+       *  version
        *
        *  @param chain_size number of step in each chain 
-       *  @param nwalkers number of parallel walkers  *
-       *  @param start vector containing the starting position
-       *  for the parameters
+       *  @param nwalkers number of parallel walkers  
+       *
+       *  @param start vector containing the starting position for the
+       *  parameters
+       *
        *  @param seed the seed for random number generator
        *  @param aa the stretch-move distribution parameter
        *
        *  @return none
+       *
+       *  @warning pointers cannot be used inside the input function
        */
       void sample_stretch_move_parallel (const int chain_size, const int nwalkers, const std::vector<std::vector<double>> start, const int seed=4241, const double aa=2);
 

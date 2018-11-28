@@ -204,16 +204,16 @@ void cbl::modelling::Modelling::read_chain (const string input_dir, const string
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::show_results (const int start, const int thin, const int nbins)
+void cbl::modelling::Modelling::show_results (const int start, const int thin, const int nbins, const bool show_mode)
 {
-  m_posterior->show_results(start, thin, nbins);
+  m_posterior->show_results(start, thin, nbins, show_mode);
 }
 
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::write_results (const string dir, const string file, const int start, const int thin, const int nbins, const bool fits)
+void cbl::modelling::Modelling::write_results (const string dir, const string file, const int start, const int thin, const int nbins, const bool fits, const bool compute_mode)
 {
-  m_posterior->write_results(dir, file, start, thin, nbins, fits);
+  m_posterior->write_results(dir, file, start, thin, nbins, fits, compute_mode);
 }
 

@@ -517,6 +517,9 @@ vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func, const st
     {
       iter ++;
 
+      if ((status != GSL_SUCCESS) && (status!=GSL_CONTINUE))
+	check_GSL_fail(status, true, "GSL_minimize_nD", "gsl_multimin_test_size");
+
       status = gsl_multimin_fminimizer_iterate(s);
 
       size = gsl_multimin_fminimizer_size(s);

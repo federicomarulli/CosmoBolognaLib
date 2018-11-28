@@ -387,17 +387,25 @@ namespace cbl {
 	 *
 	 * @param seed seed for random extraction
 	 *
+	 * @param show_mode true \f$\rightarrow\f$ show the posterior
+	 * mode; false \f$\rightarrow\f$ do not show the posterior
+	 * mode
+	 *
 	 * @return none
 	 */
-	void show_results (const int start, const int thin, const int nbins, const int seed=34121);
+	void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false);
 
 	/**
-	 * @brief write results on files
+	 * @brief store the results to file
 	 *
 	 * @param dir name of the output folder
 	 *
 	 * @param file name of the output file
 	 *
+	 * this function stores to file the posterior mean, standard
+	 * deviation, median, 18th and 82th percentiles, and
+	 * optionally the mode
+	 * 
 	 * @param start the starting position 
 	 *
 	 * @param thin number of jumped indexes in the chain
@@ -406,9 +414,13 @@ namespace cbl {
 	 *
 	 * @param seed seed for random extraction
 	 *
+	 * @param compute_mode true \f$\rightarrow\f$ compute the
+	 * posterior mode; false \f$\rightarrow\f$ do not compute the
+	 * posterior mode
+	 *
 	 * @return none
 	 */
-	void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121);
+	void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false);
 
 	/**
 	 * @brief return the private member m_chain_size

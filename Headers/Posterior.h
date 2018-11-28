@@ -86,7 +86,7 @@ namespace cbl {
 	 *
 	 * @return a seed generated from m_seed_generator
 	 */
-	int m_generate_seed () {return m_seed_generator->operator()();}
+	int m_generate_seed () { return m_seed_generator->operator()(); }
 
       public:
 
@@ -153,7 +153,7 @@ namespace cbl {
 	 *
 	 * @return pointer containing the posterior parameters
 	 */
-	std::shared_ptr<ModelParameters> parameters () const {return m_model_parameters;}
+	std::shared_ptr<ModelParameters> parameters () const { return m_model_parameters; }
 
 	/**
 	 *  @brief evaluate the unnormalized 
@@ -341,14 +341,18 @@ namespace cbl {
 	void initialize_chains (const int chain_size, const int nwalkers, const std::string input_dir, const std::string input_file);
 
 	/**
-	 * @brief sample using stretch-move
-	 * sampler (Foreman-Mackey et al. 2012)
+	 * @brief sample the posterior using the stretch-move sampler
+	 * (Foreman-Mackey et al. 2012)
 	 *
 	 * @param aa the parameter of the \f$g(z)\f$ distribution
 	 *
-	 * @param parallel false \f$\rightarrow\f$ non-parallel sampler; true \f$\rightarrow\f$ parallel sampler
+	 * @param parallel false \f$\rightarrow\f$ non-parallel
+	 * sampler; true \f$\rightarrow\f$ parallel sampler
 	 *
 	 * @return none
+	 *
+	 * @warning if parallel is set true, than pointers cannot be
+	 * used inside the posterior function
 	 */
 	void sample_stretch_move (const double aa=2, const bool parallel=true);
 
@@ -396,7 +400,8 @@ namespace cbl {
 	 *
 	 * @param thin the step used for dilution
 	 *
-	 * @param fits false \f$\rightarrow\f$ ascii file; true \f$\rightarrow\f$ fits file 
+	 * @param fits false \f$\rightarrow\f$ ascii file; true
+	 * \f$\rightarrow\f$ fits file
 	 *
 	 * @return none
 	 */
@@ -443,15 +448,15 @@ namespace cbl {
 	 * @param skip_header the lines to be skipped in
 	 * the chain file
 	 *
-	 * @param fits false \f$\rightarrow\f$ ascii file; true \f$\rightarrow\f$ fits file 
+	 * @param fits false \f$\rightarrow\f$ ascii file; true
+	 * \f$\rightarrow\f$ fits file
 	 *
 	 * @return none
 	 */
 	void read_chain (const std::string input_dir, const std::string input_file, const int nwalkers, const int skip_header=1, const bool fits=false);
 
 	/**
-	 * @brief show results of the MCMC sampling
-	 * on scree
+	 * @brief show the results of the MCMC sampling on screen
 	 *
 	 * @param start the minimum chain position to be written
 	 *
@@ -460,14 +465,21 @@ namespace cbl {
 	 * @param nbins the number of bins to estimate the posterior
 	 * distribution, used to assess its properties
 	 *
+	 * @param show_mode true \f$\rightarrow\f$ show the posterior
+	 * mode; false \f$\rightarrow\f$ do not show the posterior
+	 * mode
+	 *
 	 * @return none
 	 */
-	void show_results (const int start, const int thin, const int nbins=50);
+	void show_results (const int start, const int thin, const int nbins=50, const bool show_mode=false);
 
 	/**
-	 * @brief show results of the MCMC sampling
-	 * on scree
+	 * @brief store the results of the MCMC sampling to file
 	 * 
+	 * this function stores to file the posterior mean, standard
+	 * deviation, median, 18th and 82th percentiles, and
+	 * optionally the mode
+	 *
 	 * @param output_dir the output directory 
 	 *
 	 * @param root_file the root of the output file to be written
@@ -482,14 +494,17 @@ namespace cbl {
 	 * @param fits false \f$\rightarrow\f$ ascii file; true
 	 * \f$\rightarrow\f$ fits file
 	 *
+	 * @param compute_mode true \f$\rightarrow\f$ compute the
+	 * posterior mode; false \f$\rightarrow\f$ do not compute the
+	 * posterior mode
+	 *
 	 * @return none
 	 */
-	void write_results (const std::string output_dir, const std::string root_file, const int start=0, const int thin=1, const int nbins=50, const bool fits=false);
+	void write_results (const std::string output_dir, const std::string root_file, const int start=0, const int thin=1, const int nbins=50, const bool fits=false, const bool compute_mode=false);
 
 	/**
-	 * @brief write the model at xx, yy
-	 * computing 16th, 50th and 84th percentiles
-	 * from the chains.
+	 * @brief write the model at xx, yy computing 16th, 50th and
+	 * 84th percentiles from the MCMC chains
 	 *
 	 * @param output_dir the output directory
 	 *

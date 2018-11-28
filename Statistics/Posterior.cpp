@@ -100,12 +100,14 @@ double cbl::statistics::Posterior::log (std::vector<double> &pp) const
 {
   pp = m_model_parameters->full_parameters(pp);
   double logprior = m_prior->log(pp);
+  double val;
   if (logprior>par::defaultDouble) 
-    return (m_use_grid) ? m_log_likelihood_function_grid(pp, m_likelihood_inputs)+logprior : m_log_likelihood_function(pp, m_likelihood_inputs)+logprior;
-  else
-    return par::defaultDouble;
+    val = (m_use_grid) ? m_log_likelihood_function_grid(pp, m_likelihood_inputs)+logprior : m_log_likelihood_function(pp, m_likelihood_inputs)+logprior;
+  else 
+    val = par::defaultDouble;
+  
 
-  return 0.;
+  return val;
 }
 
 
@@ -178,15 +180,8 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
     return -this->log(pp); 
   };
 
-  vector<vector<double>> ranges;
-
-  for (size_t i=0; i<npar_free; i++) {
-    int index = m_model->parameters()->free_parameters()[i];
-    ranges.push_back( {m_model->parameters()->prior_distribution(index)->xmin(), m_model->parameters()->prior_distribution(index)->xmax()} ); 
-  }
-
   coutCBL << "Maximizing the posterior..." << endl;
-  vector<double> result = cbl::gsl::GSL_minimize_nD(post, starting_par, ranges, max_iter, tol, epsilon);
+  vector<double> result = cbl::gsl::GSL_minimize_nD(post, starting_par, {}, max_iter, tol, epsilon);
   coutCBL << "Done!" << endl << endl;
 
   m_model_parameters->set_bestfit_value(result);
@@ -210,7 +205,7 @@ void cbl::statistics::Posterior::sample_stretch_move (const double aa, const boo
 
   vector<vector<double> > start(nwalkers, vector<double>(nparameters, 0));
 
-  for(int i=0; i<nparameters; i++)
+  for (int i=0; i<nparameters; i++)
     for (int j=0; j<nwalkers; j++)
       start[j][i] = m_model_parameters->chain_value(i, 0, j);
 
@@ -240,6 +235,8 @@ void cbl::statistics::Posterior::write_chain_ascii (const string output_dir, con
   const int chain_size = m_model_parameters->chain_size();
   const int nwalkers = m_model_parameters->chain_nwalkers();
   
+  checkDim(m_logposterior_values, nwalkers*chain_size, "m_logposterior_values", false);
+  
   string MK = "mkdir -p "+output_dir;
   if (system(MK.c_str())) {}
   
@@ -254,7 +251,7 @@ void cbl::statistics::Posterior::write_chain_ascii (const string output_dir, con
   fout << " log(Likelihood) log(Prior)  log(Posterior)" << endl;
 
   int nn = 0;
-
+  
   for (int j=start; j<chain_size; j+=thin) {
     for (int i=0; i<nwalkers; i++) {
 
@@ -281,10 +278,13 @@ void cbl::statistics::Posterior::write_chain_ascii (const string output_dir, con
 
 
 void cbl::statistics::Posterior::write_chain_fits (const string output_dir, const string output_file, const int start, const int thin)
-{
+{  
   const int nparameters = m_model_parameters->nparameters();
   const int chain_size = m_model_parameters->chain_size();
   const int nwalkers = m_model_parameters->chain_nwalkers();
+
+  checkDim(m_logposterior_values, nwalkers*chain_size, "m_logposterior_values", false);
+  
   string MK = "mkdir -p "+output_dir;
   if (system(MK.c_str())) {}
 
@@ -300,7 +300,7 @@ void cbl::statistics::Posterior::write_chain_fits (const string output_dir, cons
 
   vector<vector<double>> values(nparameters+4);
 
-  int n=0;
+  int n = 0;
   for (int j=start; j<chain_size; j+=thin) 
     for (int i=0; i<nwalkers; i++) {
       values[0].emplace_back(n);
@@ -313,7 +313,7 @@ void cbl::statistics::Posterior::write_chain_fits (const string output_dir, cons
       values[nparameters+1].emplace_back(m_logposterior_values[j*nwalkers+i]-lpr);
       values[nparameters+2].emplace_back(lpr);
       values[nparameters+3].emplace_back(m_logposterior_values[j*nwalkers+i]);
-      n++;
+      n ++;
     }
   
   cbl::ccfitswrapper::write_table_fits (output_dir, output_file, names, values);
@@ -346,20 +346,20 @@ void cbl::statistics::Posterior::read_chain_ascii (const string input_dir, const
   ifstream fin(file.c_str()); checkIO(fin, file);
 
   string line;
-  for(int i=0; i<skip_header; i++)
+  for (int i=0; i<skip_header; i++)
     getline(fin, line);
 
   vector<vector<double>> chain_value;
   m_logposterior_values.erase(m_logposterior_values.begin(), m_logposterior_values.end());
 
-  while(getline(fin, line))
+  while (getline(fin, line))
   {
     stringstream ss(line);
     double NUM;
     vector<double> ll, params;
 
-    while(ss>>NUM) ll.push_back(NUM);
-    for(size_t i=1;i<ll.size()-3; i++){
+    while (ss>>NUM) ll.push_back(NUM);
+    for (size_t i=1; i<ll.size()-3; i++) {
       params.push_back(ll[i]);
     }
 
@@ -397,17 +397,17 @@ void cbl::statistics::Posterior::read_chain_fits (const string input_dir, const 
   vector<vector<double>> chain_value(nparameters);
   m_logposterior_values.erase(m_logposterior_values.begin(), m_logposterior_values.end());
 
-  vector<vector<double>> values = cbl::ccfitswrapper::read_table_fits (file, names);
+  vector<vector<double>> values = cbl::ccfitswrapper::read_table_fits(file, names);
 
-  for(int i=0; i<nparameters;i++)
+  for (int i=0; i<nparameters; i++)
     chain_value[i] = values[i];
 
   m_logposterior_values = values[nparameters];
 
   int chain_size = m_logposterior_values.size()/nwalkers;
  
-  checkDim(chain_value, nparameters, nwalkers*chain_size, "chain_from_file");
-  checkDim(m_logposterior_values, nwalkers*chain_size, "logposterior_from_file");
+  checkDim(chain_value, nparameters, nwalkers*chain_size, "chain_from_file"); 
+  checkDim(m_logposterior_values, nwalkers*chain_size, "logposterior_from_file"); 
 
   m_model_parameters->set_chain_values(chain_value, nwalkers);
 
@@ -487,14 +487,14 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
 
   vector<vector<double>> chain_value;
 
-  while(getline(fin, line))
+  while (getline(fin, line))
   {
     stringstream ss(line);
     double NUM;
     vector<double> ll, params;
 
-    while(ss>>NUM) ll.push_back(NUM);
-    for(size_t i=1;i<ll.size()-3; i++){
+    while (ss>>NUM) ll.push_back(NUM);
+    for (size_t i=1; i<ll.size()-3; i++) {
       params.push_back(ll[i]);
     }
 
@@ -515,18 +515,18 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::show_results (const int start, const int thin, const int nbins)
+void cbl::statistics::Posterior::show_results (const int start, const int thin, const int nbins, const bool show_mode)
 {
-  m_model_parameters->show_results(start, thin, nbins, m_generate_seed());
+  m_model_parameters->show_results(start, thin, nbins, m_generate_seed(), show_mode);
 }
 
 
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::write_results (const string output_dir, const string root_file, const int start, const int thin, const int nbins, const bool fits)
+void cbl::statistics::Posterior::write_results (const string output_dir, const string root_file, const int start, const int thin, const int nbins, const bool fits, const bool compute_mode)
 {
-  m_model_parameters->write_results(output_dir, root_file, start, thin, nbins, m_generate_seed());
+  m_model_parameters->write_results(output_dir, root_file, start, thin, nbins, m_generate_seed(), compute_mode);
 
   const string extension = (fits) ? "_chain.fits" : "_chain.dat";
   write_chain(output_dir, root_file+extension, start, thin, fits);

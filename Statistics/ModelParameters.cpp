@@ -135,8 +135,6 @@ size_t cbl::statistics::ModelParameters::nparameters_derived () const
 
 void cbl::statistics::ModelParameters::set_parameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames)
 {
-  //Check parameterTypes size
-  
   if (nparameters==0)
     ErrorCBL("Error in cbl::statistics::ModelParameters::set_parameters() of ModelParameters.cpp: nparameters should be > 0.");
 

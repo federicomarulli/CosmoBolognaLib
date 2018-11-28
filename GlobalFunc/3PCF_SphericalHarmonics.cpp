@@ -54,15 +54,6 @@ void cbl::glob::spherical_harmonics_coeff::initialize (const int norder, const i
   m_lmax = m_norder-1;
   m_n_sph = gsl_sf_legendre_array_n(m_lmax);
 
-  m_n_sph_l.resize(m_norder, 0);
-
-  int n=0;
-  for (int i=0; i<m_norder; i++) {
-    for (int j=0; j<i+1; j++)
-      n++;
-    m_n_sph_l[i] = n;
-  }
-
   vector<vector<complex<double>>> _alm(m_nbins, vector<complex<double>>(m_n_sph, 0));
 
   m_alm = _alm;
@@ -115,7 +106,7 @@ void cbl::glob::spherical_harmonics_coeff::add (const double xx, const double yy
 
 double cbl::glob::spherical_harmonics_coeff::power (const int l, const int bin1, const int bin2)
 {
-  const int min_n = m_n_sph_l[l-1];
+  const int min_n = l*(l+1)/2;
   double power = (real(min_n, bin1)*real(min_n, bin2)+imag(min_n, bin1)*imag(min_n, bin2));
   for (int m=1; m<l+1; m++) {
     const int pos = min_n+m;
@@ -232,8 +223,8 @@ void cbl::glob::count_triplets_SphericalHarmonics (std::vector<double> &pairs, s
   {
     spherical_harmonics_coeff alm(norders, nbins+1);
 
-    vector<double> _pairs(nbins, 0);
-    vector<vector<vector<double>>> _triplets(nbins, vector<vector<double>>(nbins, vector<double>(norders, 0)));
+    vector<double> _pairs(nbins+1, 0);
+    vector<vector<vector<double>>> _triplets(nbins, vector<vector<double>>(nbins+1, vector<double>(norders, 0)));
 
     // parallelized loop
 #pragma omp for schedule(static, 2)
