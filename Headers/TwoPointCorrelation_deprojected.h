@@ -348,7 +348,8 @@ namespace cbl {
 	 *  @brief get the the binned correlation function 
 	 *  @return the binned correlation function 
 	 */
-	std::vector<double> xi1D () const { std::vector<double> vv; m_dataset->data(vv); return vv; } 
+	std::vector<double> xi1D () const
+	  { std::vector<double> vv; m_dataset->get_data(vv); return vv; } 
 
 	/**
 	 *  @brief get the error on the binned correlation function
@@ -356,7 +357,8 @@ namespace cbl {
 	 *  @return the error on the binned correlation function
 	 *  function
 	 */
-	virtual std::vector<double> error1D () const { std::vector<double> vv; m_dataset->error(vv); return vv; }
+	virtual std::vector<double> error1D () const
+	{ std::vector<double> vv; m_dataset->get_error(vv); return vv; }
 
 	/**
 	 *  @brief get the the binned correlation function 

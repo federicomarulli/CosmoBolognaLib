@@ -157,14 +157,14 @@ namespace cbl {
        *  @brief get the number of points along x
        *  @return the number of points along x
        */
-      int xsize () const
+      int xsize () const override
       { return m_xsize; }
 
       /**
        *  @brief get the number of points along y
        *  @return the number of points along y
        */
-      int ysize () const
+      int ysize () const override
       { return m_ysize; }
 
       /**
@@ -172,28 +172,16 @@ namespace cbl {
        *  @param i index
        *  @return the value of the m_x vector at position i
        */
-      double xx (const int i) const override { return m_x[i]; }
+      double xx (const int i) const override
+      { return m_x[i]; }
 
       /**
        *  @brief get the value of y at index i
        *  @param i index
        *  @return the value of the m_y vector at position i
        */
-      double yy (const int i) const override { return m_y[i]; }
-
-      /**
-       *  @brief get x values
-       *  @param [out] x the x values
-       *  @return none
-       */
-      void xx (std::vector<double> &x) const { x= m_x; }
-
-      /**
-       *  @brief get y values
-       *  @param [out] y the y values
-       *  @return none
-       */
-      void yy (std::vector<double> &y) const { y= m_y; }
+      double yy (const int i) const override
+      { return m_y[i]; }
 
       /**
        *  @brief get the independet variable, to be used 
@@ -204,7 +192,8 @@ namespace cbl {
        *  the second independent variable
        *  @return the independent variable
        */
-      std::vector<std::vector<double>> IndipendentVariable(const int i=-1, const int j=-1) const {(void)i; (void)j;  return {m_x, m_y};}
+      std::vector<std::vector<double>> IndipendentVariable (const int i=-1, const int j=-1) const override
+	{ (void)i; (void)j;  return {m_x, m_y}; } 
 
       /**
        *  @brief get data at index i,j
@@ -212,14 +201,15 @@ namespace cbl {
        *  @param j index
        *  @return the value of the m_data vector at position i,j
        */
-      double data (const int i, const int j) const {return m_data[j+i*m_ysize];} 
+      double data (const int i, const int j) const override
+      { return m_data[j+i*m_ysize]; } 
 
       /**
        *  @brief get data
        *  @param [out] data vector containing the dataset
        *  @return none
        */
-      void data (std::vector<std::vector<double>> &data) const;
+      void get_data (std::vector<std::vector<double>> &data) const override;
 
       /**
        *  @brief get error at index i,j
@@ -227,14 +217,15 @@ namespace cbl {
        *  @param j index
        *  @return the value of the m_error vector at position i,j
        */
-      double error (const int i, const int j) const {return m_error[j+i*m_ysize];} 
+      double error (const int i, const int j) const override
+      { return m_error[j+i*m_ysize]; } 
 
       /**
        *  @brief get error
        *  @param [out] error vector containing the error
        *  @return none
        */
-      void error (std::vector<std::vector<double>> &error) const;
+      void get_error (std::vector<std::vector<double>> &error) const override;
 
       ///@}
 

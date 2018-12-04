@@ -733,7 +733,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D::compute_covariance (const std::
 
   for (size_t i=0; i<xi.size(); i++) {
     vector<double> vv;
-    xi[i]->data(vv);
+    xi[i]->get_data(vv);
     Xi.push_back(vv);
   }
 

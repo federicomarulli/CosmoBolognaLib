@@ -108,9 +108,9 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range 
   vector<double> xx;
   vector<int> use_w(m_nwedges, 0);
 
-  for (int j=0; j<m_nwedges; j++){
-    for (int i=0; i<size; i++){
-      if (m_data->xx(i+j*size) < fit_range[j][1] && m_data->xx(i+j*size) > fit_range[j][0]){
+  for (int j=0; j<m_nwedges; j++) {
+    for (int i=0; i<size; i++) {
+      if (m_data->xx(i+j*size) < fit_range[j][1] && m_data->xx(i+j*size) > fit_range[j][0]) {
 	m_wedges_order.push_back(j);
 	xx.push_back(m_data->xx(i+j*size));
 	use_w[j]=1;
@@ -155,7 +155,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
     
     m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
   }
-  else if (m_data_model->Pk_mu_model==1){
+  else if (m_data_model->Pk_mu_model==1) {
     vector<double> kk_1loop, Pk_1loop;
     for (size_t i=0; i<(size_t)m_data_model->step; i++) {
       if(m_data_model->kk[i] < par::pi) {
@@ -345,10 +345,10 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::write_model (c
   vector<double> new_xx;
   
   if (xx.size()==0)
-    m_data_fit->xx(new_xx);
+    new_xx = m_data_fit->xx();
   else
     for (int n=0; n<m_data_model->nwedges; n++)
-      for (size_t i=0; i<xx.size(); i++){
+      for (size_t i=0; i<xx.size(); i++) {
 	new_xx.push_back(xx[i]);
 	new_dataset_order.push_back(n);
       }
@@ -374,10 +374,10 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::write_model_at
   vector<double> new_xx;
 
   if (xx.size()==0)
-    m_data_fit->xx(new_xx);
+    new_xx = m_data_fit->xx();
   else
     for (int n=0; n<m_data_model->nwedges; n++)
-      for (size_t i=0; i<xx.size(); i++){
+      for (size_t i=0; i<xx.size(); i++) {
 	new_xx.push_back(xx[i]);
 	new_dataset_order.push_back(n);
       }
@@ -403,10 +403,10 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::write_model_fr
   vector<double> new_xx;
 
   if (xx.size()==0)
-    m_data_fit->xx(new_xx);
+    new_xx = m_data_fit->xx();
   else
     for (int n=0; n<m_data_model->nwedges; n++)
-      for (size_t i=0; i<xx.size(); i++){
+      for (size_t i=0; i<xx.size(); i++) {
 	new_xx.push_back(xx[i]);
 	new_dataset_order.push_back(n);
       }

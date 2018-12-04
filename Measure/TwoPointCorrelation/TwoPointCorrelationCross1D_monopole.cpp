@@ -109,7 +109,7 @@ void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::read (const std::
 
 void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::write (const std::string dir, const std::string file, const int rank) const 
 {
-  vector<double> xx; m_dataset->xx(xx);
+  vector<double> xx = m_dataset->xx();
 
   checkDim(xx, m_d1d2->nbins(), "rad");
 

@@ -826,3 +826,36 @@ std::vector<double> cbl::glob::count_triplets_classic (const double r12_min, con
 
   return tt->TT1D();
 }
+
+
+// ============================================================================
+
+
+vector<double> cbl::glob::zeta_SphericalHarmonics_edgeCorrection (const vector<double> NNN, const vector<double> RRR, const double normalization)
+{
+  const int nOrders = RRR.size();
+
+  vector<double> fl = RRR;
+  for (int i=0; i<nOrders; i++)
+    fl[i] = fl[i]/RRR[0];
+
+  vector<vector<double>> A(nOrders, vector<double>(nOrders, 0)), A_inverse;
+
+  for (int k=0; k<nOrders; k++)
+    for (int l=0; l<nOrders; l++)
+      for (int lp=1; lp<nOrders; lp++)
+	A[k][l] += (2*k+1)*pow(gsl_sf_coupling_3j(2*l, 2*lp, 2*k, 0, 0, 0),2)*fl[lp];
+
+  for (int k=0; k<nOrders; k++)
+    A[k][k] += 1.;
+
+  invert_matrix(A, A_inverse);
+
+  vector<double> zeta_l(nOrders, 0);
+  for (int l=0; l<nOrders; l++)
+    for (int k=0; k<nOrders; k++)
+      zeta_l[l] += NNN[k]*A_inverse[l][k]/RRR[0]*normalization;
+
+  return zeta_l;
+}
+

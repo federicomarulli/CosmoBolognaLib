@@ -241,67 +241,6 @@ namespace cbl {
       void reset (const int ndata);
 
       /**
-       *  @brief set interval variable data
-       *  @param data std::vector containing data points 
-       *  @return none
-       */
-      void set_data (const std::vector<double> data);
-
-      /**
-       *  @brief set interval variable m_error_fx
-       *  @param error std::vector containing data standard deviation
-       *  @return none
-       */
-      void set_error (const std::vector<double> error);
-
-      /**
-       *  @brief set interval variable m_error_fx
-       *  @param covariance std::vector containing the covariance matrix
-       *  @return none
-       */
-      void set_error (const std::vector<std::vector<double>> covariance);
-
-      /**
-       *  @brief set the interval variable m_covariance, reading from
-       *  an input file
-       *
-       *  @param filename file containing the covariance matrix in the
-       *  format: column 0 \f$ \rightarrow \f$ x<SUB>i</SUB>, column 1 \f$ \rightarrow \f$
-       *  x<SUB>j</SUB>, column cov_col &rarr;
-       *  cov(x<SUB>i</SUB>,x<SUB>j</SUB>)
-       *
-       *  @param cov_col covariance matrix column, starting from 0
-       *
-       *  @param skipped_lines comment lines to be skipped
-       *
-       *  @return none
-       */
-      void set_covariance (const std::string filename, const int cov_col=2, const int skipped_lines=0);
-
-      /**
-       *  @brief set interval the variable m_covariance
-       *  @param value covariance matrix value
-       *  @param i the first index 
-       *  @param j the second index 
-       *  @return none
-       */
-      void set_covariance (const double value, const int i, const int j) { m_covariance[i][j] = value; }
-
-      /**
-       *  @brief set interval the variable m_covariance
-       *  @param covariance std::vector containing the covariance matrix
-       *  @return none
-       */
-      void set_covariance (const std::vector<std::vector<double>> covariance);
-
-      /**
-       *  @brief set interval the variable m_covariance
-       *  @param error std::vector containing the data standard deviation
-       *  @return none
-       */
-      void set_covariance (const std::vector<double> error);
-
-      /**
        *  @brief invert the covariance matrix
        *  @return none
        */
@@ -321,22 +260,14 @@ namespace cbl {
        *  @return the value of the m_x std::vector at position i
        */
       virtual double xx (const int i) const
-      { (void)i; ErrorCBL("Error in xx of Data.h!"); return 0;}
+      { (void)i; ErrorCBL("Error in xx of Data.h!"); return 0; } 
 
       /**
        *  @brief get the x std::vector
        *  @return the x std::vector
        */
       virtual std::vector<double> xx () const 
-      { ErrorCBL("Error in xx of Data.h!"); return {};}
-      
-      /**
-       *  @brief get value of x at index i
-       *  @param [out] x x values
-       *  @return none
-       */
-      virtual void xx (std::vector<double> &x) const
-      { (void)x; ErrorCBL("Error in xx of Data.h!"); }
+      { ErrorCBL("Error in xx of Data.h!"); return {}; } 
 
       /**
        *  @brief get value of x at position i,j, for Data1D_collection
@@ -348,14 +279,6 @@ namespace cbl {
       { (void)i; (void)j; ErrorCBL("Error in xx of Data.h!"); return 0.; }
 
       /**
-       *  @brief get value of x at index i
-       *  @param [out] x x values
-       *  @return none
-       */
-      virtual void xx (std::vector<std::vector<double>> &x) const
-      { (void)x; ErrorCBL("Error in xx of Data.h!"); }
-
-      /**
        *  @brief get value of y at index i, for Data2D
        *  @param i index
        *  @return the value of the m_y std::vector at position i
@@ -364,13 +287,12 @@ namespace cbl {
       { (void)i; ErrorCBL("Error in yy of Data.h!"); return 0.; }
 
       /**
-       *  @brief get value of y, for Data2D
-       *  @param [out] yy yy values
-       *  @return none
+       *  @brief get the y std::vector
+       *  @return the y std::vector
        */
-      virtual void yy (std::vector<double> &yy) const
-      { (void)yy; ErrorCBL("Error in yy of Data.h!"); }
-
+      virtual std::vector<double> yy () const 
+      { ErrorCBL("Error in yy of Data.h!"); return {}; } 
+      
       /**
        *  @brief get the independet variable, to be used 
        *  in model computation
@@ -395,7 +317,7 @@ namespace cbl {
        *  @param [out] data std::vector containing the dataset
        *  @return none
        */
-      virtual void data (std::vector<double> &data) const
+      virtual void get_data (std::vector<double> &data) const
       { (void)data; ErrorCBL("Error in data of Data.h!"); }
       
       /**
@@ -456,7 +378,7 @@ namespace cbl {
        *  @param [out] data std::vector containing the dataset
        *  @return none
        */
-      virtual void data (std::vector<std::vector<double>> &data) const
+      virtual void get_data (std::vector<std::vector<double>> &data) const
       { (void)data; ErrorCBL("Error in data of Data.h!"); }
 
       /**
@@ -473,7 +395,7 @@ namespace cbl {
        *  @param [out] error std::vector containing the staandard deviation
        *  @return none
        */
-      virtual void error (std::vector<double> &error) const
+      virtual void get_error (std::vector<double> &error) const
       { (void)error; ErrorCBL("Error in error of Data.h!"); }
 
       /**
@@ -481,7 +403,7 @@ namespace cbl {
        *  @param [out] error std::vector containing the staandard deviation
        *  @return none
        */
-      virtual void error(std::vector<std::vector<double>> &error) const
+      virtual void get_error (std::vector<std::vector<double>> &error) const
       { (void)error; ErrorCBL("Error in error of Data.h!"); }
 
        /**
@@ -559,6 +481,67 @@ namespace cbl {
       virtual void set_extra_info (const std::vector<std::vector<double>> extra_info)
       { (void)extra_info; ErrorCBL("Error in set_extra_info of Data.h"); }
 
+      /**
+       *  @brief set interval variable data
+       *  @param data std::vector containing data points 
+       *  @return none
+       */
+      void set_data (const std::vector<double> data);
+
+      /**
+       *  @brief set interval variable m_error_fx
+       *  @param error std::vector containing data standard deviation
+       *  @return none
+       */
+      void set_error (const std::vector<double> error);
+
+      /**
+       *  @brief set interval variable m_error_fx
+       *  @param covariance std::vector containing the covariance matrix
+       *  @return none
+       */
+      void set_error (const std::vector<std::vector<double>> covariance);
+
+      /**
+       *  @brief set the interval variable m_covariance, reading from
+       *  an input file
+       *
+       *  @param filename file containing the covariance matrix in the
+       *  format: column 0 \f$ \rightarrow \f$ x<SUB>i</SUB>, column 1 \f$ \rightarrow \f$
+       *  x<SUB>j</SUB>, column cov_col &rarr;
+       *  cov(x<SUB>i</SUB>,x<SUB>j</SUB>)
+       *
+       *  @param cov_col covariance matrix column, starting from 0
+       *
+       *  @param skipped_lines comment lines to be skipped
+       *
+       *  @return none
+       */
+      void set_covariance (const std::string filename, const int cov_col=2, const int skipped_lines=0);
+
+      /**
+       *  @brief set interval the variable m_covariance
+       *  @param value covariance matrix value
+       *  @param i the first index 
+       *  @param j the second index 
+       *  @return none
+       */
+      void set_covariance (const double value, const int i, const int j) { m_covariance[i][j] = value; }
+
+      /**
+       *  @brief set interval the variable m_covariance
+       *  @param covariance std::vector containing the covariance matrix
+       *  @return none
+       */
+      void set_covariance (const std::vector<std::vector<double>> covariance);
+
+      /**
+       *  @brief set interval the variable m_covariance
+       *  @param error std::vector containing the data standard deviation
+       *  @return none
+       */
+      void set_covariance (const std::vector<double> error);
+      
       ///@}
 
       /**
@@ -713,7 +696,7 @@ namespace cbl {
        * @return pointer to an object of type Data1D
        */
       virtual std::shared_ptr<Data> cut(const std::vector<bool> mask) const
-      { (void)mask; ErrorCBL("Error in cut of Data.h!"); std::shared_ptr<Data> dd; return dd;}
+      { (void)mask; ErrorCBL("Error in cut of Data.h!"); std::shared_ptr<Data> dd; return dd; } 
 
       /**
        * @brief cut the data, for Data1D
@@ -722,7 +705,7 @@ namespace cbl {
        * @return pointer to an object of type Data1D
        */
       virtual std::shared_ptr<Data> cut(const double xmin, const double xmax) const
-      { (void)xmin; (void)xmax; ErrorCBL("Error in cut of Data.h!"); std::shared_ptr<Data> dd; return dd;}
+      { (void)xmin; (void)xmax; ErrorCBL("Error in cut of Data.h!"); std::shared_ptr<Data> dd; return dd; } 
 
       /**
        * @brief cut the data, for Data2D
@@ -733,7 +716,7 @@ namespace cbl {
        * @return pointer to an object of type Data2D
        */
       virtual std::shared_ptr<Data> cut(const double xmin, const double xmax, const double ymin, const double ymax) const
-      { (void)xmin; (void)xmax; (void)ymin; (void)ymax;  ErrorCBL("Error in cut of Data.h!"); std::shared_ptr<Data> dd; return dd;}
+      { (void)xmin; (void)xmax; (void)ymin; (void)ymax;  ErrorCBL("Error in cut of Data.h!"); std::shared_ptr<Data> dd; return dd; } 
 
       /**
        * @brief cut the data, for Data1D_collection
@@ -743,7 +726,7 @@ namespace cbl {
        * @return pointer to an object of type Data1D
        */
       virtual std::shared_ptr<Data> cut(const int dataset, const double xmin, const double xmax) const
-      { (void)dataset; (void)xmin; (void)xmax; ErrorCBL("Error in cut of Data.h!"); std::shared_ptr<Data> dd; return dd;}
+      { (void)dataset; (void)xmin; (void)xmax; ErrorCBL("Error in cut of Data.h!"); std::shared_ptr<Data> dd; return dd; } 
 
       /**
        * @brief cut the data, for Data1D_collection type
@@ -752,7 +735,7 @@ namespace cbl {
        * @return pointer to an object of type Data1D_collection
        */
       virtual std::shared_ptr<Data> cut (const std::vector<double> xmin, const std::vector<double> xmax) const
-      { (void)xmin; (void)xmax; ErrorCBL("Error in cut of Data.h!"); std::shared_ptr<Data> dd; return dd;}
+      { (void)xmin; (void)xmax; ErrorCBL("Error in cut of Data.h!"); std::shared_ptr<Data> dd; return dd; } 
 
       ///@}
       

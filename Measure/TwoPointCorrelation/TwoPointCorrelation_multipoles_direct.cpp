@@ -747,8 +747,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::set_parameters 
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xx () const
 {
-  vector<double> rad, xx;
-  m_dataset->xx(xx);
+  vector<double> rad, xx = m_dataset->xx();
 
   for (size_t i=0; i<xx.size()/3; i++)
     rad.push_back(xx[i]);
@@ -762,8 +761,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiMonopole () const
 {
-  vector<double> vv; 
-  m_dataset->data(vv);
+  vector<double> vv = m_dataset->data();
 
   size_t sz = vv.size();
 
@@ -780,8 +778,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorMonopole () const
 {
-  vector<double> vv; 
-  m_dataset->error(vv);
+  vector<double> vv = m_dataset->error();
 
   size_t sz = vv.size();
 
@@ -799,8 +796,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiQuadrupole () const 
 {
-  vector<double> vv; 
-  m_dataset->data(vv);
+  vector<double> vv = m_dataset->data();
 
   size_t sz = vv.size();
 
@@ -818,8 +814,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorQuadrupole () const 
 {
-  vector<double> vv; 
-  m_dataset->error(vv);
+  vector<double> vv = m_dataset->error();
 
   size_t sz = vv.size();
 
@@ -837,8 +832,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiHexadecapole () const
 {
-  vector<double> vv; 
-  m_dataset->data(vv);
+  vector<double> vv = m_dataset->data();
 
   size_t sz = vv.size();
 
@@ -856,8 +850,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorHexadecapole () const 
 {
-  vector<double> vv; 
-  m_dataset->error(vv);
+  vector<double> vv = m_dataset->error();
 
   size_t sz = vv.size();
 
@@ -877,7 +870,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write (const st
 {
   (void)rank;
   
-  vector<double> rad; m_dataset->xx(rad);
+  vector<double> rad = m_dataset->xx();
   vector<double> xil = m_dataset->data();
   vector<double> error = m_dataset->error();
 

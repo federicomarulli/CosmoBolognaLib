@@ -1097,6 +1097,18 @@ namespace cbl {
      * two sides fixed
      */
     std::vector<double> count_triplets_classic (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int nbins, const cbl::catalogue::Catalogue catalogue, cbl::triplets::TripletType tripletType);
+
+    /**
+     * @brief compute edge-correction
+     * and return legendre coefficients of the 3PCF
+     *
+     * @param NNN the Data-Random triplet legendre coefficients
+     * @param RRR the random triplet legendre coefficients
+     * @param normalization the normalization factor: 	
+     *        \f$ n_R*(n_R-1)*(n_R-2)/(n_G*(n_G-1)*(n_G-2))\f$
+     * @return the legendre coefficients of the 3PCF
+     */
+    std::vector<double> zeta_SphericalHarmonics_edgeCorrection (const std::vector<double> NNN, const std::vector<double> RRR, const double normalization=1.);
   }
 
 }

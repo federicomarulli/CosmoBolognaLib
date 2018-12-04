@@ -142,7 +142,7 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::read (const std::string
 
 void cbl::measure::twopt::TwoPointCorrelation_projected::write (const std::string dir, const std::string file, const int rank) const 
 {
-  vector<double> xx; m_dataset->xx(xx);
+  vector<double> xx = m_dataset->xx();
 
   checkDim(xx, m_dd->nbins_D1(), "rp");
 
@@ -226,11 +226,9 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measureJackknife (const
   
   covariance_matrix(ww, covariance, true);
 
-  vector<double> xx_cart, yy_cart;
+  vector<double> xx_cart = data_cart->xx(), yy_cart = data_cart->yy();
   vector<vector<double> > dd_cart, error_cart;
-
-  data_cart->xx(xx_cart); data_cart->yy(yy_cart);
-  data_cart->data(dd_cart); data_cart->error(error_cart);
+  data_cart->get_data(dd_cart); data_cart->get_error(error_cart);
 
   m_dataset = Projected(xx_cart, yy_cart, dd_cart, error_cart);
   m_dataset->set_covariance(covariance);
@@ -274,11 +272,9 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measureBootstrap (const
   
   covariance_matrix(ww, covariance, false);
 
-  vector<double> xx_cart, yy_cart;
+  vector<double> xx_cart = data_cart->xx(), yy_cart = data_cart->yy();
   vector<vector<double> > dd_cart, error_cart;
-
-  data_cart->xx(xx_cart); data_cart->yy(yy_cart);
-  data_cart->data(dd_cart); data_cart->error(error_cart);
+  data_cart->get_data(dd_cart); data_cart->get_error(error_cart);
 
   m_dataset = Projected(xx_cart, yy_cart, dd_cart, error_cart);
   m_dataset->set_covariance(covariance);
@@ -294,13 +290,10 @@ std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelatio
   
   auto data2d = TwoPointCorrelation2D_cartesian::XiJackknife(dd, rr);
 
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_cart, yy_cart;
-    vector<vector<double> > dd_cart, error_cart;
-
-    data2d[i]->xx(xx_cart); data2d[i]->yy(yy_cart);
-    data2d[i]->data(dd_cart); data2d[i]->error(error_cart);
-
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_cart = data2d[i]->xx(), yy_cart = data2d[i]->yy();
+    vector<vector<double>> dd_cart, error_cart;
+    data2d[i]->get_data(dd_cart); data2d[i]->get_error(error_cart);
     data.push_back(move(Projected(xx_cart, yy_cart, dd_cart, error_cart)));
   }
 
@@ -317,13 +310,10 @@ std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelatio
  
   auto data2d = TwoPointCorrelation2D_cartesian::XiJackknife(dd, rr, dr);
   
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_cart, yy_cart;
-    vector<vector<double> > dd_cart, error_cart;
-
-    data2d[i]->xx(xx_cart); data2d[i]->yy(yy_cart);
-    data2d[i]->data(dd_cart); data2d[i]->error(error_cart);
-
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_cart = data2d[i]->xx(), yy_cart = data2d[i]->yy();
+    vector<vector<double>> dd_cart, error_cart;
+    data2d[i]->get_data(dd_cart); data2d[i]->get_error(error_cart);
     data.push_back(move(Projected(xx_cart, yy_cart, dd_cart, error_cart)));
   }
 
@@ -340,13 +330,10 @@ std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelatio
 
   auto data2d = TwoPointCorrelation2D_cartesian::XiBootstrap(nMocks, dd, rr, seed);
 
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_cart, yy_cart;
-    vector<vector<double> > dd_cart, error_cart;
-
-    data2d[i]->xx(xx_cart); data2d[i]->yy(yy_cart);
-    data2d[i]->data(dd_cart); data2d[i]->error(error_cart);
-
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_cart = data2d[i]->xx(), yy_cart = data2d[i]->yy();
+    vector<vector<double>> dd_cart, error_cart;
+    data2d[i]->get_data(dd_cart); data2d[i]->get_error(error_cart);
     data.push_back(move(Projected(xx_cart, yy_cart, dd_cart, error_cart)));
   }
 
@@ -363,13 +350,10 @@ std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelatio
 
   auto data2d = TwoPointCorrelation2D_cartesian::XiBootstrap(nMocks, dd, rr, dr, seed);
   
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_cart, yy_cart;
-    vector<vector<double> > dd_cart, error_cart;
-
-    data2d[i]->xx(xx_cart); data2d[i]->yy(yy_cart);
-    data2d[i]->data(dd_cart); data2d[i]->error(error_cart);
-
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_cart = data2d[i]->xx(), yy_cart = data2d[i]->yy();
+    vector<vector<double>> dd_cart, error_cart;
+    data2d[i]->get_data(dd_cart); data2d[i]->get_error(error_cart);
     data.push_back(move(Projected(xx_cart, yy_cart, dd_cart, error_cart)));
   }
   

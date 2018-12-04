@@ -102,8 +102,7 @@ std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::xx () const
 {
-  vector<double> rad, xx;
-  m_dataset->xx(xx);
+  vector<double> rad, xx = m_dataset->xx();
 
   for (size_t i=0; i<xx.size()/3; i++)
     rad.push_back(xx[i]);
@@ -117,8 +116,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrat
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::xiMonopole () const
 {
-  vector<double> vv; 
-  m_dataset->data(vv);
+  vector<double> vv = m_dataset->data();
 
   size_t sz = vv.size();
 
@@ -135,8 +133,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrat
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::errorMonopole () const
 {
-  vector<double> vv; 
-  m_dataset->error(vv);
+  vector<double> vv = m_dataset->error();
 
   size_t sz = vv.size();
 
@@ -154,8 +151,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrat
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::xiQuadrupole () const 
 {
-  vector<double> vv; 
-  m_dataset->data(vv);
+  vector<double> vv = m_dataset->data();
 
   size_t sz = vv.size();
 
@@ -173,8 +169,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrat
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::errorQuadrupole () const 
 {
-  vector<double> vv; 
-  m_dataset->error(vv);
+  vector<double> vv = m_dataset->error();
 
   size_t sz = vv.size();
 
@@ -192,8 +187,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrat
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::xiHexadecapole () const
 {
-  vector<double> vv; 
-  m_dataset->data(vv);
+  vector<double> vv = m_dataset->data();
 
   size_t sz = vv.size();
 
@@ -211,8 +205,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrat
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::errorHexadecapole () const 
 {
-  vector<double> vv; 
-  m_dataset->error(vv);
+  vector<double> vv = m_dataset->error();
 
   size_t sz = vv.size();
 
@@ -336,7 +329,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureJack
     if (dir_output_resample != par::defaultString) {
       string file_out = dir_output_resample+"xi_multipoles_Jackknife_"+conv(i,par::fINT)+".dat";
 
-      vector<double> rad; data[i]->xx(rad);
+      vector<double> rad = data[i]->xx();
       vector<double> xil = data[i]->data();
       vector<double> error = data[i]->error();
 
@@ -362,10 +355,9 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureJack
 
   covariance_matrix(ww, covariance, 1);
 
-  vector<double> xx_polar, yy_polar;
+  vector<double> xx_polar = data_polar->xx(), yy_polar = data_polar->yy();
   vector<vector<double>> dd_polar, error_polar;
-  data_polar->xx(xx_polar); data_polar->yy(yy_polar);
-  data_polar->data(dd_polar); data_polar->error(error_polar);
+  data_polar->get_data(dd_polar); data_polar->get_error(error_polar);
 
   m_dataset = Multipoles(xx_polar, yy_polar, dd_polar, error_polar);
   m_dataset->set_covariance(covariance);
@@ -402,7 +394,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureBoot
     if (dir_output_resample != par::defaultString) {
       string file_out = dir_output_resample+"xi_multipoles_Bootstrap_"+conv(i,par::fINT)+".dat";
 
-      vector<double> rad; data[i]->xx(rad);
+      vector<double> rad = data[i]->xx();
       vector<double> xil = data[i]->data();
       vector<double> error = data[i]->error();
 
@@ -428,10 +420,9 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureBoot
   
   covariance_matrix(ww, covariance, 0);
 
-  vector<double> xx_polar, yy_polar;
+  vector<double> xx_polar = data_polar->xx(), yy_polar = data_polar->yy();
   vector<vector<double>> dd_polar, error_polar;
-  data_polar->xx(xx_polar); data_polar->yy(yy_polar);
-  data_polar->data(dd_polar); data_polar->error(error_polar);
+  data_polar->get_data(dd_polar); data_polar->get_error(error_polar);
 
   m_dataset = Multipoles(xx_polar, yy_polar, dd_polar, error_polar);
   m_dataset->set_covariance(covariance);
@@ -446,11 +437,10 @@ std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelatio
   vector<shared_ptr<data::Data>> data;
   auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd, rr);
 
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_polar, yy_polar;
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_polar = data2d[i]->xx(), yy_polar = data2d[i]->yy();
     vector<vector<double>> dd_polar, error_polar;
-    data2d[i]->xx(xx_polar); data2d[i]->yy(yy_polar);
-    data2d[i]->data(dd_polar); data2d[i]->error(error_polar);
+    data2d[i]->get_data(dd_polar); data2d[i]->get_error(error_polar);
     data.push_back(move(Multipoles(xx_polar, yy_polar, dd_polar, error_polar)));
   }
   
@@ -466,11 +456,10 @@ std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelatio
   vector<shared_ptr<data::Data>> data;
   auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd, rr, dr);
 
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_polar, yy_polar;
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_polar = data2d[i]->xx(), yy_polar = data2d[i]->yy();
     vector<vector<double>> dd_polar, error_polar;
-    data2d[i]->xx(xx_polar); data2d[i]->yy(yy_polar);
-    data2d[i]->data(dd_polar); data2d[i]->error(error_polar);
+    data2d[i]->get_data(dd_polar); data2d[i]->get_error(error_polar);
     data.push_back(move(Multipoles(xx_polar, yy_polar, dd_polar, error_polar)));
   }
   
@@ -486,11 +475,10 @@ std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelatio
   vector<shared_ptr<data::Data>> data;
   auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks, dd, rr, seed);
 
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_polar, yy_polar;
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_polar = data2d[i]->xx(), yy_polar = data2d[i]->yy();
     vector<vector<double>> dd_polar, error_polar;
-    data2d[i]->xx(xx_polar); data2d[i]->yy(yy_polar);
-    data2d[i]->data(dd_polar); data2d[i]->error(error_polar);
+    data2d[i]->get_data(dd_polar); data2d[i]->get_error(error_polar);
     data.push_back(move(Multipoles(xx_polar, yy_polar, dd_polar, error_polar)));
   }
 
@@ -506,10 +494,9 @@ std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelatio
   auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks, dd, rr, dr, seed);
 
   for (size_t i=0; i<data2d.size(); i++) {
-    vector<double> xx_polar, yy_polar;
+    vector<double> xx_polar = data2d[i]->xx(), yy_polar = data2d[i]->yy();
     vector<vector<double>> dd_polar, error_polar;
-    data2d[i]->xx(xx_polar); data2d[i]->yy(yy_polar);
-    data2d[i]->data(dd_polar); data2d[i]->error(error_polar);
+    data2d[i]->get_data(dd_polar); data2d[i]->get_error(error_polar);
     data.push_back(move(Multipoles(xx_polar, yy_polar, dd_polar, error_polar)));
   }
   
@@ -524,7 +511,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::write (cons
 {
   (void)rank;
   
-  vector<double> rad; m_dataset->xx(rad);
+  vector<double> rad = m_dataset->xx();
   vector<double> xil = m_dataset->data();
   vector<double> error = m_dataset->error();
 

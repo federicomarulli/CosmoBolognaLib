@@ -43,14 +43,14 @@ cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs (const std::shared
 {																							
   switch (data->dataType()) {
     case(data::DataType::_1D_):
-      data->xx(xx);
+      xx = data->xx();
       weights1D.resize(data->ndata(), 1.);
       break;
 
     case (data::DataType::_1D_extra_):
 
       if (input_x_index.size()==0)
-	data->xx(xx);
+	xx = data->xx();
       else 
 	for (int i=0; i<data->ndata(); i++) // using extra info
 	  xx.push_back(data->extra_info(input_x_index[0], i));
@@ -63,19 +63,19 @@ cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs (const std::shared
       break;
 
     case (data::DataType::_2D_):
-      data->xx(xx);
-      data->yy(yy);
+      xx = data->xx();
+      yy = data->yy();
       if (input_w_index<0) 
 	weights2D.resize(data->xsize(), vector<double>(data->ysize(), 1.));
       break;
 
     case (data::DataType::_2D_extra_):
       if (input_x_index.size()==0) {
-	data->xx(xx);
-	data->yy(yy);
+	xx = data->xx();
+	yy = data->yy();
       }
       else {
-	for (int i=0; i<data->ndata(); i++){ // using extra info
+	for (int i=0; i<data->ndata(); i++) { // using extra info
 	  xx.push_back(data->extra_info(input_x_index[0], i));
 	  yy.push_back(data->extra_info(input_x_index[1], i));
 	}

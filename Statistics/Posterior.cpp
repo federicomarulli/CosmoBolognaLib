@@ -105,7 +105,6 @@ double cbl::statistics::Posterior::log (std::vector<double> &pp) const
     val = (m_use_grid) ? m_log_likelihood_function_grid(pp, m_likelihood_inputs)+logprior : m_log_likelihood_function(pp, m_likelihood_inputs)+logprior;
   else 
     val = par::defaultDouble;
-  
 
   return val;
 }
@@ -182,11 +181,20 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
 
   coutCBL << "Maximizing the posterior..." << endl;
   vector<double> result = cbl::gsl::GSL_minimize_nD(post, starting_par, {}, max_iter, tol, epsilon);
-  coutCBL << "Done!" << endl << endl;
 
-  m_model_parameters->set_bestfit_value(result);
-  m_model_parameters->write_bestfit_info();
-  coutCBL << "log(posterior) = " << post(result) << endl << endl;
+ //Check if result is in prior, if not the case something bad happened, then raise a Warning (Error?)
+  
+  if (m_prior->log(result) > par::defaultDouble) {
+    coutCBL << "Done!" << endl << endl;
+    m_model_parameters->set_bestfit_value(result);
+    m_model_parameters->write_bestfit_info();
+    coutCBL << "log(posterior) = " << post(result) << endl << endl;
+  }
+  else
+    ErrorCBL("Error in cbl::statistics::Posterior::maximize() of Posterior.cpp. Maximization\
+	ended with parameter values out of prior! Please check your inputs or change the value\
+	of epsilon ");
+
 }
 
 
@@ -544,7 +552,7 @@ void cbl::statistics::Posterior::write_model_from_chain (const std::string outpu
       {
 	vector<double> xvec = xx;
 	if (xx.size()==0)
-	  m_data->xx(xvec);
+	  xvec = m_data->xx();
 
 	m_model->write_from_chains(output_dir, output_file, xvec, start, thin);
       }
@@ -554,9 +562,9 @@ void cbl::statistics::Posterior::write_model_from_chain (const std::string outpu
       {
 	vector<double> xvec = xx, yvec = yy;
 	if (xx.size()==0)
-	  m_data->xx(xvec);
+	  xvec = m_data->xx();
 	if (yy.size()==0)
-	  m_data->yy(yvec);
+	  yvec = m_data->yy();
 
 	m_model->write_from_chains(output_dir, output_file, xvec, yvec, start, thin);
       }

@@ -161,13 +161,6 @@ namespace cbl {
        *  @return the x vector
        */
       std::vector<double> xx () const override { return m_x; }  
-      
-      /**
-       *  @brief get x values
-       *  @param [out] x the x values
-       *  @return none
-       */
-      void xx (std::vector<double> &x) const { x = m_x; }
 
       /**
        *  @brief get the independet variable, to be used 
@@ -178,21 +171,24 @@ namespace cbl {
        *  independent variable, not used
        *  @return the independent variable
        */
-      std::vector<std::vector<double>> IndipendentVariable (const int i=-1, const int j=-1) const {(void)i; (void)j; return {m_x};}
+      std::vector<std::vector<double>> IndipendentVariable (const int i=-1, const int j=-1) const override
+	{ (void)i; (void)j; return {m_x}; }
 
       /**
        *  @brief get data for Data1D
        *  @param [out] data vector containing the dataset
        *  @return none
        */
-      void data (std::vector<double> &data) const { data = m_data; }
+      void get_data (std::vector<double> &data) const override
+      { data = m_data; }
 
       /**
        *  @brief get standard deviation for Data1D
        *  @param [out] error vector containing the standard deviation
        *  @return none
        */
-      void error (std::vector<double> &error) const { error = m_error; }
+      void get_error (std::vector<double> &error) const override
+      { error = m_error; }
 
       ///@}
 

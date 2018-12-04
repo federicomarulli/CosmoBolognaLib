@@ -111,7 +111,7 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measurePoisson (const
   
   // ----------- integrate the 2D two-point correlation function along the parallel direction ----------- 
 
-  vector<double> xx; m_dataset->xx(xx);
+  vector<double> xx = m_dataset->xx();
 
   m_dataset = Deprojected(xx, TwoPointCorrelation_projected::dataset()->data(), TwoPointCorrelation_projected::dataset()->error());
 }
@@ -124,7 +124,7 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife (con
 {
   if (dir_output_resample != par::defaultString && dir_output_resample != "") {
     string mkdir = "mkdir -p "+dir_output_resample;
-    if(system(mkdir.c_str())){}
+    if (system(mkdir.c_str())) {}
   }
 
   vector<shared_ptr<data::Data>> data;
@@ -133,11 +133,9 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife (con
 
   auto data_cart = (estimator==Estimator::_natural_) ? correlation_NaturalEstimator(m_dd, m_rr) : correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
 
-  vector<double> xx_cart, yy_cart; 
-  vector<vector<double> > dd_cart, error_cart;
-
-  data_cart->xx(xx_cart); data_cart->yy(yy_cart);
-  data_cart->data(dd_cart); data_cart->error(error_cart);
+  vector<double> xx_cart = data_cart->xx(), yy_cart = data_cart->yy();
+  vector<vector<double>> dd_cart, error_cart;
+  data_cart->get_data(dd_cart); data_cart->get_error(error_cart);
 
   auto data_proj = TwoPointCorrelation_projected::Projected(xx_cart, yy_cart, dd_cart, error_cart);
 
@@ -162,7 +160,7 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife (con
 
   covariance_matrix(ww, covariance, true);
 
-  vector<double> xx; data_proj->xx(xx);
+  vector<double> xx = data_proj->xx();
 
   m_dataset = Deprojected(xx, data_proj->data(), data_proj->error());
   m_dataset->set_covariance(covariance);
@@ -186,12 +184,10 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureBootstrap (con
 
   auto data_cart = (estimator==Estimator::_natural_) ? correlation_NaturalEstimator(m_dd, m_rr) : correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
 
-  vector<double> xx_cart, yy_cart; 
-  vector<vector<double> > dd_cart, error_cart;
-
-  data_cart->xx(xx_cart); data_cart->yy(yy_cart);
-  data_cart->data(dd_cart); data_cart->error(error_cart);
-
+  vector<double> xx_cart = data_cart->xx(), yy_cart = data_cart->yy();
+  vector<vector<double>> dd_cart, error_cart;
+  data_cart->get_data(dd_cart); data_cart->get_error(error_cart);
+  
   auto data_proj = TwoPointCorrelation_projected::Projected(xx_cart, yy_cart, dd_cart, error_cart);
 
   if (estimator==Estimator::_natural_) 
@@ -215,7 +211,7 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureBootstrap (con
   
   covariance_matrix(ww, covariance, false);
 
-  vector<double> xx; data_proj->xx(xx);
+  vector<double> xx = data_proj->xx();
 
   m_dataset = Deprojected(xx, data_proj->data(), data_proj->error());
   m_dataset->set_covariance(covariance);
@@ -231,8 +227,8 @@ std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelatio
   
   auto data_proj = TwoPointCorrelation_projected::XiJackknife(dd, rr);
 
-  for (size_t i=0; i<data_proj.size(); i++){
-    vector<double> xx; data_proj[i]->xx(xx);
+  for (size_t i=0; i<data_proj.size(); i++) {
+    vector<double> xx = data_proj[i]->xx();
     data.push_back(move(Deprojected(xx, data_proj[i]->data(), data_proj[i]->error())));
   }
 
@@ -248,8 +244,8 @@ std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelatio
   vector<shared_ptr<data::Data>> data;
 
   auto data_proj = TwoPointCorrelation_projected::XiJackknife(dd, rr, dr);
-  for (size_t i=0; i<data_proj.size(); i++){
-    vector<double> xx; data_proj[i]->xx(xx);
+  for (size_t i=0; i<data_proj.size(); i++) {
+    vector<double> xx = data_proj[i]->xx();
     data.push_back(move(Deprojected(xx, data_proj[i]->data(), data_proj[i]->error())));
   }
 
@@ -265,8 +261,8 @@ std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelatio
   vector<shared_ptr<data::Data>> data;
 
   auto data_proj = TwoPointCorrelation_projected::XiBootstrap(nMocks, dd, rr, seed);
-  for (size_t i=0; i<data_proj.size(); i++){
-    vector<double> xx; data_proj[i]->xx(xx);
+  for (size_t i=0; i<data_proj.size(); i++) {
+    vector<double> xx = data_proj[i]->xx();
     data.push_back(move(Deprojected(xx, data_proj[i]->data(), data_proj[i]->error())));
   }
 
@@ -283,8 +279,8 @@ std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelatio
   vector<shared_ptr<data::Data>> data;
 
   auto data_proj = TwoPointCorrelation_projected::XiBootstrap(nMocks, dd, rr, dr, seed);
-  for (size_t i=0; i<data_proj.size(); i++){
-    vector<double> xx; data_proj[i]->xx(xx);
+  for (size_t i=0; i<data_proj.size(); i++) {
+    vector<double> xx = data_proj[i]->xx();
     data.push_back(move(Deprojected(xx, data_proj[i]->data(), data_proj[i]->error())));
   }
 
@@ -306,7 +302,7 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::read (const std::stri
 
 void cbl::measure::twopt::TwoPointCorrelation_deprojected::write (const std::string dir, const std::string file, const int rank) const 
 {
-  vector<double> xx; m_dataset->xx(xx);
+  vector<double> xx = m_dataset->xx();
 
   checkDim(xx, m_dd->nbins_D1(), "rad");
 

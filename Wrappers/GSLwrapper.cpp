@@ -500,7 +500,7 @@ vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func, const st
 
   for (size_t i=0; i<npar; i++) {
     gsl_vector_set(x, i, start[i]);
-    double val = (epsilon>0 && ranges.size()>0) ? (ranges[i][1]-ranges[i][0])*epsilon : 1;
+    double val = (epsilon>0 && ranges.size()>0) ? (ranges[i][1]-ranges[i][0])*epsilon : epsilon;
     gsl_vector_set(ss, i, val);
   }
 

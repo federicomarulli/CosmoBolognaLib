@@ -1463,9 +1463,9 @@ namespace cbl {
        *  this function computes the density of massive neutrinos as
        *  follows:
        *
-       *  \f[\Omega_nu = \frac{\sum m_\nu}{93.8h^2 eV}\f]
+       *  \f[\Omega_\nu = \frac{\sum m_\nu}{93.8h^2 eV}\f]
        *
-       *  @param Mnu \f$sum m_\nu\f$ in eV
+       *  @param Mnu \f$\sum m_\nu\f$ in eV
        *  
        *  @return \f$\Omega_nu\f$
        */

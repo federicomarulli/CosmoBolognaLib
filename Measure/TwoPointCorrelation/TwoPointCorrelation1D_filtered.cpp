@@ -110,10 +110,10 @@ void cbl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters (const 
 shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D_filtered::Filtered (const shared_ptr<data::Data> monopole)
 {
   vector<double> rad; 
-  if(!m_compute_extra_info)
-    monopole->xx(rad);
+  if (!m_compute_extra_info)
+    rad = monopole->xx();
   else
-   rad = monopole->extra_info()[0];
+    rad = monopole->extra_info()[0];
 
   vector<double> xi = monopole->data();
   vector<double> error_xi = monopole->error();

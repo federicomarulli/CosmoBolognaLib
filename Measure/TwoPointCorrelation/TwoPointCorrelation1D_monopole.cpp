@@ -102,7 +102,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::read (const std::strin
 
 void cbl::measure::twopt::TwoPointCorrelation1D_monopole::write (const std::string dir, const std::string file, const int rank) const 
 {
-  vector<double> xx; m_dataset->xx(xx);
+  vector<double> xx = m_dataset->xx();
 
   checkDim(xx, m_dd->nbins(), "rad");
 
@@ -190,7 +190,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknife (cons
       data_SS[i]->write(dir_output_JackknifeXi, file, header, 10, 0);
     }
 
-    vector<double> dd; data_SS[i]->data(dd);
+    vector<double> dd; data_SS[i]->get_data(dd);
 
     xi_SubSamples.push_back(dd);
   }
@@ -238,7 +238,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknifeTest (
       data_SS[i]->write(dir_output_JackknifeXi, file, header, 10, 0);
     }
 
-    vector<double> dd; data_SS[i]->data(dd);
+    vector<double> dd; data_SS[i]->get_data(dd);
 
     xi_SubSamples.push_back(dd);
   }
@@ -286,7 +286,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureBootstrap (cons
       data_SS[i]->write(dir_output_BootstrapXi, file, header, 10, 0);
     }
 
-    vector<double> dd; data_SS[i]->data(dd);
+    vector<double> dd; data_SS[i]->get_data(dd);
 
     xi_SubSamples.push_back(dd);
   }

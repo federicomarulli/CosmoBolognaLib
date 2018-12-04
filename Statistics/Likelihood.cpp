@@ -385,9 +385,9 @@ void cbl::statistics::Likelihood::write_model (const string output_dir, const st
 
     case Dim::_1D_: 
       {
-	vector<double> xvec=xx;
-	if(xx.size()==0)
-	  m_data->xx(xvec);
+	vector<double> xvec = xx;
+	if (xx.size()==0)
+	  xvec = m_data->xx();
 
 	m_model->write(output_dir, output_file, xvec, parameters);
       }
@@ -395,11 +395,11 @@ void cbl::statistics::Likelihood::write_model (const string output_dir, const st
       break;
     case Dim::_2D_: 
       {
-	vector<double> xvec=xx, yvec=yy;
-	if(xx.size()==0)
-	  m_data->xx(xvec);
-	if(yy.size()==0)
-	  m_data->yy(yvec);
+	vector<double> xvec = xx, yvec = yy;
+	if (xx.size()==0)
+	  xvec = m_data->xx();
+	if (yy.size()==0)
+	  yvec = m_data->yy();
 
 	m_model->write(output_dir, output_file, xvec, yvec, parameters);
       }

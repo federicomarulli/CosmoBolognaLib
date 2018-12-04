@@ -182,7 +182,7 @@ std::shared_ptr<Data> cbl::data::Data1D::cut (const std::vector<bool> mask) cons
 // ======================================================================================
 
 
-shared_ptr<Data> cbl::data::Data1D::cut(const double xmin, const double xmax) const
+shared_ptr<Data> cbl::data::Data1D::cut (const double xmin, const double xmax) const
 {
   vector<bool> mask(m_ndata, true);
   vector<double> xx;
@@ -207,7 +207,7 @@ shared_ptr<Data> cbl::data::Data1D::cut(const double xmin, const double xmax) co
 // ======================================================================================
 
 
-shared_ptr<Data> cbl::data::Data1D::as_factory()
+shared_ptr<Data> cbl::data::Data1D::as_factory ()
 {
   shared_ptr<Data> dd = make_shared<Data1D>(Data1D(m_x, m_data, m_covariance));
 

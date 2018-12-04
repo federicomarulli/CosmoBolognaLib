@@ -76,7 +76,7 @@ cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::Modelling_TwoPo
 
   int size = m_data->ndata()/m_nmultipoles;
 
-  for (int j=0; j<m_nmultipoles; j++){
+  for (int j=0; j<m_nmultipoles; j++) {
     m_use_pole[j]=true;
     for (int i=0; i<size; i++)
       m_multipoles_order.push_back(j);
@@ -119,9 +119,9 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fit_ra
   vector<bool> mask(m_data->ndata(), false);
   vector<double> xx;
 
-  for (int j=0; j<m_nmultipoles; j++){
-    for (int i=0; i<size; i++){
-      if (m_data->xx(i+j*size) < fit_range[j][1] && m_data->xx(i+j*size) > fit_range[j][0]){
+  for (int j=0; j<m_nmultipoles; j++) {
+    for (int i=0; i<size; i++) {
+      if (m_data->xx(i+j*size) < fit_range[j][1] && m_data->xx(i+j*size) > fit_range[j][0]) {
 	m_multipoles_order.push_back(j);
 	xx.push_back(m_data->xx(i+j*size));
 	m_use_pole[j]=true;
@@ -168,7 +168,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fiduci
     
     m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
   }
-  else if (m_data_model->Pk_mu_model==1){
+  else if (m_data_model->Pk_mu_model==1) {
     vector<double> kk_1loop, Pk_1loop;
     for (size_t i=0; i<(size_t)m_data_model->step; i++) {
       if(m_data_model->kk[i] < par::pi) {
@@ -209,7 +209,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fiduci
     vector<double> Pk(m_data_model->step, 0), PkNW(m_data_model->step, 0);
     m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
 
-    for (size_t i=0; i<(size_t)m_data_model->step; i++){
+    for (size_t i=0; i<(size_t)m_data_model->step; i++) {
       Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
       PkNW[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
     }
@@ -393,11 +393,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::write_mode
   vector<double> new_xx;
   
   if (xx.size()==0)
-    m_data_fit->xx(new_xx);
+    new_xx = m_data_fit->xx();
   else
-    for (int n=0; n<m_data_model->nmultipoles; n++){
+    for (int n=0; n<m_data_model->nmultipoles; n++) {
       new_use_pole[n] = true;
-      for (size_t i=0; i<xx.size(); i++){
+      for (size_t i=0; i<xx.size(); i++) {
 	new_xx.push_back(xx[i]);
 	new_dataset_order.push_back(n);
       }
@@ -431,11 +431,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::write_mode
   vector<double> new_xx;
 
   if (xx.size()==0)
-    m_data_fit->xx(new_xx);
+    new_xx = m_data_fit->xx();
   else
-    for (int n=0; n<m_data_model->nmultipoles; n++){
+    for (int n=0; n<m_data_model->nmultipoles; n++) {
       new_use_pole[n] = true;
-      for (size_t i=0; i<xx.size(); i++){
+      for (size_t i=0; i<xx.size(); i++) {
 	new_xx.push_back(xx[i]);
 	new_dataset_order.push_back(n);
       }
@@ -469,11 +469,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::write_mode
   vector<double> new_xx;
 
   if (xx.size()==0)
-    m_data_fit->xx(new_xx);
+    new_xx = m_data_fit->xx();
   else
     for (int n=0; n<m_data_model->nmultipoles; n++) {
       new_use_pole[n] = true;
-      for (size_t i=0; i<xx.size(); i++){
+      for (size_t i=0; i<xx.size(); i++) {
 	new_xx.push_back(xx[i]);
 	new_dataset_order.push_back(n);
       }

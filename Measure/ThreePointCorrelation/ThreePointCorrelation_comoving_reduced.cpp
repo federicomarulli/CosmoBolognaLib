@@ -223,7 +223,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (con
   cbl::covariance_matrix(resampling_threept, cov_mat, doJK);
   m_dataset = move(unique_ptr<data::Data1D>(new data::Data1D(m_scale, m_zeta, cov_mat)));
 
-  m_dataset->error(m_error);
+  m_error = m_dataset->error();
 }
 
 

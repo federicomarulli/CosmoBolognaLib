@@ -153,7 +153,7 @@ cbl::data::Data2D::Data2D (const std::vector<double> x, const std::vector<double
 // ======================================================================================
 
 
-void cbl::data::Data2D::data (std::vector<std::vector<double>> &data) const
+void cbl::data::Data2D::get_data (std::vector<std::vector<double>> &data) const
 {
   data.erase(data.begin(), data.end());
   data.resize(m_xsize, vector<double>(m_ysize,0));
@@ -167,7 +167,7 @@ void cbl::data::Data2D::data (std::vector<std::vector<double>> &data) const
 // ======================================================================================
 
 
-void cbl::data::Data2D::error (std::vector<std::vector<double>> &error) const
+void cbl::data::Data2D::get_error (std::vector<std::vector<double>> &error) const
 {
   error.erase(error.begin(), error.end());
   error.resize(m_xsize, vector<double>(m_ysize,0));
@@ -291,7 +291,7 @@ void cbl::data::Data2D::write_covariance (const string dir, const string file, c
 // ======================================================================================
 
 
-shared_ptr<Data> cbl::data::Data2D::cut(const double xmin, const double xmax, const double ymin, const double ymax) const
+shared_ptr<Data> cbl::data::Data2D::cut (const double xmin, const double xmax, const double ymin, const double ymax) const
 {
   vector<bool> mask(m_ndata, true);
   vector<double> xx, yy;
@@ -324,7 +324,7 @@ shared_ptr<Data> cbl::data::Data2D::cut(const double xmin, const double xmax, co
 // ======================================================================================
 
 
-shared_ptr<Data> cbl::data::Data2D::as_factory()
+shared_ptr<Data> cbl::data::Data2D::as_factory ()
 {
   shared_ptr<Data> dd = make_shared<Data2D>(Data2D(m_x, m_data, m_covariance));
 

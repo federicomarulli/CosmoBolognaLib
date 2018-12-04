@@ -193,8 +193,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::read (const std::stri
 
 void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::write (const std::string dir, const std::string file, const bool full, const int rank) const 
 {
-  vector<double> xx, yy;
-  m_dataset->xx(xx); m_dataset->yy(yy);
+  vector<double> xx = m_dataset->xx(), yy = m_dataset->yy();
 
   checkDim(xx, m_dd->nbins_D1(), "rp"); checkDim(yy, m_dd->nbins_D2(), "pi");
   

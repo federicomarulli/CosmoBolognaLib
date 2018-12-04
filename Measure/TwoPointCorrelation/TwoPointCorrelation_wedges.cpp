@@ -101,7 +101,7 @@ std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_wedges::dat
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xx () const
 {
-  vector<double> rad, xx; m_dataset->xx(rad);
+  vector<double> rad, xx = m_dataset->xx();
 
   for (size_t i=0; i<xx.size()/2; i++)
     rad.push_back(xx[i]);
@@ -115,8 +115,7 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xx () const
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xiPerpendicular () const
 {
-  vector<double> vv; 
-  m_dataset->data(vv);
+  vector<double> vv = m_dataset->data();
 
   size_t sz = vv.size();
 
@@ -134,9 +133,8 @@ std::vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xiPerpendic
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::errorPerpendicular () const
 {
-vector<double> vv; 
-  m_dataset->error(vv);
-
+  vector<double> vv = m_dataset->error();
+ 
   size_t sz = vv.size();
 
   vector<double> error_xiPerp;
@@ -153,8 +151,7 @@ vector<double> vv;
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::xiParallel () const 
 {
-vector<double> vv; 
-  m_dataset->data(vv);
+  vector<double> vv = m_dataset->data();
 
   size_t sz = vv.size();
   
@@ -172,8 +169,7 @@ vector<double> vv;
 
 std::vector<double> cbl::measure::twopt::TwoPointCorrelation_wedges::errorParallel () const 
 {
-  vector<double> vv; 
-  m_dataset->error(vv);
+  vector<double> vv = m_dataset->error();
 
   size_t sz = vv.size();
 
@@ -193,7 +189,7 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::write (const std::string d
 {
   (void)rank;
   
-  vector<double> rad; m_dataset->xx(rad);
+  vector<double> rad = m_dataset->xx();
   vector<double> xiw = m_dataset->data();
   vector<double> error = m_dataset->error();
 
@@ -326,7 +322,7 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::measureJackknife (const st
     if (dir_output_resample != par::defaultString) {
       string file_out = dir_output_resample+"xi_wedges_Jackknife_"+conv(i, par::fINT)+".dat";
 
-      vector<double> rad; data[i]->xx(rad);
+      vector<double> rad = data[i]->xx();
       vector<double> xiw = data[i]->data();
       vector<double> error = data[i]->error();
 
@@ -348,10 +344,9 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::measureJackknife (const st
 
   covariance_matrix(ww, covariance, true);
 
-  vector<double> xx_polar, yy_polar;
+  vector<double> xx_polar = data_polar->xx(), yy_polar = data_polar->yy();
   vector<vector<double>> dd_polar, error_polar;
-  data_polar->xx(xx_polar); data_polar->yy(yy_polar);
-  data_polar->data(dd_polar); data_polar->error(error_polar);
+  data_polar->get_data(dd_polar); data_polar->get_error(error_polar);
 
   m_dataset = Wedges(xx_polar, yy_polar, dd_polar, error_polar);
   m_dataset->set_covariance(covariance);
@@ -390,7 +385,7 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::measureBootstrap (const in
     if (dir_output_resample != par::defaultString) {
       string file_out = dir_output_resample+"xi_wedges_Bootstrap_"+conv(i, par::fINT)+".dat";
 
-      vector<double> rad; data[i]->xx(rad);
+      vector<double> rad = data[i]->xx();
       vector<double> xiw = data[i]->data();
       vector<double> error = data[i]->error();
 
@@ -413,10 +408,9 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::measureBootstrap (const in
   
   covariance_matrix(ww, covariance, false);
 
-  vector<double> xx_polar, yy_polar;
+  vector<double> xx_polar = data_polar->xx(), yy_polar = data_polar->yy();
   vector<vector<double>> dd_polar, error_polar;
-  data_polar->xx(xx_polar); data_polar->yy(yy_polar);
-  data_polar->data(dd_polar); data_polar->error(error_polar);
+  data_polar->get_data(dd_polar); data_polar->get_error(error_polar);
 
   m_dataset = Wedges(xx_polar, yy_polar, dd_polar, error_polar);
   m_dataset->set_covariance(covariance);
@@ -432,11 +426,10 @@ std::vector<std::shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelati
 
   auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd, rr);
 
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_polar, yy_polar;
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_polar = data2d[i]->xx(), yy_polar = data2d[i]->yy();
     vector<vector<double>> dd_polar, error_polar;
-    data2d[i]->xx(xx_polar); data2d[i]->yy(yy_polar);
-    data2d[i]->data(dd_polar); data2d[i]->error(error_polar);
+    data2d[i]->get_data(dd_polar); data2d[i]->get_error(error_polar);
     data.push_back(move(Wedges(xx_polar, yy_polar, dd_polar, error_polar)));
   }
   
@@ -453,11 +446,10 @@ std::vector<std::shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelati
   
   auto data2d = TwoPointCorrelation2D_polar::XiJackknife(dd, rr, dr);
 
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_polar, yy_polar;
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_polar = data2d[i]->xx(), yy_polar = data2d[i]->yy();
     vector<vector<double>> dd_polar, error_polar;
-    data2d[i]->xx(xx_polar); data2d[i]->yy(yy_polar);
-    data2d[i]->data(dd_polar); data2d[i]->error(error_polar);
+    data2d[i]->get_data(dd_polar); data2d[i]->get_error(error_polar);
     data.push_back(move(Wedges(xx_polar, yy_polar, dd_polar, error_polar)));
   }
   
@@ -474,11 +466,10 @@ std::vector<std::shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelati
   
   auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks, dd, rr, seed);
 
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_polar, yy_polar;
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_polar = data2d[i]->xx(), yy_polar = data2d[i]->yy();
     vector<vector<double>> dd_polar, error_polar;
-    data2d[i]->xx(xx_polar); data2d[i]->yy(yy_polar);
-    data2d[i]->data(dd_polar); data2d[i]->error(error_polar);
+    data2d[i]->get_data(dd_polar); data2d[i]->get_error(error_polar);
     data.push_back(move(Wedges(xx_polar, yy_polar, dd_polar, error_polar)));
   }
   
@@ -495,11 +486,10 @@ std::vector<std::shared_ptr<data::Data> > cbl::measure::twopt::TwoPointCorrelati
   
   auto data2d = TwoPointCorrelation2D_polar::XiBootstrap(nMocks, dd, rr, dr, seed);
 
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_polar, yy_polar;
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_polar = data2d[i]->xx(), yy_polar = data2d[i]->yy();
     vector<vector<double>> dd_polar, error_polar;
-    data2d[i]->xx(xx_polar); data2d[i]->yy(yy_polar);
-    data2d[i]->data(dd_polar); data2d[i]->error(error_polar);
+    data2d[i]->get_data(dd_polar); data2d[i]->get_error(error_polar);
     data.push_back(move(Wedges(xx_polar, yy_polar, dd_polar, error_polar)));
   }
   
