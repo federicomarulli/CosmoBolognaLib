@@ -460,10 +460,10 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::initialize_chains (const int chain_size, const int nwalkers, std::vector<double> &values, const double radius)
+void cbl::statistics::Posterior::initialize_chains (const int chain_size, const int nwalkers, std::vector<double> &value, const double radius)
 {
   m_model_parameters->set_chain(chain_size, nwalkers);
-  m_model_parameters->initialize_chain_ball(values, radius, m_generate_seed());
+  m_model_parameters->initialize_chain_ball(value, radius, m_generate_seed());
 }
 
 
@@ -502,9 +502,8 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
     vector<double> ll, params;
 
     while (ss>>NUM) ll.push_back(NUM);
-    for (size_t i=1; i<ll.size()-3; i++) {
+    for (size_t i=1; i<ll.size()-3; i++) 
       params.push_back(ll[i]);
-    }
 
     chain_value.push_back(params);
   }
@@ -516,7 +515,7 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
   checkDim(chain_value, nwalkers, m_model_parameters->nparameters(), "chain_from_LastStep_file");
   chain_value = cbl::transpose(chain_value);
 
-  initialize_chains (chain_size, chain_value);
+  initialize_chains(chain_size, chain_value);
 }
 
 

@@ -156,32 +156,35 @@ namespace cbl {
 	std::shared_ptr<ModelParameters> parameters () const { return m_model_parameters; }
 
 	/**
-	 *  @brief evaluate the unnormalized 
-	 *  posterior:
+	 *  @brief evaluate the un-normalized posterior
 	 *
-	 *  \f[ P((\vec{theta} | \vec{d}) = \mathcal{L}(\vec{d}|\vec{theta}) \cdot Pr(\vec{theta}) \f]
+	 *  \f[ P((\vec{theta} | \vec{d}) =
+	 *  \mathcal{L}(\vec{d}|\vec{theta}) \cdot Pr(\vec{theta}) \f]
 	 *
-	 *  where \f$P\f$ is the posterior,\f$\mathcal{L}(\vec{d}|\vec{theta})\f$ is the
-	 *  likelihood and \f$Pr(\vec{theta})\f$ is the prior.
+	 *  where \f$P\f$ is the
+	 *  posterior,\f$\mathcal{L}(\vec{d}|\vec{theta})\f$ is the
+	 *  likelihood and \f$Pr(\vec{theta})\f$ is the prior
 	 *
 	 *  @param pp the parameters
 	 *
-	 *  @return pointer of an object of type likelihood
+	 *  @return the value of the un-normalized posterior
 	 */
-	double operator() (std::vector<double> &pp) const;
+	double operator () (std::vector<double> &pp) const;
 
 	/**
-	 *  @brief evaluate the logarithm of the unnormalized 
-	 *  posterior:
+	 *  @brief evaluate the logarithm of the un-normalized
+	 *  posterior
 	 *
-	 *  \f[ P((\vec{theta} | \vec{d}) = \mathcal{L}(\vec{d}|\vec{theta}) \cdot Pr(\vec{theta}) \f]
+	 *  \f[ P((\vec{theta} | \vec{d}) =
+	 *  \mathcal{L}(\vec{d}|\vec{theta}) \cdot Pr(\vec{theta}) \f]
 	 *
-	 *  where \f$P\f$ is the posterior,\f$\mathcal{L}(\vec{d}|\vec{theta})\f$ is the
-	 *  likelihood and \f$Pr(\vec{theta})\f$ is the prior.
+	 *  where \f$P\f$ is the
+	 *  posterior,\f$\mathcal{L}(\vec{d}|\vec{theta})\f$ is the
+	 *  likelihood and \f$Pr(\vec{theta})\f$ is the prior
 	 *
 	 *  @param pp the parameters
 	 *
-	 *  @return pointer of an object of type likelihood
+	 *  @return the logarithm of the un-normalized posterior
 	 */
 	double log (std::vector<double> &pp) const;
 
@@ -256,8 +259,11 @@ namespace cbl {
 	void maximize (const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-4);
 
 	/**
-	 * @brief initialize the chains sampling
-	 * from the prior
+	 * @brief initialize the chains sampling from the prior
+	 * distributions
+	 *
+	 * the starting values of the chain are extracted from the
+	 * (possibly different) distributions of the priors
 	 *
 	 * @param chain_size the chain lenght
 	 *
@@ -269,9 +275,16 @@ namespace cbl {
 	void initialize_chains (const int chain_size, const int nwalkers);
 
 	/**
-	 * @brief initialize the chains  in a ball
-	 * around the posterior best-fit parameters
-	 * values
+	 * @brief initialize the chains in a ball around the posterior
+	 * best-fit parameter values
+	 *
+	 * the starting values of the chain are extracted from uniform
+	 * distributions in the range [parameter-radius,
+	 * parameter+radius] (for each likelihood parameter)
+	 *
+	 * this function first maximizes the posterior, starting the
+	 * computation at the values of the input vector 'start', then
+	 * it inizializes the chain
 	 *
 	 * @param chain_size the chain lenght
 	 *
@@ -292,40 +305,48 @@ namespace cbl {
 	void initialize_chains (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6);
 
 	/**
-	 * @brief initialize the chains in a ball
-	 * around the input parameter values
+	 * @brief initialize the chains in a ball around the input
+	 * parameter values
+	 *
+	 * the starting values of the chain are extracted from uniform
+	 * distributions in the range [value[i]-radius,
+	 * value[i]+radius] (for each i-th likelihood parameter)
 	 *
 	 * @param chain_size the chain lenght
 	 *
 	 * @param nwalkers the number of parallel
 	 * chains
 	 *
-	 * @param values input values, center of the
-	 * ball in parameter space
+	 * @param value vector containing the input values, centres of
+	 * the ball in the parameter space
 	 *
-	 * @param radius radius of the ball in parameter space
+	 * @param radius radius of the ball in the parameter space
 	 *
 	 * @return none
 	 */
-	void initialize_chains (const int chain_size, const int nwalkers, std::vector<double> &values, const double radius);
+	void initialize_chains (const int chain_size, const int nwalkers, std::vector<double> &value, const double radius);
 
 	/**
-	 * @brief initialize the chains with input
-	 * values
+	 * @brief initialize the chains with input values
+	 *
+	 * the starting values of the chain are the elements of the
+	 * input matrix 'chain_values'
 	 *
 	 * @param chain_size the chain lenght
 	 *
-	 * @param chain_values std::vector of size (nwalkers, nparameters)
+	 * @param chain_value matrix of size (nwalkers, nparameters),
 	 * starting values of the chain
 	 *
 	 * @return none
 	 */
-	void initialize_chains (const int chain_size, const std::vector<std::vector<double>> chain_values);
+	void initialize_chains (const int chain_size, const std::vector<std::vector<double>> chain_value);
 
 	/**
-	 * @brief initialize the chains reading the
-	 * input values from last lines of a chain file:
-	 * can be used to continue a MCMC sampling
+	 * @brief initialize the chains reading from an input file 
+	 *
+	 * the starting values of the chain are get from the last
+	 * lines of an input chain file; it can be used to continue an
+	 * MCMC sampling computation
 	 *
 	 * @param chain_size the chain lenght
 	 *

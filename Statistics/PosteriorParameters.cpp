@@ -525,9 +525,14 @@ void cbl::statistics::PosteriorParameters::initialize_chain_from_prior ()
 void cbl::statistics::PosteriorParameters::initialize_chain_ball (const std::vector<double> center, const double radius, const double seed)
 {
   vector<vector<double>> values(m_nparameters, vector<double>(m_chain_nwalkers, 0));
+
+  // verify if the number of given parameters is fine and, in case
+  // only the free parameters are given in inputs, fill the empy
+  // elements
   vector<double> cen = full_parameters(center);
 
   cbl::random::UniformRandomNumbers ran(-radius, radius, seed);
+
   for (size_t i=0; i<m_nparameters_free; i++) {
     const int index = m_free_parameters[i];
     for (size_t j=0; j<m_chain_nwalkers; j++)      

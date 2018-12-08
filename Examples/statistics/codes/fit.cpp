@@ -118,8 +118,8 @@ int main () {
 
     // sample the posterior
     const int nwalkers = 10;
-    const int chain_size = 1000;
-    posterior.initialize_chains(chain_size, nwalkers);
+    const int chain_size = 5000;
+    posterior.initialize_chains(chain_size, nwalkers, 1.e-5, {valA, valB});
     posterior.sample_stretch_move(2);
 
     // show the results on screen

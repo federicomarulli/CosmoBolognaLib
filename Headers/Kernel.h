@@ -359,6 +359,12 @@
  *  constraints from void counting
  */
 /**
+ *  @example analyzeChains.ipynb 
+ *  
+ *  This \b notebook is aimed to help in post-processing Markov chain
+ *  Monte Carlo outputs
+ */
+/**
  *  @example 2pt_monopole.ipynb 
  *  
  *  This \b notebook explains how to compute the monopole of the
