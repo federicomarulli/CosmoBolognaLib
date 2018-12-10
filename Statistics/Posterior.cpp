@@ -201,8 +201,12 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::sample_stretch_move (const double aa, const bool parallel)
+void cbl::statistics::Posterior::sample_stretch_move (const double aa, const bool parallel, const string outputFile)
 {
+  if (parallel && outputFile!=cbl::par::defaultString)
+    WarningMsg("Warning in cbl::statistics::Posterior::sample_stretch_move() of Posterior.cpp. No run-time output\
+	available for parallel stretch-move algorithm. Option will be ignored.");
+
   coutCBL << "Sampling the posterior..." << endl;
 
   const int seed = m_generate_seed();
@@ -223,15 +227,13 @@ void cbl::statistics::Posterior::sample_stretch_move (const double aa, const boo
   if (parallel)
     sampler.sample_stretch_move_parallel(chain_size, nwalkers, start, seed, aa);
   else
-    sampler.sample_stretch_move(chain_size, nwalkers, start, seed, aa);
+    sampler.sample_stretch_move(chain_size, nwalkers, start, seed, aa, outputFile);
   
   vector<vector<double>> chain_values;
 
   sampler.get_chain_function_acceptance(chain_values, m_logposterior_values, m_acceptance);
 
   m_model_parameters->set_chain_values(chain_values, nwalkers);
-
-  coutCBL << "Done!" << endl << endl;
 }
 
 // ============================================================================================

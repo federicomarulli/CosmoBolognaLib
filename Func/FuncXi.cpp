@@ -566,7 +566,7 @@ double cbl::xi2D_model (double rp, double pi, shared_ptr<void> pp, vector<double
   if (fabs(norm-1)>0.1) { 
     string Warn = "Attention! sigma12 = "+conv(sigma12,par::fDP2)+" ---> norm = " + conv(norm,par::fDP3) + ", the number of bins used for the convolution with f(v) should be increased!";
     WarningMsg(Warn);
-    print(par);
+    Print(par);
   }
   
   return xi2D_nl;

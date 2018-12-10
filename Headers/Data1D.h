@@ -154,13 +154,15 @@ namespace cbl {
        *  @param i index
        *  @return value of x at the i-th bin
        */
-      double xx (const int i) const override { return m_x[i]; }  
+      double xx (const int i) const override
+      { return m_x[i]; }  
 
       /**
-       *  @brief get the x vector
-       *  @return the x vector
+       *  @brief get the x std::vector
+       *  @return the x std::vector
        */
-      std::vector<double> xx () const override { return m_x; }  
+      std::vector<double> xx () const override
+	{ return m_x; }  
 
       /**
        *  @brief get the independet variable, to be used 

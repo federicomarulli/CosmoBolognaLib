@@ -804,11 +804,9 @@ namespace cbl {
       /**
        *  @brief constructor, reading a file in FITS format
        *
-       *  This constructors reads a FITS file that should the three
-       *  object coordinates, and possibly the weights and the
-       *  regions. The input file might contain also other data; the
-       *  user has to specify the indexes of the coordinates, weights
-       *  and regions.
+       *  This constructor reads a FITS file that should contain at
+       *  least the three object coordinates, and possibly also
+       *  weights and regions
        *
        *  @param objectType the object type, specified in the
        *  cbl::catalogue::ObjectType enumeration
@@ -821,29 +819,13 @@ namespace cbl {
        *
        *  @param column_names vector containing the column names to
        *  read, i.e. at least the three coordinates, and possibly the
-       *  weights and regions
+       *  weights and regions, in this order
        *
-       *  @param indCoord1 index of the object first coordinates in
-       *  the FITS file
+       *  @param read_weights if true, read also the object weights
+       *  from the FITS file
        *
-       *  @param indCoord2 index of the object second coordinates in
-       *  the FITS file
-       *
-       *  @param indCoord3 index of the object third coordinates in
-       *  the FITS file
-       *
-       *  @param indWeight index of the object weights in the FITS
-       *  file
-       *
-       *  @param indRegion index of the object regions in the FITS file
-       *
-       *  @param next number of the table extension in the FITS file; a
-       *  FITS can contain more the one extension; the extension 0 is
-       *  the primary header
-       *
-       *  @param fill_value the value used to fill non-existing
-       *  columns, if fill_value==par::defaultDouble, an error is
-       *  raised when a column is not found
+       *  @param read_regions if true, read also the object regions
+       *  from the FITS file
        *  
        *  @param nSub the fracton of objects that will be randomly
        *  selected (nSub=1 \f$ \rightarrow \f$ all objects are selected)
@@ -859,62 +841,7 @@ namespace cbl {
        *
        *  @return an object of class Catalogue
        */
-      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const int indCoord1, const int indCoord2, const int indCoord3, const int indWeight, const int indRegion, const int next, const double fill_value, const double nSub, const double fact, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
-      
-      /**
-       *  @brief constructor, reading a file in FITS format
-       *
-       *  This constructors reads a FITS file that should contain the
-       *  three object coordinates, and possibly the weights and the
-       *  regions, in exactly this order. No other data should be
-       *  present in the file.
-       *
-       *  @param objectType the object type, specified in the
-       *  cbl::catalogue::ObjectType enumeration
-       *
-       *  @param coordinateType the coordinate type, specified in the
-       *  cbl::CoordinateType enumeration
-       *
-       *  @param file vector containing the files where the input
-       *  catalogues are stored
-       *
-       *  @param Coordinate vector containing the names of the
-       *  coordinate columns in the FITS table
-       *
-       *  @param Weight the name of the weight column in the FITS
-       *  table
-       *
-       *  @param Region the name of the region column in the FITS
-       *  table
-       *
-       *  @param next number of the table extension in the FITS file; a
-       *  FITS can contain more the one extension; the extension 0 is
-       *  the primary header
-       *
-       *  @param fill_value the value used to fill non-existing
-       *  columns, if fill_value==par::defaultDouble, an error is
-       *  raised when a column is not found
-       *  
-       *  @param nSub the fracton of objects that will be randomly
-       *  selected (nSub=1 \f$ \rightarrow \f$ all objects are selected)
-       *
-       *  @param fact a factor used to multiply the coordinates,
-       *  i.e. coordinate_i=coordinate_i*fact
-       *
-       *  @param cosm object of class Cosmology 
-       *
-       *  @param inputUnits the units of the input coordinates
-       *
-       *  @param seed the seed for random number generation
-       *
-       *  @return an object of class Catalogue
-       *
-       *  @warning the dimension of the input vector Coordinate must
-       *  be equal (or larger than) 3; this condition is not checked
-       *  by the constructor!
-       */
-      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> Coordinate, const std::string Weight, const std::string Region, const int next=1, const double fill_value=par::defaultDouble, const double nSub=1.1, const double fact=1, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213)
-	: Catalogue(objectType, coordinateType, file, {Coordinate[0], Coordinate[1], Coordinate[2], Weight, Region}, 0, 1, 2, 3, 4, next, fill_value, nSub, fact, cosm, inputUnits, seed) {}
+      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const bool read_weights, const bool read_regions, const double nSub, const double fact, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
       
       /**
        *  @brief constructor, using vectors of generic objects

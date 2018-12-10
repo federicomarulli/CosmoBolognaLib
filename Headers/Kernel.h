@@ -962,14 +962,16 @@ namespace cbl {
   ///@{
 
   /**
-   *  @brief print the elements of a std::vector on the screen
+   *  @brief print the elements of a std::vector of non string values
+   *  on the screen
+   *  
    *  @param vect a std::vector
    *  @param prec decimal precision
    *  @param ww number of characters to be used as field width
    *  @return none
    */
   template <typename T> 
-    void print (const std::vector<T> vect, const int prec=4, const int ww=8) 
+    void Print (const std::vector<T> vect, const int prec=4, const int ww=8) 
     {
       int bp = std::cout.precision(); 
       for (auto &&vi : vect) 
@@ -977,11 +979,27 @@ namespace cbl {
 	  coutCBL << std::scientific << std::setprecision(prec) << std::setw(ww) << vi << std::endl;
 	else
 	  coutCBL << std::fixed << std::setprecision(prec) << std::setw(ww) << vi << std::endl;
-      std::cout.precision(bp); 
+      std::cout.precision(bp);
     }
+  
+  /**
+   *  @brief print the elements of a std::vector of string values
+   *  on the screen
+   *  
+   *  @param vect a std::vector
+   *  @return none
+   */
+  inline void Print (const std::vector<std::string> vect)
+  {
+    for (auto &&vi : vect) 
+      coutCBL << vi << std::endl;
+  }
+  
 
   /**
-   *  @brief print the elements of a two std::vectors on the screen
+   *  @brief print the elements of a two std::vectors of non string
+   *  values on the screen
+   *
    *  @param vect1 a std::vector
    *  @param vect2 a std::vector
    *  @param prec decimal precision
@@ -989,10 +1007,10 @@ namespace cbl {
    *  @return none
    */
   template <typename T> 
-    void print (const std::vector<T> vect1, const std::vector<T> vect2, const int prec=4, const int ww=8) 
+    void Print (const std::vector<T> vect1, const std::vector<T> vect2, const int prec=4, const int ww=8) 
     {
       if (vect1.size()!=vect2.size())
-	ErrorCBL("Error in print() of Func.h: the two input vectors must have the same dimenion to be printed!");
+	ErrorCBL("Error in Print() of Func.h: the two input vectors must have the same dimenion to be printed!");
 
       int bp = std::cout.precision();
       
@@ -1009,19 +1027,39 @@ namespace cbl {
 	  std::cout << "   " << std::fixed << std::setprecision(prec) << std::setw(ww) << vect2[i] << std::endl;
 	
       }
-      
-      std::cout.precision(bp); 
+      std::cout.precision(bp);
     }
 
+
   /**
-   *  @brief print the elements of a matrix on the screen
+   *  @brief print the elements of a two std::vectors of string values
+   *  on the screen
+   *
+   *  @param vect1 a std::vector
+   *  @param vect2 a std::vector
+   *  @return none
+   */
+  inline void Print (const std::vector<std::string> vect1, const std::vector<std::string> vect2) 
+    {
+      if (vect1.size()!=vect2.size())
+	ErrorCBL("Error in Print() of Func.h: the two input vectors must have the same dimenion to be printed!");
+      
+      for (size_t i=0; i<vect1.size(); i++) 
+	coutCBL << vect1[i] << "   " << vect2[i] << std::endl;
+    }
+  
+
+  /**
+   *  @brief print the elements of a matrix of non string values on
+   *  the screen
+   *
    *  @param mat a matrix (i.e. a std::vector of std::vectors)
    *  @param prec decimal precision
    *  @param ww number of characters to be used as field width
    *  @return none
    */
   template <typename T> 
-    void print (const std::vector<std::vector<T> > mat, const int prec=4, const int ww=8) 
+    void Print (const std::vector<std::vector<T>> mat, const int prec=4, const int ww=8) 
     {
       const int bp = std::cout.precision(); 
       for (size_t i=0; i<mat.size(); i++) {
@@ -1037,12 +1075,31 @@ namespace cbl {
 	      std::cout << std::scientific << std::setprecision(prec) << std::setw(ww) << mat[i][j] << "   ";
 	    else
 	      std::cout << std::fixed << std::setprecision(prec) << std::setw(ww) << mat[i][j] << "   ";
-	  }
-	
+	  }	
 	std::cout << std::endl;
       }
-      std::cout.precision(bp); 
+      std::cout.precision(bp);
     }
+
+   /**
+   *  @brief print the elements of a matrix of string values on the
+   *  screen
+   *
+   *  @param mat a matrix (i.e. a std::vector of std::vectors)
+   *  @return none
+   */ 
+  inline void Print (const std::vector<std::vector<std::string>> mat) 
+    {
+      for (size_t i=0; i<mat.size(); i++) {
+	for (size_t j=0; j<mat[i].size(); j++)
+	  if (j==0) 
+	    coutCBL << mat[i][j] << "   ";
+	  else 
+	    std::cout << mat[i][j] << "   ";
+	std::cout << std::endl;
+      }
+    }
+  
 
   /**
    *  @brief minimum element of a std::vector

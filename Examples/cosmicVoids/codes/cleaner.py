@@ -84,8 +84,8 @@ if (param.findDouble('boxside') < 0.) :
   boxside = abs(vdcat.Max(cbl.Var__X_) - vdcat.Min(cbl.Var__X_))
 else :
   boxside = param.findDouble('boxside')
-vdcat.compute_catalogueProperties(param.findDouble('boxside'))
-
+vdcat.compute_catalogueProperties(boxside)
+      
 ##########################################################
 # load the input tracers catalogue
 
@@ -136,7 +136,7 @@ else :
     # mass cut-off
     if (param.findDouble('Mmin') > 0.) :
       trcat = cbl.Catalogue ()
-      trcat = temp.cutted_catalogue(cbl.Var__Mass_, param.findDouble('Mmin'), temp.Max(cbl.Var__Mass_), False)
+      trcat = temp.sub_catalogue(cbl.Var__Mass_, param.findDouble('Mmin'), temp.Max(cbl.Var__Mass_), False)
     else :
       trcat = temp
       
@@ -148,7 +148,7 @@ else :
     print "Observed coordinates not supported yet..."
     exit(1)
 
-trcat.compute_catalogueProperties(param.findDouble('boxside'))
+trcat.compute_catalogueProperties(boxside)
   
 ##########################################################
 # Generate chain-mesh of the input tracers catalogue              

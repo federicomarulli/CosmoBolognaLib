@@ -535,8 +535,12 @@ void cbl::statistics::PosteriorParameters::initialize_chain_ball (const std::vec
 
   for (size_t i=0; i<m_nparameters_free; i++) {
     const int index = m_free_parameters[i];
-    for (size_t j=0; j<m_chain_nwalkers; j++)      
-      values[index][j] = ran()+cen[index];
+    for (size_t j=0; j<m_chain_nwalkers; j++) {    
+      double val = ran()+cen[index];
+      while (!m_parameter_prior[index]->isIncluded(val))
+	val = ran()+cen[index];
+      values[index][j] = val;
+    }
   }
 
   initialize_chain(values);
@@ -645,26 +649,24 @@ void cbl::statistics::PosteriorParameters::write_results (const string dir, cons
   ofstream fout(file_parameters.c_str());
 
   if (compute_mode)
-    fout << "### Parameter # status ###" << endl << "### Posterior mean # Posterior standard deviation # Posterior median # Posterior 18th percentile # Posterior 82th percentile # Posterior mode ###" << endl << endl;
+    fout << "### Parameter # status # Posterior mean # Posterior standard deviation # Posterior median # Posterior 18th percentile # Posterior 82th percentile # Posterior mode ###" << endl << endl;
   else
-    fout << "### Parameter # status ###" << endl << "### Posterior mean # Posterior standard deviation # Posterior median # Posterior 18th percentile # Posterior 82th percentile ###" << endl << endl;
+    fout << "### Parameter # status # Posterior mean # Posterior standard deviation # Posterior median # Posterior 18th percentile # Posterior 82th percentile ###" << endl;
   
-  for (size_t i=0; i<m_nparameters; i++) 
-    if (m_parameter_type[i]==statistics::ParameterType::_Base_ && m_parameter_prior[i]->distributionType()==glob::DistributionType::_Constant_)
-      fout << "# " << m_parameter_name[i] << " FIXED #" << endl;
-    else 
-      fout << "# " << m_parameter_name[i] << " FREE #" << endl;
-
   for (size_t i=0; i<m_nparameters; i++) {
     auto posterior = m_parameter_posterior[i];
-    if (m_parameter_type[i]==statistics::ParameterType::_Base_ && m_parameter_prior[i]->distributionType()==glob::DistributionType::_Constant_)
-      fout << posterior->sample() << " 0 0 0 0 0 0" << endl;
-    else 
-      fout << posterior->mean() << " " << posterior->std() << " " << posterior->median() << " " << posterior->median()-posterior->percentile(18) << " " << posterior->percentile(82)-posterior->median();
-    if (compute_mode)
-      fout << " " << posterior->mode() << endl;
-    else
-      fout << endl;
+
+    if (m_parameter_type[i]==statistics::ParameterType::_Base_ && m_parameter_prior[i]->distributionType()==glob::DistributionType::_Constant_) {
+      fout << m_parameter_name[i] << " FIXED " << posterior->sample() << " 0 0 0 0 0";
+      if (compute_mode)
+	fout << "0";
+    }
+    else {
+      fout << m_parameter_name[i] << " FREE " << posterior->mean() << " " << posterior->std() << " " << posterior->median() << " " << posterior->median()-posterior->percentile(18) << " " << posterior->percentile(82)-posterior->median();
+      if (compute_mode)
+	fout << " " << posterior->mode() << endl;
+    }
+    fout << endl;
   }
 
   fout.clear(); fout.close(); coutCBL << "I wrote the file: " << file_parameters << endl;

@@ -176,12 +176,25 @@ namespace cbl {
       { return m_x[i]; }
 
       /**
+       *  @brief get the x vector
+       *  @return the x vector
+       */
+      std::vector<double> xx () const override { return m_x; }  
+
+      /**
        *  @brief get the value of y at index i
        *  @param i index
        *  @return the value of the m_y vector at position i
        */
       double yy (const int i) const override
       { return m_y[i]; }
+
+      /**
+       *  @brief get the y vector
+       *  @return the y vector
+       */
+      std::vector<double> yy () const override
+	{ return m_y; }  
 
       /**
        *  @brief get the independet variable, to be used 

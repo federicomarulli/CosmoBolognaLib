@@ -370,12 +370,25 @@ namespace cbl {
 	 * @param parallel false \f$\rightarrow\f$ non-parallel
 	 * sampler; true \f$\rightarrow\f$ parallel sampler
 	 *
+	 *  @param outputFile output file where the chains are 
+         * 	   written during run-time. Leave it to default value
+	 * 	   to have no output. 
+	 * 	   WARNING: this option is intended
+	 * 	   for debug. It only works for the non-parallelized
+	 * 	   stretch-move algorithm. 
+	 * 	   The chain in output will be written in a 
+	 * 	   different format with respect to the method
+	 * 	   cbl::statistics::Posterior::write_chain::ascii 
+	 * 	   col1) chain step
+	 * 	   col2) walker index
+	 * 	   col3-npar) parameter values
+	 * 	   col npar+3) value of the posterior.
 	 * @return none
 	 *
 	 * @warning if parallel is set true, than pointers cannot be
 	 * used inside the posterior function
 	 */
-	void sample_stretch_move (const double aa=2, const bool parallel=true);
+	void sample_stretch_move (const double aa=2, const bool parallel=true, const std::string outputFile=par::defaultString);
 
 	/**
 	 * @brief write the chains obtained after 

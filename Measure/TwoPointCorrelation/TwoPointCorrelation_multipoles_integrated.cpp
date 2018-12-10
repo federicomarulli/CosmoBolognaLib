@@ -294,7 +294,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measurePois
 
   
   // ----------- integrate the 2D two-point correlation function over the angle mu ----------- 
-
+  
   m_dataset = Multipoles(TwoPointCorrelation2D_polar::xx(), TwoPointCorrelation2D_polar::yy(), TwoPointCorrelation2D_polar::xi2D(), TwoPointCorrelation2D_polar::error2D());
 }
 

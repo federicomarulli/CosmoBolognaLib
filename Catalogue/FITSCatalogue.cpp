@@ -43,7 +43,7 @@ using namespace cbl;
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const int indCoord1, const int indCoord2, const int indCoord3, const int indWeight, const int indRegion, const int next, const double fill_value, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const int seed)
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const bool read_weights, const bool read_regions, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const int seed)
 {
   // parameters for random numbers used in case nSub!=1
   random::UniformRandomNumbers ran(0., 1., seed);
@@ -52,25 +52,29 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
   // read the input catalogue files
 
   for (size_t dd=0; dd<file.size(); ++dd) {
-    
-    // read the columns from the table searching by names
-    vector<vector<double>> table = ccfitswrapper::read_table_fits(file[dd], column_names, next, fill_value);
 
+    // read the columns from the table searching by names
+    vector<vector<double>> table = ccfitswrapper::read_table_fits(file[dd], column_names, 1, 1.);
     
     // include the objects in the catalogue
     
     for (size_t i=0; i<table[0].size(); ++i) {
-
+ 
       if (ran()<nSub) { // extract a subsample
 	
 	if (coordinateType==CoordinateType::_comoving_) { // comoving coordinates (x, y, z)
-	  comovingCoordinates coord = {table[indCoord1][i]*fact, table[indCoord2][i]*fact, table[indCoord3][i]*fact};
-	  m_object.push_back(move(Object::Create(objectType, coord, (indWeight>-1) ? table[indWeight][i] : 1., (indRegion>-1) ? (long)table[indRegion][i] : 1)));
+	  comovingCoordinates coord = {table[0][i]*fact, table[1][i]*fact, table[2][i]*fact};
+	  m_object.push_back(move(Object::Create(objectType, coord, (read_weights) ? table[3][i] : 1., (read_regions) ? (long)table[(read_weights) ? 4 : 3][i] : 1)));
 	}
+	
 	else if (coordinateType==CoordinateType::_observed_) { // observed coordinates (R.A., Dec, redshift)
-	  observedCoordinates coord = {table[indCoord1][i]*fact, table[indCoord2][i]*fact, table[indCoord3][i]*fact};
-	  m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosm, (indWeight>-1) ? table[indWeight][i] : 1., (indRegion>-1) ? (long)table[indRegion][i] : 1)));
+	  if (table[2][i]*fact>0) {
+	    observedCoordinates coord = {table[0][i]*fact, table[1][i]*fact, table[2][i]*fact};
+	    m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosm, (read_weights) ? table[3][i] : 1., (read_regions) ? (long)table[(read_weights) ? 4 : 3][i] : 1)));
+	  }
+	  WarningMsg("Warning in cbl::catalogue::Catalogue::Catalogue() of FITSCatalogue.cpp: the object "+conv(i, par::fINT)+" has z = "+conv(table[2][i]*fact, par::fDP2)+", and it will be not included in the catalogue!");
 	}
+
 	else ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in FITSCatalogue.cpp: coordinateType is not valid!");
 
       }

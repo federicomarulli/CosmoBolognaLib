@@ -322,10 +322,11 @@ namespace cbl {
        *  for the parameters
        *  @param seed the seed for random number generator
        *  @param aa the stretch-move distribution parameter
-       *  
+       *  @param outputFile output file where the chains are 
+       *  	 written while running
        *  @return none
        */
-      void sample_stretch_move (const int chain_size, const int nwalkers, const std::vector<std::vector<double>> start, const int seed=4241, const double aa=2);
+      void sample_stretch_move (const int chain_size, const int nwalkers, const std::vector<std::vector<double>> start, const int seed=4241, const double aa=2, const std::string outputFile=cbl::par::defaultString);
 
       /**
        *  @brief sample the input function using the stretch-move
