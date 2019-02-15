@@ -1,1 +1,0 @@
-gvim ../Headers/LogNormal.h ../Headers/LogNormalFull.h LogNormal.cpp LogNormalFull.cpp &

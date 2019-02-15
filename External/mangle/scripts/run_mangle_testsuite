@@ -1,6 +1,0 @@
-#USAGE: source run_mangle_testsuite > test.log
-echo "Setting mangle environment variables"
-cd ..
-source setup_mangle_environment $PWD/
-cd scripts
-./mangle_testsuite.sh
