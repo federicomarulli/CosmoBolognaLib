@@ -42,17 +42,17 @@ using namespace glob;
 // ============================================================================
 
 
-cbl::glob::FuncGrid::FuncGrid (const vector<double> x, const vector<double> y, const string interpType, const cbl::BinType bin_type)
+cbl::glob::FuncGrid::FuncGrid (const std::vector<double> x, const std::vector<double> y, const std::string interpType, const cbl::BinType bin_type)
   : m_x(x), m_y(y), m_size(x.size()), m_interpType(interpType), m_binType(bin_type)
 {
-  if(!is_sorted(x.begin(), x.end()))
-    ErrorCBL("Error in constructor of FuncGrid in FuncGrid.h: the x array is not sorted");
+  if (!is_sorted(x.begin(), x.end()))
+    ErrorCBL("Error in cbl::glob::FuncGrid::FuncGrid() of FuncGrid.cpp: the x array is not sorted!");
 
   shared_ptr<gsl_interp_accel> acc(gsl_interp_accel_alloc(), gsl_interp_accel_free);
   m_acc = acc;
 	  
   if (m_size<5 && interpType!="Linear") {
-    WarningMsg("Warning in the constructor of FuncGrid in FuncGrid.h: the array size is less than 5 -> setting interpolation method to Linear");
+    WarningMsg("Warning in cbl::glob::FuncGrid::FuncGrid() of FuncGrid.cpp: the array size is less than 5 -> setting interpolation method to Linear!");
     m_interpType = "Linear";
   }
 
@@ -78,7 +78,7 @@ cbl::glob::FuncGrid::FuncGrid (const vector<double> x, const vector<double> y, c
     m_type = gsl_interp_steffen;
 
   else 
-    ErrorCBL("Error in the constructor of cbl::glob::FuncGrid::FuncGrid() in FuncGrid.cpp: the value of m_interpType is not permitted!");
+    ErrorCBL("Error in cbl::glob::FuncGrid::FuncGrid() of FuncGrid.cpp: the value of m_interpType is not permitted!");
 
   vector<double> xx, yy;
 
@@ -93,7 +93,7 @@ cbl::glob::FuncGrid::FuncGrid (const vector<double> x, const vector<double> y, c
     }
   }
   else
-    ErrorCBL("Error in the constructor of cbl::glob::FuncGrid::FuncGrid() in FuncGrid.cpp: the value of m_binType is not permitted!");
+    ErrorCBL("Error in cbl::glob::FuncGrid::FuncGrid() of FuncGrid.cpp: the value of m_binType is not permitted!");
 
   m_xmin = Min(m_x);
   m_xmax = Max(m_x);
@@ -149,7 +149,7 @@ double cbl::glob::FuncGrid::operator () (const double xx) const
 // =====================================================================================
 
 
-vector<double> cbl::glob::FuncGrid::eval_func (const vector<double> xx) const
+std::vector<double> cbl::glob::FuncGrid::eval_func (const std::vector<double> xx) const
 {
   vector<double> yy;
   
@@ -238,12 +238,12 @@ double cbl::glob::FuncGrid::root_D2v (const double x_low, const double x_up, con
 // =====================================================================================
 
 
-cbl::glob::FuncGrid2D::FuncGrid2D (const vector<double> x, const vector<double> y, const vector<vector<double>> fxy, const string interpType)
+cbl::glob::FuncGrid2D::FuncGrid2D (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> fxy, const std::string interpType)
 {
   if(!is_sorted(x.begin(), x.end()))
-    ErrorCBL("Error in constructor of FuncGrid in FuncGrid.h: the x array is not sorted");
+    ErrorCBL("Error in cbl::glob::FuncGrid2D::FuncGrid2D() of FuncGrid.cpp: the x array is not sorted!");
   if(!is_sorted(y.begin(), y.end()))
-    ErrorCBL("Error in constructor of FuncGrid in FuncGrid.h: the y array is not sorted");
+    ErrorCBL("Error in cbl::glob::FuncGrid2D::FuncGrid2D() of FuncGrid.cpp: the y array is not sorted!");
 
   // set internal variables
   m_x = x;
@@ -274,7 +274,7 @@ cbl::glob::FuncGrid2D::FuncGrid2D (const vector<double> x, const vector<double> 
     m_type = gsl_interp2d_bicubic;
 
   else 
-    ErrorCBL("Error in the constructor of cbl::glob::FuncGrid::FuncGrid() in FuncGrid.cpp: the value of m_interpType is not permitted!");
+    ErrorCBL("Error in cbl::glob::FuncGrid2D::FuncGrid2D() of FuncGrid.cpp: the value of m_interpType is not permitted!");
 
   shared_ptr<gsl_interp_accel> acc_x(gsl_interp_accel_alloc(), gsl_interp_accel_free);
   shared_ptr<gsl_interp_accel> acc_y(gsl_interp_accel_alloc(), gsl_interp_accel_free);
@@ -311,12 +311,12 @@ double cbl::glob::FuncGrid2D::operator () (const double xx, const double yy) con
     extr = true;
 
   double val;
-  if (extr) {
-    cout << xx << " " << yy << endl;
-    ErrorCBL("Error in operator() of FuncGrid2D, points outside the interpolation range. Work in progres...");
-  }
+  
+  if (extr) 
+    ErrorCBL("Work in progress in cbl::glob::FuncGrid2D::operator () of FuncGrid2D: points outside the interpolation range...", glob::ExitCode::_workInProgress_);
+  
   else
-    val= gsl_spline2d_eval(m_spline.get(), xx, yy, m_acc_x.get(), m_acc_y.get());
+    val = gsl_spline2d_eval(m_spline.get(), xx, yy, m_acc_x.get(), m_acc_y.get());
 
   return val;
 
@@ -326,7 +326,7 @@ double cbl::glob::FuncGrid2D::operator () (const double xx, const double yy) con
 // =====================================================================================
 
 
-vector<double> cbl::glob::FuncGrid2D::eval_func (const vector<vector<double>> xx) const
+std::vector<double> cbl::glob::FuncGrid2D::eval_func (const std::vector<std::vector<double>> xx) const
 {
   vector<double> yy;
   

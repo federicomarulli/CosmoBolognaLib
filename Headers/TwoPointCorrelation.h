@@ -66,9 +66,6 @@ namespace cbl {
 	/// the angle-averaged two-point correlation function, i.e. the monopole, &xi;(r)
 	_1D_monopole_,
 
-	/// the angle-averaged cross two-point correlation function, i.e. the cross monopole, &xi;<SUB>12</SUB>(r)
-	_Cross1D_monopole_,
-
 	/// the projected two-point correlation function, w(r<SUB>p</SUB>)
 	_1D_projected_,
     
@@ -95,7 +92,7 @@ namespace cbl {
 
 	/// 2D two-point correlation function in polar coordinates, &xi;(r,&mu;)
 	_2D_polar_
-
+	  
       };
 
       /**
@@ -104,7 +101,7 @@ namespace cbl {
        * @return a vector containing the
        * TwoPType names
        */
-      inline std::vector<std::string> TwoPTypeNames () {return {"1D_monopole", "Cross1D_monopole", "1D_projected", "1D_deprojected", "multipoles_integrated", "multipoles_direct", "1D_wedges", "1D_filtered", "1D_angular", "2D_Cartesian", "2D_polar"}; }
+      inline std::vector<std::string> TwoPTypeNames () {return {"1D_monopole", "1D_projected", "1D_deprojected", "multipoles_integrated", "multipoles_direct", "1D_wedges", "1D_filtered", "1D_angular", "2D_Cartesian", "2D_polar"}; }
 
       /**
        * @brief cast an enum of type TwoPType
@@ -775,8 +772,9 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory used to store
-	 *  the Jackknife resampling correlation functions, with Poisson
-	 *  errors
+	 *  the Jackknife resampling correlation functions, with
+	 *  Poisson errors; if an empty string (i.e. "" or "NULL") is
+	 *  provided, no output will be stored
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
 	 *  pairs; false &rarr; read the number of data-data pairs from
@@ -811,8 +809,9 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory used to store
-	 *  the Jackknife resampling correlation functions, with Poisson
-	 *  errors
+	 *  the Jackknife resampling correlation functions, with
+	 *  Poisson errors; if an empty string (i.e. "" or "NULL") is
+	 *  provided, no output will be stored
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
 	 *  pairs; false &rarr; read the number of data-data pairs from
@@ -850,8 +849,9 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory used to store
-	 *  the Bootstrap resampling correlation function, with Poisson
-	 *  errors
+	 *  the Bootstrap resampling correlation functions, with
+	 *  Poisson errors; if an empty string (i.e. "" or "NULL") is
+	 *  provided, no output will be stored
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
 	 *  pairs; false &rarr; read the number of data-data pairs from
@@ -952,7 +952,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const int seed=3213)
-	{ (void)nMocks; (void)dd; (void)rr; (void)seed; cbl::ErrorCBL("Error in std::vector<std::shared_ptr<data::Data> > XiJackknife of TwoPointCorrelation.h!"); std::vector<std::shared_ptr<data::Data> > data; return data; }
+	{ (void)nMocks; (void)dd; (void)rr; (void)seed; cbl::ErrorCBL("Error in std::vector<std::shared_ptr<data::Data> > XiBootstrap of TwoPointCorrelation.h!"); std::vector<std::shared_ptr<data::Data> > data; return data; }
 
 	/**
 	 *  @brief measure the Bootstrap resampling of the two-point
@@ -1647,7 +1647,8 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory of the
-	 *  resampled correlation function
+	 *  resampling correlation functions; if an empty string
+	 *  (i.e. "" or "NULL") is provided, no output will be stored
 	 *
 	 *  @param nMocks number of resampling used for Bootstrap
 	 *

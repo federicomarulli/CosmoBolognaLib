@@ -91,7 +91,7 @@ double cbl::cosmology::Cosmology::f_nu (const double SS, const double del_v, con
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::size_function (const double RV, const double redshift, const double del_v, const double del_c, const string model, const string method_Pk, const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const
+double cbl::cosmology::Cosmology::size_function (const double RV, const double redshift, const double del_v, const double del_c, const std::string model, const std::string method_Pk, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file) const
 {
   double RL;
   if ((model == "Vdn") || (model == "SvdW"))
@@ -123,7 +123,7 @@ double cbl::cosmology::Cosmology::size_function (const double RV, const double r
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::size_function (const double RV, const double redshift, const string model_mf, const double del_v, const string model_sf, const string method_Pk, const string output_root, const double Delta, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
+double cbl::cosmology::Cosmology::size_function (const double RV, const double redshift, const std::string model_mf, const double del_v, const std::string model_sf, const std::string method_Pk, const std::string output_root, const double Delta, const std::string interpType, const int norm, const double k_min, const double k_max, const double prec, const std::string input_file, const bool is_parameter_file)
 {
   double RL;
   

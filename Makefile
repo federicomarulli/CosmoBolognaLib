@@ -158,7 +158,7 @@ OBJ_DISTR = $(dir_DISTR)Distribution.o
 
 OBJ_STAT =  $(dir_STAT)Prior.o $(dir_STAT)ModelParameters.o $(dir_STAT)LikelihoodParameters.o $(dir_STAT)PosteriorParameters.o $(dir_STAT)Model.o $(dir_STAT)Model1D.o $(dir_STAT)Model2D.o $(dir_STAT)LikelihoodFunction.o $(dir_STAT)Likelihood.o $(dir_STAT)Chi2.o $(dir_STAT)Sampler.o $(dir_STAT)Posterior.o
 
-OBJ_COSM = $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)MassFunction.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)DensityProfile.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)SizeFunction.o  $(dir_COSM)3PCF.o $(OBJ_RECfast)
+OBJ_COSM = $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)PkXiNonLinear.o $(dir_COSM)MassFunction.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)DensityProfile.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)SizeFunction.o  $(dir_COSM)3PCF.o $(OBJ_RECfast)
 
 OBJ_CM = $(dir_CM)ChainMesh.o
 
@@ -189,6 +189,11 @@ OBJ_READP = $(dir_READP)ReadParameters.o
 OBJ_CBL = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_READP)
 
 OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/*.o $(PWD)/External/classgal_v1/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o 
+
+
+# objects for python compilation -> if OBJ_PYTHON=OBJ_CBL then all the CBL will be converted in python modules
+
+OBJ_PYTHON = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_READP)
 
 
 ##### CBL source files #####
@@ -431,13 +436,12 @@ allExamples:
 	$(call colorecho, "\n"Compiling the example code: readParameterFile.cpp ... "\n")
 	cd $(PWD)/Examples/readParameterFile/ ; make 
 
-
-python: $(dir_Python)CBL_wrap.o $(OBJ_CBL) $(dir_Python)CBL.i
+python: $(dir_Python)CBL_wrap.o $(OBJ_PYTHON) $(dir_Python)CBL.i
 	make ALL
-	$(C) $(FLAGS_LINK) -o $(dir_Python)_CosmoBolognaLib.so $(OBJ_CBL) $(dir_Python)CBL_wrap.o $(FLAGS_CCFITS) $(CUBA_LIB) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY) -lgfortran
+	$(C) $(FLAGS_LINK) -o $(dir_Python)_CosmoBolognaLib.so $(OBJ_PYTHON) $(dir_Python)CBL_wrap.o $(FLAGS_CCFITS) $(CUBA_LIB) $(FLAGS_GSL) $(FLAGS_FFTW) -lgomp $(FLAGS_PY) -lgfortran
 
 
-doc:
+documentation:
 	rm -rf Doc/html/* Doc/xml/*
 	$(Doxygen) Doc/dconfig
 	rm -f Doc/doxygen_sqlite3.db 
@@ -498,8 +502,8 @@ purgeALL:
 	rm -rf External/CAMB/NULL*
 	rm -rf External/VIPERS/venice3.9/venice
 	rm -rf External/mangle/bin
-	cd External/mangle/src; make cleaner ; rm -f Makefile ; true
-	cd External/classgal_v1/ ; make clean ; rm -f class libclass.a ; true
+	cd External/mangle/src; make cleaner ; rm -f Makefile libmangle.a; true
+	cd External/classgal_v1/ ; make clean ; rm -rf class libclass.a python/build/* ; true
 	rm -rf External/classgal_v1/output_linear/*
 	rm -rf External/classgal_v1/output_nonlinear/*
 	cd External/fftlog-f90-master/ ; make clean ; rm -f fftlog-f90 ; true
@@ -677,6 +681,9 @@ $(dir_COSM)PkXi.o: $(dir_COSM)PkXi.cpp $(HH) $(PWD)/Makefile
 
 $(dir_COSM)PkXizSpace.o: $(dir_COSM)PkXizSpace.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)PkXizSpace.cpp -o $(dir_COSM)PkXizSpace.o
+
+$(dir_COSM)PkXiNonLinear.o: $(dir_COSM)PkXiNonLinear.cpp $(HH) $(PWD)/Makefile 
+	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)PkXiNonLinear.cpp -o $(dir_COSM)PkXiNonLinear.o
 
 $(dir_COSM)Bias.o: $(dir_COSM)Bias.cpp $(HH) $(PWD)/Makefile 
 	$(C) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)Bias.cpp -o $(dir_COSM)Bias.o

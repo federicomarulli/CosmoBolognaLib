@@ -62,9 +62,6 @@ namespace cbl {
       /// void central density
       double m_centralDensity;
 
-      /// void ID
-      int m_ID;
-
     public:
     
       /**
@@ -77,7 +74,7 @@ namespace cbl {
        *  @return object of class Void
        */
       Void () 
-      	: Object(), m_radius(par::defaultDouble), m_densityContrast(par::defaultDouble), m_centralDensity(par::defaultDouble), m_ID(par::defaultInt) {}
+      	: Object(), m_radius(par::defaultDouble), m_densityContrast(par::defaultDouble), m_centralDensity(par::defaultDouble) {}
       
       /**
        *  @brief constructor that uses comoving coordinates
@@ -88,6 +85,8 @@ namespace cbl {
        *  @param weight weight
        *
        *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param ID the object ID
        *
        *  @param field the field where the object has been observed
        *
@@ -103,12 +102,10 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @param ID identification number
-       *
        *  @return object of class Void
        */
-      Void (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble, const int ID=par::defaultInt) 
-	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity), m_ID(ID) {}
+      Void (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
 
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -128,6 +125,8 @@ namespace cbl {
        *   
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -142,12 +141,10 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @param ID identification number
-       *
        *  @return object of class Void
        */
-      Void (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble, const int ID=par::defaultInt) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity), m_ID(ID) {}
+      Void (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -159,6 +156,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -173,12 +172,10 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @param ID identification number
-       *
        *  @return object of class Void
        */
-      Void (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble, const int ID=par::defaultInt) 
-	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity), m_ID(ID) {}
+      Void (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -193,6 +190,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -207,12 +206,10 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @param ID identification number
-       *
        *  @return object of class Void
        */
-      Void (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble, const int ID=par::defaultInt) 
-	: Object(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity), m_ID(ID) {}
+      Void (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -229,6 +226,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -243,12 +242,10 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @param ID identification number
-       *
        *  @return object of class Void
        */
-      Void (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble, const int ID=par::defaultInt) 
-	: Object(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity), m_ID(ID) {}
+      Void (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -265,6 +262,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -279,36 +278,50 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @param ID identification number
-       *
        *  @return object of class Void
        */
-      Void (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble, const int ID=par::defaultInt) 
-	: Object(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity), m_ID(ID) {}
+      Void (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
 
       /**
        *  @brief constructor that uses both comoving and observed coordinates
+       *
        *  @param xx comoving coordinate
+       *
        *  @param yy comoving coordinate
+       *
        *  @param zz comoving coordinate 
+       *
        *  @param ra Right Ascension
+       *
        *  @param dec Declination
+       *
        *  @param redshift redshift
+       *
        *  @param weight weight
+       *
        *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
+       *
        *  @param x_displacement the displacement along the x-axis
+       *
        *  @param y_displacement the displacement along the y-axis
+       *
        *  @param z_displacement the displacement along the z-axis
+       *
        *  @param radius radius 
+       *
        *  @param densityContrast density contrast
+       *
        *  @param centralDensity central density
-       *  @param ID identification number
        *
        *  @return object of class Void
        */
-      Void (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble, const int ID=par::defaultInt) 
-	: Object(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity), m_ID(ID) {}
+      Void (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
       
       /**
        *  @brief default destructor
@@ -345,13 +358,6 @@ namespace cbl {
       double centralDensity () const
       { return m_centralDensity; }
 
-      /**
-       *  @brief get the private member \e m_ID
-       *  @return the identification number of the void
-       */
-      int ID () const
-      { return m_ID; }
-
       ///@}
   
   
@@ -383,14 +389,6 @@ namespace cbl {
        */
       void set_centralDensity (const double centralDensity=par::defaultDouble)
       { m_centralDensity = centralDensity; }
-	
-      /**
-       *  @brief get the private member \e m_ID
-       *  @param ID the identification number of the void
-       *  @return none
-       */
-      void set_ID (const int ID=par::defaultInt)
-      { m_ID = ID; } 
     
       ///@}
 
@@ -423,14 +421,6 @@ namespace cbl {
        */
       bool isSet_centralDensity ()
       { return (cbl::isSet(m_centralDensity)) ? true : false; }
-	
-      /**
-       *  @brief get the private member \e m_ID
-       *  
-       *  @return true if the void ID is set; false otherwise
-       */
-      bool isSet_ID ()
-      { return (cbl::isSet(m_ID)) ? true : false; } 
     
       ///@}
       

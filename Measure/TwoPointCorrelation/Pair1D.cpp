@@ -586,7 +586,7 @@ void cbl::pairs::Pair1D_comoving_multipoles_log::put (const shared_ptr<Object> o
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D::add_data1D (const int i, const vector<double> data)
+void cbl::pairs::Pair1D::add_data1D (const int i, const std::vector<double> data)
 {
   m_PP1D[i] += data[0];
   m_PP1D_weighted[i] += data[1];
@@ -596,7 +596,7 @@ void cbl::pairs::Pair1D::add_data1D (const int i, const vector<double> data)
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D::add_data1D (const int i, const shared_ptr<pairs::Pair> pair, const double ww) 
+void cbl::pairs::Pair1D::add_data1D (const int i, const std::shared_ptr<pairs::Pair> pair, const double ww) 
 {
   add_data1D(i, {ww*pair->PP1D(i), ww*pair->PP1D_weighted(i)});
 }
@@ -605,7 +605,7 @@ void cbl::pairs::Pair1D::add_data1D (const int i, const shared_ptr<pairs::Pair> 
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D::Sum (const shared_ptr<Pair> pair, const double ww)
+void cbl::pairs::Pair1D::Sum (const std::shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins != pair->nbins()) 
     ErrorCBL("Error in cbl::pairs::Pair1D::Sum of Pair.cpp: dimension problems!");
@@ -618,7 +618,7 @@ void cbl::pairs::Pair1D::Sum (const shared_ptr<Pair> pair, const double ww)
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_comoving_multipoles_lin::Sum (const shared_ptr<Pair> pair, const double ww)
+void cbl::pairs::Pair1D_comoving_multipoles_lin::Sum (const std::shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins != pair->nbins()) 
     ErrorCBL("Error in cbl::pairs::Pair1D_comoving_multipoles_lin::Sum of Pair.cpp: dimension problems!");
@@ -632,7 +632,7 @@ void cbl::pairs::Pair1D_comoving_multipoles_lin::Sum (const shared_ptr<Pair> pai
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_comoving_multipoles_log::Sum (const shared_ptr<Pair> pair, const double ww)
+void cbl::pairs::Pair1D_comoving_multipoles_log::Sum (const std::shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins != pair->nbins()) 
     ErrorCBL("Error in cbl::pairs::Pair1D_comoving_multipoles_log::Sum of Pair.cpp: dimension problems!");

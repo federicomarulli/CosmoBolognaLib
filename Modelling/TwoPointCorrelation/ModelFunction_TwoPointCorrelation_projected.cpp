@@ -44,7 +44,7 @@ using namespace cbl;
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::wp_from_xi_approx (FunctionVectorVectorPtrVectorRef func, const vector<double> rp, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::wp_from_xi_approx (FunctionVectorVectorPtrVectorRef func, const std::vector<double> rp, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_HOD> pp = static_pointer_cast<STR_data_HOD>(inputs);
@@ -73,7 +73,7 @@ vector<double> cbl::modelling::twopt::wp_from_xi_approx (FunctionVectorVectorPtr
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::wp_1halo_approx (const vector<double> rp, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::wp_1halo_approx (const std::vector<double> rp, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   return wp_from_xi_approx(modelling::twopt::xi_1halo, rp, inputs, parameter); 
 }
@@ -82,7 +82,7 @@ vector<double> cbl::modelling::twopt::wp_1halo_approx (const vector<double> rp, 
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::wp_2halo_approx (const vector<double> rp, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::wp_2halo_approx (const std::vector<double> rp, const std::shared_ptr<void> inputs, std::vector<double> &parameter) 
 {
   return wp_from_xi_approx(modelling::twopt::xi_2halo, rp, inputs, parameter); 
 }
@@ -91,7 +91,7 @@ vector<double> cbl::modelling::twopt::wp_2halo_approx (const vector<double> rp, 
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::wp_HOD_approx (const vector<double> rp, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::wp_HOD_approx (const std::vector<double> rp, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   return wp_from_xi_approx(modelling::twopt::xi_HOD, rp, inputs, parameter); 
 }
@@ -100,7 +100,7 @@ vector<double> cbl::modelling::twopt::wp_HOD_approx (const vector<double> rp, co
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::wp_from_xi (FunctionDoubleDoubleDoublePtrVectorRef func, const vector<double> rp, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::wp_from_xi (FunctionDoubleDoubleDoublePtrVectorRef func, const std::vector<double> rp, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
    shared_ptr<STR_data_HOD> pp = static_pointer_cast<STR_data_HOD>(inputs);
@@ -128,7 +128,7 @@ vector<double> cbl::modelling::twopt::wp_from_xi (FunctionDoubleDoubleDoublePtrV
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::wp_1halo (const vector<double> rp, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::wp_1halo (const std::vector<double> rp, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   return wp_from_xi(modelling::twopt::xi_1halo_zspace, rp, inputs, parameter); 
 }
@@ -137,7 +137,7 @@ vector<double> cbl::modelling::twopt::wp_1halo (const vector<double> rp, const s
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::wp_2halo (const vector<double> rp, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::wp_2halo (const std::vector<double> rp, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   return wp_from_xi(modelling::twopt::xi_2halo_zspace, rp, inputs, parameter); 
 }
@@ -146,7 +146,7 @@ vector<double> cbl::modelling::twopt::wp_2halo (const vector<double> rp, const s
 // ============================================================================================
 
 
-vector<double> cbl::modelling::twopt::wp_HOD (const vector<double> rp, const shared_ptr<void> inputs, vector<double> &parameter)
+std::vector<double> cbl::modelling::twopt::wp_HOD (const std::vector<double> rp, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   return wp_from_xi(modelling::twopt::xi_HOD_zspace, rp, inputs, parameter); 
 }

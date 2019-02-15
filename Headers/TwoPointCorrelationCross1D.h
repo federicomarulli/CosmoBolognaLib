@@ -168,7 +168,9 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory of the
-	 *  resampled &xi;(r)
+	 *  resampling correlation functions, with Poisson errors; if
+	 *  an empty string (i.e. "" or "NULL") is provided, no output
+	 *  will be stored
 	 *
 	 *  @param nMocks number of resampling for bootstrap
 	 *

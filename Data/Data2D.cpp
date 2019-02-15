@@ -42,7 +42,7 @@ using namespace data;
 // ======================================================================================
 
 
-cbl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double>> data) : Data(DataType::_2D_)
+cbl::data::Data2D::Data2D (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> data) : Data(DataType::_2D_)
 {
   m_x = x;
   m_y = y;
@@ -68,7 +68,7 @@ cbl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const
 // ======================================================================================
 
 
-cbl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<vector<double>> data, const vector<vector<double>> error) : Data(DataType::_2D_)
+cbl::data::Data2D::Data2D (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> data, const std::vector<std::vector<double>> error) : Data(DataType::_2D_)
 {
   m_x = x;
   m_y = y;
@@ -99,7 +99,7 @@ cbl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const
 // ======================================================================================
 
 
-cbl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<double> data, const vector<double> error) : Data(DataType::_2D_)
+cbl::data::Data2D::Data2D (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<double> error) : Data(DataType::_2D_)
 {
   m_x = x;
   m_y = y;
@@ -124,7 +124,7 @@ cbl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const
 // ======================================================================================
 
 
-cbl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const vector<double> data, const vector<vector<double>> covariance_matrix) : Data(DataType::_2D_)
+cbl::data::Data2D::Data2D (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<std::vector<double>> covariance_matrix) : Data(DataType::_2D_)
 {
   m_x = x;
   m_y = y;
@@ -153,7 +153,7 @@ cbl::data::Data2D::Data2D (const vector<double> x, const vector<double> y, const
 // ======================================================================================
 
 
-void cbl::data::Data2D::data(vector<vector<double>> &data) const
+void cbl::data::Data2D::get_data (std::vector<std::vector<double>> &data) const
 {
   data.erase(data.begin(), data.end());
   data.resize(m_xsize, vector<double>(m_ysize,0));
@@ -167,7 +167,7 @@ void cbl::data::Data2D::data(vector<vector<double>> &data) const
 // ======================================================================================
 
 
-void cbl::data::Data2D::error(vector<vector<double>> &error) const
+void cbl::data::Data2D::get_error (std::vector<std::vector<double>> &error) const
 {
   error.erase(error.begin(), error.end());
   error.resize(m_xsize, vector<double>(m_ysize,0));
@@ -210,10 +210,10 @@ void cbl::data::Data2D::write (const string dir, const string file, const string
   for (int i=0; i<m_xsize; ++i)
     for (int j=0; j<m_ysize; ++j) {
       int index = j+m_ysize*i;
-      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_y[j]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index] << endl;
+      fout << setprecision(precision) << setw(15) << right << m_x[i]
+	   << "  " << setprecision(precision) << setw(15) << right << m_y[j]
+	   << "  " << setprecision(precision) << setw(15) << right << m_data[index]
+	   << "  " << setprecision(precision) << setw(15) << right << m_error[index] << endl;
     }
 
  
@@ -222,28 +222,28 @@ void cbl::data::Data2D::write (const string dir, const string file, const string
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
 	int index = j+m_ysize*i;
-	fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << m_x[i]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << -m_y[j]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index]<< endl;
+	fout << setprecision(precision) << setw(15) << m_x[i]
+	     << "  " << setprecision(precision) << setw(15) << right << -m_y[j]
+	     << "  " << setprecision(precision) << setw(15) << right << m_data[index]
+	     << "  " << setprecision(precision) << setw(15) << right << m_error[index]<< endl;
       }
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
 	int index = j+m_ysize*i;
-	fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << -m_x[i]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << -m_y[j]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index] << endl;
+	fout << setprecision(precision) << setw(15) << -m_x[i]
+	     << "  " << setprecision(precision) << setw(15) << right << -m_y[j]
+	     << "  " << setprecision(precision) << setw(15) << right << m_data[index]
+	     << "  " << setprecision(precision) << setw(15) << right << m_error[index] << endl;
       }
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
 	int index = j+m_ysize*i;
-	fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << -m_x[i]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_y[j]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index]<< endl;
+	fout << setprecision(precision) << setw(15) << -m_x[i]
+	     << "  " << setprecision(precision) << setw(15) << right << m_y[j]
+	     << "  " << setprecision(precision) << setw(15) << right << m_data[index]
+	     << "  " << setprecision(precision) << setw(15) << right << m_error[index]<< endl;
       }
     
   }
@@ -270,14 +270,14 @@ void cbl::data::Data2D::write_covariance (const string dir, const string file, c
 	for (int l=0; l<m_ysize; ++l) {    
 	  int index1 = j+m_ysize*i;
 	  int index2 = l+m_ysize*k;
-	  fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i]
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_y[j]
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[k]
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_y[l]
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_covariance[index1][index2]
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_covariance[index1][index2]/sqrt(m_covariance[index1][index1]*m_covariance[index2][index2])
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(5) << right << index1 
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(5) << right << index2 <<  endl;
+	  fout << setprecision(precision) << setw(15) << right << m_x[i]
+	       << "  " << setprecision(precision) << setw(15) << right << m_y[j]
+	       << "  " << setprecision(precision) << setw(15) << right << m_x[k]
+	       << "  " << setprecision(precision) << setw(15) << right << m_y[l]
+	       << "  " << setprecision(precision) << setw(15) << right << m_covariance[index1][index2]
+	       << "  " << setprecision(precision) << setw(15) << right << m_covariance[index1][index2]/sqrt(m_covariance[index1][index1]*m_covariance[index2][index2])
+	       << "  " << setprecision(precision) << setw(5) << right << index1 
+	       << "  " << setprecision(precision) << setw(5) << right << index2 <<  endl;
 	}
       }
     }
@@ -291,7 +291,7 @@ void cbl::data::Data2D::write_covariance (const string dir, const string file, c
 // ======================================================================================
 
 
-shared_ptr<Data> cbl::data::Data2D::cut(const double xmin, const double xmax, const double ymin, const double ymax) const
+shared_ptr<Data> cbl::data::Data2D::cut (const double xmin, const double xmax, const double ymin, const double ymax) const
 {
   vector<bool> mask(m_ndata, true);
   vector<double> xx, yy;
@@ -324,7 +324,7 @@ shared_ptr<Data> cbl::data::Data2D::cut(const double xmin, const double xmax, co
 // ======================================================================================
 
 
-shared_ptr<Data> cbl::data::Data2D::as_factory()
+shared_ptr<Data> cbl::data::Data2D::as_factory ()
 {
   shared_ptr<Data> dd = make_shared<Data2D>(Data2D(m_x, m_data, m_covariance));
 

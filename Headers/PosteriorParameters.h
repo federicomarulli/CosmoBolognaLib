@@ -53,31 +53,31 @@ namespace cbl {
     class PosteriorParameters : public ModelParameters {
 
       protected:
-	
-	/// model parameter bestfit values
-	std::vector<double> m_parameter_bestfit_value;
 
-	/// numbers of free parameters
+	/// the numbers of free parameters
 	size_t m_nparameters_free = 0;
 
-	/// number of fixed parameters
+	/// the number of fixed parameters
 	size_t m_nparameters_fixed = 0;
 
-	/// indexes of fixed parameters
+	/// the indexes of fixed parameters
 	std::vector<unsigned int> m_fixed_parameters;
 
-	/// indexes of the free parameters
+	/// the indexes of the free parameters
 	std::vector<unsigned int> m_free_parameters;
 
-	/// parameter prior distributions
+	/// the parameter prior distributions
 	std::vector<std::shared_ptr<PriorDistribution>> m_parameter_prior;
 
-	/// parameter posterior distributions
-	std::vector<std::shared_ptr<PosteriorDistribution>> m_parameter_posterior;
-
-	/// function parameter covariance matrix
+	/// the parameter posterior distributions
+	std::vector<std::shared_ptr<PosteriorDistribution>> m_posterior_distribution;
+	
+	/// the best-fit parameter values, either the medians of the MCMC chain or the maxima of the posterior (depending of what has been calculated) 
+	std::vector<double> m_parameter_bestfit_value;
+	
+	/// the function parameter covariance matrix
 	std::vector<std::vector<double>> m_parameter_covariance;
-
+	
 	/// the lenght of the chain
 	size_t m_chain_size;
 
@@ -88,16 +88,15 @@ namespace cbl {
 	std::vector<std::vector<double>> m_chain_values;
 
 	/**
-	 * @brief private member to set the parameter
-	 * types
+	 *  @brief private member to set the parameter types
 	 *
-	 * @return none
+	 *  @return none
 	 */
-	void m_set_parameter_type() override;
+	void m_set_parameter_type () override;
 
 	/**
-	 *  @brief get the position in the vector
-	 *  m_values from position index and walker index
+	 *  @brief get the position in the vector m_values from
+	 *  position index and walker index
 	 *
 	 *  @param pp the position in the chain
 	 *
@@ -105,8 +104,10 @@ namespace cbl {
 	 *
 	 *  @return object of class Chain.  
 	 */
-	int m_inds_to_index(const int pp, const int ww) const { return pp*m_chain_nwalkers+ww;}
-
+	int m_inds_to_index (const int pp, const int ww) const
+	{ return pp*m_chain_nwalkers+ww; }
+	
+	
       public:
 
 	/**
@@ -154,12 +155,26 @@ namespace cbl {
 	size_t nparameters_free () const override;
 
 	/**
+	 * @brief return the private member
+	 * m_free_parameters
+	 * @return the private member m_free_parameters
+	 */
+	std::vector<unsigned int> free_parameters() const {return m_free_parameters;}
+
+	/**
 	 * @brief return the number of fixed
 	 * parameters
 	 *
 	 * @return the number of fixed parameters
 	 */
 	size_t nparameters_fixed() const override;
+
+	/**
+	 * @brief return the private member
+	 * m_fixed_parameters
+	 * @return the private member m_fixed_parameters
+	 */
+	std::vector<unsigned int> fixed_parameters() const {return m_fixed_parameters;}
 
 	/**
 	 * @brief return all the model parameters
@@ -246,11 +261,11 @@ namespace cbl {
 	 * @brief set the prior distributions for the 
 	 * parameters
 	 *
-	 * @param priorDistributions the prior distributions
+	 * @param priorDistribution the prior distributions
 	 *
 	 * @return none
 	 */
-	void set_prior_distribution (const std::vector<std::shared_ptr<PriorDistribution>> priorDistributions);
+	void set_prior_distribution (const std::vector<std::shared_ptr<PriorDistribution>> priorDistribution);
 
 	/**
 	 * @brief set the prior distributions for the 
@@ -318,14 +333,29 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_bestfit_value (const std::vector<double> bestfit_value);
-
+	void set_bestfit_values (const std::vector<double> bestfit_value);
+	
+	/**
+	 *  @brief set the protected member m_bestfit_value
+	 *
+	 *  @param start the starting position 
+	 *
+	 *  @param thin number of jumped indexes in the chain
+	 *
+	 *  @param nbins the number of bins
+	 *
+	 *  @param seed seed for random extraction
+	 *
+	 *  @return none
+	 */
+	void set_bestfit_values (const int start, const int thin, const int nbins, const int seed) override;
+	
 	/**
 	 *  @brief write bestfit info
 	 *
 	 *  @return none
 	 */
-	void write_bestfit_info();
+	void write_bestfit_info ();
 
 	///@}
 	
@@ -356,9 +386,10 @@ namespace cbl {
 	 *
 	 *  @param par the index of the parameter
 	 *
-	 *  @return the protected member m_parameter_posterior[param]
+	 *  @return the protected member m_posterior_distribution[par]
 	 */
-	std::shared_ptr<PosteriorDistribution> posterior_distribution (const int par) const { return m_parameter_posterior[par]; }
+	std::shared_ptr<PosteriorDistribution> posterior_distribution (const int par) const
+	  { cbl::checkDim(m_posterior_distribution, par, "m_posterior_distribution", false); return m_posterior_distribution[par]; }
 
 	///@}
 
@@ -373,17 +404,25 @@ namespace cbl {
 	 *
 	 * @param seed seed for random extraction
 	 *
+	 * @param show_mode true \f$\rightarrow\f$ show the posterior
+	 * mode; false \f$\rightarrow\f$ do not show the posterior
+	 * mode
+	 *
 	 * @return none
 	 */
-	void show_results (const int start, const int thin, const int nbins, const int seed=34121);
+	void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false);
 
 	/**
-	 * @brief write results on files
+	 * @brief store the results to file
 	 *
 	 * @param dir name of the output folder
 	 *
 	 * @param file name of the output file
 	 *
+	 * this function stores to file the posterior mean, standard
+	 * deviation, median, 18th and 82th percentiles, and
+	 * optionally the mode
+	 * 
 	 * @param start the starting position 
 	 *
 	 * @param thin number of jumped indexes in the chain
@@ -392,9 +431,13 @@ namespace cbl {
 	 *
 	 * @param seed seed for random extraction
 	 *
+	 * @param compute_mode true \f$\rightarrow\f$ compute the
+	 * posterior mode; false \f$\rightarrow\f$ do not compute the
+	 * posterior mode
+	 *
 	 * @return none
 	 */
-	void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121);
+	void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false);
 
 	/**
 	 * @brief return the private member m_chain_size

@@ -66,7 +66,10 @@ namespace cbl {
       _Cluster_,
     
       /// cosmic void
-      _Void_
+      _Void_,
+    
+      /// host halo
+      _HostHalo_
     
     };
 
@@ -77,7 +80,7 @@ namespace cbl {
      * ObjectType names
      */
     inline std::vector<std::string> ObjectTypeNames ()
-    { return {"Random", "Mock", "Halo", "Galaxy", "Cluster", "Void"}; }
+    { return {"Random", "Mock", "Halo", "Galaxy", "Cluster", "Void", "HostHalo"}; }
 
     /**
      * @brief cast an enum of type ObjectType
@@ -154,6 +157,9 @@ namespace cbl {
       /// region (used for jackknife/bootstrap)
       long m_region = cbl::par::defaultLong;
 
+      /// ID
+      int m_ID = cbl::par::defaultInt;
+      
       /// observed field
       std::string m_field = cbl::par::defaultString;
       
@@ -190,6 +196,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -200,8 +208,8 @@ namespace cbl {
        *
        *  @return object of class Object
        */
-      Object (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_ra(par::defaultDouble), m_dec(par::defaultDouble), m_redshift(par::defaultDouble), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
+      Object (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_ra(par::defaultDouble), m_dec(par::defaultDouble), m_redshift(par::defaultDouble), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
     
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -221,6 +229,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -231,8 +241,8 @@ namespace cbl {
        *
        *  @return object of class Object
        */
-      Object (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_weight(weight), m_region(region), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement)
+      Object (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement)
 	{
 	  cbl::polar_coord(m_xx, m_yy, m_zz, m_ra, m_dec, m_dc);
 	  m_redshift = cosm.Redshift(m_dc, z1_guess, z2_guess);
@@ -248,6 +258,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -258,8 +270,8 @@ namespace cbl {
        *
        *  @return object of class Object
        */
-      Object (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
+      Object (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -274,6 +286,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -284,8 +298,8 @@ namespace cbl {
        *
        *  @return object of class Object
        */
-      Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
+      Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -302,6 +316,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -312,8 +328,8 @@ namespace cbl {
        *
        *  @return object of class Object
        */
-      Object (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement)
+      Object (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement)
 	{ 
 	  m_dc = cosm.D_C(m_redshift); 
 	  cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
@@ -335,6 +351,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -345,8 +363,8 @@ namespace cbl {
        *
        *  @return object of class Object
        */
-      Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement)
+      Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement)
 	{ 
 	  m_dc = cosm.D_C(m_redshift);
 	  cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
@@ -363,14 +381,15 @@ namespace cbl {
        *  @param redshift redshift
        *  @param weight weight
        *  @param region region, used e.g. for jackknife and bootstrap
+       *  @param ID the object ID
        *  @param field the field where the object has been observed
        *  @param x_displacement the displacement along the x-axis
        *  @param y_displacement the displacement along the y-axis
        *  @param z_displacement the displacement along the z-axis
        *  @return object of class Object
        */
-      Object (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-      : m_xx(xx), m_yy(yy), m_zz(zz), m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(sqrt(xx*xx+yy*yy+zz*zz)), m_weight(weight), m_region(region), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) 
+      Object (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+      : m_xx(xx), m_yy(yy), m_zz(zz), m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(sqrt(xx*xx+yy*yy+zz*zz)), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) 
       {}   
 
       /**
@@ -392,7 +411,7 @@ namespace cbl {
        *  providing in input comoving coordinates
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        * 
        *  @return object of a given type
        */
@@ -403,7 +422,7 @@ namespace cbl {
        *  providing in input comoving coordinates
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param coord structure containing the comoving coordinates
        *  {x, y, z}
@@ -411,6 +430,8 @@ namespace cbl {
        *  @param weight weight
        *
        *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param ID the object ID
        *
        *  @param field the field where the object has been observed
        *
@@ -422,7 +443,7 @@ namespace cbl {
        * 
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
       
       /**
        *  @brief static factory used to construct objects of any type,
@@ -430,7 +451,7 @@ namespace cbl {
        *  model to estimate the redshift
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param coord structure containing the comoving coordinates
        *  {x, y, z}
@@ -446,6 +467,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -456,14 +479,14 @@ namespace cbl {
        *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
        *  providing in input observed coordinates in radians
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
@@ -472,6 +495,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -482,14 +507,14 @@ namespace cbl {
        *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
        *  providing in input observed coordinates in any angular units
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param coord structure containing the observed coordinates
        *  {ra Right Ascension}
@@ -500,6 +525,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -510,7 +537,7 @@ namespace cbl {
        *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -518,7 +545,7 @@ namespace cbl {
        *  cosmological model to estimate the comoving coordinates
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
@@ -530,6 +557,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -540,7 +569,7 @@ namespace cbl {
        *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -548,7 +577,7 @@ namespace cbl {
        *  model to estimate the comoving coordinates
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
@@ -562,6 +591,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -572,33 +603,46 @@ namespace cbl {
        *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
        *  providing in input both comoving and observed coordinates
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        *
        *  @param xx comoving coordinate
+       *
        *  @param yy comoving coordinate
+       *
        *  @param zz comoving coordinate 
+       *
        *  @param ra Right Ascension
+       *
        *  @param dec Declination
+       *
        *  @param redshift redshift
+       *
        *  @param weight weight
+       *
        *  @param region the object region, used e.g. for jackknife and
        *  bootstrap
+       *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
+       *
        *  @param x_displacement the displacement along the x-axis
+       *
        *  @param y_displacement the displacement along the y-axis
+       *
        *  @param z_displacement the displacement along the z-axis
        *
        *  @return object of a given type
        *
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       ///@}
 
@@ -607,77 +651,85 @@ namespace cbl {
        *  @name Member functions used to get the protected members
        */
       ///@{
-
+      
       /**
        *  @brief get the member \e m_xx
        *  @return the coordinate x of the derived object
        */
       double xx () const
-      { return (cbl::isSet(m_xx)) ? m_xx : ErrorCBL("Error in Object.h: the m_xx variable is not defined!"); }
+      { return (cbl::isSet(m_xx)) ? m_xx : ErrorCBL("Error in xx() of Object.h: the m_xx variable is not defined!"); }
 
       /**
        *  @brief get the member \e m_yy
        *  @return the coordinate y of the derived object
        */
       double yy () const
-      { return (cbl::isSet(m_yy)) ? m_yy : ErrorCBL("Error in Object.h: the m_yy variable is not defined!"); }
+      { return (cbl::isSet(m_yy)) ? m_yy : ErrorCBL("Error in yy() of Object.h: the m_yy variable is not defined!"); }
 
       /**
        *  @brief get the member \e m_zz
        *  @return the coordinate z of the derived object
        */
       double zz () const
-      { return (cbl::isSet(m_zz)) ? m_zz : ErrorCBL("Error in Object.h: the m_zz variable is not defined!"); }
+      { return (cbl::isSet(m_zz)) ? m_zz : ErrorCBL("Error in zz() of Object.h: the m_zz variable is not defined!"); }
 
       /**
        *  @brief get the member \e m_dc
        *  @return the comoving distance of the object
        */
       double dc () const
-      { return (cbl::isSet(m_dc)) ? m_dc : ErrorCBL("Error in Object.h: the m_dc variable is not defined!"); }
+      { return (cbl::isSet(m_dc)) ? m_dc : ErrorCBL("Error in dc() of Object.h: the m_dc variable is not defined!"); }
     
       /**
        *  @brief get the member \e m_ra
        *  @return the Right Ascension of the object
        */
       double ra () const
-      { return (cbl::isSet(m_ra)) ? m_ra : ErrorCBL("Error in Object.h: the m_ra variable is not defined!"); } 
+      { return (cbl::isSet(m_ra)) ? m_ra : ErrorCBL("Error in ra() of Object.h: the m_ra variable is not defined!"); } 
     
       /**
        *  @brief get the member \e m_dec
        *  @return the Declination of the object
        */
       double dec () const
-      { return (cbl::isSet(m_dec)) ? m_dec : ErrorCBL("Error in Object.h: the m_dec variable is not defined!"); }
+      { return (cbl::isSet(m_dec)) ? m_dec : ErrorCBL("Error in dec() of Object.h: the m_dec variable is not defined!"); }
     
       /**
        *  @brief get the member \e m_redshift
        *  @return the redshift of the object
        */
       double redshift () const
-      { return (cbl::isSet(m_redshift)) ? m_redshift : ErrorCBL("Error in Object.h: the m_redshift variable is not defined!"); }
+      { return (cbl::isSet(m_redshift)) ? m_redshift : ErrorCBL("Error in redshift() of Object.h: the m_redshift variable is not defined!"); }
     
       /**
        *  @brief get the member \e m_weight
        *  @return the weight of the object
        */
       double weight () const
-      { return m_weight; }
+      { return (cbl::isSet(m_weight)) ? m_weight : ErrorCBL("Error in weight() of Object.h: the m_region variable is not defined!"); }
 
       /**
        *  @brief get the member \e m_region
        *  @return the index of the subRegion in which the object is located
        */
       long region () const
-      { return (cbl::isSet(m_region)) ? m_region : ErrorCBL("Error in Object.h: the m_region variable is not defined!"); }
+      { return (cbl::isSet(m_region)) ? m_region : ErrorCBL("Error in region() of Object.h: the m_region variable is not defined!"); }
 
+      /**
+       *  @brief get the member \e m_radius
+       *  @return the ID of the derived object, or an
+       *  error message if the derived object does not have this member
+       */
+      int ID () const
+      { return (cbl::isSet(m_ID)) ? m_ID : cbl::ErrorCBL("Error in ID() of Object.h: the m_ID variable is not defined!"); }
+      
       /**
        *  @brief get the member \e m_field
        *  @return the field where the object has been observed
        */
       std::string field () const
 	{
-	  if (!cbl::isSet(m_field)) ErrorCBL("Error in Object.h: the m_field variable is not defined!");
+	  if (!cbl::isSet(m_field)) ErrorCBL("Error in field() of Object.h: the m_field variable is not defined!");
 	  return m_field;
 	}
 
@@ -686,21 +738,21 @@ namespace cbl {
        *   @return the displacement along the x axis
        */
       double x_displacement () const
-      { return (cbl::isSet(m_x_displacement)) ? m_x_displacement : ErrorCBL("Error in Object.h: the m_x_displacement variable is not defined!"); }
+      { return (cbl::isSet(m_x_displacement)) ? m_x_displacement : ErrorCBL("Error in x_displacement() of Object.h: the m_x_displacement variable is not defined!"); }
 
       /**
        *   @brief get the member \e m_y_displacement
        *   @return the displacement along the x axis
        */
       double y_displacement () const
-      { return (cbl::isSet(m_y_displacement)) ? m_y_displacement : ErrorCBL("Error in Object.h: the m_y_displacement variable is not defined!"); }
+      { return (cbl::isSet(m_y_displacement)) ? m_y_displacement : ErrorCBL("Error in y_displacement() of Object.h: the m_y_displacement variable is not defined!"); }
 
       /**
        *   @brief get the member \e m_z_displacement
        *   @return the displacement along the z axis
        */
       double z_displacement () const
-      { return (cbl::isSet(m_z_displacement)) ? m_z_displacement : ErrorCBL("Error in Object.h: the m_z_displacement variable is not defined!"); }
+      { return (cbl::isSet(m_z_displacement)) ? m_z_displacement : ErrorCBL("Error in z_displacement() of Object.h: the m_z_displacement variable is not defined!"); }
 
       /**
        *  @brief get the object coordinates
@@ -709,7 +761,7 @@ namespace cbl {
       std::vector<double> coords () const
 	{
 	  if (!cbl::isSet(m_xx) || !cbl::isSet(m_yy) || !cbl::isSet(m_zz))
-	    ErrorCBL("Error in Object.h: one or more of the m_xx, m_yy, m_zz variables is not defined!");
+	    ErrorCBL("Error in coords() of Object.h: one or more of the m_xx, m_yy, m_zz variables is not defined!");
 	  return {m_xx, m_yy, m_zz};
 	}
     
@@ -825,15 +877,134 @@ namespace cbl {
        *  error message if the derived object does not have this member
        */
       virtual double centralDensity () const
-      { return cbl::ErrorCBL("Error in radius() of centralDensity.h!"); }
+      { return cbl::ErrorCBL("Error in radius() of Object.h!"); }
     
       /**
-       *  @brief get the member \e m_radius
-       *  @return the ID of the derived object, or an
+       *  @brief get the private member \e m_mass_estimate
+       *  @return the mass estimate of the group, or an
        *  error message if the derived object does not have this member
        */
-      virtual int ID () const
-      { return cbl::ErrorCBL("Error in ID() of Objech.h!"); }
+      virtual double mass_estimate () const
+      { return cbl::ErrorCBL("Error in mass_estimate() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_radius_estimate
+       *  @return the radius estimate of the group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double radius_estimate () const
+      { return cbl::ErrorCBL("Error in radius_estimate() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_veldisp_estimate
+       *  @return the velocity dispersion estimate of the group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double veldisp_estimate () const
+      { return cbl::ErrorCBL("Error in veldisp_estimate() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_xcm
+       *  @return the x-axis coordinate of the centre of mass, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double xcm () const
+      { return cbl::ErrorCBL("Error in xcm() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_ycm
+       *  @return the y-axis coordinate of the centre of mass, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double ycm () const
+      { return cbl::ErrorCBL("Error in ycm() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_zcm
+       *  @return the z-axis coordinate of the centre of mass, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double zcm () const
+      { return cbl::ErrorCBL("Error in zcm() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_spin_x
+       *  @return the x-axis component of the spin, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double spin_x () const
+      { return cbl::ErrorCBL("Error in spin_x() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_spin_y
+       *  @return the y-axis component of the spin, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double spin_y () const
+      { return cbl::ErrorCBL("Error in spin_y() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_spin_z
+       *  @return the z-axis component of the spin, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double spin_z () const
+      { return cbl::ErrorCBL("Error in spin_z() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_veldisp
+       *  @return the velocity dispersion of the sub-group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double veldisp () const
+      { return cbl::ErrorCBL("Error in veldisp() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_vmax
+       *  @return the maximum total velocity of the sub-group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double vmax () const
+      { return cbl::ErrorCBL("Error in vmax() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_vmax_rad
+       *  @return the maximum radial velocity of the sub-group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double vmax_rad () const
+      { return cbl::ErrorCBL("Error in vmax_rad() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_tot_mass
+       *  @return the total mass of the host halo (sum over all contributions), or an
+       *  error message if the derived object does not have this member
+       */
+      virtual double tot_mass () const
+      { return cbl::ErrorCBL("Error in tot_mass() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_parent
+       *  @return the id of the parent group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual int parent () const { return cbl::ErrorCBL("Error in parent() of Object.h!"); }
+    
+      /**
+       *  @brief get the private member \e m_nsub
+       *  @return the number of sub-groups in the group, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual int nsub () const
+      { return cbl::ErrorCBL("Error in nsub() of Object.h!"); }
+    
+      /**
+       *  @brief get the member \e m_satellites
+       *  @return a vector of pointers to satellite objects of the derived object, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual std::vector<std::shared_ptr<Object>> satellites () const
+      { cbl::ErrorCBL("Error in satellites() of Objech.h!"); return {}; }
 
       ///@}
 
@@ -842,13 +1013,13 @@ namespace cbl {
        *  @name Member functions used to set the protected members
        */
       ///@{ 
-    
+      
       /**
        *  @brief set the member \e m_xx
        *  @param xx the coordinate x of the object
        *  @return none
        */
-      void set_xx (const double xx=par::defaultDouble)
+      void set_xx (const double xx)
       { m_xx = xx; }
  
       /**
@@ -856,7 +1027,7 @@ namespace cbl {
        *  @param yy the coordinate y of the object
        *  @return none
        */
-      void set_yy (const double yy=par::defaultDouble)
+      void set_yy (const double yy)
       { m_yy = yy; }
     
       /**
@@ -864,7 +1035,7 @@ namespace cbl {
        *  @param zz the coordinate z of the object
        *  @return none
        */
-      void set_zz (const double zz=par::defaultDouble)
+      void set_zz (const double zz)
       { m_zz = zz; }
     
       /**
@@ -874,7 +1045,7 @@ namespace cbl {
        *  @param inputUnits the units of the input coordinates
        *  @return none
        */
-      void set_ra (const double ra=par::defaultDouble, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
+      void set_ra (const double ra, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
       {
 	m_ra = radians(ra, inputUnits);
 	if (m_dc>par::defaultDouble) cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
@@ -887,7 +1058,7 @@ namespace cbl {
        *  @param inputUnits the units of the input coordinates
        *  @return none
        */
-      void set_dec (const double dec=par::defaultDouble, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
+      void set_dec (const double dec, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
       {
 	m_dec = radians(dec, inputUnits);
 	if (m_dc>par::defaultDouble) cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
@@ -896,15 +1067,18 @@ namespace cbl {
       /**
        *  @brief set the member \e m_redshift, updating
        *  the comoving coordinates accordingly (if already set)
+       *
        *  @param redshift the redshift of the object
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *
+       *  @param cosmology object of class Cosmology, used to estimate
+       *  the comoving distance from the given redshift
+       *
        *  @return none
        */
-      void set_redshift (const double redshift=par::defaultDouble, const cosmology::Cosmology &cosm={})
+      void set_redshift (const double redshift, const cosmology::Cosmology cosmology)
       {
 	m_redshift = redshift;
-	m_dc = cosm.D_C(m_redshift); 
+	m_dc = cosmology.D_C(m_redshift); 
 	cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
       }
     
@@ -914,7 +1088,7 @@ namespace cbl {
        *  @param dc the comoving distance of the object
        *  @return none
        */
-      void set_dc (const double dc=par::defaultDouble)
+      void set_dc (const double dc)
       {
 	m_dc = dc;
 	cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
@@ -925,7 +1099,7 @@ namespace cbl {
        *  @param weight the weight of the object
        *  @return none
        */
-      void set_weight (const double weight=par::defaultDouble)
+      void set_weight (const double weight)
       { m_weight = weight; }
       
       /**
@@ -934,15 +1108,23 @@ namespace cbl {
        *  is located 
        *  @return none
        */
-      void set_region (const long region=par::defaultLong)
+      void set_region (const long region)
       { if (region<0) ErrorCBL("Error in Object.h: region must be >0 !"); m_region = region; }
+      
+      /**
+       *  @brief set the member \e m_ID
+       *  @param ID the ID
+       *  @return none
+       */
+      void set_ID (const int ID)
+      { m_ID = ID; }
       
       /**
        *  @brief set the member \e m_field
        *  @param field the field were the object has been observed
        *  @return none
        */
-      void set_field (const std::string field=par::defaultString)
+      void set_field (const std::string field)
       { m_field = field; }
       
       /**
@@ -950,7 +1132,7 @@ namespace cbl {
        *  @param x_displacement the displacement (in Mpc) of the x coordinate
        *  @return none
        */
-      void set_x_displacement (const double x_displacement=par::defaultDouble)
+      void set_x_displacement (const double x_displacement)
       { m_x_displacement = x_displacement; }
 
       /**
@@ -958,7 +1140,7 @@ namespace cbl {
        *  @param y_displacement the displacement (in Mpc) of the y coordinate
        *  @return none
        */
-      void set_y_displacement (const double y_displacement=par::defaultDouble)
+      void set_y_displacement (const double y_displacement)
       { m_y_displacement = y_displacement; }
 
       /**
@@ -966,7 +1148,7 @@ namespace cbl {
        *  @param z_displacement the displacement (in Mpc) of the x coordinate
        *  @return none
        */
-      void set_z_displacement (const double z_displacement=par::defaultDouble)
+      void set_z_displacement (const double z_displacement)
       { m_z_displacement = z_displacement; }
 
       /**
@@ -975,7 +1157,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_vx (const double vx=par::defaultDouble)
+      virtual void set_vx (const double vx)
       { (void)vx; cbl::ErrorCBL("Error in set_vx() of Objech.h!"); }
       
       /**
@@ -984,7 +1166,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_vy (const double vy=par::defaultDouble)
+      virtual void set_vy (const double vy)
       { (void)vy; cbl::ErrorCBL("Error in set_vy() of Objech.h!"); }
     
       /**
@@ -993,7 +1175,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_vz (const double vz=par::defaultDouble)
+      virtual void set_vz (const double vz)
       { (void)vz; cbl::ErrorCBL("Error in set_vz() of Objech.h!"); }
 
       /**
@@ -1002,7 +1184,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_mass (const double mass=par::defaultDouble)
+      virtual void set_mass (const double mass)
       { (void)mass; cbl::ErrorCBL("Error in set_mass() of Objech.h!"); }
     
       /**
@@ -1011,7 +1193,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_magnitude (const double magnitude=par::defaultDouble)
+      virtual void set_magnitude (const double magnitude)
       { (void)magnitude; cbl::ErrorCBL("Error in set_magnitude() of Objech.h!"); }  
 
       /**
@@ -1020,7 +1202,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_SFR (const double SFR=par::defaultDouble)
+      virtual void set_SFR (const double SFR)
       { (void)SFR; cbl::ErrorCBL("Error in set_SFR() of Objech.h!"); }  
     
       /**
@@ -1029,7 +1211,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_sSFR (const double sSFR=par::defaultDouble)
+      virtual void set_sSFR (const double sSFR)
       { (void)sSFR; cbl::ErrorCBL("Error in set_sSFR() of Objech.h!"); }  
       
       /**
@@ -1038,7 +1220,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_richness (const double richness=par::defaultDouble)
+      virtual void set_richness (const double richness)
       { (void)richness; cbl::ErrorCBL("Error in set_richness() of Objech.h!"); }
 
       /**
@@ -1047,7 +1229,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_richness_error (const double richness_error=par::defaultDouble)
+      virtual void set_richness_error (const double richness_error)
       { (void)richness_error; cbl::ErrorCBL("Error in set_richness_error() of Objech.h!"); }
       
       /**
@@ -1056,7 +1238,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_bias (const double bias=par::defaultDouble)
+      virtual void set_bias (const double bias)
       { (void)bias; cbl::ErrorCBL("Error in set_bias() of Objech.h!"); }  
     
       /**
@@ -1065,7 +1247,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_generic (const double generic=par::defaultDouble)
+      virtual void set_generic (const double generic)
       { (void)generic; cbl::ErrorCBL("Error in set_generic() of Objech.h!"); }  
     
       /**
@@ -1074,7 +1256,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_radius (const double radius=par::defaultDouble)
+      virtual void set_radius (const double radius)
       { (void)radius; cbl::ErrorCBL("Error in set_radius() of Objech.h!"); }
     
       /**
@@ -1083,7 +1265,7 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_densityContrast (const double densityContrast=par::defaultDouble)
+      virtual void set_densityContrast (const double densityContrast)
       { (void)densityContrast; cbl::ErrorCBL("Error in set_densityContrast() of Objech.h!"); }
     
       /**
@@ -1092,17 +1274,162 @@ namespace cbl {
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_centralDensity (const double centralDensity=par::defaultDouble)
+      virtual void set_centralDensity (const double centralDensity)
       { (void)centralDensity; cbl::ErrorCBL("Error in set_centralDensity() of Objech.h!"); }
     
       /**
-       *  @brief set the member \e m_ID
-       *  @param ID the ID
+       *  @brief set the private member \e m_mass_estimate
+       *  @param mass_estimate the mass estimate of the group
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_ID (const int ID=par::defaultInt)
-      { (void)ID; cbl::ErrorCBL("Error in set_ID() of Objech.h!"); }
+      virtual void set_mass_estimate (const double mass_estimate)
+      { (void)mass_estimate; cbl::ErrorCBL("Error in set_mass_estimate() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_radius_estimate
+       *  @param radius_estimate the radius estimate of the group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_radius_estimate (const double radius_estimate)
+      { (void)radius_estimate; cbl::ErrorCBL("Error in set_radius_estimate() of Objech.h!"); }
+    
+    
+      /**
+       *  @brief set the private member \e m_veldisp_estimate
+       *  @param veldisp_estimate the velocity dispersion estimate of the group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_veldisp_estimate (const double veldisp_estimate)
+      { (void)veldisp_estimate; cbl::ErrorCBL("Error in set_veldisp_estimate() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_xcm
+       *  @param xcm the x-axis coordinate of the centre of mass
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_xcm (const double xcm)
+      { (void)xcm; cbl::ErrorCBL("Error in set_xcm() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_ycm
+       *  @param ycm the y-axis coordinate of the centre of mass
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_ycm (const double ycm)
+      { (void)ycm; cbl::ErrorCBL("Error in set_ycm() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_zcm
+       *  @param zcm the z-axis coordinate of the centre of mass
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_zcm (const double zcm)
+      { (void)zcm; cbl::ErrorCBL("Error in set_zcm() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_spin_x
+       *  @param spin_x the x-axis component of the spin
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_spin_x (const double spin_x)
+      { (void)spin_x; cbl::ErrorCBL("Error in set_spin_x() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_spin_y
+       *  @param spin_y the y-axis component of the spin
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_spin_y (const double spin_y)
+      { (void)spin_y; cbl::ErrorCBL("Error in set_spin_y() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_spin_z
+       *  @param spin_z the z-axis component of the spin
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_spin_z (const double spin_z)
+      { (void)spin_z; cbl::ErrorCBL("Error in set_spin_z() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_veldisp
+       *  @param veldisp the velocity dispersion of the sub-group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_veldisp (const double veldisp)
+      { (void)veldisp; cbl::ErrorCBL("Error in set_veldisp() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_vmax
+       *  @param vmax the maximum total velocity of the sub-group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_vmax (const double vmax)
+      { (void)vmax; cbl::ErrorCBL("Error in set_vmax() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_vmax_rad
+       *  @param vmax_rad the maximum radial velocity of the sub-group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_vmax_rad (const double vmax_rad)
+      { (void)vmax_rad; cbl::ErrorCBL("Error in set_vmax_rad() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_tot_mass
+       *  @param tot_mass the total mass of the parent halo
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_tot_mass (const double tot_mass)
+      { (void)tot_mass; cbl::ErrorCBL("Error in set_tot_mass() of Objech.h!"); }
+    
+      /**
+       *  @brief set the private member \e m_parent
+       *  @param parent the id of the parent group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_parent (const int parent)
+      { (void)parent; cbl::ErrorCBL("Error in set_parent() of Objech.h!"); }
+      
+      /**
+       *  @brief set the private member \e m_nsub
+       *  @param nsub the number of sub-groups in the group
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_nsub (const int nsub)
+      { (void)nsub; cbl::ErrorCBL("Error in set_nsub() of Objech.h!"); }
+
+      /**
+       *  @brief set the private member \em m_satellites
+       *  @param satellite the shared pointers to be added to the satellite objects pointer vector
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_satellite (const std::shared_ptr<Object> satellite)
+      {	(void)satellite; cbl::ErrorCBL("Error in set_satellite() of Objech.h!"); }
+
+      /**
+       *  @brief set the private member \em m_satellites
+       *  @param satellites the vector of shared pointers to satellite objects
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_satellites (const std::vector<std::shared_ptr<Object>> satellites)
+      {	(void)satellites; cbl::ErrorCBL("Error in set_satellites() of Objech.h!"); }
       
       ///@}
 
@@ -1362,6 +1689,156 @@ namespace cbl {
        */
       virtual bool isSet_centralDensity ()
       { return cbl::ErrorCBL("Error in isSet_centralDensity() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_mass_estimate is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_mass_estimate ()
+      { return cbl::ErrorCBL("Error in isSet_mass_estimate() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_radius_estimate is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_radius_estimate ()
+      { return cbl::ErrorCBL("Error in isSet_radius_estimate() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_veldisp_estimate is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_veldisp_estimate ()
+      { return cbl::ErrorCBL("Error in isSet_veldisp_estimate() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_xcm is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_xcm ()
+      { return cbl::ErrorCBL("Error in isSet_xcm() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_ycm is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_ycm ()
+      { return cbl::ErrorCBL("Error in isSet_ycm() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_zcm is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_zcm ()
+      { return cbl::ErrorCBL("Error in isSet_zcm() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_spin_x is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_spin_x ()
+      { return cbl::ErrorCBL("Error in isSet_spin_x() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_spin_y is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_spin_y ()
+      { return cbl::ErrorCBL("Error in isSet_spin_y() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_spin_z is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_spin_z ()
+      { return cbl::ErrorCBL("Error in isSet_spin_z() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_veldisp is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_veldisp ()
+      { return cbl::ErrorCBL("Error in isSet_veldisp() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_vmax is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_vmax ()
+      { return cbl::ErrorCBL("Error in isSet_vmax() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_vmax_rad is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_vmax_rad ()
+      { return cbl::ErrorCBL("Error in isSet_vmax_rad() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_tot_mass is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_tot_mass ()
+      { return cbl::ErrorCBL("Error in isSet_tot_mass() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_parent is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_parent ()
+      { return cbl::ErrorCBL("Error in isSet_parent() of Objech.h!"); }
+    
+      /**
+       *  @brief check if the member \e m_nsub is set
+       *  
+       *  @return true if the  is set; false otherwise,
+       *  or an error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_nsub ()
+      { return cbl::ErrorCBL("Error in isSet_nsub() of Objech.h!"); }
     
       /**
        *  @brief check if the member \e m_ID is set

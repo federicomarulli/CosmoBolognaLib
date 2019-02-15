@@ -40,10 +40,10 @@ using namespace cbl;
 // ============================================================================================
 
 
-shared_ptr<random::DistributionRandomNumbers> cbl::statistics::Sampler::m_set_gz(const int seed, const double aa)
+shared_ptr<random::DistributionRandomNumbers> cbl::statistics::Sampler::m_set_gz (const int seed, const double aa)
 {
-  if(aa<=1)
-    ErrorCBL("Error in Sampler, the stretch move parameter must be >1!");
+  if (aa<=1)
+    ErrorCBL("Error in cbl::statistics::Sampler::m_set_gz() of Sampler.cpp: the stretch move parameter must be >1!");
 
   double zmin = 1./aa;
   double zmax = aa;
@@ -115,17 +115,42 @@ void cbl::statistics::Sampler::set_function (PyObject *pp)
 // ============================================================================================
 
 
-void cbl::statistics::Sampler::sample_stretch_move (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
+void cbl::statistics::Sampler::sample_stretch_move (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa, const string outputFile)
 {
   set_chain(m_npar, m_npar_free, chain_size, nwalkers);
 
+  function<void(int, int, const vector<double>, const double)>  write_func;
+  ofstream fout;
+
+  write_func = [&] (const int nc, const int nw, const vector<double> parameters, const double func) 	
+  {(void)nc; (void)nw; (void)parameters; (void)func;};
+
+  if (outputFile!=par::defaultString) {
+    fout.open(outputFile.c_str());
+    write_func = [&] (const int nc, const int nw, const vector<double> parameters, const double func)
+      {
+	fout << nc << " " << nw << " ";
+	for (int p=0; p<m_npar; p++)
+	  fout << parameters[p] << " ";
+	fout << func << endl;
+      };
+  }
+
   // set seed for random_numbers
   random::UniformRandomNumbers_Int seeds(0, 23412432, seed);
- 
-  random::UniformRandomNumbers_Int chains(0, m_nwalkers-1, int(seeds()));
-  random::UniformRandomNumbers MH_random(0., 1., int(seeds()));
 
-  auto gz = m_set_gz(int(seeds()), aa);
+  const int chain_seed = seeds();
+  const int MH_seed = seeds();
+  const int gz_seed = seeds();
+
+  coutCBL << "Starting seed = " << seed << endl;
+  coutCBL << "Seed for random walker choice = " << chain_seed << endl;
+  coutCBL << "Seed for Metropolis-Hastings algorithm = " << MH_seed << endl;
+  coutCBL << "Seed for random extraction from g(z) = " << gz_seed << endl;
+ 
+  random::UniformRandomNumbers_Int chains(0, m_nwalkers-1, chain_seed);
+  random::UniformRandomNumbers MH_random(0., 1., MH_seed);
+  auto gz = m_set_gz(gz_seed, aa);
 
   // initialize chains
   m_initialize_chains(start);
@@ -135,7 +160,7 @@ void cbl::statistics::Sampler::sample_stretch_move (const int chain_size, const 
     {
       int kk = i;
       while (kk==i)
-	kk = int(chains());
+	kk = chains();
         
       vector<double> parameters_i;
       vector<double> parameters_k;
@@ -149,7 +174,7 @@ void cbl::statistics::Sampler::sample_stretch_move (const int chain_size, const 
       double gen_z = gz->operator()();
 
       gen_z = gz->operator()();
-      for(int p=0;p<m_npar;p++)
+      for (int p=0; p<m_npar; p++)
 	parameters[p] = parameters_k[p] + gen_z*(parameters_i[p]-parameters_k[p]);
       proposed_function_chains = m_function(parameters);
 
@@ -157,7 +182,7 @@ void cbl::statistics::Sampler::sample_stretch_move (const int chain_size, const 
 
       double ratio = min(1.,pow(gen_z, m_npar_free-1)*exp(proposed_function_chains-m_function_chain[n-1][i]));
 
-      if (MH_random() <ratio){
+      if (MH_random() <ratio) {
 	m_function_chain[n][i] = proposed_function_chains;
 	m_chains[n][i] = parameters_i;
 	m_acceptance[i] += 1./m_chain_size;
@@ -167,6 +192,7 @@ void cbl::statistics::Sampler::sample_stretch_move (const int chain_size, const 
 	m_chains[n][i] = m_chains[n-1][i]; 
       }
 
+      write_func(n, i, m_chains[n][i], m_function_chain[n][i]);
     }
     
     double progress = double((n+1)*m_nwalkers)/(m_nwalkers*m_chain_size)*100;
@@ -174,6 +200,7 @@ void cbl::statistics::Sampler::sample_stretch_move (const int chain_size, const 
   }
   
   cout << endl;
+  coutCBL << "Done!" << endl;
 }
 
 
@@ -190,15 +217,26 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_cpp (const int cha
   vector<double> chains_index = linear_bin_vector(m_nwalkers, 0., m_nwalkers-1.);
   vector<double> chains_weights(m_nwalkers,1);
 
+  const int chain_seed1 = seeds();
+  const int chain_seed2 = seeds();
+  const int MH_seed = seeds();
+  const int gz_seed = seeds();
+
+  coutCBL << "Starting seed = " << seed << endl;
+  coutCBL << "Seed for random walker choice, first half = " << chain_seed1 << endl;
+  coutCBL << "Seed for random walker choice, second half = " << chain_seed2 << endl;
+  coutCBL << "Seed for Metropolis-Hastings algorithm = " << MH_seed << endl;
+  coutCBL << "Seed for random extraction from g(z) = " << gz_seed << endl;
+
   int half = m_nwalkers/2;
-  random::UniformRandomNumbers_Int chains_first_half(0, half-1, seeds());
-  random::UniformRandomNumbers_Int chains_second_half(half, m_nwalkers-1, seeds());
+  random::UniformRandomNumbers_Int chains_first_half(0, half-1, chain_seed1);
+  random::UniformRandomNumbers_Int chains_second_half(half, m_nwalkers-1, chain_seed2);
 
   vector<random::UniformRandomNumbers_Int> chains_sample = {chains_second_half, chains_first_half};
 
-  random::UniformRandomNumbers MH_random(0., 1., seeds());
+  random::UniformRandomNumbers MH_random(0., 1., MH_seed);
 
-  auto gz = m_set_gz(seeds(), aa);
+  auto gz = m_set_gz(gz_seed, aa);
 
   // initialise the chains
   m_initialize_chains(start);
@@ -223,7 +261,7 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_cpp (const int cha
         double gen_z = gz->operator()();
 
 	gen_z = gz->operator()();
-	for(int p=0;p<m_npar;p++)
+	for (int p=0; p<m_npar; p++)
 	  parameters[p] = parameters_k[p] + gen_z*(parameters_i[p]-parameters_k[p]);
 	proposed_function_chains = m_function(parameters);
 
@@ -249,6 +287,7 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_cpp (const int cha
   }
 
   cout << endl;
+  coutCBL << "Done!" << endl;
 }
 
 
@@ -288,7 +327,7 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_py (const int chai
   Py_BEGIN_ALLOW_THREADS
 
   for (int n=1; n<m_chain_size; n++) {
-    for(int ss=0; ss<2; ss++){
+    for (int ss=0; ss<2; ss++) {
 #pragma omp parallel for schedule(dynamic)
       for (int ii=0; ii<half; ii++)
       {
@@ -303,7 +342,7 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_py (const int chai
 
         double gen_z = gz->operator()();
 
-        for(int p=0;p<m_npar;p++)
+        for (int p=0; p<m_npar; p++)
           parameters_i[p] = parameters_k[p] + gen_z*(parameters_i[p]-parameters_k[p]);
 
         double proposed_function_chains = m_function(parameters_i);
@@ -341,7 +380,10 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_py (const int chai
 
 void cbl::statistics::Sampler::sample_stretch_move_parallel (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
 {
-  if(m_use_python)
+  if (nwalkers%2 != 0)
+    ErrorCBL("Error in cbl::statistics::Sampler::sample_stretch_move_parallel(): the number of walkers must be an even integer!");
+
+  if (m_use_python)
     m_sample_stretch_move_parallel_py(chain_size, nwalkers, start, seed, aa);
   else
     m_sample_stretch_move_parallel_cpp(chain_size, nwalkers, start, seed, aa);
@@ -357,13 +399,12 @@ void cbl::statistics::Sampler::get_chain_function_acceptance (vector<vector<doub
   function.erase(function.begin(), function.end());
   acceptance.erase(acceptance.begin(), acceptance.end());
 
-  for(int i=start;i<m_chain_size; i+=thin){
-    for(int j=0;j<m_nwalkers;j++){
+  for (int i=start; i<m_chain_size; i+=thin) {
+    for (int j=0; j<m_nwalkers; j++) {
       function.push_back(m_function_chain[i][j]);
       acceptance.push_back(m_acceptance[j]);
-      for(int k=0;k<m_npar;k++){
+      for (int k=0; k<m_npar; k++)
 	chains[k].push_back(m_chains[i][j][k]);
-      }
     }
   } 
 }
@@ -379,9 +420,9 @@ void cbl::statistics::Sampler::write_chain (const string dir_output, const strin
   fout.precision(10);
 
   for (int i=start;i<m_chain_size; i+=thin) {
-    for (int j=0;j<m_nwalkers;j++) {
+    for (int j=0; j<m_nwalkers; j++) {
       fout << i*m_nwalkers+j << "  ";
-      for (int k=0;k<m_npar;k++) 
+      for (int k=0; k<m_npar; k++) 
 	fout <<  m_chains[i][j][k] << "  ";   
       fout << m_function_chain[i][j] << "  " << m_acceptance[j] << endl;
     }

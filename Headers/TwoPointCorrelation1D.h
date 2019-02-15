@@ -325,20 +325,23 @@ namespace cbl {
 	 *  @brief get the protected member m_x
 	 *  @return the x coordinates
 	 */
-	std::vector<double> xx () const override {std::vector<double> vv; m_dataset->xx(vv); return vv; }
+	std::vector<double> xx () const override
+	  { return m_dataset->xx(); }
 
 	/**
 	 *  @brief get the protected member m_fx
 	 *  @return the binned correlation function 
 	 */
-	std::vector<double> xi1D () const override { std::vector<double> vv; m_dataset->data(vv); return vv;  }
+	std::vector<double> xi1D () const override
+	  { std::vector<double> vv; m_dataset->get_data(vv); return vv;  }
 
 	/**
 	 *  @brief get the protected member m_error_fx
 	 *  @return the error on the binned correlation function
 	 *  function
 	 */
-	std::vector<double> error1D () const override { std::vector<double> vv; m_dataset->error(vv); return vv; }
+	std::vector<double> error1D () const override
+	  { std::vector<double> vv; m_dataset->get_error(vv); return vv; }
 
 	///@}
 
@@ -359,7 +362,8 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory of the
-	 *  resampled &xi;(r)
+	 *  resampling correlation functions; if an empty string
+	 *  (i.e. "" or "NULL") is provided, no output will be stored
 	 *
 	 *  @param nMocks number of resampling for bootstrap
 	 *

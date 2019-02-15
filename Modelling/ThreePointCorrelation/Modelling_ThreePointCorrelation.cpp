@@ -43,14 +43,16 @@
 using namespace std;
 
 using namespace cbl;
+using namespace measure;
 using namespace measure::threept;
-using namespace modelling::threept;
+using namespace modelling;
+using namespace measure::threept;
 
 
 // ============================================================================================
 
 
-shared_ptr<modelling::threept::Modelling_ThreePointCorrelation> modelling::threept::Modelling_ThreePointCorrelation::Create (const shared_ptr<measure::threept::ThreePointCorrelation> threept)
+std::shared_ptr<cbl::modelling::threept::Modelling_ThreePointCorrelation> cbl::modelling::threept::Modelling_ThreePointCorrelation::Create (const std::shared_ptr<measure::threept::ThreePointCorrelation> threept)
 {
   if (threept->threePType()==measure::threept::ThreePType::_angular_connected_)
     return move(unique_ptr<Modelling_ThreePointCorrelation_angular_connected> (new Modelling_ThreePointCorrelation_angular_connected(threept)));
@@ -73,7 +75,7 @@ shared_ptr<modelling::threept::Modelling_ThreePointCorrelation> modelling::three
 // ============================================================================================
 
 
-shared_ptr<modelling::threept::Modelling_ThreePointCorrelation> modelling::threept::Modelling_ThreePointCorrelation::Create (const measure::threept::ThreePType threePType, const shared_ptr<data::Data> threept_dataset)
+std::shared_ptr<cbl::modelling::threept::Modelling_ThreePointCorrelation> cbl::modelling::threept::Modelling_ThreePointCorrelation::Create (const measure::threept::ThreePType threePType, const std::shared_ptr<data::Data> threept_dataset)
 {
   if (threePType==measure::threept::ThreePType::_angular_connected_)
     return move(unique_ptr<Modelling_ThreePointCorrelation_angular_connected> (new Modelling_ThreePointCorrelation_angular_connected(threept_dataset)));
@@ -95,7 +97,7 @@ shared_ptr<modelling::threept::Modelling_ThreePointCorrelation> modelling::three
 // ============================================================================================
 
 
-void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_model (const vector<double> Q_DM)
+void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_model (const std::vector<double> Q_DM)
 {
   m_data_model.Q_DM = Q_DM;
 }
@@ -104,7 +106,7 @@ void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_model (c
 // ============================================================================================
 
 
-void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_Q_nonlocal (const cosmology::Cosmology cosmology, const double r1, const double r2, const vector<double> theta, const string model, const vector<double> kk, const vector<double> Pk_DM)
+void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_Q_nonlocal (const cosmology::Cosmology cosmology, const double r1, const double r2, const std::vector<double> theta, const string model, const std::vector<double> kk, const std::vector<double> Pk_DM)
 {
   m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model.r1 = r1;

@@ -2,10 +2,20 @@
 ----- the list of publications that used the CosmoBolognaLib -----
 ------------------------------------------------------------------
 
+20. Ronconi, Contarini, Marulli, Baldi, Moscardini
+    Cosmic voids uncovered -- first-order statistics of depressions in
+    the biased density field
+    2019, submitted to MNRAS
+
+19. Sarpa, Schimd, Branchini, Matarrese
+    BAO reconstruction: a swift numerical action method for massive
+    spectroscopic surveys
+    2019, MNRAS, 484, 3818
+
 18. Marulli and the XXL team
     The XXL Survey: XVI. The clustering of X-ray selected galaxy
     clusters at z~0.3
-    2018, A&A, in press
+    2018, A&A, 620, 1
 
 17. Moresco, Marulli
     Cosmological constraints from a joint analysis of cosmic growth

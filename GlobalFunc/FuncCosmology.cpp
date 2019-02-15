@@ -41,7 +41,7 @@ using namespace cbl;
 // ============================================================================
 
 
-void cbl::Vmax_DC_distribution (vector<double> &dc, vector<double> &nObj, const vector<double> D_C, const vector<double> zobj_min, const vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, cosmology::Cosmology &cosm, const double Area, const int nObjRan, const bool norm, const string file_Vmax, const double delta_dc_Vmax, const int seed)
+void cbl::Vmax_DC_distribution (std::vector<double> &dc, std::vector<double> &nObj, const std::vector<double> D_C, const std::vector<double> zobj_min, const std::vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, cosmology::Cosmology &cosm, const double Area, const int nObjRan, const bool norm, const std::string file_Vmax, const double delta_dc_Vmax, const int seed)
 {
   if (dc.size()>0 || nObj.size()>0) ErrorCBL("Error in Vmax_DC_distribution of GlobalFunc_Cosmology.cpp)!");
 
@@ -95,7 +95,7 @@ double cbl::AP_shift_pi (const double redshift, const cosmology::Cosmology &cosm
 // ============================================================================================
 
 
-void cbl::max_separations_AP (const double Rp_max, const double Pi_max, const double redshift, const cosmology::Cosmology &cosm1, const vector<cosmology::Cosmology> &cosm2, double &rpM_AP, double &piM_AP, double &rM_AP) 
+void cbl::max_separations_AP (const double Rp_max, const double Pi_max, const double redshift, const cosmology::Cosmology &cosm1, const std::vector<cosmology::Cosmology> &cosm2, double &rpM_AP, double &piM_AP, double &rM_AP) 
 {
   vector<double> rp(cosm2.size()), pi(cosm2.size());
 
@@ -114,7 +114,7 @@ void cbl::max_separations_AP (const double Rp_max, const double Pi_max, const do
 // ============================================================================================
 
 
-double cbl::converted_xi (const double RR, const double redshift, const vector<double> rr, const vector<double> Xi, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2, const bool direction) 
+double cbl::converted_xi (const double RR, const double redshift, const std::vector<double> rr, const std::vector<double> Xi, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2, const bool direction) 
 {
   if (RR==0) ErrorCBL("Error in converted_xi of GlobalFuncCosmology.cpp! RR must be >0!");
 
@@ -137,7 +137,7 @@ double cbl::converted_xi (const double RR, const double redshift, const vector<d
 // ============================================================================
 
 
-double cbl::converted_xi (const double RP, const double PI, const double redshift, const vector<double> rp, const vector<double> pi, const vector<vector<double> > Xi, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2, const bool direction) 
+double cbl::converted_xi (const double RP, const double PI, const double redshift, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double> > Xi, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2, const bool direction) 
 {
   double fDA = AP_shift_rp(redshift, cosm1, cosm2);
   double fH = AP_shift_pi(redshift, cosm1, cosm2);

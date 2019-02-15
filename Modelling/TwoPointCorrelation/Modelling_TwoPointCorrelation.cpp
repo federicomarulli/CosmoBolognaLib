@@ -43,12 +43,13 @@
 using namespace std;
 
 using namespace cbl;
-
+using namespace modelling;
+using namespace modelling::twopt;
 
 // ============================================================================================
 
 
-shared_ptr<modelling::twopt::Modelling_TwoPointCorrelation> modelling::twopt::Modelling_TwoPointCorrelation::Create (const shared_ptr<measure::twopt::TwoPointCorrelation> twop)
+std::shared_ptr<Modelling_TwoPointCorrelation> modelling::twopt::Modelling_TwoPointCorrelation::Create (const std::shared_ptr<measure::twopt::TwoPointCorrelation> twop)
 {
   if (twop->twoPType()==measure::twopt::TwoPType::_1D_monopole_)
     return move(unique_ptr<Modelling_TwoPointCorrelation1D_monopole> (new Modelling_TwoPointCorrelation1D_monopole(twop)));
@@ -71,7 +72,7 @@ shared_ptr<modelling::twopt::Modelling_TwoPointCorrelation> modelling::twopt::Mo
 // ============================================================================================
 
 
-shared_ptr<modelling::twopt::Modelling_TwoPointCorrelation> modelling::twopt::Modelling_TwoPointCorrelation::Create (const measure::twopt::TwoPType twoPType, const shared_ptr<data::Data> twop_dataset)
+std::shared_ptr<Modelling_TwoPointCorrelation> modelling::twopt::Modelling_TwoPointCorrelation::Create (const measure::twopt::TwoPType twoPType, const std::shared_ptr<data::Data> twop_dataset)
 {
   if (twoPType==measure::twopt::TwoPType::_1D_monopole_)
     return move(unique_ptr<Modelling_TwoPointCorrelation1D_monopole> (new Modelling_TwoPointCorrelation1D_monopole(twop_dataset)));

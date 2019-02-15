@@ -871,7 +871,7 @@ void cbl::pairs::Pair2D_comovingPolar_loglog::set_pair (const int ir, const int 
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D::add_data2D (const int i, const int j, const vector<double> data)
+void cbl::pairs::Pair2D::add_data2D (const int i, const int j, const std::vector<double> data)
 {
   /*
     checkDim(m_PP2D, i, j, "m_PP2D", false);
@@ -887,7 +887,7 @@ void cbl::pairs::Pair2D::add_data2D (const int i, const int j, const vector<doub
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D::add_data2D (const int i, const int j, const shared_ptr<pairs::Pair> pair, const double ww)
+void cbl::pairs::Pair2D::add_data2D (const int i, const int j, const std::shared_ptr<pairs::Pair> pair, const double ww)
 {
   add_data2D(i, j, {ww*pair->PP2D(i, j), ww*pair->PP2D_weighted(i, j)});
 }
@@ -896,7 +896,7 @@ void cbl::pairs::Pair2D::add_data2D (const int i, const int j, const shared_ptr<
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D::Sum (const shared_ptr<Pair> pair, const double ww)
+void cbl::pairs::Pair2D::Sum (const std::shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins_D1 != pair->nbins_D1() || m_nbins_D2 != pair->nbins_D2()) 
     ErrorCBL("Error in cbl::pairs::Pair2D::Sum of Pair.cpp: dimension problems!");

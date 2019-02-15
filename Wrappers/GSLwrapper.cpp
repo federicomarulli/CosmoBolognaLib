@@ -43,7 +43,7 @@ using namespace gsl;
 // ============================================================================
 
 
-void cbl::gsl::check_GSL_fail (const int status, const bool exit, const string CBLfunction, const string GSLroutine) 
+void cbl::gsl::check_GSL_fail (const int status, const bool exit, const std::string CBLfunction, const std::string GSLroutine) 
 {
   if (exit) {
     if (status) {
@@ -140,7 +140,7 @@ double cbl::gsl::GSL_integrate_cquad (gsl_function Func, const double a, const d
 
   gsl_integration_cquad_workspace_free(ww);
 
-  check_GSL_fail(status, true, "GSL_integrate_qag", "gsl_integration_cquad");
+  check_GSL_fail(status, true, "GSL_integrate_cquad", "gsl_integration_cquad");
   
   return Int;
 }
@@ -292,7 +292,7 @@ double cbl::gsl::GSL_integrate_qaws (FunctionDoubleDouble func, const double a, 
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_cquad (FunctionDoubleDoublePtrVectorRef func, const shared_ptr<void> pp, const vector<double> par, const double a, const double b, const double rel_err, const double abs_err, const int nevals)
+double cbl::gsl::GSL_integrate_cquad (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double b, const double rel_err, const double abs_err, const int nevals)
 {
   function<double(double)> func_bind = bind(func, placeholders::_1, pp, par);
 
@@ -303,7 +303,7 @@ double cbl::gsl::GSL_integrate_cquad (FunctionDoubleDoublePtrVectorRef func, con
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_qag (FunctionDoubleDoublePtrVectorRef func, const shared_ptr<void> pp, const vector<double> par, const double a, const double b, const double rel_err, const double abs_err, const int limit_size, const int rule)
+double cbl::gsl::GSL_integrate_qag (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double b, const double rel_err, const double abs_err, const int limit_size, const int rule)
 {
   function<double(double)> func_bind = bind(func, placeholders::_1, pp, par);
 
@@ -314,7 +314,7 @@ double cbl::gsl::GSL_integrate_qag (FunctionDoubleDoublePtrVectorRef func, const
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_qagiu (FunctionDoubleDoublePtrVectorRef func, const shared_ptr<void> pp, const vector<double> par, const double a, const double rel_err, const double abs_err, const int limit_size)
+double cbl::gsl::GSL_integrate_qagiu (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double rel_err, const double abs_err, const int limit_size)
 {
   function<double(double)> func_bind = bind(func, placeholders::_1, pp, par);
 
@@ -325,7 +325,7 @@ double cbl::gsl::GSL_integrate_qagiu (FunctionDoubleDoublePtrVectorRef func, con
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_qaws (FunctionDoubleDoublePtrVectorRef func, const shared_ptr<void> pp, const vector<double> par, const double a, const double b, const double alpha, const double beta, const int mu, const int nu, const double rel_err, const double abs_err, const int limit_size)
+double cbl::gsl::GSL_integrate_qaws (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double b, const double alpha, const double beta, const int mu, const int nu, const double rel_err, const double abs_err, const int limit_size)
 {
   function<double(double)> func_bind = bind(func, placeholders::_1, pp, par);
 
@@ -403,7 +403,7 @@ double cbl::gsl::GSL_root_brent (FunctionDoubleDouble func, const double xx0, co
 // ============================================================================
 
 
-vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVector func, const vector<double> start, const vector<vector<double>> ranges, const unsigned int max_iter, const double tol, const double epsilon)
+vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVector func, const std::vector<double> start, const std::vector<std::vector<double>> ranges, const unsigned int max_iter, const double tol, const double epsilon)
 {
   if (ranges.size() != start.size() && ranges.size() != 0)
     ErrorCBL ("Error in GSL_minimize_nD of GSLwrapper.cpp, vector of ranges must have the same size of start vector.");
@@ -473,7 +473,7 @@ vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVector func, const vecto
 // ============================================================================
 
 
-vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func, const vector<double> start, const vector<vector<double>> ranges, const unsigned int max_iter, const double tol, const double epsilon)
+vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func, const std::vector<double> start, const std::vector<std::vector<double>> ranges, const unsigned int max_iter, const double tol, const double epsilon)
 {
   if (ranges.size() != start.size() && ranges.size() != 0)
     ErrorCBL ("Error in GSL_minimize_nD of GSLwrapper.cpp, vector of ranges must have the same size of start vector.");
@@ -482,9 +482,9 @@ vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func, const ve
   size_t npar = start.size();
 
   STR_generic_func_GSL params;
-  params.fmin_return = (ranges.size() == start.size()) ? [&] (vector<double> &par) { return (inRange(par, ranges)) ? func(par) : par::defaultDouble; } : func;
+  params.fmin_return = (ranges.size() == start.size()) ? [&] (vector<double> &par) { return (inRange(par, ranges)) ? func(par) : -par::defaultDouble; } : func;
 
-  const gsl_multimin_fminimizer_type *T = gsl_multimin_fminimizer_nmsimplex2;
+  const gsl_multimin_fminimizer_type *T = gsl_multimin_fminimizer_nmsimplex;
   gsl_multimin_fminimizer *s = NULL;
   gsl_vector *ss, *x;
   gsl_multimin_function minex_func;
@@ -500,7 +500,8 @@ vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func, const ve
 
   for (size_t i=0; i<npar; i++) {
     gsl_vector_set(x, i, start[i]);
-    gsl_vector_set(ss, i, (epsilon>0 && ranges.size()>0) ? (ranges[i][1]-ranges[i][0])*epsilon : 1);
+    double val = (epsilon>0 && ranges.size()>0) ? (ranges[i][1]-ranges[i][0])*epsilon : epsilon;
+    gsl_vector_set(ss, i, val);
   }
 
   // Initialize the method and iterate 
@@ -516,17 +517,16 @@ vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func, const ve
     {
       iter ++;
 
+      if ((status != GSL_SUCCESS) && (status!=GSL_CONTINUE))
+	check_GSL_fail(status, true, "GSL_minimize_nD", "gsl_multimin_test_size");
+
       status = gsl_multimin_fminimizer_iterate(s);
 
-      if ((status != GSL_SUCCESS) && (status!=GSL_CONTINUE))
-	check_GSL_fail(status, true, "GSL_minimize_nD", "gsl_multimin_fminimizer_iterate");
-
       size = gsl_multimin_fminimizer_size(s);
-    
       status = gsl_multimin_test_size(size, tol);
 
       if ((status != GSL_SUCCESS) && (status!=GSL_CONTINUE))
-	check_GSL_fail(status, true, "GSL_minimize_nD", "gsl_multimin_fminimizer_iterate");
+	check_GSL_fail(status, true, "GSL_minimize_nD", "gsl_multimin_test_size");
     }
   
   while (status == GSL_CONTINUE && iter < max_iter);
@@ -598,7 +598,7 @@ double cbl::gsl::GSL_minimize_1D (FunctionDoubleDouble func, const double start,
 // ============================================================================
 
 
-double cbl::gsl::GSL_polynomial_eval (const double x, const shared_ptr<void> fixed_parameters, const vector<double> coeff)
+double cbl::gsl::GSL_polynomial_eval (const double x, const std::shared_ptr<void> fixed_parameters, const std::vector<double> coeff)
 {
   (void)fixed_parameters;
   return gsl_poly_eval(coeff.data(), coeff.size(), x);
@@ -608,7 +608,7 @@ double cbl::gsl::GSL_polynomial_eval (const double x, const shared_ptr<void> fix
 // ============================================================================
 
 
-void cbl::gsl::GSL_polynomial_root (const vector<double> coeff, vector<vector<double>> &root)
+void cbl::gsl::GSL_polynomial_root (const std::vector<double> coeff, std::vector<std::vector<double>> &root)
 {
   gsl_set_error_handler_off();
 

@@ -51,10 +51,9 @@ int main () {
 
     // binning parameters
 
-    const double side_s = 20.;  // 1st side of the triangle
+    const double side_s = 5.;  // 1st side of the triangle
     const double side_u = 2.;   // ratio between the 1st and 2nd sides of the triangle (u*s)
-    const double perc = 0.0225; // tolerance
-    const int nbins = 5;        // number of bins
+    const int nbins = 10;        // number of bins
 
   
     // output data
@@ -67,11 +66,11 @@ int main () {
   
     // measure the connected and reduced three-point correlation functions and write the output
 
-    const auto ThreeP = cbl::measure::threept::ThreePointCorrelation::Create(cbl::measure::threept::ThreePType::_comoving_reduced_, catalogue, random_catalogue, cbl::triplets::TripletType::_comoving_theta_, side_s, side_u, perc, nbins);
+    const auto ThreeP = cbl::measure::threept::ThreePointCorrelation::Create(cbl::measure::threept::ThreePType::_comoving_connected_, catalogue, random_catalogue, cbl::triplets::TripletType::_comoving_side_, side_s, 2., side_s*side_u, 2., nbins);
 
-    ThreeP->measure(cbl::measure::ErrorType::_Jackknife_, dir_triplets, dir_2pt);
+    ThreeP->measure(cbl::measure::ErrorType::_None_, dir_triplets);
   
-    ThreeP->write(dir_output, file_output, 1);
+    ThreeP->write(dir_output, file_output);
 
   }
 

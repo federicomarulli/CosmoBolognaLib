@@ -43,13 +43,13 @@ using namespace cbl;
 
 vector<double> cbl::statistics::ModelParameters::full_parameters (const vector<double> parameter_values) const
 {
-  if(parameter_values.size() == m_nparameters_base){
+  if (parameter_values.size()==m_nparameters_base) {
     vector<double> all_parameters(m_nparameters, 0);
 
-    for(size_t i=0; i<m_nparameters_base; i++)
+    for (size_t i=0; i<m_nparameters_base; i++)
       all_parameters[m_base_parameters[i]] = parameter_values[i];
 
-    for(size_t i=0; i<m_nparameters_derived; i++)
+    for (size_t i=0; i<m_nparameters_derived; i++)
       all_parameters[m_derived_parameters[i]] = 0.;
 
     return all_parameters;
@@ -57,7 +57,7 @@ vector<double> cbl::statistics::ModelParameters::full_parameters (const vector<d
   else if (parameter_values.size() == m_nparameters)
     return parameter_values;
   else
-    ErrorCBL("Error in full_parameters() of ModelParameters.cpp, provided vector has the wrong size!");
+    ErrorCBL("Error in cbl::statistics::ModelParameters::full_parameters() of ModelParameters.cpp, provided vector has the wrong size!");
 
   vector<double> vv;
   return vv;
@@ -88,7 +88,7 @@ void cbl::statistics::ModelParameters::m_set_parameter_type ()
 	break;
 
       default:
-	ErrorCBL("Error in cbl::statistics::ModelParameters of ModelParameters.cpp: no such kind of parameter!");
+	ErrorCBL("Error in cbl::statistics::ModelParameters::m_set_parameter_type() of ModelParameters.cpp: no such kind of parameter!");
     }
   }
 }
@@ -135,47 +135,45 @@ size_t cbl::statistics::ModelParameters::nparameters_derived () const
 
 void cbl::statistics::ModelParameters::set_parameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames)
 {
-  //Check parameterTypes size
-  
   if (nparameters==0)
-    ErrorCBL("Error in cbl::statistics::ModelParameters::set_parameters of ModelParameters.cpp! nparameters should be > 0.");
+    ErrorCBL("Error in cbl::statistics::ModelParameters::set_parameters() of ModelParameters.cpp: nparameters should be > 0.");
 
   if ((parameterTypes.size()!=nparameters) && (parameterTypes.size()!=0))
-    ErrorCBL("Error in cbl::statistics::ModelParameters::set_parameters of ModelParameters.cpp! Wrong size for the vector parameterTypes.");
+    ErrorCBL("Error in cbl::statistics::ModelParameters::set_parameters() of ModelParameters.cpp: wrong size for the vector parameterTypes.");
 
   if ((parameterNames.size()!=nparameters) && (parameterNames.size()!=0))
-    ErrorCBL("Error in cbl::statistics::ModelParameters::set_parameters of ModelParameters.cpp! Wrong size for the vector parameterNames.");
+    ErrorCBL("Error in cbl::statistics::ModelParameters::set_parameters() of ModelParameters.cpp: wrong size for the vector parameterNames.");
 
 
-  if ((parameterTypes.size()==nparameters) && (parameterNames.size()==nparameters)){
+  if ((parameterTypes.size()==nparameters) && (parameterNames.size()==nparameters)) {
     m_nparameters=nparameters;
     m_parameter_type = parameterTypes;
     m_parameter_name = parameterNames;
   }
-  else if ((parameterTypes.size()==0) && (parameterNames.size()==0)){
+  else if ((parameterTypes.size()==0) && (parameterNames.size()==0)) {
     m_nparameters=nparameters;
     vector<ParameterType> pTypes(m_nparameters);
     vector<string> pNames(m_nparameters);
-    for(size_t i=0; i<m_nparameters; i++){
+    for (size_t i=0; i<m_nparameters; i++) {
       pTypes[i] = ParameterType::_Base_;
       pNames[i] = "par_"+conv(i+1, par::fINT);
     }
     m_parameter_type = pTypes;
     m_parameter_name = pNames;
   }
-  else if ((parameterTypes.size()==nparameters) && (parameterNames.size()==0)){
+  else if ((parameterTypes.size()==nparameters) && (parameterNames.size()==0)) {
     m_nparameters=nparameters;
     vector<string> pNames(m_nparameters);
-    for(size_t i=0; i<m_nparameters; i++)
+    for (size_t i=0; i<m_nparameters; i++)
       pNames[i] = "par_"+conv(i+1, par::fINT);
     
     m_parameter_type = parameterTypes;
     m_parameter_name = pNames;
   }
-  else if ((parameterTypes.size()==0) && (parameterNames.size()==0)){
+  else if ((parameterTypes.size()==0) && (parameterNames.size()==0)) {
     m_nparameters=nparameters;
     vector<ParameterType> pTypes(m_nparameters);
-    for(size_t i=0; i<m_nparameters; i++)
+    for (size_t i=0; i<m_nparameters; i++)
       pTypes[i] = ParameterType::_Base_;
     
     m_parameter_type = pTypes;

@@ -22,7 +22,7 @@ string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 vector<double> model_function (const vector<double> x, const shared_ptr<void> modelInput, std::vector<double> &parameter)
 {
   // the object Cosmology, used in this example to compute Omega_matter
-  cbl::cosmology::Cosmology &cosm = *static_pointer_cast<cbl::cosmology::Cosmology>(modelInput);
+  cbl::cosmology::Cosmology cosm = *static_pointer_cast<cbl::cosmology::Cosmology>(modelInput);
 
   vector<double> model(x.size(), 0.);
   for (size_t i=0; i<x.size(); ++i)
@@ -52,10 +52,10 @@ int main () {
 
     // --- construct the dataset by reading an input file ---
     
-    const cbl::data::Data1D data(dir_input+"data.dat");
-    auto ptr_data = make_shared<cbl::data::Data1D>(data);
+    const cbl::data::Data1D data(dir_input+file_data);
+    shared_ptr<cbl::data::Data> ptr_data = make_shared<cbl::data::Data1D>(data);
 
-
+    
     // --- set the model to construct the likelihood ---
     
     // number of model parameters
@@ -114,24 +114,29 @@ int main () {
     cbl::statistics::Posterior posterior(prior_distributions, likelihood, 696);
 
     // maximize the posterior
-    posterior.maximize({valA, valB});
+    //posterior.maximize({valA, valB});
 
-    // sample the posterior
+    // sample the posterior (starting the MCMC chain from the maximum of the posterior to speed up the chain convergence)
     const int nwalkers = 10;
-    const int chain_size = 1000;
-    posterior.initialize_chains(chain_size, nwalkers);
-    posterior.sample_stretch_move(2, true);
+    const int chain_size = 5000;
+    posterior.initialize_chains(chain_size, nwalkers, 1.e-5, {valA, valB});
+    posterior.sample_stretch_move(2);
 
-    // show the results on screen
+    // show the median MCMC values of the four parameters on screen
+    cout << endl;
+    for (size_t i=0; i<posterior.parameters()->nparameters(); ++i)
+      cout << setprecision(4) << "Posterior median of " << posterior.parameters()->name(i) << " = " << posterior.parameters()->bestfit_value(i) << endl;
+
+    // show all the MCMC statistics on screen
     const int burn_in = 0;
     const int thin = 1;
     posterior.show_results(burn_in, thin);
 
-    // write the chain ouput
+    // store the chain ouputs
     posterior.write_results(cbl::par::DirLoc+"../output/", "chains_linear_relation", burn_in, thin);
 
-    // write the best-fit model
-    posterior.write_model_from_chain(cbl::par::DirLoc+"../output/", "model_from_chain", {}, {}, burn_in, thin);
+    // store the best-fit model
+    posterior.write_model_from_chain(cbl::par::DirLoc+"../output/", "model_from_chain.dat", {}, {}, burn_in, thin);
 
   }
   

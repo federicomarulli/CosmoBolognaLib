@@ -75,13 +75,16 @@ namespace cbl {
        *  
        *  @param model pointers to the model 
        *
+       *  @param use_covariance if true use the full data covariance matrix
+       *  else use the diagonal
+       *
        *  @param x_index index(s) of the extra info std::vector containing the point(s) where to evaluate the model
        *
        *  @param w_index index of the extra info std::vector containing the data point weight 
        *
        *  @return object of class Chi2
        */
-      Chi2 (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const std::vector<size_t> x_index={0,2}, const int w_index=-1);
+      Chi2 (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const bool use_covariance=false, const std::vector<size_t> x_index={0,2}, const int w_index=-1);
 
       /**
        *  @brief default destructor
@@ -110,9 +113,6 @@ namespace cbl {
        *
        *  @param parameter_limits limits for the parameters
        *
-       *  @param use_covariance if true use the full data covariance matrix
-       *  else use the diagonal
-       *
        *  @param max_iter the maximum number of iterations
        *
        *  @param tol the tolerance in finding convergence 
@@ -121,7 +121,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void minimize (const std::vector<double> start, const std::vector<std::vector<double>> parameter_limits, const bool use_covariance=false, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3); 
+      void minimize (const std::vector<double> start, const std::vector<std::vector<double>> parameter_limits, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3); 
 
     };
   }

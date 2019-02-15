@@ -1,0 +1,72 @@
+==27758== Memcheck, a memory error detector
+==27758== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==27758== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==27758== Command: ./integration_cuba
+==27758== Parent PID: 27757
+==27758== 
+==27763== 
+==27763== HEAP SUMMARY:
+==27763==     in use at exit: 296 bytes in 10 blocks
+==27763==   total heap usage: 157,351 allocs, 157,341 frees, 2,264,387 bytes allocated
+==27763== 
+==27763== LEAK SUMMARY:
+==27763==    definitely lost: 0 bytes in 0 blocks
+==27763==    indirectly lost: 0 bytes in 0 blocks
+==27763==      possibly lost: 0 bytes in 0 blocks
+==27763==    still reachable: 296 bytes in 10 blocks
+==27763==         suppressed: 0 bytes in 0 blocks
+==27763== Rerun with --leak-check=full to see details of leaked memory
+==27763== 
+==27763== For counts of detected and suppressed errors, rerun with: -v
+==27763== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==27758== Invalid write of size 8
+==27758==    at 0x4C367E3: memmove (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==27758==    by 0x4ECC891: Integrate (in /home/federico/CosmoBolognaLib/libWRAP.so)
+==27758==    by 0x4ECD84A: Suave (in /home/federico/CosmoBolognaLib/libWRAP.so)
+==27758==    by 0x4E9A991: cbl::cuba::CUBAwrapper::IntegrateSuave(std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >) (CUBAwrapper.cpp:139)
+==27758==    by 0x10CD5C: main (integration_cuba.cpp:33)
+==27758==  Address 0xfffffffc0c5bc120 is not stack'd, malloc'd or (recently) free'd
+==27758== 
+==27758== 
+==27758== Process terminating with default action of signal 11 (SIGSEGV)
+==27758==  Access not within mapped region at address 0xFFFFFFFC0C5BC120
+==27758==    at 0x4C367E3: memmove (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==27758==    by 0x4ECC891: Integrate (in /home/federico/CosmoBolognaLib/libWRAP.so)
+==27758==    by 0x4ECD84A: Suave (in /home/federico/CosmoBolognaLib/libWRAP.so)
+==27758==    by 0x4E9A991: cbl::cuba::CUBAwrapper::IntegrateSuave(std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >) (CUBAwrapper.cpp:139)
+==27758==    by 0x10CD5C: main (integration_cuba.cpp:33)
+==27758==  If you believe this happened as a result of a stack
+==27758==  overflow in your program's main thread (unlikely but
+==27758==  possible), you can try to increase the size of the
+==27758==  main thread stack using the --main-stacksize= flag.
+==27758==  The main thread stack size used in this run was 8388608.
+==27758== 
+==27758== HEAP SUMMARY:
+==27758==     in use at exit: 170,004 bytes in 729 blocks
+==27758==   total heap usage: 1,363 allocs, 634 frees, 256,423 bytes allocated
+==27758== 
+==27758== LEAK SUMMARY:
+==27758==    definitely lost: 56 bytes in 1 blocks
+==27758==    indirectly lost: 80 bytes in 3 blocks
+==27758==      possibly lost: 0 bytes in 0 blocks
+==27758==    still reachable: 169,868 bytes in 725 blocks
+==27758==         suppressed: 0 bytes in 0 blocks
+==27758== Rerun with --leak-check=full to see details of leaked memory
+==27758== 
+==27758== For counts of detected and suppressed errors, rerun with: -v
+==27758== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==27784== 
+==27784== HEAP SUMMARY:
+==27784==     in use at exit: 432 bytes in 14 blocks
+==27784==   total heap usage: 4,360 allocs, 4,346 frees, 226,627 bytes allocated
+==27784== 
+==27784== LEAK SUMMARY:
+==27784==    definitely lost: 56 bytes in 1 blocks
+==27784==    indirectly lost: 80 bytes in 3 blocks
+==27784==      possibly lost: 0 bytes in 0 blocks
+==27784==    still reachable: 296 bytes in 10 blocks
+==27784==         suppressed: 0 bytes in 0 blocks
+==27784== Rerun with --leak-check=full to see details of leaked memory
+==27784== 
+==27784== For counts of detected and suppressed errors, rerun with: -v
+==27784== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

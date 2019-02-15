@@ -299,26 +299,30 @@ namespace cbl {
 	 *  @brief get the protected member m_x
 	 *  @return the x coordinates
 	 */
-	std::vector<double> xx () const override { std::vector<double> vv; m_dataset->xx(vv); return vv; }
+	std::vector<double> xx () const override
+	  { return m_dataset->xx(); }
 
 	/**
 	 *  @brief get the protected member m_y
 	 *  @return the y coordinates
 	 */
-	std::vector<double> yy () const override { std::vector<double> vv; m_dataset->yy(vv); return vv;  }
+	std::vector<double> yy () const override
+	  { return m_dataset->yy(); }
 
 	/**
 	 *  @brief get the protected member m_fxy
 	 *  @return the binned correlation function 
 	 */
-	std::vector<std::vector<double>> xi2D () const override { std::vector<std::vector<double> > vv; m_dataset->data(vv); return vv; }
+	std::vector<std::vector<double>> xi2D () const override
+	  { std::vector<std::vector<double>> vv; m_dataset->get_data(vv); return vv; }
 
 	/**
 	 *  @brief get the protected member m_error_fxy
 	 *  @return the error on the binned correlation function
 	 *  function
 	 */
-	std::vector<std::vector<double>> error2D () const override {  std::vector<std::vector<double> > vv; m_dataset->error(vv); return vv;  }
+	std::vector<std::vector<double>> error2D () const override
+	  { std::vector<std::vector<double> > vv; m_dataset->get_error(vv); return vv; }
       
 	///@}
 
@@ -339,8 +343,9 @@ namespace cbl {
 	 *  @param dir_input_pairs vector of input directories used to
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
-	 *  @param dir_output_resample output directory of the resampled
-	 *  correlation functions
+	 *  @param dir_output_resample output directory of the
+	 *  resampled correlation functions; if an empty string
+	 *  (i.e. "" or "NULL") is provided, no output will be stored
 	 *
 	 *  @param nMocks number of resampling for bootstrap
 	 *

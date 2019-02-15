@@ -49,26 +49,35 @@ void cbl::modelling::Modelling1D::set_fit_range (const double xmin, const double
   m_fit_range = true;
 }
 
+
 // ============================================================================================
 
 
 void cbl::modelling::Modelling1D::write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters)
 {
-  m_posterior->write_model(output_dir, output_file, parameters, xx);
+  m_likelihood->write_model(output_dir, output_file, parameters, xx);
 }
+
 
 // ============================================================================================
 
 
 void cbl::modelling::Modelling1D::write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx)
 {
+  if (m_posterior==NULL)
+    ErrorCBL("Error in write_model_at_bestfit of Modelling1D.cpp. No posterior found! Run maximize_posterior() first");
+
   m_posterior->write_model_at_bestfit(output_dir, output_file, xx);
 }
+
 
 // ============================================================================================
 
 
 void cbl::modelling::Modelling1D::write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start, const int thin)
 {
+  if (m_posterior==NULL)
+    ErrorCBL("Error in write_model_from_chains of Modelling1D.cpp. No posterior found! Run sample_posterior() first");
+
   m_posterior->write_model_from_chain(output_dir, output_file, xx, {}, start, thin);
 }

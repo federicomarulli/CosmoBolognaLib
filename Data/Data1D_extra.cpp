@@ -115,12 +115,12 @@ void cbl::data::Data1D_extra::write (const string dir, const string file, const 
   fout << "### "<< header <<" ###" << endl;
 
   for (size_t i=0; i<m_x.size(); ++i) {
-    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i] 
-	 << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[i] 
-	 << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[i];
+    fout << setprecision(precision) << setw(15) << right << m_x[i] 
+	 << "  " << setprecision(precision) << setw(15) << right << m_data[i] 
+	 << "  " << setprecision(precision) << setw(15) << right << m_error[i];
     
     for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-      fout << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << m_extra_info[ex][i];
+      fout << "  " << setprecision(precision) << setw(15) << m_extra_info[ex][i];
     fout << endl;
   }
   

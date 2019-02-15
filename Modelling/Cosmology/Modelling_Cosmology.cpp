@@ -60,7 +60,7 @@ shared_ptr<cbl::modelling::cosmology::CMB_DistancePrior> cbl::modelling::cosmolo
 // ============================================================================================
 
 
-cbl::modelling::cosmology::Modelling_Cosmology::Modelling_Cosmology(const shared_ptr<cbl::data::Data> dataset, const vector<string> data_type)
+cbl::modelling::cosmology::Modelling_Cosmology::Modelling_Cosmology (const std::shared_ptr<cbl::data::Data> dataset, const std::vector<std::string> data_type)
 {
   m_data = dataset;
   m_data_type = data_type;

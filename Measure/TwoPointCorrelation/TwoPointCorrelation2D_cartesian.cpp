@@ -51,7 +51,7 @@ using namespace twopt;
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::set_parameters (const BinType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const BinType binType_pi, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info) 
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::set_parameters (const BinType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const BinType binType_pi, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info) 
 {
   if (!compute_extra_info) {
     if (binType_rp==BinType::_logarithmic_) {
@@ -116,7 +116,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::set_parameters (const
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::set_parameters (const BinType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const BinType binType_pi, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info)
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::set_parameters (const BinType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const BinType binType_pi, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info)
 {
   if (!compute_extra_info) {
     if (binType_rp==BinType::_logarithmic_) {
@@ -182,7 +182,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::set_parameters (const
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::read (const string dir, const string file) 
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::read (const std::string dir, const std::string file) 
 {
   m_dataset->read(dir+file);
 }
@@ -191,10 +191,9 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::read (const string di
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::write (const string dir, const string file, const bool full, const int rank) const 
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::write (const std::string dir, const std::string file, const bool full, const int rank) const 
 {
-  vector<double> xx, yy;
-  m_dataset->xx(xx); m_dataset->yy(yy);
+  vector<double> xx = m_dataset->xx(), yy = m_dataset->yy();
 
   checkDim(xx, m_dd->nbins_D1(), "rp"); checkDim(yy, m_dd->nbins_D2(), "pi");
   
@@ -208,7 +207,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::write (const string d
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measure (const ErrorType errorType, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
   case (ErrorType::_Poisson_) :
@@ -229,7 +228,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measure (const ErrorT
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   // ----------- count the data-data, random-random and data-random pairs, or read them from file ----------- 
   
@@ -252,10 +251,10 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measurePoisson (const
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_JackknifeXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  if (dir_output_JackknifeXi!=par::defaultString) {
-    string mkdir = "mkdir -p "+dir_output_JackknifeXi;
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
+    string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
   
@@ -271,11 +270,11 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife (con
 
   for (size_t i=0; i<nRegions; i++) {
 
-    if (dir_output_JackknifeXi!=par::defaultString && dir_output_JackknifeXi!="") {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_Jackknife_"+conv(i, par::fINT)+".dat";
       string header = "[1] perpendicular separation at the bin centre # [2] parallel separation at the bin centre # [3] 2D two-point correlation function # [4] error";
   if (m_compute_extra_info) header += " # [5] mean perpendicular separation # [6] standard deviation of the distribution of perpendicular separations # [7] mean parallel separation # [8] standard deviation of the distribution of parallel separations # [9] mean redshift # [10] standard deviation of the redshift distribution";
-      data_SS[i]->write(dir_output_JackknifeXi, file, header, false, 10, 0);
+      data_SS[i]->write(dir_output_resample, file, header, false, 10, 0);
     }
     
     xi_SubSamples.push_back(data_SS[i]->data());
@@ -296,13 +295,13 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife (con
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_BootstrapXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (nMocks<1)
     ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation2D_cartesian.cpp, number of mocks must be >0");
 
-  if (dir_output_BootstrapXi!=par::defaultString) {
-    string mkdir = "mkdir -p "+dir_output_BootstrapXi;
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
+    string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
 
@@ -315,11 +314,11 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap (con
 
   for (int i=0; i<nMocks; i++) {
 
-    if (dir_output_BootstrapXi!=par::defaultString && dir_output_BootstrapXi!="") {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_Bootstrap_"+conv(i, par::fINT)+".dat";
       string header = "[1] perpendicular separation at the bin centre # [2] parallel separation at the bin centre # [3] 2D two-point correlation function # [4] error";
   if (m_compute_extra_info) header += " # [5] mean perpendicular separation # [6] standard deviation of the distribution of perpendicular separations # [7] mean parallel separation # [8] standard deviation of the distribution of parallel separations # [9] mean redshift # [10] standard deviation of the redshift distribution";
-      data_SS[i]->write(dir_output_BootstrapXi, file, header, false, 10, 0);
+      data_SS[i]->write(dir_output_resample, file, header, false, 10, 0);
     }
     
     xi_SubSamples.push_back(data_SS[i]->data());

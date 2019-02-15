@@ -44,7 +44,7 @@ using namespace cbl;
 // ============================================================================================
 
 
-cbl::modelling::twopt::Modelling_TwoPointCorrelation2D::Modelling_TwoPointCorrelation2D (const shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
+cbl::modelling::twopt::Modelling_TwoPointCorrelation2D::Modelling_TwoPointCorrelation2D (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
 {
   m_data = twop->dataset();
   m_twoPType = twop->twoPType();
@@ -54,7 +54,7 @@ cbl::modelling::twopt::Modelling_TwoPointCorrelation2D::Modelling_TwoPointCorrel
 // ============================================================================================
 
 
-cbl::modelling::twopt::Modelling_TwoPointCorrelation2D::Modelling_TwoPointCorrelation2D (const shared_ptr<cbl::data::Data> dataset, const measure::twopt::TwoPType twoPType)
+cbl::modelling::twopt::Modelling_TwoPointCorrelation2D::Modelling_TwoPointCorrelation2D (const std::shared_ptr<cbl::data::Data> dataset, const measure::twopt::TwoPType twoPType)
 {
   m_data = dataset;
   m_twoPType = twoPType;
@@ -64,42 +64,44 @@ cbl::modelling::twopt::Modelling_TwoPointCorrelation2D::Modelling_TwoPointCorrel
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const string method_Pk, const double sigmaNL, const bool NL, const int FV, const string output_root, const bool bias_nl, const double bA, const bool xiType, const double k_star, const bool xiNL, const double v_min, const double v_max, const int step_v, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const double aa, const bool GSL, const double prec, const string file_par)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double sigmaNL, const bool NL, const int FV, const std::string output_root, const bool bias_nl, const double bA, const bool xiType, const double k_star, const bool xiNL, const double v_min, const double v_max, const int step_v, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const double aa, const bool GSL, const double prec, const std::string file_par)
 {
-  m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
-  m_data_model.redshift = redshift;
-  m_data_model.method_Pk = method_Pk;
-  m_data_model.sigmaNL = sigmaNL;
-  m_data_model.NL = NL;
-  m_data_model.FV = FV;
-  m_data_model.output_root = output_root;
-  m_data_model.bias_nl = bias_nl;
-  m_data_model.bA = bA;
-  m_data_model.xiType = xiType;
-  m_data_model.k_star = k_star;
-  m_data_model.xiNL = xiNL;
-  m_data_model.v_min = v_min;
-  m_data_model.v_max = v_max;
-  m_data_model.step_v = step_v;
-  m_data_model.norm = norm;
-  m_data_model.r_min = r_min;
-  m_data_model.r_max = r_max;
-  m_data_model.k_min = k_min;
-  m_data_model.k_max = k_max;
-  m_data_model.step = step;
-  m_data_model.aa = aa;
-  m_data_model.GSL = GSL;
-  m_data_model.prec = prec;
-  m_data_model.file_par = file_par;
+  m_data_model = make_shared<STR_data_model>(STR_data_model());
 
-  try {
-    m_data_model.sigma8_z = m_data_model.cosmology->sigma8(m_data_model.redshift);
+  m_data_model->cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  m_data_model->redshift = redshift;
+  m_data_model->method_Pk = method_Pk;
+  m_data_model->sigmaNL = sigmaNL;
+  m_data_model->NL = NL;
+  m_data_model->FV = FV;
+  m_data_model->output_root = output_root;
+  m_data_model->bias_nl = bias_nl;
+  m_data_model->bA = bA;
+  m_data_model->xiType = xiType;
+  m_data_model->k_star = k_star;
+  m_data_model->xiNL = xiNL;
+  m_data_model->v_min = v_min;
+  m_data_model->v_max = v_max;
+  m_data_model->step_v = step_v;
+  m_data_model->norm = norm;
+  m_data_model->r_min = r_min;
+  m_data_model->r_max = r_max;
+  m_data_model->k_min = k_min;
+  m_data_model->k_max = k_max;
+  m_data_model->step = step;
+  m_data_model->aa = aa;
+  m_data_model->GSL = GSL;
+  m_data_model->prec = prec;
+  m_data_model->file_par = file_par;
+
+  if (m_data_model->cosmology->sigma8()>0) {
+    m_data_model->sigma8_z = m_data_model->cosmology->sigma8(m_data_model->redshift);
   }
-  catch(cbl::glob::Exception &exc) { 
-    coutCBL << "sigma8 is not set, it will be computed from the power spectrum with " << m_data_model.method_Pk << endl; 
-    m_data_model.sigma8_z = m_data_model.cosmology->sigma8_Pk(m_data_model.method_Pk, m_data_model.redshift, m_data_model.output_root);
-    coutCBL << "--> sigma8(z=" << m_data_model.redshift << ") = " << m_data_model.sigma8_z << endl << endl;
+  else {
+    coutCBL << "sigma8 is not set, it will be computed from the power spectrum with " << m_data_model->method_Pk << endl; 
+    m_data_model->sigma8_z = m_data_model->cosmology->sigma8_Pk(m_data_model->method_Pk, m_data_model->redshift, m_data_model->output_root);
+    coutCBL << "--> sigma8(z=" << m_data_model->redshift << ") = " << m_data_model->sigma8_z << endl << endl;
   }
-  m_data_model.linear_growth_rate_z = m_data_model.cosmology->linear_growth_rate(m_data_model.redshift);
-  m_data_model.var = (1.+ m_data_model.redshift)/m_data_model.cosmology->HH(m_data_model.redshift);
+  m_data_model->linear_growth_rate_z = m_data_model->cosmology->linear_growth_rate(m_data_model->redshift);
+  m_data_model->var = (1.+ m_data_model->redshift)/m_data_model->cosmology->HH(m_data_model->redshift);
 }

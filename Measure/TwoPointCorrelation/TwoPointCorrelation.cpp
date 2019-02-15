@@ -54,7 +54,7 @@ using namespace measure::twopt;
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double Min, const double Max, const int nbins, const double shift, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double Min, const double Max, const int nbins, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==TwoPType::_1D_angular_) return move(unique_ptr<TwoPointCorrelation1D_angular>(new TwoPointCorrelation1D_angular(data, random, binType, Min, Max, nbins, shift, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
   
@@ -71,7 +71,7 @@ shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double Min, const double Max, const double binSize, const double shift, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double Min, const double Max, const double binSize, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==TwoPType::_1D_angular_) return move(unique_ptr<TwoPointCorrelation1D_angular>(new TwoPointCorrelation1D_angular(data, random, binType, Min, Max, binSize, shift, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
   
@@ -88,7 +88,7 @@ shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==TwoPType::_multipoles_integrated_) return move(unique_ptr<TwoPointCorrelation_multipoles_integrated>(new TwoPointCorrelation_multipoles_integrated(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
@@ -105,7 +105,7 @@ shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==TwoPType::_multipoles_integrated_) return move(unique_ptr<TwoPointCorrelation_multipoles_integrated>(new TwoPointCorrelation_multipoles_integrated(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
@@ -122,7 +122,7 @@ shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const double piMax_integral, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const double piMax_integral, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==TwoPType::_1D_projected_) return move(unique_ptr<TwoPointCorrelation_projected>(new TwoPointCorrelation_projected(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, piMax_integral, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
@@ -137,7 +137,7 @@ shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const double piMax_integral, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const double piMax_integral, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==TwoPType::_1D_projected_) return move(unique_ptr<TwoPointCorrelation_projected>(new TwoPointCorrelation_projected(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, Min_D2, Max_D2, binSize_D2, shift_D2, piMax_integral, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
@@ -152,7 +152,7 @@ shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const BinType binType_D2, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const BinType binType_D2, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==TwoPType::_2D_Cartesian_) return move(unique_ptr<TwoPointCorrelation2D_cartesian>(new TwoPointCorrelation2D_cartesian(data, random, binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1, binType_D2, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
@@ -167,7 +167,7 @@ shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create
 // ============================================================================
 
 
-shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const BinType binType_D2, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
+std::shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const BinType binType_D2, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info, const double random_dilution_fraction)
 {
   if (type==TwoPType::_2D_Cartesian_) return move(unique_ptr<TwoPointCorrelation2D_cartesian>(new TwoPointCorrelation2D_cartesian(data, random, binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1, binType_D2, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)));
 
@@ -182,7 +182,7 @@ shared_ptr<TwoPointCorrelation> cbl::measure::twopt::TwoPointCorrelation::Create
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation::count_pairs (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, shared_ptr<Pair> pp, const bool cross, const bool tcount)
+void cbl::measure::twopt::TwoPointCorrelation::count_pairs (const std::shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, std::shared_ptr<Pair> pp, const bool cross, const bool tcount)
 { 
   // timer 
   time_t start; time(&start);
@@ -265,7 +265,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs (const shared_ptr<Cat
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation::count_allPairs (const TwoPType type, const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)  
+void cbl::measure::twopt::TwoPointCorrelation::count_allPairs (const TwoPType type, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)  
 {
   // ----------- compute polar coordinates, if necessary ----------- 
 
@@ -275,7 +275,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs (const TwoPType ty
   if (!m_random->isSetVar(Var::_RA_) || !m_random->isSetVar(Var::_Dec_) || !m_random->isSetVar(Var::_Dc_))
     m_random->computePolarCoordinates();
   
-  if (type == TwoPType::_1D_angular_) {
+  if (type==TwoPType::_1D_angular_) {
     m_data->normalizeComovingCoordinates();
     m_random->normalizeComovingCoordinates();
   }
@@ -321,10 +321,10 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs (const TwoPType ty
     ChM_data.set_par(cell_size, m_data, rMAX);
   
   if (count_rr)
-    ChM_random.set_par(cell_size, m_random, rMAX);
+    ChM_random_dil.set_par(cell_size, random_dil, rMAX);
 
   if (count_dr)
-    ChM_random_dil.set_par(cell_size, random_dil, rMAX);
+    ChM_random.set_par(cell_size, m_random, rMAX);    
   
   
   // ----------- count the number of pairs or read them from file -----------
@@ -409,8 +409,8 @@ double cbl::measure::twopt::TwoPointCorrelation::PoissonError (const Estimator e
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, shared_ptr<Pair> pp, vector<shared_ptr<Pair>> pp_regions, const bool cross, const bool tcount)  
-{
+void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region (const std::shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, std::shared_ptr<Pair> pp, std::vector<std::shared_ptr<Pair>> pp_regions, const bool cross, const bool tcount)  
+{ 
   // timer 
   time_t start; time (&start);
   int dp = cout.precision();
@@ -427,7 +427,12 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region (const shared_
 
   // thread number
   int tid = 0;
-   
+
+  // check the regions
+  const int nRegions = cat1->nRegions();
+  if (cat1->Max(catalogue::Var::_Region_)>=nRegions || cat2->Max(catalogue::Var::_Region_)>=nRegions)
+    ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation::count_pairs_region(): check the regions! You might use the function cbl::check_regions()");
+    
 #pragma omp parallel num_threads(omp_get_max_threads()) private(tid)
   {
     tid = omp_get_thread_num();
@@ -438,19 +443,17 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region (const shared_
       pp_thread[i] = (pp->pairDim()==Dim::_1D_) ? move(Pair::Create(pp->pairType(), pp->pairInfo(), pp->sMin(), pp->sMax(), pp->nbins(), pp->shift(), pp->angularUnits(), pp->angularWeight()))
 	: move(Pair::Create(pp->pairType(), pp->pairInfo(), pp->sMin_D1(), pp->sMax_D1(), pp->nbins_D1(), pp->shift_D1(), pp->sMin_D2(), pp->sMax_D2(), pp->nbins_D2(), pp->shift_D2(), pp->angularUnits(), pp->angularWeight()));
     
-    int nRegions = cat1->nRegions();
-
     
     // parallelized loop
 #pragma omp for schedule(static, 2)
-    for (int i=0; i<nObj; ++i) {
-
+    for (int i=0; i<nObj; ++i) {  
+      
       vector<long int> close_objects = ChM.close_objects(cat1->coordinate(i), (cross) ? -1 : i);
 
       for (auto &&j : close_objects) {      
-	int reg1 = (cross) ? cat1->region(i) : min(cat1->region(i), cat2->region(j));
-	int reg2 = (cross) ? cat2->region(j) : max(cat1->region(i), cat2->region(j));
-	int index = (cross) ? reg1*nRegions+reg2 : reg1*nRegions+reg2-(reg1-1)*reg1/2-reg1;
+	const int reg1 = (cross) ? cat1->region(i) : min(cat1->region(i), cat2->region(j));
+	const int reg2 = (cross) ? cat2->region(j) : max(cat1->region(i), cat2->region(j));
+	const size_t index = (cross) ? reg1*nRegions+reg2 : reg1*nRegions+reg2-(reg1-1)*reg1/2-reg1;
 	pp_thread[index]->put(cat1->catalogue_object(i), cat2->catalogue_object(j));
       }
       
@@ -511,7 +514,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region (const shared_
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, shared_ptr<Pair> pp, vector<shared_ptr<Pair>> pp_res, const vector<double> weight, const bool cross, const bool tcount)  
+void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test (const std::shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, std::shared_ptr<Pair> pp, std::vector<std::shared_ptr<Pair>> pp_res, const std::vector<double> weight, const bool cross, const bool tcount)  
 {
   if(pp->pairDim()==Dim::_1D_)
     count_pairs_region_test_1D(cat1, ChM, pp, pp_res, weight, cross, tcount);
@@ -525,8 +528,8 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test (const sh
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_1D (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, shared_ptr<Pair> pp, vector<shared_ptr<Pair>> pp_res, const vector<double> weight, const bool cross, const bool tcount)  
-{
+void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_1D (const std::shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, std::shared_ptr<Pair> pp, std::vector<std::shared_ptr<Pair>> pp_res, const std::vector<double> weight, const bool cross, const bool tcount)  
+{ 
   // timer 
   time_t start; time (&start);
   int dp = cout.precision();
@@ -615,7 +618,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_1D (const
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_2D (const shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, shared_ptr<Pair> pp, vector<shared_ptr<Pair>> pp_res, const vector<double> weight, const bool cross, const bool tcount)  
+void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_2D (const std::shared_ptr<Catalogue> cat1, const ChainMesh_Catalogue &ChM, std::shared_ptr<Pair> pp, std::vector<std::shared_ptr<Pair>> pp_res, const std::vector<double> weight, const bool cross, const bool tcount)  
 {
   // timer 
   time_t start; time (&start);
@@ -707,7 +710,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_2D (const
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region (vector<shared_ptr<Pair> > &dd_regions, vector<shared_ptr<Pair> > &rr_regions, vector<shared_ptr<Pair> > &dr_regions, const TwoPType type, const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)  
+void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region (std::vector<std::shared_ptr<Pair> > &dd_regions, std::vector<std::shared_ptr<Pair> > &rr_regions, std::vector<std::shared_ptr<Pair> > &dr_regions, const TwoPType type, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)  
 {
   // ----------- compute polar coordinates, if necessary ----------- 
 
@@ -873,7 +876,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region (vector<sha
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (const TwoPType type, const vector<double> weight, const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)  
+void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (const TwoPType type, const std::vector<double> weight, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)  
 {
   // ----------- compute polar coordinates, if necessary ----------- 
 
@@ -1010,5 +1013,5 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (const
     m_data->restoreComovingCoordinates();
     m_random->restoreComovingCoordinates();
   }
-
+  
 }

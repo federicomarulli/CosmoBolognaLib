@@ -174,6 +174,9 @@ namespace cbl {
 	/// index for pre-computed two-point correlation function
 	int xi_real_index;
 
+	///  0 &rarr; don't use the pole in the fit; 1 &rarr;  use the pole in the fit
+	std::vector<bool> use_pole;
+
 	/// number of (even) multipoles to decompose \f$P(k, \mu)\f$
 	std::vector<int> dataset_order;
 
@@ -195,11 +198,17 @@ namespace cbl {
 	/// pointer to a function of FuncGrid class, used to interpolate the no-wiggles linear power spectrum
 	std::shared_ptr<glob::FuncGrid> func_Pk_NW;
 
+	/// pointer to a function of FuncGrid class, used to interpolate the power spectrum 1-loop correction
+	std::shared_ptr<glob::FuncGrid> func_Pk1loop;
+
 	/// pointer to a vector of FuncGrid objects, used to interpolate the multipoles
 	std::vector<std::shared_ptr<glob::FuncGrid>> func_multipoles;
 
 	/// pointer to a vector of FuncGrid objects, used to interpolate the wedges
 	std::vector<std::shared_ptr<glob::FuncGrid>> func_wedges;
+
+	/// the \f$P(k,\mu)\f$ model; the possible options are: dispersion_dewiggled, dispersion_modecoupling
+	std::string Pk_mu_model;
 
 	/// fiducial bias value
 	double bias;
@@ -288,18 +297,17 @@ namespace cbl {
        *  @brief the power spectrum as a function of k and \f$\mu\f$
        *
        *  this function computes the redshift-space BAO-damped power
-       *  spectrum \f$P(k, \mu)\f$ (see e.g. Sanchez et al. 2013
-       *  https://arxiv.org/pdf/1312.4854.pdf) :
+       *  spectrum \f$P(k, \mu)\f$ (see e.g. Vargas-Magana et al. 2018
+       *  https://arxiv.org/pdf/1610.03506.pdf) :
        *
        *  \f[ P(k, \mu) = \left(1+\beta\mu_p^2 \right)^2 \left(
        *  \frac{1}{1+\left(k_pf\Sigma_S\mu_p\right)^2} \right)^2
-       *  P_{NL}(k) \f]
+       *  P_{NL}(k_p) \f]
        *
        *  where
        *
-       *  \f[ P_{NL}(k) = b^2 \left\{ \left[ P_{lin}(k_p) -
-       *  P_{nw}(k_p) \right] e^{-k^2\Sigma_{NL}^2}+P_{nw}(k) \right\}
-       *  e^{-\left( k\mu\sigma \right)^2} \, , \f]
+       *  \f[ P_{NL}(k) = b^2 \left\{ \left[ P_{lin}(k) -
+       *  P_{nw}(k) \right] e^{-k^2\Sigma_{NL}^2}+P_{nw}(k) \right\} , \f]
        *
        *  \f[ k_p = \frac{k}{\alpha_\perp} \sqrt{1+\mu^2 \left[ \left(
        *  \frac{\alpha_\parallel}{\alpha_\perp}\right)^{-2}-1 \right]}
@@ -314,10 +322,9 @@ namespace cbl {
        *  are the linear and the de-wiggled power spectra,
        *  respectively (Eisenstein et al. 1998), and \f$\beta = f/b\f$
        *  with \f$f\f$ the linear growth rate and \f$b\f$ the bias,
-       *  \f$\sigma =c \sigma_z/H(z)\f$, and \f$\Sigma_S\f$ is the
-       *  streaming scale that parameterises the Fingers of God effect
-       *  at small scales. The BAO damping is parametrised via
-       *  \f$\Sigma^2_{NL} = 0.5
+       *  and \f$\Sigma_S\f$ is the streaming scale that parameterises 
+       *  the Fingers of God effect at small scales. 
+       *  The BAO damping is parametrised via \f$\Sigma^2_{NL} = 0.5
        *  (1-\mu_p^2)\Sigma^2_{\perp}+\mu_p^2\Sigma^2_{\parallel} \f$,
        *  where \f$\Sigma_{\perp}\f$ and \f$\Sigma_{\parallel}\f$ are
        *  the damping term in the transverse and parallel directions
@@ -337,15 +344,11 @@ namespace cbl {
        *  @param sigmaNL_par the damping in the direction parallel to
        *  the l.o.s.
        *
-       *  @param bias the linear bias
-       *
        *  @param linear_growth_rate the linear growth rate
        *
-       *  @param SigmaS streaming scale
+       *  @param bias the linear bias
        *
-       *  @param zErr parameter controlling the
-       *  redshift-space damping due to photometric redshift: 
-       *  zErr \f$ = c \sigma_z/H(z)\f$ 
+       *  @param SigmaS streaming scale
        *
        *  @param Pk linear power spectrum interpolator
        *
@@ -353,7 +356,97 @@ namespace cbl {
        *
        *  @return \f$P(k, \mu)\f$
        */
-      double Pkmu (const double kk, const double mu, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const std::shared_ptr<cbl::glob::FuncGrid> Pk_NW);
+      double Pkmu_DeWiggled (const double kk, const double mu, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double linear_growth_rate, const double bias, const double SigmaS, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const std::shared_ptr<cbl::glob::FuncGrid> Pk_NW);
+      
+      /**
+       *  @brief the power spectrum as a function of k and \f$\mu\f$
+       *
+       *  this function computes the redshift-space power spectrum 
+       *  \f$P(k, \mu)\f$  (see e.g. Sanchez et al. 2013
+       *  https://arxiv.org/pdf/1312.4854.pdf) :
+       *
+       *  \f[ P(k, \mu) = \left(1+\beta\mu_p^2 \right)^2 \left(
+       *  \frac{1}{1+\left(k_pf\sigma_v\mu_p\right)^2} \right)^2
+       *  P_{NL}(k_p) \f]
+       *
+       *  where
+       *
+       *  \f[ P_{NL}(k) = b^2 \left\{ P_{L}(k)*e^{-(k\mu\sigma_v)^2}
+       *  +A_{MC}P_{MC}(k) \right\} , \f]
+       *
+       *  \f[ k_p = \frac{k}{\alpha_\perp} \sqrt{1+\mu^2 \left[ \left(
+       *  \frac{\alpha_\parallel}{\alpha_\perp}\right)^{-2}-1 \right]}
+       *  \, , \f]
+       *
+       *  \f[ \mu_p = \mu\frac{\alpha_\parallel}{\alpha_\perp}
+       *  \frac{1}{\sqrt{1+\mu^2\left[\left(
+       *  \frac{\alpha_\parallel}{\alpha_\perp}
+       *  \right)^{-2}-1\right]}} \, , \f]
+       *
+       *  \f$\mu = k_{\parallel} / k\f$, \f$P_{lin}\f$, \f$P_{MC}\f$
+       *  are the linear and the linear and 1loop correction power
+       *  spectra, and \f$\beta = f/b\f$
+       *  with \f$f\f$ the linear growth rate and \f$b\f$ the bias,
+       *  \f$\sigma_v\f$ is the streaming scale that parameterises 
+       *  the Fingers of God effect at small scales and A_{MC} is the
+       *  mode coupling bias. 
+       *
+       *  @param kk the wave vector module
+       *  
+       *  @param mu the line of sight cosine
+       *
+       *  @param alpha_perp the shift transverse to the l.o.s.
+       *
+       *  @param alpha_par the shift parallel to the l.o.s.
+       *
+       *  @param linear_growth_rate the linear growth rate
+       *
+       *  @param bias the linear bias
+       *
+       *  @param sigmav streaming scale
+       *  
+       *  @param AMC the mode coupling bias
+       *
+       *  @param PkLin linear power spectrum interpolator
+       *
+       *  @param PkMC the 1loop power spectrum correction
+       *
+       *  @return \f$P(k, \mu)\f$
+       */
+      double Pkmu_ModeCoupling (const double kk, const double mu, const double alpha_perp, const double alpha_par, const double linear_growth_rate, const double bias, const double sigmav, const double AMC, const std::shared_ptr<cbl::glob::FuncGrid> PkLin, const std::shared_ptr<cbl::glob::FuncGrid> PkMC);
+
+      /**
+       *  @brief the power spectrum as a function of k and \f$\mu\f$
+       *
+       *  this function computes the redshift-space power spectrum 
+       *  \f$P(k, \mu)\f$  with one of the following models:
+       *
+       *  - the dispersion + de-wiggled model, implemented in
+       *    cbl::modelling::twopt::Pkmu_DeWiggled
+       *
+       *  - the dispersion + mode-coupling model, implemented in
+       *    cbl::modelling::twopt::Pkmu_DeWiggled
+       *
+       *  The above models may differ for both the redshit-space
+       *  distortions and the non-linear power spectrum
+       *  implementation, and may have different numbers of free
+       *  parameters
+       *
+       *  @param kk the wave vector module
+       *  
+       *  @param mu the line of sight cosine
+       *
+       *  @param model the \f$P(k,\mu)\f$ model; the possible options
+       *  are: dispersion_dewiggled, dispersion_modecoupling
+       *
+       *  @param parameter vector containing parameter values
+       *
+       *  @param pk_interp vector containing power spectrum
+       *  interpolating functions
+       *
+       *  @return \f$P(k, \mu)\f$
+       */
+      double Pkmu (const double kk, const double mu, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp);
 
       /**
        *  @brief the multipole of order l of the power spectrum
@@ -373,36 +466,86 @@ namespace cbl {
        *
        *  @param l the order of the expansion
        *
-       *  @param alpha_perp the shift transverse to the l.o.s.
+       *  @param model the \f$P(k,\mu)\f$ model; the possible options
+       *  are: dispersion_dewiggled, dispersion_modecoupling
        *
-       *  @param alpha_par the shift parallel to the l.o.s.
+       *  @param parameter vector containing parameter values
        *
-       *  @param sigmaNL_perp the damping in the direction transverse
-       *  to the l.o.s.
-       *
-       *  @param sigmaNL_par the damping in the direction parallel to
-       *  the l.o.s.
-       *
-       *  @param bias the linear bias
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param SigmaS streaming scale
-       *
-       *  @param zErr parameter controlling the
-       *  redshift-space damping due to photometric redshift: 
-       *  zErr \f$ = c \sigma_z/H(z)\f$ 
-       *
-       *  @param Pk_lin linear power spectrum interpolator
-       *
-       *  @param Pk_NW de-wiggled power spectrum interpolator
+       *  @param pk_interp vector containing power spectrum
+       *  interpolating functions
        *
        *  @param prec the integral precision
        *
        *  @return the multipole expansion of \f$P(k, \mu)\f$ at given
        *  \f$k\f$
        */
-      double Pk_l (const double kk, const int l, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const std::shared_ptr<cbl::glob::FuncGrid> Pk_lin, const std::shared_ptr<cbl::glob::FuncGrid> Pk_NW, const double prec);
+      double Pk_l (const double kk, const int l, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
+
+      /**
+       *  @brief the multipole of order l of the power spectrum
+       *
+       *  The function computes the legendre polynomial expansion of
+       *  the \f$P(k, \mu)\f$:
+       *
+       *  \f[ P_l(k) = \frac{2l+1}{2} \int_{-1}^{1} \mathrm{d}\mu P(k,
+       *  \mu) L_l(\mu) \f]
+       *
+       *  where \f$l\f$ is the order of the expansion and
+       *  \f$L_l(\mu)\f$ is the Legendere polynomial of order \f$l\f$;
+       *  \f$P(k, \mu)\f$ is computed by
+       *  cbl::modelling::twopt::Pkmu
+       *
+       *  @param kk the wave vector module vector
+       *
+       *  @param l the order of the expansion
+       *
+       *  @param model the \f$P(k,\mu)\f$ model; the possible options
+       *  are: dispersion_dewiggled, dispersion_modecoupling
+       *
+       *  @param parameter vector containing parameter values
+       *
+       *  @param pk_interp vector containing power spectrum
+       *  interpolating functions
+       *
+       *  @param prec the integral precision
+       *
+       *  @return the multipole expansion of \f$P(k, \mu)\f$ at given
+       *  \f$k\f$
+       */
+      std::vector<double> Pk_l (const std::vector<double> kk, const int l, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
+
+      /**
+       *  @brief the interpolating function of multipole expansion of the
+       *  two-point correlation function at a given order l
+       *
+       *  The function computes the multipoles of the two-point
+       *  correlation function:
+       *
+       *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
+       *  j_l(ks) \f]
+       *
+       *  where \f$j_l(ks)\f$ are the bessel functions, and
+       *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
+       *
+       *  @param kk the wave vector module vector
+       *
+       *  @param l the order of the expansion
+       *
+       *  @param model the \f$P(k,\mu)\f$ model; the possible options
+       *  are: dispersion_dewiggled, dispersion_modecoupling
+       *
+       *  @param parameter vector containing parameter values
+       *
+       *  @param pk_interp vector containing power spectrum
+       *  interpolating functions
+       *
+       *  @param prec the integral precision
+       *
+       *  @return the interpolation function of the multipole
+       *  expansion of two-point correlation function at a given order
+       *  l
+       */
+       cbl::glob::FuncGrid Xil_interp (const std::vector<double> kk, const int l, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
 
 
       /**
@@ -423,39 +566,20 @@ namespace cbl {
        *  @param nmultipoles the number of (even) multipoles to
        *  compute
        *
-       *  @param alpha_perp the shift transverse to the l.o.s.
+       *  @param model the \f$P(k,\mu)\f$ model; the possible options
+       *  are: dispersion_dewiggled, dispersion_modecoupling
        *
-       *  @param alpha_par the shift parallel to the l.o.s.
+       *  @param parameter vector containing parameter values
        *
-       *  @param sigmaNL_perp the damping in the direction transverse
-       *  to the l.o.s.
-       *
-       *  @param sigmaNL_par the damping in the direction parallel to
-       *  the l.o.s.
-       *
-       *  @param bias the linear bias
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param SigmaS streaming scale
-       *
-       *  @param zErr parameter controlling the
-       *  redshift-space damping due to photometric redshift: 
-       *  zErr \f$ = c \sigma_z/H(z)\f$ 
-       *
-       *  @param kk the binned wave vector modules
-       *
-       *  @param Pk_lin linear power spectrum interpolator
-       *
-       *  @param Pk_NW de-wiggled power spectrum interpolator
+       *  @param pk_interp vector containing power spectrum
+       *  interpolating functions
        *
        *  @param prec the integral precision
        *
-       *  @return the multipole of order l of the two-point correlation
-       *  function
+       *  @return the multipole of order l of the two-point
+       *  correlation function
        */
-      std::vector<std::vector<double>> Xi_l (const std::vector<double> rr, const int nmultipoles, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const std::vector<double> kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk_lin, const std::shared_ptr<cbl::glob::FuncGrid> Pk_NW, const double prec=1.e-5);
-
+      std::vector<std::vector<double>> Xi_l (const std::vector<double> rr, const int nmultipoles, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
 
       /**
        *  @brief the multipole of order l of the two-point correlation
@@ -471,42 +595,27 @@ namespace cbl {
        *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
        *
        *  @param rr vector of scales to compute multipoles
-       *  
-       *  @param nmultipoles the number of (even) multipoles to
-       *  compute
        *
-       *  @param alpha_perp the shift transverse to the l.o.s.
+       *  @param dataset_order vector that specify the multipole
+       *  to be computed for each scale 
        *
-       *  @param alpha_par the shift parallel to the l.o.s.
+       *  @param use_pole vector of booleans specifying if a given 
+       *  multipole should be computed
        *
-       *  @param sigmaNL_perp the damping in the direction transverse
-       *  to the l.o.s.
+       *  @param model the \f$P(k,\mu)\f$ model; the possible options
+       *  are: dispersion_dewiggled, dispersion_modecoupling
        *
-       *  @param sigmaNL_par the damping in the direction parallel to
-       *  the l.o.s.
+       *  @param parameter vector containing parameter values
        *
-       *  @param bias the linear bias
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param SigmaS streaming scale
-       *
-       *  @param zErr parameter controlling the
-       *  redshift-space damping due to photometric redshift: 
-       *  zErr \f$ = c \sigma_z/H(z)\f$ 
-       *
-       *  @param kk the binned wave vector modules
-       *
-       *  @param Pk_lin linear power spectrum interpolator
-       *
-       *  @param Pk_NW de-wiggled power spectrum interpolator
+       *  @param pk_interp vector containing power spectrum
+       *  interpolating functions
        *
        *  @param prec the integral precision
        *
-       *  @return the multipole of order l of the two-point correlation
-       *  function
+       *  @return the multipole of order l of the two-point
+       *  correlation function
        */
-      std::vector<std::vector<double>> Xi_l (const std::vector<std::vector<double>> rr, const int nmultipoles, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const std::vector<double> kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk_lin, const std::shared_ptr<cbl::glob::FuncGrid> Pk_NW, const double prec=1.e-5);
+      std::vector<double> Xi_l (const std::vector<double> rr, const std::vector<int> dataset_order, const std::vector<bool> use_pole, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
 
       /**
        *  @brief the wedge of the two-point correlation function
@@ -528,37 +637,56 @@ namespace cbl {
        * 
        *  @param nwedges the number of wedges
        *
-       *  @param alpha_perp the shift transverse to the l.o.s.
+       *  @param model the \f$P(k,\mu)\f$ model; the possible options
+       *  are: dispersion_dewiggled, dispersion_modecoupling
        *
-       *  @param alpha_par the shift parallel to the l.o.s.
+       *  @param parameter vector containing parameter values
        *
-       *  @param sigmaNL_perp the damping in the direction transverse
-       *  to the l.o.s.
-       *
-       *  @param sigmaNL_par the damping in the direction parallel to
-       *  the l.o.s.
-       *
-       *  @param bias the linear bias
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param SigmaS streaming scale
-       *
-       *  @param zErr parameter controlling the
-       *  redshift-space damping due to photometric redshift: 
-       *  zErr \f$ = c \sigma_z/H(z)\f$ 
-       *
-       *  @param kk the binned wave vector modules
-       * 
-       *  @param Pk_lin linear power spectrum interpolator
-       *
-       *  @param Pk_NW de-wiggled power spectrum interpolator
+       *  @param pk_interp vector containing power spectrum
+       *  interpolating functions
        *
        *  @param prec the integral precision
        *
        *  @return the wedges of the two-point correlation function.
        */
-      std::vector<std::vector<double>> Xi_wedges (const std::vector<double> rr, const int nwedges, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const std::vector<double> kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk_lin, const std::shared_ptr<cbl::glob::FuncGrid> Pk_NW, const double prec=1.e-5);
+      std::vector<std::vector<double>> Xi_wedges (const std::vector<double> rr, const int nwedges, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
+
+      /**
+       *  @brief the wedge of the two-point correlation function
+       *
+       *  The function computes the wedges of the two-point
+       *  correlation function (see Kazin et al. 2013):
+       *
+       *  \f[ \xi(\delta \mu, s) = \xi_0(s)+\frac{1}{2} \left( \frac{
+       *  \mu_{max}^3- \mu_{min}^3}{\mu_{max}-\mu_{min}} -1
+       *  \right)\xi_2(s)+ \frac{1}{8} \left( \frac{ 7
+       *  \left(\mu_{max}^5-\mu_{min}^5\right)-10 \left(\mu_{max}^3-
+       *  \mu_{min}^3 \right)}{\mu_{max}-\mu_{min}}+3 \right)
+       *  \xi_4(s).  \f]
+       *
+       *  where \f$xi_0(s), \xi_2(s), \xi_4(s)\f$ are the two-point
+       *  correlation function monopoles
+       *
+       *  @param rr vector of scales to compute wedges 
+       *
+       *  @param dataset_wedge vector that specify the wedges
+       *  to be computed for each scale 
+       * 
+       *  @param nwedges the number of wedges
+       *
+       *  @param model the \f$P(k,\mu)\f$ model; the possible options
+       *  are: dispersion_dewiggled, dispersion_modecoupling
+       *
+       *  @param parameter vector containing parameter values
+       *
+       *  @param pk_interp vector containing power spectrum
+       *  interpolating functions
+       *
+       *  @param prec the integral precision
+       *
+       *  @return the wedges of the two-point correlation function.
+       */
+      std::vector<double> Xi_wedges (const std::vector<double> rr, const std::vector<int> dataset_wedge, const int nwedges, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
 
       /**
        *  @brief the cartesian two-point correlation function
@@ -577,37 +705,19 @@ namespace cbl {
        * 
        *  @param pi vector of scales parallel to the line of sight  
        *
-       *  @param alpha_perp the shift transverse to the l.o.s.
+       *  @param model the \f$P(k,\mu)\f$ model; the possible options
+       *  are: dispersion_dewiggled, dispersion_modecoupling
        *
-       *  @param alpha_par the shift parallel to the l.o.s.
+       *  @param parameter vector containing parameter values
        *
-       *  @param sigmaNL_perp the damping in the direction transverse
-       *  to the l.o.s.
-       *
-       *  @param sigmaNL_par the damping in the direction parallel to
-       *  the l.o.s.
-       *
-       *  @param bias the linear bias
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param SigmaS streaming scale
-       *
-       *  @param zErr parameter controlling the
-       *  redshift-space damping due to photometric redshift: 
-       *  zErr \f$ = c \sigma_z/H(z)\f$ 
-       *
-       *  @param kk the binned wave vector modules
-       *
-       *  @param Pk_lin linear power spectrum interpolator
-       *
-       *  @param Pk_NW de-wiggled power spectrum interpolator
+       *  @param pk_interp vector containing power spectrum
+       *  interpolating functions    
        *
        *  @param prec the integral precision
        *
        *  @return the cartesian two-point correlation function.
        */
-      std::vector<std::vector<double>> Xi_rppi (const std::vector<double> rp, const std::vector<double> pi, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const std::vector<double> kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk_lin, const std::shared_ptr<cbl::glob::FuncGrid> Pk_NW, const double prec);
+      std::vector<std::vector<double>> Xi_rppi (const std::vector<double> rp, const std::vector<double> pi, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
 
       /**
        *  @brief the projected two-point correlation function
@@ -626,37 +736,19 @@ namespace cbl {
        *
        *  @param pimax the maximum scale of integration
        *
-       *  @param alpha_perp the shift transverse to the l.o.s.
+       *  @param model the \f$P(k,\mu)\f$ model; the possible options
+       *  are: dispersion_dewiggled, dispersion_modecoupling
        *
-       *  @param alpha_par the shift parallel to the l.o.s.
+       *  @param parameter vector containing parameter values
        *
-       *  @param sigmaNL_perp the damping in the direction transverse
-       *  to the l.o.s.
-       *
-       *  @param sigmaNL_par the damping in the direction parallel to
-       *  the l.o.s.
-       *
-       *  @param bias the linear bias
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param SigmaS streaming scale
-       *
-       *  @param zErr parameter controlling the
-       *  redshift-space damping due to photometric redshift: 
-       *  zErr \f$ = c \sigma_z/H(z)\f$ 
-       *
-       *  @param kk the binned wave vector modules
-       *
-       *  @param Pk_lin linear power spectrum interpolator
-       *
-       *  @param Pk_NW de-wiggled power spectrum interpolator
+       *  @param pk_interp vector containing power spectrum
+       *  interpolating functions    
        *
        *  @param prec the integral precision
        *
        *  @return the cartesian two-point correlation function.
        */
-      std::vector<double> wp_from_Xi_rppi (const std::vector<double> rp, const double pimax, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double bias, const double linear_growth_rate, const double SigmaS, const double zErr, const std::vector<double> kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk_lin, const std::shared_ptr<cbl::glob::FuncGrid> Pk_NW, const double prec);
+      std::vector<double> wp_from_Xi_rppi (const std::vector<double> rp, const double pimax, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
 
       /**
        *  @brief the power spectrum terms

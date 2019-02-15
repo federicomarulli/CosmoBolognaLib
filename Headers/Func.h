@@ -103,7 +103,7 @@ namespace cbl {
    *  std::vectors x1 and/or x2, the returned value is the extrapolatation
    *
    */
-  double interpolated_2D (const double _x1, const double _x2, const std::vector<double> x1, const std::vector<double> x2, const std::vector<std::vector<double> > yy, const std::string type);
+  double interpolated_2D (const double _x1, const double _x2, const std::vector<double> x1, const std::vector<double> x2, const std::vector<std::vector<double>> yy, const std::string type);
   
   /**
    *  @brief filter W(r/r<SUB>c</SUB>), used e.g. for filtering the
@@ -143,7 +143,7 @@ namespace cbl {
 
   /**
    *  @brief the average of the Legendre polynomial
-   *  of the l-th order over the mu range
+   *  of the l-th order over the \f$\mu=\cos(\theta)\f$ range
    *  @param mu_min the lower limit of integration of the Legendre polynomial
    *  @param mu_max the upper limit of integration of the Legendre polynomial
    *  @param ll the order of the Legendre polynomial
@@ -151,6 +151,36 @@ namespace cbl {
    *  of the l-th order over the mu range
    */
   double Legendre_polynomial_mu_average (const double mu_min, const double mu_max, const int ll);
+
+  /**
+   *  @brief the average of the Legendre polynomial
+   *  of the l-th order over the \f$\theta\f$ range
+   *  @param theta_min the lower limit of integration of the Legendre polynomial
+   *  @param theta_max the upper limit of integration of the Legendre polynomial
+   *  @param ll the order of the Legendre polynomial
+   *  @return the average of the Legendre polynomial
+   *  of the l-th order over the mu range
+   */
+  double Legendre_polynomial_theta_average (const double theta_min, const double theta_max, const int ll);
+
+  /**
+   *  @brief the average of the Legendre polynomial
+   *  of the l-th order over the \f$r_{12}, r_{13}, r_{23} \f$
+   *  @param r12_min the lower limit of integration for \f$r_{12}\f$
+   *  @param r12_max the upper limit of integration for \f$r_{12}\f$
+   *  @param r13_min the lower limit of integration for \f$r_{13}\f$
+   *  @param r13_max the upper limit of integration for \f$r_{13}\f$
+   *  @param r23_min the lower limit of integration for \f$r_{23}\f$
+   *  @param r23_max the upper limit of integration for \f$r_{23}\f$*
+   *  @param ll the order of the Legendre polynomial
+   *  @param rel_err the relative error
+   *  @param abs_err the absolute error
+   *  @param nevals the maximum number of integrals evaluation
+   *  @return the average of the Legendre polynomial
+   *
+   *  of the l-th order over the mu range
+   */
+  double Legendre_polynomial_triangles_average (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const double r23_min, const double r23_max, const int ll, const double rel_err=1.e-5, const double abs_err=1.e-8, const int nevals=100);
 
   /**
    *  @brief the order l, degree m spherical harmonics
@@ -335,7 +365,7 @@ namespace cbl {
    *  @param mat the matrix
    *  @return the determinant
    */
-  double determinant_matrix (const std::vector<std::vector<double> > mat); 
+  double determinant_matrix (const std::vector<std::vector<double>> mat); 
 
   /**
    *  @brief method to invert a matrix using the GSL
@@ -344,7 +374,7 @@ namespace cbl {
    *  @param [in] prec the precision required 
    *  @return none
    */
-  void invert_matrix (const std::vector<std::vector<double> > mat, std::vector<std::vector<double> > &mat_inv, const double prec=1.e-10); 
+  void invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const double prec=1.e-10); 
 
   /**
    *  @brief method to invert a matrix using tge GSL
@@ -355,7 +385,7 @@ namespace cbl {
    *  @param [in] prec the precision required 
    *  @return none
    */
-  void invert_matrix (const std::vector<std::vector<double> > mat, std::vector<std::vector<double> > &mat_inv, const int i1, const int i2, const double prec=1.e-10); 
+  void invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const int i1, const int i2, const double prec=1.e-10); 
 
   /**
    *  @brief compute the covariance matrix
@@ -365,7 +395,7 @@ namespace cbl {
    *  to n-1/n (for Jackknife)
    *  @return none
    */
-  void covariance_matrix (const std::vector<std::vector<double> > mat, std::vector<std::vector<double> > &cov, const bool JK = 0);
+  void covariance_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &cov, const bool JK = 0);
 
   /**
    *  @brief compute the covariance matrix
@@ -377,7 +407,7 @@ namespace cbl {
    *  to n-1/n (for Jackknife) 
    *  @return none
    */
-  void covariance_matrix (const std::vector<std::string> file, std::vector<double> &rad, std::vector<double> &mean, std::vector<std::vector<double> > &cov, const bool JK=0);
+  void covariance_matrix (const std::vector<std::string> file, std::vector<double> &rad, std::vector<double> &mean, std::vector<std::vector<double>> &cov, const bool JK=0);
 
   /**
    *  @brief compute the covariance matrix
@@ -513,7 +543,31 @@ namespace cbl {
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
    */
-  std::vector<std::vector<double>> generate_correlated_data (const int nExtractions, const std::vector<double> mean, const std::vector<std::vector<double> > covariance, const int idum=12312);
+  std::vector<std::vector<double>> generate_correlated_data (const int nExtractions, const std::vector<double> mean, const std::vector<std::vector<double>> covariance, const int idum=12312);
+
+    /**
+   *  @brief reads a vector from a binary file
+   *
+   *  @param fin input stream
+   *
+   *  @param vec the vector container where data will be stored
+   *
+   *  @param NN the number of elements to be read 
+   *
+   *  @return none
+   *
+   *  @author Tommaso Ronconi
+   *  @author tronconi@sissa.it
+   */
+  template <typename T> 
+    void vectorReadFromBinary (std::ifstream &fin, std::vector< T > &vec, size_t NN)
+    {
+      for (size_t ii = 0; ii<NN; ii++) {
+	T var;
+	fin.read((char *)&var, sizeof(T));
+	vec.push_back(var);
+      }
+    }
 
   ///@}
 
@@ -960,13 +1014,13 @@ namespace cbl {
    *  @param [in] fact factor used to normalized the distribution
    *  @param [in] V1 the minimum limit of the distribution
    *  @param [in] V2 the maximum limit of the distribution
-   *  @param [in] bin_type true &rarr; dn/dvar; false &rarr; dn/dlogvar
+   *  @param [in] bin_type "Linear" &rarr; dn/dvar; "Log10" &rarr; dn/dlog(var); "Log" &rarr; dn/dln(var)
    *  @param [in] conv true &rarr; compute the Gaussian convolvolution of
    *  the distribution; false &rarr; do not convolve
    *  @param [in] sigma &sigma; of the Gaussian kernel
    *  @return none
    */
-  void distribution (std::vector<double> &xx, std::vector<double> &fx, std::vector<double> &err, const std::vector<double> FF, const std::vector<double> WW, const int nbin, const bool linear=true, const std::string file_out=par::defaultString, const double fact=1., const double V1=par::defaultDouble, const double V2=par::defaultDouble, const bool bin_type=true, const bool conv=false, const double sigma=0.);
+  void distribution (std::vector<double> &xx, std::vector<double> &fx, std::vector<double> &err, const std::vector<double> FF, const std::vector<double> WW, const int nbin, const bool linear=true, const std::string file_out=par::defaultString, const double fact=1., const double V1=par::defaultDouble, const double V2=par::defaultDouble, const std::string bin_type="Linear", const bool conv=false, const double sigma=0.);
 
   /**
    *  @brief simple Monte Carlo integration of f(x)
@@ -1043,7 +1097,7 @@ namespace cbl {
    *  grid points
    *  @return none
    */
-  void bin_function_2D (const std::string file_grid, double func(double *, size_t, void *), void * par, const int bin, const double x1_min, const double x1_max, const double x2_min, const double x2_max, const std::string binning, std::vector<double> &xx1, std::vector<double> &xx2, std::vector<std::vector<double> > &yy);
+  void bin_function_2D (const std::string file_grid, double func(double *, size_t, void *), void * par, const int bin, const double x1_min, const double x1_max, const double x2_min, const double x2_max, const std::string binning, std::vector<double> &xx1, std::vector<double> &xx2, std::vector<std::vector<double>> &yy);
 
   /// @cond glob
   double func_grid_lin (double, void *);
@@ -1750,7 +1804,7 @@ namespace cbl {
    *
    *  @return xi<SUB>0</SUB>(s)
    */
-  double multipole_xi0 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double> > xi);
+  double multipole_xi0 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> xi);
   
   /**
    *  @brief xi<SUB>2</SUB>(s) from &xi;(r,&mu;)
@@ -1767,7 +1821,7 @@ namespace cbl {
    *
    *  @return xi<SUB>2</SUB>(s)
    */
-  double multipole_xi2 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double> > xi);
+  double multipole_xi2 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> xi);
  
   /**
    *  @brief xi<SUB>4</SUB>(s) from &xi;(r,&mu;)
@@ -1784,7 +1838,7 @@ namespace cbl {
    *
    *  @return xi<SUB>4</SUB>(s)
    */
-  double multipole_xi4 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double> > xi);
+  double multipole_xi4 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> xi);
   
   /**
    *  @brief error on xi<SUB>0</SUB>(s) from &xi;(r,&mu;)
@@ -1799,7 +1853,7 @@ namespace cbl {
    *
    *  @return error on xi<SUB>0</SUB>(s)
    */
-  double error_multipole_xi0 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double> > error);
+  double error_multipole_xi0 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> error);
 
   /**
    *  @brief error on xi<SUB>2</SUB>(s) from &xi;(r,&mu;)
@@ -1814,7 +1868,7 @@ namespace cbl {
    *
    *  @return error on xi<SUB>2</SUB>(s)
    */
-  double error_multipole_xi2 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double> > error);
+  double error_multipole_xi2 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> error);
 
   /**
    *  @brief error on xi<SUB>4</SUB>(s) from &xi;(r,&mu;)
@@ -1829,7 +1883,7 @@ namespace cbl {
    *
    *  @return error on xi<SUB>4</SUB>(s)
    */
-  double error_multipole_xi4 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double> > error);
+  double error_multipole_xi4 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> error);
 
   /**
    *  @brief xi<SUB>0</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -1843,7 +1897,7 @@ namespace cbl {
    *  @param delta_s bin size 
    *  @return xi<SUB>0</SUB>(s)
    */
-  double multipole_xi0 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double> > xi, const double delta_s);
+  double multipole_xi0 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> xi, const double delta_s);
 
   /**
    *  @brief xi<SUB>2</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -1857,7 +1911,7 @@ namespace cbl {
    *  @param delta_s bin size 
    *  @return xi<SUB>2</SUB>(s)
    */
-  double multipole_xi2 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double> > xi, const double delta_s);
+  double multipole_xi2 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> xi, const double delta_s);
 
   /**
    *  @brief xi<SUB>4</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -1871,7 +1925,7 @@ namespace cbl {
    *  @param delta_s bin size 
    *  @return xi<SUB>4</SUB>(s)
    */
-  double multipole_xi4 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double> > xi, const double delta_s);
+  double multipole_xi4 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> xi, const double delta_s);
 
   /**
    *  @brief error on xi<SUB>0</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -1883,7 +1937,7 @@ namespace cbl {
    *  @param delta_s bin size 
    *  @return error on xi<SUB>0</SUB>(s)
    */
-  double error_multipole_xi0 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double> > error, const double delta_s);
+  double error_multipole_xi0 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> error, const double delta_s);
 
   /**
    *  @brief error on xi<SUB>2</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -1895,7 +1949,7 @@ namespace cbl {
    *  @param delta_s bin size 
    *  @return error on xi<SUB>2</SUB>(s)
    */
-  double error_multipole_xi2 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double> > error, const double delta_s);
+  double error_multipole_xi2 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> error, const double delta_s);
 
   /**
    *  @brief error on xi<SUB>4</SUB>(s) from &xi;(r<SUB>p</SUB>,&pi;)
@@ -1907,7 +1961,7 @@ namespace cbl {
    *  @param delta_s bin size 
    *  @return error on xi<SUB>4</SUB>(s)
    */
-  double error_multipole_xi4 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double> > error, const double delta_s);
+  double error_multipole_xi4 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> error, const double delta_s);
 
   /// @cond glob
   /**
@@ -2201,12 +2255,17 @@ namespace cbl {
 
   /**
    *  @brief pairwise velocity distribution
+   *
    *  @param vel comoving velocity
+   *
    *  @param sigma12 &sigma;<SUB>12</SUB>
-   *  @param FV 0 \f$ \rightarrow \f$ exponential; \f$ \rightarrow \f$ 1 gaussian 
+   *
+   *  @param FV 0 \f$ \rightarrow \f$ exponential; \f$ \rightarrow \f$
+   *  1 gaussian
+   *
    *  @return f(v)
    */
-  double f_v (const double, const double, const int);
+  double f_v (const double vel, const double sigma12, const int FV);
 
   /**
    *  @brief pairwise velocity distribution
@@ -2229,7 +2288,7 @@ namespace cbl {
    *
    *  @return f(v)
    */
-  double f_v (const double, const double, const double, const double, const double, const double, const double, const double);
+  double f_v (const double vel, const double rp, const double pi, const double var, const double sigmav0, const double cmu, const double cs1, const double cs2);
 
   /**
    *  @brief velocity distribution used to model BAO
@@ -2242,7 +2301,7 @@ namespace cbl {
    *
    *  @return f<SUB>*</SUB>
    */
-  double f_star (const double, const double, const double);
+  double f_star (const double xx, const double f_g, const double k_star);
 
   /**
    *  @brief a possible parameterization of the non-linear bias
@@ -2258,7 +2317,7 @@ namespace cbl {
    *
    *  @return b(r)
    */
-  double b_nl (const double, const double, const double bB=10., const double bC=4.);
+  double b_nl (const double rr, const double bA, const double bB=10., const double bC=4.);
 
   /**
    *  @brief estimated relative error on \f$\beta=f/b\f$
@@ -2278,7 +2337,7 @@ namespace cbl {
    *  @param density the galaxy density, n
    *  @return \f$\delta\beta/\beta\f$
    */
-  double relative_error_beta (const double, const double, const double); 
+  double relative_error_beta (const double bias, const double Volume, const double density); 
 
   /**
    * @brief integrand of the 2d power spectrum to obtain power
@@ -2374,7 +2433,7 @@ namespace cbl {
    * @param f the linear growth factor
    * @return the power spectrum multipoles
    */
-  std::vector<std::vector<double> > Pkl_Kaiser(const std::vector<int> orders, const std::vector<double> kk, const std::vector<double> Pk, const double bias, const double f);
+  std::vector<std::vector<double>> Pkl_Kaiser(const std::vector<int> orders, const std::vector<double> kk, const std::vector<double> Pk, const double bias, const double f);
 
   /**
    * @brief function to obtain the two point correlation
@@ -2478,7 +2537,7 @@ namespace cbl {
    * @param orders the power spectrum multipoles orders
    * @return the sigma2_k (see i.e. Grieb et al. 2016, eq. 15)
    */
-  std::vector< std::vector<double> > sigma2_k (const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double> > Pk_multipoles, const std::vector<int> orders);
+  std::vector< std::vector<double>> sigma2_k (const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double>> Pk_multipoles, const std::vector<int> orders);
 
   /**
    * @brief Covariance matrix for 2pcf multipoles
@@ -2514,7 +2573,7 @@ namespace cbl {
    * @param bin_type the bin type
    * @return none
    */
-  void Covariance_XiWedges (std::vector<double> &rr, std::vector<std::vector<double>> &covariance, const std::vector<double> mu, const std::vector<double> delta_mu, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double> > Pk_multipoles, const std::vector<int> orders, const cbl::BinType bin_type=cbl::BinType::_linear_);
+  void Covariance_XiWedges (std::vector<double> &rr, std::vector<std::vector<double>> &covariance, const std::vector<double> mu, const std::vector<double> delta_mu, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double>> Pk_multipoles, const std::vector<int> orders, const cbl::BinType bin_type=cbl::BinType::_linear_);
 
   ///@}
 
@@ -2539,7 +2598,7 @@ namespace cbl {
     struct STR_grid_2D
     {
       std::vector<double> _xx1, _xx2;
-      std::vector<std::vector<double> > _yy;
+      std::vector<std::vector<double>> _yy;
     };
 
     struct STR_xi0_model
@@ -2663,7 +2722,7 @@ namespace cbl {
    * @return the monopole, quadrupole and hexadecapole of the two
    * point correlation function
    */
-  std::vector< std::vector<double> > Xi024_AP (const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::shared_ptr<glob::FuncGrid> xi0_interp, const std::shared_ptr<glob::FuncGrid> xi2_interp, const std::shared_ptr<glob::FuncGrid> xi4_interp);
+  std::vector< std::vector<double>> Xi024_AP (const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::shared_ptr<glob::FuncGrid> xi0_interp, const std::shared_ptr<glob::FuncGrid> xi2_interp, const std::shared_ptr<glob::FuncGrid> xi4_interp);
 
   /**
    * @brief function to obtain the 2pcf wedges

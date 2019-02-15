@@ -39,18 +39,18 @@ using namespace cbl;
 // ============================================================================================
 
 
-cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs (const shared_ptr<data::Data> input_data, const shared_ptr<Model> input_model, const vector<size_t> input_x_index, const int input_w_index) : data(input_data), model(input_model) 
+cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs (const std::shared_ptr<data::Data> input_data, const std::shared_ptr<Model> input_model, const vector<size_t> input_x_index, const int input_w_index) : data(input_data), model(input_model) 
 {																							
   switch (data->dataType()) {
     case(data::DataType::_1D_):
-      data->xx(xx);
+      xx = data->xx();
       weights1D.resize(data->ndata(), 1.);
       break;
 
     case (data::DataType::_1D_extra_):
 
       if (input_x_index.size()==0)
-	data->xx(xx);
+	xx = data->xx();
       else 
 	for (int i=0; i<data->ndata(); i++) // using extra info
 	  xx.push_back(data->extra_info(input_x_index[0], i));
@@ -63,19 +63,19 @@ cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs (const shared_ptr<
       break;
 
     case (data::DataType::_2D_):
-      data->xx(xx);
-      data->yy(yy);
+      xx = data->xx();
+      yy = data->yy();
       if (input_w_index<0) 
 	weights2D.resize(data->xsize(), vector<double>(data->ysize(), 1.));
       break;
 
     case (data::DataType::_2D_extra_):
       if (input_x_index.size()==0) {
-	data->xx(xx);
-	data->yy(yy);
+	xx = data->xx();
+	yy = data->yy();
       }
       else {
-	for (int i=0; i<data->ndata(); i++){ // using extra info
+	for (int i=0; i<data->ndata(); i++) { // using extra info
 	  xx.push_back(data->extra_info(input_x_index[0], i));
 	  yy.push_back(data->extra_info(input_x_index[1], i));
 	}
@@ -93,7 +93,7 @@ cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs (const shared_ptr<
       }
       break;
     default:
-      ErrorCBL("Error in constructor of STR_likelihood_inputs of LikelihoodFunction.cpp: wrong dataType!");
+      ErrorCBL("Error in cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs() of LikelihoodFunction.cpp: wrong dataType!");
   }
 }
 
@@ -101,7 +101,7 @@ cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs (const shared_ptr<
 // ============================================================================================
 
 
-double statistics::LogLikelihood_1D_interpolated (vector<double> &likelihood_parameters, const shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_1D_interpolated (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
 {
   // ----- extract the parameters ----- 
   shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
@@ -116,7 +116,7 @@ double statistics::LogLikelihood_1D_interpolated (vector<double> &likelihood_par
 // ============================================================================================
 
 
-double statistics::LogLikelihood_2D_interpolated (vector<double> &likelihood_parameters, const shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_2D_interpolated (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
 {
   // ----- extract the parameters ----- 
   shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
@@ -131,7 +131,7 @@ double statistics::LogLikelihood_2D_interpolated (vector<double> &likelihood_par
 // ============================================================================================
 
 
-double statistics::LogLikelihood_Gaussian_1D_error (vector<double> &likelihood_parameters, const shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_Gaussian_1D_error (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
 {
   // ----- extract the parameters ----- 
   shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
@@ -153,7 +153,7 @@ double statistics::LogLikelihood_Gaussian_1D_error (vector<double> &likelihood_p
 // ============================================================================================
 
 
-double statistics::LogLikelihood_Gaussian_1D_covariance (vector<double> &likelihood_parameters, const shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_Gaussian_1D_covariance (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
 {
   // ----- extract the parameters ----- 
   shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
@@ -183,7 +183,7 @@ double statistics::LogLikelihood_Gaussian_1D_covariance (vector<double> &likelih
 // ============================================================================================
 
 
-double statistics::LogLikelihood_Gaussian_2D_error (vector<double> &likelihood_parameters, const shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_Gaussian_2D_error (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
 {
   // ----- extract the parameters ----- 
   shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
@@ -206,7 +206,7 @@ double statistics::LogLikelihood_Gaussian_2D_error (vector<double> &likelihood_p
 // ============================================================================================
 
 
-double statistics::LogLikelihood_Poissonian_1D_ (vector<double> &likelihood_parameters, const shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_Poissonian_1D_ (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
 {
   // ----- extract the parameters ----- 
   shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
@@ -229,7 +229,7 @@ double statistics::LogLikelihood_Poissonian_1D_ (vector<double> &likelihood_para
 // ============================================================================================
 
 
-double statistics::LogLikelihood_Poissonian_2D_ (vector<double> &likelihood_parameters, const shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_Poissonian_2D_ (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
 {
   // ----- extract the parameters ----- 
   shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);

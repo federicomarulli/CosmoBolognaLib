@@ -51,17 +51,17 @@ using namespace twopt;
 void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPType type, const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_d1d2, const bool count_rr, const bool count_d1r, const bool count_d2r, const bool tcount, const Estimator estimator)  
 {
   // ----------- compute polar coordinates, if necessary ----------- 
-
-  if (!isSet(m_data->var(Var::_RA_)) || !isSet(m_data->var(Var::_Dec_)) || !isSet(m_data->var(Var::_Dc_))) 
+ 
+  if (!m_data->isSetVar(Var::_RA_) || !m_data->isSetVar(Var::_Dec_) || !m_data->isSetVar(Var::_Dc_)) 
     m_data->computePolarCoordinates();
-
-  if (!isSet(m_data2->var(Var::_RA_)) || !isSet(m_data2->var(Var::_Dec_)) || !isSet(m_data2->var(Var::_Dc_))) 
+  
+  if (!m_data2->isSetVar(Var::_RA_) || !m_data2->isSetVar(Var::_Dec_) || !m_data2->isSetVar(Var::_Dc_)) 
     m_data2->computePolarCoordinates();
-
-  if (!isSet(m_random->var(Var::_RA_)) || !isSet(m_random->var(Var::_Dec_)) || !isSet(m_random->var(Var::_Dc_))) 
+  
+  if (!m_random->isSetVar(Var::_RA_) || !m_random->isSetVar(Var::_Dec_) || !m_random->isSetVar(Var::_Dc_)) 
     m_random->computePolarCoordinates();
-
-  if (type == TwoPType::_1D_angular_) {
+  
+  if (type==TwoPType::_1D_angular_) {
     m_data->normalizeComovingCoordinates();
     m_data2->normalizeComovingCoordinates();
     m_random->normalizeComovingCoordinates();
@@ -69,7 +69,7 @@ void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPTy
 
   
   // ----------- dilute the random catalogue used to compute the RR pairs (to improve the performance) ----------- 
-
+  
   if (estimator==Estimator::_natural_ && m_random_dilution_fraction!=1.) {
     m_random_dilution_fraction = 1.;
     WarningMsg("Attention: --> m_random_dilution_fraction = 1, since the random catalogue is not diluted when using the natural estimator!");
@@ -83,19 +83,19 @@ void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPTy
   double rMAX;
 
   if (type==TwoPType::_1D_monopole_ || type==TwoPType::_1D_filtered_ || type==TwoPType::_multipoles_direct_)
-    rMAX = m_dd->sMax();
+    rMAX = m_d1d2->sMax();
 
   else if (type==TwoPType::_1D_angular_) {
     double xx, yy, zz;
-    cartesian_coord(radians(m_dd->sMax(), m_dd->angularUnits()), radians(m_dd->sMax(), m_dd->angularUnits()), 1., xx, yy, zz);
+    cartesian_coord(radians(m_d1d2->sMax(), m_d1d2->angularUnits()), radians(m_d1d2->sMax(), m_d1d2->angularUnits()), 1., xx, yy, zz);
     rMAX = max(xx, zz);
   }
 
   else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_1D_wedges_) 
-    rMAX = m_dd->sMax_D1();
+    rMAX = m_d1d2->sMax_D1();
   
   else if (type==TwoPType::_2D_Cartesian_ || type==TwoPType::_1D_projected_ || type==TwoPType::_1D_deprojected_)
-    rMAX = max(m_dd->sMax_D1(), m_dd->sMax_D2())*sqrt(2.);
+    rMAX = max(m_d1d2->sMax_D1(), m_d1d2->sMax_D2())*sqrt(2.);
 
   else
     ErrorCBL("Error in count_allPairs() of TwoPointCorrelationCross.cpp: the chosen two-point correlation function type is uknown!");
@@ -161,10 +161,8 @@ void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPTy
   else read_pairs(m_d2r, dir_input_pairs, file);
 
  
-  if (count_d1d2) {
-    m_data->Order();
+  if (count_d1d2) 
     m_data2->Order();
-  }
   
   if (count_rr || count_d1r || count_d2r)
     m_random->Order();

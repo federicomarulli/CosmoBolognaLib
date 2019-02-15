@@ -51,7 +51,7 @@ using namespace twopt;
 // ============================================================================
 
 
-shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_projected::data_with_extra_info (const vector<double> rp, const vector<double> ww, const vector<double> error) const
+std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_projected::data_with_extra_info (const std::vector<double> rp, const std::vector<double> ww, const std::vector<double> error) const
 {
   auto dd2D = cbl::measure::twopt::TwoPointCorrelation2D_cartesian::m_dd;
   
@@ -99,7 +99,7 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_projected::data_
 // ============================================================================================
 
 
-shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_projected::Projected (const vector<double> rp, const vector<double> pi, const vector<vector<double>> xi, const vector<vector<double>> error_xi)
+std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_projected::Projected (const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> xi, const std::vector<std::vector<double>> error_xi)
 {
   vector<double> ww, error;
 
@@ -131,7 +131,7 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_projected::Proje
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_projected::read (const string dir, const string file) 
+void cbl::measure::twopt::TwoPointCorrelation_projected::read (const std::string dir, const std::string file) 
 {
   m_dataset->read(dir+file);
 }
@@ -140,9 +140,9 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::read (const string dir,
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_projected::write (const string dir, const string file, const int rank) const 
+void cbl::measure::twopt::TwoPointCorrelation_projected::write (const std::string dir, const std::string file, const int rank) const 
 {
-  vector<double> xx; m_dataset->xx(xx);
+  vector<double> xx = m_dataset->xx();
 
   checkDim(xx, m_dd->nbins_D1(), "rp");
 
@@ -156,7 +156,7 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::write (const string dir
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_projected::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation_projected::measure (const ErrorType errorType, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
     case (ErrorType::_Poisson_) :
@@ -177,7 +177,7 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measure (const ErrorTyp
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_projected::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation_projected::measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   // ----------- measure the 2D two-point correlation function, xi(rp,pi) ----------- 
 
@@ -193,9 +193,9 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measurePoisson (const s
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_projected::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation_projected::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  if (dir_output_resample != par::defaultString && dir_output_resample != "") {
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
     string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
@@ -226,11 +226,9 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measureJackknife (const
   
   covariance_matrix(ww, covariance, true);
 
-  vector<double> xx_cart, yy_cart;
+  vector<double> xx_cart = data_cart->xx(), yy_cart = data_cart->yy();
   vector<vector<double> > dd_cart, error_cart;
-
-  data_cart->xx(xx_cart); data_cart->yy(yy_cart);
-  data_cart->data(dd_cart); data_cart->error(error_cart);
+  data_cart->get_data(dd_cart); data_cart->get_error(error_cart);
 
   m_dataset = Projected(xx_cart, yy_cart, dd_cart, error_cart);
   m_dataset->set_covariance(covariance);
@@ -241,9 +239,12 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measureJackknife (const
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_projected::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation_projected::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
-  if (dir_output_resample != par::defaultString && dir_output_resample != "") {
+  if (nMocks<=0)
+    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_monopole.cpp, number of mocks must be >0");
+
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
     string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
@@ -264,7 +265,7 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measureBootstrap (const
   vector<vector<double>> ww, covariance;
   for (size_t i=0; i<data.size(); i++) {
     ww.push_back(data[i]->data());
-    if (dir_output_resample != par::defaultString && dir_output_resample != "") {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_projected_Bootstrap_"+conv(i, par::fINT)+".dat";
       string header = "[1] perpendicular separation at the bin centre # [2] projected two-point correlation function # [3] error";
       if (m_compute_extra_info) header += " # [4] mean perpendicular separation # [5] standard deviation of the distribution of perpendicular separations # [6] mean redshift # [7] standard deviation of the redshift distribution";
@@ -274,11 +275,9 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measureBootstrap (const
   
   covariance_matrix(ww, covariance, false);
 
-  vector<double> xx_cart, yy_cart;
+  vector<double> xx_cart = data_cart->xx(), yy_cart = data_cart->yy();
   vector<vector<double> > dd_cart, error_cart;
-
-  data_cart->xx(xx_cart); data_cart->yy(yy_cart);
-  data_cart->data(dd_cart); data_cart->error(error_cart);
+  data_cart->get_data(dd_cart); data_cart->get_error(error_cart);
 
   m_dataset = Projected(xx_cart, yy_cart, dd_cart, error_cart);
   m_dataset->set_covariance(covariance);
@@ -288,19 +287,16 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measureBootstrap (const
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_projected::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_projected::XiJackknife (const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr)
 {
   vector<shared_ptr<data::Data>> data;
   
   auto data2d = TwoPointCorrelation2D_cartesian::XiJackknife(dd, rr);
 
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_cart, yy_cart;
-    vector<vector<double> > dd_cart, error_cart;
-
-    data2d[i]->xx(xx_cart); data2d[i]->yy(yy_cart);
-    data2d[i]->data(dd_cart); data2d[i]->error(error_cart);
-
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_cart = data2d[i]->xx(), yy_cart = data2d[i]->yy();
+    vector<vector<double>> dd_cart, error_cart;
+    data2d[i]->get_data(dd_cart); data2d[i]->get_error(error_cart);
     data.push_back(move(Projected(xx_cart, yy_cart, dd_cart, error_cart)));
   }
 
@@ -311,19 +307,16 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_projecte
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_projected::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_projected::XiJackknife (const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const std::vector<std::shared_ptr<pairs::Pair>> dr)
 {
   vector<shared_ptr<data::Data>> data;
  
   auto data2d = TwoPointCorrelation2D_cartesian::XiJackknife(dd, rr, dr);
   
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_cart, yy_cart;
-    vector<vector<double> > dd_cart, error_cart;
-
-    data2d[i]->xx(xx_cart); data2d[i]->yy(yy_cart);
-    data2d[i]->data(dd_cart); data2d[i]->error(error_cart);
-
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_cart = data2d[i]->xx(), yy_cart = data2d[i]->yy();
+    vector<vector<double>> dd_cart, error_cart;
+    data2d[i]->get_data(dd_cart); data2d[i]->get_error(error_cart);
     data.push_back(move(Projected(xx_cart, yy_cart, dd_cart, error_cart)));
   }
 
@@ -334,19 +327,16 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_projecte
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_projected::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_projected::XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const int seed)
 {
   vector<shared_ptr<data::Data>> data;
 
   auto data2d = TwoPointCorrelation2D_cartesian::XiBootstrap(nMocks, dd, rr, seed);
 
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_cart, yy_cart;
-    vector<vector<double> > dd_cart, error_cart;
-
-    data2d[i]->xx(xx_cart); data2d[i]->yy(yy_cart);
-    data2d[i]->data(dd_cart); data2d[i]->error(error_cart);
-
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_cart = data2d[i]->xx(), yy_cart = data2d[i]->yy();
+    vector<vector<double>> dd_cart, error_cart;
+    data2d[i]->get_data(dd_cart); data2d[i]->get_error(error_cart);
     data.push_back(move(Projected(xx_cart, yy_cart, dd_cart, error_cart)));
   }
 
@@ -357,19 +347,16 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_projecte
 // ============================================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_projected::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_projected::XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const std::vector<std::shared_ptr<pairs::Pair>> dr, const int seed)
 {
   vector<shared_ptr<data::Data>> data;
 
   auto data2d = TwoPointCorrelation2D_cartesian::XiBootstrap(nMocks, dd, rr, dr, seed);
   
-  for (size_t i=0; i<data2d.size(); i++){
-    vector<double> xx_cart, yy_cart;
-    vector<vector<double> > dd_cart, error_cart;
-
-    data2d[i]->xx(xx_cart); data2d[i]->yy(yy_cart);
-    data2d[i]->data(dd_cart); data2d[i]->error(error_cart);
-
+  for (size_t i=0; i<data2d.size(); i++) {
+    vector<double> xx_cart = data2d[i]->xx(), yy_cart = data2d[i]->yy();
+    vector<vector<double>> dd_cart, error_cart;
+    data2d[i]->get_data(dd_cart); data2d[i]->get_error(error_cart);
     data.push_back(move(Projected(xx_cart, yy_cart, dd_cart, error_cart)));
   }
   
@@ -380,7 +367,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_projecte
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_projected::read_covariance (const string dir, const string file)
+void cbl::measure::twopt::TwoPointCorrelation_projected::read_covariance (const std::string dir, const std::string file)
 {
   m_dataset->set_covariance(dir+file);
 }
@@ -389,7 +376,7 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::read_covariance (const 
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_projected::write_covariance (const string dir, const string file) const
+void cbl::measure::twopt::TwoPointCorrelation_projected::write_covariance (const std::string dir, const std::string file) const
 {
   m_dataset->write_covariance(dir, file);
 }
@@ -398,7 +385,7 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::write_covariance (const
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_projected::compute_covariance (const vector<shared_ptr<data::Data>> xi, const bool JK)
+void cbl::measure::twopt::TwoPointCorrelation_projected::compute_covariance (const std::vector<std::shared_ptr<data::Data>> xi, const bool JK)
 {
   vector<vector<double>> Xi;
 
@@ -415,7 +402,7 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::compute_covariance (con
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_projected::compute_covariance (const vector<string> file, const bool JK)
+void cbl::measure::twopt::TwoPointCorrelation_projected::compute_covariance (const std::vector<std::string> file, const bool JK)
 {
   vector<double> rad, mean;
   vector<vector<double>> cov_mat;

@@ -45,7 +45,7 @@ int main () {
     std::vector<std::vector<double>> point_limits = {{-10, 10}, {-10, 10}};
     const int maxiter = 10000;
     std::vector<double> result = cbl::gsl::GSL_minimize_nD(chi2_2, starting_points, point_limits, maxiter);
-    cbl::print(result);
+    cbl::Print(result);
     
   }
   

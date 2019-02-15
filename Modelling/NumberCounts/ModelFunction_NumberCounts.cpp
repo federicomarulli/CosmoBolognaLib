@@ -89,7 +89,7 @@ void cbl::modelling::numbercounts::sigmaM_dlnsigmaM (double &sigmaM, double &dln
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::sigmaM_dlnsigmaM (vector<double> &sigmaM, vector<double> &dlnsigmaM, const vector<double> mass, const vector<double> kk, const vector<double> Pk, const string interpType, const double kmax, const double rho)
+void cbl::modelling::numbercounts::sigmaM_dlnsigmaM (std::vector<double> &sigmaM, std::vector<double> &dlnsigmaM, const std::vector<double> mass, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax, const double rho)
 {
   double norm =  1./(2.*pow(par::pi, 2));
   double dRdM_fact = pow(3./(4.*par::pi*rho), 1./3.);
@@ -123,7 +123,7 @@ void cbl::modelling::numbercounts::sigmaM_dlnsigmaM (vector<double> &sigmaM, vec
 // ===========================================================================================
 
 
-vector<cbl::glob::FuncGrid> cbl::modelling::numbercounts::sigmaM_dlnsigmaM (const vector<double> mass, cbl::cosmology::Cosmology cosmology, const vector<double> kk, const vector<double> Pk, const string interpType, const double kmax)
+std::vector<cbl::glob::FuncGrid> cbl::modelling::numbercounts::sigmaM_dlnsigmaM (const std::vector<double> mass, cbl::cosmology::Cosmology cosmology, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax)
 {
   const double rho = cosmology.rho_m(0., true);
 
@@ -142,7 +142,7 @@ vector<cbl::glob::FuncGrid> cbl::modelling::numbercounts::sigmaM_dlnsigmaM (cons
 // ===========================================================================================
 
 
-double cbl::modelling::numbercounts::mass_function (const double mass, cbl::cosmology::Cosmology cosmology, const double redshift, const string model_MF, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_Pk, const double kmax)
+double cbl::modelling::numbercounts::mass_function (const double mass, cbl::cosmology::Cosmology cosmology, const double redshift, const std::string model_MF, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_Pk, const double kmax)
 {
   const double rho = cosmology.rho_m(0., true);
 
@@ -158,7 +158,7 @@ double cbl::modelling::numbercounts::mass_function (const double mass, cbl::cosm
 // ===========================================================================================
 
 
-vector<double> cbl::modelling::numbercounts::mass_function (const vector<double> mass, cbl::cosmology::Cosmology cosmology, const double redshift, const string model_MF, const double Delta, const bool isDelta_vir, const vector<double> kk, const vector<double> Pk, const string interpType, const double kmax)
+std::vector<double> cbl::modelling::numbercounts::mass_function (const std::vector<double> mass, cbl::cosmology::Cosmology cosmology, const double redshift, const std::string model_MF, const double Delta, const bool isDelta_vir, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax)
 {
   vector<double> mass_function(mass.size());
   
@@ -185,7 +185,7 @@ vector<double> cbl::modelling::numbercounts::mass_function (const vector<double>
 // ===========================================================================================
 
 
-vector<vector<double>> cbl::modelling::numbercounts::mass_function (const vector<double> redshift, const vector<double> mass, cbl::cosmology::Cosmology cosmology, const string model_MF, const double Delta, const bool isDelta_vir, const vector<double> kk, const vector<double> Pk, const string interpType, const double kmax)
+std::vector<std::vector<double>> cbl::modelling::numbercounts::mass_function (const std::vector<double> redshift, const std::vector<double> mass, cbl::cosmology::Cosmology cosmology, const std::string model_MF, const double Delta, const bool isDelta_vir, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax)
 {
   vector<vector<double>> mass_function(redshift.size(), vector<double>(mass.size()));
   
@@ -211,7 +211,7 @@ vector<vector<double>> cbl::modelling::numbercounts::mass_function (const vector
 // ===========================================================================================
 
 
-double cbl::modelling::numbercounts::number_counts(const double redshift_min, const double redshift_max, const double Mass_min, const double Mass_max,  cbl::cosmology::Cosmology cosmology, const double Area, const string model_MF, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const int npt_redshift, const int npt_mass)
+double cbl::modelling::numbercounts::number_counts(const double redshift_min, const double redshift_max, const double Mass_min, const double Mass_max,  cbl::cosmology::Cosmology cosmology, const double Area, const std::string model_MF, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const int npt_redshift, const int npt_mass)
 {
   
   double fact = (cosmology.unit()) ? 1 : cosmology.hh();

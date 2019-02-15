@@ -48,41 +48,41 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian::set_fiduc
 {
   cout << endl; coutCBL << "Setting up the fiducial dark matter two-point correlation function model" << endl;
 
-  const vector<double> rad = logarithmic_bin_vector(m_data_model.step, max(m_data_model.r_min, 1.e-4), min(m_data_model.r_max, 100.));
-  vector<double> xiDM(m_data_model.step);
+  const vector<double> rad = logarithmic_bin_vector(m_data_model->step, max(m_data_model->r_min, 1.e-4), min(m_data_model->r_max, 100.));
+  vector<double> xiDM(m_data_model->step);
   
-  if (m_data_model.sigmaNL==0) {  
-    for (size_t i=0; i<(size_t)m_data_model.step; i++)
-      xiDM[i] = m_data_model.cosmology->xi_DM(rad[i], m_data_model.method_Pk, m_data_model.redshift, m_data_model.output_root, m_data_model.NL, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.aa, m_data_model.GSL, m_data_model.prec, m_data_model.file_par);
+  if (m_data_model->sigmaNL==0) {  
+    for (size_t i=0; i<(size_t)m_data_model->step; i++)
+      xiDM[i] = m_data_model->cosmology->xi_DM(rad[i], m_data_model->method_Pk, m_data_model->redshift, m_data_model->output_root, m_data_model->NL, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->aa, m_data_model->GSL, m_data_model->prec, m_data_model->file_par);
   }
 
   else {
-    const vector<double> kk = logarithmic_bin_vector(m_data_model.step, max(m_data_model.k_min, 1.e-4), min(m_data_model.k_max, 500.));
-    vector<double> Pk(m_data_model.step);
-    for (size_t i=0; i<(size_t)m_data_model.step; i++)
-      Pk[i] = m_data_model.cosmology->Pk_DeWiggle (kk[i], m_data_model.redshift, m_data_model.sigmaNL, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.aa, m_data_model.prec);
+    const vector<double> kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
+    vector<double> Pk(m_data_model->step);
+    for (size_t i=0; i<(size_t)m_data_model->step; i++)
+      Pk[i] = m_data_model->cosmology->Pk_DeWiggle (kk[i], m_data_model->redshift, m_data_model->sigmaNL, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->aa, m_data_model->prec);
     xiDM = Xi0(rad, kk, Pk);
   }
 
-  m_data_model.func_xi = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, xiDM, "Spline"));
+  m_data_model->func_xi = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, xiDM, "Spline"));
 
-  vector<double> xiDM_(m_data_model.step), xiDM__(m_data_model.step);
+  vector<double> xiDM_(m_data_model->step), xiDM__(m_data_model->step);
 
   auto integrand_ = [&] (const double rr) { 
-    return m_data_model.func_xi->operator()(rr)*rr*rr;
+    return m_data_model->func_xi->operator()(rr)*rr*rr;
   };
 
   auto integrand__ = [&] (const double rr) { 
-    return m_data_model.func_xi->operator()(rr)*rr*rr*rr*rr;
+    return m_data_model->func_xi->operator()(rr)*rr*rr*rr*rr;
   };
 
-  for (size_t i=0; i<(size_t)m_data_model.step; i++) {
+  for (size_t i=0; i<(size_t)m_data_model->step; i++) {
     xiDM_[i] = 3.*gsl::GSL_integrate_qag(integrand_, 0., rad[i])*pow(rad[i], -3);
     xiDM__[i] = 5.*gsl::GSL_integrate_qag(integrand__, 0., rad[i])*pow(rad[i], -5);
   }
 
-  m_data_model.func_xi_ = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, xiDM_, "Spline"));
-  m_data_model.func_xi__ = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, xiDM__, "Spline"));  
+  m_data_model->func_xi_ = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, xiDM_, "Spline"));
+  m_data_model->func_xi__ = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, xiDM__, "Spline"));  
 }
 
 
@@ -109,14 +109,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian::set_model
 
   vector<statistics::PriorDistribution> priors = {alpha_perp_prior, alpha_par_prior, fsigma8_prior, bsigma8_prior, sigma12_prior};
 
-  // input data used to construct the model
-  auto inputs = make_shared<STR_data_model>(m_data_model);
-
   //set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model2D>(statistics::Model2D(&xi2D_dispersionModel, nparameters, parameterType, parameterName, inputs)); 
+  m_model = make_shared<statistics::Model2D>(statistics::Model2D(&xi2D_dispersionModel, nparameters, parameterType, parameterName, m_data_model)); 
 
 }
 

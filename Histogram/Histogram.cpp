@@ -42,7 +42,7 @@ using namespace glob;
 // ============================================================================
 
 
-cbl::glob::Histogram1D::Histogram1D (const vector<double> var, const vector<double> weight, const size_t nbins, const double minVar, const double maxVar, const double shift, const BinType bin_type)
+cbl::glob::Histogram1D::Histogram1D (const std::vector<double> var, const std::vector<double> weight, const size_t nbins, const double minVar, const double maxVar, const double shift, const BinType bin_type)
 {
   double _minVar = (minVar>par::defaultDouble) ? minVar : Min(var)*0.9999;
   double _maxVar = (maxVar>par::defaultDouble) ? maxVar : Max(var)*1.0001;
@@ -106,6 +106,8 @@ void cbl::glob::Histogram1D::set (const size_t nbins, const double minVar, const
 
 int cbl::glob::Histogram1D::digitize (const double var)
 {
+  gsl_set_error_handler_off();
+
   size_t i;
   int res = gsl_histogram_find (m_histo.get(), var, &i);
 
@@ -119,7 +121,7 @@ int cbl::glob::Histogram1D::digitize (const double var)
 // ============================================================================
 
 
-vector<int> cbl::glob::Histogram1D::digitize (const vector<double> var)
+std::vector<int> cbl::glob::Histogram1D::digitize (const std::vector<double> var)
 {
   vector<int> bin(var.size());
   for (size_t i=0; i<var.size(); i++)
@@ -144,7 +146,7 @@ void cbl::glob::Histogram1D::put (const double var, const double weight)
 // ============================================================================
 
 
-void cbl::glob::Histogram1D::put (const vector<double> var, const vector<double> weight)
+void cbl::glob::Histogram1D::put (const std::vector<double> var, const std::vector<double> weight)
 {
   for (size_t i=0; i<var.size(); i++)
     put(var[i], weight[i]);
@@ -163,7 +165,7 @@ void cbl::glob::Histogram1D::put (const int bin, const double weight)
 // ============================================================================
 
 
-void cbl::glob::Histogram1D::put (const vector<int> bins, const vector<double> weight)
+void cbl::glob::Histogram1D::put (const std::vector<int> bins, const std::vector<double> weight)
 {
   for (size_t i=0; i<bins.size(); i++)
     put(bins[i], weight[i]);
@@ -216,7 +218,7 @@ double cbl::glob::Histogram1D::operator() ( const int i, const HistogramType his
 // ============================================================================
 
 
-vector<double> cbl::glob::Histogram1D::operator() ( const HistogramType hist_type, const double fact) const
+std::vector<double> cbl::glob::Histogram1D::operator() ( const HistogramType hist_type, const double fact) const
 {
   vector<double> hist(m_nbins, 0);
 
@@ -239,7 +241,7 @@ double cbl::glob::Histogram1D::poisson_error ( const int i, const HistogramType 
 // ============================================================================
 
 
-vector<double> cbl::glob::Histogram1D::poisson_error ( const HistogramType hist_type, const double fact) const
+std::vector<double> cbl::glob::Histogram1D::poisson_error ( const HistogramType hist_type, const double fact) const
 {
   vector<double> hist(m_nbins, 0);
 
@@ -258,7 +260,7 @@ void cbl::glob::Histogram1D::write (const string dir, const string file, const H
   string mkdir = "mkdir -p "+dir;
   if (system(mkdir.c_str())) {}
   
-  string output_file = dir+file;cout <<"ECCOCI "<<output_file<<endl;
+  string output_file = dir+file;cout <<output_file<<endl;
   ofstream fout (output_file.c_str());
 
   for (size_t i=0; i<m_nbins; i++)
@@ -271,7 +273,7 @@ void cbl::glob::Histogram1D::write (const string dir, const string file, const H
 // ============================================================================
 
 
-cbl::glob::Histogram2D::Histogram2D (const vector<double> var1, const vector<double> var2, const vector<double> weight, const size_t nbins1, const size_t nbins2, const double minVar1, const double maxVar1, const double minVar2, const double maxVar2, const double shift1, const double shift2, const BinType bin_type1, const BinType bin_type2) 
+cbl::glob::Histogram2D::Histogram2D (const std::vector<double> var1, const std::vector<double> var2, const std::vector<double> weight, const size_t nbins1, const size_t nbins2, const double minVar1, const double maxVar1, const double minVar2, const double maxVar2, const double shift1, const double shift2, const BinType bin_type1, const BinType bin_type2) 
 {
   double _minVar1 = (minVar1>par::defaultDouble) ? minVar1 : Min(var1)*0.9999;
   double _maxVar1 = (maxVar1>par::defaultDouble) ? maxVar1 : Max(var1)*1.0001;
@@ -384,7 +386,7 @@ if (shift1>1 || shift1<0 || shift2>1 || shift2<0)
 // ============================================================================
 
 
-vector<int> cbl::glob::Histogram2D::digitize (const double var1, const double var2)
+std::vector<int> cbl::glob::Histogram2D::digitize (const double var1, const double var2)
 {
   size_t i, j;
   int result = gsl_histogram2d_find (m_histo.get(), var1, var2, &i, &j);
@@ -398,7 +400,7 @@ vector<int> cbl::glob::Histogram2D::digitize (const double var1, const double va
 // ============================================================================
 
 
-vector<vector<int>> cbl::glob::Histogram2D::digitize (const vector<double> var1, const vector<double> var2)
+std::vector<std::vector<int>> cbl::glob::Histogram2D::digitize (const std::vector<double> var1, const std::vector<double> var2)
 {
   vector<vector<int>> bins (var1.size(), vector<int>(2, 0));
 
@@ -425,7 +427,7 @@ void cbl::glob::Histogram2D::put (const double var1, const double var2, const do
 // ============================================================================
 
 
-void cbl::glob::Histogram2D::put (const vector<double> var1, const vector<double> var2, const vector<double> weight)
+void cbl::glob::Histogram2D::put (const std::vector<double> var1, const std::vector<double> var2, const std::vector<double> weight)
 {
   for (size_t i=0; i<var1.size(); i++)
     put(var1[i], var2[i], weight[i]);
@@ -444,7 +446,7 @@ void cbl::glob::Histogram2D::put (const int i, const int j, const double weight)
 // ============================================================================
 
 
-void cbl::glob::Histogram2D::put (const vector<vector<int>> bins, const vector<double> weight)
+void cbl::glob::Histogram2D::put (const std::vector<std::vector<int>> bins, const std::vector<double> weight)
 {
   for (size_t i=0; i<weight.size(); i++)
     put(bins[i][0], bins[i][1], weight[i]);

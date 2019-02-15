@@ -42,7 +42,7 @@ using namespace glob;
 // ============================================================================
 
 
-string cbl::fullpath (string path, const bool isDir)
+string cbl::fullpath (std::string path, const bool isDir)
 { 
   string find = "~";
   string replace = getenv("HOME");
@@ -176,7 +176,7 @@ double cbl::round_to_precision (const double num, const int ndigits)
 // ============================================================================
 
 
-void cbl::checkIO (const ifstream &fin, const string file)
+void cbl::checkIO (const std::ifstream &fin, const std::string file)
 {
   if (fin.fail()) {    
     string Err = "Error in opening the input file";
@@ -189,7 +189,7 @@ void cbl::checkIO (const ifstream &fin, const string file)
 // ============================================================================
 
 
-void cbl::checkIO (const ofstream &fout, const string file)
+void cbl::checkIO (const std::ofstream &fout, const std::string file)
 {
   if (fout.fail()) {    
     string Err = "Error in opening the output file";
@@ -202,7 +202,7 @@ void cbl::checkIO (const ofstream &fout, const string file)
 // ============================================================================================
 
 
-void cbl::set_EnvVar (vector<string> Var) 
+void cbl::set_EnvVar (std::vector<std::string> Var) 
 {
   for (size_t vv=0; vv<Var.size(); vv++) 
     putenv(&Var[0][0]);
@@ -212,7 +212,7 @@ void cbl::set_EnvVar (vector<string> Var)
 // ============================================================================================
 
 
-void cbl::check_EnvVar (const string Var) 
+void cbl::check_EnvVar (const std::string Var) 
 {
   string COM = "if [ $"+Var+" ]; then touch tmp; fi";
   if (system (COM.c_str())) {};
@@ -270,7 +270,7 @@ int cbl::used_memory (const int type)
 // ============================================================================
 
 
-int cbl::check_memory (const double frac, const bool exit, const string func, const int type)
+int cbl::check_memory (const double frac, const bool exit, const std::string func, const int type)
 {
 #ifdef LINUX
   struct sysinfo memInfo;
@@ -302,7 +302,7 @@ int cbl::check_memory (const double frac, const bool exit, const string func, co
 // ============================================================================
 
 
-void cbl::unique_unsorted (vector<int> &vv) // erase all equal elements
+void cbl::unique_unsorted (std::vector<int> &vv) // erase all equal elements
 {
   sort(vv.begin(),vv.end());
   vector<int>::iterator it;
@@ -314,7 +314,7 @@ void cbl::unique_unsorted (vector<int> &vv) // erase all equal elements
 // ============================================================================
 
 
-void cbl::unique_unsorted (vector<double> &vv) // erase all equal elements
+void cbl::unique_unsorted (std::vector<double> &vv) // erase all equal elements
 {
   sort(vv.begin(),vv.end());
   vector<double>::iterator it;
@@ -326,7 +326,7 @@ void cbl::unique_unsorted (vector<double> &vv) // erase all equal elements
 // ============================================================================
 
 
-void cbl::unique_unsorted (vector<string> &vv) // erase all equal elements
+void cbl::unique_unsorted (std::vector<std::string> &vv) // erase all equal elements
 {
   sort(vv.begin(),vv.end());
   vector<string>::iterator it;
@@ -341,7 +341,7 @@ void cbl::unique_unsorted (vector<string> &vv) // erase all equal elements
 bool cbl::glob::operator<(const cbl::glob::CL &c1, const cbl::glob::CL &c2) {return c1.VV[0] < c2.VV[0];}
 /// @endcond
 
-void cbl::sort_2vectors (vector<double>::iterator p1, vector<double>::iterator p2, const int dim) 
+void cbl::sort_2vectors (std::vector<double>::iterator p1, std::vector<double>::iterator p2, const int dim) 
 {
   int temp = 0;
   vector<cbl::glob::CL> ccc; 
@@ -359,7 +359,7 @@ void cbl::sort_2vectors (vector<double>::iterator p1, vector<double>::iterator p
   }
 }
 
-void cbl::sort_3vectors (vector<double>::iterator p1, vector<double>::iterator p2, vector<double>::iterator p3, const int dim) 
+void cbl::sort_3vectors (std::vector<double>::iterator p1, std::vector<double>::iterator p2, std::vector<double>::iterator p3, const int dim) 
 {
   int temp = 0;
   vector<cbl::glob::CL> ccc;
@@ -377,7 +377,7 @@ void cbl::sort_3vectors (vector<double>::iterator p1, vector<double>::iterator p
   }
 }
 
-void cbl::sort_4vectors (vector<double>::iterator p1, vector<double>::iterator p2, vector<double>::iterator p3, vector<double>::iterator p4, const int dim) 
+void cbl::sort_4vectors (std::vector<double>::iterator p1, std::vector<double>::iterator p2, std::vector<double>::iterator p3, std::vector<double>::iterator p4, const int dim) 
 {
   int temp = 0;
   vector<cbl::glob::CL> ccc;

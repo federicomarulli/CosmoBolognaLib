@@ -96,7 +96,7 @@ double cbl::cosmology::Cosmology::Gamma_3PCF (const double r1, const double r2, 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Q_nonLocal (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &Phi, const vector<double> kk, const vector<double> Pk_DM) const
+double cbl::cosmology::Cosmology::Q_nonLocal (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   if (rr.size()==0) {
     rr = linear_bin_vector(200, 1., 300.);
@@ -142,7 +142,7 @@ double cbl::cosmology::Cosmology::Q_nonLocal (const double r1, const double r2, 
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::Q_nonLocal (const double r1, const double r2, const vector<double> theta, const vector<double> kk, const vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::Q_nonLocal (const double r1, const double r2, const std::vector<double> theta, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   const int ntheta = theta.size();
   vector<double> rr, xi_DM, Phi;
@@ -158,7 +158,7 @@ vector<double> cbl::cosmology::Cosmology::Q_nonLocal (const double r1, const dou
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::integrals_zeta_Slepian (vector<double> &xi_DM, vector<double> &xi_DM_m1, vector<double> &xi_DM_p1, vector<double> &xi_DM_2, const vector<double> rr, const vector<double> kk, const vector<double> Pk_DM) const
+void cbl::cosmology::Cosmology::integrals_zeta_Slepian (std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   vector<double> Pk_DM_m1 = Pk_DM, Pk_DM_p1 = Pk_DM;
   const int nk = kk.size();
@@ -219,7 +219,7 @@ double cbl::cosmology::Cosmology::zeta_precyclic_Slepian (const double r1, const
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::zeta_expansion_Slepian (const double r1, const double r2, const double b1, const double b2, vector<double> &rr, vector<double> &xi_DM, vector<double> &xi_DM_m1, vector<double> &xi_DM_p1, vector<double> &xi_DM_2, const int norders, const double prec) const
+std::vector<double> cbl::cosmology::Cosmology::zeta_expansion_Slepian (const double r1, const double r2, const double b1, const double b2, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const int norders, const double prec) const
 {
   glob::FuncGrid interp_xi_DM(rr, xi_DM, "Spline");
   glob::FuncGrid interp_xi_DM_m1(rr, xi_DM_m1, "Spline");
@@ -242,7 +242,7 @@ vector<double> cbl::cosmology::Cosmology::zeta_expansion_Slepian (const double r
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::zeta_DM_Slepian (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &xi_DM_m1, vector<double> &xi_DM_p1, vector<double> &xi_DM_2, const vector<double> kk, const vector<double> Pk_DM, const int norders, const double prec) const
+double cbl::cosmology::Cosmology::zeta_DM_Slepian (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const std::vector<double> kk, const std::vector<double> Pk_DM, const int norders, const double prec) const
 {
   if (rr.size()==0) {
     rr = linear_bin_vector(200, 1., 300.);
@@ -263,7 +263,7 @@ double cbl::cosmology::Cosmology::zeta_DM_Slepian (const double r1, const double
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Q_DM_Slepian (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &xi_DM_m1, vector<double> &xi_DM_p1, vector<double> &xi_DM_2, const vector<double> kk, const vector<double> Pk_DM, const int norders, const double prec) const
+double cbl::cosmology::Cosmology::Q_DM_Slepian (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const std::vector<double> kk, const std::vector<double> Pk_DM, const int norders, const double prec) const
 {
   const double zeta_DM = zeta_DM_Slepian(r1, r2, theta, rr, xi_DM, xi_DM_m1, xi_DM_p1, xi_DM_2, kk, Pk_DM, norders, prec);
 
@@ -274,7 +274,7 @@ double cbl::cosmology::Cosmology::Q_DM_Slepian (const double r1, const double r2
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::integrals_zeta_BarrigaGatzanaga (vector<double> &xi_DM, vector<double> &Phi, const vector<double> rr, const vector<double> kk, const vector<double> Pk_DM) const
+void cbl::cosmology::Cosmology::integrals_zeta_BarrigaGatzanaga (std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   const int nk = kk.size();
 
@@ -290,7 +290,7 @@ void cbl::cosmology::Cosmology::integrals_zeta_BarrigaGatzanaga (vector<double> 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::zeta_single_BarrigaGatzanaga (const double r1, const double r2, const double theta, const vector<double> xi, const vector<double> dxi, const vector<double> dPhi) const
+double cbl::cosmology::Cosmology::zeta_single_BarrigaGatzanaga (const double r1, const double r2, const double theta, const std::vector<double> xi, const std::vector<double> dxi, const std::vector<double> dPhi) const
 {
   const double mu = cos(theta);
 
@@ -315,7 +315,7 @@ double cbl::cosmology::Cosmology::zeta_single_BarrigaGatzanaga (const double r1,
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::zeta_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &Phi, const vector<double> kk, const vector<double> Pk_DM) const
+double cbl::cosmology::Cosmology::zeta_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   if (rr.size()==0) {
     rr = linear_bin_vector(200, 1., 300.);
@@ -365,7 +365,7 @@ double cbl::cosmology::Cosmology::zeta_DM_BarrigaGatzanaga (const double r1, con
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Q_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, vector<double> &rr, vector<double> &xi_DM, vector<double> &Phi, const vector<double> kk, const vector<double> Pk_DM) const
+double cbl::cosmology::Cosmology::Q_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   return zeta_DM_BarrigaGatzanaga(r1, r2, theta, rr, xi_DM, Phi, kk, Pk_DM)/denominator_Q(r1, r2, theta, rr, xi_DM);
 }
@@ -374,7 +374,7 @@ double cbl::cosmology::Cosmology::Q_DM_BarrigaGatzanaga (const double r1, const 
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::zeta_DM (const double r1, const double r2, const vector<double> theta, const string model, const vector<double> kk, const vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::zeta_DM (const double r1, const double r2, const std::vector<double> theta, const string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   const int ntheta = theta.size();
   vector<double> rr, xi_DM;
@@ -399,7 +399,7 @@ vector<double> cbl::cosmology::Cosmology::zeta_DM (const double r1, const double
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::Q_DM (const double r1, const double r2, const vector<double> theta, const string model, const vector<double> kk, const vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::Q_DM (const double r1, const double r2, const std::vector<double> theta, const string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   const int ntheta = theta.size();
   vector<double> rr, xi_DM;
@@ -427,7 +427,7 @@ vector<double> cbl::cosmology::Cosmology::Q_DM (const double r1, const double r2
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::zeta_halo (const double r1, const double r2, const vector<double> theta, const double b1, const double b2, const string model, const vector<double> kk, const vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::zeta_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   const int ntheta = theta.size();
   vector<double> rr, xi_DM;
@@ -454,7 +454,7 @@ vector<double> cbl::cosmology::Cosmology::zeta_halo (const double r1, const doub
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::Q_halo (const double r1, const double r2, const vector<double> theta, const double b1, const double b2, const string model, const vector<double> kk, const vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::Q_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   const int ntheta = theta.size();
   vector<double> qDM = Cosmology::Q_DM(r1, r2, theta, model, kk, Pk_DM);
@@ -470,7 +470,7 @@ vector<double> cbl::cosmology::Cosmology::Q_halo (const double r1, const double 
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::Q_halo (const double r1, const double r2, const vector<double> theta, const double b1, const double b2, const double g2, const string model, const vector<double> kk, const vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::Q_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const double g2, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   const int ntheta = theta.size();
   vector<double> qH = Cosmology::Q_halo(r1, r2, theta, b1, b2, model, kk, Pk_DM);
@@ -486,7 +486,7 @@ vector<double> cbl::cosmology::Cosmology::Q_halo (const double r1, const double 
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::zeta_DM_eq (const vector<double> rr, const string model, const vector<double> kk, const vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::zeta_DM_eq (const std::vector<double> rr, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   const int nr = rr.size();
   const double theta = par::pi/3;
@@ -514,7 +514,7 @@ vector<double> cbl::cosmology::Cosmology::zeta_DM_eq (const vector<double> rr, c
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::Q_DM_eq (const vector<double> rr, const string model, const vector<double> kk, const vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::Q_DM_eq (const std::vector<double> rr, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
 {
   const int nr = rr.size();
   const double theta = par::pi/3;
@@ -542,7 +542,7 @@ vector<double> cbl::cosmology::Cosmology::Q_DM_eq (const vector<double> rr, cons
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volume, const double nObjects, const int l, const int l_prime, const double r1, const double r2, const double r1_prime, const double r2_prime, const vector<double> kk, const vector<double> Pk, const vector<double> rr, const vector<double> Xi, const double prec)
+double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volume, const double nObjects, const int l, const int l_prime, const double r1, const double r2, const double r1_prime, const double r2_prime, const std::vector<double> kk, const std::vector<double> Pk, const std::vector<double> rr, const std::vector<double> Xi, const double prec)
 {
   const double inverse_density = Volume/nObjects;
   const string interpType = "Spline";
@@ -650,7 +650,7 @@ double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volum
 // =====================================================================================
 
 
-vector<vector<double>> cbl::cosmology::Cosmology::zeta_covariance (const double Volume, const double nObjects, const vector<double> theta, const double r1, const double r2, const vector<double> kk, const vector<double> Pk, const int norders, const double prec, const bool method, const int nExtractions, vector<double> mean, const int seed)
+std::vector<std::vector<double>> cbl::cosmology::Cosmology::zeta_covariance (const double Volume, const double nObjects, const std::vector<double> theta, const double r1, const double r2, const std::vector<double> kk, const std::vector<double> Pk, const int norders, const double prec, const bool method, const int nExtractions, std::vector<double> mean, const int seed)
 {
   vector<double> rr = linear_bin_vector(4100, 1.e-5, 1.e3);
   vector<double> Xi = fftlog::transform_FFTlog(rr, 1, kk, Pk, 0);
@@ -711,7 +711,7 @@ vector<vector<double>> cbl::cosmology::Cosmology::zeta_covariance (const double 
 // =====================================================================================a
 
 
-void cbl::cosmology::Cosmology::xi_r_n (vector<double> &xi_n, const vector<double> rr, const int nn, const vector<double> kk, const vector<double> Pk)
+void cbl::cosmology::Cosmology::xi_r_n (std::vector<double> &xi_n, const std::vector<double> rr, const int nn, const std::vector<double> kk, const std::vector<double> Pk)
 {
   xi_n = fftlog::transform_FFTlog (rr, 1, kk, Pk, nn, 0, par::pi, 1);
 }
@@ -720,7 +720,7 @@ void cbl::cosmology::Cosmology::xi_r_n (vector<double> &xi_n, const vector<doubl
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::xi_r_n_pm (vector<double> &xi_n_p, vector<double> &xi_n_m, const vector<double> rr, const int nn, const vector<double> kk, const vector<double> Pk)
+void cbl::cosmology::Cosmology::xi_r_n_pm (std::vector<double> &xi_n_p, std::vector<double> &xi_n_m, const std::vector<double> rr, const int nn, const std::vector<double> kk, const std::vector<double> Pk)
 {
   vector<double> pk_p(Pk.size(), 0), pk_m(Pk.size(), 0);
 
@@ -737,7 +737,7 @@ void cbl::cosmology::Cosmology::xi_r_n_pm (vector<double> &xi_n_p, vector<double
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::eff_l_l1 (vector<vector<double>> &eff, const vector<double> rr, const int l, const int l1, const vector<double> kk, const vector<double> Pk)
+void cbl::cosmology::Cosmology::eff_l_l1 (std::vector<std::vector<double>> &eff, const std::vector<double> rr, const int l, const int l1, const std::vector<double> kk, const std::vector<double> Pk)
 {
   double min_rr = Min(rr);
   double max_rr = Max(rr);
@@ -760,7 +760,7 @@ void cbl::cosmology::Cosmology::eff_l_l1 (vector<vector<double>> &eff, const vec
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::I_ELL_ell (vector<vector<double>> &II, const vector<double> rr, const int ll, const int LL, const vector<double> kk, const vector<double> Pk)
+void cbl::cosmology::Cosmology::I_ELL_ell (std::vector<std::vector<double>> &II, const std::vector<double> rr, const int ll, const int LL, const std::vector<double> kk, const std::vector<double> Pk)
 {
   II.resize(rr.size(), vector<double>(rr.size(), 0));
   double min_rr = Min(rr);
@@ -799,7 +799,7 @@ void cbl::cosmology::Cosmology::I_ELL_ell (vector<vector<double>> &II, const vec
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::k_ell (vector<vector<double>> &KK, const vector<double> rr, const int ll, const vector<double> kk, const vector<double> Pk)
+void cbl::cosmology::Cosmology::k_ell (std::vector<std::vector<double>> &KK, const std::vector<double> rr, const int ll, const std::vector<double> kk, const std::vector<double> Pk)
 {
 
   vector<vector<double>> I1l, I3l, I5l;
@@ -906,7 +906,7 @@ double cbl::cosmology::Cosmology::zeta_ell_k_factor (const double b1, const doub
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::zeta_ell_precyclic (const double r1, const double r2, const int ell, const double b1, const double b2, const double bt, const double beta, vector<cbl::glob::FuncGrid> interp_xi_ell, const bool use_k, cbl::glob::FuncGrid2D interp_k_ell)
+double cbl::cosmology::Cosmology::zeta_ell_precyclic (const double r1, const double r2, const int ell, const double b1, const double b2, const double bt, const double beta, std::vector<cbl::glob::FuncGrid> interp_xi_ell, const bool use_k, cbl::glob::FuncGrid2D interp_k_ell)
 {
   const double gamma = 2.*b2/b1;
   const double gamma_t = bt/b1;
@@ -936,7 +936,7 @@ double cbl::cosmology::Cosmology::zeta_ell_precyclic (const double r1, const dou
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double beta, const vector<double> rr, const vector<double> kk, const vector<double> Pk, const bool include_limits, const int max_ll, const bool use_k)
+std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double beta, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk, const bool include_limits, const int max_ll, const bool use_k)
 {
   (void)max_ll; (void)use_k;
   vector<vector<double>> Kl (rr.size(), vector<double>(rr.size(), 0));
@@ -1001,7 +1001,7 @@ vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const doubl
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const string method_Pk, const int step_r, const int step_k, const bool force_RealSpace, const bool include_limits, const int max_ll, const bool use_k)
+std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const std::string method_Pk, const int step_r, const int step_k, const bool force_RealSpace, const bool include_limits, const int max_ll, const bool use_k)
 {
   double rmax = r1+r2;
 

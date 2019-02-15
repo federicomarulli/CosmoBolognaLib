@@ -86,7 +86,7 @@ namespace cbl {
 	 *
 	 * @return a seed generated from m_seed_generator
 	 */
-	int m_generate_seed () {return m_seed_generator->operator()();}
+	int m_generate_seed () { return m_seed_generator->operator()(); }
 
       public:
 
@@ -153,35 +153,38 @@ namespace cbl {
 	 *
 	 * @return pointer containing the posterior parameters
 	 */
-	std::shared_ptr<ModelParameters> parameters () const {return m_model_parameters;}
+	std::shared_ptr<ModelParameters> parameters () const { return m_model_parameters; }
 
 	/**
-	 *  @brief evaluate the unnormalized 
-	 *  posterior:
+	 *  @brief evaluate the un-normalized posterior
 	 *
-	 *  \f[ P((\vec{theta} | \vec{d}) = \mathcal{L}(\vec{d}|\vec{theta}) \cdot Pr(\vec{theta}) \f]
+	 *  \f[ P((\vec{theta} | \vec{d}) =
+	 *  \mathcal{L}(\vec{d}|\vec{theta}) \cdot Pr(\vec{theta}) \f]
 	 *
-	 *  where \f$P\f$ is the posterior,\f$\mathcal{L}(\vec{d}|\vec{theta})\f$ is the
-	 *  likelihood and \f$Pr(\vec{theta})\f$ is the prior.
+	 *  where \f$P\f$ is the
+	 *  posterior,\f$\mathcal{L}(\vec{d}|\vec{theta})\f$ is the
+	 *  likelihood and \f$Pr(\vec{theta})\f$ is the prior
 	 *
 	 *  @param pp the parameters
 	 *
-	 *  @return pointer of an object of type likelihood
+	 *  @return the value of the un-normalized posterior
 	 */
-	double operator() (std::vector<double> &pp) const;
+	double operator () (std::vector<double> &pp) const;
 
 	/**
-	 *  @brief evaluate the logarithm of the unnormalized 
-	 *  posterior:
+	 *  @brief evaluate the logarithm of the un-normalized
+	 *  posterior
 	 *
-	 *  \f[ P((\vec{theta} | \vec{d}) = \mathcal{L}(\vec{d}|\vec{theta}) \cdot Pr(\vec{theta}) \f]
+	 *  \f[ P((\vec{theta} | \vec{d}) =
+	 *  \mathcal{L}(\vec{d}|\vec{theta}) \cdot Pr(\vec{theta}) \f]
 	 *
-	 *  where \f$P\f$ is the posterior,\f$\mathcal{L}(\vec{d}|\vec{theta})\f$ is the
-	 *  likelihood and \f$Pr(\vec{theta})\f$ is the prior.
+	 *  where \f$P\f$ is the
+	 *  posterior,\f$\mathcal{L}(\vec{d}|\vec{theta})\f$ is the
+	 *  likelihood and \f$Pr(\vec{theta})\f$ is the prior
 	 *
 	 *  @param pp the parameters
 	 *
-	 *  @return pointer of an object of type likelihood
+	 *  @return the logarithm of the un-normalized posterior
 	 */
 	double log (std::vector<double> &pp) const;
 
@@ -248,14 +251,19 @@ namespace cbl {
 	 *  @param max_iter the maximum number of iterations
 	 *
 	 *  @param tol the tolerance in finding convergence 
+	 *  
+	 *  @param epsilon the relative size of the initial trial step
 	 *
 	 *  @return none
 	 */
-	void maximize (const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6);
+	void maximize (const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-4);
 
 	/**
-	 * @brief initialize the chains sampling
-	 * from the prior
+	 * @brief initialize the chains by drawing from the prior
+	 * distributions
+	 *
+	 * the starting values of the chain are extracted from the
+	 * (possibly different) distributions of the priors
 	 *
 	 * @param chain_size the chain lenght
 	 *
@@ -267,9 +275,16 @@ namespace cbl {
 	void initialize_chains (const int chain_size, const int nwalkers);
 
 	/**
-	 * @brief initialize the chains  in a ball
-	 * around the posterior best-fit parameters
-	 * values
+	 * @brief initialize the chains in a ball around the posterior
+	 * best-fit parameter values
+	 *
+	 * the starting values of the chain are extracted from uniform
+	 * distributions in the range [parameter-radius,
+	 * parameter+radius] (for each likelihood parameter)
+	 *
+	 * this function first maximizes the posterior, starting the
+	 * computation at the values of the input vector 'start', then
+	 * it inizializes the chain
 	 *
 	 * @param chain_size the chain lenght
 	 *
@@ -290,40 +305,48 @@ namespace cbl {
 	void initialize_chains (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6);
 
 	/**
-	 * @brief initialize the chains in a ball
-	 * around the input parameter values
+	 * @brief initialize the chains in a ball around the input
+	 * parameter values
+	 *
+	 * the starting values of the chain are extracted from uniform
+	 * distributions in the range [value[i]-radius,
+	 * value[i]+radius] (for each i-th likelihood parameter)
 	 *
 	 * @param chain_size the chain lenght
 	 *
 	 * @param nwalkers the number of parallel
 	 * chains
 	 *
-	 * @param values input values, center of the
-	 * ball in parameter space
+	 * @param value vector containing the input values, centres of
+	 * the ball in the parameter space
 	 *
-	 * @param radius radius of the ball in parameter space
+	 * @param radius radius of the ball in the parameter space
 	 *
 	 * @return none
 	 */
-	void initialize_chains (const int chain_size, const int nwalkers, std::vector<double> &values, const double radius);
+	void initialize_chains (const int chain_size, const int nwalkers, std::vector<double> &value, const double radius);
 
 	/**
-	 * @brief initialize the chains with input
-	 * values
+	 * @brief initialize the chains with input values
+	 *
+	 * the starting values of the chain are the elements of the
+	 * input matrix 'chain_values'
 	 *
 	 * @param chain_size the chain lenght
 	 *
-	 * @param chain_values std::vector of size (nwalkers, nparameters)
+	 * @param chain_value matrix of size (nwalkers, nparameters),
 	 * starting values of the chain
 	 *
 	 * @return none
 	 */
-	void initialize_chains (const int chain_size, const std::vector<std::vector<double>> chain_values);
+	void initialize_chains (const int chain_size, const std::vector<std::vector<double>> chain_value);
 
 	/**
-	 * @brief initialize the chains reading the
-	 * input values from last lines of a chain file:
-	 * can be used to continue a MCMC sampling
+	 * @brief initialize the chains reading from an input file 
+	 *
+	 * the starting values of the chain are get from the last
+	 * lines of an input chain file; it can be used to continue an
+	 * MCMC sampling computation
 	 *
 	 * @param chain_size the chain lenght
 	 *
@@ -339,16 +362,38 @@ namespace cbl {
 	void initialize_chains (const int chain_size, const int nwalkers, const std::string input_dir, const std::string input_file);
 
 	/**
-	 * @brief sample using stretch-move
-	 * sampler (Foreman-Mackey et al. 2012)
+	 *  @brief sample the posterior using the stretch-move sampler
+	 *  (Foreman-Mackey et al. 2012)
 	 *
-	 * @param aa the parameter of the \f$g(z)\f$ distribution
+	 *  @param aa the parameter of the \f$g(z)\f$ distribution
 	 *
-	 * @param parallel false \f$\rightarrow\f$ non-parallel sampler; true \f$\rightarrow\f$ parallel sampler
+	 *  @param parallel false \f$\rightarrow\f$ non-parallel
+	 *  sampler; true \f$\rightarrow\f$ parallel sampler
 	 *
-	 * @return none
+	 *  @param outputFile output file where the chains are written
+         * 	   during run-time. Leave it to default value to have
+         * 	   no output.  WARNING: this option is intended for
+         * 	   debug. It only works for the non-parallelized
+         * 	   stretch-move algorithm.  The chain in output will
+         * 	   be written in a different format with respect to
+         * 	   the method
+         * 	   cbl::statistics::Posterior::write_chain::ascii
+         * 	   col1) chain step col2) walker index col3-npar)
+         * 	   parameter values col npar+3) value of the
+         * 	   posterior.  @return none
+	 *	
+	 *  @param start the minimum chain position used to compute
+	 *  the median
+	 *
+	 *  @param thin the step used for chain dilution
+	 *
+	 *  @param nbins the number of bins to estimate the posterior
+	 *  distribution, used to assess its properties 
+	 *
+	 *  @warning if parallel is set true, than pointers cannot be
+	 *  used inside the posterior function
 	 */
-	void sample_stretch_move (const double aa=2, const bool parallel=true);
+	void sample_stretch_move (const double aa=2, const bool parallel=true, const std::string outputFile=par::defaultString, const int start=0, const int thin=1, const int nbins=50);
 
 	/**
 	 * @brief write the chains obtained after 
@@ -394,7 +439,8 @@ namespace cbl {
 	 *
 	 * @param thin the step used for dilution
 	 *
-	 * @param fits false \f$\rightarrow\f$ ascii file; true \f$\rightarrow\f$ fits file 
+	 * @param fits false \f$\rightarrow\f$ ascii file; true
+	 * \f$\rightarrow\f$ fits file
 	 *
 	 * @return none
 	 */
@@ -441,15 +487,15 @@ namespace cbl {
 	 * @param skip_header the lines to be skipped in
 	 * the chain file
 	 *
-	 * @param fits false \f$\rightarrow\f$ ascii file; true \f$\rightarrow\f$ fits file 
+	 * @param fits false \f$\rightarrow\f$ ascii file; true
+	 * \f$\rightarrow\f$ fits file
 	 *
 	 * @return none
 	 */
 	void read_chain (const std::string input_dir, const std::string input_file, const int nwalkers, const int skip_header=1, const bool fits=false);
 
 	/**
-	 * @brief show results of the MCMC sampling
-	 * on scree
+	 * @brief show the results of the MCMC sampling on screen
 	 *
 	 * @param start the minimum chain position to be written
 	 *
@@ -458,14 +504,21 @@ namespace cbl {
 	 * @param nbins the number of bins to estimate the posterior
 	 * distribution, used to assess its properties
 	 *
+	 * @param show_mode true \f$\rightarrow\f$ show the posterior
+	 * mode; false \f$\rightarrow\f$ do not show the posterior
+	 * mode
+	 *
 	 * @return none
 	 */
-	void show_results (const int start, const int thin, const int nbins=50);
+	void show_results (const int start, const int thin, const int nbins=50, const bool show_mode=false);
 
 	/**
-	 * @brief show results of the MCMC sampling
-	 * on scree
+	 * @brief store the results of the MCMC sampling to file
 	 * 
+	 * this function stores to file the posterior mean, standard
+	 * deviation, median, 18th and 82th percentiles, and
+	 * optionally the mode
+	 *
 	 * @param output_dir the output directory 
 	 *
 	 * @param root_file the root of the output file to be written
@@ -480,19 +533,25 @@ namespace cbl {
 	 * @param fits false \f$\rightarrow\f$ ascii file; true
 	 * \f$\rightarrow\f$ fits file
 	 *
+	 * @param compute_mode true \f$\rightarrow\f$ compute the
+	 * posterior mode; false \f$\rightarrow\f$ do not compute the
+	 * posterior mode
+	 *
 	 * @return none
 	 */
-	void write_results (const std::string output_dir, const std::string root_file, const int start=0, const int thin=1, const int nbins=50, const bool fits=false);
+	void write_results (const std::string output_dir, const std::string root_file, const int start=0, const int thin=1, const int nbins=50, const bool fits=false, const bool compute_mode=false);
 
 	/**
-	 * @brief write the model at xx, yy
-	 * computing 16th, 50th and 84th percentiles
-	 * from the chains.
+	 * @brief write the model at xx, yy computing 16th, 50th and
+	 * 84th percentiles from the MCMC chains
 	 *
 	 * @param output_dir the output directory
+	 *
 	 * @param output_file the output file
-	 * @param xx vector of points at which the model is computed,
-	 * @param yy vector of points at which the model is computed,
+	 *
+	 * @param xx vector of points at which the model is computed
+	 *
+	 * @param yy vector of points at which the model is computed
 	 *
 	 * @param start the minimum chain position to be written
 	 *

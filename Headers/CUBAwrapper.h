@@ -48,48 +48,109 @@ namespace cbl {
    */
   namespace cuba {
 
+    /// CUBA NDIM parameter
 #define NDIM 2
+
+    /// CUBA NCOMP parameter
 #define NCOMP 1
+
+    /// CUBA USERDATA parameter
 #define USERDATA NULL
+
+    /// CUBA NVEC parameter
 #define NVEC 1
+
+    /// CUBA EPSREL parameter
 #define EPSREL 1e-4
+
+    /// CUBA EPSABS parameter
 #define EPSABS 1e-12
+
+    /// CUBA VERBOSE parameter
 #define VERBOSE 0
+
+    /// CUBA LAST parameter
 #define LAST 4
+
+    /// CUBA SEED parameter
 #define SEED 0
+
+    /// CUBA MINEVAL parameter
 #define MINEVAL 0
+
+    /// CUBA MAXEVAL parameter
 #define MAXEVAL 50000
 
+    /// CUBA NSTART parameter
 #define NSTART 1000
+
+    /// CUBA NINCREASE parameter
 #define NINCREASE 500
+
+    /// CUBA NBATCH parameter
 #define NBATCH 1000
+
+    /// CUBA GRIDNO parameter
 #define GRIDNO 0
+
+    /// CUBA STATEFILE parameter
 #define STATEFILE NULL
+
+    /// CUBA SPIN parameter
 #define SPIN NULL
 
+    /// CUBA NNEW parameter
 #define NNEW 1000
+
+    /// CUBA NMIN parameter
 #define NMIN 2
+
+    /// CUBA FLATNESSv parameter
 #define FLATNESS 25.
 
+    /// CUBA KEY1 parameter
 #define KEY1 47
+
+    /// CUBA KEY2 parameter
 #define KEY2 1
+
+    /// CUBA KEY3 parameter
 #define KEY3 1
+
+    /// CUBA MAXPASS parameter
 #define MAXPASS 5
+
+    /// CUBA parameter
 #define BORDER 0.
+
+    /// CUBA MAXCHISQ parameter
 #define MAXCHISQ 10.
+
+    /// CUBA MINDEVIATION parameter
 #define MINDEVIATION .25
+
+    /// CUBA NGIVEN parameter
 #define NGIVEN 0
+
+    /// CUBA LDXGIVEN parameter
 #define LDXGIVEN NDIM
+
+    /// CUBA NEXTRA parameter
 #define NEXTRA 0
 
+    /// CUBA KEY parameter
 #define KEY 0
 
+    
     /**
      *  @brief support object for cuba integrand
      */
     struct STR_CUBA_integrand
     {
+      /// function to be integrated
       FunctionDoubleVector func;
+
+      /// limits of the integration
       std::vector<std::vector<double>> integration_limits;
     };
 
@@ -112,8 +173,8 @@ namespace cbl {
      *
      *  This class is used to handle objects of type <EM> CUBAwrapper
      *  </EM>. It can be used to estimate multidimensional integrals
-     *  using montecarlo methods implemented in the CUBA library.
-     *  See http://www.feynarts.de/cuba/ for complete documentation
+     *  using montecarlo methods implemented in the CUBA library.  See
+     *  http://www.feynarts.de/cuba/ for complete documentation
      */
     class CUBAwrapper {
 

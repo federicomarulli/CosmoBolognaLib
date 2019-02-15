@@ -88,7 +88,7 @@ int main () {
     TwoP.measure(cbl::measure::ErrorType::_Bootstrap_, dir_pairs, {dir_pairs}, "", nM);
     TwoP.write(dir_output, "xi_BootstrapErrors.dat");
 
-    cbl::print(TwoP.dataset()->covariance());
+    cbl::Print(TwoP.dataset()->covariance());
 
   }
 

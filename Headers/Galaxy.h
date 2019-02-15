@@ -92,6 +92,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -110,8 +112,8 @@ namespace cbl {
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
-	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
+      Galaxy (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
+	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
 
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -131,6 +133,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -149,8 +153,8 @@ namespace cbl {
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
+      Galaxy (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
+	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -161,6 +165,8 @@ namespace cbl {
        *  @param weight weight
        *
        *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param ID the object ID
        *
        *  @param field the field where the object has been observed
        *
@@ -180,8 +186,8 @@ namespace cbl {
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
-	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
+      Galaxy (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
+	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -196,6 +202,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -214,8 +222,8 @@ namespace cbl {
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
-	: Object(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
+      Galaxy (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
+	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -232,6 +240,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -250,8 +260,8 @@ namespace cbl {
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
-	: Object(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
+      Galaxy (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
+	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -268,6 +278,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -286,34 +298,51 @@ namespace cbl {
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
-	: Object(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
+      Galaxy (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
+	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
 
       /**
        *  @brief constructor that uses both comoving and observed
        *  coordinates
        *
        *  @param xx comoving coordinate
+       *
        *  @param yy comoving coordinate
+       *
        *  @param zz comoving coordinate 
+       *
        *  @param ra Right Ascension
+       * 
        *  @param dec Declination
+       * 
        *  @param redshift redshift
+       *
        *  @param weight weight  
+       *
        *  @param region region, used e.g. for jackknife and boostrap 
+       *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
+       *
        *  @param x_displacement the displacement along the x-axis
+       *
        *  @param y_displacement the displacement along the y-axis
+       *
        *  @param z_displacement the displacement along the z-axis
+       *
        *  @param mass the galaxy mass
+       *
        *  @param magnitude the galaxy magnitude
+       *
        *  @param SFR the galaxy star formation rate
+       *
        *  @param sSFR the galaxy specific star formation rate
        *
        *  @return object of class Galaxy
        */
-      Galaxy (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
-	: Object(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
+      Galaxy (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
+	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
       
       /**
        *  @brief default destructor

@@ -41,9 +41,9 @@ using namespace cbl;
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const RandomType type, const cosmology::Cosmology &real_cosm, const cosmology::Cosmology &test_cosm, const string dir_in, const double Zguess_min, const double Zguess_max)
+cbl::catalogue::Catalogue::Catalogue (const RandomType type, const cosmology::Cosmology &real_cosm, const cosmology::Cosmology &test_cosm, const std::string dir_in, const double Zguess_min, const double Zguess_max)
 {
-  if (type!=RandomType::_createRandom_box_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue : the random catalogue has to be cubic!");
+  if (type!=RandomType::_createRandom_box_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: the random catalogue has to be cubic!");
 
   coutCBL << "I'm creating a random catalogue with warped cubic geometry, due to geometric distortions: the undistorted random catalogue is read from a file..." << endl;
 
@@ -90,14 +90,14 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const cosmology::Co
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology &cosm, const bool conv, const double sigma, const vector<double> redshift, const vector<double> RA, const vector<double> Dec, const int z_ndigits, const int seed)
+cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology &cosm, const bool conv, const double sigma, const std::vector<double> redshift, const std::vector<double> RA, const std::vector<double> Dec, const int z_ndigits, const int seed)
 {
   size_t nRandom = int(N_R*catalogue.nObjects());
 
   vector<double> ra, dec;
   if (RA.size()>0) ra = RA;
   if (Dec.size()>0) dec = Dec;
-  if (ra.size()!=dec.size()) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue of RandomCatalogue.cpp: the dimension of observed random coordinates read in input is wrong!");
+  if (ra.size()!=dec.size()) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: the dimension of observed random coordinates read in input is wrong!");
   if (ra.size()>0 && ra.size()!=nRandom) nRandom = ra.size();
   
   if (type==RandomType::_createRandom_box_) {
@@ -108,7 +108,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
     double Ymin = catalogue.Min(Var::_Y_), Ymax = catalogue.Max(Var::_Y_);
     double Zmin = catalogue.Min(Var::_Z_), Zmax = catalogue.Max(Var::_Z_);
 
-    if (Xmin>Xmax || Ymin>Ymax || Zmin>Zmax) ErrorCBL("Error in Catalogue::Catalogue of Catalogue.cpp!");
+    if (Xmin>Xmax || Ymin>Ymax || Zmin>Zmax) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: wrong values of the coordinates in the construction of the random catalogue. The following conditions have to be satisfied: Xmin<=Xmax, Ymin<=Ymax and Zmin<=Zmax");
 
     random::UniformRandomNumbers ran(0., 1., seed);
     
@@ -184,7 +184,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
       }
       
       else
-	ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue : the chosen random catalogue type is not allowed!");
+	ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: the chosen random catalogue type is not allowed!");
     }
     
   
@@ -196,7 +196,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
     
       // extract the redshift distribution of the input catalogue  
       vector<double> xx, yy, err;
-      distribution(xx, yy, err, random_redshift, {}, nbin, true, par::defaultString, 1., cbl::Min(random_redshift), cbl::Max(random_redshift), true, conv, sigma);
+      distribution(xx, yy, err, random_redshift, {}, nbin, true, par::defaultString, 1., cbl::Min(random_redshift), cbl::Max(random_redshift), "Linear", conv, sigma);
             
       // extract the random redshifts from the distribution
       random_redshift.resize(ra.size());
@@ -219,9 +219,9 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const double Angle, const vector<double> redshift, const cosmology::Cosmology &cosm, const bool conv, const double sigma, const int seed)
+cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const double Angle, const std::vector<double> redshift, const cosmology::Cosmology &cosm, const bool conv, const double sigma, const int seed)
 {
-  if (type!=RandomType::_createRandom_cone_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue : the random catalogue has to be conic!");
+  if (type!=RandomType::_createRandom_cone_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: the random catalogue has to be conic!");
   
   coutCBL << "I'm creating a random catalogue in a cone..." << endl;
 
@@ -233,7 +233,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
   // extract the redshift distribution  
   
   vector<double> xx, yy, err;
-  distribution(xx, yy, err, redshift, {}, nbin, true, par::defaultString, 1., cbl::Min(redshift), cbl::Max(redshift), true, conv, sigma);
+  distribution(xx, yy, err, redshift, {}, nbin, true, par::defaultString, 1., cbl::Min(redshift), cbl::Max(redshift), "Linear", conv, sigma);
   
   // extract the random redshifts from the distribution
   
@@ -284,9 +284,9 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const RandomType type, const vector<string> mangle_mask, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology cosm, const bool conv, const double sigma, const int seed)
+cbl::catalogue::Catalogue::Catalogue (const RandomType type, const std::vector<std::string> mangle_mask, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology cosm, const bool conv, const double sigma, const int seed)
 {
-  if (type!=RandomType::_createRandom_MANGLE_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue : the random catalogue has to be of type _MANGLE_!");
+  if (type!=RandomType::_createRandom_MANGLE_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: the random catalogue has to be of type _MANGLE_!");
 
   string mangle_dir = par::DirCosmo+"External/mangle/";
 
@@ -330,7 +330,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const vector<string
     
   vector<double> redshift = catalogue.var(Var::_Redshift_);
   vector<double> xx, yy, err;
-  distribution(xx, yy, err, redshift, {}, nbin, true, par::defaultString, 1., cbl::Min(redshift), cbl::Max(redshift), true, conv, sigma);
+  distribution(xx, yy, err, redshift, {}, nbin, true, par::defaultString, 1., cbl::Min(redshift), cbl::Max(redshift), "Linear", conv, sigma);
 
   
   // extract the random redshifts from the distribution
@@ -350,7 +350,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const vector<string
 
 cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const bool dndz_per_stripe, const int nbin, const cosmology::Cosmology cosm, const bool conv, const double sigma, const int seed)
 {
-  if (type!=RandomType::_createRandom_SDSS_stripes_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue : the random catalogue has to be of type _SDSS_stripe_!");
+  if (type!=RandomType::_createRandom_SDSS_stripes_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: the random catalogue has to be of type _SDSS_stripe_!");
   
   vector<double> lambda, eta;
   vector<int> stripe, stripe_list;
@@ -411,7 +411,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
 
     vector<double> redshift = catalogue.var(Var::_Redshift_);
     vector<double> xx, yy, err;
-    distribution(xx, yy, err, redshift, {}, nbin, true, par::defaultString, 1., cbl::Min(redshift), cbl::Max(redshift), true, conv, sigma);
+    distribution(xx, yy, err, redshift, {}, nbin, true, par::defaultString, 1., cbl::Min(redshift), cbl::Max(redshift), "Linear", conv, sigma);
 
     // extract the random redshifts from the distribution
 

@@ -1,4 +1,4 @@
-/********************************************************************
+/*******************************************************************
  *  Copyright (C) 2014 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
@@ -42,6 +42,9 @@ using namespace cbl;
 
 double cbl::statistics::Chi2::operator() (vector<double> &pp) const
 {
+  if (m_likelihood_type==statistics::LikelihoodType::_NotSet_)
+    ErrorCBL("Error in cbl::statistics::Chi2::operator() of Chi2.cpp: you should provide a dataset!");
+
   return -2*m_log_likelihood_function(pp, m_likelihood_inputs);
 }
 
@@ -49,38 +52,39 @@ double cbl::statistics::Chi2::operator() (vector<double> &pp) const
 // ============================================================================================
 
 
-cbl::statistics::Chi2::Chi2 (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const std::vector<size_t> x_index, const int w_index) 
+cbl::statistics::Chi2::Chi2 (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const bool use_covariance, const std::vector<size_t> x_index, const int w_index) 
 {
-  m_data = data;
-  m_model = model;
+  set_data(data);
+  set_model(model);
   m_x_index = x_index;
   m_w_index = w_index;
+
+  if (use_covariance) 
+    set_function(LikelihoodType::_Gaussian_Covariance_, m_x_index, m_w_index);
+  else
+    set_function(LikelihoodType::_Gaussian_Error_, m_x_index, m_w_index);
+
+  m_likelihood_inputs = make_shared<STR_likelihood_inputs>(STR_likelihood_inputs(m_data, m_model, m_x_index, m_w_index));
 }
 
 
 // ============================================================================================
 
 
-void cbl::statistics::Chi2::minimize (const vector<double> start, vector<vector<double>> parameter_limits, const bool use_covariance, const unsigned int max_iter, const double tol, const double epsilon)
+void cbl::statistics::Chi2::minimize (const vector<double> start, vector<vector<double>> parameter_limits, const unsigned int max_iter, const double tol, const double epsilon)
 {
-  if (use_covariance) 
-    set_function(LikelihoodType::_Gaussian_Covariance_, m_x_index, m_w_index);
-  else
-    set_function(LikelihoodType::_Gaussian_Error_, m_x_index, m_w_index);
-
   if (m_likelihood_type==statistics::LikelihoodType::_NotSet_)
-    ErrorCBL("Error in cbl::statistics::Chi2::minimize of Chi2.cpp: you should provide a dataset!");
+    ErrorCBL("Error in cbl::statistics::Chi2::minimize() of Chi2.cpp: a dataset should be provided!");
 
   unsigned int npar = m_model->parameters()->nparameters_free();
 
   if (npar==0)
-    ErrorCBL("Error in maximize of minimize of Likelihood.cpp: there is no parameter free to vary");
+    ErrorCBL("Error in cbl::statistics::Chi2::minimize() of Likelihood.cpp: there is no parameter free to vary!");
   if (start.size() != npar && parameter_limits.size()!=0)
-    ErrorCBL("Error in maximize of minimize of Likelihood.cpp: wrong size for the vector of starting parameters");
+    ErrorCBL("Error in cbl::statistics::Chi2::minimize() of Likelihood.cpp: wrong size for the vector of starting parameters!");
   if (parameter_limits.size() != npar && parameter_limits.size()!=0)
-    ErrorCBL("Error in maximize of minimize of Likelihood.cpp: wrong size for the vector of parameter limits");
+    ErrorCBL("Error in cbl::statistics::Chi2::minimize() of Likelihood.cpp: wrong size for the vector of parameter limits!");
 
-  m_likelihood_inputs = make_shared<STR_likelihood_inputs>(STR_likelihood_inputs(m_data, m_model, m_x_index, m_w_index));
 
   function<double(vector<double> &)> func = [this](vector<double> & pp) { 
     return this->operator()(pp); 
@@ -90,7 +94,7 @@ void cbl::statistics::Chi2::minimize (const vector<double> start, vector<vector<
   vector<double> result = cbl::gsl::GSL_minimize_nD(func, start, parameter_limits, max_iter, tol, epsilon);
   coutCBL << "Done!" << endl << endl;
 
-  m_model->parameters()->set_bestfit_value(result);
+  m_model->parameters()->set_bestfit_values(result);
 
   m_model->parameters()->write_bestfit_info();
   coutCBL << "Chi2 = " << this->operator()(result) << endl << endl;

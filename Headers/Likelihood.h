@@ -192,7 +192,7 @@ namespace cbl {
        *
        * @return pointer containing the likelihood parameters
        */
-      std::shared_ptr<ModelParameters> parameters () const {return m_model_parameters;}
+      std::shared_ptr<ModelParameters> parameters () const { return m_model_parameters; }
 
       /**
        * @brief evaluate the likelihood

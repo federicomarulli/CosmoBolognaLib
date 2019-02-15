@@ -110,10 +110,10 @@ void cbl::measure::twopt::TwoPointCorrelation1D_filtered::set_parameters (const 
 shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D_filtered::Filtered (const shared_ptr<data::Data> monopole)
 {
   vector<double> rad; 
-  if(!m_compute_extra_info)
-    monopole->xx(rad);
+  if (!m_compute_extra_info)
+    rad = monopole->xx();
   else
-   rad = monopole->extra_info()[0];
+    rad = monopole->extra_info()[0];
 
   vector<double> xi = monopole->data();
   vector<double> error_xi = monopole->error();
@@ -139,17 +139,17 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation1D_filtered::Filt
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_filtered::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_ResampleXi, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation1D_filtered::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
   case (ErrorType::_Poisson_) :
     measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
     break;
   case (ErrorType::_Jackknife_) :
-    measureJackknife(dir_output_pairs, dir_input_pairs, dir_output_ResampleXi, count_dd, count_rr, count_dr, tcount, estimator);
+    measureJackknife(dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator);
     break;
   case (ErrorType::_Bootstrap_) :
-    measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_ResampleXi, count_dd, count_rr, count_dr, tcount, estimator, seed);
+    measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, seed);
     break;
   default:
     ErrorCBL("Error in measure() of TwoPointCorrelation1D_filtered.cpp, unknown type of error");
@@ -200,7 +200,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_filtered::measureJackknife (cons
   for (size_t i=0; i<nRegions; i++) {
     shared_ptr<Data> data_filtered = Filtered(data_SS[i]);
     
-    if (dir_output_resample != par::defaultString && dir_output_resample != "") {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_Jackknife_"+conv(i, par::fINT)+".dat";
       string header = "[1] separation at the bin centre # [2] filtered two-point correlation function # [3] error";
       if (m_compute_extra_info) header += " # [4] mean separation # [5] standard deviation of the separation distribution # [6] mean redshift # [7] standard deviation of the redshift distribution";

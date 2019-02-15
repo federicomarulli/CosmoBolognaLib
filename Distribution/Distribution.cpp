@@ -66,7 +66,7 @@ void cbl::glob::Distribution::m_set_distribution_normalization ()
 cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distributionType, const double value) 
 {
   if (distributionType != glob::DistributionType::_Constant_)
-    ErrorCBL("Error in constructor of Distribution, this constructor only allows DistributionType::_Constaint_");
+    ErrorCBL("Error in cbl::glob::Distribution::Distribution() in Distribution.cpp: this constructor only allows DistributionType::_Constant_");
 
   set_constant_distribution(value);
 }
@@ -79,7 +79,7 @@ cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distrib
 cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distributionType, const double xmin, const double xmax, const int seed) 
 {
   if (distributionType != glob::DistributionType::_Uniform_)
-    ErrorCBL("Error in constructor of Distribution, this constructor only allows DistributionType::_Uniform_");
+    ErrorCBL("Error in cbl::glob::Distribution::Distribution() in Distribution.cpp: this constructor only allows DistributionType::_Uniform_");
 
   set_uniform_distribution(xmin, xmax, seed);
 }
@@ -88,33 +88,33 @@ cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distrib
 // ======================================================================================
 
 
-cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distributionType, const vector<double> distribution_params, const double xmin, const double xmax , const int seed) 
+cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distributionType, const std::vector<double> distribution_params, const double xmin, const double xmax , const int seed) 
 {
   set_limits(xmin, xmax);
 
   if (distributionType == glob::DistributionType::_Gaussian_) {
     if (distribution_params.size() != 2)
-      ErrorCBL("Error in constructor of Distribution, wrong size of distribution_params. Gaussian distribution needs 2 parameters, the mean and the standard deviation");
+      ErrorCBL("Error in cbl::glob::Distribution::Distribution() in Distribution.cpp: wrong size of distribution_params. Gaussian distribution needs 2 parameters, the mean and the standard deviation");
 
     set_gaussian_distribution(distribution_params[0], distribution_params[1], seed);
   }
   
   else if (distributionType == glob::DistributionType::_Poisson_) {
     if (distribution_params.size() != 1)
-      ErrorCBL("Error in constructor of Distribution, wrong size of distribution_params. Poisson distribution needs 1 parameter, the mean");
+      ErrorCBL("Error in Distribution::Distribution() in Distribution.cpp: wrong size of distribution_params. Poisson distribution needs 1 parameter, the mean");
 
     set_poisson_distribution(distribution_params[0], seed);
   }
   
   else 
-    ErrorCBL("Error in Distribution constructor of Distribution.cpp. No such type of distribution");
+    ErrorCBL("Error in cbl::glob::Distribution::Distribution() in Distribution.cpp: no such type of distribution");
 }
 
 
 // ======================================================================================
 
 
- cbl::glob::Distribution::Distribution (const DistributionType distributionType, const distribution_func func, const shared_ptr<void> distribution_fixed_pars, const vector<double> distribution_pars, const double xmin, const double xmax, const int seed)
+cbl::glob::Distribution::Distribution (const DistributionType distributionType, const distribution_func func, const std::shared_ptr<void> distribution_fixed_pars, const std::vector<double> distribution_pars, const double xmin, const double xmax, const int seed)
 {
   set_limits(xmin, xmax);
 
@@ -128,10 +128,10 @@ cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distrib
 // ======================================================================================
 
 
-cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distributionType, const vector<double> discrete_values, const vector<double> weights, const int seed) 
+cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distributionType, const std::vector<double> discrete_values, const std::vector<double> weights, const int seed) 
 {
   if (distributionType != glob::DistributionType::_Discrete_)
-    ErrorCBL("Error in constructor of Distribution, this constructor only allows DistributionType::_Discrete_");
+    ErrorCBL("Error in cbl::glob:Distribution::Distribution() in Distribution.cpp: this constructor only allows DistributionType::_Discrete_");
 
   set_discrete_values(discrete_values, weights, seed);
 }
@@ -140,7 +140,7 @@ cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distrib
 // ======================================================================================
 
 
-cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distributionType, const vector<double> var, const vector<double> dist, const int nbin, const string interpolationType, const int seed) 
+cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distributionType, const std::vector<double> var, const std::vector<double> dist, const int nbin, const std::string interpolationType, const int seed) 
 {
   if (distributionType == glob::DistributionType::_Discrete_)
   {
@@ -154,7 +154,7 @@ cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distrib
     set_binned_distribution(var, dist, interpolationType, seed);
   }
   else
-    ErrorCBL("Error in Distribution constructor of Distribution.cpp. No such type of distribution");
+    ErrorCBL("Error in cbl::glob::Distribution::Distribution() in Distribution.cpp: no such type of distribution");
 }
 
 
@@ -256,12 +256,12 @@ void cbl::glob::Distribution::set_poisson_distribution (const double mean, const
 // =====================================================================================
 
 
-void cbl::glob::Distribution::set_discrete_values (const vector<double> discrete_values, const vector<double> weights, const int seed) 
+void cbl::glob::Distribution::set_discrete_values (const std::vector<double> discrete_values, const std::vector<double> weights, const int seed) 
 {
   m_distributionType = glob::DistributionType::_Discrete_;
 
   if (discrete_values.size()==0)
-    ErrorCBL("Error in set_discrete_values of Distribution. Vector of values is empty");
+    ErrorCBL("Error in cbl::glob::Distribution::set_discrete_values() in Distribution.cpp: vector of values is empty");
 
   set_limits(Min(discrete_values), Max(discrete_values));
 
@@ -286,7 +286,7 @@ void cbl::glob::Distribution::set_discrete_values (const vector<double> discrete
 // =====================================================================================
 
 
-void cbl::glob::Distribution::set_custom_distribution (const distribution_func func, const shared_ptr<void> distribution_fixed_pars, const vector<double> distribution_pars, const int seed)
+void cbl::glob::Distribution::set_custom_distribution (const distribution_func func, const shared_ptr<void> distribution_fixed_pars, const std::vector<double> distribution_pars, const int seed)
 {
 
   m_distributionType = glob::DistributionType::_Custom_;
@@ -305,12 +305,12 @@ void cbl::glob::Distribution::set_custom_distribution (const distribution_func f
 // =====================================================================================
 
 
-void cbl::glob::Distribution::set_binned_distribution (const vector<double> var, const vector<double> dist, const string interpolationType, const int seed)
+void cbl::glob::Distribution::set_binned_distribution (const std::vector<double> var, const std::vector<double> dist, const std::string interpolationType, const int seed)
 {
   m_distributionType = glob::DistributionType::_Interpolated_;
 
   if (var.size()==0)
-    ErrorCBL("Error in set_discrete_values of Distribution. Vector of values is empty");
+    ErrorCBL("Error in cbl::glob::Distribution::set_binned_distribution() in Distribution.cpp: vector of values is empty");
 
   set_limits(Min(var), Max(var));
   m_distribution_random = make_shared<DistributionRandomNumbers> (DistributionRandomNumbers(var, dist, interpolationType, seed));
@@ -525,7 +525,7 @@ double cbl::glob::Distribution::mode ()
 
     int counts = -1;
     for (size_t i=0; i<unique_vv.size(); i++) {
-      int cc   = std::count(vv.begin(), vv.end(), unique_vv[i]);
+      int cc = std::count(vv.begin(), vv.end(), unique_vv[i]);
       if (cc>counts) {
 	val = unique_vv[i];
 	counts = cc;
@@ -546,10 +546,10 @@ double cbl::glob::Distribution::mode ()
 // =====================================================================================
 
 
-void cbl::glob::Distribution::get_distribution (vector<double> &xx, vector<double> &fx, vector<double> &err, const vector<double> FF, const vector<double> WW, const int nbin, const bool linear, const string file_out, const double fact, const double V1, const double V2, const bool bin_type, const bool conv, const double sigma)
+void cbl::glob::Distribution::get_distribution (vector<double> &xx, vector<double> &fx, vector<double> &err, const std::vector<double> FF, const std::vector<double> WW, const int nbin, const bool linear, const std::string file_out, const double fact, const double V1, const double V2, const bool bin_type, const bool conv, const double sigma)
 {
-  if (xx.size()>0 || fx.size()>0 || FF.size()<=0 || nbin<=0) ErrorCBL("Error in distribution of Func.cpp!");
-  
+  if (xx.size()>0 || fx.size()>0 || FF.size()<=0 || nbin<=0) ErrorCBL("Error in cbl::glob::Distribution::get_distribution() in Distribution.cpp: the following conditions have to be satisfied: xx.size()<=0, fx.size()<=0, FF.size()>0 and nbin>0. The values recived are instead: xx.size() = " + cbl::conv(xx.size(), par::fINT) + ", fx.size() = " + cbl::conv(fx.size(), par::fINT) + ", FF.size() = " + cbl::conv(FF.size(), par::fINT) + "and nbin = " + cbl::conv(nbin, par::fINT) + "!");
+
   double minFF = (V1>cbl::par::defaultDouble) ? V1 : Min(FF)*0.9999;
   double maxFF = (V2>cbl::par::defaultDouble) ? V2 : Max(FF)*1.0001;
 

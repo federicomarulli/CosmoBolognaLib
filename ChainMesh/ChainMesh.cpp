@@ -347,7 +347,7 @@ void cbl::chainmesh::ChainMesh1D::set_par (const double cell_size, const vector<
 // ============================================================================
 
 
-cbl::chainmesh::ChainMesh1D::ChainMesh1D (const double cell_size, const vector<double> xx, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size,1)
+cbl::chainmesh::ChainMesh1D::ChainMesh1D (const double cell_size, const std::vector<double> xx, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size,1)
 {
   set_par(cell_size, xx, rMAX, nMIN, nMAX);
 }
@@ -356,7 +356,7 @@ cbl::chainmesh::ChainMesh1D::ChainMesh1D (const double cell_size, const vector<d
 // ============================================================================
 
 
-void cbl::chainmesh::ChainMesh2D::set_par (const double cell_size, const vector<double> xx, const vector<double> yy, const double rMAX, const long nMIN, const long nMAX) 
+void cbl::chainmesh::ChainMesh2D::set_par (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const double rMAX, const long nMIN, const long nMAX) 
 {
   ChainMesh::set_par(cell_size, 2);
   
@@ -370,7 +370,7 @@ void cbl::chainmesh::ChainMesh2D::set_par (const double cell_size, const vector<
 // ============================================================================
 
 
-cbl::chainmesh::ChainMesh2D::ChainMesh2D (const double cell_size, const vector<double> xx, const vector<double> yy, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size,2)
+cbl::chainmesh::ChainMesh2D::ChainMesh2D (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size,2)
 {
   set_par(cell_size, xx, yy, rMAX, nMIN, nMAX);
 }
@@ -379,7 +379,7 @@ cbl::chainmesh::ChainMesh2D::ChainMesh2D (const double cell_size, const vector<d
 // ============================================================================
 
 
-void cbl::chainmesh::ChainMesh3D::set_par (const double cell_size, const vector<double> xx, const vector<double> yy, const vector<double> zz, const double rMAX, const long nMIN, const long nMAX) 
+void cbl::chainmesh::ChainMesh3D::set_par (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const double rMAX, const long nMIN, const long nMAX) 
 {
   ChainMesh::set_par(cell_size, 3);
   vector<vector<double>> data;
@@ -393,7 +393,7 @@ void cbl::chainmesh::ChainMesh3D::set_par (const double cell_size, const vector<
 // ============================================================================
 
 
-cbl::chainmesh::ChainMesh3D::ChainMesh3D (const double cell_size, const vector<double> xx, const vector<double> yy, const vector<double> zz, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size, 3)
+cbl::chainmesh::ChainMesh3D::ChainMesh3D (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size, 3)
 {
   set_par(cell_size, xx, yy, zz, rMAX, nMIN, nMAX);
 }

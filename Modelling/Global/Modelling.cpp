@@ -57,10 +57,36 @@ void cbl::modelling::Modelling::m_set_prior (vector<statistics::PriorDistributio
 
 void cbl::modelling::Modelling::m_set_posterior (const int seed)
 {
-  if (m_likelihood != NULL && m_parameter_priors.size()==m_model->parameters()->nparameters_base())
+  if (m_likelihood!=NULL && m_parameter_priors.size()==m_model->parameters()->nparameters_base())
     m_posterior = make_shared<statistics::Posterior>(statistics::Posterior(m_parameter_priors, *m_likelihood, seed));
   else
-    ErrorCBL("Error in m_set_posterior of Modelling.cpp, likelihood is not defined or wrong number of prior distributions provided!");
+    ErrorCBL("Error in m_set_posterior() of Modelling.cpp: either the likelihood is not defined or a wrong number of prior distributions has been provided!");
+}
+
+
+// ============================================================================================
+
+
+shared_ptr<cbl::statistics::ModelParameters> cbl::modelling::Modelling::likelihood_parameters ()
+{
+  if (m_likelihood!=NULL)
+    return m_likelihood->parameters();
+  else
+    ErrorCBL("Error in cbl::modelling::Modelling::likelihood_parameters() of Modelling.cpp: the likelihood is not defined!");
+  return NULL;
+}
+
+
+// ============================================================================================
+
+
+shared_ptr<cbl::statistics::ModelParameters> cbl::modelling::Modelling::posterior_parameters ()
+{
+  if (m_posterior!=NULL)
+    return m_posterior->parameters();
+  else
+    ErrorCBL("Error in cbl::modelling::Modelling::posterior_parameters() of Modelling.cpp: the likelihood is not defined!");
+  return NULL;
 }
 
 
@@ -69,16 +95,16 @@ void cbl::modelling::Modelling::m_set_posterior (const int seed)
 
 void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type, const vector<size_t> x_index, const int w_index)
 {
-  if(m_model == NULL)
-    ErrorCBL("Error in set_likelihood of Modelling.cpp. Undefined  model!");
+  if (m_model==NULL)
+    ErrorCBL("Error in cbl::modelling::Modelling::set_likelihood() of Modelling.cpp: undefined  model!");
 
-  if (m_fit_range){
-    if(m_data_fit == NULL)
-      ErrorCBL("Error in set_likelihood of Modelling.cpp. Undefined fit range!");
+  if (m_fit_range) {
+    if (m_data_fit==NULL)
+      ErrorCBL("Error in cbl::modelling::Modelling::set_likelihood() of Modelling.cpp: undefined fit range!");
     m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data_fit, m_model, likelihood_type, x_index, w_index));
   }
   else  {
-    if(m_data == NULL)
+    if (m_data == NULL)
       ErrorCBL("Error in set_likelihood of Modelling.cpp. Undefined dataset!");
     m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, likelihood_type, x_index, w_index));
   }
@@ -97,10 +123,10 @@ void cbl::modelling::Modelling::maximize_likelihood (const vector<double> start,
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::maximize_posterior (const std::vector<double> start, const unsigned int max_iter, const double tol, const int seed)
+void cbl::modelling::Modelling::maximize_posterior (const std::vector<double> start, const unsigned int max_iter, const double tol, const double epsilon, const int seed)
 {
   m_set_posterior(seed);
-  m_posterior->maximize(start, max_iter, tol);
+  m_posterior->maximize(start, max_iter, tol, epsilon);
 }
 
 
@@ -127,10 +153,10 @@ void cbl::modelling::Modelling::sample_posterior (const int chain_size, const in
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::sample_posterior (const int chain_size, const int nwalkers, std::vector<double> &values, const double radius, const int seed, const double aa, const bool parallel)
+void cbl::modelling::Modelling::sample_posterior (const int chain_size, const int nwalkers, std::vector<double> &value, const double radius, const int seed, const double aa, const bool parallel)
 {
   m_set_posterior(seed);
-  m_posterior->initialize_chains(chain_size, nwalkers, values, radius);
+  m_posterior->initialize_chains(chain_size, nwalkers, value, radius);
   m_posterior->sample_stretch_move(aa, parallel);
 }
 
@@ -138,10 +164,10 @@ void cbl::modelling::Modelling::sample_posterior (const int chain_size, const in
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::sample_posterior (const int chain_size, const std::vector<std::vector<double>> chain_values, const int seed, const double aa, const bool parallel)
+void cbl::modelling::Modelling::sample_posterior (const int chain_size, const std::vector<std::vector<double>> chain_value, const int seed, const double aa, const bool parallel)
 {
   m_set_posterior(seed);
-  m_posterior->initialize_chains(chain_size, chain_values);
+  m_posterior->initialize_chains(chain_size, chain_value);
   m_posterior->sample_stretch_move(aa, parallel);
 }
 
@@ -178,16 +204,16 @@ void cbl::modelling::Modelling::read_chain (const string input_dir, const string
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::show_results (const int start, const int thin, const int nbins)
+void cbl::modelling::Modelling::show_results (const int start, const int thin, const int nbins, const bool show_mode)
 {
-  m_posterior->show_results(start, thin, nbins);
+  m_posterior->show_results(start, thin, nbins, show_mode);
 }
 
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::write_results (const string dir, const string file, const int start, const int thin, const int nbins, const bool fits)
+void cbl::modelling::Modelling::write_results (const string dir, const string file, const int start, const int thin, const int nbins, const bool fits, const bool compute_mode)
 {
-  m_posterior->write_results(dir, file, start, thin, nbins, fits);
+  m_posterior->write_results(dir, file, start, thin, nbins, fits, compute_mode);
 }
 

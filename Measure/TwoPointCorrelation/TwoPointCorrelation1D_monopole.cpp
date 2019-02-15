@@ -51,7 +51,7 @@ using namespace twopt;
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_monopole::set_parameters (const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info) 
+void cbl::measure::twopt::TwoPointCorrelation1D_monopole::set_parameters (const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info) 
 {
   if (!compute_extra_info) 
     m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
@@ -71,7 +71,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::set_parameters (const 
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_monopole::set_parameters (const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info)
+void cbl::measure::twopt::TwoPointCorrelation1D_monopole::set_parameters (const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info)
 {
   if (!compute_extra_info) 
     m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
@@ -91,7 +91,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::set_parameters (const 
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_monopole::read (const string dir, const string file) 
+void cbl::measure::twopt::TwoPointCorrelation1D_monopole::read (const std::string dir, const std::string file) 
 {
   m_dataset->read(dir+file);
 }
@@ -100,9 +100,9 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::read (const string dir
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_monopole::write (const string dir, const string file, const int rank) const 
+void cbl::measure::twopt::TwoPointCorrelation1D_monopole::write (const std::string dir, const std::string file, const int rank) const 
 {
-  vector<double> xx; m_dataset->xx(xx);
+  vector<double> xx = m_dataset->xx();
 
   checkDim(xx, m_dd->nbins(), "rad");
 
@@ -116,7 +116,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::write (const string di
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measure (const ErrorType errorType, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measure (const ErrorType errorType, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
     case (ErrorType::_Poisson_) :
@@ -141,7 +141,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measure (const ErrorTy
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
   // ----------- count the data-data, random-random and data-random pairs, or read them from file ----------- 
   
@@ -163,10 +163,10 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measurePoisson (const 
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_JackknifeXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  if (dir_output_JackknifeXi!=par::defaultString && dir_output_JackknifeXi!="") {
-    string mkdir = "mkdir -p "+dir_output_JackknifeXi;
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
+    string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
   
@@ -183,14 +183,14 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknife (cons
   
   for (size_t i=0; i<nRegions; i++) {
 
-    if (dir_output_JackknifeXi!=par::defaultString && dir_output_JackknifeXi!="") {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_Jackknife_"+conv(i, par::fINT)+".dat";
       string header = "[1] separation at the bin centre # [2] spherically averagerded two-point correlation function # [3] error";
       if (m_compute_extra_info) header += " # [4] mean separation # [5] standard deviation of the separation distribution # [6] mean redshift # [7] standard deviation of the redshift distribution";
-      data_SS[i]->write(dir_output_JackknifeXi, file, header, 10, 0);
+      data_SS[i]->write(dir_output_resample, file, header, 10, 0);
     }
 
-    vector<double> dd; data_SS[i]->data(dd);
+    vector<double> dd; data_SS[i]->get_data(dd);
 
     xi_SubSamples.push_back(dd);
   }
@@ -212,10 +212,10 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknife (cons
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknifeTest (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_JackknifeXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknifeTest (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  if (dir_output_JackknifeXi!=par::defaultString && dir_output_JackknifeXi!="") {
-    string mkdir = "mkdir -p "+dir_output_JackknifeXi;
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
+    string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
   
@@ -231,14 +231,14 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknifeTest (
   
   for (size_t i=0; i<nRegions; i++) {
 
-    if (dir_output_JackknifeXi!=par::defaultString && dir_output_JackknifeXi!="") {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_Jackknife_"+conv(i, par::fINT)+".dat";
       string header = "[1] separation at the bin centre # [2] spherically averagerded two-point correlation function # [3] error";
       if (m_compute_extra_info) header += " # [4] mean separation # [5] standard deviation of the separation distribution # [6] mean redshift # [7] standard deviation of the redshift distribution";
-      data_SS[i]->write(dir_output_JackknifeXi, file, header, 10, 0);
+      data_SS[i]->write(dir_output_resample, file, header, 10, 0);
     }
 
-    vector<double> dd; data_SS[i]->data(dd);
+    vector<double> dd; data_SS[i]->get_data(dd);
 
     xi_SubSamples.push_back(dd);
   }
@@ -259,13 +259,13 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknifeTest (
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_BootstrapXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
-  if (nMocks <=0)
+  if (nMocks<=0)
     ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_monopole.cpp, number of mocks must be >0");
 
-  if (dir_output_BootstrapXi!=par::defaultString && dir_output_BootstrapXi!="") {
-    string mkdir = "mkdir -p "+dir_output_BootstrapXi;
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
+    string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
 
@@ -279,14 +279,14 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureBootstrap (cons
 
   for (int i=0; i<nMocks; i++) {
 
-     if (dir_output_BootstrapXi!=par::defaultString && dir_output_BootstrapXi!="") {
+     if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_Bootstrap_"+conv(i, par::fINT)+".dat";
       string header = "[1] separation at the bin centre # [2] spherically averagerded two-point correlation function # [3] error";
       if (m_compute_extra_info) header += " # [4] mean separation # [5] standard deviation of the separation distribution # [6] mean redshift # [7] standard deviation of the redshift distribution";
-      data_SS[i]->write(dir_output_BootstrapXi, file, header, 10, 0);
+      data_SS[i]->write(dir_output_resample, file, header, 10, 0);
     }
 
-    vector<double> dd; data_SS[i]->data(dd);
+    vector<double> dd; data_SS[i]->get_data(dd);
 
     xi_SubSamples.push_back(dd);
   }

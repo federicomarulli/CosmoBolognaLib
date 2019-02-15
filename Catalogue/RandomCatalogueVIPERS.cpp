@@ -61,7 +61,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
     vector<double> redshift = catalogue_for_nz.var(Var::_Redshift_); 
     vector<double> weight = catalogue_for_nz.var(Var::_Weight_); 
     const double weightedN = catalogue_for_nz.weightedN();  
-    distribution(xx, yy, err, redshift, weight, step_redshift, true, file_nz, weightedN, cbl::Min(redshift), cbl::Max(redshift), true, do_convol, sigma);
+    distribution(xx, yy, err, redshift, weight, step_redshift, true, file_nz, weightedN, cbl::Min(redshift), cbl::Max(redshift), "Linear", do_convol, sigma);
   }
   
   
@@ -193,7 +193,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
 	  ss >> RA; ss >> DEC; ss >> REDSHIFT; ss >> FIELD;
 	  if (redshift_min<REDSHIFT && REDSHIFT<redshift_max && lim[0]<RA && RA<lim[1] && lim[2]<DEC && DEC<lim[3]) {
 	    observedCoordinates coord = {RA, DEC, REDSHIFT};
-	    m_object.push_back(move(Object::Create(ObjectType::_Random_, coord, CoordinateUnits::_degrees_, cosm, 1., 0, FIELD)));
+	    m_object.push_back(move(Object::Create(ObjectType::_Random_, coord, CoordinateUnits::_degrees_, cosm, 1., 0, -1, FIELD)));
 	  }
 	}
     }
@@ -225,7 +225,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
       // construct the objects
       for (size_t i=0; i<random_ra.size(); ++i) {
 	observedCoordinates coord = {random_ra[i], random_dec[i], random_redshift[i]};
-	m_object.push_back(move(Object::Create(ObjectType::_Random_, coord, CoordinateUnits::_degrees_, cosm, 1., 0, field[i])));
+	m_object.push_back(move(Object::Create(ObjectType::_Random_, coord, CoordinateUnits::_degrees_, cosm, 1., 0, -1, field[i])));
       }
       
     }

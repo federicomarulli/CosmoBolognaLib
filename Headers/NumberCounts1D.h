@@ -90,7 +90,7 @@ namespace cbl {
 	   *  covariance matrix
 	   *
 	   *  @param dir_output_resample output directory of the
-	   *  resampled correlation function
+	   *  resampling correlation functions
 	   *
 	   *  @return none
 	   */
@@ -101,7 +101,7 @@ namespace cbl {
 	   *  Bootstrap covariance matrix
 	   *
 	   *  @param dir_output_resample output directory of the
-	   *  resampled correlation function
+	   *  resampling correlation functions
 	   *
 	   *  @param nResamplings number of resampling used for bootstrap
 	   *
@@ -171,7 +171,7 @@ namespace cbl {
 	   *  @param errorType type of error
 	   *
 	   *  @param dir_output_resample output directory of the
-	   *  resampled correlation function
+	   *  resampling correlation functions
 	   *
 	   *  @param nResamplings number of resampling used for bootstrap
 	   *

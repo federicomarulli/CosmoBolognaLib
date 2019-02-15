@@ -79,8 +79,8 @@ int main () {
     const cbl::statistics::PriorDistribution bsigma8_prior {cbl::glob::DistributionType::_Uniform_, bsigma8_limits[0], bsigma8_limits[1],63656}; 
   
     // flat prior for sigma12
-    const std::vector<double> sigma12_limits = {1., 1000.}; 
-    const cbl::statistics::PriorDistribution sigma12_prior {cbl::glob::DistributionType::_Uniform_, sigma12_limits[0], sigma12_limits[1], 5411}; 
+    //const std::vector<double> sigma12_limits = {1., 1000.}; 
+    const cbl::statistics::PriorDistribution sigma12_prior {cbl::glob::DistributionType::_Constant_, 0.};// sigma12_limits[0], sigma12_limits[1], 5411}; 
 
     // mean redshift of the sample
     const double redshift = 1.;
@@ -91,7 +91,6 @@ int main () {
     // set the model for the redshift-space 2D two-point correlation 
     model_twop.set_model_dispersionModel(fsigma8_prior, bsigma8_prior, sigma12_prior); 
 
-    
     // ----------------------------------------------------------------------
     // ------------- run chains and write output chain and model ------------
     // ----------------------------------------------------------------------

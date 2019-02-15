@@ -42,7 +42,7 @@ using namespace data;
 // ======================================================================================
 
 
-cbl::data::Data1D_collection::Data1D_collection (const string input_file, const int skip_header)
+cbl::data::Data1D_collection::Data1D_collection (const std::string input_file, const int skip_header)
 {
   set_dataType(DataType::_1D_collection_);
   read(input_file, skip_header);
@@ -52,7 +52,7 @@ cbl::data::Data1D_collection::Data1D_collection (const string input_file, const 
 // ======================================================================================
 
 
-cbl::data::Data1D_collection::Data1D_collection (const vector<string> input_files, const int skip_header)
+cbl::data::Data1D_collection::Data1D_collection (const std::vector<std::string> input_files, const int skip_header)
 {
   set_dataType(DataType::_1D_collection_);
   read(input_files, skip_header);
@@ -62,7 +62,7 @@ cbl::data::Data1D_collection::Data1D_collection (const vector<string> input_file
 // ======================================================================================
 
 
-cbl::data::Data1D_collection::Data1D_collection (const vector<vector<double>> xx, const vector<vector<double>> data)
+cbl::data::Data1D_collection::Data1D_collection (const std::vector<std::vector<double>> xx, const std::vector<std::vector<double>> data)
 {
   set_dataType(DataType::_1D_collection_);
 
@@ -97,7 +97,7 @@ cbl::data::Data1D_collection::Data1D_collection (const vector<vector<double>> xx
 // ======================================================================================
 
 
-cbl::data::Data1D_collection::Data1D_collection (const vector<vector<double>> xx, const vector<vector<double>> data, const vector<vector<double>> covariance_matrix)
+cbl::data::Data1D_collection::Data1D_collection (const std::vector<std::vector<double>> xx, const std::vector<std::vector<double>> data, const std::vector<std::vector<double>> covariance_matrix)
 {
   set_dataType(DataType::_1D_collection_);
 
@@ -141,7 +141,7 @@ cbl::data::Data1D_collection::Data1D_collection (const vector<vector<double>> xx
 // ======================================================================================
 
 
-cbl::data::Data1D_collection::Data1D_collection (const vector<vector<double>> xx, const vector<double> data, const vector<double> error)
+cbl::data::Data1D_collection::Data1D_collection (const std::vector<std::vector<double>> xx, const std::vector<double> data, const std::vector<double> error)
 {
   set_dataType(DataType::_1D_collection_);
 
@@ -171,7 +171,7 @@ cbl::data::Data1D_collection::Data1D_collection (const vector<vector<double>> xx
 // ======================================================================================
 
 
-cbl::data::Data1D_collection::Data1D_collection (const vector<vector<double>> xx, const vector<double> data, const vector<vector<double>> covariance_matrix)
+cbl::data::Data1D_collection::Data1D_collection (const std::vector<std::vector<double>> xx, const std::vector<double> data, const std::vector<std::vector<double>> covariance_matrix)
 {
   set_dataType(DataType::_1D_collection_);
 
@@ -204,7 +204,7 @@ cbl::data::Data1D_collection::Data1D_collection (const vector<vector<double>> xx
 // ======================================================================================
 
 
-void cbl::data::Data1D_collection::data (vector<vector<double>> &data) const
+void cbl::data::Data1D_collection::data (std::vector<std::vector<double>> &data) const
 {
   data.erase(data.begin(), data.end());
 
@@ -221,7 +221,7 @@ void cbl::data::Data1D_collection::data (vector<vector<double>> &data) const
 // ======================================================================================
 
 
-void cbl::data::Data1D_collection::error (vector<vector<double>> &error) const
+void cbl::data::Data1D_collection::error (std::vector<std::vector<double>> &error) const
 {
   error.erase(error.begin(), error.end());
 
@@ -238,7 +238,7 @@ void cbl::data::Data1D_collection::error (vector<vector<double>> &error) const
 // ======================================================================================
 
 
-void cbl::data::Data1D_collection::read (const string input_file, const int skip_nlines)
+void cbl::data::Data1D_collection::read (const std::string input_file, const int skip_nlines)
 {
   ifstream fin(input_file.c_str()); checkIO(fin, input_file);
   string line;
@@ -299,7 +299,7 @@ void cbl::data::Data1D_collection::read (const string input_file, const int skip
 // ======================================================================================
 
 
-void cbl::data::Data1D_collection::read (const vector<string> input_file, const int skip_nlines)
+void cbl::data::Data1D_collection::read (const std::vector<std::string> input_file, const int skip_nlines)
 {
   m_ndataset = input_file.size();
   m_xsize.resize(m_ndataset,0);
@@ -351,7 +351,7 @@ void cbl::data::Data1D_collection::read (const vector<string> input_file, const 
 // ======================================================================================
 
 
-void cbl::data::Data1D_collection::write (const string dir, const string file, const string header, const int precision, const int rank) const
+void cbl::data::Data1D_collection::write (const std::string dir, const std::string file, const std::string header, const int precision, const int rank) const
 {
   (void)rank;
 
@@ -367,10 +367,10 @@ void cbl::data::Data1D_collection::write (const string dir, const string file, c
     fout << "### "<< header <<" ###" << endl;
 
   for (int i=0; i<ndata; i++) {
-    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[0][i] << "  ";
+    fout << setprecision(precision) << setw(15) << right << m_x[0][i] << "  ";
     for (int j=0; j<m_ndataset; j++)
-      fout  << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[m_index[j][i]]
-	    << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[m_index[j][i]] << "  ";
+      fout  << setprecision(precision) << setw(15) << right << m_data[m_index[j][i]]
+	    << "  " << setprecision(precision) << setw(15) << right << m_error[m_index[j][i]] << "  ";
     fout << endl;
   }
 
@@ -381,7 +381,7 @@ void cbl::data::Data1D_collection::write (const string dir, const string file, c
 // ======================================================================================
 
 
-void cbl::data::Data1D_collection::write (const string dir, const vector<string> files, const string header, const int precision, const int rank) const
+void cbl::data::Data1D_collection::write (const std::string dir, const std::vector<std::string> files, const std::string header, const int precision, const int rank) const
 {
   (void)rank;
 
@@ -395,9 +395,9 @@ void cbl::data::Data1D_collection::write (const string dir, const vector<string>
       fout << "### "<< header <<" ###" << endl;
 
     for (int j=0; j<m_xsize[i]; j++)
-      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i][j]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[m_index[i][j]]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[m_index[i][j]] << endl;
+      fout << setprecision(precision) << setw(15) << right << m_x[i][j]
+	   << "  " << setprecision(precision) << setw(15) << right << m_data[m_index[i][j]]
+	   << "  " << setprecision(precision) << setw(15) << right << m_error[m_index[i][j]] << endl;
 
     fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
   }
@@ -446,7 +446,7 @@ shared_ptr<Data> cbl::data::Data1D_collection::cut (const int dataset, const dou
 // ======================================================================================
 
 
-shared_ptr<Data> cbl::data::Data1D_collection::cut (const vector<double> xmin, const vector<double> xmax) const
+shared_ptr<Data> cbl::data::Data1D_collection::cut (const std::vector<double> xmin, const std::vector<double> xmax) const
 {
   checkDim(xmin, m_ndataset, "xmin");
   checkDim(xmax, m_ndataset, "xmax");
@@ -508,14 +508,14 @@ void cbl::data::Data1D_collection::write_covariance (const string dir, const str
 	for (int n=0; n<m_xsize[j]; n++) {
 	  index1 = m_index[i][m];
 	  index2 = m_index[j][n];
-	  fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << i
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << j
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i][m]
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[j][n]
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_covariance[index1][index2]
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_covariance[index1][index2]/sqrt(m_covariance[index1][index1]*m_covariance[index2][index2])
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(5) << right << index1
-	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(5) << right << index2 <<  endl;
+	  fout << setprecision(precision) << setw(15) << right << i
+	       << "  " << setprecision(precision) << setw(15) << right << j
+	       << "  " << setprecision(precision) << setw(15) << right << m_x[i][m]
+	       << "  " << setprecision(precision) << setw(15) << right << m_x[j][n]
+	       << "  " << setprecision(precision) << setw(15) << right << m_covariance[index1][index2]
+	       << "  " << setprecision(precision) << setw(15) << right << m_covariance[index1][index2]/sqrt(m_covariance[index1][index1]*m_covariance[index2][index2])
+	       << "  " << setprecision(precision) << setw(5) << right << index1
+	       << "  " << setprecision(precision) << setw(5) << right << index2 <<  endl;
 	}
 
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;

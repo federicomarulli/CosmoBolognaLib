@@ -43,7 +43,7 @@ using namespace glob;
 // ============================================================================
 
 
-cbl::glob::ReadParameters::ReadParameters (const string parameter_file)
+cbl::glob::ReadParameters::ReadParameters (const std::string parameter_file)
 {      
   // open the input parameter file
   ifstream fin(parameter_file.c_str()); checkIO(fin, parameter_file);

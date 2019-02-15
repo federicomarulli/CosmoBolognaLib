@@ -48,13 +48,13 @@ namespace cbl {
    *  @brief The namespace of the <B> FITS wrappers </B>
    *  
    *  The \e FITS namespace contains all the wrapper functions of the
-   *  FITS routines. 
+   *  FITS routines.
    *
-   *  The CCfits headers are expected to be installed
-   *  in a subdirectory of the include path. The \<CCfits\> header file
+   *  The CCfits headers are expected to be installed in a
+   *  subdirectory of the include path. The \<CCfits\> header file
    *  contains all that is necessary to use both the CCfits library
    *  and the cfitsio library (for example, it includes fitsio.h),
-   *  thus making all of cfitsio's macro definitions available. 
+   *  thus making all of cfitsio's macro definitions available.
    *
    *  \<CCfits/CCfits\> includes 12 of the CCfits headers and will
    *  support all CCfits operations. The installed location of the
@@ -87,9 +87,9 @@ namespace cbl {
     std::vector<std::vector<double>> read_table_fits (const std::string input_fits, const std::vector<std::string> column_names, const int next=1, const double fill_value=cbl::par::defaultDouble);
 
     /**
-     *  @brief function that write a table on a fits file
+     *  @brief function that writes a table on a fits file
      *
-     *  This function writes columns in a binary table in a FITS file
+     *  This function writes columns in a binary table on a FITS file
      *
      *  @param output_dir output directory
      *  @param file_fits name of the file fits

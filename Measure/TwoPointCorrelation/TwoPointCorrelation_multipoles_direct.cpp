@@ -52,7 +52,7 @@ using namespace twopt;
 // ============================================================================
 
 
-shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::data_with_extra_info (const shared_ptr<pairs::Pair> dd, const vector<double> rad, const vector<double> xi, const vector<double> error) const
+std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::data_with_extra_info (const std::shared_ptr<pairs::Pair> dd, const std::vector<double> rad, const std::vector<double> xi, const std::vector<double> error) const
 {
   vector<vector<double>> extra(4);
   
@@ -72,7 +72,7 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_direc
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (const shared_ptr<pairs::Pair> PP, const string dir, const string file) const 
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (const std::shared_ptr<pairs::Pair> PP, const std::string dir, const std::string file) const 
 {  
   string MK = "mkdir -p "+dir; if (system (MK.c_str())) {}
   
@@ -115,7 +115,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (co
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (shared_ptr<pairs::Pair> PP, const vector<string> dir, const string file) const
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (std::shared_ptr<pairs::Pair> PP, const std::vector<std::string> dir, const std::string file) const
 {
   if (dir.size()==0)
     ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation1D::read_pairs of TwoPointCorrelation_multipoles_direct! dir.size()=0!");
@@ -220,7 +220,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (sha
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (const vector<shared_ptr<pairs::Pair>> PP, const string dir, const string file) const 
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (const std::vector<std::shared_ptr<pairs::Pair>> PP, const std::string dir, const std::string file) const 
 {  
   size_t nRegions = m_data->region_list().size();
 
@@ -288,7 +288,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (co
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (vector<shared_ptr<pairs::Pair>> PP, const vector<string> dir, const string file) const
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (std::vector<std::shared_ptr<pairs::Pair>> PP, const std::vector<std::string> dir, const std::string file) const
 {
   size_t nRegions = m_data->region_list().size();
 
@@ -344,7 +344,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (vec
 // ============================================================================
 
 
-shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::correlation_NaturalEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
+std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::correlation_NaturalEstimator (const std::shared_ptr<pairs::Pair> dd, const std::shared_ptr<pairs::Pair> rr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
 {
   // number of objects in the data catalogue
   int nD = (nData>0) ? nData : m_data->nObjects();
@@ -401,7 +401,7 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_direc
 // ============================================================================
 
 
-shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::correlation_LandySzalayEstimator (const shared_ptr<pairs::Pair> dd, const shared_ptr<pairs::Pair> rr, const shared_ptr<pairs::Pair> dr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
+std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::correlation_LandySzalayEstimator (const std::shared_ptr<pairs::Pair> dd, const std::shared_ptr<pairs::Pair> rr, const std::shared_ptr<pairs::Pair> dr, const int nData, const double nData_weighted, const int nRandom, const double nRandom_weighted)
 {
   // number of objects in the data catalogue
   int nD = (nData>0) ? nData : m_data->nObjects();
@@ -468,7 +468,7 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_direc
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiJackknife (const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -511,7 +511,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipol
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiJackknife (const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiJackknife (const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const std::vector<std::shared_ptr<pairs::Pair>> dr)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -568,7 +568,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipol
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const int seed)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const int seed)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -631,7 +631,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipol
 // ============================================================================
 
 
-vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiBootstrap (const int nMocks, const vector<shared_ptr<pairs::Pair>> dd, const vector<shared_ptr<pairs::Pair>> rr, const vector<shared_ptr<pairs::Pair>> dr, const int seed)
+std::vector<std::shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const std::vector<std::shared_ptr<pairs::Pair>> dr, const int seed)
 {
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
@@ -705,7 +705,7 @@ vector<shared_ptr<data::Data>> cbl::measure::twopt::TwoPointCorrelation_multipol
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::set_parameters (const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info) 
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::set_parameters (const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info) 
 {
   if (!compute_extra_info) 
     m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_multipoles_log_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
@@ -725,7 +725,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::set_parameters 
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::set_parameters (const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits, function<double(double)> angularWeight, const bool compute_extra_info)
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::set_parameters (const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info)
 {
   if (!compute_extra_info) 
     m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_multipoles_log_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
@@ -745,10 +745,9 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::set_parameters 
 // ============================================================================================
 
 
-vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xx () const
+std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xx () const
 {
-  vector<double> rad, xx;
-  m_dataset->xx(xx);
+  vector<double> rad, xx = m_dataset->xx();
 
   for (size_t i=0; i<xx.size()/3; i++)
     rad.push_back(xx[i]);
@@ -760,10 +759,9 @@ vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xx ()
 // ============================================================================================
 
 
-vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiMonopole () const
+std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiMonopole () const
 {
-  vector<double> vv; 
-  m_dataset->data(vv);
+  vector<double> vv = m_dataset->data();
 
   size_t sz = vv.size();
 
@@ -778,10 +776,9 @@ vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiMon
 // ============================================================================================
 
 
-vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorMonopole () const
+std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorMonopole () const
 {
-  vector<double> vv; 
-  m_dataset->error(vv);
+  vector<double> vv = m_dataset->error();
 
   size_t sz = vv.size();
 
@@ -797,10 +794,9 @@ vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::error
 // ============================================================================================
 
 
-vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiQuadrupole () const 
+std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiQuadrupole () const 
 {
-  vector<double> vv; 
-  m_dataset->data(vv);
+  vector<double> vv = m_dataset->data();
 
   size_t sz = vv.size();
 
@@ -816,10 +812,9 @@ vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiQua
 // ============================================================================================
 
 
-vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorQuadrupole () const 
+std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorQuadrupole () const 
 {
-  vector<double> vv; 
-  m_dataset->error(vv);
+  vector<double> vv = m_dataset->error();
 
   size_t sz = vv.size();
 
@@ -835,10 +830,9 @@ vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::error
 // ============================================================================================
 
 
-vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiHexadecapole () const
+std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiHexadecapole () const
 {
-  vector<double> vv; 
-  m_dataset->data(vv);
+  vector<double> vv = m_dataset->data();
 
   size_t sz = vv.size();
 
@@ -854,10 +848,9 @@ vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::xiHex
 // ============================================================================================
 
 
-vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorHexadecapole () const 
+std::vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::errorHexadecapole () const 
 {
-  vector<double> vv; 
-  m_dataset->error(vv);
+  vector<double> vv = m_dataset->error();
 
   size_t sz = vv.size();
 
@@ -873,11 +866,11 @@ vector<double> cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::error
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write (const string dir, const string file, const int rank) const 
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write (const std::string dir, const std::string file, const int rank) const 
 {
   (void)rank;
   
-  vector<double> rad; m_dataset->xx(rad);
+  vector<double> rad = m_dataset->xx();
   vector<double> xil = m_dataset->data();
   vector<double> error = m_dataset->error();
 

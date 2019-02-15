@@ -54,22 +54,22 @@ namespace cbl {
 	/// false \f$\rightarrow\f$ free parameter; true \f$\rightarrow\f$ fixed parameters
 	std::vector<bool> m_parameter_isFixed;
 
-	/// number of free parameters
+	/// the number of free parameters
 	size_t m_nparameters_free = 0;
 
-	/// number of fixed parameters
+	/// the number of fixed parameters
 	size_t m_nparameters_fixed = 0;
 
-	/// indexes of fixed parameters
+	/// the indexes of fixed parameters
 	std::vector<unsigned int> m_fixed_parameters;
 
-	/// indexes of the free parameters
+	/// the indexes of the free parameters
 	std::vector<unsigned int> m_free_parameters;
 
-	/// model parameter fixed values
+	/// the model parameter fixed values
 	std::vector<double> m_parameter_fixed_value;
 
-	/// model parameter bestfit values
+	/// the best-fit parameter values, i.e. the maxima of the likelihood 
 	std::vector<double> m_parameter_bestfit_value;
 
 	/**
@@ -78,8 +78,9 @@ namespace cbl {
 	 *
 	 * @return none
 	 */
-	void m_set_parameter_type() override;
+	void m_set_parameter_type () override;
 
+	
       public:
 
 	/**
@@ -137,12 +138,26 @@ namespace cbl {
 	size_t nparameters_free () const override;
 
 	/**
+	 * @brief return the private member
+	 * m_free_parameters
+	 * @return the private member m_free_parameters
+	 */
+	std::vector<unsigned int> free_parameters() const {return m_free_parameters;}
+
+	/**
 	 * @brief return the number of fixed
 	 * parameters
 	 *
 	 * @return the number of fixed parameters
 	 */
 	size_t nparameters_fixed() const override;
+
+	/**
+	 * @brief return the private member
+	 * m_fixed_parameters
+	 * @return the private member m_fixed_parameters
+	 */
+	std::vector<unsigned int> fixed_parameters() const {return m_fixed_parameters;}
 
 	/**
 	 * @brief return all the model parameters
@@ -204,6 +219,7 @@ namespace cbl {
 	void fix_at_bestfit (const int p) override;
 
 	///@}
+	
 
 	///@{
 	
@@ -230,7 +246,7 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_bestfit_value (const std::vector<double> bestfit_value) override;
+	void set_bestfit_values (const std::vector<double> bestfit_value) override;
 
 	/**
 	 *  @brief write the best fit info

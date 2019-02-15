@@ -67,18 +67,22 @@ void cbl::statistics::Model2D::write (const string output_dir, const string outp
   vector<double> pp = parameters;
   vector<vector<double>> model = this->operator()(xx, yy, pp);
 
-  string mkdir = "mkdir -p "+output_dir;
-  string file = output_dir+output_file;
-
+  const string mkdir = "mkdir -p "+output_dir;
   if (system(mkdir.c_str())) {}
 
-  ofstream fout(file.c_str());
+  const string file = output_dir+output_file;
+  
+  ofstream fout(file.c_str()); checkIO(fout, file);
 
+  fout << "### [1] x # [2] y # [3] model(x,y) ###";
+  
   for (size_t i=0; i<xx.size(); i++)
     for (size_t j=0; j<yy.size(); j++)
-      fout << xx[i] << " " << yy[j] << " " << model[i][j] << endl;
+      fout << setprecision(5) << setw(10) << right << xx[i] << "  "
+	   << setprecision(5) << setw(10) << right << yy[j] << "  "
+	   << setprecision(5) << setw(10) << right << model[i][j] << endl;
   
-  fout.close();
+  fout.clear(); fout.close(); coutCBL << "I wrote the file: " << file << endl << endl;
 }
 
 
@@ -100,17 +104,23 @@ void cbl::statistics::Model2D::write_from_chains (const string output_dir, const
   vector<vector<double>> median_model, low_model, up_model;
   stats_from_chains(xx, yy, median_model, low_model, up_model, start, thin);
 
-  string mkdir = "mkdir -p "+output_dir;
-  string file = output_dir+output_file;
-
+  const string mkdir = "mkdir -p "+output_dir;
   if (system(mkdir.c_str())) {}
+  
+  const string file = output_dir+output_file;
+  
+  ofstream fout(file.c_str()); checkIO(fout, file);
 
-  ofstream fout(file.c_str());
-
+  fout << "### [1] x # [2] y # [3] median model(x,y) # [4] 16% percentile model(x,y) # [5] 84% percentile ###";
+  
   for (size_t i=0; i<xx.size(); i++)
     for (size_t j=0; j<yy.size(); j++)
-      fout << xx[i] << " " << yy[j] << " " << median_model[i][j] << " " << low_model[i][j] << "  " << up_model[i][j] << endl;
+      fout << setprecision(5) << setw(10) << right << xx[i] << "  "
+	   << setprecision(5) << setw(10) << right << yy[j] << "  "
+	   << setprecision(5) << setw(10) << right << median_model[i][j] << "  "
+	   << setprecision(5) << setw(10) << right << low_model[i][j] << "  "
+	   << setprecision(5) << setw(10) << right << up_model[i][j] << endl;
  
-  fout.close();
+  fout.clear(); fout.close(); coutCBL << "I wrote the file: " << file << endl;
 }
 

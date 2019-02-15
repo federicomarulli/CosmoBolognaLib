@@ -38,6 +38,10 @@ int main () {
     // integrating a function of type: function<double<double>>
     std::cout << "The integral is: " << cbl::gsl::GSL_integrate_qag(&Gaussian, lower_limit, upper_limit, prec, limit_size, rule) << std::endl;
 
+    // integrating using a lambda function
+    std::function<double(double)> GaussianL = [&] (const double xx) { return 1./(sigma*sqrt(2.*cbl::par::pi))*exp(-pow(xx-mean, 2)/(2.*sigma*sigma)); };
+    std::cout << "The integral is: " << cbl::gsl::GSL_integrate_qag(GaussianL, lower_limit, upper_limit, prec, limit_size, rule) << std::endl;
+  
   }
   
   catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
