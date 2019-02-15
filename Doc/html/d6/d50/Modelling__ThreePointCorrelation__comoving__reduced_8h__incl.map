@@ -1,0 +1,53 @@
+<map id="Headers/Modelling_ThreePointCorrelation_comoving_reduced.h" name="Headers/Modelling_ThreePointCorrelation_comoving_reduced.h">
+<area shape="rect" id="node2" href="$d5/d13/Modelling__ThreePointCorrelation__comoving__connected_8h.html" title="The class Modelling_ThreePointCorrelation_comoving_connected. " alt="" coords="1292,95,1503,136"/>
+<area shape="rect" id="node75" href="$dd/db4/ModelFunction__ThreePointCorrelation__comoving__reduced_8h.html" title="Functions to model the reduced three&#45;point correlation function in comoving coordinates. " alt="" coords="1526,95,1738,136"/>
+<area shape="rect" id="node3" href="$d0/dd4/Modelling__ThreePointCorrelation_8h.html" title="The class Modelling_ThreePointCorrelation. " alt="" coords="1123,191,1344,218"/>
+<area shape="rect" id="node74" href="$d2/d42/ModelFunction__ThreePointCorrelation__comoving__connected_8h.html" title="Functions to model the connected three&#45;point correlation function in comoving coordinates. " alt="" coords="1368,184,1595,225"/>
+<area shape="rect" id="node4" href="$de/d7d/ThreePointCorrelation_8h.html" title="The class ThreePointCorrelation. " alt="" coords="985,281,1143,307"/>
+<area shape="rect" id="node70" href="$d2/d0a/Modelling1D_8h_source.html" title="Modelling1D.h" alt="" coords="1181,281,1286,307"/>
+<area shape="rect" id="node73" href="$d6/d29/ModelFunction__ThreePointCorrelation_8h.html" title="Functions to model the three&#45;point correlation function. " alt="" coords="1310,273,1487,315"/>
+<area shape="rect" id="node5" href="$d0/d3d/Measure_8h.html" title="The class Measure. " alt="" coords="1120,437,1203,464"/>
+<area shape="rect" id="node66" href="$dc/d5e/ChainMesh__Catalogue_8h.html" title="Implementation of the chain&#45;mesh data structure. " alt="" coords="931,437,1096,464"/>
+<area shape="rect" id="node67" href="$db/d1d/Triplet1D_8h.html" title="The class Triplet1D. " alt="" coords="829,363,915,389"/>
+<area shape="rect" id="node69" href="$d9/d69/Triplet2D_8h.html" title="The class Triplet2D. " alt="" coords="939,363,1026,389"/>
+<area shape="rect" id="node6" href="$d7/d9f/Catalogue_8h.html" title="The class Catalogue. " alt="" coords="875,512,967,539"/>
+<area shape="rect" id="node7" href="$df/db4/Field3D_8h.html" title="The class field3D. " alt="" coords="723,811,802,837"/>
+<area shape="rect" id="node42" href="$d9/d73/ChainMesh_8h.html" title="Implementation of the chain&#45;mesh data structure. " alt="" coords="1327,587,1425,613"/>
+<area shape="rect" id="node58" href="$db/dbf/Object_8h.html" title="The class Object. " alt="" coords="722,661,793,688"/>
+<area shape="rect" id="node59" href="$da/dd3/RandomObject_8h.html" title="The class RandomObject. " alt="" coords="453,587,573,613"/>
+<area shape="rect" id="node60" href="$d0/dbf/Halo_8h.html" title="The class Halo. " alt="" coords="1041,587,1101,613"/>
+<area shape="rect" id="node61" href="$df/da4/Mock_8h.html" title="The class Mock. " alt="" coords="1125,587,1190,613"/>
+<area shape="rect" id="node62" href="$de/d71/Galaxy_8h.html" title="The class Galaxy. " alt="" coords="597,587,672,613"/>
+<area shape="rect" id="node63" href="$d8/d77/Cluster_8h.html" title="The class Cluster. " alt="" coords="696,587,771,613"/>
+<area shape="rect" id="node64" href="$d5/d50/Void_8h.html" title="The class Void. " alt="" coords="795,587,853,613"/>
+<area shape="rect" id="node65" href="$d3/dc6/HostHalo_8h.html" title="The class HostHalo. " alt="" coords="877,587,965,613"/>
+<area shape="rect" id="node8" href="$d6/df6/Data_8h.html" title="The class Data. " alt="" coords="1223,1483,1284,1509"/>
+<area shape="rect" id="node9" href="$d2/d8a/Func_8h.html" title="Useful generic functions. " alt="" coords="1222,1557,1285,1584"/>
+<area shape="rect" id="node10" href="$d9/d17/RandomNumbers_8h.html" title="Class functions used to generate random numbers. " alt="" coords="1151,1632,1286,1659"/>
+<area shape="rect" id="node11" href="$da/ddd/FFTlog_8h.html" title="Wrapper for fftlog wripper. " alt="" coords="1181,1707,1256,1733"/>
+<area shape="rect" id="node12" href="$d5/d38/FuncGrid_8h.html" title="Class used to handle functions stored on a grid. " alt="" coords="1175,1781,1262,1808"/>
+<area shape="rect" id="node13" href="$de/dc4/GSLwrapper_8h.html" title="functions that wrap GSL routines for integration, root finding and minimization " alt="" coords="1099,1856,1205,1883"/>
+<area shape="rect" id="node40" href="$db/dad/CUBAwrapper_8h.html" title="class CUBAwrapper that wrap CUBA routines for multidimensional integration " alt="" coords="1228,1856,1345,1883"/>
+<area shape="rect" id="node14" href="$d3/de9/Kernel_8h.html" title="Useful generic functions. " alt="" coords="1139,1931,1210,1957"/>
+<area shape="rect" id="node37" href="$d1/d45/Constants_8h.html" title="Constants of general use. " alt="" coords="2004,2005,2097,2032"/>
+<area shape="rect" id="node38" href="$d5/d76/EnumCast_8h.html" title="Classes used to cast integers and std::string into the enums used in the CosmoBolognaLib. " alt="" coords="2122,2005,2217,2032"/>
+<area shape="rect" id="node39" href="$d8/d8a/Exception_8h.html" title="The class Exception Class used to handle the exceptions. " alt="" coords="2241,2005,2332,2032"/>
+<area shape="rect" id="node43" href="$da/dd2/Cosmology_8h.html" title="The class Cosmology. " alt="" coords="1413,661,1512,688"/>
+<area shape="rect" id="node44" href="$db/dd8/Likelihood_8h.html" title="The class Likelihood. " alt="" coords="1292,736,1383,763"/>
+<area shape="rect" id="node56" href="$d6/d32/EisensteinHu_8h.html" title="The class EisensteinHu. " alt="" coords="1407,736,1518,763"/>
+<area shape="rect" id="node57" href="$da/d09/CosmClassFunc_8h.html" title="Class functions used by Numerical methods inside the class Cosmology. " alt="" coords="1543,736,1673,763"/>
+<area shape="rect" id="node45" href="$dd/ded/LikelihoodFunction_8h.html" title="Likelihood function. " alt="" coords="1281,811,1423,837"/>
+<area shape="rect" id="node46" href="$d7/de6/Model2D_8h.html" title="The class Model2D. " alt="" coords="1311,885,1396,912"/>
+<area shape="rect" id="node47" href="$d9/d12/Model1D_8h.html" title="The class Model1D. " alt="" coords="1321,960,1407,987"/>
+<area shape="rect" id="node48" href="$d3/d5a/Model_8h.html" title="The class Model. " alt="" coords="1330,1035,1398,1061"/>
+<area shape="rect" id="node49" href="$dc/d6a/ModelParameters_8h.html" title="The class ModelParameters. " alt="" coords="1302,1109,1437,1136"/>
+<area shape="rect" id="node50" href="$d8/de3/Prior_8h.html" title="The class Prior. " alt="" coords="1211,1184,1271,1211"/>
+<area shape="rect" id="node54" href="$db/d6c/PriorDistribution_8h.html" title="The class PriorDistribution. " alt="" coords="1470,1184,1597,1211"/>
+<area shape="rect" id="node55" href="$db/dbb/PosteriorDistribution_8h.html" title="The class PosteriorDistribution. " alt="" coords="1295,1184,1446,1211"/>
+<area shape="rect" id="node51" href="$d5/d4d/Distribution_8h.html" title="The class Distribution. " alt="" coords="1321,1259,1420,1285"/>
+<area shape="rect" id="node52" href="$db/db1/Data2D__extra_8h.html" title="The class Data2D_extra. " alt="" coords="1223,1333,1337,1360"/>
+<area shape="rect" id="node53" href="$d1/dfe/Data2D_8h.html" title="The class Data2D. " alt="" coords="1243,1408,1322,1435"/>
+<area shape="rect" id="node68" href="$dd/dcb/Triplet_8h.html" title="The class Triplet. " alt="" coords="837,437,907,464"/>
+<area shape="rect" id="node71" href="$d5/d4c/Modelling_8h.html" title="The class Modelling. " alt="" coords="1215,587,1303,613"/>
+<area shape="rect" id="node72" href="$d5/dee/Posterior_8h.html" title="The class Posterior. " alt="" coords="1208,661,1293,688"/>
+</map>
