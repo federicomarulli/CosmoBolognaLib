@@ -1,0 +1,30 @@
+<map id="Headers/Triplet2D.h" name="Headers/Triplet2D.h">
+<area shape="rect" id="node2" href="$de/d7d/ThreePointCorrelation_8h.html" title="The class ThreePointCorrelation. " alt="" coords="2013,87,2225,114"/>
+<area shape="rect" id="node29" href="$d2/d84/Triplet_8cpp.html" title="Methods of the class Triplet. " alt="" coords="2249,80,2452,121"/>
+<area shape="rect" id="node3" href="$d2/d5c/GlobalFunc_8h.html" title="Generic functions that use one or more classes of the CosmoBolognaLib. " alt="" coords="609,177,761,203"/>
+<area shape="rect" id="node10" href="$d0/dd4/Modelling__ThreePointCorrelation_8h.html" title="The class Modelling_ThreePointCorrelation. " alt="" coords="1501,169,1701,211"/>
+<area shape="rect" id="node20" href="$d4/dd8/ThreePointCorrelation__angular__connected_8h.html" title="The class ThreePointCorrelation_angular_connected. " alt="" coords="2018,169,2219,211"/>
+<area shape="rect" id="node22" href="$d5/db0/ThreePointCorrelation_8cpp.html" title="Methods of the class ThreePointCorrelation used to measure the three&#45;point correlation function..." alt="" coords="2295,370,2497,411"/>
+<area shape="rect" id="node25" href="$dd/de3/ThreePointCorrelation__comoving__connected_8h.html" title="The class ThreePointCorrelation_comoving_connected. " alt="" coords="2459,169,2661,211"/>
+<area shape="rect" id="node4" href="$d7/d70/3PCF__SphericalHarmonics_8cpp.html" title="Temporary function to compute the 3pcf following Slepian, Eisenstein 2015. " alt="" coords="5,266,192,307"/>
+<area shape="rect" id="node5" href="$d2/d22/Forecast_8cpp.html" title="Functions to generate mock 2PCF/3PCF signal and provide forecasts. " alt="" coords="216,273,384,300"/>
+<area shape="rect" id="node6" href="$d2/dae/GlobalFunc_2Func_8cpp_source.html" title="GlobalFunc/Func.cpp" alt="" coords="408,273,555,300"/>
+<area shape="rect" id="node7" href="$d3/d84/FuncCosmology_8cpp.html" title="Generic functions that use the class Cosmology. " alt="" coords="579,273,791,300"/>
+<area shape="rect" id="node8" href="$d1/d1f/Reconstruction_8cpp.html" title="Functions to compute displacement for the reconstructed density field of a collection of points..." alt="" coords="816,273,1021,300"/>
+<area shape="rect" id="node9" href="$db/d1c/SubSample_8cpp.html" title="Functions for dividing a catalogue in sub&#45;samples. " alt="" coords="1045,273,1229,300"/>
+<area shape="rect" id="node11" href="$dc/d7c/Modelling__ThreePointCorrelation__angular__connected_8h.html" title="The class Modelling_ThreePointCorrelation_angular_connected. " alt="" coords="1254,266,1466,307"/>
+<area shape="rect" id="node13" href="$d6/d4c/Modelling__ThreePointCorrelation_8cpp.html" title="Methods of the class Modelling_ThreePointCorrelation, used to model three&#45;point correlation functions..." alt="" coords="1357,474,1595,515"/>
+<area shape="rect" id="node16" href="$d5/d13/Modelling__ThreePointCorrelation__comoving__connected_8h.html" title="The class Modelling_ThreePointCorrelation_comoving_connected. " alt="" coords="1564,266,1791,307"/>
+<area shape="rect" id="node12" href="$d5/d0a/Modelling__ThreePointCorrelation__angular__reduced_8h.html" title="The class Modelling_ThreePointCorrelation_angular_reduced. " alt="" coords="977,370,1177,411"/>
+<area shape="rect" id="node15" href="$d5/d33/Modelling__ThreePointCorrelation__angular__connected_8cpp.html" title="Methods of the class Modelling_ThreePointCorrelation_angular_connected. " alt="" coords="1253,363,1467,419"/>
+<area shape="rect" id="node14" href="$d9/d68/Modelling__ThreePointCorrelation__angular__reduced_8cpp.html" title="Methods of the class Modelling_ThreePointCorrelation_angular_reduced. " alt="" coords="970,467,1185,523"/>
+<area shape="rect" id="node17" href="$da/d6c/Modelling__ThreePointCorrelation__comoving__reduced_8h.html" title="The class Modelling_ThreePointCorrelation_comoving_reduced. " alt="" coords="1593,370,1805,411"/>
+<area shape="rect" id="node19" href="$df/d0c/Modelling__ThreePointCorrelation__comoving__connected_8cpp.html" title="Methods of the class Modelling_ThreePointCorrelation_comoving_connected. " alt="" coords="1829,363,2043,419"/>
+<area shape="rect" id="node18" href="$df/d6a/Modelling__ThreePointCorrelation__comoving__reduced_8cpp.html" title="Methods of the class Modelling_ThreePointCorrelation_comoving_reduced. " alt="" coords="1619,467,1834,523"/>
+<area shape="rect" id="node21" href="$dd/d97/ThreePointCorrelation__angular__reduced_8h.html" title="The class ThreePointCorrelation_angular_reduced. " alt="" coords="1879,266,2081,307"/>
+<area shape="rect" id="node24" href="$dc/d6e/ThreePointCorrelation__angular__connected_8cpp.html" title="Methods of the class ThreePointCorrelation_angular_connected used to measure the connected three&#45;poin..." alt="" coords="2156,259,2359,315"/>
+<area shape="rect" id="node23" href="$d3/da9/ThreePointCorrelation__angular__reduced_8cpp.html" title="Methods of the class ThreePointCorrelation_angular_reduced used to measure the reduced three&#45;point co..." alt="" coords="2068,363,2271,419"/>
+<area shape="rect" id="node26" href="$d8/d2b/ThreePointCorrelation__comoving__reduced_8h.html" title="The class ThreePointCorrelation_comoving_reduced. " alt="" coords="2485,266,2686,307"/>
+<area shape="rect" id="node28" href="$dd/dd3/ThreePointCorrelation__comoving__connected_8cpp.html" title="Methods of the class ThreePointCorrelation_comoving_connected used to measure the connected three&#45;poi..." alt="" coords="2710,259,2925,315"/>
+<area shape="rect" id="node27" href="$d7/d43/ThreePointCorrelation__comoving__reduced_8cpp.html" title="Methods of the class ThreePointCorrelation_comoving_reduced used to measure the monopole of the three..." alt="" coords="2522,363,2737,419"/>
+</map>
