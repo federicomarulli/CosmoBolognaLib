@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
+# to ensure compatibility in Python versions 2.x and 3.x
+from __future__ import print_function
+
 import sys
+import os
 
 # import CosmoBolognaLib functions #
 import CosmoBolognaLib as cbl                                 
@@ -13,16 +17,16 @@ import time
 # just remember that parameter files do have a purpose
 
 if (len(sys.argv) == 1):
-  print "Usage: /path/to/cleaVoidCatalogue.py /path/to/parameter_file.ini"
+  print("Usage: /path/to/cleaVoidCatalogue.py /path/to/parameter_file.ini")
   exit(-1)
 
 if (len(sys.argv) > 1):
   filename = sys.argv[1]
-  print " Loading parameters from", filename
+  print(" Loading parameters from", filename)
   param = cbl.ReadParameters(filename)
 
 else:
-  print " Using default parameters"
+  print(" Using default parameters")
 
   
 ##########################################################
@@ -84,8 +88,8 @@ if (param.findDouble('boxside') < 0.) :
   boxside = abs(vdcat.Max(cbl.Var__X_) - vdcat.Min(cbl.Var__X_))
 else :
   boxside = param.findDouble('boxside')
-vdcat.compute_catalogueProperties(param.findDouble('boxside'))
-
+vdcat.compute_catalogueProperties(boxside)
+      
 ##########################################################
 # load the input tracers catalogue
 
@@ -109,8 +113,7 @@ else :
     for ii in range(len(trAttrNames)) :
       if param.findBool(trAttrNames[ii]) :
         tr_cast.append(trAttrAv[ii])
-        tr_clmn.append(param.findInt(trAttrNames[ii]+'_clmn'))
-        
+        tr_clmn.append(param.findInt(trAttrNames[ii]+'_clmn'))        
     tr_clmn, tr_cast = (list(x) for x in zip(*sorted(zip(tr_clmn, tr_cast))))  # orders clmn and cast according to column order 
     tr_attr = cbl.VarCast(tr_cast)
     
@@ -127,36 +130,31 @@ else :
       
       trcat = temp
       temp = None
-      print "Finished reading input tracers catalogue."
+      print("Finished reading input tracers catalogue.")
       
     else :
       
-      print "Finished reading input tracers catalogue, now sorting and applying mass scale factor and/or cut-off ... "
+      print("Finished reading input tracers catalogue, now applying mass scale factor and/or cut-off ... ")
 
       # scale factor
-      for ii in range(temp.nObjects()) :
-        mass = temp.mass(ii)*param.findDouble('Munit')
-        temp.set_var(ii, cbl.Var__Mass_, mass)
-
-      # sorting
-      temp.sort(cbl.Var__Mass_, False)
+      if (param.findDouble('Munit') > 0.) :
+        for ii in range(temp.nObjects()) :
+          mass = temp.mass(ii)*param.findDouble('Munit')
+          temp.set_var(ii, cbl.Var__Mass_, mass)
 
       # mass cut-off
       if (param.findDouble('Mmin') > 0.) :
         trcat = cbl.Catalogue ()
-        ii = 0
-        while (temp.mass(ii) > param.findDouble('Mmin')) :
-          trcat.add_object(temp.catalogue_object(ii))
-          ii = ii + 1
+        trcat = temp.sub_catalogue(cbl.Var__Mass_, param.findDouble('Mmin'), temp.Max(cbl.Var__Mass_), False)
       else :
         trcat = temp
-      
-      temp = None
-      print "\t ... done!"
+        temp = None
+
+      print("\t ... done!")
 
   # observed coordinates
   else :
-    print "Observed coordinates not supported yet..."
+    print("Observed coordinates not supported yet...")
     exit(1)
 
 trcat.compute_catalogueProperties(param.findDouble('boxside'))
@@ -195,8 +193,11 @@ if not param.findBool('densityContrast') :
 # overlap-check criterion choice:
 ol_crit = cbl.Var__DensityContrast_ if param.findInt('ol_crit') == 1 else cbl.Var__CentralDensity_
 
+# choose the (positive) value of the threshold
+threshold = 1. + param.findDouble('deltav_NL')
+
 # build the catalogue:
-print '\n'
+print('\n')
 tw0 = time.time()
 tc0 = time.clock()
 vdcat_cleaned = cbl.Catalogue (vdcat,
@@ -204,7 +205,7 @@ vdcat_cleaned = cbl.Catalogue (vdcat,
                                 param.findBool('clean2'),
                                 param.findBool('clean3')],
                                param.findVectorDouble('delta_r'),
-                               param.findDouble('threshold'),
+                               threshold,
                                param.findDouble('relevance'),
                                param.findBool('rescale'),
                                trcat,
@@ -212,14 +213,18 @@ vdcat_cleaned = cbl.Catalogue (vdcat,
                                param.findDouble('ratio'),
                                param.findBool('overlap'),
                                ol_crit)
-print 'Cleaning the catalogue took: ', time.clock()-tc0, ' sec'
-print 'Wall time: ', time.time()-tw0, ' sec'
-print '\n'
+print('Cleaning the catalogue took: ', time.clock()-tc0, ' sec')
+print('Wall time: ', time.time()-tw0, ' sec')
+print('\n')
 
 # write the obtained catalogue in a file
 
 clmnsToPrint = cbl.VarCast(attrAv)
-vdcat_cleaned.write_data(param.findString('outputFile'),
+
+if not os.path.exists(param.findString('outputDir')):
+    os.makedirs(param.findString('outputDir'))
+
+vdcat_cleaned.write_data(param.findString('outputDir')+param.findString('VoidCatalogueFile'),
                          clmnsToPrint)
 
 #############################################################################################################

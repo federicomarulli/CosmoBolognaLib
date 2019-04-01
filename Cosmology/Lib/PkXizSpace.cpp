@@ -64,7 +64,7 @@ std::vector<double> cbl::cosmology::Cosmology::xi0_Kaiser (const std::vector<dou
   const vector<double> kk = logarithmic_bin_vector(step, k_min, k_max);
   const vector<double> Pk = this->Pk(kk, method_Pk, NL, redshift, output_dir, output_root, norm, k_min, k_max, prec, file_par);
 
-  vector<double> xi = fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
+  vector<double> xi = wrapper::fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
 
   const double fact = bias*bias*xi_ratio(linear_growth_rate(redshift, 1.), bias);
 
@@ -130,8 +130,8 @@ double cbl::cosmology::Cosmology::xi_star (const double rr, const double redshif
 
   function<double(double)> ff = bind(&classfunc::func_xistar::operator(), func, std::placeholders::_1);
 
-  double Int1 = gsl::GSL_integrate_qag(ff, 0., 1.e2, 1.e-3);
-  double Int2 = gsl::GSL_integrate_qag(ff, 1.e2, 1.e3, 1.e-3);
+  double Int1 = wrapper::gsl::GSL_integrate_qag(ff, 0., 1.e2, 1.e-3);
+  double Int2 = wrapper::gsl::GSL_integrate_qag(ff, 1.e2, 1.e3, 1.e-3);
 
   double Int = (rr<1) ? Int1+Int2 : Int1; // check!!!
 

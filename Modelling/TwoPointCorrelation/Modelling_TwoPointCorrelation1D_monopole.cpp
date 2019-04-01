@@ -61,7 +61,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
 
     m_data_model->kk = kk;
     m_data_model->func_Pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, Pk, "Spline"));
-    xi0 = fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
+    xi0 = wrapper::fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
   }
 
   else {
@@ -77,7 +77,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
     m_data_model->func_Pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, Pk, "Spline"));
     m_data_model->func_Pk_NW = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, PkNW, "Spline"));
 
-    xi0 = fftlog::transform_FFTlog(rad, 1, kk, PkDW);
+    xi0 = wrapper::fftlog::transform_FFTlog(rad, 1, kk, PkDW);
   }
 
   m_data_model->func_xi = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, xi0, "Spline"));

@@ -56,38 +56,57 @@ namespace cbl {
        *
        *  This class is used to handle objects of type <EM>
        *  TwoPointCorrelation_wedges </EM>. It is used to measure the
-       *  wedges \f$\xi_\perp, \xi_\parallel\f$ as \f$\xi_{\Delta\mu} =
-       *  \frac{1}{2} \int_{\mu_0}^{\mu_1} \xi(s,\mu)d\mu\f$ with
-       *  \f$\mu_0=0\f$ and \f$\mu_1=0.5\f$ for \f$\xi_\perp\f$ and
-       *  \f$\mu_0=0.5\f$ and \f$\mu_1=1\f$ for \f$\xi_\parallel\f$
+       *  wedges of the two-point correlation function,
+       *  \f$\xi_{\Delta\mu} = \frac{1}{2} \int_{\mu_0}^{\mu_1}
+       *  \xi(s,\mu)d\mu\f$. The default case is the one with two
+       *  wedges, perpendicular - \f$\xi_\perp\f$ and parallel -
+       *  \f$\xi_\parallel\f$, where \f$\mu_0=0\f$ and \f$\mu_1=0.5\f$
+       *  for \f$\xi_\perp\f$, and \f$\mu_0=0.5\f$ and \f$\mu_1=1\f$
+       *  for \f$\xi_\parallel\f$. In the most general case, we have
+       *  \f$N\f$ wedges \f$\xi_{w,i}\f$, with \f$\mu_0 = (i-1)/N\f$
+       *  and \f$\mu_1=i/N\f$, for \f$1\le i \le N\f$.
        */
       class TwoPointCorrelation_wedges : public TwoPointCorrelation2D_polar {
 
       protected:
 
+	/// number of wedges to be measured
+	int m_nWedges;
+	
 	/**
-	 *  @brief measure the wedges of the two-point correlation
-	 *  function
+	 *  @brief pointer to the data containing the wedges of the
+	 *  two-point correlation function
 	 *  
-	 *  @param rr absolute separation 
+	 *  @param rr input vector contaning the absolute separations
+	 *  of the 2D two-point correlation function in polar
+	 *  coordinates used to compute the wedges; these absolute
+	 *  separations are also the separations at which the wedges
+	 *  will be measured
 	 *
-	 *  @param mu angular separation
+	 *  @param mu input vector contaning the angular separations
+	 *  of the 2D two-point correlation function in polar
+	 *  coordinates used to compute the wedges
 	 *
-	 *  @param xi 2d cartesian 2pcf
+	 *  @param xi input matrix contaning the values of the 2D
+	 *  two-point correlation function in polar coordinates used
+	 *  to compute the wedges
 	 *
-	 *  @param error_xi error on the 2d polar 2pcf
+	 *  @param error_xi input matrix contaning the values of the
+	 *  errors of the 2D two-point correlation function in polar
+	 *  coordinates used to compute the wedges
 	 *
 	 *  @return pointer to an object of type Data
 	 */
 	std::shared_ptr<data::Data> Wedges (const std::vector<double> rr, const std::vector<double> mu, const std::vector<std::vector<double> > xi, const std::vector<std::vector<double> > error_xi) override;
 
 	/**
-	 *  @brief return a data object with extra info
+	 *  @brief pointer to the data object containing the values of
+	 *  the wedges with the extra info retrieved from the 2D
+	 *  two-point correlation function in polar coordinates
 	 *  
-	 *  @param rad vector containing the binned separations
+	 *  @param rad vector containing the absolute separations
 	 *
-	 *  @param wedges vector containing the binned wedges of the
-	 *  correlation function
+	 *  @param wedges vector containing the values of the wedges
 	 *
 	 *  @param error vector containing the errors
 	 *
@@ -274,77 +293,145 @@ namespace cbl {
 	 *  @brief default constructor
 	 *  @return object of class TwoPointCorrelation_wedges
 	 */
-	TwoPointCorrelation_wedges () { m_twoPType = TwoPType::_1D_wedges_; }
-
+	TwoPointCorrelation_wedges () { m_twoPType = TwoPType::_wedges_; }
+	
 	/**
-	 *  @brief constructor
+	 *  @brief constructor, using the number of bins
+	 *
+	 *  this constructor is used to used to measure the wedges of
+	 *  the two-point correlation function, \f$\xi_{\Delta\mu} =
+	 *  \frac{1}{2} \int_{\mu_0}^{\mu_1} \xi(s,\mu)d\mu\f$. The
+	 *  default case is the one with two wedges, perpendicular -
+	 *  \f$\xi_\perp\f$ and parallel - \f$\xi_\parallel\f$, where
+	 *  \f$\mu_0=0\f$ and \f$\mu_1=0.5\f$ for \f$\xi_\perp\f$, and
+	 *  \f$\mu_0=0.5\f$ and \f$\mu_1=1\f$ for
+	 *  \f$\xi_\parallel\f$. In the most general case, we have
+	 *  \f$N\f$ wedges \f$\xi_{w,i}\f$, with \f$\mu_0 = (i-1)/N\f$
+	 *  and \f$\mu_1=i/N\f$, for \f$1\le i \le N\f$.
+	 *
 	 *  @param data object of class Catalogue containing the input
 	 *  catalogue
+	 *
 	 *  @param random of class Catalogue containing the random data
 	 *  catalogue
+	 *
 	 *  @param binType_rad binning type in absolute separations
-	 *  @param rMin minimum absolute separation used to count
-	 *  the pairs
-	 *  @param rMax maximum absolute separation used to count
-	 *  the pairs
+	 *
+	 *  @param rMin minimum absolute separation used to count the
+	 *  pairs
+	 *
+	 *  @param rMax maximum absolute separation used to count the
+	 *  pairs
+	 *
 	 *  @param nbins_rad number of bins in the absolute
 	 *  separation
+	 *
 	 *  @param shift_rad shift parameter in the absolute
 	 *  separation, i.e. the radial shift is binSize*shift
-	 *  @param muMin minimum angular used to count the pairs
-	 *  @param muMax maximum angular used to count the pairs
-	 *  @param nbins_mu number of bins in the angular
-	 *  separation
-	 *  @param shift_mu shift parameter in the angular
-	 *  separation, i.e. the radial shift is binSize*shift
+	 *
+	 *  @param nWedges number of wedges to be measured; the
+	 *  default is two wedges, \f$\xi_\perp\f$ and
+	 *  \f$\xi_\parallel\f$
+
+	 *  @param nbins_mu number of bins in the angular separation
+	 *  used to integrate
+	 *
+	 *  @param shift_mu shift parameter in the angular separation,
+	 *  i.e. the radial shift is binSize*shift
+	 *
 	 *  @param angularUnits angular units
+	 *
 	 *  @param angularWeight angular weight function
+	 *
 	 *  @param compute_extra_info true &rarr; compute extra
 	 *  information related to the pairs, such as the mean pair
 	 *  separation and redshift
-	 *  @param random_dilution_fraction fraction between the number
-	 *  of objects in the diluted and original random samples, used
-	 *  to improve performances in random-random pair counts
+	 *
+	 *  @param random_dilution_fraction fraction between the
+	 *  number of objects in the diluted and original random
+	 *  samples, used to improve performances in random-random
+	 *  pair counts
+	 *
 	 *  @return object of class TwoPointCorrelation_wedges
 	 */
-	TwoPointCorrelation_wedges (catalogue::Catalogue data, catalogue::Catalogue random, const BinType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
-	  : TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, nbins_rad, shift_rad, BinType::_linear_, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_wedges_; }
+	TwoPointCorrelation_wedges (catalogue::Catalogue data, catalogue::Catalogue random, const BinType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const int nWedges=2, const int nbins_mu=50, const double shift_mu=0.5, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	  : TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, nbins_rad, shift_rad, BinType::_linear_, 0., 1., nbins_mu, shift_mu, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
+	  {
+	    m_twoPType = TwoPType::_wedges_;
+	    
+	    if (nWedges<2)
+	      cbl::ErrorCBL("Error in TwoPointCorrelation_wedges() of TwoPointCorrelation_wedges.h: nWedges must be larger than2!");
+
+	    m_nWedges = nWedges;
+	  }
 
 	/**
-	 *  @brief constructor
+	 *  @brief constructor, using the bin size
+	 *
+	 *   this constructor is used to used to measure the wedges of
+	 *  the two-point correlation function, \f$\xi_{\Delta\mu} =
+	 *  \frac{1}{2} \int_{\mu_0}^{\mu_1} \xi(s,\mu)d\mu\f$. The
+	 *  default case is the one with two wedges, perpendicular -
+	 *  \f$\xi_\perp\f$ and parallel - \f$\xi_\parallel\f$, where
+	 *  \f$\mu_0=0\f$ and \f$\mu_1=0.5\f$ for \f$\xi_\perp\f$, and
+	 *  \f$\mu_0=0.5\f$ and \f$\mu_1=1\f$ for
+	 *  \f$\xi_\parallel\f$. In the most general case, we have
+	 *  \f$N\f$ wedges \f$\xi_{w,i}\f$, with \f$\mu_0 = (i-1)/N\f$
+	 *  and \f$\mu_1=i/N\f$, for \f$1\le i \le N\f$.
+	 *
 	 *  @param data object of class Catalogue containing the input
 	 *  catalogue
-	 *  @param random of class Catalogue containing the random data
-	 *  catalogue
+	 *
+	 *  @param random of class Catalogue containing the random
+	 *  data catalogue
+	 *
 	 *  @param binType_rad binning type in absolute separations
-	 *  @param rMin minimum absolute separation used to count
-	 *  the pairs
-	 *  @param rMax maximum absolute separation used to count
-	 *  the pairs
+	 *
+	 *  @param rMin minimum absolute separation used to count the
+	 *  pairs
+	 *
+	 *  @param rMax maximum absolute separation used to count the
+	 *  pairs
+	 *
 	 *  @param binSize_rad bin size in the absolute separation
+	 *
 	 *  @param shift_rad shift parameter in the absolute
 	 *  separation, i.e. the radial shift is binSize*shift
-	 *  @param muMin minimum angular separation used to count
-	 *  the pairs
-	 *  @param muMax maximum angular separation used to count
-	 *  the pairs
+	 *
+	 *  @param nWedges number of wedges to be measured; the
+	 *  default is two wedges, \f$\xi_\perp\f$ and
+	 *  \f$\xi_\parallel\f$
+	 *
 	 *  @param binSize_mu bin size in the angular separation
-	 *  @param shift_mu shift parameter in the angular
-	 *  separation, i.e. the radial shift is binSize*shift
+	 *
+	 *  @param shift_mu shift parameter in the angular separation,
+	 *  i.e. the radial shift is binSize*shift
+	 *
 	 *  @param angularUnits angular units
+	 *
 	 *  @param angularWeight angular weight function
+	 *
 	 *  @param compute_extra_info true &rarr; compute extra
 	 *  information related to the pairs, such as the mean pair
 	 *  separation and redshift
-	 *  @param random_dilution_fraction fraction between the number
-	 *  of objects in the diluted and original random samples, used
-	 *  to improve performances in random-random pair counts
+	 *
+	 *  @param random_dilution_fraction fraction between the
+	 *  number of objects in the diluted and original random
+	 *  samples, used to improve performances in random-random
+	 *  pair counts
+	 *
 	 *  @return object of class TwoPointCorrelation_wedges
 	 */
-	TwoPointCorrelation_wedges (catalogue::Catalogue data, catalogue::Catalogue random, const BinType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
-	  : TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, binSize_rad, shift_rad, BinType::_linear_, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_wedges_; }
+	TwoPointCorrelation_wedges (catalogue::Catalogue data, catalogue::Catalogue random, const BinType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const int nWedges=2, const double binSize_mu=1., const double shift_mu=0.5, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
+	  : TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, binSize_rad, shift_rad, BinType::_linear_, 0., 1., binSize_mu, shift_mu, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
+	  {
+	    m_twoPType = TwoPType::_wedges_;
+
+	    if (nWedges<2)
+	      cbl::ErrorCBL("Error in TwoPointCorrelation_wedges() of TwoPointCorrelation_wedges.h: nWedges must be larger than2!");
+	    
+	    m_nWedges = nWedges;
+	  }
 
 	/**
 	 *  @brief default destructor
@@ -440,7 +527,8 @@ namespace cbl {
 	 *  number of pairs
 	 *
 	 *  @param dir_input_pairs vector of input directories used to
-	 *  store the number of pairs (if the pairs are read from files)
+	 *  store the number of pairs (if the pairs are read from
+	 *  files)
 	 *
 	 *  @param dir_output_resample output directory of the
 	 *  resampling correlation functions; if an empty string
@@ -449,20 +537,22 @@ namespace cbl {
 	 *  @param nMocks number of resampling used for bootstrap
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
-	 *  pairs; false &rarr; read the number of data-random pairs from
-	 *  file
-	 *
-	 *  @param count_rr true &rarr; count the number of random-random
-	 *  pairs; false &rarr; read the number of random-random pairs
-	 *
-	 *  @param count_dr true &rarr; count the number of data-random
 	 *  pairs; false &rarr; read the number of data-random pairs
+	 *  from file
+	 *
+	 *  @param count_rr true &rarr; count the number of
+	 *  random-random pairs; false &rarr; read the number of
+	 *  random-random pairs
+	 *
+	 *  @param count_dr true &rarr; count the number of
+	 *  data-random pairs; false &rarr; read the number of
+	 *  data-random pairs
 	 *
 	 *  @param tcount true &rarr; activate the time counter; false
 	 *  &rarr; no time counter
 	 *
-	 *  @param estimator the estimator used to measure the two-point
-	 *  correlation function
+	 *  @param estimator the estimator used to measure the
+	 *  two-point correlation function
 	 *
 	 *  @param seed the seed for random number generation
 	 *

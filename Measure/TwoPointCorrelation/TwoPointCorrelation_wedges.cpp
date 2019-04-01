@@ -193,23 +193,36 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::write (const std::string d
   vector<double> xiw = m_dataset->data();
   vector<double> error = m_dataset->error();
 
-  checkDim(rad, m_dd->nbins_D1()*2, "rad");
+  checkDim(rad, m_dd->nbins_D1()*m_nWedges, "rad");
   
   string file_out = dir+file;
   ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
-  string header = "[1] separation at the bin centre # [2] perpendicular wedge # [3] error on the perpendicular wedge # [4] parallel wedge # [5] error on the parallel wedge";
+  string header = "[1] separation at the bin centre"; 
+  if (m_nWedges==2)
+    header += " # [2] perpendicular wedge # [3] error on the perpendicular wedge # [4] parallel wedge # [5] error on the parallel wedge";
+  else {
+    int index = 2;
+    for (int j=0; j<m_nWedges; ++j) {
+      header += " # ["+conv(index, par::fINT)+"] wedge "+conv(j+1, par::fINT)+" # ["+conv(index+1, par::fINT)+"] error on the wedge "+conv(j+1, par::fINT)+" ";
+      index ++;
+    }
+  }
+
   if (m_compute_extra_info)
     header += " # [6] mean separation # [7] standard deviation of the separation distribution # [8] mean redshift # [9] standard deviation of the redshift distribution";
   
   fout << "### " << header << " ###" <<endl;
 
-  for (int i=0; i<m_dd->nbins_D1(); i++) {
-    fout << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << rad[i]
-	 << "  " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right  << xiw[i]
-	 << "  " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right  << error[i]
-	 << "  " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right  << xiw[i+m_dd->nbins_D1()]
-	 << "  " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right  << error[i+m_dd->nbins_D1()];
+  for (int i=0; i<m_dd->nbins_D1(); ++i) {
+    fout << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << rad[i];
+
+    int fact = 0;
+    for (int j=0; j<m_nWedges; ++j) {
+      fout << "  " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right  << xiw[i+fact]
+	   << "  " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right  << error[i+fact];
+      fact += m_dd->nbins_D1();
+    }
     if (m_compute_extra_info)
       for (size_t ex=0; ex<m_dataset->extra_info().size(); ++ex)
 	fout << "  " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right  << m_dataset->extra_info(ex, i);
@@ -225,27 +238,34 @@ void cbl::measure::twopt::TwoPointCorrelation_wedges::write (const std::string d
 
 std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_wedges::Wedges (const std::vector<double> rr, const std::vector<double> mu, const std::vector<std::vector<double> > xi, const std::vector<std::vector<double> > error_xi)
 {
-  double binSize = mu[1]-mu[0];
-  int muSize = mu.size();
-
-  int half = max(0, min(int(0.5/binSize), muSize));
-  half = (mu[half]<0.5) ? half+1 : half;
+  const double binSize = mu[1]-mu[0];
   
-  vector<double> rad(2*rr.size(),0), wedges(2*rr.size(),0), error(2*rr.size(),0);
+  vector<double> rad(m_nWedges*rr.size(), 0), wedges(m_nWedges*rr.size(), 0), error(m_nWedges*rr.size(), 0);
+  
+  for (size_t i=0; i<rr.size(); i++) { // loop on the comoving scale
+    double fact = 0;
 
-  for (size_t i=0; i<rr.size(); i++) {
-    rad[i] = rr[i];
-    rad[i+rr.size()] = rr[i];
+    const double lim = 1./m_nWedges/binSize;   
+    
+    int j_min = 0;
+    int j_max = min(nint(lim), int(mu.size()));
+    
+    for (int wd=0; wd<m_nWedges; ++wd) { // loop on the number of wedges
+      rad[i+fact] = rr[i]; // set the comoving scale for each wedge
 
-    for (int j=0; j<half; j++) {
-      wedges[i] += 2.*xi[i][j]*binSize;   	                        // xi_perp
-      if (wedges[i]>-1.) error[i] += 2.*pow(error_xi[i][j]*binSize, 2); // error[xi_perp]
+      for (int j=j_min; j<j_max; j++) { // integral loop
+
+	wedges[i+fact] += 2.*xi[i][j]*binSize; // wd_th wedge
+
+	if (wedges[i+fact]>-1.) error[i+fact] += 2.*pow(error_xi[i][j]*binSize, 2); // error of the wd_th wedge
+
+      }
+
+      j_min = j_max;
+      j_max = min(j_max+min(nint(lim), int(mu.size())), int(mu.size()));
+
+      fact += rr.size();
     }
-
-    for (size_t j=half; j<mu.size(); j++) {
-      wedges[i+rr.size()] += 2.*xi[i][j]*binSize;                                           // xi_par
-      if (wedges[i+rr.size()]>-1.) error[i+rr.size()] += 2.*pow(error_xi[i][j]*binSize, 2); // error[xi_par]
-    }  
   }
 
   for_each( error.begin(), error.end(), [] (double &vv) { vv = sqrt(vv);} );
@@ -257,7 +277,7 @@ std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_wedges::Wed
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_wedges::measure(const ErrorType errorType, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation_wedges::measure (const ErrorType errorType, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   switch (errorType) {
     case (ErrorType::_Poisson_) :

@@ -82,7 +82,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range 
 {
   vector<vector<double>> fr(m_nwedges, vector<double>(2, -1.));
 
-  int mp = (nwedges > 0 && nwedges < m_nwedges) ? nwedges : m_nwedges;
+  int mp = (nwedges>0 && nwedges<m_nwedges) ? nwedges : m_nwedges;
 
   for (int i=0; i<mp; i++) {
     fr[i][0] = xmin;
@@ -98,8 +98,8 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range 
 
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range (const std::vector<std::vector<double>> fit_range)
 {
-  if ((int)fit_range.size() != m_nwedges)
-    ErrorCBL("Error in set_fit_range of :Modelling_TwoPointCorrelation_wedges.cpp, wrong number of wedges provided!");
+  if ((int)fit_range.size()!=m_nwedges)
+    ErrorCBL("Error in cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range() of Modelling_TwoPointCorrelation_wedges.cpp: wrong number of wedges provided, "+conv(fit_range.size(), cbl::par::fINT)+" instead of "+conv(m_nwedges, cbl::par::fINT)+"!");
 
   m_wedges_order.erase(m_wedges_order.begin(), m_wedges_order.end());
 
@@ -110,10 +110,10 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range 
 
   for (int j=0; j<m_nwedges; j++) {
     for (int i=0; i<size; i++) {
-      if (m_data->xx(i+j*size) < fit_range[j][1] && m_data->xx(i+j*size) > fit_range[j][0]) {
+      if (fit_range[j][0]<m_data->xx(i+j*size) && m_data->xx(i+j*size)<fit_range[j][1]) {
 	m_wedges_order.push_back(j);
 	xx.push_back(m_data->xx(i+j*size));
-	use_w[j]=1;
+	use_w[j] = 1;
 	mask[i+j*size] = true;
       }
     }
@@ -126,9 +126,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range 
   m_data_fit = make_shared<cbl::data::Data1D>(cbl::data::Data1D(xx, data, covariance));
   m_fit_range = true; 
 
-  m_nwedges_fit=0;
-  for (size_t i =0; i<use_w.size(); i++)
+  m_nwedges_fit = 0;
+  for (size_t i=0; i<use_w.size(); i++)
     m_nwedges_fit += use_w[i];
+
+  m_nwedges_fit = 2;
 }
 
 
@@ -144,26 +146,26 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
   vector<double> Pk(m_data_model->step, 0);
 
   for (size_t i=0; i<(size_t)m_data_model->step; i++) 
-    Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+    Pk[i] = m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
 
   m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
 
   if (m_data_model->Pk_mu_model=="dispersion_dewiggled") {    
-    vector<double> PkNW(m_data_model->step,0);
+    vector<double> PkNW(m_data_model->step, 0);
     for (size_t i=0; i<(size_t)m_data_model->step; i++) 
-      PkNW[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+      PkNW[i] = m_data_model->cosmology->Pk(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
     
     m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
   }
   
   else if (m_data_model->Pk_mu_model=="dispersion_modecoupling") {
     vector<double> kk_1loop, Pk_1loop;
-    for (size_t i=0; i<(size_t)m_data_model->step; i++) {
-      if(m_data_model->kk[i] < par::pi) {
+    for (size_t i=0; i<(size_t)m_data_model->step; i++) 
+      if (m_data_model->kk[i] < par::pi) {
 	kk_1loop.push_back(m_data_model->kk[i]);
-	Pk_1loop.push_back(m_data_model->cosmology->Pk_1loop(m_data_model->kk[i], m_data_model->func_Pk, 0,  m_data_model->k_min, 5., m_data_model->prec)); 
+	Pk_1loop.push_back(m_data_model->cosmology->Pk_1loop(m_data_model->kk[i], m_data_model->func_Pk, 0, m_data_model->k_min, 5., m_data_model->prec)); 
       }
-    }
+    
     m_data_model->func_Pk1loop = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(kk_1loop, Pk_1loop, "Spline"));
   }
 
@@ -176,7 +178,6 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
 
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_xiDM ()
 {
-
   m_data_model->nmultipoles = 3;
   m_data_model->nwedges = 2;
 
@@ -230,11 +231,15 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_full
 {
   m_data_model->Pk_mu_model = "dispersion_dewiggled";
 
-  // compute the fiducial dark matter two-point correlation function
+  // compute the fiducial dark matter power spectrum terms used to construct the model
   if (compute_PkDM) set_fiducial_PkDM();
-
+  
+  // number of wedges to be used
   m_data_model->nwedges = m_nwedges_fit;
+  
+  // scales to be used for each wedges
   m_data_model->dataset_order = m_wedges_order;
+  
   m_data_model->nmultipoles = 3;
 
   // set the model parameters
@@ -258,7 +263,6 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_full
 
   // construct the model
   m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
-
 }
 
 
@@ -269,11 +273,15 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_full
 {
   m_data_model->Pk_mu_model = "dispersion_modecoupling";
 
-  // compute the fiducial dark matter two-point correlation function
+  // compute the fiducial dark matter power spectrum terms used to construct the model
   if (compute_PkDM) set_fiducial_PkDM();
-
+  
+  // number of wedges to be used
   m_data_model->nwedges = m_nwedges_fit;
+
+  // scales to be used for each wedges
   m_data_model->dataset_order = m_wedges_order;
+  
   m_data_model->nmultipoles = 3;
 
   // set the model parameters

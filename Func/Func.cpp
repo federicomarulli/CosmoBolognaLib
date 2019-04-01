@@ -1762,12 +1762,8 @@ double cbl::legendre_polynomial_integral (double mu, void *params)
 
 double cbl::Legendre_polynomial_mu_average (const int ll, const double mu, const double delta_mu)
 {
-  gsl_function Func;
-  Func.function = &cbl::legendre_polynomial_integral;
-  int lll = ll;
-  Func.params = &lll;
-
-  return gsl::GSL_integrate_qag(Func, mu, mu+delta_mu, 1.e-3, 1000, 6)/delta_mu;
+  auto integrand = [&] (const double mu) { return cbl::legendre_polynomial(mu, ll); };
+  return wrapper::gsl::GSL_integrate_qag(integrand, mu, mu+delta_mu, 1.e-3, 1.e-6, 1000, 6);
 }
 
 
@@ -1778,18 +1774,22 @@ double cbl::Legendre_polynomial_mu_average (const double mu_min, const double mu
 {
   auto integrand = [&] (const double mu) { return cbl::legendre_polynomial(mu, ll); };
 
-  return gsl::GSL_integrate_qag(integrand, mu_min, mu_max, 1.e-3, 1.e-6, 1000, 6);
+  //double integral = (ll>0) ? legendre_polynomial(mu_max, ll+1)-legendre_polynomial(mu_max, ll-1)+
+  //  		    legendre_polynomial(mu_min, ll-1)-legendre_polynomial(mu_min, ll+1) : mu_max-mu_min;
+  //return integral/(2*ll+1);
+
+  return wrapper::gsl::GSL_integrate_qag(integrand, mu_min, mu_max, 1.e-3, 1.e-6, 1000, 6);
 }
 
 
 // ============================================================================
-
+   
 
 double cbl::Legendre_polynomial_theta_average (const double theta_min, const double theta_max, const int ll)
 {
   auto integrand = [&] (const double theta) { return sin(theta)*cbl::legendre_polynomial(cos(theta), ll); };
 
-  return gsl::GSL_integrate_qag(integrand, theta_min, theta_max, 1.e-3, 1.e-6, 1000, 6);
+  return wrapper::gsl::GSL_integrate_qag(integrand, theta_min, theta_max, 1.e-3, 1.e-6, 1000, 6);
 }
 
 
@@ -1804,18 +1804,18 @@ double cbl::Legendre_polynomial_triangles_average (const double r12_min, const d
 
       double mu_min = max(min( (r12*r12+r13*r13-r23_max*r23_max)/(2*r12*r13), 1.), -1.);
       double mu_max = min(max( (r12*r12+r13*r13-r23_min*r23_min)/(2*r12*r13), -1.), 1.);
-       
+
       auto mu_integrand = [&] (const double mu) {
 	return cbl::legendre_polynomial(mu, ll);
       };
 
-      return ((mu_min == mu_max) ? 0 : cbl::gsl::GSL_integrate_cquad(mu_integrand, mu_min, mu_max, rel_err, abs_err, nevals));
+      return ((mu_min == mu_max) ? 0 : cbl::wrapper::gsl::GSL_integrate_cquad(mu_integrand, mu_min, mu_max, rel_err, abs_err, nevals));
     };
 
-    return cbl::gsl::GSL_integrate_cquad(r13_integrand, r13_min, r13_max, rel_err, abs_err, nevals);
+    return cbl::wrapper::gsl::GSL_integrate_cquad(r13_integrand, r13_min, r13_max, rel_err, abs_err, nevals);
   };
 
-  return cbl::gsl::GSL_integrate_cquad(r12_integrand, r12_min, r12_max, rel_err, abs_err, nevals)/((r12_max-r12_min)*(r13_max-r13_min));
+  return cbl::wrapper::gsl::GSL_integrate_cquad(r12_integrand, r12_min, r12_max, rel_err, abs_err, nevals)/((r12_max-r12_min)*(r13_max-r13_min));
 }
 
 
@@ -1989,7 +1989,7 @@ double cbl::jl_distance_average (const double kk, const int order, const double 
   double prec=1.e-2;
   int limit_size = 1000;
 
-  double Int = cbl::gsl::GSL_integrate_qag(Func, r_down, r_up, prec, limit_size, 6);
+  double Int = cbl::wrapper::gsl::GSL_integrate_qag(Func, r_down, r_up, prec, limit_size, 6);
 
   return Int/volume;
 }

@@ -61,7 +61,7 @@ void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPTy
   if (!m_random->isSetVar(Var::_RA_) || !m_random->isSetVar(Var::_Dec_) || !m_random->isSetVar(Var::_Dc_)) 
     m_random->computePolarCoordinates();
   
-  if (type==TwoPType::_1D_angular_) {
+  if (type==TwoPType::_angular_) {
     m_data->normalizeComovingCoordinates();
     m_data2->normalizeComovingCoordinates();
     m_random->normalizeComovingCoordinates();
@@ -82,19 +82,19 @@ void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPTy
 
   double rMAX;
 
-  if (type==TwoPType::_1D_monopole_ || type==TwoPType::_1D_filtered_ || type==TwoPType::_multipoles_direct_)
+  if (type==TwoPType::_monopole_ || type==TwoPType::_filtered_ || type==TwoPType::_multipoles_direct_)
     rMAX = m_d1d2->sMax();
 
-  else if (type==TwoPType::_1D_angular_) {
+  else if (type==TwoPType::_angular_) {
     double xx, yy, zz;
     cartesian_coord(radians(m_d1d2->sMax(), m_d1d2->angularUnits()), radians(m_d1d2->sMax(), m_d1d2->angularUnits()), 1., xx, yy, zz);
     rMAX = max(xx, zz);
   }
 
-  else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_1D_wedges_) 
+  else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_wedges_) 
     rMAX = m_d1d2->sMax_D1();
   
-  else if (type==TwoPType::_2D_Cartesian_ || type==TwoPType::_1D_projected_ || type==TwoPType::_1D_deprojected_)
+  else if (type==TwoPType::_2D_Cartesian_ || type==TwoPType::_projected_ || type==TwoPType::_deprojected_)
     rMAX = max(m_d1d2->sMax_D1(), m_d1d2->sMax_D2())*sqrt(2.);
 
   else
@@ -167,7 +167,7 @@ void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPTy
   if (count_rr || count_d1r || count_d2r)
     m_random->Order();
 
-  if (type==TwoPType::_1D_angular_) {
+  if (type==TwoPType::_angular_) {
     m_data->restoreComovingCoordinates();
     m_data2->restoreComovingCoordinates();
     m_random->restoreComovingCoordinates();

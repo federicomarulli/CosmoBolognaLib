@@ -399,7 +399,7 @@ vector<double> cbl::cosmology::Cosmology::bias_eff_selection_function (const glo
 	return SF*MF;
       };
 
-    Bias_eff[i] = gsl::GSL_integrate_qag(integrand_num, Mass_min, Mass_max)/gsl::GSL_integrate_qag(integrand_denom, Mass_min, Mass_max);
+    Bias_eff[i] = wrapper::gsl::GSL_integrate_qag(integrand_num, Mass_min, Mass_max)/wrapper::gsl::GSL_integrate_qag(integrand_denom, Mass_min, Mass_max);
   }
 
 
@@ -446,7 +446,7 @@ vector<double> cbl::cosmology::Cosmology::bias_eff_selection_function (const glo
 	return SF*MF;
       };
 
-    Bias_eff[i] = gsl::GSL_integrate_qag(integrand_num, Mass_min, Mass_max)/gsl::GSL_integrate_qag(integrand_denom, Mass_min, Mass_max);
+    Bias_eff[i] = wrapper::gsl::GSL_integrate_qag(integrand_num, Mass_min, Mass_max)/wrapper::gsl::GSL_integrate_qag(integrand_denom, Mass_min, Mass_max);
   }
 
 

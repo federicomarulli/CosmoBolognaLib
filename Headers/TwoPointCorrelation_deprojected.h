@@ -257,7 +257,7 @@ namespace cbl {
 	 *  @brief default constructor
 	 *  @return object of class TwoPointCorrelation_deprojected
 	 */
-	TwoPointCorrelation_deprojected () { m_twoPType = TwoPType::_1D_deprojected_; }
+	TwoPointCorrelation_deprojected () { m_twoPType = TwoPType::_deprojected_; }
 
 	/**
 	 *  @brief constructor
@@ -294,7 +294,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation_deprojected (catalogue::Catalogue data, catalogue::Catalogue random, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const double piMax_integral, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation_projected(data, random, BinType::_logarithmic_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, piMax_integral, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_deprojected_; }
+	  { m_twoPType = TwoPType::_deprojected_; }
       
 	/**
 	 *  @brief constructor
@@ -329,7 +329,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation_deprojected (catalogue::Catalogue data, catalogue::Catalogue random, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const double piMax_integral, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation_projected(data, random, BinType::_logarithmic_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, piMax_integral, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_deprojected_; }
+	  { m_twoPType = TwoPType::_deprojected_; }
       
 	/**
 	 *  @brief default destructor

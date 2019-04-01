@@ -57,7 +57,7 @@ int main () {
   
     // measure the monopole of the two-point correlation function and estimate Poissonian errors
 
-    auto TwoP = cbl::measure::twopt::TwoPointCorrelation::Create(cbl::measure::twopt::TwoPType::_1D_monopole_, catalogue, random_catalogue, cbl::BinType::_linear_, rMin, rMax, nbins, shift);
+    auto TwoP = cbl::measure::twopt::TwoPointCorrelation::Create(cbl::measure::twopt::TwoPType::_monopole_, catalogue, random_catalogue, cbl::BinType::_linear_, rMin, rMax, nbins, shift);
 
     TwoP->measure(cbl::measure::ErrorType::_Poisson_, dir);
     TwoP->write(dir, file);

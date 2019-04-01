@@ -677,6 +677,15 @@ namespace cbl {
 	/// the spherical harmonics expansion coefficients in separation bins
 	std::vector<std::vector<std::complex<double>>> m_alm;
 
+	/// the normalization
+	std::vector<double> m_normalization;
+
+	/// vector for temporary computation of associated legendre polynomials
+ 	std::vector<double> m_Plm;
+  	
+	/// vector for temporary computation of spherical harmonics
+	std::vector<std::complex<double>> m_sph;
+
       public:
 	/**
 	 *  @name Constructors/destructors
@@ -871,6 +880,34 @@ namespace cbl {
     void count_triplets_SphericalHarmonics (std::vector<double> &pairs, std::vector<std::vector<std::vector<double>>> &triplets, const double rmin, const double rmax, const int nbins, const int norders, const catalogue::Catalogue catalogue);
 
     /**
+     * @brief compute the triples using
+     * Slepian, Eisenstein 2015 approach
+     *
+     * @param NN the pairs in the separation bins
+     *
+     * @param NNN the multipoles expansion of the triplets
+     * for the separation bins
+     *
+     * @param RR the random pairs in the separation bins
+     *
+     * @param RRR the multipoles expansion of the random triplets
+     * for the separation bins
+     *
+     * @param rmin the minimum separation
+     *
+     * @param rmax the maximum separation
+     * 
+     * @param nbins the number of separation bins 
+     * 
+     * @param norders the number of multipoles, \f$ l_{max}+1 \f$
+     * 
+     * @param catalogue the catalogue
+     *
+     * @return none
+     */
+    void count_triplets_SphericalHarmonics (std::vector<double> &NN, std::vector<std::vector<std::vector<double>>> &NNN, std::vector<double> &RR, std::vector<std::vector<std::vector<double>>> &RRR, const double rmin, const double rmax, const int nbins, const int norders, const catalogue::Catalogue catalogue);
+
+    /**
      * @brief compute the reconstructed triplets from
      * the multipoles expansion obtained from
      * Slepian, Eisenstein 2015 approach in 
@@ -895,6 +932,34 @@ namespace cbl {
      * @return none
      */
     void count_triplets_SphericalHarmonics (const double rmin, const double rmax, const int nbins, const int norders, const catalogue::Catalogue catalogue, const std::string output_dir, const std::string output_file_pairs, const std::string output_file_triplets);
+
+    /**
+     * @brief compute the reconstructed triplets from
+     * the multipoles expansion obtained from
+     * Slepian, Eisenstein 2015 approach in 
+     * cbl::count_triplets_SphericalHarmonics
+     *
+     * @param rmin the minimum separation
+     *
+     * @param rmax the maximum separation
+     * 
+     * @param nbins the number of separation bins 
+     * 
+     * @param norders the number of multipoles, \f$ l_{max}+1 \f$
+     * 
+     * @param catalogue the catalogue
+     *
+     * @param random_catalogue the random catalogue
+     *
+     * @param output_dir the output directory
+     *
+     * @param output_file_pairs the file to store pairs
+     *
+     * @param output_file_triplets the file to store triplets
+     *
+     * @return none
+     */
+    void count_triplets_SphericalHarmonics (const double rmin, const double rmax, const int nbins, const int norders, const catalogue::Catalogue catalogue, const catalogue::Catalogue random_catalogue, const std::string output_dir, const std::string output_file_pairs, const std::string output_file_triplets);
 
     /**
      * @brief compute the reconstructed triplets from

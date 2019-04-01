@@ -187,7 +187,7 @@ namespace cbl {
 	 *  @brief default constructor
 	 *  @return object of class TwoPointCorrelation1D_angular
 	 */
-	TwoPointCorrelation1D_angular () { m_twoPType = TwoPType::_1D_angular_; }
+	TwoPointCorrelation1D_angular () { m_twoPType = TwoPType::_angular_; }
 
 	/**
 	 *  @brief constructor
@@ -215,7 +215,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation1D_angular (const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelation1D(data, random, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_angular_; set_parameters(binType, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight, compute_extra_info); }
+	  { m_twoPType = TwoPType::_angular_; set_parameters(binType, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight, compute_extra_info); }
 
 	/**
 	 *  @brief constructor
@@ -243,7 +243,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation1D_angular (const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelation1D(data, random, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_angular_; set_parameters(binType, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight, compute_extra_info); }
+	  { m_twoPType = TwoPType::_angular_; set_parameters(binType, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight, compute_extra_info); }
 
 	/**
 	 *  @brief default destructor

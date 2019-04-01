@@ -125,6 +125,22 @@ namespace cbl {
 	void reset () override;
 
 	/**
+	 * @brief return the model parameter status
+	 * 
+	 * @param p the index of the parameter
+	 *
+	 * @return the parameter status
+	 */
+	std::string status (const int p) const;
+
+	/**
+	 * @brief return all the model parameter status
+	 * 
+	 * @return vector containing all the parameter statuss
+	 */
+	std::vector<std::string> status () const;
+
+	/**
 	 *  @name Member functions used to set private/protected of the ModelParameters
 	 */
 	///@{

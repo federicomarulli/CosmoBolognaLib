@@ -1,7 +1,8 @@
+# import python modules
 import numpy as np
 import matplotlib.pyplot as plt
 
-# import the CosmoBolognaLib #
+# import the CosmoBolognaLib 
 import CosmoBolognaLib as cbl 
 from CosmoBolognaLib import DoubleVector as dv
 

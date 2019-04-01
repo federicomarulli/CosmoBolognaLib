@@ -280,6 +280,17 @@ namespace cbl {
       void set_function (const LogLikelihood_function loglikelihood_function);
 
       /**
+       *  @brief write best-fit results on a file
+       *
+       *  @param dir_output output directory
+       *
+       *  @param file output file
+       *
+       *  @return none
+       */
+      void write_results (const std::string dir_output, const std::string file); 
+
+      /**
        *  @brief function that maximize the likelihood, find the
        *  best-fit parameters and store them in model
        *

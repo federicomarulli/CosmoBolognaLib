@@ -64,13 +64,13 @@ namespace cbl {
       enum class TwoPType { 
 
 	/// the angle-averaged two-point correlation function, i.e. the monopole, &xi;(r)
-	_1D_monopole_,
+	_monopole_,
 
 	/// the projected two-point correlation function, w(r<SUB>p</SUB>)
-	_1D_projected_,
+	_projected_,
     
 	/// the deprojected two-point correlation function, &xi;(r)
-	_1D_deprojected_,
+	_deprojected_,
     
 	/// the multipoles of the two-point correlation function, &xi;<SUB>i</SUB>(r), computed with the integrated estimator
 	_multipoles_integrated_,
@@ -79,13 +79,13 @@ namespace cbl {
 	_multipoles_direct_,
 
 	/// the wedges of the two-point correlation function, &xi;<SUB>i</SUB>(r)
-	_1D_wedges_,
+	_wedges_,
       
 	/// filtered two-point correlation function
-	_1D_filtered_,
+	_filtered_,
 
 	/// angular two-point correlation function
-	_1D_angular_,
+	_angular_,
     
 	/// 2D two-point correlation function in Cartesian coordinates, &xi;(r<SUB>p</SUB>,&pi;)
 	_2D_Cartesian_,
@@ -101,7 +101,7 @@ namespace cbl {
        * @return a vector containing the
        * TwoPType names
        */
-      inline std::vector<std::string> TwoPTypeNames () {return {"1D_monopole", "1D_projected", "1D_deprojected", "multipoles_integrated", "multipoles_direct", "1D_wedges", "1D_filtered", "1D_angular", "2D_Cartesian", "2D_polar"}; }
+      inline std::vector<std::string> TwoPTypeNames () {return {"monopole", "projected", "deprojected", "multipoles_integrated", "multipoles_direct", "wedges", "filtered", "angular", "2D_Cartesian", "2D_polar"}; }
 
       /**
        * @brief cast an enum of type TwoPType
@@ -469,8 +469,8 @@ namespace cbl {
 	 *  correlation function
 	 *
 	 *  @param type the type of two-point correlation function; it
-	 *  can be: \_1D_monopole\_, \_1D_projected\_,
-	 *  \_1D_deprojected\_, \_1D_multipoles\_, \_1D_angular\_,
+	 *  can be: \_monopole\_, \_projected\_,
+	 *  \_deprojected\_, \_multipoles\_, \_angular\_,
 	 *  \_2D_Cartesian\_, \_2D_polar\_
 	 *
 	 *  @param dir_output_pairs output directory used to store the
@@ -513,8 +513,8 @@ namespace cbl {
 	 *  @param dr_regions data-random pairs in the sub-regions
 	 *
 	 *  @param type the type of two-point correlation function; it
-	 *  can be: \_1D_monopole\_, \_1D_projected\_,
-	 *  \_1D_deprojected\_, \_1D_multipoles\_, \_1D_angular\_,
+	 *  can be: \_monopole\_, \_projected\_,
+	 *  \_deprojected\_, \_multipoles\_, \_angular\_,
 	 *  \_2D_Cartesian\_, \_2D_polar\_
 	 *
 	 *  @param dir_output_pairs output directory used to store the
@@ -551,8 +551,8 @@ namespace cbl {
 	 *  correlation function
 	 *
 	 *  @param type the type of two-point correlation function; it
-	 *  can be: \_1D_monopole\_, \_1D_projected\_,
-	 *  \_1D_deprojected\_, \_1D_multipoles\_, \_1D_angular\_,
+	 *  can be: \_monopole\_, \_projected\_,
+	 *  \_deprojected\_, \_multipoles\_, \_angular\_,
 	 *  \_2D_Cartesian\_, \_2D_polar\_
 	 *
 	 *  @param weight region weights
@@ -1023,7 +1023,7 @@ namespace cbl {
 	 *  correlation functions of any type
 	 *
 	 *  @param type the type of two-point correlation function; it
-	 *  can be: \_1D_monopole\_, \_1D_angular\_
+	 *  can be: \_monopole\_, \_angular\_
 	 *
 	 *  @param data object of class Catalogue containing the input
 	 *  catalogue
@@ -1065,7 +1065,7 @@ namespace cbl {
 	 *  correlation functions of any type
 	 *
 	 *  @param type the type of two-point correlation function; it
-	 *  can be: \_1D_monopole\_, \_1D_angular\_
+	 *  can be: \_monopole\_, \_angular\_
 	 *
 	 *  @param data object of class Catalogue containing the input
 	 *  catalogue
@@ -1221,8 +1221,7 @@ namespace cbl {
 	 *  correlation functions of any type
 	 *
 	 *  @param type the type of two-point correlation function; it
-	 *  can be: _multipoles_integrated_, _1D_wedges_,
-	 *  _1D_filtered_
+	 *  can be: _multipoles_integrated_, _filtered_
 	 *
 	 *  @param data object of class Catalogue containing the input
 	 *  catalogue
@@ -1276,8 +1275,7 @@ namespace cbl {
 	 *  correlation functions of any type
 	 *
 	 *  @param type the type of two-point correlation function; it
-	 *  can be: _multipoles_integrated_, _1D_wedges_,
-	 *  _1D_filtered_
+	 *  can be: _multipoles_integrated_, _filtered_
 	 *
 	 *  @param data object of class Catalogue containing the input
 	 *  catalogue
@@ -1331,7 +1329,7 @@ namespace cbl {
 	 *  correlation functions of any type
 	 *
 	 *  @param type the type of two-point correlation function; it
-	 *  can be: \_1D_projected\_, \_1D_deprojected\_
+	 *  can be: \_projected\_, \_deprojected\_
 	 *
 	 *  @param data object of class Catalogue containing the input
 	 *  catalogue
@@ -1387,7 +1385,7 @@ namespace cbl {
 	 *  correlation functions of any type
 	 *
 	 *  @param type the type of two-point correlation function; it
-	 *  can be: \_1D_projected\_, \_1D_deprojected\_
+	 *  can be: \_projected\_, \_deprojected\_
 	 *
 	 *  @param data object of class Catalogue containing the input
 	 *  catalogue
@@ -1437,7 +1435,111 @@ namespace cbl {
 	 *  TwoPointCorrelation of a given type
 	 */
 	static std::shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const double piMax_integral, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
-	
+
+	/**
+	 *  @brief static factory used to construct two-point
+	 *  correlation functions of any type
+	 *
+	 *  @param type the type of two-point correlation function; it
+	 *  can be: _wedges_
+	 *
+	 *  @param data object of class Catalogue containing the input
+	 *  catalogue
+	 *
+	 *  @param random of class Catalogue containing the random data
+	 *  catalogue
+	 *
+	 *  @param binType_D1 binning type in the first dimension: 0
+	 *  &rarr; linear; 1 &rarr; logarithmic
+	 *
+	 *  @param Min_D1 minimum separation in the first dimensionused
+	 *  to count the pairs
+	 *
+	 *  @param Max_D1 maximum separation in the first dimension used
+	 *  to count the pairs
+	 *
+	 *  @param nbins_D1 number of bins in the first dimension
+	 *
+	 *  @param shift_D1 shift parameter in the first dimension,
+	 *  i.e. the radial shift is binSize*shift
+	 *
+	 *  @param nWedges number of wedges to be measured; the
+	 *  default is two wedges, \f$\xi_\perp\f$ and
+	 *  \f$\xi_\parallel\f$
+	 *
+	 *  @param nbins_D2 number of bins in the second dimension
+	 *
+	 *  @param shift_D2 shift parameter in the second dimension,
+	 *  i.e. the radial shift is binSize*shift
+	 *
+	 *  @param angularUnits angular units
+	 *  @param angularWeight angular weight function
+	 *
+	 *  @param compute_extra_info true &rarr; compute extra
+	 *  information related to the pairs, such as the mean pair
+	 *  separation and redshift
+	 *
+	 *  @param random_dilution_fraction fraction between the number
+	 *  of objects in the diluted and original random samples, used
+	 *  to improve performances in random-random pair counts
+	 *
+	 *  @return a pointer to an object of class
+	 *  TwoPointCorrelation of a given type
+	 */
+	static std::shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const int nWedges, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
+
+	/**
+	 *  @brief static factory used to construct two-point
+	 *  correlation functions of any type
+	 *
+	 *  @param type the type of two-point correlation function; it
+	 *  can be: _wedges_,
+	 *
+	 *  @param data object of class Catalogue containing the input
+	 *  catalogue
+	 *
+	 *  @param random of class Catalogue containing the random data
+	 *  catalogue
+	 *
+	 *  @param binType_D1 binning type in the first dimension: 0
+	 *  &rarr; linear; 1 &rarr; logarithmic
+	 *
+	 *  @param Min_D1 minimum separation in the first dimension used
+	 *  to count the pairs
+	 *
+	 *  @param Max_D1 maximum separation in the first dimension used
+	 *  to count the pairs
+	 *
+	 *  @param binSize_D1 the bin size in the first dimension
+	 *
+	 *  @param shift_D1 shift parameter in the first dimension,
+	 *  i.e. the radial shift is binSize*shift
+	 *
+	 *  @param binSize_D2 the bin size in the second dimension
+	 *
+	 *  @param nWedges number of wedges to be measured; the
+	 *  default is two wedges, \f$\xi_\perp\f$ and
+	 *  \f$\xi_\parallel\f$
+	 *
+	 *  @param shift_D2 shift parameter in the second dimension,
+	 *  i.e. the radial shift is binSize*shift
+	 *
+	 *  @param angularUnits angular units
+	 *  @param angularWeight angular weight function
+	 *
+	 *  @param compute_extra_info true &rarr; compute extra
+	 *  information related to the pairs, such as the mean pair
+	 *  separation and redshift
+	 *
+	 *  @param random_dilution_fraction fraction between the number
+	 *  of objects in the diluted and original random samples, used
+	 *  to improve performances in random-random pair counts
+	 *
+	 *  @return a pointer to an object of class
+	 *  TwoPointCorrelation of a given type
+	 */
+	static std::shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const int nWedges, const double binSize_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
+
 	///@}
 
     

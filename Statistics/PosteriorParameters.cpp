@@ -42,6 +42,58 @@ using namespace statistics;
 // ============================================================================================
 
 
+string cbl::statistics::PosteriorParameters::status (const int p) const
+{
+  string stat;
+
+  switch (m_parameter_type[p]) {
+    case statistics::ParameterType::_Base_:
+      if (m_parameter_prior[p]->distributionType()==cbl::glob::DistributionType::_Constant_) 
+	stat = "FIXED";
+      else 
+	stat = "FREE";
+      break;
+
+    case statistics::ParameterType::_Derived_:
+      stat = "OUTPUT";
+      break;
+
+    default:
+      ErrorCBL("Error in cbl::statistics::PosteriorParameters::status() of PosteriorParameters.cpp: no such kind of parameter!");
+  }
+
+  return stat;
+}
+
+
+// ============================================================================================
+
+
+vector<string> cbl::statistics::PosteriorParameters::status () const
+{
+  vector<string> stat;
+  for (size_t i=0; i<m_nparameters; i++) {
+    switch (m_parameter_type[i]) {
+      case statistics::ParameterType::_Base_:
+	if (m_parameter_prior[i]->distributionType()==cbl::glob::DistributionType::_Constant_) 
+	  stat.push_back("FIXED");
+	else 
+	  stat.push_back("FREE");
+	break;
+
+      case statistics::ParameterType::_Derived_:
+	stat.push_back("OUTPUT");
+	break;
+
+      default:
+	ErrorCBL("Error in cbl::statistics::PosteriorParameters::status() of PosteriorParameters.cpp: no such kind of parameter!");
+    }
+  }
+  return stat;
+}
+// ============================================================================================
+
+
 std::vector<double> cbl::statistics::PosteriorParameters::full_parameters (const std::vector<double> parameter_values) const
 {
   if (parameter_values.size() == m_nparameters_free) {

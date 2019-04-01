@@ -1,5 +1,6 @@
 C = g++
 F = gfortran
+PY = python
 
 SWIG = swig
 Doxygen = doxygen
@@ -28,7 +29,7 @@ FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H)
 FLAGS_FFTW = -lfftw3 #-lfftw3_omp
 FLAGS_GSL = -lgsl -lgslcblas -lm -L$(HOME)/lib
-FLAGS_CCFITS = -Wl,-rpath,$(dir_CCfits)/lib -L$(dir_CCfits)/lib -lCCfits
+FLAGS_CCFITS = -Wl,-rpath,$(dir_CCfits)lib -L$(dir_CCfits)lib -lCCfits
 FLAGS_FFTLOG = -fPIC -w
 FLAGS_Recfast = -Wall -O3 -fPIC -D RECFASTPPPATH=\"$(PWD)/External/Recfast/\"
 
@@ -40,7 +41,25 @@ CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits && 
 
 FLAGS_LINK = -shared
 
-PFLAGS = -I/usr/include/python2.7 
+# Python-related flags
+python_version_full := $(wordlist 2,4,$(subst ., ,$(shell $(PY) --version 2>&1)))
+python_version_major := $(word 1,${python_version_full})
+python_version_minor := $(word 2,${python_version_full})
+
+PYVERSION = $(python_version_major).$(python_version_minor)
+
+ifeq ($(python_version_major),2)
+PYINC = $(shell $(PY) -c 'from distutils import sysconfig; print sysconfig.get_config_var("INCLUDEDIR")')
+PYLIB = $(shell $(PY) -c 'from distutils import sysconfig; print sysconfig.get_config_var("LIBDIR")')    
+SWIG_FLAG = -python -c++
+endif
+ifeq ($(python_version_major),3)
+PYINC = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("INCLUDEDIR"))')
+PYLIB = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("LIBDIR"))')    
+SWIG_FLAG = -python -c++ -py3
+endif
+
+PFLAGS = -I$(PYINC)/python$(PYVERSION)
 
 ES = so
 
@@ -54,7 +73,7 @@ ifeq ($(SYS),Darwin)
 	FLAGS_FFTW = -lfftw3 
 	FLAGS_LINK = -dynamiclib -undefined suppress -flat_namespace
         ES = dylib
-	FLAGS_PY = -L$(shell python -c 'from distutils import sysconfig; print sysconfig.get_config_var("LIBDIR")') -lpython2.7 -ldl	
+	FLAGS_PY = -L$(PYLIB) -lpython$(PYVERSION) -ldl	
 endif
 
 FLAGST = $(FLAGS0) $(FLAGS)

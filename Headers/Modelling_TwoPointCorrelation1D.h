@@ -339,7 +339,7 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_data_HOD (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string model_MF="Tinker", const std::string model_bias="Tinker", const double Mh_min=0., const double Mh_max=1.e16, const double pi_max=100., const double r_max_int=100., const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const int step=200, const std::string method_Pk="CAMB", const bool NL=true, const std::string output_root="test", const double Delta=200., const double kk=0., const std::string interpType="Linear", const int norm=-1, const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const std::string model_cM="Duffy", const std::string profile="NFW", const std::string halo_def="vir");
+	void set_data_HOD (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string model_MF="Tinker", const std::string model_bias="Tinker", const double Mh_min=0., const double Mh_max=1.e16, const double pi_max=100., const double r_max_int=100., const double r_min=1.e-3, const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=200, const std::string method_Pk="CAMB", const bool NL=true, const std::string output_root="test", const double Delta=200., const double kk=0., const std::string interpType="Linear", const int norm=-1, const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const std::string model_cM="Duffy", const std::string profile="NFW", const std::string halo_def="vir");
 	
 	/**
 	 *  @brief set the data used to construct the model for

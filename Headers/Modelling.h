@@ -153,6 +153,18 @@ namespace cbl {
          * @brief return the likelihood parameters
          * @return pointer to the likelihood parameters
          */    
+        std::shared_ptr<statistics::Likelihood> likelihood ();
+
+        /**
+         * @brief return the posterior parameters
+         * @return pointer to the posterior parameters
+         */    
+        std::shared_ptr<statistics::Posterior> posterior ();
+
+        /**
+         * @brief return the likelihood parameters
+         * @return pointer to the likelihood parameters
+         */    
         std::shared_ptr<statistics::ModelParameters> likelihood_parameters ();
 
         /**

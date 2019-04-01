@@ -63,6 +63,31 @@ void cbl::modelling::Modelling::m_set_posterior (const int seed)
     ErrorCBL("Error in m_set_posterior() of Modelling.cpp: either the likelihood is not defined or a wrong number of prior distributions has been provided!");
 }
 
+// ============================================================================================
+
+
+shared_ptr<statistics::Likelihood> cbl::modelling::Modelling::likelihood ()
+{
+  if (m_likelihood!=NULL)
+    return m_likelihood;
+  else
+    ErrorCBL("Error in cbl::modelling::Modelling::likelihood() of Modelling.cpp: the likelihood is not defined!");
+  return NULL;
+}
+
+
+// ============================================================================================
+
+
+shared_ptr<cbl::statistics::Posterior> cbl::modelling::Modelling::posterior ()
+{
+  if (m_posterior!=NULL)
+    return move(m_posterior);
+  else
+    ErrorCBL("Error in cbl::modelling::Modelling::posterior() of Modelling.cpp: the likelihood is not defined!");
+  return NULL;
+}
+
 
 // ============================================================================================
 

@@ -179,7 +179,7 @@ double cbl::cosmology::Cosmology::Mass_Delta (const double Mass, const double De
     };
   
   // R_[Delta_out]/R_[Delta_in]
-  const double Rratio = cbl::gsl::GSL_minimize_1D(func, 1., max(1.e-3, rRmin_guess), rRmax_guess);
+  const double Rratio = wrapper::gsl::GSL_minimize_1D(func, 1., max(1.e-3, rRmin_guess), rRmax_guess);
 
   // M_[Delta_out]
   return Delta_out/Delta_in/pow(Rratio, 3)*Mass;

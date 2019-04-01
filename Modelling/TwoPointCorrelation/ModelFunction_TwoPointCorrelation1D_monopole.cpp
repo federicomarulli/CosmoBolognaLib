@@ -73,7 +73,7 @@ std::vector<double> cbl::modelling::twopt::xi0_BAO_sigmaNL (const std::vector<do
     Pk[i] = PkNW[i]*(1.+(Pklin[i]/PkNW[i]-1.)*exp(-0.5*pow(pp->kk[i]*sigmaNL, 2)));
   }
 
-  vector<double> xi = fftlog::transform_FFTlog(new_rad, 1, pp->kk, Pk, 0);
+  vector<double> xi = wrapper::fftlog::transform_FFTlog(new_rad, 1, pp->kk, Pk, 0);
   
   // return the monopole of the two-point correlation function
 
@@ -141,7 +141,7 @@ std::vector<double> cbl::modelling::twopt::xi0_polynomial_LinearPoint (const std
     poly_params[i] = parameter[i+3];
 
   for (size_t i=0; i<model.size(); i++)
-    model[i] = gsl::GSL_polynomial_eval(rad[i], NULL, poly_params);
+    model[i] = wrapper::gsl::GSL_polynomial_eval(rad[i], NULL, poly_params);
 
   vector<double> deriv_coeff(pp->poly_order-1, 0);
   vector<vector<double>> roots;
@@ -165,7 +165,7 @@ std::vector<double> cbl::modelling::twopt::xi0_polynomial_LinearPoint (const std
 
   bool end=false;
   while (!end) {
-    parameter[0] = gsl::GSL_root_brent(model_derivative, 0., xmin, xmax, 1.e-10);
+    parameter[0] = wrapper::gsl::GSL_root_brent(model_derivative, 0., xmin, xmax, 1.e-10);
     if (fabs(parameter[0]-xmin)<0.1)
       xmin -=2;
     else if (fabs(parameter[0]-xmax)<0.1)
@@ -184,7 +184,7 @@ std::vector<double> cbl::modelling::twopt::xi0_polynomial_LinearPoint (const std
     xmin = parameter[0]-22; xmax = parameter[0]-2;
     end = false;
     while (!end) {
-      parameter[1] = gsl::GSL_root_brent(model_derivative, 0., xmin, xmax, 1.e-10);
+      parameter[1] = wrapper::gsl::GSL_root_brent(model_derivative, 0., xmin, xmax, 1.e-10);
 
       if (fabs(parameter[1]-xmin)<0.1)
 	xmin -=2;
@@ -258,7 +258,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_LinearPoint (const std::ve
 
   bool end = false;
   while (!end) {
-    parameter[0] = gsl::GSL_root_brent(model_derivative, 0., xmin, xmax, 1.e-10);
+    parameter[0] = wrapper::gsl::GSL_root_brent(model_derivative, 0., xmin, xmax, 1.e-10);
     if (fabs(parameter[0]-xmin)<0.1)
       xmin -= 2;
     else if (fabs(parameter[0]-xmax)<0.1)
@@ -273,7 +273,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_LinearPoint (const std::ve
 
   parameter[1] = 0;
   if ((parameter[0]>xmin) && (parameter[0]<xmax)) {
-    parameter[1] = gsl::GSL_root_brent(model_derivative, 0., 40, parameter[0]-2, 1.e-10);
+    parameter[1] = wrapper::gsl::GSL_root_brent(model_derivative, 0., 40, parameter[0]-2, 1.e-10);
     if (parameter[0]-parameter[1]<2.1) {
       parameter[1] = 0;
       parameter[0] = 0;
@@ -708,7 +708,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters_selecti
       {
 	return pow(TopHat_WF(kk*RR)*kk, 2)*interp_Pk(kk); 
       };
-    sigma_grid.emplace_back(sqrt(1./(2.*pow(par::pi, 2))*gsl::GSL_integrate_qag(func_sigma, pp->k_min, pp->k_max, pp->prec)));
+    sigma_grid.emplace_back(sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(func_sigma, pp->k_min, pp->k_max, pp->prec)));
 
     // compute dlnsigma
     const double dRdM = pow(3./(4.*par::pi*rho), 1./3.)*pow(mass[i], -2./3.)/3.;
@@ -717,7 +717,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters_selecti
 	double filter = 2*TopHat_WF(kk*RR)*TopHat_WF_D1(kk*RR)*kk*dRdM;
 	return filter*pow(kk, 2)*interp_Pk(kk); 
       };
-    dnsigma_grid.emplace_back(1./(2.*pow(par::pi, 2))*gsl::GSL_integrate_qag(func_dnsigma, pp->k_min, pp->k_max, pp->prec));
+    dnsigma_grid.emplace_back(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(func_dnsigma, pp->k_min, pp->k_max, pp->prec));
 
   }
   
@@ -738,7 +738,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters_selecti
     new_rad[i] *= AP_factor;
   
   // compute the real-space monopole of the two-point correlation function at z=0, by Fourier transforming the P(k)
-  vector<double> xi = fftlog::transform_FFTlog(new_rad, 1, pp->kk, Pk_grid, 0);
+  vector<double> xi = wrapper::fftlog::transform_FFTlog(new_rad, 1, pp->kk, Pk_grid, 0);
 
   // compute the redshift-space monopole at z=pp->redshift
   const double fact = pow(bias, 2)*xi_ratio(cosmo.linear_growth_rate(pp->redshift, 1), bias)*pow(cosmo.DD(pp->redshift)/cosmo.DD(0), 2);
@@ -802,7 +802,7 @@ double cbl::modelling::twopt::ng_integrand (const double mass, const double Mmin
 
 double cbl::modelling::twopt::ng (const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha, const std::shared_ptr<void> inputs)
 {
-  return gsl::GSL_integrate_qag(bind(&modelling::twopt::ng_integrand, std::placeholders::_1, Mmin, sigmalgM, M0, M1, alpha, inputs), 1.e10, 1.e16);
+  return wrapper::gsl::GSL_integrate_qag(bind(&modelling::twopt::ng_integrand, std::placeholders::_1, Mmin, sigmalgM, M0, M1, alpha, inputs), 1.e10, 1.e16);
 }
 
 
@@ -829,7 +829,7 @@ double cbl::modelling::twopt::bias (const double Mmin, const double sigmalgM, co
       return dndM*NN*bias_halo;
     };
 
-  return 1./ng(Mmin, sigmalgM, M0, M1, alpha, inputs)*gsl::GSL_integrate_qag(func, pp->Mh_min, pp->Mh_max);
+  return 1./ng(Mmin, sigmalgM, M0, M1, alpha, inputs)*wrapper::gsl::GSL_integrate_qag(func, pp->Mh_min, pp->Mh_max);
 }
 
 
@@ -895,7 +895,7 @@ double cbl::modelling::twopt::Pk_cs (const double kk, const std::shared_ptr<void
   const double M1 = parameter[3];
   const double alpha = parameter[4];
   
-  return 2./pow(ng(Mmin, sigmalgM, M0, M1, alpha, inputs), 2)*gsl::GSL_integrate_qag(bind(&modelling::twopt::Pk_cs_numerator_integrand, std::placeholders::_1, kk, inputs, parameter), pp->Mh_min, pp->Mh_max);
+  return 2./pow(ng(Mmin, sigmalgM, M0, M1, alpha, inputs), 2)*wrapper::gsl::GSL_integrate_qag(bind(&modelling::twopt::Pk_cs_numerator_integrand, std::placeholders::_1, kk, inputs, parameter), pp->Mh_min, pp->Mh_max);
 }
 
 
@@ -943,7 +943,7 @@ double cbl::modelling::twopt::Pk_ss (const double kk, const std::shared_ptr<void
   const double M1 = parameter[3];
   const double alpha = parameter[4];
   
-  return 1./pow(ng(Mmin, sigmalgM, M0, M1, alpha, inputs), 2)*gsl::GSL_integrate_qag(bind(&modelling::twopt::Pk_ss_numerator_integrand, std::placeholders::_1, kk, inputs, parameter), pp->Mh_min, pp->Mh_max);
+  return 1./pow(ng(Mmin, sigmalgM, M0, M1, alpha, inputs), 2)*wrapper::gsl::GSL_integrate_qag(bind(&modelling::twopt::Pk_ss_numerator_integrand, std::placeholders::_1, kk, inputs, parameter), pp->Mh_min, pp->Mh_max);
 }
 
 
@@ -988,7 +988,7 @@ double cbl::modelling::twopt::Pk_2halo (const double kk, const std::shared_ptr<v
       return NN*dndM*bias*uk;
     };
   
-  return pp->func_Pk->operator()(kk)*pow(1./ng(Mmin, sigmalgM, M0, M1, alpha, inputs)*gsl::GSL_integrate_qag(func, pp->Mh_min, pp->Mh_max), 2);
+  return pp->func_Pk->operator()(kk)*pow(1./ng(Mmin, sigmalgM, M0, M1, alpha, inputs)*wrapper::gsl::GSL_integrate_qag(func, pp->Mh_min, pp->Mh_max), 2);
 
 }
 
@@ -1041,7 +1041,7 @@ std::vector<double> cbl::modelling::twopt::xi_1halo (const std::vector<double> r
 	};
       
       // wrapper to CUBA libraries
-      cuba::CUBAwrapper CW(func, 2);
+      wrapper::cuba::CUBAwrapper CW(func, 2);
       
       // integrate with Cuhre
       xi[i] *= CW.IntegrateCuhre(integration_limits);
@@ -1090,7 +1090,7 @@ std::shared_ptr<glob::FuncGrid> cbl::modelling::twopt::func_2halo (const std::ve
 	return NN*dndM*bias*uk;
       };
     
-    fact[i] = pow(gsl::GSL_integrate_qag(func, pp->Mh_min, pp->Mh_max), 2);
+    fact[i] = pow(wrapper::gsl::GSL_integrate_qag(func, pp->Mh_min, pp->Mh_max), 2);
   }
   
   return move(unique_ptr<glob::FuncGrid>(new glob::FuncGrid(kk, fact, "Spline")));
@@ -1126,7 +1126,7 @@ std::vector<double> cbl::modelling::twopt::xi_2halo (const std::vector<double> r
       
       auto integrand = [&] (double kk) { return pp->func_Pk->operator()(kk)*func->operator()(kk)*kk*sin(kk*rad[i])/rad[i]; };
 
-      xi[i] = 1./(2.*pow(par::pi*ng(Mmin, sigmalgM, M0, M1, alpha, inputs),2))*gsl::GSL_integrate_qag(integrand, 0., pp->k_max);
+      xi[i] = 1./(2.*pow(par::pi*ng(Mmin, sigmalgM, M0, M1, alpha, inputs),2))*wrapper::gsl::GSL_integrate_qag(integrand, 0., pp->k_max);
       
     }
 
@@ -1186,10 +1186,10 @@ double cbl::modelling::twopt::xi_zspace (FunctionVectorVectorPtrVectorRef func, 
   const double fact_xi4 = 8./35.*beta2*beta2;
 
   auto func3 = [&] (double yy) { return func({yy}, inputs, parameter)[0]*pow(yy, 2); };
-  const double J3 = pow(rad, -3)*gsl::GSL_integrate_qag(func3, 0., rad);
+  const double J3 = pow(rad, -3)*wrapper::gsl::GSL_integrate_qag(func3, 0., rad);
  
   auto func5 = [&] (double yy) { return func({yy}, inputs, parameter)[0]*pow(yy, 4); };
-  const double J5 = pow(rad, -5)*gsl::GSL_integrate_qag(func5, 0., rad);
+  const double J5 = pow(rad, -5)*wrapper::gsl::GSL_integrate_qag(func5, 0., rad);
   
   const double xi0 = fact_xi0*func({rad}, inputs, parameter)[0];
   const double xi2 = fact_xi2*(func({rad}, inputs, parameter)[0]-3.*J3);

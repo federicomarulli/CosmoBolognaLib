@@ -42,9 +42,9 @@ using namespace std;
 // ============================================================================
 
 
-int cbl::cuba::CUBAIntegrand (const int *ndim, const cubareal xx[], const int *ncomp, cubareal ff[], void *userdata)
+int cbl::wrapper::cuba::CUBAIntegrand (const int *ndim, const cubareal xx[], const int *ncomp, cubareal ff[], void *userdata)
 {
-  cbl::cuba::STR_CUBA_integrand *pp = static_cast<cbl::cuba::STR_CUBA_integrand *>(userdata);
+  cbl::wrapper::cuba::STR_CUBA_integrand *pp = static_cast<cbl::wrapper::cuba::STR_CUBA_integrand *>(userdata);
 
   vector<double> var;
   double fact = 1.;
@@ -62,7 +62,7 @@ int cbl::cuba::CUBAIntegrand (const int *ndim, const cubareal xx[], const int *n
 // ============================================================================
 
 
-cbl::cuba::CUBAwrapper::CUBAwrapper (FunctionDoubleVectorPtrVectorRef func, const std::shared_ptr<void> function_parameters, std::vector<double> &parameters, const int ndim)
+cbl::wrapper::cuba::CUBAwrapper::CUBAwrapper (FunctionDoubleVectorPtrVectorRef func, const std::shared_ptr<void> function_parameters, std::vector<double> &parameters, const int ndim)
 {
   set_integrand(func, function_parameters, parameters, ndim);
 }
@@ -71,7 +71,7 @@ cbl::cuba::CUBAwrapper::CUBAwrapper (FunctionDoubleVectorPtrVectorRef func, cons
 // ============================================================================
 
 
-cbl::cuba::CUBAwrapper::CUBAwrapper (FunctionDoubleVector func, const int ndim)
+cbl::wrapper::cuba::CUBAwrapper::CUBAwrapper (FunctionDoubleVector func, const int ndim)
 {
   set_integrand(func, ndim);
 }
@@ -80,7 +80,7 @@ cbl::cuba::CUBAwrapper::CUBAwrapper (FunctionDoubleVector func, const int ndim)
 // ============================================================================
 
 
-void cbl::cuba::CUBAwrapper::set_integrand (FunctionDoubleVectorPtrVectorRef func, const std::shared_ptr<void> function_parameters, std::vector<double> &parameters, const int ndim)
+void cbl::wrapper::cuba::CUBAwrapper::set_integrand (FunctionDoubleVectorPtrVectorRef func, const std::shared_ptr<void> function_parameters, std::vector<double> &parameters, const int ndim)
 {
   m_integrand = std::bind(func, std::placeholders::_1, function_parameters, parameters);
   m_ndim = ndim;
@@ -90,7 +90,7 @@ void cbl::cuba::CUBAwrapper::set_integrand (FunctionDoubleVectorPtrVectorRef fun
 // ============================================================================
 
 
-void cbl::cuba::CUBAwrapper::set_integrand (FunctionDoubleVector func, const int ndim)
+void cbl::wrapper::cuba::CUBAwrapper::set_integrand (FunctionDoubleVector func, const int ndim)
 {
   m_integrand = func;
   m_ndim = ndim;
@@ -100,16 +100,16 @@ void cbl::cuba::CUBAwrapper::set_integrand (FunctionDoubleVector func, const int
 // ============================================================================
 
 
-double cbl::cuba::CUBAwrapper::IntegrateVegas (vector<vector<double>> integration_limits)
+double cbl::wrapper::cuba::CUBAwrapper::IntegrateVegas (vector<vector<double>> integration_limits)
 {
   int comp, neval, fail;
   cubareal integral[NCOMP], error[NCOMP], prob[NCOMP];
 
-  cbl::cuba::STR_CUBA_integrand *userdata = new cbl::cuba::STR_CUBA_integrand;
+  cbl::wrapper::cuba::STR_CUBA_integrand *userdata = new cbl::wrapper::cuba::STR_CUBA_integrand;
   userdata->func = m_integrand;
   userdata->integration_limits = integration_limits;
 
-  Vegas(m_ndim, NCOMP, cbl::cuba::CUBAIntegrand, userdata, NVEC,
+  Vegas(m_ndim, NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, NVEC,
     EPSREL, EPSABS, VERBOSE, SEED,
     MINEVAL, MAXEVAL, NSTART, NINCREASE, NBATCH,
     GRIDNO, STATEFILE, SPIN,
@@ -128,15 +128,15 @@ double cbl::cuba::CUBAwrapper::IntegrateVegas (vector<vector<double>> integratio
 // ============================================================================
 
 
-double cbl::cuba::CUBAwrapper::IntegrateSuave (vector<vector<double>> integration_limits)
+double cbl::wrapper::cuba::CUBAwrapper::IntegrateSuave (vector<vector<double>> integration_limits)
 {
   int comp, neval, fail, nregions;
   cubareal integral[NCOMP], error[NCOMP], prob[NCOMP];
 
-  cbl::cuba::STR_CUBA_integrand *userdata = new cbl::cuba::STR_CUBA_integrand;
+  cbl::wrapper::cuba::STR_CUBA_integrand *userdata = new cbl::wrapper::cuba::STR_CUBA_integrand;
   userdata->func = m_integrand;
   userdata->integration_limits = integration_limits;
-  Suave(m_ndim, NCOMP, cbl::cuba::CUBAIntegrand, userdata, NVEC,
+  Suave(m_ndim, NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, NVEC,
     EPSREL, EPSABS, VERBOSE | LAST, SEED,
     MINEVAL, MAXEVAL, NNEW, NMIN, FLATNESS,
     STATEFILE, SPIN,
@@ -155,16 +155,16 @@ double cbl::cuba::CUBAwrapper::IntegrateSuave (vector<vector<double>> integratio
 // ============================================================================
 
 
-double cbl::cuba::CUBAwrapper::IntegrateDivonne (vector<vector<double>> integration_limits)
+double cbl::wrapper::cuba::CUBAwrapper::IntegrateDivonne (vector<vector<double>> integration_limits)
 {
   int comp, neval, fail, nregions;
   cubareal integral[NCOMP], error[NCOMP], prob[NCOMP];
 
-  cbl::cuba::STR_CUBA_integrand *userdata = new cbl::cuba::STR_CUBA_integrand;
+  cbl::wrapper::cuba::STR_CUBA_integrand *userdata = new cbl::wrapper::cuba::STR_CUBA_integrand;
   userdata->func = m_integrand;
   userdata->integration_limits = integration_limits;
 
-  Divonne(m_ndim, NCOMP, cbl::cuba::CUBAIntegrand, userdata, NVEC,
+  Divonne(m_ndim, NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, NVEC,
     EPSREL, EPSABS, VERBOSE, SEED,
     MINEVAL, MAXEVAL, KEY1, KEY2, KEY3, MAXPASS,
     BORDER, MAXCHISQ, MINDEVIATION,
@@ -185,16 +185,16 @@ double cbl::cuba::CUBAwrapper::IntegrateDivonne (vector<vector<double>> integrat
 // ============================================================================
 
 
-double cbl::cuba::CUBAwrapper::IntegrateCuhre (vector<vector<double>> integration_limits)
+double cbl::wrapper::cuba::CUBAwrapper::IntegrateCuhre (vector<vector<double>> integration_limits)
 {
   int comp, neval, fail, nregions;
   cubareal integral[NCOMP], error[NCOMP], prob[NCOMP];
 
-  cbl::cuba::STR_CUBA_integrand *userdata = new cbl::cuba::STR_CUBA_integrand;
+  cbl::wrapper::cuba::STR_CUBA_integrand *userdata = new cbl::wrapper::cuba::STR_CUBA_integrand;
   userdata->func = m_integrand;
   userdata->integration_limits = integration_limits;
 
-  Cuhre(m_ndim, NCOMP,  cbl::cuba::CUBAIntegrand, userdata, NVEC,
+  Cuhre(m_ndim, NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, NVEC,
     EPSREL, EPSABS, VERBOSE | LAST,
     MINEVAL, MAXEVAL, KEY,
     STATEFILE, SPIN,

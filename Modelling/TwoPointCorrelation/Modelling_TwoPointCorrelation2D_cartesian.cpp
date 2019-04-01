@@ -77,8 +77,8 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian::set_fiduc
   };
 
   for (size_t i=0; i<(size_t)m_data_model->step; i++) {
-    xiDM_[i] = 3.*gsl::GSL_integrate_qag(integrand_, 0., rad[i])*pow(rad[i], -3);
-    xiDM__[i] = 5.*gsl::GSL_integrate_qag(integrand__, 0., rad[i])*pow(rad[i], -5);
+    xiDM_[i] = 3.*wrapper::gsl::GSL_integrate_qag(integrand_, 0., rad[i])*pow(rad[i], -3);
+    xiDM__[i] = 5.*wrapper::gsl::GSL_integrate_qag(integrand__, 0., rad[i])*pow(rad[i], -5);
   }
 
   m_data_model->func_xi_ = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, xiDM_, "Spline"));

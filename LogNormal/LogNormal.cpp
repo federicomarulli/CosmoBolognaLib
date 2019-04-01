@@ -148,7 +148,7 @@ void cbl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, cons
     vector<double> PkG;
     vector<double> kG = linear_bin_vector(500, -4., 1.);
 
-    double ff = m_cosmology->linear_growth_rate(stat[0]);
+    double ff = m_cosmology->linear_growth_rate(stat[0], 0.);
     double beta = ff/m_bias;
     double fact = pow(m_bias,2);
     fact = (m_Real) ? fact : fact*(1+2.*beta/3.+0.2*beta*beta);

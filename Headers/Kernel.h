@@ -352,7 +352,7 @@
  * function
  */
 /**
- * @example cleaner.py
+ * @example cleanVoidCatalogue.py
  *
  *  This example shows how to clean a cosmic void catalogue, making
  *  use of a parameter file, in order to extract cosmological
@@ -365,17 +365,17 @@
  *  Monte Carlo outputs
  *
  *  To see the notebook, click here: <a
- *  href="https://github.com/federicomarulli/CosmoBolognaLib/blob/develop/Examples/statistics/codes/analyzeChains.ipynb">
+ *  href="https://github.com/federicomarulli/CosmoBolognaLib/blob/master/Examples/statistics/codes/analyzeChains.ipynb">
  *  notebook</a>
  */
 /**
- *  @example cleaner.ipynb 
+ *  @example CLeaning_Algorithm_for_Void_Abundances.ipynb
  *  
- *  This \b notebook explains how to clean cosmic void catalogues to
+ *  This \b notebook explains how to clean cosmic void catalogues and
  *  extract cosmological constraints from void statistics.
  *
  *  To see the notebook, click here: <a
- *  href="https://github.com/federicomarulli/CosmoBolognaLib/blob/develop/Examples/cosmicVoids/codes/cleaner.ipynb">
+ *  href="https://github.com/federicomarulli/CosmoBolognaLib/blob/master/Examples/cosmicVoids/codes/CLeaning_Algorithm_for_Void_Abundances.ipynb">
  *  notebook</a>
  */
 /**
@@ -793,7 +793,7 @@ namespace cbl {
   template <typename T>
     T closest (T x, T a, T b)
     { 
-      if (a>b) ErrorCBL("Error in closest() of Func.h: a>b");
+      if (a>b) ErrorCBL("Error in closest() of Kernel.h: a>b");
       else if (a==b) return a;
       else return (fabs(x-a) < fabs(x-b)) ? a : b;
       return 1;
@@ -1024,7 +1024,7 @@ namespace cbl {
     void Print (const std::vector<T> vect1, const std::vector<T> vect2, const int prec=4, const int ww=8) 
     {
       if (vect1.size()!=vect2.size())
-	ErrorCBL("Error in Print() of Func.h: the two input vectors must have the same dimenion to be printed!");
+	ErrorCBL("Error in Print() of Kernel.h: the two input vectors must have the same dimenion to be printed!");
 
       int bp = std::cout.precision();
       
@@ -1056,7 +1056,7 @@ namespace cbl {
   inline void Print (const std::vector<std::string> vect1, const std::vector<std::string> vect2) 
     {
       if (vect1.size()!=vect2.size())
-	ErrorCBL("Error in Print() of Func.h: the two input vectors must have the same dimenion to be printed!");
+	ErrorCBL("Error in Print() of Kernel.h: the two input vectors must have the same dimenion to be printed!");
       
       for (size_t i=0; i<vect1.size(); i++) 
 	coutCBL << vect1[i] << "   " << vect2[i] << std::endl;
@@ -1123,7 +1123,7 @@ namespace cbl {
   template <typename T> 
     T Min (const std::vector<T> vect) 
     {
-      if (vect.size()==0) ErrorCBL("Error in function Min of Func.h: vect.size=0!");
+      if (vect.size()==0) ErrorCBL("Error in function Min of Kernel.h: vect.size=0!");
       return *min_element(vect.begin(), vect.end());
     }
 
@@ -1135,7 +1135,7 @@ namespace cbl {
   template <typename T> 
     T Max (const std::vector<T> vect) 
     {
-      if (vect.size()==0) ErrorCBL("Error in function Max of Func.h: vect.size=0!");
+      if (vect.size()==0) ErrorCBL("Error in function Max of Kernel.h: vect.size=0!");
       return *max_element(vect.begin(), vect.end());
     }
 
@@ -1199,7 +1199,7 @@ namespace cbl {
     void Erase (std::vector<T> &vv, std::vector<int> ind) 
     {
       for (auto &&i : ind) 
-	if (i>=int(vv.size())) ErrorCBL("Error in Erase of Func.h!");
+	if (i>=int(vv.size())) ErrorCBL("Error in Erase of Kernel.h!");
 
       unique_unsorted(ind);
       int tt = 0;
@@ -1218,7 +1218,7 @@ namespace cbl {
     void Erase_lines (std::vector<std::vector<T> > &Mat, std::vector<int> ll) 
     {
       for (auto &&i : ll)
-	if (i>=int(Mat.size())) ErrorCBL("Error in Erase_lines of Func.h!");
+	if (i>=int(Mat.size())) ErrorCBL("Error in Erase_lines of Kernel.h!");
 
       unique_unsorted(ll);
       int tt = 0;
@@ -1238,7 +1238,7 @@ namespace cbl {
     {
       for (auto &&i : col)
 	for (auto &&j : Mat)
-	  if (i>=int(j.size())) ErrorCBL("Error in Erase_columns of Func.h!");
+	  if (i>=int(j.size())) ErrorCBL("Error in Erase_columns of Kernel.h!");
 
       unique_unsorted(col);
       int tt = 0;
@@ -1270,11 +1270,11 @@ namespace cbl {
       std::vector<int> line, column;
 
       for (unsigned int i=0; i<xx.size(); i++) {
-	if (i>=Mat.size()) ErrorCBL("Error in SubMatrix of Func.h!");
+	if (i>=Mat.size()) ErrorCBL("Error in SubMatrix of Kernel.h!");
 	bool ll = 0;
 
 	for (unsigned int j=0; j<yy.size(); j++) {
-	  if (j>=Mat[i].size()) ErrorCBL("Error in SubMatrix of Func.h!");
+	  if (j>=Mat[i].size()) ErrorCBL("Error in SubMatrix of Kernel.h!");
 	  if (Mat[i][j]<val) {
 	    if (j<int(yy.size()*0.5)) {line.push_back(i); ll = 1;}
 	    else if (ll==0) {column.push_back(j);}
@@ -1336,11 +1336,11 @@ namespace cbl {
     {
       if (equal) {
 	if ((int)vect.size()!=val) 
-	  ErrorCBL("Error in checkDim of Func.h! The dimension of " + vector + " is: " + conv(vect.size(), par::fINT) + " ( != " + conv(val, par::fINT) + " )");
+	  ErrorCBL("Error in checkDim() of Kernel.h: the dimension of " + vector + " is: " + conv(vect.size(), par::fINT) + " ( != " + conv(val, par::fINT) + " )");
       }
       else { 
 	if ((int)vect.size()<val)
-	  ErrorCBL("Error in checkDim of Func.h! The dimension of " + vector + " is: " + conv(vect.size(), par::fINT) + " ( < " + conv(val, par::fINT) + " )");
+	  ErrorCBL("Error in checkDim() of Kernel.h: the dimension of " + vector + " is: " + conv(vect.size(), par::fINT) + " ( < " + conv(val, par::fINT) + " )");
       }
     }
   
@@ -1361,19 +1361,19 @@ namespace cbl {
     {
       if (equal) {
 	if (int(mat.size())!=val_i) 
-	  ErrorCBL("Error in checkDim of Func.h! The dimension of: " + matrix + " is:" + conv(mat.size(), par::fINT) + " <= " + conv(val_i, par::fINT) + "!");
+	  ErrorCBL("Error in checkDim() of Kernel.h: the dimension of: " + matrix + " is:" + conv(mat.size(), par::fINT) + " <= " + conv(val_i, par::fINT) + "!");
 	else 
 	  for (size_t k=0; k<mat.size(); k++)
 	    if (int(mat[k].size())!=val_j) 
-	      ErrorCBL("Errorin checkDim of Func.h! The dimension of: " + matrix + " is:" + conv(mat[k].size(), par::fINT) + " <= " + conv(val_j, par::fINT) + "!");
+	      ErrorCBL("Errorin checkDim of Kernel.h: the dimension of: " + matrix + " is:" + conv(mat[k].size(), par::fINT) + " <= " + conv(val_j, par::fINT) + "!");
       }
       else {
 	if (int(mat.size())<val_i) 
-	  ErrorCBL("Error in checkDim of Func.h! The dimension of: " + matrix + " is:" + conv(mat.size(), par::fINT) + " <= " + conv(val_i, par::fINT) + "!");
+	  ErrorCBL("Error in checkDim() of Kernel.h: the dimension of: " + matrix + " is:" + conv(mat.size(), par::fINT) + " <= " + conv(val_i, par::fINT) + "!");
 	else 
 	  for (size_t k=0; k<mat.size(); k++)
 	    if (int(mat[k].size())<val_j) 
-	      ErrorCBL("Errorin checkDim of Func.h! The dimension of: " + matrix + " is:" + conv(mat[k].size(), par::fINT) + " <= " + conv(val_j, par::fINT) + "!");
+	      ErrorCBL("Errorin checkDim of Kernel.h! The dimension of: " + matrix + " is:" + conv(mat[k].size(), par::fINT) + " <= " + conv(val_j, par::fINT) + "!");
       }
     }
 
@@ -1393,7 +1393,7 @@ namespace cbl {
       checkDim(vect2, vect1.size(), "vect2");
       for (size_t i=0; i<vect1.size(); i++)
 	if (vect1[i]!=vect2[i])
-	  ErrorCBL("Error in checkEqual! vect1 and vect2 are different");
+	  ErrorCBL("Error in checkEqual() of Kernel.h: vect1 and vect2 are different!");
     }
   
   /**
@@ -1511,7 +1511,7 @@ namespace cbl {
     std::vector<std::vector<T>> reshape(std::vector<T> vec, const int size1, const int size2)
     {
       if (size1*size2!=int(vec.size()))
-	ErrorCBL("Error in reshape() of Func.h, sizes does not match! "+conv(size1*size2, par::fINT)+" should be equal to "+conv(int(vec.size()), par::fINT));
+	ErrorCBL("Error in reshape() of Kernel.h, sizes does not match! "+conv(size1*size2, par::fINT)+" should be equal to "+conv(int(vec.size()), par::fINT));
 
       std::vector<std::vector<T>> matrix(size1, std::vector<T> (size2, 0));
 

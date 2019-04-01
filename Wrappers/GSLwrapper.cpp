@@ -38,12 +38,12 @@
 using namespace std;
 
 using namespace cbl;
-using namespace gsl;
+
 
 // ============================================================================
 
 
-void cbl::gsl::check_GSL_fail (const int status, const bool exit, const std::string CBLfunction, const std::string GSLroutine) 
+void cbl::wrapper::gsl::check_GSL_fail (const int status, const bool exit, const std::string CBLfunction, const std::string GSLroutine) 
 {
   if (exit) {
     if (status) {
@@ -58,7 +58,7 @@ void cbl::gsl::check_GSL_fail (const int status, const bool exit, const std::str
 // ============================================================================
 
 
-double cbl::gsl::generic_function (const double xx, void *params)
+double cbl::wrapper::gsl::generic_function (const double xx, void *params)
 {
   gsl::STR_generic_func_GSL *pp = (gsl::STR_generic_func_GSL *) params;
   return pp->f(xx);
@@ -68,7 +68,7 @@ double cbl::gsl::generic_function (const double xx, void *params)
 // ============================================================================
 
 
-double cbl::gsl::generic_roots (double xx, void *params)
+double cbl::wrapper::gsl::generic_roots (double xx, void *params)
 {
   gsl::STR_generic_func_GSL *pp = (gsl::STR_generic_func_GSL *) params;
   return pp->f(xx)-pp->xx0;
@@ -78,7 +78,7 @@ double cbl::gsl::generic_roots (double xx, void *params)
 // ============================================================================
 
 
-double cbl::gsl::generic_minimizer (const gsl_vector * xx, void * params)
+double cbl::wrapper::gsl::generic_minimizer (const gsl_vector * xx, void * params)
 {
   vector<double> _xx;
   for (size_t i=0; i<xx->size; i++)
@@ -94,7 +94,7 @@ double cbl::gsl::generic_minimizer (const gsl_vector * xx, void * params)
 // ============================================================================
 
 
-double cbl::gsl::generic_minimizer_return (const gsl_vector * xx, void * params)
+double cbl::wrapper::gsl::generic_minimizer_return (const gsl_vector * xx, void * params)
 {
   vector<double> _xx;
   for (size_t i=0; i<xx->size; i++)
@@ -112,7 +112,7 @@ double cbl::gsl::generic_minimizer_return (const gsl_vector * xx, void * params)
 // ============================================================================
 
 
-double cbl::gsl::GSL_derivative (gsl_function Func, const double xx, const double hh, const double prec)
+double cbl::wrapper::gsl::GSL_derivative (gsl_function Func, const double xx, const double hh, const double prec)
 {
   gsl_set_error_handler_off();
 
@@ -128,7 +128,7 @@ double cbl::gsl::GSL_derivative (gsl_function Func, const double xx, const doubl
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_cquad (gsl_function Func, const double a, const double b, const double rel_err, const double abs_err, const int nevals)
+double cbl::wrapper::gsl::GSL_integrate_cquad (gsl_function Func, const double a, const double b, const double rel_err, const double abs_err, const int nevals)
 {
   gsl_set_error_handler_off();
   double Int, error;
@@ -149,7 +149,7 @@ double cbl::gsl::GSL_integrate_cquad (gsl_function Func, const double a, const d
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_qag (gsl_function Func, const double a, const double b, const double rel_err, const double abs_err, const int limit_size, const int rule)
+double cbl::wrapper::gsl::GSL_integrate_qag (gsl_function Func, const double a, const double b, const double rel_err, const double abs_err, const int limit_size, const int rule)
 {
   gsl_set_error_handler_off();
 
@@ -169,7 +169,7 @@ double cbl::gsl::GSL_integrate_qag (gsl_function Func, const double a, const dou
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_qagiu (gsl_function Func, const double a, const double rel_err, const double abs_err, const int limit_size)
+double cbl::wrapper::gsl::GSL_integrate_qagiu (gsl_function Func, const double a, const double rel_err, const double abs_err, const int limit_size)
 {
   gsl_set_error_handler_off();
 
@@ -189,7 +189,7 @@ double cbl::gsl::GSL_integrate_qagiu (gsl_function Func, const double a, const d
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_qaws (gsl_function Func, const double a, const double b, const double alpha, const double beta, const int mu, const int nu, const double rel_err, const double abs_err, const int limit_size)
+double cbl::wrapper::gsl::GSL_integrate_qaws (gsl_function Func, const double a, const double b, const double alpha, const double beta, const int mu, const int nu, const double rel_err, const double abs_err, const int limit_size)
 {
   gsl_set_error_handler_off();
 
@@ -212,7 +212,7 @@ double cbl::gsl::GSL_integrate_qaws (gsl_function Func, const double a, const do
 // ============================================================================
 
 
-double cbl::gsl::GSL_derivative (FunctionDoubleDouble func, const double xx, const double hh, const double prec)
+double cbl::wrapper::gsl::GSL_derivative (FunctionDoubleDouble func, const double xx, const double hh, const double prec)
 {
   STR_generic_func_GSL params;
   params.f = func;
@@ -228,7 +228,7 @@ double cbl::gsl::GSL_derivative (FunctionDoubleDouble func, const double xx, con
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_cquad (FunctionDoubleDouble func, const double a, const double b, const double rel_err, const double abs_err, const int nevals)
+double cbl::wrapper::gsl::GSL_integrate_cquad (FunctionDoubleDouble func, const double a, const double b, const double rel_err, const double abs_err, const int nevals)
 {
   STR_generic_func_GSL params;
   params.f = func;
@@ -244,7 +244,7 @@ double cbl::gsl::GSL_integrate_cquad (FunctionDoubleDouble func, const double a,
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_qag (FunctionDoubleDouble func, const double a, const double b, const double rel_err, const double abs_err, const int limit_size, const int rule)
+double cbl::wrapper::gsl::GSL_integrate_qag (FunctionDoubleDouble func, const double a, const double b, const double rel_err, const double abs_err, const int limit_size, const int rule)
 {
   STR_generic_func_GSL params;
   params.f = func;
@@ -260,7 +260,7 @@ double cbl::gsl::GSL_integrate_qag (FunctionDoubleDouble func, const double a, c
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_qagiu (FunctionDoubleDouble func, const double a,  const double rel_err, const double abs_err, const int limit_size)
+double cbl::wrapper::gsl::GSL_integrate_qagiu (FunctionDoubleDouble func, const double a,  const double rel_err, const double abs_err, const int limit_size)
 {
   STR_generic_func_GSL params;
   params.f = func;
@@ -276,7 +276,7 @@ double cbl::gsl::GSL_integrate_qagiu (FunctionDoubleDouble func, const double a,
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_qaws (FunctionDoubleDouble func, const double a, const double b, const double alpha, const double beta, const int mu, const int nu, const double rel_err, const double abs_err, const int limit_size)
+double cbl::wrapper::gsl::GSL_integrate_qaws (FunctionDoubleDouble func, const double a, const double b, const double alpha, const double beta, const int mu, const int nu, const double rel_err, const double abs_err, const int limit_size)
 {
   STR_generic_func_GSL params;
   params.f = func;
@@ -292,7 +292,7 @@ double cbl::gsl::GSL_integrate_qaws (FunctionDoubleDouble func, const double a, 
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_cquad (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double b, const double rel_err, const double abs_err, const int nevals)
+double cbl::wrapper::gsl::GSL_integrate_cquad (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double b, const double rel_err, const double abs_err, const int nevals)
 {
   function<double(double)> func_bind = bind(func, placeholders::_1, pp, par);
 
@@ -303,7 +303,7 @@ double cbl::gsl::GSL_integrate_cquad (FunctionDoubleDoublePtrVectorRef func, con
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_qag (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double b, const double rel_err, const double abs_err, const int limit_size, const int rule)
+double cbl::wrapper::gsl::GSL_integrate_qag (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double b, const double rel_err, const double abs_err, const int limit_size, const int rule)
 {
   function<double(double)> func_bind = bind(func, placeholders::_1, pp, par);
 
@@ -314,7 +314,7 @@ double cbl::gsl::GSL_integrate_qag (FunctionDoubleDoublePtrVectorRef func, const
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_qagiu (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double rel_err, const double abs_err, const int limit_size)
+double cbl::wrapper::gsl::GSL_integrate_qagiu (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double rel_err, const double abs_err, const int limit_size)
 {
   function<double(double)> func_bind = bind(func, placeholders::_1, pp, par);
 
@@ -325,7 +325,7 @@ double cbl::gsl::GSL_integrate_qagiu (FunctionDoubleDoublePtrVectorRef func, con
 // ============================================================================
 
 
-double cbl::gsl::GSL_integrate_qaws (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double b, const double alpha, const double beta, const int mu, const int nu, const double rel_err, const double abs_err, const int limit_size)
+double cbl::wrapper::gsl::GSL_integrate_qaws (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double b, const double alpha, const double beta, const int mu, const int nu, const double rel_err, const double abs_err, const int limit_size)
 {
   function<double(double)> func_bind = bind(func, placeholders::_1, pp, par);
 
@@ -336,7 +336,7 @@ double cbl::gsl::GSL_integrate_qaws (FunctionDoubleDoublePtrVectorRef func, cons
 // ============================================================================
 
 
-double cbl::gsl::GSL_root_brent (gsl_function Func, const double low_guess, const double up_guess, const double rel_err, const double abs_err)
+double cbl::wrapper::gsl::GSL_root_brent (gsl_function Func, const double low_guess, const double up_guess, const double rel_err, const double abs_err)
 {
   gsl_set_error_handler_off();
 
@@ -384,7 +384,7 @@ double cbl::gsl::GSL_root_brent (gsl_function Func, const double low_guess, cons
 // ============================================================================
 
 
-double cbl::gsl::GSL_root_brent (FunctionDoubleDouble func, const double xx0, const double low_guess, const double up_guess, const double rel_err, const double abs_err)
+double cbl::wrapper::gsl::GSL_root_brent (FunctionDoubleDouble func, const double xx0, const double low_guess, const double up_guess, const double rel_err, const double abs_err)
 {
   gsl_set_error_handler_off();
 
@@ -403,7 +403,7 @@ double cbl::gsl::GSL_root_brent (FunctionDoubleDouble func, const double xx0, co
 // ============================================================================
 
 
-vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVector func, const std::vector<double> start, const std::vector<std::vector<double>> ranges, const unsigned int max_iter, const double tol, const double epsilon)
+vector<double> cbl::wrapper::gsl::GSL_minimize_nD (FunctionDoubleVector func, const std::vector<double> start, const std::vector<std::vector<double>> ranges, const unsigned int max_iter, const double tol, const double epsilon)
 {
   if (ranges.size() != start.size() && ranges.size() != 0)
     ErrorCBL ("Error in GSL_minimize_nD of GSLwrapper.cpp, vector of ranges must have the same size of start vector.");
@@ -473,7 +473,7 @@ vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVector func, const std::
 // ============================================================================
 
 
-vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func, const std::vector<double> start, const std::vector<std::vector<double>> ranges, const unsigned int max_iter, const double tol, const double epsilon)
+vector<double> cbl::wrapper::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func, const std::vector<double> start, const std::vector<std::vector<double>> ranges, const unsigned int max_iter, const double tol, const double epsilon)
 {
   if (ranges.size() != start.size() && ranges.size() != 0)
     ErrorCBL ("Error in GSL_minimize_nD of GSLwrapper.cpp, vector of ranges must have the same size of start vector.");
@@ -544,7 +544,7 @@ vector<double> cbl::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func, const st
 // ============================================================================
 
 
-double cbl::gsl::GSL_minimize_1D (FunctionDoubleDouble func, const double start, double min, double max, const int max_iter, const bool verbose)
+double cbl::wrapper::gsl::GSL_minimize_1D (FunctionDoubleDouble func, const double start, double min, double max, const int max_iter, const bool verbose)
 {
   gsl_set_error_handler_off();
 
@@ -598,7 +598,7 @@ double cbl::gsl::GSL_minimize_1D (FunctionDoubleDouble func, const double start,
 // ============================================================================
 
 
-double cbl::gsl::GSL_polynomial_eval (const double x, const std::shared_ptr<void> fixed_parameters, const std::vector<double> coeff)
+double cbl::wrapper::gsl::GSL_polynomial_eval (const double x, const std::shared_ptr<void> fixed_parameters, const std::vector<double> coeff)
 {
   (void)fixed_parameters;
   return gsl_poly_eval(coeff.data(), coeff.size(), x);
@@ -608,7 +608,7 @@ double cbl::gsl::GSL_polynomial_eval (const double x, const std::shared_ptr<void
 // ============================================================================
 
 
-void cbl::gsl::GSL_polynomial_root (const std::vector<double> coeff, std::vector<std::vector<double>> &root)
+void cbl::wrapper::gsl::GSL_polynomial_root (const std::vector<double> coeff, std::vector<std::vector<double>> &root)
 {
   gsl_set_error_handler_off();
 

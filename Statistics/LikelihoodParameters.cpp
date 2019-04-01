@@ -46,6 +46,59 @@ void cbl::statistics::LikelihoodParameters::reset ()
   set_parameters(m_nparameters, m_parameter_type, m_parameter_name);
 }
 
+// ============================================================================================
+
+
+string cbl::statistics::LikelihoodParameters::status (const int p) const
+{
+  string stat;
+
+  switch (m_parameter_type[p]) {
+    case statistics::ParameterType::_Base_:
+      if (m_parameter_isFixed[p]) 
+	stat = "FIXED";
+      else 
+	stat = "FREE";
+      break;
+
+    case statistics::ParameterType::_Derived_:
+      stat = "OUTPUT";
+      break;
+
+    default:
+      ErrorCBL("Error in cbl::statistics::LikelihoodParameters::status() of LikelihoodParameters.cpp: no such kind of parameter!");
+  }
+
+  return stat;
+}
+
+
+// ============================================================================================
+
+
+vector<string> cbl::statistics::LikelihoodParameters::status () const
+{
+  vector<string> stat;
+  for (size_t i=0; i<m_nparameters; i++) {
+    switch (m_parameter_type[i]) {
+      case statistics::ParameterType::_Base_:
+	if (m_parameter_isFixed[i]) 
+	  stat.push_back("FIXED");
+	else 
+	  stat.push_back("FREE");
+	break;
+
+      case statistics::ParameterType::_Derived_:
+	stat.push_back("OUTPUT");
+	break;
+
+      default:
+	ErrorCBL("Error in cbl::statistics::LikelihoodParameters::status() of LikelihoodParameters.cpp: no such kind of parameter!");
+    }
+  }
+  return stat;
+}
+
 
 // ============================================================================================
 

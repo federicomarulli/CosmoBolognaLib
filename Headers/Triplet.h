@@ -81,7 +81,40 @@ namespace cbl {
      * @return a vector containing the
      * TripletType names
      */
-    inline std::vector<std::string> TripletTypeNames () {return {"comoving_theta", "comoving_side", "comoving_theta", "_multipoles_direct_"}; }
+    inline std::vector<std::string> TripletTypeNames () {return {"comoving_theta", "comoving_side", "comoving_costheta", "_multipoles_direct_"}; }
+
+    /**
+     * @brief cast an enum of type TripletType
+     * from its index
+     * @param tripletPTypeIndex the tripletPType index
+     * @return object of class TripletType
+     */
+    inline TripletType TripletTypeCast (const int tripletPTypeIndex) {return castFromValue<TripletType>(tripletPTypeIndex);}
+
+    /**
+     * @brief cast an enum of type TripletType
+     * from its name
+     * @param tripletPTypeName the tripletPType name
+     * @return object of class TripletType
+     */
+    inline TripletType TripletTypeCast (const std::string tripletPTypeName) {return castFromName<TripletType>(tripletPTypeName, TripletTypeNames());}
+
+    /**
+     * @brief cast an enum of type TripletType
+     * from indeces
+     * @param tripletPTypeIndeces the tripletPType indeces
+     * @return object of class TripletType
+     */
+    inline std::vector<TripletType> TripletTypeCast (const std::vector<int> tripletPTypeIndeces) {return castFromValues<TripletType>(tripletPTypeIndeces);} 
+
+    /**
+     * @brief cast an enum of type TripletType
+     * from thier names
+     * @param tripletPTypeNames the tripletPType names
+     * @return vector of TripletType enums
+     */
+    inline std::vector<TripletType> TripletTypeCast (const std::vector<std::string> tripletPTypeNames) {return castFromNames<TripletType>(tripletPTypeNames, TripletTypeNames());}
+
 
     /**
      *  @class Triplet Triplet.h "Headers/Triplet.h"

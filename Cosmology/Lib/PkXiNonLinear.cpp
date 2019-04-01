@@ -50,7 +50,7 @@ double cbl::cosmology::Cosmology::f_k (const double kk, const shared_ptr<cbl::gl
     double fact = 6.*pow(kk, 7)*qq-79.*pow(kk, 5)*pow(qq, 3)+50.*pow(kk,3)*pow(qq, 5)-21.*kk*pow(qq, 7)+3./4*pow(kk*kk-qq*qq, 3)*(2.*kk*kk+7.*qq*qq)*log(pow(fabs(kk-qq), 2)/pow(fabs(kk+qq), 2));
     return pow(504.*pow(kk, 3)*pow(qq, 5), -1)*fact*_Pk*qq*qq;
   }; 
-  return 4.*par::pi*gsl::GSL_integrate_qag(integrand, qmin, qmax, prec);
+  return 4.*par::pi*wrapper::gsl::GSL_integrate_qag(integrand, qmin, qmax, prec);
 }
 
 
@@ -64,7 +64,7 @@ double cbl::cosmology::Cosmology::g_k (const double kk, const shared_ptr<cbl::gl
     double fact = 6.*pow(kk, 7)*qq-41.*pow(kk, 5)*pow(qq, 3)+2.*pow(kk,3)*pow(qq, 5)-3.*kk*pow(qq, 7)+3./4*pow(kk*kk-qq*qq, 3)*(2.*kk*kk+qq*qq)*log(pow(fabs(kk-qq), 2)/pow(fabs(kk+qq), 2));
     return pow(168.*pow(kk, 3)*pow(qq, 5), -1)*fact*_Pk*qq*qq;
   }; 
-  return 4.*par::pi*gsl::GSL_integrate_qag(integrand, qmin, qmax, prec);
+  return 4.*par::pi*wrapper::gsl::GSL_integrate_qag(integrand, qmin, qmax, prec);
 }
 
 
@@ -116,11 +116,11 @@ double cbl::cosmology::Cosmology::Pk_1loop (const double kk, const shared_ptr<cb
       double akq = (kk*xx-qq)/kq;
       return func1(kq, qq, akq)*func2(kq, qq, akq)*Pk->operator()(kq);
     };
-    double res = gsl::GSL_integrate_qag(integrand_intermediate, -1, 1, prec);
+    double res = wrapper::gsl::GSL_integrate_qag(integrand_intermediate, -1, 1, prec);
     return Pk->operator()(qq)*qq*qq*res;
   };
 
-  return 4.*par::pi*gsl::GSL_integrate_qag(integrand, qmin, qmax, prec);
+  return 4.*par::pi*wrapper::gsl::GSL_integrate_qag(integrand, qmin, qmax, prec);
 }
 
 

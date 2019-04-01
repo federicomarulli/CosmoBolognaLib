@@ -133,8 +133,8 @@ namespace cbl {
 	 *  correlation function
 	 *
 	 *  @param type the type of two-point correlation function; it
-	 *  can be: \_1D_monopole\_, \_1D_projected\_,
-	 *  \_1D_deprojected\_, \_1D_multipoles\_, \_1D_angular\_,
+	 *  can be: \_monopole\_, \_projected\_,
+	 *  \_deprojected\_, \_multipoles\_, \_angular\_,
 	 *  \_2D_Cartesian\_, \_2D_polar\_
 	 *
 	 *  @param dir_output_pairs output directory used to store the

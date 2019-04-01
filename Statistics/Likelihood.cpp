@@ -367,7 +367,7 @@ void cbl::statistics::Likelihood::maximize (const std::vector<double> start, con
   };
 
   coutCBL << "Maximizing the likelihood..." << endl;
-  vector<double> result = cbl::gsl::GSL_minimize_nD(ll, starting_par, limits_par, max_iter, tol, epsilon);
+  vector<double> result = cbl::wrapper::gsl::GSL_minimize_nD(ll, starting_par, limits_par, max_iter, tol, epsilon);
   coutCBL << "Done!" << endl << endl;
 
   m_model_parameters->set_bestfit_values(result);
@@ -375,6 +375,37 @@ void cbl::statistics::Likelihood::maximize (const std::vector<double> start, con
   coutCBL << "log(Likelihood) = " << this->operator()(result) << endl << endl;
 }
 
+
+// ============================================================================================
+
+void cbl::statistics::Likelihood::write_results (const string dir_output, const string file)
+{
+  coutCBL << "Writing results of Likelihood minimization on " << dir_output+file << endl;
+  vector<double> bestFitValues = m_model_parameters->bestfit_values();
+  string name = LikelihoodTypeNames ()[static_cast<int>(m_likelihood_type)];
+  double likelihoodValue = this->log(bestFitValues);
+
+  string mkdir = "mkdir -p "+dir_output;
+  if (system(mkdir.c_str())) {}
+
+  ofstream fout(dir_output+file);
+
+  fout << "#Parameters information" << endl;
+  fout << "nParameters = " << bestFitValues.size() << endl;
+
+  for (size_t i=0; i<bestFitValues.size(); i++) {
+    fout << "par" << i+1 << "_name = " << m_model_parameters->name(i) << endl;
+    fout << "par" << i+1 << "_status = " << m_model_parameters->status(i) << endl;
+    fout << "par" << i+1 << "_bestfit_value = " << bestFitValues[i] << endl;
+  }
+
+  fout << "#Likelihood information" << endl;
+  fout << "likelihoodType = " << name << endl;
+  fout << "logLikelihoodValue = " << likelihoodValue << endl;
+
+  fout.clear(); fout.close();
+  coutCBL << "I wrote the file " << dir_output+file << endl;
+}
 
 // ============================================================================================
 

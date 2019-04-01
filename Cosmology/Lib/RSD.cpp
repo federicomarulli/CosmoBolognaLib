@@ -79,7 +79,7 @@ double cbl::cosmology::Cosmology::linear_growth_rate (const double redshift, con
     //for (int i=0; i<6; i++) KK.push_back(kkk[i]);
 
     vector<double> MU;
- //   MU.push_back(1.);
+
     for (int i=0; i<6; i++) MU.push_back(1.-aa[i]*m_Omega_DE*fnu+bb[i]*fnu*fnu-cc[i]*fnu*fnu*fnu); 
     
     double mu;

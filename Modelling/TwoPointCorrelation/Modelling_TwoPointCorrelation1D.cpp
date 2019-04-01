@@ -142,6 +142,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_HOD (const
   m_data_HOD.k_min = k_min;
   m_data_HOD.k_max = k_max;
   m_data_HOD.step = step;
+  m_data_HOD.kkvec = cbl::logarithmic_bin_vector(step, k_min, k_max);
   m_data_HOD.method_Pk = method_Pk;
   m_data_HOD.NL = NL;
   m_data_HOD.output_root = output_root;

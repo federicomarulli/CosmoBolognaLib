@@ -60,7 +60,7 @@ std::vector<double> cbl::modelling::twopt::wp_from_xi_approx (FunctionVectorVect
       auto integrand = [&] (double rad) { return func({rad}, inputs, parameter)[0]/sqrt(rad*rad-rp[i]*rp[i]); };
       
       double r_out = sqrt(pow(rp[i], 2)+pow(pp->r_max_int, 2));
-      wp[i] = 2.*gsl::GSL_integrate_qag(integrand, rp[i], r_out);
+      wp[i] = 2.*wrapper::gsl::GSL_integrate_qag(integrand, rp[i], r_out);
       
     }
 
@@ -115,7 +115,7 @@ std::vector<double> cbl::modelling::twopt::wp_from_xi (FunctionDoubleDoubleDoubl
       
       auto integrand = [&] (double pi) { return func(rp[i], pi, inputs, parameter); };
       
-      wp[i] = 2.*gsl::GSL_integrate_qag(integrand, 0., pp->pi_max);
+      wp[i] = 2.*wrapper::gsl::GSL_integrate_qag(integrand, 0., pp->pi_max);
       
     }
 

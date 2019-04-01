@@ -126,8 +126,18 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
       
 	file_input.emplace_back(par::DirLoc+"temp"+conv(i, par::fINT));
 
-      
-	// use each single mask (separately)
+
+	// set how many random galaxies put in each pointing
+
+	random::UniformRandomNumbers_Int random(0, pointing.size(), seed);
+
+	vector<int> rnd_pnt(pointing.size(), 0);
+	
+	for (int i=0; i<nRandom; ++i)
+	  rnd_pnt[random()] ++;
+	
+	
+	// use each single pointing (separately)
       
 	string filelist, file, Mask;
   
@@ -137,7 +147,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
 
 	  Mask = mask+"mask_"+pointing[mm]+".reg";
 	
-	  string DO = par::DirCosmo+"External/VIPERS/"+dir_venice+"/venice -m "+Mask+" -r -f "+where[i]+" -npart "+conv((int)nRandom/pointing.size(), par::fINT)+" -o "+file;
+	  string DO = par::DirCosmo+"External/VIPERS/"+dir_venice+"/venice -m "+Mask+" -r -f "+where[i]+" -npart "+conv(rnd_pnt[mm], par::fINT)+" -o "+file;
 	  if (do_zdistr_with_venice && isSpectroscopic) DO += " -nz "+file_nz;
 
 	  //coutCBL << endl << "--> " << DO << endl << endl;

@@ -247,7 +247,7 @@ namespace cbl {
 	 * 
 	 * @param p the index of the parameter
 	 *
-	 * @return vector containing the parameter name
+	 * @return the parameter name
 	 */
 	std::string name (const int p) const { return m_parameter_name[p]; }
 
@@ -257,6 +257,24 @@ namespace cbl {
 	 * @return vector containing all the parameter names
 	 */
 	std::vector<std::string> name () const { return m_parameter_name; }
+
+	/**
+	 * @brief return the model parameter status
+	 * 
+	 * @param p the index of the parameter
+	 *
+	 * @return the parameter status
+	 */
+	virtual std::string status (const int p) const
+	{ (void)p; ErrorCBL("Error in status() of ModelParameters.h!"); return par::defaultString;}
+
+	/**
+	 * @brief return all the model parameter status
+	 * 
+	 * @return vector containing all the parameter statuss
+	 */
+	virtual std::vector<std::string> status () const
+	{ErrorCBL("Error in status() of ModelParameters.h!"); std::vector<std::string> vv; return vv;}
 
 	/**
 	 * @brief return all the model parameters, for internal usage

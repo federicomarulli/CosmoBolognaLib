@@ -74,7 +74,7 @@ int main () {
     cbl::statistics::PriorDistribution A1_prior(cbl::glob::DistributionType::_Uniform_, -100., 100.);
     cbl::statistics::PriorDistribution A2_prior(cbl::glob::DistributionType::_Uniform_, -1000., 1000.);
   
-    model_twop.set_model_BAO_LinearPoint(alpha_prior, BB_prior, A0_prior, A1_prior, A2_prior);
+    model_twop.set_model_BAO(alpha_prior, BB_prior, A0_prior, A1_prior, A2_prior);
 
   
     // ----------------------------------------------------------------------

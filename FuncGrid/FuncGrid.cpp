@@ -187,7 +187,7 @@ double cbl::glob::FuncGrid::integrate_qag (const double a, const double b, const
 {
   function<double(double)> f = bind(&FuncGrid::operator(), this, std::placeholders::_1);
 
-  return gsl::GSL_integrate_qag(f, a, b, rel_err, abs_err, limit_size, rule);
+  return wrapper::gsl::GSL_integrate_qag(f, a, b, rel_err, abs_err, limit_size, rule);
 }
 
 
@@ -198,7 +198,7 @@ double cbl::glob::FuncGrid::integrate_qaws (const double a, const double b, cons
 {
   function<double(double)> f = bind(&FuncGrid::operator(), this, std::placeholders::_1);
 
-  return gsl::GSL_integrate_qaws(f, a, b, alpha, beta, mu, nu, rel_err, abs_err, limit_size);
+  return wrapper::gsl::GSL_integrate_qaws(f, a, b, alpha, beta, mu, nu, rel_err, abs_err, limit_size);
 }
 
 
@@ -209,7 +209,7 @@ double cbl::glob::FuncGrid::root (const double x_low, const double x_up, const d
 {
   function<double(double)> f = bind(&FuncGrid::operator(), this, std::placeholders::_1);
 
-  return gsl::GSL_root_brent(f, fx0,  x_low, x_up, rel_err, abs_err);
+  return wrapper::gsl::GSL_root_brent(f, fx0,  x_low, x_up, rel_err, abs_err);
 }
 
 
@@ -220,7 +220,7 @@ double cbl::glob::FuncGrid::root_D1v (const double x_low, const double x_up, con
 {
   function<double(double)> f = bind(&FuncGrid::D1v, this, std::placeholders::_1);
 
-  return gsl::GSL_root_brent(f, fx0,  x_low, x_up, rel_err, abs_err);
+  return wrapper::gsl::GSL_root_brent(f, fx0,  x_low, x_up, rel_err, abs_err);
 }
 
 
@@ -231,7 +231,7 @@ double cbl::glob::FuncGrid::root_D2v (const double x_low, const double x_up, con
 {
   function<double(double)> f = bind(&FuncGrid::D2v, this, std::placeholders::_1);
 
-  return gsl::GSL_root_brent(f, fx0,  x_low, x_up, rel_err, abs_err);
+  return wrapper::gsl::GSL_root_brent(f, fx0,  x_low, x_up, rel_err, abs_err);
 }
 
 
@@ -347,7 +347,7 @@ double cbl::glob::FuncGrid2D::IntegrateVegas (const double xmin, const double xm
     return this->operator()(var[0], var[1]);
   };
 
-  cbl::cuba::CUBAwrapper cuba_integral(integrand, 2);
+  wrapper::cuba::CUBAwrapper cuba_integral(integrand, 2);
 
   return cuba_integral.IntegrateVegas({{xmin, xmax}, {ymin, ymax}});
 }
@@ -363,7 +363,7 @@ double cbl::glob::FuncGrid2D::IntegrateSuave (const double xmin, const double xm
     return this->operator()(var[0], var[1]);
   };
 
-  cbl::cuba::CUBAwrapper cuba_integral(integrand, 2);
+  wrapper::cuba::CUBAwrapper cuba_integral(integrand, 2);
 
   return cuba_integral.IntegrateSuave({{xmin, xmax}, {ymin, ymax}});
 }
@@ -379,7 +379,7 @@ double cbl::glob::FuncGrid2D::IntegrateDivonne (const double xmin, const double 
     return this->operator()(var[0], var[1]);
   };
 
-  cbl::cuba::CUBAwrapper cuba_integral(integrand, 2);
+  wrapper::cuba::CUBAwrapper cuba_integral(integrand, 2);
 
   return cuba_integral.IntegrateDivonne({{xmin, xmax}, {ymin, ymax}});
 }
@@ -395,7 +395,7 @@ double cbl::glob::FuncGrid2D::IntegrateCuhre (const double xmin, const double xm
     return this->operator()(var[0], var[1]);
   };
 
-  cbl::cuba::CUBAwrapper cuba_integral(integrand, 2);
+  wrapper::cuba::CUBAwrapper cuba_integral(integrand, 2);
 
   return cuba_integral.IntegrateCuhre ({{xmin, xmax}, {ymin, ymax}});
 }

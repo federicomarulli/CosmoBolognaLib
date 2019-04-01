@@ -87,13 +87,16 @@ namespace cbl {
 	double r_max = 350.;
 	
 	/// minimum wave vector module up to which the power spectrum is computed
-	double k_min = 0.;
+	double k_min = 1.e-4;
 	 
 	/// maximum wave vector module up to which the power spectrum is computed
 	double k_max = 100.;
 	
 	/// number of steps used to compute the binned dark matter correlation function
 	int step = 200;
+
+	/// vector of wave vector module to compute the power spectrum
+	std::vector<double> kkvec;
 	
 	/// method used to compute the power spectrum and &sigma;(mass);
 	std::string method_Pk = "CAMB";

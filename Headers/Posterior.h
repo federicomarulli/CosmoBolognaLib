@@ -495,6 +495,17 @@ namespace cbl {
 	void read_chain (const std::string input_dir, const std::string input_file, const int nwalkers, const int skip_header=1, const bool fits=false);
 
 	/**
+	 * @brief write maximization results on a file
+	 *
+	 * @param output_dir the output directory 
+	 *
+	 * @param root_file the root of the output file to be written
+	 *
+	 * @return none
+	 */
+	void write_maximization_results (const std::string output_dir, const std::string root_file);
+
+	/**
 	 * @brief show the results of the MCMC sampling on screen
 	 *
 	 * @param start the minimum chain position to be written

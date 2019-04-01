@@ -46,15 +46,20 @@ namespace cbl {
      * @enum HistogramType
      * @brief the histogram type
      */
-    enum class HistogramType { 
+    enum class HistogramType {
 
-      _dn_dV_,
-
-      _dn_dlogV_,
-
+      /// the binned counts, \f$N_V[i]\f$
       _N_V_,
 
-      _n_V_
+      /// the normalised binned counts, i.e. \f$n_V[i]=N_V[i]/fact\f$, where the factor \f$fact\f$ is a number provided in input
+      _n_V_,
+
+      /// \f$n_V[i]/(edge[i+1]-edge[i])\f$, where \f$edge\f$ are the bin limits
+      _dn_dV_,
+
+      /// \f$n_V[i]/(\log_{10}(edge[i+1])-\log_{10}(edge[i]))\f$, where \f$edge\f$ are the bin limits
+      _dn_dlogV_
+
     };
 
     /**
@@ -1376,7 +1381,7 @@ namespace cbl {
 	 * @return the lower limit of the histogram
 	 * for the first variable
 	 */
-	double minVar1 () const override {return m_minVar1;}
+	double minVar1 () const override { return m_minVar1; }
 	
 	/**
 	 * @brief return the upper limit of the
@@ -1385,7 +1390,7 @@ namespace cbl {
 	 * @return the upper limit of the histogram
 	 * for the first variable
 	 */
-	double maxVar1 () const override {return m_maxVar1;}
+	double maxVar1 () const override { return m_maxVar1; }
 
 	/**
 	 * @brief return the bin shift for the
@@ -1393,7 +1398,7 @@ namespace cbl {
 	 *
 	 * @return the bin shift for the first variable
 	 */
-	double shift1 () const override {return m_shift1;}
+	double shift1 () const override { return m_shift1; }
 
 	/**
 	 * @brief return the bin type for the first

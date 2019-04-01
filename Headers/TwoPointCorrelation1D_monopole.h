@@ -241,7 +241,7 @@ namespace cbl {
 	 *  @brief default constructor
 	 *  @return object of class TwoPointCorrelation1D_monopole
 	 */
-	TwoPointCorrelation1D_monopole () { m_twoPType = TwoPType::_1D_monopole_; }
+	TwoPointCorrelation1D_monopole () { m_twoPType = TwoPType::_monopole_; }
 
 	/**
 	 *  @brief constructor
@@ -267,7 +267,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation1D_monopole (const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelation1D(data, random, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_monopole_; set_parameters(binType, rMin, rMax, nbins, shift, angularUnits, angularWeight, compute_extra_info); }
+	  { m_twoPType = TwoPType::_monopole_; set_parameters(binType, rMin, rMax, nbins, shift, angularUnits, angularWeight, compute_extra_info); }
       
 	/**
 	 *  @brief constructor
@@ -293,7 +293,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation1D_monopole (const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelation1D(data, random, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_monopole_; set_parameters(binType, rMin, rMax, binSize, shift, angularUnits, angularWeight, compute_extra_info); }
+	  { m_twoPType = TwoPType::_monopole_; set_parameters(binType, rMin, rMax, binSize, shift, angularUnits, angularWeight, compute_extra_info); }
 
 	/**
 	 *  @brief default destructor

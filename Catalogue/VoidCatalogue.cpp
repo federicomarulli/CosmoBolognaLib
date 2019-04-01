@@ -901,6 +901,7 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
 {
 
   auto catalogue = input_voidCatalogue;
+
   clock_t begin_time = clock();
     
   // ---------------------------------------------------- //
@@ -911,6 +912,7 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
   if (clean[0] || clean[1] || clean[2]) {
     vector<int> counter(clean.size(), 0);
     vector<bool> remove(catalogue->nObjects(), false);
+    coutCBL << "Voids in the catalogue = " << catalogue->nObjects() << endl;
     coutCBL << "Input void catalogue cleaning procedure started ..." << endl;
     for (size_t i=0; i<catalogue->nObjects(); i++) {
       
@@ -947,7 +949,7 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
       "\t statistically irrelevant: " << counter[2] << "\n" <<
       "\t total removed: " << counter[0]+counter[1]+counter[2] << endl;
   }
-  coutCBL << "\n Voids in the Catalogue: " << catalogue->nObjects() << endl;
+  coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
   
   float cleaning_time = float( clock() - begin_time ) / CLOCKS_PER_SEC;
   coutCBL << "Time spent by the cleaning procedure: " << cleaning_time << " seconds \n" << endl;
@@ -967,9 +969,9 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
     
     //counter for regions without any tracer:
     int void_voids = 0;
-    
-    //counter for negative radius voids:
-    int negative = 0;
+
+    //counter for voids that the procedure can't clean properly:
+    int bad_rescaled = 0;
     
     for (size_t j = 0; j<catalogue->nObjects(); j++) {
       double value = (3.*catalogue->radius(j) < delta_r[1]) ? 3.*catalogue->radius(j) : delta_r[1];
@@ -995,29 +997,32 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
 	if (kk/(volume_sphere(distances[kk-1])*density) > threshold)
 	  while (kk/(volume_sphere(distances[kk-1])*density) > threshold && kk > 1) kk--; // either you shrink
 	else while (kk/(volume_sphere(distances[kk-1])*density) < threshold && kk < (int) distances.size()) kk++; // or you expand
-	  
+
 	// linear interpolation:
 	double new_radius = interpolated(threshold,
 					 {kk/(volume_sphere(distances[kk-1])*density), (kk+1)/(volume_sphere(distances[kk])*density)},
 					 {distances[kk-1], distances[kk]}, "Linear"); // gsl function
+
+	if ((kk/(volume_sphere(new_radius)*density))>(threshold+0.15) || (kk/(volume_sphere(new_radius)*density))<(threshold-0.15))
+	  { bad_rescaled++;
+	    remove[j] = true;
+	  }
 	  
-	  
-	if (new_radius < 0) {
-	  negative++;
-	  remove[j] = true;
-	}
-	else catalogue->set_var(j, Var::_Radius_, abs(new_radius));
+	else catalogue->set_var(j, Var::_Radius_, fabs(new_radius));
       }
+      
       else {
-	void_voids ++;
+	void_voids++;
 	remove[j] = true;
       }
+      
     }//for
     
     catalogue->remove_objects(remove);
-    coutCBL << "\t Empty voids removed: " << void_voids << endl;
-    coutCBL << "\t Negative voids removed: " << negative << "\n" << endl;
+    coutCBL << "Empty voids removed: " << void_voids << endl;
+    coutCBL << "Bad rescaled voids removed: " << bad_rescaled << "\n" << endl;
     //if (negative > 0) WarningMsg("Warning: there were "+conv(negative,par::fINT)+" negative radii.");
+   
     
     //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
     vector<bool> remove_outofrange(catalogue->nObjects(), false);
@@ -1031,15 +1036,16 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
     }
     
     catalogue->remove_objects(remove_outofrange);
-    coutCBL << "\t Removed voids out of range ["+conv(delta_r[0],par::fDP2)+","+conv(delta_r[1],par::fDP2)+"] : " << outofrange << endl;
+    coutCBL << "Removed voids out of range ["+conv(delta_r[0],par::fDP2)+","+conv(delta_r[1],par::fDP2)+"] : " << outofrange << endl;
     
     //compute new central density and density contrast:
     catalogue->compute_centralDensity(tracers_catalogue, ChM, density, ratio);
     catalogue->compute_densityContrast(tracers_catalogue, ChM, ratio);
     
   }//rescale part
-  
-  coutCBL << "\n Voids in the Catalogue: " << catalogue->nObjects() << endl;
+
+  cout << endl;
+  coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
 
   float rescaling_time = float( clock() - begin_time ) / CLOCKS_PER_SEC;
   rescaling_time = rescaling_time - cleaning_time;
@@ -1058,7 +1064,7 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
     
     vector<bool> remove(catalogue->nObjects(), false);
     
-    coutCBL << "\t Generating chain-mesh for void centres ..." << endl;
+    coutCBL << "Generating chain-mesh for void centres ..." << endl;
     chainmesh::ChainMesh3D ChM_voids(catalogue->Min(Var::_Radius_),
 				     catalogue->var(Var::_X_),
 				     catalogue->var(Var::_Y_),
@@ -1078,14 +1084,15 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
     int overlap_removed = 0;
     for (size_t i = 0; i<remove.size(); i++) if (remove[i]) overlap_removed++;
     catalogue->remove_objects(remove);
-    coutCBL << "\t Voids removed to avoid overlap: " << overlap_removed << endl;
+    coutCBL << "Voids removed to avoid overlap: " << overlap_removed << endl;
   }//overlap check
-  coutCBL << "\n Voids in the Catalogue: " << catalogue->nObjects() << endl;
+  cout << endl;
+  coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
 
   float olchecking_time = float( clock() - begin_time ) / CLOCKS_PER_SEC;
   olchecking_time = olchecking_time - rescaling_time - cleaning_time;
-  coutCBL << "Time spent by the overlap-checking procedure: " << olchecking_time << " seconds" << endl;
-  coutCBL << "\n Total time spent: " << float( clock() - begin_time ) / CLOCKS_PER_SEC << " seconds \n" << endl;
+  coutCBL << "Time spent by the overlap-checking procedure: " << olchecking_time << " seconds" << endl << endl;
+  coutCBL << "Total time spent: " << float( clock() - begin_time ) / CLOCKS_PER_SEC << " seconds \n" << endl;
   
   m_object = catalogue->sample();
 }
@@ -1098,6 +1105,7 @@ void cbl::catalogue::Catalogue::compute_centralDensity (const shared_ptr<Catalog
   ///
   //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
   vector<bool> remove(m_object.size(), false);
+  vector<int> eraser;
   ///
   //coutCBL << "check2" << endl;
   ///
@@ -1153,8 +1161,9 @@ void cbl::catalogue::Catalogue::compute_centralDensity (const shared_ptr<Catalog
   ///
   //coutCBL << "check3" << endl;
   ///
-  for (size_t j = 0; j<m_object.size(); j++)
-    if (remove[j]) m_object.erase(m_object.begin()+j);
+  for (size_t j=0; j<m_object.size(); j++)
+    if (remove[j]) eraser.push_back(j);
+  cbl::Erase(m_object, eraser);
   ///
   //coutCBL << "check4" << endl;
   ///
@@ -1168,7 +1177,7 @@ void cbl::catalogue::Catalogue::compute_densityContrast (const shared_ptr<Catalo
   
   //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
   vector<bool> remove(m_object.size(), false);
-    
+  vector<int> eraser;
   //counter for regions without any tracer:
   int void_voids = 0;
   int cloud_in_void = 0;
@@ -1210,9 +1219,10 @@ void cbl::catalogue::Catalogue::compute_densityContrast (const shared_ptr<Catalo
       } 
   }//for
   
-  for (size_t j = 0; j<m_object.size(); j++)
-    if (remove[j]) m_object.erase(m_object.begin()+j);
-
+  for (size_t j=0; j<m_object.size(); j++)
+    if (remove[j]) eraser.push_back(j);
+  cbl::Erase(m_object, eraser);
+  
   coutCBL << "Cloud-in-void: " << cloud_in_void << endl;
   coutCBL << "I removed " << void_voids+cloud_in_void << " voids in calculating the density contrast!" << endl;
   

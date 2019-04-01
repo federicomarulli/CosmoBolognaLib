@@ -114,7 +114,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_model_Numb
       m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_density_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
       break;
     case (glob::HistogramType::_dn_dV_):
-      m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_density_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
+      m_model = make_shared<statistics::Model1D>(statistics::Model1D(&mass_function_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
       break;
     default:
       ErrorCBL("Error in set_model_NumberCounts_cosmology of Modelling_NumberCounts1D_Mass.cpp: no such a variable in the list!");

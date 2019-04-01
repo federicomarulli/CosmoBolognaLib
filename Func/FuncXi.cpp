@@ -148,7 +148,7 @@ double cbl::Pk_from_xi (const double kk, const std::vector<double> lgrr, const s
     };
 
   const double prec = 0.0001;
-  const double Int = gsl::GSL_integrate_qag(ff, r_min, r_max, prec);
+  const double Int = wrapper::gsl::GSL_integrate_qag(ff, r_min, r_max, prec);
   
   return 4.*par::pi*Int;
 } 
@@ -197,7 +197,7 @@ double cbl::wp (const double rp, const std::vector<double> rr, const std::vector
     };
 
   const double prec = 0.0001;
-  return 2.*gsl::GSL_integrate_qag(ff, rp, r_max, prec);
+  return 2.*wrapper::gsl::GSL_integrate_qag(ff, rp, r_max, prec);
 }
 
 
@@ -237,7 +237,7 @@ double cbl::sigmaR (const double RR, const int corrType, const std::vector<doubl
       };
 
     const double prec = 0.0001;
-    const double Int = gsl::GSL_integrate_qaws (ff, 0., 2*RR, 1, 0, 0, 0, prec);
+    const double Int = wrapper::gsl::GSL_integrate_qaws (ff, 0., 2*RR, 1, 0, 0, 0, prec);
 
     if (1./pow(RR,3)*Int<0) ErrorCBL("Error in sigmaR with xi of Func.cpp!,"+conv(1./pow(RR,3)*Int,par::fDP4)+"<0");
     sigmaR = sqrt(1./pow(RR,3)*Int);
@@ -259,8 +259,8 @@ double cbl::sigmaR (const double RR, const int corrType, const std::vector<doubl
       };
 
     const double prec = 0.0001;
-    const double Int1 = gsl::GSL_integrate_qaws(ff, 0., 1., prec);
-    const double Int2 = gsl::GSL_integrate_qaws(ff, 1., 100., prec);
+    const double Int1 = wrapper::gsl::GSL_integrate_qaws(ff, 0., 1., prec);
+    const double Int2 = wrapper::gsl::GSL_integrate_qaws(ff, 1., 100., prec);
 
     if (1./pow(RR,3)*(Int1+Int2)<0) ErrorCBL("Error in sigmaR with wp of Func.cpp!,"+conv(1./pow(RR,3)*(Int1+Int2),par::fDP4)+"<0");
     sigmaR = sqrt(1./pow(RR,3)*(Int1+Int2));

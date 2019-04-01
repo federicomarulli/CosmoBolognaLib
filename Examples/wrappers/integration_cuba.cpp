@@ -26,7 +26,7 @@ int main () {
     integration_limits[1] = {0., 2.};
 
     // wrapper to CUBA libraries
-    cbl::cuba::CUBAwrapper CW(integrand, ndim);
+    cbl::wrapper::cuba::CUBAwrapper CW(integrand, ndim);
 
     // write the outputs
     std::cout << "The integral computed with Vegas is: " << CW.IntegrateVegas(integration_limits) << std::endl;

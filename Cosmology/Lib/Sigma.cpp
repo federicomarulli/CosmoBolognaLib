@@ -120,9 +120,9 @@ double cbl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const do
     };
   
   // compute the mass variance
-  //return 1./(2.*pow(par::pi, 2))*gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4)+gsl::GSL_integrate_qagiu(ff, 1., 1.e-5);
+  //return 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4)+wrapper::gsl::GSL_integrate_qagiu(ff, 1., 1.e-5);
  
-  return 1./(2.*pow(par::pi, 2))*gsl::GSL_integrate_qag(ff, 1.e-4, kmax, 1.e-1);
+  return 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(ff, 1.e-4, kmax, 1.e-1);
 }
 
 
@@ -266,8 +266,8 @@ double cbl::cosmology::Cosmology::dnsigma2M (const int nd, const double mass, co
 
   if (nd==1) {
 
-    //return gsl::GSL_derivative(bind(&Cosmology::sigma2M, this, placeholders::_1, method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, unit1), mass, 1.e11);
-    //return gsl::GSL_derivative(bind(&Cosmology::sigma2M, this, placeholders::_1, method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file), mass, mass*1.e-3);
+    //return wrapper::gsl::GSL_derivative(bind(&Cosmology::sigma2M, this, placeholders::_1, method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file, unit1), mass, 1.e11);
+    //return wrapper::gsl::GSL_derivative(bind(&Cosmology::sigma2M, this, placeholders::_1, method_Pk, redshift, output_root, interpType, kmax, input_file, is_parameter_file), mass, mass*1.e-3);
 
     const double rho = (input_file!=par::defaultString && !is_parameter_file) ?  m_RhoZero : rho_m(redshift, unit1);
 

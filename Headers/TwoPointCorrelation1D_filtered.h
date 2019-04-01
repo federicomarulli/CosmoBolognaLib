@@ -202,7 +202,7 @@ namespace cbl {
 	 *  @brief default constructor
 	 *  @return object of class TwoPointCorrelation1D_monopole
 	 */
-	TwoPointCorrelation1D_filtered () { m_twoPType = TwoPType::_1D_filtered_; }
+	TwoPointCorrelation1D_filtered () { m_twoPType = TwoPType::_filtered_; }
 
 	/**
 	 *  @brief constructor for the filtered two-point correlation
@@ -253,7 +253,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const double Min_D2, const double Max_D2, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation1D_monopole(data, random, BinType::_linear_, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_filtered_;  set_parameters(binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1); }
+	  { m_twoPType = TwoPType::_filtered_;  set_parameters(binType_D1, Min_D1, Max_D1, nbins_D1, shift_D1); }
 
 	/**
 	 *  @brief constructor for the filtered two-point correlation
@@ -304,7 +304,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation1D_filtered (const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const double Min_D2, const double Max_D2, const double binSize_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation1D_monopole(data, random, BinType::_linear_, Min_D2, Max_D2, binSize_D2, shift_D2, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_filtered_; set_parameters(binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1); }     
+	  { m_twoPType = TwoPType::_filtered_; set_parameters(binType_D1, Min_D1, Max_D1, binSize_D1, shift_D1); }     
 
 	/**
 	 *  @brief default destructor

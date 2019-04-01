@@ -516,7 +516,7 @@ namespace cbl {
        *  used to compute the power spectrum; if a power spectrum file
        *  is provided, i.e. input_file!=NULL and
        *  is_parameter_file=false, then the provided power spectrum
-       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+      *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
        *  is computed by integrating the computed/provided power
        *  spectrum ignoring the cosmological parameters of the object
        *
@@ -2028,11 +2028,17 @@ namespace cbl {
        *  @author Tommaso Ronconi
        *  @author tommaso.ronconi@studio.unibo.it
        *
-       *  @param bias the bias of the sample
+       *  @param deltav_NL the non linear density contrast:
+       *  \f$\rho_v/\rho_m\f$ (default value set to \f$-0.795\f$)
        *
-       *  @param rho_vm the non linear density contrast:
-       *  \f$\rho_v/\rho_m\f$ (default value set to \f$0.205\f$)
-       *  
+       *  @param b_eff the effective bias of the sample
+       *
+       *  @param slope first coefficent to convert the effective bias
+       *  (default value set to \f$0.854\f$)
+       *
+       *  @param offset second coefficent to convert the effective
+       *  bias (default value set to \f$0.420\f$)
+       *
        *  @return The linear density contrast used as second barrier
        *  in the excursion set formalism for voids, based on the fit
        *  by Bernardeu (1994): \f$\delta_v^L \equiv \frac{\rho_v -
@@ -2041,7 +2047,7 @@ namespace cbl {
        *  \f$ average density of the surrounding Universe and \f$C =
        *  1.594\f$, a costant.
        */
-      double deltav_L (const double bias=1., const double rho_vm=0.205) const;
+      double deltav_L (const double deltav_NL, const double b_eff, double slope=0.854, double offset=0.420) const;
     
       /**
        *  @brief Non-Linear (under)density contrast
@@ -8276,13 +8282,23 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
-       *  @param del_v linear density contrast defining a void
-       *
-       *  @param del_c critical value of the linear density field
-       *
        *  @param model size function model name; valid choices for
        *  model name are SvdW (Sheth and van de Weygaert, 2004),
        *  linear and Vdn (Jennings et al., 2013)
+       *
+       *  @param b_eff the effective bias of the sample
+       *
+       *  @param slope first coefficent to convert the effective bias
+       *  (default value set to \f$0.854\f$)
+       *
+       *  @param offset second coefficent to convert the effective
+       *  bias (default value set to \f$0.420\f$)
+       *
+       *  @param deltav_NL the non linear density contrast:
+       *  \f$\rho_v/\rho_m\f$ (default value set to \f$-0.795\f$)
+       *
+       *  @param del_c critical value of the linear density field
+       *  (default value set to \f$1.06\f$)
        *
        *  @param method_Pk method used to compute the power spectrum;
        *  valid choices for method_Pk are: CAMB [http://camb.info/],
@@ -8318,7 +8334,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      double size_function (const double RV, const double redshift, const double del_v, const double del_c, const std::string model, const std::string method_Pk="CAMB", const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double size_function (const double RV, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="CAMB", const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
 
       /**
        *  @brief the void size function
@@ -8929,6 +8945,70 @@ namespace cbl {
        */
       double zeta_precyclic_Slepian (const double r1, const double r2, const double mu, const double b1, const double b2, const glob::FuncGrid interp_xi_DM, const glob::FuncGrid interp_xi_DM_m1, const glob::FuncGrid interp_xi_DM_p1, const glob::FuncGrid interp_xi_DM_2) const;
 
+
+      /**
+       *  @brief the pre-cyclic three-point correlation function as
+       *  described in Slepian et al. 2015, for a triangle
+       *  averaging in the bin
+       *
+       *  this function computes the pre-cyclic three-point
+       *  correlation function as described in Slepian et al. 2015, as
+       *  follows:
+       *
+       *  \f[ \zeta_{pc} = \sum_{l=0}^2 \zeta_{pc l}(r_1, r_2)
+       *		   P_l(\hat{r_1}\cdot \hat{r_2})+ \sum_{l=0}^2
+       *		   \zeta_{pc l}(r_2, r_3) P_l(\hat{r_2}\cdot
+       *		   \hat{r_3})+ \sum_{l=0}^2 \zeta_{pc l}(r_3,
+       *		   r_1) P_l(\hat{r_3}\cdot \hat{r_1}) \f]
+       *
+       *  with 
+       *
+       *  \f[r_3 = \sqrt{r_1^2+r_2^2-2 r_1 r_2 \cos(\theta)}\f]
+       *
+       *  and
+       *
+       *  \f[ \zeta_{pc0}(r_i, r_j) = \left[ 2 b_1^2 b_2 +
+       *  \frac{34}{21} b_1^3 \right] \xi(r_i) \xi(r_j), \f] \f[
+       *  \zeta_{pc1}(r_i, r_j) = -b_1^3\left[ \xi^{[1-]}(r_i)
+       *  \xi^{[1+]}(r_j) + \xi^{[1-]}(r_j) \xi^{[1+]}(r_i) \right] ,
+       *  \f] \f[ \zeta_{pc2}(r_i, r_j) = \frac{8}{21}
+       *  b_1^3\xi^{[2]}(r_i)\xi^{[2]}(r_j) . \f]
+       *
+       *  where \f$ b_1, b_2 \f$ are the linear and non-linear bias,
+       *  respectively, and \f$\xi_{DM}(r), \xi^{[1\pm]}_{DM}(r),
+       *  \xi^{[2]}_{DM}(r)\f$ are the integrals of the dark matter
+       *  power spectrum computed by
+       *  cbl::cosmology::Cosmology::integrals_zeta_Slepian
+       *
+       *  @param r1 the first side
+       *
+       *  @param r2 the second side
+       *
+       *  @param r3 the third side
+       *
+       *  @param deltaR the side width
+       *
+       *  @param b1 the linear bias
+       *
+       *  @param b2 the non-linear bias
+       *
+       *  @param interp_xi_DM interpolating function
+       *  for \f$\xi_DM\f$
+       *
+       *  @param interp_xi_DM_m1 interpolating function
+       *  for \f$\xi^{[1-]}_{DM}(r)\f$      
+       *
+       *  @param interp_xi_DM_p1 interpolating function
+       *  for \f$\xi^{[1+]}_{DM}(r)\f$
+       *  
+       *  @param interp_xi_DM_2 interpolating function
+       *  for \f$\xi^{[2]}_{DM}(r)\f$
+       *
+       *  @return the pre-cyclic three-point
+       *  correlation function
+       */
+      double zeta_precyclic_Slepian (const double r1, const double r2, const double r3, const double deltaR, const double b1, const double b2, const glob::FuncGrid interp_xi_DM, const glob::FuncGrid interp_xi_DM_m1, const glob::FuncGrid interp_xi_DM_p1, const glob::FuncGrid interp_xi_DM_2) const;
+
       /**
        *  @brief the terms of the \f$\zeta(r_1, r_2)\f$ expansion 
        *
@@ -9493,6 +9573,9 @@ namespace cbl {
        *
        *  @param r2_prime the scale \f$r_2\textprime\f$
        *
+       *  @param deltaR the bin size, if non-positive, no bin average 
+       *  is computed 
+       *
        *  @param kk vector of the wave vector modules
        *
        *  @param Pk the pdark matter ower spectrum
@@ -9507,7 +9590,7 @@ namespace cbl {
        *  @return the covariance of the multipole expansion of 
        *  the dark matter three-point correlation function
        */
-      double zeta_multipoles_covariance (const double Volume, const double nObjects, const int l, const int l_prime, const double r1, const double r2, const double r1_prime, const double r2_prime, const std::vector<double> kk, const std::vector<double> Pk, const std::vector<double> rr, const std::vector<double> Xi, const double prec=1.e-3);
+      double zeta_multipoles_covariance (const double Volume, const double nObjects, const int l, const int l_prime, const double r1, const double r2, const double r1_prime, const double r2_prime, const double deltaR, const std::vector<double> kk, const std::vector<double> Pk, const std::vector<double> rr, const std::vector<double> Xi, const double prec=1.e-3);
 
       /**
        *  @brief the dark matter three-point correlation function 
@@ -9535,6 +9618,9 @@ namespace cbl {
        *  
        *  @param r2 the scale \f$r_2\f$
        *
+       *  @param deltaR the bin size, if non-positive, no bin average 
+       *  is computed 
+       *
        *  @param kk vector of the wave vector modules
        *
        *  @param Pk the pdark matter ower spectrum
@@ -9557,7 +9643,7 @@ namespace cbl {
        *  @return the covariance of the dark matter 
        *   three-point correlation function
        */
-      std::vector<std::vector<double>> zeta_covariance (const double Volume, const double nObjects, const std::vector<double> theta, const double r1, const double r2, const std::vector<double> kk, const std::vector<double> Pk, const int norders=10, const double prec=1.e-3, const bool method=false, const int nExtractions=10000, const std::vector<double> mean={}, const int seed=543);
+      std::vector<std::vector<double>> zeta_covariance (const double Volume, const double nObjects, const std::vector<double> theta, const double r1, const double r2, const double deltaR, const std::vector<double> kk, const std::vector<double> Pk, const int norders=10, const double prec=1.e-3, const bool method=false, const int nExtractions=10000, const std::vector<double> mean={}, const int seed=543);
        
       /**
        * @brief compute the  power spectrum integral transform

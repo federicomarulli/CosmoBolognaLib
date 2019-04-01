@@ -91,7 +91,7 @@ void cbl::statistics::Chi2::minimize (const vector<double> start, vector<vector<
   };
 
   coutCBL << "Minimizing..." << endl;
-  vector<double> result = cbl::gsl::GSL_minimize_nD(func, start, parameter_limits, max_iter, tol, epsilon);
+  vector<double> result = cbl::wrapper::gsl::GSL_minimize_nD(func, start, parameter_limits, max_iter, tol, epsilon);
   coutCBL << "Done!" << endl << endl;
 
   m_model->parameters()->set_bestfit_values(result);

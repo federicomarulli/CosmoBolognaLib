@@ -74,14 +74,14 @@ void cbl::modelling::numbercounts::sigmaM_dlnsigmaM (double &sigmaM, double &dln
     return kk*kk*interp_Pk(kk)*Filter_sigmaR(kk, RR);
   };
 
-  sigmaM = norm*cbl::gsl::GSL_integrate_qag(integrand_sigmaR, 0, kmax, 1.e-5);
+  sigmaM = norm*cbl::wrapper::gsl::GSL_integrate_qag(integrand_sigmaR, 0, kmax, 1.e-5);
 
   auto integrand_dsigmaR = [&] (const double kk)
   {
     return kk*kk*interp_Pk(kk)*Filter_dsigmaR(kk, RR);
   };
 
-  dlnsigmaM = norm*cbl::gsl::GSL_integrate_qag(integrand_dsigmaR, 0, kmax, 1.e-5)*dRdM*(mass/(2*sigmaM));
+  dlnsigmaM = norm*cbl::wrapper::gsl::GSL_integrate_qag(integrand_dsigmaR, 0, kmax, 1.e-5)*dRdM*(mass/(2*sigmaM));
   sigmaM = sqrt(sigmaM);
 }
 
@@ -107,14 +107,14 @@ void cbl::modelling::numbercounts::sigmaM_dlnsigmaM (std::vector<double> &sigmaM
       return kk*kk*Pk_interp(kk)*Filter_sigmaR(kk, RR);
     };
 
-    sigmaM[i] = norm*cbl::gsl::GSL_integrate_qag(integrand_sigmaR, 1.e-4, kmax, 1.e-6);
+    sigmaM[i] = norm*cbl::wrapper::gsl::GSL_integrate_qag(integrand_sigmaR, 1.e-4, kmax, 1.e-6);
 
     auto integrand_dsigmaR = [&] (const double kk)
     {
       return kk*kk*Pk_interp(kk)*Filter_dsigmaR(kk, RR);
     };
 
-    dlnsigmaM[i] = norm*cbl::gsl::GSL_integrate_qag(integrand_dsigmaR, 1.e-4, kmax, 1.e-6)*dRdM*(mass[i]/(2*sigmaM[i]));
+    dlnsigmaM[i] = norm*cbl::wrapper::gsl::GSL_integrate_qag(integrand_dsigmaR, 1.e-4, kmax, 1.e-6)*dRdM*(mass[i]/(2*sigmaM[i]));
     sigmaM[i] = sqrt(sigmaM[i]);
   }
 }
@@ -260,10 +260,10 @@ double cbl::modelling::numbercounts::number_counts(const double redshift_min, co
       return cosmology.mass_function (mass, interp_sigmaM(mass), interp_DlnsigmaM(mass), redshift, model_MF, cbl::par::defaultString, _Delta)*dV_dZ;
     };
 
-    return gsl::GSL_integrate_qag(integrand_nc_m, Mass_min, Mass_max);
+    return wrapper::gsl::GSL_integrate_qag(integrand_nc_m, Mass_min, Mass_max);
   };
 
-  return gsl::GSL_integrate_qag(integrand_nc_z, redshift_min, redshift_max);
+  return wrapper::gsl::GSL_integrate_qag(integrand_nc_z, redshift_min, redshift_max);
   */
 }
 

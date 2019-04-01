@@ -98,7 +98,7 @@ namespace cbl {
 	 *  Modelling_TwoPointCorrelation1D_monopole
 	 */
 	Modelling_TwoPointCorrelation1D_monopole (const std::shared_ptr<data::Data> twop_dataset)
-	  : Modelling_TwoPointCorrelation1D(twop_dataset, cbl::measure::twopt::TwoPType::_1D_monopole_) {}
+	  : Modelling_TwoPointCorrelation1D(twop_dataset, cbl::measure::twopt::TwoPType::_monopole_) {}
 
 	/**
 	 *  @brief default destructor
@@ -243,7 +243,8 @@ namespace cbl {
 
 	/**
 	 *  @brief set the model to fit the full shape of the monopole
-	 *  of the two-point correlation function
+	 *  of the two-point correlation function, providing in output
+	 *  the positions of the BAO peak, deap and linear point
 	 *
 	 *  the model is the following:
 	 *
@@ -257,6 +258,9 @@ namespace cbl {
 	 *    - \f$f(z)\sigma_8(z)\f$
 	 *    - \f$b(z)\sigma_8(z)\f$
 	 *    - \f$A_i\f$
+	 *
+	 *  the positions of the BAO peak, dip, and linear point are
+	 *  provided in output as derived parameters
 	 *
 	 *  the dark matter two-point correlation function is computed
 	 *  using the input cosmological parameters
@@ -279,7 +283,9 @@ namespace cbl {
 
 	/**
 	 *  @brief set the model to fit the full shape of the monopole
-	 *  of the two-point correlation function as a polynomial
+	 *  of the two-point correlation function as a polynomial,
+	 *  providing in output the positions of the BAO peak, deap
+	 *  and linear point
 	 *
 	 *  @param polynomial_prior vector containing the priors
 	 *  for the polynomial part: order of the polynomial is
@@ -607,12 +613,17 @@ namespace cbl {
 	 *  @brief set the parameter to model the monopole of the
 	 *  two-point correlation function in real space, taking into
 	 *  accout geometric distortions (that is the Alcock-Paczynski
-	 *  effect), and using a second order polynomial
+	 *  effect), and using a second order polynomial, providing in
+	 *  output the positions of the BAO peak, deap and linear
+	 *  point
 	 *
 	 *  the model used is the following:
 	 *
 	 *  \f[\xi(s)= b^2 \xi_{DM}(\alpha s)\ + A_0 + A_1/s
 	 *  +A_2/s^2\f]
+	 *
+	 *  the positions of the BAO peak, deap and linear point are
+	 *  provided in output as derived parameters
 	 *
 	 *  where \f$\xi_{DM}\f$ is computed at the fiducial (fixed)
 	 *  cosmology, and {\f$b\sigma_8\f$, \f$A_0\f$, \f$A_1\f$,

@@ -56,7 +56,22 @@ void cbl::glob::spherical_harmonics_coeff::initialize (const int norder, const i
 
   vector<vector<complex<double>>> _alm(m_nbins, vector<complex<double>>(m_n_sph, 0));
 
+  vector<double> normalization (m_n_sph);
+
+  vector<double> Plm(m_n_sph, 0);
+  vector<complex<double>> sph(m_n_sph);
+
+  for (int l=0; l<m_norder; l++)
+    for (int m=0; m<l+1; m++) {
+      int n=l*(l+1)/2+m;
+      normalization[n] = gsl_sf_fact (l - m) / gsl_sf_fact ( l + m); 
+    }
+
   m_alm = _alm;
+  m_normalization = normalization;
+
+  m_Plm = Plm;
+  m_sph = sph;
 }
 
 
@@ -76,7 +91,91 @@ void cbl::glob::spherical_harmonics_coeff::reset ()
 
 std::vector<std::complex<double>> cbl::glob::spherical_harmonics_coeff::alm (const double xx, const double yy, const double zz)
 {
-  return spherical_harmonics_array (m_lmax, xx, yy, zz);
+  double cosTheta = zz;
+
+  m_sph[0].real(1);
+  m_sph[0].imag(0);
+
+  m_sph[1].real(cosTheta);
+  m_sph[1].imag(0);
+
+  double Plm0 = 1.;
+  double Plm1 = cosTheta;
+  double Plm2, Plm3;
+
+  int q, l, lp1;
+
+  // P(l, 0)
+  for (int l = 1; l < m_norder-1; l++) {
+    q = l+1;
+    Plm2 = ((2*l+1)*cosTheta*Plm1-l*Plm0)/(l+1);
+    m_sph[q*(q+1)/2].real(Plm2);
+    m_sph[q*(q+1)/2].imag(0.);
+    Plm0 = Plm1;
+    Plm1 = Plm2;
+  }
+
+  double sinTheta = sqrt(1 - cosTheta*cosTheta);
+  if (sinTheta > 0) {
+    double cosPhi = xx/sinTheta;
+    double sinPhi = yy/sinTheta;
+
+    double old_cc_real = 1.;
+    double old_cc_imag = 0.;
+    double cc_real = cosPhi;
+    double cc_imag = sinPhi;
+
+    // P(m, m) -> P(m+1, m) -> P( m+1<l<lMax, m)
+    Plm0 = 1.;
+    for (int m=1; m<m_norder; m++) {
+      l = m;
+      lp1 = m+1;
+      Plm1 = -(2*(m-1)+1)*Plm0*sinTheta;
+      Plm0 = Plm1;
+      m_sph[l*(l+1)/2+m].real(Plm1*cc_real);
+      m_sph[l*(l+1)/2+m].imag(Plm1*cc_imag);
+
+      Plm2 = cosTheta*(2*l+1)*Plm1;
+      m_sph[lp1*(lp1+1)/2+m].real(Plm2*cc_real);
+      m_sph[lp1*(lp1+1)/2+m].imag(Plm2*cc_imag);
+
+      for (int lp2=lp1+1; lp2<m_norder; lp2++) {
+	Plm3 = ((2.*lp2-1.)*cosTheta*Plm2-(lp2+m-1)*Plm1)/(lp2-m);
+	Plm1 = Plm2;
+	Plm2 = Plm3;
+
+	m_sph[lp2*(lp2+1)/2+m].real(Plm3*cc_real);
+	m_sph[lp2*(lp2+1)/2+m].imag(Plm3*cc_imag);
+      }
+
+      old_cc_real = cc_real;
+      old_cc_imag = cc_imag;
+      cc_real = old_cc_real*cosPhi-old_cc_imag*sinPhi;
+      cc_imag = old_cc_real*sinPhi+old_cc_imag*cosPhi;
+    }
+  }
+  else {
+    for (int m=1; m<m_norder; m++) {
+      l = m;
+      lp1 = m+1;
+
+      m_sph[l*(l+1)/2+m].real(0.);
+      m_sph[l*(l+1)/2+m].imag(0.);
+
+      m_sph[lp1*(lp1+1)/2+m].real(0.);
+      m_sph[lp1*(lp1+1)/2+m].imag(0.);
+
+      for (int lp2=lp1+1; lp2<m_norder; lp2++) {
+	Plm3 = ((2.*lp2-1.)*cosTheta*Plm2-(lp2+m-1)*Plm1)/(lp2-m);
+
+	m_sph[lp2*(lp2+1)/2+m].real(0.);
+	m_sph[lp2*(lp2+1)/2+m].imag(0.);
+      }
+    }
+  }
+
+
+  return m_sph;
 }
 
 
@@ -107,13 +206,13 @@ void cbl::glob::spherical_harmonics_coeff::add (const double xx, const double yy
 double cbl::glob::spherical_harmonics_coeff::power (const int l, const int bin1, const int bin2)
 {
   const int min_n = l*(l+1)/2;
-  double power = (real(min_n, bin1)*real(min_n, bin2)+imag(min_n, bin1)*imag(min_n, bin2));
+  double power = m_normalization[min_n]*(real(min_n, bin1)*real(min_n, bin2)+imag(min_n, bin1)*imag(min_n, bin2));
   for (int m=1; m<l+1; m++) {
     const int pos = min_n+m;
-    power += 2.*(real(pos, bin1)*real(pos, bin2)+imag(pos, bin1)*imag(pos, bin2));
+    power += 2.*m_normalization[pos]*(real(pos, bin1)*real(pos, bin2)+imag(pos, bin1)*imag(pos, bin2));
   }
 
-  return 4.*par::pi/(2*l+1)*power;
+  return power;
 }
 
 
@@ -284,6 +383,117 @@ void cbl::glob::count_triplets_SphericalHarmonics (std::vector<double> &pairs, s
 // ============================================================================
 
 
+void cbl::glob::count_triplets_SphericalHarmonics (std::vector<double> &NN, std::vector<std::vector<std::vector<double>>> &NNN, std::vector<double> &RR, std::vector<std::vector<std::vector<double>>> &RRR, const double rmin, const double rmax, const int nbins, const int norders, const cbl::catalogue::Catalogue catalogue)
+{
+  NN.erase(NN.begin(), NN.end());
+  NNN.erase(NNN.begin(), NNN.end());
+  NN.resize(nbins, 0);
+  NNN.resize(nbins, vector<vector<double>>(nbins, vector<double>(norders, 0)));
+
+  RR.erase(RR.begin(), RR.end());
+  RRR.erase(RRR.begin(), RRR.end());
+  RR.resize(nbins, 0);
+  RRR.resize(nbins, vector<vector<double>>(nbins, vector<double>(norders, 0)));
+
+  std::shared_ptr<catalogue::Catalogue> cc(new catalogue::Catalogue(catalogue));
+
+  chainmesh::ChainMesh_Catalogue cm;
+
+  double deltaBin = (rmax-rmin)/double(nbins);
+  double binSize_inv = 1./deltaBin;
+
+  cm.set_par(rmax*0.5, cc, rmax*1.1);
+
+  auto cat = cm.catalogue();
+
+  const int nObjects = catalogue.nObjects();
+
+  // start the multithreading parallelization
+#pragma omp parallel num_threads(omp_get_max_threads())
+  {
+    spherical_harmonics_coeff alm_n(norders, nbins+1);
+
+    vector<double> _NN(nbins+1, 0);
+    vector<vector<vector<double>>> _NNN(nbins, vector<vector<double>>(nbins+1, vector<double>(norders, 0)));
+
+    spherical_harmonics_coeff alm_r(norders, nbins+1);
+    vector<double> _RR(nbins+1, 0);
+    vector<vector<vector<double>>> _RRR(nbins, vector<vector<double>>(nbins+1, vector<double>(norders, 0)));
+
+    // parallelized loop
+#pragma omp for schedule(static, 2)
+    for (int i=0; i<nObjects; i++)
+    {
+      alm_n.reset();
+
+      double ixx = cat->xx(i);
+      double iyy = cat->yy(i);
+      double izz = cat->zz(i);
+      double iww = cat->weight(i);
+
+      if(iww<0)
+	alm_r.reset();
+
+      vector<long> close_objects = cm.close_objects({ixx, iyy, izz}, -1);
+
+      for (size_t j=0; j<close_objects.size(); j++) {
+
+	double jxx = cat->xx(close_objects[j]);
+	double jyy = cat->yy(close_objects[j]);
+	double jzz = cat->zz(close_objects[j]);
+	double jww = cat->weight(close_objects[j]);
+
+	double xx = jxx-ixx;
+	double yy = jyy-iyy;
+	double zz = jzz-izz;
+
+	double rr = sqrt(xx*xx+yy*yy+zz*zz);
+
+	if (rr>=rmin && rr<=rmax && i!=close_objects[j]) {
+
+	  vector<complex<double>> _alm = alm_n.alm(xx/rr, yy/rr, zz/rr);
+
+	  int jbin = max(0, min(int((rr-rmin)*binSize_inv), nbins));
+
+	  _NN[jbin] += iww*jww;
+
+	  alm_n.add (_alm, jww, jbin);
+	  if (iww<0 && jww <0) {
+	    alm_r.add(_alm, jww, jbin);
+	    _RR[jbin] += iww*jww;
+	  }
+	}
+      }
+
+      for (int b1=0; b1<nbins; b1++)
+	for (int b2=0; b2<nbins; b2++)
+	  for (int l=0; l<norders; l++) {
+	    _NNN[b1][b2][l] += iww*alm_n.power(l, b1, b2);
+	    if (iww<0)
+	      _RRR[b1][b2][l] -= iww*alm_r.power(l, b1, b2);
+	  }
+    }
+#pragma omp critical
+    {
+      for (int b1=0; b1<nbins; b1++){
+	NN[b1] += _NN[b1];
+	RR[b1] += _RR[b1];
+	for (int b2=0; b2<nbins; b2++)
+	  for (int l=0; l<norders; l++) {
+	    NNN[b1][b2][l] += _NNN[b1][b2][l];
+	    RRR[b1][b2][l] += _RRR[b1][b2][l];
+	  }
+      }
+    }
+
+  }
+}
+
+
+
+// ============================================================================
+
+
 void cbl::glob::count_triplets_SphericalHarmonics (const double rmin, const double rmax, const int nbins, const int norders, const cbl::catalogue::Catalogue catalogue, const std::string output_dir, const std::string output_file_pairs, const std::string output_file_triplets)
 {
   // ----------------------------------------------------------------------
@@ -317,6 +527,70 @@ void cbl::glob::count_triplets_SphericalHarmonics (const double rmin, const doub
 	fout << b1 << " " << b2 << " " << l << " " << setprecision(10) << triplets[b1][b2][l] <<endl;
   fout.clear(); fout.close();
 }
+
+
+// ============================================================================
+
+
+void cbl::glob::count_triplets_SphericalHarmonics (const double rmin, const double rmax, const int nbins, const int norders, const cbl::catalogue::Catalogue catalogue, const cbl::catalogue::Catalogue random_catalogue, const std::string output_dir, const std::string output_file_pairs, const std::string output_file_triplets)
+{
+  // ---------------------------------------------------------------
+  // ---------------- construct the mixed catalogue ----------------
+  // ---------------------------------------------------------------
+
+  double N_R = double(random_catalogue.nObjects())/catalogue.nObjects();
+
+  catalogue::Catalogue ran_catalogue (random_catalogue);
+  catalogue::Catalogue mixed_catalogue (catalogue);
+
+  for (size_t i=0; i<random_catalogue.nObjects(); i++) {
+    double xx = random_catalogue.xx(i);
+    double yy = random_catalogue.yy(i);
+    double zz = random_catalogue.zz(i);
+    double ww = -random_catalogue.weight(i)/N_R;
+    ran_catalogue.set_var(i, catalogue::Var::_Weight_, -ww);
+
+    auto obj = make_shared<catalogue::Object>( catalogue::Object());
+    obj->set_xx(xx);
+    obj->set_yy(yy);
+    obj->set_zz(zz);
+    obj->set_weight(ww);
+    mixed_catalogue.add_object(obj);
+  }
+
+  // ----------------------------------------------------------------------
+  // ---------------- measure triplet multipoles expansion ----------------
+  // ----------------------------------------------------------------------
+
+  coutCBL << endl;
+  coutCBL << "Counting triplets" << endl;
+  vector<double> NN, RR;
+  vector<vector<vector<double>>> NNN, RRR;
+  count_triplets_SphericalHarmonics(NN, NNN, RR, RRR, rmin, rmax, nbins, norders, mixed_catalogue);
+  coutCBL << "Done!" << endl;
+  coutCBL << endl;
+
+  const string mkdir = "mkdir -p "+output_dir;
+  if(system(mkdir.c_str())) {}
+
+  string file_out = output_dir+output_file_pairs;
+  ofstream fout(file_out.c_str());
+
+  for (int b1=0; b1<nbins; b1++)
+    fout << b1 << " " << NN[b1] << " " << RR[b1] << endl;
+  fout.clear(); fout.close();
+
+  file_out = output_dir+output_file_triplets;
+  fout.open(file_out.c_str());
+
+  for (int b1=0; b1<nbins; b1++)
+    for (int b2=0; b2<nbins; b2++) {
+      for (int l=0; l<norders; l++) 
+	fout << b1 << " " << b2 << " " << l << " " << setprecision(10) << NNN[b1][b2][l] << " " << RRR[b1][b2][l] << endl;
+    }
+  fout.clear(); fout.close();
+}
+
 
 
 // ============================================================================
@@ -844,7 +1118,7 @@ vector<double> cbl::glob::zeta_SphericalHarmonics_edgeCorrection (const std::vec
   for (int k=0; k<nOrders; k++)
     for (int l=0; l<nOrders; l++)
       for (int lp=1; lp<nOrders; lp++)
-	A[k][l] += (2*k+1)*pow(gsl_sf_coupling_3j(2*l, 2*lp, 2*k, 0, 0, 0),2)*fl[lp];
+	A[k][l] += (2*k+1)*pow(gsl_sf_coupling_3j(2*l, 2*lp, 2*k, 0, 0, 0), 2)*fl[lp];
 
   for (int k=0; k<nOrders; k++)
     A[k][k] += 1.;

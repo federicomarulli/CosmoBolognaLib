@@ -60,3 +60,5 @@ V4.22 minor bugs fixed in some python examples
 V5.0 classes for statistical analyses substantially improved; new estimators for the three-point correlation function
 
 V5.1 classes for modelling improved; bugs fixed; tools for void analysis updated
+
+V5.2 new notebook and example codes for cosmic voidmakefile updated to have Python 3.x-compatible CosmoBolognaLib modules

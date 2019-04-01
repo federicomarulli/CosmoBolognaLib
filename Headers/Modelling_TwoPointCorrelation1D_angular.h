@@ -97,7 +97,7 @@ namespace cbl {
 	 *  Modelling_TwoPointCorrelation1D_angular
 	 */
 	Modelling_TwoPointCorrelation1D_angular (const std::shared_ptr<data::Data> twop_dataset)
-	  : Modelling_TwoPointCorrelation1D(twop_dataset, cbl::measure::twopt::TwoPType::_1D_angular_) {}
+	  : Modelling_TwoPointCorrelation1D(twop_dataset, cbl::measure::twopt::TwoPType::_angular_) {}
 
 	/**
 	 *  @brief default destructor

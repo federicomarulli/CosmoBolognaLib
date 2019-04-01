@@ -120,7 +120,7 @@ double cbl::modelling::twopt::Pk_l (const double kk, const int l, const std::str
     return modelling::twopt::Pkmu(kk, mu, model, parameter, pk_interp)*legendre_polynomial(mu, l);
   };
 
-  return 0.5*(2*l+1)*gsl::GSL_integrate_qag(integrand, -1., 1., prec);
+  return 0.5*(2*l+1)*wrapper::gsl::GSL_integrate_qag(integrand, -1., 1., prec);
 }
 
 // ============================================================================================
@@ -137,7 +137,7 @@ std::vector<double> cbl::modelling::twopt::Pk_l (const std::vector<double> kk, c
       return modelling::twopt::Pkmu(kk[i], mu, model, parameter, pk_interp)*legendre_polynomial(mu, l);
     };
 
-    Pkl[i] = 0.5*(2*l+1)*gsl::GSL_integrate_qag(integrand, -1., 1., prec);
+    Pkl[i] = 0.5*(2*l+1)*wrapper::gsl::GSL_integrate_qag(integrand, -1., 1., prec);
   }
 
   return Pkl;
@@ -152,7 +152,7 @@ cbl::glob::FuncGrid cbl::modelling::twopt::Xil_interp (const std::vector<double>
   vector<double> Pkl = Pk_l(kk, l, model, parameter, pk_interp, prec);
   vector<double> rr, Xil;
 
-  cbl::fftlog::transform_FFTlog(rr, Xil, 1, kk, Pkl, l);
+  cbl::wrapper::fftlog::transform_FFTlog(rr, Xil, 1, kk, Pkl, l);
 
   cbl::glob::FuncGrid interp(rr, Xil, "Spline");
 
@@ -197,55 +197,6 @@ std::vector<double> cbl::modelling::twopt::Xi_l (const std::vector<double> rr, c
     Xil[i] = sign[dataset_order[i]]*interp_Xil[dataset_order[i]](rr[i]);
 
   return Xil;
-}
-
-
-// ============================================================================================
-
-
-std::vector<double> cbl::modelling::twopt::Xi_wedges (const std::vector<double> rr, const std::vector<int> dataset_wedge, const int nwedges, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
-{
-  vector<cbl::glob::FuncGrid> interp_Xil(3);
-  for (size_t i=0; i<3; i++)
-    interp_Xil[i] = Xil_interp(pk_interp[0]->x(), 2*i, model, parameter, pk_interp, prec);
-
-  vector<double> XiW(rr.size());
-
-  for (size_t i=0; i<rr.size(); i++) {
-    double mu_min = double(dataset_wedge[i])/nwedges;
-    double mu_max = double(dataset_wedge[i]+1)/nwedges;
-
-    double f2 = -0.5*((pow(mu_max, 3)-pow(mu_min,3))/(mu_max-mu_min)-1.);
-    double f4 = 0.125*( ( 7.*(pow(mu_max, 5)-pow(mu_min,5)) - 10.*(pow(mu_max, 3)-pow(mu_min,3)))/(mu_max-mu_min)+3.);
-
-    XiW[i] = (interp_Xil[0](rr[i])+f2*interp_Xil[1](rr[i])+f4*interp_Xil[2](rr[i]));
-  }
-
-  return XiW;
-}
-
-
-// ============================================================================================
-
-
-std::vector<std::vector<double>> cbl::modelling::twopt::Xi_wedges (const std::vector<double> rr, const int nwedges, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
-{
-  vector<vector<double>> Xil = Xi_l(rr, 3, model, parameter, pk_interp, prec);
-
-  vector<vector<double>> XiW(nwedges, vector<double>(rr.size(), 0));
-
-  for (int i=0; i<nwedges; i++) {
-    double mu_min = double(i)/nwedges;
-    double mu_max = double(i+1)/nwedges;
-
-    double f2 = 0.5*((pow(mu_max, 3)-pow(mu_min,3))/(mu_max-mu_min)-1.);
-    double f4 = 0.125*( ( 7.*(pow(mu_max, 5)-pow(mu_min,5)) - 10.*(pow(mu_max, 3)-pow(mu_min,3)))/(mu_max-mu_min)+3.);
-
-    for (size_t j=0; j<rr.size(); j++)
-      XiW[i][j] = Xil[0][j]+f2*Xil[1][j]+f4*Xil[2][j];
-  }
-
-  return XiW;
 }
 
 
@@ -330,7 +281,7 @@ std::vector<double> cbl::modelling::twopt::damped_Xi (const std::vector<double> 
   vector<double> xi(ss.size(), 0);
 
   for (size_t i=0; i<pk_terms.size(); i++) {
-    vector<double> xi_term = fftlog::transform_FFTlog(ss, 1, kk, pk_terms[i], 0);
+    vector<double> xi_term = wrapper::fftlog::transform_FFTlog(ss, 1, kk, pk_terms[i], 0);
     for (size_t j=0; j<ss.size(); j++)
       xi[j] += pow(bias, 2-i)*xi_term[j];
     

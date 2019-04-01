@@ -54,7 +54,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
   for (size_t dd=0; dd<file.size(); ++dd) {
 
     // read the columns from the table searching by names
-    vector<vector<double>> table = ccfitswrapper::read_table_fits(file[dd], column_names, 1, 1.);
+    vector<vector<double>> table = wrapper::ccfits::read_table_fits(file[dd], column_names, 1, 1.);
     
     if (((read_weights || read_regions) && table.size()<3) || ((read_weights && read_regions) && table.size()<4))
       ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() of FITSCatalgue.cpp: the number of columns in the input FITS file is wrong!"); 

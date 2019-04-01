@@ -68,8 +68,8 @@ double cbl::cosmology::Cosmology::square_bulk_flow (const double rr, const doubl
 
   }
 
-  double Int1 = gsl::GSL_integrate_qag(ff, k_int_min, 1., 1.e-3);
-  double Int2 = gsl::GSL_integrate_qag(ff, 1., 1.e30, 1.e-3);
+  double Int1 = wrapper::gsl::GSL_integrate_qag(ff, k_int_min, 1., 1.e-3);
+  double Int2 = wrapper::gsl::GSL_integrate_qag(ff, 1., 1.e30, 1.e-3);
 
   bulk = m_Pk0_EH*(Int1+Int2);
   return pow(HH(redshift)/(1.+redshift),2)/(2.*par::pi*par::pi)*bulk;
@@ -85,8 +85,8 @@ double cbl::cosmology::Cosmology::square_bulk_flow_Table (const double rr, const
 
   function<double(double)> ff = bind(&cbl::classfunc::func_V2_Table::operator(), func, std::placeholders::_1);
 
-  double Int1 = gsl::GSL_integrate_qag(ff, k_int_min, 1., 1.e-3);
-  double Int2 = gsl::GSL_integrate_qag(ff, 1., 1.e30, 1.e-3);
+  double Int1 = wrapper::gsl::GSL_integrate_qag(ff, k_int_min, 1., 1.e-3);
+  double Int2 = wrapper::gsl::GSL_integrate_qag(ff, 1., 1.e30, 1.e-3);
 
   return pow(HH(redshift)/(1.+redshift),2)/(2.*par::pi*par::pi)*(Int1+Int2);
 }
@@ -160,12 +160,12 @@ double cbl::cosmology::Cosmology::CMN (const double rr, const double k_int_min, 
 
   }
 
-  double i1 = gsl::GSL_integrate_qag(ff1, k_int_min, 1.,1.e-3);
-  double i2 = gsl::GSL_integrate_qag(ff1, 1., 1.e30,1.e-3);
+  double i1 = wrapper::gsl::GSL_integrate_qag(ff1, k_int_min, 1.,1.e-3);
+  double i2 = wrapper::gsl::GSL_integrate_qag(ff1, 1., 1.e30,1.e-3);
   double Int1 = i1+i2;
 
-  i1 = gsl::GSL_integrate_qag(ff2, k_int_min, 1.,1.e-3);
-  i2 = gsl::GSL_integrate_qag(ff2, 1., 1.e30,1.e-3);
+  i1 = wrapper::gsl::GSL_integrate_qag(ff2, k_int_min, 1.,1.e-3);
+  i2 = wrapper::gsl::GSL_integrate_qag(ff2, 1., 1.e30,1.e-3);
   double Int2 = i1+i2;
 
   CMN = Int1/Int2;			       

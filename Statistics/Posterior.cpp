@@ -174,13 +174,14 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
       starting_par.push_back(start[m_model->parameters()->free_parameters()[i]]);
   else
     ErrorCBL("Error in cbl::statistics::Posterior::maximize() of Posterior.cpp: check your inputs!");
-
-  function<double(vector<double> &)> post = [this](vector<double> & pp) { return -this->log(pp); };
-
+  
+  function<double(vector<double> &)> post = [this](vector<double> &pp) { return -this->log(pp); };
+  
   coutCBL << "Maximizing the posterior..." << endl;
-  vector<double> result = cbl::gsl::GSL_minimize_nD(post, starting_par, {}, max_iter, tol, epsilon);
+  vector<double> result = cbl::wrapper::gsl::GSL_minimize_nD(post, starting_par, {}, max_iter, tol, epsilon);
 
-  // check if result is in prior, if not the case something bad happened, then raise a Warning (Error?)
+  
+  // check if result is inside the prior ranges
   
   if (m_prior->log(result)>par::defaultDouble) {
     coutCBL << "Done!" << endl << endl;
@@ -326,7 +327,7 @@ void cbl::statistics::Posterior::write_chain_fits (const string output_dir, cons
       n ++;
     }
   
-  cbl::ccfitswrapper::write_table_fits(output_dir, output_file, names, values);
+  cbl::wrapper::ccfits::write_table_fits(output_dir, output_file, names, values);
 
 
   coutCBL << "I wrote the file: " << output_dir+output_file << endl;
@@ -407,7 +408,7 @@ void cbl::statistics::Posterior::read_chain_fits (const string input_dir, const 
   vector<vector<double>> chain_value(nparameters);
   m_logposterior_values.erase(m_logposterior_values.begin(), m_logposterior_values.end());
 
-  vector<vector<double>> values = cbl::ccfitswrapper::read_table_fits(file, names);
+  vector<vector<double>> values = cbl::wrapper::ccfits::read_table_fits(file, names);
 
   for (int i=0; i<nparameters; i++)
     chain_value[i] = values[i];
@@ -518,6 +519,39 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
   chain_value = cbl::transpose(chain_value);
 
   initialize_chains(chain_size, chain_value);
+}
+
+
+// ============================================================================================
+
+
+void cbl::statistics::Posterior::write_maximization_results (const string dir_output, const string file)
+{
+  coutCBL << "Writing results of posterior maximization on " << dir_output+file << endl;
+  vector<double> bestFitValues = m_model_parameters->bestfit_values();
+  string name = LikelihoodTypeNames ()[static_cast<int>(m_likelihood_type)];
+  double posteriorValue = this->log(bestFitValues);
+
+  string mkdir = "mkdir -p "+dir_output;
+  if (system(mkdir.c_str())) {}
+
+  ofstream fout(dir_output+file);
+
+  fout << "#Parameters information" << endl;
+  fout << "nParameters = " << bestFitValues.size() << endl;
+
+  for (size_t i=0; i<bestFitValues.size(); i++) {
+    fout << "par" << i+1 << "_name = " << m_model_parameters->name(i) << endl;
+    fout << "par" << i+1 << "_status = " << m_model_parameters->status(i) << endl;
+    fout << "par" << i+1 << "_bestfit_value = " << bestFitValues[i] << endl;
+  }
+
+  fout << "#Likelihood information" << endl;
+  fout << "likelihoodType = " << name << endl;
+  fout << "logPosteriorValue = " << posteriorValue << endl;
+
+  fout.clear(); fout.close();
+  coutCBL << "I wrote the file " << dir_output+file << endl;
 }
 
 

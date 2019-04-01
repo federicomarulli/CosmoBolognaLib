@@ -40,10 +40,10 @@ using namespace std;
 // ============================================================================
 
 
-vector<double> cbl::fftlog::transform_FFTlog (const std::vector<double> yy, const int dir, const std::vector<double> xx, const std::vector<double> fx, const double mu, const double q, const double kr, const int kropt)
+vector<double> cbl::wrapper::fftlog::transform_FFTlog (const std::vector<double> yy, const int dir, const std::vector<double> xx, const std::vector<double> fx, const double mu, const double q, const double kr, const int kropt)
 {
   vector<double> _yy, _fy;
-  cbl::fftlog::transform_FFTlog(_yy, _fy, dir, xx, fx, mu, q, kr, kropt);
+  cbl::wrapper::fftlog::transform_FFTlog(_yy, _fy, dir, xx, fx, mu, q, kr, kropt);
 
   cbl::glob::FuncGrid interp(_yy, _fy, "Spline");
 
@@ -58,7 +58,7 @@ vector<double> cbl::fftlog::transform_FFTlog (const std::vector<double> yy, cons
 // ============================================================================
 
 
-void cbl::fftlog::transform_FFTlog (std::vector<double> &yy, std::vector<double> &fy, const int dir, const std::vector<double> xx, const std::vector<double> fx, const double mu, const double q, const double kr, const int kropt)
+void cbl::wrapper::fftlog::transform_FFTlog (std::vector<double> &yy, std::vector<double> &fy, const int dir, const std::vector<double> xx, const std::vector<double> fx, const double mu, const double q, const double kr, const int kropt)
 {
   const int NMAX = 4096;
 
@@ -87,16 +87,16 @@ void cbl::fftlog::transform_FFTlog (std::vector<double> &yy, std::vector<double>
   for (int i=0; i<n; i++)
     ap[i] = fx[i]*xx[i];
 
-  fftlog::fhti_(&n, &_mu, &_q, &dlnx, &_kr, &_kropt, wsave, &i_ok);
+  wrapper::fftlog::fhti_(&n, &_mu, &_q, &dlnx, &_kr, &_kropt, wsave, &i_ok);
 
   double logymedian = log10(_kr)-logxmedian;
 
   double rk = pow(10, logxmedian - logymedian);
 
   if (i_ok==0)
-    ErrorCBL("Problems in cbl::fftlog::transform_FFTlog() of FFTlog.cpp!");
+    ErrorCBL("Problems in cbl::wrapper::fftlog::transform_FFTlog() of FFTlog.cpp!");
 
-  fftlog::fftl_(&n, ap, &rk, &_dir, wsave);
+  wrapper::fftlog::fftl_(&n, ap, &rk, &_dir, wsave);
 
   yy.erase(yy.begin(), yy.end()); fy.erase(fy.begin(), fy.end());
 

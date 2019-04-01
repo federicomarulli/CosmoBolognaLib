@@ -533,7 +533,7 @@ void cbl::cosmology::Cosmology::Table_XiCodes (const std::string code, const boo
     for_each( kk.begin(), kk.end(), [] (double &vv) { vv = pow(10., vv); } );
     for_each( Pk.begin(), Pk.end(), [] (double &vv) { vv = pow(10., vv); } );
     
-    cbl::fftlog::transform_FFTlog(rr, xi, 1, kk, Pk);
+    cbl::wrapper::fftlog::transform_FFTlog(rr, xi, 1, kk, Pk);
 
     ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
@@ -590,7 +590,7 @@ void cbl::cosmology::Cosmology::Pk_0 (const std::string method_Pk, const double 
 	return pow(TopHat_WF(kk*RR)*kk, 2)*eh.Pk(kk); 
       };
     
-    Int = gsl::GSL_integrate_qag(func, k_min, k_max, prec);
+    Int = wrapper::gsl::GSL_integrate_qag(func, k_min, k_max, prec);
   }
 
   else if (method_Pk=="CAMB" || method_Pk=="MPTbreeze-v1" || method_Pk=="classgal_v1") {
@@ -726,7 +726,7 @@ std::vector<double> cbl::cosmology::Cosmology::Pk (const std::vector<double> kk,
 	auto func_sigma = [&] (double _k){
 	  return pow(TopHat_WF(_k*RR)*_k, 2)*interpPk(_k); 
 	};
-	sigma8 = sqrt(1./(2.*pow(par::pi, 2))*gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))*DD(0.)/DD(redshift);
+	sigma8 = sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))*DD(0.)/DD(redshift);
       }
 
       m_Pk0_CAMB = pow(m_sigma8/sigma8,2);
@@ -1073,7 +1073,7 @@ double cbl::cosmology::Cosmology::sigma8_Pk (const std::string method_Pk, const 
 	return pow(TopHat_WF(kk*RR)*kk, 2)*eh.Pk(kk); 
       };
     
-    Int = gsl::GSL_integrate_qag (func, k_min, k_max, prec, limit_size);
+    Int = wrapper::gsl::GSL_integrate_qag (func, k_min, k_max, prec, limit_size);
     
   }
 
@@ -1177,8 +1177,8 @@ double cbl::cosmology::Cosmology::k_star (const std::string method_Pk, const dou
   cbl::classfunc::func_kstar func (m_hh, m_unit, lgkk, lgPk);
 
   function<double(double)> ff = bind(&cbl::classfunc::func_kstar::operator(), func, std::placeholders::_1);
-  double Int1 = gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4);
-  double Int2 = gsl::GSL_integrate_qag(ff, 1., 1.e30, 1.e-4);
+  double Int1 = wrapper::gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4);
+  double Int2 = wrapper::gsl::GSL_integrate_qag(ff, 1., 1.e30, 1.e-4);
   
   double Int = Int1+Int2;
   
@@ -1438,7 +1438,7 @@ std::vector<std::vector<double> > cbl::cosmology::Cosmology::XiMonopole_covarian
 	  params.jl1r1 = &jl1r1;
 	  params.jl2r2 = &jl2r2;
 
-	  double Int = gsl::GSL_integrate_qag(Func,k_min,k_max, prec,limit_size,6);
+	  double Int = wrapper::gsl::GSL_integrate_qag(Func,k_min,k_max, prec,limit_size,6);
 	  Int = Int/(2.*par::pi*par::pi);
 	  covariance[i][j] = Int;
 	  covariance[j][i] = Int;
@@ -1527,7 +1527,7 @@ std::vector<std::vector<double> > cbl::cosmology::Cosmology::XiMultipoles_covari
 	      params.jl1r1 = &jl1r1;
 	      params.jl2r2 = &jl2r2;
 
-	      double Int = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6);
+	      double Int = wrapper::gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6);
 	      Int = Int/(2.*par::pi*par::pi);
 	      covariance[i+nbins*l1][j+nbins*l2] = Int;
 	      covariance[j+nbins*l1][i+nbins*l2] = Int;
@@ -1613,19 +1613,19 @@ std::vector<std::vector<double> > cbl::cosmology::Cosmology::XiMultipoles (const
       params.k_cut = 0.7;
       params.cut_pow = 2.;
 
-      xi0[i] = gsl::GSL_integrate_qag(Func,k_min,k_max, prec,limit_size,6)*f0;
+      xi0[i] = wrapper::gsl::GSL_integrate_qag(Func,k_min,k_max, prec,limit_size,6)*f0;
       
       params.Pkl = &Pk2_interp;
       params.l = 2;
       params.k_cut = 0.58;
       params.cut_pow = 4.;
-      xi2[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6)*f2;
+      xi2[i] = wrapper::gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6)*f2;
       
       params.Pkl = &Pk4_interp;
       params.l = 4;
       params.k_cut = 0.6;
       params.cut_pow = 2.;
-      xi4[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6)*f4;
+      xi4[i] = wrapper::gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6)*f4;
     }
     
     Pk0_interp.free();
@@ -1669,7 +1669,7 @@ double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const std::vect
     Pk.push_back( this->Pk(kk[i], method_Pk, NL, zmean, output_root, norm, k_min, k_max, prec, file_par));
 
   vector<double> r, xi;
-  cbl::fftlog::transform_FFTlog(r, xi, 1, kk, Pk);
+  cbl::wrapper::fftlog::transform_FFTlog(r, xi, 1, kk, Pk);
   cbl::glob::FuncGrid xi_interp(r, xi, interpolationType);
 
   if (GSL) {
@@ -1683,9 +1683,9 @@ double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const std::vect
 	  return xi_interp(ss)*phi(z2);
 	};
 
-	return cbl::gsl::GSL_integrate_qag(integrand_z2, zmin, zmax)*phi(z1);
+	return cbl::wrapper::gsl::GSL_integrate_qag(integrand_z2, zmin, zmax)*phi(z1);
       };
-    return cbl::gsl::GSL_integrate_qag(integrand, zmin, zmax);
+    return cbl::wrapper::gsl::GSL_integrate_qag(integrand, zmin, zmax);
   }
   else{
     auto integrand = [&] (vector<double> zz)
@@ -1696,7 +1696,7 @@ double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const std::vect
 	return xi_interp(ss)*phi(zz[0])*phi(zz[1]);
       };
 
-    cbl::cuba::CUBAwrapper integrator(integrand, 2);
+    cbl::wrapper::cuba::CUBAwrapper integrator(integrand, 2);
 
     return integrator.IntegrateCuhre( {{zmin, zmax}, {zmin, zmax}});
   }
@@ -1732,13 +1732,13 @@ double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const std::vect
       return phi(redshift)*this->dV_dZdOmega(redshift, 1);
     };
   
-  double normalization = gsl::GSL_integrate_qag(normalization_integrand, zmin, zmax);
+  double normalization = wrapper::gsl::GSL_integrate_qag(normalization_integrand, zmin, zmax);
 
   
   // compute the 2PCF model
 
   vector<double> r, xi;
-  cbl::fftlog::transform_FFTlog(r, xi, 1, kk, Pk);
+  cbl::wrapper::fftlog::transform_FFTlog(r, xi, 1, kk, Pk);
   cbl::glob::FuncGrid xi_interp(r, xi, interpolationType);
   double integral;
 
@@ -1754,10 +1754,10 @@ double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const std::vect
 	  return DD*DD*xi_interp(ss)*normalization_integrand(z2);
 	};
 
-	return cbl::gsl::GSL_integrate_qag(integrand_z2, zmin, zmax)*normalization_integrand(z1);
+	return cbl::wrapper::gsl::GSL_integrate_qag(integrand_z2, zmin, zmax)*normalization_integrand(z1);
       };
 
-    integral = cbl::gsl::GSL_integrate_qag(integrand, zmin, zmax);
+    integral = cbl::wrapper::gsl::GSL_integrate_qag(integrand, zmin, zmax);
 
   }
   
@@ -1771,7 +1771,7 @@ double cbl::cosmology::Cosmology::wtheta_DM (const double theta, const std::vect
 	return DD*DD*xi_interp(ss)*normalization_integrand(zz[0])*normalization_integrand(zz[1]);
       };
 
-    cbl::cuba::CUBAwrapper integrator(integrand, 2);
+    cbl::wrapper::cuba::CUBAwrapper integrator(integrand, 2);
 
     integral = integrator.IntegrateCuhre( {{zmin, zmax}, {zmin, zmax}});
   }
@@ -1800,7 +1800,7 @@ std::vector<double> cbl::cosmology::Cosmology::C_l_DM (const int lmax, const std
     return Pk_interp(kk);
   };
 
-  double sbao = sqrt(4.*par::pi*cbl::gsl::GSL_integrate_qag(integrand_sbao, 1.e-4, 1)/3./pow(2*par::pi,3));
+  double sbao = sqrt(4.*par::pi*cbl::wrapper::gsl::GSL_integrate_qag(integrand_sbao, 1.e-4, 1)/3./pow(2*par::pi,3));
 
   cbl::glob::FuncGrid phi(zz, phiz, interpolationMethod);
 
@@ -1817,11 +1817,11 @@ std::vector<double> cbl::cosmology::Cosmology::C_l_DM (const int lmax, const std
 	  return DD(zz)*jl(kk*D_C(zz), l);
 	};
 
-	double integral_z = cbl::gsl::GSL_integrate_qag(integrand_z, zmin, zmax);
+	double integral_z = cbl::wrapper::gsl::GSL_integrate_qag(integrand_z, zmin, zmax);
 	return kk*kk*Pk_interp(kk)*pow(integral_z, 2)*exp(-kk*kk*sbao*sbao);
       };
 
-      integral = 2*cbl::gsl::GSL_integrate_qag(integrand, 1.e-4, 10)/par::pi;
+      integral = 2*cbl::wrapper::gsl::GSL_integrate_qag(integrand, 1.e-4, 10)/par::pi;
     }
     else {
     
@@ -1832,7 +1832,7 @@ std::vector<double> cbl::cosmology::Cosmology::C_l_DM (const int lmax, const std
 	return pow(DD(zz)*phi(zz), 2)*Pk_interp(kk)*HH(zz)/(par::cc*dc*dc);
       };
 
-      integral = cbl::gsl::GSL_integrate_qag(integrand, zmin, zmax);
+      integral = cbl::wrapper::gsl::GSL_integrate_qag(integrand, zmin, zmax);
     }   
     C_l.push_back(integral);
   }
@@ -1863,7 +1863,7 @@ std::vector<double> cbl::cosmology::Cosmology::C_l_DM (const int lmax, const std
       double _kk = double(l)/dc;
       return pow(phi(redshift), 2)*HH(redshift)/pow(dc, 2)*pow(DD(redshift),2)*Pk_interp(_kk);
     };
-    C_l.push_back(cbl::gsl::GSL_integrate_qag(integrand, zmin, zmax)/par::cc);
+    C_l.push_back(cbl::wrapper::gsl::GSL_integrate_qag(integrand, zmin, zmax)/par::cc);
   }
 
   return C_l;

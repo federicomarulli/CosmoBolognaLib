@@ -45,7 +45,7 @@ using namespace random;
 double cbl::glob::Distribution::m_percentile_integrator (const double xx)
 {
   function<double(double)> f_moment = [this] (double x) {return this->operator()(x);};
-  return gsl::GSL_integrate_qag(f_moment, m_xmin, xx);
+  return wrapper::gsl::GSL_integrate_qag(f_moment, m_xmin, xx);
 }
 
 
@@ -56,7 +56,7 @@ void cbl::glob::Distribution::m_set_distribution_normalization ()
 {
   function<double(double)> f = bind(m_func, std::placeholders::_1, m_distribution_func_fixed_pars, m_distribution_func_pars);
 
-  m_distribution_normalization = gsl::GSL_integrate_qag(f, m_xmin, m_xmax);
+  m_distribution_normalization = wrapper::gsl::GSL_integrate_qag(f, m_xmin, m_xmax);
 }
 
 
@@ -386,7 +386,7 @@ double cbl::glob::Distribution::mean()
   {
     function<double(double)> f = bind(&Distribution::m_moments_integrator, this, std::placeholders::_1, 1);
 
-    val = gsl::GSL_integrate_qag(f, m_xmin, m_xmax);
+    val = wrapper::gsl::GSL_integrate_qag(f, m_xmin, m_xmax);
   }
   m_mean = val;
   return val;
@@ -410,7 +410,7 @@ double cbl::glob::Distribution::variance ()
 
     function<double(double)> f = [this] (double xx) {return  this->m_central_moments_integrator(xx, 2);};
 
-    val = gsl::GSL_integrate_qag(f, m_xmin, m_xmax);
+    val = wrapper::gsl::GSL_integrate_qag(f, m_xmin, m_xmax);
   }
   m_variance = val;
   return val;
@@ -441,7 +441,7 @@ double cbl::glob::Distribution::skewness ()
     
     function<double(double)> f = [this] (double xx) { return  this->m_central_moments_integrator(xx, 3); };
     
-    val = sqrt(pow(gsl::GSL_integrate_qag(f, m_xmin, m_xmax),2)*pow(m_variance, -3));
+    val = sqrt(pow(wrapper::gsl::GSL_integrate_qag(f, m_xmin, m_xmax),2)*pow(m_variance, -3));
   }
   
   return val;
@@ -463,7 +463,7 @@ double cbl::glob::Distribution::kurtosis ()
 
     function<double(double)> f = [this] (double xx) { return  this->m_central_moments_integrator(xx, 4); };
 
-    val= gsl::GSL_integrate_qag(f, m_xmin, m_xmax)*pow(m_variance, -2);
+    val= wrapper::gsl::GSL_integrate_qag(f, m_xmin, m_xmax)*pow(m_variance, -2);
   }
   
   return val;
@@ -497,7 +497,7 @@ double cbl::glob::Distribution::percentile (const unsigned int i)
   else {
     function<double(double)> f_integral = [this] (double xx) { return this->m_percentile_integrator(xx); };
 
-    val = gsl::GSL_root_brent(f_integral, Area, m_xmin, m_xmax);
+    val = wrapper::gsl::GSL_root_brent(f_integral, Area, m_xmin, m_xmax);
   }
 
   return val;
@@ -536,7 +536,7 @@ double cbl::glob::Distribution::mode ()
   else {
     auto func = [&] (const double param) { return -this->operator()(param); };
     double start = median(); //(m_xmax+m_xmin)*0.5;
-    val = gsl::GSL_minimize_1D(func, start, m_xmin, m_xmax, 10000, false);
+    val = wrapper::gsl::GSL_minimize_1D(func, start, m_xmin, m_xmax, 10000, false);
   }
   
   return val;

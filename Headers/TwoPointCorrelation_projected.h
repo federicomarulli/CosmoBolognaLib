@@ -279,7 +279,7 @@ namespace cbl {
 	 *  @brief default constructor
 	 *  @return object of class TwoPointCorrelation_projected
 	 */
-	TwoPointCorrelation_projected () { m_twoPType = TwoPType::_1D_projected_; m_piMax_integral=50.; }
+	TwoPointCorrelation_projected () { m_twoPType = TwoPType::_projected_; m_piMax_integral=50.; }
 
 	/**
 	 *  @brief constructor
@@ -317,7 +317,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation_projected (catalogue::Catalogue data, catalogue::Catalogue random, const BinType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const double piMax_integral, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation2D_cartesian(data, random, binType_rp, rpMin, rpMax, nbins_rp, shift_rp, BinType::_linear_, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_projected_; m_piMax_integral = piMax_integral; }
+	  { m_twoPType = TwoPType::_projected_; m_piMax_integral = piMax_integral; }
       
 	/**
 	 *  @brief constructor
@@ -353,7 +353,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation_projected (catalogue::Catalogue data, catalogue::Catalogue random, const BinType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const double piMax_integral, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation2D_cartesian(data, random, binType_rp, rpMin, rpMax, binSize_rp, shift_rp, BinType::_linear_, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_projected_; m_piMax_integral = piMax_integral; }
+	  { m_twoPType = TwoPType::_projected_; m_piMax_integral = piMax_integral; }
       
 	/**
 	 *  @brief default destructor

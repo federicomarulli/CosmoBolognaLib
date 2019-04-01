@@ -470,7 +470,7 @@ double cbl::cosmology::Cosmology::n_haloes (const double Mass_min, const double 
 
   if (nbin_mass==0) {  
     function<double(double)> func = bind(&Cosmology::m_mass_function, this, std::placeholders::_1, pp);
-    return Volume*gsl::GSL_integrate_qag(func, Mass_min, Mass_max, prec);
+    return Volume*wrapper::gsl::GSL_integrate_qag(func, Mass_min, Mass_max, prec);
   }
 
   else if (nbin_mass>0)
@@ -502,7 +502,7 @@ double cbl::cosmology::Cosmology::MhaloMin (const int n_halo, const double Area,
   
   function<double(double) > ff = bind(&cbl::classfunc::func_MhaloMin::operator(), func, std::placeholders::_1);
   double prec = 0.0001;
-  double lgM = gsl::GSL_root_brent (ff, 0., lgM1_guess, lgM2_guess, prec);
+  double lgM = wrapper::gsl::GSL_root_brent (ff, 0., lgM1_guess, lgM2_guess, prec);
 
   return pow(10., lgM);
 }
@@ -625,7 +625,7 @@ std::vector<double> cbl::cosmology::Cosmology::mass_function (const std::vector<
       double DD = (isDelta_vir) ? Delta_vir(Delta, redshift) : Delta;
       return mass_function(mass[k], sigma, dlnsigma, redshift, model_MF, output_root, DD)*dV_dZdOmega(redshift, false);
     };
-    MF[k] = gsl::GSL_integrate_qag(func, z_min, z_max)/VV;
+    MF[k] = wrapper::gsl::GSL_integrate_qag(func, z_min, z_max)/VV;
   }
 
   return MF;
@@ -683,7 +683,7 @@ std::vector<double> cbl::cosmology::Cosmology::mass_function_selection_function_
       return SF*mass_function(mass[k], sigma, dlnsigma, redshift, model_MF, output_root, DD)*dV_dZdOmega(redshift, false);
     };
 
-    MF[k] = gsl::GSL_integrate_qag(func, z_min, z_max)/VV; ///gsl::GSL_integrate_qag(funcD, z_min, z_max);  
+    MF[k] = wrapper::gsl::GSL_integrate_qag(func, z_min, z_max)/VV; ///wrapper::gsl::GSL_integrate_qag(funcD, z_min, z_max);  
   }
 
   return MF;
@@ -739,7 +739,7 @@ std::vector<double> cbl::cosmology::Cosmology::redshift_distribution_haloes (con
       return Area_degrees*dV_dZdOmega(redshift, false)*mass_function(mass, sigma, dlnsigma, redshift, model_MF, output_root, DD);
     };
 
-    cbl::cuba::CUBAwrapper CubaIntegrand(integrand, 2);
+    cbl::wrapper::cuba::CUBAwrapper CubaIntegrand(integrand, 2);
 
     redshift_distribution[Red] = CubaIntegrand.IntegrateVegas(integration_limits);
     redshift += delta_z;
@@ -810,7 +810,7 @@ std::vector<double> cbl::cosmology::Cosmology::redshift_distribution_haloes_sele
       return SF*Area_degrees*dV_dZdOmega(redshift, false)*mass_function(mass, sigma, dlnsigma, redshift, model_MF, output_root, DD);
     };
 
-    cuba::CUBAwrapper CubaIntegrand(integrand, 2);
+    wrapper::cuba::CUBAwrapper CubaIntegrand(integrand, 2);
     const double distr = CubaIntegrand.IntegrateVegas(integration_limits);
     redshift_distribution[zz] = (distr!=distr) ? 0. : distr;
   }
@@ -881,8 +881,8 @@ double cbl::cosmology::Cosmology::mean_redshift_haloes_selection_function (const
     return MF*SF*dV_dZdOmega(redshift, false);
   };
 
-  cbl::cuba::CUBAwrapper IntegrandNum(integrand_num, 2);
-  cbl::cuba::CUBAwrapper IntegrandDenom(integrand_denom, 2);
+  cbl::wrapper::cuba::CUBAwrapper IntegrandNum(integrand_num, 2);
+  cbl::wrapper::cuba::CUBAwrapper IntegrandDenom(integrand_denom, 2);
 
   vector<vector<double>> limits = {{z_min, z_max}, {Mass_min, Mass_max}};
 

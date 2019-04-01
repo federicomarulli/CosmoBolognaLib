@@ -139,7 +139,7 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const std::vector<d
       return val;
     };
 
-    double xi0 = cbl::gsl::GSL_integrate_qag(xi_mu_0, 0, 1);
+    double xi0 = cbl::wrapper::gsl::GSL_integrate_qag(xi_mu_0, 0, 1);
 
     Xil[0].push_back(parameter[2]*xi0+parameter[4]+parameter[6]/new_rad[0][i]+parameter[8]/(new_rad[0][i]*new_rad[0][i]));
 
@@ -170,8 +170,8 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const std::vector<d
       return 3*val*mu*mu;
     };
 
-    double xi0 = cbl::gsl::GSL_integrate_qag(xi_mu_0, 0, 1);
-    double ximu2 = cbl::gsl::GSL_integrate_qag(xi_mu_2, 0, 1);
+    double xi0 = cbl::wrapper::gsl::GSL_integrate_qag(xi_mu_0, 0, 1);
+    double ximu2 = cbl::wrapper::gsl::GSL_integrate_qag(xi_mu_2, 0, 1);
 
     Xil[1].push_back(2.5*(parameter[3]*ximu2-parameter[2]*xi0)+parameter[5]+parameter[7]/new_rad[1][i]+parameter[9]/(new_rad[1][i]*new_rad[1][i]));
   }

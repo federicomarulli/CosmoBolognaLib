@@ -671,7 +671,7 @@ double cbl::cosmology::Cosmology::gg (const double redshift) const
   
   const double aa = 1./(1+redshift);
   
-  return 2.5*OmegaM(redshift)*aa*aa*pow(HH(redshift), 3)*gsl::GSL_integrate_qag(func, 0, aa);
+  return 2.5*OmegaM(redshift)*aa*aa*pow(HH(redshift), 3)*wrapper::gsl::GSL_integrate_qag(func, 0, aa);
 }
 
 
@@ -710,7 +710,7 @@ double cbl::cosmology::Cosmology::D_C (const double redshift) const
 
   if (m_model=="LCDM") {
     function<double(double)> integrand = bind(&Cosmology::EE_inv, this, std::placeholders::_1);
-    Dc = gsl::GSL_integrate_qag(integrand,0, redshift); 
+    Dc = wrapper::gsl::GSL_integrate_qag(integrand,0, redshift); 
   }
   
   else {
@@ -894,7 +894,7 @@ double cbl::cosmology::Cosmology::Distance (const double redshift, const std::st
 double cbl::cosmology::Cosmology::lookback_time (const double redshift) const 
 {
   function<double(double)> integrand = bind(&Cosmology::EE_inv2, this, std::placeholders::_1);
-  double tt =  gsl::GSL_integrate_qag(integrand,0, redshift); 
+  double tt =  wrapper::gsl::GSL_integrate_qag(integrand,0, redshift); 
 
   double Mpc = par::mega*par::pc*1.e-3; // in Km;
   double Gyr = par::giga*par::yr; // in sec
@@ -911,7 +911,7 @@ double cbl::cosmology::Cosmology::cosmic_time (const double redshift) const
   function<double(double)> integrand = bind(&Cosmology::EE_inv3, this, std::placeholders::_1);
   
   double aa = 1./(1.+redshift);
-  double tt = gsl::GSL_integrate_qag(integrand,0, aa); 
+  double tt = wrapper::gsl::GSL_integrate_qag(integrand,0, aa); 
 
   double Mpc = par::mega*par::pc*1.e-3; // in Km;
   double Gyr = par::giga*par::yr; // in sec
@@ -1009,7 +1009,7 @@ double cbl::cosmology::Cosmology::Redshift (const double d_c, const double z1_gu
   
   if (m_model=="LCDM") {
     function<double(double)> func = bind(&Cosmology::D_C, this, std::placeholders::_1);
-    redshift =  gsl::GSL_root_brent(func, d_c, z1_guess, z2_guess, prec); 
+    redshift =  wrapper::gsl::GSL_root_brent(func, d_c, z1_guess, z2_guess, prec); 
   }
   
   else {
@@ -1129,7 +1129,7 @@ double cbl::cosmology::Cosmology::Redshift_time (const double time, const double
   double prec = 0.0001;
 
   function<double(double)> func = bind(&Cosmology::cosmic_time, this, std::placeholders::_1);
-  return gsl::GSL_root_brent(func, time, z1_guess, z2_guess, prec); 
+  return wrapper::gsl::GSL_root_brent(func, time, z1_guess, z2_guess, prec); 
 }
 
 
@@ -1173,7 +1173,7 @@ double cbl::cosmology::Cosmology::max_redshift (const double Volume, const doubl
   double dcz2 = pow(3*Volume/Area_steradians+pow(D_C(z_min),3),1./3);
 
   function<double(double)> func = bind(&Cosmology::D_C, this, std::placeholders::_1);
-  return gsl::GSL_root_brent(func, dcz2, z_min, 10, 1.e-9); 
+  return wrapper::gsl::GSL_root_brent(func, dcz2, z_min, 10, 1.e-9); 
 }
 
 
