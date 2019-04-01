@@ -1,0 +1,8 @@
+<map id="Headers/GlobalFunc.h" name="Headers/GlobalFunc.h">
+<area shape="rect" id="node2" href="$d7/d70/3PCF__SphericalHarmonics_8cpp.html" title="Temporary function to compute the 3pcf following Slepian, Eisenstein 2015. " alt="" coords="5,80,192,121"/>
+<area shape="rect" id="node3" href="$d2/d22/Forecast_8cpp.html" title="Functions to generate mock 2PCF/3PCF signal and provide forecasts. " alt="" coords="216,87,384,114"/>
+<area shape="rect" id="node4" href="$d2/dae/GlobalFunc_2Func_8cpp_source.html" title="GlobalFunc/Func.cpp" alt="" coords="408,87,555,114"/>
+<area shape="rect" id="node5" href="$d3/d84/FuncCosmology_8cpp.html" title="Generic functions that use the class Cosmology. " alt="" coords="579,87,791,114"/>
+<area shape="rect" id="node6" href="$d1/d1f/Reconstruction_8cpp.html" title="Functions to compute displacement for the reconstructed density field of a collection of points..." alt="" coords="816,87,1021,114"/>
+<area shape="rect" id="node7" href="$db/d1c/SubSample_8cpp.html" title="Functions for dividing a catalogue in sub&#45;samples. " alt="" coords="1045,87,1229,114"/>
+</map>

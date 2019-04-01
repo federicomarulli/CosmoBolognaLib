@@ -2,6 +2,16 @@
 ----- the list of publications that used the CosmoBolognaLib -----
 ------------------------------------------------------------------
 
+22. Contarini, Ronconi, Marulli, Moscardini, Veropalumbo, Baldi
+    Cosmological exploitation of the size function of cosmic voids
+    identified in the distribution of biased tracers
+    2019, submitted to MNRAS
+    
+21. García-Farieta, Marulli, Veropalumbo, Moscardini, Casas, Giocoli, Baldi
+    Clustering and redshift-space distortions in modified gravity
+    models with massive neutrinos
+    2019, submitted to MNRAS
+    
 20. Ronconi, Contarini, Marulli, Baldi, Moscardini
     Cosmic voids uncovered -- first-order statistics of depressions in
     the biased density field

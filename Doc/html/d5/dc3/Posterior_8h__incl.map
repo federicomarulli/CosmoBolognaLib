@@ -1,0 +1,25 @@
+<map id="Headers/Posterior.h" name="Headers/Posterior.h">
+<area shape="rect" id="node2" href="$d9/d17/RandomNumbers_8h.html" title="Class functions used to generate random numbers. " alt="" coords="1151,976,1286,1003"/>
+<area shape="rect" id="node34" href="$d8/de3/Prior_8h.html" title="The class Prior. " alt="" coords="1210,528,1270,555"/>
+<area shape="rect" id="node40" href="$db/dd8/Likelihood_8h.html" title="The class Likelihood. " alt="" coords="1289,80,1380,107"/>
+<area shape="rect" id="node3" href="$da/ddd/FFTlog_8h.html" title="Wrapper for fftlog wripper. " alt="" coords="1181,1051,1256,1077"/>
+<area shape="rect" id="node4" href="$d5/d38/FuncGrid_8h.html" title="Class used to handle functions stored on a grid. " alt="" coords="1175,1125,1262,1152"/>
+<area shape="rect" id="node5" href="$de/dc4/GSLwrapper_8h.html" title="functions that wrap GSL routines for integration, root finding and minimization " alt="" coords="1099,1200,1205,1227"/>
+<area shape="rect" id="node32" href="$db/dad/CUBAwrapper_8h.html" title="class CUBAwrapper that wrap CUBA routines for multidimensional integration " alt="" coords="1228,1200,1345,1227"/>
+<area shape="rect" id="node6" href="$d3/de9/Kernel_8h.html" title="Useful generic functions. " alt="" coords="1139,1275,1210,1301"/>
+<area shape="rect" id="node29" href="$d1/d45/Constants_8h.html" title="Constants of general use. " alt="" coords="2004,1349,2097,1376"/>
+<area shape="rect" id="node30" href="$d5/d76/EnumCast_8h.html" title="Classes used to cast integers and std::string into the enums used in the CosmoBolognaLib. " alt="" coords="2122,1349,2217,1376"/>
+<area shape="rect" id="node31" href="$d8/d8a/Exception_8h.html" title="The class Exception Class used to handle the exceptions. " alt="" coords="2241,1349,2332,1376"/>
+<area shape="rect" id="node35" href="$d5/d4d/Distribution_8h.html" title="The class Distribution. " alt="" coords="1308,603,1407,629"/>
+<area shape="rect" id="node36" href="$db/db1/Data2D__extra_8h.html" title="The class Data2D_extra. " alt="" coords="1209,677,1324,704"/>
+<area shape="rect" id="node39" href="$d2/d8a/Func_8h.html" title="Useful generic functions. " alt="" coords="1235,901,1298,928"/>
+<area shape="rect" id="node37" href="$d1/dfe/Data2D_8h.html" title="The class Data2D. " alt="" coords="1227,752,1306,779"/>
+<area shape="rect" id="node38" href="$d6/df6/Data_8h.html" title="The class Data. " alt="" coords="1236,827,1297,853"/>
+<area shape="rect" id="node41" href="$dd/ded/LikelihoodFunction_8h.html" title="Likelihood function. " alt="" coords="1281,155,1423,181"/>
+<area shape="rect" id="node42" href="$d7/de6/Model2D_8h.html" title="The class Model2D. " alt="" coords="1309,229,1395,256"/>
+<area shape="rect" id="node43" href="$d9/d12/Model1D_8h.html" title="The class Model1D. " alt="" coords="1309,304,1395,331"/>
+<area shape="rect" id="node44" href="$d3/d5a/Model_8h.html" title="The class Model. " alt="" coords="1319,379,1387,405"/>
+<area shape="rect" id="node45" href="$dc/d6a/ModelParameters_8h.html" title="The class ModelParameters. " alt="" coords="1289,453,1423,480"/>
+<area shape="rect" id="node46" href="$db/d6c/PriorDistribution_8h.html" title="The class PriorDistribution. " alt="" coords="1294,528,1421,555"/>
+<area shape="rect" id="node47" href="$db/dbb/PosteriorDistribution_8h.html" title="The class PosteriorDistribution. " alt="" coords="1445,528,1595,555"/>
+</map>
