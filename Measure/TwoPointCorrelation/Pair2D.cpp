@@ -392,7 +392,7 @@ void cbl::pairs::Pair2D_comovingCartesian_linlin::get_pair (const shared_ptr<Obj
   const double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
   const double pi = fabs(obj1->dc()-obj2->dc());
   
-  if (m_rpMin<rp && rp<m_rpMax && m_piMin<pi && pi<m_piMax) {
+  if (m_rpMin<rp && rp<m_rpMax && m_piMin<=pi && pi<m_piMax) {
 
     ir = max(0, min(int((rp-m_rpMin)*m_binSize_inv_D1), m_nbins_D1));
     jr = max(0, min(int((pi-m_piMin)*m_binSize_inv_D2), m_nbins_D2));
@@ -445,7 +445,7 @@ void cbl::pairs::Pair2D_comovingCartesian_loglin::get_pair (const shared_ptr<Obj
   const double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
   const double pi = fabs(obj1->dc()-obj2->dc());
 
-  if (m_rpMin<rp && rp<m_rpMax && m_piMin<pi && pi<m_piMax) {
+  if (m_rpMin<rp && rp<m_rpMax && m_piMin<=pi && pi<m_piMax) {
 
     ir = max(0, min(int((log10(rp)-log10(m_rpMin))*m_binSize_inv_D1), m_nbins_D1)); 
     jr = max(0, min(int((pi-m_piMin)*m_binSize_inv_D2), m_nbins_D2));
@@ -596,7 +596,7 @@ void cbl::pairs::Pair2D_comovingCartesian_linlin::put (const shared_ptr<Object> 
   const double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
   const double pi = fabs(obj1->dc()-obj2->dc());
   
-  if (m_rpMin<rp && rp<m_rpMax && m_piMin<pi && pi<m_piMax) {
+  if (m_rpMin<rp && rp<m_rpMax && m_piMin<=pi && pi<m_piMax) {
 
     const int ir = max(0, min(int((rp-m_rpMin)*m_binSize_inv_D1), m_nbins_D1));
     const int jr = max(0, min(int((pi-m_piMin)*m_binSize_inv_D2), m_nbins_D2));
@@ -642,7 +642,7 @@ void cbl::pairs::Pair2D_comovingCartesian_loglin::put (const shared_ptr<Object> 
   const double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
   const double pi = fabs(obj1->dc()-obj2->dc());
 
-  if (m_rpMin<rp && rp<m_rpMax && m_piMin<pi && pi<m_piMax) {
+  if (m_rpMin<rp && rp<m_rpMax && m_piMin<=pi && pi<m_piMax) {
 
     const int ir = max(0, min(int((log10(rp)-log10(m_rpMin))*m_binSize_inv_D1), m_nbins_D1)); 
     const int jr = max(0, min(int((pi-m_piMin)*m_binSize_inv_D2), m_nbins_D2));
