@@ -1,0 +1,12 @@
+<map id="Headers/SphericalHarmonics_Coefficients.h" name="Headers/SphericalHarmonics_Coefficients.h">
+<area shape="rect" id="node2" href="$d2/d8a/Func_8h.html" title="Useful generic functions. " alt="" coords="1187,95,1250,121"/>
+<area shape="rect" id="node3" href="$d9/d17/RandomNumbers_8h.html" title="Class functions used to generate random numbers. " alt="" coords="1151,169,1286,196"/>
+<area shape="rect" id="node4" href="$da/ddd/FFTlog_8h.html" title="Wrapper for fftlog wripper. " alt="" coords="1181,244,1256,271"/>
+<area shape="rect" id="node5" href="$d5/d38/FuncGrid_8h.html" title="Class used to handle functions stored on a grid. " alt="" coords="1175,319,1262,345"/>
+<area shape="rect" id="node6" href="$de/dc4/GSLwrapper_8h.html" title="functions that wrap GSL routines for integration, root finding and minimization " alt="" coords="1099,393,1205,420"/>
+<area shape="rect" id="node33" href="$db/dad/CUBAwrapper_8h.html" title="class CUBAwrapper that wrap CUBA routines for multidimensional integration " alt="" coords="1228,393,1345,420"/>
+<area shape="rect" id="node7" href="$d3/de9/Kernel_8h.html" title="Useful generic functions. " alt="" coords="1139,468,1210,495"/>
+<area shape="rect" id="node30" href="$d1/d45/Constants_8h.html" title="Constants of general use. " alt="" coords="2004,543,2097,569"/>
+<area shape="rect" id="node31" href="$d5/d76/EnumCast_8h.html" title="Classes used to cast integers and std::string into the enums used in the CosmoBolognaLib. " alt="" coords="2122,543,2217,569"/>
+<area shape="rect" id="node32" href="$d8/d8a/Exception_8h.html" title="The class Exception Class used to handle the exceptions. " alt="" coords="2241,543,2332,569"/>
+</map>
