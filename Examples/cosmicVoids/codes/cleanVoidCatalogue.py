@@ -38,31 +38,6 @@ else :
   coordinates = cbl.CoordinateType__observed_
 
 ##########################################################
-# define a cosmological model, using parameters from file #
-
-cosm = cbl.Cosmology(param.findDouble('OmM'),
-                     param.findDouble('Omb'),
-                     param.findDouble('Omn'),
-                     param.findDouble('massless'),
-                     param.findInt('massive'),
-                     param.findDouble('OmL'),
-                     param.findDouble('Omr'),
-                     param.findDouble('hh'),
-                     param.findDouble('As'),
-                     param.findDouble('pivot'),
-                     param.findDouble('ns'),
-                     param.findDouble('w0'),
-                     param.findDouble('wa'),
-                     param.findDouble('fNL'),
-                     param.findInt('type_NG'),
-                     param.findDouble('tau'),
-                     param.findString('model'),
-                     param.findBool('unit'))
-
-# set sigma_8 value from file
-cosm.set_sigma8(param.findDouble('sigma8'))
-
-##########################################################
 # load the input void catalogue
 
 cast = []
@@ -159,23 +134,22 @@ else :
 
 trcat.compute_catalogueProperties(param.findDouble('boxside'))
   
-##########################################################
-# Generate chain-mesh of the input tracers catalogue              
-
-ChM = cbl.ChainMesh3D (2.*trcat.mps(),
-                       trcat.var(cbl.Var__X_),
-                       trcat.var(cbl.Var__Y_),
-                       trcat.var(cbl.Var__Z_),
-                       vdcat.Max(cbl.Var__Radius_))
   
 ##########################################################
 # Finally building the cleaned catalogue
 
 # sets the radius if not read from file:
 if not param.findBool('Radius') :
-  limit = param.findVectorDouble('delta_r')
+  delta_r = param.findVectorDouble('delta_r')
   radii = [delta_r[1] for ii in range(vdcat.nObjects())]
   vdcat.set_var(cbl.Var__Radius_, radii)
+
+# Generate chain-mesh of the input tracers catalogue              
+ChM = cbl.ChainMesh3D (2.*trcat.mps(),
+                       trcat.var(cbl.Var__X_),
+                       trcat.var(cbl.Var__Y_),
+                       trcat.var(cbl.Var__Z_),
+                       vdcat.Max(cbl.Var__Radius_))
 
 # sets the central density if not read from file:
 if not param.findBool('centralDensity') : 

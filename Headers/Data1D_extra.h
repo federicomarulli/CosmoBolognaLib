@@ -79,22 +79,53 @@ namespace cbl {
 	: Data1D() { set_dataType(DataType::_1D_extra_); }
 
       /**
-       *  @brief constructor of Data1D
+       *  @brief constructor which reads the data from file
+       *
        *  @param n_extra_info number of extra info
+       *
        *  @param input_file the input data file
+       *
        *  @param skip_nlines the header lines to be skipped
+       *
+       *  @param column_x the column of x values in the input file; if
+       *  it is not provided, the first column will be used by default
+       *
+       *  @param column_data the column of data values in the input
+       *  file; the size of column_data is the number of data to be
+       *  read (e.g. the size should be 3 in the case of the 3
+       *  multipole moments of the two-point correlation function); if
+       *  the size of column_data is larger than 1, more than 1 data
+       *  vectors are read and then added one after the other in a
+       *  single data object; if column_data is not provided, the
+       *  first column after column_x will be used by default,
+       *  assuming that only 1 data vector has to be read
+       *
+       *  @param column_errors the column of error values in the input
+       *  file; the size of column_error must be equal to the size of
+       *  column_data; if the size of column_error is larger than 1,
+       *  more than 1 error vectors are read and then added one after
+       *  the other in a single data object; if column_random is not
+       *  provided, the second column after column_x will be used by
+       *  default, assuming that only 1 random vector has to be read;
+       *  if the input file has only 2 columns, the errors will be set
+       *  to 1
+       *
        *  @return object of class Data1D
        */
-      Data1D_extra (const int n_extra_info, const std::string input_file, const int skip_nlines=0)
+      Data1D_extra (const int n_extra_info, const std::string input_file, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={})
 	: Data1D()
-	{ m_extra_info.resize(n_extra_info); read(input_file, skip_nlines); set_dataType(DataType::_1D_extra_); }
+	{ m_extra_info.resize(n_extra_info); read(input_file, skip_nlines, column_x, column_data, column_errors); set_dataType(DataType::_1D_extra_); }
       
       /**
-       *  @brief constructor
-       *  @param x vector containing x points 
-       *  @param data vector containing data values 
+       *  @brief constructor which gets the data from input vectors
+       *
+       *  @param x vector containing the x values 
+       *
+       *  @param data vector containing the data values 
+       *
        *  @param extra_info vector containing vectors of extra generic
        *  information
+       *
        *  @return an object of class Data1D_extra
        */
       Data1D_extra (const std::vector<double> x, const std::vector<double> data, const std::vector<std::vector<double>> extra_info)
@@ -102,12 +133,18 @@ namespace cbl {
       { set_dataType(DataType::_1D_extra_); }
 
       /**
-       *  @brief constructor
-       *  @param x vector containing x points 
-       *  @param data vector containing the data values
-       *  @param error vector containing the errors 
+       *  @brief constructor which gets both the data and the errors
+       *  from input vectors
+       *   
+       *  @param x vector containing the x values 
+       *
+       *  @param data vector containing the data
+       *
+       *  @param error vector containing the errors
+       *
        *  @param extra_info vector containing vectors of extra generic
        *  information
+       *
        *  @return an object of class Data1D_extra
        */
       Data1D_extra (const std::vector<double> x, const std::vector<double> data, const std::vector<double> error, const std::vector<std::vector<double>> extra_info={})
@@ -115,12 +152,18 @@ namespace cbl {
       { set_dataType(DataType::_1D_extra_); }
       
       /**
-       *  @brief constructor
-       *  @param x vector containing x points 
-       *  @param data vector containing data values 
-       *  @param covariance vector containing data covariance matrix 
+       *  @brief constructor which gets both the data and the
+       *  covariance matrix from input vectors
+       *
+       *  @param x vector containing the x values 
+       *
+       *  @param data vector containing the data
+       *
+       *  @param covariance matrix containing the covariance 
+       * 
        *  @param extra_info vector containing vectors of extra generic
        *  information
+       *
        *  @return an object of class Data1D_extra
        */
       Data1D_extra (const std::vector<double> x, const std::vector<double> data, const std::vector<std::vector<double>> covariance, const std::vector<std::vector<double>> extra_info)
@@ -209,10 +252,42 @@ namespace cbl {
        *
        *  @param skip_nlines the header lines to be skipped
        *
+       *  @param column_x the column of x values in the input file; if
+       *  it is not provided, the first column will be used by default
+       *
+       *  @param column_data the column of data values in the input
+       *  file; the size of column_data is the number of data to be
+       *  read (e.g. the size should be 3 in the case of the 3
+       *  multipole moments of the two-point correlation function); if
+       *  the size of column_data is larger than 1, more than 1 data
+       *  vectors are read and then added one after the other in a
+       *  single data object; if column_data is not provided, the
+       *  first column after column_x will be used by default,
+       *  assuming that only 1 data vector has to be read
+       *
+       *  @param column_errors the column of error values in the input
+       *  file; the size of column_error must be equal to the size of
+       *  column_data; if the size of column_error is larger than 1,
+       *  more than 1 error vectors are read and then added one after
+       *  the other in a single data object; if column_random is not
+       *  provided, the second column after column_x will be used by
+       *  default, assuming that only 1 random vector has to be read;
+       *  if the input file has only 2 columns, the errors will be set
+       *  to 1
+       *
        *  @return none
        */
-      virtual void read (const std::string input_file, const int skip_nlines=0) override;
+      virtual void read (const std::string input_file, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={}) override;
 
+      /**
+       *  @brief print the data on screen
+       *
+       *  @param precision the float precision
+       *
+       *  @return none
+       */
+      virtual void Print (const int precision=4) const override;
+      
       /**
        *  @brief write the data
        *  @param dir output directory
@@ -224,6 +299,30 @@ namespace cbl {
        *  @return none
        */
       virtual void write (const std::string dir, const std::string file, const std::string header, const int precision=4, const int rank=0) const override;
+
+      ///@}
+
+
+      /**
+       *  @name Member functions for data cut
+       */
+      
+      ///@{
+      
+      /**
+       * @brief cut the data
+       * @param xmin minumum value for the independent variable x
+       * @param xmax maximum value for the independent variable x
+       * @return pointer to an object of type Data1D_extra
+       */
+      std::shared_ptr<Data> cut (const double xmin, const double xmax) const override;
+
+      /**
+       * @brief cut the data, for Data1D_extra
+       * @param [in] mask vector containing values to be masked
+       * @return pointer to an object of type Data1D_extra
+       */
+      std::shared_ptr<Data> cut (const std::vector<bool> mask) const;
 
       ///@}
       

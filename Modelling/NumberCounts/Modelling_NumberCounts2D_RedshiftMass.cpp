@@ -69,16 +69,16 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts2D_RedshiftMass::set_mo
   // construct the model
   switch (m_HistogramType) {
 
-    case (glob::HistogramType::_N_V_):
-      m_model = make_shared<statistics::Model2D>(statistics::Model2D(&number_counts_mass_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
-      break;
-    case (glob::HistogramType::_n_V_):
-      m_model = make_shared<statistics::Model2D>(statistics::Model2D(&number_density_mass_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
-      break;
-    case (glob::HistogramType::_dn_dV_):
-      m_model = make_shared<statistics::Model2D>(statistics::Model2D(&mass_function_mass_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
-      break;
-    default:
-      ErrorCBL("Error in set_model_NumberCounts_cosmology of Modelling_NumberCounts2D_RedshiftMass.cpp: no such a variable in the list!");
+  case (glob::HistogramType::_N_V_):
+    m_model = make_shared<statistics::Model2D>(statistics::Model2D(&number_counts_mass_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    break;
+  case (glob::HistogramType::_n_V_):
+    m_model = make_shared<statistics::Model2D>(statistics::Model2D(&number_density_mass_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    break;
+  case (glob::HistogramType::_dn_dV_):
+    m_model = make_shared<statistics::Model2D>(statistics::Model2D(&mass_function_mass_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    break;
+  default:
+    ErrorCBL("no such a variable in the list!", "set_model_NumberCounts_cosmology", "Modelling_NumberCounts2D_RedshiftMass.cpp");
   }
 }

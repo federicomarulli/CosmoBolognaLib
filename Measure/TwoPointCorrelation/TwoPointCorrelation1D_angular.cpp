@@ -129,7 +129,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::measure (const ErrorTyp
     measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, seed);
     break;
   default:
-    ErrorCBL("Error in measure() of TwoPointCorrelation1D_angular.cpp, unknown type of error");
+    ErrorCBL("unknown type of error!", "measure", "TwoPointCorrelation1D_angular.cpp");
   }
 }
 
@@ -151,7 +151,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::measurePoisson (const s
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
-    ErrorCBL("Error in measurePoisson() of TwoPointCorrelation1D_angular.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measurePoisson", "TwoPointCorrelation1D_angular.cpp");
 }
 
 
@@ -197,7 +197,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureJackknife (const
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
-    ErrorCBL("Error in measureJackknife() of TwoPointCorrelation1D_angular.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureJackknife", "TwoPointCorrelation1D_angular.cpp");
 
   m_dataset->set_covariance(covariance);
 
@@ -210,7 +210,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureJackknife (const
 void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (nMocks<=0)
-    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_angular.cpp, number of mocks must be >0");
+    ErrorCBL("the number of mocks must be >0!", "measureBootstrap", "TwoPointCorrelation1D_angular.cpp");
 
   if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -246,7 +246,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureBootstrap (const
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
-    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_angular.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureBootstrap", "TwoPointCorrelation1D_angular.cpp");
 
   m_dataset->set_covariance(covariance);
 

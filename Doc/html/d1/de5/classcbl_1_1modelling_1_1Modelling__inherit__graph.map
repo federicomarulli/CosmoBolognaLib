@@ -1,0 +1,27 @@
+<map id="cbl::modelling::Modelling" name="cbl::modelling::Modelling">
+<area shape="rect" id="node2" href="$d3/d42/classcbl_1_1modelling_1_1Modelling1D.html" title="The class Modelling1D. " alt="" coords="219,273,401,299"/>
+<area shape="rect" id="node21" href="$de/d65/classcbl_1_1modelling_1_1Modelling2D.html" title="The class Modelling2D. " alt="" coords="219,553,401,579"/>
+<area shape="rect" id="node3" href="$d7/d93/classcbl_1_1modelling_1_1cosmology_1_1Modelling__Cosmology.html" title="The class Modelling_Cosmology. " alt="" coords="476,87,649,128"/>
+<area shape="rect" id="node4" href="$d3/df9/classcbl_1_1modelling_1_1numbercounts_1_1Modelling__NumberCounts1D.html" title="The class Modelling_NumberCounts1D. " alt="" coords="464,152,661,193"/>
+<area shape="rect" id="node8" href="$d3/d4f/classcbl_1_1modelling_1_1threept_1_1Modelling__ThreePointCorrelation.html" title="The class Modelling_ThreePointCorrelation. " alt="" coords="453,265,672,307"/>
+<area shape="rect" id="node13" href="$d6/d8d/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation1D.html" title="The class Modelling_TwoPointCorrelation1D. " alt="" coords="449,385,676,427"/>
+<area shape="rect" id="node5" href="$de/d0a/classcbl_1_1modelling_1_1numbercounts_1_1Modelling__NumberCounts1D__Mass.html" title="The class Modelling_NumberCounts1D_Mass. " alt="" coords="724,5,960,47"/>
+<area shape="rect" id="node6" href="$d1/dcb/classcbl_1_1modelling_1_1numbercounts_1_1Modelling__NumberCounts1D__Redshift.html" title="The class Modelling_NumberCounts1D_Redshift. " alt="" coords="743,71,941,127"/>
+<area shape="rect" id="node7" href="$d8/d4b/classcbl_1_1modelling_1_1numbercounts_1_1Modelling__NumberCounts1D__Size.html" title="The class Modelling_NumberCounts1D_Size. " alt="" coords="727,152,957,193"/>
+<area shape="rect" id="node9" href="$d3/d7f/classcbl_1_1modelling_1_1threept_1_1Modelling__ThreePointCorrelation__angular__connected.html" title="The class Modelling_ThreePointCorrelation_angular_connected. " alt="" coords="733,218,951,274"/>
+<area shape="rect" id="node11" href="$df/d9a/classcbl_1_1modelling_1_1threept_1_1Modelling__ThreePointCorrelation__comoving__connected.html" title="The class Modelling_ThreePointCorrelation_comoving_connected. " alt="" coords="733,298,951,354"/>
+<area shape="rect" id="node10" href="$dd/d32/classcbl_1_1modelling_1_1threept_1_1Modelling__ThreePointCorrelation__angular__reduced.html" title="The class Modelling_ThreePointCorrelation_angular_reduced. " alt="" coords="1008,218,1227,274"/>
+<area shape="rect" id="node12" href="$db/d60/classcbl_1_1modelling_1_1threept_1_1Modelling__ThreePointCorrelation__comoving__reduced.html" title="The class Modelling_ThreePointCorrelation_comoving_reduced. " alt="" coords="1008,298,1227,354"/>
+<area shape="rect" id="node14" href="$d5/dbd/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation1D__angular.html" title="The class Modelling_TwoPointCorrelation1D_angular. " alt="" coords="733,378,951,434"/>
+<area shape="rect" id="node15" href="$d6/d6e/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation1D__monopole.html" title="The class Modelling_TwoPointCorrelation1D_monopole. " alt="" coords="733,458,951,514"/>
+<area shape="rect" id="node16" href="$d2/d3d/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation1D__filtered.html" title="The class Modelling_TwoPointCorrelation1D_filtered. " alt="" coords="1009,378,1226,434"/>
+<area shape="rect" id="node17" href="$db/dc5/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation__multipoles.html" title="The class Modelling_TwoPointCorrelation_multipoles. " alt="" coords="1012,458,1223,514"/>
+<area shape="rect" id="node18" href="$dd/d6e/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation__projected.html" title="The class Modelling_TwoPointCorrelation_projected. " alt="" coords="1012,538,1223,594"/>
+<area shape="rect" id="node20" href="$d9/d7a/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation__wedges.html" title="The class Modelling_TwoPointCorrelation_wedges. " alt="" coords="1012,618,1223,674"/>
+<area shape="rect" id="node19" href="$da/d35/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation__deprojected.html" title="The class Modelling_TwoPointCorrelation_deprojected. " alt="" coords="1275,538,1485,594"/>
+<area shape="rect" id="node22" href="$d7/d90/classcbl_1_1modelling_1_1numbercounts_1_1Modelling__NumberCounts2D.html" title="The class Modelling_NumberCounts2D. " alt="" coords="464,545,661,587"/>
+<area shape="rect" id="node24" href="$d5/d8f/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation2D.html" title="The class Modelling_TwoPointCorrelation2D. " alt="" coords="449,625,676,667"/>
+<area shape="rect" id="node23" href="$db/d78/classcbl_1_1modelling_1_1numbercounts_1_1Modelling__NumberCounts2D__RedshiftMass.html" title="The class Modelling_NumberCounts2D_RedshiftMass. " alt="" coords="743,538,941,594"/>
+<area shape="rect" id="node25" href="$d6/dc0/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation2D__cartesian.html" title="The class Modelling_TwoPointCorrelation2D_cartesian. " alt="" coords="733,618,951,674"/>
+<area shape="rect" id="node26" href="$dd/dce/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation2D__polar.html" title="The class Modelling_TwoPointCorrelation2D_polar. " alt="" coords="733,698,951,754"/>
+</map>

@@ -107,7 +107,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (co
 	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->z_mean(i)
 	<< "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->z_sigma(i) << endl;
   else
-      ErrorCBL("Error in write_pairs() of TwoPointCorrelation_multipoles_direct.cpp: no such pairInfo!");
+    ErrorCBL("no such pairInfo!", "write_pairs", "TwoPointCorrelation_multipoles_direct.cpp");
 
   fout.clear(); fout.close(); coutCBL << "I wrote the file " << file_out << endl;
 }
@@ -118,7 +118,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (co
 void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (std::shared_ptr<pairs::Pair> PP, const std::vector<std::string> dir, const std::string file) const
 {
   if (dir.size()==0)
-    ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation1D::read_pairs of TwoPointCorrelation_multipoles_direct! dir.size()=0!");
+    ErrorCBL("dir.size()=0!", "read_pairs", "TwoPointCorrelation_multipoles_direct.cpp");
 
   string line;
   int i;
@@ -142,7 +142,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (std
 	while (ss >> val) num.emplace_back(val);
 	
 	if (num.size()!=8)
-	  ErrorCBL("Error in read_pairs() of TwoPointCorrelation1D.cpp: the number of lines in the input pair file: "+file_in+" must be 8!");
+	  ErrorCBL("the number of lines in the input pair file: "+file_in+" must be 8!", "read_pairs", "TwoPointCorrelation_multipoles_direct.cpp");
 	
 	i = int(num[0]);
 	pairs = num[2];
@@ -183,7 +183,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (std
 	while (ss >> val) num.emplace_back(val);
 
 	if (num.size()!=12)
-	  ErrorCBL("Error in read_pairs() of TwoPointCorrelation_multipoles_direct.cpp: the number of lines in the input pair file: "+file_in+" must be 12!");
+	  ErrorCBL("the number of lines in the input pair file: "+file_in+" must be 12!", "read_pairs", "TwoPointCorrelation_multipoles_direct.cpp");
 
 	i = int(num[0]);
 
@@ -212,7 +212,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (std
     }
 
   else
-    ErrorCBL("Error in read_pairs() of TwoPointCorrelation_multipoles_direct.cpp: no such pairInfo!");
+    ErrorCBL("no such pairInfo!", "read_pairs", "TwoPointCorrelation_multipoles_direct.cpp");
     
 }
 
@@ -279,7 +279,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::write_pairs (co
       }
 
   else
-    ErrorCBL("Error in write_pairs() of TwoPointCorrelation_multipoles_direct.cpp: no such pairInfo!");
+    ErrorCBL("no such pairInfo!", "write_pairs", "TwoPointCorrelation_multipoles_direct.cpp");
       
   fout.clear(); fout.close();
 }
@@ -337,7 +337,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_direct::read_pairs (std
     }
   
   else
-    ErrorCBL("Error in read_pairs() of TwoPointCorrelation_multipoles_direct.cpp: no such pairInfo!");
+    ErrorCBL("no such pairInfo!", "read_pairs", "TwoPointCorrelation_multipoles_direct.cpp");
 }
 
 
@@ -375,7 +375,7 @@ std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_
       if (abs(dd->PP1D_weighted(idx))>0) {
 
         if (abs(rr->PP1D_weighted(i))<1.e-30) 
-          ErrorCBL("Error in correlation_NaturalEstimator() of TwoPointCorrelation_multipoles_direct.cpp: there are no random objects in the bin "+conv(i, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP1D_weighted(i), par::fDP3)+", rr="+conv(rr->PP1D_weighted(i), par::fDP3)+")");
+          ErrorCBL("there are no random objects in the bin "+conv(i, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP1D_weighted(i), par::fDP3)+", rr="+conv(rr->PP1D_weighted(i), par::fDP3)+")!", "correlation_NaturalEstimator", "TwoPointCorrelation_multipoles_direct.cpp");
 
         // normalised number of data-data weighted pairs
         double DD_norm = dd->PP1D_weighted(idx)*nDDi;
@@ -435,7 +435,7 @@ std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_
 //if (abs(dd->PP1D_weighted(i))>0) {
 
         if (abs(rr->PP1D_weighted(i))<1.e-30) 
-          ErrorCBL("Error in correlation_LandySzalayEstimator() of TwoPointCorrelation_multipoles_direct.cpp: there are no random objects in the bin "+conv(i, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP1D_weighted(idx), par::fDP3)+", rr="+conv(rr->PP1D_weighted(idx), par::fDP3)+")");
+          ErrorCBL("there are no random objects in the bin "+conv(i, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP1D_weighted(idx), par::fDP3)+", rr="+conv(rr->PP1D_weighted(idx), par::fDP3)+")!", "correlation_LandySzalayEstimator", "TwoPointCorrelation_multipoles_direct.cpp");
 
         // normalised number of data-data weighted pairs
         double DD_norm = dd->PP1D_weighted(idx)*nDDi;

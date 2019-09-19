@@ -53,59 +53,91 @@ void cbl::data::Data1D::set_xx (const vector<double> x)
 // ======================================================================================
 
 
-void cbl::data::Data1D::read (const string input_file, const int skip_nlines)
+void cbl::data::Data1D::read (const string input_file, const int skip_nlines, const int column_x, const vector<int> column_data, const vector<int> column_errors)
 {
+  if (column_data.size()!=column_errors.size()) ErrorCBL("the sizes of column_data and columt_errors must be equal!", "read", "Data1D.cpp");
+  
+  // default column of input data values
+  int column_data_default = column_x;
+  
+  // default column of input error values
+  int column_error_default = column_x+1;
+  
   ifstream fin(input_file.c_str()); checkIO(fin, input_file);
   string line;
-
-  bool moreColumns = true;
-  unsigned int col = 3, ind1 = 1, ind2 = 2;
-
-  // enter here the first time, and continue to read in case of more the 3 columns (e.g. for clustering multipoles)
-  while (moreColumns) {
-
+  
+  // loop on the data (and, possibly, error) vectors to be read; if
+  // more than one data vectors are read, the data (and, possibly,
+  // error) vectors will be added one after the other, in order to
+  // construct a single data object
+  const int cl_max = (column_data.size()<2) ? 1 : column_data.size();
+  for (int cl=0; cl<cl_max; ++cl) {
+    
     // skip the first nlines (in case of header lines)
     if (skip_nlines>0)
       for (int i=0; i<skip_nlines; ++i)
 	getline(fin, line);
-
+   
     // read the file lines
     while (getline(fin, line)) {
       
       stringstream ss(line);
       vector<double> num; double NUM;
       while (ss>>NUM) num.emplace_back(NUM);
+      
+      // if column_x is larger than 0, the column of x coordinates is
+      // the one specified in input
+      const int ind_x = max(0, column_x-1);
+      checkDim(num, ind_x+1, "num", false);
+      m_x.emplace_back(num[ind_x]);
 
-      if ((int)num.size()<2) ErrorCBL("Error in cbl::data::Data1D::read(): the input file has less than 2 columns!");
+      // if the size of the column_data vector is larger than 1, the
+      // columns of data values are the ones specified in input
+      const int ind_data = (column_data.size()<1) ? column_data_default : column_data[cl]-1;
+      checkDim(num, ind_data+1, "num", false);
+      m_data.emplace_back(num[ind_data]);
+
+      // if the size of the column_errors vector is larger than 1, the
+      // columns of error values are the ones specified in input; if
+      // the error column is not present, the errors will be set to 1,
+      // by default
+      const size_t ind_error = (column_errors.size()<1) ? column_error_default : column_errors[cl]-1;
+      if (num.size()<ind_error+1 && column_errors.size()>1)
+	WarningMsgCBL("the errors cannot be retrieved from the provided input file, and will be set to 1", "read", "Data1D.cpp");
+      m_error.emplace_back((num.size()<ind_error+1) ? 1 : num[ind_error]);
       
-      // if there are more than 3 columns then the next columns will
-      // be read and added to the first one
-      if (num.size()<=col) moreColumns = false;
-      
-      m_x.emplace_back(num[0]);
-      m_data.emplace_back(num[ind1]);
-      m_error.emplace_back((num.size()>ind2) ? num[ind2] : 1);
-       
     }
 
     // go back at the beginning of the file
     fin.clear(); fin.seekg(ios::beg);
- 
-    col += 2;
-    ind1 += 2;
-    ind2 += 2;
+
+    column_data_default += 2;
+    column_error_default += 2;
   }
   
   fin.clear(); fin.close();
 
 
-  // set the data type and diagonal covariance
+  // set the data size and diagonal covariance
 
   m_ndata = m_data.size();
 
   m_covariance.resize(m_ndata, vector<double>(m_ndata, 0));
   for (int i=0; i<m_ndata; i++)
     m_covariance[i][i] = pow(m_error[i], 2);
+  
+}
+
+
+// ======================================================================================
+
+
+void cbl::data::Data1D::Print (const int precision) const
+{
+  for (size_t i=0; i<m_x.size(); i++)
+    coutCBL << std::fixed << setprecision(precision) << setw(8) << right << m_x[i] 
+	 << "   " << std::fixed << setprecision(precision) << setw(8) << right << m_data[i] 
+	 << "   " << std::fixed << setprecision(precision) << setw(8) << right << m_error[i] << endl;
 }
 
 

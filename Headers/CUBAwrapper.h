@@ -251,7 +251,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	void set_limits (std::vector<std::vector<double>> integration_limits)
-	{ (void)integration_limits; ErrorCBL("Work in progress in set_limits() of CUBAwrapper.h...", glob::ExitCode::_workInProgress_); };
+	{ (void)integration_limits; ErrorCBL("", "set_limits", "CUBAwrapper.h", glob::ExitCode::_workInProgress_); };
 
 	/**
 	 *  @brief integrate using the Vegas routine

@@ -51,6 +51,8 @@ void cbl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, const int nx, c
   const double Cell_Y = (data.Max(catalogue::Var::_Y_)-yMin)/ny;
   const double Cell_Z = (data.Max(catalogue::Var::_Z_)-zMin)/nz;
 
+  vector<long> dataReg(data.nObjects());
+
 #pragma omp parallel num_threads(omp_get_max_threads())
   {
     
@@ -60,9 +62,11 @@ void cbl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, const int nx, c
       const int j1 = min(int((data.yy(i)-yMin)/Cell_Y), ny-1);
       const int z1 = min(int((data.zz(i)-zMin)/Cell_Z), nz-1);
       const int index = z1+nz*(j1+ny*i1);
-      data.catalogue_object(i)->set_region(index);
+      dataReg[i] = index;
     }
   }
+
+  data.set_region(dataReg, nx*ny*nz);
 }
 
 
@@ -101,7 +105,7 @@ void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, const int nSample
     ss >> NUM; 
     ss >> NUM; 
     ss >> pp;
-    if (pp==-100) ErrorCBL("Error in cbl::set_ObjectRegion_mangle()!");
+    if (pp==-100) ErrorCBL("", "set_ObjectRegion_mangle", "GlobalFunc/SubSample.cpp");
     poly_data.push_back(pp);
   }
   fin.clear(); fin.close();
@@ -119,11 +123,15 @@ void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, const int nSample
   for (int i=1; i<nSamples; i++)
     boundaries[i] = poly_list[i*int(nPoly/(nSamples))];
  
+  vector<long> dataReg(data.nObjects());
+
   for (size_t i=1; i<boundaries.size(); i++) {
     for (size_t j=0; j<poly_data.size(); j++) 
       if (poly_data[j]>=boundaries[i-1] && poly_data[j] <boundaries[i])
-	data.catalogue_object(j)->set_region(i-1);
+	dataReg[j] = i-1;
   }
+
+  data.set_region(dataReg, nSamples);
   
   string RM = "rm -rf "+mangle_working_dir;
   if (system(RM.c_str())) {}
@@ -174,6 +182,7 @@ void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, const double Cell_
     cells.push_back(vv);
   }
 
+  vector<long> dataReg(data.nObjects());
   
 #pragma omp parallel num_threads(omp_get_max_threads())
   {
@@ -182,10 +191,12 @@ void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, const double Cell_
     for (size_t i=0; i<data.nObjects(); i++) {
       int j1 = min(int((data_y[i]-Lim[2])/Cell_sz), nDec-1);
       int i1 = min(int((data_x[i]-Lim[0])/cell_size_x[j1]), n_cells_x[j1]-1);
-      data.catalogue_object(i)->set_region(cells[j1][i1]);
+      dataReg[i] = cells[j1][i1];
     }
 
   }
+
+  data.set_region(dataReg, n);
 }
 
 
@@ -195,6 +206,8 @@ void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, const double Cell_
 
 void cbl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nx, const int ny, const int nz)
 {
+  coutCBL << "I'm putting data and random objects in box-sized regions."<<endl;
+
   const double xMin = data.Min(catalogue::Var::_X_);
   const double yMin = data.Min(catalogue::Var::_Y_);
   const double zMin = data.Min(catalogue::Var::_Z_);
@@ -202,6 +215,9 @@ void cbl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::Cata
   const double Cell_X = (data.Max(catalogue::Var::_X_)-xMin)/nx;
   const double Cell_Y = (data.Max(catalogue::Var::_Y_)-yMin)/ny;
   const double Cell_Z = (data.Max(catalogue::Var::_Z_)-zMin)/nz;
+
+  vector<long> dataReg(data.nObjects());
+  vector<long> randReg(random.nObjects());
 
 #pragma omp parallel num_threads(omp_get_max_threads())
   {
@@ -212,7 +228,7 @@ void cbl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::Cata
       const int j1 = min(int((data.yy(i)-yMin)/Cell_Y), ny-1);
       const int z1 = min(int((data.zz(i)-zMin)/Cell_Z), nz-1);
       const int index = z1+nz*(j1+ny*i1);
-      data.catalogue_object(i)->set_region(index);
+      dataReg[i] = index;
     }
 
 #pragma omp for schedule(static, 2) 
@@ -221,11 +237,16 @@ void cbl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::Cata
       const int j1 = min(int((random.yy(i)-yMin)/Cell_Y), ny-1);
       const int z1 = min(int((random.zz(i)-zMin)/Cell_Z), nz-1);
       const int index = z1+nz*(j1+ny*i1);
-      random.catalogue_object(i)->set_region(index);
+      randReg[i] = index;
     }
   }
 
+  data.set_region(dataReg, nx*ny*nz);
+  random.set_region(randReg, nx*ny*nz);
+
   cbl::check_regions(data, random);
+
+  coutCBL << "Done!" << endl;
 }
 
 
@@ -272,7 +293,7 @@ void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalo
     ss >> NUM; 
     ss >> NUM; 
     ss >> pp;
-    if (pp==-100) ErrorCBL("Error in cbl::set_ObjectRegion_mangle()!");
+    if (pp==-100) ErrorCBL("", "set_ObjectRegion_mangle", "GlobalFunc/SubSample.cpp");
     poly_data.push_back(pp);
   }
   fin.clear(); fin.close();
@@ -284,7 +305,7 @@ void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalo
     ss >> NUM; 
     ss >> NUM; 
     ss >> pp;
-    if (pp==-100) ErrorCBL("Error in cbl::set_ObjectRegion_mangle()!");
+    if (pp==-100) ErrorCBL("", "set_ObjectRegion_mangle", "GlobalFunc/SubSample.cpp");
     poly_random.push_back(pp);
     poly_list.push_back(pp);
   }
@@ -302,19 +323,25 @@ void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalo
 
   for (int i=1; i<nSamples; i++)
     boundaries[i] = poly_list[i*int(nPoly/(nSamples))];
+
+  vector<long> dataReg(data.nObjects());
+  vector<long> randReg(random.nObjects());
  
   for (size_t i=1; i<boundaries.size(); i++) {
     for (size_t j=0; j<poly_data.size(); j++) 
       if (poly_data[j]>=boundaries[i-1] && poly_data[j] <boundaries[i])
-	data.catalogue_object(j)->set_region(i-1);
+	dataReg[j] = i-1;
     
     for (size_t j=0; j<poly_random.size(); j++) 
       if (poly_random[j]>=boundaries[i-1] && poly_random[j]<boundaries[i]) 
-	random.catalogue_object(j)->set_region(i-1);
+	randReg[j] = i-1;
   }
   
   string RM = "rm -rf "+mangle_working_dir;
   if (system(RM.c_str())) {}
+
+  data.set_region(dataReg, nSamples);
+  random.set_region(randReg, nSamples);
 
   cbl::check_regions(data, random);
 }
@@ -369,7 +396,9 @@ void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalog
     cells.push_back(vv);
   }
 
-  
+  vector<long> dataReg(data.nObjects());
+  vector<long> randReg(random.nObjects());
+
 #pragma omp parallel num_threads(omp_get_max_threads())
   {
     
@@ -377,16 +406,19 @@ void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalog
     for (size_t i=0; i<data.nObjects(); i++) {
       int j1 = min(int((data_y[i]-Lim[2])/Cell_sz), nDec-1);
       int i1 = min(int((data_x[i]-Lim[0])/cell_size_x[j1]), n_cells_x[j1]-1);
-      data.catalogue_object(i)->set_region(cells[j1][i1]);
+      dataReg[i] = cells[j1][i1];
     }
 
 #pragma omp for schedule(static, 2) 
     for (size_t i=0; i<random.nObjects(); i++) {
       int j1 = min(int((random_y[i]-Lim[2])/Cell_sz), nDec-1);
       int i1 = min(int((random_x[i]-Lim[0])/cell_size_x[j1]), n_cells_x[j1]-1);
-      random.catalogue_object(i)->set_region(cells[j1][i1]);
+      randReg[i] = cells[j1][i1];
     }
   }
+
+  data.set_region(dataReg, n);
+  random.set_region(randReg, n);
 
   cbl::check_regions(data, random);
 }
@@ -398,44 +430,67 @@ void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalog
 void cbl::check_regions (catalogue::Catalogue &data, catalogue::Catalogue &random)
 {
   coutCBL << "Checking if the regions have been assigned correctly..." << endl;
-  
-  vector<long> data_regions = data.region_list();
-  vector<long> random_regions = random.region_list();
-  
+
   // check if data and random catalogues have the same number of regions
-  if (data_regions.size() != random_regions.size()) 
-    ErrorCBL("Error in cbl::check_regions() of Subsample.cpp, data and random have different number of regions: data_regions.size() = "+conv(data_regions.size(), par::fINT)+", random_regions.size = "+conv(random_regions.size(), par::fINT));
+  // nRegions is a "proxy" for the region geometry
+  if (data.nRegions()!=random.nRegions()) 
+    ErrorCBL("data and random have different number of regions: data_regions.size() = "+conv(data.nRegions(), par::fINT)+", random_regions.size = "+conv(random.nRegions(), par::fINT)+": please set the number of regions through set_region_number() or check your inputs!", "check_regions", "GlobalFunc/SubSample.cpp"); 
+
+  size_t nRegions = data.nRegions();
+
+  // count how many objects fall in the regions
+  vector<long> dataObj_region(nRegions, 0);
+  vector<long> data_region = data.region();
   
-  // check if data and random catalogues have the same regions
-  size_t nRegions = data_regions.size();
-  for (size_t i=0; i<nRegions; ++i)
-    if (data_regions[i] != random_regions[i])
-      ErrorCBL("Error in cbl::check_regions() of Subsample.cpp, data and random have different regions!");
-  
-  // check if regions are consecutive and starting from 0
-  bool cons = true;
-  for (size_t i=0; i<nRegions; ++i) 
-    if (data_regions[i] != (long)i)
-      cons = false;
-  
-  // make regions 
-  if (!cons) {
-    map<long, long> regions;
-    for (size_t i=0; i<nRegions; ++i)
-      regions[data_regions[i]] = (long)i;
-      
-    for (size_t i=0; i<data.nObjects(); ++i) {
-      long region = data.catalogue_object(i)->region();
-      auto search = regions.find(region);
-      data.catalogue_object(i)->set_region(search->second);
-    }
-      
-    for (size_t i=0; i<random.nObjects(); ++i) {
-      long region = random.catalogue_object(i)->region();
-      auto search = regions.find(region);
-      random.catalogue_object(i)->set_region(search->second);
-    } 
+  for (size_t i=0; i<data.nObjects(); ++i) {
+    checkDim(dataObj_region, data_region[i], "dataObj_region", false); 
+    dataObj_region[data_region[i]] ++;
   }
+  
+  vector<long> randObj_region(nRegions, 0);
+  vector<long> rand_region = random.region();
+  for (size_t i=0; i<random.nObjects(); ++i) {
+    checkDim(randObj_region, rand_region[i], "randObj_region", false); 
+    randObj_region[rand_region[i]] ++;
+  }
+
+  // empty random regions are not allowed!
+  // rearrange regions
+  size_t region_eff = 0;
+  std::map<long, long> region_list_eff; 
+  for (size_t i=0; i<nRegions; i++) {
+    if (randObj_region[i]!=0) {
+      region_list_eff.insert(pair<long, long>(i, region_eff));
+      region_eff ++;
+    }
+    else {
+      // throw error if random region is empty and data region is not
+      if (dataObj_region[i]!=0)
+	ErrorCBL("the "+conv(i, par::fINT)+" region is empty in the random sample, but contains "+conv(dataObj_region[i], par::fINT)+" data points; this is not allowed, Please check your inputs!", "check_regions", "GlobalFunc/SubSample.cpp");
+    }
+  }
+
+  if (region_eff!=nRegions) {
+    coutCBL << "Found "+conv(region_eff, par::fINT)+" non-empty regions" << endl;
+    coutCBL << "Rearranging regions in data and random sample..." << endl;
+    for (size_t i=0; i<data.nObjects(); ++i) {
+      checkDim(data_region, i, "data_region", false);
+      if (int(region_list_eff.size())<data_region[i]) ErrorCBL("the dimension of region_list_eff is: " + conv(region_list_eff.size(), par::fINT) + " ( < " + conv(data_region[i], par::fINT) + " )", "check_regions", "SubSample.cpp"); 
+      data_region[i] = region_list_eff[data_region[i]];
+    }
+    
+    for (size_t i=0; i<random.nObjects(); ++i) {
+      checkDim(rand_region, i, "rand_region", false);
+      if (int(region_list_eff.size())<rand_region[i]) ErrorCBL("the dimension of region_list_eff is: " + conv(region_list_eff.size(), par::fINT) + " ( < " + conv(rand_region[i], par::fINT) + " )", "check_regions", "SubSample.cpp"); 
+      rand_region[i] = region_list_eff[rand_region[i]];
+    }
+    
+    data.set_region(data_region, region_eff+1);
+    random.set_region(rand_region, region_eff+1);
+    coutCBL << "Done!" << endl;
+  }
+
+  coutCBL << "End check regions!" << endl;
 
 }
 
@@ -448,8 +503,6 @@ void cbl::set_ObjectRegion_SDSS_stripes (catalogue::Catalogue &data, catalogue::
   vector<double> lambda, eta, random_lambda, random_eta;
   vector<int> stripe, random_stripe, str_u, random_str_u;
 
-  //map<int, int> stripe_to_index;
-
   eq2sdss(data.var(catalogue::Var::_RA_), data.var(catalogue::Var::_Dec_), lambda, eta);
   sdss_stripe (eta, lambda, stripe, str_u);
   
@@ -457,12 +510,7 @@ void cbl::set_ObjectRegion_SDSS_stripes (catalogue::Catalogue &data, catalogue::
   sdss_stripe (random_eta, random_lambda, random_stripe, random_str_u);
 
   if (!isDimEqual(str_u, random_str_u))
-    ErrorCBL("Error in cbl::set_ObjectRegion_SDSS_stripes()! Data and random catalogues have different stripes!");
-
-  /*
-  for(size_t i=0; i<str_u.size(); i++)
-    stripe_to_index[str_u[i]] = i;
-  */
+    ErrorCBL("data and random catalogues have different stripes!", "set_ObjectRegion_SDSS_stripes", "GlobalFunc/SubSample.cpp");
 
   for (size_t i=0; i<data.nObjects(); i++)
     data.set_var(i, catalogue::Var::_Region_, stripe[i]);
@@ -470,5 +518,6 @@ void cbl::set_ObjectRegion_SDSS_stripes (catalogue::Catalogue &data, catalogue::
   for (size_t i=0; i<random.nObjects(); i++)
     random.set_var(i, catalogue::Var::_Region_, random_stripe[i]);
 
-  //cbl::check_regions(data, random);
+  data.set_region_number(str_u.size());
+  random.set_region_number(random_str_u.size());
 } 

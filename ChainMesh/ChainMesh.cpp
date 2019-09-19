@@ -46,10 +46,8 @@ void cbl::chainmesh::ChainMesh::set_par (const double cell_size, const long nDim
   m_nDim = nDim;
   m_cell_size = cell_size;
   
-  if (m_cell_size<=0) {
-    string Err = "Error in cbl::chainmesh::ChainMesh::set_par of ChainMesh.cpp: forbidden value for cell_size = "+conv(cell_size, par::fDP2);
-    ErrorCBL(Err);
-  }
+  if (m_cell_size<=0) 
+    ErrorCBL("forbidden value for cell_size = "+conv(cell_size, par::fDP2), "set_par", "ChainMesh.cpp");
 
   m_Lim.resize(m_nDim, vector<double> (2,0));
   m_Delta.resize(m_nDim);
@@ -295,7 +293,7 @@ vector<long> cbl::chainmesh::ChainMesh::close_objects (const vector<double> cent
 
   vector<long> list;
   
-  if (long(center.size()) != m_nDim) ErrorCBL("Error in ChainMesh::get_list : point must have same dimensions of the chain-mesh");
+  if (long(center.size())!=m_nDim) ErrorCBL("point must have same dimensions of the chain-mesh", "close_objects", "ChainMesh.cpp");
 
    long center_indx = pos_to_index(center);
    

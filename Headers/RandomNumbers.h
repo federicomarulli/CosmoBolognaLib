@@ -135,7 +135,7 @@ namespace cbl {
        *  @return none
        */
       void set_value(const double value) 
-      { (void)value; ErrorCBL("Error in set_value() of RandomNumbers.h"); }
+      { (void)value; ErrorCBL("error!", "set_value", "RandomNumbers.h"); }
 
       /**
        *  @brief set the mean for Poisson distribution
@@ -143,7 +143,7 @@ namespace cbl {
        *  @return none
        */
       virtual void set_mean (const double mean)
-      { (void)mean; ErrorCBL("Error in set_mean() of RandomNumbers.h"); }
+      { (void)mean; ErrorCBL("error!", "set_mean", "RandomNumbers.h"); }
 
       /**
        *  @brief set parameters for Normal distribution
@@ -152,7 +152,7 @@ namespace cbl {
        *  @return none
        */
       virtual void set_mean_sigma (const double mean, const double sigma)
-      { (void)mean; (void)sigma; ErrorCBL("Error in set_mean_sigma() of RandomNumbers.h"); }
+      { (void)mean; (void)sigma; ErrorCBL("error!", "set_mean_sigma", "RandomNumbers.h"); }
 
       /**
        *  @brief set parameters for Discrete distribution
@@ -161,7 +161,7 @@ namespace cbl {
        *  @return none
        */
       virtual void set_discrete_values (const std::vector<double> values, const std::vector<double> weights)
-      { (void)values; (void)weights; ErrorCBL("Error in set_discrete_values() of RandomNumbers.h"); }
+      { (void)values; (void)weights; ErrorCBL("error!", "set_discrete_values", "RandomNumbers.h"); }
 
       /**
        *  @brief set the parameters for the interpolated distribution
@@ -170,7 +170,7 @@ namespace cbl {
        *  @return none
        */
       virtual void set_interpolated_distribution (const std::vector<double> values, const std::vector<double> weights)
-      { (void)values; (void)weights; ErrorCBL("Error in set_interpolated_distribution() of RandomNumbers.h"); }
+      { (void)values; (void)weights; ErrorCBL("error!", "set_interpolated_distribution", "RandomNumbers.h"); }
 
       /**
        *  @brief set parameters for interpolated distribution
@@ -180,7 +180,7 @@ namespace cbl {
        *  @return none
        */
       virtual void set_custom_distribution (const distribution_func func, const std::shared_ptr<void> fixed_pars, const std::vector<double> pars)
-      { (void)func; (void)fixed_pars; (void)pars; ErrorCBL("Error in set_custom_distribution() of RandomNumbers.h"); }
+      { (void)func; (void)fixed_pars; (void)pars; ErrorCBL("error!", "set_custom_distribution", "RandomNumbers.h"); }
 
     };
 

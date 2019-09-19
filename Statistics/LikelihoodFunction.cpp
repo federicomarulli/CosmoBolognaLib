@@ -93,7 +93,7 @@ cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs (const std::shared
       }
       break;
     default:
-      ErrorCBL("Error in cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs() of LikelihoodFunction.cpp: wrong dataType!");
+      ErrorCBL("wrong dataType!", "STR_likelihood_inputs", "LikelihoodFunction.cpp");
   }
 }
 
@@ -156,18 +156,21 @@ double statistics::LogLikelihood_Gaussian_1D_error (std::vector<double> &likelih
 double statistics::LogLikelihood_Gaussian_1D_covariance (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
 {
   // ----- extract the parameters ----- 
+  
   shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
+
 
   // ----- compute the model values ----- 
 
   vector<double> computed_model = pp->model->operator()(pp->xx, likelihood_parameters);
+
 
   // ----- compute the difference between model and data at each bin ----- 
   
   vector<double> diff(pp->data->ndata(), 0);
   for (int i=0; i<pp->data->ndata(); i++)
     diff[i] = pp->data->data(i)-computed_model[i];
-
+  
 
   // ----- estimate the Gaussian log-likelihood ----- 
   

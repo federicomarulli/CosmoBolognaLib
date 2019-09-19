@@ -91,7 +91,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D::write_pairs (const std::shared_
 	     << "   " << setiosflags(ios::fixed) << setprecision(5) << setw(10) << right << PP->z_sigma(i, j) << endl;
 
   else
-    ErrorCBL("Error in write_pairs() of TwoPointCorrelation2D.cpp: no such pairInfo!");
+    ErrorCBL("no such pairInfo!", "write_pairs", "TwoPointCorrelation2D.cpp");
   
   fout.clear(); fout.close(); coutCBL << "I wrote the file " << file_out << endl;
   
@@ -104,7 +104,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D::write_pairs (const std::shared_
 void cbl::measure::twopt::TwoPointCorrelation2D::read_pairs (std::shared_ptr<pairs::Pair> PP, const std::vector<std::string> dir, const std::string file) const
 {
   if (dir.size()==0)
-    ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation2D::read_pairs of TwoPointCorrelation2D.cpp! dir.size()=0!");
+    ErrorCBL("dir.size()=0!", "read_pairs", "TwoPointCorrelation2D.cpp");
 
   string line;
   int i, j;
@@ -128,7 +128,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D::read_pairs (std::shared_ptr<pai
 	while (ss >> val) num.emplace_back(val);
 
 	if (num.size()!=6)
-	  ErrorCBL("Error in read_pairs() of TwoPointCorrelation2D.cpp: the number of lines in the input pair file: "+file_in+" must be 6!");
+	  ErrorCBL("the number of lines in the input pair file: "+file_in+" must be 6!", "read_pairs", "TwoPointCorrelation2D.cpp");
 
 	i = int(num[0]);
 	j = int(num[1]);
@@ -162,7 +162,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D::read_pairs (std::shared_ptr<pai
 	while (ss >> val) num.emplace_back(val);
 
 	if (num.size()!=12)
-	  ErrorCBL("Error in read_pairs() of TwoPointCorrelation1D.cpp: the number of lines in the input pair file: "+file_in+" must be 12!");
+	  ErrorCBL("the number of lines in the input pair file: "+file_in+" must be 12!", "read_pairs", "TwoPointCorrelation2D.cpp");
 
 	i = int(num[0]);
 	j = int(num[1]);
@@ -184,7 +184,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D::read_pairs (std::shared_ptr<pai
     }
   
   else
-    ErrorCBL("Error in read_pairs() of TwoPointCorrelation2D.cpp: no such pairInfo!");
+    ErrorCBL("no such pairInfo!", "read_pairs", "TwoPointCorrelation2D.cpp");
 }
 
 
@@ -195,7 +195,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D::write_pairs (const std::vector<
 {  
   size_t nRegions = m_data->region_list().size();
 
-  bool cross = (PP.size() == nRegions*nRegions) ? true : false;
+  bool cross = (PP.size()==nRegions*nRegions) ? true : false;
 
   string MK = "mkdir -p "+dir; if (system (MK.c_str())) {}
   
@@ -251,7 +251,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D::write_pairs (const std::vector<
       }
 
   else
-    ErrorCBL("Error in write_pairs() of TwoPointCorrelation2D.cpp: no such pairInfo!");
+    ErrorCBL("no such pairInfo!", "write_pairs", "TwoPointCorrelation2D.cpp");
   
   fout.clear(); fout.close();
   
@@ -311,7 +311,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D::read_pairs (std::vector<std::sh
     }
   
   else
-    ErrorCBL("Error in read_pairs() of TwoPointCorrelation2D.cpp: no such pairInfo!");
+    ErrorCBL("no such pairInfo!", "read_pairs", "TwoPointCorrelation2D.cpp");
 
 }
 
@@ -379,7 +379,7 @@ std::shared_ptr<Data> cbl::measure::twopt::TwoPointCorrelation2D::correlation_Na
       if (dd->PP2D_weighted(i, j)>0) {
 
 	if (rr->PP2D_weighted(i, j)<1.e-30) 
-	  ErrorCBL("Error in correlation_NaturalEstimator() of TwoPointCorrelation2D.cpp: there are no random objects in the bin "+conv(i, par::fINT)+","+conv(j, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP2D_weighted(i, j), par::fDP3)+", rr="+conv(rr->PP2D_weighted(i, j), par::fDP3)+")");
+	  ErrorCBL("there are no random objects in the bin "+conv(i, par::fINT)+","+conv(j, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP2D_weighted(i, j), par::fDP3)+", rr="+conv(rr->PP2D_weighted(i, j), par::fDP3)+")!", "correlation_NaturalEstimator", "TwoPointCorrelation2D.cpp");
 
 	// normalised number of data-data weighted pairs
 	double DD_norm = dd->PP2D_weighted(i, j)*nDDi;
@@ -445,7 +445,7 @@ std::shared_ptr<Data> cbl::measure::twopt::TwoPointCorrelation2D::correlation_La
       if (dd->PP2D_weighted(i, j)>0) {
 
 	if (rr->PP2D_weighted(i, j)<1.e-30) 
-	  ErrorCBL("Error in correlation_LandySzalayEstimator() of TwoPointCorrelation2D.cpp: there are no random objects in the bin "+conv(i, par::fINT)+","+conv(j, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP2D_weighted(i, j), par::fDP3)+", rr="+conv(rr->PP2D_weighted(i, j), par::fDP3)+")");
+	  ErrorCBL("there are no random objects in the bin "+conv(i, par::fINT)+","+conv(j, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size! (dd="+conv(dd->PP2D_weighted(i, j), par::fDP3)+", rr="+conv(rr->PP2D_weighted(i, j), par::fDP3)+")!", "correlation_LandySzalayEstimator", "TwoPointCorrelation2D.cpp");
 		   
 	// normalised number of data-data weighted pairs
 	double DD_norm = dd->PP2D_weighted(i, j)*nDDi;

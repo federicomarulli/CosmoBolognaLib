@@ -319,6 +319,24 @@ namespace cbl {
 	virtual void read_pairs (std::vector<std::shared_ptr<pairs::Pair> > PP, const std::vector<std::string> dir, const std::string file) const = 0;
 
 	///@}
+	
+	/**
+	 *  @name Member functions to reset the number of pairs 
+	 */
+	///@{
+	
+	/**
+	 * @brief reset the pair counts
+	 *
+	 * @details set the pair counts to zero,
+	 * by calling the cbl::Pairs::reset() method
+	 * for the internal variables m_dd, m_rr, m_dr
+	 *
+	 * @return none
+	 */
+	void resets ();
+	
+	///@}
 
 
 	/**
@@ -657,7 +675,7 @@ namespace cbl {
 	 *  @return pointer to an object of type Data
 	 */
 	virtual std::shared_ptr<data::Data> Filtered (const std::shared_ptr<data::Data> data)
-	{ (void)data; ErrorCBL("Error in Filtered() of TwoPointCorrelation.h"); std::shared_ptr<data::Data> dd; return dd; }
+	{ (void)data; ErrorCBL("", "Filtered", "TwoPointCorrelation.h"); std::shared_ptr<data::Data> dd; return dd; }
       
 	/**
 	 *  @brief measure the projected two-point correlation function
@@ -674,7 +692,7 @@ namespace cbl {
 	 *  @return pointer to an object of type Data
 	 */
 	virtual std::shared_ptr<data::Data> Projected (const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double> > xi, const std::vector<std::vector<double> > error_xi)
-	{ (void)rp; (void)pi; (void)xi; (void)error_xi; ErrorCBL("Error in Projected() of TwoPointCorrelation.h"); std::shared_ptr<data::Data> data; return data; }
+	{ (void)rp; (void)pi; (void)xi; (void)error_xi; ErrorCBL("", "Projected", "TwoPointCorrelation.h"); std::shared_ptr<data::Data> data; return data; }
 
 	/**
 	 *  @brief measure the deprojected two-point correlation
@@ -690,7 +708,7 @@ namespace cbl {
 	 *  @return pointer to an object of type Data
 	 */
 	virtual std::shared_ptr<data::Data> Deprojected (const std::vector<double> rp, const std::vector<double> ww, const std::vector<double> error_ww)
-	{ (void)rp; (void)ww; (void)error_ww; ErrorCBL("Error in Deprojected() of TwoPointCorrelation.h"); std::shared_ptr<data::Data> data; return data; }
+	{ (void)rp; (void)ww; (void)error_ww; ErrorCBL("", "Deprojected", "TwoPointCorrelation.h"); std::shared_ptr<data::Data> data; return data; }
 
 	/**
 	 *  @brief measure the multipoles of the two-point correlation
@@ -708,7 +726,7 @@ namespace cbl {
 	 *  @return pointer to an object of type Data
 	 */
 	virtual std::shared_ptr<data::Data> Multipoles (const std::vector<double> rr, const std::vector<double> mu, const std::vector<std::vector<double>> xi, const std::vector<std::vector<double>> error_xi)
-	{ (void)rr; (void)mu; (void)xi; (void)error_xi; ErrorCBL("Error in Multipoles() of TwoPointCorrelation.h"); std::shared_ptr<data::Data> data; return data; }
+	{ (void)rr; (void)mu; (void)xi; (void)error_xi; ErrorCBL("", "Multipoles", "TwoPointCorrelation.h"); std::shared_ptr<data::Data> data; return data; }
 
 	/**
 	 *  @brief measure the wedges of the two-poinr correlation
@@ -726,7 +744,7 @@ namespace cbl {
 	 *  @return pointer to an object of type Data
 	 */
 	virtual std::shared_ptr<data::Data> Wedges (const std::vector<double> rr, const std::vector<double> mu, const std::vector<std::vector<double>> xi, const std::vector<std::vector<double> > error_xi)
-	{ (void)rr; (void)mu; (void)xi; (void)error_xi; ErrorCBL("Error in Wedges() of TwoPointCorrelation.h"); std::shared_ptr<data::Data> data; return data; }
+	{ (void)rr; (void)mu; (void)xi; (void)error_xi; ErrorCBL("", "Wedges", "TwoPointCorrelation.h"); std::shared_ptr<data::Data> data; return data; }
  
 
 	/**
@@ -759,7 +777,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void measurePoisson (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_)
-	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; cbl::ErrorCBL("Error inmeasurePoisson() of TwoPointCorrelation.h!"); }
+	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; cbl::ErrorCBL("", "measurePoisson", "TwoPointCorrelation.h"); }
 
 	/**
 	 *  @brief measure the two-point correlation function estimating
@@ -796,7 +814,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void measureJackknife (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_)
-	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)dir_output_resample; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; cbl::ErrorCBL("Error in measureJackknife() of TwoPointCorrelation.h!"); }
+	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)dir_output_resample; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; cbl::ErrorCBL("", "measureJackknife", "TwoPointCorrelation.h"); }
 
 	/**
 	 *  @brief measure the two-point correlation function estimating
@@ -833,7 +851,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void measureJackknifeTest (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_)
-	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)dir_output_resample; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; cbl::ErrorCBL("Error in measureJackknife() of TwoPointCorrelation.h!"); }
+	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)dir_output_resample; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; cbl::ErrorCBL("", "measureJackknifeTest", "TwoPointCorrelation.h"); }
 
 	/**
 	 *  @brief measure the two-point correlation function estimating
@@ -875,7 +893,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void measureBootstrap (const int nMocks, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213)
-	{ (void)nMocks; (void)dir_output_pairs; (void)dir_input_pairs; (void)dir_output_resample; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; (void)seed; cbl::ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation.h!"); }
+	{ (void)nMocks; (void)dir_output_pairs; (void)dir_input_pairs; (void)dir_output_resample; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; (void)seed; cbl::ErrorCBL("", "measureBootstrap", "TwoPointCorrelation.h"); }
 
 	/**
 	 *  @brief measure the Jackknife resampling of the two-point
@@ -888,7 +906,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiJackknife (const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr)
-	{ (void)dd; (void)rr; cbl::ErrorCBL("Error in std::vector<std::shared_ptr<data::Data> > XiJackknife of TwoPointCorrelation.h!"); std::vector<std::shared_ptr<data::Data> > data; return data; }
+	{ (void)dd; (void)rr; cbl::ErrorCBL("", "XiJackknife", "TwoPointCorrelation.h"); std::vector<std::shared_ptr<data::Data> > data; return data; }
 
 	/**
 	 *  @brief measure the Jackknife resampling of the two-point
@@ -905,7 +923,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiJackknife (const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const std::vector<std::shared_ptr<pairs::Pair> > dr)
-	{ (void)dd; (void)rr; (void)dr; cbl::ErrorCBL("Error in std::vector<std::shared_ptr<data::Data> > XiJackknife of TwoPointCorrelation.h!"); std::vector<std::shared_ptr<data::Data> > data; return data; }
+	{ (void)dd; (void)rr; (void)dr; cbl::ErrorCBL("", "XiJackknife", "TwoPointCorrelation.h"); std::vector<std::shared_ptr<data::Data> > data; return data; }
 
 	/**
 	 *  @brief measure the Jackknife resampling of the two-point
@@ -918,7 +936,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiJackknifeTest (const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr)
-	{ (void)dd; (void)rr; cbl::ErrorCBL("Error in std::vector<std::shared_ptr<data::Data> > XiJackknife of TwoPointCorrelation.h!"); std::vector<std::shared_ptr<data::Data> > data; return data; }
+	{ (void)dd; (void)rr; cbl::ErrorCBL("", "XiJackknifeTest", "TwoPointCorrelation.h"); std::vector<std::shared_ptr<data::Data> > data; return data; }
 
 	/**
 	 *  @brief measure the Jackknife resampling of the two-point
@@ -934,7 +952,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiJackknifeTest (const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const std::vector<std::shared_ptr<pairs::Pair> > dr)
-	{ (void)dd; (void)rr; (void)dr; cbl::ErrorCBL("Error in std::vector<std::shared_ptr<data::Data> > XiJackknife of TwoPointCorrelation.h!"); std::vector<std::shared_ptr<data::Data> > data; return data; }
+	{ (void)dd; (void)rr; (void)dr; cbl::ErrorCBL("", "XiJackknifeTest", "TwoPointCorrelation.h"); std::vector<std::shared_ptr<data::Data> > data; return data; }
 
 	/**
 	 *  @brief measure the Bootstrap resampling of the two-point
@@ -952,7 +970,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const int seed=3213)
-	{ (void)nMocks; (void)dd; (void)rr; (void)seed; cbl::ErrorCBL("Error in std::vector<std::shared_ptr<data::Data> > XiBootstrap of TwoPointCorrelation.h!"); std::vector<std::shared_ptr<data::Data> > data; return data; }
+	{ (void)nMocks; (void)dd; (void)rr; (void)seed; cbl::ErrorCBL("", "XiBootstrap", "TwoPointCorrelation.h"); std::vector<std::shared_ptr<data::Data> > data; return data; }
 
 	/**
 	 *  @brief measure the Bootstrap resampling of the two-point
@@ -972,7 +990,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const std::vector<std::shared_ptr<pairs::Pair> > dr, const int seed=3213)
-	{ (void)nMocks; (void)dd; (void)rr; (void)dr; (void)seed; cbl::ErrorCBL("Error in std::vector<std::shared_ptr<data::Data> > XiBootstrap of TwoPointCorrelation.h!"); std::vector<std::shared_ptr<data::Data> > data; return data; }
+	{ (void)nMocks; (void)dd; (void)rr; (void)dr; (void)seed; cbl::ErrorCBL("", "XiBootstrap", "TwoPointCorrelation.h"); std::vector<std::shared_ptr<data::Data> > data; return data; }
 
 	///@}
 
@@ -1471,8 +1489,12 @@ namespace cbl {
 	 *
 	 *  @param shift_D2 shift parameter in the second dimension,
 	 *  i.e. the radial shift is binSize*shift
+	 *	 
+	 *  @param mu_integral_limits the \f$\mu\f$ integral limits
+	 *  used to measure the wedges
 	 *
 	 *  @param angularUnits angular units
+	 *
 	 *  @param angularWeight angular weight function
 	 *
 	 *  @param compute_extra_info true &rarr; compute extra
@@ -1486,7 +1508,7 @@ namespace cbl {
 	 *  @return a pointer to an object of class
 	 *  TwoPointCorrelation of a given type
 	 */
-	static std::shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const int nWedges, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
+	static std::shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const int nbins_D1, const double shift_D1, const int nWedges, const int nbins_D2, const double shift_D2, const std::vector<std::vector<double>> mu_integral_limits={{0., 0.5}, {0.5, 1}}, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
 
 	/**
 	 *  @brief static factory used to construct two-point
@@ -1523,22 +1545,27 @@ namespace cbl {
 	 *
 	 *  @param shift_D2 shift parameter in the second dimension,
 	 *  i.e. the radial shift is binSize*shift
+	 * 
+	 *  @param mu_integral_limits the \f$\mu\f$ integral limits
+	 *  used to measure the wedges
 	 *
 	 *  @param angularUnits angular units
+	 *
 	 *  @param angularWeight angular weight function
 	 *
 	 *  @param compute_extra_info true &rarr; compute extra
 	 *  information related to the pairs, such as the mean pair
 	 *  separation and redshift
 	 *
-	 *  @param random_dilution_fraction fraction between the number
-	 *  of objects in the diluted and original random samples, used
-	 *  to improve performances in random-random pair counts
+	 *  @param random_dilution_fraction fraction between the
+	 *  number of objects in the diluted and original random
+	 *  samples, used to improve performances in random-random
+	 *  pair counts
 	 *
 	 *  @return a pointer to an object of class
 	 *  TwoPointCorrelation of a given type
 	 */
-	static std::shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const int nWedges, const double binSize_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
+	static std::shared_ptr<TwoPointCorrelation> Create (const TwoPType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType_D1, const double Min_D1, const double Max_D1, const double binSize_D1, const double shift_D1, const int nWedges, const double binSize_D2, const double shift_D2, const std::vector<std::vector<double>> mu_integral_limits={{0., 0.5}, {0.5, 1}}, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.);
 
 	///@}
 
@@ -1609,13 +1636,13 @@ namespace cbl {
 	 *  @brief get the y coordinates
 	 *  @return the y coordinates
 	 */
-	virtual std::vector<double> yy () const { cbl::ErrorCBL("Error in yy() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	virtual std::vector<double> yy () const { cbl::ErrorCBL("", "yy", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the the binned correlation function 
 	 *  @return the binned correlation function 
 	 */
-	virtual std::vector<double> xi1D () const { cbl::ErrorCBL("Error in xi() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	virtual std::vector<double> xi1D () const { cbl::ErrorCBL("", "xi1D", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the error on the binned correlation function
@@ -1623,89 +1650,89 @@ namespace cbl {
 	 *  @return the error on the binned correlation function
 	 *  function
 	 */
-	virtual std::vector<double> error1D () const { cbl::ErrorCBL("Error in error() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	virtual std::vector<double> error1D () const { cbl::ErrorCBL("", "error1D", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
       
 	/**
 	 *  @brief get the the binned correlation function 
 	 *  @return the binned correlation function 
 	 */
-	virtual std::vector<std::vector<double> > xi2D () const { cbl::ErrorCBL("Error in xi() of TwoPointCorrelation.h!"); std::vector<std::vector<double> > vv; return vv; }
+	virtual std::vector<std::vector<double> > xi2D () const { cbl::ErrorCBL("", "xi2D", "TwoPointCorrelation.h"); std::vector<std::vector<double> > vv; return vv; }
 
 	/**
 	 *  @brief get the error on the binned correlation function
 	 *  @return the error on the binned correlation function
 	 */
-	virtual std::vector<std::vector<double> > error2D () const { cbl::ErrorCBL("Error in error() of TwoPointCorrelation.h!"); std::vector<std::vector<double> > vv; return vv; }
+	virtual std::vector<std::vector<double> > error2D () const { cbl::ErrorCBL("", "error2D", "TwoPointCorrelation.h"); std::vector<std::vector<double> > vv; return vv; }
 
 	/**
 	 *  @brief get the monopole of the polar xi
 	 *  @return the xiMonopole
 	 */
 	virtual std::vector<double> xiMonopole () const 
-	{ cbl::ErrorCBL("Error in xiMonopole() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "xiMonopole", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the error on the monopole of the polar xi
 	 *  @return the xiMonopole
 	 */
 	virtual std::vector<double> errorMonopole () const 
-	{ cbl::ErrorCBL("Error in errorMonopole() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "errorMonopole", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the quadrupole of the polar xi
 	 *  @return the xiQuadrupole
 	 */
 	virtual std::vector<double> xiQuadrupole () const 
-	{ cbl::ErrorCBL("Error in xiQuadrupole() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "xiQuadrupole", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the error on the quadrupole of the polar xi
 	 *  @return the xiQuadrupole
 	 */
 	virtual std::vector<double> errorQuadrupole () const 
-	{ cbl::ErrorCBL("Error in errorQuadrupole() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "errorQuadrupole", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
 	
 	/**
 	 *  @brief get the hexadecapole of the polar xi
 	 *  @return the xiHexadecapole
 	 */
 	virtual std::vector<double> xiHexadecapole () const 
-	{ cbl::ErrorCBL("Error in xiHexadecapole() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "xiHexadecapole", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the error on the hexadecapole of the polar xi
 	 *  @return the error on xiOctupole
 	 */
 	virtual std::vector<double> errorHexadecapole () const 
-	{ cbl::ErrorCBL("Error in xiHexadecapole() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "errorHexadecapole", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the perpendicular wedge of the polar xi
 	 *  @return the perpendicular wedge of the polar xi
 	 */
 	virtual std::vector<double> xiPerpendicular () const 
-	{ cbl::ErrorCBL("Error in xiPerpendicular() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "xiPerpendicular", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the perpendicular wedge of the polar xi
 	 *  @return the error on the perpendicular wedge of the polar xi
 	 */
 	virtual std::vector<double> errorPerpendicular () const 
-	{ cbl::ErrorCBL("Error in errorPerpendicular() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "errorPerpendicular", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the parallel wedge of the polar xi
 	 *  @return the xiPar coordinates
 	 */
 	virtual std::vector<double> xiParallel () const 
-	{ cbl::ErrorCBL("Error in xiParallel() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "xiParallel", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the error on the parallel wedge of the polar xi
 	 *  @return the error on the parallel wedge of the polar xi
 	 */
 	virtual std::vector<double> errorParallel () const 
-	{ cbl::ErrorCBL("Error in errorParallel() of TwoPointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "errorParallel", "TwoPointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	///@}
       
@@ -1813,7 +1840,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void write (const std::string dir, const std::string file, const bool full, const int rank=0) const
-	{ (void)dir; (void)file; (void)full; (void)rank; cbl::ErrorCBL("Error in write() of TwoPointCorrelation.h!"); }
+	{ (void)dir; (void)file; (void)full; (void)rank; cbl::ErrorCBL("", "write", "TwoPointCorrelation.h"); }
       
 	///@}
       

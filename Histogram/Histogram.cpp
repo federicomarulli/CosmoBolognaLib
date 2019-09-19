@@ -58,7 +58,7 @@ cbl::glob::Histogram1D::Histogram1D (const std::vector<double> var, const std::v
 void cbl::glob::Histogram1D::set (const size_t nbins, const double minVar, const double maxVar, const double shift, const BinType bin_type)
 {
   if (shift>1 || shift<0) 
-    ErrorCBL("Error in set, shift must be 0<shift<1!");
+    ErrorCBL("shift must be 0<shift<1!", "set", "Histogram.cpp");
 
   m_nbins = nbins;
   m_minVar = minVar;
@@ -67,7 +67,7 @@ void cbl::glob::Histogram1D::set (const size_t nbins, const double minVar, const
 
   m_bins.resize(m_nbins, 0);
   m_edges.resize(m_nbins+1, 0);
-  m_weight.resize(m_nbins, 1.);
+  m_weight.resize(m_nbins, 0.);
 
   shared_ptr<gsl_histogram> histo(gsl_histogram_alloc(m_nbins), gsl_histogram_free);
 
@@ -109,7 +109,7 @@ int cbl::glob::Histogram1D::digitize (const double var)
   gsl_set_error_handler_off();
 
   size_t i;
-  int res = gsl_histogram_find (m_histo.get(), var, &i);
+  int res = gsl_histogram_find(m_histo.get(), var, &i);
 
   if (res == GSL_EDOM)
     return -1;
@@ -136,9 +136,9 @@ std::vector<int> cbl::glob::Histogram1D::digitize (const std::vector<double> var
 void cbl::glob::Histogram1D::put (const double var, const double weight)
 {
   const int bin = digitize(var);
-  if (bin>-1){
+  if (bin>-1) {
     put(bin, 1);
-    m_weight[bin] *= weight;
+    m_weight[bin] += weight;
   }
 }
 
@@ -189,6 +189,10 @@ double cbl::glob::Histogram1D::normalization ( const int i, const HistogramType 
       norm = fact*(log10(m_edges[i+1])-log10(m_edges[i])) ;
       break;
 
+    case (HistogramType::_dn_dlnV_):
+      norm = fact*(log(m_edges[i+1])-log(m_edges[i])) ;
+      break;
+
     case (HistogramType::_N_V_):
       norm = 1.;
       break;
@@ -198,7 +202,7 @@ double cbl::glob::Histogram1D::normalization ( const int i, const HistogramType 
       break;
 
     default:
-      ErrorCBL("Error in cbl::Histogram of Histogram1D.cpp: no such a variable in the list!");
+      ErrorCBL("no such a variable in the list!", "normalization", "Histogram1D.cpp");
   }
 
   return norm;
@@ -291,8 +295,8 @@ cbl::glob::Histogram2D::Histogram2D (const std::vector<double> var1, const std::
 
 void cbl::glob::Histogram2D::set (const size_t nbins1, const size_t nbins2, const double minVar1, const double maxVar1, const double minVar2, const double maxVar2, const double shift1, const double shift2, const BinType bin_type1, const BinType bin_type2)
 {
-if (shift1>1 || shift1<0 || shift2>1 || shift2<0) 
-    ErrorCBL("Error in set, shift must be 0<shift<1!");
+  if (shift1>1 || shift1<0 || shift2>1 || shift2<0) 
+    ErrorCBL("shift must be in the range (0,1) !", "set", "Histrogram.cpp");
 
   m_nbins1 = nbins1;
   m_minVar1 = minVar1;
@@ -321,13 +325,13 @@ if (shift1>1 || shift1<0 || shift2>1 || shift2<0)
     gsl_histogram2d_set_ranges_uniform(histo.get(), m_minVar1, m_maxVar1, m_minVar2, m_minVar2);
 
     m_edges1[0] = histo.get()->xrange[0];
-    for (size_t i=0; i<m_nbins1; i++){
+    for (size_t i=0; i<m_nbins1; i++) {
       m_edges1[i+1] = histo.get()->xrange[i+1];
       m_bins1[i] = m_edges1[i]+m_shift1*m_binSize1;
     }
 
     m_edges2[0] = histo.get()->yrange[0];
-    for (size_t i=0; i<m_nbins2; i++){
+    for (size_t i=0; i<m_nbins2; i++) {
       m_edges2[i+1] = histo.get()->yrange[i+1];
       m_bins2[i] = m_edges2[i]+m_shift2*m_binSize2;
     }
@@ -336,24 +340,24 @@ if (shift1>1 || shift1<0 || shift2>1 || shift2<0)
   else {
 
     // set ranges for variable 1
-    if ( m_binType1 == BinType::_linear_) {
+    if ( m_binType1==BinType::_linear_) {
       m_binSize1 = (m_maxVar1-m_minVar1)/m_nbins1;
       m_edges1[0] = m_minVar1;
-      for (size_t i=0; i<m_nbins1; i++){
+      for (size_t i=0; i<m_nbins1; i++) {
 	m_edges1[i+1] = m_edges1[i]+m_binSize1;
 	m_bins1[i] = m_edges1[i]+m_shift1*m_binSize1;
       }
     }
-    else if (m_binType1 == BinType::_logarithmic_){
+    else if (m_binType1==BinType::_logarithmic_) {
       m_binSize1 = (log10(m_maxVar1)-log10(m_minVar1))/m_nbins1;
       m_edges1[0] = m_minVar1;
-      for (size_t i=0; i<m_nbins1; i++){
+      for (size_t i=0; i<m_nbins1; i++) {
 	m_edges1[i+1] = pow(10., log10(m_edges1[i])+m_binSize1);
 	m_bins1[i] = pow(10., log10(m_edges1[i])+m_shift1*m_binSize1);
       }
     }
     else 
-      ErrorCBL("Error in set of Histogram2D. No such bin_type!");
+      ErrorCBL("no such bin_type!", "set", "Histogram2D.cpp");
 
     // set ranges for variable 2
     if ( m_binType2 == BinType::_linear_) {
@@ -364,16 +368,16 @@ if (shift1>1 || shift1<0 || shift2>1 || shift2<0)
 	m_bins2[i] = m_edges2[i]+m_shift2*m_binSize2;
       }
     }
-    else if (m_binType2 == BinType::_logarithmic_){
+    else if (m_binType2 == BinType::_logarithmic_) {
       m_binSize2 = (log10(m_maxVar2)-log10(m_minVar2))/m_nbins2;
       m_edges2[0] = m_minVar2;
-      for (size_t i=0; i<m_nbins2; i++){
+      for (size_t i=0; i<m_nbins2; i++) {
 	m_edges2[i+1] = pow(10., log10(m_edges2[i])+m_binSize2);
 	m_bins2[i] = pow(10., log10(m_edges2[i])+m_shift2*m_binSize2);
       }
     }
     else 
-      ErrorCBL("Error in set of Histogram2D. No such bin_type!");
+      ErrorCBL("the input bin_type is not allowed!", "set", "Histrogram.cpp");
     
     gsl_histogram2d_set_ranges(histo.get(), m_edges1.data(), m_nbins1+1, m_edges2.data(), m_nbins2+1);
   }
@@ -389,9 +393,9 @@ if (shift1>1 || shift1<0 || shift2>1 || shift2<0)
 std::vector<int> cbl::glob::Histogram2D::digitize (const double var1, const double var2)
 {
   size_t i, j;
-  int result = gsl_histogram2d_find (m_histo.get(), var1, var2, &i, &j);
+  int result = gsl_histogram2d_find(m_histo.get(), var1, var2, &i, &j);
 
-  if (result == GSL_SUCCESS)
+  if (result==GSL_SUCCESS)
     return {(int)i, (int)j};
   return {-1, -1};
 }
@@ -419,7 +423,7 @@ void cbl::glob::Histogram2D::put (const double var1, const double var2, const do
   const vector<int> bins = digitize(var1, var2);
   if (bins[0]>-1 && bins[1]>-1){
     put(bins[0], bins[1], 1);
-    m_weight[bins[0]][bins[1]] *= weight;
+    m_weight[bins[0]][bins[1]] += weight;
   }
 }
 
@@ -470,6 +474,10 @@ double cbl::glob::Histogram2D::normalization ( const int i, const int j, const H
       norm = fact*(log10(m_edges1[i+1])-log10(m_edges1[i]))*(log10(m_edges2[j+1])-log10(m_edges2[j])) ;
       break;
 
+    case (HistogramType::_dn_dlnV_):
+      norm = fact*(log(m_edges1[i+1])-log(m_edges1[i]))*(log(m_edges2[j+1])-log(m_edges2[j])) ;
+      break;
+
     case (HistogramType::_N_V_):
       norm = 1.;
       break;
@@ -479,7 +487,7 @@ double cbl::glob::Histogram2D::normalization ( const int i, const int j, const H
       break;
 
     default:
-      ErrorCBL("Error in cbl::Histogram of Histogram1D.cpp: no such a variable in the list!");
+      ErrorCBL("no such a variable in the list!", "normalization", "Histogram.cpp");
   }
 
   return norm;

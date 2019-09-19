@@ -22,9 +22,14 @@ int main () {
   
     cbl::catalogue::Catalogue catalogue1 {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_comoving_, {file_catalogue}};
 
+    // standard
+    std::cout << "The coordinates of the first galaxy in the catalogue are: " <<
+      catalogue1.xx(0) << ", " << catalogue1.yy(0) << ", " << catalogue1.zz(0) << std::endl;
+
+    // with vector syntax
     std::cout << "The coordinates of the first galaxy in the catalogue are: " <<
       catalogue1[0]->xx() << ", " << catalogue1[0]->yy() << ", " << catalogue1[0]->zz() << std::endl;
-
+    
     
     // -----------------------------------------------------------------------------------------------------------------------
     // ------- method II : construct a galaxy catalogue directly from a file, choosing which quantity has to be read ---------

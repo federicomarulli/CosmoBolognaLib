@@ -56,7 +56,7 @@ vector<double> cbl::statistics::ModelParameters::full_parameters (const vector<d
   else if (parameter_values.size() == m_nparameters)
     return parameter_values;
   else
-    ErrorCBL("Error in cbl::statistics::ModelParameters::full_parameters() of ModelParameters.cpp, provided vector has the wrong size!");
+    ErrorCBL("the provided vector has the wrong size!", "full_parameters", "ModelParameters.cpp");
 
   vector<double> vv;
   return vv;
@@ -87,7 +87,7 @@ void cbl::statistics::ModelParameters::m_set_parameter_type ()
 	break;
 
       default:
-	ErrorCBL("Error in cbl::statistics::ModelParameters::m_set_parameter_type() of ModelParameters.cpp: no such kind of parameter!");
+	ErrorCBL("no such kind of parameter!", "m_set_parameter_type", "ModelParameters.cpp");
     }
   }
 }
@@ -135,13 +135,13 @@ size_t cbl::statistics::ModelParameters::nparameters_derived () const
 void cbl::statistics::ModelParameters::set_parameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames)
 {
   if (nparameters==0)
-    ErrorCBL("Error in cbl::statistics::ModelParameters::set_parameters() of ModelParameters.cpp: nparameters should be > 0.");
+    ErrorCBL("nparameters should be > 0!", "set_parameters", "ModelParameters.cpp");
 
   if ((parameterTypes.size()!=nparameters) && (parameterTypes.size()!=0))
-    ErrorCBL("Error in cbl::statistics::ModelParameters::set_parameters() of ModelParameters.cpp: wrong size for the vector parameterTypes.");
+    ErrorCBL("wrong size for the vector parameterTypes!", "set_parameters", "ModelParameters.cpp");
 
   if ((parameterNames.size()!=nparameters) && (parameterNames.size()!=0))
-    ErrorCBL("Error in cbl::statistics::ModelParameters::set_parameters() of ModelParameters.cpp: wrong size for the vector parameterNames.");
+    ErrorCBL("wrong size for the vector parameterNames!", "set_parameters", "ModelParameters.cpp");
 
 
   if ((parameterTypes.size()==nparameters) && (parameterNames.size()==nparameters)) {

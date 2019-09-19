@@ -45,7 +45,7 @@ using namespace random;
 double cbl::glob::Distribution::m_percentile_integrator (const double xx)
 {
   function<double(double)> f_moment = [this] (double x) {return this->operator()(x);};
-  return wrapper::gsl::GSL_integrate_qag(f_moment, m_xmin, xx);
+  return wrapper::gsl::GSL_integrate_cquad(f_moment, m_xmin, xx, 1.e-4);
 }
 
 
@@ -56,7 +56,7 @@ void cbl::glob::Distribution::m_set_distribution_normalization ()
 {
   function<double(double)> f = bind(m_func, std::placeholders::_1, m_distribution_func_fixed_pars, m_distribution_func_pars);
 
-  m_distribution_normalization = wrapper::gsl::GSL_integrate_qag(f, m_xmin, m_xmax);
+  m_distribution_normalization = wrapper::gsl::GSL_integrate_cquad(f, m_xmin, m_xmax, 1.e-4);
 }
 
 
@@ -65,8 +65,8 @@ void cbl::glob::Distribution::m_set_distribution_normalization ()
 
 cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distributionType, const double value) 
 {
-  if (distributionType != glob::DistributionType::_Constant_)
-    ErrorCBL("Error in cbl::glob::Distribution::Distribution() in Distribution.cpp: this constructor only allows DistributionType::_Constant_");
+  if (distributionType!=glob::DistributionType::_Constant_)
+    ErrorCBL("this constructor only allows DistributionType::_Constant_ !", "Distribution", "Distribution.cpp");
 
   set_constant_distribution(value);
 }
@@ -79,7 +79,7 @@ cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distrib
 cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distributionType, const double xmin, const double xmax, const int seed) 
 {
   if (distributionType != glob::DistributionType::_Uniform_)
-    ErrorCBL("Error in cbl::glob::Distribution::Distribution() in Distribution.cpp: this constructor only allows DistributionType::_Uniform_");
+    ErrorCBL("this constructor only allows DistributionType::_Uniform_ !", "Distribution", "Distribution.cpp");
 
   set_uniform_distribution(xmin, xmax, seed);
 }
@@ -94,20 +94,20 @@ cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distrib
 
   if (distributionType == glob::DistributionType::_Gaussian_) {
     if (distribution_params.size() != 2)
-      ErrorCBL("Error in cbl::glob::Distribution::Distribution() in Distribution.cpp: wrong size of distribution_params. Gaussian distribution needs 2 parameters, the mean and the standard deviation");
+      ErrorCBL("wrong size of distribution_params: Gaussian distribution needs 2 parameters, the mean and the standard deviation!", "Distribution", "Distribution.cpp");
 
     set_gaussian_distribution(distribution_params[0], distribution_params[1], seed);
   }
   
   else if (distributionType == glob::DistributionType::_Poisson_) {
     if (distribution_params.size() != 1)
-      ErrorCBL("Error in Distribution::Distribution() in Distribution.cpp: wrong size of distribution_params. Poisson distribution needs 1 parameter, the mean");
+      ErrorCBL("wrong size of distribution_params: poisson distribution needs 1 parameter, the mean", "Distribution", "Distribution.cpp");
 
     set_poisson_distribution(distribution_params[0], seed);
   }
   
   else 
-    ErrorCBL("Error in cbl::glob::Distribution::Distribution() in Distribution.cpp: no such type of distribution");
+    ErrorCBL("no such type of distribution", "Distribution", "Distribution.cpp");
 }
 
 
@@ -119,7 +119,7 @@ cbl::glob::Distribution::Distribution (const DistributionType distributionType, 
   set_limits(xmin, xmax);
 
   if (distributionType != glob::DistributionType::_Custom_)
-    ErrorCBL("Error in constructor of Distribution, this constructor only allows DistributionType::_Custom_");
+    ErrorCBL("this constructor only allows DistributionType::_Custom_ !", "Distribution", "Distribution.cpp");
 
   set_custom_distribution(func, distribution_fixed_pars, distribution_pars, seed);
 }
@@ -131,7 +131,7 @@ cbl::glob::Distribution::Distribution (const DistributionType distributionType, 
 cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distributionType, const std::vector<double> discrete_values, const std::vector<double> weights, const int seed) 
 {
   if (distributionType != glob::DistributionType::_Discrete_)
-    ErrorCBL("Error in cbl::glob:Distribution::Distribution() in Distribution.cpp: this constructor only allows DistributionType::_Discrete_");
+    ErrorCBL("this constructor only allows DistributionType::_Discrete_ !", "Distribution", "Distribution.cpp");
 
   set_discrete_values(discrete_values, weights, seed);
 }
@@ -154,7 +154,7 @@ cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distrib
     set_binned_distribution(var, dist, interpolationType, seed);
   }
   else
-    ErrorCBL("Error in cbl::glob::Distribution::Distribution() in Distribution.cpp: no such type of distribution");
+    ErrorCBL("no such type of distribution", "Distribution", "Distribution.cpp");
 }
 
 
@@ -261,7 +261,7 @@ void cbl::glob::Distribution::set_discrete_values (const std::vector<double> dis
   m_distributionType = glob::DistributionType::_Discrete_;
 
   if (discrete_values.size()==0)
-    ErrorCBL("Error in cbl::glob::Distribution::set_discrete_values() in Distribution.cpp: vector of values is empty");
+    ErrorCBL("the input vector of discrete values is empty", "set_discrete_values", "Distribution.cpp");
 
   set_limits(Min(discrete_values), Max(discrete_values));
 
@@ -297,7 +297,7 @@ void cbl::glob::Distribution::set_custom_distribution (const distribution_func f
 
   m_distribution_random = make_shared<CustomDistributionRandomNumbers> (CustomDistributionRandomNumbers(m_func, m_distribution_func_fixed_pars, m_distribution_func_pars, seed, m_xmin, m_xmax));
 
-  m_set_distribution_normalization ();
+  m_set_distribution_normalization();
 
 }
 
@@ -310,7 +310,7 @@ void cbl::glob::Distribution::set_binned_distribution (const std::vector<double>
   m_distributionType = glob::DistributionType::_Interpolated_;
 
   if (var.size()==0)
-    ErrorCBL("Error in cbl::glob::Distribution::set_binned_distribution() in Distribution.cpp: vector of values is empty");
+    ErrorCBL("the input vector is empty", "set_binned_distribution", "Distribution.cpp");
 
   set_limits(Min(var), Max(var));
   m_distribution_random = make_shared<DistributionRandomNumbers> (DistributionRandomNumbers(var, dist, interpolationType, seed));
@@ -379,14 +379,14 @@ double cbl::glob::Distribution::mean()
   double val = 0.;
   
   if (m_distributionType == glob::DistributionType::_Discrete_) {
-    shared_ptr<STR_closest_probability> pp  = static_pointer_cast<glob::STR_closest_probability>(m_distribution_func_fixed_pars);
+    shared_ptr<STR_closest_probability> pp = static_pointer_cast<glob::STR_closest_probability>(m_distribution_func_fixed_pars);
     val = Average(pp->values, pp->weights);
   }
   else
   {
     function<double(double)> f = bind(&Distribution::m_moments_integrator, this, std::placeholders::_1, 1);
 
-    val = wrapper::gsl::GSL_integrate_qag(f, m_xmin, m_xmax);
+    val = wrapper::gsl::GSL_integrate_cquad(f, m_xmin, m_xmax, 1.e-4);
   }
   m_mean = val;
   return val;
@@ -401,7 +401,7 @@ double cbl::glob::Distribution::variance ()
   double val = 0.;
   
   if (m_distributionType == glob::DistributionType::_Discrete_) {
-    shared_ptr<STR_closest_probability> pp  = static_pointer_cast<glob::STR_closest_probability>(m_distribution_func_fixed_pars);
+    shared_ptr<STR_closest_probability> pp = static_pointer_cast<glob::STR_closest_probability>(m_distribution_func_fixed_pars);
     val = pow(Sigma(pp->values, pp->weights),2);
   }
   else
@@ -410,7 +410,7 @@ double cbl::glob::Distribution::variance ()
 
     function<double(double)> f = [this] (double xx) {return  this->m_central_moments_integrator(xx, 2);};
 
-    val = wrapper::gsl::GSL_integrate_qag(f, m_xmin, m_xmax);
+    val = wrapper::gsl::GSL_integrate_cquad(f, m_xmin, m_xmax, 1.e-4);
   }
   m_variance = val;
   return val;
@@ -434,14 +434,14 @@ double cbl::glob::Distribution::skewness ()
   double val = 0.;
 
   if (m_distributionType == glob::DistributionType::_Discrete_)
-    ErrorCBL("Work in progress!", glob::ExitCode::_workInProgress_);
+    ErrorCBL("", "skewness", "Distribution.cpp", glob::ExitCode::_workInProgress_);
   
   else {
     variance();
     
     function<double(double)> f = [this] (double xx) { return  this->m_central_moments_integrator(xx, 3); };
     
-    val = sqrt(pow(wrapper::gsl::GSL_integrate_qag(f, m_xmin, m_xmax),2)*pow(m_variance, -3));
+    val = sqrt(pow(wrapper::gsl::GSL_integrate_qag(f, m_xmin, m_xmax, 1.e-4),2)*pow(m_variance, -3));
   }
   
   return val;
@@ -456,14 +456,14 @@ double cbl::glob::Distribution::kurtosis ()
   double val = 0.;
   
   if (m_distributionType == glob::DistributionType::_Discrete_)
-    ErrorCBL("Work in progress!", glob::ExitCode::_workInProgress_);
+    ErrorCBL("", "kurtosis", "Distribution.cpp", glob::ExitCode::_workInProgress_);
   
   else {
     variance();
 
     function<double(double)> f = [this] (double xx) { return  this->m_central_moments_integrator(xx, 4); };
 
-    val= wrapper::gsl::GSL_integrate_qag(f, m_xmin, m_xmax)*pow(m_variance, -2);
+    val= wrapper::gsl::GSL_integrate_qag(f, m_xmin, m_xmax, 1.e-4)*pow(m_variance, -2);
   }
   
   return val;
@@ -488,7 +488,7 @@ double cbl::glob::Distribution::percentile (const unsigned int i)
   double val = 0.;
   
   if (m_distributionType == glob::DistributionType::_Discrete_) {
-    shared_ptr<STR_closest_probability> pp  = static_pointer_cast<glob::STR_closest_probability>(m_distribution_func_fixed_pars);
+    shared_ptr<STR_closest_probability> pp = static_pointer_cast<glob::STR_closest_probability>(m_distribution_func_fixed_pars);
     vector<double> vv = pp->values; sort(vv.begin(), vv.end());
     int perc = nint(double(i)/100.*pp->values.size());
     val = vv[perc];
@@ -514,7 +514,7 @@ double cbl::glob::Distribution::mode ()
   if (m_distributionType == glob::DistributionType::_Discrete_) {
 
     int digits = 4;
-    shared_ptr<STR_closest_probability> pp  = static_pointer_cast<glob::STR_closest_probability>(m_distribution_func_fixed_pars);
+    shared_ptr<STR_closest_probability> pp = static_pointer_cast<glob::STR_closest_probability>(m_distribution_func_fixed_pars);
     vector<double> vv = pp->values; 
     for (size_t i=0; i<vv.size(); i++)
       vv[i] = round_to_precision (vv[i], digits);
@@ -548,7 +548,7 @@ double cbl::glob::Distribution::mode ()
 
 void cbl::glob::Distribution::get_distribution (vector<double> &xx, vector<double> &fx, vector<double> &err, const std::vector<double> FF, const std::vector<double> WW, const int nbin, const bool linear, const std::string file_out, const double fact, const double V1, const double V2, const bool bin_type, const bool conv, const double sigma)
 {
-  if (xx.size()>0 || fx.size()>0 || FF.size()<=0 || nbin<=0) ErrorCBL("Error in cbl::glob::Distribution::get_distribution() in Distribution.cpp: the following conditions have to be satisfied: xx.size()<=0, fx.size()<=0, FF.size()>0 and nbin>0. The values recived are instead: xx.size() = " + cbl::conv(xx.size(), par::fINT) + ", fx.size() = " + cbl::conv(fx.size(), par::fINT) + ", FF.size() = " + cbl::conv(FF.size(), par::fINT) + "and nbin = " + cbl::conv(nbin, par::fINT) + "!");
+  if (xx.size()>0 || fx.size()>0 || FF.size()<=0 || nbin<=0) ErrorCBL("the following conditions have to be satisfied: xx.size()<=0, fx.size()<=0, FF.size()>0 and nbin>0. The values recived are instead: xx.size() = "+cbl::conv(xx.size(), par::fINT)+", fx.size() = "+cbl::conv(fx.size(), par::fINT)+", FF.size() = "+cbl::conv(FF.size(), par::fINT)+"and nbin = "+cbl::conv(nbin, par::fINT)+"!", "get_distribution", "Distribution.cpp");
 
   double minFF = (V1>cbl::par::defaultDouble) ? V1 : Min(FF)*0.9999;
   double maxFF = (V2>cbl::par::defaultDouble) ? V2 : Max(FF)*1.0001;
@@ -602,7 +602,7 @@ void cbl::glob::Distribution::get_distribution (vector<double> &xx, vector<doubl
     double *func;
     fftw_complex *func_tr;
 
-    if (!linear) ErrorCBL("Work in progress...", ExitCode::_workInProgress_);
+    if (!linear) ErrorCBL("", "get_distribution", "Distribution.cpp", ExitCode::_workInProgress_);
     int nbinN = 2*nbin;
     int i1 = nbin*0.5, i2 = 1.5*nbin;
 

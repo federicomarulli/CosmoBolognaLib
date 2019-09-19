@@ -433,7 +433,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	void read_covariance (const std::string dir, const std::string file) override
-	{ (void)dir; (void)file; ErrorCBL("Work in progress in read_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::ExitCode::_workInProgress_); }
+	{ (void)dir; (void)file; ErrorCBL("", "read_covariance", "TwoPointCorrelation2D_cartesian.h", glob::ExitCode::_workInProgress_); }
 
 	/**
 	 *  @brief write the measured two-point correlation
@@ -442,7 +442,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	void write_covariance (const std::string dir, const std::string file) const override
-	{ (void)dir; (void)file; ErrorCBL("Work in progress in write_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::ExitCode::_workInProgress_); }
+	{ (void)dir; (void)file; ErrorCBL("", "write_covariance", "TwoPointCorrelation2D_cartesian.h", glob::ExitCode::_workInProgress_); }
       
 	/**
 	 *  @brief compute the covariance matrix
@@ -453,7 +453,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	void compute_covariance (const std::vector<std::shared_ptr<data::Data>> xi, const bool JK) override
-	{ (void)xi; (void)JK; ErrorCBL("Work in progress in compute_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::ExitCode::_workInProgress_); }
+	{ (void)xi; (void)JK; ErrorCBL("", "compute_covariance", "TwoPointCorrelation2D_cartesian.h", glob::ExitCode::_workInProgress_); }
       
 	/**
 	 *  @brief compute the covariance matrix
@@ -465,7 +465,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	void compute_covariance (const std::vector<std::string> file, const bool JK) override
-	{ (void)file; (void)JK; ErrorCBL("Work in progress in compute_covariance() of TwoPointCorrelation2D_cartesian.h...", glob::ExitCode::_workInProgress_); }
+	{ (void)file; (void)JK; ErrorCBL("", "compute_covariance", "TwoPointCorrelation2D_cartesian.h", glob::ExitCode::_workInProgress_); }
       
 	///@} 
       

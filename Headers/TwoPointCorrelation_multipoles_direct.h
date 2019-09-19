@@ -328,7 +328,8 @@ namespace cbl {
           ///@}
 
 	  /**
-	   *  @name Member functions to 
+	   *  @name Member functions to get the private/protected
+	   *  variables of the class
 	   */
 	  ///@{
 
@@ -343,7 +344,7 @@ namespace cbl {
 	   *  @return the binned correlation function 
 	   */
 	  std::vector<double> xi1D () const
-	  { cbl::ErrorCBL("Error in xi1D() of TwoPointCorrelation_multipoles_direct.h!"); std::vector<double> vv; return vv; }
+	    { cbl::ErrorCBL("", "xi1D", "TwoPointCorrelation_multipoles_direct.h"); std::vector<double> vv; return vv; }
 
 	  /**
 	   *  @brief get the error on the binned correlation function
@@ -352,7 +353,7 @@ namespace cbl {
 	   *  function
 	   */
 	  std::vector<double> error1D () const
-	  { cbl::ErrorCBL("Error in error1D() of TwoPointCorrelation_multipoles_direct.h!"); std::vector<double> vv; return vv; }
+	    { cbl::ErrorCBL("", "error1D", "TwoPointCorrelation_multipoles_direct.h"); std::vector<double> vv; return vv; }
 
 	  /**
 	   *  @brief get the monopole of the polar xi
@@ -446,7 +447,7 @@ namespace cbl {
 	   *  @return none
 	   */
 	  void read (const std::string dir, const std::string file) override
-	  { (void)dir; (void)file; ErrorCBL("Error in TwoPointCorrelation_multipoles::read of TwoPointCorrelation_multipoles.h: work in progress!", glob::ExitCode::_workInProgress_); }
+	  { (void)dir; (void)file; ErrorCBL("", "read", "TwoPointCorrelation_multipoles_direct.h", glob::ExitCode::_workInProgress_); }
 
 	  /**
 	   *  @brief write the multipoles of the two-point correlation

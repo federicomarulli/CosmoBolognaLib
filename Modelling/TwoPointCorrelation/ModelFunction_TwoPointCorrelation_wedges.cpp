@@ -44,22 +44,20 @@ using namespace cbl;
 // ============================================================================================
 
 
-std::vector<double> cbl::modelling::twopt::xi_Wedges (const std::vector<double> rr, const std::vector<int> dataset_wedge, const int nwedges, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
+std::vector<double> cbl::modelling::twopt::xi_Wedges (const std::vector<double> rr, const std::vector<int> dataset_order, const std::vector<std::vector<double>> mu_integral_limits, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
 {
-  vector<cbl::glob::FuncGrid> interp_Xil(3);
-  for (size_t i=0; i<3; i++)
-    interp_Xil[i] = Xil_interp(pk_interp[0]->x(), 2*i, model, parameter, pk_interp, prec);
-
+  vector<vector<double>> Xil = Xi_l(rr, 3, model, parameter, pk_interp, prec);
+  
   vector<double> XiW(rr.size());
-
+  
   for (size_t i=0; i<rr.size(); i++) {
-    double mu_min = double(dataset_wedge[i])/nwedges;
-    double mu_max = double(dataset_wedge[i]+1)/nwedges;
+    const double mu_min = mu_integral_limits[dataset_order[i]][0];
+    const double mu_max = mu_integral_limits[dataset_order[i]][1];
+    
+    const double f2 = 0.5*((pow(mu_max, 3)-pow(mu_min, 3))/(mu_max-mu_min)-1.);
+    const double f4 = 0.125*((7.*(pow(mu_max, 5)-pow(mu_min, 5))-10.*(pow(mu_max, 3)-pow(mu_min, 3)))/(mu_max-mu_min)+3.);
 
-    double f2 = -0.5*((pow(mu_max, 3)-pow(mu_min, 3))/(mu_max-mu_min)-1.);
-    double f4 = 0.125*((7.*(pow(mu_max, 5)-pow(mu_min, 5))-10.*(pow(mu_max, 3)-pow(mu_min, 3)))/(mu_max-mu_min)+3.);
-
-    XiW[i] = (interp_Xil[0](rr[i])+f2*interp_Xil[1](rr[i])+f4*interp_Xil[2](rr[i]));
+    XiW[i] = Xil[0][i]+f2*Xil[1][i]+f4*Xil[2][i];
   }
   
   return XiW;
@@ -69,20 +67,20 @@ std::vector<double> cbl::modelling::twopt::xi_Wedges (const std::vector<double> 
 // ============================================================================================
 
 
-std::vector<std::vector<double>> cbl::modelling::twopt::xi_Wedges (const std::vector<double> rr, const int nwedges, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
+std::vector<std::vector<double>> cbl::modelling::twopt::xi_Wedges (const std::vector<double> rr, const int nWedges, const std::vector<std::vector<double>> mu_integral_limits, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec)
 {
   vector<vector<double>> Xil = Xi_l(rr, 3, model, parameter, pk_interp, prec);
 
-  vector<vector<double>> XiW(nwedges, vector<double>(rr.size(), 0));
+  vector<vector<double>> XiW(nWedges, vector<double>(rr.size(), 0));
 
-  for (int i=0; i<nwedges; i++) {
-    double mu_min = double(i)/nwedges;
-    double mu_max = double(i+1)/nwedges;
-
-    double f2 = 0.5*((pow(mu_max, 3)-pow(mu_min, 3))/(mu_max-mu_min)-1.);
-    double f4 = 0.125*((7.*(pow(mu_max, 5)-pow(mu_min, 5))-10.*(pow(mu_max, 3)-pow(mu_min, 3)))/(mu_max-mu_min)+3.);
-
-    for (size_t j=0; j<rr.size(); j++) 
+  for (int i=0; i<nWedges; i++) {
+    const double mu_min = mu_integral_limits[i][0];
+    const double mu_max = mu_integral_limits[i][1];
+    
+    const double f2 = 0.5*((pow(mu_max, 3)-pow(mu_min, 3))/(mu_max-mu_min)-1.);
+    const double f4 = 0.125*((7.*(pow(mu_max, 5)-pow(mu_min, 5))-10.*(pow(mu_max, 3)-pow(mu_min, 3)))/(mu_max-mu_min)+3.);
+    
+    for (size_t j=0; j<rr.size(); j++)
       XiW[i][j] = Xil[0][j]+f2*Xil[1][j]+f4*Xil[2][j];
   }
 
@@ -99,20 +97,66 @@ std::vector<double> cbl::modelling::twopt::xiWedges (const std::vector<double> r
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
 
   // input parameters
-  vector<double> pars;
   vector<shared_ptr<glob::FuncGrid>> pk_interp(2);
+  vector<shared_ptr<glob::FuncGrid>> pk_interp_Scoccimarro_CPT(3);
+  vector<shared_ptr<glob::FuncGrid>> pk_interp_TNS_CPT(17);
+  vector<shared_ptr<glob::FuncGrid>> pk_interp_Dispersion(1);
+  std::vector<double> Xi_wedge;
 
   if (pp->Pk_mu_model=="dispersion_dewiggled") {
     pk_interp[0] = pp->func_Pk;
     pk_interp[1] = pp->func_Pk_NW;
+    Xi_wedge = xi_Wedges(rad, pp->dataset_order, pp->mu_integral_limits, pp->Pk_mu_model, { parameter[0], parameter[1], parameter[2], parameter[3], parameter[4]/pp->sigma8_z, parameter[5]/pp->sigma8_z, parameter[6] }, pk_interp, pp->prec);
   }
-  else if (pp->Pk_mu_model=="dispersion_modecoupling") { 
+  else if (pp->Pk_mu_model=="dispersion_modecoupling") {
     pk_interp[0] = pp->func_Pk;
     pk_interp[1] = pp->func_Pk1loop;
+    Xi_wedge = xi_Wedges(rad, pp->dataset_order, pp->mu_integral_limits, pp->Pk_mu_model, { parameter[0], parameter[1], parameter[2], parameter[3], parameter[4]/pp->sigma8_z, parameter[5]/pp->sigma8_z, parameter[6] }, pk_interp, pp->prec);
   }
-  else ErrorCBL("Error in cbl::modelling::twopt::xiWedges() of ModelFunction_TwoPointCorrelation_wedges.cpp: the chosen model ("+pp->Pk_mu_model+") is not currently implemented!");
-  
-  return xi_Wedges(rad, pp->dataset_order, pp->nwedges, pp->Pk_mu_model, { parameter[0], parameter[1], parameter[2], parameter[3], parameter[4]/pp->sigma8_z, parameter[5]/pp->sigma8_z, parameter[6] }, pk_interp, pp->prec);
+  else if (pp->Pk_mu_model=="DispersionGauss" || pp->Pk_mu_model=="DispersionLorentz") {
+    pk_interp_Dispersion[0] = pp->func_Pk;
+    Xi_wedge = xi_Wedges(rad, pp->dataset_order, pp->mu_integral_limits, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_Dispersion, pp->prec);
+  }  
+  else if (pp->Pk_mu_model=="ScoccimarroPezzottaGauss" || pp->Pk_mu_model=="ScoccimarroPezzottaLorentz") {
+    pk_interp[0] = pp->func_Pk;
+    pk_interp[1] = pp->func_Pk_nonlin;
+    Xi_wedge = xi_Wedges(rad, pp->dataset_order, pp->mu_integral_limits, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2], parameter[3], parameter[4] }, pk_interp, pp->prec);
+  }
+  else if (pp->Pk_mu_model=="ScoccimarroBelGauss" || pp->Pk_mu_model=="ScoccimarroBelLorentz") {
+    pk_interp[0] = pp->func_Pk;
+    pk_interp[1] = pp->func_Pk_nonlin;
+    Xi_wedge = xi_Wedges(rad, pp->dataset_order, pp->mu_integral_limits, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2], parameter[3], parameter[4], parameter[5], parameter[6], parameter[7] }, pk_interp, pp->prec);
+  }
+  else if (pp->Pk_mu_model=="ScoccimarroGauss" || pp->Pk_mu_model=="ScoccimarroLorentz") {
+    pk_interp_Scoccimarro_CPT[0] = pp->func_Pk_DeltaDelta;
+    pk_interp_Scoccimarro_CPT[1] = pp->func_Pk_DeltaTheta;
+    pk_interp_Scoccimarro_CPT[2] = pp->func_Pk_ThetaTheta;
+    Xi_wedge = xi_Wedges(rad, pp->dataset_order, pp->mu_integral_limits, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_Scoccimarro_CPT, pp->prec);
+  }
+  else if (pp->Pk_mu_model=="TaruyaGauss" || pp->Pk_mu_model=="TaruyaLorentz") {
+    pk_interp_TNS_CPT[0]  = pp->func_Pk_DeltaDelta;
+    pk_interp_TNS_CPT[1]  = pp->func_Pk_DeltaTheta;
+    pk_interp_TNS_CPT[2]  = pp->func_Pk_ThetaTheta;
+    pk_interp_TNS_CPT[3]  = pp->func_Pk_A11;
+    pk_interp_TNS_CPT[4]  = pp->func_Pk_A12;
+    pk_interp_TNS_CPT[5]  = pp->func_Pk_A22;
+    pk_interp_TNS_CPT[6]  = pp->func_Pk_A23;
+    pk_interp_TNS_CPT[7]  = pp->func_Pk_A33;
+    pk_interp_TNS_CPT[8]  = pp->func_Pk_B12;
+    pk_interp_TNS_CPT[9]  = pp->func_Pk_B13;
+    pk_interp_TNS_CPT[10] = pp->func_Pk_B14;
+    pk_interp_TNS_CPT[11] = pp->func_Pk_B22;
+    pk_interp_TNS_CPT[12] = pp->func_Pk_B23;
+    pk_interp_TNS_CPT[13] = pp->func_Pk_B24;
+    pk_interp_TNS_CPT[14] = pp->func_Pk_B33;
+    pk_interp_TNS_CPT[15] = pp->func_Pk_B34;
+    pk_interp_TNS_CPT[16] = pp->func_Pk_B44;
+    Xi_wedge = xi_Wedges(rad, pp->dataset_order, pp->mu_integral_limits, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_TNS_CPT, pp->prec);
+  }
+
+  else ErrorCBL("the chosen model ("+pp->Pk_mu_model+") is not currently implemented!", "xiWedges", "ModelFunction_TwoPointCorrelation_wedges.cpp");
+
+  return Xi_wedge;
   
 }
 
@@ -125,7 +169,7 @@ std::vector<double> cbl::modelling::twopt::xiWedges_BAO (const std::vector<doubl
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
 
-  vector<vector<double>> new_rad(pp->nwedges);
+  vector<vector<double>> new_rad(pp->nWedges);
 
   for(size_t i=0; i<rad.size(); i++)
     new_rad[pp->dataset_order[i]].push_back(rad[i]);

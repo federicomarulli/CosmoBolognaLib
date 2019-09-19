@@ -50,7 +50,7 @@ double cbl::cosmology::Cosmology::f_k (const double kk, const shared_ptr<cbl::gl
     double fact = 6.*pow(kk, 7)*qq-79.*pow(kk, 5)*pow(qq, 3)+50.*pow(kk,3)*pow(qq, 5)-21.*kk*pow(qq, 7)+3./4*pow(kk*kk-qq*qq, 3)*(2.*kk*kk+7.*qq*qq)*log(pow(fabs(kk-qq), 2)/pow(fabs(kk+qq), 2));
     return pow(504.*pow(kk, 3)*pow(qq, 5), -1)*fact*_Pk*qq*qq;
   }; 
-  return 4.*par::pi*wrapper::gsl::GSL_integrate_qag(integrand, qmin, qmax, prec);
+  return 4.*par::pi*wrapper::gsl::GSL_integrate_cquad(integrand, qmin, qmax, prec);
 }
 
 
@@ -64,7 +64,7 @@ double cbl::cosmology::Cosmology::g_k (const double kk, const shared_ptr<cbl::gl
     double fact = 6.*pow(kk, 7)*qq-41.*pow(kk, 5)*pow(qq, 3)+2.*pow(kk,3)*pow(qq, 5)-3.*kk*pow(qq, 7)+3./4*pow(kk*kk-qq*qq, 3)*(2.*kk*kk+qq*qq)*log(pow(fabs(kk-qq), 2)/pow(fabs(kk+qq), 2));
     return pow(168.*pow(kk, 3)*pow(qq, 5), -1)*fact*_Pk*qq*qq;
   }; 
-  return 4.*par::pi*wrapper::gsl::GSL_integrate_qag(integrand, qmin, qmax, prec);
+  return 4.*par::pi*wrapper::gsl::GSL_integrate_cquad(integrand, qmin, qmax, prec);
 }
 
 
@@ -106,7 +106,7 @@ double cbl::cosmology::Cosmology::Pk_1loop (const double kk, const shared_ptr<cb
     func2 = [&] (const double k, const double q, const double kq) {return G2(k, q, kq);};
   }
   else 
-    ErrorCBL("Error in Pk_1loop() of PkXiNonLinear! You must choose a correct value for corrtype!");
+    ErrorCBL("the input value of corrtype is not allowed!", "Pk_1loop", "PkXiNonLinear.cpp");
 
   auto integrand = [&] (const double qq) 
   {
@@ -116,11 +116,11 @@ double cbl::cosmology::Cosmology::Pk_1loop (const double kk, const shared_ptr<cb
       double akq = (kk*xx-qq)/kq;
       return func1(kq, qq, akq)*func2(kq, qq, akq)*Pk->operator()(kq);
     };
-    double res = wrapper::gsl::GSL_integrate_qag(integrand_intermediate, -1, 1, prec);
+    double res = wrapper::gsl::GSL_integrate_cquad(integrand_intermediate, -1, 1, prec);
     return Pk->operator()(qq)*qq*qq*res;
   };
 
-  return 4.*par::pi*wrapper::gsl::GSL_integrate_qag(integrand, qmin, qmax, prec);
+  return 4.*par::pi*wrapper::gsl::GSL_integrate_cquad(integrand, qmin, qmax, prec);
 }
 
 
@@ -156,9 +156,12 @@ double cbl::cosmology::Cosmology::Pk_ThetaTheta (const double kk, const std::sha
 // ============================================================================================
       
 
-std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
+std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
 {
-  vector<double> pkLin = Pk(kk, method_Pk, false, redshift, output_dir, output_root, norm, k_min, k_max, prec, file_par, unit1);
+  vector<double> pkLin = Pk(kk, method_Pk, false, redshift, output_dir, store_output_CAMB, output_root, norm, k_min, k_max, prec, file_par, unit1);
+
+  for (size_t i=0; i<kk.size(); i++)
+    pkLin[i] /= pow(2*par::pi, 3);
 
   auto pkLinInterp = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, pkLin, "Spline"));
 
@@ -174,9 +177,12 @@ std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaDelta (const std::vector<
 // ============================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
+std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
 {
-  vector<double> pkLin = Pk(kk, method_Pk, false, redshift, output_dir, output_root, norm, k_min, k_max, prec, file_par, unit1);
+  vector<double> pkLin = Pk(kk, method_Pk, false, redshift, output_dir, store_output_CAMB, output_root, norm, k_min, k_max, prec, file_par, unit1);
+
+  for (size_t i=0; i<kk.size(); i++)
+    pkLin[i] /= pow(2*par::pi, 3);
 
   auto pkLinInterp = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, pkLin, "Spline"));
 
@@ -191,9 +197,12 @@ std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaTheta (const std::vector<
 // ============================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
+std::vector<double> cbl::cosmology::Cosmology::Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
 {
-  vector<double> pkLin = Pk(kk, method_Pk, false, redshift, output_dir, output_root, norm, k_min, k_max, prec, file_par, unit1);
+  vector<double> pkLin = Pk(kk, method_Pk, false, redshift, output_dir, store_output_CAMB, output_root, norm, k_min, k_max, prec, file_par, unit1);
+
+  for (size_t i=0; i<kk.size(); i++)
+    pkLin[i] /= pow(2*par::pi, 3);
 
   auto pkLinInterp = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, pkLin, "Spline"));
 

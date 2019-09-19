@@ -54,7 +54,7 @@ shared_ptr<Data> cbl::data::Data::Create (const DataType dataType)
   else if (dataType==DataType::_1D_collection_) return move(unique_ptr<Data1D_collection>(new Data1D_collection()));
   else if (dataType==DataType::_1D_extra_) return move(unique_ptr<Data1D_extra>(new Data1D_extra()));
   else if (dataType==DataType::_2D_extra_) return move(unique_ptr<Data2D_extra>(new Data2D_extra()));
-  else ErrorCBL("Error in cbl::data::Data::Create of Data.cpp: no such type of object, or error in the input parameters!!");
+  else ErrorCBL("no such type of object, or error in the input parameters!", "Create", "Data.cpp");
 
   return NULL;
 }
@@ -156,7 +156,7 @@ void cbl::data::Data::set_error(const std::vector<std::vector<double>> covarianc
   checkDim(covariance, m_ndata, m_ndata, "covariance");
 
   for (int i=0; i<m_ndata; i++)
-    m_error[i]=sqrt(covariance[i][i]);
+    m_error[i] = sqrt(covariance[i][i]);
 }
 
 
@@ -230,7 +230,7 @@ void cbl::data::Data::cut (const std::vector<bool> mask, std::vector<double> &da
       ndata_eff +=1;
 
   if (ndata_eff <1)
-    ErrorCBL("Error in cut of Data, no elements left");
+    ErrorCBL("no elements left!", "cut", "Data.cpp");
 
   data.resize(ndata_eff, 0);
   error.resize(ndata_eff, 0);
@@ -240,7 +240,7 @@ void cbl::data::Data::cut (const std::vector<bool> mask, std::vector<double> &da
   for (int i=0; i<m_ndata; i++) {
     if (mask[i]) {
       data[index1] = m_data[i];
-      error[index1] = m_data[i];
+      error[index1] = m_error[i];
 
       int index2 = 0;
       for (int j=0; j<m_ndata; j++) {
@@ -261,26 +261,26 @@ void cbl::data::Data::cut (const std::vector<bool> mask, std::vector<double> &da
 shared_ptr<data::Data> cbl::data::join_dataset (std::vector<std::shared_ptr<data::Data>> dataset)
 {
   if (dataset.size()<2)
-    cbl::ErrorCBL("Error in join_dataset(). You must provide at least 2 dataset");
+    ErrorCBL("at least 2 dataset have to be provided!", "join_dataset", "Data.cpp");
 
-  cbl::data::DataType dt = dataset[0]->dataType();
+  data::DataType dt = dataset[0]->dataType();
 
   for (size_t i=0; i<dataset.size(); i++)
     if (dt!=dataset[i]->dataType())
-      cbl::ErrorCBL("Error in join_dataset(). Dataset must be equal");
+      ErrorCBL("the dataset types must be equal!", "join_dataset", "Data.cpp");
 
   switch(dt) {
 
-    case cbl::data::DataType::_1D_:
+    case data::DataType::_1D_:
       return join_dataset_1D(dataset);
       break;
 
-    case cbl::data::DataType::_1D_extra_:
+    case data::DataType::_1D_extra_:
       return join_dataset_1D_extra(dataset);
       break;
 
     default:
-      ErrorCBL("Error in join_dataset(). Work in progress!");
+      ErrorCBL("", "join_dataset", "Data.cpp");
 
   }
 
@@ -320,7 +320,7 @@ shared_ptr<data::Data> cbl::data::join_dataset_1D(std::vector<std::shared_ptr<da
 	covariance[data_index[i][j]][data_index[i][k]] = dataset[i]->covariance(j, k);
     }
 
-  return move(unique_ptr<cbl::data::Data1D>(new cbl::data::Data1D(xx, data, covariance)));
+  return move(unique_ptr<data::Data1D>(new data::Data1D(xx, data, covariance)));
 }
 
 
@@ -329,7 +329,7 @@ shared_ptr<data::Data> cbl::data::join_dataset_1D(std::vector<std::shared_ptr<da
 
 shared_ptr<data::Data> data::join_dataset_1D_extra (std::vector<std::shared_ptr<data::Data>> dataset)
 {
-  ErrorCBL("Error in join_dataset_1D_extra, work in progress!");
+  ErrorCBL("", "join_dataset_1D_extra", "Data.cpp", glob::ExitCode::_workInProgress_);
   int ndataset = (int)dataset.size();
   int ndata = 0;
   vector<int> n_data(ndataset);
@@ -342,7 +342,7 @@ shared_ptr<data::Data> data::join_dataset_1D_extra (std::vector<std::shared_ptr<
   vector<vector<double>> extra_info (nextra, vector<double>(ndata, 0));
   vector<vector<double>> covariance(ndata, vector<double>(ndata, 0));
 
-  auto merged_dataset = make_shared<cbl::data::Data1D_extra>(cbl::data::Data1D_extra(xx, data, covariance, extra_info));
+  auto merged_dataset = make_shared<data::Data1D_extra>(data::Data1D_extra(xx, data, covariance, extra_info));
   
   return merged_dataset;
 }

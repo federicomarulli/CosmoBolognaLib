@@ -102,9 +102,8 @@ int main () {
     
     // --- construct the priors ---
     
-    // (remember to give different seed to priors!)
-    auto prior_A = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Uniform_, minA, maxA, 666));
-    auto prior_B = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Uniform_, minB, maxB, 999));
+    auto prior_A = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Uniform_, minA, maxA));
+    auto prior_B = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Uniform_, minB, maxB));
     auto prior_C = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Constant_, valC));
     const vector<shared_ptr<cbl::statistics::PriorDistribution>> prior_distributions = {prior_A, prior_B, prior_C};
 

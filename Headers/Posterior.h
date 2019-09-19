@@ -105,8 +105,8 @@ namespace cbl {
 	/**
 	 *  @brief constructor
 	 *
-	 *  @param prior_distributions vector containing the priors for the 
-	 *  likelihood parameters
+	 *  @param prior_distributions vector containing the priors
+	 *  for the likelihood parameters
 	 *
 	 *  @param likelihood pointer to an object of type Likelihood
 	 *
@@ -119,8 +119,8 @@ namespace cbl {
 	/**
 	 *  @brief constructor
 	 *
-	 *  @param prior_distributions vector containing the priors for the 
-	 *  likelihood parameters
+	 *  @param prior_distributions vector containing the priors
+	 *  for the likelihood parameters
 	 *
 	 *  @param data object of type data
 	 *
@@ -189,7 +189,7 @@ namespace cbl {
 	double log (std::vector<double> &pp) const;
 
 	/**
-	 * @brief set the model for the likelihood analysis 
+	 * @brief set the model for the posterior analysis 
 	 *
 	 * @param model pointer to the model
 	 *
@@ -200,17 +200,18 @@ namespace cbl {
 	void set_model (std::shared_ptr<Model> model=NULL, const std::shared_ptr<ModelParameters> model_parameters=NULL);
 
 	/**
-	 * @brief set the posterior type using the LikelihoodType object 
+	 * @brief set the posterior type using the LikelihoodType
+	 * object
 	 *
-	 * @param prior_distributions vector containing the priors for the 
-	 * likelihood parameters
+	 * @param prior_distributions vector containing the priors for
+	 * the likelihood parameters
 	 *
 	 * @param data pointer to an object of type Data
 	 *
 	 * @param model pointer to an object of type model
 	 *
-	 * @param likelihood_type the likelihood type, specified with the 
-	 * LikelihoodType object
+	 * @param likelihood_type the likelihood type, specified with
+	 * the LikelihoodType object
 	 *
 	 * @param x_index index(s) of the extra info std::vector containing the point(s) where to evaluate the model
 	 *
@@ -223,11 +224,27 @@ namespace cbl {
 	void set (const std::vector<std::shared_ptr<PriorDistribution>> prior_distributions, const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const LikelihoodType likelihood_type, const std::vector<size_t> x_index, const int w_index, const int seed);
 
 	/**
-	 *  @brief function that maximize the likelihood, find the
-	 *  best-fit parameters and store them in model
+	 *  @brief function that maximizes the posterior, finds the
+	 *  best-fit parameters and store them in the model
 	 *
-	 *  @param start std::vector containing initial values for
-	 *  the likelihood maximization
+	 *  this function exploits the Nelder-Mead method
+	 *  https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method
+	 *
+	 *  the algorithm defines a simplex (i.e a k-dimensional
+	 *  polytope which is the convex hull of its k+1 vertices) in
+	 *  the parameter space. At each step, it identifies the
+	 *  simplex vertex at which the function to be minimised
+	 *  (i.e. the negative posterior in this case) has the
+	 *  greatest value, and moves it, via reflections and scaling,
+	 *  to a new position in which the function has a lower
+	 *  value. This iteration stops when the simplex area becomes
+	 *  lower than the tolerance. For instance, in 2D, the
+	 *  starting vertices of the simplex (a triangle in 2D) are
+	 *  the following: (start[0], start[1]) ; (start[0]+epsilon,
+	 *  start[1]) ; (start[0], start[1]+epsilon)
+	 *
+	 *  @param start std::vector containing initial values for the
+	 *  posterior maximization
 	 *
 	 *  @param parameter_limits limits for the parameters
 	 *
@@ -235,11 +252,12 @@ namespace cbl {
 	 *
 	 *  @param tol the tolerance in finding convergence 
 	 *
-	 *  @param epsilon the relative fraction of the interval size
+	 *  @param epsilon the simplex side
 	 *
 	 *  @return none
 	 */
-	void maximize (const std::vector<double> start, const std::vector<std::vector<double>> parameter_limits, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3) {(void)start; (void)parameter_limits; (void)max_iter; (void)tol; (void)epsilon; ErrorCBL("Error in maximize() of Posterior.h, use the method without parameter_ranges!");}
+	void maximize (const std::vector<double> start, const std::vector<std::vector<double>> parameter_limits, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3)
+	{ (void)start; (void)parameter_limits; (void)max_iter; (void)tol; (void)epsilon; ErrorCBL("the method is used without parameter_ranges!", "maximize", "Posterior.h"); }
 
 	/**
 	 *  @brief function that maximize the posterior, find the
@@ -252,7 +270,7 @@ namespace cbl {
 	 *
 	 *  @param tol the tolerance in finding convergence 
 	 *  
-	 *  @param epsilon the relative size of the initial trial step
+	 *  @param epsilon the simplex side
 	 *
 	 *  @return none
 	 */
@@ -300,9 +318,11 @@ namespace cbl {
 	 *
 	 * @param tol the tolerance in finding convergence 
 	 *
+	 * @param epsilon the simplex side
+	 *
 	 * @return none
 	 */
-	void initialize_chains (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6);
+	void initialize_chains (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3);
 
 	/**
 	 * @brief initialize the chains in a ball around the input

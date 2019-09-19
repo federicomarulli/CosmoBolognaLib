@@ -169,7 +169,7 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measure (const ErrorTyp
       measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, seed);
       break;
     default:
-      ErrorCBL("Error in measure() of TwoPointCorrelation_projected.cpp, unknown type of error");
+      ErrorCBL("unknown type of error!", "measure", "TwoPointCorrelation_projected.cpp");
   }
 }
 
@@ -211,7 +211,7 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measureJackknife (const
   else if (estimator==Estimator::_LandySzalay_)
     data = XiJackknife(dd_regions, rr_regions, dr_regions);
   else
-    ErrorCBL("Error in measureJackknife() of TwoPointCorrelation_projected.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureJackknife", "TwoPointCorrelation_projected.cpp");
   
   vector<vector<double>> ww, covariance;
   for (size_t i=0; i<data.size(); i++) {
@@ -242,7 +242,7 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measureJackknife (const
 void cbl::measure::twopt::TwoPointCorrelation_projected::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (nMocks<=0)
-    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_monopole.cpp, number of mocks must be >0");
+    ErrorCBL("the number of mocks must be >0!", "measureBootstrap", "TwoPointCorrelation1D_monopole.cpp");
 
   if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -260,7 +260,7 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measureBootstrap (const
   else if (estimator==Estimator::_LandySzalay_)
     data = XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions, seed);
   else
-    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation_projected.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureBootstrap", "TwoPointCorrelation_projected.cpp");
   
   vector<vector<double>> ww, covariance;
   for (size_t i=0; i<data.size(); i++) {

@@ -81,7 +81,8 @@ namespace cbl {
      * @return a vector containing the
      * TripletType names
      */
-    inline std::vector<std::string> TripletTypeNames () {return {"comoving_theta", "comoving_side", "comoving_costheta", "_multipoles_direct_"}; }
+    inline std::vector<std::string> TripletTypeNames ()
+    { return {"comoving_theta", "comoving_side", "comoving_costheta", "multipoles_direct"}; }
 
     /**
      * @brief cast an enum of type TripletType
@@ -89,7 +90,8 @@ namespace cbl {
      * @param tripletPTypeIndex the tripletPType index
      * @return object of class TripletType
      */
-    inline TripletType TripletTypeCast (const int tripletPTypeIndex) {return castFromValue<TripletType>(tripletPTypeIndex);}
+    inline TripletType TripletTypeCast (const int tripletPTypeIndex)
+    { return castFromValue<TripletType>(tripletPTypeIndex); }
 
     /**
      * @brief cast an enum of type TripletType
@@ -97,7 +99,8 @@ namespace cbl {
      * @param tripletPTypeName the tripletPType name
      * @return object of class TripletType
      */
-    inline TripletType TripletTypeCast (const std::string tripletPTypeName) {return castFromName<TripletType>(tripletPTypeName, TripletTypeNames());}
+    inline TripletType TripletTypeCast (const std::string tripletPTypeName)
+    { return castFromName<TripletType>(tripletPTypeName, TripletTypeNames()); }
 
     /**
      * @brief cast an enum of type TripletType
@@ -105,7 +108,8 @@ namespace cbl {
      * @param tripletPTypeIndeces the tripletPType indeces
      * @return object of class TripletType
      */
-    inline std::vector<TripletType> TripletTypeCast (const std::vector<int> tripletPTypeIndeces) {return castFromValues<TripletType>(tripletPTypeIndeces);} 
+    inline std::vector<TripletType> TripletTypeCast (const std::vector<int> tripletPTypeIndeces)
+    { return castFromValues<TripletType>(tripletPTypeIndeces); } 
 
     /**
      * @brief cast an enum of type TripletType
@@ -113,7 +117,8 @@ namespace cbl {
      * @param tripletPTypeNames the tripletPType names
      * @return vector of TripletType enums
      */
-    inline std::vector<TripletType> TripletTypeCast (const std::vector<std::string> tripletPTypeNames) {return castFromNames<TripletType>(tripletPTypeNames, TripletTypeNames());}
+    inline std::vector<TripletType> TripletTypeCast (const std::vector<std::string> tripletPTypeNames)
+    { return castFromNames<TripletType>(tripletPTypeNames, TripletTypeNames()); }
 
 
     /**
@@ -191,26 +196,30 @@ namespace cbl {
        *  @brief get the dimension of the triplet vectors 
        *  @return the dimension of the triplet vectors 
        */
-      Dim tripletDim () const { return m_tripletDim; }
+      Dim tripletDim () const
+      { return m_tripletDim; }
 
       /**
        *  @brief get the triplet type
        *  @return the triplet type
        */
-      TripletType tripletType () const { return m_tripletType; }
+      TripletType tripletType () const
+      { return m_tripletType; }
 
       /**
        *  @brief get the protected member \e m_scale[i]
        *  @param i the bin index
        *  @return the i-th binned scale
        */
-      virtual double scale (const int i) const { (void)i; cbl::ErrorCBL("Error in Triplet::scale() of Triplet.h!"); return 0; }
+      virtual double scale (const int i) const
+      { (void)i; cbl::ErrorCBL("", "scale", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member \e m_scale
        *  @return the vector containing the binned scales
        */
-      virtual std::vector<double> scale () const { cbl::ErrorCBL("Error in Triplet::scale() of Triplet.h!"); std::vector<double> vv; return vv; }
+      virtual std::vector<double> scale () const
+      { cbl::ErrorCBL("", "scale", "Triplet.h"); std::vector<double> vv; return vv; }
       
       /**
        *  @brief get the private member \e m_TT1D[i]
@@ -218,7 +227,7 @@ namespace cbl {
        *  @return the number of triplets in the i-th angular bin, or an
        *  error message if the derived object does not have this member
        */
-      virtual double TT1D (const int i) const { (void)i; cbl::ErrorCBL("Error in Triplet::TT1D() of Triplet.h!"); return 0; }
+      virtual double TT1D (const int i) const { (void)i; cbl::ErrorCBL("", "TT1D", "Triplet.h"); return 0; }
       
       /**
        *  @brief get the private member \e m_TT1D
@@ -226,33 +235,33 @@ namespace cbl {
        *  bins, or an error message if the derived object does not have
        *  this member
        */
-      virtual std::vector<double> TT1D () const { cbl::ErrorCBL("Error in Triplet::TT1D() of Triplet.h!"); std::vector<double> vv; return vv; }
+      virtual std::vector<double> TT1D () const { cbl::ErrorCBL("", "TT1D", "Triplet.h"); std::vector<double> vv; return vv; }
 
       /**
        *  @brief get the protected member \e m_scale_D1[i]
        *  @param i the bin index in the first dimension
        *  @return the i-th binned scale
        */
-      virtual double scale_D1 (const int i) const { (void)i; cbl::ErrorCBL("Error in Triplet::scale_D1() of Triplet.h!"); return 0; }
+      virtual double scale_D1 (const int i) const { (void)i; cbl::ErrorCBL("", "scale_D1", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member \e m_scale_D1
        *  @return the vector containing the binned scales
        */
-      virtual std::vector<double> scale_D1 () const { cbl::ErrorCBL("Error in Triplet::scale_D1() of Triplet.h!"); std::vector<double> vv; return vv; }
+      virtual std::vector<double> scale_D1 () const { cbl::ErrorCBL("", "scale_D1", "Triplet.h"); std::vector<double> vv; return vv; }
 
       /**
        *  @brief get the protected member \e m_scale_D2[i]
        *  @param i the bin index in the first dimension
        *  @return the i-th binned scale
        */
-      virtual double scale_D2 (const int i) const { (void)i; cbl::ErrorCBL("Error in Triplet::scale_D2() of Triplet.h!"); return 0; }
+      virtual double scale_D2 (const int i) const { (void)i; cbl::ErrorCBL("", "scale_D2", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member \e m_scale_D2
        *  @return the vector containing the binned scales
        */
-      virtual std::vector<double> scale_D2 () const { cbl::ErrorCBL("Error in Triplet::scale_D2() of Triplet.h!"); std::vector<double> vv; return vv; }
+      virtual std::vector<double> scale_D2 () const { cbl::ErrorCBL("", "scale_D2", "Triplet.h"); std::vector<double> vv; return vv; }
 
       /**
        *  @brief get the protected member \e m_TT2D[i]
@@ -260,55 +269,55 @@ namespace cbl {
        *  @param j the bin index in the second dimension
        *  @return the number of pairs in the i-th bin
        */
-      virtual double TT2D (const int i, const int j) const { (void)i; (void)j; cbl::ErrorCBL("Error in Triplet::TT2D() of Triplet.h!"); return 0; }
+      virtual double TT2D (const int i, const int j) const { (void)i; (void)j; cbl::ErrorCBL("", "TT2D", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member \e m_TT2D
        *  @return the vector containing the binned number of pairs
        */
-      virtual std::vector<std::vector<double> > TT2D () const { cbl::ErrorCBL("Error in Triplet::TT2D() of Triplet.h!"); std::vector<std::vector<double> > vv; return vv; }
+      virtual std::vector<std::vector<double> > TT2D () const { cbl::ErrorCBL("", "TT2D", "Triplet.h"); std::vector<std::vector<double> > vv; return vv; }
       
       /**
        *  @brief get the private member \e m_r12
        *  @return the size of r<SUB>12</SUB>, or an error message if the
        *  derived object does not have this member
        */
-      virtual double r12 () const { cbl::ErrorCBL("Error in Triplet::r12_binSize() of Triplet.h!"); return 0; }
+      virtual double r12 () const { cbl::ErrorCBL("", "r12", "Triplet.h"); return 0; }
       
       /**
        *  @brief get the private member \e m_r12
        *  @return the size of the r<SUB>12</SUB> bin, or an error message if the
        *  derived object does not have this member
        */
-      virtual double r12_binSize () const { cbl::ErrorCBL("Error in Triplet::r12_binSize() of Triplet.h!"); return 0; }
+      virtual double r12_binSize () const { cbl::ErrorCBL("", "r12_binSize", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the private member \e m_side_u
        *  @return the size of r<SUB>13</SUB>, or an error message if the
        *  derived object does not have this member
        */
-      virtual double r13 () const { cbl::ErrorCBL("Error in Triplet::r13_binSize() of Triplet.h!"); return 0; }
+      virtual double r13 () const { cbl::ErrorCBL("", "r13", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the private member \e m_side_u
        *  @return the size of r<SUB>13</SUB> bin, or an error message if the
        *  derived object does not have this member
        */
-      virtual double r13_binSize () const { cbl::ErrorCBL("Error in Triplet::r13_binSize() of Triplet.h!"); return 0; }
+      virtual double r13_binSize () const { cbl::ErrorCBL("", "r13_binSize", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the private member \e m_nbins
        *  @return the number of bins, or an error message if the
        *  derived object does not have this member
        */
-      virtual int nbins () const { cbl::ErrorCBL("Error in Triplet::nbins() of Triplet.h!"); return 0; }
+      virtual int nbins () const { cbl::ErrorCBL("", "nbins", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the private member \e m_binSize
        *  @return the bin size, or an error message if the
        *  derived object does not have this member
        */
-      virtual double binSize () const { cbl::ErrorCBL("Error in Triplet::binSize() of Triplet.h!"); return 0; }
+      virtual double binSize () const { cbl::ErrorCBL("", "binSize", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_r12_D1
@@ -316,7 +325,7 @@ namespace cbl {
        *  or an error message if the derived object does not have this
        *  member
        */
-      virtual double r12_D1 () const { cbl::ErrorCBL("Error in Triplet::r12_D1() of Triplet.h!"); return 0; }
+      virtual double r12_D1 () const { cbl::ErrorCBL("", "r12_D1", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_r12_binSize_D1
@@ -324,7 +333,7 @@ namespace cbl {
        *  or an error message if the derived object does not have this
        *  member
        */
-      virtual double r12_binSize_D1 () const { cbl::ErrorCBL("Error in Triplet::r12_binSize_D1() of Triplet.h!"); return 0; }
+      virtual double r12_binSize_D1 () const { cbl::ErrorCBL("", "r12_binSize_D1", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_r13_D1
@@ -332,7 +341,7 @@ namespace cbl {
        *  or an error message if the derived object does
        *  not have this member
        */
-      virtual double r13_D1 () const { cbl::ErrorCBL("Error in Triplet::r13_D1() of Triplet.h!"); return 0; }
+      virtual double r13_D1 () const { cbl::ErrorCBL("", "r13_D1", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_r13_binSize_D1
@@ -340,7 +349,7 @@ namespace cbl {
        *  or an error message if the derived object does not have this
        *  member
        */
-      virtual double r13_binSize_D1 () const { cbl::ErrorCBL("Error in Triplet::r13_binSize_D1() of Triplet.h!"); return 0; }
+      virtual double r13_binSize_D1 () const { cbl::ErrorCBL("", "r13_binSize_D1", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_nbins_D1
@@ -348,7 +357,7 @@ namespace cbl {
        *  error message if the derived object does not have this
        *  member
        */    
-      virtual int nbins_D1 () const { cbl::ErrorCBL("Error in Triplet::nbins_D1() of Triplet.h!"); return 0; }
+      virtual int nbins_D1 () const { cbl::ErrorCBL("", "nbins_D1", "Triplet.h"); return 0; }
       
       /**
        *  @brief get the protected member Triplet1D::m_binSize_D1
@@ -356,7 +365,7 @@ namespace cbl {
        *  error message if the derived object does not have this
        *  member
        */    
-      virtual double binSize_D1 () const { cbl::ErrorCBL("Error in Triplet::binSize_D1() of Triplet.h!"); return 0; }
+      virtual double binSize_D1 () const { cbl::ErrorCBL("", "binSize_D1", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_r12_D1
@@ -364,7 +373,7 @@ namespace cbl {
        *  or an error message if the derived object does not have this
        *  member
        */
-      virtual double r12_D2 () const { cbl::ErrorCBL("Error in Triplet::r12_D2() of Triplet.h!"); return 0; }
+      virtual double r12_D2 () const { cbl::ErrorCBL("", "r12_D2", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_r12_binSize_D1
@@ -372,7 +381,7 @@ namespace cbl {
        *  or an error message if the derived object does not have this
        *  member
        */
-      virtual double r12_binSize_D2 () const { cbl::ErrorCBL("Error in Triplet::r12_binSize_D2() of Triplet.h!"); return 0; }
+      virtual double r12_binSize_D2 () const { cbl::ErrorCBL("", "r12_binSize_D2", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_r13_D2
@@ -380,7 +389,7 @@ namespace cbl {
        *  or an error message if the derived object does
        *  not have this member
        */
-      virtual double r13_D2 () const { cbl::ErrorCBL("Error in Triplet::r13_D2() of Triplet.h!"); return 0; }
+      virtual double r13_D2 () const { cbl::ErrorCBL("", "r13_D2", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_r13_binSize_D2
@@ -388,7 +397,7 @@ namespace cbl {
        *  or an error message if the derived object does not have this
        *  member
        */
-      virtual double r13_binSize_D2 () const { cbl::ErrorCBL("Error in Triplet::r13_binSize_D2() of Triplet.h!"); return 0; }
+      virtual double r13_binSize_D2 () const { cbl::ErrorCBL("", "r13_binSize_D2", "Triplet.h"); return 0; }
 
       /**
        *  @brief get the protected member Triplet1D::m_nbins_D2
@@ -396,7 +405,7 @@ namespace cbl {
        *  error message if the derived object does not have this
        *  member
        */    
-      virtual int nbins_D2 () const { cbl::ErrorCBL("Error in Triplet::nbins_D2() of Triplet.h!"); return 0; }
+      virtual int nbins_D2 () const { cbl::ErrorCBL("", "nbins_D2", "Triplet.h"); return 0; }
       
       /**
        *  @brief get the protected member Triplet1D::m_binSize_D2
@@ -404,7 +413,7 @@ namespace cbl {
        *  error message if the derived object does not have this
        *  member
        */    
-      virtual double binSize_D2 () const { cbl::ErrorCBL("Error in Triplet::binSize_D2() of Triplet.h!"); return 0; }
+      virtual double binSize_D2 () const { cbl::ErrorCBL("", "binSize_D2", "Triplet.h"); return 0; }
 
       ///@}
       
@@ -422,7 +431,7 @@ namespace cbl {
        *  not have this member
        */
       virtual void set_TT1D (const int i, const double tt)
-      { (void)i; (void)tt; cbl::ErrorCBL("Error in Triplet::set_TT() of Triplet.h!"); }
+      { (void)i; (void)tt; cbl::ErrorCBL("", "set_TT1D", "Triplet.h"); }
 
       /**
        *  @brief set the protected member Triplet1D::m_TT1D[i] adding
@@ -433,7 +442,7 @@ namespace cbl {
        *  not have this member
        */
       virtual void add_TT1D (const int i, const double tt)
-      { (void)i; (void)tt; cbl::ErrorCBL("Error in Triplet::add_TT() of Triplet.h!"); }
+      { (void)i; (void)tt; cbl::ErrorCBL("", "add_TT1D", "Triplet.h"); }
 
       ///@}
 

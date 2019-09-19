@@ -59,7 +59,7 @@ string cbl::statistics::PosteriorParameters::status (const int p) const
       break;
 
     default:
-      ErrorCBL("Error in cbl::statistics::PosteriorParameters::status() of PosteriorParameters.cpp: no such kind of parameter!");
+      ErrorCBL("no such kind of parameter!", "status", "PosteriorParameters.cpp");
   }
 
   return stat;
@@ -86,7 +86,7 @@ vector<string> cbl::statistics::PosteriorParameters::status () const
 	break;
 
       default:
-	ErrorCBL("Error in cbl::statistics::PosteriorParameters::status() of PosteriorParameters.cpp: no such kind of parameter!");
+	ErrorCBL("no such kind of parameter!", "status", "PosteriorParameters.cpp");
     }
   }
   return stat;
@@ -119,7 +119,7 @@ std::vector<double> cbl::statistics::PosteriorParameters::full_parameters (const
     return all_parameters;
   }
   else
-    ErrorCBL("Error in cbl::statistics::PosteriorParameters::full_parameters of PosteriorParameters.cpp: the vector of free parameters has the wrong size!");
+    ErrorCBL("the vector of free parameters has the wrong size!", "full_parameters", "PosteriorParameters.cpp");
 
   vector<double> vv;
   return vv;
@@ -146,25 +146,25 @@ void cbl::statistics::PosteriorParameters::m_set_parameter_type ()
       case statistics::ParameterType::_Base_:
 	if (m_parameter_prior[i] != NULL) {
 	  if (m_parameter_prior[i]->distributionType()==glob::DistributionType::_Constant_) {
-	    m_nparameters_fixed +=1;
+	    m_nparameters_fixed ++;
 	    m_fixed_parameters.push_back(i);
 	  }
 	  else {
-	    m_nparameters_free +=1;
+	    m_nparameters_free ++;
 	    m_free_parameters.push_back(i);
 	  }
-	  m_nparameters_base +=1;
+	  m_nparameters_base ++;
 	  m_base_parameters.push_back(i);
 	}
 	break;
 
       case statistics::ParameterType::_Derived_:
-	m_nparameters_derived += 1;
+	m_nparameters_derived ++;
 	m_derived_parameters.push_back(i);
 	break;
 
       default:
-	ErrorCBL("Error in cbl::statistics::PosteriorParameters::m_set_parameter_type of PosteriorParameters.cpp: no such kind of parameter!");
+	ErrorCBL("no such kind of parameter!", "m_set_parameter_type", "PosteriorParameters.cpp");
     }
   }
 }
@@ -187,13 +187,13 @@ void cbl::statistics::PosteriorParameters::set_parameters (const size_t nparamet
   // check parameterTypes size
   
   if (nparameters==0)
-    ErrorCBL("Error in cbl::statistics::PosteriorParameters::set_parameters() of ModelParameters.cpp: nparameters must be >0!");
+    ErrorCBL("nparameters must be >0!", "set_parameters", "PosteriorParameters.cpp");
 
   if ((parameterTypes.size()!=nparameters) && (parameterTypes.size()!=0))
-    ErrorCBL("Error in cbl::statistics::PosteriorParameters::set_parameters() of ModelParameters.cpp: the size of parameterTypes is incorrect!");
+    ErrorCBL("the size of parameterTypes is incorrect!", "set_parameters", "PosteriorParameters.cpp");
 
   if ((parameterNames.size()!=nparameters) && (parameterNames.size()!=0))
-    ErrorCBL("Error in cbl::statistics::PosteriorParameters::set_parameters() of ModelParameters.cpp: the size of parameterNames is incorrect!");
+    ErrorCBL("the size of parameterNames is incorrect!", "set_parameters", "PosteriorParameters.cpp");
 
 
   if ((parameterTypes.size()==nparameters) && (parameterNames.size()==nparameters)) {
@@ -300,11 +300,11 @@ void cbl::statistics::PosteriorParameters::set_prior_distribution (const int p, 
 
     case statistics::ParameterType::_Derived_:
       m_parameter_prior[p] = NULL;
-      WarningMsg("Warning in set_prior_distribution of PosteriorParameters, "+m_parameter_name[p]+" is a derived parameter");
+      WarningMsgCBL(m_parameter_name[p]+" is a derived parameter!", "set_prior_distribution", "PosteriorParameters.cpp");
       break;
 
     default:
-      ErrorCBL("Error in cbl::statistics::set_prior_distribution() of PosteriorParameters.cpp: no such kind of parameter!");
+      ErrorCBL("no such kind of parameter!", "set_prior_distribution", "PosteriorParameters.cpp");
   }
 }
 
@@ -315,7 +315,7 @@ void cbl::statistics::PosteriorParameters::set_prior_distribution (const int p, 
 void cbl::statistics::PosteriorParameters::set_prior_distribution (const std::vector<std::shared_ptr<PriorDistribution>> priorDistribution)
 {
   if (m_nparameters_base!=priorDistribution.size())
-    ErrorCBL ("Error in cbl::statistics::PosteriorParameters::set_prior_distribution() of PosteriorParameters.cpp: the size of the prior vector is incorrect!");
+    ErrorCBL ("the size of the prior vector is incorrect!", "set_prior_distribution", "PosteriorParameters.cpp");
 
   m_parameter_prior.erase(m_parameter_prior.begin(), m_parameter_prior.end());
   m_parameter_prior.resize(m_nparameters, NULL);
@@ -364,7 +364,7 @@ std::shared_ptr<cbl::statistics::Prior> cbl::statistics::PosteriorParameters::pr
 double cbl::statistics::PosteriorParameters::bestfit_value (const int p) const
 {
   if (m_parameter_bestfit_value.size()==0) 
-    ErrorCBL("Error in cbl::statistics::PosteriorParameters::bestfit_value() of PosteriorParameters.cpp: the best-fit values have not been computed!"); 
+    ErrorCBL("the best-fit values have not been computed!", "bestfit_value", "PosteriorParameters.cpp"); 
 
   return m_parameter_bestfit_value[p];
 }
@@ -375,7 +375,7 @@ double cbl::statistics::PosteriorParameters::bestfit_value (const int p) const
 std::vector<double> cbl::statistics::PosteriorParameters::bestfit_values () const
 {
   if (m_parameter_bestfit_value.size()==0) 
-    ErrorCBL("Error in cbl::statistics::PosteriorParameters::bestfit_values() of PosteriorParameters.cpp: the best-fit values have not been computed!"); 
+    ErrorCBL("the best-fit values have not been computed!", "bestfit_value", "PosteriorParameters.cpp"); 
 
   return m_parameter_bestfit_value;
 }
@@ -387,7 +387,7 @@ std::vector<double> cbl::statistics::PosteriorParameters::bestfit_values () cons
 void cbl::statistics::PosteriorParameters::set_bestfit_values (const std::vector<double> bestfit_value)
 {
   if (bestfit_value.size()!=m_nparameters)
-    ErrorCBL("Error in cbl::statistics::PosteriorParameters::set_bestfit_values() of PosteriorParameters: the size of the input vector is incorrect!");
+    ErrorCBL("the size of the input vector is incorrect!", "set_bestfit_value", "PosteriorParameters.cpp");
   
   m_parameter_bestfit_value.erase(m_parameter_bestfit_value.begin(), m_parameter_bestfit_value.end());
 
@@ -424,7 +424,7 @@ void cbl::statistics::PosteriorParameters::set_bestfit_values (const int start, 
 	break;
 
       default:
-	ErrorCBL("Error in cbl::statistics::PosteriorParameters::set_bestfit_values() of PosteriorParameters.cpp: no such kind of parameter!");
+	ErrorCBL("no such kind of parameter!", "set_bestfit_values", "PosteriorParameters.cpp");
     }
   }
 
@@ -453,15 +453,15 @@ void cbl::statistics::PosteriorParameters::write_bestfit_info ()
 	break;
 
 	default:
-	ErrorCBL("Error in cbl::statistics::PosteriorParameters::write_bestfit_info() of PosteriorParameters.cpp: no such kind of parameter!");
+	  ErrorCBL("no such kind of parameter!", "write_bestfit_info", "PosteriorParameters.cpp");
       }
 
-      coutCBL << "value = " << m_parameter_bestfit_value[i] << endl << endl;
+      Print(m_parameter_bestfit_value[i], 5, 10, true, true, "value = ");
     }
   }
   
   else
-    ErrorCBL("Error in cbl::statistics::PosteriorParameters::write_bestfit_info() of PosteriorParameters.cpp: the best-fit values have not been computed!"); 
+    ErrorCBL("the best-fit values have not been computed!", "write_bestfit_info", "PosteriorParameters.cpp"); 
 }
 
 
@@ -539,7 +539,7 @@ void cbl::statistics::PosteriorParameters::set_chain_values (const std::vector<s
   int size = values[0].size()/nwalkers;
   
   if (values[0].size()%nwalkers!=0)
-    ErrorCBL("Error in cbl::statistics::PosteriorParameters::set_chain_values() of PosteriorParameters.cpp: the size of the input values or the number of walkers is incorrect!");
+    ErrorCBL("the size of the input values or the number of walkers is incorrect!", "set_chain_values", "PosteriorParameters.cpp");
 
   set_chain(size, nwalkers);
 
@@ -687,34 +687,34 @@ void cbl::statistics::PosteriorParameters::show_results (const int start, const 
       case statistics::ParameterType::_Base_:
 	if (m_parameter_prior[i]->distributionType()==glob::DistributionType::_Constant_) {
 	  coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_purple << "FIXED" << endl;
-	  coutCBL << "value = " << m_parameter_prior[i]->sample() << endl;
+	  Print(m_parameter_prior[i]->sample(), 5, 10, true, true, "value ="); 
 	  cout << endl;
 	}
 	else {
 	  coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_green << "FREE" << endl;
-	  coutCBL << "Posterior mean = " << posterior->mean() << endl;
-	  coutCBL << "Posterior standard deviation = " << posterior->std() << endl;
-	  coutCBL << "Posterior median = " << posterior->median() << endl;
-	  coutCBL << "Posterior 18th percentile = " << posterior->median()-posterior->percentile(18) << endl;
-	  coutCBL << "Posterior 82th percentile = " << posterior->percentile(82)-posterior->median() << endl;
-	  if (show_mode) coutCBL << "Posterior mode = " << posterior->mode() << endl;
+	  Print(posterior->mean(), 5, 10, true, true, "Posterior mean = "); 
+	  Print(posterior->std(), 5, 10, true, true, "Posterior standard deviation = "); 
+	  Print(posterior->median(), 5, 10, true, true, "Posterior median = "); 
+	  Print(posterior->median()-posterior->percentile(18), 5, 10, true, true, "Posterior 18th percentile = "); 
+	  Print(posterior->percentile(82)-posterior->median(), 5, 10, true, true, "Posterior 82th percentile = "); 
+	  if (show_mode) Print(posterior->mode(), 5, 10, true, true, "Posterior mode = "); 
 	  cout << endl;
 	}
 	break;
 
       case statistics::ParameterType::_Derived_:
 	coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_bred << "OUTPUT" << endl;
-	coutCBL << "Posterior mean = " << posterior->mean() << endl;
-	coutCBL << "Posterior standard deviation = " << posterior->std() << endl;
-	coutCBL << "Posterior median = " << posterior->median() << endl;
-	coutCBL << "Posterior 18th percentile = " << posterior->median()-posterior->percentile(18) << endl;
-	coutCBL << "Posterior 82th percentile = " << posterior->percentile(82)-posterior->median() << endl;
-	if (show_mode) coutCBL << "Posterior mode = " << posterior->mode() << endl;
-	coutCBL << endl;
+	Print(posterior->mean(), 5, 10, true, true, "Posterior mean = "); 
+	Print(posterior->std(), 5, 10, true, true, "Posterior standard deviation = "); 
+	Print(posterior->median(), 5, 10, true, true, "Posterior median = "); 
+	Print(posterior->median()-posterior->percentile(18), 5, 10, true, true, "Posterior 18th percentile = "); 
+	Print(posterior->percentile(82)-posterior->median(), 5, 10, true, true, "Posterior 82th percentile = "); 
+	if (show_mode) Print(posterior->mode(), 5, 10, true, true, "Posterior mode = "); 
+	cout << endl;
 	break;
 
       default:
-	ErrorCBL("Error in cbl::statistics::PosteriorParameters::show_results() of PosteriorParameters.cpp: no such kind of parameter!");
+	ErrorCBL("no such kind of parameter!", "show_results", "PosteriorParameters.cpp");
     }
   }
   

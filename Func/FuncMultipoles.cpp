@@ -341,7 +341,7 @@ double cbl::multipoles (double rr, shared_ptr<void> pp, std::vector<double> par)
   
   if (vec->type[index]==1) return multipole_xi0(0,cos_lin,xi_cos); 
   else if (vec->type[index]==2) return multipole_xi2(0,cos_lin,xi_cos); 
-  else return ErrorCBL("Error in the function multipoles of FuncMultipoles.cpp!");
+  else return ErrorCBL("vec->type[index]!=1 and !=2", "multipoles", "FuncMultipoles.cpp");
 
 }
 
@@ -377,7 +377,7 @@ double cbl::multipole_xi0_model (double xx, shared_ptr<void> pp, std::vector<dou
 
   if (par.size()==2) return multipole_xi0_model(par[0], vec->bias_sigma8, vec->sigma8z, vec->xi_DM[par[par.size()-1]]); 
 
-  else return ErrorCBL("Error in multipole_xi0_model of FuncMultipoles.cpp!");
+  else return ErrorCBL("par.size()!=2", "multipole_xi0_model", "FuncMultipoles.cpp");
 }
 
 /// @endcond

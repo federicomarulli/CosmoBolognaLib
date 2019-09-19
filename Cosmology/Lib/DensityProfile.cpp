@@ -49,7 +49,7 @@ double cbl::cosmology::Cosmology::concentration (const double Mass, const double
   
   if (author=="Duffy") {
 
-    if (redshift>2) ErrorCBL("Error in cbl::cosmology::Cosmology::concentration() of DensityProfile.cpp: the concentration-mass relation by Duffy et al. has been tested only at z<2");
+    if (redshift>2) ErrorCBL("the concentration-mass relation by Duffy et al. has been tested only at z<2", "concentration", "DensityProfile.cpp");
       
     if (profile=="NFW") {
       
@@ -71,7 +71,7 @@ double cbl::cosmology::Cosmology::concentration (const double Mass, const double
 	CC = -1.01;
       }
       
-      else return ErrorCBL("Error in cbl::cosmology::Cosmology::concentration() of DensityProfile.cpp: halo_def not allowed!");
+      else return ErrorCBL("halo_def not allowed!", "concentration", "DensityProfile.cpp");
 
     }
     
@@ -95,15 +95,15 @@ double cbl::cosmology::Cosmology::concentration (const double Mass, const double
 	CC = -1.16;
       }
       
-      else return ErrorCBL("Error in cbl::cosmology::Cosmology::concentration() of DensityProfile.cpp: halo_def not allowed!");
+      else return ErrorCBL("halo_def not allowed!", "concentration", "DensityProfile.cpp");
       
     }
 
-    else return ErrorCBL("Error in cbl::cosmology::Cosmology::profile() of DensityProfile.cpp: halo_def not allowed!");
+    else return ErrorCBL("profile not allowed!", "concentration", "DensityProfile.cpp");
     
   }
   
-  else return ErrorCBL("Error in cbl::cosmology::Cosmology::concentration() of DensityProfile.cpp: author not allowed!");
+  else return ErrorCBL("author not allowed!", "concentration", "DensityProfile.cpp");
 
   
   const double Mpivot = 2.e12; // in Msun/h
@@ -118,7 +118,7 @@ double cbl::cosmology::Cosmology::concentration (const double Mass, const double
 double cbl::cosmology::Cosmology::density_profile (const double rad, const double Mass, const double redshift, const string model_cM, const string profile, const string halo_def) const
 {
   if (profile!="NFW")
-    return ErrorCBL("Error in cbl::cosmology::Cosmology::halo_def() of DensityProfile.cpp: profile not allowed!");
+    return ErrorCBL("profile not allowed!", "density_profile", "DensityProfile.cpp");
   
   const double conc = concentration(Mass, redshift, model_cM, profile, halo_def);
 

@@ -144,7 +144,7 @@ namespace cbl {
         std::shared_ptr<data::Data> data_fit () 
         { 
           if (!m_fit_range) 
-            ErrorCBL("Error in data_fit of Modelling, no fit range has been set!");
+            ErrorCBL("no fit range has been set!", "data_fit", "Modelling.h");
 
           return m_data_fit; 
         }
@@ -201,7 +201,7 @@ namespace cbl {
          *  @return none
          */
         virtual void set_fit_range (const double xmin, const double xmax)
-        { (void)xmin; (void)xmax; ErrorCBL("Error in set_fit_range of Modelling.h."); }
+        { (void)xmin; (void)xmax; ErrorCBL("", "set_fit_range", "Modelling.h"); }
 
         /**
          *  @brief set the fit range 
@@ -217,7 +217,7 @@ namespace cbl {
          *  @return none
          */
         virtual void set_fit_range (const double xmin, const double xmax, const double ymin, const double ymax)
-        { (void)xmin; (void)xmax; (void)ymin; (void)ymax; ErrorCBL("Error in set_fit_range of Modelling.h."); }
+        { (void)xmin; (void)xmax; (void)ymin; (void)ymax; ErrorCBL("", "set_fit_range", "Modelling.h"); }
 
         /**
          * @brief set the dataset
@@ -247,27 +247,60 @@ namespace cbl {
         ///@}
 
         /**
-         *  @brief function that maximizes the likelihood, finds the
-         *  best-fit parameters and store them in model
+         *  @brief function that maximizes the posterior, finds the
+         *  best-fit parameters and stores them in the model
+	 *
+	 *  this function exploits the Nelder-Mead method
+	 *  https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method
+	 *
+	 *  the algorithm defines a simplex (i.e a k-dimensional
+	 *  polytope which is the convex hull of its k+1 vertices) in
+	 *  the parameter space. At each step, it identifies the
+	 *  simplex vertex at which the function to be minimised
+	 *  (i.e. the negative likelihood in this case) has the
+	 *  greatest value, and moves it, via reflections and scaling,
+	 *  to a new position in which the function has a lower
+	 *  value. This iteration stops when the simplex area becomes
+	 *  lower than the tolerance. For instance, in 2D, the
+	 *  starting vertices of the simplex (a triangle in 2D) are
+	 *  the following: (start[0], start[1]) ; (start[0]+epsilon,
+	 *  start[1]) ; (start[0], start[1]+epsilon)
          *
-         *  @param start std::vector containing initial values for
-         *  the likelihood maximization
-         *
-         *  @param parameter_limits limits for the parameters
-         *
-         *  @param max_iter the maximum number of iterations
-         *
-         *  @param tol the tolerance in finding convergence 
-         *
-         *  @param epsilon the relative fraction of the interval size
-         *
+	 *  @param start std::vector containing the initial values for
+	 *  the likelihood maximization
+	 *  
+	 *  @param parameter_limits limits of the parameter space in
+	 *  where the maximum of likelihood will be searched
+	 *
+	 *  @param max_iter the maximum number of iterations
+	 *
+	 *  @param tol the tolerance in finding convergence 
+	 *
+	 *  @param epsilon the simplex side
+	 *
          *  @return none
          */
         void maximize_likelihood (const std::vector<double> start, const std::vector<std::vector<double>> parameter_limits, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3);
 
         /**
          *  @brief function that maximizes the posterior, finds the
-         *  best-fit parameters and stores them in model
+         *  best-fit parameters and stores them in the model
+	 *
+	 *  this function exploits the Nelder-Mead method
+	 *  https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method
+	 *
+	 *  the algorithm defines a simplex (i.e a k-dimensional
+	 *  polytope which is the convex hull of its k+1 vertices) in
+	 *  the parameter space. At each step, it identifies the
+	 *  simplex vertex at which the function to be minimised
+	 *  (i.e. the negative posterior in this case) has the
+	 *  greatest value, and moves it, via reflections and scaling,
+	 *  to a new position in which the function has a lower
+	 *  value. This iteration stops when the simplex area becomes
+	 *  lower than the tolerance. For instance, in 2D, the
+	 *  starting vertices of the simplex (a triangle in 2D) are
+	 *  the following: (start[0], start[1]) ; (start[0]+epsilon,
+	 *  start[1]) ; (start[0], start[1]+epsilon)
 	 *
 	 *  @param start vector containing initial values for
 	 *  the posterior maximization
@@ -276,7 +309,8 @@ namespace cbl {
 	 *
 	 *  @param tol the tolerance to find convergence
 	 *
-	 *  @param epsilon the relative fraction of the interval size
+	 *  @param epsilon the relative fraction of the initial
+	 *  simplex size
 	 *
 	 *  @param seed the seed
 	 *
@@ -333,43 +367,45 @@ namespace cbl {
          *
          * @param tol the tolerance in finding convergence 
 	 *
-         * @param seed the seed
+	 * @param epsilon the simplex side
+	 *
+	 * @param seed the seed
          *
-         * @param aa the parameter of the \f$g(z)\f$ distribution
+	 * @param aa the parameter of the \f$g(z)\f$ distribution
          *
-         * @param parallel false \f$\rightarrow\f$ non-parallel
+	 * @param parallel false \f$\rightarrow\f$ non-parallel
          * sampler; true \f$\rightarrow\f$ parallel sampler
 	 *
          * @return none
          */
-        void sample_posterior (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const int seed=34123, const double aa=2, const bool parallel=true);
+        void sample_posterior (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3, const int seed=34123, const double aa=2, const bool parallel=true);
 
-        /**
-         * @brief sample the posterior, initializing the chains in a
-         * ball around the input parameter values
-         *
-	 * the starting values of the chain are extracted from uniform
-	 * distributions in the range [value[i]-radius,
-	 * value[i]+radius] (for each i-th likelihood parameter)
-         * @param chain_size the chain lenght
+	/**
+	 * @brief sample the posterior, initializing the chains by
+         * drawing from the prior distributions
 	 *
-         * @param nwalkers the number of parallel
+	 * the starting values of the chain are extracted from the
+	 * (possibly different) distributions of the priors
+	 *
+	 * @param chain_size the chain lenght
+	 *
+	 * @param nwalkers the number of parallel
          * chains
-         *
-         * @param value input values, center of the ball in parameter
+	 *
+	 * @param value input values, center of the ball in parameter
          * space
          *
          * @param radius radius of the ball in parameter space
 	 *
-         * @param seed the seed
-         *
-         * @param aa the parameter of the \f$g(z)\f$ distribution
-         *
-         * @param parallel false \f$\rightarrow\f$ non-parallel
+	 * @param seed the seed
+	 *
+	 * @param aa the parameter of the \f$g(z)\f$ distribution
+	 *
+	 * @param parallel false \f$\rightarrow\f$ non-parallel
          * sampler; true \f$\rightarrow\f$ parallel sampler
-         *
-         * @return none
-         */
+	 *
+	 * @return none
+	 */
         void sample_posterior (const int chain_size, const int nwalkers, std::vector<double> &value, const double radius, const int seed=34123, const double aa=2, const bool parallel=true);
 
         /**
@@ -526,7 +562,7 @@ namespace cbl {
          *  @return none
          */
         virtual void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters)
-        { (void)output_dir; (void)output_file; (void)xx; (void)parameters; cbl::ErrorCBL("Error in write_model() of Modelling.h!"); }
+        { (void)output_dir; (void)output_file; (void)xx; (void)parameters; cbl::ErrorCBL("", "write_model", "Modelling.h"); }
 
         /**
          *  @brief write the model at xx, yy
@@ -545,7 +581,7 @@ namespace cbl {
          *  @return none
          */
         virtual void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> parameters)
-        { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)parameters; cbl::ErrorCBL("Error in write_model() of Modelling.h!"); }
+        { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)parameters; cbl::ErrorCBL("", "write_model", "Modelling.h"); }
 
         /**
          *  @brief write the model at xx 
@@ -559,7 +595,7 @@ namespace cbl {
          *  @return none
          */
         virtual void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx)
-        { (void)output_dir; (void)output_file; (void)xx; cbl::ErrorCBL("Error in write_model_at_bestfit() of Modelling.h!"); }
+        { (void)output_dir; (void)output_file; (void)xx; cbl::ErrorCBL("", "write_model_at_bestfit", "Modelling.h"); }
 
         /**
          *  @brief write the model at xx, yy
@@ -576,7 +612,7 @@ namespace cbl {
          *  @return none
          */
         virtual void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy)
-        { (void)output_dir; (void)output_file; (void)xx; (void)yy; cbl::ErrorCBL("Error in write_model_at_bestfit of Modelling.h!"); }
+        { (void)output_dir; (void)output_file; (void)xx; (void)yy; cbl::ErrorCBL("", "write_model_at_bestfit", "Modelling.h"); }
 
         /**
          *  @brief write the model at xx 
@@ -592,7 +628,7 @@ namespace cbl {
          *  @return none
          */
         virtual void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start=0, const int thin=1)
-        { (void)output_dir; (void)output_file; (void)xx; (void)start; (void)thin; cbl::ErrorCBL("Error in write_model_from_chains of Modelling.h!"); }
+        { (void)output_dir; (void)output_file; (void)xx; (void)start; (void)thin; cbl::ErrorCBL("", "write_model_from_chains", "Modelling.h"); }
 
         /**
          *  @brief write the model at xx, yy
@@ -611,7 +647,7 @@ namespace cbl {
          *  @return none
          */
         virtual void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const int start=0, const int thin=1)
-        { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)start; (void)thin; cbl::ErrorCBL("Error in write_model_from_chains of Modelling.h!"); }
+        { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)start; (void)thin; cbl::ErrorCBL("", "write_model_from_chains", "Modelling.h"); }
 
         ///@}
 

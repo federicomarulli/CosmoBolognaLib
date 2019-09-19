@@ -477,7 +477,7 @@ namespace cbl {
 	 *  @return the scale bins
 	 */
 	virtual std::vector<double> scale () const
-	{ cbl::ErrorCBL("Error in scale() of ThreePointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "scale", "ThreePointCorrelation.h"); std::vector<double> vv; return vv; }
       
 	/**
 	 *  @brief get the protected member m_zeta
@@ -485,14 +485,14 @@ namespace cbl {
 	 *  function
 	 */
 	virtual std::vector<double> zeta () const  
-	{ cbl::ErrorCBL("Error in zeta() of ThreePointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "zeta", "ThreePointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the protected member m_QQ
 	 *  @return the binned reduced three-point correlation function
 	 */
 	virtual std::vector<double> QQ () const  
-	{ cbl::ErrorCBL("Error in QQ() of ThreePointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "QQ", "ThreePointCorrelation.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the protected member
@@ -501,7 +501,7 @@ namespace cbl {
 	 *  correlation function
 	 */
 	virtual std::vector<double> error () const  
-	{ cbl::ErrorCBL("Error in error() of ThreePointCorrelation.h!"); std::vector<double> vv; return vv; }
+	{ cbl::ErrorCBL("", "error", "ThreePointCorrelation.h"); std::vector<double> vv; return vv; }
 
       
 	///@}
@@ -567,7 +567,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void measure (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
-	{ (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
+	{ (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -607,7 +607,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
-	{ (void)weight; (void)doJK; (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
+	{ (void)weight; (void)doJK; (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -646,7 +646,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
-	{ (void)errorType; (void)dir_output_triplets; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
+	{ (void)errorType; (void)dir_output_triplets; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -684,7 +684,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void measure (const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
-	{ (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
+	{ (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h!"); }
                 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -727,7 +727,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
-	{ (void)weight; (void)doJK; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
+	{ (void)weight; (void)doJK; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -769,7 +769,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
-	{ (void)errorType; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("Error in measure() of ThreePointCorrelation.h!"); }
+	{ (void)errorType; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 
 	///@}
       
@@ -786,7 +786,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void write (const std::string dir, const std::string file) const
-	{ (void)dir; (void)file; cbl::ErrorCBL("Error in write() of ThreePointCorrelation.h!"); }
+	{ (void)dir; (void)file; cbl::ErrorCBL("", "write", "ThreePointCorrelation.h"); }
       
 	/**
 	 *  @brief write the measured three-point correlation
@@ -798,7 +798,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void write (const std::string dir, const std::string file, const bool connected) const
-	{ (void)dir; (void)file; (void)connected; cbl::ErrorCBL("Error in write() of ThreePointCorrelation.h!"); }
+	{ (void)dir; (void)file; (void)connected; cbl::ErrorCBL("", "write", "ThreePointCorrelation.h"); }
 
 	/**
 	 *  @brief write the measured three-point correlation covariance

@@ -52,7 +52,7 @@ std::shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType
   else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster()));
   else if (objType==ObjectType::_Void_) return move(unique_ptr<Void>(new Void()));
   else if (objType==ObjectType::_HostHalo_) return move(unique_ptr<HostHalo>(new HostHalo()));
-  else ErrorCBL("Error in cbl::catalogue::Object::Create() in Object.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Object.cpp");
   return NULL;
 }
 
@@ -69,7 +69,7 @@ std::shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType
   else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_Void_) return move(unique_ptr<Void>(new Void(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_HostHalo_) return move(unique_ptr<HostHalo>(new HostHalo(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
-  else ErrorCBL("Error in cbl::catalogue::Object::Create() in Object.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Object.cpp");
   return NULL;
 }
 
@@ -86,7 +86,7 @@ std::shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType
   else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_Void_) return move(unique_ptr<Void>(new Void(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_HostHalo_) return move(unique_ptr<HostHalo>(new HostHalo(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
-  else ErrorCBL("Error in cbl::catalogue::Object::Create() in Object.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Object.cpp");
   return NULL;
 }
 
@@ -102,7 +102,7 @@ std::shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType
   else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_Void_) return move(unique_ptr<Void>(new Void(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_HostHalo_) return move(unique_ptr<HostHalo>(new HostHalo(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
-  else ErrorCBL("Error in cbl::catalogue::Object::Create() in Object.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Object.cpp");
   return NULL;
 }
 
@@ -118,7 +118,7 @@ std::shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType
   else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_Void_) return move(unique_ptr<Void>(new Void(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_HostHalo_) return move(unique_ptr<HostHalo>(new HostHalo(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
-  else ErrorCBL("Error in cbl::catalogue::Object::Create() in Object.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Object.cpp");
   return NULL;
 }
 
@@ -134,7 +134,7 @@ std::shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType
   else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_Void_) return move(unique_ptr<Void>(new Void(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_HostHalo_) return move(unique_ptr<HostHalo>(new HostHalo(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
-  else ErrorCBL("Error in cbl::catalogue::Object::Create() in Object.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Object.cpp");
   return NULL;
 }
 
@@ -150,7 +150,7 @@ std::shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType
   else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_Void_) return move(unique_ptr<Void>(new Void(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_HostHalo_) return move(unique_ptr<HostHalo>(new HostHalo(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
-  else ErrorCBL("Error in cbl::catalogue::Object::Create() in Object.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Object.cpp");
   return NULL;
 }
 
@@ -166,6 +166,6 @@ std::shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType
   else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_Void_) return move(unique_ptr<Void>(new Void(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
   else if (objType==ObjectType::_HostHalo_) return move(unique_ptr<HostHalo>(new HostHalo(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement)));
-  else ErrorCBL("Error in cbl::catalogue::Object::Create() in Object.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Object.cpp");
   return NULL;
 }

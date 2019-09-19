@@ -66,7 +66,7 @@ void cbl::statistics::Model2D::write (const string output_dir, const string outp
 {
   vector<double> pp = parameters;
   vector<vector<double>> model = this->operator()(xx, yy, pp);
-
+  
   const string mkdir = "mkdir -p "+output_dir;
   if (system(mkdir.c_str())) {}
 
@@ -74,14 +74,14 @@ void cbl::statistics::Model2D::write (const string output_dir, const string outp
   
   ofstream fout(file.c_str()); checkIO(fout, file);
 
-  fout << "### [1] x # [2] y # [3] model(x,y) ###";
+  fout << "### [1] x # [2] y # [3] model(x,y) ###" << endl;
   
   for (size_t i=0; i<xx.size(); i++)
     for (size_t j=0; j<yy.size(); j++)
       fout << setprecision(5) << setw(10) << right << xx[i] << "  "
 	   << setprecision(5) << setw(10) << right << yy[j] << "  "
 	   << setprecision(5) << setw(10) << right << model[i][j] << endl;
-  
+   
   fout.clear(); fout.close(); coutCBL << "I wrote the file: " << file << endl << endl;
 }
 
@@ -111,7 +111,7 @@ void cbl::statistics::Model2D::write_from_chains (const string output_dir, const
   
   ofstream fout(file.c_str()); checkIO(fout, file);
 
-  fout << "### [1] x # [2] y # [3] median model(x,y) # [4] 16% percentile model(x,y) # [5] 84% percentile ###";
+  fout << "### [1] x # [2] y # [3] median model(x,y) # [4] 16% percentile model(x,y) # [5] 84% percentile ###" << endl;
   
   for (size_t i=0; i<xx.size(); i++)
     for (size_t j=0; j<yy.size(); j++)

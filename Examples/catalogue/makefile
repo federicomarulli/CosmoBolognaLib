@@ -1,4 +1,4 @@
-C = g++
+CXX = g++
 
 FLAGS0 = -std=c++11 -fopenmp 
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
@@ -12,7 +12,7 @@ dirCUBA = $(dirLib)External/Cuba-4.2/
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
 FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lCBL
-FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
+FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
 
 OBJ = catalogue.o
 
@@ -26,12 +26,12 @@ ifeq ($(SYS),Darwin)
 endif
 
 catalogue: $(OBJ) 
-	$(C) $(OBJ) -o catalogue $(FLAGS_LIB)
+	$(CXX) $(OBJ) -o catalogue $(FLAGS_LIB)
 
 clean:
 	rm -f *.o catalogue *~ \#* temp* core*
 
 
 catalogue.o: catalogue.cpp makefile $(dirLib)*.$(ES)
-	$(C) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c catalogue.cpp
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c catalogue.cpp
 

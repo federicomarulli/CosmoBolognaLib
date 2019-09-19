@@ -217,6 +217,16 @@ namespace cbl {
        *  @name Member functions used to set the protected members
        */
       ///@{
+
+      /**
+       * @brief reset the pair counts
+       *
+       * @details set to 0 the m_PP1D and 
+       * m_PP1D_weighted vector elements
+       *
+       * @return none
+       */
+      void reset () override;
       
       /**
        *  @brief set the protected member Pair1D::m_scale[i]
@@ -525,29 +535,28 @@ namespace cbl {
       ///@{
   
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief get the pair index and weight
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @return none
        */
-      void get_pair (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &wkk) override;
+      void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &wkk) override;
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief set the pair vector 
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @param weight the weght of the region
        *  @return none
        */
-      void set_pair (const int kk, const double wkk, const double weight=1) override;
+      void set (const int kk, const double wkk, const double weight=1) override;
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief estimate the distance between two objects and update
+       *  the pair vector accordingly
+       *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @return none
@@ -672,29 +681,28 @@ namespace cbl {
       ///@{
     
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief get the pair index and weight
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @return none
        */
-      void get_pair (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &wkk) override;
+      void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &wkk) override;
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief set the pair vector 
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @param weight the weght of the region
        *  @return none
        */
-      void set_pair (const int kk, const double wkk, const double weight=1) override;
+      void set (const int kk, const double wkk, const double weight=1) override;
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief estimate the distance between two objects and update
+       *  the pair vector accordingly
+       *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @return none
@@ -939,29 +947,28 @@ namespace cbl {
       ///@{ 
       
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief get the pair index and weight
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @return none
        */
-      void get_pair (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &wkk) override;
+      void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &wkk) override;
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief set the pair vector 
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @param weight the weght of the region
        *  @return none
        */
-      void set_pair (const int kk, const double wkk, const double weight=1) override;
+      void set (const int kk, const double wkk, const double weight=1) override;
   
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief estimate the distance between two objects and update
+       *  the pair vector accordingly
+       *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @return none
@@ -1082,29 +1089,28 @@ namespace cbl {
       ///@{
         
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief get the pair index and weight
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @return none
        */
-      void get_pair (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &wkk) override;
+      void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &wkk) override;
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief set the pair vector 
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @param weight the weght of the region
        *  @return none
        */
-      void set_pair (const int kk, const double wkk, const double weight=1) override;
+      void set (const int kk, const double wkk, const double weight=1) override;
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief estimate the distance between two objects and update
+       *  the pair vector accordingly
+       *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @return none
@@ -1355,8 +1361,7 @@ namespace cbl {
       ///@{ 
       
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief get the pair index and weight
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param kk index of the pairs
@@ -1364,22 +1369,22 @@ namespace cbl {
        *  @param wkk weight of the pair
        *  @return none
        */
-      void get_pair (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &cosmu, double &wkk) override;
+      void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &cosmu, double &wkk) override;
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief set the pair vector 
        *  @param wkk weight of the pair
        *  @param kk index of the pairs
        *  @param cosmu cosine of the angle between objects
        *  @param weight the weght of the region
        *  @return none
        */
-      void set_pair (const double cosmu, const int kk, const double wkk, const double weight=1) override;
+      void set (const double cosmu, const int kk, const double wkk, const double weight=1) override;
   
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief estimate the distance between two objects and update
+       *  the pair vector accordingly
+       *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @return none
@@ -1516,8 +1521,7 @@ namespace cbl {
       ///@{
         
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief get the pair index and weight
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param kk index of the pairs
@@ -1525,22 +1529,22 @@ namespace cbl {
        *  @param wkk weight of the pair
        *  @return none
        */
-      void get_pair (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &cosmu, double &wkk) override;
+      void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &cosmu, double &wkk) override;
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief set the pair vector 
        *  @param cosmu cosine of the angle between objects
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @param weight the weght of the region
        *  @return none
        */
-      void set_pair (const double cosmu, const int kk, const double wkk, const double weight=1) override;
+      void set (const double cosmu, const int kk, const double wkk, const double weight=1) override;
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief estimate the distance between two objects and update
+       *  the pair vector accordingly
+       *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @return none

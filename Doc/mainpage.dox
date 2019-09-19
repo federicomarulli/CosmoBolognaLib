@@ -37,6 +37,8 @@ Other contributors:
   - Carlo Cannarozzo (void detection)
   - Sofia Contarini (void number counts)
   - Cosimo Fedeli (non-Gaussian cosmologies)
+  - Giovanni Gandolfi (HOD modelling)
+  - Jorge Enrique García-Farieta (two-point correlation modelling)
   - Carlo Giocoli (mass accretion history)
   - Jacopo Neri (mass function)
   - Mauro Roncarelli (fast comoving distance estimator) 
@@ -50,7 +52,7 @@ Other contributors:
 
 
 A @b configured @b virtual @b development @b environment to use the
-CosmoBolognaLib is avaliable here:
+CosmoBolognaLib is available here:
 \n
 https://apps.difa.unibo.it/files/people/Str957-cluster/CosmoBolognaLib_VM/Ubuntu_CBL.ova
 \n the password is: cbl

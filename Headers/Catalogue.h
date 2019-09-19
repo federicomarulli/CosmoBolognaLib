@@ -540,6 +540,8 @@ namespace cbl {
       /// catalogue mean particle separation
       double m_mps;
 
+      /// number of regions
+      size_t m_nRegions = 0;
       
       /**
        *  @name private variables and functions used to read catalogues from standard GADGET files
@@ -625,8 +627,7 @@ namespace cbl {
        *  @param cat object of class Catalogue
        *  @return object of class Catalogue
        */
-      Catalogue (const Catalogue &cat)
-	: m_object(cat.sample()), m_index(cat.index()) {}
+      Catalogue (const Catalogue &cat);
       
       /**
        *  @brief constructor
@@ -776,8 +777,10 @@ namespace cbl {
        *  @param attribute vector containing the list of attributes
        *  contained in the file, used to construct the catalogue
        *
-       *  @param column vector containing the column number which 
-       *  correspond to each element of the vector 'attributes'
+       *  @param column vector containing the column number which
+       *  correspond to each element of the vector 'attributes', to be
+       *  provided in ascending order; the column number corresponding
+       *  to the first column is 1
        *
        *  @param file vector containing the files where the input
        *  catalogues are stored
@@ -1416,20 +1419,19 @@ namespace cbl {
       double z_displacement (const int i) const { return m_object[i]->z_displacement(); };
 
       /**
+       *  @brief get the private member m_nRegions
+       *
+       *  @return the total number of regions
+       */
+      size_t nRegions ();
+      
+      /**
        *  @brief get the list of regions in which the catalogue is
        *  divided
        *
        *  @return the list of regions 
        */
-      std::vector<long> region_list () const { return different_elements(region()); }
-
-      /**
-       *  @brief get the total number of regions by which the
-       *  Catalogues is divided
-       *
-       *  @return the total number of regions
-       */
-      size_t nRegions () const { return N_different_elements(region()); }
+      std::vector<long> region_list () const;
       
       /**
        *  @brief get the list of fields where the objects have been
@@ -1703,10 +1705,23 @@ namespace cbl {
 
       /**
        * @brief set a private variable
+       *
        * @param region vector containing the object regions
+       *
+       * @param nRegions the total number of regions; if this parameter
+       * is \f$<0\f$, its value will be set to the size of the region
+       * vector
+       *
        * @return none
        */
-      void set_region (const std::vector<long> region);
+      void set_region (const std::vector<long> region, const int nRegions=-1);
+
+      /**
+       * @brief set the private variable m_nRegion
+       * @param nRegions the total number of regions
+       * @return none
+       */
+      void set_region_number (const size_t nRegions);
 
       /**
        * @brief set a private variable
@@ -1913,6 +1928,15 @@ namespace cbl {
        *  @return none
        */
       void sort (const Var var_name, const bool increasing=false);
+
+      /**
+       *  @brief shuffle objects in the catalogue 
+       *
+       *  @param seed the seed for random number generation
+       *
+       *  @return none
+       */
+      void shuffle (const int seed);
       
       ///@}
 

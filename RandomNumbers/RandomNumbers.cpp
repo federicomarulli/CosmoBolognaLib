@@ -193,7 +193,7 @@ void cbl::random::DiscreteRandomNumbers::set_discrete_values (const vector<doubl
     m_weights.resize(m_values.size(), 1.);
   }
   else if (weights.size()!=values.size())
-    ErrorCBL("Error in set_parameters of DiscreteRandomNumbers.h: value and weight vectors have different sizes!");
+    ErrorCBL("value and weight vectors have different sizes!", "set_discrete_values", "RandomNumbers.cpp");
   else {
     m_values = values;
     m_weights = weights;

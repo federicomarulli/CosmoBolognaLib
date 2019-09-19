@@ -68,7 +68,8 @@ namespace cbl {
       protected:
 
 	/// the container of parameters for the HOD modelling of the two-point correlation function
-	modelling::twopt::STR_data_HOD m_data_HOD;
+	std::shared_ptr<modelling::twopt::STR_data_HOD> m_data_HOD;
+
 	
       public:
 
@@ -123,7 +124,7 @@ namespace cbl {
 	 * @return the container of parameters for the HOD modelling
 	 * of the two-point correlation function
 	 */
-	modelling::twopt::STR_data_HOD data_HOD () { return m_data_HOD; }
+	std::shared_ptr<modelling::twopt::STR_data_HOD> data_HOD () { return m_data_HOD; }
 	
 	///@}
 	
@@ -175,6 +176,9 @@ namespace cbl {
 	 *
 	 *  @param output_dir the output_dir directory
 	 *  where the output of external codes are written
+	 *
+	 *  @param store_output_CAMB if true the output files created by CAMB are stored;
+	 *  if false the output files created by CAMB are removed
 	 *
 	 *  @param output_root output_root of the parameter file used
 	 *  to compute the power spectrum and &sigma;(mass); it can be
@@ -229,7 +233,7 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double sigmaNL_perp=0., const double sigmaNL_par=0., const bool NL=true, const double bias=1., const double pimax=40., const double r_min=1., const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const std::string output_root="test", const int norm=-1, const double aa=0., const bool GSL=true, const double prec=1.e-3, const std::string file_par=par::defaultString, const double Delta=200., const bool isDelta_vir=true, const std::vector<double> cluster_redshift={}, const std::vector<double> cluster_mass_proxy={}, const std::vector<double> cluster_mass_proxy_error={}, const std::string model_bias="Tinker", const std::string meanType="mean_bias", const int seed=666, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
+	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double sigmaNL_perp=0., const double sigmaNL_par=0., const bool NL=true, const double bias=1., const double pimax=40., const double r_min=1., const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double aa=0., const bool GSL=true, const double prec=1.e-3, const std::string file_par=par::defaultString, const double Delta=200., const bool isDelta_vir=true, const std::vector<double> cluster_redshift={}, const std::vector<double> cluster_mass_proxy={}, const std::vector<double> cluster_mass_proxy_error={}, const std::string model_bias="Tinker", const std::string meanType="mean_bias", const int seed=666, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
 	
 	/**
 	 *  @brief set the data used to construct the HOD model
@@ -281,10 +285,20 @@ namespace cbl {
 	 *  
 	 *  @param k_max maximum wave vector module up to which the
 	 *  binned dark matter power spectrum is computed
-
+	 *
 	 *  @param step number of steps used to compute the binned
 	 *  dark matter correlation function and power spectrum
 	 *
+	 *  @param m_min minimum mass value for mass function and bias
+	 *  interpolation
+	 *
+	 *  @param m_max maximum mass value for mass function and bias
+	 *  interpolation
+	 * 
+	 *  @param m_step number of steps used for the mass vector
+	 *  allocation, i.e. the number of points on which the mass
+	 *  function and the bias are interpolated
+	 * 
 	 *  @param method_Pk method used to compute the power
 	 *  spectrum; valid choices for method_Pk are: CAMB
 	 *  [http://camb.info/], classgal_v1 [http://class-code.net/],
@@ -295,6 +309,9 @@ namespace cbl {
 	 *  @param NL false \f$rightarrow\f$ linear power spectrum;
 	 *  true \f$rightarrow\f$ non-linear power spectrum
 	 * 
+	 *  @param store_output_CAMB if true the output files created by CAMB are stored;
+	 *  if false the output files created by CAMB are removed
+	 *
 	 *  @param output_root output_root of the parameter file used
 	 *  to compute the power spectrum and &sigma;(mass); it can be
 	 *  any name
@@ -339,7 +356,7 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_data_HOD (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string model_MF="Tinker", const std::string model_bias="Tinker", const double Mh_min=0., const double Mh_max=1.e16, const double pi_max=100., const double r_max_int=100., const double r_min=1.e-3, const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=200, const std::string method_Pk="CAMB", const bool NL=true, const std::string output_root="test", const double Delta=200., const double kk=0., const std::string interpType="Linear", const int norm=-1, const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const std::string model_cM="Duffy", const std::string profile="NFW", const std::string halo_def="vir");
+	void set_data_HOD (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string model_MF="Tinker", const std::string model_bias="Tinker", const double Mh_min=0., const double Mh_max=1.e16, const double pi_max=100., const double r_max_int=100., const double r_min=1.e-3, const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=200, const double m_min=1.e7, const double m_max=1.e17, const int m_step=100, const std::string method_Pk="CAMB", const bool NL=true, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=0., const std::string interpType="Linear", const int norm=-1, const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const std::string model_cM="Duffy", const std::string profile="NFW", const std::string halo_def="vir");
 	
 	/**
 	 *  @brief set the data used to construct the model for
@@ -398,6 +415,9 @@ namespace cbl {
 	 *  EisensteinHu
 	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
 	 *  
+	 *  @param store_output_CAMB if true the output files created by CAMB are stored;
+	 *  if false the output files created by CAMB are removed
+	 *
 	 *  @param output_dir the output_dir directory
 	 *  where the output of external codes are written
 	 *  
@@ -415,7 +435,7 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_data_model_cluster_selection_function (const cbl::cosmology::Cosmology cosmology, const cbl::cosmology::Cosmology test_cosmology, const double mean_redshift, const std::string model_MF, const std::string model_bias, const std::string selection_function_file, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const double Delta=200, const bool isDelta_vir=false, const std::string method_Pk="CAMB", const std::string output_dir=par::defaultString, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const int step=200, const int mass_step=50);
+	void set_data_model_cluster_selection_function (const cbl::cosmology::Cosmology cosmology, const cbl::cosmology::Cosmology test_cosmology, const double mean_redshift, const std::string model_MF, const std::string model_bias, const std::string selection_function_file, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const double Delta=200, const bool isDelta_vir=false, const std::string method_Pk="CAMB", const bool store_output_CAMB=true, const std::string output_dir=par::defaultString, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const int step=200, const int mass_step=50);
 
 	///@}
 	

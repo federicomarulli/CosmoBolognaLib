@@ -13,44 +13,31 @@ std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 int main () {
 
   try {
-   
-    // -----------------------------------------------
-    // ----- use default cosmological parameters ----- 
-    // -----------------------------------------------
-    
-    cbl::cosmology::Cosmology cosm;
-
-
-    // -----------------------------------------------
-    // ------------ logarithmic binning -------------- 
-    // -----------------------------------------------
-    
-    std::vector<double> RR; 
-    int n_val = 10;   // number of values at which the size function is computed
-    double R_min = 1.,  R_max = 30.;   // minimum and maximum values of effective void radii
-    
-    double min_log = std::log(R_min);
-    double max_log = std::log(R_max);
-    
-    double log_increment = (max_log-min_log)/(n_val-1);
-    double log_value = min_log;
-
-    for(int i=0; i<n_val; i++){
-      RR.push_back(std::exp(log_value));
-      log_value += log_increment;
-    }
-
+     
     // -------------------------------------------------------------
     // ----- compute the Sheth & van de Weygaert size function -----
     // -------------------------------------------------------------
+ 
+    // set the cosmology using Planck18 parameters 
+    const cbl::cosmology::Cosmology Planck18 {cbl::cosmology::CosmologicalModel::_Planck18_};
+    
+    // logarithmic binning in the void effectiv radii
+    const std::vector<double> radius = cbl::logarithmic_bin_vector(10, 1., 30.); 
 
-    double zz  = 0.;  // redshift of the sample
-    double b_eff = 1.;   // effective bias of the mass tracers
+    // redshift
+    const double redshift  = 0.;
 
-    std::cout << "The size function at z = " << zz << " is :" << std::endl;
+    // effective bias of the tracers (e.g. galaxies or galaxy clusters) used to detect the voids 
+    const double b_eff = 1.; 
 
-    for(int i=0; i<n_val; i++)
-      std::cout << std::scientific << std::setprecision(6) << cosm.size_function(RR[i], zz, "SvdW", b_eff) << " (h/Mpc)^3 at R = " << std::defaultfloat << std::setprecision(3) << RR[i] << " Mpc/h " << std::endl;
+
+    // print the size function
+    
+    std::cout << "The size function at z = " << redshift << " is :" << std::endl;
+    
+    for (auto && rr : radius)
+      std::cout << std::scientific << std::setprecision(6) << Planck18.size_function(rr, redshift, "SvdW", b_eff) << " (h/Mpc)^3 at R = " << std::defaultfloat << std::setprecision(3) << rr << " Mpc/h" << std::endl;
+
   }
   
   catch (cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }

@@ -147,7 +147,7 @@ double cbl::cosmology::Cosmology::rs (const std::string method_Pk, const double 
     return rs_CAMB();
 
   else
-    return ErrorCBL("Error in cbl::cosmology::Cosmology::rs of BAO.cpp: 'method_Pk' not allowed!");
+    return ErrorCBL(" the input parameter method_Pk is not allowed!", "rs", "BAO.cpp");
 }
 
 

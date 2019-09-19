@@ -2,20 +2,29 @@
 ----- the list of publications that used the CosmoBolognaLib -----
 ------------------------------------------------------------------
 
+24. Verza, Pisani, Carbone, Hamaus, Guzzo
+    The Void Size Function in Dynamical Dark Energy Cosmologies
+    2019, submitted to JCAP
+
+23. Keihänen et al.
+    Estimating the galaxy two-point correlation function using a split
+    random catalog
+    2019, submitted to A&A
+
 22. Contarini, Ronconi, Marulli, Moscardini, Veropalumbo, Baldi
-    Cosmological exploitation of the size function of cosmic voids 
+    Cosmological exploitation of the size function of cosmic voids
     identified in the distribution of biased tracers
-    2019, submitted to MNRAS
+    2019, MNRAS, 488, 3526
     
 21. García-Farieta, Marulli, Veropalumbo, Moscardini, Casas, Giocoli, Baldi
-    Clustering and redshift-space distortions in modified gravity 
+    Clustering and redshift-space distortions in modified gravity
     models with massive neutrinos
-    2019, submitted to MNRAS
+    2019, MNRAS, 488, 1987
     
 20. Ronconi, Contarini, Marulli, Baldi, Moscardini
     Cosmic voids uncovered -- first-order statistics of depressions in
     the biased density field
-    2019, submitted to MNRAS
+    2019, MNRAS, in press
 
 19. Sarpa, Schimd, Branchini, Matarrese
     BAO reconstruction: a swift numerical action method for massive

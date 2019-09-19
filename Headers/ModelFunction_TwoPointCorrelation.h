@@ -74,6 +74,9 @@ namespace cbl {
       
 	/// the output_dir directory where the output of external codes are written
 	std::string output_dir;
+
+	/// true \f$\rightarrow\f$ the output files created by CAMB are stored; false \f$\rightarrow\f$ the output files created by CAMB are removed
+	bool store_output_CAMB;
       
 	/// output root of the parameter file used to compute the dark matter power spectrum
 	std::string output_root;
@@ -184,8 +187,11 @@ namespace cbl {
 	int nmultipoles;
 
 	/// number of two-point correlation function wedges
-	int nwedges;
+	int nWedges;
 
+	/// integral limits used to measure the wedges
+	std::vector<std::vector<double>> mu_integral_limits;
+	
 	/// vector of wave vector modules
 	std::vector<double> kk;
 
@@ -197,6 +203,60 @@ namespace cbl {
 
 	/// pointer to a function of FuncGrid class, used to interpolate the no-wiggles linear power spectrum
 	std::shared_ptr<glob::FuncGrid> func_Pk_NW;
+	
+	/// pointer to a function of FuncGrid class, used to interpolate the no-linear power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_nonlin;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the Pk_DeltaDelta power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_DeltaDelta;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the Pk_DeltaTheta power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_DeltaTheta;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the Pk_ThetaTheta power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_ThetaTheta;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the A11 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_A11;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the A12 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_A12;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the A22 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_A22;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the A23 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_A23;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the A33 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_A33;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the B12 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_B12;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the B13 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_B13;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the B14 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_B14;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the B22 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_B22;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the B23 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_B23;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the B24 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_B24;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the B33 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_B33;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the B34 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_B34;
+
+	/// pointer to a function of FuncGrid class, used to interpolate the B44 term (TNS) of the power spectrum
+	std::shared_ptr<glob::FuncGrid> func_Pk_B44;
 
 	/// pointer to a function of FuncGrid class, used to interpolate the power spectrum 1-loop correction
 	std::shared_ptr<glob::FuncGrid> func_Pk1loop;
@@ -357,7 +417,262 @@ namespace cbl {
        *  @return \f$P(k, \mu)\f$
        */
       double Pkmu_DeWiggled (const double kk, const double mu, const double alpha_perp, const double alpha_par, const double sigmaNL_perp, const double sigmaNL_par, const double linear_growth_rate, const double bias, const double SigmaS, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const std::shared_ptr<cbl::glob::FuncGrid> Pk_NW);
-      
+
+      /**
+       *  @brief the power spectrum as a function of \f$k\f$ and \f$\mu\f$
+       *
+       *  this function computes the redshift-space power spectrum
+       *  \f$P(k, \mu)\f$ for the so-called dispersion model (see e.g. Pezzotta et al. 2017
+       *  https://arxiv.org/abs/1612.05645):
+       *
+       *  \f[ P(k, \mu) = D_{FoG}(k,\mu,\sigma_{12})\left(1+\frac{f}{b}\mu^2\right)P_{\delta\delta}(k)\f]
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param mu the line of sight cosine
+       *
+       *  @param DFoG the damping factor ("Gaussian" or "Lorentzian")
+       *
+       *  @param linear_growth_rate the linear growth rate
+       *
+       *  @param bias the linear bias
+       *
+       *  @param sigma12 streaming scale
+       *
+       *  @param Pklin linear power spectrum interpolator
+       *
+       *  @return \f$P(k, \mu)\f$
+       */
+      double Pkmu_Dispersion (const double kk, const double mu, const std::string DFoG, const double linear_growth_rate, const double bias, const double sigma12, const std::shared_ptr<cbl::glob::FuncGrid> Pklin);
+
+      /**
+       *  @brief the power spectrum as a function of \f$k\f$ and \f$\mu\f$
+       *
+       *  this function computes the redshift-space power spectrum
+       *  \f$P(k, \mu)\f$ ussing fitting functions (see e.g. Pezzotta et al. 2017
+       *  https://arxiv.org/abs/1612.05645, and Mohammad et. al. 2018 https://arxiv.org/abs/1807.05999):
+       *
+       *  \f[ P(k, \mu) = D_{FoG}(k,\mu,\sigma_{12})\left(b^2P_{\delta\delta}(k) + 2fb\mu^2P_{\delta\theta}(k)
+       *  + f^2\mu^4P_{\delta\delta}(k)\right)\f]
+       *
+       *  where
+       *
+       *  \f[ P_{\delta\theta}(k)=\left(P_{\delta\delta}P^{lin}(k)e^{-k/k*}\right)^{1/2} , \f]
+       *
+       *  \f[ P_{\theta\theta}(k)=P^{lin}(k)e^{-k/k*}, \f]
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param mu the line of sight cosine
+       *
+       *  @param DFoG the damping factor ("Gaussian" or "Lorentzian")
+       *
+       *  @param linear_growth_rate the linear growth rate
+       *
+       *  @param bias the linear bias
+       *
+       *  @param sigma12 streaming scale
+       *
+       *  @param kd fitting parameter
+       *
+       *  @param kt fitting parameter
+       *
+       *  @param Pklin linear power spectrum interpolator
+       *
+       *  @param Pknonlin nolinear power spectrum interpolator
+       *
+       *  @return \f$P(k, \mu)\f$
+       */
+      double Pkmu_Scoccimarro_fitPezzotta (const double kk, const double mu, const std::string DFoG, const double linear_growth_rate, const double bias, const double sigma12, const double kd, const double kt, const std::shared_ptr<cbl::glob::FuncGrid> Pklin, const std::shared_ptr<cbl::glob::FuncGrid> Pknonlin);
+
+      /**
+       *  @brief the power spectrum as a function of \f$k\f$ and \f$\mu\f$
+       *
+       *  this function computes the redshift-space power spectrum
+       *  \f$P(k, \mu)\f$ ussing fitting functions (see e.g. Bel et al. 2019
+       *  https://arxiv.org/abs/1809.09338):
+       *
+       *  \f[ P(k, \mu) = D_{FoG}(k,\mu,\sigma_{12})\left(b^2P_{\delta\delta}(k) + 2fb\mu^2P_{\delta\theta}(k)
+       *  + f^2\mu^4P_{\delta\delta}(k)\right)\f]
+       *
+       *  where
+       *
+       *  \f[ P_{\delta\theta}(k)=\left(P_{\delta\delta}P^{lin}(k)\right)^{1/2}e^{-k/k_\delta-bk^6} , \f]
+       *
+       *  \f[ P_{\theta\theta}(k)=P^{lin}(k)e^{-k(a_1+a_2k+a_3k^2)}, \f]
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param mu the line of sight cosine
+       *
+       *  @param DFoG the damping factor ("Gaussian" or "Lorentzian")
+       *
+       *  @param linear_growth_rate the linear growth rate
+       *
+       *  @param bias the linear bias
+       *
+       *  @param sigma12 streaming scale
+       *
+       *  @param kd fitting parameter
+       *
+       *  @param bb fitting parameter
+       *
+       *  @param a1 fitting parameter
+       *
+       *  @param a2 fitting parameter
+       *
+       *  @param a3 fitting parameter
+       *
+       *  @param Pklin linear power spectrum interpolator
+       *
+       *  @param Pknonlin nolinear power spectrum interpolator
+       *
+       *  @return \f$P(k, \mu)\f$
+       */
+      double Pkmu_Scoccimarro_fitBel (const double kk, const double mu, const std::string DFoG, const double linear_growth_rate, const double bias, const double sigma12, const double kd, const double bb, const double a1, const double a2, const double a3, const std::shared_ptr<cbl::glob::FuncGrid> Pklin, const std::shared_ptr<cbl::glob::FuncGrid> Pknonlin);
+
+      /**
+       *  @brief the power spectrum as a function of \f$k\f$ and \f$\mu\f$
+       *
+       *  this function computes the redshift-space power spectrum
+       *  \f$P(k, \mu)\f$ in 1-loop aproximation using (standard) Perturbation Theory (see e.g. Scoccimarro 2004
+       *  https://arxiv.org/abs/astro-ph/0407214 and Taruya et. al., 2010 https://arxiv.org/abs/1006.0699):
+       *
+       *  \f[ P(k, \mu) = D_{FoG}(k,\mu,\sigma_{12})\left(b^2P_{\delta\delta}(k) + 2fb\mu^2P_{\delta\theta}(k)
+       *  + f^2\mu^4P_{\delta\delta}(k)\right)\f]
+       *
+       *  where
+       *
+       * \f[
+       * < \delta(k)\delta(k')> = (2\pi)^3\delta(k + k')P_{\delta\delta}(k)
+       * \f]
+       * \f[
+       * < \delta(k)\theta(k')> = (2\pi)^3\delta(k + k')P_{\delta\theta}(k)
+       * \f]
+       * \f[
+       * < \theta(k)\theta(k')> = (2\pi)^3\delta(k + k')P_{\theta\theta}(k)
+       * \f]
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param mu the line of sight cosine
+       *
+       *  @param DFoG the damping factor ("Gaussian" or "Lorentzian")
+       *
+       *  @param linear_growth_rate the linear growth rate
+       *
+       *  @param bias the linear bias
+       *
+       *  @param sigma12 streaming scale
+       *
+       *  @param Pk_DeltaDelta power spectrum interpolator
+       *
+       *  @param Pk_DeltaTheta power spectrum interpolator
+       *
+       *  @param Pk_ThetaTheta power spectrum interpolator
+       *
+       *  @return \f$P(k, \mu)\f$
+       */
+      double Pkmu_Scoccimarro (const double kk, const double mu, const std::string DFoG, const double linear_growth_rate, const double bias, const double sigma12, const std::shared_ptr<cbl::glob::FuncGrid> Pk_DeltaDelta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_DeltaTheta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_ThetaTheta);
+
+      /**
+       *  @brief the TNS power spectrum as a function of \f$k\f$ and \f$\mu\f$
+       *
+       *  this function computes the TNS redshift-space power spectrum
+       *  \f$P(k, \mu)\f$ in 1-loop aproximation using (standard) Perturbation Theory (see e.g. Taruya et. al, 2010
+       *  https://arxiv.org/abs/1006.0699 and Taruya et. al., 2013 https://arxiv.org/abs/1301.3624):
+       *
+       *  \f[ P(k, \mu) = D_{FoG}(k,\mu,\sigma_{12})\left(b^2P_{\delta\delta}(k) + 2fb\mu^2P_{\delta\theta}(k)
+       *  + f^2\mu^4P_{\delta\delta}(k) + b^3A(k, \mu, f) + b^4B(k, \mu, f)\right)\f]
+       *
+       *  where
+       *
+       * \f[
+       * < \delta(k)\delta(k')> = (2\pi)^3\delta(k + k')P_{\delta\delta}(k)
+       * \f]
+       * \f[
+       * < \delta(k)\theta(k')> = (2\pi)^3\delta(k + k')P_{\delta\theta}(k)
+       * \f]
+       * \f[
+       * < \theta(k)\theta(k')> = (2\pi)^3\delta(k + k')P_{\theta\theta}(k)
+       * \f]
+       *
+       * and 
+       *
+       * \f[
+       * A(k, \mu ; f)=j_{1} \int d^{3} r e^{i \boldsymbol{k} \cdot \boldsymbol{r}}\left\langle A_{1} A_{2} A_{3}\right\rangle_{c}=k \mu f \int \frac{d^{3} p}{(2 \pi)^{3}} \frac{p_{z}}{p^{2}}\left\{B_{\sigma}(\boldsymbol{p}, \boldsymbol{k}-\boldsymbol{p},-\boldsymbol{k})-B_{\sigma}(\boldsymbol{p}, \boldsymbol{k},-\boldsymbol{k}-\boldsymbol{p})\right\}
+       * \f]
+       *
+       * \f[
+       * B(k, \mu ; f)=j_{1}^{2} \int d^{3} r e^{i \boldsymbol{k} \cdot \boldsymbol{r}}\left\langle A_{1} A_{2}\right\rangle_{c}\left\langle A_{1} A_{3}\right\rangle_{c}=(k \mu f)^{2} \int \frac{d^{3} p}{(2 \pi)^{3}} F_{\sigma}(\boldsymbol{p}) F_{\sigma}(\boldsymbol{k}-\boldsymbol{p})
+       * \f]
+       *
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param mu the line of sight cosine
+       *
+       *  @param DFoG the damping factor ("Gaussian" or "Lorentzian")
+       *
+       *  @param linear_growth_rate the linear growth rate
+       *
+       *  @param bias the linear bias
+       *
+       *  @param sigma12 streaming scale
+       *
+       *  @param Pk_DeltaDelta power spectrum interpolator
+       *
+       *  @param Pk_DeltaTheta power spectrum interpolator
+       *
+       *  @param Pk_ThetaTheta power spectrum interpolator
+       *
+       *  @param Pk_A11 power spectrum interpolator
+       *
+       *  @param Pk_A12 power spectrum interpolator
+       *
+       *  @param Pk_A22 power spectrum interpolator
+       *
+       *  @param Pk_A23 power spectrum interpolator
+       *
+       *  @param Pk_A33 power spectrum interpolator
+       *
+       *  @param Pk_B12 power spectrum interpolator
+       *
+       *  @param Pk_B13 power spectrum interpolator
+       *
+       *  @param Pk_B14 power spectrum interpolator
+       *
+       *  @param Pk_B22 power spectrum interpolator
+       *
+       *  @param Pk_B23 power spectrum interpolator
+       *
+       *  @param Pk_B24 power spectrum interpolator
+       *
+       *  @param Pk_B33 power spectrum interpolator
+       *
+       *  @param Pk_B34 power spectrum interpolator
+       *
+       *  @param Pk_B44 power spectrum interpolator
+       *
+       *  @return \f$P(k, \mu)\f$
+       */
+      double Pkmu_TNS (const double kk, const double mu, const std::string DFoG, const double linear_growth_rate, const double bias, const double sigma12, const std::shared_ptr<cbl::glob::FuncGrid> Pk_DeltaDelta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_DeltaTheta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_ThetaTheta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A11, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A12, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A22, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A23, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A33, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B12, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B13, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B14, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B22, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B23, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B24, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B33, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B34, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B44);
+
       /**
        *  @brief the power spectrum as a function of k and \f$\mu\f$
        *

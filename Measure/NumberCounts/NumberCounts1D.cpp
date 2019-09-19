@@ -222,7 +222,7 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts1D::m_measureBoot
 // ============================================================================
 
 
-void cbl::measure::numbercounts::NumberCounts1D::measure (const ErrorType errorType, const string dir_output_resample, const int nResamplings, const int seed)
+void cbl::measure::numbercounts::NumberCounts1D::measure (const ErrorType errorType, const string dir_output_resample, const int nResamplings, const int seed, const bool conv, const double sigma)
 {
   switch (errorType) {
     case (ErrorType::_Poisson_) :
@@ -233,13 +233,13 @@ void cbl::measure::numbercounts::NumberCounts1D::measure (const ErrorType errorT
       break;
     case (ErrorType::_Bootstrap_) :
       m_dataset = m_measureBootstrap(dir_output_resample, nResamplings, seed);
-      break;
-
+      break;  
     default:
-      ErrorCBL("Error in measure() of NumberCounts1D.cpp, unknown type of error");
+      ErrorCBL("The input ErrorType is not allowed!", "measure", "NumberCounts1D.cpp");
   }
-}
 
+  if (conv) m_dataset = Gaussian_smoothing(sigma);
+}
 
 // ============================================================================
 
@@ -268,7 +268,7 @@ void cbl::measure::numbercounts::NumberCounts1D::write (const string dir, const 
   string mkdir = "mkdir -p "+dir;
   if (system(mkdir.c_str())) {}
 
-  string header = "# bin_center counts error  r1   r2";
+  string header = "bin_center  counts  error  r1  r2  weight";
   m_dataset->write(dir, file, header, 10, rank);
 }
 
@@ -282,4 +282,72 @@ void cbl::measure::numbercounts::NumberCounts1D::write_covariance (const string 
   if (system(mkdir.c_str())) {}
 
   m_dataset->write_covariance(dir, file, 8);
+}
+
+
+// ============================================================================
+
+
+shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts1D::Gaussian_smoothing (const double sigma)
+{
+     coutCBL << "The distribution is smoothed with a Gaussian filter" << endl;
+     double *func;
+     fftw_complex *func_tr;
+ 
+     if (m_histogram->bin_type()!=BinType::_linear_) ErrorCBL("", "Gaussian_smoothing", "NumberCounts1D.cpp", glob::ExitCode::_workInProgress_);
+
+     auto histogram =  make_shared<glob::Histogram1D> (glob::Histogram1D ());
+     histogram->set(m_histogram->nbins(), m_histogram->minVar(), m_histogram->maxVar(), m_histogram->shift(), m_histogram->bin_type());
+     
+     int nbin = m_histogram->nbins();
+     int nbinN = 2*nbin;
+     int i1 = nbin*0.5, i2 = 1.5*nbin;
+ 
+     int nbinK = 0.5*nbinN+1;
+ 
+     func = fftw_alloc_real(nbinN);
+     func_tr = fftw_alloc_complex(nbinK);
+ 
+     for (int i=0; i<nbinN; i++)
+       func[i] = 0;
+     
+     for (int i=i1; i<i2; i++)
+       func[i] = m_histogram->operator()(m_HistogramType, m_fact)[i-i1];
+     
+     for (int i=0; i<nbinK; i++) {
+       func_tr[i][0] = 0;
+       func_tr[i][1] = 0;
+     }
+ 
+     fftw_plan real2complex;
+     real2complex = fftw_plan_dft_r2c_1d(nbinN, func, func_tr, FFTW_ESTIMATE);
+     fftw_execute(real2complex);
+     fftw_destroy_plan(real2complex);
+ 
+     double delta = (m_histogram->maxVar()-m_histogram->minVar())/nbin;
+     double SS = pow(sigma,2);
+ 
+     double fact = 2*par::pi/(nbinN*delta);
+     for (int i=0; i<nbinK; i++) {
+       double kk = i*fact;
+       func_tr[i][0] = func_tr[i][0]*exp(-0.5*kk*kk*SS);
+       func_tr[i][1] = func_tr[i][1]*exp(-0.5*kk*kk*SS);
+     }
+     
+     fftw_plan complex2real;
+     complex2real = fftw_plan_dft_c2r_1d(nbinN, func_tr, func, FFTW_ESTIMATE);
+     fftw_execute(complex2real);
+     fftw_destroy_plan(complex2real);
+
+     vector<double> new_hist;
+     
+     for (int i=0; i<i2-i1; i++) new_hist.push_back(func[i+i1]/nbinN);
+
+     auto dataset = make_shared<data::Data1D_extra> (data::Data1D_extra(m_histogram->bins(), new_hist, m_dataset->error(), m_dataset->extra_info()));
+ 
+     //gsl_histogram_free(m_histogram);
+     fftw_cleanup();
+
+     return dataset;
+   
 }

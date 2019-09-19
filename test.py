@@ -92,10 +92,12 @@ check("vectors", "vectors", "C++")
 check("eigen", "eigen", "C++") 
 
 check("randomNumbers", "randomNumbers", "C++") 
+check("randomNumbers", "randomNumbers_custom", "C++") 
+check("randomNumbers", "correlated_samples", "C++") 
 
 check("wrappers", "integration_gsl", "C++")
 check("wrappers", "minimisation_gsl", "C++") 
-check("wrappers", "integration_cuba", "C++") # seg fault with valgrind!!!
+#check("wrappers", "integration_cuba", "C++") # seg fault with valgrind!!!
 check("wrappers", "fits", "C++") 
 
 check("covsample", "covsample", "C++") 
@@ -105,7 +107,9 @@ check("cosmology", "fsigma8", "C++")
 check("cosmology", "distances", "C++") 
 check("cosmology", "model_cosmology", "C++") 
 
-check("statistics/codes", "prior", "C++") 
+check("data", "data1D", "C++")
+
+check("statistics/codes", "prior", "C++")
 check("statistics/codes", "fit", "C++") 
 check("statistics/codes", "sampler", "C++")
 
@@ -121,6 +125,7 @@ check("clustering/codes", "2pt_2D", "C++")
 check("clustering/codes", "2pt_projected", "C++")
 check("clustering/codes", "2pt_angular", "C++")
 check("clustering/codes", "3pt", "C++")
+check("clustering/codes", "3pt_multipoles", "C++")
 
 check("clustering/codes", "model_2pt_monopole_BAO", "C++")
 check("clustering/codes", "model_2pt_monopole_RSD", "C++")
@@ -130,7 +135,8 @@ check("clustering/codes", "model_2pt_multipoles", "C++")
 check("clustering/codes", "model_3pt", "C++") 
 
 check("cosmicVoids/codes", "sizeFunction", "C++") 
-check("cosmicVoids/codes", "cleanVoidCatalogue", "C++") 
+check("cosmicVoids/codes", "cleanVoidCatalogue", "C++")
+check("cosmicVoids/codes", "modelling_VoidAbundances", "C++") 
 
 check("readParameterFile", "readParameterFile", "C++") 
 
@@ -160,6 +166,9 @@ check("cosmology", "distances.py", "python3")
 check("statistics/codes", "prior.py", "python")
 check("statistics/codes", "prior.py", "python3")
 
+check("statistics/codes", "fit.py", "python")
+check("statistics/codes", "fit.py", "python3")
+
 check("catalogue", "catalogue.py", "python")
 check("catalogue", "catalogue.py", "python3")
 
@@ -168,6 +177,9 @@ check("clustering/codes", "2pt_monopole.py", "python3")
 
 check("clustering/codes", "2pt_model.py", "python")
 check("clustering/codes", "2pt_model.py", "python3")
+
+check("clustering/codes", "2pt_model_zErrors.py", "python")
+check("clustering/codes", "2pt_model_zErrors.py", "python3")
 
 check("clustering/codes", "3pt_model.py", "python")
 check("clustering/codes", "3pt_model.py", "python3")

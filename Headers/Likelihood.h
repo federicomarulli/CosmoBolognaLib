@@ -291,8 +291,24 @@ namespace cbl {
       void write_results (const std::string dir_output, const std::string file); 
 
       /**
-       *  @brief function that maximize the likelihood, find the
-       *  best-fit parameters and store them in model
+       *  @brief function that maximizes the likelihood, finds the
+       *  best-fit parameters and stores them in the model
+       *
+       *  this function exploits the Nelder-Mead method
+       *  https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method
+       *
+       *  the algorithm defines a simplex (i.e a k-dimensional
+       *  polytope which is the convex hull of its k+1 vertices) in
+       *  the parameter space. At each step, it identifies the simplex
+       *  vertex at which the function to be minimised (i.e. the
+       *  negative likelihood in this case) has the greatest value,
+       *  and moves it, via reflections and scaling, to a new position
+       *  in which the function has a lower value. This iteration
+       *  stops when the simplex area becomes lower than the
+       *  tolerance. For instance, in 2D, the starting vertices of the
+       *  simplex (a triangle in 2D) are the following: (start[0],
+       *  start[1]) ; (start[0]+epsilon, start[1]) ; (start[0],
+       *  start[1]+epsilon)
        *
        *  @param start std::vector containing initial values for
        *  the likelihood maximization
@@ -303,7 +319,7 @@ namespace cbl {
        *
        *  @param tol the tolerance in finding convergence 
        *
-       *  @param epsilon the relative fraction of the interval size
+       *  @param epsilon the simplex side
        *
        *  @return none
        */

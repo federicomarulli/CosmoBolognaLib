@@ -31,6 +31,7 @@
  *  @authors federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
  */
 
+#include "FFTlog.h"
 #include "LogNormal.h"
 
 using namespace std;
@@ -80,10 +81,34 @@ void cbl::lognormal::LogNormal::setParameters_from_model (const std::shared_ptr<
 // ============================================================================
 
 
+std::vector<double> cbl::lognormal::LogNormal::get_xi_model(const std::vector<double> radius)
+{
+  vector<double> stat;
+  m_data->stats_var(Var::_Redshift_, stat);
+  vector<double> PkG;
+  vector<double> kG = linear_bin_vector(500, -4., 2.);
+
+  double ff = m_cosmology->linear_growth_rate(stat[0], 0.);
+  double beta = ff/m_bias;
+  double fact = pow(m_bias,2);
+  fact = (m_Real) ? fact : fact*(1+2.*beta/3.+0.2*beta*beta);
+
+  for (size_t i=0; i<kG.size(); i++) {
+    kG[i] = pow(10,kG[i]);
+    PkG.push_back(fact*m_cosmology->Pk(kG[i], m_author, m_NL, stat[0], true, m_model));
+  }
+
+  return cbl::wrapper::fftlog::transform_FFTlog (radius, 1, kG, PkG, 0, 0, 2.*par::pi, 1);
+}
+
+
+// ============================================================================
+
+
 void cbl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, const std::string dir, const int start, const std::string filename, const int seed)
 { 
   if (m_nLN==0)  
-    ErrorCBL("Error in cbl::lognormal::LogNormal::generate_LogNormal_mock of LogNormal.cpp, set number of LN realization first!");
+    ErrorCBL("set number of LN realization first!", "generate_LogNormal_mock", "LogNormal.cpp");
 
   random::UniformRandomNumbers ran(0., 1., seed);
   
@@ -92,9 +117,13 @@ void cbl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, cons
   
   // compute the visibility mask
   
-  double DeltaX = (m_random->Max(Var::_X_)-m_random->Min(Var::_X_)); 
-  double DeltaY = (m_random->Max(Var::_Y_)-m_random->Min(Var::_Y_)); 
-  double DeltaZ = (m_random->Max(Var::_Z_)-m_random->Min(Var::_Z_)); 
+  double minX_random = m_random->Min(Var::_X_);
+  double minY_random = m_random->Min(Var::_Y_);
+  double minZ_random = m_random->Min(Var::_Z_);
+
+  double DeltaX = (m_random->Max(Var::_X_)-minX_random); 
+  double DeltaY = (m_random->Max(Var::_Y_)-minY_random); 
+  double DeltaZ = (m_random->Max(Var::_Z_)-minZ_random); 
 
   int nTot = m_random->nObjects();
   
@@ -136,17 +165,18 @@ void cbl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, cons
     ppkk[i][1] = 0;
   }
 
+
   for (int i=0;i<nTot; i++) {
-    int i1 = min(int((m_random->xx(i)-m_random->Min(Var::_X_))/xmin), nx-1);
-    int j1 = min(int((m_random->yy(i)-m_random->Min(Var::_Y_))/ymin), ny-1);
-    int z1 = min(int((m_random->zz(i)-m_random->Min(Var::_Z_))/zmin), nz-1);
+    int i1 = min(int((m_random->xx(i)-minX_random)/xmin), nx-1);
+    int j1 = min(int((m_random->yy(i)-minY_random)/ymin), ny-1);
+    int z1 = min(int((m_random->zz(i)-minZ_random)/zmin), nz-1);
     long int index = z1+nz*(j1+ny*i1);
     grid[index] += 1./nTot;
   }
 
   if (!m_withxi) { // with the model xi(r)
     vector<double> PkG;
-    vector<double> kG = linear_bin_vector(500, -4., 1.);
+    vector<double> kG = linear_bin_vector(500, -4., 2.);
 
     double ff = m_cosmology->linear_growth_rate(stat[0], 0.);
     double beta = ff/m_bias;
@@ -156,8 +186,10 @@ void cbl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, cons
 
     for (size_t i=0; i<kG.size(); i++) {
       kG[i] = pow(10,kG[i]);
-      PkG.push_back(fact*m_cosmology->Pk(kG[i], m_author, m_NL, stat[0], m_model));
+      PkG.push_back(fact*m_cosmology->Pk(kG[i], m_author, m_NL, stat[0], true, m_model));
     }
+
+    cbl::glob::FuncGrid interpPk(kG, PkG, "Spline");
 
     double xfact = 2*par::pi/(nx*xmin);
     double yfact = 2*par::pi/(ny*ymin);
@@ -172,7 +204,7 @@ void cbl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, cons
 	  double kk = pow(kx*kx+ky*ky+kz*kz, 0.5);
 	  long int kindex = k+nzp*(j+ny*i);
 	  
-	  ppkk[kindex][0] = interpolated(kk, kG, PkG, "Poly")/VV;
+	  ppkk[kindex][0] = interpPk(kk)/VV; //interpolated(kk, kG, PkG, "Poly")/VV;
 	}
       }
     }
@@ -189,7 +221,7 @@ void cbl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, cons
   }
   
   else 
-    ErrorCBL("Work in progres in cbl::lognormal::LogNormal::generate_LogNormal_mock of LogNormal.cpp");
+    ErrorCBL("", "generate_LogNormal_mock", "LogNormal.cpp", glob::ExitCode::_workInProgress_);
   
 
   fftw_plan xi2pk;
@@ -222,8 +254,8 @@ void cbl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, cons
 	  int kindex = k+nzp*(j+ny*i);
 	  double Pkk = max(0., ppkk[kindex][0]/nRtot);
 	  Pkk = sqrt(Pkk/2);
-	  double v1 = sqrt(2.)*Pkk*rang();
-	  double v2 = sqrt(2.)*Pkk*rang();
+	  double v1 = /*sqrt(2.)**/Pkk*rang();
+	  double v2 = /*sqrt(2.)**/Pkk*rang();
 
 	  if (i==0 && j==0 && k==0) {
 	    densK[kindex][0] = 0;
@@ -283,9 +315,9 @@ void cbl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, cons
 
 	  for (int nnoo = 0; nnoo<no; nnoo++) {
 	    comovingCoordinates coord;
-	    coord.xx = xmin*(i+ran())+m_random->Min(Var::_X_);
-	    coord.yy = ymin*(j+ran())+m_random->Min(Var::_Y_);
-	    coord.zz = zmin*(k+ran())+m_random->Min(Var::_Z_);
+	    coord.xx = xmin*(i+ran())+minX_random;
+	    coord.yy = ymin*(j+ran())+minY_random;
+	    coord.zz = zmin*(k+ran())+minZ_random;
 	    shared_ptr<Galaxy> SMP(new Galaxy(coord));
 	    mock_sample.push_back(SMP);
 	  }

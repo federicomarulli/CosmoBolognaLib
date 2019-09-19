@@ -46,12 +46,12 @@ using namespace cbl;
 void cbl::wrapper::gsl::check_GSL_fail (const int status, const bool exit, const std::string CBLfunction, const std::string GSLroutine) 
 {
   if (exit) {
-    if (status) {
-      ErrorCBL((GSLroutine != par::defaultString) ? "Error in the gsl routine "+GSLroutine+" used in "+CBLfunction+":"+string(gsl_strerror(status)): "Error in "+CBLfunction+":"+string(gsl_strerror(status)));
+    if (status!=0) {
+      ErrorCBL((GSLroutine != par::defaultString) ? "the error has been raised by the gsl routine "+GSLroutine+" used in "+CBLfunction+": "+string(gsl_strerror(status)): "Error in "+CBLfunction+": "+string(gsl_strerror(status)), "check_GSL_fail", "GSLwrapper.cpp");
     }
   }
   else 
-    WarningMsg("The gsl routine "+GSLroutine+" used in "+CBLfunction+" exited with status "+string(gsl_strerror(status)));
+    WarningMsgCBL("The gsl routine "+GSLroutine+" used in "+CBLfunction+" exited with status "+string(gsl_strerror(status)), "check_GSL_fail", "GSLwrapper.cpp");
 }
 
 
@@ -121,7 +121,7 @@ double cbl::wrapper::gsl::GSL_derivative (gsl_function Func, const double xx, co
   int status = gsl_deriv_central(&Func, xx, hh, &Deriv, &error);
   check_GSL_fail(status, true, "GSL_derivative", "gsl_deriv_central");
 
-  return (Deriv!=0 && error/Deriv<prec) ? Deriv : ErrorCBL("Error in cosmobl::gsl::GSL_derivative of GSLwrapper! error/Deriv = "+conv(error/Deriv, par::fDP6)+" > prec = "+conv(prec, par::fDP3));
+  return (Deriv!=0 && error/Deriv<prec) ? Deriv : ErrorCBL("error/Deriv = "+conv(error/Deriv, par::fDP6)+" > prec = "+conv(prec, par::fDP3), "GSL_derivative", "GSLwrapper.cpp");
 }
 
 
@@ -159,6 +159,26 @@ double cbl::wrapper::gsl::GSL_integrate_qag (gsl_function Func, const double a, 
   int status = gsl_integration_qag(&Func, a, b, abs_err, rel_err, limit_size, rule, ww, &Int, &error); 
 
   check_GSL_fail(status, true, "GSL_integrate_qag", "gsl_integrate_qag");
+  
+  gsl_integration_workspace_free(ww);
+  
+  return Int;
+}
+
+
+// ============================================================================
+
+
+double cbl::wrapper::gsl::GSL_integrate_qags (gsl_function Func, const double a, const double b, const double rel_err, const double abs_err, const int limit_size)
+{
+  gsl_set_error_handler_off();
+
+  double Int, error;
+  gsl_integration_workspace *ww = gsl_integration_workspace_alloc(limit_size);
+
+  int status = gsl_integration_qags(&Func, a, b, abs_err, rel_err, limit_size, ww, &Int, &error); 
+
+  check_GSL_fail(status, true, "GSL_integrate_qags", "gsl_integrate_qags");
   
   gsl_integration_workspace_free(ww);
   
@@ -260,6 +280,22 @@ double cbl::wrapper::gsl::GSL_integrate_qag (FunctionDoubleDouble func, const do
 // ============================================================================
 
 
+double cbl::wrapper::gsl::GSL_integrate_qags (FunctionDoubleDouble func, const double a, const double b, const double rel_err, const double abs_err, const int limit_size)
+{
+  STR_generic_func_GSL params;
+  params.f = func;
+
+  gsl_function Func;  
+  Func.function = generic_function;
+  Func.params = &params;
+  
+  return GSL_integrate_qags(Func, a, b, rel_err, abs_err, limit_size);
+}
+
+
+// ============================================================================
+
+
 double cbl::wrapper::gsl::GSL_integrate_qagiu (FunctionDoubleDouble func, const double a,  const double rel_err, const double abs_err, const int limit_size)
 {
   STR_generic_func_GSL params;
@@ -308,6 +344,17 @@ double cbl::wrapper::gsl::GSL_integrate_qag (FunctionDoubleDoublePtrVectorRef fu
   function<double(double)> func_bind = bind(func, placeholders::_1, pp, par);
 
   return GSL_integrate_qag(func_bind, a, b, abs_err, rel_err, limit_size, rule);
+}
+
+
+// ============================================================================
+
+
+double cbl::wrapper::gsl::GSL_integrate_qags (FunctionDoubleDoublePtrVectorRef func, const std::shared_ptr<void> pp, const std::vector<double> par, const double a, const double b, const double rel_err, const double abs_err, const int limit_size)
+{
+  function<double(double)> func_bind = bind(func, placeholders::_1, pp, par);
+
+  return GSL_integrate_qags(func_bind, a, b, abs_err, rel_err, limit_size);
 }
 
 
@@ -406,7 +453,7 @@ double cbl::wrapper::gsl::GSL_root_brent (FunctionDoubleDouble func, const doubl
 vector<double> cbl::wrapper::gsl::GSL_minimize_nD (FunctionDoubleVector func, const std::vector<double> start, const std::vector<std::vector<double>> ranges, const unsigned int max_iter, const double tol, const double epsilon)
 {
   if (ranges.size() != start.size() && ranges.size() != 0)
-    ErrorCBL ("Error in GSL_minimize_nD of GSLwrapper.cpp, vector of ranges must have the same size of start vector.");
+    ErrorCBL("vector of ranges must have the same size of start vector!", "GSL_minimize_nD", "GSLwrapper.cpp");
   gsl_set_error_handler_off();
 
   size_t npar = start.size();
@@ -430,7 +477,8 @@ vector<double> cbl::wrapper::gsl::GSL_minimize_nD (FunctionDoubleVector func, co
 
   for (size_t i=0; i<npar; i++) {
     gsl_vector_set(x, i, start[i]);
-    gsl_vector_set(ss, i, (epsilon>0 && ranges.size()>0) ? (ranges[i][1]-ranges[i][0])*epsilon : 1);
+    double val = ((ranges.size()>0) && (start[i]+epsilon>ranges[i][1])) ? ranges[i][1]*0.999-start[i] : epsilon;
+    gsl_vector_set(ss, i, val);
   }
 
   // Initialize the method and iterate 
@@ -456,15 +504,22 @@ vector<double> cbl::wrapper::gsl::GSL_minimize_nD (FunctionDoubleVector func, co
 
       if ((status!=GSL_SUCCESS) && (status!=GSL_CONTINUE))
 	check_GSL_fail(status, true, "GSL_minimize_nD", "gsl_multimin_fminimizer_iterate");
+
+      coutCBL << std::fixed << "\r" << "Iteration " << iter << std::scientific << std::setprecision(2) << " " << "Size= " << size << ", Tol = "<< tol << "\r"<<std::fixed; cout.flush(); 
     }
   
   while (status == GSL_CONTINUE && iter < max_iter);
 
-  check_GSL_fail(status, true, "GSL_minimize_nD", par::defaultString);
-
   gsl_vector_free(x);
   gsl_vector_free(ss);
   gsl_multimin_fminimizer_free (s);
+
+  if (status==GSL_SUCCESS)
+    coutCBL << "Converged to a minimum at iteration " << iter << "( <" << max_iter << " )" << endl;
+  else if (status==GSL_CONTINUE)
+    ErrorCBL("Minimization has not converged. Try with lower tolerance or larger number of iterations", "GSL_minimize_nD", "GSLwrapper.cpp");
+  else
+    check_GSL_fail(status, true, "GSL_minimize_nD", par::defaultString);
 
   return params.parameters_return;
 }
@@ -475,8 +530,8 @@ vector<double> cbl::wrapper::gsl::GSL_minimize_nD (FunctionDoubleVector func, co
 
 vector<double> cbl::wrapper::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func, const std::vector<double> start, const std::vector<std::vector<double>> ranges, const unsigned int max_iter, const double tol, const double epsilon)
 {
-  if (ranges.size() != start.size() && ranges.size() != 0)
-    ErrorCBL ("Error in GSL_minimize_nD of GSLwrapper.cpp, vector of ranges must have the same size of start vector.");
+  if (ranges.size()!=start.size() && ranges.size()!=0)
+    ErrorCBL("vector of ranges must have the same size of start vector!", "GSL_minimize_nD", "GSLwrapper.cpp");
   gsl_set_error_handler_off();
 
   size_t npar = start.size();
@@ -493,49 +548,62 @@ vector<double> cbl::wrapper::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func,
   int status = 0;
   double size;
 
-  // Starting point
+  
+  // starting point
   
   x = gsl_vector_alloc(npar);
   ss = gsl_vector_alloc(npar);
 
   for (size_t i=0; i<npar; i++) {
     gsl_vector_set(x, i, start[i]);
-    double val = (epsilon>0 && ranges.size()>0) ? (ranges[i][1]-ranges[i][0])*epsilon : epsilon;
+    double val = ((ranges.size()>0) && (start[i]+epsilon>ranges[i][1])) ? ranges[i][1]*0.999-start[i] : epsilon;
     gsl_vector_set(ss, i, val);
   }
 
-  // Initialize the method and iterate 
+  
+  // initialize the method and iterate 
 
   minex_func.n = npar;
   minex_func.f = &generic_minimizer_return;
   minex_func.params = &params;
 
-  s = gsl_multimin_fminimizer_alloc (T, npar);
-  gsl_multimin_fminimizer_set (s, &minex_func, x, ss);
+  s = gsl_multimin_fminimizer_alloc(T, npar);
+  gsl_multimin_fminimizer_set(s, &minex_func, x, ss);
 
-  do
-    {
-      iter ++;
+  // check if current simplex size is smaller than requested tolerance
+  if (gsl_multimin_fminimizer_size(s)<tol)
+    ErrorCBL("The simplex size is smaller than requested tolerance, "+conv(gsl_multimin_fminimizer_size(s), par::fDP6)+"<"+conv(tol, par::fDP6)+", check your inputs!", "GSL_minimize_nD", "GSLwrapper.cpp");
 
-      if ((status != GSL_SUCCESS) && (status!=GSL_CONTINUE))
-	check_GSL_fail(status, true, "GSL_minimize_nD", "gsl_multimin_test_size");
-
-      status = gsl_multimin_fminimizer_iterate(s);
-
-      size = gsl_multimin_fminimizer_size(s);
-      status = gsl_multimin_test_size(size, tol);
-
-      if ((status != GSL_SUCCESS) && (status!=GSL_CONTINUE))
-	check_GSL_fail(status, true, "GSL_minimize_nD", "gsl_multimin_test_size");
-    }
-  
-  while (status == GSL_CONTINUE && iter < max_iter);
-
-  check_GSL_fail(status, true, "GSL_minimize_nD", par::defaultString);
+  do {
+    iter ++;
+    
+    if ((status != GSL_SUCCESS) && (status!=GSL_CONTINUE))
+      check_GSL_fail(status, true, "GSL_minimize_nD", "gsl_multimin_test_size");
+    
+    status = gsl_multimin_fminimizer_iterate(s);
+    
+    size = gsl_multimin_fminimizer_size(s);
+    
+    status = gsl_multimin_test_size(size, tol);
+    
+    if ((status!=GSL_SUCCESS) && (status!=GSL_CONTINUE))
+      check_GSL_fail(status, true, "GSL_minimize_nD", "gsl_multimin_test_size");
+    
+    coutCBL << std::fixed << "\r" << "Iteration " << iter << std::scientific << std::setprecision(2) << " " << "Size= " << size << ", Tol = "<< tol << "\r"<<std::fixed; cout.flush(); 
+  }
+  while (status==GSL_CONTINUE && iter<max_iter);
 
   gsl_vector_free(x);
   gsl_vector_free(ss);
-  gsl_multimin_fminimizer_free (s);
+  gsl_multimin_fminimizer_free(s);
+
+  if (status==GSL_SUCCESS)
+    coutCBL << "Converged to a minimum at iteration " << iter << "( <" << max_iter << " )" << endl;
+  else if (status==GSL_CONTINUE)
+    ErrorCBL("Minimization has not converged. Try with lower tolerance or larger number of iterations", "GSL_minimize_nD", "GSLwrapper.cpp");
+  else
+    check_GSL_fail(status, true, "GSL_minimize_nD", par::defaultString);
+
 
   return params.parameters_return;
 }
@@ -546,6 +614,7 @@ vector<double> cbl::wrapper::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func,
 
 double cbl::wrapper::gsl::GSL_minimize_1D (FunctionDoubleDouble func, const double start, double min, double max, const int max_iter, const bool verbose)
 {
+  (void)verbose;
   gsl_set_error_handler_off();
 
   const gsl_min_fminimizer_type *T = gsl_min_fminimizer_brent;
@@ -584,12 +653,14 @@ double cbl::wrapper::gsl::GSL_minimize_1D (FunctionDoubleDouble func, const doub
   
   while (status==GSL_CONTINUE && iter<max_iter);
 
-  check_GSL_fail(status, true, "GSL_minimize_1D", par::defaultString);
-
-  if ((status==GSL_SUCCESS) && verbose)
-    coutCBL << "Converged to a minimum." << endl;
-
   gsl_min_fminimizer_free(s);
+
+  if (status==GSL_SUCCESS)
+    coutCBL << "Converged to a minimum at iteration " << iter << "( <" << max_iter << " )" << endl;
+  else if (status == GSL_CONTINUE)
+    ErrorCBL("Minimization has not converged. Try with lower tolerance or larger number of iterations", "GSL_minimize_1D", "GSLwrapper.cpp");
+  else
+    check_GSL_fail(status, true, "GSL_minimize_1D", par::defaultString);
   
   return m;
 }

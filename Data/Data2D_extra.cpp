@@ -43,15 +43,31 @@ using namespace glob;
 // ======================================================================================
 
 
-void cbl::data::Data2D_extra::read (const string input_file, const int skip_nlines)
+void cbl::data::Data2D_extra::read (const string input_file, const int skip_nlines, const int column_x, const vector<int> column_data, const vector<int> column_errors)
 {
-  (void)skip_nlines;
+  (void)input_file; (void)skip_nlines; (void)column_x; (void)column_data; (void)column_errors;
 
-  ErrorCBL("Error in cbl::data::Data2D_extra::read : work in progress!", ExitCode::_workInProgress_);
+  ErrorCBL("", "read", "Data2D_extra.cpp", ExitCode::_workInProgress_);
+}
 
-  ifstream fin(input_file.c_str()); checkIO(fin, input_file);
 
-  fin.clear(); fin.close();
+// ======================================================================================
+
+
+void cbl::data::Data2D_extra::Print (const int precision) const 
+{
+  for (int i=0; i<m_xsize; ++i)
+    for (int j=0; j<m_ysize; ++j) {
+      int index = j+m_ysize*i;
+      coutCBL << setprecision(precision) << setw(8) << right << m_x[i]
+	      << "   " << setprecision(precision) << setw(8) << right << m_y[j]
+	      << "   " << setprecision(precision) << setw(8) << right << m_data[index]
+	      << "   " << setprecision(precision) << setw(8) << right << m_error[index];
+      
+      for (size_t ex=0; ex<m_extra_info.size(); ++ex)
+        coutCBL << "   " << setprecision(precision) << setw(8) << right << m_extra_info[ex][index];
+      cout << endl;
+    }
 }
 
 
@@ -65,11 +81,11 @@ void cbl::data::Data2D_extra::write (const string dir, const string file, const 
   string file_out = dir+file;
   ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
-  if(header!=par::defaultString)
+  if (header!=par::defaultString)
     fout << "### " << header << " ###" << endl;
 
   for (int i=0; i<m_xsize; ++i)
-    for (int j=0; j<m_ysize; ++j){
+    for (int j=0; j<m_ysize; ++j) {
       int index = j+m_ysize*i;
       fout << setprecision(precision) << setw(15) << right << m_x[i]
 	   << "  " << setprecision(precision) << setw(15) << right << m_y[j]
@@ -85,7 +101,7 @@ void cbl::data::Data2D_extra::write (const string dir, const string file, const 
   if (full) { // duplicate the information in the other 3 quadrants
 
     for (int i=0; i<m_xsize; ++i)
-      for (int j=0; j<m_ysize; ++j){
+      for (int j=0; j<m_ysize; ++j) {
         int index = j+m_ysize*i;
         fout << setprecision(precision) << setw(15) << right << m_x[i]
 	     << "  " << setprecision(precision) << setw(15) << right << -m_y[j]
@@ -98,7 +114,7 @@ void cbl::data::Data2D_extra::write (const string dir, const string file, const 
       }
 
     for (int i=0; i<m_xsize; ++i)
-      for (int j=0; j<m_ysize; ++j){
+      for (int j=0; j<m_ysize; ++j) {
         int index = j+m_ysize*i;
         fout << setprecision(precision) << setw(15) << right << -m_x[i]
 	     << "  " << setprecision(precision) << setw(15) << right << -m_y[j]
@@ -111,7 +127,7 @@ void cbl::data::Data2D_extra::write (const string dir, const string file, const 
       }
 
     for (int i=0; i<m_xsize; ++i)
-      for (int j=0; j<m_ysize; ++j){
+      for (int j=0; j<m_ysize; ++j) {
         int index = j+m_ysize*i;
         fout << setprecision(precision) << setw(15) << right << -m_x[i]
 	     << "  " << setprecision(precision) << setw(15) << right << m_y[j]
@@ -126,5 +142,71 @@ void cbl::data::Data2D_extra::write (const string dir, const string file, const 
   }
 
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl << endl;
+}
+
+
+// ======================================================================================
+
+
+shared_ptr<Data> cbl::data::Data2D_extra::cut (const double xmin, const double xmax, const double ymin, const double ymax) const
+{
+  vector<bool> mask(m_ndata, true);
+  vector<double> xx, yy;
+
+  for (int i=0; i<m_xsize; i++) 
+    for (int j=0; j<m_ysize; j++) 
+      if (((m_x[i] < xmin) || (m_x[i]>xmax)) || ((m_y[j] < ymin) || (m_y[j]>ymax)))
+	mask[j+m_ysize*i] = false;
+
+  for (int i=0; i<m_xsize; i++)
+    if (!((m_x[i] < xmin) || (m_x[i]>xmax)))
+      xx.push_back(m_x[i]);
+
+  for (int i=0; i<m_ysize; i++)
+    if (!((m_y[i] < ymin) || (m_y[i]>ymax)))
+      yy.push_back(m_y[i]);
+
+  vector<double> data, error;
+  vector<vector<double>> covariance;
+  vector<vector<double>> extra_info;
+
+  int ndata_eff = 0;
+
+  for (int i=0; i<m_ndata; i++)
+    if (mask[i])
+      ndata_eff ++;
+
+  if (ndata_eff<1)
+    ErrorCBL("no elements left!", "cut", "Data2D_extra.cpp");
+
+  data.resize(ndata_eff, 0);
+  error.resize(ndata_eff, 0);
+  covariance.resize(ndata_eff, vector<double>(ndata_eff, 0));
+  extra_info.resize(m_extra_info.size(), vector<double>(ndata_eff, 0));
+
+  int index1 = 0;
+  for (int i=0; i<m_ndata; i++) {
+    if (mask[i]) {
+      data[index1] = m_data[i];
+      error[index1] = m_error[i];
+
+      for (size_t j=0; j<m_extra_info.size(); j++) {
+	extra_info[j][index1] = m_extra_info[j][i];
+      }
+
+      int index2 = 0;
+      for (int j=0; j<m_ndata; j++) {
+	if (mask[j]) {
+	  covariance[index1][index2] = m_covariance[i][j];
+	  index2++;
+	}
+      }
+      index1++;
+    }
+  }
+
+  shared_ptr<Data> dd = make_shared<Data2D_extra>(Data2D_extra(xx, yy, data, covariance, extra_info));
+
+  return dd;
 }
 

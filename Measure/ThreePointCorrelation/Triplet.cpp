@@ -55,7 +55,7 @@ std::shared_ptr<Triplet> cbl::triplets::Triplet::Create (const cbl::triplets::Tr
   else if (type==TripletType::_comoving_costheta_)  return move(unique_ptr<Triplet1D_comoving_costheta>{new Triplet1D_comoving_costheta(r12, r12_binSize, r13, r13_binSize, nbins)});
   else if (type==TripletType::_multipoles_direct_)  return move(unique_ptr<Triplet1D_multipoles_direct>{new Triplet1D_multipoles_direct(r12, r12_binSize, r13, r13_binSize, nbins)});
   
-  else ErrorCBL("Error in cbl::triplets::Create of Triplet.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Triple.cpp");
   
   return NULL;
 }

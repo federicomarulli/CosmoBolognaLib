@@ -55,10 +55,10 @@ namespace cbl {
     namespace numbercounts {
 
       /**
-       *  @class NumberCounts1D_Redshift NumberCounts1D_Redshift.h
-       *  "Headers/NumberCounts1D_Redshift.h"
+       *  @class NumberCounts2D_RedshiftMass NumberCounts2D_RedshiftMass.h
+       *  "Headers/NumberCounts2D_RedshiftMass.h"
        *
-       *  @brief The class NumberCounts1D_Redshift
+       *  @brief The class NumberCounts2D_Redshift
        *
        *  This is the base class used to measure the 
        *  mass-redshift number counts
@@ -76,7 +76,7 @@ namespace cbl {
 	  /**
 	   *  @brief default constructor
 	   *
-	   *  @return object of class NumberCounts1D_Redshift
+	   *  @return object of class NumberCounts2D_RedshiftMass
 	   */
 	  NumberCounts2D_RedshiftMass () {}
 
@@ -111,7 +111,7 @@ namespace cbl {
 	   *
 	   * @param fact factor used to normalized the distribution
 	   *
-	   * @return object of class Histogram1D
+	   * @return object of class NumberCounts2D_RedshiftMass
 	   */
 	  NumberCounts2D_RedshiftMass (const catalogue::Catalogue data, const size_t nbins1, const size_t nbins2, const double minVar1=par::defaultDouble, const double maxVar1=par::defaultDouble, const double minVar2=par::defaultDouble, const double maxVar2=par::defaultDouble, const double shift1=0.5, const double shift2=0.5, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.) : NumberCounts2D (catalogue::Var::_Redshift_, BinType::_linear_, catalogue::Var::_Mass_, BinType::_logarithmic_, data, nbins1, nbins2, minVar1, maxVar1, minVar2, maxVar2, shift1, shift2, hist_type, fact) {} 
 

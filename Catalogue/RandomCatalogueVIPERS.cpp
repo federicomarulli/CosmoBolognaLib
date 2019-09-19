@@ -46,7 +46,7 @@ using namespace cbl;
 
 cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField, const bool isSpectroscopic, const Catalogue catalogue, const Catalogue catalogue_for_nz, const double N_R, const cosmology::Cosmology &cosm, const int step_redshift, const vector<double> lim, const double redshift_min, const double redshift_max, const bool do_convol, const double sigma, const bool use_venice, const bool do_zdistr_with_venice, const string file_random, const string mask, const string pointing_file, const string dir_venice, const int seed) 
 {
-  if (type!=RandomType::_createRandom_VIPERS_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue : the random catalogue has to be of type _VIPERS_ !");
+  if (type!=RandomType::_createRandom_VIPERS_) ErrorCBL("the random catalogue has to be of type _VIPERS_ !", "Catalogue", "RandomCatalogueVIPERS.cpp");
   
   coutCBL << par::col_green << "I'm creating the random catalogue..." << par::col_default << endl;
 
@@ -225,9 +225,13 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
 	  }
 	}
 
-      if (isSpectroscopic) 
+      if (isSpectroscopic) {
 	// extract the random redshifts from the distribution
-	random_redshift = vector_from_distribution(random_ra.size(), xx, yy, redshift_min, redshift_max, seed);
+	vector<double> redshift = catalogue_for_nz.var(Var::_Redshift_); 
+	double zmin = max(cbl::Min(redshift), redshift_min);
+	double zmax = min(cbl::Max(redshift), redshift_max);
+	random_redshift = vector_from_distribution(random_ra.size(), xx, yy, zmin, zmax, seed);
+      }
       else
 	for (size_t i=0; i<random_ra.size(); ++i)
 	  random_redshift.emplace_back(1.);
@@ -252,17 +256,17 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
 
   size_t nFieldsB = nFields();
   
-  shuffle(begin(m_object), end(m_object), default_random_engine{});
+  std::shuffle(begin(m_object), end(m_object), default_random_engine{});
   m_object.resize(N_R*catalogue.nObjects());
   
 
   // ----- check the number of fields -----
   
   if (nFields() != nFieldsB)
-    ErrorCBL("Error in Catalogue::Catalogue of RandomCatalogueVIPERS.cpp, nFields() = "+conv(nFields(), par::fINT)+" != nFieldsB = "+conv(nFieldsB, par::fINT)+" --> the random sample should be probably enlarged");
+    ErrorCBL("nFields() = "+conv(nFields(), par::fINT)+" != nFieldsB = "+conv(nFieldsB, par::fINT)+" --> the random sample should be probably enlarged", "Catalogue", "RandomCatalogueVIPERS.cpp");
 
   if (catalogue.nFields()>nFields())
-    ErrorCBL("Error in Catalogue::Catalogue of RandomCatalogueVIPERS.cpp, catalogue.nFields() = "+conv(catalogue.nFields(), par::fINT)+" > nFields = "+conv(nFields(), par::fINT)+" --> the random sample should be probably enlarged");
+    ErrorCBL("catalogue.nFields() = "+conv(catalogue.nFields(), par::fINT)+" > nFields = "+conv(nFields(), par::fINT)+" --> the random sample should be probably enlarged", "Catalogue", "RandomCatalogueVIPERS.cpp");
   
   coutCBL <<"total number of fields in the catalogue = "<<catalogue.nFields() << endl;
   coutCBL <<"total number of fields in the random = "<<nFields()<<endl;

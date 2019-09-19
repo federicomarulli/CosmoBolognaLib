@@ -99,7 +99,8 @@ double cbl::statistics::Posterior::operator() (std::vector<double> &pp) const
 double cbl::statistics::Posterior::log (std::vector<double> &pp) const
 {
   pp = m_model_parameters->full_parameters(pp);
-  double logprior = m_prior->log(pp);
+  const double logprior = m_prior->log(pp);
+
   double val;
   if (logprior>par::defaultDouble) 
     val = (m_use_grid) ? m_log_likelihood_function_grid(pp, m_likelihood_inputs)+logprior : m_log_likelihood_function(pp, m_likelihood_inputs)+logprior;
@@ -123,7 +124,7 @@ void cbl::statistics::Posterior::set_model (const std::shared_ptr<Model> model, 
       m_model = make_shared<Model2D>(*static_pointer_cast<Model2D>(model));
       break;
     default:
-      ErrorCBL("Error in cbl::statistics::Posterior::set_model() of set_model.cpp: dimension shoud be Dim::_1D_ or Dim::_2D_!");
+      ErrorCBL("the model dimension must be Dim::_1D_ or Dim::_2D_ !", "set_model", "Posterior.cpp");
   }
 
   if (model_parameters!=NULL)
@@ -173,13 +174,36 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
     for (size_t i=0; i<npar_free; i++)
       starting_par.push_back(start[m_model->parameters()->free_parameters()[i]]);
   else
-    ErrorCBL("Error in cbl::statistics::Posterior::maximize() of Posterior.cpp: check your inputs!");
+    ErrorCBL("check your inputs: start.size()="+conv(start.size(), par::fINT)+" must be equal to either npar_free="+conv(npar_free, par::fINT)+" or npar="+conv(npar, par::fINT)+"!", "maximize", "Posterior.cpp");
   
   function<double(vector<double> &)> post = [this](vector<double> &pp) { return -this->log(pp); };
+
+
+  //Extra check on epsilon
   
+  function<bool(vector<double> &)> checkWrong = [&] (vector<double> &pp)
+  {
+    bool ch = true;
+    if (post(pp) < -par::defaultDouble)
+      ch = false;
+    return ch;
+  };
+
+  vector<double> par = starting_par;
+  if (checkWrong(par))
+      ErrorCBL("Starting position is outside prior range. Change it", "maximize", "Posterior.cpp");
+
+  // loop on simplex side
+  for (size_t i=0; i<npar_free; i++) {
+    par = starting_par;
+    par[i] += epsilon;
+    if (checkWrong(par))
+      ErrorCBL("Simplex side is outside prior range. Change your epsilon parameter or starting position", "maximize", "Posterior.cpp");
+  }
+
+  // Everything is fine up to here... let's go
   coutCBL << "Maximizing the posterior..." << endl;
   vector<double> result = cbl::wrapper::gsl::GSL_minimize_nD(post, starting_par, {}, max_iter, tol, epsilon);
-
   
   // check if result is inside the prior ranges
   
@@ -190,7 +214,7 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
     coutCBL << "log(posterior) = " << post(result) << endl << endl;
   }
   else
-    ErrorCBL("Error in cbl::statistics::Posterior::maximize() of Posterior.cpp: the maximization ended with parameter values out of the priors! Please, check your inputs or change the epsilon value!");
+    ErrorCBL("the maximization ended with parameter values out of the priors: check your inputs or change the epsilon value!", "maximize", "Posterior.cpp");
 
 }
 
@@ -201,8 +225,7 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
 void cbl::statistics::Posterior::sample_stretch_move (const double aa, const bool parallel, const string outputFile, const int start, const int thin, const int nbins)
 {
   if (parallel && outputFile!=cbl::par::defaultString)
-    WarningMsg("Warning in cbl::statistics::Posterior::sample_stretch_move() of Posterior.cpp. No run-time output\
-	available for parallel stretch-move algorithm. Option will be ignored.");
+    WarningMsgCBL("no run-time output available for parallel stretch-move algorithm: this option will be ignored!", "sample_stretch_move", "Posterior.cpp");
 
   coutCBL << "Sampling the posterior..." << endl;
 
@@ -451,9 +474,9 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::initialize_chains (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter, const double tol)
+void cbl::statistics::Posterior::initialize_chains (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter, const double tol, const double epsilon)
 {
-  maximize(start, max_iter, tol);
+  maximize(start, max_iter, tol, epsilon);
 
   m_model_parameters->set_chain(chain_size, nwalkers);
   m_model_parameters->initialize_chain_ball_bestfit(radius, m_generate_seed());
@@ -569,10 +592,10 @@ void cbl::statistics::Posterior::show_results (const int start, const int thin, 
 
 void cbl::statistics::Posterior::write_results (const string output_dir, const string root_file, const int start, const int thin, const int nbins, const bool fits, const bool compute_mode)
 {
-  m_model_parameters->write_results(output_dir, root_file, start, thin, nbins, m_generate_seed(), compute_mode);
-
   const string extension = (fits) ? "_chain.fits" : "_chain.dat";
   write_chain(output_dir, root_file+extension, start, thin, fits);
+
+  m_model_parameters->write_results(output_dir, root_file, start, thin, nbins, m_generate_seed(), compute_mode);
 }
 
 
@@ -606,6 +629,6 @@ void cbl::statistics::Posterior::write_model_from_chain (const std::string outpu
 
       break;
     default:
-      ErrorCBL("Error in cbl::statistics::Posterior::write_model_from_chain of Posterior.cpp: dimension shoud be Dim::_1D_ or Dim::_2D_!");
+      ErrorCBL("the input dimension must be Dim::_1D_ or Dim::_2D_ !", "write_model_from_chain", "Posterior.cpp");
   }
 }

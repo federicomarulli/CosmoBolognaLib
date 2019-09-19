@@ -176,10 +176,15 @@ namespace cbl {
 	   *  @param nResamplings number of resampling used for bootstrap
 	   *
 	   *  @param seed the seed for random number generation
+	   *  
+	   *  @param conv true &rarr; compute the Gaussian convolvolution of
+	   *  the distribution; false &rarr; do not convolve
+	   *
+	   *  @param sigma &sigma; of the Gaussian kernel
 	   *
 	   *  @return none
 	   */
-	  void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_resample=par::defaultString, const int nResamplings=0, const int seed=3213) override;
+	  void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_resample=par::defaultString, const int nResamplings=0, const int seed=3213, const bool conv=false, const double sigma=0.) override;
 
 	  /**
 	   *  @brief compute the covariance matrix
@@ -215,6 +220,14 @@ namespace cbl {
 	   *  @return none
 	   */
 	  void write_covariance (const std::string dir, const std::string file) const override;
+
+	  ///@{
+	  /**
+	   *  @brief apply a Gaussian filter to the distribution
+	   *  @param &sigma; of the Gaussian kernel
+	   *  @return none
+	   */
+	  std::shared_ptr<data::Data> Gaussian_smoothing (const double sigma) override;
 
 	  ///@}
 

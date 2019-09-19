@@ -92,6 +92,24 @@ namespace cbl {
       { set_function(function); m_dimension=Dim::_1D_; }
 
       /**
+       *  @brief constructor
+       *
+       *  @param function model function
+       *
+       *  @param nparameters the number of parameters
+       *
+       *  @param parameterTypes the parameter types
+       *
+       *  @param parameterNames the parameter names
+       *
+       *  @param inputs inputs of the model
+       *
+       *  @return object of class Model1D
+       */
+      Model1D (const std::vector<double> (*function)(const std::vector<double> xx, std::vector<double> &val), const size_t nparameters, std::vector<ParameterType> parameterTypes={}, std::vector<std::string> parameterNames={}, const std::shared_ptr<void> inputs=NULL) : Model(nparameters, parameterTypes, parameterNames, inputs)
+      { set_function(function); m_dimension=Dim::_1D_; }
+
+      /**
        *  @brief default destructor
        *
        *  @return none
@@ -108,6 +126,18 @@ namespace cbl {
        * @return none 
        */
       void set_function (const model_function_1D function);
+
+      /**
+       * @brief set the model function
+       *
+       * @param function pointer to a model_function_1D
+       *
+       * @warning function passed in this way doesn't allow for
+       * input parameters
+       * 
+       * @return none 
+       */
+      void set_function (const std::vector<double> (*function)(const std::vector<double> xx, std::vector<double> &val));
 
       /**
        * @brief evaluate the model function at xx

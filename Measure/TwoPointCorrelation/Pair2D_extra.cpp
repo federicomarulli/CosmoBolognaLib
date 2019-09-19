@@ -444,7 +444,7 @@ void cbl::pairs::Pair2D_extra::add_data2D (const int i, const int j, const std::
 void cbl::pairs::Pair2D_extra::Sum (const std::shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins_D1 != pair->nbins_D1() || m_nbins_D2 != pair->nbins_D2()) 
-    ErrorCBL("Error in cbl::pairs::Pair2D::Sum of Pair.cpp: dimension problems!");
+    ErrorCBL("dimension problems!", "Sum", "Pair2D_extra.cpp");
   
   for (int i=0; i<m_nbins_D1; ++i)
     for (int j=0; j<m_nbins_D2; ++j)

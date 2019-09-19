@@ -42,7 +42,7 @@ using namespace cbl;
 // ============================================================================================
 
 
-double cbl::modelling::cosmology::cosmological_measurements(const double redshift, const std::string data_type, const cbl::cosmology::Cosmology cosmology)
+double cbl::modelling::cosmology::cosmological_measurements (const double redshift, const std::string data_type, const cbl::cosmology::Cosmology cosmology)
 {
   if(data_type == "DV")
     return cosmology.D_V(redshift);
@@ -89,7 +89,7 @@ double cbl::modelling::cosmology::cosmological_measurements(const double redshif
   else if (data_type == "DL")
     return cosmology.D_L(redshift);
   else
-    ErrorCBL("Error in cosmological_measurements, no such type of measurement");
+    ErrorCBL("the input data_type is not allowed!", "cosmological_measurements", "ModelFunction_Cosmology.cpp");
 
   return 0;
 }

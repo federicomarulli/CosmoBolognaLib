@@ -111,7 +111,7 @@ namespace cbl {
 	 *  @return object of class ThreePointCorrelation_angular_connected
 	 */
 	ThreePointCorrelation_angular_connected (const catalogue::Catalogue data, const catalogue::Catalogue random, const double side_s, const double side_u, const double perc_increase, const int nbins)
-	  : ThreePointCorrelation(data, random) { ErrorCBL("Error in ThreePointCorrelation_angular_connected() of ThreePointCorrelation_angular_connected.h", cbl::glob::ExitCode::_workInProgress_); set_parameters(side_s, side_u, perc_increase, nbins); }
+	  : ThreePointCorrelation(data, random) { ErrorCBL("", "ThreePointCorrelation_angular_connected", "ThreePointCorrelation_angular_connected.h", cbl::glob::ExitCode::_workInProgress_); set_parameters(side_s, side_u, perc_increase, nbins); }
 
 	/**
 	 *  @brief constructor
@@ -127,7 +127,7 @@ namespace cbl {
 	 *  @return object of class ThreePointCorrelation_angular_connected
 	 */
 	ThreePointCorrelation_angular_connected (const catalogue::Catalogue data, const catalogue::Catalogue random, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
-	  : ThreePointCorrelation(data, random) { ErrorCBL("Error in ThreePointCorrelation_angular_connected() of ThreePointCorrelation_angular_connected.h", cbl::glob::ExitCode::_workInProgress_); set_parameters(r12, r12_binSize, r13, r13_binSize, nbins); }
+	  : ThreePointCorrelation(data, random) { ErrorCBL("", "ThreePointCorrelation_angular_connected", "ThreePointCorrelation_angular_connected.h", cbl::glob::ExitCode::_workInProgress_); set_parameters(r12, r12_binSize, r13, r13_binSize, nbins); }
 
 	/**
 	 *  @brief default destructor

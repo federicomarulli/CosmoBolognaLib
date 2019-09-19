@@ -403,7 +403,7 @@ namespace cbl {
        * @return the value of the vector field
        */
       virtual double ScalarField (const int i, const int j, const int k) const
-      { (void)i; (void)j; (void)k; ErrorCBL("Error in Scalarield of Field3D"); return 0; }
+      { (void)i; (void)j; (void)k; ErrorCBL("", "Scalarield", "Field3D.h"); return 0; }
 
         
       /**
@@ -414,7 +414,7 @@ namespace cbl {
        * @return the value of the vector field
        */
       virtual double ScalarField (const std::vector<double> pos) const
-      { (void)pos; ErrorCBL("Error in Scalarield of Field3D"); return 0; }
+      { (void)pos; ErrorCBL("", "Scalarield", "Field3D.h"); return 0; }
     
       /**
        * @brief get the value of the scalar field
@@ -422,7 +422,7 @@ namespace cbl {
        * @return the values of the scalar field
        */
       virtual std::vector<double> ScalarField () const
-      { ErrorCBL("Error in Scalarield of Field3D"); std::vector<double> vv; return vv; }
+      { ErrorCBL("", "Scalarield", "Field3D.h"); std::vector<double> vv; return vv; }
 
       /**
        * @brief get the value of the vector field
@@ -434,7 +434,7 @@ namespace cbl {
        * @return vector containing the values of the vector field
        */
       virtual std::vector<double> VectorField (const int i, const int j, const int k) const
-      { (void)i; (void)j; (void)k; ErrorCBL("Error in VectorField of Field3D"); return {0}; }
+      { (void)i; (void)j; (void)k; ErrorCBL("", "VectorField", "Field3D.h"); return {0}; }
 
       /**
        * @brief get the value of the vector field
@@ -444,7 +444,7 @@ namespace cbl {
        * @return vector containing the values of the vector field
        */
       virtual std::vector<double> VectorField (const std::vector<double> pos) const
-      { (void)pos; ErrorCBL("Error in VectorField of Field3D"); double vv=0; return {vv}; }
+      { (void)pos; ErrorCBL("", "VectorField", "Field3D.h"); double vv = 0.; return {vv}; }
 
       /**
        * @brief get the value of the scalar field, Fourier space, real part
@@ -456,7 +456,7 @@ namespace cbl {
        * @return the values of the scalar field, Fourier space, real part
        */
       virtual double ScalarField_FourierSpace_real (const int i, const int j, const int k) const
-      { (void)i; (void)j; (void)k; ErrorCBL("Error in ScalarField_FourierSpace of Field3D"); return 0; }
+      { (void)i; (void)j; (void)k; ErrorCBL("", "ScalarField_FourierSpace_real", "Field3D.h"); return 0; }
 
       /**
        * @brief get the value of the scalar field, Fourier space, complex part
@@ -468,7 +468,7 @@ namespace cbl {
        * @return the value of the scalar field, Fourier space, complex part
        */
       virtual double ScalarField_FourierSpace_complex (const int i, const int j, const int k) const
-      { (void)i; (void)j; (void)k; ErrorCBL("Error in ScalarField_FourierSpace of Field3D"); return 0; }
+      { (void)i; (void)j; (void)k; ErrorCBL("", "ScalarField_FourierSpace_complex", "Field3D.h"); return 0; }
 
       /**
        * @brief get the value of the scalar field, Fourier space, real part
@@ -476,7 +476,7 @@ namespace cbl {
        * @return the values of the scalar field
        */
       virtual std::vector<double> ScalarField_FourierSpace_real () const
-      { ErrorCBL("Error in Scalarield of Field3D"); std::vector<double> vv; return vv; }
+      { ErrorCBL("", "Scalarield_FourierSpace_real", "Field3D.h"); std::vector<double> vv; return vv; }
 
       /**
        * @brief get the value of the scalar field, Fourier space, complex part
@@ -484,7 +484,7 @@ namespace cbl {
        * @return the value of the vector field
        */
       virtual std::vector<double> ScalarField_FourierSpace_complex () const
-      { ErrorCBL("Error in Scalarield of Field3D"); std::vector<double> vv; return vv; }
+      { ErrorCBL("", "Scalarield_FourierSpace_complex", "Field3D.h"); std::vector<double> vv; return vv; }
 
       /**
        * @brief get the value of the vector field, Fourier space, real part
@@ -496,7 +496,7 @@ namespace cbl {
        * @return vector containing the value of the vector field, Fourier space, real part
        */
       virtual std::vector<double> VectorField_FourierSpace_real (const int i, const int j, const int k) const
-      { (void)i; (void)j; (void)k; ErrorCBL("Error in VectorField_FourierSpace of Field3D"); return {0}; }
+      { (void)i; (void)j; (void)k; ErrorCBL("", "VectorField_FourierSpace_real", "Field3D.h"); return {0}; }
 
       /**
        * @brief get the value of the vector field, Fourier space, complex part
@@ -508,7 +508,7 @@ namespace cbl {
        * @return vector containing the value of the vector field, Fourier space, complex part
        */
       virtual std::vector<double> VectorField_FourierSpace_complex (const int i, const int j, const int k) const
-      { (void)i; (void)j; (void)k; ErrorCBL("Error in VectorField_FourierSpace_complex of Field3D"); return {0}; }
+      { (void)i; (void)j; (void)k; ErrorCBL("", "VectorField_FourierSpace_complex", "Field3D.h"); return {0}; }
 
       ///@}
 
@@ -523,14 +523,14 @@ namespace cbl {
        * @return none
        */
       virtual void FourierTransformField ()
-      { ErrorCBL("Error in FourierTransformField of Field3D"); }
+      { ErrorCBL("", "FourierTransformField", "Field3D.h"); }
 
       /**
        * @brief perform the anti-Fourier transform on the field
        * @return none
        */
       virtual void FourierAntiTransformField ()
-      { ErrorCBL("Error in FourierAntiTransformField of Field3D"); }
+      { ErrorCBL("", "FourierAntiTransformField", "Field3D.h"); }
 
       /**
        * @brief perform a smoothing of the field with a gaussian kernel
@@ -538,7 +538,7 @@ namespace cbl {
        * @return none
        */
       virtual void GaussianConvolutionField (const double kernel_size)
-      { (void)kernel_size; ErrorCBL("Error in GaussianConvolutionField of Field3D"); }
+      { (void)kernel_size; ErrorCBL("", "GaussianConvolutionField", "Field3D.h"); }
 
       /**
        * @brief set the value of the scalar field
@@ -553,7 +553,7 @@ namespace cbl {
        * @return none
        */
       virtual void set_ScalarField (const double value, const int i, const int j, const int k, const bool add=0)
-      { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("Error in set_ScalarField of Field3D"); }
+      { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("", "set_ScalarField", "Field3D.h"); }
     
       /**
        * @brief set the value of the vectorr field
@@ -568,7 +568,7 @@ namespace cbl {
        * @return none
        */
       virtual void set_VectorField (const std::vector<double> value, const int i, const int j, const int k, const bool add=0)
-      { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("Error in set_Vectorield of Field3D"); }
+      { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("", "set_Vectorield", "Field3D.h"); }
 
       /**
        * @brief set the value of the scalar field in Fourier space, real part
@@ -583,7 +583,7 @@ namespace cbl {
        * @return none
        */
       virtual void set_ScalarField_FourierSpace_real (const double value, const int i, const int j, const int k, const bool add=0)
-      { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("Error in set_ScalarField_FourierSpace_real of Field3D"); }
+      { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("", "set_ScalarField_FourierSpace_real", "Field3D.h"); }
     
       /**
        * @brief set the value of the scalar field in Fourier space, complex part
@@ -598,7 +598,7 @@ namespace cbl {
        * @return none
        */
       virtual void set_ScalarField_FourierSpace_complex (const double value, const int i, const int j, const int k, const bool add=0)
-      { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("Error in set_ScalarField_FourierSpace_complex of Field3D"); }
+      { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("", "set_ScalarField_FourierSpace_complex", "Field3D.h"); }
 
       /**
        * @brief set the value of the vector field, Fourier space, real part
@@ -614,7 +614,7 @@ namespace cbl {
        * @return none
        */
       virtual void set_VectorField_FourierSpace_real (const std::vector<double> value, const int i, const int j, const int k, const bool add=0)
-      { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("Error in set_VectorField_FourierSpace_real of Field3D"); }
+      { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("", "set_VectorField_FourierSpace_real", "Field3D.h"); }
 
       /**
        * @brief set the value of the vector field, Fourier space, complex part
@@ -630,7 +630,7 @@ namespace cbl {
        * @return none
        */
       virtual void set_VectorField_FourierSpace_complex (const std::vector<double> value, const int i, const int j, const int k, const bool add=0)
-      { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("Error in set_VectorField_FourierSpace_complex of Field3D"); }
+      { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("", "set_VectorField_FourierSpace_complex", "Field3D.h"); }
 
       /**
        * @brief set to 0 the fields
@@ -638,7 +638,7 @@ namespace cbl {
        * @return none
        */
       virtual void reset()
-      { ErrorCBL("Error in reset of Field3D"); }
+      { ErrorCBL("", "reset", "Field3D.h"); }
 
       ///@}
       

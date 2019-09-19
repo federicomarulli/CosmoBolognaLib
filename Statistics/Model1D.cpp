@@ -54,6 +54,20 @@ void cbl::statistics::Model1D::set_function (const model_function_1D function)
 // ======================================================================================
 
 
+void cbl::statistics::Model1D::set_function (const std::vector<double> (*function)(const std::vector<double> xx, std::vector<double> &val))
+{
+  m_function = [this, function](vector<vector<double>> xx, shared_ptr<void> inputs, vector<double> &parameters) 
+    {
+      (void)inputs;
+      vector<vector<double>> res(1, function(xx[0], parameters));
+      return res;
+    };
+}
+
+
+// ======================================================================================
+
+
 void cbl::statistics::Model1D::stats_from_chains (const vector<double> xx, vector<double> &median_model, vector<double> &low_model, vector<double> &up_model, const int start, const int thin) 
 {
   vector<vector<double>> _median, _low, _up;
@@ -74,8 +88,8 @@ void cbl::statistics::Model1D::write (const string output_dir, const string outp
   vector<double> pp = parameters;
   vector<double> xx_unique = different_elements(xx);
 
-  if (xx.size() % xx_unique.size() != 0)
-    ErrorCBL("Error in cbl::statistics::Model1D::write() of Model1D.cpp: model.size() is not a multiple of xx.size().");
+  if (xx.size() % xx_unique.size()!=0)
+    ErrorCBL("model.size() is not a multiple of xx.size()!", "write", "Model1D.cpp");
 
   const int nmodels = xx.size()/xx_unique.size();
   vector<double> model = this->operator()(xx, pp);
@@ -119,8 +133,8 @@ void cbl::statistics::Model1D::write_from_chains (const string output_dir, const
 {
   vector<double> xx_unique = different_elements(xx);
 
-  if (xx.size() % xx_unique.size() != 0)
-    ErrorCBL("Error in cbl::statistics::Model1D::write_from_chains() of Model1D.cpp: model.size() is not a multiple of xx.size().");
+  if (xx.size() % xx_unique.size()!=0)
+    ErrorCBL("model.size() is not a multiple of xx.size()!", "write_from_chains", "Model1D.cpp");
 
   const int nmodels = xx.size()/xx_unique.size();
 
@@ -143,7 +157,7 @@ void cbl::statistics::Model1D::write_from_chains (const string output_dir, const
     for (int nn=0; nn<nmodels; nn++)
       fout << setprecision(5) << setw(10) << right << median_model[i+nn*xx_unique.size()] << "  "
 	   << setprecision(5) << setw(10) << right << low_model[i+nn*xx_unique.size()] << "  "
-	   << setprecision(5) << setw(10) << right <<  up_model[i+nn*xx_unique.size()] << "  ";
+	   << setprecision(5) << setw(10) << right << up_model[i+nn*xx_unique.size()] << "  ";
     fout << endl;
   }
   

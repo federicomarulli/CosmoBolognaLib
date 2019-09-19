@@ -132,7 +132,7 @@ void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::measure (const Er
     measurePoisson(dir_output_pairs, dir_input_pairs, count_d1d2, count_rr, count_d1r, count_d2r, tcount, estimator);
     break;
   default:
-    ErrorCBL("Error in measure() of TwoPointCorrelationCross1D_monopole.cpp, unknown type of error");
+    ErrorCBL("unknown type of error!", "measure", "TwoPointCorrelationCross1D_monopole.cpp");
   }
 }
 
@@ -152,6 +152,6 @@ void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::measurePoisson (c
   if (estimator==Estimator::_SzapudiSzalay_)
     m_dataset = correlation_SzapudiSzalayEstimator(m_d1d2, m_rr, m_d1r, m_d2r);
   else
-    ErrorCBL("Error in measurePoisson() of TwoPointCorrelationCross1D_monopole.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measurePoisson", "TwoPointCorrelationCross1D_monopole.cpp");
   
 }

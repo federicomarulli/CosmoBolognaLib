@@ -110,7 +110,7 @@ namespace cbl {
 	   *  @return none
 	   */
 	  virtual std::shared_ptr<data::Data> m_measurePoisson () 
-	  {ErrorCBL("Error in m_measurePoisson of NumberCounts.h!"); return NULL;}
+	  { ErrorCBL("", "m_measurePoisson", "NumberCounts.h"); return NULL; }
 
 	  /**
 	   *  @brief measure the number counts with Jackknife 
@@ -122,7 +122,7 @@ namespace cbl {
 	   *  @return none
 	   */
 	  virtual std::shared_ptr<data::Data> m_measureJackknife (const std::string dir_output_resample=par::defaultString)
-	  { (void)dir_output_resample; ErrorCBL("Error in m_measureJackknife of NumberCounts.h!"); return NULL;}
+	  { (void)dir_output_resample; ErrorCBL("", "m_measureJackknife", "NumberCounts.h"); return NULL; }
 
 	  /**
 	   *  @brief measure the number counts with
@@ -138,7 +138,7 @@ namespace cbl {
 	   *  @return none
 	   */
 	  virtual std::shared_ptr<data::Data> m_measureBootstrap (const std::string dir_output_resample=par::defaultString, const int nResamplings=0, const int seed=3213)
-	  { (void)dir_output_resample; (void)nResamplings; (void)seed; ErrorCBL("Error in m_measureBootstrap of NumberCounts.h!");  return NULL;}
+	  { (void)dir_output_resample; (void)nResamplings; (void)seed; ErrorCBL("", "m_measureBootstrap", "NumberCounts.h");  return NULL; }
 
 	  ///@}
 
@@ -208,10 +208,15 @@ namespace cbl {
 	   *
 	   *  @param seed the seed for random number generation
 	   *
+	   *  @param conv true &rarr; compute the Gaussian convolvolution of
+	   *  the distribution; false &rarr; do not convolve
+	   *
+	   *  @param sigma &sigma; of the Gaussian kernel
+	   *
 	   *  @return none
 	   */
-	  virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_resample=par::defaultString, const int nResamplings=0, const int seed=3213)
-	  { (void)errorType; (void)dir_output_resample; (void)nResamplings; (void)seed; ErrorCBL("Error in measure of NumberCounts.h"); }
+	  virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_resample=par::defaultString, const int nResamplings=0, const int seed=3213, const bool conv=false, const double sigma=0.)
+	  { (void)errorType; (void)dir_output_resample; (void)nResamplings; (void)seed; (void)conv; (void)sigma; ErrorCBL("", "measure", "NumberCounts.h"); }
 
 	  ///@}
 
@@ -228,7 +233,7 @@ namespace cbl {
 	   *  @return none
 	   */
 	  virtual void write (const std::string dir=par::defaultString, const std::string file=par::defaultString, const int rank=0) const
-	  { (void)dir; (void)file; (void)rank; ErrorCBL("Error in write of NumberCounts.h!");}
+	  { (void)dir; (void)file; (void)rank; ErrorCBL("", "write", "NumberCounts.h"); }
 
 
 	  ///@}
@@ -246,7 +251,7 @@ namespace cbl {
 	   *  @return none
 	   */
 	  virtual void write_covariance (const std::string dir, const std::string file) const
-	  { (void)dir; (void)file; ErrorCBL("Error in write_covariance of NumberCounts.h!"); }
+	  { (void)dir; (void)file; ErrorCBL("", "write_covariance", "NumberCounts.h"); }
 
 	  /**
 	   *  @brief compute the covariance matrix
@@ -257,7 +262,15 @@ namespace cbl {
 	   *  @return none
 	   */
 	  virtual void compute_covariance (const std::vector<std::shared_ptr<glob::Histogram>> histo, const bool JK)
-	  { (void)histo; (void)JK; ErrorCBL("Error in compute_covariance of NumberCounts.h!"); }
+	  { (void)histo; (void)JK; ErrorCBL("", "compute_covariance", "NumberCounts.h"); }
+	  	  
+	  /**
+	   *  @brief apply a Gaussian filter to the distribution
+	   *  @param &sigma; of the Gaussian kernel
+	   *  @return none
+	   */
+	  virtual std::shared_ptr<data::Data> Gaussian_smoothing (const double sigma)
+	  { (void)sigma; ErrorCBL("", "Gaussian_smoothing", "NumberCounts.h"); return NULL; }
 
 	  ///@}
 
@@ -271,7 +284,7 @@ namespace cbl {
 	   *
 	   * @return pointer to an object of class Histogram
 	   */
-	  std::shared_ptr<glob::Histogram> histogram () {return m_histogram;}
+	  std::shared_ptr<glob::Histogram> histogram () { return m_histogram; }
 
 	  /**
 	   * @brief return the type of histogram

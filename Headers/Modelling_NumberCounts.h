@@ -82,6 +82,9 @@ namespace cbl {
 	/// the container of parameters for number counts model computation
 	modelling::numbercounts::STR_NC_data_model m_data_model;
 
+	/// the container of parameters for size number counts model computation
+	modelling::numbercounts::STR_NCSF_data_model m_data_model_SF;
+
       public:
 
 	/**
@@ -131,6 +134,16 @@ namespace cbl {
          * model computation
 	 */
 	modelling::numbercounts::STR_NC_data_model data_model () { return m_data_model; }
+
+
+	///@{
+
+	/**
+	 * @brief get the member \e m_data_model_SF
+	 * @return the container of parameters for size number counts
+         * model computation
+	 */
+	modelling::numbercounts::STR_NCSF_data_model data_model_SF () { return m_data_model_SF; }
 	
 	///@}
 
@@ -168,6 +181,9 @@ namespace cbl {
 	 *  @param output_dir the output_dir directory
 	 *  where the output of external codes are written
 	 *  
+	 *  @param store_output_CAMB if true the output files created by CAMB are stored;
+	 *  if false the output files created by CAMB are removed
+	 *
 	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
 	 *  &rarr; normalize the power spectrum
 	 *
@@ -204,7 +220,76 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const std::string selection_function_file=par::defaultString, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const int z_step=50, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
+	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output_CAMB=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const std::string selection_function_file=par::defaultString, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const int z_step=50, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
+
+	///@}
+		
+	/**
+	 *  @name Member functions used to set the model parameters
+	 *
+	 *  @param cosmology the cosmological model used to compute
+	 *  the void size function
+	 *
+	 *  @param radii the void radii
+	 *
+	 *  @param redshift the redshift
+	 *
+	 *  @param model size function model name; valid choices for
+	 *  model name are SvdW (Sheth and van de Weygaert, 2004),
+	 *  linear and Vdn (Jennings et al., 2013)
+	 *
+	 *  @param b_eff the effective bias of the sample
+	 *
+	 *  @param slope first coefficent to convert the effective bias
+	 *  (default value set to \f$0.854\f$)
+	 *
+	 *  @param offset second coefficent to convert the effective
+	 *  bias (default value set to \f$0.420\f$)
+	 *
+	 *  @param deltav_NL the non linear density contrast:
+	 *  \f$\rho_v/\rho_m\f$ (default value set to \f$-0.795\f$)
+	 *
+	 *  @param del_c critical value of the linear density field
+	 *  (default value set to \f$1.06\f$)
+	 *
+	 *  @param method_Pk method used to compute the power spectrum;
+	 *  valid choices for method_Pk are: CAMB [http://camb.info/],
+	 *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+	 *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+	 *
+	 *  @param store_output_CAMB if true the output files created by CAMB are stored;
+	 *  if false the output files created by CAMB are removed
+	 *
+	 *  @param output_root output_root of the parameter file used to
+	 *  compute the power spectrum and &sigma;(mass); it can be any
+	 *  name
+	 *
+	 *  @param interpType method to interpolate the power spectrum
+	 *
+	 *  @param k_max maximum wave vector module up to which the power
+	 *  spectrum is computed
+	 *           
+	 *  @param input_file either the parameter file or the power
+	 *  spectrum file; if a parameter file is provided,
+	 *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+	 *  used to compute the power spectrum; if a power spectrum file
+	 *  is provided, i.e. input_file!=NULL and
+	 *  is_parameter_file=false, then the provided power spectrum
+	 *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+	 *  is computed by integrating the computed/provided power
+	 *  spectrum ignoring the cosmological parameters of the object
+	 *
+	 *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+	 *  is a parameter file, used to compute the power spectrum with
+	 *  the method specified by method_Pk; false \f$\rightarrow\f$
+	 *  the input_file is a file containing the power spectrum
+	 *
+	 *  @return none
+	 */
+	
+	void set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+
 
 	/**
 	 *  @brief set the data used to construct mass
@@ -234,6 +319,9 @@ namespace cbl {
 	 *  @param output_dir the output_dir directory
 	 *  where the output of external codes are written
 	 *  
+	 *  @param store_output_CAMB if true the output files created by CAMB are stored;
+	 *  if false the output files created by CAMB are removed
+	 *
 	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
 	 *  &rarr; normalize the power spectrum
 	 *
@@ -257,12 +345,12 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	virtual void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4) 
+	virtual void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output_CAMB=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4) 
 	{ 
 	  (void)cosmology; (void)redshift; (void)method_Pk; (void)k_min; (void)k_max; (void)step;
-	  (void)output_dir; (void)norm; (void)Delta; (void)isDelta_vir; (void)model_MF; (void)Volume; (void)prec;
-	  (void)Mass_min; (void)Mass_max; (void)Mass_step;
-	  cbl::ErrorCBL("Error in set_data_model_snapshot() of Modelling_NumberCounts.h!");
+	  (void)output_dir; (void)store_output_CAMB; (void)norm; (void)Delta; (void)isDelta_vir; (void)model_MF;
+	  (void)Volume; (void)prec; (void)Mass_min; (void)Mass_max; (void)Mass_step;
+	  cbl::ErrorCBL("", "set_data_model_snapshot", "Modelling_NumberCounts.h");
 	}
 
 

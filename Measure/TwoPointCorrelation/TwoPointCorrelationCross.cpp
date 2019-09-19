@@ -72,7 +72,7 @@ void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPTy
   
   if (estimator==Estimator::_natural_ && m_random_dilution_fraction!=1.) {
     m_random_dilution_fraction = 1.;
-    WarningMsg("Attention: --> m_random_dilution_fraction = 1, since the random catalogue is not diluted when using the natural estimator!");
+    WarningMsgCBL("m_random_dilution_fraction = 1, since the random catalogue is not diluted when using the natural estimator!", "count_allPairs", "TwoPointCorrelation.cpp");
   }
 
   auto random_dil = make_shared<catalogue::Catalogue>(catalogue::Catalogue(move(m_random->diluted_catalogue(m_random_dilution_fraction))));
@@ -98,7 +98,7 @@ void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPTy
     rMAX = max(m_d1d2->sMax_D1(), m_d1d2->sMax_D2())*sqrt(2.);
 
   else
-    ErrorCBL("Error in count_allPairs() of TwoPointCorrelationCross.cpp: the chosen two-point correlation function type is uknown!");
+    ErrorCBL("the chosen two-point correlation function type is uknown!", "count_allPairs", "TwoPointCorrelationCross.cpp");
   
   double cell_size = rMAX*0.1; // to be optimized!!!
   
@@ -183,7 +183,7 @@ double TwoPointCorrelationCross::PoissonError (const Estimator estimator, const 
 {
   (void)estimator; (void)d1d2; (void)rr;  (void)d1r; (void)d2r; (void)nData1; (void)nData2; (void)nRandom; 
   
-  WarningMsg("Attention: the PoissonError has still to be implemented for the cross-correlation function");
+  WarningMsgCBL("the PoissonError has still to be implemented for the cross-correlation function", "PoissonError", "TwoPointCorrelation.cpp");
 
   return -1000.;
 }

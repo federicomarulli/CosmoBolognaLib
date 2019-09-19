@@ -57,7 +57,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
     vector<vector<double>> table = wrapper::ccfits::read_table_fits(file[dd], column_names, 1, 1.);
     
     if (((read_weights || read_regions) && table.size()<3) || ((read_weights && read_regions) && table.size()<4))
-      ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() of FITSCatalgue.cpp: the number of columns in the input FITS file is wrong!"); 
+      ErrorCBL("the number of columns in the input FITS file is wrong!", "Catalogue", "FITSCatalogue.cpp"); 
     
     // include the objects in the catalogue
     
@@ -75,10 +75,10 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 	    observedCoordinates coord = {table[0][i]*fact, table[1][i]*fact, table[2][i]*fact};
 	    m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosm, (read_weights) ? table[3][i] : 1., (read_regions) ? (long)table[(read_weights) ? 4 : 3][i] : 1)));
 	  }
-	  else WarningMsg("Warning in cbl::catalogue::Catalogue::Catalogue() of FITSCatalogue.cpp: the object "+conv(i, par::fINT)+" has z = "+conv(table[2][i]*fact, par::fDP2)+", and it will be not included in the catalogue!");
+	  else WarningMsgCBL("the object "+conv(i, par::fINT)+" has z = "+conv(table[2][i]*fact, par::fDP2)+", and it will be not included in the catalogue!", "Catalogue", "FITSCatalogue.cpp");
 	}
 
-	else ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in FITSCatalogue.cpp: coordinateType is not valid!");
+	else ErrorCBL("coordinateType is not valid!", "Catalogue", "FITSCatalogue.cpp");
 
       }
       

@@ -68,13 +68,13 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Redshift::set_model_
 
   // construct the model
   switch (m_HistogramType) {
-    case (glob::HistogramType::_N_V_):
-      m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
-      break;
-    case (glob::HistogramType::_n_V_):
-      m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_density_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
-      break;
-    default:
-      ErrorCBL("Error in set_model_NumberCounts_cosmology of Modelling_NumberCounts1D_Redshift.cpp: no such a variable in the list!");
+  case (glob::HistogramType::_N_V_):
+    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    break;
+  case (glob::HistogramType::_n_V_):
+    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_density_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    break;
+  default:
+    ErrorCBL("no such a variable in the list!", "set_model_NumberCounts_cosmology", "Modelling_NumberCounts1D_Redshift.cpp");
   }
 }

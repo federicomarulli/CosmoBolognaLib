@@ -18,6 +18,9 @@
 #include "ThreePointCorrelation_angular_reduced.h"
 #include "ThreePointCorrelation_comoving_connected.h"
 #include "ThreePointCorrelation_comoving_reduced.h"
+#include "ThreePointCorrelation_comoving_multipoles.h"
+#include "ThreePointCorrelation_comoving_multipoles_single.h"
+#include "ThreePointCorrelation_comoving_multipoles_all.h"
 %}
 
 %include "Triplet.h"
@@ -29,3 +32,7 @@
 %include "ThreePointCorrelation_angular_reduced.h"
 %include "ThreePointCorrelation_comoving_connected.h"
 %include "ThreePointCorrelation_comoving_reduced.h"
+%include "ThreePointCorrelation_comoving_multipoles.h"
+%include "ThreePointCorrelation_comoving_multipoles_single.h"
+%include "ThreePointCorrelation_comoving_multipoles_all.h"
+

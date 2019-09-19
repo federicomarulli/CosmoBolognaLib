@@ -528,7 +528,7 @@ namespace cbl {
        *  not have this member
        */
       void get_triplet (const double r12, const double r13, const double r23, int &klin)    
-      { (void)r12; (void)r13; (void)r23; (void)klin; cbl::ErrorCBL("Error in Triplet::get_triplet() of Triplet1D_multipoles_direct.h!"); }
+      { (void)r12; (void)r13; (void)r23; (void)klin; ErrorCBL("", "get_triplet", "Triplet1D.h!"); }
 
       /**
        *  @brief update the triplet
@@ -538,7 +538,7 @@ namespace cbl {
        *  not have this member
        */
       void set_triplet (const int klin, const double ww=1.)   
-      { (void)klin; (void)ww; cbl::ErrorCBL("Error in Triplet::get_triplet() of Triplet1D_multipoles_direct.h!"); }
+      { (void)klin; (void)ww; cbl::ErrorCBL("", "get_triplet", "Triplet1D.h!"); }
    
       /**
        *  @brief estimate the distance between three objects and

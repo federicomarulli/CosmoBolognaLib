@@ -496,7 +496,7 @@ namespace cbl {
        *     
        *  @param Mass the mass of the hosting dark matter halo
        *
-       *  @param Mmin \f$M_{min}\f$: the mass scale at which 50% of
+       *  @param lgMmin \f$logM_{min}\f$: the logarithm of the mass scale at which 50% of
        *  haloes host a central galaxy
        *
        *  @param sigmalgM \f$\sigma_{\log M_h}\f$: transition width
@@ -504,7 +504,7 @@ namespace cbl {
        *
        *  @return \f$N_{cen}(M_h)\f$
        */
-      double Ncen (const double Mass, const double Mmin, const double sigmalgM);
+      double Ncen (const double Mass, const double lgMmin, const double sigmalgM);
 
       /**
        *  @brief the average number of satellite galaxies hosted in a
@@ -523,21 +523,21 @@ namespace cbl {
        *
        *  @param Mass the mass of the hosting dark matter halo
        *
-       *  @param Mmin \f$M_{min}\f$: the mass scale at which 50% of
+       *  @param lgMmin \f$logM_{min}\f$: the logarithm of the mass scale at which 50% of
        *  haloes host a satellite galaxy
        *
        *  @param sigmalgM \f$\sigma_{\log M_h}\f$: transition width
        *  reflecting the scatter in the luminosity-halo mass relation
        *
-       *  @param M0 \f$M_0\f$: the cutoff mass 
+       *  @param lgM0 \f$logM_0\f$: the the logarithm of the cutoff mass 
        *
-       *  @param M1 \f$M_1\f$: the amplitude of the power law
+       *  @param lgM1 \f$logM_1\f$: the the logarithm of the amplitude of the power law
        *
        *  @param alpha \f$\alpha\f$: the slope of the power law
        *
        *  @return \f$N_{sat}(M_h)\f$
        */
-      double Nsat (const double Mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha);
+      double Nsat (const double Mass, const double lgMmin, const double sigmalgM, const double lgM0, const double lgM1, const double alpha);
       
       /**
        *  @brief the average number of galaxies hosted in a dark
@@ -555,98 +555,65 @@ namespace cbl {
        *
        *  @param Mass the mass of the hosting dark matter halo
        *
-       *  @param Mmin \f$M_{min}\f$: the mass scale at which 50% of
+       *  @param lgMmin \f$logM_{min}\f$: the the logarithm of the mass scale at which 50% of
        *  haloes host a satellite galaxy
        *
        *  @param sigmalgM \f$\sigma_{\log M_h}\f$: transition width
        *  reflecting the scatter in the luminosity-halo mass relation
        *
-       *  @param M0 \f$M_0\f$: the cutoff mass 
+       *  @param lgM0 \f$logM_0\f$: the logarithm of the cutoff mass 
        *
-       *  @param M1 \f$M_1\f$: the amplitude of the power law
+       *  @param lgM1 \f$logM_1\f$: the logarithm of the amplitude of the power law
        *
-       *  @param alpha \f$\alpha\f$: the slope of the power law
+       *  @param alpha \f$\alpha\f$: the the slope of the power law
        *
        *  @return \f$N_{gal}(M_h)\f$
        */
-      double Navg (const double Mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha);
-
-      /**
-       *  @brief the integrand function to compute the galaxy number
-       *  density
-       *
-       *  this function is the integrand to compute the galaxy number
-       *  density; it returns the following quantity:
-       *
-       *  \f[n_h(M_h, z)N_{gal}(M_h)\f]
-       *
-       *  where the halo mass function, \f$n_h(M_h, z)=dn/dM_h\f$, is
-       *  computed by cosmology::Cosmology::mass_function, and the
-       *  average number of galaxies hosted in a dark matter halo of a
-       *  given mass, \f$N_{gal}(M_h)\f$, is computed by
-       *  cbl::modelling::twopt::Navg
-       *
-       *  @param mass \f$M_{h}\f$: the halo mass
-       *
-       *  @param Mmin \f$M_{min}\f$: the mass scale at which 50% of
-       *  haloes host a satellite galaxy
-       *
-       *  @param sigmalgM \f$\sigma_{\log M_h}\f$: transition width
-       *  reflecting the scatter in the luminosity-halo mass relation
-       *
-       *  @param M0 \f$M_0\f$: the cutoff mass 
-       *
-       *  @param M1 \f$M_1\f$: the amplitude of the power law
-       *
-       *  @param alpha \f$\alpha\f$: the slope of the power law
-       *
-       *  @param inputs pointer to the structure that contains the
-       *  fixed input data used to construct the model
-       *
-       *  @return the integrand function to compute galaxy number
-       *  density
-       *
-       *  @warning in the current implementation, the integral is
-       *  actually computed in the range \f$10^{10}-10^{16}\f$, using 
-       */
-      double ng_integrand (const double mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha, const std::shared_ptr<void> inputs);
+      double Navg (const double Mass, const double lgMmin, const double sigmalgM, const double lgM0, const double lgM1, const double alpha);
 
       /**
        *  @brief the galaxy number density
        *
        *  this function computes the galaxy number density as follows:
-       *
+       *  
+       *  \f[n_{gal}(z) = \int_{logM_{min}}^{logM_{max}}n_{h, interp}(M_h, z)N_{gal}
+       *  (M_h)M_hln(10)\,{\rm d}log(M_h)\f]
+       *  
+       *  where \f$n_{h, interp}(M_h, z)\f$ is an interpolation of the halo mass function 
+       *  cosmology::Cosmology::mass_function, 
+       *  and the average number of galaxies hosted in a dark matter halo of a
+       *  given mass, \f$N_{gal}(M_h)\f$, is computed by
+       *  cbl::modelling::twopt::Navg
+       * 
+       *  The equation above was obtained from the original expression for 
+       *  \f$n_{gal}(z)\f$ using a change of variable from \f$dM_h\f$ to \f$dlogM_h\f$.
+       *  The original expression for \f$n_{gal}(z)\f$ is the following:
+       * 
        *  \f[n_{gal}(z) = \int_0^{M_{max}}n_h(M_h, z)N_{gal}(M_h)\,{\rm
        *  d}M_h\f]
        *
-       *  where the halo mass function, \f$n_h(M_h, z)=dn/dM_h\f$, is
-       *  computed by cosmology::Cosmology::mass_function, and the
-       *  average number of galaxies hosted in a dark matter halo of a
-       *  given mass, \f$N_{gal}(M_h)\f$, is computed by
-       *  cbl::modelling::twopt::Navg; the integrand function is
-       *  computed by cbl::modelling::twopt::ng_integrand
-       *
-       *  @param Mmin \f$M_{min}\f$: the mass scale at which 50% of
+       *  @param lgMmin \f$logM_{min}\f$: the logarithm of the mass scale at which 50% of
        *  haloes host a satellite galaxy
        *
        *  @param sigmalgM \f$\sigma_{\log M_h}\f$: transition width
        *  reflecting the scatter in the luminosity-halo mass relation
        *
-       *  @param M0 \f$M_0\f$: the cutoff mass 
+       *  @param lgM0 \f$logM_0\f$: the logarithm of the cutoff mass 
        *
-       *  @param M1 \f$M_1\f$: the amplitude of the power law
+       *  @param lgM1 \f$logM_1\f$: the logarithm of the amplitude of the power law
        *
        *  @param alpha \f$\alpha\f$: the slope of the power law
-       *
+       * 
        *  @param inputs pointer to the structure that contains the
        *  fixed input data used to construct the model
        *
        *  @return the galaxy number density
        *
        *  @warning in the current implementation, the integral is
-       *  actually computed in the range \f$10^{10}-10^{16}\f$, using 
+       *  actually computed in the range \f$10^{10} -10^{16}\f$ solar
+       *  masses, using GSL_integrate_qag
        */
-      double ng (const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha, const std::shared_ptr<void> inputs);
+      double ng (const double lgMmin, const double sigmalgM, const double lgM0, const double lgM1, const double alpha, const std::shared_ptr<void> inputs);
       
       /**
        *  @brief the mean galaxy bias
@@ -699,15 +666,15 @@ namespace cbl {
        *
        *  @param Mass the mass of the hosting dark matter halo
        *
-       *  @param Mmin \f$M_{min}\f$: the mass scale at which 50% of
+       *  @param lgMmin \f$logM_{min}\f$: the logarithm of the mass scale at which 50% of
        *  haloes host a satellite galaxy
        *
        *  @param sigmalgM \f$\sigma_{\log M_h}\f$: transition width
        *  reflecting the scatter in the luminosity-halo mass relation
        *
-       *  @param M0 \f$M_0\f$: the cutoff mass 
+       *  @param lgM0 \f$logM_0\f$: the logarithm of the cutoff mass 
        *
-       *  @param M1 \f$M_1\f$: the amplitude of the power law
+       *  @param lgM1 \f$logM_1\f$: the logarithm of the amplitude of the power law
        *
        *  @param alpha \f$\alpha\f$: the slope of the power law
        *
@@ -717,7 +684,7 @@ namespace cbl {
        *  Poisson distribution of the satellite galaxy's distribution
        *  (see e.g. Harikane et al 2016)
        */
-      double NcNs (const double Mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha);
+      double NcNs (const double Mass, const double lgMmin, const double sigmalgM, const double lgM0, const double lgM1, const double alpha);
       
       /**
        *  @brief the mean number of satellite-satellite galaxy pairs
@@ -734,15 +701,15 @@ namespace cbl {
        *
        *  @param Mass the mass of the hosting dark matter halo
        *
-       *  @param Mmin \f$M_{min}\f$: the mass scale at which 50% of
+       *  @param lgMmin \f$logM_{min}\f$: the logarithm of the mass scale at which 50% of
        *  haloes host a satellite galaxy
        *
        *  @param sigmalgM \f$\sigma_{\log M_h}\f$: transition width
        *  reflecting the scatter in the luminosity-halo mass relation
        *
-       *  @param M0 \f$M_0\f$: the cutoff mass 
+       *  @param lgM0 \f$logM_0\f$: the logarithm of the cutoff mass 
        *
-       *  @param M1 \f$M_1\f$: the amplitude of the power law
+       *  @param lgM1 \f$logM_1\f$: the logarithm of the amplitude of the power law
        *
        *  @param alpha \f$\alpha\f$: the slope of the power law
        *
@@ -752,70 +719,37 @@ namespace cbl {
        *  Poisson distribution of the satellite galaxy's distribution
        *  (see e.g. Harikane et al 2016)
        */
-      double NsNs1 (const double Mass, const double Mmin, const double sigmalgM, const double M0, const double M1, const double alpha);
+      double NsNs1 (const double Mass, const double lgMmin, const double sigmalgM, const double lgM0, const double lgM1, const double alpha);
       
-      /**
-       *  @brief the integrand function to compute the numerator of
-       *  the central-satellite part of the 1-halo term of the power
-       *  spectrum
-       *
-       *  this function is the integrand to compute the
-       *  central-satellite part of the 1-halo term of power spectrum
-       *  (e.g. Harikane et al. 2016); it returns the following
-       *  quantity:
-       *
-       *  \f[<N_{cen}N_{sat}>(M_h)\,n_h(M_h, z)\,\tilde{u}_h(k, M_h,
-       *  z)\f]
-       *
-       *  where the galaxy number density, \f$n_{gal}(z)\f$ is
-       *  computed by cbl::modelling::twopt::ng,
-       *  \f$<N_{cen}N_{sat}>(M_h)\f$ is computed by
-       *  cbl::modelling::twopt::NcNs, the Fourier transform of
-       *  the halo density profile, \f$\tilde{u}_h(k, M_h, z)\f$ if
-       *  computed by
-       *  cbl::cosmology::Cosmology::density_profile_FourierSpace
-       *  and the halo mass function, \f$n_h(M_h, z)=dn/dM_h\f$, is
-       *  computed by cosmology::Cosmology::mass_function
-       *
-       *  @param mass \f$M_{h}\f$: the halo mass
-       *
-       *  @param kk the wave vector module at which the model is
-       *  computed
-       *
-       *  @param inputs pointer to the structure that contains the
-       *  fixed input data used to construct the model
-       *
-       *  @param parameter vector containing the model parameters
-       *
-       *  @return the integrand function to compute central-satellite
-       *  part of the 1-halo term of the power spectrum
-       */
-      double Pk_cs_numerator_integrand (const double mass, const double kk, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
-
+  
       /**
        *  @brief model for the central-satellite part of the 1-halo
        *  term of the power spectrum
        *
        *  this function computes the central-satellite part of the
-       *  1-halo term of power spectrum as follows (e.g. Harikane et
-       *  al. 2016):
+       *  1-halo term of power spectrum as follows:
+       * 
+       *  \f[P_{cs}(k, z) = \frac{2}{n_{gal}^2(z)}
+       *  \int_{log(M_{min})}^{log(M_{max})} n_{h, interp}(M_h, z)\,<N_{cen}N_{sat}>(M_h)\,
+       *  \tilde{u}_h(k, M_h, z)\,M_h\,ln(10)\,{\rm d}log(M_h)\f]
+       * 
+       *  where the galaxy number density \f$n_{gal}(z)\f$ is
+       *  computed by cbl::modelling::twopt::ng, \f$n_{h, interp}(M_h, z)\f$ is an 
+       *  interpolation of the halo mass function cosmology::Cosmology::mass_function,
+       *  \f$<N_{cen}N_{sat}>(M_h)\f$ is computed by
+       *  cbl::modelling::twopt::NcNs, and the Fourier transform of
+       *  the halo density profile \f$\tilde{u}_h(k, M_h, z)\f$ is
+       *  computed by cbl::cosmology::Cosmology::density_profile_FourierSpace
+       * 
+       *  The equation above was obtained from the original expression for \f$P_{cs}(k, z)\f$
+       *  using a change of variable from \f$dM_h\f$ to 
+       *  \f$dlogM_h\f$. The original expression 
+       *  for \f$P_{cs}(k, z)\f$ (e.g. Harikane et al. 2016) is the following:
        *
        *  \f[P_{cs}(k, z) = \frac{2}{n_{gal}^2(z)}
        *  \int_{M_{min}}^{M_{max}} <N_{cen}N_{sat}>(M_h)\,n_h(M_h,
        *  z)\,\tilde{u}_h(k, M_h, z)\,{\rm d} M_h\f]
        *
-       *  where the galaxy number density, \f$n_{gal}(z)\f$ is
-       *  computed by cbl::modelling::twopt::ng,
-       *  \f$<N_{cen}N_{sat}>(M_h)\f$ is computed by
-       *  cbl::modelling::twopt::NcNs, the Fourier transform of
-       *  the halo density profile, \f$\tilde{u}_h(k, M_h, z)\f$ if
-       *  computed by
-       *  cbl::cosmology::Cosmology::density_profile_FourierSpace
-       *  and the halo mass function, \f$n_h(M_h, z)=dn/dM_h\f$, is
-       *  computed by cosmology::Cosmology::mass_function; the
-       *  integrand function of the numerator is computed by
-       *  cbl::modelling::twopt::Pk_cs_numerator_integrand
-       *
        *  @param kk the wave vector module at which the model is
        *  computed
        *
@@ -823,75 +757,40 @@ namespace cbl {
        *  fixed input data used to construct the model
        *
        *  @param parameter vector containing the model parameters
-       *
+       * 
        *  @return the central-satellite part of the 1-halo term of the
        *  power spectrum
        */
       double Pk_cs (const double kk, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
-
-      /**
-       *  @brief the integrand function to compute the numerator of
-       *  the satellite-satellite part of the 1-halo term of the power
-       *  spectrum
-       *
-       *  this function is the integrand to compute the
-       *  satellite-satellite part of the 1-halo term of power
-       *  spectrum as follows (e.g. Harikane et al. 2016); it returns
-       *  the following quantity:
-       *
-       *  \f[<N_{sat}(N_{sat}-1)>(M_h)\,n_h(M_h, z)\,\tilde{u}_h^2(k,
-       *  M_h, z)\f]
-       *
-       *  where the galaxy number density, \f$n_{gal}(z)\f$ is
-       *  computed by cbl::modelling::twopt::ng,
-       *  \f$<N_{sat}(N_{sat}-1)>(M_h)\f$ is computed by
-       *  cbl::modelling::twopt::NsNs1, the Fourier transform of
-       *  the halo density profile, \f$\tilde{u}_h(k, M_h, z)\f$ if
-       *  computed by
-       *  cbl::cosmology::Cosmology::density_profile_FourierSpace
-       *  and the halo mass function, \f$n_h(M_h, z)=dn/dM_h\f$, is
-       *  computed by cosmology::Cosmology::mass_function
-       *
-       *  @param mass \f$M_{h}\f$: the halo mass
-       *
-       *  @param kk the wave vector module at which the model is
-       *  computed
-       *
-       *  @param inputs pointer to the structure that contains the
-       *  fixed input data used to construct the model
-       *
-       *  @param parameter vector containing the model parameters
-       *
-       *  @return the integrand function to compute the
-       *  satellite-satellite part of the 1-halo term of the power
-       *  spectrum
-       */
-      double Pk_ss_numerator_integrand (const double mass, const double kk, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
       
       /**
        *  @brief model for the satellite-satellite part of the 1-halo
        *  term of the power spectrum
-       *
+       * 
        *  this function computes the satellite-satellite part of the
-       *  1-halo term of power spectrum as follows (e.g. Harikane et
-       *  al. 2016):
-       *
+       *  1-halo term of power spectrum as follows
+       * 
+       *  \f[P_{ss}(k, z) = \frac{1}{n_{gal}^2(z)}
+       *  \int_{log(M_{min})}^{log(M_{max})} n_{h, interp}(M_h, z)\,<N_{sat}(N_{sat}-1)>(M_h)
+       *  \,{\tilde{u}_h}^2(k, M_h, z)\,M_hln(10){\rm d}log(M_h)\f]
+       *  
+       *  where the galaxy number density \f$n_{gal}(z)\f$ is
+       *  computed by cbl::modelling::twopt::ng, \f$n_{h, interp}(M_h, z)\f$ is an interpolation 
+       *  of the halo mass function cosmology::Cosmology::mass_function,
+       *  \f$<N_{sat}(N_{sat}-1)>(M_h)\f$ is computed by
+       *  cbl::modelling::twopt::NsNs1, and the Fourier transform of
+       *  the halo density profile \f$\tilde{u}_h(k, M_h, z)\f$ is
+       *  computed by cbl::cosmology::Cosmology::density_profile_FourierSpace
+       * 
+       *  The equation above was obtained from the original expression for \f$P_{ss}(k, z)\f$
+       *  using a change of variable from \f$dM_h\f$ to 
+       *  \f$dlogM_h\f$. The original expression 
+       *  for \f$P_{ss}(k, z)\f$ (e.g. Harikane et al. 2016) is the following:
+       * 
        *  \f[P_{ss}(k, z) = \frac{1}{n_{gal}^2(z)}
        *  \int_{M_{min}}^{M_{max}} <N_{sat}(N_{sat}-1)>(M_h)\,n_h(M_h,
        *  z)\,\tilde{u}_h^2(k, M_h, z)\,{\rm d} M_h\f]
-       *
-       *  where the galaxy number density, \f$n_{gal}(z)\f$ is
-       *  computed by cbl::modelling::twopt::ng,
-       *  \f$<N_{sat}(N_{sat}-1)>(M_h)\f$ is computed by
-       *  cbl::modelling::twopt::NsNs1, the Fourier transform of
-       *  the halo density profile, \f$\tilde{u}_h(k, M_h, z)\f$ is
-       *  computed by
-       *  cbl::cosmology::Cosmology::density_profile_FourierSpace
-       *  and the halo mass function, \f$n_h(M_h, z)=dn/dM_h\f$, is
-       *  computed by cosmology::Cosmology::mass_function; the
-       *  integrand function of the numerator is computed by
-       *  cbl::modelling::twopt::Pk_ss_numerator_integrand
-       *
+       * 
        *  @param kk the wave vector module at which the model is
        *  computed
        *
@@ -899,7 +798,7 @@ namespace cbl {
        *  fixed input data used to construct the model
        *
        *  @param parameter vector containing the model parameters
-       *
+       * 
        *  @return the satellite-satellite part of the 1-halo term of
        *  the power spectrum
        */
@@ -935,25 +834,35 @@ namespace cbl {
        *  @brief model for the 2-halo term of the power spectrum
        *
        *  this function computes the 2-halo term of the power spectrum
-       *  as follows (e.g. Harikane et al. 2016):
+       *  as follows:
        *
+       *  \f[P_{2halo}(k, z) = P_{m, interp}(k, z) \left[\frac{1}{n_{gal}(z)}
+       *  \int_{log(M_{min})}^{log(M_{max})} N_{gal}(M_h)\,n_{h, interp}(M_h, z)
+       *  \,b_{h, interp}(M_h, z)\,\tilde{u}_h(k, M_h, z)\,M_hln(10){\rm d}log(M_h)\right]^2\f]
+       *
+       *  where \f$P_{m, interp}(k, z)\f$ is an interpolation
+       *  of the matter power spectrum cbl::cosmology::Cosmology::Pk, 
+       *  the galaxy number density \f$n_{gal}(z)\f$ is computed by 
+       *  cbl::modelling::twopt::ng, the average
+       *  number of galaxies hosted in a dark matter halo of a given
+       *  mass, \f$N_{gal}(M_h)\f$, is computed by
+       *  cbl::modelling::twopt::Navg, \f$n_{h, interp}(M_h, z)\f$ is an interpolation
+       *  of the halo mass function cosmology::Cosmology::mass_function, 
+       *  \f$b_{h, interp}(M_h, z)\f$ is an interpolation of the halo bias 
+       *  cosmology::Cosmology::bias_halo, and 
+       *  the Fourier transform of the density profile, 
+       *  \f$\tilde{u}_h(k, M_h, z)\f$, is computed by
+       *  cbl::cosmology::Cosmology::density_profile_FourierSpace
+       *
+       *  The equation above was obtained from the original expression for \f$P_{2halo}(k, z)\f$
+       *  using a change of variable from \f$dM_h\f$ to 
+       *  \f$dlogM_h\f$. The original expression for \f$P_{2halo}(k, z)\f$ 
+       *  (e.g. Harikane et al. 2016) is the following:
+       *  
        *  \f[P_{2halo}(k, z) = P_m(k, z) \left[\frac{1}{n_{gal}(z)}
        *  \int_{M_{min}}^{M_{max}} N_{gal}(M_h)\,n_h(M_h, z)\,b_h(M,
        *  z)\,\tilde{u}_h(k, M_h, z)\,{\rm d} M_h\right]^2\f]
-       *
-       *  where the matter power spectrum, \f$P_m(k, z)\f$, is
-       *  computed by cbl::cosmology::Cosmology::Pk, the average
-       *  number of galaxies hosted in a dark matter halo of a given
-       *  mass, \f$N_{gal}(M_h)\f$, is computed by
-       *  cbl::modelling::twopt::Navg, the halo mass function,
-       *  \f$n_h(M_h, z)=dn/dM_h\f$ is computed by
-       *  cosmology::Cosmology::mass_function, the halo bias,
-       *  \f$b(M_h, z)\f$, is computed by
-       *  cosmology::Cosmology::bias_halo, and the Fourier transform
-       *  of the density profile, \f$\tilde{u}_h(k, M_h, z)\f$, is
-       *  computed by
-       *  cbl::cosmology::Cosmology::density_profile_FourierSpace
-       *
+       * 
        *  @param kk the wave vector module at which the model is
        *  computed
        *
@@ -985,8 +894,8 @@ namespace cbl {
        *  fixed input data used to construct the model
        *
        *  @param parameter vector containing the model parameters
-       *
-       *  @return the 1-halo term of the power spectrum
+       * 
+       *  @return the HOD model of the power spectrum
        */
       double Pk_HOD (const double kk, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
       
@@ -1011,26 +920,24 @@ namespace cbl {
        *  \frac{1}{2\pi^2}\int_{0}^{k_{max}}{\rm d}k\, \left[P_{cs}(k,
        *  z)+P_{ss}(k, z)\right]\frac{k\sin (kr)}{r} = \f]
        *
-       *  \f[= \frac{1}{2\pi^2n_{gal}^2(z)}\int_{0}^{k_{max}}{\rm
-       *  d}k\, \int_{M_{min}}^{M_{max}}{\rm d} M_h\, \left[
-       *  2<N_{cen}N_{sat}>(M_h)\,n_h(M_h, z)\,\tilde{u}_h(k, M_h, z)
-       *  + <N_{sat}(N_{sat}-1)>(M_h)\,n_h(M_h, z)\,\tilde{u}_h^2(k,
-       *  M_h, z)\right]\frac{k\sin (kr)}{r} \f]
+       *  \f[= \frac{ln(10)}{2\pi^2n_{gal}^2(z)}\int_{0}^{k_{max}}{\rm
+       *  d}k\, \int_{log(M_{min})}^{log(M_{max})}{\rm d} log(M_h)M_h\, 
+       *  \tilde{u}_h(k, M_h, z)\,n_{h, interp}(M_h, z)\,\left[
+       *  2<N_{cen}N_{sat}>(M_h)\,+ <N_{sat}(N_{sat}-1)>(M_h)\,
+       *  \tilde{u}_h(k, M_h, z)\right]\frac{k\sin (kr)}{r} \f]
        *
        *  where the galaxy number density, \f$n_{gal}(z)\f$ is
        *  computed by cbl::modelling::twopt::ng,
-       *  \f$<N_{cen}N_{sat}>(M_h)\f$ is computed by
-       *  cbl::modelling::twopt::NcNs,
-       *  \f$<N_{sat}(N_{sat}-1)>(M_h)\f$ is computed by
-       *  cbl::modelling::twopt::NsNs1, the Fourier transform of
-       *  the halo density profile, \f$\tilde{u}_h(k, M_h, z)\f$ is
+       *  the Fourier transform of
+       *  the halo density profile \f$\tilde{u}_h(k, M_h, z)\f$ is
        *  computed by
-       *  cbl::cosmology::Cosmology::density_profile_FourierSpace
-       *  and the halo mass function, \f$n_h(M_h, z)=dn/dM_h\f$, is
-       *  computed by cosmology::Cosmology::mass_function
-       *
-       *  the multidimensional integral is implemented with the CUBA
-       *  libraries
+       *  cbl::cosmology::Cosmology::density_profile_FourierSpace,
+       *  \f$n_{h, interp}(M_h, z)\f$ is an interpolation
+       *  of the halo mass function cosmology::Cosmology::mass_function,
+       *  \f$<N_{cen}N_{sat}>(M_h)\f$ is computed by
+       *  cbl::modelling::twopt::NcNs and
+       *  \f$<N_{sat}(N_{sat}-1)>(M_h)\f$ is computed by
+       *  cbl::modelling::twopt::NsNs1
        *
        *  @param rad the scale at which the model is computed
        *
@@ -1043,42 +950,6 @@ namespace cbl {
        *  correlation function
        */
       std::vector<double> xi_1halo (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
-
-      /**
-       *  @brief auxiliary function used to speed up the computation
-       *  of the multidimensional integral of the 2-halo term of the
-       *  monopole of the two-point correlation function
-       *
-       *  this function provides a shared pointer to the following
-       *  function defined on a grid:
-       *
-       *  \f[ N_{gal}(M_h)\,n_h(M_h, z)\,b_h(M, z)\,\tilde{u}_h^2(k,
-       *  M_h, z) \f]
-       *
-       *  where the matter power spectrum, \f$P_m(k, z)\f$, is
-       *  computed by cbl::cosmology::Cosmology::Pk, the average
-       *  number of galaxies hosted in a dark matter halo of a given
-       *  mass, \f$N_{gal}(M_h)\f$, is computed by
-       *  cbl::modelling::twopt::Navg, the halo mass function,
-       *  \f$n_h(M_h, z)=dn/dM_h\f$ is computed by
-       *  cosmology::Cosmology::mass_function, the halo bias,
-       *  \f$b(M_h, z)\f$, is computed by
-       *  cosmology::Cosmology::bias_halo, and the Fourier transform
-       *  of the density profile, \f$\tilde{u}_h^2(k, M_h, z)\f$, is
-       *  computed by
-       *  cbl::cosmology::Cosmology::density_profile_FourierSpace
-       *
-       *  @param kk vector containting the wave vector modules at which
-       *  the model is computed
-       *
-       *  @param inputs pointer to the structure that contains the
-       *  fixed input data used to construct the model
-       *
-       *  @param parameter vector containing the model parameters
-       *
-       *  @return a shared pointer to the function specified above
-       */
-      std::shared_ptr<glob::FuncGrid> func_2halo (const std::vector<double> kk, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
       
       /**
        *  @brief model for the 2-halo term of the monopole of the
@@ -1089,12 +960,30 @@ namespace cbl {
        *  of the power spectrum:
        *
        *  \f[\xi_{2halo}(r, z) =
-       *  \frac{1}{2\pi^2}\int_{0}^{k_{max}}k^2P_{2halo}(k,
-       *  z)\frac{\sin (kr)}{kr}\,{\rm d}k\f]
+       *  \frac{1}{2\pi^2}\int_{0}^{k_{max}}{\rm d}k\,k^2P_{2halo}(k,
+       *  z)\frac{\sin (kr)}{kr}\f]
        *
        *  where the 2-halo term of the power spectrum \f$P_{2halo}(k,
        *  z)\f$, is computed by cbl::modelling::twopt::Pk_2halo
        *
+       *  so the integral that is actually computed is the following:
+       * 
+       *  \f[\xi_{2halo}(r, z) = \frac{ln(10)}{2\pi^2n_{gal}^2(z)}\int_{0}^{k_{max}}{\rm
+       *  d}k\, P_{m, interp}(k, z)\,\int_{log(M_{min})}^{log(M_{max})}{\rm d} log(M_h)M_h\, 
+       *  N_{gal}(M_h)\,n_{h, interp}(M_h, z)\,\,b_{h, interp}(M_h, z)\,\tilde{u}_h(k, M_h, z)\frac{k\sin (kr)}{r} \f]
+       * 
+       *  where the galaxy number density, \f$n_{gal}(z)\f$ is
+       *  computed by cbl::modelling::twopt::ng, \f$P_{m, interp}(k, z)\f$ is an interpolation
+       *  of the matter power spectrum cbl::cosmology::Cosmology::Pk,
+       *  the average number of galaxies hosted in a dark matter halo of a given mass, 
+       *  \f$N_{gal}(M_h)\f$, is computed by cbl::modelling::twopt::Navg, 
+       *  \f$n_{h, interp}(M_h, z)\f$ is an interpolation
+       *  of the halo mass function cosmology::Cosmology::mass_function, 
+       *  \f$b_{h, interp}(M_h, z)\f$ is an interpolation of the halo bias 
+       *  cosmology::Cosmology::bias_halo and the Fourier transform of
+       *  the halo density profile \f$\tilde{u}_h(k, M_h, z)\f$ is computed by
+       *  cbl::cosmology::Cosmology::density_profile_FourierSpace
+       * 
        *  @param rad the scale at which the model is computed
        *
        *  @param inputs pointer to the structure that contains the
@@ -1130,7 +1019,7 @@ namespace cbl {
        *  function
        */
       std::vector<double> xi_HOD (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
-
+      
       /**
        *  @brief function used to compute the redshift-space monopole
        *  of the two-point correlation function

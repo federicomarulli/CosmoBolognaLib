@@ -53,9 +53,9 @@ using namespace twopt;
 
 void cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameters (const BinType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const BinType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info) 
 {
-  if (muMin<0.) ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameter() of TwoPointCorrelation2D_polar.cpp: mMun must be >0 !");
-  if (muMin>1.) ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameter() of TwoPointCorrelation2D_polar.cpp: mMun must be <1 !");
-  if (rMin<0.) ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameter() of TwoPointCorrelation2D_polar.cpp: rMun must be >0 !");
+  if (muMin<0.) ErrorCBL("mMun must be >0 !", "set_parameters", "TwoPointCorrelation2D_polar.cpp");
+  if (muMin>1.) ErrorCBL("mMun must be <1 !", "set_parameters", "TwoPointCorrelation2D_polar.cpp");
+  if (rMin<0.) ErrorCBL("rMun must be >0 !", "set_parameters", "TwoPointCorrelation2D_polar.cpp");
   
   if (!compute_extra_info) {
     if (binType_rad==BinType::_logarithmic_) {
@@ -124,9 +124,9 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameters (const Bin
 
 void cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameters (const BinType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const BinType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info)
 {
-  if (muMin<0.) ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameter() of TwoPointCorrelation2D_polar.cpp: mMun must be >0 !");
-  if (muMin>1.) ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameter() of TwoPointCorrelation2D_polar.cpp: mMun must be <1 !");
-  if (rMin<0.) ErrorCBL("Error in cbl::measure::twopt::TwoPointCorrelation2D_polar::set_parameter() of TwoPointCorrelation2D_polar.cpp: rMun must be >0 !");
+  if (muMin<0.) ErrorCBL("mMun must be >0 !", "set_parameters", "TwoPointCorrelation2D_polar.cpp");
+  if (muMin>1.) ErrorCBL("mMun must be <1 !", "set_parameters", "TwoPointCorrelation2D_polar.cpp");
+  if (rMin<0.) ErrorCBL("rMun must be >0 !", "set_parameters", "TwoPointCorrelation2D_polar.cpp");
   
   if (!compute_extra_info) {
     if (binType_rad==BinType::_logarithmic_) {
@@ -230,7 +230,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measure (const ErrorType 
     measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, seed);
     break;
   default:
-    ErrorCBL("Error in measure() of TwoPointCorrelation2D_polar.cpp, unknown type of error");
+    ErrorCBL("unknown type of error!", "measure", "TwoPointCorrelation2D_polar.cpp");
   }
 }
 
@@ -252,7 +252,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measurePoisson (const std
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
-    ErrorCBL("Error in measurePoisson() of TwoPointCorrelation2D_polar.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measurePoisson", "TwoPointCorrelation2D_polar.cpp");
 
 }
 
@@ -296,7 +296,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureJackknife (const s
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
-    ErrorCBL("Error in measurePoisson() of TwoPointCorrelation2D_polar.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureJackknife", "TwoPointCorrelation2D_polar.cpp");
 
   m_dataset->set_covariance(covariance);
 }
@@ -308,7 +308,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureJackknife (const s
 void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (nMocks<=0)
-    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation2D_polar.cpp, number of mocks must be >0");
+    ErrorCBL("the number of mocks must be >0!", "measureBootstrap", "TwoPointCorrelation2D_polar.cpp");
 
   if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -342,7 +342,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureBootstrap (const i
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
-    ErrorCBL("Error in measurePoisson() of TwoPointCorrelation2D_polar.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureBootstrap", "TwoPointCorrelation2D_polar.cpp");
 
   m_dataset->set_covariance(covariance);
 }

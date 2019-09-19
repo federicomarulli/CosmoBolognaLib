@@ -11,11 +11,11 @@ int main () {
     // define the (lambda) function to minimise
     
     auto chi2 = [] (const double xx) 
-    {
-      const double mean = 0.;
-      const double sigma = 1.;
-      return pow(xx-mean, 2)/(sigma*sigma);
-    };
+      {
+	const double mean = 0.;
+	const double sigma = 1.;
+	return pow(xx-mean, 2)/(sigma*sigma);
+      };
 
     
     // run the 1D minimisation GSL wrapper

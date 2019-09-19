@@ -24,7 +24,7 @@ int main () {
     // ---------------- using one of the built-in cosmological models ------------
     // ---------------------------------------------------------------------------
     
-    cbl::cosmology::Cosmology cosmo2 {cbl::cosmology::CosmologicalModel::_Planck15_};
+    cbl::cosmology::Cosmology cosmo2 {cbl::cosmology::CosmologicalModel::_Planck18_};
 
     
     // -----------------------------------------------------------------

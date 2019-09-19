@@ -15,8 +15,8 @@ int main () {
   
     // -------------------------------------------------------------
     // ---------------- set the cosmological parameters ------------
-    // ------------------------------------------------------------- 
-
+    // -------------------------------------------------------------
+    
     cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
 
 
@@ -30,6 +30,7 @@ int main () {
     double fs8 = cosmology.fsigma8(redshift, method);
 
     std::cout << "f*sigma8(z=" << redshift << ") = " << fs8 << std::endl;
+    
   }
 
   catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }

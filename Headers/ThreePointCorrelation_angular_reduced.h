@@ -117,7 +117,7 @@ namespace cbl {
 	 */
 	ThreePointCorrelation_angular_reduced (const catalogue::Catalogue data, const catalogue::Catalogue random, const double side_s, const double side_u, const double perc_increase, const int nbins)
 	  : ThreePointCorrelation_angular_connected(data, random, side_s, side_u, perc_increase, nbins)
-	  { ErrorCBL("Error in ThreePointCorrelation_angular_reduced() of ThreePointCorrelation_angular_reduced.h", cbl::glob::ExitCode::_workInProgress_); }
+	  { ErrorCBL("", "ThreePointCorrelation_angular_reduced", "ThreePointCorrelation_angular_reduced.h", cbl::glob::ExitCode::_workInProgress_); }
           
 	/**
 	 *  @brief constructor
@@ -136,7 +136,7 @@ namespace cbl {
 	 */
 	ThreePointCorrelation_angular_reduced (const catalogue::Catalogue data, const catalogue::Catalogue random,  const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
 	  : ThreePointCorrelation_angular_connected(data, random, r12, r12_binSize, r13, r13_binSize, nbins)
-	  { ErrorCBL("Error in ThreePointCorrelation_angular_reduced() of ThreePointCorrelation_angular_reduced.h", cbl::glob::ExitCode::_workInProgress_); }  
+	  { ErrorCBL("", "ThreePointCorrelation_angular_reduced", "ThreePointCorrelation_angular_reduced.h", cbl::glob::ExitCode::_workInProgress_); }  
 
 	/**
 	 *  @brief default destructor

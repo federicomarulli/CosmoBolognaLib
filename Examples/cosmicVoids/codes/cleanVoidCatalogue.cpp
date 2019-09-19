@@ -45,7 +45,7 @@ int main () {
     std::vector<int> columns_tracers = {1, 2, 3};
 
     // catalogue constructor
-    cbl::catalogue::Catalogue tracers_catalogue {cbl::catalogue::ObjectType::_Halo_, cbl::CoordinateType::_comoving_, var_names_tracers, columns_tracers, {file_tracers}, 1};
+    cbl::catalogue::Catalogue tracers_catalogue {cbl::catalogue::ObjectType::_Halo_, cbl::CoordinateType::_comoving_, var_names_tracers, columns_tracers, {file_tracers}, 0};
 
     // length of the simulation box
     double boxside = 500.;
@@ -89,7 +89,7 @@ int main () {
     // clean[2] = true -> erase voids with density contrast lower than a given value
     std::vector<bool> clean = {true, false, false};
 
-    std::vector<double> delta_r = {17., 100.}; // the interval of accepted radii
+    std::vector<double> delta_r = {17., 150.}; // the interval of accepted radii
     double threshold = 0.3;                   // the density threshold
     double relevance = 1.57;                  // the minimum accepted density contrast
 

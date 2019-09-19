@@ -56,7 +56,7 @@ vector<vector<double>> cbl::wrapper::ccfits::read_table_fits (const std::string 
   size_t no_col = 0;
 
   if (nrows==0)
-    ErrorCBL("Error in cbl::wrapper::ccfits::read_table_fits() of FITSwrapper.cpp: no rows in the selected table extension!");
+    ErrorCBL("no rows in the selected table extension!", "read_table_fits", "FITSwrapper.cpp");
 
   vector<vector<double>> cc;
 
@@ -67,7 +67,7 @@ vector<vector<double>> cbl::wrapper::ccfits::read_table_fits (const std::string 
     }
     catch (CCfits::Table::NoSuchColumn) {
       if (fill_value==par::defaultDouble)
-	ErrorCBL("Error in cbl::wrapper::ccfits::read_table_fits() of FITSwrapper.cpp: no column "+column_names[i]+"!");
+	ErrorCBL("no column "+column_names[i]+"!", "read_table_fits", "FITSwrapper.cpp");
       else {
 	vv.erase(vv.begin(), vv.end());
 	vv.resize(nrows, fill_value);
@@ -78,7 +78,7 @@ vector<vector<double>> cbl::wrapper::ccfits::read_table_fits (const std::string 
   }
 
   if (no_col==column_names.size())
-    ErrorCBL("Error in cbl::wrapper::ccfits::read_table_fits() of FITSwrapper.cpp: no column found!");
+    ErrorCBL("no column found!", "read_table_fits", "FITSwrapper.cpp");
 
   return cc;
 }
@@ -99,7 +99,7 @@ void cbl::wrapper::ccfits::write_table_fits (const std::string output_dir, const
   }
   catch(CCfits::FITS::CantOpen)
   {
-    ErrorCBL("Error in cbl::wrapper::ccfits::write_table_fits() of FITSwrapper.cpp: the file "+file_name+" cannot be opened!");
+    ErrorCBL("the file "+file_name+" cannot be opened!", "write_table_fits", "FITSwrapper.cpp");
   }
 
   const size_t ncolumns = column_names.size();

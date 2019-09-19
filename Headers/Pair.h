@@ -362,14 +362,14 @@ namespace cbl {
        *  @return the i-th binned scale
        */
       virtual double scale (const int i) const
-      { (void)i; cbl::ErrorCBL("Error in scale() of Pair.h!"); return 0; }
+      { (void)i; cbl::ErrorCBL("", "scale", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_scale
        *  @return the vector containing the binned scales
        */
       virtual std::vector<double> scale () const
-      { cbl::ErrorCBL("Error in scale() of Pair.h!"); std::vector<double> vv; return vv; }
+      { cbl::ErrorCBL("", "scale", "Pair.h"); std::vector<double> vv; return vv; }
 
       /**
        *  @brief get the member m_scale_mean[i]
@@ -377,14 +377,14 @@ namespace cbl {
        *  @return the mean scale in the i-th bin
        */
       virtual double scale_mean (const int i) const
-      { (void)i; cbl::ErrorCBL("Error in scale_mean() of Pair.h!"); return 0; }
+      { (void)i; cbl::ErrorCBL("", "scale_mean", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_scale_mean
        *  @return the vector containing the mean scales 
        */
       virtual std::vector<double> scale_mean () const
-      { cbl::ErrorCBL("Error in scale_mean() of Pair.h!"); std::vector<double> vv; return vv; }
+      { cbl::ErrorCBL("", "scale_mean", "Pair.h"); std::vector<double> vv; return vv; }
 
       /**
        *  @brief get the member m_scale_S[i]
@@ -394,7 +394,7 @@ namespace cbl {
        *  bin
        */
       virtual double scale_S (const int i) const
-      { (void)i; cbl::ErrorCBL("Error in scale_S() of Pair.h!"); return 0; }
+      { (void)i; cbl::ErrorCBL("", "scale_S", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_scale_S
@@ -402,7 +402,7 @@ namespace cbl {
        *  the scale distribution, multiplied by the total weight
        */
       virtual std::vector<double> scale_S () const
-      { cbl::ErrorCBL("Error in scale_S() of Pair.h!"); std::vector<double> vv; return vv; }
+      { cbl::ErrorCBL("", "scale_S", "Pair.h"); std::vector<double> vv; return vv; }
       
       /**
        *  @brief get the member m_scale_sigma[i]
@@ -411,7 +411,7 @@ namespace cbl {
        *  the i-th bin
        */
       virtual double scale_sigma (const int i) const
-      { (void)i; cbl::ErrorCBL("Error in scale_sigma() of Pair.h!"); return 0; }
+      { (void)i; cbl::ErrorCBL("", "scale_sigma", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_scale_sigma
@@ -419,7 +419,7 @@ namespace cbl {
        *  scale distribution
        */
       virtual std::vector<double> scale_sigma () const
-      { cbl::ErrorCBL("Error in scale_sigma() of Pair.h!"); std::vector<double> vv; return vv; }
+      { cbl::ErrorCBL("", "scale_sigma", "Pair.h"); std::vector<double> vv; return vv; }
 
       /**
        *  @brief get the protected member Pair1D_extra::m_z_mean[i]
@@ -427,14 +427,14 @@ namespace cbl {
        *  @return the mean redshift in the i-th bin
        */
       virtual double z_mean (const int i) const
-      { (void)i; cbl::ErrorCBL("Error in z_mean() of Pair.h!"); return 0; }
+      { (void)i; cbl::ErrorCBL("", "z_mean", "Pair.h"); return 0; }
 
       /**
        *  @brief get the protected member Pair1D_extra::m_z_mean
        *  @return the vector containing the mean redshifts 
        */
       virtual std::vector<double> z_mean () const
-      { cbl::ErrorCBL("Error in z_mean() of Pair.h!"); std::vector<double> vv; return vv; }
+      { cbl::ErrorCBL("", "z_mean", "Pair.h"); std::vector<double> vv; return vv; }
 
       /**
        *  @brief get the protected member Pair1D_extra::m_z_S[i]
@@ -444,7 +444,7 @@ namespace cbl {
        *  the i-th bin
        */
       virtual double z_S (const int i) const
-      { (void)i; cbl::ErrorCBL("Error in z_S() of Pair.h!"); return 0; }
+      { (void)i; cbl::ErrorCBL("", "z_S", "Pair.h"); return 0; }
 
       /**
        *  @brief get the protected member Pair1D_extra::m_z_S
@@ -452,7 +452,7 @@ namespace cbl {
        *  the redshift distribution, multiplied by the total weight
        */
       virtual std::vector<double> z_S () const
-      { cbl::ErrorCBL("Error in z_S() of Pair.h!"); std::vector<double> vv; return vv; }
+      { cbl::ErrorCBL("", "z_S", "Pair.h"); std::vector<double> vv; return vv; }
       
       /**
        *  @brief get the protected member Pair1D_extra::m_z_sigma[i]
@@ -461,7 +461,7 @@ namespace cbl {
        *  in the i-th bin
        */
       virtual double z_sigma (const int i) const
-      { (void)i; cbl::ErrorCBL("Error in z_sigma() of Pair.h!"); return 0; }
+      { (void)i; cbl::ErrorCBL("", "z_sigma", "Pair.h"); return 0; }
 
       /**
        *  @brief get the protected member Pair1D_extra::m_z_sigma
@@ -469,7 +469,7 @@ namespace cbl {
        *  redshift distribution
        */
       virtual std::vector<double> z_sigma () const
-      { cbl::ErrorCBL("Error in z_sigma() of Pair.h!"); std::vector<double> vv; return vv; }
+      { cbl::ErrorCBL("", "z_sigma", "Pair.h"); std::vector<double> vv; return vv; }
       
       /**
        *  @brief get the member m_PP1D[i]
@@ -477,14 +477,14 @@ namespace cbl {
        *  @return the number of pairs in the i-th bin
        */
       virtual double PP1D (const int i) const
-      { (void)i; cbl::ErrorCBL("Error in PP1D() of Pair.h!"); return 0; }
+      { (void)i; cbl::ErrorCBL("", "PP1D", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_PP1D
        *  @return the vector containing the binned number of pairs
        */
       virtual std::vector<double> PP1D () const
-      { cbl::ErrorCBL("Error in PP1D() of Pair.h!"); std::vector<double> vv; return vv; }
+      { cbl::ErrorCBL("", "PP1D", "Pair.h"); std::vector<double> vv; return vv; }
       
       /**
        *  @brief get the member m_PP1D_weighted[i]
@@ -492,7 +492,7 @@ namespace cbl {
        *  @return the number of weighted pairs in the i-th bin
        */
       virtual double PP1D_weighted (const int i) const
-      { (void)i; cbl::ErrorCBL("Error in PP1D_weighted() of Pair.h!"); return 0; }
+      { (void)i; cbl::ErrorCBL("", "PP1D_weighted", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_PP1D_weighted
@@ -500,7 +500,7 @@ namespace cbl {
        *  pairs
        */
       virtual std::vector<double> PP1D_weighted () const
-      { cbl::ErrorCBL("Error in PP1D_weighted() of Pair.h!"); std::vector<double> vv; return vv; }
+      { cbl::ErrorCBL("", "PP1D_weighted", "Pair.h"); std::vector<double> vv; return vv; }
 
       /**
        *  @brief get the member m_scale_D1[i]
@@ -508,7 +508,7 @@ namespace cbl {
        *  @return the i-th binned scale in the first dimension
        */
       virtual double scale_D1 (const int i) const
-      { (void)i; cbl::ErrorCBL("Error in scale_D1() of Pair.h!"); return 0; }
+      { (void)i; cbl::ErrorCBL("", "scale_D1", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_scale_D1
@@ -516,7 +516,7 @@ namespace cbl {
        *  dimension
        */
       virtual std::vector<double> scale_D1 () const
-      { cbl::ErrorCBL("Error in scale_D1() of Pair.h!"); std::vector<double> vv; return vv; }
+      { cbl::ErrorCBL("", "scale_D1", "Pair.h"); std::vector<double> vv; return vv; }
 
       /**
        *  @brief get the member m_scale_D2[i]
@@ -524,7 +524,7 @@ namespace cbl {
        *  @return the i-th binned scale in the second dimension
        */
       virtual double scale_D2 (const int i) const
-      { (void)i; cbl::ErrorCBL("Error in scale_D2() of Pair.h!"); return 0; }
+      { (void)i; cbl::ErrorCBL("", "scale_D2", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_scale_D2
@@ -532,7 +532,7 @@ namespace cbl {
        *  second dimension
        */
       virtual std::vector<double> scale_D2 () const
-      { cbl::ErrorCBL("Error in scale_D2() of Pair.h!"); std::vector<double> vv; return vv; }
+      { cbl::ErrorCBL("", "scale_D2", "Pair.h"); std::vector<double> vv; return vv; }
 
       /**
        *  @brief get the protected member \e m_scale_D1[i][j]
@@ -541,14 +541,14 @@ namespace cbl {
        *  @return the mean scale in the first dimension, in the i-j bin
        */
       virtual double scale_D1_mean (const int i, const int j) const
-      { (void)i; (void)j; cbl::ErrorCBL("Error in scale_D1_mean() of Pair.h!"); return 0; }
+      { (void)i; (void)j; cbl::ErrorCBL("", "scale_D1_mean", "Pair.h"); return 0; }
 
       /**
        *  @brief get the protected member \e m_scale_D1
        *  @return the matrix containing the mean scales in the first dimension
        */
       virtual std::vector<std::vector<double>> scale_D1_mean () const
-      { cbl::ErrorCBL("Error in scale_D1_mean() of Pair.h!"); std::vector<std::vector<double>> vv; return vv; }
+      { cbl::ErrorCBL("", "scale_D1_mean", "Pair.h"); std::vector<std::vector<double>> vv; return vv; }
 
       /**
        *  @brief get the protected member \e m_scale_D2[i][j]
@@ -557,7 +557,7 @@ namespace cbl {
        *  @return the mean scale in the second dimension, in the i-j bin
        */
       virtual double scale_D2_mean (const int i, const int j) const
-      { (void)i; (void)j; cbl::ErrorCBL("Error in scale_D2_mean() of Pair.h!"); return 0; }
+      { (void)i; (void)j; cbl::ErrorCBL("", "scale_D2_mean", "Pair.h"); return 0; }
 
       /**
        *  @brief get the protected member \e m_scale_D2
@@ -565,7 +565,7 @@ namespace cbl {
        *  dimension
        */
       virtual std::vector<std::vector<double>> scale_D2_mean () const
-      { cbl::ErrorCBL("Error in scale_D2_mean() of Pair.h!"); std::vector<std::vector<double>> vv; return vv; }
+      { cbl::ErrorCBL("", "scale_D2_mean", "Pair.h"); std::vector<std::vector<double>> vv; return vv; }
 
       /**
        *  @brief get the member m_scale_D1_S[i][j]
@@ -576,7 +576,7 @@ namespace cbl {
        *  bin, in the first dimension
        */
       virtual double scale_D1_S (const int i, const int j) const
-      { (void)i; (void)j; cbl::ErrorCBL("Error in scale_D1_S() of Pair.h!"); return 0; }
+      { (void)i; (void)j; cbl::ErrorCBL("", "scale_D1_S", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_scale_D1
@@ -585,7 +585,7 @@ namespace cbl {
        *  the first dimension
        */
       virtual std::vector<std::vector<double>> scale_D1_S () const
-      { cbl::ErrorCBL("Error in scale_D1_S() of Pair.h!"); std::vector<std::vector<double>> vv; return vv; }
+      { cbl::ErrorCBL("", "scale_D1_S", "Pair.h"); std::vector<std::vector<double>> vv; return vv; }
 
       /**
        *  @brief get the member m_scale_D2[i][j]
@@ -596,7 +596,7 @@ namespace cbl {
        *  bin, in the second dimension
        */
       virtual double scale_D2_S (const int i, const int j) const
-      { (void)i; (void)j; cbl::ErrorCBL("Error in scale_D2_S() of Pair.h!"); return 0; }
+      { (void)i; (void)j; cbl::ErrorCBL("", "scale_D2_S", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_scale_D2
@@ -605,7 +605,7 @@ namespace cbl {
        *  the second dimension
        */
       virtual std::vector<std::vector<double>> scale_D2_S () const
-      { cbl::ErrorCBL("Error in scale_D2_S() of Pair.h!"); std::vector<std::vector<double>> vv; return vv; }
+      { cbl::ErrorCBL("", "scale_D2_S", "Pair.h"); std::vector<std::vector<double>> vv; return vv; }
 
       /**
        *  @brief get the member m_scale_D1_sigma[i][j]
@@ -615,7 +615,7 @@ namespace cbl {
        *  the i-th bin, in the first dimension
        */
       virtual double scale_D1_sigma (const int i, const int j) const
-      { (void)i; (void)j; cbl::ErrorCBL("Error in scale_D1_sigma() of Pair.h!"); return 0; }
+      { (void)i; (void)j; cbl::ErrorCBL("", "scale_D1_sigma", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_scale_D1
@@ -623,7 +623,7 @@ namespace cbl {
        *  scale distribution in the first dimension
        */
       virtual std::vector<std::vector<double>> scale_D1_sigma () const
-      { cbl::ErrorCBL("Error in scale_D1_sigma() of Pair.h!"); std::vector<std::vector<double>> vv; return vv; }
+      { cbl::ErrorCBL("", "scale_D1_sigma", "Pair.h"); std::vector<std::vector<double>> vv; return vv; }
 
       /**
        *  @brief get the member m_scale_D2[i][j]
@@ -633,7 +633,7 @@ namespace cbl {
        *  the i-th bin, in the second dimension
        */
       virtual double scale_D2_sigma (const int i, const int j) const
-      { (void)i; (void)j; cbl::ErrorCBL("Error in scale_D2_sigma() of Pair.h!"); return 0; }
+      { (void)i; (void)j; cbl::ErrorCBL("", "scale_D2_sigma", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_scale_D2
@@ -641,7 +641,7 @@ namespace cbl {
        *  scale distribution in the second dimension
        */
       virtual std::vector<std::vector<double>> scale_D2_sigma () const
-      { cbl::ErrorCBL("Error in scale_D2_sigma() of Pair.h!"); std::vector<std::vector<double>> vv; return vv; }
+      { cbl::ErrorCBL("", "scale_D2_sigma", "Pair.h"); std::vector<std::vector<double>> vv; return vv; }
       
       /**
        *  @brief get the protected member \e m_z_mean[i][j]
@@ -650,14 +650,14 @@ namespace cbl {
        *  @return the mean redshift, in the i-j bin
        */
       virtual double z_mean (const int i, const int j) const
-      { (void)i; (void)j; cbl::ErrorCBL("Error in z_mean() of Pair.h!"); return 0; }
+      { (void)i; (void)j; cbl::ErrorCBL("", "z_mean", "Pair.h"); return 0; }
 
       /**
        *  @brief get the protected member \e m_z_mean
        *  @return the matrix containing the mean redshifts
        */
       virtual std::vector<std::vector<double>> z_mean2D () const
-      { cbl::ErrorCBL("Error in z_mean2D() of Pair.h!"); std::vector<std::vector<double>> vv; return vv; }
+      { cbl::ErrorCBL("", "z_mean", "Pair.h"); std::vector<std::vector<double>> vv; return vv; }
 
       /**
        *  @brief get the member m_z_sigma[i][j]
@@ -668,7 +668,7 @@ namespace cbl {
        *  the i-th bin
        */
       virtual double z_S (const int i, const int j) const
-      { (void)i; (void)j; cbl::ErrorCBL("Error in z_S() of Pair.h!"); return 0; }
+      { (void)i; (void)j; cbl::ErrorCBL("", "z_S", "Pair.h"); return 0; }
       
       /**
        *  @brief get the member m_z_sigma[i][j]
@@ -678,7 +678,7 @@ namespace cbl {
        *  in the i-th bin
        */
       virtual double z_sigma (const int i, const int j) const
-      { (void)i; (void)j; cbl::ErrorCBL("Error in z_sigma() of Pair.h!"); return 0; }
+      { (void)i; (void)j; cbl::ErrorCBL("", "z_sigma", "Pair.h"); return 0; }
 
       /**
        *  @brief get the member std::vector<double> m_z_sigma
@@ -686,7 +686,7 @@ namespace cbl {
        *  redshift distribution
        */
       virtual std::vector<std::vector<double>> z_sigma2D () const 
-      { cbl::ErrorCBL("Error in z_sigma2D() of Pair.h!"); std::vector<std::vector<double>> vv; return vv; }
+      { cbl::ErrorCBL("", "z_sigma2D", "Pair.h"); std::vector<std::vector<double>> vv; return vv; }
 
       /**
        *  @brief get the member m_PP2D[i][j]
@@ -695,14 +695,14 @@ namespace cbl {
        *  @return the number of pairs in the i-th bin
        */
       virtual double PP2D (const int i, const int j) const
-      { (void)i; (void)j; cbl::ErrorCBL("Error in PP2D() of Pair.h!"); return 0;}
+      { (void)i; (void)j; cbl::ErrorCBL("", "PP2D", "Pair.h"); return 0;}
 
       /**
        *  @brief get the member std::vector<std::vector<double>> m_PP2D
        *  @return the vector containing the binned number of pairs
        */
       virtual std::vector<std::vector<double>> PP2D () const
-      { cbl::ErrorCBL("Error in PP2D() of Pair.h!"); std::vector<std::vector<double>> vv; return vv; }
+      { cbl::ErrorCBL("", "PP2D", "Pair.h"); std::vector<std::vector<double>> vv; return vv; }
 
       /**
        *  @brief get the member m_PP2D_weighted[i][j]
@@ -711,7 +711,7 @@ namespace cbl {
        *  @return the number of weighted pairs in the i-th bin
        */
       virtual double PP2D_weighted (const int i, const int j) const
-      { (void)i; (void)j; cbl::ErrorCBL("Error in PP2D_weighted() of Pair.h!"); return 0;}
+      { (void)i; (void)j; cbl::ErrorCBL("", "PP2D_weighted", "Pair.h"); return 0;}
 
       /**
        *  @brief get the member std::vector<std::vector<double>> m_PP2D_weighted
@@ -719,42 +719,42 @@ namespace cbl {
        *  pairs
        */
       virtual std::vector<std::vector<double>> PP2D_weighted () const
-      { cbl::ErrorCBL("Error in PP2D_weighted() of Pair.h!"); std::vector<std::vector<double>> vv; return vv; }
+      { cbl::ErrorCBL("", "PP2D_weighted", "Pair.h"); std::vector<std::vector<double>> vv; return vv; }
       
       /**
        *  @brief get the member m_binSize_inv
        *  @return the inverse of the bin size
        */
       virtual double binSize_inv () const 
-      { cbl::ErrorCBL("Error in binSize_inv() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "binSize_inv", "Pair.h"); return 0; }
   
       /**
        *  @brief get the member m_nbins
        *  @return the number of bins
        */
       virtual int nbins () const
-      { cbl::ErrorCBL("Error in nbins() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "nbins", "Pair.h"); return 0; }
     
       /**
        *  @brief get the member m_shift
        *  @return the radial shift used to centre the output bins
        */
       virtual double shift () const
-      { cbl::ErrorCBL("Error in shift() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "shift", "Pair.h"); return 0; }
   
       /**
        *  @brief get the member m_binSize_inv_D1
        *  @return the inverse of the bin size in the first dimension
        */
       virtual double binSize_inv_D1 () const 
-      { cbl::ErrorCBL("Error in binSize_inv_D1() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "binSize_inv_D1", "Pair.h"); return 0; }
   
       /**
        *  @brief get the member m_nbins_D1
        *  @return the number of bins in the first dimension
        */
       virtual int nbins_D1 () const 
-      { cbl::ErrorCBL("Error in nbins_D1() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "nbins_D1", "Pair.h"); return 0; }
   
       /**
        *  @brief get the member m_shift_D1
@@ -762,21 +762,21 @@ namespace cbl {
        *  to centre the output bins
        */
       virtual double shift_D1 () const 
-      { cbl::ErrorCBL("Error in shift_D1() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "shift_D1", "Pair.h"); return 0; }
   
       /**
        *  @brief get the member m_binSize_inv_D2
        *  @return the inverse of the bin size in the second dimension
        */
       virtual double binSize_inv_D2 () const 
-      { cbl::ErrorCBL("Error in binSize_inv_D2() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "binSize_inv_D2", "Pair.h"); return 0; }
   
       /**
        *  @brief get the member m_nbins_D2
        *  @return the number of bins in the second dimension
        */
       virtual int nbins_D2 () const 
-      { cbl::ErrorCBL("Error in nbins_D2() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "nbins_D2", "Pair.h"); return 0; }
   
       /**
        *  @brief get the member m_shift_D2
@@ -784,21 +784,21 @@ namespace cbl {
        *  the output bins
        */
       virtual double shift_D2 () const 
-      { cbl::ErrorCBL("Error in shift_D2() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "shift_D2", "Pair.h"); return 0; }
 
       /**
        *  @brief get the minimum separation
        *  @return the minimum separation used to count the pairs
        */
       virtual double sMin () const
-      { cbl::ErrorCBL("Error in sMin() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "sMin", "Pair.h"); return 0; }
 
       /**
        *  @brief get the the minimum separation
        *  @return the maximum separation used to count the pairs
        */
       virtual double sMax () const
-      { cbl::ErrorCBL("Error in sMax() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "sMax", "Pair.h"); return 0; }
       
       /**
        *  @brief get the minimum separation in the first dimension
@@ -806,7 +806,7 @@ namespace cbl {
        *  to count the pairs
        */
       virtual double sMin_D1 () const
-      { cbl::ErrorCBL("Error in sMin_D1() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "sMin_D1", "Pair.h"); return 0; }
 
       /**
        *  @brief get the the minimum separation in the first dimension
@@ -814,7 +814,7 @@ namespace cbl {
        *  to count the pairs
        */
       virtual double sMax_D1 () const
-      { cbl::ErrorCBL("Error in sMax_D1() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "sMax_D1", "Pair.h"); return 0; }
 
       /**
        *  @brief get the minimum separation in the second dimension
@@ -822,7 +822,7 @@ namespace cbl {
        *  to count the pairs
        */
       virtual double sMin_D2 () const
-      { cbl::ErrorCBL("Error in sMin_D2() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "sMin_D2", "Pair.h"); return 0; }
 
       /**
        *  @brief get the the minimum separation in the second dimension
@@ -830,7 +830,7 @@ namespace cbl {
        *  to count the pairs
        */
       virtual double sMax_D2 () const
-      { cbl::ErrorCBL("Error in sMax_D2() of Pair.h!"); return 0; }
+      { cbl::ErrorCBL("", "sMax_D2", "Pair.h"); return 0; }
       
       ///@}
     
@@ -841,13 +841,22 @@ namespace cbl {
       ///@{
 
       /**
+       * @brief reset the pair counts
+       *
+       * @details set to 0 the pair vector elements
+       *
+       * @return none
+       */
+      virtual void reset () = 0;
+
+      /**
        *  @brief set the member m_PP1D[i]
        *  @param i the bin index
        *  @param pp the number of pairs in the bin
        *  @return none
        */
       virtual void set_PP1D (const int i, const double pp)
-      { (void)i; (void)pp; cbl::ErrorCBL("Error in set_PP1D() of Pair.h!"); }
+      { (void)i; (void)pp; cbl::ErrorCBL("", "set_PP1D", "Pair.h"); }
 
       /**
        *  @brief set the member m_PP1D_weighted[i]
@@ -856,7 +865,7 @@ namespace cbl {
        *  @return none
        */
       virtual void set_PP1D_weighted (const int i, const double pp)
-      { (void)i; (void)pp; cbl::ErrorCBL("Error in set_PP1D_weighted() of Pair.h!"); }
+      { (void)i; (void)pp; cbl::ErrorCBL("", "set_PP1D_weighted", "Pair.h"); }
       
       /**
        *  @brief set the member m_PP2D[i][j]
@@ -866,7 +875,7 @@ namespace cbl {
        *  @return none
        */
       virtual void set_PP2D (const int i, const int j, const double pp)
-      { (void)i; (void)j; (void)pp; cbl::ErrorCBL("Error in set_PP2D() of Pair.h!"); }
+      { (void)i; (void)j; (void)pp; cbl::ErrorCBL("", "set_PP2D", "Pair.h"); }
 
       /**
        *  @brief set the member m_PP2D_weighted[i][j]
@@ -876,7 +885,7 @@ namespace cbl {
        *  @return none
        */
       virtual void set_PP2D_weighted (const int i, const int j, const double pp)
-      { (void)i; (void)j; (void)pp; cbl::ErrorCBL("Error in set_PP2D_weighted() of Pair.h!"); }
+      { (void)i; (void)j; (void)pp; cbl::ErrorCBL("", "set_PP2D_weighted", "Pair.h"); }
 
        /**
        *  @brief set the protected members by adding new 1D data
@@ -885,7 +894,7 @@ namespace cbl {
        *  @return none
        */
       virtual void add_data1D (const int i, const std::vector<double> data)
-      { (void)i; (void)data; cbl::ErrorCBL("Error in void add_data1D() of Pair.h!"); }
+      { (void)i; (void)data; cbl::ErrorCBL("", "add_data1D", "Pair.h"); }
 
       /**
        *  @brief set the protected members by adding new 1D data
@@ -895,7 +904,7 @@ namespace cbl {
        *  @return none
        */
       virtual void add_data1D (const int i, const std::shared_ptr<pairs::Pair> pair, const double ww=1.)
-      { (void)i; (void)pair; (void)ww; cbl::ErrorCBL("Error in add_data1D() of Pair.h!"); }
+      { (void)i; (void)pair; (void)ww; cbl::ErrorCBL("", "add_data1D", "Pair.h"); }
       
       /**
        *  @brief set the protected members by adding new 2D data
@@ -905,7 +914,7 @@ namespace cbl {
        *  @return none
        */
       virtual void add_data2D (const int i, const int j, const std::vector<double> data)
-      { (void)i; (void)j; (void)data; cbl::ErrorCBL("Error in add_data2D() of Pair.h!"); }
+      { (void)i; (void)j; (void)data; cbl::ErrorCBL("", "add_data2D", "Pair.h"); }
 
       /**
        *  @brief set the protected members by adding new 2D data
@@ -916,7 +925,7 @@ namespace cbl {
        *  @return none
        */
       virtual void add_data2D (const int i, const int j, const std::shared_ptr<pairs::Pair> pair, const double ww=1.)
-      { (void)i; (void)j; (void)pair; (void)ww; cbl::ErrorCBL("Error in add_data2D() of Pair.h!"); }
+      { (void)i; (void)j; (void)pair; (void)ww; cbl::ErrorCBL("", "add_data2D", "Pair.h"); }
       
       ///@}
 
@@ -927,20 +936,18 @@ namespace cbl {
       ///@{
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief get the pair index and weight
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @return none
        */
-      virtual void get_pair (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &wkk)
-      { (void)obj1; (void)obj2; (void)kk; (void)wkk; cbl::ErrorCBL("Error in get() of Pair.h!"); }
+      virtual void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &wkk)
+      { (void)obj1; (void)obj2; (void)kk; (void)wkk; cbl::ErrorCBL("", "get", "Pair.h"); }
         
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief get the pair index and weight
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param kk index of the pairs
@@ -948,12 +955,11 @@ namespace cbl {
        *  @param wkk weight of the pair
        *  @return none
        */
-      virtual void get_pair (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &cosmu, double &wkk) 
-      { (void)obj1; (void)obj2; (void)kk; (void)cosmu; (void)wkk; cbl::ErrorCBL("Error in get_pair() of Pair.h!"); }
+      virtual void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &cosmu, double &wkk) 
+      { (void)obj1; (void)obj2; (void)kk; (void)cosmu; (void)wkk; cbl::ErrorCBL("", "get", "Pair.h"); }
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief get the pair index and weight
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param ir the bin index in the first dimension
@@ -961,47 +967,45 @@ namespace cbl {
        *  @param ww weight of the pair
        *  @return none
        */
-      virtual void get_pair (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww)
-      { (void)obj1; (void)obj2; (void)ir; (void)jr; (void)ww; cbl::ErrorCBL("Error in get() of Pair.h!"); }
+      virtual void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww)
+      { (void)obj1; (void)obj2; (void)ir; (void)jr; (void)ww; cbl::ErrorCBL("", "get", "Pair.h"); }
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief set the pair vector 
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @param weight the weight of the region
        *  @return none
        */
-      virtual void set_pair (const int kk, const double wkk, const double weight=1)
-      { (void)kk; (void)wkk; (void)weight; cbl::ErrorCBL("Error in set() of Pair.h!"); }
+      virtual void set (const int kk, const double wkk, const double weight=1)
+      { (void)kk; (void)wkk; (void)weight; cbl::ErrorCBL("", "get", "Pair.h"); }
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief set the pair vector 
        *  @param cosmu cosine of the angle between objects
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @param weight the weght of the region
        *  @return none
        */
-      virtual void set_pair (const double cosmu, const int kk, const double wkk, const double weight=1) 
-      { (void)cosmu;  (void)kk; (void)wkk; (void)weight; cbl::ErrorCBL("Error in set_pair() of Pair.h!"); }
+      virtual void set (const double cosmu, const int kk, const double wkk, const double weight=1) 
+      { (void)cosmu;  (void)kk; (void)wkk; (void)weight; cbl::ErrorCBL("", "get", "Pair.h"); }
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief set the pair vector 
        *  @param ir the bin index in the first dimension
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
        *  @param weight the weight of the region
        *  @return none
        */
-      virtual void set_pair (const int ir, const int jr, const double ww, const double weight=1)
-      { (void)ir; (void)jr; (void)ww; (void)weight; cbl::ErrorCBL("Error in set() of Pair.h!"); }
+      virtual void set (const int ir, const int jr, const double ww, const double weight=1)
+      { (void)ir; (void)jr; (void)ww; (void)weight; cbl::ErrorCBL("", "get", "Pair.h"); }
 
       /**
-       *  @brief estimate the distance between two objects and update the
-       *  pair vector accordingly
+       *  @brief estimate the distance between two objects and update
+       *  the pair vector accordingly
+       *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @return none

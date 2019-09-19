@@ -148,7 +148,20 @@ namespace cbl {
        * @return none 
        */
       void set_function (const model_function_1D function)
-      { (void)function; ErrorCBL("Error in set_function() of Model.h!"); } 
+      { (void)function; ErrorCBL("", "set_function", "Model.h"); } 
+
+      /**
+       * @brief set the model function, for Model1D
+       *
+       * @param function pointer to a model_function_1D
+       *
+       * @warning function passed in this way doesn't allow for
+       * input parameters 
+       * 
+       * @return none 
+       */
+      void set_function (const std::vector<double>(*function)(const std::vector<double> xx, std::vector<double> &val))
+      { (void)function; ErrorCBL("", "set_function", "Model.h"); } 
 
       /**
        * @brief set the model function, for Model2D
@@ -158,7 +171,7 @@ namespace cbl {
        * @return none 
        */
       void set_function (const model_function_2D function)
-      { (void)function; ErrorCBL("Error in set_function() of Model.h!"); } 
+      { (void)function; ErrorCBL("", "set_function", "Model.h"); } 
 
       /**
        *  @brief set the model inputs
@@ -229,7 +242,7 @@ namespace cbl {
        * @return vector containing model values
        */
       virtual double operator () (const double xx, std::vector<double> &parameters) const
-      { (void)xx; (void)parameters; ErrorCBL("Error in operator() of Model.h!"); return 0; } 
+      { (void)xx; (void)parameters; ErrorCBL("", "operator ()", "Model.h"); return 0; } 
 
       /**
        * @brief evaluate the model function at xx, for Model1D
@@ -242,7 +255,7 @@ namespace cbl {
        * @return vector containing model values
        */
       virtual std::vector<double> operator () (const std::vector<double> xx, std::vector<double> &parameters) const
-      { (void)xx; (void)parameters; ErrorCBL("Error in operator() of Model.h!"); std::vector<double> vv; return vv; } 
+      { (void)xx; (void)parameters; ErrorCBL("", "operator ()", "Model.h"); std::vector<double> vv; return vv; } 
 
       /**
        * @brief evaluate the model function at xx, yy, for Model2D
@@ -256,7 +269,7 @@ namespace cbl {
        * @return vector containing model values
        */
       virtual double operator () (const double xx, const double yy, std::vector<double> &parameters) const
-      { (void)xx; (void)yy; (void)parameters; ErrorCBL("Error in operator() of Model.h!"); return 0; } 
+      { (void)xx; (void)yy; (void)parameters; ErrorCBL("", "operator ()", "Model.h"); return 0; } 
 
       /**
        *  @brief evaluate the model function at xx, yy, for Model2D
@@ -272,7 +285,7 @@ namespace cbl {
        *  @return vector containing model values
        */
       virtual std::vector<std::vector<double>> operator () (const std::vector<double> xx, const std::vector<double> yy, std::vector<double> &parameters) const
-      { (void)xx; (void)yy; (void)parameters; ErrorCBL("Error in operator() of Model.h!"); std::vector<std::vector<double>> vv; return vv; } 
+      { (void)xx; (void)yy; (void)parameters; ErrorCBL("", "operator ()", "Model.h"); std::vector<std::vector<double>> vv; return vv; } 
 
       /**
        *  @brief compute the median and percentiles of the model
@@ -301,7 +314,7 @@ namespace cbl {
        *  @return none
        */
       virtual void stats_from_chains (const std::vector<double> xx, std::vector<double> &median_model, std::vector<double> &low_model, std::vector<double> &up_model, const int start=0, const int thin=1)
-      {(void)xx; (void)median_model; (void)low_model; (void)up_model; (void)start; (void)thin; ErrorCBL("Error in stats_from_chains() of Model.h!");} 
+      { (void)xx; (void)median_model; (void)low_model; (void)up_model; (void)start; (void)thin; ErrorCBL("", "stats_from_chains", "Model.h"); } 
 
 
       /**
@@ -320,7 +333,7 @@ namespace cbl {
        *  @return none
        */
       virtual void stats_from_chains (const std::vector<double> xx, const std::vector<double> yy, std::vector<std::vector<double>> &median_model, std::vector<std::vector<double>> &low_model, std::vector<std::vector<double>> &up_model, const int start=0, const int thin=1)
-      {(void)xx; (void)yy; (void)median_model; (void)low_model; (void)up_model; (void)start; (void)thin; ErrorCBL("Error in stats_from_chains() of Model.h!");} 
+      { (void)xx; (void)yy; (void)median_model; (void)low_model; (void)up_model; (void)start; (void)thin; ErrorCBL("", "stats_from_chains", "Model.h"); } 
 
       /**
        *  @brief write the model at xx
@@ -336,7 +349,7 @@ namespace cbl {
        *  @return none
        */
       virtual void write (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters)
-      { (void)output_dir; (void)output_file; (void)xx; (void)parameters; cbl::ErrorCBL("Error in write() of Model.h!"); }
+      { (void)output_dir; (void)output_file; (void)xx; (void)parameters; cbl::ErrorCBL("", "write", "Model.h"); }
 
       /**
        *  @brief write the model at xx, yy
@@ -355,7 +368,7 @@ namespace cbl {
        *  @return none
        */
       virtual void write (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> parameters)
-      { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)parameters; cbl::ErrorCBL("Error in write() of Model.h!"); }
+      { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)parameters; cbl::ErrorCBL("", "write", "Model.h"); }
 
       /**
        *  @brief write the model at xx 
@@ -369,7 +382,7 @@ namespace cbl {
        *  @return none
        */
       virtual void write_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx)
-      { (void)output_dir; (void)output_file; (void)xx; cbl::ErrorCBL("Error in write_at_bestfit() of Model.h!"); }
+      { (void)output_dir; (void)output_file; (void)xx; cbl::ErrorCBL("", "write_at_bestfit", "Model.h"); }
 
       /**
        *  @brief write the model at xx, yy
@@ -386,7 +399,7 @@ namespace cbl {
        *  @return none
        */
       virtual void write_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy)
-      { (void)output_dir; (void)output_file; (void)xx; (void)yy; cbl::ErrorCBL("Error in write_at_bestfit() of Model.h!"); }
+      { (void)output_dir; (void)output_file; (void)xx; (void)yy; cbl::ErrorCBL("", "write_at_bestfit", "Model.h"); }
 
       /**
        *  @brief write the model at xx 
@@ -402,7 +415,7 @@ namespace cbl {
        *  @return none
        */
       virtual void write_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start=0, const int thin=1)
-      { (void)output_dir; (void)output_file; (void)xx; (void)start; (void)thin; cbl::ErrorCBL("Error in write_from_chains() of Model.h!"); }
+      { (void)output_dir; (void)output_file; (void)xx; (void)start; (void)thin; cbl::ErrorCBL("", "write_from_chains", "Model.h"); }
 
       /**
        *  @brief write the model at xx, yy
@@ -421,7 +434,7 @@ namespace cbl {
        *  @return none
        */
       virtual void write_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const int start=0, const int thin=1)
-      { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)start; (void)thin; cbl::ErrorCBL("Error in write_from_chains() of Model.h!"); }
+      { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)start; (void)thin; cbl::ErrorCBL("", "write_from_chains", "Model.h"); }
 
 
     };

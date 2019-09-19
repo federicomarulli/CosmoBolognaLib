@@ -60,7 +60,7 @@ void cbl::modelling::Modelling::m_set_posterior (const int seed)
   if (m_likelihood!=NULL && m_parameter_priors.size()==m_model->parameters()->nparameters_base())
     m_posterior = make_shared<statistics::Posterior>(statistics::Posterior(m_parameter_priors, *m_likelihood, seed));
   else
-    ErrorCBL("Error in m_set_posterior() of Modelling.cpp: either the likelihood is not defined or a wrong number of prior distributions has been provided!");
+    ErrorCBL("either the posterior is not defined or a wrong number of prior distributions has been provided!", "m_set_posterior", "Modelling.cpp");
 }
 
 // ============================================================================================
@@ -71,7 +71,7 @@ shared_ptr<statistics::Likelihood> cbl::modelling::Modelling::likelihood ()
   if (m_likelihood!=NULL)
     return m_likelihood;
   else
-    ErrorCBL("Error in cbl::modelling::Modelling::likelihood() of Modelling.cpp: the likelihood is not defined!");
+    ErrorCBL("the likelihood is not defined!", "likelihood", "Modelling.cpp");
   return NULL;
 }
 
@@ -84,7 +84,7 @@ shared_ptr<cbl::statistics::Posterior> cbl::modelling::Modelling::posterior ()
   if (m_posterior!=NULL)
     return move(m_posterior);
   else
-    ErrorCBL("Error in cbl::modelling::Modelling::posterior() of Modelling.cpp: the likelihood is not defined!");
+    ErrorCBL("the posterior is not defined!", "posterior", "Modelling.cpp");
   return NULL;
 }
 
@@ -97,7 +97,7 @@ shared_ptr<cbl::statistics::ModelParameters> cbl::modelling::Modelling::likeliho
   if (m_likelihood!=NULL)
     return m_likelihood->parameters();
   else
-    ErrorCBL("Error in cbl::modelling::Modelling::likelihood_parameters() of Modelling.cpp: the likelihood is not defined!");
+    ErrorCBL("the likelihood is not defined!", "likelihood_parameters", "Modelling.cpp");
   return NULL;
 }
 
@@ -110,7 +110,7 @@ shared_ptr<cbl::statistics::ModelParameters> cbl::modelling::Modelling::posterio
   if (m_posterior!=NULL)
     return m_posterior->parameters();
   else
-    ErrorCBL("Error in cbl::modelling::Modelling::posterior_parameters() of Modelling.cpp: the likelihood is not defined!");
+    ErrorCBL("the posterior is not defined!", "posterior_parameters", "Modelling.cpp");
   return NULL;
 }
 
@@ -121,16 +121,16 @@ shared_ptr<cbl::statistics::ModelParameters> cbl::modelling::Modelling::posterio
 void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type, const vector<size_t> x_index, const int w_index)
 {
   if (m_model==NULL)
-    ErrorCBL("Error in cbl::modelling::Modelling::set_likelihood() of Modelling.cpp: undefined  model!");
+    ErrorCBL("undefined  model!", "set_likelihood", "Modelling.cpp");
 
   if (m_fit_range) {
     if (m_data_fit==NULL)
-      ErrorCBL("Error in cbl::modelling::Modelling::set_likelihood() of Modelling.cpp: undefined fit range!");
+      ErrorCBL("undefined fit range!", "set_likelihood", "Modelling.cpp");
     m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data_fit, m_model, likelihood_type, x_index, w_index));
   }
   else  {
     if (m_data == NULL)
-      ErrorCBL("Error in set_likelihood of Modelling.cpp. Undefined dataset!");
+      ErrorCBL("Error in set_likelihood of Modelling.cpp. Undefined dataset!", "set_likelihood", "Modelling.cpp");
     m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, likelihood_type, x_index, w_index));
   }
 }
@@ -168,10 +168,10 @@ void cbl::modelling::Modelling::sample_posterior (const int chain_size, const in
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::sample_posterior (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter, const double tol, const int seed, const double aa, const bool parallel)
+void cbl::modelling::Modelling::sample_posterior (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter, const double tol, const double epsilon, const int seed, const double aa, const bool parallel)
 { 
   m_set_posterior(seed);
-  m_posterior->initialize_chains(chain_size, nwalkers, radius, start, max_iter, tol);
+  m_posterior->initialize_chains(chain_size, nwalkers, radius, start, max_iter, tol, epsilon);
   m_posterior->sample_stretch_move(aa, parallel);
 }
 

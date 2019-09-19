@@ -7,7 +7,7 @@
 int main () {
 
   try {
-  
+    
     // define three std::vectors
     std::vector<double> v1 {1, 2, 3, 4, 5}, v2 {2, 3, 4}, v3 {3, 4, 5, 6};
   

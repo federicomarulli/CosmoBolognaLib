@@ -94,7 +94,7 @@ void cbl::wrapper::fftlog::transform_FFTlog (std::vector<double> &yy, std::vecto
   double rk = pow(10, logxmedian - logymedian);
 
   if (i_ok==0)
-    ErrorCBL("Problems in cbl::wrapper::fftlog::transform_FFTlog() of FFTlog.cpp!");
+    ErrorCBL("problems in the FFTlog computation!", "transform_FFTlog", "FFTlog.cpp");
 
   wrapper::fftlog::fftl_(&n, ap, &rk, &_dir, wsave);
 

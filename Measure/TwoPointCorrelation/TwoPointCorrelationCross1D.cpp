@@ -92,7 +92,7 @@ shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelationCross1D::correlat
     if (d1d2->PP1D_weighted(i)>0) {
 
       if (rr->PP1D_weighted(i)<1.e-30) 
-	ErrorCBL("Error in correlation_SzapudiSzalayEstimator() of TwoPointCorrelation1D.cpp: there are no random objects in the bin "+conv(i, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size!");
+	ErrorCBL("there are no random objects in the bin "+conv(i, par::fINT)+"; please, either increase the total number of random objects or enlarge the bin size!", "correlation_SzapudiSzalayEstimator", "TwoPointCorrelationCross1D.cpp");
 
       // normalised number of data1-data2 weighted pairs
       double D1D2_norm = d1d2->PP1D_weighted(i)*nD1D2i;

@@ -368,7 +368,7 @@ namespace cbl {
 	 *  @return the y coordinates
 	 */
 	std::vector<double> yy () const 
-	  { cbl::ErrorCBL("Error in yy() of TwoPointCorrelation_projected.h!"); std::vector<double> vv; return vv; }
+	  { cbl::ErrorCBL("", "yy", "TwoPointCorrelation_projected.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the the binned correlation function 
@@ -391,7 +391,7 @@ namespace cbl {
 	 *  @return the binned correlation function 
 	 */
 	std::vector<std::vector<double>> xi2D () const 
-	  { cbl::ErrorCBL("Error in xi2D() of TwoPointCorrelation_projected.h!"); std::vector<std::vector<double>> vv; return vv; }
+	  { cbl::ErrorCBL("", "xi2D", "TwoPointCorrelation_projected.h"); std::vector<std::vector<double>> vv; return vv; }
 
 	/**
 	 *  @brief get the error on the binned correlation function
@@ -400,7 +400,7 @@ namespace cbl {
 	 *  function
 	 */
 	std::vector<std::vector<double>> error2D () const 
-	  { cbl::ErrorCBL("Error in error2D() of TwoPointCorrelation_projected.h!"); std::vector<std::vector<double>> vv; return vv; }
+	  { cbl::ErrorCBL("", "error2D", "TwoPointCorrelation_projected.h"); std::vector<std::vector<double>> vv; return vv; }
       
 
 	/**

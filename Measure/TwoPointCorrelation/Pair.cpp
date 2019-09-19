@@ -67,7 +67,7 @@ shared_ptr<Pair> cbl::pairs::Pair::Create (const cbl::pairs::PairType type, cons
     else if (type==PairType::_comoving_multipoles_log_)
       return move(unique_ptr<Pair1D_comoving_multipoles_log>{new Pair1D_comoving_multipoles_log(Min, Max, nbins, shift, angularUnits, angularWeight)});
 
-    else ErrorCBL("Error in cbl::pairs::Create of Pairs.cpp: no such type of object!");
+    else ErrorCBL("no such type of object!", "Create", "Pair.cpp");
 
   }
 
@@ -91,11 +91,11 @@ shared_ptr<Pair> cbl::pairs::Pair::Create (const cbl::pairs::PairType type, cons
     else if (type==PairType::_comoving_multipoles_log_)
       return move(unique_ptr<Pair1D_comoving_multipoles_log_extra>{new Pair1D_comoving_multipoles_log_extra(Min, Max, nbins, shift, angularUnits, angularWeight)});
 
-    else ErrorCBL("Error in cbl::pairs::Create of Pairs.cpp: no such type of object!");
+    else ErrorCBL("no such type of object!", "Create", "Pair.cpp");
 
   }
   
-  else ErrorCBL("Error in cbl::pairs::Create of Pairs.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Pair.cpp");
    
   return NULL;
 }
@@ -126,7 +126,7 @@ shared_ptr<Pair> cbl::pairs::Pair::Create (const PairType type, const PairInfo i
     else if (type==PairType::_comoving_multipoles_log_)
       return move(unique_ptr<Pair1D_comoving_multipoles_log>{new Pair1D_comoving_multipoles_log(Min, Max, binSize, shift, angularUnits, angularWeight)});
     
-    else ErrorCBL("Error in cbl::pairs::Create of Pairs.cpp: no such type of object!");
+    else ErrorCBL("no such type of object!", "Create", "Pair.cpp");
 
   }
   
@@ -150,11 +150,11 @@ shared_ptr<Pair> cbl::pairs::Pair::Create (const PairType type, const PairInfo i
     else if (type==PairType::_comoving_multipoles_log_) 
       return move(unique_ptr<Pair1D_comoving_multipoles_log_extra>{new Pair1D_comoving_multipoles_log_extra(Min, Max, binSize, shift, angularUnits, angularWeight)});
 
-    else ErrorCBL("Error in cbl::pairs::Create of Pairs.cpp: no such type of object!");
+    else ErrorCBL("no such type of object!", "Create", "Pair.cpp");
     
   }
 
-  else ErrorCBL("Error in cbl::pairs::Create of Pairs.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Pair.cpp");
   
   return NULL;
 }
@@ -191,7 +191,7 @@ shared_ptr<Pair> cbl::pairs::Pair::Create (const cbl::pairs::PairType type, cons
     else if (type==PairType::_comovingPolar_loglog_)
       return move(unique_ptr<Pair2D_comovingPolar_loglog>{new Pair2D_comovingPolar_loglog(Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight)});
   
-    else ErrorCBL("Error in cbl::pairs::Create of Pairs.cpp: no such type of object!");
+    else ErrorCBL("no such type of object!", "Create", "Pair.cpp");
 
   }
 
@@ -221,11 +221,11 @@ shared_ptr<Pair> cbl::pairs::Pair::Create (const cbl::pairs::PairType type, cons
     else if (type==PairType::_comovingPolar_loglog_)
       return move(unique_ptr<Pair2D_comovingPolar_loglog_extra>{new Pair2D_comovingPolar_loglog_extra(Min_D1, Max_D1, nbins_D1, shift_D1, Min_D2, Max_D2, nbins_D2, shift_D2, angularUnits, angularWeight)});
   
-    else ErrorCBL("Error in cbl::pairs::Create of Pairs.cpp: no such type of object!");
+    else ErrorCBL("no such type of object!", "Create", "Pair.cpp");
 	  
   }
 
-  else ErrorCBL("Error in cbl::pairs::Create of Pairs.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Pair.cpp");
   
   return NULL;
 }
@@ -292,7 +292,7 @@ shared_ptr<Pair> cbl::pairs::Pair::Create (const cbl::pairs::PairType type, cons
     
   }
   
-  else ErrorCBL("Error in cbl::pairs::Create of Pairs.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "Pair.cpp");
  
   return NULL;
 }

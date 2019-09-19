@@ -1,1 +1,1 @@
-emacs ../Headers/GlobalFunc.h FuncCosmology.cpp Func.cpp SubSample.cpp Reconstruction.cpp 3PCF_SphericalHarmonics.cpp Forecast.cpp&
+emacs ../Headers/GlobalFunc.h FuncCosmology.cpp Func.cpp SubSample.cpp Reconstruction.cpp Forecast.cpp&

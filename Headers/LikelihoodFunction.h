@@ -59,7 +59,7 @@ namespace cbl {
       /// Gaussian likelihood covariance
       _Gaussian_Covariance_,
 
-      /// PoissonianLikelihood
+      /// Poissonian likelihood
       _Poissonian_,
       
       /// Likelihood function defined by the user
@@ -111,8 +111,8 @@ namespace cbl {
      * @struct STR_likelihood_inputs
      * @brief the struct STR_likelihood_inputs
      *
-     * This struct contains the data
-     * and the model for the likelihood analysis
+     * This struct contains the data and the model for the likelihood
+     * analysis
      */
     struct STR_likelihood_inputs
     {
@@ -191,6 +191,8 @@ namespace cbl {
      *  @param likelihood_parameters the parameters of the model
      *  @param inputs pointer to an object of type STR_params
      *  @return the value of the loglikelihood 
+     *  @warning the gaussian likelihood doesn't allow for
+     *  null standard deviation.
      */
     double LogLikelihood_Gaussian_1D_error (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> inputs);
 
@@ -208,6 +210,8 @@ namespace cbl {
      *  @param likelihood_parameters the parameters of the model
      *  @param inputs pointer to an object of type STR_params
      *  @return the value of the loglikelihood 
+     *  @warning the gaussian likelihood doesn't allow for
+     *  null standard deviation.
      */
     double LogLikelihood_Gaussian_2D_error (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> inputs);
 
@@ -216,6 +220,9 @@ namespace cbl {
      *  @param likelihood_parameters the parameters of the model
      *  @param inputs pointer to an object of type STR_params
      *  @return the value of the loglikelihood 
+     *  @warning the poissian likelihood takes counts in input;
+     *  it's care of the user to ensure that this is the case.
+     *
      */
     double LogLikelihood_Poissonian_1D_ (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> inputs);
 
@@ -224,6 +231,8 @@ namespace cbl {
      *  @param likelihood_parameters the parameters of the model
      *  @param inputs pointer to an object of type STR_params
      *  @return the value of the loglikelihood 
+     *  @warning the poissian likelihood takes counts in input;
+     *  it's care of the user to ensure that this is the case.
      */
     double LogLikelihood_Poissonian_2D_ (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> inputs);
 

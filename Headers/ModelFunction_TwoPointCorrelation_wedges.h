@@ -68,7 +68,10 @@ namespace cbl {
        *
        *  @param rr vector of scales to compute wedges 
        * 
-       *  @param nwedges the number of wedges
+       *  @param nWedges the number of wedges
+       *
+       *  @param mu_integral_limits the \f$\mu\f$ integral limits
+       *  used to measure the wedges
        *
        *  @param model the \f$P(k,\mu)\f$ model; the possible options
        *  are: dispersion_dewiggled, dispersion_modecoupling
@@ -82,7 +85,7 @@ namespace cbl {
        *
        *  @return the wedges of the two-point correlation function.
        */
-      std::vector<std::vector<double>> xi_Wedges (const std::vector<double> rr, const int nwedges, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
+      std::vector<std::vector<double>> xi_Wedges (const std::vector<double> rr, const int nWedges, const std::vector<std::vector<double>> mu_integral_limits, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
 
       /**
        *  @brief the wedge of the two-point correlation function
@@ -102,10 +105,11 @@ namespace cbl {
        *
        *  @param rr vector of scales to compute wedges 
        *
-       *  @param dataset_wedge vector that specify the wedges
+       *  @param dataset_order vector that specify the wedges
        *  to be computed for each scale 
-       * 
-       *  @param nwedges the number of wedges
+       *	
+       *  @param mu_integral_limits the \f$\mu\f$ integral limits
+       *  used to measure the wedges
        *
        *  @param model the \f$P(k,\mu)\f$ model; the possible options
        *  are: dispersion_dewiggled, dispersion_modecoupling
@@ -119,7 +123,7 @@ namespace cbl {
        *
        *  @return the wedges of the two-point correlation function.
        */
-      std::vector<double> xi_Wedges (const std::vector<double> rr, const std::vector<int> dataset_wedge, const int nwedges, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
+      std::vector<double> xi_Wedges (const std::vector<double> rr, const std::vector<int> dataset_order, const std::vector<std::vector<double>> mu_integral_limits, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5);
       
       /**
        *  @brief the model wedges of the two-point correlation

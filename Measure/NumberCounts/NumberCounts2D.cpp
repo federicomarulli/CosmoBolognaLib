@@ -240,8 +240,7 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measureBoot
 
 // ============================================================================
 
-
-void cbl::measure::numbercounts::NumberCounts2D::measure (const ErrorType errorType, const string dir_output_resample, const int nResamplings, const int seed)
+void cbl::measure::numbercounts::NumberCounts2D::measure (const ErrorType errorType, const string dir_output_resample, const int nResamplings, const int seed, const bool conv, const double sigma)
 {
   switch (errorType) {
     case (ErrorType::_Poisson_) :
@@ -253,10 +252,11 @@ void cbl::measure::numbercounts::NumberCounts2D::measure (const ErrorType errorT
     case (ErrorType::_Bootstrap_) :
       m_dataset = m_measureBootstrap(dir_output_resample, nResamplings, seed);
       break;
-
     default:
-      ErrorCBL("Error in measure() of NumberCounts2D.cpp, unknown type of error");
+      ErrorCBL("the input ErrorType is not allowed!", "measure", "NumberCounts2D.cpp");
   }
+
+  if (conv) m_dataset = Gaussian_smoothing(sigma);
 
 }
 
@@ -299,4 +299,14 @@ void cbl::measure::numbercounts::NumberCounts2D::write_covariance (const string 
   string mkdir = "mkdir -p "+dir;
   if(system(mkdir.c_str())) {}
   m_dataset->write_covariance(dir, file, 8);
+}
+
+// ============================================================================
+
+shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::Gaussian_smoothing (const double sigma)
+{
+  (void)sigma;
+  ErrorCBL("Gaussian smoothing is not implemented yet in 2D...", "Gaussian_smoothing", "NumberCounts2D.cpp", glob::ExitCode::_workInProgress_);
+
+  return m_dataset;
 }

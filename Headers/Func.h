@@ -308,6 +308,22 @@ namespace cbl {
    */
   double trapezoid_integration (const std::vector<double> xx, const std::vector<double> yy);
 
+  /**
+   *  @brief compute the Wigner 3-j symbol
+   *  
+   * compute the Wigner 3-j symbol of type
+   * \f[
+   *	\left(\begin{array}{ccc}{l}} & {l^'} & {l_2}} 
+   *	\\ {m_{1}} & {m_{2}} & {m_{3}}\end{array}\right)
+   * \f]
+   *
+   * @param l the first index
+   * @param l_prime the second index
+   * @param l2 the third index
+   * @return the Wigner 3-j symbol
+   */
+  double coupling_3j(const int l, const int l_prime, const int l2);
+
   ///@}
 
 
@@ -1190,8 +1206,8 @@ namespace cbl {
    *  @param [in] XX the Cartesian coordinate x
    *  @param [in] YY the Cartesian coordinate y
    *  @param [in] ZZ the Cartesian coordinate z
-   *  @param [out] ra the Right Ascension [in radians]
-   *  @param [out] dec the Declination [in radians]
+   *  @param [out] ra the Right Ascension [radians]
+   *  @param [out] dec the Declination [radians]
    *  @param [out] dd the comoving distance
    *  @return none
    */
@@ -1201,8 +1217,8 @@ namespace cbl {
    *  @brief conversion from polar coordinates to Cartesian
    *  coordinates
    *
-   *  @param [in] ra the Right Ascension [in radians]
-   *  @param [in] dec the Declination [in radians]
+   *  @param [in] ra the Right Ascension [radians]
+   *  @param [in] dec the Declination [radians]
    *  @param [in] dd the comoving distance 
    *  @param [out] XX the Cartesian coordinate x
    *  @param [out] YY the Cartesian coordinate y
@@ -1218,8 +1234,8 @@ namespace cbl {
    *  @param [in] XX std::vector containing the Cartesian coordinates x
    *  @param [in] YY std::vector containing the Cartesian coordinates y
    *  @param [in] ZZ std::vector containing the Cartesian coordinates z
-   *  @param [out] ra std::vector containing the Right Ascension values [in radians]
-   *  @param [out] dec std::vector containing the Declination values [in radians]
+   *  @param [out] ra std::vector containing the Right Ascension values [radians]
+   *  @param [out] dec std::vector containing the Declination values [radians]
    *  @param [out] dd std::vector containing the comoving distances
    *  @return none
    */
@@ -1229,8 +1245,8 @@ namespace cbl {
    *  @brief conversion from polar coordinates to Cartesian
    *  coordinates used for a set of objects
    *
-   *  @param [in] ra std::vector containing the Right Ascension values [in radians]
-   *  @param [in] dec std::vector containing the Declination values [in radians]
+   *  @param [in] ra std::vector containing the Right Ascension values [radians]
+   *  @param [in] dec std::vector containing the Declination values [radians]
    *  @param [in] dd std::vector containing the comoving distances
    *  @param [out] XX std::vector containing the Cartesian coordinates x
    *  @param [out] YY std::vector containing the Cartesian coordinates y
@@ -1256,10 +1272,10 @@ namespace cbl {
   /**
    *  @brief the perpendicular separation, r<SUB>p</SUB>
    *
-   *  @param ra1 the Right Ascension of the first object [in radians]
-   *  @param ra2 the Right Ascension of the second object [in radians]
-   *  @param dec1 the Declination of the first object [in radians]
-   *  @param dec2 the Declination of the second object [in radians]
+   *  @param ra1 the Right Ascension of the first object [radians]
+   *  @param ra2 the Right Ascension of the second object [radians]
+   *  @param dec1 the Declination of the first object [radians]
+   *  @param dec2 the Declination of the second object [radians]
    *  @param d1 the comoving distance of the first object
    *  @param d2 the comoving distance of the second object
    *  @return the perpendicular separation, r<SUB>p</SUB>
@@ -1277,20 +1293,20 @@ namespace cbl {
    *  @param y2 y coordinate of the second object
    *  @param z1 z coordinate of the first object
    *  @param z2 z coordinate of the second object
-   *  @return the angular separation [in radians]
+   *  @return the angular separation [radians]
    */
   double angular_distance (const double x1, const double x2, const double y1, const double y2, const double z1, const double z2);
 
   /**
-   *  @brief the haversine angular separation in 3D
+   *  @brief the haversine angular separation
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
    *
-   *  @param ra1 the Right Ascension of the first object [in radians]
-   *  @param ra2 the Right Ascension of the second object [in radians]
-   *  @param dec1 the Declination of the first object [in radians]
-   *  @param dec2 the Declination of the second object [in radians]
-   *  @return the haversine angular separation [in radians]
+   *  @param ra1 the Right Ascension of the first object [radians]
+   *  @param ra2 the Right Ascension of the second object [radians]
+   *  @param dec1 the Declination of the first object [radians]
+   *  @param dec2 the Declination of the second object [radians]
+   *  @return the haversine angular separation [radians]
    */
   double haversine_distance (const double ra1, const double ra2, const double dec1, const double dec2);
   

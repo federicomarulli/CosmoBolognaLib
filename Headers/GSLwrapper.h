@@ -156,7 +156,7 @@ namespace cbl {
        *  @param nevals the number of intervals
        *  @return the definite integral of the function
        */
-      double GSL_integrate_cquad (gsl_function Func, const double a, const double b, const double rel_err=1.e-2, const double abs_err=1.e-6, const int nevals=100);
+      double GSL_integrate_cquad (gsl_function Func, const double a, const double b, const double rel_err=1.e-3, const double abs_err=0, const int nevals=100);
 
       /**
        *  @brief integral, computed using the GSL qag method 
@@ -169,7 +169,19 @@ namespace cbl {
        *  @param rule the rule of integration
        *  @return the definite integral of the function
        */
-      double GSL_integrate_qag (gsl_function Func, const double a, const double b, const double rel_err=1.e-2, const double abs_err=1.e-6, const int limit_size=1000, const int rule=6);
+      double GSL_integrate_qag (gsl_function Func, const double a, const double b, const double rel_err=1.e-3, const double abs_err=0, const int limit_size=1000, const int rule=6);
+
+      /**
+       *  @brief integral, computed using the GSL qags method 
+       *  @param Func the GSL function to be integrated
+       *  @param a the lower limit of the integral
+       *  @param b the upper limit of the integral
+       *  @param rel_err the relative error
+       *  @param abs_err the absolute error
+       *  @param limit_size the maximum size of workspace
+       *  @return the definite integral of the function
+       */
+      double GSL_integrate_qags (gsl_function Func, const double a, const double b, const double rel_err=1.e-3, const double abs_err=0, const int limit_size=1000);
 
       /**
        *  @brief integral, computed using the GSL qaws method 
@@ -185,7 +197,7 @@ namespace cbl {
        *  @param limit_size the maximum size of workspace
        *  @return the definite integral of the function
        */
-      double GSL_integrate_qaws (gsl_function Func, const double a, const double b, const double alpha=0, const double beta=0, const int mu=1, const int nu =0, const double rel_err=1.e-2, const double abs_err=1.e-6, const int limit_size=1000);
+      double GSL_integrate_qaws (gsl_function Func, const double a, const double b, const double alpha=0, const double beta=0, const int mu=1, const int nu =0, const double rel_err=1.e-3, const double abs_err=0, const int limit_size=1000);
 
       /**
        *  @brief integral, computed using the GSL qagiu method 
@@ -196,7 +208,7 @@ namespace cbl {
        *  @param limit_size the maximum size of workspace
        *  @return the integral of the function
        */
-      double GSL_integrate_qagiu (gsl_function Func, const double a, const double rel_err=1.e-2, const double abs_err=1.e-6, const int limit_size=1000);
+      double GSL_integrate_qagiu (gsl_function Func, const double a, const double rel_err=1.e-3, const double abs_err=0, const int limit_size=1000);
 
       /**
        *  @brief the derivative of a function
@@ -247,7 +259,7 @@ namespace cbl {
        *  @param nevals the number of intervals
        *  @return the definite integral of the function
        */
-      double GSL_integrate_cquad (FunctionDoubleDouble func, const double a, const double b, const double rel_err=1.e-2, const double abs_err=1.e-6, const int nevals=100);
+      double GSL_integrate_cquad (FunctionDoubleDouble func, const double a, const double b, const double rel_err=1.e-3, const double abs_err=0, const int nevals=100);
 
       /**
        *  @brief integral, using the GSL qag method
@@ -265,7 +277,24 @@ namespace cbl {
        *  @param rule the rule of integration
        *  @return the definite integral of the function
        */
-      double GSL_integrate_qag (FunctionDoubleDouble func, const double a, const double b, const double rel_err=1.e-2, const double abs_err=1.e-6, const int limit_size=1000, const int rule=6);
+      double GSL_integrate_qag (FunctionDoubleDouble func, const double a, const double b, const double rel_err=1.e-3, const double abs_err=0, const int limit_size=1000, const int rule=6);
+
+      /**
+       *  @brief integral, using the GSL qags method
+       *
+       *  it only works with function defined as std::function<double(double)>
+       *  that doesn't use fixed parameters (useful for class members,
+       *  when the external parameters could be attributes of the class)
+       *
+       *  @param func the fuction to be integrated
+       *  @param a the lower limit of the integral
+       *  @param b the upper limit of the integral
+       *  @param rel_err the relative error
+       *  @param abs_err the absolute error
+       *  @param limit_size the maximum size of workspace
+       *  @return the definite integral of the function
+       */
+      double GSL_integrate_qags (FunctionDoubleDouble func, const double a, const double b, const double rel_err=1.e-3, const double abs_err=0, const int limit_size=1000);
 
       /**
        *  @brief integral, using the GSL qagiu method
@@ -282,7 +311,7 @@ namespace cbl {
        *  @param limit_size the maximum size of workspace
        *  @return the definite integral of the function
        */
-      double GSL_integrate_qagiu (FunctionDoubleDouble func, const double a, const double rel_err=1.e-2, const double abs_err=1.e-6, const int limit_size=1000);
+      double GSL_integrate_qagiu (FunctionDoubleDouble func, const double a, const double rel_err=1.e-3, const double abs_err=0, const int limit_size=1000);
 
       /**
        *  @brief integral, using the GSL qaws method 
@@ -298,7 +327,7 @@ namespace cbl {
        *  @param limit_size the maximum size of workspace
        *  @return the definite integral of the function
        */
-      double GSL_integrate_qaws (FunctionDoubleDouble func, const double a, const double b, const double alpha=0, const double beta=0, const int mu=1, const int nu =0, const double rel_err=1.e-2, const double abs_err=1.e-6, const int limit_size=1000);
+      double GSL_integrate_qaws (FunctionDoubleDouble func, const double a, const double b, const double alpha=0, const double beta=0, const int mu=1, const int nu =0, const double rel_err=1.e-3, const double abs_err=0, const int limit_size=1000);
 
       /**
        *  @brief integral, using the GSL cquad method
@@ -318,7 +347,7 @@ namespace cbl {
        *  @param nevals the number of intervals
        *  @return the definite integral of the function
        */
-      double GSL_integrate_cquad (FunctionDoubleDoublePtrVectorRef func, std::shared_ptr<void> pp, std::vector<double> par, const double a, const double b, const double rel_err=1.e-2, const double abs_err=1.e-6, const int nevals=100);
+      double GSL_integrate_cquad (FunctionDoubleDoublePtrVectorRef func, std::shared_ptr<void> pp, std::vector<double> par, const double a, const double b, const double rel_err=1.e-3, const double abs_err=0, const int nevals=100);
 
       /**
        *  @brief integral, using the GSL qag method
@@ -339,7 +368,27 @@ namespace cbl {
        *  @param rule the rule of integration
        *  @return the definite integral of the function
        */
-      double GSL_integrate_qag (FunctionDoubleDoublePtrVectorRef func, std::shared_ptr<void> pp, std::vector<double> par, const double a, const double b, const double rel_err=1.e-2, const double abs_err=1.e-6, const int limit_size=1000, const int rule=6);
+      double GSL_integrate_qag (FunctionDoubleDoublePtrVectorRef func, std::shared_ptr<void> pp, std::vector<double> par, const double a, const double b, const double rel_err=1.e-3, const double abs_err=0, const int limit_size=1000, const int rule=6);
+
+      /**
+       *  @brief integral, using the GSL qags method
+       *
+       *  it only works with a function defined as
+       *  std::function<double(double)> that doesn't use fixed parameters
+       *  (useful for class members, when the external parameters can be
+       *  attributes of the class)
+       *
+       *  @param func the fuction to be integrated
+       *  @param pp a void pointer 
+       *  @param par a vector containing the coefficients
+       *  @param a the lower limit of the integral
+       *  @param b the upper limit of the integral
+       *  @param rel_err the relative error
+       *  @param abs_err the absolute error
+       *  @param limit_size the maximum size of workspace
+       *  @return the definite integral of the function
+       */
+      double GSL_integrate_qags (FunctionDoubleDoublePtrVectorRef func, std::shared_ptr<void> pp, std::vector<double> par, const double a, const double b, const double rel_err=1.e-3, const double abs_err=0, const int limit_size=1000);
 
       /**
        *  @brief integral, using the GSL qagiu method
@@ -358,7 +407,7 @@ namespace cbl {
        *  @param limit_size the maximum size of workspace
        *  @return the definite integral of the function
        */
-      double GSL_integrate_qagiu (FunctionDoubleDoublePtrVectorRef func, std::shared_ptr<void> pp, std::vector<double> par, const double a, const double rel_err=1.e-2, const double abs_err=1.e-6, const int limit_size=1000);
+      double GSL_integrate_qagiu (FunctionDoubleDoublePtrVectorRef func, std::shared_ptr<void> pp, std::vector<double> par, const double a, const double rel_err=1.e-3, const double abs_err=0, const int limit_size=1000);
 
       /**
        *  @brief integral, using the GSL qag method 
@@ -376,7 +425,7 @@ namespace cbl {
        *  @param limit_size the maximum size of workspace
        *  @return the definite integral of the function
        */
-      double GSL_integrate_qaws (FunctionDoubleDoublePtrVectorRef func, std::shared_ptr<void> pp, std::vector<double> par, const double a, const double b, const double alpha=0, const double beta=0, const int mu=1, const int nu =0, const double rel_err=1.e-2, const double abs_err=1.e-6, const int limit_size=1000);
+      double GSL_integrate_qaws (FunctionDoubleDoublePtrVectorRef func, std::shared_ptr<void> pp, std::vector<double> par, const double a, const double b, const double alpha=0, const double beta=0, const int mu=1, const int nu =0, const double rel_err=1.e-3, const double abs_err=0, const int limit_size=1000);
 
       /**
        *  @brief function to find roots using GSL qag method 
@@ -387,7 +436,7 @@ namespace cbl {
        *  @param abs_err the absolute error
        *  @return the function root
        */
-      double GSL_root_brent (gsl_function Func, const double low_guess, const double up_guess, const double rel_err=1.e-3, const double abs_err=1.e-6);
+      double GSL_root_brent (gsl_function Func, const double low_guess, const double up_guess, const double rel_err=1.e-3, const double abs_err=0);
 
       /**
        *  @brief function to find roots using GSL brent method 
@@ -399,7 +448,7 @@ namespace cbl {
        *  @param abs_err the absolute error
        *  @return the function root
        */
-      double GSL_root_brent (FunctionDoubleDouble func, double xx0, const double low_guess, const double up_guess, const double rel_err=1.e-3, const double abs_err=1.e-6);
+      double GSL_root_brent (FunctionDoubleDouble func, double xx0, const double low_guess, const double up_guess, const double rel_err=1.e-3, const double abs_err=0);
 
       /**
        * @brief minimize the provided function using GSL procedure
@@ -409,8 +458,7 @@ namespace cbl {
        * @param ranges limits for the parameters
        * @param max_iter maximum number of iteration
        * @param tol tolerance of the minimization
-       * @param epsilon percentage of the range to be used
-       * to define the step size
+       * @param epsilon the simplex side
        *
        * @return vector containing the point that minimize the function
        */
@@ -424,8 +472,7 @@ namespace cbl {
        * @param ranges limits for the parameters
        * @param max_iter maximum number of iteration
        * @param tol tolerance of the minimization
-       * @param epsilon percentage of the range to be used
-       * to define the step size
+       * @param epsilon the simplex side
        *
        * @return vector containing the point that minimize the function
        */
