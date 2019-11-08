@@ -57,4 +57,6 @@
 
 %template(ParameterTypeVector) std::vector<cbl::statistics::ParameterType>;
 %template(PriorDistributionVector) std::vector<cbl::statistics::PriorDistribution>;
+%template(PriorDistributionPtrVector) std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>>;
 %template(PosteriorDistributionVector) std::vector<cbl::statistics::PosteriorDistribution>;
+%template(PosteriorDistributionPtrVector) std::vector<std::shared_ptr<cbl::statistics::PosteriorDistribution>>;

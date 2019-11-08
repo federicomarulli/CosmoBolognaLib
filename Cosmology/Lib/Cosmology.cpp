@@ -137,7 +137,7 @@ std::string cbl::cosmology::CosmologicalParameter_name (const CosmologicalParame
     break;
 
   default:
-    ErrorCBL("Error in cbl::cosmology::Cosmology::value_CosmologicalParameter of Cosmology.cpp: no such a variable in the list!");
+    ErrorCBL("no such a variable in the list!", "CosmologicalParameter_name", "Cosmology.cpp");
   }
   
   return name;
@@ -148,7 +148,7 @@ std::string cbl::cosmology::CosmologicalParameter_name (const CosmologicalParame
 
 void cbl::cosmology::Cosmology::set_default ()
 {
-  if (m_Omega_matter==0) ErrorCBL("Error in cbl::cosmology::Cosmology::Cosmology of Cosmology.cpp: Omega_matter=0!");
+  if (m_Omega_matter==0) ErrorCBL("Omega_matter=0!", "set_default", "Cosmology.cpp");
 
   m_Omega_k = 1.-m_Omega_matter-m_Omega_radiation-m_Omega_DE;
   m_Omega_CDM = m_Omega_matter-m_Omega_baryon-m_Omega_neutrinos;
@@ -279,7 +279,7 @@ cbl::cosmology::Cosmology::Cosmology (const CosmologicalModel cosmoModel, const 
     break;
 
   default:
-    ErrorCBL("Error in cbl::cosmology::Cosmology::Cosmology() of Cosmology.cpp: the chosen built-in cosmological model is not implemented");
+    ErrorCBL("the chosen built-in cosmological model is not implemented", "Cosmology", "Cosmology.cpp");
     
   }
   
@@ -292,24 +292,24 @@ cbl::cosmology::Cosmology::Cosmology (const CosmologicalModel cosmoModel, const 
 
 void cbl::cosmology::Cosmology::print_parameters () const
 {
-  coutCBL << "Omega_matter = " << m_Omega_matter << std::endl
-	  << "Omega_baryon = " << m_Omega_baryon << std::endl
-	  << "Omega_neutrinos = " << m_Omega_neutrinos << std::endl
-	  << "massless_neutrinos = " << m_massless_neutrinos << std::endl
-	  << "massive_neutrinos = " << m_massive_neutrinos << std::endl
-	  << "Omega_DE = " << m_Omega_DE << std::endl
-	  << "Omega_radiation = " << m_Omega_radiation << std::endl
-	  << "Omega_k = " << m_Omega_k << std::endl 
-	  << "Omega_CDM = " << m_Omega_CDM << std::endl
-	  << "h = " << m_hh << std::endl
-	  << "scalar_amp = " << m_scalar_amp << std::endl
-	  << "scalar_pivot = " << m_scalar_pivot << std::endl
-	  << "n_spec = " << m_n_spec << std::endl
-	  << "w0 = " << m_w0 << std::endl
-	  << "wa = " << m_wa << std::endl
-	  << "fNL = " << m_fNL << std::endl
-	  << "type_NG = " << m_type_NG << std::endl
-	  << "tau = " << m_tau << std::endl;
+  coutCBL << "Omega_matter = " << m_Omega_matter << std::endl;
+  coutCBL << "Omega_baryon = " << m_Omega_baryon << std::endl;
+  coutCBL << "Omega_neutrinos = " << m_Omega_neutrinos << std::endl;
+  coutCBL << "massless_neutrinos = " << m_massless_neutrinos << std::endl;
+  coutCBL << "massive_neutrinos = " << m_massive_neutrinos << std::endl;
+  coutCBL << "Omega_DE = " << m_Omega_DE << std::endl;
+  coutCBL << "Omega_radiation = " << m_Omega_radiation << std::endl;
+  coutCBL << "Omega_k = " << m_Omega_k << std::endl; 
+  coutCBL << "Omega_CDM = " << m_Omega_CDM << std::endl;
+  coutCBL << "h = " << m_hh << std::endl;
+  coutCBL << "scalar_amp = " << m_scalar_amp << std::endl;
+  coutCBL << "scalar_pivot = " << m_scalar_pivot << std::endl;
+  coutCBL << "n_spec = " << m_n_spec << std::endl;
+  coutCBL << "w0 = " << m_w0 << std::endl;
+  coutCBL << "wa = " << m_wa << std::endl;
+  coutCBL << "fNL = " << m_fNL << std::endl;
+  coutCBL << "type_NG = " << m_type_NG << std::endl;
+  coutCBL << "tau = " << m_tau << std::endl;
 }
 
 
@@ -411,7 +411,7 @@ double cbl::cosmology::Cosmology::value (const CosmologicalParameter parameter) 
     break;
     
   default:
-    ErrorCBL("Error in cbl::cosmology::Cosmology::value_CosmologicalParameter of Cosmology.cpp: no such a variable in the list!");
+    ErrorCBL("no such a variable in the list!", "value", "Cosmology.cpp");
   }
   
   return param_value;
@@ -514,7 +514,7 @@ void cbl::cosmology::Cosmology::set_parameter (const CosmologicalParameter param
     break;
 
   default:
-    ErrorCBL("Error in cbl::cosmology::Cosmology::set_CosmologicalParameter of Cosmology.cpp: no such a variable in the list!");
+    ErrorCBL("no such a variable in the list!", "set_parameter", "Cosmology.cpp");
   }
 }
 
@@ -587,7 +587,7 @@ double cbl::cosmology::Cosmology::OmegaM (const double redshift) const
 
 double cbl::cosmology::Cosmology::OmegaDE (const double redshift) const 
 {
-  if (m_wa!=0) ErrorCBL("Error in cbl::cosmology::Cosmology::OmegaDE of Cosmology.cpp: w_a!=0", ExitCode::_workInProgress_);
+  if (m_wa!=0) ErrorCBL("w_a!=0", "OmegaDE", "Cosmology.cpp", ExitCode::_workInProgress_);
 
   return m_Omega_DE/EE2(redshift)*pow(1./(1.+redshift),1.-3.*m_w0);
 } 
@@ -634,7 +634,7 @@ double cbl::cosmology::Cosmology::OmegaNu (const double redshift) const
 
 double cbl::cosmology::Cosmology::Omega (const double redshift) const 
 {
-  if (m_wa!=0) ErrorCBL("Error in cbl::cosmology::Cosmology::Omega of Cosmology.cpp: w_a!=0", ExitCode::_workInProgress_);
+  if (m_wa!=0) ErrorCBL("w_a!=0", "Omega", "Cosmology.cpp", ExitCode::_workInProgress_);
 
   const double aa = 1./(1.+redshift);
 
@@ -647,7 +647,7 @@ double cbl::cosmology::Cosmology::Omega (const double redshift) const
 
 double cbl::cosmology::Cosmology::Omega_neutrinos (const double Mnu) const
 {
-  if (m_hh<1.e-33) ErrorCBL("Error in Omega_neutrinos() of Cosmology.h: m_hh should be >0");
+  if (m_hh<1.e-33) ErrorCBL("m_hh should be >0", "Omega_neutrinos", "Cosmology.cpp");
   return Mnu/(93.8*pow(m_hh, 2));
 }
 
@@ -657,7 +657,7 @@ double cbl::cosmology::Cosmology::Omega_neutrinos (const double Mnu) const
 
 double cbl::cosmology::Cosmology::neutrino_mass () const
 {
-  if (m_hh<1.e-33) ErrorCBL("Error in neutrino_mass() of Cosmology.h: m_hh should be >0");
+  if (m_hh<1.e-33) ErrorCBL("m_hh should be >0", "neutrino_mass", "Cosmology.cpp");
   return m_Omega_neutrinos*93.8*pow(m_hh, 2);
 }
 
@@ -671,7 +671,7 @@ double cbl::cosmology::Cosmology::gg (const double redshift) const
   
   const double aa = 1./(1+redshift);
   
-  return 2.5*OmegaM(redshift)*aa*aa*pow(HH(redshift), 3)*gsl::GSL_integrate_qag(func, 0, aa);
+  return 2.5*OmegaM(redshift)*aa*aa*pow(HH(redshift), 3)*wrapper::gsl::GSL_integrate_qag(func, 0, aa);
 }
 
 
@@ -693,7 +693,7 @@ double cbl::cosmology::Cosmology::DD (const double redshift) const
 double cbl::cosmology::Cosmology::sigma8 (const double redshift) const 
 {
   if (m_sigma8<0)
-    ErrorCBL("Error in sigma8 of Cosmology.cpp, sigma8 at z=0 is not set");
+    ErrorCBL("sigma8 at z=0 is not set!", "sigma8", "Cosmology.cpp");
 
   return m_sigma8*DD(redshift)/DD(0.);
 }
@@ -704,13 +704,13 @@ double cbl::cosmology::Cosmology::sigma8 (const double redshift) const
 
 double cbl::cosmology::Cosmology::D_C (const double redshift) const 
 {
-  if (redshift<0) ErrorCBL("Error in cbl::cosmology::Cosmology::D_C of Cosmology.cpp: redshift have to be >=0!");
+  if (redshift<0) ErrorCBL("redshift have to be >=0!", "D_C", "Cosmology.cpp");
   
   double Dc;
 
   if (m_model=="LCDM") {
     function<double(double)> integrand = bind(&Cosmology::EE_inv, this, std::placeholders::_1);
-    Dc = gsl::GSL_integrate_qag(integrand,0, redshift); 
+    Dc = wrapper::gsl::GSL_integrate_qag(integrand, 0, redshift); 
   }
   
   else {
@@ -726,7 +726,7 @@ double cbl::cosmology::Cosmology::D_C (const double redshift) const
     else if (m_model=="EXP008e3_Baldi_CoDECS") file_in = dir+"EXP008e3_CoDECS-comovingdist.dat";
     else if (m_model=="EXP010e2_Baldi_CoDECS") file_in = dir+"EXP010e2_CoDECS-comovingdist.dat";
     else if (m_model=="SUGRA003_Baldi_CoDECS") file_in = dir+"SUGRA003_CoDECS-comovingdist.dat";
-    else { string Err = "Error in cbl::cosmology::Cosmology::D_C of Cosmology.cpp: model = " + m_model + "!"; ErrorCBL(Err); }
+    else { ErrorCBL("model = " + m_model + "!", "D_C", "Cosmology.cpp"); }
                      
     ifstream fin(file_in.c_str()); checkIO(fin, file_in); 
     
@@ -742,8 +742,8 @@ double cbl::cosmology::Cosmology::D_C (const double redshift) const
     Dc = interpolated(redshift, Redshift, dc, "Rat");
     
     if (err/Dc>0.1) {
-      string Err = "Error in cbl::cosmology::Cosmology::D_C of Cosmology.cpp: " + conv(redshift,par::fDP3) + "   " + conv(Redshift.size(),par::fINT) + "   " + conv(dc.size(),par::fINT);
-      ErrorCBL(Err);
+      string Err = "Error in cbl::cosmology::Cosmology::D_C of Cosmology.cpp: " + conv(redshift, par::fDP3) + "   " + conv(Redshift.size(), par::fINT) + "   " + conv(dc.size(), par::fINT);
+      ErrorCBL(conv(redshift, par::fDP3) + "   " + conv(Redshift.size(), par::fINT) + "   " + conv(dc.size(), par::fINT), "D_C", "Cosmology.cpp");
     }
   }
   
@@ -819,7 +819,7 @@ double cbl::cosmology::Cosmology::D_A (const double redshift) const
 double cbl::cosmology::Cosmology::D_A (const double z1, const double z2) const 
 {
   if (m_Omega_k<0)
-    ErrorCBL("Error in cbl::cosmology::Cosmology::D_A() of Cosmology.cpp: the implemented formula is not correct for Omega_k<0!");
+    ErrorCBL("the implemented formula is not correct for Omega_k<0!", "D_A", "Cosmology.cpp");
   
   const double _z1 = (z1<z2) ? z1 : z2;
   const double _z2 = (z1<z2) ? z2 : z1;
@@ -882,7 +882,7 @@ double cbl::cosmology::Cosmology::Distance (const double redshift, const std::st
     return rs_CAMB()/D_V(redshift);
 
   else {
-    ErrorCBL("Error in Distance of Cosmology, Cosmology/Lib/Cosmology.cpp. No such a distance type");
+    ErrorCBL("no such a distance type!", "Distance", "Cosmology.cpp");
     return -1;
   }
 }
@@ -894,7 +894,7 @@ double cbl::cosmology::Cosmology::Distance (const double redshift, const std::st
 double cbl::cosmology::Cosmology::lookback_time (const double redshift) const 
 {
   function<double(double)> integrand = bind(&Cosmology::EE_inv2, this, std::placeholders::_1);
-  double tt =  gsl::GSL_integrate_qag(integrand,0, redshift); 
+  double tt =  wrapper::gsl::GSL_integrate_qag(integrand,0, redshift); 
 
   double Mpc = par::mega*par::pc*1.e-3; // in Km;
   double Gyr = par::giga*par::yr; // in sec
@@ -911,7 +911,7 @@ double cbl::cosmology::Cosmology::cosmic_time (const double redshift) const
   function<double(double)> integrand = bind(&Cosmology::EE_inv3, this, std::placeholders::_1);
   
   double aa = 1./(1.+redshift);
-  double tt = gsl::GSL_integrate_qag(integrand,0, aa); 
+  double tt = wrapper::gsl::GSL_integrate_qag(integrand,0, aa); 
 
   double Mpc = par::mega*par::pc*1.e-3; // in Km;
   double Gyr = par::giga*par::yr; // in sec
@@ -936,7 +936,7 @@ double cbl::cosmology::Cosmology::EE2 (const double redshift) const // see e.g. 
 
 double cbl::cosmology::Cosmology::qq (const double redshift) const
 {
-  if (m_wa!=0) ErrorCBL("Error in cbl::cosmology::Cosmology::qq of Cosmology.cpp: w_a!=0", ExitCode::_workInProgress_);
+  if (m_wa!=0) ErrorCBL("w_a!=0", "qq", "Cosmology.cpp", ExitCode::_workInProgress_);
 
   double aa = 1./(1.+redshift);
   return (m_Omega_matter*aa+2.*m_Omega_radiation+(1.+3.*m_w0)*m_Omega_DE*pow(aa,1.-3.*m_w0))/(2.*EE2(redshift));
@@ -957,10 +957,10 @@ double cbl::cosmology::Cosmology::Hdot (const double redshift) const
 
 double cbl::cosmology::Cosmology::z_acc () const
 {
-  if (m_wa!=0) ErrorCBL("Error in cbl::cosmology::Cosmology::z_acc of Cosmology.cpp: w_a!=0", ExitCode::_workInProgress_);
+  if (m_wa!=0) ErrorCBL("w_a!=0", "z_acc", "Cosmology.cpp", ExitCode::_workInProgress_);
   
   double z_acc = pow(-(1.+3.*m_w0)*m_Omega_DE/m_Omega_matter,-1./(3.*m_w0))-1.;
-  if (std::isnan(z_acc)) ErrorCBL("Error in cbl::cosmology::Cosmology::z_acc of Cosmology.cpp!");
+  if (std::isnan(z_acc)) ErrorCBL("", "z_acc", "Cosmology.cpp");
   
   return z_acc;
 }
@@ -971,7 +971,7 @@ double cbl::cosmology::Cosmology::z_acc () const
 
 double cbl::cosmology::Cosmology::z_eq () const
 {
-  if (m_wa!=0) ErrorCBL("Error in cbl::cosmology::Cosmology::z_eq of Cosmology.cpp: w_a!=0", ExitCode::_workInProgress_);
+  if (m_wa!=0) ErrorCBL("w_a!=0", "z_eq", "Cosmology.cpp", ExitCode::_workInProgress_);
   return pow(m_Omega_DE/m_Omega_matter,-1./(3.*m_w0))-1.;
 }
 
@@ -1001,7 +1001,7 @@ double cbl::cosmology::Cosmology::Redshift (const double d_c, const double z1_gu
 {
   double Prec = prec;
   if (Prec<1.e-5) {
-    WarningMsg("Attention in cbl::cosmology::Cosmology::Redshift of Cosmology.cpp: prec has been set to 1.e-5");
+    WarningMsgCBL("prec has been set to 1.e-5", "Redshift", "Cosmology.h");
     Prec = 1.e-5;
   }
 
@@ -1009,11 +1009,11 @@ double cbl::cosmology::Cosmology::Redshift (const double d_c, const double z1_gu
   
   if (m_model=="LCDM") {
     function<double(double)> func = bind(&Cosmology::D_C, this, std::placeholders::_1);
-    redshift =  gsl::GSL_root_brent(func, d_c, z1_guess, z2_guess, prec); 
+    redshift =  wrapper::gsl::GSL_root_brent(func, d_c, z1_guess, z2_guess, prec); 
   }
   
   else {
-    WarningMsg("Attention in cbl::cosmology::Cosmology::Redshift of Cosmology.cpp: the quantity prec is not used");
+    WarningMsgCBL("the quantity prec is not used", "Redshift", "Cosmology.h");
 
     string dir = par::DirCosmo+"Cosmology/Tables/dc_cDE/";
     string file_in;
@@ -1028,7 +1028,7 @@ double cbl::cosmology::Cosmology::Redshift (const double d_c, const double z1_gu
     else if (m_model=="EXP008e3_Baldi_CoDECS") file_in = dir+"EXP003_CoDECS-comovingdist.dat";
     else if (m_model=="EXP010e2_Baldi_CoDECS") file_in = dir+"EXP010e2_CoDECS-comovingdist.dat";
     else if (m_model=="SUGRA003_Baldi_CoDECS") file_in = dir+"SUGRA003_CoDECS-comovingdist.dat";
-    else { string Err = "Error in cbl::cosmology::Cosmology::Redshift of Cosmology.cpp: model = " + m_model + "!"; ErrorCBL(Err); }
+    else { ErrorCBL("model = " + m_model + "!", "Redshift", "Cosmology.cpp"); }
     
     ifstream fin(file_in.c_str()); checkIO(fin, file_in); 
     
@@ -1042,7 +1042,7 @@ double cbl::cosmology::Cosmology::Redshift (const double d_c, const double z1_gu
     
     double err = -1;
     redshift = interpolated(d_c, dc, Redshift, "Rat");
-    if (err/redshift>0.1) ErrorCBL("Error in cbl::cosmology::Cosmology::Redshift of Cosmology.cpp!");
+    if (err/redshift>0.1) ErrorCBL("", "Redshift", "Cosmology.cpp");
   }
   
   return redshift;
@@ -1055,13 +1055,11 @@ double cbl::cosmology::Cosmology::Redshift (const double d_c, const double z1_gu
 double cbl::cosmology::Cosmology::Redshift_LCDM (const double d_c, const double z1_guess, const double z2_guess, const bool go_fast, const double prec) const 
 {
   if (m_model!="LCDM") 
-    ErrorCBL("Error in cbl::cosmology::Cosmology::Redshift_LDCM of Cosmology.cpp: this"
-	     " method works only for a LambdaCDM universe");
+    ErrorCBL("this method works only for a LambdaCDM universe", "Redshift_LCDM", "Cosmology.cpp");
 
   double Prec = prec;
   if (Prec<1.e-5) {
-    WarningMsg("Attention in cbl::cosmology::Cosmology::Redshift_LDCM of Cosmology.cpp: prec"
-	       " has been set to 1.e-5");
+    WarningMsgCBL("prec has been set to 1.e-5", "Redshift_LCDM", "Cosmology.h");
     Prec = 1.e-5;
   }
 
@@ -1124,12 +1122,12 @@ double cbl::cosmology::Cosmology::Redshift_LCDM (const double d_c, const double 
 
 double cbl::cosmology::Cosmology::Redshift_time (const double time, const double z1_guess, const double z2_guess) const 
 {
-  if (m_model!="LCDM") ErrorCBL("Error in cbl::cosmology::Cosmology::Redshift_time of Cosmology.cpp: model!=LCDM", ExitCode::_workInProgress_);
+  if (m_model!="LCDM") ErrorCBL("model!=LCDM", "Redshift_time", "Cosmology.cpp", ExitCode::_workInProgress_);
 
   double prec = 0.0001;
 
   function<double(double)> func = bind(&Cosmology::cosmic_time, this, std::placeholders::_1);
-  return gsl::GSL_root_brent(func, time, z1_guess, z2_guess, prec); 
+  return wrapper::gsl::GSL_root_brent(func, time, z1_guess, z2_guess, prec); 
 }
 
 
@@ -1138,29 +1136,38 @@ double cbl::cosmology::Cosmology::Redshift_time (const double time, const double
 
 double cbl::cosmology::Cosmology::Volume (const double z1, const double z2, const double Area) const 
 {
-  double Area_steradians = Area*pow(par::pi/180.,2);
-
-  return 4./3.*par::pi*fabs(pow(D_C(z1),3)-pow(D_C(z2),3))*Area_steradians/(4.*par::pi);
+  const double Area_steradians = Area*pow(par::pi/180., 2);
+  
+  return 4./3.*par::pi*fabs(pow(D_C(z1), 3)-pow(D_C(z2), 3))*Area_steradians/(4.*par::pi);
 }
 
 
 // =====================================================================================
 
-/* Alfonso Veropalumbo */
 
-// Total Comoving volume from z=0 to z, all sky (Hogg 2000, Eq. 29)
+double cbl::cosmology::Cosmology::Volume (const double z1, const double z2, const double RA_min, const double RA_max, const double Dec_min, const double Dec_max) const
+{
+  const double Area = degrees(haversine_distance(RA_min, RA_max, Dec_min, Dec_min))*degrees(haversine_distance(RA_min, RA_min, Dec_min, Dec_max));
+  
+  return Volume(z1, z2, Area);
+}
+
+
+// =====================================================================================
+
+
 double cbl::cosmology::Cosmology::Volume (const double zz) const 
 {
-  double DDMM = D_M(zz);
+  const double DDMM = D_M(zz);
 
   if (m_Omega_k>1.e-10) 
-    return (4*par::pi*pow(m_D_H,3)/(2*m_Omega_k))*(DDMM/m_D_H*sqrt(1+m_Omega_k*pow(DDMM/m_D_H,2))-pow(fabs(m_Omega_k),-0.5)*asinh(sqrt(fabs(m_Omega_k))*DDMM/m_D_H));
+    return (4*par::pi*pow(m_D_H, 3)/(2*m_Omega_k))*(DDMM/m_D_H*sqrt(1+m_Omega_k*pow(DDMM/m_D_H, 2))-pow(fabs(m_Omega_k), -0.5)*asinh(sqrt(fabs(m_Omega_k))*DDMM/m_D_H));
 
   else if (fabs(m_Omega_k)<1.e-10) 
-    return 4*par::pi*pow(DDMM,3)/3;
+    return 4*par::pi*pow(DDMM, 3)/3;
 
   else 
-    return (4*par::pi*pow(m_D_H,3)/(2*m_Omega_k))*(DDMM/m_D_H*sqrt(1+m_Omega_k*pow(DDMM/m_D_H,2))-pow(fabs(m_Omega_k),-0.5)*asin(sqrt(fabs(m_Omega_k))*DDMM/m_D_H));
+    return (4*par::pi*pow(m_D_H, 3)/(2*m_Omega_k))*(DDMM/m_D_H*sqrt(1+m_Omega_k*pow(DDMM/m_D_H, 2))-pow(fabs(m_Omega_k), -0.5)*asin(sqrt(fabs(m_Omega_k))*DDMM/m_D_H));
 }
 
 
@@ -1173,7 +1180,7 @@ double cbl::cosmology::Cosmology::max_redshift (const double Volume, const doubl
   double dcz2 = pow(3*Volume/Area_steradians+pow(D_C(z_min),3),1./3);
 
   function<double(double)> func = bind(&Cosmology::D_C, this, std::placeholders::_1);
-  return gsl::GSL_root_brent(func, dcz2, z_min, 10, 1.e-9); 
+  return wrapper::gsl::GSL_root_brent(func, dcz2, z_min, 10, 1.e-9); 
 }
 
 
@@ -1238,7 +1245,7 @@ double cbl::cosmology::Cosmology::Delta_c (const double redshift, const std::str
     else if (fabs(m_Omega_k)<1.e-30)
       return 18.*par::pi*par::pi+82.*xx-39.*xx*xx;
     
-    else return ErrorCBL("Error in cbl::cosmology::Cosmology::Delta_c(): cosmological parameters not allowed for the current implementation");
+    else return ErrorCBL("cosmological parameters not allowed for the current implementation", "Delta_c", "Cosmology.cpp");
   }
 
   else if (author=="Eke") {
@@ -1248,7 +1255,7 @@ double cbl::cosmology::Cosmology::Delta_c (const double redshift, const std::str
     else if (fabs(m_Omega_k)<1.e-30)
       return 178.*pow(OmegaM(redshift), 0.45);
 
-    else return ErrorCBL("Error in cbl::cosmology::Cosmology::Delta_c(): cosmological parameters not allowed for the current implementation");
+    else return ErrorCBL("cosmological parameters not allowed for the current implementation", "Delta_c", "Cosmology.cpp");
   }
 
   else if (author=="NakamuraSuto") {
@@ -1256,10 +1263,10 @@ double cbl::cosmology::Cosmology::Delta_c (const double redshift, const std::str
       const double x = pow(1./m_Omega_matter-1., 1./3.)/(1.+redshift);
       return 18.*pow(par::pi, 2)*(1+0.4093*pow(x, 2.7152))*OmegaM(redshift);
     }
-    else return ErrorCBL("Error in cbl::cosmology::Cosmology::Delta_c(): cosmological parameters not allowed for the current implementation");
+    else return ErrorCBL("cosmological parameters not allowed for the current implementation", "Delta_c", "Cosmology.cpp");
   }
     
-  else return ErrorCBL("Error in cbl::cosmology::Cosmology::Delta_c(): author not allowed");
+  else return ErrorCBL("author not allowed", "Delta_c", "Cosmology.cpp");
 }
 
 
@@ -1316,14 +1323,10 @@ double cbl::cosmology::Cosmology::c_vir (const double c_200, const double redshi
 double cbl::cosmology::Cosmology::D_C_LCDM (const double redshift) const 
 {
   if (m_model!="LCDM" || fabs(m_Omega_k)>1.e-10) 
-    ErrorCBL("Error in cbl::cosmology::Cosmology::D_C_LCDM of Cosmology.cpp: this method"
-    	     " works only for a flat LambdaCDM universe; it does not work for"
-	     " non-standard dark energy or non-flat models");
+    ErrorCBL("this method works only for a flat LambdaCDM universe; it does not work for non-standard dark energy or non-flat models", "D_C_LCDM", "Cosmology.h");
 
   if (redshift>10)
-    WarningMsg("Attention: the method cbl::cosmology::Cosmology::D_C_LCDM of Cosmology.cpp"
-	       " works only at low enough redshifts where &Omega<SUB>r</SUB> is"
-	       " negligible");
+    WarningMsgCBL("this function works only at low enough redshifts where &Omega<SUB>r</SUB> is negligible", "D_C_LCDM","Cosmology.h");
 
   double CC = 1./pow(3.,0.25)/(pow(m_Omega_matter,1./3.)*pow(1.-m_Omega_matter,1./6.));
   double f_m = (1.-sqrt(3.))*pow((1.-m_Omega_matter)/m_Omega_matter,1./3.);
@@ -1386,8 +1389,7 @@ double cbl::cosmology::Cosmology::m_acn_dz (const double cc) const
     pp *= 2.;
   }
   
-  ErrorCBL("Error in cbl::cosmology::Cosmology::m_acn_dz of Cosmology.cpp: too many half"
-	   " argument transformations of cn");
+  ErrorCBL("too many half argument transformations of cn", "m_acn_dz", "Cosmology.cpp");
   return 0;
 }
 
@@ -1412,7 +1414,7 @@ double cbl::cosmology::Cosmology::m_asn_dz (const double ss) const
       return pp*sqrt(yy)*m_serf_dz(yy);
   }
   
-  return ErrorCBL("Error in cbl::cosmology::Cosmology::m_asn_dz: too many half argument transformations of sn");
+  return ErrorCBL("too many half argument transformations of sn", "m_asn_dz", "Cosmology.cpp");
 }
 
 

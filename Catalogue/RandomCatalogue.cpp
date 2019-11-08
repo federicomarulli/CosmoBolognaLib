@@ -43,7 +43,7 @@ using namespace cbl;
 
 cbl::catalogue::Catalogue::Catalogue (const RandomType type, const cosmology::Cosmology &real_cosm, const cosmology::Cosmology &test_cosm, const std::string dir_in, const double Zguess_min, const double Zguess_max)
 {
-  if (type!=RandomType::_createRandom_box_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: the random catalogue has to be cubic!");
+  if (type!=RandomType::_createRandom_box_) ErrorCBL("the random catalogue has to be cubic!", "Catalogue", "RandomCatalogue.cpp");
 
   coutCBL << "I'm creating a random catalogue with warped cubic geometry, due to geometric distortions: the undistorted random catalogue is read from a file..." << endl;
 
@@ -97,7 +97,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
   vector<double> ra, dec;
   if (RA.size()>0) ra = RA;
   if (Dec.size()>0) dec = Dec;
-  if (ra.size()!=dec.size()) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: the dimension of observed random coordinates read in input is wrong!");
+  if (ra.size()!=dec.size()) ErrorCBL("the dimension of observed random coordinates read in input is wrong!", "Catalogue", "RandomCatalogue.cpp");
   if (ra.size()>0 && ra.size()!=nRandom) nRandom = ra.size();
   
   if (type==RandomType::_createRandom_box_) {
@@ -108,7 +108,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
     double Ymin = catalogue.Min(Var::_Y_), Ymax = catalogue.Max(Var::_Y_);
     double Zmin = catalogue.Min(Var::_Z_), Zmax = catalogue.Max(Var::_Z_);
 
-    if (Xmin>Xmax || Ymin>Ymax || Zmin>Zmax) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: wrong values of the coordinates in the construction of the random catalogue. The following conditions have to be satisfied: Xmin<=Xmax, Ymin<=Ymax and Zmin<=Zmax");
+    if (Xmin>Xmax || Ymin>Ymax || Zmin>Zmax) ErrorCBL("wrong values of the coordinates in the construction of the random catalogue; the following conditions have to be satisfied: Xmin<=Xmax, Ymin<=Ymax and Zmin<=Zmax!", "Catalogue", "RandomCatalogue.cpp");
 
     random::UniformRandomNumbers ran(0., 1., seed);
     
@@ -184,7 +184,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
       }
       
       else
-	ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: the chosen random catalogue type is not allowed!");
+	ErrorCBL("the chosen random catalogue type is not allowed!", "Catalogue", "RandomCatalogue.cpp");
     }
     
   
@@ -221,7 +221,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
 
 cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const double Angle, const std::vector<double> redshift, const cosmology::Cosmology &cosm, const bool conv, const double sigma, const int seed)
 {
-  if (type!=RandomType::_createRandom_cone_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: the random catalogue has to be conic!");
+  if (type!=RandomType::_createRandom_cone_) ErrorCBL("the random catalogue has to be conic!", "Catalogue", "RandomCatalogue.cpp");
   
   coutCBL << "I'm creating a random catalogue in a cone..." << endl;
 
@@ -286,7 +286,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
 
 cbl::catalogue::Catalogue::Catalogue (const RandomType type, const std::vector<std::string> mangle_mask, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology cosm, const bool conv, const double sigma, const int seed)
 {
-  if (type!=RandomType::_createRandom_MANGLE_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: the random catalogue has to be of type _MANGLE_!");
+  if (type!=RandomType::_createRandom_MANGLE_) ErrorCBL("the random catalogue has to be of type _MANGLE_!", "Catalogue", "RandomCatalogue.cpp");
 
   string mangle_dir = par::DirCosmo+"External/mangle/";
 
@@ -350,42 +350,41 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const std::vector<s
 
 cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const bool dndz_per_stripe, const int nbin, const cosmology::Cosmology cosm, const bool conv, const double sigma, const int seed)
 {
-  if (type!=RandomType::_createRandom_SDSS_stripes_) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in RandomCatalogue.cpp: the random catalogue has to be of type _SDSS_stripe_!");
+  if (type!=RandomType::_createRandom_SDSS_stripes_) ErrorCBL("the random catalogue has to be of type _SDSS_stripe_!", "Catalogue", "RandomCatalogue.cpp");
   
   vector<double> lambda, eta;
   vector<int> stripe, stripe_list;
 
   vector<double> ra, dec;
 
-  for(size_t i=0; i<catalogue.nObjects(); i++){
+  for (size_t i=0; i<catalogue.nObjects(); i++) {
     ra.push_back(catalogue.ra(i));
     dec.push_back(catalogue.dec(i));
   }
 
-  eq2sdss (ra, dec, lambda, eta);
+  eq2sdss(ra, dec, lambda, eta);
 
-  sdss_stripe (eta, lambda, stripe, stripe_list);
+  sdss_stripe(eta, lambda, stripe, stripe_list);
 
-  std::map< int, vector<double>> lambda_stripe, eta_stripe, redshift_stripe;
-  std::map< int, int> nObj_stripe;
+  std::map<int, vector<double>> lambda_stripe, eta_stripe, redshift_stripe;
+  std::map<int, int> nObj_stripe;
 
-  for (size_t i=0; i<catalogue.nObjects(); i++) 
-  {
-    nObj_stripe[stripe[i]] +=1;
+  for (size_t i=0; i<catalogue.nObjects(); i++) {
+    nObj_stripe[stripe[i]] ++;
     lambda_stripe[stripe[i]].push_back(lambda[i]);
     eta_stripe[stripe[i]].push_back(eta[i]);
-    if(dndz_per_stripe)
+    if (dndz_per_stripe)
       redshift_stripe[stripe[i]].push_back(catalogue.redshift(i));
   }
 
-  // Extract random points
+  
+  // extract random points
   
   random::UniformRandomNumbers random(0., 1., seed);
 
   vector<double> random_lambda, random_eta, random_ra, random_dec, random_redshift;
 
-  for(auto &&ss : stripe_list)
-  {
+  for (auto &&ss : stripe_list) {
     const double MinL = sin(cbl::Min(lambda_stripe[ss])*par::pi/180);
     const double MaxL = sin(cbl::Max(lambda_stripe[ss])*par::pi/180);
     const double deltaL = MaxL-MinL;
@@ -396,17 +395,17 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
     const int nObj = lambda_stripe[ss].size();
     const int nRan = int(N_R*nObj);
 
-    for(int j=0; j<nRan; j++){
+    for (int j=0; j<nRan; j++) {
       random_lambda.push_back(asin(MinL+deltaL*random())*180/par::pi);
       random_eta.push_back(MinE+deltaE*random());
-      if(dndz_per_stripe)
+      if (dndz_per_stripe)
 	random_redshift.push_back(redshift_stripe[ss][int(random()*(nObj-1))]);
     }
   }
 
-  sdss2eq (random_lambda, random_eta, random_ra, random_dec);
+  sdss2eq(random_lambda, random_eta, random_ra, random_dec);
 
-  if(!dndz_per_stripe){
+  if (!dndz_per_stripe) {
     // generate the redshift distribution from the input catalogue
 
     vector<double> redshift = catalogue.var(Var::_Redshift_);

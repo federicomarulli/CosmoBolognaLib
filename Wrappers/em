@@ -1,1 +1,1 @@
-emacs ../Headers/GSL*.h ../Headers/FITSwrapper.h ../Headers/CUBAwrapper.h *cpp &
+emacs ../Headers/FFTlog.h ../Headers/GSL*.h ../Headers/FITSwrapper.h ../Headers/CUBAwrapper.h *cpp &

@@ -125,10 +125,10 @@ namespace cbl {
 	size_t m_nparameters_derived = 0;
 
 	/// indexes of base parameters
-	std::vector<unsigned int> m_base_parameters;
+	std::vector<unsigned int> m_base_parameter;
 
 	/// indexes of the derived parameters
-	std::vector<unsigned int> m_derived_parameters;
+	std::vector<unsigned int> m_derived_parameter;
 
 	/**
 	 * @brief private member to set the parameter
@@ -136,8 +136,9 @@ namespace cbl {
 	 *
 	 * @return none
 	 */
-	virtual void m_set_parameter_type();
-
+	virtual void m_set_parameter_type ();
+	
+	
       public:
 
 	/**
@@ -180,7 +181,8 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void reset ()
-	{set_parameters(m_nparameters, m_parameter_type, m_parameter_name); } 
+	{ set_parameters(m_nparameters, m_parameter_type, m_parameter_name); } 
+
 	
 	/**
 	 *  @name Member functions used to set private/protected of the ModelParameters
@@ -201,14 +203,14 @@ namespace cbl {
 	 *
 	 * @return the number of base parameters
 	 */
-	size_t nparameters_base() const;
+	size_t nparameters_base () const;
 
 	/**
 	 * @brief return the private member
 	 * m_base_parameters
 	 * @return the private member m_base_parameters
 	 */
-	std::vector<unsigned int> base_parameters() const {return m_base_parameters; }
+	std::vector<unsigned int> base_parameter () const { return m_base_parameter; }
 
 	/**
 	 * @brief return the number of derived
@@ -216,14 +218,14 @@ namespace cbl {
 	 *
 	 * @return the number of derived parameters
 	 */
-	size_t nparameters_derived() const;
+	size_t nparameters_derived () const;
 
 	/**
-	 * @brief return the private member
-	 * m_derived_parameters
-	 * @return the private member m_derived_parameters
+	 * @brief return the private member m_derived_parameter
+	 *
+	 * @return the private member m_derived_parameter
 	 */
-	std::vector<unsigned int> derived_parameters() const {return m_derived_parameters; }
+	std::vector<unsigned int> derived_parameter () const { return m_derived_parameter; }
 
 	/**
 	 * @brief return the model parameter type
@@ -232,39 +234,57 @@ namespace cbl {
 	 * 
 	 * @return vector containing the parameter type
 	 */
-	ParameterType type (const int p) const {return m_parameter_type[p]; }
+	ParameterType type (const int p) const { return m_parameter_type[p]; }
 
 	/**
 	 * @brief return all the model parameter names
 	 * 
 	 * @return vector containing all the parameter names
 	 */
-	std::vector<ParameterType> type () const {return m_parameter_type; }
+	std::vector<ParameterType> type () const { return m_parameter_type; }
 
 	/**
 	 * @brief return the model parameter name
 	 * 
 	 * @param p the index of the parameter
 	 *
-	 * @return vector containing the parameter name
+	 * @return the parameter name
 	 */
-	std::string name (const int p) const {return m_parameter_name[p]; }
+	std::string name (const int p) const { return m_parameter_name[p]; }
 
 	/**
 	 * @brief return all the model parameter names
 	 * 
 	 * @return vector containing all the parameter names
 	 */
-	std::vector<std::string> name () const {return m_parameter_name; }
+	std::vector<std::string> name () const { return m_parameter_name; }
 
 	/**
-	 * @brief return all the model parameters
+	 * @brief return the model parameter status
 	 * 
-	 * @param parameter_values vector of parameters
+	 * @param p the index of the parameter
+	 *
+	 * @return the parameter status
+	 */
+	virtual std::string status (const int p) const
+	{ (void)p; ErrorCBL("", "status", "ModelParameters.h"); return par::defaultString;}
+
+	/**
+	 * @brief return all the model parameter status
+	 * 
+	 * @return vector containing all the parameter statuss
+	 */
+	virtual std::vector<std::string> status () const
+	{ ErrorCBL("", "status", "ModelParameters.h"); std::vector<std::string> vv; return vv;}
+
+	/**
+	 * @brief return all the model parameters, for internal usage
+	 * 
+	 * @param parameter_value vector of parameters
 	 *
 	 * @return all the parameter values
 	 */
-	virtual std::vector<double> full_parameters (const std::vector<double> parameter_values) const;
+	virtual std::vector<double> full_parameter (const std::vector<double> parameter_value) const;
 
 	/**
 	 *  @brief set the parameter
@@ -293,9 +313,10 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void set_parameters (const size_t nparameters, const std::vector<std::shared_ptr<PriorDistribution>> priorDistributions, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames)
-	{ (void)nparameters; (void)priorDistributions; (void)parameterTypes, (void)parameterNames; ErrorCBL("Error in set_parameters() of ModelParameters.h!"); }
+	{ (void)nparameters; (void)priorDistributions; (void)parameterTypes, (void)parameterNames; ErrorCBL("", "set_parameters", "ModelParameters.h"); }
 
 	///@}
+
 	
 	/**
 	 *  @name Member functions used to set private/protected of the ModelParameters
@@ -309,34 +330,34 @@ namespace cbl {
 	 * @return the number of free parameters
 	 */
 	virtual size_t nparameters_free () const 
-	{ErrorCBL("Error in nparameters_free() of ModelParameters.h!"); return 1; }
+	{ ErrorCBL("", "nparameters_free", "ModelParameters.h"); return 1; }
 
 	/**
-	 * @brief return the private member
-	 * m_free_parameters
-	 * @return the private member m_free_parameters
+	 * @brief return the private member m_free_parameter
+	 *
+	 * @return the private member m_free_parameter
 	 */
-	virtual std::vector<unsigned int> free_parameters() const
-	{ErrorCBL("Error in free_parameters() of ModelParameters.h!"); std::vector<unsigned int> vv; return vv; }
+	virtual std::vector<unsigned int> free_parameter () const
+	{ ErrorCBL("", "free_parameter", "ModelParameters.h"); std::vector<unsigned int> vv; return vv; }
 
 	/**
-	 * @brief return the number of fixed
-	 * parameters
+	 * @brief return the number of fixed parameters
 	 *
 	 * @return the number of fixed parameters
 	 */
-	virtual size_t nparameters_fixed() const
-	{ErrorCBL("Error in nparameters_fixed() of ModelParameters.h!"); return 1; }
+	virtual size_t nparameters_fixed () const
+	{ ErrorCBL("", "nparameters_fixed", "ModelParameters.h"); return 1; }
 
 	/**
-	 * @brief return the private member
-	 * m_fixed_parameters
+	 * @brief return the private member m_fixed_parameters
+	 *
 	 * @return the private member m_fixed_parameters
 	 */
-	virtual std::vector<unsigned int> fixed_parameters() const
-	{ErrorCBL("Error in fixed_parameters() of ModelParameters.h!"); std::vector<unsigned int> vv; return vv; }
+	virtual std::vector<unsigned int> fixed_parameter () const
+	{ ErrorCBL("", "fixed_parameters", "ModelParameters.h"); std::vector<unsigned int> vv; return vv; }
 
 	///@}
+	
 	
 	/**
 	 *  @name Member functions to manage fixed/free parameters
@@ -351,7 +372,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void free (const int p)
-	{ (void)p; ErrorCBL("Error in free() of ModelParameters.h!"); }
+	{ (void)p; ErrorCBL("", "free", "ModelParameters.h"); }
 
 	/**
 	 * @brief fix the parameter at the input value;
@@ -363,18 +384,18 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void fix (const int p, const double value)
-	{ (void)p; (void)value; ErrorCBL("Error in fix() of ModelParameters.h!"); }
+	{ (void)p; (void)value; ErrorCBL("", "fix", "ModelParameters.h"); }
 
 	/**
 	 * @brief fix the parameter at the bestfit value,
-	 * contained in m_bestfit_value;
+	 * contained in m_bestfit_value
 	 *
 	 * @param p the p-th parameter
 	 *
 	 * @return none
 	 */
 	virtual void fix_at_bestfit (const int p)
-	{ (void)p; ErrorCBL("Error in fix_at_bestfit() of ModelParameters.h!"); }
+	{ (void)p; ErrorCBL("", "fix_at_bestfit", "ModelParameters.h"); }
 
 	///@}
 
@@ -388,15 +409,15 @@ namespace cbl {
 	 * @return the bestfit value of the parameter
 	 */
 	virtual double bestfit_value (const int p) const
-	{ (void)p; ErrorCBL("Error in bestfit_value() of ModelParameters.h!"); return 0.; }
+	{ (void)p; ErrorCBL("", "bestfit_value", "ModelParameters.h"); return 0.; }
 	
 	/**
 	 * @brief get the protected member m_value
 	 *
 	 * @return the parameter bestfit values
 	 */
-	virtual std::vector<double> bestfit_values () const
-	{ErrorCBL("Error in bestfit_values() of ModelParameters.h!"); std::vector<double> vv; return vv; }
+	virtual std::vector<double> bestfit_value () const
+	{ ErrorCBL("", "bestfit_value", "ModelParameters.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief set the protected member m_bestfit_value
@@ -405,19 +426,36 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	virtual void set_bestfit_value (const std::vector<double> bestfit_value)
-	{ (void)bestfit_value; ErrorCBL("Error in set_bestfit_values() of ModelParameters.h!"); }
-
+	virtual void set_bestfit_values (const std::vector<double> bestfit_value)
+	{ (void)bestfit_value; ErrorCBL("", "set_bestfit_values", "ModelParameters.h"); }
+	
+	/**
+	 *  @brief set the protected member m_bestfit_value
+	 *
+	 *  @param start the starting position 
+	 *
+	 *  @param thin number of jumped indexes in the chain
+	 *
+	 *  @param nbins the number of bins
+	 *
+	 *  @param seed seed for random extraction
+	 *
+	 *  @return none
+	 */
+	virtual void set_bestfit_values (const int start, const int thin, const int nbins, const int seed) 
+	{ (void)start; (void)thin; (void)nbins; (void)seed; ErrorCBL("", "set_bestfit_values", "ModelParameters.h"); }
+	
 	/**
 	 *  @brief write the bestfit info
 	 *
 	 *  @return none
 	 */
 	virtual void write_bestfit_info ()
-	{ErrorCBL("Error in write_bestfit_info() of ModelParameters.h!"); }
+	{ ErrorCBL("", "write_bestfit_info", "ModelParameters.h"); }
 
 	///@}
 
+	
 	/**
 	 *  @name Member functions used to interact with prior distribution
 	 */
@@ -434,7 +472,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void set_prior_distribution (const int p, const std::shared_ptr<PriorDistribution> priorDistribution)
-	{ (void)p; (void)priorDistribution; ErrorCBL("Error in set_prior_distribution() of ModelParameters.h!"); }
+	{ (void)p; (void)priorDistribution; ErrorCBL("", "set_prior_distribution", "ModelParameters.h"); }
 
 	/**
 	 * @brief set the prior distributions for the 
@@ -445,7 +483,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void set_prior_distribution (const std::vector<std::shared_ptr<PriorDistribution>> priorDistributions)
-	{ (void)priorDistributions; ErrorCBL("Error in set_prior_distribution() of ModelParameters.h!"); }
+	{ (void)priorDistributions; ErrorCBL("", "set_prior_distribution", "ModelParameters.h"); }
 
 	/**
 	 * @brief set the prior distributions for the 
@@ -456,7 +494,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void set_prior_distribution_seed (const std::shared_ptr<random::UniformRandomNumbers_Int> ran_generator)
-	{ (void)ran_generator; ErrorCBL("Error in set_prior_distribution_seed() of ModelParameters.h!"); } 
+	{ (void)ran_generator; ErrorCBL("", "set_prior_distribution_seed", "ModelParameters.h"); } 
 	
 	/**
 	 * @brief get the prior distribution for the p-th 
@@ -468,17 +506,16 @@ namespace cbl {
 	 * parameter
 	 */
 	virtual std::shared_ptr<PriorDistribution> prior_distribution (const int p) const
-	{ (void)p; ErrorCBL("Error in prior_distribution() of ModelParameters.h!"); return NULL; }
+	{ (void)p; ErrorCBL("", "prior_distribution", "ModelParameters.h"); return NULL; }
 
 	/**
-	 * @brief get the prior distribution for the p-th 
-	 * parameter
+	 * @brief get the prior distribution for the p-th parameter
 	 *
 	 * @return pointer to the prior distribution of the p-th
 	 * parameter
 	 */
 	virtual std::vector<std::shared_ptr<PriorDistribution>> prior_distribution () const
-	{ErrorCBL("Error in prior_distribution() of ModelParameters.h!"); std::vector<std::shared_ptr<PriorDistribution>> vv; return vv; }
+	{ ErrorCBL("", "prior_distribution", "ModelParameters.h"); std::vector<std::shared_ptr<PriorDistribution>> vv; return vv; }
 
 	/**
 	 * @brief get the prior function
@@ -486,7 +523,7 @@ namespace cbl {
 	 * @return pointer to a class Prior
 	 */
 	virtual std::shared_ptr<Prior> prior () const
-	{ErrorCBL("Error in prior() of ModelParameters.h!"); return NULL; }
+	{ ErrorCBL("", "prior", "ModelParameters.h"); return NULL; }
 
 	///@}
 			
@@ -500,8 +537,8 @@ namespace cbl {
 	 *
 	 * @return none
 	 */
-	virtual void set_parameter_covariance(const int start=0, const int thin=1)
-	{ (void)start; (void)thin; ErrorCBL("Error in set_parameter_covariance() of ModelParameters.h!"); }
+	virtual void set_parameter_covariance (const int start=0, const int thin=1)
+	{ (void)start; (void)thin; ErrorCBL("", "set_parameter_covariance", "ModelParameters.h"); }
 
 	/**
 	 * @brief return the protected member m_parameter_covariance
@@ -513,7 +550,7 @@ namespace cbl {
 	 * @return the value of the parameter covariance at i,j
 	 */
 	virtual double parameter_covariance (const int i, const int j) const
-	{ (void)i; (void)j; ErrorCBL("Error in parameter_covariance() of ModelParameters.h!"); return 0.; }
+	{ (void)i; (void)j; ErrorCBL("", "parameter_covariance", "ModelParameters.h"); return 0.; }
 
 	/**
 	 * @brief return the protected member m_parameter_covariance
@@ -522,7 +559,7 @@ namespace cbl {
 	 * matrix
 	 */
 	virtual std::vector<std::vector<double>> parameter_covariance () const
-	{ErrorCBL("Error in parameter_covariance() of ModelParameters.h!"); std::vector<std::vector<double>> vv; return vv; }
+	{ ErrorCBL("", "parameter_covariance", "ModelParameters.h"); std::vector<std::vector<double>> vv; return vv; }
 
 	
 	/**
@@ -545,7 +582,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void set_posterior_distribution (const int start, const int thin, const int nbins, const int seed=34121)
-	{ (void)start; (void)thin; (void)nbins; (void)seed; ErrorCBL("Error in set_posterior_distribution() of ModelParameters.h!"); }
+	{ (void)start; (void)thin; (void)nbins; (void)seed; ErrorCBL("", "set_posterior_distribution", "ModelParameters.h"); }
 
 	/**
 	 *  @brief get the posterior distribution for the 
@@ -556,7 +593,7 @@ namespace cbl {
 	 *  @return the protected member m_parameter_posterior[param]
 	 */
 	virtual std::shared_ptr<PosteriorDistribution> posterior_distribution (const int par) const 
-	{ (void)par; ErrorCBL("Error in posterior_distribution() of ModelParameters.h!"); return NULL; }
+	{ (void)par; ErrorCBL("", "posterior_distribution", "ModelParameters.h"); return NULL; }
 
 	///@}
 
@@ -578,7 +615,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false)
-	{ (void)start; (void)thin; (void)nbins; (void)seed; (void)show_mode; ErrorCBL("Error in show_results() of ModelParameters.h!"); }
+	{ (void)start; (void)thin; (void)nbins; (void)seed; (void)show_mode; ErrorCBL("", "show_results", "ModelParameters.h"); }
 
 	/**
 	 * @brief store the results to file
@@ -602,7 +639,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false)
-	{ (void)dir; (void)file; (void)start; (void)thin; (void)nbins; (void)seed; (void)compute_mode; ErrorCBL("Error in write_results() of ModelParameters.h!"); }
+	{ (void)dir; (void)file; (void)start; (void)thin; (void)nbins; (void)seed; (void)compute_mode; ErrorCBL("", "write_results", "ModelParameters.h"); }
 
 	/**
 	 * @brief return the private member m_chain_size
@@ -610,7 +647,7 @@ namespace cbl {
 	 * @return the chain size
 	 */
 	virtual size_t chain_size () const
-	{ ErrorCBL("Error in chain_size() of ModelParameters.h!"); return 0; }
+	{ ErrorCBL("", "chain_size", "ModelParameters.h"); return 0; }
 
 	/**
 	 * @brief return the private member m_chain_nwalkers
@@ -618,7 +655,7 @@ namespace cbl {
 	 * @return the chain size
 	 */
 	virtual size_t chain_nwalkers () const
-	{ ErrorCBL("Error in chain_nwalkers() of ModelParameters.h!"); return 0; }
+	{ ErrorCBL("", "chain_nwalkers", "ModelParameters.h"); return 0; }
 
 	/**
 	 * @brief set the chain
@@ -630,7 +667,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void set_chain (const size_t size, const size_t nwalkers)
-	{ (void)size; (void)nwalkers; ErrorCBL("Error in set_chain() of ModelParameters.h!"); }
+	{ (void)size; (void)nwalkers; ErrorCBL("", "set_chain", "ModelParameters.h"); }
 
 	/**
 	 * @brief reset the chain using m_size and m_nwalkers
@@ -638,7 +675,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void reset_chain ()
-	{ ErrorCBL("Error in reset_chain() of ModelParameters.h!"); }
+	{ ErrorCBL("", "reset_chain", "ModelParameters.h"); }
 
 	/**
 	 * @brief expand the already existing chain
@@ -648,7 +685,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void expand_chain (const int append)
-	{ (void)append; ErrorCBL("Error in expand_chain() of ModelParameters.h!"); }
+	{ (void)append; ErrorCBL("", "expand_chain", "ModelParameters.h"); }
 
 	/**
 	 * @brief return the private member m_chain_values at the pos step
@@ -663,7 +700,7 @@ namespace cbl {
 	 * @return the chain value
 	 */
 	virtual double chain_value (const int param, const int pos, const int ww) const
-	{ (void)param; (void)pos; (void)ww; ErrorCBL("Error in chain_value() of ModelParameters.h!"); return 0.; }
+	{ (void)param; (void)pos; (void)ww; ErrorCBL("", "chain_value", "ModelParameters.h"); return 0.; }
 
 	/**
 	 * @brief return the private member m_values at the pp-th step
@@ -676,7 +713,7 @@ namespace cbl {
 	 * @return the chain value
 	 */
 	virtual std::vector<double> chain_value_parameters (const int pos, const int ww) const
-	{ (void)pos; (void)ww; ErrorCBL("Error in chain_value_parameters() of ModelParameters.h!"); std::vector<double> vv; return vv; }
+	{ (void)pos; (void)ww; ErrorCBL("", "chain_value_parameters", "ModelParameters.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 * @brief return all the chain values for a parameter
@@ -690,7 +727,7 @@ namespace cbl {
 	 * @return the chain value
 	 */
 	virtual std::vector<double> parameter_chain_values (const int par, const int start=0, const int thin = 1) const
-	{ (void)par; (void)start; (void)thin; ErrorCBL("Error in parameter_chain_values() of ModelParameters.h!");  std::vector<double> vv; return vv; }
+	{ (void)par; (void)start; (void)thin; ErrorCBL("", "parameter_chain_values", "ModelParameters.h");  std::vector<double> vv; return vv; }
 
 	/**
 	 * @brief set the private member m_chain_values at the pp-th step
@@ -707,7 +744,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void set_chain_value (const int param, const int pos, const int ww, const double value) 
-	{ (void)param; (void)pos; (void)ww; (void)value; ErrorCBL("Error in set_chain_value() of ModelParameters.h!"); }
+	{ (void)param; (void)pos; (void)ww; (void)value; ErrorCBL("", "set_chain_value", "ModelParameters.h"); }
 
 	/**
 	 *  @brief set the chain values
@@ -719,7 +756,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void set_chain_values (const std::vector<std::vector<double>> values, const int nwalkers)
-	{ (void)values; (void)nwalkers; ErrorCBL("Error in set_chain_values() of ModelParameters.h!"); }
+	{ (void)values; (void)nwalkers; ErrorCBL("", "set_chain_values", "ModelParameters.h"); }
 
 	/**
 	 *  @brief set the chain values
@@ -729,7 +766,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void set_chain_values (const std::vector<std::vector<std::vector<double>>> values)
-	{ (void)values;  ErrorCBL("Error in set_chain_values() of ModelParameters.h!"); }
+	{ (void)values;  ErrorCBL("", "set_chain_values", "ModelParameters.h"); }
 
 	/**
 	 * @brief initialize the chain values
@@ -739,7 +776,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void initialize_chain (const std::vector<std::vector<double>> values)
-	{ (void)values;  ErrorCBL("Error in initialize_chain() of ModelParameters.h!"); }
+	{ (void)values;  ErrorCBL("", "initialize_chain", "ModelParameters.h"); }
 
 	/**
 	 * @brief initialize the chain values
@@ -748,7 +785,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void initialize_chain_from_prior ()
-	{ErrorCBL("Error in initialize_chain_from_prior() of ModelParameters.h!"); }
+	{ ErrorCBL("", "initialize_chain_from_prior", "ModelParameters.h"); }
 
 	/**
 	 * @brief initialize the chain values
@@ -762,7 +799,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void initialize_chain_ball (const std::vector<double> center, const double radius, const double seed)
-	{ (void)center; (void)radius; (void)seed;  ErrorCBL("Error in initialize_chain_ball() of ModelParameters.h!"); }
+	{ (void)center; (void)radius; (void)seed; ErrorCBL("", "initialize_chain_ball", "ModelParameters.h"); }
 
 	/**
 	 * @brief initialize the chain values around bestfit 
@@ -775,7 +812,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void initialize_chain_ball_bestfit (const double radius, const double seed)
-	{ (void)radius; (void)seed;  ErrorCBL("Error in initialize_chain_ball() of ModelParameters.h!"); }
+	{ (void)radius; (void)seed;  ErrorCBL("", "initialize_chain_ball_bestfit", "ModelParameters.h"); }
 
     };
   }

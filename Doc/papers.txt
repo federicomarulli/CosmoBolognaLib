@@ -2,15 +2,44 @@
 ----- the list of publications that used the CosmoBolognaLib -----
 ------------------------------------------------------------------
 
+25. Allevato et al.
+    The Chandra COSMOS Legacy Survey: clustering dependence of Type 2
+    AGN on host galaxy properties
+    2019, A&A, in press
+
+24. Verza, Pisani, Carbone, Hamaus, Guzzo
+    The Void Size Function in Dynamical Dark Energy Cosmologies
+    2019, submitted to JCAP
+
+23. Keihänen et al.
+    Estimating the galaxy two-point correlation function using a split
+    random catalog
+    2019, A&A, 631, 73
+
+22. Contarini, Ronconi, Marulli, Moscardini, Veropalumbo, Baldi
+    Cosmological exploitation of the size function of cosmic voids
+    identified in the distribution of biased tracers
+    2019, MNRAS, 488, 3526
+    
+21. García-Farieta, Marulli, Veropalumbo, Moscardini, Casas, Giocoli, Baldi
+    Clustering and redshift-space distortions in modified gravity
+    models with massive neutrinos
+    2019, MNRAS, 488, 1987
+    
+20. Ronconi, Contarini, Marulli, Baldi, Moscardini
+    Cosmic voids uncovered -- first-order statistics of depressions in
+    the biased density field
+    2019, MNRAS, 488, 5075
+
 19. Sarpa, Schimd, Branchini, Matarrese
     BAO reconstruction: a swift numerical action method for massive
     spectroscopic surveys
-    2018, submitted to MNRAS
+    2019, MNRAS, 484, 3818
 
 18. Marulli and the XXL team
     The XXL Survey: XVI. The clustering of X-ray selected galaxy
     clusters at z~0.3
-    2018, A&A, in press
+    2018, A&A, 620, 1
 
 17. Moresco, Marulli
     Cosmological constraints from a joint analysis of cosmic growth

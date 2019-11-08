@@ -65,7 +65,7 @@ std::shared_ptr<ThreePointCorrelation> cbl::measure::threept::ThreePointCorrelat
  
   if (type==ThreePType::_comoving_reduced_) return move(unique_ptr<ThreePointCorrelation_comoving_reduced>(new ThreePointCorrelation_comoving_reduced(data, random, tripletType, side_s, side_u, perc_increase, nbins)));
  
-  else ErrorCBL("Error in cbl::measure::threept::ThreePointCorrelation::Create of ThreePointCorrelation.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "ThreePointCorrelation.cpp");
   
   return NULL;
 }
@@ -84,7 +84,7 @@ std::shared_ptr<ThreePointCorrelation> cbl::measure::threept::ThreePointCorrelat
  
   if (type==ThreePType::_comoving_reduced_) return move(unique_ptr<ThreePointCorrelation_comoving_reduced>(new ThreePointCorrelation_comoving_reduced(data, random, tripletType, r12, r12_binSize, r13, r13_binSize, nbins)));
  
-  else ErrorCBL("Error in cbl::measure::threept::ThreePointCorrelation::Create of ThreePointCorrelation.cpp: no such type of object!");
+  else ErrorCBL("no such type of object!", "Create", "ThreePointCorrelation.cpp");
   
   return NULL;
 }
@@ -574,9 +574,9 @@ void cbl::measure::threept::ThreePointCorrelation::write_triplets (std::shared_p
 
 void cbl::measure::threept::ThreePointCorrelation::read_triplets (std::shared_ptr<triplets::Triplet> TT, const std::vector<std::string> dir, const std::string file) 
 {
- if (dir.size()==0)
-    ErrorCBL("Error in cbl::twopt::TwoPointCorrelation1D::read_triplets of TwoPointCorrelation1D.cpp! dir.size()=0!");
-      
+  if (dir.size()==0)
+    ErrorCBL("dir.size()=0!", "read_triplets", "TwoPointCorrelation.cpp");
+
   for (size_t dd=0; dd<dir.size(); dd++) {
         
     string file_in = dir[dd]+file; 

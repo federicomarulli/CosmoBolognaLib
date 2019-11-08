@@ -156,8 +156,9 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory used to store
-	 *  the Jackknife resampling correlation functions, with Poisson
-	 *  errors
+	 *  the Jackknife resampling correlation functions, with
+	 *  Poisson errors; if an empty string (i.e. "" or "NULL") is
+	 *  provided, no output will be stored
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
 	 *  pairs; false &rarr; read the number of data-data pairs from
@@ -195,8 +196,9 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory used to store
-	 *  the Bootstrap resampling correlation function, with Poisson
-	 *  errors
+	 *  the Bootstrap resampling correlation functions, with
+	 *  Poisson errors; if an empty string (i.e. "" or "NULL") is
+	 *  provided, no output will be stored
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
 	 *  pairs; false &rarr; read the number of data-data pairs from
@@ -392,14 +394,14 @@ namespace cbl {
 	 *  @return the y coordinates
 	 */
 	std::vector<double> yy () const 
-	  { cbl::ErrorCBL("Error in yy() of TwoPointCorrelation_multipoles_integrated.h!"); std::vector<double> vv; return vv; }
+	  { cbl::ErrorCBL("", "yy", "TwoPointCorrelation_multipoles_integrated.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the the binned correlation function 
 	 *  @return the binned correlation function 
 	 */
 	std::vector<double> xi1D () const
-	  { cbl::ErrorCBL("Error in xi1D() of TwoPointCorrelation_multipoles_integrated.h!"); std::vector<double> vv; return vv; }
+	  { cbl::ErrorCBL("", "xi1D", "TwoPointCorrelation_multipoles_integrated.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the error on the binned correlation function
@@ -408,14 +410,14 @@ namespace cbl {
 	 *  function
 	 */
 	std::vector<double> error1D () const
-	  { cbl::ErrorCBL("Error in error1D() of TwoPointCorrelation_multipoles_integrated.h!"); std::vector<double> vv; return vv; }
+	  { cbl::ErrorCBL("", "error1D", "TwoPointCorrelation_multipoles_integrated.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the the binned correlation function 
 	 *  @return the binned correlation function 
 	 */
 	std::vector<std::vector<double>> xi2D () const 
-	  { cbl::ErrorCBL("Error in xi2D() of TwoPointCorrelation_multipoles_integrated.h!"); std::vector<std::vector<double>> vv; return vv; }
+	  { cbl::ErrorCBL("", "xi2D", "TwoPointCorrelation_multipoles_integrated.h"); std::vector<std::vector<double>> vv; return vv; }
 
 	/**
 	 *  @brief get the error on the binned correlation function
@@ -424,7 +426,7 @@ namespace cbl {
 	 *  function
 	 */
 	std::vector<std::vector<double>> error2D () const 
-	  { cbl::ErrorCBL("Error in error2D() of TwoPointCorrelation_multipoles_integrated.h!"); std::vector<std::vector<double>> vv; return vv; }
+	  { cbl::ErrorCBL("", "error2D", "TwoPointCorrelation_multipoles_integrated.h"); std::vector<std::vector<double>> vv; return vv; }
 
 	/**
 	 *  @brief get the monopole of the polar xi
@@ -475,7 +477,8 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory of the
-	 *  resampled correlation function
+	 *  resampling correlation functions; if an empty string (i.e. ""
+	 *  or "NULL") is provided, no output will be stored
 	 *
 	 *  @param nMocks number of resampling used for bootstrap
 	 *
@@ -517,7 +520,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	void read (const std::string dir, const std::string file) override
-	{ (void)dir; (void)file; ErrorCBL("Error in TwoPointCorrelation_multipoles_integrated::read of TwoPointCorrelation_multipoles_integrated.h: work in progress!", glob::ExitCode::_workInProgress_); }
+	{ (void)dir; (void)file; ErrorCBL("", "read", "TwoPointCorrelation_multipoles_integrated.h", glob::ExitCode::_workInProgress_); }
 
 	/**
 	 *  @brief write the multipoles of the two-point correlation

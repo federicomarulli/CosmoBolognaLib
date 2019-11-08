@@ -44,7 +44,7 @@ using namespace cbl;
 
 
 cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const bool read_weights, const bool read_regions, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const int seed)
-{
+{ 
   // parameters for random numbers used in case nSub!=1
   random::UniformRandomNumbers ran(0., 1., seed);
 
@@ -54,7 +54,10 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
   for (size_t dd=0; dd<file.size(); ++dd) {
 
     // read the columns from the table searching by names
-    vector<vector<double>> table = ccfitswrapper::read_table_fits(file[dd], column_names, 1, 1.);
+    vector<vector<double>> table = wrapper::ccfits::read_table_fits(file[dd], column_names, 1, 1.);
+    
+    if (((read_weights || read_regions) && table.size()<3) || ((read_weights && read_regions) && table.size()<4))
+      ErrorCBL("the number of columns in the input FITS file is wrong!", "Catalogue", "FITSCatalogue.cpp"); 
     
     // include the objects in the catalogue
     
@@ -72,10 +75,10 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 	    observedCoordinates coord = {table[0][i]*fact, table[1][i]*fact, table[2][i]*fact};
 	    m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosm, (read_weights) ? table[3][i] : 1., (read_regions) ? (long)table[(read_weights) ? 4 : 3][i] : 1)));
 	  }
-	  WarningMsg("Warning in cbl::catalogue::Catalogue::Catalogue() of FITSCatalogue.cpp: the object "+conv(i, par::fINT)+" has z = "+conv(table[2][i]*fact, par::fDP2)+", and it will be not included in the catalogue!");
+	  else WarningMsgCBL("the object "+conv(i, par::fINT)+" has z = "+conv(table[2][i]*fact, par::fDP2)+", and it will be not included in the catalogue!", "Catalogue", "FITSCatalogue.cpp");
 	}
 
-	else ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in FITSCatalogue.cpp: coordinateType is not valid!");
+	else ErrorCBL("coordinateType is not valid!", "Catalogue", "FITSCatalogue.cpp");
 
       }
       

@@ -40,6 +40,13 @@ int main () {
     cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::RandomType::_createRandom_box_, catalogue, N_R};
 
   
+    // construct the sub-regions used for jackknife and bootstrap
+
+    std::cout << "I'm constructing the sub-regions used for jackknife and bootstrap..." << std::endl;
+    const int nx = 3, ny = 3, nz = 3;
+    cbl::set_ObjectRegion_SubBoxes(catalogue, random_catalogue, nx, ny, nz);
+
+  
     // --------------------------------------------------------------------------------------------
     // ---------------- measure the monopole of the two-point correlation function ----------------
     // --------------------------------------------------------------------------------------------
@@ -61,13 +68,6 @@ int main () {
   
     const std::string dir_output = cbl::par::DirLoc+"../output/";
     const std::string dir_pairs = dir_output+"pairs/";
-
-  
-    // construct the sub-regions used for jackknife and bootstrap
-
-    std::cout << "I'm constructing the sub-regions used for jackknife and bootstrap..." << std::endl;
-    const int nx = 3, ny = 3, nz = 3;
-    cbl::set_ObjectRegion_SubBoxes(catalogue, random_catalogue, nx, ny, nz);
 
   
     // measure the monopole and compute Poissonian errors 

@@ -89,7 +89,7 @@ namespace cbl {
        *  @return object of class Model2D
        */
       Model2D (model_function_2D function, const size_t nparameters, std::vector<ParameterType> parameterTypes={}, std::vector<std::string> parameterNames={}, std::shared_ptr<void> inputs=NULL)
-	: Model(nparameters, parameterTypes, parameterNames, inputs) {set_function(function); m_dimension=Dim::_2D_; }
+	: Model(nparameters, parameterTypes, parameterNames, inputs) { set_function(function); m_dimension=Dim::_2D_; }
 
       /**
        *  @brief default destructor
@@ -107,7 +107,7 @@ namespace cbl {
        * 
        * @return none 
        */
-      void set_function(const model_function_2D function);
+      void set_function (const model_function_2D function);
 
       /**
        * @brief evaluate the model function at xx, yy

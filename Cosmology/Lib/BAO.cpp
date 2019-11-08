@@ -118,10 +118,10 @@ double cbl::cosmology::Cosmology::z_drag() const
 
   auto func = [&] (double redshift)
   {
-    return gsl::GSL_integrate_qag(integrand, 0., redshift);
+    return wrapper::gsl::GSL_integrate_qag(integrand, 0., redshift);
   };
 
-  return gsl::GSL_root_brent (func, 1., 500, 2000);
+  return wrapper::gsl::GSL_root_brent (func, 1., 500, 2000);
   /*
   double wb = m_Omega_baryon*m_hh*m_hh;
   double wm = m_Omega_matter*m_hh*m_hh;
@@ -147,7 +147,7 @@ double cbl::cosmology::Cosmology::rs (const std::string method_Pk, const double 
     return rs_CAMB();
 
   else
-    return ErrorCBL("Error in cbl::cosmology::Cosmology::rs of BAO.cpp: 'method_Pk' not allowed!");
+    return ErrorCBL(" the input parameter method_Pk is not allowed!", "rs", "BAO.cpp");
 }
 
 
@@ -253,7 +253,7 @@ double cbl::cosmology::Cosmology::rs (const double redshift, const double T_CMB)
 {
   function<double(double)> integrand = bind(&Cosmology::rs_integrand, this, std::placeholders::_1, T_CMB);
   double a = 1./(1+redshift);
-  return gsl::GSL_integrate_qag(integrand, 0, a)/m_H0;
+  return wrapper::gsl::GSL_integrate_qag(integrand, 0, a)/m_H0;
 }
 
 
@@ -271,7 +271,7 @@ vector<double> cbl::cosmology::Cosmology::linear_point (const double redshift, c
     Pk[i] = pow(10., Pk[i]);
   }
 
-  vector<double> xi = cbl::fftlog::transform_FFTlog(rr, 1, kk, Pk);
+  vector<double> xi = cbl::wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk);
 
   cbl::glob::FuncGrid xi_interp(rr, xi, interpType);
 

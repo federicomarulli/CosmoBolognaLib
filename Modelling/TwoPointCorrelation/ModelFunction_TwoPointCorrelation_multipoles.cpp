@@ -52,24 +52,66 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles (const std::vector<doubl
   
   // input parameters
   vector<shared_ptr<glob::FuncGrid>> pk_interp(2);
+  vector<shared_ptr<glob::FuncGrid>> pk_interp_Scoccimarro_CPT(3);
+  vector<shared_ptr<glob::FuncGrid>> pk_interp_TNS_CPT(17);
+  vector<shared_ptr<glob::FuncGrid>> pk_interp_Dispersion(1);
+  std::vector<double> Xi_ll;
 
-  if (pp->Pk_mu_model == 0) { // de-wiggled model 
+  if (pp->Pk_mu_model=="dispersion_dewiggled") { 
     pk_interp[0] = pp->func_Pk;
     pk_interp[1] = pp->func_Pk_NW;
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, {parameter[2], parameter[3], parameter[4]/pp->sigma8_z, parameter[5]/pp->sigma8_z, parameter[6] }, pk_interp, pp->prec, parameter[0], parameter[1]);
   }
-  else if (pp->Pk_mu_model == 1) { // mode-coupling model 
+  else if (pp->Pk_mu_model=="dispersion_modecoupling") { 
     pk_interp[0] = pp->func_Pk;
     pk_interp[1] = pp->func_Pk1loop;
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, {parameter[2]/pp->sigma8_z, parameter[3]/pp->sigma8_z, parameter[4], parameter[5] }, pk_interp, pp->prec, parameter[0], parameter[1]);
+  }
+  else if (pp->Pk_mu_model=="DispersionGauss" || pp->Pk_mu_model=="DispersionLorentz") {
+    pk_interp_Dispersion[0] = pp->func_Pk;
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_Dispersion, pp->prec, 1., 1.);
+  }  
+  else if (pp->Pk_mu_model=="ScoccimarroPezzottaGauss" || pp->Pk_mu_model=="ScoccimarroPezzottaLorentz") {
+    pk_interp[0] = pp->func_Pk;
+    pk_interp[1] = pp->func_Pk_nonlin;
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2], parameter[3], parameter[4] }, pk_interp, pp->prec, 1., 1.);
+  }
+  else if (pp->Pk_mu_model=="ScoccimarroBelGauss" || pp->Pk_mu_model=="ScoccimarroBelLorentz") {
+    pk_interp[0] = pp->func_Pk;
+    pk_interp[1] = pp->func_Pk_nonlin;
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2], parameter[3], parameter[4], parameter[5], parameter[6], parameter[7] }, pk_interp, pp->prec, 1., 1.);
+  }  
+  else if (pp->Pk_mu_model=="ScoccimarroGauss" || pp->Pk_mu_model=="ScoccimarroLorentz") {
+    pk_interp_Scoccimarro_CPT[0] = pp->func_Pk_DeltaDelta;
+    pk_interp_Scoccimarro_CPT[1] = pp->func_Pk_DeltaTheta;
+    pk_interp_Scoccimarro_CPT[2] = pp->func_Pk_ThetaTheta;
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_Scoccimarro_CPT, pp->prec, 1., 1.);
+  }
+  else if (pp->Pk_mu_model=="TaruyaGauss" || pp->Pk_mu_model=="TaruyaLorentz") {
+    pk_interp_TNS_CPT[0]  = pp->func_Pk_DeltaDelta;
+    pk_interp_TNS_CPT[1]  = pp->func_Pk_DeltaTheta;
+    pk_interp_TNS_CPT[2]  = pp->func_Pk_ThetaTheta;
+    pk_interp_TNS_CPT[3]  = pp->func_Pk_A11;
+    pk_interp_TNS_CPT[4]  = pp->func_Pk_A12;
+    pk_interp_TNS_CPT[5]  = pp->func_Pk_A22;
+    pk_interp_TNS_CPT[6]  = pp->func_Pk_A23;
+    pk_interp_TNS_CPT[7]  = pp->func_Pk_A33;
+    pk_interp_TNS_CPT[8]  = pp->func_Pk_B12;
+    pk_interp_TNS_CPT[9]  = pp->func_Pk_B13;
+    pk_interp_TNS_CPT[10] = pp->func_Pk_B14;
+    pk_interp_TNS_CPT[11] = pp->func_Pk_B22;
+    pk_interp_TNS_CPT[12] = pp->func_Pk_B23;
+    pk_interp_TNS_CPT[13] = pp->func_Pk_B24;
+    pk_interp_TNS_CPT[14] = pp->func_Pk_B33;
+    pk_interp_TNS_CPT[15] = pp->func_Pk_B34;
+    pk_interp_TNS_CPT[16] = pp->func_Pk_B44;
+
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_TNS_CPT, pp->prec, 1., 1.);    
   }
 
-  vector<double> Xil = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, parameter, pk_interp, pp->prec);
-
-  const double norm = pow(pp->sigma8_z, -2);
+  else ErrorCBL("the chosen model ("+pp->Pk_mu_model+") is not currently implemented!", "xiMultipoles", "ModelFunction_TwoPointCorrelation_multipoles.cpp");
   
-  for (size_t i=0; i<Xil.size(); i++)
-      Xil[i] *= norm;
-
-  return Xil;
+  return Xi_ll;
 }
 
 
@@ -104,7 +146,7 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles_sigma8_bias (const std::
   // streaming scale
   double SigmaS = 0.;
 
-  return Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, {alpha_perpendicular, alpha_parallel, pp->sigmaNL_perp, pp->sigmaNL_par, fsigma8/pp->sigma8_z, bsigma8/pp->sigma8_z, SigmaS}, {pp->func_Pk, pp->func_Pk_NW}, pp->prec);
+  return Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, {pp->sigmaNL_perp, pp->sigmaNL_par, fsigma8/pp->sigma8_z, bsigma8/pp->sigma8_z, SigmaS}, {pp->func_Pk, pp->func_Pk_NW}, pp->prec, alpha_perpendicular, alpha_parallel);
 }
 
 
@@ -119,7 +161,7 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const std::vector<d
   vector<vector<double>> new_rad(pp->nmultipoles);
 
   for(size_t i=0; i<rad.size(); i++)
-      new_rad[pp->dataset_order[i]].push_back(rad[i]);
+    new_rad[pp->dataset_order[i]].push_back(rad[i]);
   
   // input parameters
 
@@ -134,17 +176,17 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const std::vector<d
   for(size_t i=0; i<new_rad[0].size(); i++) {
 
     auto xi_mu_0 = [&] (const double mu)
-    {
-      double alpha = sqrt(mu*mu*alpha_parallel*alpha_parallel+(1-mu*mu)*alpha_perpendicular*alpha_perpendicular);
-      double sp = new_rad[0][i]*alpha;
-      double mup = mu*alpha_parallel/alpha;
-      double val=0;
-      for (int j=0; j<pp->nmultipoles; j++)
-	val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
-      return val;
-    };
+      {
+	double alpha = sqrt(mu*mu*alpha_parallel*alpha_parallel+(1-mu*mu)*alpha_perpendicular*alpha_perpendicular);
+	double sp = new_rad[0][i]*alpha;
+	double mup = mu*alpha_parallel/alpha;
+	double val=0;
+	for (int j=0; j<pp->nmultipoles; j++)
+	  val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
+	return val;
+      };
 
-    double xi0 = cbl::gsl::GSL_integrate_qag(xi_mu_0, 0, 1);
+    double xi0 = cbl::wrapper::gsl::GSL_integrate_qag(xi_mu_0, 0, 1);
 
     Xil[0].push_back(parameter[2]*xi0+parameter[4]+parameter[6]/new_rad[0][i]+parameter[8]/(new_rad[0][i]*new_rad[0][i]));
 
@@ -153,30 +195,30 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const std::vector<d
   for(size_t i=0; i<new_rad[1].size(); i++) {
 
     auto xi_mu_0 = [&] (const double mu)
-    {
-      double alpha = sqrt(mu*mu*alpha_parallel*alpha_parallel+(1-mu*mu)*alpha_perpendicular*alpha_perpendicular);
-      double sp = new_rad[1][i]*alpha;
-      double mup = mu*alpha_parallel/alpha;
-      double val=0;
-      for (int j=0; j<pp->nmultipoles; j++)
-	val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
-      return val;
-    };
+      {
+	double alpha = sqrt(mu*mu*alpha_parallel*alpha_parallel+(1-mu*mu)*alpha_perpendicular*alpha_perpendicular);
+	double sp = new_rad[1][i]*alpha;
+	double mup = mu*alpha_parallel/alpha;
+	double val = 0;
+	for (int j=0; j<pp->nmultipoles; j++)
+	  val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
+	return val;
+      };
 
     auto xi_mu_2 = [&] (const double mu)
-    {
-      double alpha =sqrt(mu*mu*alpha_parallel*alpha_parallel+(1-mu*mu)*alpha_perpendicular*alpha_perpendicular);
-      double sp = new_rad[1][i]*alpha;
-      double mup = mu*alpha_parallel/alpha;
-      double val=0;
-      for (int j=0; j<pp->nmultipoles; j++)
-	val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
+      {
+	double alpha =sqrt(mu*mu*alpha_parallel*alpha_parallel+(1-mu*mu)*alpha_perpendicular*alpha_perpendicular);
+	double sp = new_rad[1][i]*alpha;
+	double mup = mu*alpha_parallel/alpha;
+	double val=0;
+	for (int j=0; j<pp->nmultipoles; j++)
+	  val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
       
-      return 3*val*mu*mu;
-    };
+	return 3*val*mu*mu;
+      };
 
-    double xi0 = cbl::gsl::GSL_integrate_qag(xi_mu_0, 0, 1);
-    double ximu2 = cbl::gsl::GSL_integrate_qag(xi_mu_2, 0, 1);
+    double xi0 = cbl::wrapper::gsl::GSL_integrate_qag(xi_mu_0, 0, 1);
+    double ximu2 = cbl::wrapper::gsl::GSL_integrate_qag(xi_mu_2, 0, 1);
 
     Xil[1].push_back(2.5*(parameter[3]*ximu2-parameter[2]*xi0)+parameter[5]+parameter[7]/new_rad[1][i]+parameter[9]/(new_rad[1][i]*new_rad[1][i]));
   }

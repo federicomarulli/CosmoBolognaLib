@@ -205,43 +205,43 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (c
 
   switch(errorType) {
     
-    case cbl::measure::ErrorType::_None_:
-      {
-	measure(dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
-	break;
-      }
+  case cbl::measure::ErrorType::_None_:
+    {
+      measure(dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+      break;
+    }
     
-    case cbl::measure::ErrorType::_Jackknife_:
-      {
-	const int nRegions = m_data->nRegions();
+  case cbl::measure::ErrorType::_Jackknife_:
+    {
+      const int nRegions = m_data->nRegions();
 
-	vector<vector<double>> weight(nRegions, vector<double>(nRegions, 1));
-	for (int i=0; i<nRegions; i++)
-	  weight[i][i] = 0;
+      vector<vector<double>> weight(nRegions, vector<double>(nRegions, 1));
+      for (int i=0; i<nRegions; i++)
+	weight[i][i] = 0;
 
-	measure(weight, true, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
-	break;
-      }
+      measure(weight, true, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+      break;
+    }
 
-    case cbl::measure::ErrorType::_Bootstrap_:
-      {
-	const int nRegions = m_data->nRegions();
+  case cbl::measure::ErrorType::_Bootstrap_:
+    {
+      const int nRegions = m_data->nRegions();
 
-	random::UniformRandomNumbers_Int ran(0., nRegions-1, seed);
+      random::UniformRandomNumbers_Int ran(0., nRegions-1, seed);
 	
-	int val = 2; // see Norberg et al. 2009
+      int val = 3; // see Norberg et al. 2009
 
-	vector<vector<double>> weight(nResamplings, vector<double>(nRegions, 0));
-	for (int i=0; i<nResamplings; i++)
-	  for (int j=0; j<val*nRegions; j++)
-	    weight[i][ran()] ++;
+      vector<vector<double>> weight(nResamplings, vector<double>(nRegions, 0));
+      for (int i=0; i<nResamplings; i++)
+	for (int j=0; j<val*nRegions; j++)
+	  weight[i][ran()] ++;
 
-	measure(weight, false, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
-	break;
-      }
+      measure(weight, false, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+      break;
+    }
 
-    default:
-      ErrorCBL("Error in measure() of ThreePointCorrelation_comoving_connected, no such kind of error type!");
+  default:
+    ErrorCBL("no such kind of error type!", "measure", "ThreePointCorrelation_comoving_connected.cpp");
   }
 
 }

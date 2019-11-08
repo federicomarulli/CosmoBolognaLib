@@ -193,7 +193,7 @@ void cbl::random::DiscreteRandomNumbers::set_discrete_values (const vector<doubl
     m_weights.resize(m_values.size(), 1.);
   }
   else if (weights.size()!=values.size())
-    ErrorCBL("Error in set_parameters of DiscreteRandomNumbers.h: value and weight vectors have different sizes!");
+    ErrorCBL("value and weight vectors have different sizes!", "set_discrete_values", "RandomNumbers.cpp");
   else {
     m_values = values;
     m_weights = weights;
@@ -302,7 +302,7 @@ void cbl::random::CustomDistributionRandomNumbers::set_custom_distribution (cons
   m_func_fixed_pars = fixed_pars;
   m_func_pars = pars;
 
-  m_normalization = gsl::GSL_integrate_qag(m_func, m_func_fixed_pars, m_func_pars, m_MinVal, m_MaxVal);
+  m_normalization = wrapper::gsl::GSL_integrate_qag(m_func, m_func_fixed_pars, m_func_pars, m_MinVal, m_MaxVal);
 }
 
 
@@ -311,8 +311,8 @@ void cbl::random::CustomDistributionRandomNumbers::set_custom_distribution (cons
 
 double cbl::random::CustomDistributionRandomNumbers::operator () ()
 {
-  auto f = [this] (double xx) {return gsl::GSL_integrate_qag(m_func, m_func_fixed_pars, m_func_pars, m_MinVal, xx)/m_normalization;};
-  return gsl::GSL_root_brent(f, m_uniform_generator->operator()(), m_MinVal, m_MaxVal);
+  auto f = [this] (double xx) {return wrapper::gsl::GSL_integrate_qag(m_func, m_func_fixed_pars, m_func_pars, m_MinVal, xx)/m_normalization;};
+  return wrapper::gsl::GSL_root_brent(f, m_uniform_generator->operator()(), m_MinVal, m_MaxVal);
 }
 
 

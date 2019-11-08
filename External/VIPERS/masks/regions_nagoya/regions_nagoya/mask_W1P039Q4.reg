@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: /tmp/fileeuum1b.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(32.085829,-4.470164,32.088285,-4.47371,32.193599,-4.4744299,32.196237,-4.466233,32.196158,-4.348179,32.187304,-4.346808,32.086452,-4.345023,32.079258,-4.34819,32.07926,-4.466178) # color=red dash=1

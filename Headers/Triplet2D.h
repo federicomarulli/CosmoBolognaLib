@@ -308,7 +308,7 @@ namespace cbl {
        *  @warning This method has not been implemented yet
        */
       void Sum (const std::shared_ptr<Triplet> tt, const double ww=1) override
-      { (void)tt; (void)ww; ErrorCBL("Error in Sum of Triple2D.h", cbl::glob::ExitCode::_workInProgress_); }
+      { (void)tt; (void)ww; ErrorCBL("", "Sum", "Triple2D.h", cbl::glob::ExitCode::_workInProgress_); }
      
       /**
        *  @brief estimate the distance between two objects and update
@@ -321,7 +321,7 @@ namespace cbl {
        *  not have this member
        */
       virtual void get_triplet (const double r12, const double r13, const double r23, int &klin) override
-      { (void)r12; (void)r13; (void)r23; (void)klin; ErrorCBL("Error in get of Triple2D.h", cbl::glob::ExitCode::_workInProgress_); }
+      { (void)r12; (void)r13; (void)r23; (void)klin; ErrorCBL("", "get_triplet", "Triple2D.h", cbl::glob::ExitCode::_workInProgress_); }
 
       /**
        *  @brief update the triplet
@@ -331,7 +331,7 @@ namespace cbl {
        *  not have this member
        */
       virtual void set_triplet (const int klin, const double ww=1.) override   
-      { (void)klin; (void)ww; ErrorCBL("Error in set of Triple2D.h", cbl::glob::ExitCode::_workInProgress_); }
+      { (void)klin; (void)ww; ErrorCBL("", "set_triplet", "Triple2D.h", cbl::glob::ExitCode::_workInProgress_); }
 
       /**
        *  @brief estimate the distance between three objects and
@@ -345,7 +345,7 @@ namespace cbl {
        *  @warning This method has not been implemented yet
        */
       void put (const double r12, const double r13, const double r23, const double ww=1.) override
-      { (void)r12; (void)r13; (void)r23; (void)ww; ErrorCBL("Error in put of Triple2D.h", cbl::glob::ExitCode::_workInProgress_); }
+      { (void)r12; (void)r13; (void)r23; (void)ww; ErrorCBL("", "put", "Triple2D.h", cbl::glob::ExitCode::_workInProgress_); }
     
       /**
        *  @brief estimate the distance between three objects and
@@ -358,7 +358,7 @@ namespace cbl {
        *  @warning This method has not been implemented yet
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, const std::shared_ptr<catalogue::Object> obj3) override
-      { (void)obj1; (void)obj2; (void)obj3; ErrorCBL("Error in put of Triple2D.h", cbl::glob::ExitCode::_workInProgress_); }
+      { (void)obj1; (void)obj2; (void)obj3; ErrorCBL("", "put", "Triple2D.h", cbl::glob::ExitCode::_workInProgress_); }
       
       ///@}
     

@@ -62,7 +62,7 @@ double cbl::cosmology::Cosmology::denominator_Q (const double r1, const double r
 
 void cbl::cosmology::Cosmology::integrals_Q_nonLocal (vector<double> &xi_DM, vector<double> &Phi, const vector<double> rr, const vector<double> kk, const vector<double> Pk_DM, const double prec) const
 {
-  xi_DM = fftlog::transform_FFTlog(rr, 1, kk, Pk_DM, 0, 0, 1, 1);
+  xi_DM = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM, 0, 0, 1, 1);
 
   const int nk = kk.size();
   glob::FuncGrid interp_Pk = glob::FuncGrid(kk, Pk_DM, "Spline", BinType::_logarithmic_);
@@ -78,7 +78,7 @@ void cbl::cosmology::Cosmology::integrals_Q_nonLocal (vector<double> &xi_DM, vec
       return pow(TopHat_WF(kr), 2)*interp_Pk(_k)*sin(kr)/kr; 
     };
     
-    Phi[i] = 1./(2.*pow(par::pi, 2))*gsl::GSL_integrate_qag(integrand, 0, 100, prec);
+    Phi[i] = 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(integrand, 0, 100, prec);
   }
   
 }
@@ -168,10 +168,10 @@ void cbl::cosmology::Cosmology::integrals_zeta_Slepian (std::vector<double> &xi_
     Pk_DM_p1[i] *= kk[i];
   }
 
-  xi_DM = fftlog::transform_FFTlog(rr, 1, kk, Pk_DM, 0, 0, 1, 1);
-  xi_DM_m1 = fftlog::transform_FFTlog(rr, 1, kk, Pk_DM_m1, 1, 0, 1, 1);
-  xi_DM_p1 = fftlog::transform_FFTlog(rr, 1, kk, Pk_DM_p1, 1, 0, 1, 1);
-  xi_DM_2 = fftlog::transform_FFTlog(rr, 1, kk, Pk_DM, 2, 0, 1, 1);
+  xi_DM = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM, 0, 0, 1, 1);
+  xi_DM_m1 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM_m1, 1, 0, 1, 1);
+  xi_DM_p1 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM_p1, 1, 0, 1, 1);
+  xi_DM_2 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM, 2, 0, 1, 1);
 }
 
 
@@ -181,6 +181,9 @@ void cbl::cosmology::Cosmology::integrals_zeta_Slepian (std::vector<double> &xi_
 double cbl::cosmology::Cosmology::zeta_precyclic_Slepian (const double r1, const double r2, const double mu, const double b1, const double b2, const glob::FuncGrid interp_xi_DM, const glob::FuncGrid interp_xi_DM_m1, const glob::FuncGrid interp_xi_DM_p1, const glob::FuncGrid interp_xi_DM_2) const
 {
   const double mu12 = mu;
+
+  if (abs(mu12)>1)
+    return 0;
     
   const double r3 = sqrt(r1*r1+r2*r2-2.*r1*r2*mu12);
   const double a12 = acos(mu12);
@@ -219,6 +222,72 @@ double cbl::cosmology::Cosmology::zeta_precyclic_Slepian (const double r1, const
 // =====================================================================================
 
 
+double cbl::cosmology::Cosmology::zeta_precyclic_Slepian (const double r1, const double r2, const double r3, const double deltaR, const double b1, const double b2, const glob::FuncGrid interp_xi_DM, const glob::FuncGrid interp_xi_DM_m1, const glob::FuncGrid interp_xi_DM_p1, const glob::FuncGrid interp_xi_DM_2) const
+{
+  double r1Min = r1-0.5*deltaR;
+  double r1Max = r1+0.5*deltaR;
+  double r2Min = r2-0.5*deltaR;
+  double r2Max = r2+0.5*deltaR;
+  double r3Min = r3-0.5*deltaR;
+  double r3Max = r3+0.5*deltaR;
+
+  // Numerator
+  auto integrandNum_r1 = [&] (const double _r1) {
+
+    auto integrandNum_r2 = [&] (const double _r2) {
+
+      double a = max(r3Min, _r2-_r1);
+      double b = min(r3Max, _r2+_r1);
+	
+      if (a>b) 
+	return 0.;
+      else {
+	auto integrandNum_r3 = [&] (const double _r3) {
+	  double mu = (_r1*_r1+_r2*_r2-_r3*_r3)/(2*_r1*_r2);
+	  return zeta_precyclic_Slepian (_r1, _r2, mu, b1, b2, interp_xi_DM, interp_xi_DM_m1, interp_xi_DM_p1, interp_xi_DM_2);
+	};
+
+	return wrapper::gsl::GSL_integrate_cquad(integrandNum_r3, a, b, 1.e-4);
+      }
+    };
+
+    return wrapper::gsl::GSL_integrate_cquad(integrandNum_r2, r2Min, r2Max, 1.e-4);
+  };
+
+  double num = wrapper::gsl::GSL_integrate_cquad(integrandNum_r1, r1Min, r1Max, 1.e-4);
+
+  // Denominator
+  auto integrandDen_r1 = [&] (const double _r1) {
+
+    auto integrandDen_r2 = [&] (const double _r2) {
+
+      double a = max(r3Min, _r2-_r1);
+      double b = min(r3Max, _r2+_r1);
+
+      if (a>b) 
+	return 0.;
+      else {
+	auto integrandDen_r3 = [&] (const double _r3) {
+	  (void)_r3;
+	  return 1.;
+	};
+
+	return wrapper::gsl::GSL_integrate_cquad(integrandDen_r3,  a, b, 1.e-4);
+      }
+    };
+
+    return wrapper::gsl::GSL_integrate_cquad(integrandDen_r2, r2Min, r2Max, 1.e-4);
+  };
+
+  double den = wrapper::gsl::GSL_integrate_cquad(integrandDen_r1, r1Min, r1Max, 1.e-4);
+
+  return num/den;
+}
+
+
+// =====================================================================================
+
+
 std::vector<double> cbl::cosmology::Cosmology::zeta_expansion_Slepian (const double r1, const double r2, const double b1, const double b2, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const int norders, const double prec) const
 {
   glob::FuncGrid interp_xi_DM(rr, xi_DM, "Spline");
@@ -232,7 +301,7 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_expansion_Slepian (const dou
     auto integrand = [&] (const double mu12) {
       return Cosmology::zeta_precyclic_Slepian(r1, r2, mu12, b1, b2, interp_xi_DM, interp_xi_DM_m1, interp_xi_DM_p1, interp_xi_DM_2)*legendre_polynomial (mu12, i);
     };
-    zeta_r1_r2[i] = 0.5*(2*i+1)*gsl::GSL_integrate_qag(integrand, -1, 1, prec);
+    zeta_r1_r2[i] = 0.5*(2*i+1)*wrapper::gsl::GSL_integrate_qag(integrand, -1, 1, prec);
   }
 
   return zeta_r1_r2;
@@ -282,8 +351,8 @@ void cbl::cosmology::Cosmology::integrals_zeta_BarrigaGatzanaga (std::vector<dou
   for (int i=0; i< nk; i++)
     Pk_DM_m4[i] *= pow(kk[i], -2);
   
-  xi_DM = fftlog::transform_FFTlog(rr, 1, kk, Pk_DM, 0, 0, 1, 1);
-  Phi = fftlog::transform_FFTlog(rr, 1, kk, Pk_DM_m4, 0, 0, 1, 1);
+  xi_DM = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM, 0, 0, 1, 1);
+  Phi = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM_m4, 0, 0, 1, 1);
 }
 
 
@@ -391,7 +460,7 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_DM (const double r1, const d
       zDM[i] = zeta_DM_BarrigaGatzanaga(r1, r2, theta[i], rr, xi_DM, Phi, kk, Pk_DM);
   }
   else
-    ErrorCBL("Error in cbl::cosmology::Cosmology::zeta_DM() of 3PCF.cpp: the chosen model is not implemented!");
+    ErrorCBL("the chosen model is not implemented!", "zeta_DM", "3PCF.cpp");
 
   return zDM;
 }
@@ -417,7 +486,7 @@ std::vector<double> cbl::cosmology::Cosmology::Q_DM (const double r1, const doub
       qDM[i] = Q_DM_BarrigaGatzanaga(r1, r2, theta[i], rr, xi_DM, Phi, kk, Pk_DM);
   }
   else
-    ErrorCBL("Error in cbl::cosmology::Cosmology::Q_DM() of 3PCF.cpp: the chosen model is not implemented!");
+    ErrorCBL("the chosen model is not implemented!", "Q_DM", "3PCF.cpp");
 
   return qDM;
 
@@ -445,7 +514,7 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_halo (const double r1, const
       zH[i] = b1*b1*b1*zeta_DM_BarrigaGatzanaga(r1, r2, theta[i], rr, xi_DM, Phi, kk, Pk_DM)+b1*b1*b2*denominator_Q(r1, r2, theta[i], rr, xi_DM);
   }
   else
-    ErrorCBL("Error in cbl::cosmology::Cosmology::z_halo() of 3PCF.cpp: the chosen model is not implemented!");
+    ErrorCBL("the chosen model is not implemented!", "z_halo", "3PCF.cpp");
 
   return zH;
 }
@@ -505,7 +574,7 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_DM_eq (const std::vector<dou
       zDM[i] = zeta_DM_BarrigaGatzanaga(rr[i], rr[i], theta, _rr, xi_DM, Phi, kk, Pk_DM);
   }
   else
-    ErrorCBL("Error in cbl::cosmology::Cosmology::zeta_DM_eq() of 3PCF.cpp: the chosen model is not implemented!");
+    ErrorCBL("the chosen model is not implemented!", "zeta_DM_eq", "3PCF.cpp");
 
   return zDM;
 }
@@ -533,7 +602,7 @@ std::vector<double> cbl::cosmology::Cosmology::Q_DM_eq (const std::vector<double
       Q_DM[i] = Q_DM_BarrigaGatzanaga(rr[i], rr[i], theta, _rr, xi_DM, Phi, kk, Pk_DM);
   }
   else
-    ErrorCBL("Error in cbl::cosmology::Cosmology::Q_DM_eq() of 3PCF.cpp: the chosen model is not implemented!");
+    ErrorCBL("the chosen model is not implemented!", "Q_DM_eq", "3PCF.cpp");
 
   return Q_DM;
 }
@@ -542,22 +611,114 @@ std::vector<double> cbl::cosmology::Cosmology::Q_DM_eq (const std::vector<double
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volume, const double nObjects, const int l, const int l_prime, const double r1, const double r2, const double r1_prime, const double r2_prime, const std::vector<double> kk, const std::vector<double> Pk, const std::vector<double> rr, const std::vector<double> Xi, const double prec)
+double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volume, const double nObjects, const int l, const int l_prime, const double r1, const double r2, const double r1_prime, const double r2_prime, const double deltaR, const std::vector<double> kk, const std::vector<double> Pk, const std::vector<double> rr, const std::vector<double> Xi, const double prec)
 {
+  (void)prec;
+  double dlnK = log10(kk[1])-log10(kk[0]);
+  double fact = dlnK/(2.*par::pi*par::pi)*log(10.);
+
   const double inverse_density = Volume/nObjects;
   const string interpType = "Spline";
 
-  vector<double> kk_sn, pk_sn;
+  glob::FuncGrid interpXi (rr, Xi, interpType);
+
+  vector<double> pk_sn;
   for (size_t i=0; i<kk.size(); i++)
-    if (kk[i]<=1) {
-      kk_sn.push_back(kk[i]);
-      pk_sn.push_back(Pk[i]+inverse_density);
+    pk_sn.push_back(Pk[i]+inverse_density);
+
+  // r binning
+
+  function<double(double, int, double)> func1; 
+  function<double(double, int, int, double, double)> func2; 
+  function<double(double, double)> noise;
+
+  if (deltaR<0) {
+    func1 = [&] (const double kk, const int l, const double rr) {
+      return jl(kk*rr, l); };
+    func2 = [&] (const double kk, const int l, const int lp, const double rr, const double rrp) {
+      return jl(kk*rr, l)*jl(kk*rrp, lp); };
+    noise = [&] (const double xx, const double x1) {
+      if (xx!=x1)
+        return 0.;
+      return 1.;
+    };
+  } else {
+    func1 = [&] (const double kk, const int l, const double rr) {
+      return jl_distance_average(kk, l, rr-deltaR*0.5, rr+deltaR*0.5); };
+    func2 = [&] (const double kk, const int l, const int lp, const double rr, const double rrp) {
+      return jl_distance_average(kk, l, rr-deltaR*0.5, rr+deltaR*0.5)*jl_distance_average(kk, lp, rrp-deltaR*0.5, rrp+deltaR*0.5); };
+    noise = [&] (const double xx, const double x1) {
+      if ( (xx<=x1+0.5*deltaR) && (xx>=x1-0.5*deltaR))
+        return 1.;
+      return 0.;
+    };
+  }
+
+  vector<double> f_r1(kk.size(), 0), f_r2(kk.size(), 0), f_r1p(kk.size(), 0), f_r2p(kk.size(), 0);
+  vector<double> f_r1_r1p(kk.size(), 0), f_r1_r2p(kk.size(), 0), f_r2_r1p(kk.size(), 0), f_r2_r2p(kk.size(), 0);
+
+  for (size_t j=0; j<kk.size(); j++) {
+    double _kk = kk[j];
+    double prod = pow(_kk, 3)*Pk[j]*fact;
+    double prodSN = pow(_kk, 3)*pk_sn[j]*fact;
+    f_r1[j] = func1(_kk, l, r1)*prod;
+    f_r2[j] = func1(_kk, l, r2)*prod;
+    f_r1p[j] = func1(_kk, l_prime, r1_prime)*prod;
+    f_r2p[j] = func1(_kk, l_prime, r2_prime)*prod;
+    f_r1_r1p[j] = func2(_kk, l, l_prime, r1, r1_prime)*prodSN;
+    f_r1_r2p[j] = func2(_kk, l, l_prime, r1, r2_prime)*prodSN;
+    f_r2_r1p[j] = func2(_kk, l, l_prime, r2, r1_prime)*prodSN;
+    f_r2_r2p[j] = func2(_kk, l, l_prime, r2, r2_prime)*prodSN;
+  }
+
+
+  auto integrand = [&] (const double rad) {  
+    double Xi_r = interpXi(rad);
+
+    double f_r_r1 = 0, f_r_r2 =0, f_r_r1p = 0, f_r_r2p = 0;
+
+    for (size_t j=0; j<kk.size(); j++) {
+      double _kk = kk[j];
+      double jlr = jl(_kk*rad, l);
+      double jlrp = jl(_kk*rad, l_prime);
+      f_r_r1 += f_r1[j]*jlr;
+      f_r_r2 += f_r2[j]*jlr;
+      f_r_r1p += f_r1p[j]*jlrp;
+      f_r_r2p += f_r2p[j]*jlrp;
     }
 
-  const int nk = kk_sn.size();
-  glob::FuncGrid interp_Pk(kk_sn, pk_sn, interpType);
-  glob::FuncGrid interp_Xi(rr, Xi, interpType);
+    f_r_r1 += noise(rad, r1);
+    f_r_r2 += noise(rad, r2);
+    f_r_r1p += noise(rad, r1_prime);
+    f_r_r2p += noise(rad, r2_prime);
 
+    double sum=0;
+    for (int l2=abs(l-l_prime); l2<l+l_prime+1; l2++) {
+      double wig = coupling_3j(l, l_prime, l2);
+      if (wig!=0) {
+        double t1 = (2*l2+1)*pow(wig,2);
+        double f_r_r1_r1p = 0,  f_r_r1_r2p = 0, f_r_r2_r1p = 0, f_r_r2_r2p = 0;
+        for (size_t j=0; j<kk.size(); j++) {
+          double _kk = kk[j];
+          double jlr = jl(_kk*rad, l2);
+          f_r_r1_r1p += f_r1_r1p[j]*jlr;
+          f_r_r1_r2p += f_r1_r2p[j]*jlr;
+          f_r_r2_r1p += f_r2_r1p[j]*jlr;
+          f_r_r2_r2p += f_r2_r2p[j]*jlr;
+        }
+
+        double t2 = pow(-1, l2)*Xi_r*(f_r_r1_r1p*f_r_r2_r2p+f_r_r2_r1p*f_r_r1_r2p);
+        double t3  = pow(-1, 0.5*(l+l_prime+l2))*(f_r_r1*f_r_r1p*f_r_r2_r2p+f_r_r1*f_r_r2p*f_r_r2_r1p+f_r_r2*f_r_r1p*f_r_r1_r2p+f_r_r2*f_r_r2p*f_r_r1_r1p);
+        sum += t1*(t2+t3);
+      }
+    }
+
+    return rad*rad*sum;
+  };
+
+  return wrapper::gsl::GSL_integrate_cquad(integrand, 1., 1000, prec)*4.*par::pi/Volume*(2*l+1)*(2*l_prime+1)*pow(-1, l+l_prime);
+
+  /*
   // l2
   vector<int> l2;
   for (int ll=abs(l-l_prime); ll<l+l_prime+1; ll++)
@@ -566,45 +727,44 @@ double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volum
   const int n_l2 = (int)l2.size();
 
   // integrand
-  
-  vector<double> pk_r1(nk, 0), pk_r2(nk, 0), pk_r1p(nk, 0), pk_r2p(nk, 0);
+    
+  vector<double> pk_r1 = pk_sn, pk_r2 = pk_sn;
+  vector<double> pk_r1p = pk_sn, pk_r2p = pk_sn;
 
   for (int i=0; i<nk; i++) {
-    pk_r1[i] = pk_sn[i]*jl(kk_sn[i]*r1, l);
-    pk_r2[i] = pk_sn[i]*jl(kk_sn[i]*r2, l);
-    pk_r1p[i] = pk_sn[i]*jl(kk_sn[i]*r1_prime, l_prime);
-    pk_r2p[i] = pk_sn[i]*jl(kk_sn[i]*r2_prime, l_prime);
+    pk_r1[i] *= func1(kk[i], l, r1);
+    pk_r2[i] *= func1(kk[i], l, r2);
+    pk_r1p[i] *= func1(kk[i], l_prime, r1_prime);
+    pk_r2p[i] *= func1(kk[i], l_prime, r2_prime);
   }
 
-  const double kr0 = par::pi; //check
+  const double kr0 = 2.*par::pi; //check
 
-  vector<double> f_r_r1 = fftlog::transform_FFTlog(rr, 1, kk_sn, pk_r1, l, 0, kr0, 1);
-  vector<double> f_r_r2 = fftlog::transform_FFTlog(rr, 1, kk_sn, pk_r2, l, 0, kr0, 1);
-  vector<double> f_r_r1p = fftlog::transform_FFTlog(rr, 1, kk_sn, pk_r1p, l_prime, 0, kr0, 1);
-  vector<double> f_r_r2p = fftlog::transform_FFTlog(rr, 1, kk_sn, pk_r2p, l_prime, 0, kr0, 1);
+  vector<double> f_r_r1 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r1, l, 0, kr0, 1);
+  vector<double> f_r_r2 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r2, l, 0, kr0, 1);
+  vector<double> f_r_r1p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r1p, l_prime, 0, kr0, 1);
+  vector<double> f_r_r2p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r2p, l_prime, 0, kr0, 1);
 
   glob::FuncGrid interp_f_r_r1(rr, f_r_r1, interpType);
   glob::FuncGrid interp_f_r_r2(rr, f_r_r2, interpType);
   glob::FuncGrid interp_f_r_r1p(rr, f_r_r1p, interpType);
   glob::FuncGrid interp_f_r_r2p(rr, f_r_r2p, interpType);
   
-
-  vector<double> pk_r1_r1p(nk, 0), pk_r2_r2p(nk, 0), pk_r2_r1p(nk, 0), pk_r1_r2p(nk, 0);
+  vector<double> pk_r1_r1p = pk_sn, pk_r2_r2p = pk_sn, pk_r2_r1p = pk_sn, pk_r1_r2p = pk_sn;
   for (int i=0; i<nk; i++) {
-    pk_r1_r1p[i] = pk_sn[i]*jl(kk_sn[i]*r1, l)*jl(kk_sn[i]*r1_prime, l_prime);
-    pk_r2_r2p[i] = pk_sn[i]*jl(kk_sn[i]*r2, l)*jl(kk_sn[i]*r2_prime, l_prime);
-    pk_r2_r1p[i] = pk_sn[i]*jl(kk_sn[i]*r2, l)*jl(kk_sn[i]*r1_prime, l_prime);
-    pk_r1_r2p[i] = pk_sn[i]*jl(kk_sn[i]*r1, l)*jl(kk_sn[i]*r2_prime, l_prime);
+    pk_r1_r1p[i] *= func2(kk[i], l, l_prime, r1, r1_prime);
+    pk_r2_r2p[i] *= func2(kk[i], l, l_prime, r2, r2_prime);
+    pk_r2_r1p[i] *= func2(kk[i], l, l_prime, r2, r1_prime);
+    pk_r1_r2p[i] *= func2(kk[i], l, l_prime, r1, r2_prime);
   }
 
   vector<std::shared_ptr<glob::FuncGrid>> interp_f_r_r1_r1p(n_l2), interp_f_r_r2_r2p(n_l2), interp_f_r_r1_r2p(n_l2), interp_f_r_r2_r1p(n_l2);
 
   for (int ll=0; ll<n_l2; ll++) {
-
-    vector<double> f_r_r1_r1p = fftlog::transform_FFTlog(rr, 1, kk_sn, pk_r1_r1p, l2[ll], 0, kr0, 1);
-    vector<double> f_r_r2_r2p = fftlog::transform_FFTlog(rr, 1, kk_sn, pk_r2_r2p, l2[ll], 0, kr0, 1);
-    vector<double> f_r_r2_r1p = fftlog::transform_FFTlog(rr, 1, kk_sn, pk_r2_r1p, l2[ll], 0, kr0, 1);
-    vector<double> f_r_r1_r2p = fftlog::transform_FFTlog(rr, 1, kk_sn, pk_r1_r2p, l2[ll], 0, kr0, 1);
+    vector<double> f_r_r1_r1p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r1_r1p, l2[ll], 0, kr0, 1);
+    vector<double> f_r_r2_r2p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r2_r2p, l2[ll], 0, kr0, 1);
+    vector<double> f_r_r2_r1p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r2_r1p, l2[ll], 0, kr0, 1);
+    vector<double> f_r_r1_r2p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r1_r2p, l2[ll], 0, kr0, 1);
     interp_f_r_r1_r1p[ll] = make_shared<glob::FuncGrid> (glob::FuncGrid(rr, f_r_r1_r1p, interpType));
     interp_f_r_r2_r2p[ll] = make_shared<glob::FuncGrid> (glob::FuncGrid(rr, f_r_r2_r2p, interpType));
     interp_f_r_r2_r1p[ll] = make_shared<glob::FuncGrid> (glob::FuncGrid(rr, f_r_r2_r1p, interpType));
@@ -625,8 +785,9 @@ double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volum
     double sum = 0;
 
     for (int ll=0; ll<n_l2; ll++) {
-      double t1 = (2*l2[ll]+1)*pow(gsl_sf_coupling_3j(2*l, 2*l_prime, 2*l2[ll], 0, 0, 0),2);
-      if (t1>0) {
+      double wig = gsl_sf_coupling_3j(2*l, 2*l_prime, 2*l2[ll], 0, 0, 0);
+      if (wig!=0) {
+        double t1 = (2*l2[ll]+1)*pow(wig,2);
 	double f_r_r1_r1p = interp_f_r_r1_r1p[ll]->operator()(rr);
 	double f_r_r2_r2p = interp_f_r_r2_r2p[ll]->operator()(rr);
 	double f_r_r2_r1p = interp_f_r_r2_r1p[ll]->operator()(rr);
@@ -635,7 +796,7 @@ double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volum
 	double t2 = pow(-1, l2[ll])*Xi_r*(f_r_r1_r1p*f_r_r2_r2p+f_r_r2_r1p*f_r_r1_r2p);
 	double t3  = pow(-1, 0.5*(l+l_prime+l2[ll]))*(f_r_r1*f_r_r1p*f_r_r2_r2p+f_r_r1*f_r_r2p*f_r_r2_r1p+f_r_r2*f_r_r1p*f_r_r1_r2p+f_r_r2*f_r_r2p*f_r_r1_r1p);
 	sum += t1*(t2+t3);
-      }
+     }
     }
 
     return rr*rr*sum;
@@ -643,23 +804,24 @@ double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volum
   
   double fact = 4.*par::pi/Volume*(2*l+1)*(2*l_prime+1)*pow(-1, l+l_prime);
   
-  return fact*gsl::GSL_integrate_qag(integrand, 0., 1000, prec);
+  return fact*wrapper::gsl::GSL_integrate_cquad(integrand, 1., 1000, prec);
+*/
 }
 
 
 // =====================================================================================
 
 
-std::vector<std::vector<double>> cbl::cosmology::Cosmology::zeta_covariance (const double Volume, const double nObjects, const std::vector<double> theta, const double r1, const double r2, const std::vector<double> kk, const std::vector<double> Pk, const int norders, const double prec, const bool method, const int nExtractions, std::vector<double> mean, const int seed)
+std::vector<std::vector<double>> cbl::cosmology::Cosmology::zeta_covariance (const double Volume, const double nObjects, const std::vector<double> theta, const double r1, const double r2, const double deltaR, const std::vector<double> kk, const std::vector<double> Pk, const int norders, const double prec, const bool method, const int nExtractions, std::vector<double> mean, const int seed)
 {
   vector<double> rr = linear_bin_vector(4100, 1.e-5, 1.e3);
-  vector<double> Xi = fftlog::transform_FFTlog(rr, 1, kk, Pk, 0);
+  vector<double> Xi = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk, 0);
 
   vector<vector<double>> zeta_l1l2_covariance(norders, vector<double>(norders, 0.));
 
   for (int i=0; i<norders; i++)
     for (int j=i; j<norders; j++) {
-      zeta_l1l2_covariance[i][j] = zeta_multipoles_covariance(Volume, nObjects, i, j, r1, r2, r1, r2, kk, Pk, rr, Xi, prec);
+      zeta_l1l2_covariance[i][j] = zeta_multipoles_covariance(Volume, nObjects, i, j, r1, r2, r1, r2, deltaR, kk, Pk, rr, Xi, prec);
       zeta_l1l2_covariance[j][i] = zeta_l1l2_covariance[i][j];
     }
 
@@ -713,7 +875,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::zeta_covariance (con
 
 void cbl::cosmology::Cosmology::xi_r_n (std::vector<double> &xi_n, const std::vector<double> rr, const int nn, const std::vector<double> kk, const std::vector<double> Pk)
 {
-  xi_n = fftlog::transform_FFTlog (rr, 1, kk, Pk, nn, 0, par::pi, 1);
+  xi_n = wrapper::fftlog::transform_FFTlog (rr, 1, kk, Pk, nn, 0, par::pi, 1);
 }
 
 
@@ -729,8 +891,8 @@ void cbl::cosmology::Cosmology::xi_r_n_pm (std::vector<double> &xi_n_p, std::vec
     pk_m[i] = Pk[i]/kk[i];
   }
 
-  xi_n_p = fftlog::transform_FFTlog (rr, 1, kk, pk_p, nn, 0, par::pi, 1);
-  xi_n_m = fftlog::transform_FFTlog (rr, 1, kk, pk_m, nn, 0, par::pi, 1);
+  xi_n_p = wrapper::fftlog::transform_FFTlog (rr, 1, kk, pk_p, nn, 0, par::pi, 1);
+  xi_n_m = wrapper::fftlog::transform_FFTlog (rr, 1, kk, pk_m, nn, 0, par::pi, 1);
 }
 
 
@@ -751,7 +913,7 @@ void cbl::cosmology::Cosmology::eff_l_l1 (std::vector<std::vector<double>> &eff,
     for (size_t j=0; j<Pk.size(); j++)
       _pk[j] = kk[j]*Pk[j]*jl(kk[j]*rr[i], l);
 
-    eff[i] = fftlog::transform_FFTlog (new_r, 1, kk, _pk, l1, 0, par::pi, 1);
+    eff[i] = wrapper::fftlog::transform_FFTlog (new_r, 1, kk, _pk, l1, 0, par::pi, 1);
   }
   
 }
@@ -784,7 +946,7 @@ void cbl::cosmology::Cosmology::I_ELL_ell (std::vector<std::vector<double>> &II,
 	    auto integrand = [&] ( const double _r) {
 	      return interp_r1_eff(_r)*interp_r2_eff(_r)*_r;
 	    };
-	    II[r1][r2] += fact*gsl::GSL_integrate_qag(integrand, min_rr, max_rr, 1.e-3); //Check the integral limits
+	    II[r1][r2] += fact*wrapper::gsl::GSL_integrate_qag(integrand, min_rr, max_rr, 1.e-3); //Check the integral limits
 	    if(r1!=r2)
 	      II[r2][r1] += II[r1][r2];
 	    
@@ -906,30 +1068,30 @@ double cbl::cosmology::Cosmology::zeta_ell_k_factor (const double b1, const doub
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::zeta_ell_precyclic (const double r1, const double r2, const int ell, const double b1, const double b2, const double bt, const double beta, std::vector<cbl::glob::FuncGrid> interp_xi_ell, const bool use_k, cbl::glob::FuncGrid2D interp_k_ell)
+double cbl::cosmology::Cosmology::zeta_ell_precyclic (const double r1, const double r2, const int ell, const double b1, const double b2, const double bt, const double beta, std::vector<std::shared_ptr<cbl::glob::FuncGrid>> interp_xi_ell, const bool use_k, std::shared_ptr<cbl::glob::FuncGrid2D> interp_k_ell)
 {
   const double gamma = 2.*b2/b1;
-  const double gamma_t = bt/b1;
+  const double gamma_t = 2.*bt/b1;
 
   double fact=0;
 
   if(ell==0){
-    fact = (zeta_ell_0_factor( b1, gamma, beta)+zeta_ell_0_factor_tidal(gamma_t, beta))*(interp_xi_ell[0](r1)*interp_xi_ell[0](r2));
+    fact = (zeta_ell_0_factor( b1, gamma, beta)+zeta_ell_0_factor_tidal(gamma_t, beta))*(interp_xi_ell[0]->operator()(r1)*interp_xi_ell[0]->operator()(r2));
   }
   else if (ell==1){
-    fact = zeta_ell_1_factor(b1, beta)*(interp_xi_ell[0](r1)*interp_xi_ell[1](r2)+interp_xi_ell[0](r2)*interp_xi_ell[1](r1));
+    fact = zeta_ell_1_factor(b1, beta)*(interp_xi_ell[0]->operator()(r1)*interp_xi_ell[1]->operator()(r2)+interp_xi_ell[0]->operator()(r2)*interp_xi_ell[1]->operator()(r1));
   }
   else if (ell==2){
-    fact = (zeta_ell_2_factor( b1, gamma, beta)+zeta_ell_2_factor_tidal(gamma_t, beta))*(interp_xi_ell[0](r1)*interp_xi_ell[0](r2));
+    fact = (zeta_ell_2_factor( b1, gamma, beta)+zeta_ell_2_factor_tidal(gamma_t, beta))*(interp_xi_ell[0]->operator()(r1)*interp_xi_ell[0]->operator()(r2));
   }
   else if (ell==3){
-    fact = zeta_ell_3_factor(b1, beta)*(interp_xi_ell[0](r1)*interp_xi_ell[1](r2)+interp_xi_ell[0](r2)*interp_xi_ell[1](r1));
+    fact = zeta_ell_3_factor(b1, beta)*(interp_xi_ell[0]->operator()(r1)*interp_xi_ell[1]->operator()(r2)+interp_xi_ell[0]->operator()(r2)*interp_xi_ell[1]->operator()(r1));
   }
   else if (ell==4){
-    fact = (zeta_ell_4_factor(b1, beta) + zeta_ell_4_factor_tidal(gamma_t, beta))*(interp_xi_ell[0](r1)*interp_xi_ell[0](r2));
+    fact = (zeta_ell_4_factor(b1, beta) + zeta_ell_4_factor_tidal(gamma_t, beta))*(interp_xi_ell[0]->operator()(r1)*interp_xi_ell[0]->operator()(r2));
   }
 
-  return ((use_k) ? fact+zeta_ell_k_factor (b1, beta)*interp_k_ell(r1, r2) : fact);
+  return ((use_k) ? fact+zeta_ell_k_factor (b1, beta)*interp_k_ell->operator()(r1, r2) : fact);
 }
 
 
@@ -940,7 +1102,7 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const 
 {
   (void)max_ll; (void)use_k;
   vector<vector<double>> Kl (rr.size(), vector<double>(rr.size(), 0));
-  glob::FuncGrid2D interp_Kl(rr, rr, Kl, "Linear");
+  auto interp_Kl= make_shared< glob::FuncGrid2D > (glob::FuncGrid2D(rr, rr, Kl, "Linear"));
 
   const int nbins = (include_limits) ? ntheta+1 : ntheta;
   vector<double> zeta(ntheta, 0);
@@ -971,7 +1133,7 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const 
   for (int i=0; i<3; i++) {
     double ll = 2*i;
     vector<double> xil; xi_r_n(xil, rr, ll, kk, Pk);
-    glob::FuncGrid interp_xil (rr, xil, "Spline");
+    auto interp_xil = make_shared<glob::FuncGrid> (glob::FuncGrid (rr, xil, "Spline") );
 
     for(int t=0; t<nbins; t++){
       zeta[t] += zeta_ell_precyclic (r1, r2, ll, b1, b2, bt, beta, {interp_xil}, use_k, interp_Kl)*legendre_polynomial(cos_a12[t], ll);
@@ -984,8 +1146,8 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const 
   for (int i=0; i<2; i++) {
     double ll = 2*i+1;
     vector<double> xil_p, xil_m; xi_r_n_pm (xil_p, xil_m, rr, ll, kk, Pk);
-    glob::FuncGrid interp_xil_p (rr, xil_p, "Spline");
-    glob::FuncGrid interp_xil_m (rr, xil_m, "Spline");
+    auto interp_xil_p = make_shared<glob::FuncGrid> (glob::FuncGrid (rr, xil_p, "Spline") );
+    auto interp_xil_m = make_shared<glob::FuncGrid> (glob::FuncGrid (rr, xil_m, "Spline") );
 
     for(int t=0; t<nbins; t++){
       zeta[t] += zeta_ell_precyclic (r1, r2, ll, b1, b2, bt, beta, {interp_xil_p, interp_xil_m}, use_k, interp_Kl)*legendre_polynomial(cos_a12[t], ll);
@@ -1001,14 +1163,14 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const 
 // =====================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const std::string method_Pk, const int step_r, const int step_k, const bool force_RealSpace, const bool include_limits, const int max_ll, const bool use_k)
+std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const std::string method_Pk, const int step_r, const int step_k, const string output_dir, const bool store_output_CAMB, const string output_root, const bool force_RealSpace, const bool include_limits, const int max_ll, const bool use_k)
 {
   double rmax = r1+r2;
 
   double beta = (force_RealSpace) ? 0 : linear_growth_rate(redshift)/b1;
   vector<double> rr = linear_bin_vector(step_r, 1., rmax);
   vector<double> kk = logarithmic_bin_vector(step_k, 1.e-4, 10.);
-  vector<double> _Pk = Pk(kk, method_Pk, false, redshift, cbl::par::defaultString);  
+  vector<double> _Pk = Pk(kk, method_Pk, false, redshift, output_dir, store_output_CAMB, output_root);  
 
   return zeta_RSD (r1, r2, ntheta, b1, b2, bt, beta, rr, kk, _Pk, include_limits, max_ll, use_k);
 }

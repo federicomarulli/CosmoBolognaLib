@@ -51,7 +51,7 @@ shared_ptr<cbl::modelling::cosmology::CMB_DistancePrior> cbl::modelling::cosmolo
     return move(unique_ptr<cbl::modelling::cosmology::Aubourg15_Planck15>(new cbl::modelling::cosmology::Aubourg15_Planck15()));
   else if (distance_prior_name == "Aubourg15_WMAP09")
     return move(unique_ptr<cbl::modelling::cosmology::Aubourg15_WMAP09>(new cbl::modelling::cosmology::Aubourg15_WMAP09()));
-  else ErrorCBL("Error in cbl::modelling::cosmology::CMB_DistancePrior::Create of Modelling_Cosmology_DistancePrior.h: no such type of CMB_DistancePrior!");
+  else ErrorCBL("no such type of distance_prior_name!", "Create", "Modelling_Cosmology.cpp");
 
   return NULL;
 }

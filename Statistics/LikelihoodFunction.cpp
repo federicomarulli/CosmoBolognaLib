@@ -93,7 +93,7 @@ cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs (const std::shared
       }
       break;
     default:
-      ErrorCBL("Error in cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs() of LikelihoodFunction.cpp: wrong dataType!");
+      ErrorCBL("wrong dataType!", "STR_likelihood_inputs", "LikelihoodFunction.cpp");
   }
 }
 
@@ -101,13 +101,13 @@ cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs (const std::shared
 // ============================================================================================
 
 
-double statistics::LogLikelihood_1D_interpolated (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_1D_interpolated (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> fixed_parameter)
 {
   // ----- extract the parameters ----- 
-  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
+  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameter);
 
-  double ll = pp->interp_function1D->operator()(likelihood_parameters[0]);
-  pp->model->parameters()->full_parameters(likelihood_parameters);
+  double ll = pp->interp_function1D->operator()(likelihood_parameter[0]);
+  pp->model->parameters()->full_parameter(likelihood_parameter);
 
   return ll;
 }
@@ -116,13 +116,13 @@ double statistics::LogLikelihood_1D_interpolated (std::vector<double> &likelihoo
 // ============================================================================================
 
 
-double statistics::LogLikelihood_2D_interpolated (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_2D_interpolated (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> fixed_parameter)
 {
   // ----- extract the parameters ----- 
-  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
+  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameter);
 
-  double ll = pp->interp_function2D->operator()(likelihood_parameters[0], likelihood_parameters[1]);
-  pp->model->parameters()->full_parameters(likelihood_parameters);
+  double ll = pp->interp_function2D->operator()(likelihood_parameter[0], likelihood_parameter[1]);
+  pp->model->parameters()->full_parameter(likelihood_parameter);
 
   return ll;
 }
@@ -131,14 +131,14 @@ double statistics::LogLikelihood_2D_interpolated (std::vector<double> &likelihoo
 // ============================================================================================
 
 
-double statistics::LogLikelihood_Gaussian_1D_error (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_Gaussian_1D_error (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> fixed_parameter)
 {
   // ----- extract the parameters ----- 
-  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
+  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameter);
 
   // ----- compute the model values ----- 
 
-  vector<double> computed_model = pp->model->operator()(pp->xx, likelihood_parameters);
+  vector<double> computed_model = pp->model->operator()(pp->xx, likelihood_parameter);
  
   // ----- estimate the Gaussian log-likelihood -----
   
@@ -153,21 +153,24 @@ double statistics::LogLikelihood_Gaussian_1D_error (std::vector<double> &likelih
 // ============================================================================================
 
 
-double statistics::LogLikelihood_Gaussian_1D_covariance (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_Gaussian_1D_covariance (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> fixed_parameter)
 {
   // ----- extract the parameters ----- 
-  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
+  
+  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameter);
+
 
   // ----- compute the model values ----- 
 
-  vector<double> computed_model = pp->model->operator()(pp->xx, likelihood_parameters);
+  vector<double> computed_model = pp->model->operator()(pp->xx, likelihood_parameter);
+
 
   // ----- compute the difference between model and data at each bin ----- 
   
   vector<double> diff(pp->data->ndata(), 0);
   for (int i=0; i<pp->data->ndata(); i++)
     diff[i] = pp->data->data(i)-computed_model[i];
-
+  
 
   // ----- estimate the Gaussian log-likelihood ----- 
   
@@ -183,14 +186,13 @@ double statistics::LogLikelihood_Gaussian_1D_covariance (std::vector<double> &li
 // ============================================================================================
 
 
-double statistics::LogLikelihood_Gaussian_2D_error (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_Gaussian_2D_error (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> fixed_parameter)
 {
   // ----- extract the parameters ----- 
-  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
+  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameter);
   
   // ----- compute the model values -----
-
-  vector<vector<double>> computed_model = pp->model->operator()(pp->xx, pp->yy, likelihood_parameters);
+  vector<vector<double>> computed_model = pp->model->operator()(pp->xx, pp->yy, likelihood_parameter);
   
   // ----- estimate the Gaussian log-likelihood -----
 
@@ -206,14 +208,13 @@ double statistics::LogLikelihood_Gaussian_2D_error (std::vector<double> &likelih
 // ============================================================================================
 
 
-double statistics::LogLikelihood_Poissonian_1D_ (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_Poissonian_1D_ (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> fixed_parameter)
 {
   // ----- extract the parameters ----- 
-  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
+  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameter);
 
   // ----- compute the model values ----- 
-
-  vector<double> computed_model = pp->model->operator()(pp->xx, likelihood_parameters);
+  vector<double> computed_model = pp->model->operator()(pp->xx, likelihood_parameter);
  
   // ----- estimate the Poissonian log-likelihood -----
   
@@ -229,14 +230,13 @@ double statistics::LogLikelihood_Poissonian_1D_ (std::vector<double> &likelihood
 // ============================================================================================
 
 
-double statistics::LogLikelihood_Poissonian_2D_ (std::vector<double> &likelihood_parameters, const std::shared_ptr<void> fixed_parameters)
+double statistics::LogLikelihood_Poissonian_2D_ (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> fixed_parameter)
 {
   // ----- extract the parameters ----- 
-  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameters);
+  shared_ptr<statistics::STR_likelihood_inputs> pp = static_pointer_cast<statistics::STR_likelihood_inputs>(fixed_parameter);
   
   // ----- compute the model values -----
-
-  vector<vector<double>> computed_model = pp->model->operator()(pp->xx, pp->yy, likelihood_parameters);
+  vector<vector<double>> computed_model = pp->model->operator()(pp->xx, pp->yy, likelihood_parameter);
   
   // ----- estimate the Poissonian log-likelihood -----
 

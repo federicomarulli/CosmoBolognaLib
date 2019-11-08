@@ -51,19 +51,19 @@ using namespace modelling::twopt;
 
 std::shared_ptr<Modelling_TwoPointCorrelation> modelling::twopt::Modelling_TwoPointCorrelation::Create (const std::shared_ptr<measure::twopt::TwoPointCorrelation> twop)
 {
-  if (twop->twoPType()==measure::twopt::TwoPType::_1D_monopole_)
+  if (twop->twoPType()==measure::twopt::TwoPType::_monopole_)
     return move(unique_ptr<Modelling_TwoPointCorrelation1D_monopole> (new Modelling_TwoPointCorrelation1D_monopole(twop)));
   
   else if (twop->twoPType()==measure::twopt::TwoPType::_2D_Cartesian_)
     return move(unique_ptr<Modelling_TwoPointCorrelation2D_cartesian> (new Modelling_TwoPointCorrelation2D_cartesian(twop)));
 
-  else if (twop->twoPType()==measure::twopt::TwoPType::_1D_projected_)
+  else if (twop->twoPType()==measure::twopt::TwoPType::_projected_)
     return move(unique_ptr<Modelling_TwoPointCorrelation_projected> (new Modelling_TwoPointCorrelation_projected(twop)));
 
-  else if (twop->twoPType()==measure::twopt::TwoPType::_1D_deprojected_)
+  else if (twop->twoPType()==measure::twopt::TwoPType::_deprojected_)
     return move(unique_ptr<Modelling_TwoPointCorrelation_deprojected> (new Modelling_TwoPointCorrelation_deprojected(twop)));
 
-  else ErrorCBL("Error in cbl::modelling::twopt::Modelling_TwoPointCorrelation::Create of Modelling_TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!");
+  else ErrorCBL("no such type of object, or error in the input parameters!", "Create", "Modelling_TwoPointCorrelation.cpp");
  
   return NULL;
 }
@@ -74,19 +74,19 @@ std::shared_ptr<Modelling_TwoPointCorrelation> modelling::twopt::Modelling_TwoPo
 
 std::shared_ptr<Modelling_TwoPointCorrelation> modelling::twopt::Modelling_TwoPointCorrelation::Create (const measure::twopt::TwoPType twoPType, const std::shared_ptr<data::Data> twop_dataset)
 {
-  if (twoPType==measure::twopt::TwoPType::_1D_monopole_)
+  if (twoPType==measure::twopt::TwoPType::_monopole_)
     return move(unique_ptr<Modelling_TwoPointCorrelation1D_monopole> (new Modelling_TwoPointCorrelation1D_monopole(twop_dataset)));
 
   else if (twoPType==measure::twopt::TwoPType::_2D_Cartesian_)
     return move(unique_ptr<Modelling_TwoPointCorrelation2D_cartesian> (new Modelling_TwoPointCorrelation2D_cartesian(twop_dataset)));
 
-  else if (twoPType==measure::twopt::TwoPType::_1D_projected_)
+  else if (twoPType==measure::twopt::TwoPType::_projected_)
     return move(unique_ptr<Modelling_TwoPointCorrelation_projected> (new Modelling_TwoPointCorrelation_projected(twop_dataset)));
 
-  else if (twoPType==measure::twopt::TwoPType::_1D_deprojected_)
+  else if (twoPType==measure::twopt::TwoPType::_deprojected_)
     return move(unique_ptr<Modelling_TwoPointCorrelation_deprojected> (new Modelling_TwoPointCorrelation_deprojected(twop_dataset)));
   
-  else ErrorCBL("Error in cbl::modelling::twopt::Modelling_TwoPointCorrelation::Create of Modelling_TwoPointCorrelation.cpp: no such type of object, or error in the input parameters!");
+  else ErrorCBL("no such type of object, or error in the input parameters!", "Create", "Modelling_TwoPointCorrelation.cpp");
 
   return NULL;
 }

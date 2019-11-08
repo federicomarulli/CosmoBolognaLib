@@ -133,8 +133,8 @@ namespace cbl {
 	 *  correlation function
 	 *
 	 *  @param type the type of two-point correlation function; it
-	 *  can be: \_1D_monopole\_, \_1D_projected\_,
-	 *  \_1D_deprojected\_, \_1D_multipoles\_, \_1D_angular\_,
+	 *  can be: \_monopole\_, \_projected\_,
+	 *  \_deprojected\_, \_multipoles\_, \_angular\_,
 	 *  \_2D_Cartesian\_, \_2D_polar\_
 	 *
 	 *  @param dir_output_pairs output directory used to store the
@@ -248,7 +248,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void measurePoisson (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_)
-	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)count_d1d2; (void)count_rr; (void)count_d1r; (void)count_d2r; (void)tcount; (void)estimator; cbl::ErrorCBL("Error inmeasurePoisson() of TwoPointCorrelation.h!"); }
+	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)count_d1d2; (void)count_rr; (void)count_d1r; (void)count_d2r; (void)tcount; (void)estimator; cbl::ErrorCBL("", "measurePoisson", "TwoPointCorrelation.h"); }
 	
 	///@}
 

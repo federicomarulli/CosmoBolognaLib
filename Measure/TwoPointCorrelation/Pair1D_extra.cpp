@@ -149,7 +149,7 @@ void cbl::pairs::Pair1D_comoving_lin_extra::put (const shared_ptr<Object> obj1, 
 
 
 void cbl::pairs::Pair1D_comoving_log_extra::put (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2)
-{ 
+{
   const double dist = Euclidean_distance(obj1->xx(), obj2->xx(), obj1->yy(), obj2->yy(), obj1->zz(), obj2->zz()); 
 
   if (m_rMin < dist && dist < m_rMax) {
@@ -344,7 +344,7 @@ void cbl::pairs::Pair1D_extra::add_data1D (const int i, const std::shared_ptr<pa
 void cbl::pairs::Pair1D_extra::Sum (const std::shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins != pair->nbins()) 
-    ErrorCBL("Error in cbl::pairs::Pair1D::Sum of Pair.cpp: dimension problems!");
+    ErrorCBL("dimension problems!", "Sum", "Pair1D_extra.cpp");
 
   for (int i=0; i<m_nbins; ++i) 
     add_data1D(i, pair, ww);   
@@ -357,7 +357,7 @@ void cbl::pairs::Pair1D_extra::Sum (const std::shared_ptr<Pair> pair, const doub
 void cbl::pairs::Pair1D_comoving_multipoles_lin_extra::Sum (const std::shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins != pair->nbins()) 
-    ErrorCBL("Error in cbl::pairs::Pair1D_comoving_multipoles_lin_extra::Sum of Pair.cpp: dimension problems!");
+    ErrorCBL("dimension problems!", "Sum", "Pair1D_extra.cpp");
   
   for (int l=0; l<3; ++l)
     for (int i=0; i<m_nbins; ++i)
@@ -371,7 +371,7 @@ void cbl::pairs::Pair1D_comoving_multipoles_lin_extra::Sum (const std::shared_pt
 void cbl::pairs::Pair1D_comoving_multipoles_log_extra::Sum (const std::shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins != pair->nbins()) 
-    ErrorCBL("Error in cbl::pairs::Pair1D_comoving_multipoles_log_extra::Sum of Pair.cpp: dimension problems!");
+    ErrorCBL("dimension problems!", "Sum", "Pair1D_extra.cpp");
   
   for (int l=0; l<3; ++l)
     for (int i=0; i<m_nbins; ++i)

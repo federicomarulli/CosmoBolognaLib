@@ -1,34 +1,36 @@
-#survey		z	fsigma8	err	ref
-#6dFGs		0.	0.424	0.0655	Adams2017
-6dFGS+SnIa	0.02	0.428	0.0465  Huterer2016
-SnIa+IRAS	0.02	0.398	0.065	Turnbull2012+Hudson2013
-2MASS		0.02	0.314	0.048	Davis2011+Hudson2013
-6dFGRS		0.067	0.423	0.055	Beutler2012
-SDSS-veloc	0.10	0.370	0.130	Feix2015
-SDSS-MGS	0.15	0.49	0.145	Howlett2015
-2dFGRS		0.17	0.51	0.06	Percival2004
-GAMA		0.18	0.360	0.090	Blake2013
-GAMA		0.38	0.440	0.060	Blake2013
-LRG-200		0.25	0.3512	0.0583	Samushia2012
-LRG-200		0.37	0.4602	0.0378	Samushia2012
-#LRG-60		0.25	0.3665	0.0601  Samushia2012
-#LRG-60		0.37	0.4031	0.0586	Samushia2012
-#BOSS		0.30	0.408	0.0552	Tojeiro2012
-#BOSS		0.60	0.433	0.0662	Tojeiro2012
-WiggleZ		0.44	0.413	0.080	Blake2012
-WiggleZ		0.60	0.390	0.063	Blake2012
-WiggleZ		0.73	0.437	0.072	Blake2012
-#LRG		0.35	0.429	0.089	ChuangWang2013
-#LOWZ		0.32	0.384	0.095	Chuang2013
-#CMASS		0.57	0.348	0.071	
-#CMASS		0.57	0.423	0.052	Beutler2014
-#CMASS		0.57	0.4441	0.043	Samushia2014
-#CMASS		0.57	0.450	0.011	Reid2013
-CMASS		0.59	0.488	0.060	Chuang2016
-#Vipers-PDR1	0.8	0.47	0.08	DelaTorre2013
-Vipers-PDR2	0.6	0.48	0.12	DelaTorre2016
-Vipers-PDR2	0.86	0.48	0.10	DelaTorre2016
-#Vipers-PDR2	0.6	0.55	0.12	Pezzotta2016
-#Vipers-PDR2	0.86	0.40	0.11	Pezzotta2016
-FastSound	1.4	0.482	0.116	Okumura2016
-#VVDS					
+#survey		z	fsigma8	 error-  error+	 ref
+6dFGS		0.	0.424	 0.064	 0.067	 Adams et al. 2017; density-velocity cross-correlation; https://arxiv.org/abs/1706.05205
+6dFGS		0.067	0.423	 0.055	 0.055	 Beutler et al. 2012; galaxy clustering; https://arxiv.org/abs/1204.4725?context=astro-ph
+6dFGS+SNIa	0.02	0.428	 0.045   0.048	 Huterer et al. 2017; SN Ia + galaxy velocities; https://arxiv.org/abs/1611.09862
+SNIa+IRAS-PSCz	0.02	0.398	 0.065	 0.065	 Turnbull et al. 2012, Hudson et al. 2013; A1 SN Ia peculiar velocities + IRAS Point Source PSCz galaxy density field; https://arxiv.org/abs/1111.0631, https://arxiv.org/abs/1203.4814 (indirect constraints on fsigma8)
+2MASS		0.02	0.314	 0.048	 0.048	 Davis et al. 2011, Hudson et al. 2013; SFI++ Tully–Fisher peculiar velocities + 2MASS density field; https://arxiv.org/abs/1011.3114, https://arxiv.org/abs/1203.4814 (indirect constraints on fsigma8)
+SDSS-vel	0.10	0.37	 0.13	 0.13	 Feix et al. 2015; spatial modulations in galaxy luminosities; https://arxiv.org/abs/1503.05945
+2dFGRS		0.17	0.51	 0.06	 0.06	 Percival et al. 2004; galaxy clustering; https://arxiv.org/abs/astro-ph/0406513 (constaints on beta) 
+GAMA		0.18	0.36	 0.09	 0.09	 Blake et al. 2013; multiple-tracer clustering; https://arxiv.org/abs/1309.5556
+GAMA		0.38	0.44	 0.06	 0.06	 Blake et al. 2013; multiple-tracer clustering; https://arxiv.org/abs/1309.5556
+SDSS-DR7-MGS	0.15	0.49	 0.14	 0.15	 Howlett et al. 2015; galaxy clustering; https://arxiv.org/abs/1409.3238
+SDSS-DR7-LRG	0.25	0.3512	 0.0583	 0.0583	 Samushia et al. 2012; galaxy clustering; https://arxiv.org/abs/1102.1014
+SDSS-DR7-LRG	0.37	0.4602	 0.0378	 0.0378	 Samushia et al. 2012; galaxy clustering; https://arxiv.org/abs/1102.1014
+SDSS-DR7-LRG	0.35	0.429	 0.089	 0.089	 Chuang & Wang 2013; galaxy clustering; https://arxiv.org/abs/1205.5573
+WiggleZ		0.44	0.413	 0.080	 0.080	 Blake et al. 2012; galaxy clustering; https://arxiv.org/abs/1204.3674
+WiggleZ		0.60	0.390	 0.063	 0.063	 Blake et al. 2012; galaxy clustering; https://arxiv.org/abs/1204.3674
+WiggleZ		0.73	0.437	 0.072	 0.072	 Blake et al. 2012; galaxy clustering; https://arxiv.org/abs/1204.3674
+BOSS		0.3	0.407	 0.055	 0.055	 Tojeiro et al. 2012; passive galaxy clustering; https://arxiv.org/abs/1203.6565
+BOSS		0.4	0.419	 0.041	 0.041	 Tojeiro et al. 2012; passive galaxy clustering; https://arxiv.org/abs/1203.6565
+BOSS		0.5	0.427	 0.043	 0.042	 Tojeiro et al. 2012; passive galaxy clustering; https://arxiv.org/abs/1203.6565
+BOSS		0.6	0.433	 0.067	 0.067	 Tojeiro et al. 2012; passive galaxy clustering; https://arxiv.org/abs/1203.6565
+BOSS-CMASS 	0.57	0.428    0.066	 0.066 	 Chuang et al. 2013; galaxy clustering; https://arxiv.org/abs/1303.4486
+BOSS-CMASS 	0.57	0.419	 0.044	 0.044	 Beutler et al. 2014; galaxy clustering; https://arxiv.org/abs/1312.4611
+BOSS-CMASS 	0.57	0.441	 0.044	 0.044	 Samushia et al. 2014; galaxy clustering; https://arxiv.org/abs/1312.4899
+BOSS-CMASS 	0.57	0.451	 0.025	 0.025	 Reid et al. 2012; galaxy clustering; https://arxiv.org/abs/1203.6641
+BOSS-CMASS 	0.59	0.488	 0.060	 0.060	 Chuang et al. 2016; galaxy clustering; https://arxiv.org/abs/1312.4889
+eBOSS-LRG     	0.72	0.454	 0.139	 0.139	 Icaza-Lizaola et al. 2019; galaxy clustering; https://arxiv.org/pdf/1909.07742
+VVDS		0.77	0.490	 0.180	 0.180	 Guzzo et al. 2008; galaxy clustering; https://arxiv.org/abs/0802.1944 (constaints on beta)
+VIPERS-PDR1	0.8	0.47	 0.08	 0.08	 de la Torre et al. 2013; galaxy clustering; https://arxiv.org/abs/1303.2622
+VIPERS-PDR2	0.6	0.48	 0.12	 0.12	 de la Torre et al. 2016; galaxy clustering + galaxy-galaxy lensing; https://arxiv.org/abs/1612.05647
+VIPERS-PDR2	0.86	0.48	 0.10	 0.10	 de la Torre et al. 2016; galaxy clustering + galaxy-galaxy lensing; https://arxiv.org/abs/1612.05647
+VIPERS-PDR2	0.6	0.55	 0.12	 0.12    Pezzotta et al. 2016; galaxy clustering; https://arxiv.org/abs/1612.05645
+VIPERS-PDR2	0.86	0.40	 0.11	 0.12	 Pezzotta et al. 2016; galaxy clustering; https://arxiv.org/abs/1612.05645
+VIPERS-PDR2     0.727   0.296    0.078   0.075 	 Hawken et al. 2017; void profiles; https://arxiv.org/abs/1611.07046
+VIPERS-PRD2	0.85	0.45	 0.11	 0.11 	 Mohammad et al. 2017; clustering of blue galaxies; https://arxiv.org/abs/1708.00026
+FastSound	1.4	0.494	 0.120	 0.126   Okumura et al. 2016; galaxy clustering; https://arxiv.org/abs/1511.08083

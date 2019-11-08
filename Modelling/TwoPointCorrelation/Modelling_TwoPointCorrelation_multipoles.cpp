@@ -47,7 +47,7 @@ using namespace cbl;
 
 
 cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::Modelling_TwoPointCorrelation_multipoles (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
-  : Modelling_TwoPointCorrelation1D_monopole(twop), m_nmultipoles(3), m_nmultipoles_fit(3)
+  : Modelling_TwoPointCorrelation1D_monopole(twop), m_nmultipoles(3)
 {
   m_ModelIsSet = false;
 
@@ -67,18 +67,16 @@ cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::Modelling_TwoPo
 
 
 cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::Modelling_TwoPointCorrelation_multipoles (const std::shared_ptr<data::Data> twop_dataset, const int nmultipoles)
-  : Modelling_TwoPointCorrelation1D_monopole(twop_dataset), m_nmultipoles(nmultipoles), m_nmultipoles_fit(nmultipoles)
+  : Modelling_TwoPointCorrelation1D_monopole(twop_dataset), m_nmultipoles(nmultipoles)
 {
   m_ModelIsSet = false;
 
   m_multipoles_order.erase(m_multipoles_order.begin(), m_multipoles_order.end());
   m_use_pole.resize(3, false);
 
-  int size = m_data->ndata()/m_nmultipoles;
-
   for (int j=0; j<m_nmultipoles; j++) {
-    m_use_pole[j]=true;
-    for (int i=0; i<size; i++)
+    m_use_pole[j] = true;
+    for (int i=0; i<m_data->ndata()/m_nmultipoles; i++)
       m_multipoles_order.push_back(j);
   }
 
@@ -92,7 +90,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fit_ra
 {
   vector<vector<double>> fr(m_nmultipoles, vector<double>(2, -1.));
 
-  int mp = (nmultipoles > 0 && nmultipoles < m_nmultipoles) ? nmultipoles : m_nmultipoles;
+  int mp = (0<nmultipoles && nmultipoles<m_nmultipoles) ? nmultipoles : m_nmultipoles;
 
   for (int i=0; i<mp; i++) {
     fr[i][0] = xmin;
@@ -108,38 +106,31 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fit_ra
 
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fit_range (const std::vector<std::vector<double>> fit_range)
 {
-  if ((int)fit_range.size() != m_nmultipoles)
-    ErrorCBL("Error in set_fit_range of :Modelling_TwoPointCorrelation_multipoles.cpp, wrong number of multipoles provided!");
+  if ((int)fit_range.size()!=m_nmultipoles)
+    ErrorCBL("the dimension input matrix must be equal to the number of multipoles to be fitted, i.e."+conv(m_nmultipoles, par::fINT)+"!", "set_fit_range", "Modelling_TwoPointCorrelation_multipoles.cpp");
 
   m_use_pole = {false, false, false};
 
   m_multipoles_order.erase(m_multipoles_order.begin(), m_multipoles_order.end());
 
-  int size = m_data->ndata()/m_nmultipoles;
+  const int size = m_data->ndata()/m_nmultipoles;
   vector<bool> mask(m_data->ndata(), false);
   vector<double> xx;
 
   for (int j=0; j<m_nmultipoles; j++) {
     for (int i=0; i<size; i++) {
-      if (m_data->xx(i+j*size) < fit_range[j][1] && m_data->xx(i+j*size) > fit_range[j][0]) {
+      if (fit_range[j][0]<m_data->xx(i+j*size) && m_data->xx(i+j*size)<fit_range[j][1]) {
 	m_multipoles_order.push_back(j);
 	xx.push_back(m_data->xx(i+j*size));
-	m_use_pole[j]=true;
+	m_use_pole[j] = true;
 	mask[i+j*size] = true;
       }
     }
   }
 
-  vector<double> data, error;
-  vector<vector<double>> covariance;
-  m_data->cut(mask, data, error, covariance);
-
-  m_data_fit = make_shared<cbl::data::Data1D>(cbl::data::Data1D(xx, data, covariance));
+  m_data_fit = m_data->cut(mask);
+  
   m_fit_range = true; 
-
-  m_nmultipoles_fit = 0;
-  for (size_t i =0; i<m_use_pole.size(); i++)
-    m_nmultipoles_fit += m_use_pole[i];
 
   if (m_ModelIsSet) 
     m_data_model->dataset_order = m_multipoles_order;
@@ -154,30 +145,110 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fiduci
   m_data_model->nmultipoles = m_nmultipoles;
 
   m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
+
   vector<double> Pk(m_data_model->step, 0);
 
-  for (size_t i=0; i<(size_t)m_data_model->step; i++) 
-    Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+  for (size_t i=0; i<(size_t)m_data_model->step; i++)
+    Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
 
-  m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
-  
-  if (m_data_model->Pk_mu_model==0) {    
+  if (m_data_model->Pk_mu_model=="dispersion_dewiggled") {
     vector<double> PkNW(m_data_model->step,0);
-    for (size_t i=0; i<(size_t)m_data_model->step; i++) 
-      PkNW[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-    
+    for (size_t i=0; i<(size_t)m_data_model->step; i++)
+      PkNW[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+    m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
     m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
+
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_NW);
   }
-  else if (m_data_model->Pk_mu_model==1) {
+
+  else if (m_data_model->Pk_mu_model=="dispersion_modecoupling") {
     vector<double> kk_1loop, Pk_1loop;
     for (size_t i=0; i<(size_t)m_data_model->step; i++) {
-      if(m_data_model->kk[i] < par::pi) {
+      if (m_data_model->kk[i] < par::pi) {
 	kk_1loop.push_back(m_data_model->kk[i]);
-	Pk_1loop.push_back(m_data_model->cosmology->Pk_1loop(m_data_model->kk[i], m_data_model->func_Pk, 0,  m_data_model->k_min, 5., m_data_model->prec)); 
+	Pk_1loop.push_back(m_data_model->cosmology->Pk_1loop(m_data_model->kk[i], m_data_model->func_Pk, 0,  m_data_model->k_min, 5., m_data_model->prec));
       }
     }
+    m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
     m_data_model->func_Pk1loop = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(kk_1loop, Pk_1loop, "Spline"));
+
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk1loop);
   }
+
+  else if (m_data_model->Pk_mu_model=="DispersionGauss"  || m_data_model->Pk_mu_model=="DispersionLorentz") {
+    m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
+
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk);
+  }
+
+  else if (m_data_model->Pk_mu_model=="ScoccimarroPezzottaGauss"  || m_data_model->Pk_mu_model=="ScoccimarroPezzottaLorentz" || m_data_model->Pk_mu_model=="ScoccimarroBelGauss"  || m_data_model->Pk_mu_model=="ScoccimarroBelLorentz") {
+    vector<double> Pknonlin(m_data_model->step,0);
+    for (size_t i=0; i<(size_t)m_data_model->step; i++)
+      Pknonlin[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, true, m_data_model->redshift, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+    m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
+    m_data_model->func_Pk_nonlin = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pknonlin, "Spline"));
+
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_nonlin);
+  }
+
+  else if (m_data_model->Pk_mu_model=="ScoccimarroGauss"  || m_data_model->Pk_mu_model=="ScoccimarroLorentz") {
+    vector<vector<double>> Pk_terms = m_data_model->cosmology->Pk_TNS_dd_dt_tt(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->output_dir, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+
+    m_data_model->func_Pk_DeltaDelta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[0], "Spline"));
+    m_data_model->func_Pk_DeltaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[1], "Spline"));
+    m_data_model->func_Pk_ThetaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[2], "Spline"));
+
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_DeltaDelta);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_DeltaTheta);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_ThetaTheta);
+  }
+
+  else if (m_data_model->Pk_mu_model=="TaruyaGauss"  || m_data_model->Pk_mu_model=="TaruyaLorentz") {
+    vector<vector<double>> Pk_terms = m_data_model->cosmology->Pk_TNS_dd_dt_tt(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->output_dir, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+    vector<vector<double>> Pk_AB    = m_data_model->cosmology->Pk_TNS_AB_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->output_dir, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+
+    m_data_model->func_Pk_DeltaDelta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[0], "Spline"));
+    m_data_model->func_Pk_DeltaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[1], "Spline"));
+    m_data_model->func_Pk_ThetaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[2], "Spline"));
+
+    m_data_model->func_Pk_A11 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[0], "Spline"));
+    m_data_model->func_Pk_A12 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[1], "Spline"));
+    m_data_model->func_Pk_A22 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[2], "Spline"));
+    m_data_model->func_Pk_A23 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[3], "Spline"));
+    m_data_model->func_Pk_A33 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[4], "Spline"));
+    m_data_model->func_Pk_B12 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[5], "Spline"));
+    m_data_model->func_Pk_B13 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[6], "Spline"));
+    m_data_model->func_Pk_B14 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[7], "Spline"));
+    m_data_model->func_Pk_B22 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[8], "Spline"));
+    m_data_model->func_Pk_B23 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[9], "Spline"));
+    m_data_model->func_Pk_B24 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[10], "Spline"));
+    m_data_model->func_Pk_B33 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[11], "Spline"));
+    m_data_model->func_Pk_B34 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[12], "Spline"));
+    m_data_model->func_Pk_B44 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[13], "Spline"));
+
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_DeltaDelta);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_DeltaTheta);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_ThetaTheta);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A11);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A12);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A22);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A23);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A33);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B12);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B13);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B14);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B22);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B23);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B24);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B33);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B34);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B44);
+  }
+
+  else ErrorCBL("the chosen model ("+m_data_model->Pk_mu_model+") is not currently implemented!", "set_fiducial_PkDM", "Modelling_TwoPointCorrelation_multipoles.cpp");
 }
 
 
@@ -198,7 +269,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fiduci
     m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
 
     for (size_t i=0; i<(size_t)m_data_model->step; i++) 
-      Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+      Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
 
     m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
 
@@ -210,8 +281,8 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fiduci
     m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
 
     for (size_t i=0; i<(size_t)m_data_model->step; i++) {
-      Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-      PkNW[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+      Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+      PkNW[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
     }
 
     m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
@@ -234,12 +305,12 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fiduci
 
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_fullShape_DeWiggled (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution SigmaNL_perpendicular_prior, const statistics::PriorDistribution SigmaNL_parallel_prior, statistics::PriorDistribution fsigma8_prior, statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution SigmaS_prior, const bool compute_PkDM)
 {
-  m_data_model->Pk_mu_model = 0;
+  m_data_model->Pk_mu_model = "dispersion_dewiggled";
 
   // compute the fiducial dark matter two-point correlation function
   if (compute_PkDM) set_fiducial_PkDM();
 
-  m_data_model->nmultipoles = m_nmultipoles_fit;
+  m_data_model->nmultipoles = m_nmultipoles;
   m_data_model->dataset_order = m_multipoles_order;
   m_data_model->use_pole = m_use_pole;
 
@@ -261,6 +332,42 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 
   //set the priors
   m_set_prior(priors);
+  
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiMultipoles, nparameters, parameterType, parameterName, m_data_model));
+  m_ModelIsSet = true;
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_Dispersion (statistics::PriorDistribution fsigma8_prior, statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigma12_prior, const bool DFoG, const bool compute_PkDM)
+{
+  if (DFoG) m_data_model->Pk_mu_model = "DispersionGauss";
+  else m_data_model->Pk_mu_model = "DispersionLorentz";
+
+  // compute the fiducial dark matter two-point correlation function
+  if (compute_PkDM) set_fiducial_PkDM();
+
+  m_data_model->nmultipoles = m_nmultipoles;
+  m_data_model->dataset_order = m_multipoles_order;
+  m_data_model->use_pole = m_use_pole;
+
+  // set the model parameters
+  const int nparameters = 3;
+
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b*sigma8";
+  parameterName[2] = "sigma12";
+
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigma12_prior};
+
+  //set the priors
+  m_set_prior(priors);
 
   // construct the model
   m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiMultipoles, nparameters, parameterType, parameterName, m_data_model));
@@ -271,14 +378,165 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_fullShape_ModeCoupling (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, statistics::PriorDistribution fsigma8_prior, statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution SigmaV_prior, const statistics::PriorDistribution AMC_prior, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigma12_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution kt_prior, const bool DFoG, const bool compute_PkDM)
 {
-  m_data_model->Pk_mu_model = 1;
+  if (DFoG) m_data_model->Pk_mu_model = "ScoccimarroPezzottaGauss";
+  else m_data_model->Pk_mu_model = "ScoccimarroPezzottaLorentz";
 
   // compute the fiducial dark matter two-point correlation function
   if (compute_PkDM) set_fiducial_PkDM();
 
-  m_data_model->nmultipoles = m_nmultipoles_fit;
+  m_data_model->nmultipoles = m_nmultipoles;
+  m_data_model->dataset_order = m_multipoles_order;
+  m_data_model->use_pole = m_use_pole;
+
+  // set the model parameters
+  const int nparameters = 5;
+
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b*sigma8";
+  parameterName[2] = "sigma12";
+  parameterName[3] = "kd";
+  parameterName[4] = "kt";
+
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigma12_prior, kd_prior, kt_prior};
+
+  //set the priors
+  m_set_prior(priors);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiMultipoles, nparameters, parameterType, parameterName, m_data_model));
+  m_ModelIsSet = true;
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigma12_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution bb_prior, const statistics::PriorDistribution a1_prior, const statistics::PriorDistribution a2_prior, const statistics::PriorDistribution a3_prior, const bool DFoG, const bool compute_PkDM)
+{
+  if (DFoG) m_data_model->Pk_mu_model = "ScoccimarroBelGauss";
+  else m_data_model->Pk_mu_model = "ScoccimarroBelLorentz";
+
+  // compute the fiducial dark matter two-point correlation function
+  if (compute_PkDM) set_fiducial_PkDM();
+
+  m_data_model->nmultipoles = m_nmultipoles;
+  m_data_model->dataset_order = m_multipoles_order;
+  m_data_model->use_pole = m_use_pole;
+
+  // set the model parameters
+  const int nparameters = 8;
+
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b*sigma8";
+  parameterName[2] = "sigma12";
+  parameterName[3] = "kd";
+  parameterName[4] = "bb";
+  parameterName[5] = "a1";
+  parameterName[6] = "a2";
+  parameterName[7] = "a3";
+
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigma12_prior, kd_prior, bb_prior, a1_prior, a2_prior, a3_prior};
+
+  //set the priors
+  m_set_prior(priors);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiMultipoles, nparameters, parameterType, parameterName, m_data_model));
+  m_ModelIsSet = true;
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_TNS (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigma12_prior, const bool DFoG, const bool compute_PkDM)
+{
+  if (DFoG) m_data_model->Pk_mu_model = "TaruyaGauss";
+  else m_data_model->Pk_mu_model = "TaruyaLorentz";
+
+  // compute the fiducial dark matter two-point correlation function
+  if (compute_PkDM) set_fiducial_PkDM();
+
+  m_data_model->nmultipoles = m_nmultipoles;
+  m_data_model->dataset_order = m_multipoles_order;
+  m_data_model->use_pole = m_use_pole;
+
+  // set the model parameters
+  const int nparameters = 3;
+
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b*sigma8";
+  parameterName[2] = "sigma12";
+
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigma12_prior};
+
+  //set the priors
+  m_set_prior(priors);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiMultipoles, nparameters, parameterType, parameterName, m_data_model));
+  m_ModelIsSet = true;
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigma12_prior, const bool DFoG, const bool compute_PkDM)
+{
+  if (DFoG) m_data_model->Pk_mu_model = "ScoccimarroGauss";
+  else m_data_model->Pk_mu_model = "ScoccimarroLorentz";
+
+  // compute the fiducial dark matter two-point correlation function
+  if (compute_PkDM) set_fiducial_PkDM();
+
+  m_data_model->nmultipoles = m_nmultipoles;
+  m_data_model->dataset_order = m_multipoles_order;
+  m_data_model->use_pole = m_use_pole;
+
+  // set the model parameters
+  const int nparameters = 3;
+
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b*sigma8";
+  parameterName[2] = "sigma12";
+
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigma12_prior};
+
+  //set the priors
+  m_set_prior(priors);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiMultipoles, nparameters, parameterType, parameterName, m_data_model));
+  m_ModelIsSet = true;
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_fullShape_ModeCoupling (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution SigmaV_prior, const statistics::PriorDistribution AMC_prior, const bool compute_PkDM)
+{
+  m_data_model->Pk_mu_model = "dispersion_modecoupling";
+
+  // compute the fiducial dark matter two-point correlation function
+  if (compute_PkDM) set_fiducial_PkDM();
+
+  m_data_model->nmultipoles = m_nmultipoles;
   m_data_model->dataset_order = m_multipoles_order;
   m_data_model->use_pole = m_use_pole;
 
@@ -314,7 +572,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
   // compute the fiducial dark matter two-point correlation function
   set_fiducial_PkDM();
 
-  m_data_model->nmultipoles = m_nmultipoles_fit;
+  m_data_model->nmultipoles = m_nmultipoles;
   m_data_model->dataset_order = m_multipoles_order;
   m_data_model->use_pole = m_use_pole;
 
@@ -346,7 +604,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
   // compute the fiducial dark matter two-point correlation function
   if (compute_XiDM) set_fiducial_xiDM();
 
-  m_data_model->nmultipoles = m_nmultipoles_fit;
+  m_data_model->nmultipoles = m_nmultipoles;
   m_data_model->dataset_order = m_multipoles_order;
   m_data_model->use_pole = m_use_pole;
 
@@ -383,10 +641,12 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::write_model (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const std::vector<double> parameters)
 {
+  if (m_likelihood==NULL) ErrorCBL("this function requires the likelihood to be defined (with the function set_likelihood)!", "write_model", "Modelling_TwoPointCorrelation_multipoles.cpp");
+  
   int nmultipoles_original = m_data_model->nmultipoles;
   vector<int> dataset_order_original = m_data_model->dataset_order;
 
-  m_data_model->nmultipoles=nmultipoles;
+  m_data_model->nmultipoles = nmultipoles;
 
   vector<bool> new_use_pole(3, false);
   vector<int> new_dataset_order;
@@ -405,6 +665,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::write_mode
 
   m_data_model->dataset_order = new_dataset_order;
   m_data_model->use_pole = new_use_pole;
+
   m_likelihood->write_model(output_dir, output_file, parameters, new_xx);
 
   m_data_model->dataset_order = dataset_order_original;
@@ -418,8 +679,8 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::write_mode
 
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::write_model_at_bestfit (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx)
 {
-  if(m_posterior==NULL)
-    ErrorCBL("Error in write_model_at_bestfit of Modelling_TwoPointCorrelation_multipoles.cpp. No posterior found! Run maximize_posterior() first");
+  if (m_posterior==NULL)
+    ErrorCBL("no posterior found: run maximize_posterior() first!", "write_model_at_best_fit", "Modelling_TwoPointCorrelation_multipoles.cpp");
 
   int nmultipoles_original = m_data_model->nmultipoles;
   vector<int> dataset_order_original = m_data_model->dataset_order;
@@ -456,8 +717,8 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::write_mode
 
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::write_model_from_chains (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const int start, const int thin)
 {
-  if(m_posterior==NULL)
-    ErrorCBL("Error in write_model_from_chains of Modelling_TwoPointCorrelation_multipoles.cpp. No posterior found! Run sample_posterior() first");
+  if (m_posterior==NULL)
+    ErrorCBL("no posterior found: run sample_posterior() first!", "write_model_from_chains", "Modelling_TwoPointCorrelation_multipoles.cpp");
 
   int nmultipoles_original = m_data_model->nmultipoles;
   vector<int> dataset_order_original = m_data_model->dataset_order;

@@ -341,7 +341,7 @@ double cbl::multipoles (double rr, shared_ptr<void> pp, std::vector<double> par)
   
   if (vec->type[index]==1) return multipole_xi0(0,cos_lin,xi_cos); 
   else if (vec->type[index]==2) return multipole_xi2(0,cos_lin,xi_cos); 
-  else return ErrorCBL("Error in the function multipoles of FuncMultipoles.cpp!");
+  else return ErrorCBL("vec->type[index]!=1 and !=2", "multipoles", "FuncMultipoles.cpp");
 
 }
 
@@ -377,7 +377,7 @@ double cbl::multipole_xi0_model (double xx, shared_ptr<void> pp, std::vector<dou
 
   if (par.size()==2) return multipole_xi0_model(par[0], vec->bias_sigma8, vec->sigma8z, vec->xi_DM[par[par.size()-1]]); 
 
-  else return ErrorCBL("Error in multipole_xi0_model of FuncMultipoles.cpp!");
+  else return ErrorCBL("par.size()!=2", "multipole_xi0_model", "FuncMultipoles.cpp");
 }
 
 /// @endcond
@@ -491,7 +491,7 @@ double cbl::Pkl_Kaiser_integral(const int order, const double bias, const double
   Func.function = &Pkl_Kaiser_integrand;
   Func.params = &params;
 
-  return 0.5*(2*order+1)*gsl::GSL_integrate_qag(Func, -1., 1., prec, limit_size, 6);
+  return 0.5*(2*order+1)*wrapper::gsl::GSL_integrate_qag(Func, -1., 1., prec, limit_size, 6);
 }
 
 
@@ -608,7 +608,7 @@ std::vector<double> cbl::Xi0 (const std::vector<double> r, const std::vector<dou
 
     for (int i=0; i<nbins; i++) {
       params.r = r[i];
-      xi0[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, 0., limit_size, 6)*f0;
+      xi0[i] = wrapper::gsl::GSL_integrate_qag(Func, k_min, k_max, prec, 0., limit_size, 6)*f0;
     }
     
     Pk0_interp.free();
@@ -664,7 +664,7 @@ std::vector<double> cbl::Xi2 (const std::vector<double> rr, const std::vector<do
 
       for (int i=0; i<nbins; i++) {
         params.r = rr[i];
-	xi2[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, 0., limit_size, 6)*f2;
+	xi2[i] = wrapper::gsl::GSL_integrate_qag(Func, k_min, k_max, prec, 0., limit_size, 6)*f2;
       }
       Pk2_interp.free();
 
@@ -720,7 +720,7 @@ std::vector<double> cbl::Xi4(const std::vector<double> rr, const std::vector<dou
 
       for (int i=0; i<nbins; i++) {
         params.r = rr[i];
-	xi4[i] = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, 0., limit_size, 6)*f4;
+	xi4[i] = wrapper::gsl::GSL_integrate_qag(Func, k_min, k_max, prec, 0., limit_size, 6)*f4;
       }
       Pk4_interp.free();
 
@@ -975,7 +975,7 @@ std::vector< std::vector<double>> cbl::sigma2_k (const double nObjects, const do
       int index = j+n_orders*i;
       for(size_t k=0;k<kk.size();k++){
 	params.kk = kk[k];
-	double Int = gsl::GSL_integrate_qag(Func, -1, 1., prec, limit_size, 6);
+	double Int = wrapper::gsl::GSL_integrate_qag(Func, -1, 1., prec, limit_size, 6);
 	sigma2[index][k] = (2*orders[i]+1)*(2*orders[j]+1)*Int/Volume;
       }
     }
@@ -1042,7 +1042,7 @@ void cbl::Covariance_XiMultipoles (std::vector<double> &rr, std::vector<std::vec
 	params.jl1r1 = &jl1r1;
 	params.jl2r2 = &jl2r2;
 
-	double Int = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6);
+	double Int = wrapper::gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6);
 	Int = Int/(2.*par::pi*par::pi);
 	covariance[i+nbins*l][j+nbins*l] = Int;
 	covariance[j+nbins*l][i+nbins*l] = Int;
@@ -1070,7 +1070,7 @@ void cbl::Covariance_XiMultipoles (std::vector<double> &rr, std::vector<std::vec
 	  params.jl1r1 = &jl1r1;
 	  params.jl2r2 = &jl2r2;
 
-	  double Int = gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6);
+	  double Int = wrapper::gsl::GSL_integrate_qag(Func, k_min, k_max, prec, limit_size, 6);
 	  Int = sign*Int/(2.*par::pi*par::pi);
 	  covariance[i+nbins*l1][j+nbins*l2] = Int;
 	  covariance[j+nbins*l2][i+nbins*l1] = Int;

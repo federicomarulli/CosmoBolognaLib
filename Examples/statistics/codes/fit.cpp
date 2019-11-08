@@ -102,9 +102,8 @@ int main () {
     
     // --- construct the priors ---
     
-    // (remember to give different seed to priors!)
-    auto prior_A = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Uniform_, minA, maxA, 666));
-    auto prior_B = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Uniform_, minB, maxB, 999));
+    auto prior_A = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Uniform_, minA, maxA));
+    auto prior_B = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Uniform_, minB, maxB));
     auto prior_C = make_shared<cbl::statistics::PriorDistribution>(cbl::statistics::PriorDistribution(cbl::glob::DistributionType::_Constant_, valC));
     const vector<shared_ptr<cbl::statistics::PriorDistribution>> prior_distributions = {prior_A, prior_B, prior_C};
 
@@ -114,23 +113,28 @@ int main () {
     cbl::statistics::Posterior posterior(prior_distributions, likelihood, 696);
 
     // maximize the posterior
-    posterior.maximize({valA, valB});
+    //posterior.maximize({valA, valB});
 
-    // sample the posterior
+    // sample the posterior (starting the MCMC chain from the maximum of the posterior to speed up the chain convergence)
     const int nwalkers = 10;
     const int chain_size = 5000;
     posterior.initialize_chains(chain_size, nwalkers, 1.e-5, {valA, valB});
     posterior.sample_stretch_move(2);
 
-    // show the results on screen
+    // show the median MCMC values of the four parameters on screen
+    cout << endl;
+    for (size_t i=0; i<posterior.parameters()->nparameters(); ++i)
+      cout << setprecision(4) << "Posterior median of " << posterior.parameters()->name(i) << " = " << posterior.parameters()->bestfit_value(i) << endl;
+
+    // show all the MCMC statistics on screen
     const int burn_in = 0;
     const int thin = 1;
     posterior.show_results(burn_in, thin);
 
-    // write the chain ouput
+    // store the chain ouputs
     posterior.write_results(cbl::par::DirLoc+"../output/", "chains_linear_relation", burn_in, thin);
 
-    // write the best-fit model
+    // store the best-fit model
     posterior.write_model_from_chain(cbl::par::DirLoc+"../output/", "model_from_chain.dat", {}, {}, burn_in, thin);
 
   }

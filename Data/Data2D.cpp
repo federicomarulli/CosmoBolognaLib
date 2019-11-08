@@ -77,8 +77,9 @@ cbl::data::Data2D::Data2D (const std::vector<double> x, const std::vector<double
   m_ysize = m_y.size();
 
   checkDim(data, m_xsize, "data");
-  checkDim(error, m_xsize, "error");
 
+  checkDim(error, m_xsize, "error");
+  
   for (int i=0; i<m_xsize; i++) {
     checkDim(data[i], m_ysize, "data["+conv(i, par::fINT)+"]");
     checkDim(error[i], m_ysize, "error["+conv(i, par::fINT)+"]");
@@ -117,7 +118,7 @@ cbl::data::Data2D::Data2D (const std::vector<double> x, const std::vector<double
 
   m_covariance.resize(m_ndata, vector<double>(m_ndata,0));
   for (int i=0; i<m_ndata; i++)
-    m_covariance[i][i] = pow(m_error[i],2);
+    m_covariance[i][i] = pow(m_error[i], 2);
 }
 
 
@@ -173,24 +174,35 @@ void cbl::data::Data2D::get_error (std::vector<std::vector<double>> &error) cons
   error.resize(m_xsize, vector<double>(m_ysize,0));
 
   for (int i=0; i<m_xsize; i++)
-    for (int j=0; j< m_ysize; j++) {
+    for (int j=0; j< m_ysize; j++) 
       error[i][j] = this->error(i,j);
-    }
 }
 
 
 // ======================================================================================
 
 
-void cbl::data::Data2D::read (const string input_file, const int skip_nlines)
+void cbl::data::Data2D::read (const string input_file, const int skip_nlines, const int column_x, const vector<int> column_data, const vector<int> column_errors)
 {
-  (void)skip_nlines;
-  
-  ErrorCBL("Error in cbl::data::Data2D::read : work in progress!", glob::ExitCode::_workInProgress_);
+  (void)input_file; (void)skip_nlines; (void)column_x; (void)column_data; (void)column_errors;
 
-  ifstream fin(input_file.c_str()); checkIO(fin, input_file);
-  
-  fin.clear(); fin.close();
+  ErrorCBL("", "read", "Data2D.cpp", glob::ExitCode::_workInProgress_);
+}
+
+
+// ======================================================================================
+
+
+void cbl::data::Data2D::Print (const int precision) const 
+{
+  for (int i=0; i<m_xsize; ++i)
+    for (int j=0; j<m_ysize; ++j) {
+      int index = j+m_ysize*i;
+      coutCBL << setprecision(precision) << setw(8) << right << m_x[i]
+	      << "   " << setprecision(precision) << setw(8) << right << m_y[j]
+	      << "   " << setprecision(precision) << setw(8) << right << m_data[index]
+	      << "   " << setprecision(precision) << setw(8) << right << m_error[index] << endl;
+    }
 }
 
 

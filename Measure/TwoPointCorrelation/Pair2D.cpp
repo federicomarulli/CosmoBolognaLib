@@ -43,6 +43,19 @@ using namespace pairs;
 // ============================================================================================
 
 
+void cbl::pairs::Pair2D::reset ()
+{
+  for (int i=0; i<m_nbins_D1; i++) {
+    for (int j=0; j<m_nbins_D2; j++) {
+      m_PP2D[i][j] = 0.;
+      m_PP2D_weighted[i][j] = 0;
+    }
+  }
+}
+
+// ============================================================================================
+
+
 void cbl::pairs::Pair2D_comovingCartesian_linlin::m_set_parameters_nbins ()
 {
   const double binSize_D1 = ((m_rpMax-m_rpMin)/m_nbins_D1);
@@ -84,7 +97,7 @@ void cbl::pairs::Pair2D_comovingCartesian_linlin::m_set_parameters_binSize ()
 void cbl::pairs::Pair2D_comovingCartesian_linlog::m_set_parameters_nbins ()
 {
   if (m_piMin<1.e-30)
-    ErrorCBL("Error in cbl::pairs::Pair2D_comovingCartesian_linlog::m_set_parameters_nbins of Pair.cpp: m_piMin must be >0!");
+    ErrorCBL("m_piMin must be >0!", "m_set_parameters_nbins", "Pair2D.cpp");
   
   const double binSize_D1 = ((m_rpMax-m_rpMin)/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
@@ -106,7 +119,7 @@ void cbl::pairs::Pair2D_comovingCartesian_linlog::m_set_parameters_nbins ()
 void cbl::pairs::Pair2D_comovingCartesian_linlog::m_set_parameters_binSize ()
 {
   if (m_piMin<1.e-30)
-    ErrorCBL("Error in cbl::pairs::Pair2D_comovingCartesian_linlog::m_set_parameters_binSize of Pair.cpp: m_piMin must be >0!");
+    ErrorCBL("m_piMin must be >0!", "m_set_parameters_binSize", "Pair2D.cpp");
   
   m_nbins_D1 = nint((m_rpMax-m_rpMin)*m_binSize_inv_D1);
   m_rpMax = m_nbins_D1/m_binSize_inv_D1+m_rpMin;
@@ -128,7 +141,7 @@ void cbl::pairs::Pair2D_comovingCartesian_linlog::m_set_parameters_binSize ()
 void cbl::pairs::Pair2D_comovingCartesian_loglin::m_set_parameters_nbins ()
 {
   if (m_rpMin<1.e-30)
-    ErrorCBL("Error in cbl::pairs::Pair2D_comovingCartesian_loglin::m_set_parameters_nbins of Pair.cpp: m_rpMin must be >0!");
+    ErrorCBL("m_rpMin must be >0!", "m_set_parameters_nbins", "Pair2D.cpp");
   
   const double binSize_D1 = ((log10(m_rpMax)-log10(m_rpMin))/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
@@ -150,7 +163,7 @@ void cbl::pairs::Pair2D_comovingCartesian_loglin::m_set_parameters_nbins ()
 void cbl::pairs::Pair2D_comovingCartesian_loglin::m_set_parameters_binSize ()
 {
   if (m_rpMin<1.e-30)
-    ErrorCBL("Error in cbl::pairs::Pair2D_comovingCartesian_linlin::m_set_parameters_binSize of Pair.cpp: m_rpMin must be >0!");
+    ErrorCBL("m_rpMin must be >0!", "m_set_parameters_binSize", "Pair2D.cpp");
   
   m_nbins_D1 = nint((log10(m_rpMax)-log10(m_rpMin))*m_binSize_inv_D1);
   m_rpMax = pow(10.,m_nbins_D1/m_binSize_inv_D1+log10(m_rpMin));
@@ -172,7 +185,7 @@ void cbl::pairs::Pair2D_comovingCartesian_loglin::m_set_parameters_binSize ()
 void cbl::pairs::Pair2D_comovingCartesian_loglog::m_set_parameters_nbins ()
 {
   if (m_rpMin<1.e-30 || m_piMin<1.e-30)
-    ErrorCBL("Error in cbl::pairs::Pair2D_comovingCartesian_loglog::m_set_parameters_nbins of Pair.cpp: m_rpMin and m_piMin must be >0!");
+    ErrorCBL("m_rpMin and m_piMin must be >0!", "m_set_parameters_nbins", "Pair2D.cpp");
   
   const double binSize_D1 = ((log10(m_rpMax)-log10(m_rpMin))/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
@@ -194,7 +207,7 @@ void cbl::pairs::Pair2D_comovingCartesian_loglog::m_set_parameters_nbins ()
 void cbl::pairs::Pair2D_comovingCartesian_loglog::m_set_parameters_binSize ()
 {
   if (m_rpMin<1.e-30 || m_piMin<1.e-30)
-    ErrorCBL("Error in cbl::pairs::Pair2D_comovingCartesian_loglog::m_set_parameters_binSize of Pair.cpp: m_rpMin and m_piMin must be >0!");
+    ErrorCBL("m_rpMin and m_piMin must be >0!", "m_set_parameters_binSize", "Pair2D.cpp");
   
   m_nbins_D1 = nint((log10(m_rpMax)-log10(m_rpMin))*m_binSize_inv_D1);
   m_rpMax = pow(10.,m_nbins_D1/m_binSize_inv_D1+log10(m_rpMin));
@@ -254,7 +267,7 @@ void cbl::pairs::Pair2D_comovingPolar_linlin::m_set_parameters_binSize ()
 void cbl::pairs::Pair2D_comovingPolar_linlog::m_set_parameters_nbins ()
 {
   if (m_muMin<1.e-30)
-    ErrorCBL("Error in cbl::pairs::Pair2D_comovingPolar_linlog::m_set_parameters_nbins of Pair.cpp: m_muMin must be >0!");
+    ErrorCBL("m_muMin must be >0!", "m_set_parameters_nbins", "Pair2D.cpp");
   
   const double binSize_D1 = ((m_rMax-m_rMin)/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
@@ -276,7 +289,7 @@ void cbl::pairs::Pair2D_comovingPolar_linlog::m_set_parameters_nbins ()
 void cbl::pairs::Pair2D_comovingPolar_linlog::m_set_parameters_binSize ()
 {
   if (m_muMin<1.e-30)
-    ErrorCBL("Error in cbl::pairs::Pair2D_comovingPolar_linlog::m_set_parameters_linlog of Pair.cpp: m_muMin must be >0!");
+    ErrorCBL("m_muMin must be >0!", "m_set_parameters_binSize", "Pair2D.cpp");
   
   m_nbins_D1 = nint((m_rMax-m_rMin)*m_binSize_inv_D1);
   m_rMax = m_nbins_D1/m_binSize_inv_D1+m_rMin;
@@ -298,7 +311,7 @@ void cbl::pairs::Pair2D_comovingPolar_linlog::m_set_parameters_binSize ()
 void cbl::pairs::Pair2D_comovingPolar_loglin::m_set_parameters_nbins ()
 {
   if (m_rMin<1.e-30)
-    ErrorCBL("Error in cbl::pairs::Pair2D_comovingPolar_loglin::m_set_parameters_nbins of Pair.cpp: m_rMin must be >0!");
+    ErrorCBL("m_rMin must be >0!", "m_set_parameters_nbins", "Pair2D.cpp");
   
   const double binSize_D1 = ((log10(m_rMax)-log10(m_rMin))/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
@@ -320,7 +333,7 @@ void cbl::pairs::Pair2D_comovingPolar_loglin::m_set_parameters_nbins ()
 void cbl::pairs::Pair2D_comovingPolar_loglin::m_set_parameters_binSize ()
 {
   if (m_rMin<1.e-30)
-    ErrorCBL("Error in cbl::pairs::Pair2D_comovingPolar_loglin::m_set_parameters_binSize of Pair.cpp: m_rMin must be >0!");
+    ErrorCBL("m_rMin must be >0!", "m_set_parameters_binSize", "Pair2D.cpp");
   
   m_nbins_D1 = nint((log10(m_rMax)-log10(m_rMin))*m_binSize_inv_D1);
   m_rMax = pow(10.,m_nbins_D1/m_binSize_inv_D1+log10(m_rMin));
@@ -342,7 +355,7 @@ void cbl::pairs::Pair2D_comovingPolar_loglin::m_set_parameters_binSize ()
 void cbl::pairs::Pair2D_comovingPolar_loglog::m_set_parameters_nbins ()
 {
   if (m_rMin<1.e-30 || m_muMin<1.e-30)
-    ErrorCBL("Error in cbl::pairs::Pair2D_comovingPolar_loglog::m_set_parameters_nbins of Pair.cpp: m_rMin and m_muMin must be >0!");
+    ErrorCBL("m_rMin and m_muMin must be >0!", "m_set_parameters_nbins", "Pair2D.cpp");
   
   const double binSize_D1 = ((log10(m_rMax)-log10(m_rMin))/m_nbins_D1);
   m_binSize_inv_D1 = 1./binSize_D1;
@@ -364,7 +377,7 @@ void cbl::pairs::Pair2D_comovingPolar_loglog::m_set_parameters_nbins ()
 void cbl::pairs::Pair2D_comovingPolar_loglog::m_set_parameters_binSize ()
 {
   if (m_rMin<1.e-30 || m_muMin<1.e-30)
-    ErrorCBL("Error in cbl::pairs::Pair2D_comovingPolar_loglog::m_set_parameters_binSize of Pair.cpp: m_rMin and m_muMin must be >0!");
+    ErrorCBL("m_rMin and m_muMin must be >0!", "m_set_parameters_binSize", "Pair2D.cpp");
   
   m_nbins_D1 = nint((log10(m_rMax)-log10(m_rMin))*m_binSize_inv_D1);
   m_rMax = pow(10.,m_nbins_D1/m_binSize_inv_D1+log10(m_rMin));
@@ -383,7 +396,7 @@ void cbl::pairs::Pair2D_comovingPolar_loglog::m_set_parameters_binSize ()
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingCartesian_linlin::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
+void cbl::pairs::Pair2D_comovingCartesian_linlin::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
 {
   ir = -1;
   ir = -1;
@@ -392,7 +405,7 @@ void cbl::pairs::Pair2D_comovingCartesian_linlin::get_pair (const shared_ptr<Obj
   const double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
   const double pi = fabs(obj1->dc()-obj2->dc());
   
-  if (m_rpMin<rp && rp<m_rpMax && m_piMin<pi && pi<m_piMax) {
+  if (m_rpMin<rp && rp<m_rpMax && m_piMin<=pi && pi<m_piMax) {
 
     ir = max(0, min(int((rp-m_rpMin)*m_binSize_inv_D1), m_nbins_D1));
     jr = max(0, min(int((pi-m_piMin)*m_binSize_inv_D2), m_nbins_D2));
@@ -409,7 +422,7 @@ void cbl::pairs::Pair2D_comovingCartesian_linlin::get_pair (const shared_ptr<Obj
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingCartesian_linlog::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
+void cbl::pairs::Pair2D_comovingCartesian_linlog::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
 {
   ir = -1;
   ir = -1;
@@ -436,7 +449,7 @@ void cbl::pairs::Pair2D_comovingCartesian_linlog::get_pair (const shared_ptr<Obj
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingCartesian_loglin::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
+void cbl::pairs::Pair2D_comovingCartesian_loglin::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
 {
   ir = -1;
   ir = -1;
@@ -445,7 +458,7 @@ void cbl::pairs::Pair2D_comovingCartesian_loglin::get_pair (const shared_ptr<Obj
   const double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
   const double pi = fabs(obj1->dc()-obj2->dc());
 
-  if (m_rpMin<rp && rp<m_rpMax && m_piMin<pi && pi<m_piMax) {
+  if (m_rpMin<rp && rp<m_rpMax && m_piMin<=pi && pi<m_piMax) {
 
     ir = max(0, min(int((log10(rp)-log10(m_rpMin))*m_binSize_inv_D1), m_nbins_D1)); 
     jr = max(0, min(int((pi-m_piMin)*m_binSize_inv_D2), m_nbins_D2));
@@ -462,7 +475,7 @@ void cbl::pairs::Pair2D_comovingCartesian_loglin::get_pair (const shared_ptr<Obj
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingCartesian_loglog::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
+void cbl::pairs::Pair2D_comovingCartesian_loglog::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
 {
   ir = -1;
   ir = -1;
@@ -488,7 +501,7 @@ void cbl::pairs::Pair2D_comovingCartesian_loglog::get_pair (const shared_ptr<Obj
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingPolar_linlin::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
+void cbl::pairs::Pair2D_comovingPolar_linlin::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
 {
   ir = -1;
   ir = -1;
@@ -514,7 +527,7 @@ void cbl::pairs::Pair2D_comovingPolar_linlin::get_pair (const shared_ptr<Object>
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingPolar_linlog::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
+void cbl::pairs::Pair2D_comovingPolar_linlog::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
 {
   ir = -1;
   ir = -1;
@@ -539,7 +552,7 @@ void cbl::pairs::Pair2D_comovingPolar_linlog::get_pair (const shared_ptr<Object>
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingPolar_loglin::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
+void cbl::pairs::Pair2D_comovingPolar_loglin::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
 {
   ir = -1;
   ir = -1;
@@ -565,7 +578,7 @@ void cbl::pairs::Pair2D_comovingPolar_loglin::get_pair (const shared_ptr<Object>
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingPolar_loglog::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
+void cbl::pairs::Pair2D_comovingPolar_loglog::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &ir, int &jr, double &ww) 
 {
   ir = -1;
   ir = -1;
@@ -596,7 +609,7 @@ void cbl::pairs::Pair2D_comovingCartesian_linlin::put (const shared_ptr<Object> 
   const double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
   const double pi = fabs(obj1->dc()-obj2->dc());
   
-  if (m_rpMin<rp && rp<m_rpMax && m_piMin<pi && pi<m_piMax) {
+  if (m_rpMin<rp && rp<m_rpMax && m_piMin<=pi && pi<m_piMax) {
 
     const int ir = max(0, min(int((rp-m_rpMin)*m_binSize_inv_D1), m_nbins_D1));
     const int jr = max(0, min(int((pi-m_piMin)*m_binSize_inv_D2), m_nbins_D2));
@@ -642,7 +655,7 @@ void cbl::pairs::Pair2D_comovingCartesian_loglin::put (const shared_ptr<Object> 
   const double rp = perpendicular_distance(obj1->ra(), obj2->ra(), obj1->dec(), obj2->dec(), obj1->dc(), obj2->dc());
   const double pi = fabs(obj1->dc()-obj2->dc());
 
-  if (m_rpMin<rp && rp<m_rpMax && m_piMin<pi && pi<m_piMax) {
+  if (m_rpMin<rp && rp<m_rpMax && m_piMin<=pi && pi<m_piMax) {
 
     const int ir = max(0, min(int((log10(rp)-log10(m_rpMin))*m_binSize_inv_D1), m_nbins_D1)); 
     const int jr = max(0, min(int((pi-m_piMin)*m_binSize_inv_D2), m_nbins_D2));
@@ -775,7 +788,7 @@ void cbl::pairs::Pair2D_comovingPolar_loglog::put (const shared_ptr<Object> obj1
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingCartesian_linlin::set_pair (const int ir, const int jr, const double ww, const double weight) 
+void cbl::pairs::Pair2D_comovingCartesian_linlin::set (const int ir, const int jr, const double ww, const double weight) 
 {
   if (ir>-1 && jr>-1){
     m_PP2D[ir][jr] += weight;
@@ -787,7 +800,7 @@ void cbl::pairs::Pair2D_comovingCartesian_linlin::set_pair (const int ir, const 
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingCartesian_linlog::set_pair (const int ir, const int jr, const double ww, const double weight) 
+void cbl::pairs::Pair2D_comovingCartesian_linlog::set (const int ir, const int jr, const double ww, const double weight) 
 {
   if (ir>-1 && jr>-1){
     m_PP2D[ir][jr] += weight;
@@ -799,7 +812,7 @@ void cbl::pairs::Pair2D_comovingCartesian_linlog::set_pair (const int ir, const 
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingCartesian_loglin::set_pair (const int ir, const int jr, const double ww, const double weight) 
+void cbl::pairs::Pair2D_comovingCartesian_loglin::set (const int ir, const int jr, const double ww, const double weight) 
 {
   if (ir>-1 && jr>-1){
     m_PP2D[ir][jr] += weight;
@@ -811,7 +824,7 @@ void cbl::pairs::Pair2D_comovingCartesian_loglin::set_pair (const int ir, const 
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingCartesian_loglog::set_pair (const int ir, const int jr, const double ww, const double weight) 
+void cbl::pairs::Pair2D_comovingCartesian_loglog::set (const int ir, const int jr, const double ww, const double weight) 
 {
   if (ir>-1 && jr>-1){
     m_PP2D[ir][jr] += weight;
@@ -823,7 +836,7 @@ void cbl::pairs::Pair2D_comovingCartesian_loglog::set_pair (const int ir, const 
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingPolar_linlin::set_pair (const int ir, const int jr, const double ww, const double weight) 
+void cbl::pairs::Pair2D_comovingPolar_linlin::set (const int ir, const int jr, const double ww, const double weight) 
 {
   if (ir>-1 && jr>-1){
     m_PP2D[ir][jr] += weight;
@@ -835,7 +848,7 @@ void cbl::pairs::Pair2D_comovingPolar_linlin::set_pair (const int ir, const int 
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingPolar_linlog::set_pair (const int ir, const int jr, const double ww, const double weight) 
+void cbl::pairs::Pair2D_comovingPolar_linlog::set (const int ir, const int jr, const double ww, const double weight) 
 {
   if (ir>-1 && jr>-1){
     m_PP2D[ir][jr] += weight;
@@ -847,7 +860,7 @@ void cbl::pairs::Pair2D_comovingPolar_linlog::set_pair (const int ir, const int 
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingPolar_loglin::set_pair (const int ir, const int jr, const double ww, const double weight) 
+void cbl::pairs::Pair2D_comovingPolar_loglin::set (const int ir, const int jr, const double ww, const double weight) 
 {
   if (ir>-1 && jr>-1){
     m_PP2D[ir][jr] += weight;
@@ -859,7 +872,7 @@ void cbl::pairs::Pair2D_comovingPolar_loglin::set_pair (const int ir, const int 
 // ============================================================================================
 
 
-void cbl::pairs::Pair2D_comovingPolar_loglog::set_pair (const int ir, const int jr, const double ww, const double weight) 
+void cbl::pairs::Pair2D_comovingPolar_loglog::set (const int ir, const int jr, const double ww, const double weight) 
 {
   if (ir>-1 && jr>-1){
     m_PP2D[ir][jr] += weight;
@@ -899,7 +912,7 @@ void cbl::pairs::Pair2D::add_data2D (const int i, const int j, const std::shared
 void cbl::pairs::Pair2D::Sum (const std::shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins_D1 != pair->nbins_D1() || m_nbins_D2 != pair->nbins_D2()) 
-    ErrorCBL("Error in cbl::pairs::Pair2D::Sum of Pair.cpp: dimension problems!");
+    ErrorCBL("dimension problems!", "Sum", "Pair2D.cpp");
     
   for (int i=0; i<m_nbins_D1; i++)
     for (int j=0; j<m_nbins_D2; j++) 

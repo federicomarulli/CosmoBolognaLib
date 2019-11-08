@@ -46,15 +46,23 @@ namespace cbl {
      * @enum HistogramType
      * @brief the histogram type
      */
-    enum class HistogramType { 
+    enum class HistogramType {
 
-      _dn_dV_,
-
-      _dn_dlogV_,
-
+      /// the binned counts, \f$N_V[i]\f$
       _N_V_,
 
-      _n_V_
+      /// the normalised binned counts, i.e. \f$n_V[i]=N_V[i]/fact\f$, where the factor \f$fact\f$ is a number provided in input
+      _n_V_,
+
+      /// \f$n_V[i]/(edge[i+1]-edge[i])\f$, where \f$edge\f$ are the bin limits
+      _dn_dV_,
+
+      /// \f$n_V[i]/(\log_{10}(edge[i+1])-\log_{10}(edge[i]))\f$, where \f$edge\f$ are the bin limits
+      _dn_dlogV_,
+
+      /// \f$n_V[i]/(\ln(edge[i+1])-\ln(edge[i]))\f$, where \f$edge\f$ are the bin limits
+      _dn_dlnV_
+
     };
 
     /**
@@ -64,7 +72,7 @@ namespace cbl {
      * HistogramType names
      */
     inline std::vector<std::string> HistogramTypeNames ()
-    { return {"dn_dV", "dn_dlogV", "N_V", "n_V"}; }
+    { return {"dn_dV", "dn_dlogV", "dn_dlnV", "N_V", "n_V"}; }
 
     /**
      * @brief cast an enum of type HistogramType
@@ -139,7 +147,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void set (const size_t nbins, const double minVar=par::defaultDouble, const double maxVar=par::defaultDouble, const double shift=0.5, const BinType bin_type=BinType::_linear_)
-	{ (void)nbins; (void)minVar; (void)maxVar; (void)shift; (void)bin_type; ErrorCBL("Error in set of Histogram.h!"); }
+	{ (void)nbins; (void)minVar; (void)maxVar; (void)shift; (void)bin_type; ErrorCBL("", "set", "Histogram.h"); }
 
 	/**
 	 * @brief get the histogram index
@@ -149,7 +157,7 @@ namespace cbl {
 	 * @return the histogram index
 	 */
 	virtual int digitize (const double var)
-	{ (void)var; ErrorCBL("Error in digitize of Histogram.h!"); return 0;}
+	{ (void)var; return ErrorCBL("", "digitize", "Histogram.h"); }
 
 	/**
 	 * @brief get the histogram indeces
@@ -159,7 +167,7 @@ namespace cbl {
 	 * @return the histogram indeces
 	 */
 	virtual std::vector<int> digitize (const std::vector<double> var)
-	{ (void)var; ErrorCBL("Error in digitize of Histogram.h!"); std::vector<int> vv; return vv;}
+	{ (void)var; ErrorCBL("", "digitize", "Histogram.h"); std::vector<int> vv; return vv; }
 
 	/**
 	 * @brief bin the data
@@ -171,7 +179,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void put (const double var, const double weight)
-	{ (void)var; (void)weight; ErrorCBL("Error in put of Histogram.h!");}
+	{ (void)var; (void)weight; ErrorCBL("", "put", "Histogram.h"); }
 
 	/**
 	 * @brief bin the data
@@ -183,7 +191,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void put (const std::vector<double> var, const std::vector<double> weight)
-	{ (void)var; (void)weight; ErrorCBL("Error in put of Histogram.h!");}
+	{ (void)var; (void)weight; ErrorCBL("", "put", "Histogram.h"); }
 
 	/**
 	 * @brief bin the data
@@ -192,10 +200,12 @@ namespace cbl {
 	 *
 	 * @param weight weight of the var
 	 *
+	 * @param var value of the var
+	 *
 	 * @return none
 	 */
-	virtual void put (const int bin, const double weight)
-	{ (void)bin; (void)weight; ErrorCBL("Error in put of Histogram.h!");}
+	virtual void put (const int bin, const double weight, const double var)
+	{ (void)bin; (void)weight; (void)var; ErrorCBL("", "put", "Histogram.h"); }
 
 	/**
 	 * @brief bin the data
@@ -204,10 +214,12 @@ namespace cbl {
 	 *
 	 * @param weight weights of the var
 	 *
+	 * @param var values of the var
+	 *
 	 * @return none
 	 */
-	virtual void put (const std::vector<int> bins, const std::vector<double> weight)
-	{ (void)bins; (void)weight; ErrorCBL("Error in put of Histogram.h!");}
+	virtual void put (const std::vector<int> bins, const std::vector<double> weight, const std::vector<double> var)
+	{ (void)bins; (void)weight; (void)var; ErrorCBL("", "put", "Histogram.h"); }
 
 	/**
 	 * @brief set the histogram variables
@@ -226,7 +238,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void set (const size_t nbins1, const size_t nbins2, const double minVar1=par::defaultDouble, const double maxVar1=par::defaultDouble, const double minVar2=par::defaultDouble, const double maxVar2=par::defaultDouble, const double shift1=0.5, const double shift2=0.5, const BinType bin_type1=BinType::_linear_, const BinType bin_type2=BinType::_linear_)
-	{ (void)nbins1; (void)minVar1; (void)maxVar1; (void)nbins2; (void)minVar2; (void)maxVar2; (void)shift1; (void)shift2; (void)bin_type1; (void)bin_type2; ErrorCBL("Error in set of Histogram.h!"); }
+	{ (void)nbins1; (void)minVar1; (void)maxVar1; (void)nbins2; (void)minVar2; (void)maxVar2; (void)shift1; (void)shift2; (void)bin_type1; (void)bin_type2; ErrorCBL("", "set", "Histogram.h"); }
 
 	/**
 	 * @brief get the histogram index
@@ -237,7 +249,7 @@ namespace cbl {
 	 * @return the histogram index
 	 */
 	virtual std::vector<int> digitize (const double var1, const double var2)
-	{ (void)var1; (void)var2; ErrorCBL("Error in digitize of Histogram.h!"); std::vector<int> vv; return vv;}
+	{ (void)var1; (void)var2; ErrorCBL("", "digitize", "Histogram.h"); std::vector<int> vv; return vv; }
 
 	/**
 	 * @brief get the histogram indeces
@@ -248,7 +260,7 @@ namespace cbl {
 	 * @return the histogram indeces
 	 */
 	virtual std::vector<std::vector<int>> digitize (const std::vector<double> var1, const std::vector<double> var2)
-	{ (void)var1; (void)var2; ErrorCBL("Error in digitize of Histogram.h!"); std::vector<std::vector<int>> vv; return vv;}
+	{ (void)var1; (void)var2; ErrorCBL("", "digitize", "Histogram.h"); std::vector<std::vector<int>> vv; return vv; }
 
 	/**
 	 * @brief bin the data
@@ -262,7 +274,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void put (const double var1, const double var2, const double weight)
-	{ (void)var1; (void)var2; (void)weight; ErrorCBL("Error in put of Histogram.h!");}
+	{ (void)var1; (void)var2; (void)weight; ErrorCBL("", "put", "Histogram.h"); }
 
 	/**
 	 * @brief bin the data
@@ -276,7 +288,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void put (const std::vector<double> var1, const std::vector<double> var2, const std::vector<double> weight)
-	{ (void)var1; (void)var2; (void)weight; ErrorCBL("Error in put of Histogram.h!");}
+	{ (void)var1; (void)var2; (void)weight; ErrorCBL("", "put", "Histogram.h"); }
 
 	/**
 	 * @brief bin the data
@@ -287,10 +299,14 @@ namespace cbl {
 	 *
 	 * @param weight weight of the var
 	 *
+	 * @param var1 value of the first var
+	 *
+	 * @param var2 value of the second var
+	 *
 	 * @return none
 	 */
-	virtual void put (const int bin1, const int bin2, const double weight)
-	{ (void)bin1; (void)bin2; (void)weight; ErrorCBL("Error in put of Histogram.h!");}
+	virtual void put (const int bin1, const int bin2, const double weight, const double var1, const double var2)
+	{ (void)bin1; (void)bin2; (void)weight; (void)var1; (void)var2; ErrorCBL("", "put", "Histogram.h"); }
 
 	/**
 	 * @brief bin the data
@@ -299,10 +315,14 @@ namespace cbl {
 	 *
 	 * @param weight weights of the var
 	 *
+	 * @param var1 values of the first var
+	 *
+	 * @param var2 values of the second var
+	 *
 	 * @return none
 	 */
-	virtual void put (const std::vector<std::vector<int>> bins, const std::vector<double> weight)
-	{ (void)bins; (void)weight; ErrorCBL("Error in put of Histogram.h!");}
+	virtual void put (const std::vector<std::vector<int>> bins, const std::vector<double> weight, const std::vector<double> var1, const std::vector<double> var2)
+	{ (void)bins; (void)weight; (void)var1; (void)var2; ErrorCBL("", "put", "Histogram.h"); }
 
 	///@}
 
@@ -318,7 +338,7 @@ namespace cbl {
 	 * @return the number of bins
 	 */
 	virtual size_t nbins () const 
-	{ErrorCBL("Error in nbins of Histogram.h!"); return 1; }
+	{ ErrorCBL("", "nbins", "Histogram.h"); return 1; }
 
 	/**
 	 * @brief return the bin size
@@ -326,7 +346,7 @@ namespace cbl {
 	 * @return the bin size
 	 */
 	virtual double binSize () const
-	{ErrorCBL("Error in binSize of Histogram.h!"); return 0.;}
+	{ ErrorCBL("", "binSize", "Histogram.h"); return 0.; }
 
 	/**
 	 * @brief return the lower limit of the
@@ -335,7 +355,7 @@ namespace cbl {
 	 * @return the lower limit of the histogram
 	 */
 	virtual double minVar() const
-	{ErrorCBL("Error in minVar of Histogram.h!"); return 0.;}
+	{ ErrorCBL("", "minVar", "Histogram.h"); return 0.; }
 	
 	/**
 	 * @brief return the upper limit of the
@@ -344,7 +364,7 @@ namespace cbl {
 	 * @return the lower upper of the histogram
 	 */
 	virtual double maxVar() const
-	{ErrorCBL("Error in maxVar of Histogram.h!"); return 0.;}
+	{ ErrorCBL("", "maxVar", "Histogram.h"); return 0.; }
 
 	/**
 	 * @brief return the bin shift
@@ -352,7 +372,7 @@ namespace cbl {
 	 * @return the bin shift
 	 */
 	virtual double shift() const
-	{ErrorCBL("Error in shift of Histogram.h!"); return 0.;}
+	{ ErrorCBL("", "shift", "Histogram.h"); return 0.; }
 
 	/**
 	 * @brief return the bin type
@@ -360,7 +380,7 @@ namespace cbl {
 	 * @return the bin type
 	 */
 	virtual BinType bin_type() const
-	{ErrorCBL("Error in bin_type of Histogram.h!"); return BinType::_linear_;}
+	{ ErrorCBL("", "bin_type", "Histogram.h"); return BinType::_linear_; }
 
 	/**
 	 * @brief return the i-th bin
@@ -370,7 +390,7 @@ namespace cbl {
 	 * @return the i-th bin
 	 */
 	virtual double bin (const size_t i) const 
-	{(void)i; ErrorCBL("Error in bin of Histogram.h!"); return 0.;}
+	{(void)i; ErrorCBL("", "bin", "Histogram.h"); return 0.; }
 
 	/**
 	 * @brief return the bins
@@ -378,7 +398,23 @@ namespace cbl {
 	 * @return the histogram bins
 	 */
 	virtual std::vector<double> bins () const
-	{ ErrorCBL("Error in bins of Histogram.h!"); std::vector<double> vv; return vv;}
+	{ ErrorCBL("", "bins", "Histogram.h"); std::vector<double> vv; return vv; }
+
+	/**
+	 * @brief return the averaged bins
+	 *
+	 * @return the histogram averaged bins
+	 */
+	virtual std::vector<double> averaged_bins () const
+	{ ErrorCBL("", "averaged_bins", "Histogram.h"); std::vector<double> vv; return vv; }
+
+	/**
+	 * @brief return the bin errors
+	 *
+	 * @return the bin errors
+	 */
+	virtual std::vector<double> error_bins () const
+	{ ErrorCBL("", "error_bins", "Histogram.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 * @brief return the i-th edge
@@ -388,7 +424,7 @@ namespace cbl {
 	 * @return the i-th edge
 	 */
 	virtual double edge (const size_t i) const
-	{(void)i; ErrorCBL("Error in edge of Histogram.h!"); return 0.;}
+	{ (void)i; ErrorCBL("", "edge", "Histogram.h"); return 0.; }
 
 	/**
 	 * @brief return the histogram edges
@@ -396,7 +432,7 @@ namespace cbl {
 	 * @return the histogram edges
 	 */
 	virtual std::vector<double> edges () const
-	{ ErrorCBL("Error in edges of Histogram.h!"); std::vector<double> vv; return vv;}
+	{ ErrorCBL("", "edges", "Histogram.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 * @brief return the number
@@ -405,7 +441,7 @@ namespace cbl {
 	 * @return the number of bins for the first variable
 	 */
 	virtual size_t nbins1 () const
-	{ErrorCBL("Error in bins1 of Histogram.h!"); return 1; }
+	{ ErrorCBL("", "nbins1", "Histogram.h"); return 1; }
 
 	/**
 	 * @brief return the first variable bin size
@@ -413,7 +449,7 @@ namespace cbl {
 	 * @return the first variable bin size
 	 */
 	virtual double binSize1 () const
-	{ ErrorCBL("Error in binSize1 of Histogram.h!"); return 1.; }
+	{ ErrorCBL("", "binSize1", "Histogram.h"); return 1.; }
 
 	/**
 	 * @brief return the lower limit of the
@@ -423,7 +459,7 @@ namespace cbl {
 	 * for the first variable
 	 */
 	virtual double minVar1() const
-	{ ErrorCBL("Error in minVar1 of Histogram.h!"); return 1.; }
+	{ ErrorCBL("", "minVar1", "Histogram.h"); return 1.; }
 	
 	/**
 	 * @brief return the upper limit of the
@@ -433,7 +469,7 @@ namespace cbl {
 	 * for the first variable
 	 */
 	virtual double maxVar1() const
-	{ ErrorCBL("Error in maxVar1 of Histogram.h!"); return 1.; }
+	{ ErrorCBL("", "maxVar1", "Histogram.h"); return 1.; }
 
 	/**
 	 * @brief return the bin shift for the
@@ -442,7 +478,7 @@ namespace cbl {
 	 * @return the bin shift for the first variable
 	 */
 	virtual double shift1() const
-	{ ErrorCBL("Error in shift1 of Histogram.h!"); return 1.; }
+	{ ErrorCBL("", "shift1", "Histogram.h"); return 1.; }
 
 	/**
 	 * @brief return the bin type for the first
@@ -451,7 +487,7 @@ namespace cbl {
 	 * @return the bin type for the first variable
 	 */
 	virtual BinType bin_type1() const
-	{ ErrorCBL("Error in bin_type1 of Histogram.h!"); return BinType::_linear_; }
+	{ ErrorCBL("", "bin_type1", "Histogram.h"); return BinType::_linear_; }
 	
 	/**
 	 * @brief return the number
@@ -460,7 +496,7 @@ namespace cbl {
 	 * @return the number of bins for the second variable
 	 */
 	virtual size_t nbins2 () const
-	{ErrorCBL("Error in bins2 of Histogram.h!"); return 1; }
+	{ ErrorCBL("", "bins2", "Histogram.h"); return 1; }
 
 	/**
 	 * @brief return the second variable bin size
@@ -468,7 +504,7 @@ namespace cbl {
 	 * @return the second variable bin size
 	 */
 	virtual double binSize2 () const
-	{ErrorCBL("Error in binSize2 of Histogram.h!"); return 1.; }
+	{ ErrorCBL("", "binSize2", "Histogram.h"); return 1.; }
 
 	/**
 	 * @brief return the lower limit of the
@@ -478,7 +514,7 @@ namespace cbl {
 	 * for the second variable
 	 */
 	virtual double minVar2() const
-	{ ErrorCBL("Error in minVar2 of Histogram.h!"); return 1.; }
+	{ ErrorCBL("", "minVar2", "Histogram.h"); return 1.; }
 	
 	/**
 	 * @brief return the upper limit of the
@@ -488,7 +524,7 @@ namespace cbl {
 	 * for the second variable
 	 */
 	virtual double maxVar2() const
-	{ ErrorCBL("Error in maxVar2 of Histogram.h!"); return 1.; }
+	{ ErrorCBL("", "maxVar2", "Histogram.h"); return 1.; }
 
 	/**
 	 * @brief return the bin shift for the
@@ -497,7 +533,7 @@ namespace cbl {
 	 * @return the bin shift for the second variable
 	 */
 	virtual double shift2() const
-	{ ErrorCBL("Error in shift2 of Histogram.h!"); return 1.; }
+	{ ErrorCBL("", "shift2", "Histogram.h"); return 1.; }
 
 	/**
 	 * @brief return the bin type for the second
@@ -506,7 +542,7 @@ namespace cbl {
 	 * @return the bin type for the second variable
 	 */
 	virtual BinType bin_type2() const
-	{ ErrorCBL("Error in bin_type2 of Histogram.h!"); return BinType::_linear_; }
+	{ ErrorCBL("", "bin_type2", "Histogram.h"); return BinType::_linear_; }
 
 	/**
 	 * @brief return the i-th bin of the first variable
@@ -516,7 +552,7 @@ namespace cbl {
 	 * @return the i-th bin of the first variable
 	 */
 	virtual double bin1 (const size_t i) const
-	{ (void)i; ErrorCBL("Error in histogram_bin1 of Histogram.h!"); return 0.;}
+	{ (void)i; ErrorCBL("", "bin1", "Histogram.h"); return 0.; }
 
 	/**
 	 * @brief return the first variable bins
@@ -524,7 +560,23 @@ namespace cbl {
 	 * @return the first variable bins
 	 */
 	virtual std::vector<double> bins1 () const
-	{ErrorCBL("Error in histogram_bins1 of Histogram.h!"); std::vector<double> vv; return vv;}
+	{ ErrorCBL("", "bins1", "Histogram.h"); std::vector<double> vv; return vv; }
+
+	/**
+	 * @brief return the first variable averaged bins
+	 *
+	 * @return the first variable averaged bins
+	 */
+	virtual std::vector<std::vector<double>> averaged_bins1 () const
+	{ ErrorCBL("", "averaged_bins1", "Histogram.h"); std::vector<std::vector<double>> vv; return vv; }
+
+	/**
+	 * @brief return the first variable averaged bin errors
+	 *
+	 * @return the first variable averaged bin errors
+	 */
+	virtual std::vector<std::vector<double>> error_bins1 () const
+	{ ErrorCBL("", "error_bins1", "Histogram.h"); std::vector<std::vector<double>> vv; return vv; }
 
 	/**
 	 * @brief return the i-th edge of the first variable
@@ -534,7 +586,7 @@ namespace cbl {
 	 * @return the i-th edge of the first variable
 	 */
 	virtual double edge1 (const size_t i) const
-	{ (void)i; ErrorCBL("Error in histogram_edge1 of Histogram.h!"); return 0.;}
+	{ (void)i; ErrorCBL("", "edge1", "Histogram.h"); return 0.; }
 
 	/**
 	 * @brief return the histogram edges of the first variable
@@ -542,7 +594,7 @@ namespace cbl {
 	 * @return the histogram edges of the first variable
 	 */
 	virtual std::vector<double> edges1 () const
-	{ErrorCBL("Error in histogram_edges1 of Histogram.h!"); std::vector<double> vv; return vv;}
+	{ ErrorCBL("", "edges1", "Histogram.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 * @brief return the i-th bin of the second variable
@@ -552,7 +604,7 @@ namespace cbl {
 	 * @return the i-th bin of the second variable
 	 */
 	virtual double bin2 (const size_t i) const
-	{ (void)i; ErrorCBL("Error in histogram_bin2 of Histogram.h!"); return 0.;}
+	{ (void)i; ErrorCBL("", "bin2", "Histogram.h"); return 0.; }
 
 	/**
 	 * @brief return the second variable bins
@@ -560,7 +612,23 @@ namespace cbl {
 	 * @return the second variable bins
 	 */
 	virtual std::vector<double> bins2 () const
-	{ErrorCBL("Error in histogram_bins2 of Histogram.h!"); std::vector<double> vv; return vv;}
+	{ ErrorCBL("", "bins2", "Histogram.h"); std::vector<double> vv; return vv; }
+
+	/**
+	 * @brief return the second variable averaged bins
+	 *
+	 * @return the second variable averaged bins
+	 */
+	virtual std::vector<std::vector<double>> averaged_bins2 () const
+	{ ErrorCBL("", "averaged_bins2", "Histogram.h"); std::vector<std::vector<double>> vv; return vv; }
+
+	/**
+	 * @brief return the second variable averaged bin errors
+	 *
+	 * @return the second variable averaged bin errors
+	 */
+	virtual std::vector<std::vector<double>> error_bins2 () const
+	{ ErrorCBL("", "error_bins2", "Histogram.h"); std::vector<std::vector<double>> vv; return vv; }
 
 	/**
 	 * @brief return the i-th edge of the second variable
@@ -570,7 +638,7 @@ namespace cbl {
 	 * @return the i-th edge of the second variabl
 	 */
 	virtual double edge2 (const size_t i) const
-	{ (void)i; ErrorCBL("Error in histogram_edge2 of Histogram.h!"); return 0.;}
+	{ (void)i; ErrorCBL("", "edge2", "Histogram.h"); return 0.; }
 
 	/**
 	 * @brief return the histogram edges of the second variable
@@ -578,7 +646,7 @@ namespace cbl {
 	 * @return the histogram edges of the second variabl
 	 */
 	virtual std::vector<double> edges2 () const
-	{ErrorCBL("Error in histogram_edges2 of Histogram.h!"); std::vector<double> vv; return vv;}
+	{ ErrorCBL("", "edges2", "Histogram.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 * @brief return the histogram
@@ -593,7 +661,7 @@ namespace cbl {
 	 * @return the histogram
 	 */
 	virtual double operator() ( const int i, const HistogramType hist_type, const double fact=1.) const
-	{ (void)i; (void)hist_type; (void)fact; ErrorCBL("Error in operator() of Histogram.h!"); return 0.;}
+	{ (void)i; (void)hist_type; (void)fact; ErrorCBL("", "operator ()", "Histogram.h"); return 0.; }
 
 	/**
 	 * @brief return the histogram at (i,j)
@@ -610,7 +678,7 @@ namespace cbl {
 	 * @return the histogram at (i,j)
 	 */
 	virtual double operator() ( const int i, const int j, const HistogramType hist_type, const double fact=1.) const
-	{ (void)i; (void)j; (void)hist_type; (void)fact; ErrorCBL("Error in operator() of Histogram.h!"); return 0.;}
+	{ (void)i; (void)j; (void)hist_type; (void)fact; ErrorCBL("", "operator()", "Histogram.h"); return 0.; }
 
 
 	/**
@@ -624,7 +692,7 @@ namespace cbl {
 	 * @return the histogram
 	 */
 	virtual std::vector<double> operator() (const HistogramType hist_type, const double fact=1.) const
-	{ (void)hist_type; (void)fact; ErrorCBL("Error in operator() of Histogram.h!"); std::vector<double> vv; return vv;}
+	{ (void)hist_type; (void)fact; ErrorCBL("", "operator ()", "Histogram.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 * @brief return the bin normalization
@@ -639,7 +707,7 @@ namespace cbl {
 	 * @return the bin normalization
 	 */
 	virtual double normalization (const int i, const HistogramType hist_type, const double fact=1.) const
-	{ (void)i; (void)hist_type; (void)fact; ErrorCBL("Error in normalization of Histogram.h!"); return 0.;}
+	{ (void)i; (void)hist_type; (void)fact; ErrorCBL("", "normalization", "Histogram.h"); return 0.; }
 
 	/**
 	 * @brief return the bin normalization
@@ -656,37 +724,37 @@ namespace cbl {
 	 * @return the bin normalization
 	 */
 	virtual double normalization (const int i, const int j, const HistogramType hist_type, const double fact=1.) const
-	{ (void)i; (void)j; (void)hist_type; (void)fact; ErrorCBL("Error in normalization of Histogram.h!"); return 0.;}
+	{ (void)i; (void)j; (void)hist_type; (void)fact; ErrorCBL("", "normalization", "Histogram.h"); return 0.; }
 
 	/**
-	 * @brief return the bin weight
+	 * @brief return the unweighted bin counts
 	 *
 	 * @param i i-th bin
 	 *
-	 * @return the bin weight
+	 * @return the unweighted bin counts
 	 */
-	virtual double weight (const int i) const
-	{ (void)i; ErrorCBL("Error in weight of Histogram.h!"); return 0.;}
+	virtual int unweighted_counts (const int i) const
+	{ (void)i; ErrorCBL("", "counts", "Histogram.h"); return 0; }
 
 	/**
 	 * @brief return the weights
 	 *
 	 * @return the weights
 	 */
-	virtual std::vector<double> weights () const
-	{ ErrorCBL("Error in weights of Histogram.h!"); std::vector<double> vv; return vv;}
+	virtual std::vector<int> unweighted_counts () const
+	{ ErrorCBL("", "weights", "Histogram.h"); std::vector<int> vv; return vv; }
 
 	/**
-	 * @brief return the bin weight
+	 * @brief return the unweighted bin counts
 	 *
 	 * @param i i-th bin
 	 *
 	 * @param j j-th bin
 	 *
-	 * @return the bin normalization
+	 * @return the unweighted bin counts 
 	 */
-	virtual double weight (const int i, const int j) const
-	{ (void)i; (void)j; ErrorCBL("Error in weight of Histogram.h!"); return 0.;}
+	virtual int unweighted_counts (const int i, const int j) const
+	{ (void)i; (void)j; ErrorCBL("", "weight", "Histogram.h"); return 0.; }
 
 	/**
 	 * @brief return the poisson error of
@@ -699,13 +767,13 @@ namespace cbl {
 	 * @param fact the factor used to normalized the
 	 * histogram
 	 *
-	 * @return the histogram
+	 * @return the histogram error at i
 	 */
-	virtual double poisson_error ( const int i, const HistogramType hist_type, const double fact=1.) const
-	{ (void)i; (void)hist_type; (void)fact; ErrorCBL("Error in operator() of Histogram.h!"); return 0.;}
+	virtual double error ( const int i, const HistogramType hist_type, const double fact=1.) const
+	{ (void)i; (void)hist_type; (void)fact; ErrorCBL("", "error", "Histogram.h"); return 0.; }
 
 	/**
-	 * @brief return the poisson error of
+	 * @brief return the error of
 	 * the histogram at (i,j)
 	 *
 	 * @param i the i-th first variable bin
@@ -719,23 +787,23 @@ namespace cbl {
 	 *
 	 * @return the histogram at (i,j)
 	 */
-	virtual double poisson_error ( const int i, const int j, const HistogramType hist_type, const double fact=1.) const
-	{ (void)i; (void)j; (void)hist_type; (void)fact; ErrorCBL("Error in operator() of Histogram.h!"); return 0.;}
+	virtual double error ( const int i, const int j, const HistogramType hist_type, const double fact=1.) const
+	{ (void)i; (void)j; (void)hist_type; (void)fact; ErrorCBL("", "error", "Histogram.h"); return 0.; }
 
 
 	/**
-	 * @brief return the poisosn error 
-	 * of t he histogram
+	 * @brief return the error 
+	 * of the histogram
 	 *
 	 * @param hist_type the type of histogram
 	 *
 	 * @param fact the factor used to normalized the
 	 * histogram
 	 *
-	 * @return the histogram
+	 * @return the histogram error
 	 */
-	virtual std::vector<double> poisson_error ( const HistogramType hist_type, const double fact=1.) const
-	{ (void)hist_type; (void)fact; ErrorCBL("Error in operator() of Histogram.h!"); std::vector<double> vv; return vv;}
+	virtual std::vector<double> error (const HistogramType hist_type, const double fact=1.) const
+	{ (void)hist_type; (void)fact; ErrorCBL("", "error", "Histogram.h"); std::vector<double> vv; return vv; }
 
 	///@}
 
@@ -759,7 +827,7 @@ namespace cbl {
 	 * @return none
 	 */
 	virtual void write (const std::string dir, const std::string file, const HistogramType hist_type, const double fact=1.) const
-	{ (void)dir; (void)file; (void)hist_type; (void)fact; ErrorCBL("Error in write of Histogram.h!");}
+	{ (void)dir; (void)file; (void)hist_type; (void)fact; ErrorCBL("", "write", "Histogram.h"); }
 
 
 	///@}
@@ -780,9 +848,18 @@ namespace cbl {
 	
 	/// GSL histogram
 	std::shared_ptr<gsl_histogram> m_histo;
+
+	/// GSL histogram
+	std::shared_ptr<gsl_histogram> m_histo_error;
 	
-	/// histogram weights
-	std::vector<double> m_weight;
+	/// histogram counts
+	std::vector<int> m_counts;
+
+	/// bin-weighted variable
+	std::vector<double> m_var;
+
+	/// bin-weighted variable error
+	std::vector<double> m_var_err;
 
 	/// variable bins
 	std::vector<double> m_bins;
@@ -915,9 +992,11 @@ namespace cbl {
 	 *
 	 * @param weight weight of the var
 	 *
+	 * @param var value of the var
+	 *
 	 * @return none
 	 */
-	void put (const int bin, const double weight) override;
+	void put (const int bin, const double weight, const double var) override;
 
 	/**
 	 * @brief bin the data
@@ -926,9 +1005,11 @@ namespace cbl {
 	 *
 	 * @param weight weights of the var
 	 *
+	 * @param var values of the var
+	 *
 	 * @return none
 	 */
-	void put (const std::vector<int> bin, const std::vector<double> weight) override;
+	void put (const std::vector<int> bin, const std::vector<double> weight, const std::vector<double> var) override;
 
 	///@}
 
@@ -958,7 +1039,7 @@ namespace cbl {
 	 *
 	 * @return the lower limit of the histogram
 	 */
-	double minVar() const override {return m_minVar;}
+	double minVar() const override { return m_minVar; }
 	
 	/**
 	 * @brief return the upper limit of the
@@ -966,21 +1047,21 @@ namespace cbl {
 	 *
 	 * @return the lower upper of the histogram
 	 */
-	double maxVar() const override {return m_maxVar;}
+	double maxVar() const override { return m_maxVar; }
 
 	/**
 	 * @brief return the bin shift
 	 *
 	 * @return the bin shift
 	 */
-	double shift() const override {return m_shift;}
+	double shift() const override { return m_shift; }
 
 	/**
 	 * @brief return the bin type
 	 *
 	 * @return the bin type
 	 */
-	BinType bin_type() const override {return m_binType;}
+	BinType bin_type() const override { return m_binType; }
 
 	/**
 	 * @brief return the i-th bin
@@ -997,6 +1078,20 @@ namespace cbl {
 	 * @return the histogram bins
 	 */
 	std::vector<double> bins () const override { return m_bins; }
+
+	/**
+	 * @brief return the averaged bins
+	 *
+	 * @return the histogram averaged bins
+	 */
+	std::vector<double> averaged_bins () const { return m_var;}
+
+	/**
+	 * @brief return the bin errors
+	 *
+	 * @return the bin errors
+	 */
+	std::vector<double> error_bins () const;
 
 	/**
 	 * @brief return the i-th edge
@@ -1029,20 +1124,20 @@ namespace cbl {
 	double normalization (const int i, const HistogramType hist_type, const double fact=1.) const override;
 
 	/**
-	 * @brief return the bin weight
+	 * @brief return the unweighted bin counts 
 	 *
 	 * @param i i-th bin
 	 *
-	 * @return the bin weight
+	 * @return the unweighted bin counts
 	 */
-        double weight (const int i) const override {return m_weight[i]; }
+        int unweighted_counts (const int i) const override { return m_counts[i]; }
 
 	/**
-	 * @brief return the bin weights
+	 * @brief return the unweighted bin counts
 	 *
-	 * @return the bin weights
+	 * @return the unweighted bin counts
 	 */
-        std::vector<double> weights () const override {return m_weight; }
+        std::vector<int> unweighted_counts () const override { return m_counts; }
 
 	/**
 	 * @brief return the histogram
@@ -1071,7 +1166,7 @@ namespace cbl {
 	std::vector<double> operator() ( const HistogramType hist_type, const double fact=1.) const override;
 
 	/**
-	 * @brief return the histogram
+	 * @brief return the histogram error
 	 *
 	 * @param i i-th bin
 	 *
@@ -1080,12 +1175,12 @@ namespace cbl {
 	 * @param fact the factor used to normalized the
 	 * histogram
 	 *
-	 * @return the histogram
+	 * @return the histogram error at the i-th bin
 	 */
-	double poisson_error ( const int i, const HistogramType hist_type, const double fact=1.) const override;
+	double error ( const int i, const HistogramType hist_type, const double fact=1.) const override;
 
 	/**
-	 * @brief return the poisson error of the
+	 * @brief return the error of the
 	 * histogram
 	 *
 	 * @param hist_type the type of histogram
@@ -1093,9 +1188,9 @@ namespace cbl {
 	 * @param fact the factor used to normalized the
 	 * histogram
 	 *
-	 * @return the histogram
+	 * @return the histogram error
 	 */
-	std::vector<double> poisson_error ( const HistogramType hist_type, const double fact=1.) const override;
+	std::vector<double> error ( const HistogramType hist_type, const double fact=1.) const override;
 
 	///@}
 	
@@ -1137,9 +1232,24 @@ namespace cbl {
 	
 	/// GSL histogram
 	std::shared_ptr<gsl_histogram2d> m_histo;
+
+	/// GSL histogram error
+	std::shared_ptr<gsl_histogram2d> m_histo_error;
 	
 	/// histogram weights
-	std::vector<std::vector<double>> m_weight;
+	std::vector<std::vector<int>> m_counts;
+
+	/// bin-weighted first variable
+	std::vector<std::vector<double>> m_var1;
+
+	/// bin-weighted first variable error
+	std::vector<std::vector<double>> m_var1_err;
+
+	/// bin-weighted second variable
+	std::vector<std::vector<double>> m_var2;
+
+	/// bin-weighted second variable error
+	std::vector<std::vector<double>> m_var2_err;
 
 	/// first variable bins
 	std::vector<double> m_bins1;
@@ -1330,9 +1440,13 @@ namespace cbl {
 	 *
 	 * @param weight weight of the var
 	 *
+	 * @param var1 value of the first var
+	 *
+	 * @param var2 value of the second var
+	 *
 	 * @return none
 	 */
-	void put (const int bin1, const int bin2, const double weight) override;
+	void put (const int bin1, const int bin2, const double weight, const double var1, const double var2) override;
 
 	/**
 	 * @brief bin the data
@@ -1342,9 +1456,13 @@ namespace cbl {
 	 *
 	 * @param weight weights of the var
 	 *
+	 * @param var1 value of the first var
+	 *
+	 * @param var2 value of the second var
+	 *
 	 * @return none
 	 */
-	void put (const std::vector<std::vector<int>> bins, const std::vector<double> weight) override;
+	void put (const std::vector<std::vector<int>> bins, const std::vector<double> weight, const std::vector<double> var1, const std::vector<double> var2) override;
 
 	///@}
 
@@ -1376,7 +1494,7 @@ namespace cbl {
 	 * @return the lower limit of the histogram
 	 * for the first variable
 	 */
-	double minVar1 () const override {return m_minVar1;}
+	double minVar1 () const override { return m_minVar1; }
 	
 	/**
 	 * @brief return the upper limit of the
@@ -1385,7 +1503,7 @@ namespace cbl {
 	 * @return the upper limit of the histogram
 	 * for the first variable
 	 */
-	double maxVar1 () const override {return m_maxVar1;}
+	double maxVar1 () const override { return m_maxVar1; }
 
 	/**
 	 * @brief return the bin shift for the
@@ -1393,7 +1511,7 @@ namespace cbl {
 	 *
 	 * @return the bin shift for the first variable
 	 */
-	double shift1 () const override {return m_shift1;}
+	double shift1 () const override { return m_shift1; }
 
 	/**
 	 * @brief return the bin type for the first
@@ -1401,7 +1519,7 @@ namespace cbl {
 	 *
 	 * @return the bin type for the first variable
 	 */
-	BinType bin_type1 () const override {return m_binType1;}
+	BinType bin_type1 () const override { return m_binType1; }
 
 	/**
 	 * @brief return the number
@@ -1426,7 +1544,7 @@ namespace cbl {
 	 * @return the lower limit of the histogram
 	 * for the second variable
 	 */
-	double minVar2 () const override {return m_minVar2;}
+	double minVar2 () const override { return m_minVar2; }
 	
 	/**
 	 * @brief return the upper limit of the
@@ -1435,7 +1553,7 @@ namespace cbl {
 	 * @return the upper limit of the histogram
 	 * for the second variable
 	 */
-	double maxVar2 () const override {return m_maxVar2;}
+	double maxVar2 () const override { return m_maxVar2; }
 
 	/**
 	 * @brief return the bin shift for the
@@ -1443,7 +1561,7 @@ namespace cbl {
 	 *
 	 * @return the bin shift for the second variable
 	 */
-	double shift2 () const override {return m_shift2;}
+	double shift2 () const override { return m_shift2; }
 
 	/**
 	 * @brief return the bin type for the second
@@ -1451,7 +1569,7 @@ namespace cbl {
 	 *
 	 * @return the bin type for the second variable
 	 */
-	BinType bin_type2 () const override {return m_binType2;}
+	BinType bin_type2 () const override { return m_binType2; }
 
 	/**
 	 * @brief return the i-th bin of the first variable
@@ -1468,6 +1586,34 @@ namespace cbl {
 	 * @return the first variable bins
 	 */
 	std::vector<double> bins1 () const override { return m_bins1; }
+
+	/**
+	 * @brief return the averaged bins
+	 *
+	 * @return the histogram averaged bins
+	 */
+	std::vector<std::vector<double>> averaged_bins1 () const { return m_var1; }
+
+	/**
+	 * @brief return the averaged bins
+	 *
+	 * @return the histogram averaged bins
+	 */
+	std::vector<std::vector<double>> averaged_bins2 () const { return m_var2; }
+
+	/**
+	 * @brief return the averaged bins
+	 *
+	 * @return the histogram averaged bins
+	 */
+	std::vector<std::vector<double>> error_bins1 () const;
+
+	/**
+	 * @brief return the averaged bins
+	 *
+	 * @return the histogram averaged bins
+	 */
+	std::vector<std::vector<double>> error_bins2 () const;
 
 	/**
 	 * @brief return the i-th edge of the first variable
@@ -1534,15 +1680,15 @@ namespace cbl {
 	double normalization (const int i, const int j, const HistogramType hist_type, const double fact=1.) const override;
 
 	/**
-	 * @brief return the bin weight
+	 * @brief return the bin unweighted counts
 	 *
 	 * @param i i-th bin
 	 *
 	 * @param j j-th bin
 	 *
-	 * @return the bin weight
+	 * @return the bin unweighteighted counts
 	 */
-        double weight (const int i, const int j) const override {return m_weight[i][j];}
+        int unweighted_counts (const int i, const int j) const override { return m_counts[i][j]; }
 
 	/**
 	 * @brief return the histogram at (i,j)
@@ -1573,9 +1719,9 @@ namespace cbl {
 	 * @param fact the factor used to normalized the
 	 * histogram
 	 *
-	 * @return the histogram at (i,j)
+	 * @return the histogram error at (i,j)
 	 */
-	double poisson_error (const int i, const int j, const HistogramType hist_type, const double fact=1.) const override;
+	double error (const int i, const int j, const HistogramType hist_type, const double fact=1.) const override;
 
 	///@}
 

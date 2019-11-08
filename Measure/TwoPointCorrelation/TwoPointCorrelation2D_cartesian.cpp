@@ -220,7 +220,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measure (const ErrorT
     measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, seed);
     break;
   default:
-    ErrorCBL("Error in measure() of TwoPointCorrelation2D_cartesian.cpp, unknown type of error");
+    ErrorCBL("unknown type of error!", "measure", "TwoPointCorrelation2D_cartesian.cpp");
   }
 }
 
@@ -243,7 +243,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measurePoisson (const
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   }
   else
-    ErrorCBL("Error in measurePoisson() of TwoPointCorrelation2D_cartesian.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measurePoisson", "TwoPointCorrelation2D_cartesian.cpp");
   
 }
 
@@ -251,10 +251,10 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measurePoisson (const
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_JackknifeXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  if (dir_output_JackknifeXi!=par::defaultString) {
-    string mkdir = "mkdir -p "+dir_output_JackknifeXi;
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
+    string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
   
@@ -270,11 +270,11 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife (con
 
   for (size_t i=0; i<nRegions; i++) {
 
-    if (dir_output_JackknifeXi!=par::defaultString && dir_output_JackknifeXi!="") {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_Jackknife_"+conv(i, par::fINT)+".dat";
       string header = "[1] perpendicular separation at the bin centre # [2] parallel separation at the bin centre # [3] 2D two-point correlation function # [4] error";
   if (m_compute_extra_info) header += " # [5] mean perpendicular separation # [6] standard deviation of the distribution of perpendicular separations # [7] mean parallel separation # [8] standard deviation of the distribution of parallel separations # [9] mean redshift # [10] standard deviation of the redshift distribution";
-      data_SS[i]->write(dir_output_JackknifeXi, file, header, false, 10, 0);
+      data_SS[i]->write(dir_output_resample, file, header, false, 10, 0);
     }
     
     xi_SubSamples.push_back(data_SS[i]->data());
@@ -287,7 +287,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife (con
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
-    ErrorCBL("Error in measurePoisson() of TwoPointCorrelation2D_cartesian.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureJackknife", "TwoPointCorrelation2D_cartesian.cpp");
 
   m_dataset->set_covariance(covariance);
 }
@@ -295,13 +295,13 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureJackknife (con
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_BootstrapXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
   if (nMocks<1)
-    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation2D_cartesian.cpp, number of mocks must be >0");
+    ErrorCBL("the number of mocks must be >0", "measureBootstrap", "TwoPointCorrelation2D_cartesian.cpp");
 
-  if (dir_output_BootstrapXi!=par::defaultString) {
-    string mkdir = "mkdir -p "+dir_output_BootstrapXi;
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
+    string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
 
@@ -314,11 +314,11 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap (con
 
   for (int i=0; i<nMocks; i++) {
 
-    if (dir_output_BootstrapXi!=par::defaultString && dir_output_BootstrapXi!="") {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_Bootstrap_"+conv(i, par::fINT)+".dat";
       string header = "[1] perpendicular separation at the bin centre # [2] parallel separation at the bin centre # [3] 2D two-point correlation function # [4] error";
   if (m_compute_extra_info) header += " # [5] mean perpendicular separation # [6] standard deviation of the distribution of perpendicular separations # [7] mean parallel separation # [8] standard deviation of the distribution of parallel separations # [9] mean redshift # [10] standard deviation of the redshift distribution";
-      data_SS[i]->write(dir_output_BootstrapXi, file, header, false, 10, 0);
+      data_SS[i]->write(dir_output_resample, file, header, false, 10, 0);
     }
     
     xi_SubSamples.push_back(data_SS[i]->data());
@@ -331,7 +331,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::measureBootstrap (con
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
-    ErrorCBL("Error in measurePoisson() of TwoPointCorrelation2D_cartesian.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureBootstrap", "TwoPointCorrelation2D_cartesian.cpp");
 
   m_dataset->set_covariance(covariance);
 }

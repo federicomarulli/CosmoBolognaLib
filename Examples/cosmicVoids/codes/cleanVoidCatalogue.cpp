@@ -19,27 +19,24 @@ int main () {
     // ------------------------------------------
 
     // ASCII void catalogue 
-    std::string file_voids_in = cbl::par::DirLoc+"../input/vide_void_catalogue.txt";
+    std::string file_voids_in = cbl::par::DirLoc+"../input/void_catalogue.txt";
 
     // std::vector containing the variable name list to read from file
     std::vector<cbl::catalogue::Var> var_names_voids = {cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_, cbl::catalogue::Var::_Radius_};
     
     // std::vector containing the columns corresponding to each attribute
-    std::vector<int> columns_voids = {1, 2, 3, 5};
+    std::vector<int> columns_voids = {1, 2, 3, 4};
     
     // catalogue constructor
-    cbl::catalogue::Catalogue void_catalogue_in {cbl::catalogue::ObjectType::_Void_, cbl::CoordinateType::_comoving_, var_names_voids, columns_voids, {file_voids_in}, 1};
+    cbl::catalogue::Catalogue void_catalogue_in {cbl::catalogue::ObjectType::_Void_, cbl::CoordinateType::_comoving_, var_names_voids, columns_voids, {file_voids_in}, 0};
      
-    // make a shared pointer to void_catalogue_in
-    auto input_voidCata = std::make_shared<cbl::catalogue::Catalogue> (cbl::catalogue::Catalogue(std::move(void_catalogue_in)));
-
     
     // ---------------------------------------
     // ----- build the tracer catalogue ------
     // ---------------------------------------
       
     // binary halo gadget snapshot 
-    std::string file_tracers = cbl::par::DirLoc+"../input/tracers_catalogue.txt";
+    std::string file_tracers = cbl::par::DirLoc+"../input/halo_catalogue.txt";
 
     // std::vector containing the variable name list to read from file
     std::vector<cbl::catalogue::Var> var_names_tracers = {cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_};
@@ -48,10 +45,13 @@ int main () {
     std::vector<int> columns_tracers = {1, 2, 3};
 
     // catalogue constructor
-    cbl::catalogue::Catalogue tracers_catalogue {cbl::catalogue::ObjectType::_Halo_, cbl::CoordinateType::_comoving_, var_names_tracers, columns_tracers, {file_tracers}, 1};
+    cbl::catalogue::Catalogue tracers_catalogue {cbl::catalogue::ObjectType::_Halo_, cbl::CoordinateType::_comoving_, var_names_tracers, columns_tracers, {file_tracers}, 0};
+
+    // length of the simulation box
+    double boxside = 500.;
 
     // compute simulation properties
-    tracers_catalogue.compute_catalogueProperties();
+    tracers_catalogue.compute_catalogueProperties(boxside);
 
     // store the mean particle separation of the simulation
     double mps = tracers_catalogue.mps();      
@@ -70,8 +70,16 @@ int main () {
     // ----- build the cleaned void catalogue -----
     // --------------------------------------------
 
-    // compute the central densities of the input void catalogue
-    void_catalogue_in.compute_centralDensity(input_tracersCata, ChM, density);
+     double ratio = 0.8; // variable used to compute the central density and the density contrast of a void
+     
+    // sets the central density if not read from file:
+    void_catalogue_in.compute_centralDensity(input_tracersCata, ChM, density, ratio);
+
+    // sets the density contrast if not read from file:
+    void_catalogue_in.compute_densityContrast(input_tracersCata, ChM, ratio);
+
+    // make a shared pointer to void_catalogue_in
+    auto input_voidCata = std::make_shared<cbl::catalogue::Catalogue> (cbl::catalogue::Catalogue(std::move(void_catalogue_in)));
 
 
     // ---- use built in catalogue constructor, selecting which step of the cleaning procedure to perform ----
@@ -79,12 +87,11 @@ int main () {
     // clean[0] = true -> erase voids with underdensities higher than a given threshold
     // clean[1] = true -> erase voids with effective radii outside a given range
     // clean[2] = true -> erase voids with density contrast lower than a given value
-    std::vector<bool> clean = {true, true, false};
+    std::vector<bool> clean = {true, false, false};
 
-    std::vector<double> delta_r = {0.5, 50.}; // the interval of accepted radii
-    double threshold = 0.21;             // the density threshold
-    double relevance = 1.57;             // the minimum accepted density contrast
-    double ratio = 0.1;
+    std::vector<double> delta_r = {17., 150.}; // the interval of accepted radii
+    double threshold = 0.3;                   // the density threshold
+    double relevance = 1.57;                  // the minimum accepted density contrast
 
     // catalogue constructor
     cbl::catalogue::Catalogue void_catalogue_out {input_voidCata, clean, delta_r, threshold, relevance, true, input_tracersCata, ChM, ratio, true, cbl::catalogue::Var::_CentralDensity_};
@@ -94,7 +101,7 @@ int main () {
     std::string mkdir = "mkdir -p ../output/";
     if (system(mkdir.c_str())) {}
 
-    std::string cata_out = cbl::par::DirLoc+"../output/void_catalogue_cleaned.out";
+    std::string cata_out = cbl::par::DirLoc+"../output/cleaned_void_catalogue.out";
     void_catalogue_out.write_data(cata_out, var_names_voids);
     
   }

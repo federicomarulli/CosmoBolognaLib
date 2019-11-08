@@ -88,7 +88,7 @@ void cbl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosmolog
   for (int i=0; i<nredshift;i++) {
     HH.push_back(cosmology.HH(redshift[i]));
     dc.push_back(cosmology.D_C(redshift[i]));
-    ff.push_back(cosmology.linear_growth_rate(redshift[i]));
+    ff.push_back(cosmology.linear_growth_rate(redshift[i], 0.));
     dd.push_back(cosmology.DD(redshift[i])/cosmology.DD(0.));
 
   }

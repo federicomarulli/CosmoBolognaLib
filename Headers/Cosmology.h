@@ -63,25 +63,25 @@ namespace cbl {
       /// Komatsu et al. 2009: Table 1, WMAP 5 Year Mean
       _WMAP5_,
       
-      /// Komatsu et al. 2011: Table 1, WMAP Seven-year Mean
-      _WMAP7_,
+	/// Komatsu et al. 2011: Table 1, WMAP Seven-year Mean
+	_WMAP7_,
 
-      /// Hinshaw et al. 2013: Table 3, WMAP-only Nine-year
-      _WMAP9_,
+	/// Hinshaw et al. 2013: Table 3, WMAP-only Nine-year
+	_WMAP9_,
 
-      /// Planck collaboration 2013, paper XVI: Table 3, Planck+WP
-      _Planck13_,
+	/// Planck collaboration 2013, paper XVI: Table 3, Planck+WP
+	_Planck13_,
       
-      /// Planck collaboration 2015, paper XIII: Table 4, TT,TE,EE+lowP+lensing
-      _Planck15_,
+	/// Planck collaboration 2015, paper XIII: Table 4, TT,TE,EE+lowP+lensing
+	_Planck15_,
       
-      /// Planck collaboration 2015, paper XIII: Table 4, TT+lowP+lensing
-      _Planck15_TT_,
+	/// Planck collaboration 2015, paper XIII: Table 4, TT+lowP+lensing
+	_Planck15_TT_,
 
-      /// Planck collaboration 2018, Paper VI: Table 2, TT,TE,EE+lowE+lensing
-      _Planck18_	
+	/// Planck collaboration 2018, Paper VI: Table 2, TT,TE,EE+lowE+lensing
+	_Planck18_	
       
-    };
+	};
 
     /**
      * @brief return a vector containing the
@@ -133,69 +133,69 @@ namespace cbl {
       /// \f$\Omega_M\f$: the density of baryons, cold dark matter and massive neutrinos (in units of the critical density) at z=0 in the LCDM case
       _Omega_matter_LCDM_,
 
-      /// \f$\Omega_M\f$: the density of baryons, cold dark matter and massive neutrinos (in units of the critical density) at z=0
-      _Omega_matter_,
+	/// \f$\Omega_M\f$: the density of baryons, cold dark matter and massive neutrinos (in units of the critical density) at z=0
+	_Omega_matter_,
   
-      /// \f$\Omega_b\f$: the baryon density at z=0
-      _Omega_baryon_,         
+	/// \f$\Omega_b\f$: the baryon density at z=0
+	_Omega_baryon_,         
     
-      /// \f$\Omega_b h^2\f$: the baryon density times \f$h^2\f$ at z=0
-      _Omega_baryon_h2_,        
+	/// \f$\Omega_b h^2\f$: the baryon density times \f$h^2\f$ at z=0
+	_Omega_baryon_h2_,        
 
-      /// \f$\Omega_\nu\f$: the density of massive neutrinos at z=0
-      _Omega_neutrinos_,      
+	/// \f$\Omega_\nu\f$: the density of massive neutrinos at z=0
+	_Omega_neutrinos_,      
 
-      /// \f$N_{eff}\f$: the effective number (for QED + non-instantaneous decoupling)
-      _massless_neutrinos_,   
+	/// \f$N_{eff}\f$: the effective number (for QED + non-instantaneous decoupling)
+	_massless_neutrinos_,   
 
-      /// the number of degenerate massive neutrino species 
-      _massive_neutrinos_,
+	/// the number of degenerate massive neutrino species 
+	_massive_neutrinos_,
 
-      /// the total neutrino mass
-      _neutrino_mass_,
+	/// the total neutrino mass
+	_neutrino_mass_,
 
-      /// \f$\Omega_{DE}\f$: the dark energy density at z=0
-      _Omega_DE_,             
+	/// \f$\Omega_{DE}\f$: the dark energy density at z=0
+	_Omega_DE_,             
 
-      /// \f$\Omega_{rad}\f$: the radiation density at z=0
-      _Omega_radiation_,     
+	/// \f$\Omega_{rad}\f$: the radiation density at z=0
+	_Omega_radiation_,     
              
-      /// \f$H_0\f$: the Hubble constant at z=0 [km/sec/Mpc] 
-      _H0_,
+	/// \f$H_0\f$: the Hubble constant at z=0 [km/sec/Mpc] 
+	_H0_,
     
-      /// \f$h\f$: the Hubble constant at z=0 divided by 100 
-      _hh_,           
+	/// \f$h\f$: the Hubble constant at z=0 divided by 100 
+	_hh_,           
 
-      /// \f$A_s\f$: the initial scalar amplitude of the power spectrum
-      _scalar_amp_,           
+	/// \f$A_s\f$: the initial scalar amplitude of the power spectrum
+	_scalar_amp_,           
 
-      /// \f$\ln(10^{10}A_s)\f$: the logarithm of 1e10 times the initial scalar amplitude of the power spectrum
-      _ln_scalar_amp_,
+	/// \f$\ln(10^{10}A_s)\f$: the logarithm of 1e10 times the initial scalar amplitude of the power spectrum
+	_ln_scalar_amp_,
 
-      /// the scalar pivot k in \f$Mpc^{-1}\f$
-      _scalar_pivot_,
+	/// the scalar pivot k in \f$Mpc^{-1}\f$
+	_scalar_pivot_,
       
-      /// \f$n_{spec}\f$: the primordial spectral index
-      _n_spec_,               
+	/// \f$n_{spec}\f$: the primordial spectral index
+	_n_spec_,               
 
-      /// \f$w_0\f$: the parameter of the dark energy equation of state (CPL parameterisation)
-      _w0_,
+	/// \f$w_0\f$: the parameter of the dark energy equation of state (CPL parameterisation)
+	_w0_,
 
-      /// \f$w_a\f$: the parameter of the dark energy equation of state (CPL parameterisation)
-      _wa_,             
+	/// \f$w_a\f$: the parameter of the dark energy equation of state (CPL parameterisation)
+	_wa_,             
 
-      /// \f$f_{NL}\f$: the non-Gaussian amplitude
-      _fNL_,                  
+	/// \f$f_{NL}\f$: the non-Gaussian amplitude
+	_fNL_,                  
 
-      /// \f$\sigma_8\f$: the power spectrum normalisation
-      _sigma8_,
+	/// \f$\sigma_8\f$: the power spectrum normalisation
+	_sigma8_,
       
-      /// \f$\tau\f$: Thomson scattering optical depth due to reionization
-      _tau_,
+	/// \f$\tau\f$: Thomson scattering optical depth due to reionization
+	_tau_,
 
-      /// sound horizon
-      _rs_
-    };
+	/// sound horizon
+	_rs_
+	};
 
     /**
      * @brief return a vector containing the
@@ -337,7 +337,7 @@ namespace cbl {
       double m_tau;
 
       /// \f$r_s\f$ the sound horizon
-      double m_rs = -1;
+      double m_rs;
       
       /// the normalisation of the power spectrum for Eisenstein & Hu [http://background.uchicago.edu/~whu/transfer/transferpage.html]
       double m_Pk0_EH;
@@ -354,7 +354,7 @@ namespace cbl {
       /// the cosmologial model used to compute distances
       std::string m_model;                
 
-      /// false \f$\rightarrow\f$ phyical units; true \f$\rightarrow\f$ cosmological units (i.e. without \e h)
+      /// false \f$\rightarrow\f$ quantities are provided in phyical units; true \f$\rightarrow\f$ quantities are provided in cosmological units (i.e. in units of \e h, e.g. Mpc/h)
       bool m_unit;
 
       
@@ -390,6 +390,10 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -422,7 +426,7 @@ namespace cbl {
        *  @return the funciton to compute the not-yet-normalised 
        *  mass variances
        */
-      double m_func_sigma (const std::string method_Pk, const double redshift, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, std::function<double(double)> filter={}, const bool unit1=false) const;
+      double m_func_sigma (const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, std::function<double(double)> filter={}, const bool unit1=false) const;
 
       /**
        *  @brief the not-yet-normalised mass variance,
@@ -446,6 +450,10 @@ namespace cbl {
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -476,7 +484,7 @@ namespace cbl {
        *
        *  @return the not-yet-normalised \f$\sigma^2(R)\f$
        */
-      double m_sigma2R_notNormalised (const double radius, const std::string method_Pk, const double redshift, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const;
+      double m_sigma2R_notNormalised (const double radius, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const;
       
       /**
        *  @brief the not-yet-normalised mass variance,
@@ -500,6 +508,10 @@ namespace cbl {
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -529,7 +541,7 @@ namespace cbl {
        *
        *  @return the not-yet-normalised \f$\sigma^2(M)\f$
        */
-      double m_sigma2M_notNormalised (const double mass, const std::string method_Pk, const double redshift, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double m_sigma2M_notNormalised (const double mass, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
       
       /**
        *  @brief auxiliary function to compute the mass function of
@@ -571,19 +583,22 @@ namespace cbl {
        *  @param model_MF author(s) who proposed the mass function;
        *  valid authors are: PS (Press & Schechter), ST (Sheth &
        *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
-       *  al. 2006), Reed (Reed et al. 2007), Pan (Pan 2007), ShenH
-       *  (halo MF, Shen et al. 2006), ShenF (filament MF, Shen et
-       *  al. 2006), ShenS (sheet MF, Shen et al. 2006), Tinker
-       *  (Tinker et al. 2008), Crocce (Crocce et al. 2010),
-       *  Angulo_FOF (FoF MF, Angulo et al. 2012), Angulo_Sub (SUBFIND
-       *  MF, Angulo et al. 2012), Watson_FOF (FoF MF, Watson et
-       *  al. 2012), Watson_SOH (Spherical Overdensity halo MF, Watson
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (Peacock at al. 2007), Despali (Despali et al. 2016)
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param default_delta true = using function
        *  cbl::cosmology::deltac; false = using delta_t*growth
@@ -619,7 +634,9 @@ namespace cbl {
        *  of Warren 2004), Tinker (Tinker et al. 2010)
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (author=Tinker)
+       *  bias
        *
        *  @return the halo bias
        *
@@ -794,8 +811,10 @@ namespace cbl {
        *
        *  @param model the cosmologial model used to compute distances
        *
-       *  @param unit false \f$\rightarrow\f$ phyical units; true
-       *  \f$\rightarrow\f$ cosmological units (i.e. without \e h)
+       *  @param unit false \f$\rightarrow\f$ quantities are provided in
+       *  phyical units; true \f$\rightarrow\f$ quantities are
+       *  provided in cosmological units (i.e. in units of \e h,
+       *  e.g. Mpc/h)
        *
        *  @return object of class Cosmology
        *
@@ -813,8 +832,10 @@ namespace cbl {
        *
        *  @param model the cosmologial model used to compute distances
        *
-       *  @param unit 0 \f$\rightarrow\f$ phyical units; 1
-       *  \f$\rightarrow\f$ cosmological units (i.e. without \e h)
+       *  @param unit false \f$\rightarrow\f$ quantities are provided in
+       *  phyical units; true \f$\rightarrow\f$ quantities are
+       *  provided in cosmological units (i.e. in units of \e h,
+       *  e.g. Mpc/h)
        *
        *  @return object of class Cosmology; by default:
        *  \f$\Omega_k = 1-\Omega_M-\Omega_{rad}-\Omega_{DM}\f$,
@@ -1069,8 +1090,10 @@ namespace cbl {
       /**
        *  @brief get the private member Cosmology::m_unit
        *
-       *  @return unit: false \f$\rightarrow\f$ phyical units; true
-       *  \f$\rightarrow\f$ cosmological units (i.e. without \e h)
+       *  @return unit: false \f$\rightarrow\f$ quantities are
+       *  provided in phyical units; true \f$\rightarrow\f$ quantities
+       *  are provided in cosmological units (i.e. in units of \e h,
+       *  e.g. Mpc/h)
        */
       bool unit () const { return m_unit; };
 
@@ -1234,7 +1257,7 @@ namespace cbl {
        */
       void set_hh (const double hh=0.7, const bool warn=true)
       {
-	if (m_unit && warn) WarningMsg("if unit=true then H0=100 (by internal definition)");
+	if (m_unit && warn) WarningMsgCBL("if unit=true then H0=100 (by internal definition)", "set_hh", "Cosmology.h");
 	m_hh = hh; 
 	m_H0 = (m_unit) ? 100. : m_hh*100.;   
 	m_t_H = 1./m_H0; 
@@ -1246,14 +1269,14 @@ namespace cbl {
        *
        *  @param H0 H<SUB>0</SUB>: Hubble constant [km/sec/Mpc]
        *
-       *  @param warn true \f$\rightarrow\f$ print a warning message if m_unit is
-       *  true
+       *  @param warn true \f$\rightarrow\f$ print a warning message
+       *  if m_unit is true
        *
        *  @return none
        */
       void set_H0 (const double H0=70., const bool warn=true)
       {
-	if (m_unit && warn) WarningMsg("if unit=true then H0=100 (by internal definition)");
+	if (m_unit && warn) WarningMsgCBL("if unit=true then H0=100 (by internal definition)", "set_H0", "Cosmology.h");
 	m_hh = H0/100.; 
 	m_H0 = (m_unit) ? 100. : m_hh*100.;   
 	m_t_H = 1./m_H0; 
@@ -1377,8 +1400,8 @@ namespace cbl {
       /**
        *  @brief set the value of unit
        *
-       *  @param unit false \f$\rightarrow\f$ phyical units; true \f$\rightarrow\f$
-       *  cosmological units (i.e. without \e h)
+       *  @param unit false \f$\rightarrow\f$ phyical units; true
+       *  \f$\rightarrow\f$ cosmological units (i.e. in units of \e h)
        *
        *  @return none
        */
@@ -1988,13 +2011,17 @@ namespace cbl {
        *
        *  @param wwf rescaled variable w as in Lacey and Coles 1993
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @return redshift
        */
-      double Redshift (const double mm, const double redshift, const double ff, const std::string method_SS, const double wwf, const std::string output_root="test") const; 
+      double Redshift (const double mm, const double redshift, const double ff, const std::string method_SS, const double wwf, const bool store_output_CAMB=true, const std::string output_root="test") const; 
 
       /**
        *  @brief redshift at a given cosmic time
@@ -2027,11 +2054,17 @@ namespace cbl {
        *  @author Tommaso Ronconi
        *  @author tommaso.ronconi@studio.unibo.it
        *
-       *  @param bias the bias of the sample
+       *  @param deltav_NL the non linear density contrast:
+       *  \f$\rho_v/\rho_m\f$ (default value set to \f$-0.795\f$)
        *
-       *  @param rho_vm the non linear density contrast:
-       *  \f$\rho_v/\rho_m\f$ (default value set to \f$0.205\f$)
-       *  
+       *  @param b_eff the effective bias of the sample
+       *
+       *  @param slope first coefficent to convert the effective bias
+       *  (default value set to \f$0.854\f$)
+       *
+       *  @param offset second coefficent to convert the effective
+       *  bias (default value set to \f$0.420\f$)
+       *
        *  @return The linear density contrast used as second barrier
        *  in the excursion set formalism for voids, based on the fit
        *  by Bernardeu (1994): \f$\delta_v^L \equiv \frac{\rho_v -
@@ -2040,7 +2073,7 @@ namespace cbl {
        *  \f$ average density of the surrounding Universe and \f$C =
        *  1.594\f$, a costant.
        */
-      double deltav_L (const double bias=1., const double rho_vm=0.205) const;
+      double deltav_L (const double deltav_NL, const double b_eff, double slope=0.854, double offset=0.420) const;
     
       /**
        *  @brief Non-Linear (under)density contrast
@@ -2242,18 +2275,49 @@ namespace cbl {
       double Distance (const double redshift, const std::string distance_type) const;
 
       /**
-       *  @brief comoving volume for a given redshift range and sky area
+       *  @brief comoving volume for a given redshift range and sky
+       *  area
        *
-       *  this function provides an approximated expression valid only
-       *  for a LCDM model
+       *  this function provides an approximated expression of the
+       *  comoving volume valid only for a &Lambda;CDM model
        *
        *  @param z1 minimum redshift
+       *
        *  @param z2 maximum redshift
-       *  @param Area sky area
-       *  @return comoving volume
+       *
+       *  @param Area sky area [square degrees]
+       *
+       *  @return comoving volume [m_unit=true \f$\rightarrow
+       *  (\mbox{Mpc}/h)^3\f$; m_unit=false \f$\rightarrow
+       *  \mbox{Mpc}^3\f$]
        */
       double Volume (const double z1, const double z2, const double Area) const; 
 
+      /**
+       *  @brief comoving volume for a given redshift range and
+       *  R.A.-Dec limits
+       *
+       *  this function provides an approximated expression of the
+       *  comoving volume valid only for a &Lambda;CDM model
+       *
+       *  @param z1 minimum redshift
+       *
+       *  @param z2 maximum redshift
+       *
+       *  @param RA_min minimum Right ascension [radians]
+       *
+       *  @param RA_max maximum Right ascension [radians]
+       *
+       *  @param Dec_min minimum Declination [radians]
+       *
+       *  @param Dec_max minimum Declination [radians]
+       *
+       *  @return comoving volume [m_unit=true \f$\rightarrow
+       *  (\mbox{Mpc}/h)^3\f$; m_unit=false \f$\rightarrow
+       *  \mbox{Mpc}^3\f$]
+       */
+      double Volume (const double z1, const double z2, const double RA_min, const double RA_max, const double Dec_min, const double Dec_max) const; 
+      
       /**
        *  @brief total comoving volume from z=0 to z
        *
@@ -2261,8 +2325,12 @@ namespace cbl {
        *
        *  @author Alfonso Veropalumbo
        *  @author alfonso.veropalumbo@unibo.it
+       *
        *  @param zz redshift
-       *  @return comoving volume
+       *
+       *  @return comoving volume [m_unit=true \f$\rightarrow
+       *  (\mbox{Mpc}/h)^3\f$; m_unit=false \f$\rightarrow
+       *  \mbox{Mpc}^3\f$]
        */
       double Volume (const double zz) const;
   
@@ -2309,6 +2377,10 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -2335,7 +2407,7 @@ namespace cbl {
        *
        *  @return file_grid name of the file where the grid is stored
        */
-      std::string create_grid_sigmaM (const std::string method_SS, const double redshift, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;         
+      std::string create_grid_sigmaM (const std::string method_SS, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;         
 
       /**
        *  @brief the mass function of dark matter haloes (filaments
@@ -2354,16 +2426,17 @@ namespace cbl {
        *  @param model_MF author(s) who proposed the mass function;
        *  valid authors are: PS (Press & Schechter), ST (Sheth &
        *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
-       *  al. 2006), Reed (Reed et al. 2007), Pan (Pan 2007), ShenH
-       *  (halo MF, Shen et al. 2006), ShenF (filament MF, Shen et
-       *  al. 2006), ShenS (sheet MF, Shen et al. 2006), Tinker
-       *  (Tinker et al. 2008), Crocce (Crocce et al. 2010),
-       *  Angulo_FOF (FoF MF, Angulo et al. 2012), Angulo_Sub (SUBFIND
-       *  MF, Angulo et al. 2012), Watson_FOF (FoF MF, Watson et
-       *  al. 2012), Watson_SOH (Spherical Overdensity halo MF, Watson
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (Peacock at al. 2007), Despali (Despali et al. 2016)
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -2371,12 +2444,18 @@ namespace cbl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
-       *  interior density relative to the background
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2384,11 +2463,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -2426,7 +2509,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mass_function (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
+      double mass_function (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
 
       /**
        *  @brief the mass function of dark matter haloes (filaments and
@@ -2445,16 +2528,17 @@ namespace cbl {
        *  @param model_MF author(s) who proposed the mass function;
        *  valid authors are: PS (Press & Schechter), ST (Sheth &
        *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
-       *  al. 2006), Reed (Reed et al. 2007), Pan (Pan 2007), ShenH
-       *  (halo MF, Shen et al. 2006), ShenF (filament MF, Shen et
-       *  al. 2006), ShenS (sheet MF, Shen et al. 2006), Tinker
-       *  (Tinker et al. 2008), Crocce (Crocce et al. 2010),
-       *  Angulo_FOF (FoF MF, Angulo et al. 2012), Angulo_Sub (SUBFIND
-       *  MF, Angulo et al. 2012), Watson_FOF (FoF MF, Watson et
-       *  al. 2012), Watson_SOH (Spherical Overdensity halo MF, Watson
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (Peacock at al. 2007), Despali (Despali et al. 2016)
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -2462,12 +2546,18 @@ namespace cbl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
-       *  interior density relative to the background
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2475,11 +2565,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -2511,7 +2605,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mass_function_fast (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double mass_function_fast (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief the mass function of dark matter haloes (filaments and
@@ -2534,25 +2628,32 @@ namespace cbl {
        *  @param redshift the redshift
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        * 
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
-       *  interior density relative to the background
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2560,11 +2661,14 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed to estimate the power spectrum
+       *  normalisation; this parameter is used only if norm=1
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -2602,7 +2706,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
     
       /**
        *  @brief number of dark matter haloes per steradian or square
@@ -2626,30 +2730,37 @@ namespace cbl {
        *  degrees; 1 \f$\rightarrow\f$ &Omega; in steradians
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
        *  classgal_v1 [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *       
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2685,7 +2796,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double n_haloes (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double n_haloes (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief number of dark matter haloes per volume at fixed
@@ -2713,16 +2824,17 @@ namespace cbl {
        *  @param model_MF author(s) who proposed the mass function;
        *  valid authors are: PS (Press & Schechter), ST (Sheth &
        *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
-       *  al. 2006), Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH
-       *  (halo MF by Shen et al. 2006), ShenF (filaments MF by Shen
-       *  et al. 2006), ShenS (sheets MF by Shen et al. 2006), Tinker
-       *  (Tinker et al. 2008), Crocce (Crocce et al. 2010),
-       *  Angulo_FOF (FOF MF by Angulo et al. 2012), Angulo_Sub
-       *  (SUBFIND MF by Angulo et al. 2012), Watson_FOF(FOF MF by
-       *  Watson et al. 2012), Watson_SOH (MF for Spherical Overdensity
-       *  Haloes by Watson et al. 2012), Manera (Manera et al. 2010),
-       *  Bhattacharya (Bhattacharya et al. 2011), Courtin (Courtin 
-       *  et al. 2010), Peacock (by Peacock at al. 2007)
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -2733,12 +2845,18 @@ namespace cbl {
        *  @param nbin_mass number of bin for the mass function
        *  computation
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2746,11 +2864,14 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed to estimate the power spectrum
+       *  normalisation; this parameter is used only if norm=1
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -2788,7 +2909,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double n_haloes (const double Mass_min, const double Mass_max, const double Volume, const double redshift, const std::string model_MF, const std::string method_SS, const int nbin_mass=0, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
+      double n_haloes (const double Mass_min, const double Mass_max, const double Volume, const double redshift, const std::string model_MF, const std::string method_SS, const int nbin_mass=0, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
       
       /**
        *  @brief number of dark matter haloes per steradian or square
@@ -2813,18 +2934,19 @@ namespace cbl {
        *  degrees; 1 \f$\rightarrow\f$ &Omega; in steradians
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
@@ -2834,14 +2956,20 @@ namespace cbl {
        *  @param selection_function_file input file where the selection
        *  function is stored
        *
-       *  @param [in] column the columns to be read
+       *  @param column the columns to be read
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        *  virial overdensity
@@ -2880,7 +3008,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double n_haloes_selection_function (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double n_haloes_selection_function (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief mass function for a range of masses
@@ -2896,30 +3024,37 @@ namespace cbl {
        *  @param z_max maximum redshift
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
        *  classgal_v1 [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        *  virial overdensity
@@ -2958,7 +3093,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      std::vector<double> mass_function (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> mass_function (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief mass function given a selection function
@@ -2974,18 +3109,19 @@ namespace cbl {
        *  @param z_max maximum redshift
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
@@ -2997,12 +3133,18 @@ namespace cbl {
        *
        *  @param column the columns to be read
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        *  virial overdensity
@@ -3041,7 +3183,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      std::vector<double> mass_function_selection_function_vector (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> mass_function_selection_function_vector (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief redshift distribution of dark matter haloes
@@ -3063,18 +3205,19 @@ namespace cbl {
        *  @param Mass_max maximum halo mass
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
-       *  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
-       *  al. 2012), Manera (Manera et al. 2010), Bhattacharya
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -3082,12 +3225,18 @@ namespace cbl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        *  virial overdensity
@@ -3125,7 +3274,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      std::vector<double> redshift_distribution_haloes (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> redshift_distribution_haloes (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief redshift distribution of dark matter haloes, given a
@@ -3145,18 +3294,19 @@ namespace cbl {
        *  @param Mass_max maximum halo mass
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
-       *  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
-       *  al. 2012), Manera (Manera et al. 2010), Bhattacharya
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -3169,12 +3319,18 @@ namespace cbl {
        *
        *  @param column the columns to be read
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        *  virial overdensity
@@ -3212,7 +3368,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      std::vector<double> redshift_distribution_haloes_selection_function (const std::vector<double> redshift, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> redshift_distribution_haloes_selection_function (const std::vector<double> redshift, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the mean redshift of a dark matter haloe sample,
@@ -3231,18 +3387,19 @@ namespace cbl {
        *  @param Mass_max maximum halo mass
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
-       *  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
-       *  al. 2012), Manera (Manera et al. 2010), Bhattacharya
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -3255,12 +3412,18 @@ namespace cbl {
        *
        *  @param column the columns to be read
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        *  virial overdensity
@@ -3298,7 +3461,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mean_redshift_haloes_selection_function (const double z_min, const double z_max, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double mean_redshift_haloes_selection_function (const double z_min, const double z_max, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
   
       /**
        *  @brief minimum halo mass, given the number of haloes in a
@@ -3330,18 +3493,19 @@ namespace cbl {
        *  root finder
        *  
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -3349,12 +3513,18 @@ namespace cbl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -3389,7 +3559,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double MhaloMin (const int n_halo, const double Area, const bool angle_rad, const double z_min, const double z_max, const double Mmax, const double lgM1_guess, const double lgM2_guess, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double MhaloMin (const int n_halo, const double Area, const bool angle_rad, const double z_min, const double z_max, const double Mmax, const double lgM1_guess, const double lgM2_guess, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
 
       /**
        *  @brief convert a cluster mass estimated in a different
@@ -3469,13 +3639,17 @@ namespace cbl {
        *  classgal_v1 [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *     
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @return p(z): formation probability
        */
-      double pz (const double m0, const double z0, const double frac, const double redshift, const std::string model_model, const std::string method_SS, const std::string output_root="test") const; 
+      double pz (const double m0, const double z0, const double frac, const double redshift, const std::string model_model, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test") const; 
 
       /**
        *  @brief cumulative distribution 
@@ -3523,13 +3697,17 @@ namespace cbl {
        *
        *  @param [out] zf vector of z(f)
        *      
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @return none
        */
-      void medianzf (const double ff, const double mass, const double z0, const std::string model_model, const std::string method_SS, std::vector<double> &zf, const std::string output_root="test") const; 
+      void medianzf (const double ff, const double mass, const double z0, const std::string model_model, const std::string method_SS, std::vector<double> &zf, const bool store_output_CAMB=true, const std::string output_root="test") const; 
   
       /**
        *  @brief rescaled variable w as in Lacey and Coles 1993
@@ -3551,13 +3729,17 @@ namespace cbl {
        *  classgal_v1 [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *     
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @return the conditional variable w
        */
-      double wf (const double mm, const double redshift, const double ff, const double zf, const std::string method_SS, const std::string output_root="test") const; 
+      double wf (const double mm, const double redshift, const double ff, const double zf, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test") const; 
 
       /**
        *  @brief the unevolved mass function
@@ -3618,6 +3800,10 @@ namespace cbl {
        *  @param run true \f$\rightarrow\f$ write or read the table
        *  where the dark matter power spectrum is stored
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -3631,7 +3817,7 @@ namespace cbl {
        *
        *  @return the path to the power spectrum output
        */
-      std::string Pk_output_file (const std::string code, const bool NL, const double redshift, const bool run=0, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString);
+      std::string Pk_output_file (const std::string code, const bool NL, const double redshift, const bool run=0, const bool store_output_CAMB=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString);
 
       /**
        *  @brief run CAMB [http://camb.info/]
@@ -3695,7 +3881,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void run_CAMB (std::vector<double> &lgkk, std::vector<double> &lgPk, const bool NL, const double redshift, const std::string output_root=par::defaultString, const std::string output_dir=par::defaultString, const double k_max=100., const std::string file_par=par::defaultString) const;
+      void run_CAMB (std::vector<double> &lgkk, std::vector<double> &lgPk, const bool NL, const double redshift, const std::string output_root="test", const std::string output_dir=par::defaultString, const double k_max=100., const std::string file_par=par::defaultString) const;
 
       /**
        *  @brief write or read the table where the dark matter power
@@ -3714,6 +3900,10 @@ namespace cbl {
        *  @param [out] lgPk vector of log(P(k))
        *
        *  @param [in] redshift redshift
+       *  
+       *  @param [in] store_output_CAMB if true the output files
+       *  created by CAMB are stored; if false the output files
+       *  created by CAMB are removed
        *
        *  @param [in] output_root output_root of the parameter file used
        *  to compute the power spectrum; it can be any name
@@ -3727,7 +3917,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void Table_PkCodes (const std::string code, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const std::string output_root="test", const double k_max=100., std::string file_par=par::defaultString) const;
+      void Table_PkCodes (const std::string code, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_max=100., std::string file_par=par::defaultString) const;
 
       /**
        *  @brief write or read the table where the dark matter two-point
@@ -3747,6 +3937,10 @@ namespace cbl {
        *
        *  @param [in] redshift redshift
        *
+       *  @param [in] store_output_CAMB if true the output files
+       *  created by CAMB are stored; if false the output files
+       *  created by CAMB are removed
+       *
        *  @param [in] output_root output_root of the parameter file used
        *  to compute the power spectrum; it can be any name
        *
@@ -3759,7 +3953,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void Table_XiCodes (const std::string code, const bool NL, std::vector<double> &rr, std::vector<double> &xi, const double redshift, const std::string output_root, const double k_max, std::string file_par) const;
+      void Table_XiCodes (const std::string code, const bool NL, std::vector<double> &rr, std::vector<double> &xi, const double redshift, const bool store_output_CAMB, const std::string output_root, const double k_max, std::string file_par) const;
 
       /**
        *  @brief normalisation of the power spectrum
@@ -3775,15 +3969,21 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed to estimate the power spectrum
+       *  normalisation;
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed to estimate the power spectrum
+       *  normalisation;
        *
        *  @param prec accuracy of the integration 
        *
@@ -3793,7 +3993,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void Pk_0 (const std::string method_Pk, const double redshift, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      void Pk_0 (const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief normalised power spectrum
@@ -3815,6 +4015,10 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -3823,11 +4027,14 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed to estimate the power spectrum
+       *  normalisation; this parameter is used only if norm=1
        *
        *  @param prec accuracy of the integration 
        *
@@ -3839,7 +4046,7 @@ namespace cbl {
        *
        *  @return P(k)
        */
-      double Pk (const double kk, const std::string method_Pk, const bool NL, const double redshift, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
+      double Pk (const double kk, const std::string method_Pk, const bool NL, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
 
       /**
        *  @brief normalised power spectrum
@@ -3864,6 +4071,10 @@ namespace cbl {
        *  @param output_dir the output_dir directory
        *  where the output of external codes are written
        *  
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -3872,11 +4083,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -3888,7 +4103,7 @@ namespace cbl {
        *
        *  @return P(k)
        */
-      std::vector<double> Pk (const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
+      std::vector<double> Pk (const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
 
       /**
        *  @brief return power spectrum first three multipoles using linear kaiser model
@@ -3920,6 +4135,10 @@ namespace cbl {
        *
        *  @param sigma_NL the BAO damping parameter
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -3928,11 +4147,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -3942,7 +4165,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void Pk_Kaiser_multipoles (std::vector<double> &Pk0, std::vector<double> &Pk2, std::vector<double> &Pk4, const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const double bias, const double sigma_NL = 0., const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      void Pk_Kaiser_multipoles (std::vector<double> &Pk0, std::vector<double> &Pk2, std::vector<double> &Pk4, const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const double bias, const double sigma_NL = 0., const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief the dark matter power spectrum, de-wiggled (see
@@ -3960,6 +4183,10 @@ namespace cbl {
        *
        *  @param sigma_NL the non linear BAO damping
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -3968,11 +4195,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param aa parameter \e a of Eq. 24 of Anderson et al. 2012
        *
@@ -3981,7 +4212,7 @@ namespace cbl {
        *  @return P;<SUB>DW</SUB>(k): the De-Wiggled power
        *  spectrum of dark matter
        */
-      double Pk_DeWiggle (const double kk, const double redshift, const double sigma_NL, const std::string output_root = "test", const bool norm=1, const double k_min=0., const double k_max=100., const double aa=1., const double prec=1.e-2);
+      double Pk_DeWiggle (const double kk, const double redshift, const double sigma_NL, const bool store_output_CAMB=true, const std::string output_root = "test", const bool norm=1, const double k_min=0., const double k_max=100., const double aa=1., const double prec=1.e-2);
  
       /**
        *  @brief the mass variance, \f$\sigma^2(R)\f$
@@ -4003,6 +4234,10 @@ namespace cbl {
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -4032,7 +4267,7 @@ namespace cbl {
        *
        *  @return \f$\sigma^2(R)\f$
        */
-      double sigma2R (const double radius, const std::string method_Pk, const double redshift, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double sigma2R (const double radius, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
 
       /**
        *  @brief the mass variance, \f$\sigma^2(M)\f$
@@ -4055,6 +4290,10 @@ namespace cbl {
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -4084,7 +4323,7 @@ namespace cbl {
        *
        *  @return \f$\sigma^2(M)\f$
        */
-      double sigma2M (const double mass, const std::string method_Pk, const double redshift, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double sigma2M (const double mass, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
  
       /**
        *  @brief the nth-order derivative of the mass variance,
@@ -4101,6 +4340,10 @@ namespace cbl {
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -4135,7 +4378,7 @@ namespace cbl {
        *  incremental step; it is computationally efficient, but the
        *  accuracy might be lowt
        */
-      double dnsigma2R (const int nd, const double radius, const std::string method_Pk, const double redshift, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double dnsigma2R (const int nd, const double radius, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
 
       /**
        *  @brief the first derivative of the mass variance, \f${\rm
@@ -4152,6 +4395,10 @@ namespace cbl {
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -4186,7 +4433,7 @@ namespace cbl {
        *  incremental step; it is computationally efficient, but the
        *  accuracy might be low
        */
-      double dnsigma2M (const int nd, const double mass, const std::string method_Pk, const double redshift, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double dnsigma2M (const int nd, const double mass, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
 
       ///@}
 
@@ -4487,6 +4734,10 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -4498,11 +4749,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param aa parameter \e a of Eq. 24 of Anderson et al. 2012
        *
@@ -4519,7 +4774,7 @@ namespace cbl {
        *  averaged (monopole) of the two-point correlation function of
        *  dark matter
        */
-      double xi_DM (const double rr, const std::string method_Pk, const double redshift, const std::string output_root="test", const bool NL=true, const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi_DM (const double rr, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const bool NL=true, const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the dark matter angular two-point correlation function
@@ -4558,6 +4813,10 @@ namespace cbl {
        *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1
        *  \f$\rightarrow\f$ non-linear power spectrum
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -4566,11 +4825,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalize the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -4581,7 +4844,7 @@ namespace cbl {
        *  @return \f$w_{DM}(\theta)\f$: the angular two point
        *  correlation function of dark matter
        */
-      double wtheta_DM (const double theta, const std::vector<double> zz, const std::vector<double> phiz, const std::string interpolationMethod, const CoordinateUnits coordUnits = CoordinateUnits::_degrees_, const bool GSL=false, const std::string method_Pk="CAMB", const bool NL=false, const std::string output_root="test", const int norm=-1, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double wtheta_DM (const double theta, const std::vector<double> zz, const std::vector<double> phiz, const std::string interpolationMethod, const CoordinateUnits coordUnits = CoordinateUnits::_degrees_, const bool GSL=false, const std::string method_Pk="CAMB", const bool NL=false, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the dark matter angular two-point correlation function
@@ -4661,6 +4924,10 @@ namespace cbl {
        * [http://arxiv.org/abs/1207.1465], EisensteinHu
        * [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       * @param store_output_CAMB if true the output files created by
+       * CAMB are stored; by CAMB during the computation of the power
+       * spectrum
+       *
        * @param output_root output_root of the parameter file used to
        * compute the power spectrum and &sigma;(mass); it can be any
        * name
@@ -4684,7 +4951,7 @@ namespace cbl {
        * @return vector containing the angular linear power spectrum up to \f$l_{max}\f$
        *
        */
-      std::vector<double> C_l_DM (const int lmax, const std::vector<double> zz, const std::vector<double> phiz, const std::string interpolationMethod, const std::string method_Pk="CAMB", const std::string output_root="test", const int norm=-1, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      std::vector<double> C_l_DM (const int lmax, const std::vector<double> zz, const std::vector<double> phiz, const std::string interpolationMethod, const std::string method_Pk="CAMB", const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the dark matter two-point correlation function,
@@ -4703,6 +4970,10 @@ namespace cbl {
        *
        *  @param sigma_NL the non linear BAO damping
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -4711,11 +4982,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param aa parameter \e a of Eq. 24 of Anderson et al. 2012
        *
@@ -4725,7 +5000,7 @@ namespace cbl {
        *  averaged (monopole) of the two-point correlation function of
        *  dark matter
        */
-      double xi_DM_DeWiggle (const double rr, const double redshift, const double sigma_NL, const std::string output_root = "test", const bool norm=1, const double k_min=0., const double k_max=100., const double aa=1., const double prec=1.e-2);
+      double xi_DM_DeWiggle (const double rr, const double redshift, const double sigma_NL, const bool store_output_CAMB=true, const std::string output_root="test", const bool norm=1, const double k_min=0., const double k_max=100., const double aa=1., const double prec=1.e-2);
 
       /**
        *  @brief get the dark matter two-point correlation function
@@ -4746,6 +5021,10 @@ namespace cbl {
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param [in] redshift redshift
+       *
+       *  @param [in] store_output_CAMB if true the output files
+       *  created by CAMB are stored; if false the output files
+       *  created by CAMB are removed
        *
        *  @param [in] output_root output_root of the parameter file used
        *  to compute the power spectrum and &sigma;(mass); it can be any
@@ -4771,7 +5050,9 @@ namespace cbl {
        *  correlation function is computed
        *
        *  @param [in] k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param [in] k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -4790,7 +5071,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void get_xi (std::vector<double> &rr, std::vector<double> &Xi, const std::string method_Pk, const double redshift, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      void get_xi (std::vector<double> &rr, std::vector<double> &Xi, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
   
       /**
        *  @brief get the barred dark matter correlation functions
@@ -4837,7 +5118,9 @@ namespace cbl {
        *  correlation function is computed
        *
        *  @param [in] k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param [in] k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -4874,6 +5157,10 @@ namespace cbl {
        *
        *  @param pimax the upper limit of the line-of-sight integration
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -4892,7 +5179,9 @@ namespace cbl {
        *  correlation function is computed
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -4912,7 +5201,7 @@ namespace cbl {
        *  @return w<SUB>p,DM</SUB>(&theta;): the projected correlation
        *  function of dark matter
        */
-      double wp_DM (const double rp, const std::string method_Pk, const double redshift, const double pimax, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=cbl::par::defaultString);
+      double wp_DM (const double rp, const std::string method_Pk, const double redshift, const double pimax, const bool store_output_CAMB=true, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=cbl::par::defaultString);
 
       /**
        *  @brief the k<SUB>*</SUB> parameter 
@@ -4929,6 +5218,10 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -4942,7 +5235,7 @@ namespace cbl {
        *
        *  @return k<SUB>*</SUB>
        */
-      double k_star (const std::string method_Pk, const double redshift, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const; 
+      double k_star (const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const; 
 
 
       /**
@@ -4965,6 +5258,10 @@ namespace cbl {
        *
        *  @param pimax the upper limit of the line-of-sight integration
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -4983,7 +5280,9 @@ namespace cbl {
        *  correlation function is computed
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5003,7 +5302,7 @@ namespace cbl {
        *  @return &sigma;<SUB>R</SUB>: the dark matter rms mass
        *  fluctuation
        */
-      double sigmaR_DM (const double RR, const int corrType, const std::string method_Pk, const double redshift, const double pimax=40, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      double sigmaR_DM (const double RR, const int corrType, const std::string method_Pk, const double redshift, const double pimax=40, const bool store_output_CAMB=true, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief the dark matter rms mass fluctuation within 8 Mpc/h
@@ -5019,6 +5318,10 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -5027,7 +5330,9 @@ namespace cbl {
        *  non-linear power spectrum
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5041,7 +5346,7 @@ namespace cbl {
        *  @return &sigma;<SUB>8</SUB>: the dark matter rms mass
        *  fluctuation within 8 Mpc/h
        */
-      double sigma8_Pk (const std::string method_Pk, const double redshift, const std::string output_root="test", const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const; 
+      double sigma8_Pk (const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const; 
 
       /**
        *  @brief bias of dark matter haloes
@@ -5061,6 +5366,10 @@ namespace cbl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -5068,7 +5377,9 @@ namespace cbl {
        *  @param interpType method to interpolate the power spectrum
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (author=Tinker)
+       *  bias
        *  
        *  @param kk wave vector module
        *
@@ -5077,7 +5388,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5107,7 +5420,7 @@ namespace cbl {
        *  cbl::Cosmology::Delta_vir can be used to convert
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
-      double bias_halo (const double Mass, const double redshift, const std::string author, const std::string method_SS, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double bias_halo (const double Mass, const double redshift, const std::string author, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief bias of dark matter haloes
@@ -5123,6 +5436,10 @@ namespace cbl {
        *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
        *  correction of Warren 2004), Tinker (Tinker et al. 2010)
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -5130,7 +5447,9 @@ namespace cbl {
        *  @param interpType method to interpolate the power spectrum
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (author=Tinker)
+       *  bias
        *  
        *  @param kk wave vector module
        *
@@ -5139,7 +5458,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5175,7 +5496,7 @@ namespace cbl {
        *  cbl::Cosmology::Delta_vir can be used to convert
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
-      double bias_halo (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_halo (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true);
   
       /**
        *  @brief the effective bias of dark matter haloes, with masses
@@ -5212,30 +5533,38 @@ namespace cbl {
        *  correction of Warren 2004), Tinker (Tinker et al. 2010)
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
-       *  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
-       *  al. 2012), Manera (Manera et al. 2010), Bhattacharya
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
        *  classgal_v1 [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions and for Tinker
+       *  et al. (author=Tinker) bias
        *  
        *  @param kk wave vector module
        *
@@ -5246,7 +5575,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5281,7 +5612,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double bias_eff (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_eff (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
  
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -5322,12 +5653,18 @@ namespace cbl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (author=Tinker)
+       *  bias
        *  
        *  @param kk wave vector module
        *
@@ -5338,7 +5675,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5368,7 +5707,7 @@ namespace cbl {
        *  cbl::Cosmology::Delta_vir can be used to convert
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
-      double bias_eff (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_eff (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
 
       /**
@@ -5416,6 +5755,10 @@ namespace cbl {
        *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
        *  bias is computed with Eq.(2)
        * 
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -5432,7 +5775,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5457,7 +5802,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      std::vector<double> bias_eff_mass_grid (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_mass_grid (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -5502,6 +5847,10 @@ namespace cbl {
        *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
        *  bias is computed with Eq.(2)
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -5518,7 +5867,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5543,7 +5894,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      std::vector<double> bias_eff_mass (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_mass (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -5592,6 +5943,10 @@ namespace cbl {
        *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
        *  bias is computed with Eq.(2)
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -5608,7 +5963,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5633,7 +5990,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      std::vector<double> bias_eff_mass (const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_mass (const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief compute the effective bias of dark matter haloes, by
@@ -5708,6 +6065,10 @@ namespace cbl {
        *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
        *  bias is computed with Eq.(2)
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -5724,7 +6085,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5756,7 +6119,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
+      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -5813,18 +6176,19 @@ namespace cbl {
        *  correction of Warren 2004), Tinker (Tinker et al. 2010)
        * 
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
-       *  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
-       *  al. 2012), Manera (Manera et al. 2010), Bhattacharya
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -5840,6 +6204,10 @@ namespace cbl {
        *
        *  @param column vector containing the columns with {mass,
        *  redshift, selection function}
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -5857,7 +6225,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5882,7 +6252,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const double redshift, const double Mass_min, const double Mass_max, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const double redshift, const double Mass_min, const double Mass_max, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -5973,12 +6343,18 @@ namespace cbl {
        *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
        *  bias is computed with Eq.(2)
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (author=Tinker)
+       *  bias
        *  
        *  @param kk wave vector module
        *
@@ -5989,7 +6365,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -6021,7 +6399,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      void generate_bias_eff_grid_two_cosmopars (std::vector<double> &parameter1, std::vector<double> &parameter2, std::vector<std::vector<double>> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cbl::cosmology::CosmologicalParameter cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
+      void generate_bias_eff_grid_two_cosmopars (std::vector<double> &parameter1, std::vector<double> &parameter2, std::vector<std::vector<double>> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cbl::cosmology::CosmologicalParameter cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
 
       /**
        *  @brief effective bias of dark matter haloes, computed using
@@ -6070,18 +6448,19 @@ namespace cbl {
        *  correction of Warren 2004), Tinker (Tinker et al. 2010)
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
-       *  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
-       *  al. 2012), Manera (Manera et al. 2010), Bhattacharya
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -6091,6 +6470,10 @@ namespace cbl {
        *
        *  @param alpha the \f$\alpha\f$ parameter of the cluster mass
        *  scaling relation
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -6108,7 +6491,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -6139,7 +6524,7 @@ namespace cbl {
        *  some applications (e.g. MCMC) where these quantities can be
        *  computed once
        */
-      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
        
       /**
        *  @brief effective bias of dark matter haloes, computed using
@@ -6188,18 +6573,19 @@ namespace cbl {
        *  correction of Warren 2004), Tinker (Tinker et al. 2010)
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
-       *  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
-       *  al. 2012), Manera (Manera et al. 2010), Bhattacharya
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -6209,6 +6595,10 @@ namespace cbl {
        *
        *  @param alpha the \f$\alpha\f$ parameter of the cluster mass
        *  scaling relation
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -6226,7 +6616,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -6257,7 +6649,7 @@ namespace cbl {
        *  some applications (e.g. MCMC) where these quantities can be
        *  computed once
        */
-      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid2D interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid2D interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief effective bias of dark matter haloes, computed using
@@ -6295,18 +6687,19 @@ namespace cbl {
        *  correction of Warren 2004), Tinker (Tinker et al. 2010)
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF
-       *  by Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson et
-       *  al. 2012), Manera (Manera et al. 2010), Bhattacharya
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -6322,6 +6715,10 @@ namespace cbl {
        *
        *  @param alpha the \f$\alpha\f$ parameter of the cluster mass
        *  scaling relation
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -6339,7 +6736,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -6364,7 +6763,7 @@ namespace cbl {
        *
        *  @return b<SUB>eff</SUB>: the effective dark matter bias
        */
-      std::vector<double> bias_eff_selection_function (const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_selection_function (const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
        
       ///@}
 
@@ -6406,6 +6805,9 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *  
+       *  @param store_output_CAMB if true the output files created by CAMB are stored;
+       *  if false the output files created by CAMB are removed
+       *
        *  @param output_root output_root of the parameter file used to compute
        *  the power spectrum and &sigma;(mass); it can be any name
        *
@@ -6414,11 +6816,15 @@ namespace cbl {
        *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$ non-linear power
        *  spectrum
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *   
        *  @param prec accuracy of the integration
        *
@@ -6428,7 +6834,528 @@ namespace cbl {
        *
        *  @return f*&sigma;<SUB>8</SUB>
        */
-      double fsigma8 (const double redshift, const std::string method_Pk, const std::string output_root="test", const double kk=1., const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
+      double fsigma8 (const double redshift, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const double kk=1., const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
+
+      /**
+       *  @brief the non-linear dark matter power spectrum using
+       *  fitting functions given by Bel et. al (2019)
+       *
+       *
+       *  the non-linear dark matter power spectrum,
+       *  P<SUB>&delta;&delta;</SUB>, is computed using the fitting
+       *  functions given by Bel et. al (2019)
+       *  [https://arxiv.org/abs/1809.09338].
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param author author(s) who proposed the fitting functions; valid
+       *  authors are: Pezzotta (Pezzotta, et.al, 2017), Bel (Bel et.al., 2019)
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @param unit1 true \f$\rightarrow\f$ force cosmological units
+       *
+       *  @return P<SUB>&delta;&delta;</SUB>: the non linear power spectrum using fitting functions
+       */
+      double Pk_DeltaDelta_fitting_function (const double kk, const std::string method_Pk, const double redshift, const std::string author, const bool store_output_CAMB, const std::string output_root, const int norm, double k_min, double k_max, const double prec, const std::string file_par, const bool unit1);
+
+      /**
+       *  @brief the dark matter cross power spectrum 
+       *
+       *  the dark matter cross power spectrum,
+       *  P<SUB>&delta;&theta;</SUB>, is computed using the fitting
+       *  functions given by Bel et. al (2019)
+       *  [https://arxiv.org/abs/1809.09338].
+       *
+       *  \f[ P_{\delta\theta} (k) =
+       *  \left(P_{\delta\delta}(k)P_{\theta\theta}^{Lin}(k)\right)^{1/2}e^{-k/k_\delta-bk^6}
+       *  \f]
+       *
+       *  with \f$b = 0.091 + 0.702*\sigma8^2\f$
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param author author(s) who proposed the fitting functions; valid
+       *  authors are: Pezzotta (Pezzotta, et.al, 2017), Bel (Bel et.al., 2019)
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$ non-linear
+       *  power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @param unit1 true \f$\rightarrow\f$ force cosmological units
+       *
+       *  @return P<SUB>&delta;&theta;</SUB>: the cross power spectrum using fitting functions
+       */
+      double Pk_DeltaTheta_fitting_function (const double kk, const std::string method_Pk, const double redshift, const std::string author, const bool store_output_CAMB, const std::string output_root, const bool NL, const int norm, double k_min, double k_max, const double prec, const std::string file_par, const bool unit1);
+
+      /**
+       *  @brief the dark matter velocity divergence power spectrum 
+       *
+       *  the dark matter velocity divergence power spectrum,
+       *  P<SUB>&theta;&theta;</SUB>, is computed using the fitting
+       *  functions given by Bel et. al (2019)
+       *  [https://arxiv.org/abs/1809.09338].
+       *
+       *  \f[ P_{\theta\theta}(k) =
+       *  P^{Lin}_{\theta\theta}(k)e^{-k(a_1+a_2k+a_3k^2)} \f]
+       *
+       *  with
+       *
+       *  \f[a_1 = -0.817 + 3.198*\sigma_8\f] \f[a_2 = 0.877 -
+       *  4.191*\sigma_8\f] \f[a_3 = -1.199 + 4.629*\sigma_8\f]
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param method_Pk method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param author author(s) who proposed the fitting functions;
+       *  valid authors are: Pezzotta (Pezzotta, et.al, 2017), Bel
+       *  (Bel et.al., 2019)
+       *
+       *  @param store_output_CAMB if true the output files created
+       *  by CAMB are stored; if false the output files created by
+       *  CAMB are removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can
+       *  be any name
+       *
+       *  @param NL false \f$\rightarrow\f$ linear power spectrum;
+       *  true \f$\rightarrow\f$ non-linear power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @param unit1 true \f$\rightarrow\f$ force cosmological units
+       *
+       *  @return P<SUB>&theta;&theta;</SUB>: the velocity divergence
+       *  power spectrum using fitting functions
+       */
+      double Pk_ThetaTheta_fitting_function (const double kk, const std::string method_Pk, const double redshift, const std::string author, const bool store_output_CAMB, const std::string output_root, const bool NL, const int norm, double k_min, double k_max, const double prec, const std::string file_par, const bool unit1);
+
+      /**
+       *  @brief the multipoles of the A and B correction terms for
+       *  the TNS model 
+       *
+       *  the multipoles of the A and B correction terms for the TNS
+       *  model are computed at 1-loop using the Standard
+       *  Perturbation Theory implemented in the CPT Library
+       *  [http://www2.yukawa.kyoto-u.ac.jp/~atsushi.taruya/cpt_pack.html].
+       *  Details can be found in Taruya et al. (2010)
+       *  [https://arxiv.org/abs/1006.0699].
+       *
+       *  \f[ A(k,\mu) = A_0(k)L_0(\mu) + A_2(k)L_2(\mu) +
+       *  A_4(k)L_4(\mu) \f]
+       *
+       *  \f[ B(k,\mu) = B_0(k)L_0(\mu) + B_2(k)L_2(\mu) +
+       *  B_4(k)L_4(\mu) \f]
+       *
+       *  where \f$L_l\f$ represents the Legendre polynomial of order
+       *  \f$l\f$.
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param method method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_dir the output_dir directory
+       *  where the output of external codes are written
+       *
+       *  @param store_output_CAMB if true the output files created
+       *  by CAMB are stored; if false the output files created by
+       *  CAMB are removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @return multipoles of A and B terms for TNS model (A0, A2, A4, B0, B2, B4)
+       */
+      std::vector<std::vector<double>> Pk_TNS_AB_multipoles (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec);
+
+      /**
+       *  @brief the A and B correction terms for the TNS model at
+       *  1-loop from the multipole expansion
+       *
+       *  the A and B correction terms for the TNS model at 1-loop
+       *  from the multipole expansion are computed using the
+       *  Standard Perturbation Theory implemented in the CPT Library
+       *  [http://www2.yukawa.kyoto-u.ac.jp/~atsushi.taruya/cpt_pack.html].
+       *  Details can be found in Taruya et al. (2010)
+       *  [https://arxiv.org/abs/1006.0699].
+       *
+       *  \f[ A(k,\mu) = A_0(k)L_0(\mu) + A_2(k)L_2(\mu) +
+       *  A_4(k)L_4(\mu) \f]
+       *
+       *  \f[ B(k,\mu) = B_0(k)L_0(\mu) + B_2(k)L_2(\mu) +
+       *  B_4(k)L_4(\mu) \f]
+       *
+       *  where \f$L_l\f$ represents the Legendre polynomial of order
+       *  \f$l\f$.
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param mu the cosine of the angle between the separation
+       *  and the line of sight
+       *
+       *  @param method method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_dir the output_dir directory
+       *  where the output of external codes are written
+       *
+       *  @param store_output_CAMB if true the output files created
+       *  by CAMB are stored; if false the output files created by
+       *  CAMB are removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @return A and B terms (total contribution) from multipoles
+       */
+      std::vector<std::vector<double>> Pk_TNS_AB_1loop (std::vector<double> kk, const double mu, const std::string method, const double redshift, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec);
+
+
+      /**
+       *  @brief the expanded A and B correction terms for the TNS
+       *  model
+       *
+       *  the expanded A and B correction terms for the TNS model are
+       *  computed at 1-loop using the Standard Perturbation Theory
+       *  implemented in the CPT Library
+       *  [http://www2.yukawa.kyoto-u.ac.jp/~atsushi.taruya/cpt_pack.html].
+       *  Details can be found in Taruya et al. (2010)
+       *  [https://arxiv.org/abs/1006.0699].
+       *
+       *  \f[ A(k,\mu,\beta) = \beta\mu^2A_{11} + \beta^2(\mu^2A_{12}
+       *  + \mu^4A_{22}) + \beta^3(\mu^4A_{23} + \mu^6A_{33}) \f] 
+       *
+       *  \f[ B(k,\mu,\beta) = \mu^2(\beta^2B_{12} + \beta^3B_{13} +
+       *  \beta^4B_{14}) + \mu^4(\beta^2B_{22} + \beta^3B_{23} +
+       *  \beta^4B_{24}) + \mu^6(\beta^3B_{33} + \beta^4B_{34}) +
+       *  \mu^8\beta^4B_{44} \f]
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param method method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_dir the output_dir directory
+       *  where the output of external codes are written
+       *
+       *  @param store_output_CAMB if true the output files created
+       *  by CAMB are stored; if false the output files created by
+       *  CAMB are removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can
+       *  be any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @return A and B terms (expanded) for TNS model: A11, A12,
+       *  A22, A23, A33, B12, B13, B14, B22, B23, B24, B33, B34, B44
+       */
+      std::vector<std::vector<double>> Pk_TNS_AB_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min=0., const double k_max=100., const double prec=1.e-2);
+
+      /**
+       *  @brief the expanded A and B correction terms for the TNS
+       *  model
+       *
+       *  the expanded A and B correction terms are computed at
+       *  1-loop using (Standard) Perturbation Theory implemented in
+       *  the CPT Library
+       *  [http://www2.yukawa.kyoto-u.ac.jp/~atsushi.taruya/cpt_pack.html].
+       *  Details can be found in (Taruya et.al, 2010)
+       *  [https://arxiv.org/abs/1006.0699].
+       *
+       *  \f[ A(k,\mu,\beta) = \beta\mu^2A_{11} + \beta^2(\mu^2A_{12}
+       *  + \mu^4A_{22}) + \beta^3(\mu^4A_{23} + \mu^6A_{33}) \f]
+       *
+       *  \f[ B(k,\mu,\beta) = \mu^2(\beta^2B_{12} + \beta^3B_{13} +
+       *  \beta^4B_{14}) + \mu^4(\beta^2B_{22} + \beta^3B_{23} +
+       *  \beta^4B_{24}) + \mu^6(\beta^3B_{33} + \beta^4B_{34}) +
+       *  \mu^8\beta^4B_{44} \f]
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param mu the cosine of the angle between the separation and the line of sight
+       *
+       *  @param linear_growth_rate the linear growth rate
+       *
+       *  @param bias the bias
+       *
+       *  @param method method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_dir the output_dir directory
+       *  where the output of external codes are written
+       *
+       *  @param store_output_CAMB if true the output files created
+       *  by CAMB are stored; if false the output files created by
+       *  CAMB are removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @return A and B terms (total contribution) for TNS model
+       */ 
+      std::vector<std::vector<double>> Pk_TNS_AB_1loop (std::vector<double> kk, const double mu, const double linear_growth_rate, const double bias, const std::string method, const double redshift, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min=0., const double k_max=100., const double prec=1.e-2);
+
+      /**
+       *  @brief the non-linear power spectrum
+       *
+       *  the non-linear power spectrum, P<SUB>&delta;&delta;</SUB>,
+       *  P<SUB>&delta;&theta;</SUB>, P<SUB>&theta;&theta;</SUB>
+       *  computed at 1-loop using (Standard) Perturbation Theory
+       *  implemented in the CPT Library
+       *  [http://www2.yukawa.kyoto-u.ac.jp/~atsushi.taruya/cpt_pack.html].
+       *  Details can be found in Taruya et al. (2010)
+       *  [https://arxiv.org/abs/1006.0699]. The density,
+       *  density-velocity divergence and velocity
+       *  divergence-velocity divergence power spectra are defined
+       *  as:
+       *
+       *  \f[ < \delta(k)\delta(k')> = (2\pi)^3\delta(k +
+       *  k')P_{\delta\delta}(k) \f] \f[ < \delta(k)\theta(k')> =
+       *  (2\pi)^3\delta(k + k')P_{\delta\theta}(k) \f] \f[ <
+       *  \theta(k)\theta(k')> = (2\pi)^3\delta(k +
+       *  k')P_{\theta\theta}(k) \f]
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param method method used to compute the power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_dir the output_dir directory
+       *  where the output of external codes are written
+       *
+       *  @param store_output_CAMB if true the output files created
+       *  by CAMB are stored; if false the output files created by
+       *  CAMB are removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can
+       *  be any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @return the non-linear power spectrum from perturbation theory
+       */
+      std::vector<std::vector<double>> Pk_TNS_dd_dt_tt (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min=0., const double k_max=100., const double prec=1.e-2);
 
       /**
        *  @brief the specific growth rate &beta;
@@ -6466,18 +7393,19 @@ namespace cbl {
        *  correction of Warren 2004), Tinker (Tinker et al. 2010)
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -6485,12 +7413,18 @@ namespace cbl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *  
        *  @param kk wave vector module
        *
@@ -6501,7 +7435,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -6537,7 +7473,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the specific growth rate &beta;
@@ -6554,18 +7490,19 @@ namespace cbl {
        *  correction of Warren 2004), Tinker (Tinker et al. 2010)
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
@@ -6574,12 +7511,18 @@ namespace cbl {
        *
        *  @param err_bias error on the bias
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *  
        *  @param kk wave vector module
        *
@@ -6590,7 +7533,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -6626,7 +7571,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double error_beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double err_bias, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double error_beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double err_bias, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
   
       /**
        *  @brief the specific growth rate &beta;
@@ -6648,12 +7593,18 @@ namespace cbl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (author=Tinker)
+       *  bias
        *  
        *  @param kk wave vector module
        *
@@ -6664,7 +7615,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -6700,7 +7653,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the error on the specific growth rate &beta;
@@ -6723,12 +7676,18 @@ namespace cbl {
        *
        *  @param err_bias error on the bias
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (author=Tinker)
+       *  bias
        *  
        *  @param kk wave vector module
        *
@@ -6739,7 +7698,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -6775,7 +7736,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double error_beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const double err_bias, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double error_beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const double err_bias, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
  
       /**
        *  @brief the error on the specific growth rate &beta; from
@@ -6797,18 +7758,19 @@ namespace cbl {
        *  correction of Warren 2004), Tinker (Tinker et al. 2010)
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -6816,12 +7778,18 @@ namespace cbl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *  
        *  @param kk wave vector module
        *
@@ -6832,7 +7800,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -6868,7 +7838,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief the normalised quadrupole Q
@@ -6885,18 +7855,19 @@ namespace cbl {
        *  correction of Warren 2004), Tinker (Tinker et al. 2010)
        *
        *  @param model_MF author(s) who proposed the mass function;
-       *  valid authors are: PS (Press&Schechter), ST (Sheth&Tormen),
-       *  Jenkins (Jenkins et al. 2001), Warren (Warren et al. 2006),
-       *  Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH (halo MF by
-       *  Shen et al. 2006), ShenF (filaments MF by Shen et al. 2006),
-       *  ShenS (sheets MF by Shen et al. 2006), Tinker (Tinker et
-       *  al. 2008), Crocce (Crocce et al. 2010), Angulo_FOF (FOF MF by
-       *  Angulo et al. 2012), Angulo_Sub (SUBFIND MF by Angulo et
-       *  al. 2012), Watson_FOF(FOF MF by Watson et al. 2012),
-       *  Watson_SOH (MF for Spherical Overdensity Haloes by Watson 
-       *  et al. 2012), Manera (Manera et al. 2010), Bhattacharya 
-       *  (Bhattacharya et al. 2011), Courtin (Courtin et al. 2010),
-       *  Peacock (by Peacock at al. 2007)
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
@@ -6904,12 +7875,18 @@ namespace cbl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (model_MF=Tinker)
+       *  and Watson et al. (model_MF=Watson_SOH) mass functions
        *  
        *  @param kk wave vector module
        *
@@ -6920,7 +7897,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -6955,7 +7934,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double quadrupole (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double quadrupole (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief the normalised quadrupole Q
@@ -6977,12 +7956,18 @@ namespace cbl {
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  mean interior density relative to the background; this
+       *  parameter is used only for Tinker et al. (author=Tinker)
+       *  bias
        *  
        *  @param kk wave vector module
        *
@@ -6993,7 +7978,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -7023,7 +8010,7 @@ namespace cbl {
        *  cbl::Cosmology::Delta_vir can be used to convert
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
-      double quadrupole (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double quadrupole (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output_CAMB=true,  const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the mean square bulk flow
@@ -7041,12 +8028,18 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -7059,7 +8052,7 @@ namespace cbl {
        *
        *  @return the mean square bulk flow
        */
-      double square_bulk_flow (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double square_bulk_flow (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the mean square bulk flow
@@ -7095,12 +8088,18 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -7113,7 +8112,7 @@ namespace cbl {
        *
        *  @return the mean square velocity dispersion
        */
-      double square_velocity_dispersion (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double square_velocity_dispersion (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
     
       /**
        *  @brief the Cosmic Mach Number
@@ -7131,6 +8130,10 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -7144,7 +8147,7 @@ namespace cbl {
        *
        *  @return the Cosmic Mach Number
        */
-      double CMN (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const;
+      double CMN (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const;
 
       /**
        *  @brief the hierarchical moments S<SUB>n</SUB>
@@ -7162,6 +8165,10 @@ namespace cbl {
        *  [http://camb.info/], classgal_v1 [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -7190,7 +8197,7 @@ namespace cbl {
        *  @return the hierarchical moments, S<SUB>n</SUB>, given by the
        *  perturbation theory
        */
-      double Sn_PT (const int nn, const double RR, const std::string method_SS, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double Sn_PT (const int nn, const double RR, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
   
       /**
        *  @brief the deprojected hierarchical moments
@@ -7209,6 +8216,10 @@ namespace cbl {
        *  [http://camb.info/], classgal_v1 [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -7237,7 +8248,7 @@ namespace cbl {
        *  @return the deprojected hierarchical moments,
        *  &Sigma;<SUB>n</SUB>, given by the perturbation theory
        */
-      double Sigman_PT (const int nn, const double RR, const std::string method_SS, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double Sigman_PT (const int nn, const double RR, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
     
       /**
        *  @brief 1D monopole in the Kaiser limit
@@ -7258,6 +8269,10 @@ namespace cbl {
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -7282,7 +8297,9 @@ namespace cbl {
        *  correlation function is computed
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -7302,7 +8319,7 @@ namespace cbl {
        *  @return &xi;<SUB>0</SUB>
        *
        */
-      double xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const std::string method_Pk, const double redshift, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
     
       /**
        *  @brief 1D monopole in the Kaiser limit
@@ -7328,6 +8345,10 @@ namespace cbl {
        *  @param output_dir the output_dir directory
        *  where the output of external codes are written
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -7337,7 +8358,9 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -7353,7 +8376,7 @@ namespace cbl {
        *  @return &xi;<SUB>0</SUB>
        *
        */
-      std::vector<double> xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const std::string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const std::string file_par);
+      std::vector<double> xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const std::string file_par);
 
       /**
        *  @brief 2D correlation function, &xi;(r<SUB>p</SUB>,&pi;),
@@ -7397,6 +8420,10 @@ namespace cbl {
        *
        *  @param Xi__ vector of double-barred &xi;(r)
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -7437,7 +8464,9 @@ namespace cbl {
        *  correlation function is computed
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -7456,7 +8485,7 @@ namespace cbl {
        *
        *  @return &xi;(r<SUB>p</SUB>,&pi;)
        */
-      double xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const std::string method_Pk, const double redshift, const int FV, const bool NL, std::vector<double> rr, std::vector<double> &Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const std::string output_root="test", const int index=-1, const bool bias_nl=0, const double bA=-1., const bool xiType=0, const double k_star=-1., const bool xiNL=0, const double v_min=-3000., const double v_max=3000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const std::string method_Pk, const double redshift, const int FV, const bool NL, std::vector<double> rr, std::vector<double> &Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output_CAMB=true, const std::string output_root="test", const int index=-1, const bool bias_nl=0, const double bA=-1., const bool xiType=0, const double k_star=-1., const bool xiNL=0, const double v_min=-3000., const double v_max=3000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the function &xi;<SUB>*</SUB> of the Chuang & Wang 2012
@@ -7468,6 +8497,10 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -7475,7 +8508,9 @@ namespace cbl {
        *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -7488,7 +8523,7 @@ namespace cbl {
        *
        *  @return &xi;<SUB>*</SUB>
        */
-      double xi_star (const double rr, const double redshift, const std::string output_root="test", const double k_star=-1., const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi_star (const double rr, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_star=-1., const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
   
       /**
        *  @brief the function &xi;<SUB>g,nw</SUB>(s) of the Chuang &
@@ -7520,13 +8555,17 @@ namespace cbl {
        *
        *  @param Xi__ vector of double-barred &xi;(r)
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
        *  @return &xi;<SUB>g,nw</SUB>(s)
        */
-      double xisnl_gnw (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double bA, const double redshift, std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const std::string output_root="test");
+      double xisnl_gnw (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double bA, const double redshift, std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output_CAMB=true, const std::string output_root="test");
  
       /**
        *  @brief the function &xi;<SUB>g,BAO</SUB>(s) of the Chuang &
@@ -7556,6 +8595,10 @@ namespace cbl {
        *
        *  @param Xi__ vector of double-barred &xi;(r)
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -7573,7 +8616,7 @@ namespace cbl {
        *
        *  @return &xi;<SUB>g,BAO</SUB>(s)
        */
-      double xis_gBAO (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double redshift, std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const std::string output_root="test", const double k_star=-1., const double x_min=-3000., const double x_max=3000., const int step_x=500);
+      double xis_gBAO (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double redshift, std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output_CAMB=true, const std::string output_root="test", const double k_star=-1., const double x_min=-3000., const double x_max=3000., const int step_x=500);
  
       /**
        *  @brief 2D correlation function, &xi;(r<SUB>p</SUB>,&pi;),
@@ -7624,6 +8667,10 @@ namespace cbl {
        *
        *  @param Xi2__ vector of double-barred &xi;(r)
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -7654,7 +8701,9 @@ namespace cbl {
        *  correlation function
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -7682,7 +8731,7 @@ namespace cbl {
        *
        *  @return &xi;(r<SUB>p</SUB>,&pi;)
        */
-      double xi2D_CW (const double rp, const double pi, const double beta, const double bias_lin, const double bA, const double sigmav0, const double cmu, const double cs1, const double cs2, const double redshift, std::vector<double> rr1, std::vector<double> Xi1, std::vector<double> rr2, std::vector<double> Xi2, std::vector<double> &Xi1_, std::vector<double> &Xi1__, std::vector<double> &Xi2_, std::vector<double> &Xi2__, const std::string output_root="test", const bool BAO=1, const bool xiType=0, const double k_star=-1, const bool xiNL=0, const double r_min=0.1, const double r_max=150., const double v_min=-3000., const double v_max=3000., const int step_v=500, const double k_min=0., const double k_max=100., const double x_min=-3000., const double x_max=3000., const int step_x=500, const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi2D_CW (const double rp, const double pi, const double beta, const double bias_lin, const double bA, const double sigmav0, const double cmu, const double cs1, const double cs2, const double redshift, std::vector<double> rr1, std::vector<double> Xi1, std::vector<double> rr2, std::vector<double> Xi2, std::vector<double> &Xi1_, std::vector<double> &Xi1__, std::vector<double> &Xi2_, std::vector<double> &Xi2__, const bool store_output_CAMB=true, const std::string output_root="test", const bool BAO=1, const bool xiType=0, const double k_star=-1, const bool xiNL=0, const double r_min=0.1, const double r_max=150., const double v_min=-3000., const double v_max=3000., const int step_v=500, const double k_min=0., const double k_max=100., const double x_min=-3000., const double x_max=3000., const int step_x=500, const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       ///@}
 
@@ -7811,6 +8860,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -7819,11 +8872,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *       
@@ -7833,7 +8890,7 @@ namespace cbl {
        *
        *  @return A<SUB>m</SUB>
        */
-      double Am (const std::string method_Pk, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      double Am (const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief the potential spectral amplitude 
@@ -7847,6 +8904,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -7855,11 +8916,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -7869,7 +8934,7 @@ namespace cbl {
        *
        *  @return the potential spectral amplitude
        */
-      double potential_spectral_amplitude (const std::string method_Pk, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double potential_spectral_amplitude (const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the bispectrum
@@ -7885,6 +8950,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -7893,11 +8962,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -7907,7 +8980,7 @@ namespace cbl {
        *
        *  @return the potential spectral amplitude
        */
-      double bispectrum (const std::vector<double> kk, const std::string method_Pk, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double bispectrum (const std::vector<double> kk, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
     
       /**
        *  @brief auxiliary function to estimate cosmological quantities
@@ -7926,6 +8999,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -7934,11 +9011,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -7948,7 +9029,7 @@ namespace cbl {
        *
        *  @return mrk
        */
-      double mrk (const double kk, const double mass, const std::string method_Pk, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double mrk (const double kk, const double mass, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief auxiliary function to estimate cosmological quantities
@@ -7967,6 +9048,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -7977,11 +9062,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -8002,12 +9091,12 @@ namespace cbl {
        *
        *  @return frk
        */
-      double frk (const double kk, const double mass, const std::string method_Pk, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double frk (const double kk, const double mass, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /// @cond TEST_NG
       double bias_kernel (const double, void *); 
 
-      double frk_test (const double, const double, const std::string, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double frk_test (const double, const double, const std::string, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       /// @endcond
 
 
@@ -8027,6 +9116,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -8037,11 +9130,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -8062,7 +9159,7 @@ namespace cbl {
        *
        *  @return bias correction
        */
-      double bias_correction (const double kk, const double mass, const std::string method_Pk, const std::string  output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_correction (const double kk, const double mass, const std::string method_Pk, const bool store_output_CAMB=true, const std::string  output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the skewness
@@ -8078,6 +9175,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -8088,11 +9189,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -8113,7 +9218,7 @@ namespace cbl {
        *
        *  @return skewness
        */
-      double skewness (const double mass, const std::string method_Pk, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double skewness (const double mass, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the derivative of the skewness, ds/dM
@@ -8129,6 +9234,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -8139,11 +9248,15 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -8164,7 +9277,7 @@ namespace cbl {
        *
        *  @return derivative of the skewness
        */
-      double dskewnessdM (const double mass, const std::string method_Pk, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double dskewnessdM (const double mass, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief correction to the halo mass in non-Gaussian cosmologies
@@ -8182,6 +9295,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
        *  any name
@@ -8191,11 +9308,15 @@ namespace cbl {
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
@@ -8216,7 +9337,7 @@ namespace cbl {
        *
        *  @return bias correction
        */
-      double MF_correction (const double mass, const double redshift, const std::string method_Pk, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double MF_correction (const double mass, const double redshift, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       ///@}
 
@@ -8254,19 +9375,33 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
-       *  @param del_v linear density contrast defining a void
-       *
-       *  @param del_c critical value of the linear density field
-       *
        *  @param model size function model name; valid choices for
        *  model name are SvdW (Sheth and van de Weygaert, 2004),
        *  linear and Vdn (Jennings et al., 2013)
+       *
+       *  @param b_eff the effective bias of the sample
+       *
+       *  @param slope first coefficent to convert the effective bias
+       *  (default value set to \f$0.854\f$)
+       *
+       *  @param offset second coefficent to convert the effective
+       *  bias (default value set to \f$0.420\f$)
+       *
+       *  @param deltav_NL the non linear density contrast:
+       *  \f$\rho_v/\rho_m\f$ (default value set to \f$-0.795\f$)
+       *
+       *  @param del_c critical value of the linear density field
+       *  (default value set to \f$1.06\f$)
        *
        *  @param method_Pk method used to compute the power spectrum;
        *  valid choices for method_Pk are: CAMB [http://camb.info/],
        *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -8296,7 +9431,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      double size_function (const double RV, const double redshift, const double del_v, const double del_c, const std::string model, const std::string method_Pk="CAMB", const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double size_function (const double RV, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
 
       /**
        *  @brief the void size function
@@ -8334,6 +9469,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
@@ -8348,10 +9487,14 @@ namespace cbl {
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration
        *
@@ -8375,7 +9518,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      double size_function (const double RV, const double redshift, const std::string model_mf, const double del_v, const std::string model_sf, const std::string method_Pk="CAMB", const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double size_function (const double RV, const double redshift, const std::string model_mf, const double del_v, const std::string model_sf, const std::string method_Pk="EisensteinHu", const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       ///@}
 
@@ -8548,17 +9691,16 @@ namespace cbl {
       double Pk_DeltaTheta (const double kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const double qmin, const double qmax, const double prec=1.e-3);
 
       /**
-       * @brief compute the Delta-Delta non linear power spectrum 
-       * at 1-loop following MPTbreeze scheme (Crocce & Scoccimarro 2012)
+       * @brief compute the Delta-Delta non linear power spectrum at
+       * 1-loop following MPTbreeze scheme (Crocce & Scoccimarro 2012)
        *
-       * \f[
-       *    P_{\theta \theta} (k) = \exp(g(k))^2 (P_L(k)+P_{1loop}(k))
-       * \f]
+       * \f[ P_{\theta \theta} (k) = \exp(g(k))^2
+       *    (P_L(k)+P_{1loop}(k)) \f]
        *
-       * where \f$ g(k) \f$ is the second order correction of the non-linear
-       * propagator, \f$\P_L(k)\f$ is the linear power spectrum
-       * and \f$ P_{1loop} \f$ is the one loop power spectrum correction,
-       * computed by cbl::cosmology::Cosmology::Pk_1loop.
+       * where \f$ g(k) \f$ is the second order correction of the
+       * non-linear propagator, \f$\P_L(k)\f$ is the linear power
+       * spectrum and \f$ P_{1loop} \f$ is the one loop power spectrum
+       * correction, computed by cbl::cosmology::Cosmology::Pk_1loop.
        *
        * @param kk the wavevector module
        *
@@ -8575,12 +9717,12 @@ namespace cbl {
        */
       double Pk_ThetaTheta (const double kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const double qmin, const double qmax, const double prec=1.e-3);
 
-      std::vector<double> Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      std::vector<double> Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
       
-      std::vector<double> Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      std::vector<double> Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
 
       /**
-       *  @brief compute the Delta-Delta non linear power spectrum 
+       *  @brief compute the Theta-Theta non-linear power spectrum 
        *  at 1-loop following MPTbreeze scheme (Crocce & Scoccimarro 2012)
        *
        *  \f[ P_{\theta \theta} (k) = \exp(g(k))^2
@@ -8604,17 +9746,25 @@ namespace cbl {
        *
        *  @param output_dir the output directory
        *
-        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
-       *  @param k_max maximum wave vector module up to which the power
-       *  spectrum is computed
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
+       *
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -8628,9 +9778,10 @@ namespace cbl {
        *
        *  @return the \f$\Theta-\Theta\f$ non-linear power spectrum
        */
-      std::vector<double> Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      std::vector<double> Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
 
       ///@}
+      
             
       /**
        *  @name Functions to estimate the three-point correlation function
@@ -8906,6 +10057,70 @@ namespace cbl {
        *  correlation function
        */
       double zeta_precyclic_Slepian (const double r1, const double r2, const double mu, const double b1, const double b2, const glob::FuncGrid interp_xi_DM, const glob::FuncGrid interp_xi_DM_m1, const glob::FuncGrid interp_xi_DM_p1, const glob::FuncGrid interp_xi_DM_2) const;
+
+
+      /**
+       *  @brief the pre-cyclic three-point correlation function as
+       *  described in Slepian et al. 2015, for a triangle
+       *  averaging in the bin
+       *
+       *  this function computes the pre-cyclic three-point
+       *  correlation function as described in Slepian et al. 2015, as
+       *  follows:
+       *
+       *  \f[ \zeta_{pc} = \sum_{l=0}^2 \zeta_{pc l}(r_1, r_2)
+       *		   P_l(\hat{r_1}\cdot \hat{r_2})+ \sum_{l=0}^2
+       *		   \zeta_{pc l}(r_2, r_3) P_l(\hat{r_2}\cdot
+       *		   \hat{r_3})+ \sum_{l=0}^2 \zeta_{pc l}(r_3,
+       *		   r_1) P_l(\hat{r_3}\cdot \hat{r_1}) \f]
+       *
+       *  with 
+       *
+       *  \f[r_3 = \sqrt{r_1^2+r_2^2-2 r_1 r_2 \cos(\theta)}\f]
+       *
+       *  and
+       *
+       *  \f[ \zeta_{pc0}(r_i, r_j) = \left[ 2 b_1^2 b_2 +
+       *  \frac{34}{21} b_1^3 \right] \xi(r_i) \xi(r_j), \f] \f[
+       *  \zeta_{pc1}(r_i, r_j) = -b_1^3\left[ \xi^{[1-]}(r_i)
+       *  \xi^{[1+]}(r_j) + \xi^{[1-]}(r_j) \xi^{[1+]}(r_i) \right] ,
+       *  \f] \f[ \zeta_{pc2}(r_i, r_j) = \frac{8}{21}
+       *  b_1^3\xi^{[2]}(r_i)\xi^{[2]}(r_j) . \f]
+       *
+       *  where \f$ b_1, b_2 \f$ are the linear and non-linear bias,
+       *  respectively, and \f$\xi_{DM}(r), \xi^{[1\pm]}_{DM}(r),
+       *  \xi^{[2]}_{DM}(r)\f$ are the integrals of the dark matter
+       *  power spectrum computed by
+       *  cbl::cosmology::Cosmology::integrals_zeta_Slepian
+       *
+       *  @param r1 the first side
+       *
+       *  @param r2 the second side
+       *
+       *  @param r3 the third side
+       *
+       *  @param deltaR the side width
+       *
+       *  @param b1 the linear bias
+       *
+       *  @param b2 the non-linear bias
+       *
+       *  @param interp_xi_DM interpolating function
+       *  for \f$\xi_DM\f$
+       *
+       *  @param interp_xi_DM_m1 interpolating function
+       *  for \f$\xi^{[1-]}_{DM}(r)\f$      
+       *
+       *  @param interp_xi_DM_p1 interpolating function
+       *  for \f$\xi^{[1+]}_{DM}(r)\f$
+       *  
+       *  @param interp_xi_DM_2 interpolating function
+       *  for \f$\xi^{[2]}_{DM}(r)\f$
+       *
+       *  @return the pre-cyclic three-point
+       *  correlation function
+       */
+      double zeta_precyclic_Slepian (const double r1, const double r2, const double r3, const double deltaR, const double b1, const double b2, const glob::FuncGrid interp_xi_DM, const glob::FuncGrid interp_xi_DM_m1, const glob::FuncGrid interp_xi_DM_p1, const glob::FuncGrid interp_xi_DM_2) const;
 
       /**
        *  @brief the terms of the \f$\zeta(r_1, r_2)\f$ expansion 
@@ -9471,6 +10686,9 @@ namespace cbl {
        *
        *  @param r2_prime the scale \f$r_2\textprime\f$
        *
+       *  @param deltaR the bin size, if non-positive, no bin average 
+       *  is computed 
+       *
        *  @param kk vector of the wave vector modules
        *
        *  @param Pk the pdark matter ower spectrum
@@ -9485,7 +10703,7 @@ namespace cbl {
        *  @return the covariance of the multipole expansion of 
        *  the dark matter three-point correlation function
        */
-      double zeta_multipoles_covariance (const double Volume, const double nObjects, const int l, const int l_prime, const double r1, const double r2, const double r1_prime, const double r2_prime, const std::vector<double> kk, const std::vector<double> Pk, const std::vector<double> rr, const std::vector<double> Xi, const double prec=1.e-3);
+      double zeta_multipoles_covariance (const double Volume, const double nObjects, const int l, const int l_prime, const double r1, const double r2, const double r1_prime, const double r2_prime, const double deltaR, const std::vector<double> kk, const std::vector<double> Pk, const std::vector<double> rr, const std::vector<double> Xi, const double prec=1.e-3);
 
       /**
        *  @brief the dark matter three-point correlation function 
@@ -9513,6 +10731,9 @@ namespace cbl {
        *  
        *  @param r2 the scale \f$r_2\f$
        *
+       *  @param deltaR the bin size, if non-positive, no bin average 
+       *  is computed 
+       *
        *  @param kk vector of the wave vector modules
        *
        *  @param Pk the pdark matter ower spectrum
@@ -9535,7 +10756,7 @@ namespace cbl {
        *  @return the covariance of the dark matter 
        *   three-point correlation function
        */
-      std::vector<std::vector<double>> zeta_covariance (const double Volume, const double nObjects, const std::vector<double> theta, const double r1, const double r2, const std::vector<double> kk, const std::vector<double> Pk, const int norders=10, const double prec=1.e-3, const bool method=false, const int nExtractions=10000, const std::vector<double> mean={}, const int seed=543);
+      std::vector<std::vector<double>> zeta_covariance (const double Volume, const double nObjects, const std::vector<double> theta, const double r1, const double r2, const double deltaR, const std::vector<double> kk, const std::vector<double> Pk, const int norders=10, const double prec=1.e-3, const bool method=false, const int nExtractions=10000, const std::vector<double> mean={}, const int seed=543);
        
       /**
        * @brief compute the  power spectrum integral transform
@@ -9907,7 +11128,7 @@ namespace cbl {
        *
        * @return the pre-cyclic \f$ \zeta_l \f$
        */
-      double zeta_ell_precyclic (const double r1, const double r2, const int ell, const double b1, const double b2, const double bt, const double beta, std::vector<glob::FuncGrid> interp_xi_ell, const bool use_k, glob::FuncGrid2D interp_k_ell);
+      double zeta_ell_precyclic (const double r1, const double r2, const int ell, const double b1, const double b2, const double bt, const double beta, std::vector<std::shared_ptr<glob::FuncGrid>> interp_xi_ell, const bool use_k, std::shared_ptr<glob::FuncGrid2D> interp_k_ell);
 
       /**
        * @brief the \f$ \zeta (r_1, r_2, \theta) \f$
@@ -9965,7 +11186,7 @@ namespace cbl {
        *
        * @param bt the tidal bias
        *
-       * @param redshift the redshif
+       * @param redshift the redshift
        *
        * @param method_Pk method used to compute the power spectrum;
        * valid choices for method_Pk are: CAMB [http://camb.info/],
@@ -9976,6 +11197,17 @@ namespace cbl {
        * @param step_r the number of bins for r
        *
        * @param step_k the number of bins for k
+       *
+       *  @param output_dir the output_dir directory
+       *  where the output of external codes are written
+       *  
+       *  @param store_output_CAMB if true the output files created by
+       *  CAMB are stored; if false the output files created by CAMB
+       *  are removed
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
        *
        * @param force_RealSpace if true, force the computation
        * to be in real space
@@ -9988,7 +11220,7 @@ namespace cbl {
        *
        * @return the halo redshift space three-point correlation function
        */
-      std::vector<double> zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const std::string method_Pk, const int step_r, const int step_k, const bool force_RealSpace = false, const bool include_limits=false, const int max_ll=4, const bool use_k=false);
+      std::vector<double> zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const std::string method_Pk, const int step_r, const int step_k, const std::string output_dir, const bool store_output_CAMB=true, const std::string output_root="test", const bool force_RealSpace = false, const bool include_limits=false, const int max_ll=4, const bool use_k=false);
 
       ///@}
        
@@ -10016,6 +11248,7 @@ namespace cbl {
       double kt;
       double mass;
       std::string method_Pk;
+      bool store_output_CAMB;
       std::string output_root;
       int norm;
       double k_min;
@@ -10083,6 +11316,7 @@ namespace cbl {
       double redshift;
       std::string model_MF;
       std::string method_SS;
+      bool store_output_CAMB;
       std::string output_root;
       double Delta;
       std::string interpType;
@@ -10119,6 +11353,7 @@ namespace cbl {
       double kt;
       double mass;
       std::string method_Pk;
+      bool store_output_CAMB;
       std::string output_root;
       int norm;
       double k_min;

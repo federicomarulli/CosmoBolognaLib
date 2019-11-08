@@ -118,7 +118,7 @@ void cbl::catalogue::Catalogue::m_check_it_out (std::ifstream& finr, const bool 
   int check;
   finr.read((char *)&check, sizeof(check));
   if (swap) check = IntSwap(check);
-  if (check != m_blockheader) ErrorCBL("Error in cbl::catalogue::Catalogue::m_check_it_out() in GadgetCatalogue.cpp: block-headers of gadget snapshot do not match!");
+  if (check != m_blockheader) ErrorCBL("block-headers of gadget snapshot do not match!", "m_check_it_in", "GadgetCatalogue.cpp");
 }
 
 //==============================================================================================
@@ -215,11 +215,11 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const std::st
 	  offset += data.npart[jj];
 	  if (component_to_read == components_name[jj]) wrong_component_name = false;
 	}
-	if (wrong_component_name) WarningMsg("Possible error in cbl::catalogue::Catalogue::Catalogue() in GadgetCatalogue.cpp: selected component is not available, available components are ALL, Gas, Halo, Disk, Bulge, Stars, Boundary.");
-	if (offset != dimsnap) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in GadgetCatalogue.cpp: something horrible happened...");
+	if (wrong_component_name) WarningMsgCBL("selected component is not available, available components are ALL, Gas, Halo, Disk, Bulge, Stars, Boundary", "Catalogue", "GadgetCatalogue.cpp");
+	if (offset != dimsnap) ErrorCBL("something horrible happened...", "Catalogue", "GadgetCatalogue.cpp");
       }
 	
-      //reading particle positions
+      // reading particle positions
       
       // for snapformat = 2:
       if (snapformat) {
@@ -260,7 +260,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const std::st
 
   }//read_catalogue=true
   
-  else WarningMsg("Warning: The catalogue is empty!"); //read_catalogue=false
+  else WarningMsgCBL("the catalogue is empty!", "Catalogue", "GadgetCatalogue.cpp"); //read_catalogue=false
     
 }
 
@@ -291,7 +291,6 @@ cbl::catalogue::Catalogue::Catalogue (const int snap, const std::string basedir,
     // try open file and check it works
     std::string current_file = file_base + conv(filenum, par::fINT);
     std::ifstream fincur (current_file.c_str(), std::ifstream::binary); checkIO(fincur, current_file);
-    if (fincur.fail()) ErrorCBL("Error in reading file "+current_file); // do I need this??? isn't checkIO enough?
 
     // read file header
     SubFindTab_Header header = m_read_header(fincur, swap);
@@ -359,8 +358,8 @@ cbl::catalogue::Catalogue::Catalogue (const int snap, const std::string basedir,
 	break;
 	
       default:
-	ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in GadgetCatalogue.cpp: wrong estimate criterion selected. Available criteria are: _m200_, _c200_ and _t200_");
-      } //endswitch (estimate_crit)
+	ErrorCBL("wrong estimate criterion selected; available criteria are: _m200_, _c200_ and _t200_", "Catalogue", "GadgetCatalogue.cpp");
+      } // endswitch (estimate_crit)
 
       fincur.seekg(sizeof(uint32_t)*NG, fincur.cur); // jumps the 'contamination count' block
       fincur.seekg(sizeof(float)*NG, fincur.cur); // jumps the 'contamination mass' block
@@ -485,15 +484,14 @@ cbl::catalogue::Catalogue::Catalogue (const int snap, const std::string basedir,
     // final check
     int curpos = fincur.tellg();
     fincur.seekg(0, fincur.end);
-    if (curpos != fincur.tellg()) WarningMsg("Warning: finished reading before EOF for file "+current_file);
+    if (curpos != fincur.tellg()) WarningMsgCBL("finished reading before EOF for file "+current_file, "Catalogue", "GadgetCatalogue.cpp");
     fincur.clear(); fincur.close();
-    filenum++;
+    filenum ++;
     if (filenum >= Nfiles) doneflag = true;
 
-  } //endwhile (!doneflag)
-  if (count_G != totNG) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in GadgetCatalogue.cpp: groups read do not match expected!");
-  if (count_S != totNS) ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in GadgetCatalogue.cpp: subGroups read do not match expected!");
-  coutCBL<< std::endl; // <----------------- remove when ready
+  } // endwhile (!doneflag)
+  if (count_G != totNG) ErrorCBL("groups read do not match expected!", "Catalogue", "GadgetCatalogue.cpp");
+  if (count_S != totNS) ErrorCBL("subGroups read do not match expected!", "Catalogue", "GadgetCatalogue.cpp");
 
   // sorting the sub-groups according to their parent ID
   coutCBL << "Now sorting sub-groups ..." << std::endl;
@@ -564,10 +562,10 @@ cbl::catalogue::Catalogue::Catalogue (const int snap, const std::string basedir,
 	// - if add_satellites = false, satellites can be only retrieved by the 'satellites' 
 	//   member of the central HostHalo object:
 	if (add_satellites) m_object.push_back(subgroups[index]); 
-      } //endfor jj      
+      } // endfor jj      
       if ((int) m_object[last_central]->satellites().size() != m_object[last_central]->nsub()-1) 
-	ErrorCBL("Error in cbl::catalogue::Catalogue::Catalogue() in GadgetCatalogue.cpp: number of satellites do not match!");
-    } //endif (m_object[ii]->nsub() > 0)
+	ErrorCBL("number of satellites do not match!", "Catalogue", "GadgetCatalogue.cpp");
+    } // endif (m_object[ii]->nsub() > 0)
 
     // groups without sub-groups added as-they-are to the catalogue
     // [will lack of sub-group properties (e.g. CM coords, Spin, ...)]

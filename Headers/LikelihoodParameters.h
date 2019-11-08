@@ -54,22 +54,22 @@ namespace cbl {
 	/// false \f$\rightarrow\f$ free parameter; true \f$\rightarrow\f$ fixed parameters
 	std::vector<bool> m_parameter_isFixed;
 
-	/// number of free parameters
+	/// the number of free parameters
 	size_t m_nparameters_free = 0;
 
-	/// number of fixed parameters
+	/// the number of fixed parameters
 	size_t m_nparameters_fixed = 0;
 
-	/// indexes of fixed parameters
-	std::vector<unsigned int> m_fixed_parameters;
+	/// the indexes of fixed parameters
+	std::vector<unsigned int> m_fixed_parameter;
 
-	/// indexes of the free parameters
-	std::vector<unsigned int> m_free_parameters;
+	/// the indexes of the free parameters
+	std::vector<unsigned int> m_free_parameter;
 
-	/// model parameter fixed values
+	/// the model parameter fixed values
 	std::vector<double> m_parameter_fixed_value;
 
-	/// model parameter bestfit values
+	/// the best-fit parameter values, i.e. the maxima of the likelihood 
 	std::vector<double> m_parameter_bestfit_value;
 
 	/**
@@ -78,8 +78,9 @@ namespace cbl {
 	 *
 	 * @return none
 	 */
-	void m_set_parameter_type() override;
+	void m_set_parameter_type () override;
 
+	
       public:
 
 	/**
@@ -124,6 +125,22 @@ namespace cbl {
 	void reset () override;
 
 	/**
+	 * @brief return the model parameter status
+	 * 
+	 * @param p the index of the parameter
+	 *
+	 * @return the parameter status
+	 */
+	std::string status (const int p) const;
+
+	/**
+	 * @brief return all the model parameter status
+	 * 
+	 * @return vector containing all the parameter statuss
+	 */
+	std::vector<std::string> status () const;
+
+	/**
 	 *  @name Member functions used to set private/protected of the ModelParameters
 	 */
 	///@{
@@ -137,11 +154,11 @@ namespace cbl {
 	size_t nparameters_free () const override;
 
 	/**
-	 * @brief return the private member
-	 * m_free_parameters
-	 * @return the private member m_free_parameters
+	 * @brief return the private member m_free_parameter
+	 *
+	 * @return the private member m_free_parameter
 	 */
-	std::vector<unsigned int> free_parameters() const {return m_free_parameters;}
+	std::vector<unsigned int> free_parameter () const { return m_free_parameter; }
 
 	/**
 	 * @brief return the number of fixed
@@ -149,23 +166,23 @@ namespace cbl {
 	 *
 	 * @return the number of fixed parameters
 	 */
-	size_t nparameters_fixed() const override;
+	size_t nparameters_fixed () const override;
 
 	/**
-	 * @brief return the private member
-	 * m_fixed_parameters
-	 * @return the private member m_fixed_parameters
+	 * @brief return the private member m_fixed_parameter
+	 *
+	 * @return the private member m_fixed_parameter
 	 */
-	std::vector<unsigned int> fixed_parameters() const {return m_fixed_parameters;}
+	std::vector<unsigned int> fixed_parameter () const { return m_fixed_parameter; }
 
 	/**
-	 * @brief return all the model parameters
+	 * @brief return all the model parameter
 	 * 
-	 * @param parameter_values vector of free parameters
+	 * @param parameter_value vector of free parameter
 	 *
 	 * @return all the parameter values
 	 */
-	std::vector<double> full_parameters (const std::vector<double> parameter_values) const override;
+	std::vector<double> full_parameter (const std::vector<double> parameter_value) const override;
 
 	/**
 	 *  @brief set the parameter
@@ -218,6 +235,7 @@ namespace cbl {
 	void fix_at_bestfit (const int p) override;
 
 	///@}
+	
 
 	///@{
 	
@@ -235,7 +253,7 @@ namespace cbl {
 	 *
 	 * @return the parameter bestfit values
 	 */
-	std::vector<double> bestfit_values () const override;
+	std::vector<double> bestfit_value () const override;
 
 	/**
 	 *  @brief set the protected member m_bestfit_value
@@ -244,7 +262,7 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_bestfit_value (const std::vector<double> bestfit_value) override;
+	void set_bestfit_values (const std::vector<double> bestfit_value) override;
 
 	/**
 	 *  @brief write the best fit info

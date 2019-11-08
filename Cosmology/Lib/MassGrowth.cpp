@@ -68,13 +68,13 @@ double cbl::cosmology::Cosmology::pw (const double ww, const double ff, const st
 
 // Probability that a halo of a given mass m0 at redshift z0 make a mass fraction f at redshift z
 
-double cbl::cosmology::Cosmology::pz (const double m0, const double z0, const double frac, const double redshift, const std::string model_model, const std::string method_SS, const std::string output_root) const
+double cbl::cosmology::Cosmology::pz (const double m0, const double z0, const double frac, const double redshift, const std::string model_model, const std::string method_SS, const bool store_output_CAMB, const std::string output_root) const
 {
   double dcz0 = deltac(z0)/DD(z0)*DD(0.);
   double dcz = deltac(redshift)/DD(redshift)*DD(0.);
-  double SS = sigma2M(m0, method_SS, redshift, output_root); 
+  double SS = sigma2M(m0, method_SS, redshift, store_output_CAMB, output_root); 
   double mf = m0*frac;
-  double SSf = sigma2M(mf, method_SS, redshift, output_root);
+  double SSf = sigma2M(mf, method_SS, redshift, store_output_CAMB, output_root);
   double ww = (dcz-dcz0)/sqrt(SSf-SS);
   if (model_model=="NS"){
     if(frac<0.5) coutCBL <<"Warning you are calling pw function for NS with frac = "<<frac<<endl;
@@ -150,13 +150,13 @@ void cbl::cosmology::Cosmology::medianwf (const double ff, const std::string mod
 // Conditional variable w = \delta_c(zf) - \delta_c(z)/\sqrt(s(fm)-s(m))
 // we recall that \delta_c(z) = delta_c0(z)/D+(z)
 
-double cbl::cosmology::Cosmology::wf (const double mm, const double redshift, const double ff, const double zf, const std::string method_SS, const std::string output_root) const
+double cbl::cosmology::Cosmology::wf (const double mm, const double redshift, const double ff, const double zf, const std::string method_SS, const bool store_output_CAMB, const std::string output_root) const
 {
   double deltacz = deltac(redshift)/DD(redshift)*DD(0.);
   double deltaczf = deltac(zf)/DD(zf)*DD(0.);
-  double SS = sigma2M(mm, method_SS, redshift, output_root); 
+  double SS = sigma2M(mm, method_SS, redshift, store_output_CAMB, output_root); 
   double mf = mm*ff;
-  double SSf = sigma2M(mf, method_SS, redshift, output_root); 
+  double SSf = sigma2M(mf, method_SS, redshift, store_output_CAMB, output_root); 
   return (deltaczf-deltacz)/sqrt(SSf-SS);
 }
 
@@ -165,14 +165,14 @@ double cbl::cosmology::Cosmology::wf (const double mm, const double redshift, co
 
 // with this routine you can estimate the redshift from w given the parent halo mass (at z=z_0), z_0 and its assembled fraction f
 
-double cbl::cosmology::Cosmology::Redshift (const double mm, const double redshift, const double ff, const std::string method_SS, const double wwf, const std::string output_root) const
+double cbl::cosmology::Cosmology::Redshift (const double mm, const double redshift, const double ff, const std::string method_SS, const double wwf, const bool store_output_CAMB, const std::string output_root) const
 {
   int const nn = 128;
   vector<double> lzi = linear_bin_vector(nn, 0., 1.7);
   double dc0 = deltac(redshift)/DD(redshift)*DD(0.);
-  double SS = sigma2M(mm, method_SS, redshift, output_root); 
+  double SS = sigma2M(mm, method_SS, redshift, store_output_CAMB, output_root); 
   double mf = mm*ff;
-  double SSf = sigma2M(mf, method_SS, redshift, output_root); 
+  double SSf = sigma2M(mf, method_SS, redshift, store_output_CAMB, output_root); 
   double dd = wwf*sqrt(SSf-SS) + dc0;
   
   vector<double> dci(nn);
@@ -189,14 +189,14 @@ double cbl::cosmology::Cosmology::Redshift (const double mm, const double redshi
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::medianzf (const double ff, const double mass, const double z0, const std::string model_model, const std::string method_SS, std::vector<double> &zf, const std::string output_root) const
+void cbl::cosmology::Cosmology::medianzf (const double ff, const double mass, const double z0, const std::string model_model, const std::string method_SS, std::vector<double> &zf, const bool store_output_CAMB, const std::string output_root) const
 {
   vector<double> wf;
   zf.resize(3);
   medianwf(ff, model_model, wf);
 
-  zf[0] = Redshift(mass, z0, ff, method_SS, wf[0], output_root);
-  zf[1] = Redshift(mass, z0, ff, method_SS, wf[1], output_root);
-  zf[2] = Redshift(mass, z0, ff, method_SS, wf[2], output_root);
+  zf[0] = Redshift(mass, z0, ff, method_SS, wf[0], store_output_CAMB, output_root);
+  zf[1] = Redshift(mass, z0, ff, method_SS, wf[1], store_output_CAMB, output_root);
+  zf[2] = Redshift(mass, z0, ff, method_SS, wf[2], store_output_CAMB, output_root);
 }
 

@@ -39,13 +39,12 @@
 using namespace std;
 
 using namespace cbl;
-using namespace ccfitswrapper;
 
 
 // ============================================================================
 
 
-vector<vector<double>> cbl::ccfitswrapper::read_table_fits (const std::string input_fits, const std::vector<std::string> column_names, const int next, const double fill_value)
+vector<vector<double>> cbl::wrapper::ccfits::read_table_fits (const std::string input_fits, const std::vector<std::string> column_names, const int next, const double fill_value)
 {
   ifstream check_input(input_fits); checkIO(check_input, input_fits); check_input.close();
   
@@ -57,7 +56,7 @@ vector<vector<double>> cbl::ccfitswrapper::read_table_fits (const std::string in
   size_t no_col = 0;
 
   if (nrows==0)
-    ErrorCBL("Error in cbl::ccfitswrapper::read_table_fits() of FITSwrapper.cpp: no rows in the selected table extension!");
+    ErrorCBL("no rows in the selected table extension!", "read_table_fits", "FITSwrapper.cpp");
 
   vector<vector<double>> cc;
 
@@ -68,7 +67,7 @@ vector<vector<double>> cbl::ccfitswrapper::read_table_fits (const std::string in
     }
     catch (CCfits::Table::NoSuchColumn) {
       if (fill_value==par::defaultDouble)
-	ErrorCBL("Error in cbl::ccfitswrapper::read_table_fits() of FITSwrapper.cpp: no column "+column_names[i]+"!");
+	ErrorCBL("no column "+column_names[i]+"!", "read_table_fits", "FITSwrapper.cpp");
       else {
 	vv.erase(vv.begin(), vv.end());
 	vv.resize(nrows, fill_value);
@@ -79,7 +78,7 @@ vector<vector<double>> cbl::ccfitswrapper::read_table_fits (const std::string in
   }
 
   if (no_col==column_names.size())
-    ErrorCBL("Error in cbl::ccfitswrapper::read_table_fits() of FITSwrapper.cpp: no column found!");
+    ErrorCBL("no column found!", "read_table_fits", "FITSwrapper.cpp");
 
   return cc;
 }
@@ -88,7 +87,7 @@ vector<vector<double>> cbl::ccfitswrapper::read_table_fits (const std::string in
 // ============================================================================
 
 
-void cbl::ccfitswrapper::write_table_fits (const std::string output_dir, const std::string file_fits, const std::vector<std::string> column_names, const std::vector<std::vector<double>> table, const std::vector<std::string> column_units)
+void cbl::wrapper::ccfits::write_table_fits (const std::string output_dir, const std::string file_fits, const std::vector<std::string> column_names, const std::vector<std::vector<double>> table, const std::vector<std::string> column_units)
 {
   const string file_name = output_dir+file_fits;
 
@@ -100,7 +99,7 @@ void cbl::ccfitswrapper::write_table_fits (const std::string output_dir, const s
   }
   catch(CCfits::FITS::CantOpen)
   {
-    ErrorCBL("Error in cbl::ccfitswrapper::write_table_fits() of FITSwrapper.cpp: the file "+file_name+" cannot be opened!");
+    ErrorCBL("the file "+file_name+" cannot be opened!", "write_table_fits", "FITSwrapper.cpp");
   }
 
   const size_t ncolumns = column_names.size();

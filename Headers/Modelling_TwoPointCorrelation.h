@@ -78,7 +78,7 @@ namespace cbl {
 
 	/// the container of parameters for two-point correlation function model computation
 	std::shared_ptr<modelling::twopt::STR_data_model> m_data_model;
-
+	
 	
       public:
 

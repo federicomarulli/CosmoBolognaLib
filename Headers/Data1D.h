@@ -80,20 +80,48 @@ namespace cbl {
 	: Data(DataType::_1D_) {}
 
       /**
-       *  @brief constructor of Data1D
+       *  @brief constructor which reads the data from file
+       *
        *  @param input_file the input data file
+       *
        *  @param skip_nlines the header lines to be skipped
+       *
+       *  @param column_x the column of x values in the input file; if
+       *  it is not provided, the first column will be used by default
+       *
+       *  @param column_data the column of data values in the input
+       *  file; the size of column_data is the number of data to be
+       *  read (e.g. the size should be 3 in the case of the 3
+       *  multipole moments of the two-point correlation function); if
+       *  the size of column_data is larger than 1, more than 1 data
+       *  vectors are read and then added one after the other in a
+       *  single data object; if column_data is not provided, the
+       *  first column after column_x will be used by default,
+       *  assuming that only 1 data vector has to be read
+       *
+       *  @param column_errors the column of error values in the input
+       *  file; the size of column_error must be equal to the size of
+       *  column_data; if the size of column_error is larger than 1,
+       *  more than 1 error vectors are read and then added one after
+       *  the other in a single data object; if column_random is not
+       *  provided, the second column after column_x will be used by
+       *  default, assuming that only 1 random vector has to be read;
+       *  if the input file has only 2 columns, the errors will be set
+       *  to 1
+       *
        *  @return object of class Data1D
        */
-      Data1D (const std::string input_file, const int skip_nlines=0)
+      Data1D (const std::string input_file, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={})
 	: Data(cbl::data::DataType::_1D_)
-	{ read(input_file, skip_nlines); }
+	{ read(input_file, skip_nlines, column_x, column_data, column_errors); }
 
-      
       /**
-       *  @brief constructor of Data1D
-       *  @param x vector containing x points 
-       *  @param data vector containing data 
+       *  @brief constructor which gets the data from input vectors
+       *
+       *  @param x vector containing the x values 
+       *
+       *  @param data vector containing data
+       *
        *  @return object of class Data1D
        */
       Data1D (const std::vector<double> x, const std::vector<double> data)
@@ -101,10 +129,15 @@ namespace cbl {
 	{ set_xx(x); }
       
       /**
-       *  @brief Constructor of Data1D
-       *  @param x vector containing x points 
-       *  @param data vector containing data 
-       *  @param error vector containing error on data 
+       *  @brief constructor which gets both the data and the errors
+       *  from input vectors
+       *
+       *  @param x vector containing the x values 
+       *
+       *  @param data vector containing the data
+       *
+       *  @param error vector containing the errors
+       *
        *  @return object of class Data1D
        */
       Data1D (const std::vector<double> x, const std::vector<double> data, const std::vector<double> error) 
@@ -112,10 +145,15 @@ namespace cbl {
 	{ set_xx(x); }
       
       /**
-       *  @brief Constructor of Data1D
-       *  @param x vector containing x points 
-       *  @param data vector containing data 
-       *  @param covariance vector containing data covariance matrix 
+       *  @brief constructor which gets both the data and the
+       *  covariance matrix from input vectors
+       *
+       *  @param x vector containing the x values 
+       *
+       *  @param data vector containing the data
+       *
+       *  @param covariance matrix containing the covariance 
+       *
        *  @return object of class Data1D
        */
       Data1D (const std::vector<double> x, const std::vector<double> data, const std::vector<std::vector<double>> covariance)
@@ -217,34 +255,80 @@ namespace cbl {
 
       /**
        *  @brief read the data
+       *
        *  @param input_file input data file
+       *
        *  @param skip_nlines the header lines to be skipped
+       *
+       *  @param column_x the column of x values in the input file; if
+       *  it is not provided, the first column will be used by default
+       *
+       *  @param column_data the column of data values in the input
+       *  file; the size of column_data is the number of data to be
+       *  read (e.g. the size should be 3 in the case of the 3
+       *  multipole moments of the two-point correlation function); if
+       *  the size of column_data is larger than 1, more than 1 data
+       *  vectors are read and then added one after the other in a
+       *  single data object; if column_data is not provided, the
+       *  first column after column_x will be used by default,
+       *  assuming that only 1 data vector has to be read
+       *
+       *  @param column_errors the column of error values in the input
+       *  file; the size of column_error must be equal to the size of
+       *  column_data; if the size of column_error is larger than 1,
+       *  more than 1 error vectors are read and then added one after
+       *  the other in a single data object; if column_random is not
+       *  provided, the second column after column_x will be used by
+       *  default, assuming that only 1 random vector has to be read;
+       *  if the input file has only 2 columns, the errors will be set
+       *  to 1
+       *
        *  @return none
        */
-      void read (const std::string input_file, const int skip_nlines=0) override;
+      void read (const std::string input_file, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={}) override;
 
       /**
+       *  @brief print the data on screen
+       *
+       *  @param precision the float precision
+       *
+       *  @return none
+       */
+      virtual void Print (const int precision=4) const override;
+      
+      /**
        *  @brief write the data
+       *
        *  @param dir output directory
+       *
        *  @param file output file
+       *
        *  @param header text with the variable names to be written at
        *  the first line of the output file
+       *
        *  @param precision the float precision
+       *
        *  @param rank cpu index (for MPI usage)
+       *
        *  @return none
        */
       void write (const std::string dir, const std::string file, const std::string header, const int precision=10, const int rank=0) const override;
       
       /**
        *  @brief write the covariance
+       *
        *  @param dir the output directory
+       *
        *  @param file the output file
+       *
        *  @param precision the float precision
+       *
        *  @return none
        */
       void write_covariance (const std::string dir, const std::string file, const int precision=10) const override;
       
       ///@}
+      
 
       /**
        *  @name Member functions for data cut
@@ -258,14 +342,14 @@ namespace cbl {
        * @param xmax maximum value for the independent variable x
        * @return pointer to an object of type Data1D
        */
-      std::shared_ptr<Data> cut(const double xmin, const double xmax) const override;
+      std::shared_ptr<Data> cut (const double xmin, const double xmax) const override;
 
       /**
        * @brief cut the data, for Data1D
        * @param [in] mask vector containing values to be masked
        * @return pointer to an object of type Data1D
        */
-      std::shared_ptr<Data> cut(const std::vector<bool> mask) const;
+      std::shared_ptr<Data> cut (const std::vector<bool> mask) const;
 
       ///@}
 

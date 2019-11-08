@@ -362,7 +362,8 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory of the
-	 *  resampled &xi;(r)
+	 *  resampling correlation functions; if an empty string
+	 *  (i.e. "" or "NULL") is provided, no output will be stored
 	 *
 	 *  @param nMocks number of resampling for bootstrap
 	 *
@@ -403,7 +404,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void read (const std::string dir, const std::string file)
-	{ (void)dir; (void)file; ErrorCBL("Error in read() of TwoPointCorrelation1D.h"); }	
+	{ (void)dir; (void)file; ErrorCBL("", "read", "TwoPointCorrelation1D.h"); }	
 
 	/**
 	 *  @brief write the measured two-point correlation
@@ -413,7 +414,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void write (const std::string dir, const std::string file, const int rank=0) const
-	{ (void)dir; (void)file; (void)rank; ErrorCBL("Error in write() of TwoPointCorrelation1D.h"); }	
+	{ (void)dir; (void)file; (void)rank; ErrorCBL("", "read", "TwoPointCorrelation1D.h"); }	
 
 	///@}
 

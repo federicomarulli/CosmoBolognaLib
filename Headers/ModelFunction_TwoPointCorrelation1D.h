@@ -69,15 +69,17 @@ namespace cbl {
 	std::string model_bias = "Tinker";
 
 	/// minimum halo mass
-	double Mh_min = 0.;
+	double Mh_min = 1.e8;
 	
-        /// maximum halo mass
+	/// maximum halo mass
 	double Mh_max = 1.e16;
 	
 	/// the upper limit of the line-of-sight integration
 	double pi_max = 100.;
 
-	/// the maximum separation used to count pairs; it is used to compute the upper limit of the line-of-sight integration in approximate projected clustering estimators
+	/// the maximum separation used to count pairs; it is used to
+	/// compute the upper limit of the line-of-sight integration
+	/// in approximate projected clustering estimators
 	double r_max_int = 100.;
 	
 	/// minimum separation up to which the correlation function is computed
@@ -87,19 +89,57 @@ namespace cbl {
 	double r_max = 350.;
 	
 	/// minimum wave vector module up to which the power spectrum is computed
-	double k_min = 0.;
+	double k_min = 1.e-4;
 	 
 	/// maximum wave vector module up to which the power spectrum is computed
 	double k_max = 100.;
 	
 	/// number of steps used to compute the binned dark matter correlation function
 	int step = 200;
+
+	/// vector of wave vector module to compute the power spectrum
+	std::vector<double> kkvec;
+
+	/// minimum mass for mass function and bias interpolation
+	double m_min = 1.e7;
+	 
+	/// maximum mass for mass function and bias interpolation
+	double m_max = 1.e17;
 	
+	/// number of points used for mass function and bias interpolation
+	int m_step = 100;
+
+	/// vector containing mass values for interpolation
+	std::vector<double> massvec;	
+
+	/// vector containing mass function values for interpolation
+	std::vector<double> mass_function_vec;
+
+	/// vector containing bias values for interpolation
+	std::vector<double> bias_vec;
+
+	/// vector containing bias values for interpolation
+	std::vector<double> pk_vec;
+
+	/// interpolated mass function
+	cbl::glob::FuncGrid interpMF;
+
+	/// interpolated bias
+	cbl::glob::FuncGrid interpBias;
+
+	/// interpolated power spectrum
+	cbl::glob::FuncGrid interpPk;	
+
 	/// method used to compute the power spectrum and &sigma;(mass);
 	std::string method_Pk = "CAMB";
 
 	/// false &rarr; linear power spectrum; true &rarr; non-linear power spectrum
-	bool NL = true;
+	bool NL = false;
+
+	/// true \f$\rightarrow\f$ the output files created by CAMB
+	/// are stored; false \f$\rightarrow\f$ the output files
+	/// created by CAMB are removed
+	bool store_output_CAMB = true;
 	
 	/// output_root of the parameter file used to compute the power spectrum 
 	std::string output_root = "test";

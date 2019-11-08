@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileYBDjVl.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(33.840366,-5.504179,33.906442,-5.503938,33.914106,-5.503845,33.941566,-5.503982,33.949746,-5.501559,33.949777,-5.383521,33.944868,-5.377946,33.940738,-5.376309,33.841566,-5.376295,33.832576,-5.383507,33.832643,-5.501574) # color=red dash=1

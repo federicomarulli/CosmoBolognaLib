@@ -35,12 +35,15 @@ Main contributors:
 
 Other contributors:
   - Carlo Cannarozzo (void detection)
-  - Sofia Contarini (void number counts)
+  - Sofia Contarini (void number counts, CBL logo)
   - Cosimo Fedeli (non-Gaussian cosmologies)
+  - Giovanni Gandolfi (HOD modelling)
+  - Jorge Enrique García-Farieta (two-point correlation modelling)
   - Carlo Giocoli (mass accretion history)
   - Jacopo Neri (mass function)
   - Mauro Roncarelli (fast comoving distance estimator) 
   - Tommaso Ronconi (void number counts)
+  - Elena Sarpa (code validation)
   - Akke Viitanen (code validation)
 
 
@@ -49,7 +52,7 @@ Other contributors:
 
 
 A @b configured @b virtual @b development @b environment to use the
-CosmoBolognaLib is avaliable here:
+CosmoBolognaLib is available here:
 \n
 https://apps.difa.unibo.it/files/people/Str957-cluster/CosmoBolognaLib_VM/Ubuntu_CBL.ova
 \n the password is: cbl
@@ -110,7 +113,7 @@ FLAGS defined in the Makefile (e.g.: make C=icpc FLAGS="-O0 -g")
 > <KBD> $ make lib* </KBD> [ ---> compile the * library (e.g. make libFUNC will compile the library libFUNC.so) ]
 
 > <KBD> $ make python </KBD> [ ---> compile the Python wrappers (SWIG
-  >=v3.0.7 is required); in this case, CosmoBolognaLib/Python/ has to be added in PYTHONPATH (e.g. in .bashrc add the following line: export PYTHONPATH=$PYTHONPATH:/path_to/CosmoBolognaLib/Python/) ]
+  >=v3.0.7 is required); in this case, CosmoBolognaLib/Python/ has to be added in PYTHONPATH (e.g. in .bashrc add the following line: export PYTHONPATH=$PYTHONPATH:/path_to/CosmoBolognaLib/Python/); to specify a different python version set the PY variable (e.g. make python PY=python3) ]
 
 > <KBD> $ make cleanpy </KBD> [ ---> remove the Python wrappers ]
     

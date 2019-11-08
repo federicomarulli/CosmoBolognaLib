@@ -110,8 +110,9 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory used to store
-	 *  the Jackknife resampling correlation functions, with Poisson
-	 *  errors
+	 *  the Jackknife resampling correlation functions, with
+	 *  Poisson errors; if an empty string (i.e. "" or "NULL") is
+	 *  provided, no output will be stored
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
 	 *  pairs; false &rarr; read the number of data-data pairs from
@@ -132,7 +133,7 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void measureJackknife (const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample = par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_) override;
+	void measureJackknife (const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_) override;
 
 	/**
 	 *  @brief measure the angular two-point correlation function
@@ -148,8 +149,9 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory used to store
-	 *  the Bootstrap resampling correlation function, with Poisson
-	 *  errors
+	 *  the Bootstrap resampling correlation functions, with
+	 *  Poisson errors; if an empty string (i.e. "" or "NULL") is
+	 *  provided, no output will be stored
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
 	 *  pairs; false &rarr; read the number of data-data pairs from
@@ -185,7 +187,7 @@ namespace cbl {
 	 *  @brief default constructor
 	 *  @return object of class TwoPointCorrelation1D_angular
 	 */
-	TwoPointCorrelation1D_angular () { m_twoPType = TwoPType::_1D_angular_; }
+	TwoPointCorrelation1D_angular () { m_twoPType = TwoPType::_angular_; }
 
 	/**
 	 *  @brief constructor
@@ -213,7 +215,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation1D_angular (const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelation1D(data, random, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_angular_; set_parameters(binType, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight, compute_extra_info); }
+	  { m_twoPType = TwoPType::_angular_; set_parameters(binType, thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight, compute_extra_info); }
 
 	/**
 	 *  @brief constructor
@@ -241,7 +243,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation1D_angular (const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelation1D(data, random, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_angular_; set_parameters(binType, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight, compute_extra_info); }
+	  { m_twoPType = TwoPType::_angular_; set_parameters(binType, thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight, compute_extra_info); }
 
 	/**
 	 *  @brief default destructor
@@ -315,7 +317,8 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory of the
-	 *  resampled correlation function
+	 *  resampling correlation functions; if an empty string
+	 *  (i.e. "" or "NULL") is provided, no output will be stored
 	 *
 	 *  @param nMocks number of resampling for Bootstrap
 	 *

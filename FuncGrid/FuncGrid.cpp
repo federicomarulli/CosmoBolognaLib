@@ -46,13 +46,13 @@ cbl::glob::FuncGrid::FuncGrid (const std::vector<double> x, const std::vector<do
   : m_x(x), m_y(y), m_size(x.size()), m_interpType(interpType), m_binType(bin_type)
 {
   if (!is_sorted(x.begin(), x.end()))
-    ErrorCBL("Error in cbl::glob::FuncGrid::FuncGrid() of FuncGrid.cpp: the x array is not sorted!");
+    ErrorCBL("the x array is not sorted!", "FuncGrid", "FuncGrid.cpp");
 
   shared_ptr<gsl_interp_accel> acc(gsl_interp_accel_alloc(), gsl_interp_accel_free);
   m_acc = acc;
 	  
   if (m_size<5 && interpType!="Linear") {
-    WarningMsg("Warning in cbl::glob::FuncGrid::FuncGrid() of FuncGrid.cpp: the array size is less than 5 -> setting interpolation method to Linear!");
+    WarningMsgCBL("the array size is less than 5 -> setting interpolation method to Linear!", "FuncGrid", "FuncGrid.cpp");
     m_interpType = "Linear";
   }
 
@@ -78,7 +78,7 @@ cbl::glob::FuncGrid::FuncGrid (const std::vector<double> x, const std::vector<do
     m_type = gsl_interp_steffen;
 
   else 
-    ErrorCBL("Error in cbl::glob::FuncGrid::FuncGrid() of FuncGrid.cpp: the value of m_interpType is not permitted!");
+    ErrorCBL("the value of m_interpType is not permitted!", "FuncGrid", "FuncGrid.cpp");
 
   vector<double> xx, yy;
 
@@ -93,7 +93,7 @@ cbl::glob::FuncGrid::FuncGrid (const std::vector<double> x, const std::vector<do
     }
   }
   else
-    ErrorCBL("Error in cbl::glob::FuncGrid::FuncGrid() of FuncGrid.cpp: the value of m_binType is not permitted!");
+    ErrorCBL("the value of m_binType is not permitted!", "FuncGrid", "FuncGrid.cpp");
 
   m_xmin = Min(m_x);
   m_xmax = Max(m_x);
@@ -126,21 +126,21 @@ double cbl::glob::FuncGrid::operator () (const double xx) const
   if (xx<m_xmin) { // perform a linear extrapolation
     val = m_spline.get()->y[0]+(_xx-m_spline.get()->x[0])/(m_spline.get()->x[1]-m_spline.get()->x[0])*(m_spline.get()->y[1]-m_spline.get()->y[0]);
     val = (m_binType==cbl::BinType::_logarithmic_) ? pow(10, val) : val;
-    if (val!=val) return ErrorCBL("Error in cbl::glob::FuncGrid::operator () of FuncGrid.cpp: inside the xx<m_xmin condition, the return value is nan!");
+    if (val!=val) return ErrorCBL("inside the xx<m_xmin condition, the return value is nan!", "operator ()", "FuncGrid.cpp");
     else return val;
   }
   
   else if (xx>m_xmax) { // perform a linear extrapolation
     val = m_spline.get()->y[m_size-2]+(_xx-m_spline.get()->x[m_size-2])/(m_spline.get()->x[m_size-1]-m_spline.get()->x[m_size-2])*(m_spline.get()->y[m_size-1]-m_spline.get()->y[m_size-2]);
     val = (m_binType==cbl::BinType::_logarithmic_) ? pow(10, val) : val;
-    if (val!=val) return ErrorCBL("Error in cbl::glob::FuncGrid::operator () of FuncGrid.cpp: inside the xx>m_xmax condition, the return value is nan!");
+    if (val!=val) return ErrorCBL("inside the xx>m_xmax condition, the return value is nan!", "operator ()", "FuncGrid.cpp");
     else return val;
   }
   
   // performe an interpolation
   else {
     val = (m_binType==cbl::BinType::_logarithmic_) ? pow(10., gsl_spline_eval(m_spline.get(), _xx, m_acc.get())) : gsl_spline_eval(m_spline.get(), _xx, m_acc.get());
-    if (val!=val) return ErrorCBL("Error in cbl::glob::FuncGrid::operator () of FuncGrid.cpp: the return value is nan!");
+    if (val!=val) return ErrorCBL("the return value is nan!", "operator ()", "FuncGrid.cpp");
     else return val;
   }
 }
@@ -187,7 +187,7 @@ double cbl::glob::FuncGrid::integrate_qag (const double a, const double b, const
 {
   function<double(double)> f = bind(&FuncGrid::operator(), this, std::placeholders::_1);
 
-  return gsl::GSL_integrate_qag(f, a, b, rel_err, abs_err, limit_size, rule);
+  return wrapper::gsl::GSL_integrate_qag(f, a, b, rel_err, abs_err, limit_size, rule);
 }
 
 
@@ -198,7 +198,7 @@ double cbl::glob::FuncGrid::integrate_qaws (const double a, const double b, cons
 {
   function<double(double)> f = bind(&FuncGrid::operator(), this, std::placeholders::_1);
 
-  return gsl::GSL_integrate_qaws(f, a, b, alpha, beta, mu, nu, rel_err, abs_err, limit_size);
+  return wrapper::gsl::GSL_integrate_qaws(f, a, b, alpha, beta, mu, nu, rel_err, abs_err, limit_size);
 }
 
 
@@ -209,7 +209,7 @@ double cbl::glob::FuncGrid::root (const double x_low, const double x_up, const d
 {
   function<double(double)> f = bind(&FuncGrid::operator(), this, std::placeholders::_1);
 
-  return gsl::GSL_root_brent(f, fx0,  x_low, x_up, rel_err, abs_err);
+  return wrapper::gsl::GSL_root_brent(f, fx0,  x_low, x_up, rel_err, abs_err);
 }
 
 
@@ -220,7 +220,7 @@ double cbl::glob::FuncGrid::root_D1v (const double x_low, const double x_up, con
 {
   function<double(double)> f = bind(&FuncGrid::D1v, this, std::placeholders::_1);
 
-  return gsl::GSL_root_brent(f, fx0,  x_low, x_up, rel_err, abs_err);
+  return wrapper::gsl::GSL_root_brent(f, fx0,  x_low, x_up, rel_err, abs_err);
 }
 
 
@@ -231,7 +231,7 @@ double cbl::glob::FuncGrid::root_D2v (const double x_low, const double x_up, con
 {
   function<double(double)> f = bind(&FuncGrid::D2v, this, std::placeholders::_1);
 
-  return gsl::GSL_root_brent(f, fx0,  x_low, x_up, rel_err, abs_err);
+  return wrapper::gsl::GSL_root_brent(f, fx0,  x_low, x_up, rel_err, abs_err);
 }
 
 
@@ -241,9 +241,9 @@ double cbl::glob::FuncGrid::root_D2v (const double x_low, const double x_up, con
 cbl::glob::FuncGrid2D::FuncGrid2D (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> fxy, const std::string interpType)
 {
   if(!is_sorted(x.begin(), x.end()))
-    ErrorCBL("Error in cbl::glob::FuncGrid2D::FuncGrid2D() of FuncGrid.cpp: the x array is not sorted!");
+    ErrorCBL("the x array is not sorted!", "FuncGrid2D", "FuncGrid.cpp");
   if(!is_sorted(y.begin(), y.end()))
-    ErrorCBL("Error in cbl::glob::FuncGrid2D::FuncGrid2D() of FuncGrid.cpp: the y array is not sorted!");
+    ErrorCBL("the y array is not sorted!", "FuncGrid2D", "FuncGrid.cpp");
 
   // set internal variables
   m_x = x;
@@ -274,7 +274,7 @@ cbl::glob::FuncGrid2D::FuncGrid2D (const std::vector<double> x, const std::vecto
     m_type = gsl_interp2d_bicubic;
 
   else 
-    ErrorCBL("Error in cbl::glob::FuncGrid2D::FuncGrid2D() of FuncGrid.cpp: the value of m_interpType is not permitted!");
+    ErrorCBL("the value of m_interpType is not permitted!", "FuncGrid2D", "FuncGrid.cpp");
 
   shared_ptr<gsl_interp_accel> acc_x(gsl_interp_accel_alloc(), gsl_interp_accel_free);
   shared_ptr<gsl_interp_accel> acc_y(gsl_interp_accel_alloc(), gsl_interp_accel_free);
@@ -313,7 +313,7 @@ double cbl::glob::FuncGrid2D::operator () (const double xx, const double yy) con
   double val;
   
   if (extr) 
-    ErrorCBL("Work in progress in cbl::glob::FuncGrid2D::operator () of FuncGrid2D: points outside the interpolation range...", glob::ExitCode::_workInProgress_);
+    ErrorCBL("points outside the interpolation range...", "operator ()", "FuncGrid.cpp", glob::ExitCode::_workInProgress_);
   
   else
     val = gsl_spline2d_eval(m_spline.get(), xx, yy, m_acc_x.get(), m_acc_y.get());
@@ -347,7 +347,7 @@ double cbl::glob::FuncGrid2D::IntegrateVegas (const double xmin, const double xm
     return this->operator()(var[0], var[1]);
   };
 
-  cbl::cuba::CUBAwrapper cuba_integral(integrand, 2);
+  wrapper::cuba::CUBAwrapper cuba_integral(integrand, 2);
 
   return cuba_integral.IntegrateVegas({{xmin, xmax}, {ymin, ymax}});
 }
@@ -363,7 +363,7 @@ double cbl::glob::FuncGrid2D::IntegrateSuave (const double xmin, const double xm
     return this->operator()(var[0], var[1]);
   };
 
-  cbl::cuba::CUBAwrapper cuba_integral(integrand, 2);
+  wrapper::cuba::CUBAwrapper cuba_integral(integrand, 2);
 
   return cuba_integral.IntegrateSuave({{xmin, xmax}, {ymin, ymax}});
 }
@@ -379,7 +379,7 @@ double cbl::glob::FuncGrid2D::IntegrateDivonne (const double xmin, const double 
     return this->operator()(var[0], var[1]);
   };
 
-  cbl::cuba::CUBAwrapper cuba_integral(integrand, 2);
+  wrapper::cuba::CUBAwrapper cuba_integral(integrand, 2);
 
   return cuba_integral.IntegrateDivonne({{xmin, xmax}, {ymin, ymax}});
 }
@@ -395,7 +395,7 @@ double cbl::glob::FuncGrid2D::IntegrateCuhre (const double xmin, const double xm
     return this->operator()(var[0], var[1]);
   };
 
-  cbl::cuba::CUBAwrapper cuba_integral(integrand, 2);
+  wrapper::cuba::CUBAwrapper cuba_integral(integrand, 2);
 
   return cuba_integral.IntegrateCuhre ({{xmin, xmax}, {ymin, ymax}});
 }

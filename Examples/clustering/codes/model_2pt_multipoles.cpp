@@ -95,8 +95,11 @@ int main () {
 
     // maximise the posterior
     const std::vector<double> start = {0.2, 0.2, 1.};
-    const unsigned int Niter = 1000;
-    model_multipoles.maximize_posterior(start, Niter);
+    model_multipoles.maximize_posterior(start);
+
+    // retrieve and show the best-fit parameter values
+    for (unsigned int i=0; i<model_multipoles.posterior()->parameters()->nparameters(); ++i)
+      std::cout << "the best-fit value of " << model_multipoles.posterior()->parameters()->name(i) << " is " << model_multipoles.posterior()->parameters()->bestfit_value(i) << std::endl;
 
   }
 

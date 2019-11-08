@@ -148,7 +148,7 @@ double cbl::Pk_from_xi (const double kk, const std::vector<double> lgrr, const s
     };
 
   const double prec = 0.0001;
-  const double Int = gsl::GSL_integrate_qag(ff, r_min, r_max, prec);
+  const double Int = wrapper::gsl::GSL_integrate_qag(ff, r_min, r_max, prec);
   
   return 4.*par::pi*Int;
 } 
@@ -197,7 +197,7 @@ double cbl::wp (const double rp, const std::vector<double> rr, const std::vector
     };
 
   const double prec = 0.0001;
-  return 2.*gsl::GSL_integrate_qag(ff, rp, r_max, prec);
+  return 2.*wrapper::gsl::GSL_integrate_qag(ff, rp, r_max, prec);
 }
 
 
@@ -237,9 +237,9 @@ double cbl::sigmaR (const double RR, const int corrType, const std::vector<doubl
       };
 
     const double prec = 0.0001;
-    const double Int = gsl::GSL_integrate_qaws (ff, 0., 2*RR, 1, 0, 0, 0, prec);
+    const double Int = wrapper::gsl::GSL_integrate_qaws (ff, 0., 2*RR, 1, 0, 0, 0, prec);
 
-    if (1./pow(RR,3)*Int<0) ErrorCBL("Error in sigmaR with xi of Func.cpp!,"+conv(1./pow(RR,3)*Int,par::fDP4)+"<0");
+    if (1./pow(RR,3)*Int<0) ErrorCBL(conv(1./pow(RR,3)*Int,par::fDP4)+"<0!", "sigmaR", "FuncXi.cpp");
     sigmaR = sqrt(1./pow(RR,3)*Int);
   }
 
@@ -259,14 +259,14 @@ double cbl::sigmaR (const double RR, const int corrType, const std::vector<doubl
       };
 
     const double prec = 0.0001;
-    const double Int1 = gsl::GSL_integrate_qaws(ff, 0., 1., prec);
-    const double Int2 = gsl::GSL_integrate_qaws(ff, 1., 100., prec);
+    const double Int1 = wrapper::gsl::GSL_integrate_qaws(ff, 0., 1., prec);
+    const double Int2 = wrapper::gsl::GSL_integrate_qaws(ff, 1., 100., prec);
 
-    if (1./pow(RR,3)*(Int1+Int2)<0) ErrorCBL("Error in sigmaR with wp of Func.cpp!,"+conv(1./pow(RR,3)*(Int1+Int2),par::fDP4)+"<0");
+    if (1./pow(RR,3)*(Int1+Int2)<0) ErrorCBL(conv(1./pow(RR,3)*(Int1+Int2),par::fDP4)+"<0", "sigmaR", "FuncXi.cpp");
     sigmaR = sqrt(1./pow(RR,3)*(Int1+Int2));
   }
   
-  else ErrorCBL("Error in sigmaR of Func.cpp!");
+  else ErrorCBL("the value of corrType is not allowed!", "sigmaR", "Func.cpp");
   
   return sigmaR;
 }
@@ -311,7 +311,7 @@ double cbl::xi_ratio (double xx, shared_ptr<void> pp, vector<double> par)
   
   else if (par.size()==3) return xi_ratio(par[0], par[1]);
   
-  else { ErrorCBL("Error in xi_ratio of FuncXi.cpp!"); return 0; }
+  else return ErrorCBL("par.size()!=2 and !=3", "xi_ratio", "FuncXi.cpp");
 }
 
 /// @endcond
@@ -432,10 +432,8 @@ double cbl::barred_xi__ (const double RR, const std::vector<double> rr, const st
 
 double cbl::xi2D_lin_model (double rp, double pi, shared_ptr<void> pp, vector<double> par)
 { 
-  if (par.size()!=2 && par.size()!=3 && par.size()!=4) {
-    string Err = "Error in xi2D_lin_model! par.size() = " + conv(par.size(),par::fINT) + "!";
-    ErrorCBL(Err);
-  }
+  if (par.size()!=2 && par.size()!=3 && par.size()!=4) 
+    ErrorCBL("par.size() = "+conv(par.size(),par::fINT)+"!", "xi2D_lin_model", "FuncXi.cpp");
 
   double beta = par[0];  
   double bias = (par.size()==3) ? par[1] : 1;
@@ -445,10 +443,9 @@ double cbl::xi2D_lin_model (double rp, double pi, shared_ptr<void> pp, vector<do
 
   
   if (vec->bias_nl) {
-    if (par.size()!=4) {
-      string Err = "Error in xi2D_lin_model! par.size() = " + conv(par.size(),par::fINT) + "!";
-      ErrorCBL(Err);
-    }
+    if (par.size()!=4) 
+      ErrorCBL("par.size() = "+conv(par.size(),par::fINT)+"!", "xi2D_lin_model", "FuncXi.cpp");
+ 
     double bA = par[3];
     double rr = sqrt(pow(rp, 2)+pow(pi, 2));
     bias *= b_nl(rr, bA);
@@ -530,10 +527,8 @@ double cbl::xi2D_model (double rp, double pi, shared_ptr<void> pp, vector<double
 {
   (void)rp; (void)pi;
   
-  if (par.size()<3) {
-    string Err = "Error in xi2D_model! par.size() = " + conv(par.size(),par::fINT) + "!";
-    ErrorCBL(Err);
-  }
+  if (par.size()<3) 
+    ErrorCBL("par.size() = "+conv(par.size(),par::fINT)+"!", "xi2D_model", "FuncXi.cpp");
 
   shared_ptr<cbl::glob::STR_xi2D_model> vec = static_pointer_cast<cbl::glob::STR_xi2D_model>(pp);
     
@@ -564,8 +559,7 @@ double cbl::xi2D_model (double rp, double pi, shared_ptr<void> pp, vector<double
 
 
   if (fabs(norm-1)>0.1) { 
-    string Warn = "Attention! sigma12 = "+conv(sigma12,par::fDP2)+" ---> norm = " + conv(norm,par::fDP3) + ", the number of bins used for the convolution with f(v) should be increased!";
-    WarningMsg(Warn);
+    WarningMsgCBL("sigma12 = "+conv(sigma12,par::fDP2)+" ---> norm = " + conv(norm,par::fDP3) + ", the number of bins used for the convolution with f(v) should be increased!", "xi2D_model", "FuncXi.cpp");
     Print(par);
   }
   

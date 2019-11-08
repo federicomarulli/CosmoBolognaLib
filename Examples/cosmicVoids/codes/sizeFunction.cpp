@@ -13,26 +13,31 @@ std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 int main () {
 
   try {
-   
-    // -----------------------------------------------
-    // ----- use default cosmological parameters ----- 
-    // -----------------------------------------------
-    
-    cbl::cosmology::Cosmology cosm;
-
-
+     
     // -------------------------------------------------------------
     // ----- compute the Sheth & van de Weygaert size function -----
     // -------------------------------------------------------------
+ 
+    // set the cosmology using Planck18 parameters 
+    const cbl::cosmology::Cosmology Planck18 {cbl::cosmology::CosmologicalModel::_Planck18_};
+    
+    // logarithmic binning in the void effectiv radii
+    const std::vector<double> radius = cbl::logarithmic_bin_vector(10, 1., 30.); 
 
-    double RR = 10.; // effective void radius at which the size function is computed
-    double redshift = 0.;
+    // redshift
+    const double redshift  = 0.;
+
+    // effective bias of the tracers (e.g. galaxies or galaxy clusters) used to detect the voids 
+    const double b_eff = 1.; 
+
+
+    // print the size function
     
-    double del_v = cosm.deltav_L(); // linear underdensity threshold
-    double del_c = cosm.deltac(0.); // linear overdensity threshold
+    std::cout << "The size function at z = " << redshift << " is :" << std::endl;
     
-    std::cout << cosm.size_function(RR, redshift, del_v, del_c, "SvdW") << std::endl;
-   
+    for (auto && rr : radius)
+      std::cout << std::scientific << std::setprecision(6) << Planck18.size_function(rr, redshift, "SvdW", b_eff) << " (h/Mpc)^3 at R = " << std::defaultfloat << std::setprecision(3) << rr << " Mpc/h" << std::endl;
+
   }
   
   catch (cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }

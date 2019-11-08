@@ -112,7 +112,7 @@ std::vector<double> cbl::fit_covariance_matrix_2PCF_monopole (const std::vector<
 
   vector<double> start = {nObjects, Volume};
   vector<vector<double>> limits = { {min_nObj, max_nObj}, {min_Vol, max_Vol}};
-  return cbl::gsl::GSL_minimize_nD(func, start, limits);
+  return cbl::wrapper::gsl::GSL_minimize_nD(func, start, limits);
 }
 
 
@@ -154,9 +154,9 @@ std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_multipoles (const cbl::
 
    cbl::Covariance_XiMultipoles (rr, covariance, nbins, rMin, rMax, nObjects, Volume, kk, {Pk0, Pk2, Pk4}, {0, 2, 4}, bin_type);
 
-  xil[0] = cbl::fftlog::transform_FFTlog(rr, 1, kk, Pk0, 0);
-  xil[1] = cbl::fftlog::transform_FFTlog(rr, 1, kk, Pk2, 2);
-  xil[2] = cbl::fftlog::transform_FFTlog(rr, 1, kk, Pk4, 4);
+  xil[0] = cbl::wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk0, 0);
+  xil[1] = cbl::wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk2, 2);
+  xil[2] = cbl::wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk4, 4);
 
   vector<double> rad, xi;
   for (int i=0; i<3; i++) {

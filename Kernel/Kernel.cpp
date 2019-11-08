@@ -181,7 +181,7 @@ void cbl::checkIO (const std::ifstream &fin, const std::string file)
   if (fin.fail()) {    
     string Err = "Error in opening the input file";
     if (file!="NULL") Err += ": " + file;
-    ErrorCBL(Err, ExitCode::_IO_); 
+    ErrorCBL(Err, "checkIO", "Kernel.cpp", ExitCode::_IO_); 
   }
 }
 
@@ -194,7 +194,7 @@ void cbl::checkIO (const std::ofstream &fout, const std::string file)
   if (fout.fail()) {    
     string Err = "Error in opening the output file";
     if (file!="NULL") Err += ": " + file;
-    ErrorCBL(Err, ExitCode::_IO_); 
+    ErrorCBL(Err, "checkIO", "Kernel.cpp", ExitCode::_IO_); 
   }
 }
 
@@ -217,12 +217,10 @@ void cbl::check_EnvVar (const std::string Var)
   string COM = "if [ $"+Var+" ]; then touch tmp; fi";
   if (system (COM.c_str())) {};
   ifstream fin_check("tmp");
-  if (!fin_check) { 
-    string Warn = "Attention: the variable " + Var + " has not been defined! (see check_EnvVar of Func.cpp)";
-    WarningMsg(Warn);
-  }
+  if (!fin_check) 
+    WarningMsgCBL("the variable " + Var + " has not been defined!", "check_EnvVar", "Kenrel.cpp");
   fin_check.clear(); fin_check.close();
-  if (system ("rm -f tmp")) {};
+  if (system("rm -f tmp")) {};
 }
 
 
@@ -237,7 +235,7 @@ int cbl::used_memory (const int type)
   string mem;
   if (type==1) mem = "VmRSS:";
   else if (type==2) mem = "VmSize:";
-  else ErrorCBL("Error in cbl::used_memory of Func.cpp: the input value of type is not allowed!");
+  else ErrorCBL("the input value of type is not allowed!", "used_memory", "Kernel.cpp");
   
   string file = "/proc/self/status";
   ifstream fin(file.c_str()); checkIO(fin, file);
@@ -259,7 +257,7 @@ int cbl::used_memory (const int type)
 
 #else 
   (void)type;
-  //WarningMsg("Attention: used_memory of Func.cpp works only on Linux systems");
+  //WarningMsgCBL("this function works only on Linux systems", "used_memory", "Kernel.cpp");
   return 1;
 
 #endif
@@ -281,18 +279,18 @@ int cbl::check_memory (const double frac, const bool exit, const std::string fun
   int used = used_memory(type);
   
   if (used > freePhysMem*0.001*frac) { // 0.001 is to convert kbytes in bytes
-    string Err = "Attention: possible memory problem";
+    string Err = "possible memory problem";
     Err += (func.empty()) ? "!\n" : " in "+func+" !\n";
     Err += "freePhysMem = "+conv((double)freePhysMem*1.e-9, par::fDP3)+" GB\n";
     Err += "memory used by the process: = "+conv((double)used*1.e-6, par::fDP3)+" GB\n";
-    if (exit) ErrorCBL(Err);
-    else { WarningMsg(Err); return 0; }
+    if (exit) ErrorCBL(Err, "check_memory", "Kernel.cpp");
+    else { WarningMsgCBL(Err, "check_memory", "Kernel.cpp"); return 0; }
   }
   return 1;
   
 #else
   (void)frac; (void)exit; (void)func; (void)type;
-  //WarningMsg("Attention: check_memory of Func.cpp works only on Linux systems");
+  //WarningMsgCBL("this function works only on Linux systems", "checked_memory", "Kernel.cpp");
   return 1;
   
 #endif
@@ -393,4 +391,35 @@ void cbl::sort_4vectors (std::vector<double>::iterator p1, std::vector<double>::
     *p1 = ccc[i].VV[0]; *p2 = ccc[i].VV[1]; *p3 = ccc[i].VV[2]; *p4 = ccc[i].VV[3];
     if (i+1<dim) {*p1 ++; *p2 ++; *p3 ++; *p4 ++;} 
   }
+}
+
+
+// ============================================================================
+
+
+int cbl::makeDir (std::string path, const std::string rootPath, const mode_t mode, const bool verbose)
+{
+  struct stat st;
+
+  for (std::string::iterator iter=path.begin(); iter!=path.end();) {
+    std::string::iterator newIter = std::find(iter, path.end(), '/');
+    std::string newPath = rootPath+"/"+std::string(path.begin(), newIter);
+
+    if (stat(newPath.c_str(), &st)!=0) {           
+      if (mkdir(newPath.c_str(), mode)!=0 && errno!=EEXIST) 
+	return cbl::ErrorCBL("cannot create the directory "+newPath+strerror(errno), "makeDir", "Kernel.cpp");
+    }
+    else
+      if (!S_ISDIR(st.st_mode)) {
+	errno = ENOTDIR;
+	return cbl::ErrorCBL(newPath+" is not a directory", "makeDir", "Kernel.cpp");
+      }
+      else if (verbose)
+	cbl::WarningMsgCBL(newPath+" already exists", "makeDir", "Kernel.cpp");
+
+    iter = newIter;
+    if (newIter!=path.end()) ++iter;
+  }
+  
+  return 0;
 }

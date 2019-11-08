@@ -1,4 +1,4 @@
-C = g++
+CXX = g++
 
 FLAGS0 = -std=c++11 -fopenmp 
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
@@ -12,7 +12,7 @@ dir_Eigen = $(dirLib)External/eigen-3.3.4/
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
 FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lFUNCGRID -lRAN 
-FLAGS_INC = -I$(HOME)/include/ -I/usr/local/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
+FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
 
 OBJ = eigen.o
 
@@ -25,10 +25,10 @@ ifeq ($(SYS),Darwin)
 endif
 
 eigen: $(OBJ) 
-	$(C) $(OBJ) -o eigen $(FLAGS_LIB) 
+	$(CXX) $(OBJ) -o eigen $(FLAGS_LIB) 
 
 clean:
 	rm -f *.o eigen *~ \#* temp* core*
 
 eigen.o: eigen.cpp makefile $(dirLib)*.$(ES)
-	$(C) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c eigen.cpp 
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c eigen.cpp 

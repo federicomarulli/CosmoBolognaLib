@@ -72,6 +72,8 @@ namespace cbl {
        *  @param weight the weight
        * 
        *  @param region region, used e.g. for jackknife and bootstrap
+       *
+       *  @param ID the object ID
        * 
        *  @param field the field where the object has been observed
        *
@@ -83,8 +85,8 @@ namespace cbl {
        *
        *  @return object of class RandomObject
        */
-      RandomObject (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement) {}
+      RandomObject (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
 
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -104,6 +106,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -114,8 +118,8 @@ namespace cbl {
        *
        *  @return object of class RandomObject
        */
-      RandomObject (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight, region, field, x_displacement, y_displacement, z_displacement) {}
+      RandomObject (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -127,6 +131,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -137,8 +143,8 @@ namespace cbl {
        *
        *  @return object of class RandomObject
        */
-      RandomObject (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: Object(coord, weight, region, field, x_displacement, y_displacement, z_displacement) {}
+      RandomObject (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -153,6 +159,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -163,8 +171,8 @@ namespace cbl {
        *
        *  @return object of class RandomObject
        */
-      RandomObject (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: Object(coord, inputUnits, weight, region, field, x_displacement, y_displacement, z_displacement) {}
+      RandomObject (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -181,6 +189,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -191,8 +201,8 @@ namespace cbl {
        *
        *  @return object of class RandomObject
        */
-      RandomObject (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: Object(coord, cosm, weight, region, field, x_displacement, y_displacement, z_displacement) {}
+      RandomObject (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -209,6 +219,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -219,8 +231,8 @@ namespace cbl {
        *
        *  @return object of class RandomObject
        */
-      RandomObject (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: Object(coord, inputUnits, cosm, weight, region, field, x_displacement, y_displacement, z_displacement) {}
+      RandomObject (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
 
       /**
        *  @brief constructor that uses both comoving and observed coordinates
@@ -241,6 +253,8 @@ namespace cbl {
        *
        *  @param region region, used e.g. for jackknife and bootstrap
        *
+       *  @param ID the object ID
+       *
        *  @param field the field where the object has been observed
        *
        *  @param x_displacement the displacement along the x-axis
@@ -251,8 +265,8 @@ namespace cbl {
        *
        *  @return object of class RandomObject
        */
-      RandomObject (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: Object(xx, yy, zz, ra, dec, redshift, weight, region, field, x_displacement, y_displacement, z_displacement) {}
+      RandomObject (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
       
       /**
        *  @brief default destructor

@@ -57,7 +57,7 @@ int main () {
   
     // measure the monopole of the two-point correlation function and estimate Poissonian errors
 
-    auto TwoP = cbl::measure::twopt::TwoPointCorrelation::Create(cbl::measure::twopt::TwoPType::_1D_monopole_, catalogue, random_catalogue, cbl::BinType::_linear_, rMin, rMax, nbins, shift);
+    auto TwoP = cbl::measure::twopt::TwoPointCorrelation::Create(cbl::measure::twopt::TwoPType::_monopole_, catalogue, random_catalogue, cbl::BinType::_linear_, rMin, rMax, nbins, shift);
 
     TwoP->measure(cbl::measure::ErrorType::_Poisson_, dir);
     TwoP->write(dir, file);
@@ -95,6 +95,9 @@ int main () {
     // set the likelihood type
     model_twop.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_);
 
+    // maximise the posterior
+    model_twop.maximize_posterior({1., 1.}, 10000, 1.e-4, 1.e-2);
+    
     // run the MCMC method to sample the posterior
     const int chain_size = 1000; // the size the chain lenght
     const int nwalkers = 10;     // the number of parallel walkers in the MCMC chains

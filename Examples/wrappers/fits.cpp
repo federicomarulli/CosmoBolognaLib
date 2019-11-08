@@ -29,14 +29,14 @@ int main () {
     const std::vector<std::string> column_names = {"XX", "YY", "ZZ", "Weight"};
    
     // read the columns from the table searching by names
-    std::vector<std::vector<double>> table = cbl::ccfitswrapper::read_table_fits(input_file, column_names, next, fill_value);
+    std::vector<std::vector<double>> table = cbl::wrapper::ccfits::read_table_fits(input_file, column_names, next, fill_value);
     std::cout << table[0][0] << " " <<table[1][0] << " " << table[2][0] << " " << table[3][0] << std::endl;
     
     // the unit of the columns, optional
     const std::vector<std::string> column_units = {"Mpc/h", "Mpc/h", "Mpc/h", ""};
 
     // write the output on a new fits file, adding the weight column
-    cbl::ccfitswrapper::write_table_fits(cbl::par::DirLoc, "catalogue_with_weights.fits", column_names, table, column_units);
+    cbl::wrapper::ccfits::write_table_fits(cbl::par::DirLoc, "catalogue_with_weights.fits", column_names, table, column_units);
   }
   
   catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }

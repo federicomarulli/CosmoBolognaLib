@@ -87,7 +87,6 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_model_Numb
   m_data_model.Cpar = cosmo_param;
 
   const size_t nParams = cosmo_param.size();
-  checkDim(cosmo_param, nParams, "cosmoPar_prior");
 
   vector<statistics::ParameterType> cosmoPar_type(nParams, statistics::ParameterType::_Base_);
   vector<string> cosmoPar_string(nParams);
@@ -104,19 +103,19 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_model_Numb
   // construct the model
   switch (m_HistogramType) {
 
-    case (glob::HistogramType::_N_V_):
-      if (m_data_model.isSnapshot == true)
-	m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_mass_snapshot, nParams, cosmoPar_type, cosmoPar_string, inputs));
-      else
-	m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
-      break;
-    case (glob::HistogramType::_n_V_):
-      m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_density_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
-      break;
-    case (glob::HistogramType::_dn_dV_):
-      m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_density_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
-      break;
-    default:
-      ErrorCBL("Error in set_model_NumberCounts_cosmology of Modelling_NumberCounts1D_Mass.cpp: no such a variable in the list!");
+  case (glob::HistogramType::_N_V_):
+    if (m_data_model.isSnapshot == true)
+      m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_mass_snapshot, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    else
+      m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    break;
+  case (glob::HistogramType::_n_V_):
+    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_density_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    break;
+  case (glob::HistogramType::_dn_dV_):
+    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&mass_function_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    break;
+  default:
+    ErrorCBL("no such a variable in the list!", "set_model_NumberCounts_cosmology", "Modelling_NumberCounts1D_Mass.cpp");
   }
 }

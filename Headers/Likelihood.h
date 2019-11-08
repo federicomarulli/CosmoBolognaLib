@@ -192,7 +192,7 @@ namespace cbl {
        *
        * @return pointer containing the likelihood parameters
        */
-      std::shared_ptr<ModelParameters> parameters () const {return m_model_parameters;}
+      std::shared_ptr<ModelParameters> parameters () const { return m_model_parameters; }
 
       /**
        * @brief evaluate the likelihood
@@ -280,8 +280,35 @@ namespace cbl {
       void set_function (const LogLikelihood_function loglikelihood_function);
 
       /**
-       *  @brief function that maximize the likelihood, find the
-       *  best-fit parameters and store them in model
+       *  @brief write best-fit results on a file
+       *
+       *  @param dir_output output directory
+       *
+       *  @param file output file
+       *
+       *  @return none
+       */
+      void write_results (const std::string dir_output, const std::string file); 
+
+      /**
+       *  @brief function that maximizes the likelihood, finds the
+       *  best-fit parameters and stores them in the model
+       *
+       *  this function exploits the Nelder-Mead method
+       *  https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method
+       *
+       *  the algorithm defines a simplex (i.e a k-dimensional
+       *  polytope which is the convex hull of its k+1 vertices) in
+       *  the parameter space. At each step, it identifies the simplex
+       *  vertex at which the function to be minimised (i.e. the
+       *  negative likelihood in this case) has the greatest value,
+       *  and moves it, via reflections and scaling, to a new position
+       *  in which the function has a lower value. This iteration
+       *  stops when the simplex area becomes lower than the
+       *  tolerance. For instance, in 2D, the starting vertices of the
+       *  simplex (a triangle in 2D) are the following: (start[0],
+       *  start[1]) ; (start[0]+epsilon, start[1]) ; (start[0],
+       *  start[1]+epsilon)
        *
        *  @param start std::vector containing initial values for
        *  the likelihood maximization
@@ -292,7 +319,7 @@ namespace cbl {
        *
        *  @param tol the tolerance in finding convergence 
        *
-       *  @param epsilon the relative fraction of the interval size
+       *  @param epsilon the simplex side
        *
        *  @return none
        */
@@ -322,7 +349,7 @@ namespace cbl {
        *  @return none
        */
       void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx={}, const std::vector<double> yy={})
-      { write_model(output_dir, output_file, m_model_parameters->bestfit_values(), xx, yy); }
+      { write_model(output_dir, output_file, m_model_parameters->bestfit_value(), xx, yy); }
 
     };
   }

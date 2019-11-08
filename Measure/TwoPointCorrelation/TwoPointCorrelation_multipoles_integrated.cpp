@@ -278,7 +278,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measure (co
       measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, seed);
       break;
     default:
-      ErrorCBL("Error in measure() of TwoPointCorrelation_multipoles_integrated.cpp, unknown type of error");
+      ErrorCBL("the input ErrorType is not allowed!", "measure", "TwoPointCorrelation_multipoles_integrated.cpp");
   }
 }
 
@@ -304,7 +304,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measurePois
 
 void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  if (dir_output_resample != par::defaultString) {
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
     string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
@@ -320,13 +320,13 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureJack
   else if (estimator==Estimator::_LandySzalay_)
     data = XiJackknife(dd_regions, rr_regions, dr_regions);
   else
-    ErrorCBL("Error in measurJackknife() of TwoPointCorrelation_multipoles_integrated.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measurJackknife", "TwoPointCorrelation_multipoles_integrated.cpp");
   
   vector<vector<double>> ww, covariance;
   for (size_t i=0; i<data.size(); i++) {
     ww.push_back(data[i]->data());
     
-    if (dir_output_resample != par::defaultString) {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file_out = dir_output_resample+"xi_multipoles_Jackknife_"+conv(i,par::fINT)+".dat";
 
       vector<double> rad = data[i]->xx();
@@ -369,7 +369,10 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureJack
 
 void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
-  if (dir_output_resample != par::defaultString) {
+  if (nMocks<=0)
+    ErrorCBL("the number of mocks must be >0", "measureBootstrap", "TwoPointCorrelation1D_monopole.cpp");
+
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
     string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
@@ -385,13 +388,13 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureBoot
   else if (estimator==Estimator::_LandySzalay_)
     data = XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions, seed);
   else
-    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation_multipoles_integrated.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureBootstrap", "TwoPointCorrelation_multipoles_integrated.cpp");
   
   vector<vector<double>> ww, covariance;
   for (size_t i=0; i<data.size(); i++) {
     ww.push_back(data[i]->data());
     
-    if (dir_output_resample != par::defaultString) {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file_out = dir_output_resample+"xi_multipoles_Bootstrap_"+conv(i,par::fINT)+".dat";
 
       vector<double> rad = data[i]->xx();

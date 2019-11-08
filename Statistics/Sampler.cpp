@@ -43,7 +43,7 @@ using namespace cbl;
 shared_ptr<random::DistributionRandomNumbers> cbl::statistics::Sampler::m_set_gz (const int seed, const double aa)
 {
   if (aa<=1)
-    ErrorCBL("Error in cbl::statistics::Sampler::m_set_gz() of Sampler.cpp: the stretch move parameter must be >1!");
+    ErrorCBL("the stretch move parameter must be >1!", "m_set_gz", "Sampler.cpp");
 
   double zmin = 1./aa;
   double zmax = aa;
@@ -59,7 +59,7 @@ shared_ptr<random::DistributionRandomNumbers> cbl::statistics::Sampler::m_set_gz
 
 
 
-void cbl::statistics::Sampler::m_initialize_chains(const vector< vector<double> > start)
+void cbl::statistics::Sampler::m_initialize_chains (const vector< vector<double> > start)
 {
   for (int i=0; i<m_nwalkers; i++) { 
     vector<double> pp = start[i];
@@ -72,7 +72,7 @@ void cbl::statistics::Sampler::m_initialize_chains(const vector< vector<double> 
 // ============================================================================================
 
 
-void cbl::statistics::Sampler::set_chain(const int npar, const int npar_free, const int chain_size, const int nwalkers)
+void cbl::statistics::Sampler::set_chain (const int npar, const int npar_free, const int chain_size, const int nwalkers)
 {
   m_npar = npar;
   m_npar_free = npar_free;
@@ -192,11 +192,11 @@ void cbl::statistics::Sampler::sample_stretch_move (const int chain_size, const 
 	m_chains[n][i] = m_chains[n-1][i]; 
       }
 
-      write_func (n, i, m_chains[n][i], m_function_chain[n][i]);
+      write_func(n, i, m_chains[n][i], m_function_chain[n][i]);
     }
     
-    double progress = double((n+1)*m_nwalkers)/(m_nwalkers*m_chain_size)*100;
-    coutCBL << setprecision(2) << setiosflags(ios::fixed) << setw(8) << progress << "% \r"; cout.flush();
+    const int progress = int(double((n+1)*m_nwalkers)/(m_nwalkers*m_chain_size)*100);
+    coutCBL << progress << "% \r"; cout.flush();
   }
   
   cout << endl;
@@ -267,9 +267,9 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_cpp (const int cha
 
         parameters_i = parameters;
 
-	double ratio = min(1.,pow(gen_z, m_npar_free-1)*exp(proposed_function_chains-m_function_chain[n-1][i]));
+	double ratio = min(1., pow(gen_z, m_npar_free-1)*exp(proposed_function_chains-m_function_chain[n-1][i]));
 
-        if (MH_random() <ratio) {
+        if (MH_random()<ratio) {
           m_function_chain[n][i] = proposed_function_chains;
 	  m_chains[n][i] = parameters_i;
 	  m_acceptance[i] += 1./m_chain_size;
@@ -282,8 +282,8 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_cpp (const int cha
       }
     }
     
-    double progress = double((n+1)*m_nwalkers)/(m_nwalkers*m_chain_size)*100;
-    coutCBL << setprecision(2) << setiosflags(ios::fixed) << setw(8) << progress << "% \r"; cout.flush();
+    const int progress = int(double((n+1)*m_nwalkers)/(m_nwalkers*m_chain_size)*100);
+    coutCBL << progress << "% \r"; cout.flush();
   }
 
   cout << endl;
@@ -297,7 +297,7 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_cpp (const int cha
 void cbl::statistics::Sampler::m_sample_stretch_move_parallel_py (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
 {
   (void)chain_size; (void)nwalkers; (void)start; (void)seed; (void)aa;
-  cbl::ErrorCBL("Work in progress", glob::ExitCode::_workInProgress_);
+  cbl::ErrorCBL("", "m_sample_stretch_move_parallel_py", "Sampler.cpp", glob::ExitCode::_workInProgress_);
 
 
   /*
@@ -364,8 +364,8 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_py (const int chai
       }
     }
 
-    double progress = double((n+1)*m_nwalkers)/(m_nwalkers*m_chain_size)*100;
-    coutCBL << setprecision(2) << setiosflags(ios::fixed) << setw(8) << progress << "% \r"; cout.flush();
+    const int progress = int(double((n+1)*m_nwalkers)/(m_nwalkers*m_chain_size)*100);
+    coutCBL << progress << "% \r"; cout.flush();
   }
 
   cout << endl;
@@ -380,8 +380,8 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_py (const int chai
 
 void cbl::statistics::Sampler::sample_stretch_move_parallel (const int chain_size, const int nwalkers, const vector<vector<double>> start, const int seed, const double aa)
 {
-  if (nwalkers%2 != 0)
-    ErrorCBL("Error in cbl::statistics::Sampler::sample_stretch_move_parallel(): the number of walkers must be an even integer!");
+  if (nwalkers%2!=0)
+    ErrorCBL("the number of walkers must be an even integer!", "sample_stretch_move_parallel", "Sampler.cpp");
 
   if (m_use_python)
     m_sample_stretch_move_parallel_py(chain_size, nwalkers, start, seed, aa);

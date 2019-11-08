@@ -56,6 +56,9 @@
 #include <time.h>
 #include <fcntl.h>
 #include <ctype.h>
+#include <sys/stat.h>
+#include <errno.h>
+
 
 #ifdef LINUX
 #include "sys/types.h"
@@ -124,8 +127,25 @@
 /**
  *  @example randomNumbers.cpp 
  *
- *  This example shows how to to generate random numbers extracted
+ *  This example shows how to generate random numbers extracted
  *  from a normal distribution
+ */
+/**
+ *  @example randomNumbers_custom.cpp 
+ *
+ *  This example shows how to generate random numbers extracted from a
+ *  generic probability distribution
+ */
+/**
+ *  @example histogram.cpp 
+ *
+ *  This example shows how use the histogram class
+ */
+/**
+ *  @example correlated_samples.cpp 
+ *
+ *  This example shows how to generate correlated random samples using
+ *  the Cholesky decomposition
  */
 /**
  *  @example distances.cpp  
@@ -136,8 +156,8 @@
 /**
  *  @example integration_cuba.cpp 
  *
- *  This example shows how to to use the wrapper for CUBA
- *  multidimensiona integration functions
+ *  This example shows how to use the wrapper for CUBA multidimensiona
+ *  integration functions
  */
 /**
  *  @example integration_gsl.cpp  
@@ -181,6 +201,12 @@
  *
  *  This example shows how to menage priors
  */
+/**
+*  @example data1D.cpp
+*
+*  this example shows how to construct an object of class Data1D, used
+*  to handle 1D datasets of any type
+*/
 /**
  *  @example fit.cpp
  *
@@ -238,6 +264,12 @@
  *
  * This example shows how to measure the three-point correlation
  * function
+ */
+/**
+ * @example 3pt_multipoles.cpp 
+ *
+ * This example shows how to measure the three-point correlation
+ * function legendre coefficients
  */
 /**
  * @example model_2pt_monopole_BAO.cpp
@@ -305,7 +337,12 @@
  * to extract cosmological constraints from void counting
  */
 /**
- *  @example distances.py 
+ * @example modelling_VoidAbundances.cpp
+ *
+ * This example shows how to measure and model the void size function,
+ * extracting constraints on the cosmological parameters of the model
+ */
+/** @example distances.py
  *
  *  This example shows how to convert redshifts into comoving
  *  distances 
@@ -331,13 +368,24 @@
 /**
  *  @example prior.py
  *
- *  This example shows how to menage priors
+ *  This example shows how to manage priors
+ */
+/**
+ *  @example fit.py
+ *
+ *  This example shows how to fit a data set with a generic model
  */
 /**
  *  @example 2pt_model.py
  *
  *  This example shows how to compute power spectrum and two-point
  *  correlation function models
+ */
+/**
+ *  @example 2pt_model_zErrors.py
+ *
+ *  This example shows how to compute the two-point correlation
+ *  function model taking into account the effect of redshift errors
  */
 /**
  *  @example 2pt_monopole.py
@@ -352,7 +400,7 @@
  * function
  */
 /**
- * @example cleaner.py
+ * @example cleanVoidCatalogue.py
  *
  *  This example shows how to clean a cosmic void catalogue, making
  *  use of a parameter file, in order to extract cosmological
@@ -363,6 +411,20 @@
  *  
  *  This \b notebook is aimed to help in post-processing Markov chain
  *  Monte Carlo outputs
+ *
+ *  To see the notebook, click here: <a
+ *  href="https://github.com/federicomarulli/CosmoBolognaLib/blob/master/Examples/statistics/codes/analyzeChains.ipynb">
+ *  notebook</a>
+ */
+/**
+ *  @example CLeaning_Algorithm_for_Void_Abundances.ipynb
+ *  
+ *  This \b notebook explains how to clean cosmic void catalogues and
+ *  extract cosmological constraints from void statistics.
+ *
+ *  To see the notebook, click here: <a
+ *  href="https://github.com/federicomarulli/CosmoBolognaLib/blob/master/Examples/cosmicVoids/codes/CLeaning_Algorithm_for_Void_Abundances.ipynb">
+ *  notebook</a>
  */
 /**
  *  @example 2pt_monopole.ipynb 
@@ -371,7 +433,7 @@
  *  two-point correlation function
  *
  *  To see the notebook, click here: <a
- *  href="https://drive.google.com/open?id=1tpQ1Tj06RRwOfZtxYXPC1Sr_Hdb679w8">
+ *  href="https://colab.research.google.com/drive/1tpQ1Tj06RRwOfZtxYXPC1Sr_Hdb679w8">
  *  notebook</a>
  */
 
@@ -630,7 +692,8 @@ namespace cbl {
   /**
    *  @brief set the default directories
    *
-   *  @param input_DirCosmo directory where the CosmoBolognaLib are stored
+   *  @param input_DirCosmo directory where the CosmoBolognaLib are
+   *  stored
    *
    *  @param input_DirLoc local directory of the main code
    *
@@ -640,12 +703,20 @@ namespace cbl {
   { par::DirCosmo = input_DirCosmo; par::DirLoc = input_DirLoc; }
   
   /**
-   *  @brief warning message
+   *  @brief internal CBL warning message
+   *
    *  @param msg std::string containing the warning message
+   *
+   *  @param functionCBL the CBL function in which the warning message
+   *  is called
+   *
+   *  @param fileCBL the CBL file containing the function in which the
+   *  warning message is called
+   *
    *  @return none
    */
-  inline void WarningMsg (const std::string msg)
-  { std::cerr << par::col_blue << msg << cbl::par::col_default << std::endl; }
+  inline void WarningMsgCBL (const std::string msg, const std::string functionCBL, const std::string fileCBL)
+  { std::cerr << std::endl << par::col_bred << "CBL > Warning in the CBL function " << cbl::par::col_yellow << functionCBL << cbl::par::col_bred << " of " << fileCBL << ": " << cbl::par::col_default << msg << std::endl << std::endl; }
 
   /**
    *  @brief throw an exception
@@ -662,11 +733,19 @@ namespace cbl {
    *  inside the CosmoBolognaLib
    *
    *  @param msg the message describing the exception
+   *
+   *  @param functionCBL the CBL function where the exception is
+   *  raised
+   *
+   *  @param fileCBL the CBL file containing the function where the
+   *  exception is raised
+   *
    *  @param exitCode the exit status
+   *
    *  @return none
    */
-  inline int ErrorCBL (const std::string msg, const cbl::glob::ExitCode exitCode=cbl::glob::ExitCode::_error_)
-  { throw cbl::glob::Exception(msg, exitCode, cbl::par::ErrorMsg); }
+  inline int ErrorCBL (const std::string msg, const std::string functionCBL, const std::string fileCBL, const cbl::glob::ExitCode exitCode=cbl::glob::ExitCode::_error_)
+  { throw cbl::glob::Exception(msg, exitCode, cbl::par::ErrorMsg, functionCBL, fileCBL); }
   
   /**
    *  @brief produce a beep using the software totem
@@ -779,7 +858,7 @@ namespace cbl {
   template <typename T>
     T closest (T x, T a, T b)
     { 
-      if (a>b) ErrorCBL("Error in closest() of Func.h: a>b");
+      if (a>b) ErrorCBL("the input parameter a must be <= than the input parameter b!", "closest", "Kernel.h");
       else if (a==b) return a;
       else return (fabs(x-a) < fabs(x-b)) ? a : b;
       return 1;
@@ -794,7 +873,7 @@ namespace cbl {
   template <typename T>
     T index_closest (T x, std::vector<T> vv)
     { 
-      if (vv.size()==0) ErrorCBL("Error in index_closest() of Func.cpp, vv is an empty std::vector");
+      if (vv.size()==0) ErrorCBL("vv is an empty std::vector!", "index_closest", "Kernel.h");
       std::vector<double>::iterator low, up;
       low = lower_bound(vv.begin(), vv.end(), x);
       up = upper_bound(vv.begin(), vv.end(), x);
@@ -949,7 +1028,7 @@ namespace cbl {
    *  @return 0 \f$\rightarrow\f$ memory problems; 1 \f$\rightarrow\f$ no memory problems 
    */
   int check_memory (const double frac, const bool exit=true, const std::string func="", const int type=1);
-  
+
   ///@}
 
   
@@ -962,6 +1041,46 @@ namespace cbl {
   ///@{
 
   /**
+   *  @brief function to print values with a proper homegenised format
+   *  
+   *  @param value the value print
+   *
+   *  @param prec decimal precision
+   *
+   *  @param ww number of characters to be used as field width
+   *
+   *  @param insert_new_line if true, it inserts a new-line character
+   *  and flushes the stream (i.e. it adds std::endl)
+   *
+   *  @param use_coutCBL if true, coutCBL is used instead of std::cout
+   *
+   *  @param header string added at the beginning of the line
+   *
+   *  @param colour output colour 
+   *
+   *  @return none
+   */
+  template <typename T> 
+    void Print (const T value, const int prec, const int ww, const bool insert_new_line=true, const bool use_coutCBL=true, const std::string header="", const std::string colour=cbl::par::col_default) 
+    {
+      const int bp = std::cout.precision(); 
+      if (fabs(value)<pow(10, -prec) || fabs(value)>pow(10, prec)) {
+	if (use_coutCBL)
+	  coutCBL << header << colour << std::scientific << std::setprecision(prec) << std::setw(ww) << value;
+	else
+	  std::cout << header << colour << std::scientific << std::setprecision(prec) << std::setw(ww) << value;
+      }
+      else {
+	if (use_coutCBL)
+	  coutCBL << header << colour << std::fixed << std::setprecision(prec) << std::setw(ww) << value;
+	else
+	  std::cout << header << colour << std::fixed << std::setprecision(prec) << std::setw(ww) << value;
+      }
+      if (insert_new_line) std::cout << par::col_default << std::endl;
+      std::cout.precision(bp);
+    }
+  
+  /**
    *  @brief print the elements of a std::vector of non string values
    *  on the screen
    *  
@@ -973,13 +1092,8 @@ namespace cbl {
   template <typename T> 
     void Print (const std::vector<T> vect, const int prec=4, const int ww=8) 
     {
-      int bp = std::cout.precision(); 
-      for (auto &&vi : vect) 
-	if (fabs(vi)<pow(10, -prec) || fabs(vi)>pow(10, prec))
-	  coutCBL << std::scientific << std::setprecision(prec) << std::setw(ww) << vi << std::endl;
-	else
-	  coutCBL << std::fixed << std::setprecision(prec) << std::setw(ww) << vi << std::endl;
-      std::cout.precision(bp);
+      for (auto &&vi : vect)
+	Print(vi, prec, ww);
     }
   
   /**
@@ -1010,75 +1124,110 @@ namespace cbl {
     void Print (const std::vector<T> vect1, const std::vector<T> vect2, const int prec=4, const int ww=8) 
     {
       if (vect1.size()!=vect2.size())
-	ErrorCBL("Error in Print() of Func.h: the two input vectors must have the same dimenion to be printed!");
-
-      int bp = std::cout.precision();
+	ErrorCBL("the two input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
       
       for (size_t i=0; i<vect1.size(); i++) {
-	
-	if (fabs(vect1[i])<pow(10, -prec) || fabs(vect1[i])>pow(10, prec))
-	  coutCBL << std::scientific << std::setprecision(prec) << std::setw(ww) << vect1[i];
-	else
-	  coutCBL << std::fixed << std::setprecision(prec) << std::setw(ww) << vect1[i];
-
-	if (fabs(vect2[i])<pow(10, -prec) || fabs(vect2[i])>pow(10, prec))
-	  std::cout << "   " << std::scientific << std::setprecision(prec) << std::setw(ww) << vect2[i] << std::endl;
-	else
-	  std::cout << "   " << std::fixed << std::setprecision(prec) << std::setw(ww) << vect2[i] << std::endl;
-	
+	Print(vect1[i], prec, ww, false);
+	Print(vect2[i], prec, ww, true);
       }
-      std::cout.precision(bp);
     }
 
 
   /**
-   *  @brief print the elements of a two std::vectors of string values
+   *  @brief print the elements of two std::vectors of string values
    *  on the screen
    *
    *  @param vect1 a std::vector
+   *
    *  @param vect2 a std::vector
+   *
    *  @return none
    */
   inline void Print (const std::vector<std::string> vect1, const std::vector<std::string> vect2) 
     {
       if (vect1.size()!=vect2.size())
-	ErrorCBL("Error in Print() of Func.h: the two input vectors must have the same dimenion to be printed!");
+	ErrorCBL("the two input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
       
       for (size_t i=0; i<vect1.size(); i++) 
 	coutCBL << vect1[i] << "   " << vect2[i] << std::endl;
     }
-  
 
+
+  /**
+   *  @brief print the elements of a three std::vectors of non string
+   *  values on the screen
+   *
+   *  @param vect1 a std::vector
+   *
+   *  @param vect2 a std::vector
+   *
+   *  @param vect3 a std::vector
+   *
+   *  @param prec decimal precision
+   *
+   *  @param ww number of characters to be used as field width
+   *
+   *  @return none
+   */
+  template <typename T> 
+    void Print (const std::vector<T> vect1, const std::vector<T> vect2, const std::vector<T> vect3, const int prec=4, const int ww=8) 
+    {
+      if (vect1.size()!=vect2.size() || vect1.size()!=vect3.size())
+	ErrorCBL("the three input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
+      
+      for (size_t i=0; i<vect1.size(); i++) {
+	Print(vect1[i], prec, ww, false);
+	Print(vect2[i], prec, ww, false);
+	Print(vect3[i], prec, ww, true);	
+      }
+    }
+
+
+  /**
+   *  @brief print the elements of two std::vectors of string values
+   *  on the screen
+   *
+   *  @param vect1 a std::vector
+   *
+   *  @param vect2 a std::vector
+   *
+   *  @param vect3 a std::vector
+   *
+   *  @return none
+   */
+  inline void Print (const std::vector<std::string> vect1, const std::vector<std::string> vect2, const std::vector<std::string> vect3) 
+    {
+      if (vect1.size()!=vect2.size() || vect1.size()!=vect3.size())
+	ErrorCBL("the three input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
+      
+      for (size_t i=0; i<vect1.size(); i++) 
+	coutCBL << vect1[i] << "   " << vect2[i] << "   " << vect3[i] << std::endl;
+    }
+  
+  
   /**
    *  @brief print the elements of a matrix of non string values on
    *  the screen
    *
    *  @param mat a matrix (i.e. a std::vector of std::vectors)
+   *
    *  @param prec decimal precision
+   *
    *  @param ww number of characters to be used as field width
+   *
    *  @return none
    */
   template <typename T> 
     void Print (const std::vector<std::vector<T>> mat, const int prec=4, const int ww=8) 
     {
-      const int bp = std::cout.precision(); 
       for (size_t i=0; i<mat.size(); i++) {
 	for (size_t j=0; j<mat[i].size(); j++)
-	  if (j==0) {
-	    if (fabs(mat[i][j])<pow(10, -prec) || fabs(mat[i][j])>pow(10, prec))
-	      coutCBL << std::scientific << std::setprecision(prec) << std::setw(ww) << mat[i][j] << "   ";
-	    else
-	      coutCBL << std::fixed << std::setprecision(prec) << std::setw(ww) << mat[i][j] << "   ";
-	  }
-	  else {
-	    if (fabs(mat[i][j])<pow(10, -prec) || fabs(mat[i][j])>pow(10, prec))
-	      std::cout << std::scientific << std::setprecision(prec) << std::setw(ww) << mat[i][j] << "   ";
-	    else
-	      std::cout << std::fixed << std::setprecision(prec) << std::setw(ww) << mat[i][j] << "   ";
-	  }	
+	  if (j==0)
+	    Print(mat[i][j], prec, ww, false);
+	  else
+	    Print(mat[i][j], prec, ww, false, false); 
 	std::cout << std::endl;
       }
-      std::cout.precision(bp);
     }
 
    /**
@@ -1086,6 +1235,7 @@ namespace cbl {
    *  screen
    *
    *  @param mat a matrix (i.e. a std::vector of std::vectors)
+   *
    *  @return none
    */ 
   inline void Print (const std::vector<std::vector<std::string>> mat) 
@@ -1109,7 +1259,7 @@ namespace cbl {
   template <typename T> 
     T Min (const std::vector<T> vect) 
     {
-      if (vect.size()==0) ErrorCBL("Error in function Min of Func.h: vect.size=0!");
+      if (vect.size()==0) ErrorCBL("vect.size=0!", "Min", "Kernel.h");
       return *min_element(vect.begin(), vect.end());
     }
 
@@ -1121,7 +1271,7 @@ namespace cbl {
   template <typename T> 
     T Max (const std::vector<T> vect) 
     {
-      if (vect.size()==0) ErrorCBL("Error in function Max of Func.h: vect.size=0!");
+      if (vect.size()==0) ErrorCBL("vect.size=0!", "Max", "Kernel.h");
       return *max_element(vect.begin(), vect.end());
     }
 
@@ -1185,7 +1335,7 @@ namespace cbl {
     void Erase (std::vector<T> &vv, std::vector<int> ind) 
     {
       for (auto &&i : ind) 
-	if (i>=int(vv.size())) ErrorCBL("Error in Erase of Func.h!");
+	if (i>=int(vv.size())) ErrorCBL("the input value of ind is too large!", "Erase", "Kernel.h");
 
       unique_unsorted(ind);
       int tt = 0;
@@ -1204,7 +1354,7 @@ namespace cbl {
     void Erase_lines (std::vector<std::vector<T> > &Mat, std::vector<int> ll) 
     {
       for (auto &&i : ll)
-	if (i>=int(Mat.size())) ErrorCBL("Error in Erase_lines of Func.h!");
+	if (i>=int(Mat.size())) ErrorCBL("the dimension of the input vector ll is too large!", "Erase_lines", "Kernel.h");
 
       unique_unsorted(ll);
       int tt = 0;
@@ -1224,7 +1374,7 @@ namespace cbl {
     {
       for (auto &&i : col)
 	for (auto &&j : Mat)
-	  if (i>=int(j.size())) ErrorCBL("Error in Erase_columns of Func.h!");
+	  if (i>=int(j.size())) ErrorCBL("the dimension of the input vector col is too large!", "Erase_columns", "Kernel.h");
 
       unique_unsorted(col);
       int tt = 0;
@@ -1256,11 +1406,11 @@ namespace cbl {
       std::vector<int> line, column;
 
       for (unsigned int i=0; i<xx.size(); i++) {
-	if (i>=Mat.size()) ErrorCBL("Error in SubMatrix of Func.h!");
+	if (i>=Mat.size()) ErrorCBL("the dimension of the input vector xx is too large!", "SubMatrix", "Kernel.h");
 	bool ll = 0;
 
 	for (unsigned int j=0; j<yy.size(); j++) {
-	  if (j>=Mat[i].size()) ErrorCBL("Error in SubMatrix of Func.h!");
+	  if (j>=Mat[i].size()) ErrorCBL("the dimension of the input vector yy is too large!", "SubMatrix", "Kernel.h");
 	  if (Mat[i][j]<val) {
 	    if (j<int(yy.size()*0.5)) {line.push_back(i); ll = 1;}
 	    else if (ll==0) {column.push_back(j);}
@@ -1307,14 +1457,20 @@ namespace cbl {
     }
 
   /**
-   *  @brief check if the dimension of a std::vector is equal/lower than an
-   *  input value
+   *  @brief check if the dimension of a std::vector is equal/lower
+   *  than an input value
+   *
    *  @param vect a std::vector
+   *   
    *  @param val the input value
-   *  @param vector the name of the std::vector (used only to write the
-   *  error message)
-   *  @param equal true \f$\rightarrow\f$ check if the dimension is equal to val;
-   *  false \f$\rightarrow\f$ check if the dimension is lower than val
+   *
+   *  @param vector the name of the std::vector (used only to write
+   *  the error message)
+   *
+   *  @param equal true \f$\rightarrow\f$ check if the dimension is
+   *  equal to val; false \f$\rightarrow\f$ check if the dimension is
+   *  lower than val
+   *
    *  @return none
    */
   template <typename T> 
@@ -1322,11 +1478,11 @@ namespace cbl {
     {
       if (equal) {
 	if ((int)vect.size()!=val) 
-	  ErrorCBL("Error in checkDim of Func.h! The dimension of " + vector + " is: " + conv(vect.size(), par::fINT) + " ( != " + conv(val, par::fINT) + " )");
+	  ErrorCBL("the dimension of " + vector + " is: " + conv(vect.size(), par::fINT) + " ( != " + conv(val, par::fINT) + " )", "checkDim", "Kernel.h");
       }
       else { 
 	if ((int)vect.size()<val)
-	  ErrorCBL("Error in checkDim of Func.h! The dimension of " + vector + " is: " + conv(vect.size(), par::fINT) + " ( < " + conv(val, par::fINT) + " )");
+	  ErrorCBL("the dimension of " + vector + " is: " + conv(vect.size(), par::fINT) + " ( < " + conv(val, par::fINT) + " )", "checkDim", "Kernel.h");
       }
     }
   
@@ -1347,19 +1503,19 @@ namespace cbl {
     {
       if (equal) {
 	if (int(mat.size())!=val_i) 
-	  ErrorCBL("Error in checkDim of Func.h! The dimension of: " + matrix + " is:" + conv(mat.size(), par::fINT) + " <= " + conv(val_i, par::fINT) + "!");
+	  ErrorCBL("the dimension of: " + matrix + " is:" + conv(mat.size(), par::fINT) + " != " + conv(val_i, par::fINT) + "!", "checkDim", "Kernel.h");
 	else 
 	  for (size_t k=0; k<mat.size(); k++)
 	    if (int(mat[k].size())!=val_j) 
-	      ErrorCBL("Errorin checkDim of Func.h! The dimension of: " + matrix + " is:" + conv(mat[k].size(), par::fINT) + " <= " + conv(val_j, par::fINT) + "!");
+	      ErrorCBL("the dimension of: " + matrix + " is:" + conv(mat[k].size(), par::fINT) + " != " + conv(val_j, par::fINT) + "!", "checkDim", "Kernel.h");
       }
       else {
 	if (int(mat.size())<val_i) 
-	  ErrorCBL("Error in checkDim of Func.h! The dimension of: " + matrix + " is:" + conv(mat.size(), par::fINT) + " <= " + conv(val_i, par::fINT) + "!");
+	  ErrorCBL("the dimension of: " + matrix + " is:" + conv(mat.size(), par::fINT) + " < " + conv(val_i, par::fINT) + "!", "checkDim", "Kernel.h");
 	else 
 	  for (size_t k=0; k<mat.size(); k++)
 	    if (int(mat[k].size())<val_j) 
-	      ErrorCBL("Errorin checkDim of Func.h! The dimension of: " + matrix + " is:" + conv(mat[k].size(), par::fINT) + " <= " + conv(val_j, par::fINT) + "!");
+	      ErrorCBL("the dimension of: " + matrix + " is:" + conv(mat[k].size(), par::fINT) + " < " + conv(val_j, par::fINT) + "!", "checkDim", "Kernel.h");
       }
     }
 
@@ -1379,7 +1535,7 @@ namespace cbl {
       checkDim(vect2, vect1.size(), "vect2");
       for (size_t i=0; i<vect1.size(); i++)
 	if (vect1[i]!=vect2[i])
-	  ErrorCBL("Error in checkEqual! vect1 and vect2 are different");
+	  ErrorCBL("vect1 and vect2 are different!", "checkEqual", "Kernel.h");
     }
   
   /**
@@ -1494,10 +1650,10 @@ namespace cbl {
    *  @return the reshaped matrix
    */
   template <typename T>
-    std::vector<std::vector<T>> reshape(std::vector<T> vec, const int size1, const int size2)
+    std::vector<std::vector<T>> reshape (std::vector<T> vec, const int size1, const int size2)
     {
       if (size1*size2!=int(vec.size()))
-	ErrorCBL("Error in reshape() of Func.h, sizes does not match! "+conv(size1*size2, par::fINT)+" should be equal to "+conv(int(vec.size()), par::fINT));
+	ErrorCBL("sizes does not match! "+conv(size1*size2, par::fINT)+" should be equal to "+conv(int(vec.size()), par::fINT), "reshape", "Kernel.h");
 
       std::vector<std::vector<T>> matrix(size1, std::vector<T> (size2, 0));
 
@@ -1518,10 +1674,8 @@ namespace cbl {
   template <typename T>
     std::vector<std::vector<T>> transpose (std::vector<std::vector<T>> matrix)
     {
-
-      int size1 = matrix.size();
-      int size2 = matrix[0].size();
-      checkDim (matrix, size1, size2, "matrix", true); 
+      const int size1 = matrix.size();
+      const int size2 = matrix[0].size();
       
       std::vector<std::vector<T>> TRmatrix(size2, std::vector<T> (size1, 0));
 
@@ -1686,6 +1840,24 @@ namespace cbl {
    */
   void sort_4vectors (std::vector<double>::iterator p1, std::vector<double>::iterator p2, std::vector<double>::iterator p3, std::vector<double>::iterator p4, const int dim);
 
+  /**
+   *  @brief function to create multiple directories 
+   *
+   *  http://mylinuxtechcorner.blogspot.com/2012/09/c-version-for-mkdir-p.html
+   *
+   *  @param path the name of the directory to be created
+   *
+   *  @param rootPath the name of the root directory
+   *
+   *  @param mode the permissions for the directory
+   *
+   *  @param verbose if true it shows a warning message when the
+   *  directory to be created already exists
+   *
+   *  @return 0 if no error occurs
+   */
+  int makeDir (std::string path, const std::string rootPath=".", const mode_t mode=0777, const bool verbose=false);
+  
   /**
    *  @brief matrix multiplication
    *

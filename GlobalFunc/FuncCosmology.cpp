@@ -43,7 +43,7 @@ using namespace cbl;
 
 void cbl::Vmax_DC_distribution (std::vector<double> &dc, std::vector<double> &nObj, const std::vector<double> D_C, const std::vector<double> zobj_min, const std::vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, cosmology::Cosmology &cosm, const double Area, const int nObjRan, const bool norm, const std::string file_Vmax, const double delta_dc_Vmax, const int seed)
 {
-  if (dc.size()>0 || nObj.size()>0) ErrorCBL("Error in Vmax_DC_distribution of GlobalFunc_Cosmology.cpp)!");
+  if (dc.size()>0 || nObj.size()>0) ErrorCBL("", "Vmax_DC_distribution", "GlobalFunc/FuncCosmology.cpp");
 
   random::UniformRandomNumbers ran(0., 1., seed);
   
@@ -116,7 +116,7 @@ void cbl::max_separations_AP (const double Rp_max, const double Pi_max, const do
 
 double cbl::converted_xi (const double RR, const double redshift, const std::vector<double> rr, const std::vector<double> Xi, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2, const bool direction) 
 {
-  if (RR==0) ErrorCBL("Error in converted_xi of GlobalFuncCosmology.cpp! RR must be >0!");
+  if (RR==0) ErrorCBL("RR must be >0!", "converted_xi", "GlobalFunc/FuncCosmology.cpp");
 
   double gamma = AP_shift_r(redshift, cosm1, cosm2);
 

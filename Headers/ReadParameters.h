@@ -183,10 +183,8 @@ namespace cbl {
 	  std::stringstream tmpVal(m_parameters.at(key));
 	  tmpVal >> std::boolalpha >> value ;
 	}
-	else {
-	  std::string errorMsg = "[ReadParameters] Parameter "+key+" not found";
-	  ErrorCBL(errorMsg);
-	}
+	else 
+	  ErrorCBL("[ReadParameters] Parameter "+key+" not found", "find", "ReadParameters.h");
 	
 	return value;
       }
@@ -222,10 +220,8 @@ namespace cbl {
 	    vect.push_back(value);
 	  }
 	}
-	else {
-	  std::string errorMsg = "[ReadParameters] Parameter "+key+" not found";
-	  ErrorCBL(errorMsg);
-	}
+	else 
+	  ErrorCBL("[ReadParameters] Parameter "+key+" not found", "find_vector", "ReadParameters.h");
 	
 	return vect;
       }

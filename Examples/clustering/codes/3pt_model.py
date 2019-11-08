@@ -1,12 +1,15 @@
+# =======================================================================
+# Example code: how to compute the three-point correlation function model
+# =======================================================================
+
 import numpy as np
 import matplotlib.pyplot as plt
 import CosmoBolognaLib as cbl
 from CosmoBolognaLib import DoubleVector as dv
 import os
 
+# set the CosmoBolognaLib and the current directories
 cbl.SetDirs("../../../", "./")
-
-print os.path.abspath(cbl.__file__)
 
 ''' Define the cosmology '''
 cosmo = cbl.Cosmology(cbl.CosmologicalModel__Planck15_)

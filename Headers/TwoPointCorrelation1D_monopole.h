@@ -117,17 +117,20 @@ namespace cbl {
 
 	/**
 	 *  @brief measure the monopole of the two-point correlation
-	 *  function estimating the covariance with Jackknife resampling
+	 *  function estimating the covariance with Jackknife
+	 *  resampling
 	 *
 	 *  @param dir_output_pairs output directory used to store the
 	 *  number of pairs
 	 *
 	 *  @param dir_input_pairs vector of input directories used to
-	 *  store the number of pairs (if the pairs are read from files)
+	 *  store the number of pairs (if the pairs are read from
+	 *  files)
 	 *
 	 *  @param dir_output_resample output directory used to store
-	 *  the Jackknife resampling correlation functions, with Poisson
-	 *  errors
+	 *  the Jackknife resampling correlation functions, with
+	 *  Poisson errors; if an empty string (i.e. "" or "NULL") is
+	 *  provided, no output will be stored
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
 	 *  pairs; false &rarr; read the number of data-data pairs from
@@ -161,8 +164,9 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory used to store
-	 *  the Jackknife resampling correlation functions, with Poisson
-	 *  errors
+	 *  the Jackknife resampling correlation functions, with
+	 *  Poisson errors; if an empty string (i.e. "" or "NULL") is
+	 *  provided, no output will be stored
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
 	 *  pairs; false &rarr; read the number of data-data pairs from
@@ -199,8 +203,9 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory used to store
-	 *  the Bootstrap resampling correlation function, with Poisson
-	 *  errors
+	 *  the Bootstrap resampling correlation functions, with
+	 *  Poisson errors; if an empty string (i.e. "" or "NULL") is
+	 *  provided, no output will be stored
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
 	 *  pairs; false &rarr; read the number of data-data pairs from
@@ -236,7 +241,7 @@ namespace cbl {
 	 *  @brief default constructor
 	 *  @return object of class TwoPointCorrelation1D_monopole
 	 */
-	TwoPointCorrelation1D_monopole () { m_twoPType = TwoPType::_1D_monopole_; }
+	TwoPointCorrelation1D_monopole () { m_twoPType = TwoPType::_monopole_; }
 
 	/**
 	 *  @brief constructor
@@ -262,7 +267,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation1D_monopole (const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelation1D(data, random, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_monopole_; set_parameters(binType, rMin, rMax, nbins, shift, angularUnits, angularWeight, compute_extra_info); }
+	  { m_twoPType = TwoPType::_monopole_; set_parameters(binType, rMin, rMax, nbins, shift, angularUnits, angularWeight, compute_extra_info); }
       
 	/**
 	 *  @brief constructor
@@ -288,7 +293,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation1D_monopole (const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelation1D(data, random, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_monopole_; set_parameters(binType, rMin, rMax, binSize, shift, angularUnits, angularWeight, compute_extra_info); }
+	  { m_twoPType = TwoPType::_monopole_; set_parameters(binType, rMin, rMax, binSize, shift, angularUnits, angularWeight, compute_extra_info); }
 
 	/**
 	 *  @brief default destructor
@@ -359,7 +364,8 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory of the
-	 *  resampled correlation function
+	 *  resampling correlation functions; if an empty string
+	 *  (i.e. "" or "NULL") is provided, no output will be stored
 	 *
 	 *  @param nMocks number of resampling used for bootstrap
 	 *

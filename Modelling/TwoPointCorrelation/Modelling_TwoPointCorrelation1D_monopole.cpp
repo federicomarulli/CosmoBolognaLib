@@ -57,19 +57,19 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
     vector<double> kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.)), Pk(m_data_model->step,0);
 
     for (size_t i=0; i<kk.size(); i++)
-      Pk[i] = m_data_model->cosmology->Pk(kk[i], m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+      Pk[i] = m_data_model->cosmology->Pk(kk[i], m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
 
     m_data_model->kk = kk;
     m_data_model->func_Pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, Pk, "Spline"));
-    xi0 = fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
+    xi0 = wrapper::fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
   }
 
   else {
 
     vector<double> kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.)), Pk(m_data_model->step,0), PkNW(m_data_model->step,0), PkDW(m_data_model->step,0);
     for (size_t i=0; i<kk.size(); i++) {
-      Pk[i] = m_data_model->cosmology->Pk(kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-      PkNW[i] = m_data_model->cosmology->Pk(kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+      Pk[i] = m_data_model->cosmology->Pk(kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+      PkNW[i] = m_data_model->cosmology->Pk(kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
       PkDW[i] = PkNW[i]*(1+(Pk[i]/PkNW[i]-1)*exp(-0.5*pow(kk[i]*m_data_model->sigmaNL, 2)));
     }
 
@@ -77,7 +77,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
     m_data_model->func_Pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, Pk, "Spline"));
     m_data_model->func_Pk_NW = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, PkNW, "Spline"));
 
-    xi0 = fftlog::transform_FFTlog(rad, 1, kk, PkDW);
+    xi0 = wrapper::fftlog::transform_FFTlog(rad, 1, kk, PkDW);
   }
 
   m_data_model->func_xi = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, xi0, "Spline"));
@@ -92,7 +92,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiducial_sigma_data_model ()
 {
   // create the grid file if it doesn't exist yet
-  const string file_grid = m_data_model->cosmology->create_grid_sigmaM(m_data_model->method_Pk, 0., m_data_model->output_root, "Spline", m_data_model->k_max);
+  const string file_grid = m_data_model->cosmology->create_grid_sigmaM(m_data_model->method_Pk, 0., m_data_model->store_output_CAMB, m_data_model->output_root, "Spline", m_data_model->k_max);
 
   
   // read the grid file
@@ -121,13 +121,13 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
 {
   coutCBL << "Setting up the fiducial matter power spectrum model" << endl;
 
-  const vector<double> kk = logarithmic_bin_vector(m_data_HOD.step, max(m_data_HOD.k_min, 1.e-4), min(m_data_HOD.k_max, 500.));
+  const vector<double> kk = logarithmic_bin_vector(m_data_HOD->step, max(m_data_HOD->k_min, 1.e-4), min(m_data_HOD->k_max, 500.));
   vector<double> PkDM(kk.size());
   
   for (size_t i=0; i<kk.size(); i++)
-    PkDM[i] = m_data_HOD.cosmology->Pk(kk[i], m_data_HOD.method_Pk, m_data_HOD.NL, m_data_HOD.redshift, m_data_HOD.output_root, m_data_HOD.norm, m_data_HOD.k_min, m_data_HOD.k_max, m_data_HOD.prec, m_data_HOD.input_file);
+    PkDM[i] = m_data_HOD->cosmology->Pk(kk[i], m_data_HOD->method_Pk, m_data_HOD->NL, m_data_HOD->redshift, m_data_HOD->store_output_CAMB, m_data_HOD->output_root, m_data_HOD->norm, m_data_HOD->k_min, m_data_HOD->k_max, m_data_HOD->prec, m_data_HOD->input_file);
 
-  m_data_HOD.func_Pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, PkDM, "Spline"));
+  m_data_HOD->func_Pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, PkDM, "Spline"));
 }
 
 
@@ -138,7 +138,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
 {
   // create the grid file if it doesn't exist yet
   
-  const string file_grid = m_data_HOD.cosmology->create_grid_sigmaM(m_data_HOD.method_Pk, 0., m_data_HOD.output_root, m_data_HOD.interpType, m_data_HOD.k_max, m_data_HOD.input_file, m_data_HOD.is_parameter_file);
+  const string file_grid = m_data_HOD->cosmology->create_grid_sigmaM(m_data_HOD->method_Pk, 0., m_data_HOD->store_output_CAMB, m_data_HOD->output_root, m_data_HOD->interpType, m_data_HOD->k_max, m_data_HOD->input_file, m_data_HOD->is_parameter_file);
 
   
   // read the grid file
@@ -157,9 +157,9 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
 
   // create the function to interpolate sigma(M) and dlg(sigma(M)
 
-  m_data_HOD.func_sigma = make_shared<glob::FuncGrid>(glob::FuncGrid(mass, sigma, "Spline"));
+  m_data_HOD->func_sigma = make_shared<glob::FuncGrid>(glob::FuncGrid(mass, sigma, "Spline"));
   
-  m_data_HOD.func_dlnsigma = make_shared<glob::FuncGrid>(glob::FuncGrid(mass, dln_sigma, "Spline"));
+  m_data_HOD->func_dlnsigma = make_shared<glob::FuncGrid>(glob::FuncGrid(mass, dln_sigma, "Spline"));
   
 }
 
@@ -169,7 +169,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
 
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_eff_grid (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<double> min_par, const std::vector<double> max_par, const std::vector<int> nbins_par, const std::string dir, const std::string file_grid_bias)
 {
-  if (m_data_model->cluster_mass_proxy->ndata()==0) ErrorCBL("Error in cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_eff_grid of Modelling_TwoPointCorrelation1D_monopole.cpp: m_data_model->cluster_mass_proxy->ndata() is not defined!");
+  if (m_data_model->cluster_mass_proxy->ndata()==0) ErrorCBL("m_data_model->cluster_mass_proxy->ndata() is not defined!", "set_bias_eff_grid", "Modelling_TwoPointCorrelation1D_monopole.cpp");
   
   const int npar = cosmo_param.size(); 
  
@@ -184,9 +184,9 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_e
       vector<double> mass_grid = logarithmic_bin_vector(m_data_model->cluster_mass_proxy->ndata()/10, Min(m_data_model->cluster_mass_proxy->data()), Max(m_data_model->cluster_mass_proxy->data()));
       vector<double> parameter, bias_eff;
      
-      m_data_model->cosmology->generate_bias_eff_grid_one_cosmopar(parameter, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], m_data_model->cluster_mass_proxy->data(), mass_grid, m_data_model->cluster_mass_proxy->xx(), m_data_model->model_bias, m_data_model->method_Pk, m_data_model->meanType, m_data_model->output_root, m_data_model->Delta, 1., "Spline", m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, "NULL", false, m_data_model->cosmology_mass, m_data_model->redshift_source);
+      m_data_model->cosmology->generate_bias_eff_grid_one_cosmopar(parameter, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], m_data_model->cluster_mass_proxy->data(), mass_grid, m_data_model->cluster_mass_proxy->xx(), m_data_model->model_bias, m_data_model->method_Pk, m_data_model->meanType, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->Delta, 1., "Spline", m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, "NULL", false, m_data_model->cosmology_mass, m_data_model->redshift_source);
 
-      m_data_model->cosmopar_bias_interp_1D = bind(interpolated , placeholders::_1, parameter, bias_eff, "Spline");
+      m_data_model->cosmopar_bias_interp_1D = bind(interpolated, placeholders::_1, parameter, bias_eff, "Spline");
 
     }
     
@@ -196,14 +196,14 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_e
 
       vector<double> parameter1, parameter2;
       vector<vector<double>> bias_eff;
-      m_data_model->cosmology->generate_bias_eff_grid_two_cosmopars(parameter1, parameter2, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], cosmo_param[1], min_par[1], max_par[1], nbins_par[1], m_data_model->cluster_mass_proxy->data(), mass_grid, m_data_model->cluster_mass_proxy->xx(), m_data_model->model_bias, m_data_model->method_Pk, m_data_model->meanType, m_data_model->output_root, m_data_model->Delta, 1., "Spline", m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, par::defaultString, false, m_data_model->cosmology_mass, m_data_model->redshift_source);
+      m_data_model->cosmology->generate_bias_eff_grid_two_cosmopars(parameter1, parameter2, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], cosmo_param[1], min_par[1], max_par[1], nbins_par[1], m_data_model->cluster_mass_proxy->data(), mass_grid, m_data_model->cluster_mass_proxy->xx(), m_data_model->model_bias, m_data_model->method_Pk, m_data_model->meanType, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->Delta, 1., "Spline", m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, par::defaultString, false, m_data_model->cosmology_mass, m_data_model->redshift_source);
       
       m_data_model->cosmopar_bias_interp_2D = bind(interpolated_2D, placeholders::_1, placeholders::_2, parameter1, parameter2, bias_eff, "Cubic");
 
     }
     
     else 
-      ErrorCBL("Error in set_bias_eff_grid om ModellingTwoPointCorrelation1D_monopole.cpp, this function works with 1 or 2 cosmological parameters.");
+      ErrorCBL("this function works with 1 or 2 cosmological parameters!", "set_bias_eff_grid", "Modelling_TwoPointCorrelation1D_monopole.cpp");
   }
   
   else {
@@ -230,11 +230,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_e
       
       read_matrix(file, parameter1, parameter2, bias_eff);
 
-      m_data_model->cosmopar_bias_interp_2D = bind(interpolated_2D , placeholders::_1, placeholders::_2, parameter1, parameter2, bias_eff, "Cubic");
+      m_data_model->cosmopar_bias_interp_2D = bind(interpolated_2D, placeholders::_1, placeholders::_2, parameter1, parameter2, bias_eff, "Cubic");
     }
     
     else 
-      ErrorCBL("Error in set_bias_eff_grid om ModellingTwoPointCorrelation1D_monopole.cpp, this function works with 1 or 2 cosmological parameters.");
+      ErrorCBL("this function works with 1 or 2 cosmological parameters!", "set_bias_eff_grid", "Modelling_TwoPointCorrelation1D_monopole.cpp");
   }
 }
 
@@ -248,17 +248,17 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_e
   
   if (npar==1) {
     vector<double> parameter, bias_eff;
-    m_data_model->cosmology->generate_bias_eff_grid_one_cosmopar(parameter, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], m_data_model->redshift,  m_data_model->Mass_min, m_data_model->Mass_max, m_data_model->model_bias, m_data_model->model_MF, m_data_model->method_Pk, file_selection_function, column, 1., m_data_model->output_root, m_data_model->Delta, 1., "Spline", m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+    m_data_model->cosmology->generate_bias_eff_grid_one_cosmopar(parameter, bias_eff, dir, file_grid_bias, cosmo_param[0], min_par[0], max_par[0], nbins_par[0], m_data_model->redshift, m_data_model->Mass_min, m_data_model->Mass_max, m_data_model->model_bias, m_data_model->model_MF, m_data_model->method_Pk, file_selection_function, column, 1., m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->Delta, 1., "Spline", m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
       
-    m_data_model->cosmopar_bias_interp_1D = bind(interpolated , placeholders::_1, parameter, bias_eff, "Spline");
+    m_data_model->cosmopar_bias_interp_1D = bind(interpolated, placeholders::_1, parameter, bias_eff, "Spline");
   }
   
   else if (npar==2) {
-    ErrorCBL("Work in progress in cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_bias_eff_grid of Modelling_TwoPointCorrelation1D_monopole.cpp!", glob::ExitCode::_workInProgress_);
+    ErrorCBL("", "set_bias_eff_grid", "Modelling_TwoPointCorrelation1D_monopole.cpp", glob::ExitCode::_workInProgress_);
   }
   
   else 
-    ErrorCBL("Error in set_bias_eff_grid om ModellingTwoPointCorrelation1D_monopole.cpp, this function works with 1 or 2 cosmological parameters.");
+    ErrorCBL("this function works with 1 or 2 cosmological parameters!", "set_bias_eff_grid", "Modelling_TwoPointCorrelation1D_monopole.cpp");
 }
 
 
@@ -528,7 +528,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
   // compute the bias on a grid, using a selection function if provided
   (void)column;
   if (file_selection_function!=par::defaultString)
-    ErrorCBL("Work in progress in cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_linear_cosmology_clusters_grid of Modelling_TwoPointCorrelation1D_monopole.cpp", glob::ExitCode::_workInProgress_);
+    ErrorCBL("", "set_model_linear_cosmology_clusters_grid", "Modelling_TwoPointCorrelation1D_monopole.cpp", glob::ExitCode::_workInProgress_);
   else 
     set_bias_eff_grid({cosmo_param1, cosmo_param2}, {min_par1, min_par2}, {max_par1, max_par2}, {nbins_par1, nbins_par2}, dir, file_grid_bias);
 
@@ -734,7 +734,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi_HOD, nparameters, parameterType, parameterName, m_data_model));
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xi_HOD, nparameters, parameterType, parameterName, m_data_HOD));
 }
 
 

@@ -381,11 +381,10 @@ namespace cbl {
      */
 
     /// header of error messages for internal usage
-    static const std::string ErrorMsg = col_bred +
-      "\n\n ================================== \n" +
-      " ===== CosmoBolognaLib error! ===== \n" + 
-      " ================================== \n\n" +
-      col_default;
+    static const std::string ErrorMsg = "\n" + col_onred + 
+      " ================================== " + col_default + "\n" + col_onred +
+      " ===== CosmoBolognaLib error! ===== " + col_default + "\n" + col_onred +
+      " ================================== " + col_default + "\n\n";
     
     /**
      *  @} */

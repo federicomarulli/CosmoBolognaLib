@@ -76,7 +76,7 @@ int main () {
   
     // flat prior for b*sigma8
     const std::vector<double> bsigma8_limits = {0.8*cosmology.sigma8(), 3.*cosmology.sigma8()}; 
-    const cbl::statistics::PriorDistribution bsigma8_prior {cbl::glob::DistributionType::_Uniform_, bsigma8_limits[0], bsigma8_limits[1],63656}; 
+    const cbl::statistics::PriorDistribution bsigma8_prior {cbl::glob::DistributionType::_Uniform_, bsigma8_limits[0], bsigma8_limits[1], 63656}; 
   
     // flat prior for sigma12
     //const std::vector<double> sigma12_limits = {1., 1000.}; 

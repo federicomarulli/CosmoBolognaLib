@@ -94,7 +94,7 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measure (const ErrorT
       measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, seed);
       break;
     default:
-      ErrorCBL("Error in measure() of TwoPointCorrelation_deprojected.cpp, unknown type of error");
+      ErrorCBL("unknown type of error!", "measure", "TwoPointCorrelation_deprojected.cpp");
   }
 }
 
@@ -122,7 +122,7 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measurePoisson (const
 
 void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  if (dir_output_resample != par::defaultString && dir_output_resample != "") {
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
     string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
@@ -144,13 +144,13 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife (con
   else if (estimator==Estimator::_LandySzalay_)
     data = XiJackknife(dd_regions, rr_regions, dr_regions);
   else
-    ErrorCBL("Error in measureJackknife() of TwoPointCorrelation_deprojected.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureJackknife", "TwoPointCorrelation_deprojected.cpp");
   
   vector<vector<double>> ww, covariance;
   for (size_t i=0; i<data.size(); i++) {
     ww.push_back(data[i]->data());
 
-    if (dir_output_resample != par::defaultString && dir_output_resample != "") {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_deprojected_Jackknife_"+conv(i, par::fINT)+".dat";
       string header = "[1] separation at the bin centre # [2] deprojected two-point correlation function # [3] error";
       if (m_compute_extra_info) header += " # [4] mean separation # [5] standard deviation of the separation distribution # [6] mean redshift # [7] standard deviation of the redshift distribution";
@@ -173,7 +173,10 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureJackknife (con
 
 void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
-  if (dir_output_resample != par::defaultString && dir_output_resample != "") {
+  if (nMocks<=0)
+    ErrorCBL("the number of mocks must be >0!", "measureBootstrap", "TwoPointCorrelation_deprojected.cpp");
+
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
     string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
@@ -195,13 +198,13 @@ void cbl::measure::twopt::TwoPointCorrelation_deprojected::measureBootstrap (con
   else if (estimator==Estimator::_LandySzalay_)
     data = XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions, seed);
   else
-    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation_deprojected.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureBootstrap", "TwoPointCorrelation_deprojected.cpp");
   
   vector<vector<double>> ww, covariance;
   for (size_t i=0; i<data.size(); i++) {
     ww.push_back(data[i]->data());
 
-    if (dir_output_resample != par::defaultString && dir_output_resample != "") {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_deprojected_Bootstrap_"+conv(i, par::fINT)+".dat";
       string header = "[1] separation at the bin centre # [2] deprojected two-point correlation function # [3] error";
       if (m_compute_extra_info) header += " # [4] mean separation # [5] standard deviation of the separation distribution # [6] mean redshift # [7] standard deviation of the redshift distribution";

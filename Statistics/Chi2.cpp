@@ -43,7 +43,7 @@ using namespace cbl;
 double cbl::statistics::Chi2::operator() (vector<double> &pp) const
 {
   if (m_likelihood_type==statistics::LikelihoodType::_NotSet_)
-    ErrorCBL("Error in cbl::statistics::Chi2::operator() of Chi2.cpp: you should provide a dataset!");
+    ErrorCBL("a dataset should be provided!", "operator ()", "Chi2.cpp");
 
   return -2*m_log_likelihood_function(pp, m_likelihood_inputs);
 }
@@ -74,16 +74,16 @@ cbl::statistics::Chi2::Chi2 (const std::shared_ptr<data::Data> data, const std::
 void cbl::statistics::Chi2::minimize (const vector<double> start, vector<vector<double>> parameter_limits, const unsigned int max_iter, const double tol, const double epsilon)
 {
   if (m_likelihood_type==statistics::LikelihoodType::_NotSet_)
-    ErrorCBL("Error in cbl::statistics::Chi2::minimize() of Chi2.cpp: a dataset should be provided!");
+    ErrorCBL("a dataset should be provided!", "minimize", "Chi2.cpp");
 
   unsigned int npar = m_model->parameters()->nparameters_free();
 
   if (npar==0)
-    ErrorCBL("Error in cbl::statistics::Chi2::minimize() of Likelihood.cpp: there is no parameter free to vary!");
+    ErrorCBL("there is no parameter free to vary!", "minimize", "Chi2.cpp");
   if (start.size() != npar && parameter_limits.size()!=0)
-    ErrorCBL("Error in cbl::statistics::Chi2::minimize() of Likelihood.cpp: wrong size for the vector of starting parameters!");
+    ErrorCBL("wrong size for the vector of starting parameters!", "minimize", "Chi2.cpp");
   if (parameter_limits.size() != npar && parameter_limits.size()!=0)
-    ErrorCBL("Error in cbl::statistics::Chi2::minimize() of Likelihood.cpp: wrong size for the vector of parameter limits!");
+    ErrorCBL("wrong size for the vector of parameter limits!", "minimize", "Chi2.cpp");
 
 
   function<double(vector<double> &)> func = [this](vector<double> & pp) { 
@@ -91,10 +91,10 @@ void cbl::statistics::Chi2::minimize (const vector<double> start, vector<vector<
   };
 
   coutCBL << "Minimizing..." << endl;
-  vector<double> result = cbl::gsl::GSL_minimize_nD(func, start, parameter_limits, max_iter, tol, epsilon);
+  vector<double> result = cbl::wrapper::gsl::GSL_minimize_nD(func, start, parameter_limits, max_iter, tol, epsilon);
   coutCBL << "Done!" << endl << endl;
 
-  m_model->parameters()->set_bestfit_value(result);
+  m_model->parameters()->set_bestfit_values(result);
 
   m_model->parameters()->write_bestfit_info();
   coutCBL << "Chi2 = " << this->operator()(result) << endl << endl;

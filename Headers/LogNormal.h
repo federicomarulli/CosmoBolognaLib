@@ -178,6 +178,17 @@ namespace cbl {
        *  @return the i-th LogNormal realization
        */
       std::shared_ptr<catalogue::Catalogue> LNCat (const int i) { return m_LNCat[i]; }
+
+      /**
+       *  @brief get the \f$\xi(r)\f$ model used in lognormal mock
+       *  creation
+       *
+       *  @param radius the scale to compute the model
+       *
+       *  @return the \f$\xi(r)\f$ model used in lognormal mock
+       *  creation
+       */
+      std::vector<double> get_xi_model(const std::vector<double> radius);
     
       /**
        *  @brief generate the LogNormal mock catalogues

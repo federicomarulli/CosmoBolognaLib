@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileyLBfC1.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(332.161548,1.935480,332.161628,2.056922,332.159288,2.061417,332.152588,2.068154,332.061568,2.068159,332.045228,2.059875,332.045428,1.935688) # color=red dash=1

@@ -112,6 +112,11 @@ namespace cbl {
 	
 	/// the output_dir directory where the output of external codes are written
 	std::string output_dir;
+
+	/// true \f$\rightarrow\f$ the output files created by CAMB
+	/// are stored; false \f$\rightarrow\f$ the output files
+	/// created by CAMB are removed
+	bool store_output_CAMB;
 	
 	/// output root of the parameter file used to compute the dark matter power spectrum
 	std::string output_root;

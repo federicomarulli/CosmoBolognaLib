@@ -50,54 +50,54 @@ namespace cbl {
       class CMB_DistancePrior
       {
 
-	protected:
+      protected:
 
-	  /// dataset
-	  std::shared_ptr<data::Data> m_dataset;
+	/// dataset
+	std::shared_ptr<data::Data> m_dataset;
 
-	public:
+      public:
 
-	  CMB_DistancePrior() {}
+	CMB_DistancePrior() {}
 
-	  ~CMB_DistancePrior() {}
+	~CMB_DistancePrior() {}
 
-	  static std::shared_ptr<CMB_DistancePrior> Create (const std::string distance_prior_name);
+	static std::shared_ptr<CMB_DistancePrior> Create (const std::string distance_prior_name);
 
-	  virtual std::shared_ptr<data::Data> dataset()
-	  {ErrorCBL("Error in dataset() of CMB_DistancePrior. No dataset for base class!"); return NULL;}
+	virtual std::shared_ptr<data::Data> dataset()
+	{ ErrorCBL("no dataset for base class!", "dataset", "Modelling_Cosmology_DistancePrior.h"); return NULL; }
 	  
-	  virtual std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
-	  {(void)cosmology; ErrorCBL("Error in model() of CMB_DistancePrior. No model for base class!"); std::vector<double> vv; return vv;}
+	virtual std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
+	{ (void)cosmology; ErrorCBL("no model for base class!", "model", "Modelling_Cosmology_DistancePrior.h"); std::vector<double> vv; return vv; }
 
       };
 
       class Aubourg15_Planck15 : public CMB_DistancePrior
       {
 
-	public:
+      public:
 
-	  Aubourg15_Planck15 () {
-	    std::vector<double> redshift = {0., 0., 1090.};
-	    std::vector<double> data = {0.02245, 0.1386, 94.33};
-	    std::vector<std::vector<double>> covariance(3, std::vector<double>(3, 0));
-	    covariance[0][0] =  1.286e-7;
-	    covariance[0][1] =  -6.033e-7;
-	    covariance[0][2] =  -1.443e-5;
+	Aubourg15_Planck15 () {
+	  std::vector<double> redshift = {0., 0., 1090.};
+	  std::vector<double> data = {0.02245, 0.1386, 94.33};
+	  std::vector<std::vector<double>> covariance(3, std::vector<double>(3, 0));
+	  covariance[0][0] =  1.286e-7;
+	  covariance[0][1] =  -6.033e-7;
+	  covariance[0][2] =  -1.443e-5;
 
-	    covariance[1][0] =  -6.033e-7;
-	    covariance[1][1] =  7.542e-6;
-	    covariance[1][2] =  -3.605e-5;
+	  covariance[1][0] =  -6.033e-7;
+	  covariance[1][1] =  7.542e-6;
+	  covariance[1][2] =  -3.605e-5;
 
-	    covariance[2][0] =  1.443e-5;
-	    covariance[2][1] =  -3.605e-5;
-	    covariance[2][2] =  0.004264;
+	  covariance[2][0] =  1.443e-5;
+	  covariance[2][1] =  -3.605e-5;
+	  covariance[2][2] =  0.004264;
 
-	    m_dataset = std::make_shared<data::Data1D>(data::Data1D(redshift, data, covariance));
-	  }
+	  m_dataset = std::make_shared<data::Data1D>(data::Data1D(redshift, data, covariance));
+	}
 
-	  std::shared_ptr<data::Data> dataset() {return m_dataset;}
+	std::shared_ptr<data::Data> dataset() {return m_dataset; }
 
-	  std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
+	std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
 	  {
 	    std::vector<double> mm(3, 0);
 
@@ -113,31 +113,31 @@ namespace cbl {
       class Aubourg15_WMAP09 : public CMB_DistancePrior
       {
 
-	public:
+      public:
 
-	  Aubourg15_WMAP09 () {
+	Aubourg15_WMAP09 () {
 
-	    std::vector<double> redshift = {0., 0., 1090.};
-	    std::vector<double> data = {0.02259, 0.1354, 94.51};
-	    std::vector<std::vector<double>> covariance(3, std::vector<double>(3, 0));
-	    covariance[0][0] =  2.864-7;
-	    covariance[0][1] =  -4.809e-7;
-	    covariance[0][2] =  -1.111-5;
+	  std::vector<double> redshift = {0., 0., 1090.};
+	  std::vector<double> data = {0.02259, 0.1354, 94.51};
+	  std::vector<std::vector<double>> covariance(3, std::vector<double>(3, 0));
+	  covariance[0][0] =  2.864-7;
+	  covariance[0][1] =  -4.809e-7;
+	  covariance[0][2] =  -1.111-5;
 
-	    covariance[1][0] = -4.809e-7;
-	    covariance[1][1] = 1.908e-5;
-	    covariance[1][2] = -7.495e-6;
+	  covariance[1][0] = -4.809e-7;
+	  covariance[1][1] = 1.908e-5;
+	  covariance[1][2] = -7.495e-6;
 
-	    covariance[2][0] = -1.111e-5;
-	    covariance[2][1] = -7.495e-6;
-	    covariance[2][2] = 0.02542;
+	  covariance[2][0] = -1.111e-5;
+	  covariance[2][1] = -7.495e-6;
+	  covariance[2][2] = 0.02542;
 
-	    m_dataset = std::make_shared<data::Data1D>(data::Data1D(redshift, data, covariance));
-	  }
+	  m_dataset = std::make_shared<data::Data1D>(data::Data1D(redshift, data, covariance));
+	}
 
-	  std::shared_ptr<data::Data> dataset() {return m_dataset;}
+	std::shared_ptr<data::Data> dataset() {return m_dataset; }
 
-	  std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
+	std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
 	  {
 	    std::vector<double> mm(3, 0);
 

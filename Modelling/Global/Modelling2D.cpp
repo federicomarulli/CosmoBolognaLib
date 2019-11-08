@@ -53,7 +53,7 @@ void cbl::modelling::Modelling2D::set_fit_range (const double xmin, const double
 
 void cbl::modelling::Modelling2D::write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> parameters)
 {
-  m_posterior->write_model(output_dir, output_file, parameters, xx, yy);
+  m_model->write(output_dir, output_file, xx, yy, parameters);
 }
 
 

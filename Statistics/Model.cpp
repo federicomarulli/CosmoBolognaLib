@@ -42,7 +42,7 @@ using namespace cbl;
 
 vector<vector<double>> cbl::statistics::Model::operator() (const std::vector<std::vector<double>> xx, std::vector<double> &parameters) const
 {
-  parameters = m_parameters->full_parameters(parameters);
+  parameters = m_parameters->full_parameter(parameters);
   return m_function(xx, m_inputs, parameters);
 }
 
@@ -71,7 +71,7 @@ void cbl::statistics::Model::stats_from_chains (const std::vector<std::vector<do
     sz2 = int(xx[1].size());
   }
   else
-    ErrorCBL("Error in cbl::statistics::Model::stats_from_chains() of Model.cpp: wrong size for xx vector!");
+    ErrorCBL("wrong size for xx vector!", "stats_from_chains", "Model.cpp");
   
   vector<double> _median(sz1*sz2, 0);
   vector<double> _low(sz1*sz2, 0);
@@ -102,7 +102,7 @@ void cbl::statistics::Model::stats_from_chains (const std::vector<std::vector<do
     _low[i] = vv[low];
     _up[i] = vv[up];
   }
-
+  
   median_model = reshape(_median, sz1, sz2);
   low_model = reshape(_low, sz1, sz2);
   up_model = reshape(_up, sz1, sz2);

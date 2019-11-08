@@ -52,7 +52,7 @@ int main () {
     // ------------------------------------------------------
   
     cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole model_twop(twop_dataset);
-
+    
     
     // --------------------------------------------------------------------------
     // ------------- set the underlying dark matter clustering model ------------
@@ -62,7 +62,7 @@ int main () {
     const double sigmaNL = 8.;
   
     model_twop.set_data_model(cosmology, redshift, "CAMB", sigmaNL, sigmaNL, false, 2.);
-
+    
   
     // -------------------------------------------------------
     // ------------- set the priors and the model ------------
@@ -74,8 +74,8 @@ int main () {
     cbl::statistics::PriorDistribution A1_prior(cbl::glob::DistributionType::_Uniform_, -100., 100.);
     cbl::statistics::PriorDistribution A2_prior(cbl::glob::DistributionType::_Uniform_, -1000., 1000.);
   
-    model_twop.set_model_BAO_LinearPoint(alpha_prior, BB_prior, A0_prior, A1_prior, A2_prior);
-
+    model_twop.set_model_BAO(alpha_prior, BB_prior, A0_prior, A1_prior, A2_prior);
+    
   
     // ----------------------------------------------------------------------
     // ------------- run chains and write output chain and model ------------
@@ -91,8 +91,8 @@ int main () {
     
     model_twop.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Covariance_);
 
-    model_twop.sample_posterior(chain_size, nwalkers); //, radius, starting_parameters);
-
+    model_twop.sample_posterior(chain_size, nwalkers);
+    
     const int burn_in = 100; // discard the first 100 chain steps 
     const int thin = 10;     // take 1 step every 10
     model_twop.show_results(burn_in, thin);

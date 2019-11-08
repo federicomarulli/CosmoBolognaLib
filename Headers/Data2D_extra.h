@@ -78,50 +78,76 @@ namespace cbl {
       Data2D_extra () { set_dataType(DataType::_2D_extra_); }
 
       /**
-       *  @brief constructor
-       *  @param x vector containing x points 
-       *  @param y vector containing y points 
-       *  @param data vector containing f(x,y) values
+       *  @brief constructor which gets the data from an input matrix
+       *
+       *  @param x vector containing the x values
+       * 
+       *  @param y vector containing the y values
+       * 
+       *  @param data matrix containing the f(x,y) values
+       *
        *  @param extra_info vector containing vectors of extra generic
        *  information
+       *
        *  @return an object of class Data2D_extra
        */
       Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> data, const std::vector<std::vector<double>> extra_info)
 	: Data2D(x, y, data), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
 
       /**
-       *  @brief constructor
-       *  @param x vector containing x points 
-       *  @param y vector containing y points 
-       *  @param data vector containing data values
-       *  @param covariance vector containing covariance matrix
+       *  @brief constructor which gets both the data and the errors
+       *  from input matrices
+       *
+       *  @param x vector containing the x values
+       * 
+       *  @param y vector containing the y values 
+       *
+       *  @param data vector containing the data
+       *
+       *  @param error vector containing the errors
+       *
        *  @param extra_info vector containing vectors of extra generic
        *  information
+       *
+       *  @return an object of class Data2D_extra
+       */
+      Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<double> error, const std::vector<std::vector<double>> extra_info) : Data2D(x, y, data, error), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
+      
+      /**
+       *  @brief constructor which gets both the data and the
+       *  covariance matrix from input matrices
+       *
+       *  @param x vector containing the x values 
+       *
+       *  @param y vector containing the y values
+       *
+       *  @param data matrix containing the data
+       *
+       *  @param covariance matrix containing the covariance
+       *
+       *  @param extra_info vector containing vectors of extra generic
+       *  information
+       *
        *  @return an object of class Data2D_extra
        */
       Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> data, const std::vector<std::vector<double>> covariance, const std::vector<std::vector<double>> extra_info) : Data2D(x, y, data, covariance), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
-
+      
       /**
-       *  @brief constructor
-       *  @param x vector containing x points 
-       *  @param y vector containing y points 
-       *  @param data vector containing data values
-       *  @param error vector containing error values
+       *  @brief constructor which gets both the data and the
+       *  covariance matrix from input matrices
+       *
+       *  @param x vector containing the x values 
+       *
+       *  @param y vector containing the y values 
+       *
+       *  @param data matrix containing the data
+       *
+       *  @param covariance matrix containing the covariance
+       *
        *  @param extra_info vector containing vectors of extra generic
        *  information
-       *  @return shared pointer to an object of class Data2D_extra
-       */
-      Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<double> error, const std::vector<std::vector<double>> extra_info) : Data2D(x, y, data, error), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
-
-      /**
-       *  @brief constructor
-       *  @param x vector containing x points 
-       *  @param y vector containing y points 
-       *  @param data vector containing data values
-       *  @param covariance vector containing covariance matrix
-       *  @param extra_info vector containing vectors of extra generic
-       *  information
-       *  @return shared pointer to an object of class Data2D_extra
+       *
+       *  @return an object of class Data2D_extra
        */
       Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<std::vector<double>> covariance, const std::vector<std::vector<double>> extra_info) : Data2D(x, y, data, covariance), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
 
@@ -133,8 +159,9 @@ namespace cbl {
 
       /**
        *  @brief static factory used to construct objects of class
-       *  Data1D
-       *  @return a shared pointer to an object of class Data
+       *  Data2D_extra
+       *
+       *  @return a shared pointer to an object of class Data2D_extra
        */
       std::shared_ptr<Data> as_factory () { return move(std::unique_ptr<Data2D_extra>(this)); }
 
@@ -161,15 +188,18 @@ namespace cbl {
       std::vector<std::vector<double>> extra_info () const { return m_extra_info; }
 
       /**
-       *  @brief get the independet variable, to be used 
-       *  in model computation
-       *  @param i index of the extra_info containing
-       *  the first independent variable
-       *  @param j index of the extra_info containing
-       *  the second independent variable
+       *  @brief get the independet variable, to be used in model
+       *  computation
+       *
+       *  @param i index of the extra_info containing the first
+       *  independent variable
+       *
+       *  @param j index of the extra_info containing the second
+       *  independent variable
+       *
        *  @return the independent variable
        */
-      std::vector<std::vector<double>> IndipendentVariable(const int i=-1, const int j=-1) const 
+      std::vector<std::vector<double>> IndipendentVariable (const int i=-1, const int j=-1) const 
       {
 	std::vector<std::vector<double>> iv;
 	iv.push_back(((i>0) ? m_extra_info[i] : m_x));
@@ -202,12 +232,50 @@ namespace cbl {
       
       /**
        *  @brief read the data
+       *
        *  @param input_file input data file
+       *
        *  @param skip_nlines the header lines to be skipped
+       * 
+       *  @param column_x the column of x values in the input file; if
+       *  it is not provided, the first column will be used by default
+       *
+       *  @param column_data the column of data values in the input
+       *  file; the size of column_data is the number of data to be
+       *  read (e.g. the size should be 3 in the case of the 3
+       *  multipole moments of the two-point correlation function); if
+       *  the size of column_data is larger than 1, more than 1 data
+       *  vectors are read and then added one after the other in a
+       *  single data object; if column_data is not provided, the
+       *  first column after column_x will be used by default,
+       *  assuming that only 1 data vector has to be read
+       *
+       *  @param column_errors the column of error values in the input
+       *  file; the size of column_error must be equal to the size of
+       *  column_data; if the size of column_error is larger than 1,
+       *  more than 1 error vectors are read and then added one after
+       *  the other in a single data object; if column_random is not
+       *  provided, the second column after column_x will be used by
+       *  default, assuming that only 1 random vector has to be read;
+       *  if the input file has only 2 columns, the errors will be set
+       *  to 1
+       *
+       *  @return none
+       *
+       *  @warning this function is not implemented yet: work in
+       *  progress!
+       */
+      virtual void read (const std::string input_file, const int skip_nlines=0, const int column_x=-1, const std::vector<int> column_data={}, const std::vector<int> column_errors={}) override;
+
+      /**
+       *  @brief print the data on screen
+       *
+       *  @param precision the float precision
+       *
        *  @return none
        */
-      virtual void read (const std::string input_file, const int skip_nlines=0) override;
-
+      virtual void Print (const int precision=4) const override;
+      
       /**
        *  @brief write the data
        *  @param dir output directory
@@ -224,6 +292,25 @@ namespace cbl {
        */
       virtual void write (const std::string dir, const std::string file, const std::string header, const bool full, const int precision=4, const int rank=0) const override;
       
+      ///@}
+
+      
+      /**
+       *  @name Member functions for data cut
+       */
+
+      ///@{
+
+      /**
+       * @brief cut the data
+       * @param xmin minumum value for the independent variable x
+       * @param xmax maximum value for the independent variable x
+       * @param ymin minumum value for the independent variable y
+       * @param ymax maximum value for the independent variable y
+       * @return pointer to an object of type Data2D
+       */
+      std::shared_ptr<Data> cut (const double xmin, const double xmax, const double ymin, const double ymax) const;
+
       ///@}
       
     };

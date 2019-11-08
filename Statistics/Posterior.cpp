@@ -82,12 +82,11 @@ cbl::statistics::Posterior::Posterior (const std::vector<std::shared_ptr<PriorDi
 
 double cbl::statistics::Posterior::operator() (std::vector<double> &pp) const
 {
-  pp = m_model_parameters->full_parameters(pp);
+  pp = m_model_parameters->full_parameter(pp);
   double prior = m_prior->operator()(pp);
+  
   if (prior>0) 
     return (m_use_grid) ? m_likelihood_function_grid(pp, m_likelihood_inputs)*prior : m_likelihood_function(pp, m_likelihood_inputs)*prior;
-  else
-    return 0;
 
   return 0.;
 }
@@ -98,8 +97,9 @@ double cbl::statistics::Posterior::operator() (std::vector<double> &pp) const
 
 double cbl::statistics::Posterior::log (std::vector<double> &pp) const
 {
-  pp = m_model_parameters->full_parameters(pp);
-  double logprior = m_prior->log(pp);
+  pp = m_model_parameters->full_parameter(pp);
+  const double logprior = m_prior->log(pp);
+
   double val;
   if (logprior>par::defaultDouble) 
     val = (m_use_grid) ? m_log_likelihood_function_grid(pp, m_likelihood_inputs)+logprior : m_log_likelihood_function(pp, m_likelihood_inputs)+logprior;
@@ -116,14 +116,14 @@ double cbl::statistics::Posterior::log (std::vector<double> &pp) const
 void cbl::statistics::Posterior::set_model (const std::shared_ptr<Model> model, const std::shared_ptr<ModelParameters> model_parameters)
 {
   switch (model->dimension()) {
-    case Dim::_1D_:
-      m_model = make_shared<Model1D>(*static_pointer_cast<Model1D>(model));
-      break;
-    case Dim::_2D_:
-      m_model = make_shared<Model2D>(*static_pointer_cast<Model2D>(model));
-      break;
-    default:
-      ErrorCBL("Error in cbl::statistics::Posterior::set_model() of set_model.cpp: dimension shoud be Dim::_1D_ or Dim::_2D_!");
+  case Dim::_1D_:
+    m_model = make_shared<Model1D>(*static_pointer_cast<Model1D>(model));
+    break;
+  case Dim::_2D_:
+    m_model = make_shared<Model2D>(*static_pointer_cast<Model2D>(model));
+    break;
+  default:
+    ErrorCBL("the model dimension must be Dim::_1D_ or Dim::_2D_ !", "set_model", "Posterior.cpp");
   }
 
   if (model_parameters!=NULL)
@@ -168,32 +168,51 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
   unsigned int npar = m_model->parameters()->nparameters();
   
   if (start.size()==npar_free) 
-    starting_par=start;
+    starting_par = start;
   else if (start.size()==npar)
     for (size_t i=0; i<npar_free; i++)
-      starting_par.push_back(start[m_model->parameters()->free_parameters()[i]]);
+      starting_par.push_back(start[m_model->parameters()->free_parameter()[i]]);
   else
-    ErrorCBL("Error in cbl::statistics::Posterior::maximize() of Posterior.cpp: check your inputs!");
-
-  function<double(vector<double> &)> post = [this](vector<double> & pp) { 
-    return -this->log(pp); 
-  };
-
-  coutCBL << "Maximizing the posterior..." << endl;
-  vector<double> result = cbl::gsl::GSL_minimize_nD(post, starting_par, {}, max_iter, tol, epsilon);
-
- //Check if result is in prior, if not the case something bad happened, then raise a Warning (Error?)
+    ErrorCBL("check your inputs: start.size()="+conv(start.size(), par::fINT)+" must be equal to either npar_free="+conv(npar_free, par::fINT)+" or npar="+conv(npar, par::fINT)+"!", "maximize", "Posterior.cpp");
   
-  if (m_prior->log(result) > par::defaultDouble) {
+  function<double(vector<double> &)> post = [this](vector<double> &pp) { return -this->log(pp); };
+
+
+  // extra check on epsilon
+  
+  function<bool(vector<double> &)> checkWrong = [&] (vector<double> &pp)
+    {
+      bool ch = true;
+      if (post(pp) < -par::defaultDouble)
+	ch = false;
+      return ch;
+    };
+
+  vector<double> par = starting_par;
+  if (checkWrong(par))
+    ErrorCBL("The starting position is outside the prior range: the first input parameter must be changed!", "maximize", "Posterior.cpp");
+
+  // loop on simplex side
+  for (size_t i=0; i<npar_free; i++) {
+    par = starting_par;
+    par[i] += epsilon;
+    if (checkWrong(par))
+      ErrorCBL("The simplex side is outside prior range: the epsilon parameter or the starting position must be changed.", "maximize", "Posterior.cpp");
+  }
+
+  // everything is fine up to here... let's go
+  coutCBL << "Maximizing the posterior..." << endl;
+  vector<double> result = cbl::wrapper::gsl::GSL_minimize_nD(post, starting_par, {}, max_iter, tol, epsilon);
+  
+  // check if the result is inside the prior ranges
+  if (m_prior->log(result)>par::defaultDouble) {
     coutCBL << "Done!" << endl << endl;
-    m_model_parameters->set_bestfit_value(result);
+    m_model_parameters->set_bestfit_values(result);
     m_model_parameters->write_bestfit_info();
     coutCBL << "log(posterior) = " << post(result) << endl << endl;
   }
   else
-    ErrorCBL("Error in cbl::statistics::Posterior::maximize() of Posterior.cpp. Maximization\
-	ended with parameter values out of prior! Please check your inputs or change the value\
-	of epsilon ");
+    ErrorCBL("the maximization ended with parameter values out of the priors: check your inputs or change the epsilon value!", "maximize", "Posterior.cpp");
 
 }
 
@@ -201,40 +220,43 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::sample_stretch_move (const double aa, const bool parallel, const string outputFile)
+void cbl::statistics::Posterior::sample_stretch_move (const double aa, const bool parallel, const string outputFile, const int start, const int thin, const int nbins)
 {
   if (parallel && outputFile!=cbl::par::defaultString)
-    WarningMsg("Warning in cbl::statistics::Posterior::sample_stretch_move() of Posterior.cpp. No run-time output\
-	available for parallel stretch-move algorithm. Option will be ignored.");
+    WarningMsgCBL("no run-time output available for parallel stretch-move algorithm: this option will be ignored!", "sample_stretch_move", "Posterior.cpp");
 
   coutCBL << "Sampling the posterior..." << endl;
-
+  
   const int seed = m_generate_seed();
   const int nparameters = m_model_parameters->nparameters();
   const int nparameters_free = m_model_parameters->nparameters_free();
   const int chain_size = m_model_parameters->chain_size();
   const int nwalkers = m_model_parameters->chain_nwalkers();
 
-  vector<vector<double> > start(nwalkers, vector<double>(nparameters, 0));
+  vector<vector<double>> Start(nwalkers, vector<double>(nparameters, 0));
 
   for (int i=0; i<nparameters; i++)
     for (int j=0; j<nwalkers; j++)
-      start[j][i] = m_model_parameters->chain_value(i, 0, j);
+      Start[j][i] = m_model_parameters->chain_value(i, 0, j);
 
   auto posterior = [this] (vector<double> &pp) { return log(pp); }; 
 
   cbl::statistics::Sampler sampler(nparameters, nparameters_free, posterior); 
   if (parallel)
-    sampler.sample_stretch_move_parallel(chain_size, nwalkers, start, seed, aa);
+    sampler.sample_stretch_move_parallel(chain_size, nwalkers, Start, seed, aa);
   else
-    sampler.sample_stretch_move(chain_size, nwalkers, start, seed, aa, outputFile);
+    sampler.sample_stretch_move(chain_size, nwalkers, Start, seed, aa, outputFile);
   
   vector<vector<double>> chain_values;
 
   sampler.get_chain_function_acceptance(chain_values, m_logposterior_values, m_acceptance);
 
   m_model_parameters->set_chain_values(chain_values, nwalkers);
+
+  // set the best-fit parameters to the meadian values of the MCMC chain
+  m_model_parameters->set_bestfit_values(start, thin, nbins, m_generate_seed());
 }
+
 
 // ============================================================================================
 
@@ -326,7 +348,7 @@ void cbl::statistics::Posterior::write_chain_fits (const string output_dir, cons
       n ++;
     }
   
-  cbl::ccfitswrapper::write_table_fits (output_dir, output_file, names, values);
+  cbl::wrapper::ccfits::write_table_fits(output_dir, output_file, names, values);
 
 
   coutCBL << "I wrote the file: " << output_dir+output_file << endl;
@@ -363,19 +385,19 @@ void cbl::statistics::Posterior::read_chain_ascii (const string input_dir, const
   m_logposterior_values.erase(m_logposterior_values.begin(), m_logposterior_values.end());
 
   while (getline(fin, line))
-  {
-    stringstream ss(line);
-    double NUM;
-    vector<double> ll, params;
+    {
+      stringstream ss(line);
+      double NUM;
+      vector<double> ll, params;
 
-    while (ss>>NUM) ll.push_back(NUM);
-    for (size_t i=1; i<ll.size()-3; i++) {
-      params.push_back(ll[i]);
+      while (ss>>NUM) ll.push_back(NUM);
+      for (size_t i=1; i<ll.size()-3; i++) {
+	params.push_back(ll[i]);
+      }
+
+      m_logposterior_values.push_back(ll[ll.size()-1]);
+      chain_value.push_back(params);
     }
-
-    m_logposterior_values.push_back(ll[ll.size()-1]);
-    chain_value.push_back(params);
-  }
   int chain_size = chain_value.size()/nwalkers;
 
   fin.clear(); fin.close();
@@ -407,7 +429,7 @@ void cbl::statistics::Posterior::read_chain_fits (const string input_dir, const 
   vector<vector<double>> chain_value(nparameters);
   m_logposterior_values.erase(m_logposterior_values.begin(), m_logposterior_values.end());
 
-  vector<vector<double>> values = cbl::ccfitswrapper::read_table_fits(file, names);
+  vector<vector<double>> values = cbl::wrapper::ccfits::read_table_fits(file, names);
 
   for (int i=0; i<nparameters; i++)
     chain_value[i] = values[i];
@@ -450,9 +472,9 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::initialize_chains (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter, const double tol)
+void cbl::statistics::Posterior::initialize_chains (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter, const double tol, const double epsilon)
 {
-  maximize(start, max_iter, tol);
+  maximize(start, max_iter, tol, epsilon);
 
   m_model_parameters->set_chain(chain_size, nwalkers);
   m_model_parameters->initialize_chain_ball_bestfit(radius, m_generate_seed());
@@ -498,17 +520,17 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
   vector<vector<double>> chain_value;
 
   while (getline(fin, line))
-  {
-    stringstream ss(line);
-    double NUM;
-    vector<double> ll, params;
+    {
+      stringstream ss(line);
+      double NUM;
+      vector<double> ll, params;
 
-    while (ss>>NUM) ll.push_back(NUM);
-    for (size_t i=1; i<ll.size()-3; i++) 
-      params.push_back(ll[i]);
+      while (ss>>NUM) ll.push_back(NUM);
+      for (size_t i=1; i<ll.size()-3; i++) 
+	params.push_back(ll[i]);
 
-    chain_value.push_back(params);
-  }
+      chain_value.push_back(params);
+    }
   fin.clear(); fin.close();
 
   string rm_last_step = "rm -r "+last_step_file;
@@ -518,6 +540,39 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
   chain_value = cbl::transpose(chain_value);
 
   initialize_chains(chain_size, chain_value);
+}
+
+
+// ============================================================================================
+
+
+void cbl::statistics::Posterior::write_maximization_results (const string dir_output, const string file)
+{
+  coutCBL << "Writing results of posterior maximization on " << dir_output+file << endl;
+  vector<double> bestFitValues = m_model_parameters->bestfit_value();
+  string name = LikelihoodTypeNames ()[static_cast<int>(m_likelihood_type)];
+  double posteriorValue = this->log(bestFitValues);
+
+  string mkdir = "mkdir -p "+dir_output;
+  if (system(mkdir.c_str())) {}
+
+  ofstream fout(dir_output+file);
+
+  fout << "#Parameters information" << endl;
+  fout << "nParameters = " << bestFitValues.size() << endl;
+
+  for (size_t i=0; i<bestFitValues.size(); i++) {
+    fout << "par" << i+1 << "_name = " << m_model_parameters->name(i) << endl;
+    fout << "par" << i+1 << "_status = " << m_model_parameters->status(i) << endl;
+    fout << "par" << i+1 << "_bestfit_value = " << bestFitValues[i] << endl;
+  }
+
+  fout << "#Likelihood information" << endl;
+  fout << "likelihoodType = " << name << endl;
+  fout << "logPosteriorValue = " << posteriorValue << endl;
+
+  fout.clear(); fout.close();
+  coutCBL << "I wrote the file " << dir_output+file << endl;
 }
 
 
@@ -535,10 +590,10 @@ void cbl::statistics::Posterior::show_results (const int start, const int thin, 
 
 void cbl::statistics::Posterior::write_results (const string output_dir, const string root_file, const int start, const int thin, const int nbins, const bool fits, const bool compute_mode)
 {
-  m_model_parameters->write_results(output_dir, root_file, start, thin, nbins, m_generate_seed(), compute_mode);
-
   const string extension = (fits) ? "_chain.fits" : "_chain.dat";
   write_chain(output_dir, root_file+extension, start, thin, fits);
+
+  m_model_parameters->write_results(output_dir, root_file, start, thin, nbins, m_generate_seed(), compute_mode);
 }
 
 
@@ -549,29 +604,29 @@ void cbl::statistics::Posterior::write_model_from_chain (const std::string outpu
 {
   switch (m_model->dimension()) {
 
-    case Dim::_1D_: 
-      {
-	vector<double> xvec = xx;
-	if (xx.size()==0)
-	  xvec = m_data->xx();
+  case Dim::_1D_: 
+    {
+      vector<double> xvec = xx;
+      if (xx.size()==0)
+	xvec = m_data->xx();
 
-	m_model->write_from_chains(output_dir, output_file, xvec, start, thin);
-      }
+      m_model->write_from_chains(output_dir, output_file, xvec, start, thin);
+    }
 
-      break;
-    case Dim::_2D_: 
-      {
-	vector<double> xvec = xx, yvec = yy;
-	if (xx.size()==0)
-	  xvec = m_data->xx();
-	if (yy.size()==0)
-	  yvec = m_data->yy();
+    break;
+  case Dim::_2D_: 
+    {
+      vector<double> xvec = xx, yvec = yy;
+      if (xx.size()==0)
+	xvec = m_data->xx();
+      if (yy.size()==0)
+	yvec = m_data->yy();
 
-	m_model->write_from_chains(output_dir, output_file, xvec, yvec, start, thin);
-      }
+      m_model->write_from_chains(output_dir, output_file, xvec, yvec, start, thin);
+    }
 
-      break;
-    default:
-      ErrorCBL("Error in cbl::statistics::Posterior::write_model_from_chain of Posterior.cpp: dimension shoud be Dim::_1D_ or Dim::_2D_!");
+    break;
+  default:
+    ErrorCBL("the input dimension must be Dim::_1D_ or Dim::_2D_ !", "write_model_from_chain", "Posterior.cpp");
   }
 }

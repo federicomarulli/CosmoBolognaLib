@@ -137,3 +137,6 @@
 #include "Model.h"
 #include "Pair2D_extra.h"
 #include "Triplet2D.h"
+#include "ThreePointCorrelation_comoving_multipoles.h"
+#include "ThreePointCorrelation_comoving_multipoles_single.h"
+#include "ThreePointCorrelation_comoving_multipoles_all.h"

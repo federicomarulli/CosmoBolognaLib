@@ -53,31 +53,31 @@ namespace cbl {
     class PosteriorParameters : public ModelParameters {
 
       protected:
-	
-	/// model parameter bestfit values
-	std::vector<double> m_parameter_bestfit_value;
 
-	/// numbers of free parameters
+	/// the numbers of free parameters
 	size_t m_nparameters_free = 0;
 
-	/// number of fixed parameters
+	/// the number of fixed parameters
 	size_t m_nparameters_fixed = 0;
 
-	/// indexes of fixed parameters
-	std::vector<unsigned int> m_fixed_parameters;
+	/// the indexes of fixed parameters
+	std::vector<unsigned int> m_fixed_parameter;
 
-	/// indexes of the free parameters
-	std::vector<unsigned int> m_free_parameters;
+	/// the indexes of the free parameters
+	std::vector<unsigned int> m_free_parameter;
 
-	/// parameter prior distributions
+	/// the parameter prior distributions
 	std::vector<std::shared_ptr<PriorDistribution>> m_parameter_prior;
 
-	/// parameter posterior distributions
-	std::vector<std::shared_ptr<PosteriorDistribution>> m_parameter_posterior;
-
-	/// function parameter covariance matrix
+	/// the parameter posterior distributions
+	std::vector<std::shared_ptr<PosteriorDistribution>> m_posterior_distribution;
+	
+	/// the best-fit parameter values, either the medians of the MCMC chain or the maxima of the posterior (depending of what has been calculated) 
+	std::vector<double> m_parameter_bestfit_value;
+	
+	/// the function parameter covariance matrix
 	std::vector<std::vector<double>> m_parameter_covariance;
-
+	
 	/// the lenght of the chain
 	size_t m_chain_size;
 
@@ -85,19 +85,18 @@ namespace cbl {
 	size_t m_chain_nwalkers;
 
 	/// content of the chain
-	std::vector<std::vector<double>> m_chain_values;
+	std::vector<std::vector<double>> m_chain_value;
 
 	/**
-	 * @brief private member to set the parameter
-	 * types
+	 *  @brief private member to set the parameter types
 	 *
-	 * @return none
+	 *  @return none
 	 */
-	void m_set_parameter_type() override;
+	void m_set_parameter_type () override;
 
 	/**
-	 *  @brief get the position in the vector
-	 *  m_values from position index and walker index
+	 *  @brief get the position in the vector m_values from
+	 *  position index and walker index
 	 *
 	 *  @param pp the position in the chain
 	 *
@@ -105,8 +104,10 @@ namespace cbl {
 	 *
 	 *  @return object of class Chain.  
 	 */
-	int m_inds_to_index(const int pp, const int ww) const { return pp*m_chain_nwalkers+ww;}
-
+	int m_inds_to_index (const int pp, const int ww) const
+	{ return pp*m_chain_nwalkers+ww; }
+	
+	
       public:
 
 	/**
@@ -153,12 +154,29 @@ namespace cbl {
 	 */
 	size_t nparameters_free () const override;
 
+	
 	/**
-	 * @brief return the private member
-	 * m_free_parameters
-	 * @return the private member m_free_parameters
+	 * @brief return the model parameter status
+	 * 
+	 * @param p the index of the parameter
+	 *
+	 * @return the parameter status
 	 */
-	std::vector<unsigned int> free_parameters() const {return m_free_parameters;}
+	std::string status (const int p) const;
+
+	/**
+	 * @brief return all the model parameter status
+	 * 
+	 * @return vector containing all the parameter statuss
+	 */
+	std::vector<std::string> status () const;
+
+	/**
+	 * @brief return the private member m_free_parameter
+	 *
+	 * @return the private member m_free_parameter
+	 */
+	std::vector<unsigned int> free_parameter () const { return m_free_parameter; }
 
 	/**
 	 * @brief return the number of fixed
@@ -169,20 +187,20 @@ namespace cbl {
 	size_t nparameters_fixed() const override;
 
 	/**
-	 * @brief return the private member
-	 * m_fixed_parameters
-	 * @return the private member m_fixed_parameters
+	 * @brief return the private member m_fixed_parameter
+	 *
+	 * @return the private member m_fixed_parameter
 	 */
-	std::vector<unsigned int> fixed_parameters() const {return m_fixed_parameters;}
+	std::vector<unsigned int> fixed_parameter () const { return m_fixed_parameter; }
 
 	/**
 	 * @brief return all the model parameters
 	 * 
-	 * @param parameter_values vector of free parameters
+	 * @param parameter_value vector of free parameters
 	 *
 	 * @return all the parameter values
 	 */
-	std::vector<double> full_parameters (const std::vector<double> parameter_values) const override;
+	std::vector<double> full_parameter (const std::vector<double> parameter_value) const override;
 
 	/**
 	 *  @brief set the parameter
@@ -206,8 +224,7 @@ namespace cbl {
 	///@{
 			
 	/**
-	 * @brief set the internal method
-	 *  m_parameter_covariance
+	 * @brief set the internal method m_parameter_covariance
 	 *
 	 * @param start the starting position 
 	 *
@@ -215,7 +232,7 @@ namespace cbl {
 	 *
 	 * @return none
 	 */
-	void set_parameter_covariance(const int start=0, const int thin=1);
+	void set_parameter_covariance (const int start=0, const int thin=1);
 
 	/**
 	 * @brief return the protected member m_parameter_covariance
@@ -231,8 +248,7 @@ namespace cbl {
 	/**
 	 * @brief return the protected member m_parameter_covariance
 	 *
-	 * @return vector containing the parameter covariance
-	 * matrix
+	 * @return vector containing the parameter covariance matrix
 	 */
 	std::vector<std::vector<double>> parameter_covariance () const;
 
@@ -285,7 +301,7 @@ namespace cbl {
 	 * @return pointer to the prior distribution of the p-th
 	 * parameter
 	 */
-	std::shared_ptr<PriorDistribution> prior_distribution (const int p) const {return m_parameter_prior[p];}
+	std::shared_ptr<PriorDistribution> prior_distribution (const int p) const { return m_parameter_prior[p]; }
 
 	/**
 	 * @brief get the prior distribution for the p-th 
@@ -293,7 +309,7 @@ namespace cbl {
 	 *
 	 * @return vector containing pointers to the prior distributions
 	 */
-	std::vector<std::shared_ptr<PriorDistribution>> prior_distribution () const {return m_parameter_prior;}
+	std::vector<std::shared_ptr<PriorDistribution>> prior_distribution () const { return m_parameter_prior; }
 
 	/**
 	 * @brief get the prior function
@@ -319,11 +335,11 @@ namespace cbl {
 	double bestfit_value (const int p) const;
 	
 	/**
-	 * @brief get the protected member m_value
+	 * @brief get the protected member m_parameter_bestfit_value
 	 *
 	 * @return the parameter bestfit values
 	 */
-	std::vector<double> bestfit_values () const;
+	std::vector<double> bestfit_value () const;
 
 	/**
 	 *  @brief set the protected member m_bestfit_value
@@ -332,8 +348,23 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_bestfit_value (const std::vector<double> bestfit_value);
-
+	void set_bestfit_values (const std::vector<double> bestfit_value);
+	
+	/**
+	 *  @brief set the protected member m_bestfit_value
+	 *
+	 *  @param start the starting position 
+	 *
+	 *  @param thin number of jumped indexes in the chain
+	 *
+	 *  @param nbins the number of bins
+	 *
+	 *  @param seed seed for random extraction
+	 *
+	 *  @return none
+	 */
+	void set_bestfit_values (const int start, const int thin, const int nbins, const int seed) override;
+	
 	/**
 	 *  @brief write bestfit info
 	 *
@@ -370,9 +401,10 @@ namespace cbl {
 	 *
 	 *  @param par the index of the parameter
 	 *
-	 *  @return the protected member m_parameter_posterior[param]
+	 *  @return the protected member m_posterior_distribution[par]
 	 */
-	std::shared_ptr<PosteriorDistribution> posterior_distribution (const int par) const { return m_parameter_posterior[par]; }
+	std::shared_ptr<PosteriorDistribution> posterior_distribution (const int par) const
+	  { cbl::checkDim(m_posterior_distribution, par, "m_posterior_distribution", false); return m_posterior_distribution[par]; }
 
 	///@}
 
@@ -464,7 +496,7 @@ namespace cbl {
 	void expand_chain (const int append);
 
 	/**
-	 * @brief return the private member m_chain_values at the pos step
+	 * @brief return the private member m_chain_value at the pos step
 	 * for the ww-th walker, for the chosen parameter
 	 *
 	 * @param param the parameter index
@@ -475,7 +507,7 @@ namespace cbl {
 	 *
 	 * @return the chain value
 	 */
-	double chain_value (const int param, const int pos, const int ww) const { return m_chain_values[param][m_inds_to_index(pos, ww)]; }
+	double chain_value (const int param, const int pos, const int ww) const { return m_chain_value[param][m_inds_to_index(pos, ww)]; }
 
 	/**
 	 * @brief return the private member m_values at the pp-th step
@@ -487,7 +519,7 @@ namespace cbl {
 	 *
 	 * @return the chain value
 	 */
-	std::vector<double> chain_value_parameters (const int pos, const int ww) const;
+	std::vector<double> chain_value_parameter (const int pos, const int ww) const;
 
 	/**
 	 * @brief return all the chain values for a parameter
@@ -503,7 +535,7 @@ namespace cbl {
 	std::vector<double> parameter_chain_values (const int param, const int start=0, const int thin = 1) const;
 
 	/**
-	 * @brief set the private member m_chain_values at the pp-th step
+	 * @brief set the private member m_chain_value at the pp-th step
 	 * for the ww-th step
 	 *
 	 * @param param the parameter index
@@ -516,7 +548,7 @@ namespace cbl {
 	 *
 	 * @return none
 	 */
-	void set_chain_value (const int param, const int pos, const int ww, const double value) { m_chain_values[param][m_inds_to_index(pos, ww)] = value; }
+	void set_chain_value (const int param, const int pos, const int ww, const double value) { m_chain_value[param][m_inds_to_index(pos, ww)] = value; }
 
 	/**
 	 *  @brief set the chain values

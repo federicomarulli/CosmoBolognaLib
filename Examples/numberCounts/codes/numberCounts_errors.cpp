@@ -64,6 +64,12 @@ int main () {
     NC.measure(cbl::measure::ErrorType::_Jackknife_);
     NC.write(dir, "redshift_distribution_Jackknife.dat");
     NC.write_covariance(dir, "redshift_distribution_Jackknife_covariance.dat");
+
+    // measure the number counts and compute Jackknife errors 
+
+    NC.measure(cbl::measure::ErrorType::_Bootstrap_, dir+"Bootstrap/", 1000);
+    NC.write(dir, "redshift_distribution_Bootstrap.dat");
+    NC.write_covariance(dir, "redshift_distribution_Bootstrap_covariance.dat");
     
   }
 

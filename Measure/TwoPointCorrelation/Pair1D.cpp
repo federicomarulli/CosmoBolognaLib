@@ -43,6 +43,18 @@ using namespace pairs;
 // ============================================================================================
 
 
+void cbl::pairs::Pair1D::reset ()
+{
+  for (int i=0; i<m_nbins; i++) {
+    m_PP1D[i] = 0.;
+    m_PP1D_weighted[i] = 0;
+  }
+}
+
+
+// ============================================================================================
+
+
 void cbl::pairs::Pair1D_angular_lin::m_set_parameters_nbins ()
 {
   const double binSize = ((m_thetaMax-m_thetaMin)/m_nbins);
@@ -73,7 +85,7 @@ void cbl::pairs::Pair1D_angular_lin::m_set_parameters_binSize ()
 
 void cbl::pairs::Pair1D_angular_log::m_set_parameters_nbins ()
 {
-  if (m_thetaMin<1.e-30) ErrorCBL("Error in cbl::pairs::Pair1D_angular_log::m_set_parameters_nbins of Pair.cpp: m_thetaMin must be >0!");
+  if (m_thetaMin<1.e-30) ErrorCBL("m_thetaMin must be >0!", "m_set_parameters_nbins", "Pair1D.cpp");
   
   const double binSize = ((log10(m_thetaMax)-log10(m_thetaMin))/m_nbins);
   m_binSize_inv = 1./binSize;
@@ -89,7 +101,7 @@ void cbl::pairs::Pair1D_angular_log::m_set_parameters_nbins ()
 
 void cbl::pairs::Pair1D_angular_log::m_set_parameters_binSize ()
 {
-  if (m_thetaMin<1.e-30) ErrorCBL("Error in cbl::pairs::Pair1D_angular_log::m_set_parameters_binSize of Pair.cpp: m_thetaMin must be >0!");
+  if (m_thetaMin<1.e-30) ErrorCBL("m_thetaMin must be >0!", "m_set_parameters_binSize", "Pair1D.cpp");
 
   m_nbins = nint((log10(m_thetaMax)-log10(m_thetaMin))*m_binSize_inv);
   m_thetaMax = pow(10.,m_nbins/m_binSize_inv+log10(m_thetaMin));
@@ -133,7 +145,7 @@ void cbl::pairs::Pair1D_comoving_lin::m_set_parameters_binSize ()
 
 void cbl::pairs::Pair1D_comoving_log::m_set_parameters_nbins ()
 {
-  if (m_rMin<1.e-30) ErrorCBL("Error in cbl::pairs::Pair1D_comoving_log::m_set_parameters_nbins of Pair.cpp: m_rMin must be >0!");
+  if (m_rMin<1.e-30) ErrorCBL("m_rMin must be >0!", "m_set_parameters_nbins", "Pair1D.cpp");
   
   const double binSize = ((log10(m_rMax)-log10(m_rMin))/m_nbins);
   m_binSize_inv = 1./binSize;
@@ -149,7 +161,7 @@ void cbl::pairs::Pair1D_comoving_log::m_set_parameters_nbins ()
 
 void cbl::pairs::Pair1D_comoving_log::m_set_parameters_binSize ()
 {
-  if (m_rMin<1.e-30) ErrorCBL("Error in cbl::pairs::Pair1D_comoving_log::m_set_parameters_binSize of Pair.cpp: m_rMin must be >0!");
+  if (m_rMin<1.e-30) ErrorCBL("m_rMin must be >0!", "m_set_parameters_binSize", "Pair1D.cpp");
   
   m_nbins = nint((log10(m_rMax)-log10(m_rMin))*m_binSize_inv);
   m_rMax = pow(10.,m_nbins/m_binSize_inv+log10(m_rMin));
@@ -195,7 +207,7 @@ void cbl::pairs::Pair1D_comoving_multipoles_lin::m_set_parameters_binSize ()
 
 void cbl::pairs::Pair1D_comoving_multipoles_log::m_set_parameters_nbins ()
 {
-  if (m_rMin<1.e-30) ErrorCBL("Error in cbl::pairs::Pair1D_comoving_multipoles_log::m_set_parameters_nbins of Pair.cpp: m_rMin must be >0!");
+  if (m_rMin<1.e-30) ErrorCBL("m_rMin must be >0!", "m_set_parameters_nbins", "Pair1D.cpp");
   
   const double binSize = ((log10(m_rMax)-log10(m_rMin))/m_nbins);
   m_binSize_inv = 1./binSize;
@@ -212,7 +224,7 @@ void cbl::pairs::Pair1D_comoving_multipoles_log::m_set_parameters_nbins ()
 
 void cbl::pairs::Pair1D_comoving_multipoles_log::m_set_parameters_binSize ()
 {
-  if (m_rMin<1.e-30) ErrorCBL("Error in cbl::pairs::Pair1D_comoving_multipoles_log::m_set_parameters_binSize of Pair.cpp: m_rMin must be >0!");
+  if (m_rMin<1.e-30) ErrorCBL("m_rMin must be >0!", "m_set_parameters_binSize", "Pair1D.cpp");
   
   m_nbins = nint((log10(m_rMax)-log10(m_rMin))*m_binSize_inv);
   m_rMax = pow(10.,m_nbins/m_binSize_inv+log10(m_rMin));
@@ -227,7 +239,7 @@ void cbl::pairs::Pair1D_comoving_multipoles_log::m_set_parameters_binSize ()
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_angular_lin::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &kk, double &wkk)
+void cbl::pairs::Pair1D_angular_lin::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &kk, double &wkk)
 {
   kk = -1;
   wkk = 0;
@@ -246,7 +258,7 @@ void cbl::pairs::Pair1D_angular_lin::get_pair (const shared_ptr<Object> obj1, co
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_angular_log::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &kk, double &wkk)
+void cbl::pairs::Pair1D_angular_log::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &kk, double &wkk)
 {
   kk = -1;
   wkk = 0;
@@ -265,7 +277,7 @@ void cbl::pairs::Pair1D_angular_log::get_pair (const shared_ptr<Object> obj1, co
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_comoving_lin::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &kk, double &wkk)
+void cbl::pairs::Pair1D_comoving_lin::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &kk, double &wkk)
 {
   kk = -1;
   wkk = 0;
@@ -286,7 +298,7 @@ void cbl::pairs::Pair1D_comoving_lin::get_pair (const shared_ptr<Object> obj1, c
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_comoving_log::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &kk, double &wkk)
+void cbl::pairs::Pair1D_comoving_log::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &kk, double &wkk)
 {
   kk = -1;
   wkk = 0;
@@ -307,7 +319,7 @@ void cbl::pairs::Pair1D_comoving_log::get_pair (const shared_ptr<Object> obj1, c
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_comoving_multipoles_lin::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &kk, double &cosmu, double &wkk)
+void cbl::pairs::Pair1D_comoving_multipoles_lin::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &kk, double &cosmu, double &wkk)
 {
   kk = -1;
   wkk = 0;
@@ -330,7 +342,7 @@ void cbl::pairs::Pair1D_comoving_multipoles_lin::get_pair (const shared_ptr<Obje
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_comoving_multipoles_log::get_pair (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &kk, double &cosmu, double &wkk)
+void cbl::pairs::Pair1D_comoving_multipoles_log::get (const shared_ptr<Object> obj1, const shared_ptr<Object> obj2, int &kk, double &cosmu, double &wkk)
 {
   kk = -1;
   wkk = 0;
@@ -352,7 +364,7 @@ void cbl::pairs::Pair1D_comoving_multipoles_log::get_pair (const shared_ptr<Obje
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_angular_lin::set_pair (const int kk, const double wkk, const double weight)
+void cbl::pairs::Pair1D_angular_lin::set (const int kk, const double wkk, const double weight)
 {
   if (kk>-1) {
     m_PP1D[kk] += weight;
@@ -364,7 +376,7 @@ void cbl::pairs::Pair1D_angular_lin::set_pair (const int kk, const double wkk, c
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_angular_log::set_pair (const int kk, const double wkk, const double weight)
+void cbl::pairs::Pair1D_angular_log::set (const int kk, const double wkk, const double weight)
 {
   if (kk>-1) {
     m_PP1D[kk] += weight;
@@ -376,7 +388,7 @@ void cbl::pairs::Pair1D_angular_log::set_pair (const int kk, const double wkk, c
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_comoving_lin::set_pair (const int kk, const double wkk, const double weight)
+void cbl::pairs::Pair1D_comoving_lin::set (const int kk, const double wkk, const double weight)
 {
   if (kk>-1) {
     m_PP1D[kk] += weight;
@@ -388,7 +400,7 @@ void cbl::pairs::Pair1D_comoving_lin::set_pair (const int kk, const double wkk, 
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_comoving_log::set_pair (const int kk, const double wkk, const double weight)
+void cbl::pairs::Pair1D_comoving_log::set (const int kk, const double wkk, const double weight)
 {
   if (kk>-1) {
     m_PP1D[kk] += weight;
@@ -400,7 +412,7 @@ void cbl::pairs::Pair1D_comoving_log::set_pair (const int kk, const double wkk, 
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_comoving_multipoles_lin::set_pair (const double cosmu, const int kk, const double wkk, const double weight)
+void cbl::pairs::Pair1D_comoving_multipoles_lin::set (const double cosmu, const int kk, const double wkk, const double weight)
 {
   if (kk>-1) {
     double cosmu2 = cosmu*cosmu;
@@ -421,7 +433,7 @@ void cbl::pairs::Pair1D_comoving_multipoles_lin::set_pair (const double cosmu, c
 // ============================================================================================
 
 
-void cbl::pairs::Pair1D_comoving_multipoles_log::set_pair (const double cosmu, const int kk, const double wkk, const double weight)
+void cbl::pairs::Pair1D_comoving_multipoles_log::set (const double cosmu, const int kk, const double wkk, const double weight)
 {
   if (kk>-1) {
     double cosmu2 = cosmu*cosmu;
@@ -608,7 +620,7 @@ void cbl::pairs::Pair1D::add_data1D (const int i, const std::shared_ptr<pairs::P
 void cbl::pairs::Pair1D::Sum (const std::shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins != pair->nbins()) 
-    ErrorCBL("Error in cbl::pairs::Pair1D::Sum of Pair.cpp: dimension problems!");
+    ErrorCBL("dimension problems!", "Sum", "Pair1D.cpp");
   
   for (int i=0; i<m_nbins; ++i)
     add_data1D(i, pair, ww);
@@ -621,7 +633,7 @@ void cbl::pairs::Pair1D::Sum (const std::shared_ptr<Pair> pair, const double ww)
 void cbl::pairs::Pair1D_comoving_multipoles_lin::Sum (const std::shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins != pair->nbins()) 
-    ErrorCBL("Error in cbl::pairs::Pair1D_comoving_multipoles_lin::Sum of Pair.cpp: dimension problems!");
+    ErrorCBL("dimension problems!", "Sum", "Pair1D.cpp");
   
   for (int l=0; l<3; ++l)
     for (int i=0; i<m_nbins; ++i)
@@ -635,7 +647,7 @@ void cbl::pairs::Pair1D_comoving_multipoles_lin::Sum (const std::shared_ptr<Pair
 void cbl::pairs::Pair1D_comoving_multipoles_log::Sum (const std::shared_ptr<Pair> pair, const double ww)
 {
   if (m_nbins != pair->nbins()) 
-    ErrorCBL("Error in cbl::pairs::Pair1D_comoving_multipoles_log::Sum of Pair.cpp: dimension problems!");
+    ErrorCBL("dimension problems!", "Sum", "Pair1D.cpp");
   
   for (int l=0; l<3; ++l)
     for (int i=0; i<m_nbins; ++i)

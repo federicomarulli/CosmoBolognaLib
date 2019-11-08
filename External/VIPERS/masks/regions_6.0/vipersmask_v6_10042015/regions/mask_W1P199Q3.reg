@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/filepuyDb0.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(30.905242,-5.978732,31.000728,-5.979247,31.009665,-5.972226,31.00959,-5.845084,31.008216,-5.845198,31.000605,-5.8468,30.896079,-5.847363,30.892415,-5.849624,30.892365,-5.97215) # color=red dash=1

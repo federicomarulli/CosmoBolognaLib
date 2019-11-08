@@ -343,8 +343,9 @@ namespace cbl {
 	 *  @param dir_input_pairs vector of input directories used to
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
-	 *  @param dir_output_resample output directory of the resampled
-	 *  correlation functions
+	 *  @param dir_output_resample output directory of the
+	 *  resampled correlation functions; if an empty string
+	 *  (i.e. "" or "NULL") is provided, no output will be stored
 	 *
 	 *  @param nMocks number of resampling for bootstrap
 	 *
@@ -386,7 +387,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void read (const std::string dir, const std::string file)
-	{ (void)dir; (void)file; ErrorCBL("Error in read() of TwoPointCorrelation2D.h"); }	
+	{ (void)dir; (void)file; ErrorCBL("", "read", "TwoPointCorrelation2D.h"); }	
 
 	/**
 	 *  @brief write the measured two-point correlation
@@ -396,7 +397,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void write (const std::string dir, const std::string file, const int rank=0) const
-	{ (void)dir; (void)file; (void)rank; ErrorCBL("Error in write() of TwoPointCorrelation2D.h"); }	
+	{ (void)dir; (void)file; (void)rank; ErrorCBL("", "write", "TwoPointCorrelation2D.h"); }	
 
 	///@}
 
@@ -413,7 +414,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void read_covariance (const std::string dir, const std::string file)
-	{ (void)dir; (void)file; ErrorCBL("Error in read_covariance() of TwoPointCorrelation2D.h"); }
+	{ (void)dir; (void)file; ErrorCBL("", "read_covariance", "TwoPointCorrelation2D.h"); }
 
 	/**
 	 *  @brief write the measured two-point correlation
@@ -422,7 +423,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void write_covariance (const std::string dir, const std::string file) const
-	{ (void)dir; (void)file; ErrorCBL("Error in write_covariance() of TwoPointCorrelation2D.h"); }
+	{ (void)dir; (void)file; ErrorCBL("", "write_covariance", "TwoPointCorrelation2D.h"); }
       
 	/**
 	 *  @brief compute the covariance matrix
@@ -433,7 +434,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void compute_covariance (const std::vector<std::shared_ptr<data::Data>> xi, const bool JK)
-	{ (void)xi; (void)JK; ErrorCBL("Error in compute_covariance() of TwoPointCorrelation2D.h"); }
+	{ (void)xi; (void)JK; ErrorCBL("", "compute_covariance", "TwoPointCorrelation2D.h"); }
  
 	/**
 	 *  @brief compute the covariance matrix
@@ -445,7 +446,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	virtual void compute_covariance (const std::vector<std::string> file, const bool JK)
-	{ (void)file; (void)JK; ErrorCBL("Error in compute_covariance() of TwoPointCorrelation2D.h"); }
+	{ (void)file; (void)JK; ErrorCBL("", "compute_covariance", "TwoPointCorrelation2D.h"); }
       
 	///@} 
 

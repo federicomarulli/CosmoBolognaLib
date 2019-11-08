@@ -64,18 +64,25 @@ namespace cbl {
 
       protected:
 
-	/// number of multipoles
-	int m_nwedges;
+	/// number of measured wedges in the input dataset
+	int m_nWedges;
 
-	/// number of wedges used for the fit
-	int m_nwedges_fit;
+	/// the \f$\mu\f$ integral limits used to measure the wedges
+	std::vector<std::vector<double>> m_mu_integral_limits;
+	
+	/// vector of booleans indicating the wedges to be modelled (m_use_wedge[i]=true -> the i-th wedge is modelled)
+        std::vector<bool> m_use_wedge;
 
-	/// vector containing the ordering of the data vector
+	/// vector containing the ordering of the data vector, which spcifies which wedge correponds to each data vector element
 	std::vector<int> m_wedges_order;
 
+	/// bolean to check if the model has been set
+	bool m_ModelIsSet;
+	
 	/// the wedges aperture
 	double m_deltamu;
 
+	
       public:
 
 	/**
@@ -92,25 +99,33 @@ namespace cbl {
 	/**
 	 *  @brief constructor
 	 *  
-	 *  @param twop the two-point correlation function to model
+	 *  @param twop the wedges to model
+	 *
+	 *  @param nWedges the number of wedges
+	 *	 
+	 *  @param mu_integral_limits the \f$\mu\f$ integral limits
+	 *  used to measure the wedges
 	 *
 	 *  @return object of type
 	 *  Modelling_TwoPointCorrelation_wedges
 	 */
-	Modelling_TwoPointCorrelation_wedges (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop);
+	Modelling_TwoPointCorrelation_wedges (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop, const int nWedges=2, const std::vector<std::vector<double>> mu_integral_limits={{0., 0.5}, {0.5, 1.}});
 
 	/**
 	 *  @brief constructor
 	 *  
-	 *  @param twop_dataset the dataset containing the two-point
-	 *  correlation function to model
+	 *  @param twop_dataset the dataset containing the wedges to
+	 *  model
 	 *  
-	 *  @param nwedges the number of wedges
+	 *  @param nWedges the number of wedges
+	 *	 
+	 *  @param mu_integral_limits the \f$\mu\f$ integral limits
+	 *  used to measure the wedges
 	 *
 	 *  @return object of type
 	 *  Modelling_TwoPointCorrelation_wedges
 	 */
-	Modelling_TwoPointCorrelation_wedges (const std::shared_ptr<data::Data> twop_dataset, const int nwedges);
+	Modelling_TwoPointCorrelation_wedges (const std::shared_ptr<data::Data> twop_dataset, const int nWedges, const std::vector<std::vector<double>> mu_integral_limits={{0., 0.5}, {0.5, 1.}});
       
 	/**
 	 *  @brief default destructor
@@ -141,11 +156,11 @@ namespace cbl {
 	 *
 	 *  @param xmin the minimum x value
 	 *  @param xmax the maximum x value
-	 *  @param nwedges the number of wedges
+	 *  @param nWedges the number of wedges
 	 *
 	 *  @return none
 	 */
-	void set_fit_range (const double xmin, const double xmax, const int nwedges=-1);
+	void set_fit_range (const double xmin, const double xmax, const int nWedges=-1);
 
 	/**
 	 *  @brief set the scale range used for the fit
@@ -158,17 +173,14 @@ namespace cbl {
 	void set_fit_range (std::vector<std::vector<double>> fit_range);
 
 	/**
-	 *  @brief set the model to fit the full shape of the
-	 *  multipole moments of the two-point correlation function
+	 *  @brief set the de-wiggled model to fit the full shape of
+	 *  the wedges of the two-point correlation function
 	 *
-	 *  the multipoles of the two-point correlation function will
-	 *  be computed as follows:
-	 *
-	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-	 *  j_l(ks); \f]
-	 *
-	 *  where \f$j_l(ks)\f$ are the bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
+	 *  the wedges of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::xiWedges, where the
+	 *  power spectrum is computed with the de-wiggled model by
+	 *  cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_PkDM
+	 *  with cbl::modelling::twopt::Pkmu_DeWiggled
 	 *
 	 *  the model has 7 parameters: 
 	 *    - \f$\alpha_{\perp}\f$
@@ -177,18 +189,18 @@ namespace cbl {
 	 *    - \f$\Sigma_{NL,\parallel}\f$ 
 	 *    - \f$f(z)\sigma_8(z)\f$
 	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$\Sigma_s\f$*
+	 *    - \f$\Sigma_s\f$
 	 *
 	 *  the dark matter two-point correlation function is computed
 	 *  using the input cosmological parameters
 	 *
-	 *  @param alpha_perpendicular_prior prior for the parameter 
+	 *  @param alpha_perpendicular_prior prior for the parameter
 	 *  \f$\alpha_{\perp}\f$
 	 *
 	 *  @param alpha_parallel_prior prior for the parameter 
 	 *  \f$\alpha_{\parallel}\f$
 	 *
-	 *  @param SigmaNL_perpendicular_prior prior for the parameter 
+	 *  @param SigmaNL_perpendicular_prior prior for the parameter
 	 *  \f$\Sigma_{NL, \perp}\f$
 	 *
 	 *  @param SigmaNL_parallel_prior prior for the parameter 
@@ -211,30 +223,251 @@ namespace cbl {
 	void set_model_fullShape_DeWiggled (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution SigmaNL_perpendicular_prior={}, const statistics::PriorDistribution SigmaNL_parallel_prior={}, statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaS_prior={}, const bool compute_PkDM=true);
 
 	/**
-	 *  @brief set the model to fit the full shape of the
-	 *  multipole moments of the two-point correlation function
+	 *  @brief set the Dispersion model to fit the wedges of the
+	 *  two-point correlation function
 	 *
-	 *  the multipoles of the two-point correlation function will
-	 *  be computed as follows:
+	 *  the wedges of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::xiWedges, where the
+	 *  Dispersion power spectrum model \f$P(k, \mu)\f$ (see
+	 *  e.g. Pezzotta et al. 2017,
+	 *  https://arxiv.org/abs/1612.05645) is computed by
+	 *  cbl:modelling::twopt::Pkmu_Dispersion
 	 *
-	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-	 *  j_l(ks); \f]
+	 *  the model has 3 parameters:
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_{12}\f$
 	 *
-	 *  where \f$j_l(ks)\f$ are the bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @author J.E. Garcia-Farieta
+	 *  @author joegarciafa@unal.edu.co
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param sigma12_prior prior for the parameters
+	 *  \f$\sigma_{12}\f$
+	 *
+	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
+	 *  \f$\rightarrow\f$ Lorentzian damping
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 *
+	 *  @return none
+	 */
+	void set_model_Dispersion (statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const bool DFoG=true, const bool compute_PkDM=true); // [Jorge]
+
+	/**
+	 *  @brief set the Scoccimarro model to fit the wedges of the
+	 *  two-point correlation function
+	 *
+	 *  the wedges of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::xiWedges, where the
+	 *  Scoccimarro power spectrum model \f$P(k, \mu)\f$ (see
+	 *  e.g. Pezzotta et al. 2017,
+	 *  https://arxiv.org/abs/1612.05645) is computed by
+	 *  cbl:modelling::twopt::Pkmu_Scoccimarro_fitPezzotta
+	 *
+	 *  the model has 5 parameters:
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_{12}\f$
+	 *    - \f$k_\delta\f$
+	 *    - \f$k_\theta\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @author J.E. Garcia-Farieta
+	 *  @author joegarciafa@unal.edu.co
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param sigma12_prior prior for the parameters
+	 *  \f$\sigma_{12}\f$
+	 *
+	 *  @param kd_prior prior for the parameters \f$ k_\delta\f$
+	 *
+	 *  @param kt_prior prior for the parameters \f$k_t\f$
+	 *
+	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
+	 *  \f$\rightarrow\f$ Lorentzian damping
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 *
+	 *  @return none
+	 */
+	void set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const statistics::PriorDistribution kd_prior={}, const statistics::PriorDistribution kt_prior={}, const bool DFoG=true, const bool compute_PkDM=true); 
+
+	/**
+	 *  @brief set the Scoccimarro model to fit the wedges of the
+	 *  two-point correlation function
+	 *
+	 *  the wedges of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::xiWedges, where the
+	 *  Scoccimarro power spectrum model \f$P(k, \mu)\f$ (see
+	 *  e.g. Bel et al. 2019, https://arxiv.org/abs/1809.09338) is
+	 *  computed by cbl:modelling::twopt::Pkmu_Scoccimarro_fitBel
+	 *
+	 *  the model has 8 parameters:
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_{12}\f$
+	 *    - \f$k_\delta\f$
+	 *    - \f$bb\f$
+	 *    - \f$a1\f$
+	 *    - \f$a2\f$
+	 *    - \f$a3\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @author J.E. Garcia-Farieta
+	 *  @author joegarciafa@unal.edu.co
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param sigma12_prior prior for the parameters
+	 *  \f$\sigma_{12}\f$
+	 *
+	 *  @param kd_prior prior for the parameters \f$ k_d\f$
+	 *
+	 *  @param bb_prior prior for the parameters \f$bb\f$
+	 *
+	 *  @param a1_prior prior for the parameters \f$a1\f$
+	 *
+	 *  @param a2_prior prior for the parameters \f$a2\f$
+	 *
+	 *  @param a3_prior prior for the parameters \f$a3\f$
+	 *
+	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
+	 *  \f$\rightarrow\f$ Lorentzian damping
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 *
+	 *  @return none
+	 */
+	void set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const statistics::PriorDistribution kd_prior={}, const statistics::PriorDistribution bb_prior={}, const statistics::PriorDistribution a1_prior={}, const statistics::PriorDistribution a2_prior={}, const statistics::PriorDistribution a3_prior={}, const bool DFoG=true, const bool compute_PkDM=true);
+
+	/**
+	 *  @brief set the Scoccimarro model to fit the wedges of the
+	 *  two-point correlation function
+	 *
+	 *  the wedges of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::xiWedges, where the
+	 *  Scoccimarro power spectrum model \f$P(k, \mu)\f$ (see
+	 *  e.g. Scoccimarro et al. 2004,
+	 *  https://arxiv.org/abs/astro-ph/0407214) is computed by
+	 *  cbl:modelling::twopt::Pkmu_Scoccimarro
+	 *
+	 *  the model has 3 parameters:
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_{12}\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @author J.E. Garcia-Farieta
+	 *  @author joegarciafa@unal.edu.co
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param sigma12_prior prior for the parameters
+	 *  \f$\sigma_{12}\f$
+	 *
+	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
+	 *  \f$\rightarrow\f$ Lorentzian damping
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 *
+	 *  @return none
+	 */
+	void set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const bool DFoG=true, const bool compute_PkDM=true);
+
+	/**
+	 * @brief set the TNS (Taruya, Nishimichi and Saito) model to
+	 * fit the wedges of the * two-point correlation function
+	 *
+	 *  the wedges of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::xiWedges, where the TNS
+	 *  power spectrum model \f$P(k, \mu)\f$ (see e.g. Taruya et
+	 *  al. 2010, https://arxiv.org/abs/1006.0699) is computed by
+	 *  cbl:modelling::twopt::Pkmu_TNS
+	 *
+	 *  the model has 3+N parameters:
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_{12}\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @author J.E. Garcia-Farieta
+	 *  @author joegarciafa@unal.edu.co
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param sigma12_prior prior for the parameters
+	 *  \f$\sigma_{12}\f$
+	 *
+	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
+	 *  \f$\rightarrow\f$ Lorentzian damping
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 *
+	 *  @return none
+	 */
+	void set_model_TNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const bool DFoG=true, const bool compute_PkDM=true);
+
+	/**
+	 *  @brief set the mode-coupling model to fit the full shape
+	 *  of the wedges of the two-point correlation function
+	 *
+	 *  the wedges of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::xiWedges, where the
+	 *  power spectrum is computed with the mode-coupling model by
+	 *  cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_PkDM
+	 *  with cbl::modelling::twopt::Pkmu_ModeCoupling
 	 *
 	 *  the model has 6 parameters: 
 	 *    - \f$\alpha_{\perp}\f$
 	 *    - \f$\alpha_{\parallel}\f$
 	 *    - \f$f(z)\sigma_8(z)\f$
 	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$\sigma_v\f$*
-	 *    - \f$\A_{MC}\f$*
+	 *    - \f$\sigma_v\f$
+	 *    - \f$A_{MC}\f$
 	 *
 	 *  the dark matter two-point correlation function is computed
 	 *  using the input cosmological parameters
 	 *
-	 *  @param alpha_perpendicular_prior prior for the parameter 
+	 *  @param alpha_perpendicular_prior prior for the parameter
 	 *  \f$\alpha_{\perp}\f$
 	 *
 	 *  @param alpha_parallel_prior prior for the parameter 
@@ -250,61 +483,34 @@ namespace cbl {
 	 *  \f$\sigma_v\f$
 	 *
 	 *  @param AMC_prior prior for the parameters
-	 *  \f$\A_{MC}\f$
+	 *  \f$A_{MC}\f$
 	 *
-	 *  @param compute_PkDM true \f$rightarrow\f$ compute the
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 *
 	 *  @return none
 	 */
-	void set_model_fullShape_ModeCoupling (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaV_prior={}, const statistics::PriorDistribution AMC_prior={}, const bool compute_PkDM=true);
+	void set_model_fullShape_ModeCoupling (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaV_prior={}, const statistics::PriorDistribution AMC_prior={}, const bool compute_PkDM=true);
 
 	/**
-	 *  @brief set the model to fit the monopole and quadrupole of
-	 *  the two-point correlation function, used for anisotropic
-	 *  BAO measurements
+	 *  @brief set the model to fit the wedges of the two-point
+	 *  correlation function, used for anisotropic BAO
+	 *  measurements
 	 *
-	 *  the monopole and quadrupole of the two-point correlation
-	 *  function are computed as follows (Ross et al. 2017):
+	 *  the wedges of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::xiWedges_BAO
 	 *
-	 *  \f[ \xi_{\perp}(s) = B_{perp}\xi_{\perp}(s,
-	 *  \alpha_{\perp},
-	 *  \alpha_{\parallel})+A_{perp}^0+\frac{A_{perp}^1}{s}+\frac{A_{perp}^2}{s^2};
-	 *  \\ \xi_{\parallel}(s) = B_{parallel}\xi_{\parallel}(s,
-	 *  \alpha_{\parallel},
-	 *  \alpha_{\parallel})+A_{parallel}^0+\frac{A_{parallel}^1}{s}+\frac{A_{parallel}^2}{s^2};
-	 *  \\ \f]
-	 *
-	 *  where \f$\xi_{\perp}\f$, \f$\xi_{\parallel}\f$ are the two
-	 *  wedges of the two-point correlation function.
-	 *
-	 *  The function takes as inputs ten parameters
-	 *    - \f$\alpha_{\perp}\f$
-	 *    - \f$\alpha_{\parallel}\f$
-	 *    - \f$B_0\f$
-	 *    - \f$B_2\f$
-	 *    - \f$A^0_0\f$
-	 *    - \f$A^0_1\f$
-	 *    - \f$A^0_2\f$
-	 *    - \f$A^2_0\f$
-	 *    - \f$A^2_1\f$
-	 *    - \f$A^2_2\f$
-	 *
-	 *
-	 *  the dark matter two-point correlation function is computed
-	 *  using the input cosmological parameters
-	 *
-	 *  @param alpha_perpendicular_prior prior for the parameter 
+	 *  @param alpha_perpendicular_prior prior for the parameter
 	 *  \f$\alpha_{\perp}\f$
 	 *
 	 *  @param alpha_parallel_prior prior for the parameter 
 	 *  \f$\alpha_{\parallel}\f$
 	 *
 	 *  @param Bperp_prior prior for the parameter
-	 *  \f$B_perp\f$
+	 *  \f$B_\perp\f$
 	 *
 	 *  @param Bpar_prior prior for the parameter
-	 *  \f$B_par\f$
+	 *  \f$B_\parallel\f$
 	 *
 	 *  @param Aperp0_prior prior for the parameter
 	 *  \f$A^0_0\f$
@@ -324,24 +530,23 @@ namespace cbl {
 	 *  @param Apar2_prior prior for the parameter
 	 *  \f$A^2_2\f$
 	 *
-	 *  @param compute_XiDM true \f$rightarrow\f$ compute the
+	 *  @param compute_XiDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter two-point correlation 
 	 *  function
 	 *
 	 *  @return none
-	 *
-	 *  @warning the current implementation works only for
-	 *  monopole and quadrupole
 	 */
 	void set_model_BAO (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution Bperp_prior={}, const statistics::PriorDistribution Bpar_prior={}, const statistics::PriorDistribution Aperp0_prior={}, const statistics::PriorDistribution Apar0_prior={}, const statistics::PriorDistribution Aperp1_prior={}, const statistics::PriorDistribution Apar1_prior={}, const statistics::PriorDistribution Aperp2_prior={}, const statistics::PriorDistribution Apar2_prior={}, const bool compute_XiDM=true);
 
         /**
-         *  @brief write the model at xx
-         *  for given parameters
+         *  @brief write the model at xx for given parameters
          *
          *  @param output_dir the output directory
+	 *
          *  @param output_file the output file
-         *  @param xx vector of points at which the model is computed,
+	 *
+         *  @param xx vector of points at which the model is computed
+	 *
          *  @param parameters vector containing the input parameters
          *  used to compute the model; if this vector is not provided,
          *  the model will be computed using the best-fit parameters

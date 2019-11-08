@@ -109,7 +109,7 @@ cbl::data::Data1D_collection::Data1D_collection (const std::vector<std::vector<d
 
   for (int i=0; i<m_ndataset; i++) {
     m_xsize[i] = m_x[i].size();
-    checkDim(data[i], m_xsize[i], "data["+conv(i,par::fINT)+"]");
+    checkDim(data[i], m_xsize[i], "data["+conv(i, par::fINT)+"]");
     for (int j=0; j<m_xsize[i]; j++)
       m_data.push_back(data[i][j]);
   }
@@ -149,7 +149,7 @@ cbl::data::Data1D_collection::Data1D_collection (const std::vector<std::vector<d
   m_ndataset = m_x.size();
   m_xsize.resize(m_ndataset,0);
 
-  int nn=0;
+  int nn = 0;
   
   for (int i=0; i<m_ndataset; i++) {
     m_xsize[i] = m_x[i].size();
@@ -238,8 +238,11 @@ void cbl::data::Data1D_collection::error (std::vector<std::vector<double>> &erro
 // ======================================================================================
 
 
-void cbl::data::Data1D_collection::read (const std::string input_file, const int skip_nlines)
+void cbl::data::Data1D_collection::read (const std::string input_file, const int skip_nlines, const int column_x, const vector<int> column_data, const vector<int> column_errors)
 {
+  (void)column_x; (void)column_data; (void)column_errors;
+  WarningMsgCBL("column_x, column_data, column_errors are not used in the current implementation", "read", "Data1D_collection.cpp");
+  
   ifstream fin(input_file.c_str()); checkIO(fin, input_file);
   string line;
 
@@ -295,12 +298,14 @@ void cbl::data::Data1D_collection::read (const std::string input_file, const int
 }
 
 
-
 // ======================================================================================
 
 
-void cbl::data::Data1D_collection::read (const std::vector<std::string> input_file, const int skip_nlines)
+void cbl::data::Data1D_collection::read (const std::vector<std::string> input_file, const int skip_nlines, const int column_x, const vector<int> column_data, const vector<int> column_errors)
 {
+  (void)column_x; (void)column_data; (void)column_errors;
+  WarningMsgCBL("column_x, column_data, column_errors are not used in the current implementation", "read", "Data1D_collection.cpp");
+  
   m_ndataset = input_file.size();
   m_xsize.resize(m_ndataset,0);
 
@@ -348,6 +353,27 @@ void cbl::data::Data1D_collection::read (const std::vector<std::string> input_fi
   }
 }
 
+
+// ======================================================================================
+
+
+void cbl::data::Data1D_collection::Print (const int precision) const
+{
+  const int ndata = m_xsize[0];
+  
+  for (int i=1; i<m_ndataset; i++)
+    checkEqual(m_x[0], m_x[i]);
+
+  for (int i=0; i<ndata; i++) {
+    coutCBL << setprecision(precision) << setw(8) << right << m_x[0][i] << "   ";
+    for (int j=0; j<m_ndataset; j++)
+      coutCBL << setprecision(precision) << setw(8) << right << m_data[m_index[j][i]]
+	      << "   " << setprecision(precision) << setw(8) << right << m_error[m_index[j][i]] << "   ";
+    cout << endl;
+  }
+}
+
+
 // ======================================================================================
 
 
@@ -355,12 +381,12 @@ void cbl::data::Data1D_collection::write (const std::string dir, const std::stri
 {
   (void)rank;
 
-  int ndata = m_xsize[0];
+  const int ndata = m_xsize[0];
 
   for (int i=1; i<m_ndataset; i++)
     checkEqual(m_x[0], m_x[i]);
 
-  string file_out =dir+file;
+  string file_out = dir+file;
 
   ofstream fout(file_out.c_str()); checkIO(fout, file_out);
   if (header!=par::defaultString)
@@ -369,8 +395,8 @@ void cbl::data::Data1D_collection::write (const std::string dir, const std::stri
   for (int i=0; i<ndata; i++) {
     fout << setprecision(precision) << setw(15) << right << m_x[0][i] << "  ";
     for (int j=0; j<m_ndataset; j++)
-      fout  << setprecision(precision) << setw(15) << right << m_data[m_index[j][i]]
-	    << "  " << setprecision(precision) << setw(15) << right << m_error[m_index[j][i]] << "  ";
+      fout << setprecision(precision) << setw(15) << right << m_data[m_index[j][i]]
+	   << "  " << setprecision(precision) << setw(15) << right << m_error[m_index[j][i]] << "  ";
     fout << endl;
   }
 

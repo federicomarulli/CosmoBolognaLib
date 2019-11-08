@@ -272,7 +272,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (con
       }
 
     default:
-      ErrorCBL("Error in measure() of ThreePointCorrelation_comoving_reduced, no such kind of error type!");
+      ErrorCBL("no such kind of error type!", "measure", "hreePointCorrelation_comoving_reduced.cpp");
   }
 
 }

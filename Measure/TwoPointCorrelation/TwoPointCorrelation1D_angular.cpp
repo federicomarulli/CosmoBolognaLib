@@ -129,7 +129,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::measure (const ErrorTyp
     measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, seed);
     break;
   default:
-    ErrorCBL("Error in measure() of TwoPointCorrelation1D_angular.cpp, unknown type of error");
+    ErrorCBL("unknown type of error!", "measure", "TwoPointCorrelation1D_angular.cpp");
   }
 }
 
@@ -151,17 +151,17 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::measurePoisson (const s
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
-    ErrorCBL("Error in measurePoisson() of TwoPointCorrelation1D_angular.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measurePoisson", "TwoPointCorrelation1D_angular.cpp");
 }
 
 
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_JackknifeXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureJackknife (const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  if (dir_output_JackknifeXi!=par::defaultString) {
-    string mkdir = "mkdir -p "+dir_output_JackknifeXi;
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
+    string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
   
@@ -178,11 +178,11 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureJackknife (const
 
   for (size_t i=0; i<nRegions; i++) {
 
-    if (dir_output_JackknifeXi!=par::defaultString && dir_output_JackknifeXi!="") {
+    if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_Jackknife_"+conv(i, par::fINT)+".dat";
       string header = "[1] angular separation at the bin centre # [2] angular two-point correlation function # [3] error";
       if (m_compute_extra_info) header += " # [4] mean separation # [5] standard deviation of the separation distribution # [6] mean redshift # [7] standard deviation of the redshift distribution";
-      data_SS[i]->write(dir_output_JackknifeXi, file, header, 10, 0);
+      data_SS[i]->write(dir_output_resample, file, header, 10, 0);
     }
 
     vector<double> dd; data_SS[i]->get_data(dd);
@@ -197,7 +197,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureJackknife (const
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
-    ErrorCBL("Error in measureJackknife() of TwoPointCorrelation1D_angular.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureJackknife", "TwoPointCorrelation1D_angular.cpp");
 
   m_dataset->set_covariance(covariance);
 
@@ -207,13 +207,13 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureJackknife (const
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_BootstrapXi, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureBootstrap (const int nMocks, const string dir_output_pairs, const vector<string> dir_input_pairs, const string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
 {
-  if (nMocks <=0)
-    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_angular.cpp, number of mocks must be >0");
+  if (nMocks<=0)
+    ErrorCBL("the number of mocks must be >0!", "measureBootstrap", "TwoPointCorrelation1D_angular.cpp");
 
-  if (dir_output_BootstrapXi!=par::defaultString) {
-    string mkdir = "mkdir -p "+dir_output_BootstrapXi;
+  if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
+    string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
 
@@ -227,11 +227,11 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureBootstrap (const
 
   for (int i=0; i<nMocks; i++) {
 
-     if (dir_output_BootstrapXi!=par::defaultString && dir_output_BootstrapXi!="") {
+     if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
       string file = "xi_Bootstrap_"+conv(i, par::fINT)+".dat";
       string header = "[1] angular separation at the bin centre # [2] angular two-point correlation function # [3] error";
       if (m_compute_extra_info) header += " # [4] mean separation # [5] standard deviation of the separation distribution # [6] mean redshift # [7] standard deviation of the redshift distribution";
-      data_SS[i]->write(dir_output_BootstrapXi, file, header, 10, 0);
+      data_SS[i]->write(dir_output_resample, file, header, 10, 0);
     }
 
     vector<double> dd; data_SS[i]->get_data(dd);
@@ -246,7 +246,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_angular::measureBootstrap (const
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
-    ErrorCBL("Error in measureBootstrap() of TwoPointCorrelation1D_angular.cpp: the chosen estimator is not implemented!");
+    ErrorCBL("the chosen estimator is not implemented!", "measureBootstrap", "TwoPointCorrelation1D_angular.cpp");
 
   m_dataset->set_covariance(covariance);
 

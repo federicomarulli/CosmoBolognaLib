@@ -86,17 +86,28 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measurePois
   vector<double> hist(m_histogram->nbins1()*m_histogram->nbins2());
   vector<double> error(m_histogram->nbins1()*m_histogram->nbins2());
 
-  vector<vector<double>> extra_info(5);
+  vector<vector<double>> ave_var1 = m_histogram->averaged_bins1();
+  vector<vector<double>> ave_var2 = m_histogram->error_bins2();
+  vector<vector<double>> err_var1 = m_histogram->averaged_bins1();
+  vector<vector<double>> err_var2 = m_histogram->error_bins2();
+
+  vector<vector<double>> extra_info(11);
 
   for(size_t i=0; i<m_histogram->nbins1(); i++)
     for(size_t j=0; j<m_histogram->nbins2(); j++){
       hist[i*m_histogram->nbins2()+j] = m_histogram->operator()(i, j, m_HistogramType, m_fact);
-      error[i*m_histogram->nbins2()+j] = m_histogram->poisson_error(i, j, m_HistogramType, m_fact);
+      error[i*m_histogram->nbins2()+j] = m_histogram->error(i, j, m_HistogramType, m_fact);
       extra_info[0].push_back(edges1[i]);
       extra_info[1].push_back(edges1[i+1]);
       extra_info[2].push_back(edges2[j]);
       extra_info[3].push_back(edges2[j+1]);
-      extra_info[4].push_back(m_histogram->weight(i, j));
+      extra_info[4].push_back(m_histogram->unweighted_counts(i, j));
+      extra_info[5].push_back(sqrt(m_histogram->unweighted_counts(i, j)));
+      extra_info[6].push_back(m_histogram->normalization(i, j, m_HistogramType, m_fact));
+      extra_info[7].push_back(ave_var1[i][j]);
+      extra_info[8].push_back(err_var1[i][j]);
+      extra_info[9].push_back(ave_var2[i][j]);
+      extra_info[10].push_back(err_var2[i][j]);
     }
 
   auto dataset = make_shared<data::Data2D_extra> (data::Data2D_extra(bins1, bins2, hist, error, extra_info));
@@ -110,8 +121,7 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measurePois
 
 shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measureJackknife (const string dir_output_resample)
 {
-  auto histogram =  make_shared<glob::Histogram2D> (glob::Histogram2D ());
-  histogram->set(m_histogram->nbins1(), m_histogram->nbins2(), m_histogram->minVar1(), m_histogram->maxVar1(), m_histogram->minVar2(),  m_histogram->maxVar2(), m_histogram->shift1(), m_histogram->shift2(), m_histogram->bin_type1(), m_histogram->bin_type2());
+  m_dataset = m_measurePoisson();
 
   const int nRegions = m_data->nRegions();
   vector<shared_ptr<glob::Histogram>> histo_JK(nRegions);
@@ -127,44 +137,20 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measureJack
   vector<double> weight = m_data->var(catalogue::Var::_Weight_);
 
   for (size_t i=0; i<m_data->nObjects(); i++) {
-    vector<int> bin = histogram->digitize(var1[i], var2[i]);
-    histogram->put(bin[0], bin[1], weight[i]);
-    histo_JK[regions[i]]->put (bin[0], bin[1], weight[i]);
+    vector<int> bin = m_histogram->digitize(var1[i], var2[i]);
+    for (int j=0; j<nRegions; j++)
+      if (j!=regions[i])
+	histo_JK[regions[i]]->put (bin[0], bin[1], weight[i], var1[i], var2[i]);
   }
 
-  m_histogram = histogram;
-
-  vector<double> bins1 = m_histogram->bins1();
-  vector<double> edges1 = m_histogram->edges1();
-
-  vector<double> bins2 = m_histogram->bins2();
-  vector<double> edges2 = m_histogram->edges2();
-
-  vector<double> hist(m_histogram->nbins1()*m_histogram->nbins2());
-  vector<double> error(m_histogram->nbins1()*m_histogram->nbins2());
-
-  vector<vector<double>> extra_info(5);
-
-  for(size_t i=0; i<m_histogram->nbins1(); i++)
-    for(size_t j=0; j<m_histogram->nbins2(); j++){
-      hist[i*m_histogram->nbins2()+j] = m_histogram->operator()(i, j, m_HistogramType, m_fact);
-      error[i*m_histogram->nbins2()+j] = m_histogram->poisson_error(i, j, m_HistogramType, m_fact);
-      extra_info[0].push_back(edges1[i]);
-      extra_info[1].push_back(edges1[i+1]);
-      extra_info[2].push_back(edges2[i]);
-      extra_info[3].push_back(edges2[i+1]);
-      extra_info[4].push_back(m_histogram->weight(i, j));
-    }
-
   compute_covariance(histo_JK, true);
-  auto dataset = make_shared<data::Data2D_extra> (data::Data2D_extra(bins1, bins2, hist, m_dataset->covariance(), extra_info));
 
   // write jackknife outputs
   if (dir_output_resample!=par::defaultString)
     for (int i=0; i<nRegions; i++) 
       histo_JK[i]->write(dir_output_resample, "Jackknife_"+conv(i+1, par::fINT)+".dat", m_HistogramType, m_fact);
 
-  return dataset;
+  return m_dataset;
 }
 
 // ============================================================================
@@ -172,8 +158,7 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measureJack
 
 shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measureBootstrap (const string dir_output_resample, const int nResamplings, const int seed) 
 {
-  auto histogram =  make_shared<glob::Histogram2D> (glob::Histogram2D ());
-  histogram->set(m_histogram->nbins1(), m_histogram->nbins2(), m_histogram->minVar1(), m_histogram->maxVar1(), m_histogram->minVar2(),  m_histogram->maxVar2(), m_histogram->shift1(), m_histogram->shift2(), m_histogram->bin_type1(), m_histogram->bin_type2());
+  m_dataset = m_measurePoisson();
 
   const int nRegions = m_data->nRegions();
   vector<shared_ptr<glob::Histogram>> histo_BS(nResamplings);
@@ -195,53 +180,25 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measureBoot
 
   for (size_t i=0; i<m_data->nObjects(); i++) {
     vector<int> bin = m_histogram->digitize(var1[i], var2[i]);
-    m_histogram->put(bin[0], bin[1], weight[i]);
     for (int j=0; j<nResamplings; j++) {
-      histo_BS[j]->put (bin[0], bin[1], weight[i]*region_weights[j][regions[i]]);
+      histo_BS[j]->put (bin[0], bin[1], weight[i]*region_weights[j][regions[i]], var1[i], var2[i]);
     }
   }
 
-  m_histogram = histogram;
-
-  vector<double> bins1 = m_histogram->bins1();
-  vector<double> edges1 = m_histogram->edges1();
-
-  vector<double> bins2 = m_histogram->bins2();
-  vector<double> edges2 = m_histogram->edges2();
-
-  vector<double> hist(m_histogram->nbins1()*m_histogram->nbins2());
-  vector<double> error(m_histogram->nbins1()*m_histogram->nbins2());
-
-  vector<vector<double>> extra_info(5);
-
-  for(size_t i=0; i<m_histogram->nbins1(); i++)
-    for(size_t j=0; j<m_histogram->nbins2(); j++){
-      hist[i*m_histogram->nbins2()+j] = m_histogram->operator()(i, j, m_HistogramType, m_fact);
-      error[i*m_histogram->nbins2()+j] = m_histogram->poisson_error(i, j, m_HistogramType, m_fact);
-      extra_info[0].push_back(edges1[i]);
-      extra_info[1].push_back(edges1[i+1]);
-      extra_info[2].push_back(edges2[i]);
-      extra_info[3].push_back(edges2[i+1]);
-      extra_info[4].push_back(m_histogram->weight(i, j));
-    }
-
-
-  compute_covariance(histo_BS, true);
-  auto dataset = make_shared<data::Data2D_extra> (data::Data2D_extra(bins1, bins2, hist, m_dataset->covariance(), extra_info));
+  compute_covariance(histo_BS, false);
 
   // write bootstrap outputs
   if (dir_output_resample!=par::defaultString)
     for (int i=0; i<nResamplings; i++)
       histo_BS[i]->write(dir_output_resample, "Bootstraps_"+conv(i+1, par::fINT)+".dat", m_HistogramType, m_fact);
 
-  return dataset;
+  return m_dataset;
 }
 
 
 // ============================================================================
 
-
-void cbl::measure::numbercounts::NumberCounts2D::measure (const ErrorType errorType, const string dir_output_resample, const int nResamplings, const int seed)
+void cbl::measure::numbercounts::NumberCounts2D::measure (const ErrorType errorType, const string dir_output_resample, const int nResamplings, const int seed, const bool conv, const double sigma)
 {
   switch (errorType) {
     case (ErrorType::_Poisson_) :
@@ -253,10 +210,11 @@ void cbl::measure::numbercounts::NumberCounts2D::measure (const ErrorType errorT
     case (ErrorType::_Bootstrap_) :
       m_dataset = m_measureBootstrap(dir_output_resample, nResamplings, seed);
       break;
-
     default:
-      ErrorCBL("Error in measure() of NumberCounts2D.cpp, unknown type of error");
+      ErrorCBL("the input ErrorType is not allowed!", "measure", "NumberCounts2D.cpp");
   }
+
+  if (conv) m_dataset = Gaussian_smoothing(sigma);
 
 }
 
@@ -299,4 +257,14 @@ void cbl::measure::numbercounts::NumberCounts2D::write_covariance (const string 
   string mkdir = "mkdir -p "+dir;
   if(system(mkdir.c_str())) {}
   m_dataset->write_covariance(dir, file, 8);
+}
+
+// ============================================================================
+
+shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::Gaussian_smoothing (const double sigma)
+{
+  (void)sigma;
+  ErrorCBL("Gaussian smoothing is not implemented yet in 2D...", "Gaussian_smoothing", "NumberCounts2D.cpp", glob::ExitCode::_workInProgress_);
+
+  return m_dataset;
 }

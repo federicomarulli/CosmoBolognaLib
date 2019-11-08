@@ -61,7 +61,8 @@ namespace cbl {
      * @return a std::vector containing the
      * ExitCode names
      */
-    inline std::vector<std::string> ExitCodeNames () {return {"error", "IO", "workInProgress"}; }
+    inline std::vector<std::string> ExitCodeNames ()
+    { return {"error", "IO", "workInProgress"}; }
 
     /**
      * @brief cast an enum of type ExitCode
@@ -69,8 +70,9 @@ namespace cbl {
      * @param exitCodeIndex the exitCode index
      * @return object of class ExitCode
      */
-    inline ExitCode ExitCodeCast (const int exitCodeIndex) {return castFromValue<ExitCode>(exitCodeIndex);}
-
+    inline ExitCode ExitCodeCast (const int exitCodeIndex)
+    { return castFromValue<ExitCode>(exitCodeIndex); }
+    
     /**
      * @brief cast an enum of type ExitCode
      * from its name
@@ -85,7 +87,8 @@ namespace cbl {
      * @param exitCodeIndeces the exitCode indeces
      * @return std::vector of objects of class ExitCode
      */
-    inline std::vector<ExitCode> ExitCodeCast (const std::vector<int> exitCodeIndeces) {return castFromValues<ExitCode>(exitCodeIndeces);} 
+    inline std::vector<ExitCode> ExitCodeCast (const std::vector<int> exitCodeIndeces)
+    { return castFromValues<ExitCode>(exitCodeIndeces); } 
 
     /**
      * @brief cast an enum of type ExitCode
@@ -93,7 +96,8 @@ namespace cbl {
      * @param exitCodeNames the exitCode names
      * @return std::vector of objects of class ExitCode
      */
-    inline std::vector<ExitCode> ExitCodeCast (const std::vector<std::string> exitCodeNames) {return castFromNames<ExitCode>(exitCodeNames, ExitCodeNames());}
+    inline std::vector<ExitCode> ExitCodeCast (const std::vector<std::string> exitCodeNames)
+    { return castFromNames<ExitCode>(exitCodeNames, ExitCodeNames()); }
 
     /**
      *  @class Exception Exception.h
@@ -110,10 +114,15 @@ namespace cbl {
 
       /// the message describing the exception
       std::string m_message;
-
+      
       /// the exit status
       ExitCode m_exitCode;
 
+      /// the CBL function where the exception is raised
+      std::string m_functionCBL;
+
+      /// the CBL file containing the function where the exception is raised
+      std::string m_fileCBL;
   
     public:
     
@@ -127,38 +136,52 @@ namespace cbl {
        *  @return object of class Data
        */
       Exception ()
-	: m_message(par::col_red+"\n*** CosmoBolognaLib generic error! ***\n"+par::col_default), m_exitCode(ExitCode::_error_) {}
+	: m_message(par::col_red+"\n*** CosmoBolognaLib generic error! ***\n"+par::col_default), m_exitCode(ExitCode::_error_), m_functionCBL(cbl::par::defaultString), m_fileCBL(cbl::par::defaultString) {}
 
       /**
        *  @brief constructor
        *
        *  @param message the output message
+       *
        *  @param exitCode the exit status
+       *
        *  @param header header of the error message
+       *
+       *  @param functionCBL the CBL function where the exception is
+       *  raised
+       *
+       *  @param fileCBL the CBL file containing the function where
+       *  the exception is raised
        *
        *  @return object of class Exception
        */
-      explicit Exception (const std::string message, const ExitCode exitCode=ExitCode::_error_, const std::string header="\n")
-	: m_exitCode(exitCode)
+      explicit Exception (const std::string message, const ExitCode exitCode=ExitCode::_error_, const std::string header="\n", const std::string functionCBL=cbl::par::defaultString, const std::string fileCBL=cbl::par::defaultString)
+	: m_exitCode(exitCode), m_functionCBL(functionCBL), m_fileCBL(fileCBL)
       {
 	m_message = header;
 	
-	switch (exitCode)
+	switch(exitCode)
 	  {
 	  case(ExitCode::_error_):
-	    m_message += par::col_red + "*** Error! ***\n";
+	    m_message += (m_functionCBL!=par::defaultString && m_fileCBL!=par::defaultString)
+	      ? par::col_red+"*** Error in the CBL function "+par::col_purple+m_functionCBL+par::col_red+" of "+m_fileCBL+" ! ***\n"
+	      : par::col_red+"*** Error! ***\n";
 	    break;
 	  
 	  case(ExitCode::_IO_):
-	    m_message += par::col_red + "*** Input/Output error ***\n";
+	    m_message += (m_functionCBL!=par::defaultString && m_fileCBL!=par::defaultString)
+	      ? par::col_red+"*** Input/Output error in the CBL function "+par::col_blue+m_functionCBL+" of "+m_fileCBL+par::col_red+"! ***\n"
+	      : par::col_red+"*** Input/Output error! ***\n";
 	    break;
 	  
 	  case(ExitCode::_workInProgress_):
-	    m_message += par::col_purple + "*** Work in progress! ***\n";
+	    m_message += (m_functionCBL!=par::defaultString && m_fileCBL!=par::defaultString)
+	      ? par::col_purple+"*** Work in progress in the CBL function "+par::col_blue+m_functionCBL+" of "+m_fileCBL+par::col_red+"! ***\n"
+	      : par::col_purple+"*** Work in progress! ***\n";
 	    break;
 	  }
-
-	m_message += message + "\n\n" + par::col_default;
+	
+	m_message += par::col_yellow+message+"\n\n"+par::col_default;
       }
     
       /**
@@ -169,13 +192,11 @@ namespace cbl {
 
       ///@}
 
-    
+      
       /**
-       *  @brief get the exit status
-       *  @return the exit status
+       *  @name Functions to get the protected members of the class
        */
-      ExitCode exitCode () const noexcept
-      { return m_exitCode; }
+      ///@{
 
       /**
        *  @brief the error description
@@ -184,7 +205,33 @@ namespace cbl {
        */
       const char* what () const noexcept override
       { return m_message.c_str(); }
-  
+      
+      /**
+       *  @brief get the exit status
+       *  @return the exit status
+       */
+      ExitCode exitCode () const noexcept
+      { return m_exitCode; }
+
+      /**
+       *  @brief get the CBL function where the exception is raised
+       *
+       *  @return the CBL function where the exception is raised
+       */
+      std::string functionCBL () const noexcept
+      { return m_functionCBL; }
+
+      /**
+       *  @brief get the CBL file containing the function where the
+       *  exception is raised
+       *
+       *  @return the CBL function where the exception is raised
+       */
+      std::string fileCBL () const noexcept
+      { return m_fileCBL; }
+      
+      ///@}
+      
     };
   
   }

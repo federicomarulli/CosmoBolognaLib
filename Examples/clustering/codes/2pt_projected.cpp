@@ -62,7 +62,7 @@ int main () {
 
     // measure the projected two-point correlation function
   
-    const auto TwoP = cbl::measure::twopt::TwoPointCorrelation::Create(cbl::measure::twopt::TwoPType::_1D_projected_, catalogue, random_catalogue, cbl::BinType::_logarithmic_, rpMin, rpMax, nbins_D1, shift_D1, piMin, piMax, nbins_D2, shift_D2, piMax_integral);
+    const auto TwoP = cbl::measure::twopt::TwoPointCorrelation::Create(cbl::measure::twopt::TwoPType::_projected_, catalogue, random_catalogue, cbl::BinType::_logarithmic_, rpMin, rpMax, nbins_D1, shift_D1, piMin, piMax, nbins_D2, shift_D2, piMax_integral);
 
     TwoP->measure(cbl::measure::ErrorType::_Poisson_, dir);
 

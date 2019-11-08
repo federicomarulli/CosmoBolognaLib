@@ -138,8 +138,9 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory used to store
-	 *  the Jackknife resampling correlation functions, with Poisson
-	 *  errors
+	 *  the Jackknife resampling correlation functions, with
+	 *  Poisson errors; if an empty string (i.e. "" or "NULL") is
+	 *  provided, no output will be stored
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
 	 *  pairs; false &rarr; read the number of data-data pairs from
@@ -176,8 +177,9 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory used to store
-	 *  the Bootstrap resampling correlation function, with Poisson
-	 *  errors
+	 *  the Bootstrap resampling correlation functions, with
+	 *  Poisson errors; if an empty string (i.e. "" or "NULL") is
+	 *  provided, no output will be stored
 	 *
 	 *  @param count_dd true &rarr; count the number of data-data
 	 *  pairs; false &rarr; read the number of data-data pairs from
@@ -277,7 +279,7 @@ namespace cbl {
 	 *  @brief default constructor
 	 *  @return object of class TwoPointCorrelation_projected
 	 */
-	TwoPointCorrelation_projected () { m_twoPType = TwoPType::_1D_projected_; m_piMax_integral=50.; }
+	TwoPointCorrelation_projected () { m_twoPType = TwoPType::_projected_; m_piMax_integral=50.; }
 
 	/**
 	 *  @brief constructor
@@ -315,7 +317,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation_projected (catalogue::Catalogue data, catalogue::Catalogue random, const BinType binType_rp, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const double piMax_integral, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation2D_cartesian(data, random, binType_rp, rpMin, rpMax, nbins_rp, shift_rp, BinType::_linear_, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_projected_; m_piMax_integral = piMax_integral; }
+	  { m_twoPType = TwoPType::_projected_; m_piMax_integral = piMax_integral; }
       
 	/**
 	 *  @brief constructor
@@ -351,7 +353,7 @@ namespace cbl {
 	 */
 	TwoPointCorrelation_projected (catalogue::Catalogue data, catalogue::Catalogue random, const BinType binType_rp, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const double piMax_integral, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation2D_cartesian(data, random, binType_rp, rpMin, rpMax, binSize_rp, shift_rp, BinType::_linear_, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
-	  { m_twoPType = TwoPType::_1D_projected_; m_piMax_integral = piMax_integral; }
+	  { m_twoPType = TwoPType::_projected_; m_piMax_integral = piMax_integral; }
       
 	/**
 	 *  @brief default destructor
@@ -366,7 +368,7 @@ namespace cbl {
 	 *  @return the y coordinates
 	 */
 	std::vector<double> yy () const 
-	  { cbl::ErrorCBL("Error in yy() of TwoPointCorrelation_projected.h!"); std::vector<double> vv; return vv; }
+	  { cbl::ErrorCBL("", "yy", "TwoPointCorrelation_projected.h"); std::vector<double> vv; return vv; }
 
 	/**
 	 *  @brief get the the binned correlation function 
@@ -389,7 +391,7 @@ namespace cbl {
 	 *  @return the binned correlation function 
 	 */
 	std::vector<std::vector<double>> xi2D () const 
-	  { cbl::ErrorCBL("Error in xi2D() of TwoPointCorrelation_projected.h!"); std::vector<std::vector<double>> vv; return vv; }
+	  { cbl::ErrorCBL("", "xi2D", "TwoPointCorrelation_projected.h"); std::vector<std::vector<double>> vv; return vv; }
 
 	/**
 	 *  @brief get the error on the binned correlation function
@@ -398,7 +400,7 @@ namespace cbl {
 	 *  function
 	 */
 	std::vector<std::vector<double>> error2D () const 
-	  { cbl::ErrorCBL("Error in error2D() of TwoPointCorrelation_projected.h!"); std::vector<std::vector<double>> vv; return vv; }
+	  { cbl::ErrorCBL("", "error2D", "TwoPointCorrelation_projected.h"); std::vector<std::vector<double>> vv; return vv; }
       
 
 	/**
@@ -418,7 +420,8 @@ namespace cbl {
 	 *  store the number of pairs (if the pairs are read from files)
 	 *
 	 *  @param dir_output_resample output directory of the
-	 *  resampled correlation function
+	 *  resampling correlation functions; if an empty string
+	 *  (i.e. "" or "NULL") is provided, no output will be stored
 	 *
 	 *  @param nMocks number of resampling used for bootstrap
 	 *
