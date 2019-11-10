@@ -596,9 +596,7 @@ namespace cbl {
        *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *
        *  @param default_delta true = using function
        *  cbl::cosmology::deltac; false = using delta_t*growth
@@ -634,9 +632,7 @@ namespace cbl {
        *  of Warren 2004), Tinker (Tinker et al. 2010)
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (author=Tinker)
-       *  bias
+       *  mean interior density relative to the background
        *
        *  @return the halo bias
        *
@@ -2452,10 +2448,8 @@ namespace cbl {
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
+       *  interior density relative to the background
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2554,10 +2548,8 @@ namespace cbl {
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
+       *  interior density relative to the background
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2650,10 +2642,8 @@ namespace cbl {
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
+       *  interior density relative to the background
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2758,9 +2748,7 @@ namespace cbl {
        *  name
        *       
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2854,9 +2842,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2967,9 +2953,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *
        *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        *  virial overdensity
@@ -3052,9 +3036,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *
        *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        *  virial overdensity
@@ -3142,9 +3124,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *
        *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        *  virial overdensity
@@ -3234,9 +3214,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *
        *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        *  virial overdensity
@@ -3328,9 +3306,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *
        *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        *  virial overdensity
@@ -3421,9 +3397,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *
        *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        *  virial overdensity
@@ -3522,9 +3496,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -5377,9 +5349,7 @@ namespace cbl {
        *  @param interpType method to interpolate the power spectrum
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (author=Tinker)
-       *  bias
+       *  mean interior density relative to the background
        *  
        *  @param kk wave vector module
        *
@@ -5447,9 +5417,7 @@ namespace cbl {
        *  @param interpType method to interpolate the power spectrum
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (author=Tinker)
-       *  bias
+       *  mean interior density relative to the background
        *  
        *  @param kk wave vector module
        *
@@ -5561,10 +5529,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions and for Tinker
-       *  et al. (author=Tinker) bias
+       *  mean interior density relative to the background
        *  
        *  @param kk wave vector module
        *
@@ -5662,9 +5627,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (author=Tinker)
-       *  bias
+       *  mean interior density relative to the background
        *  
        *  @param kk wave vector module
        *
@@ -6352,9 +6315,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (author=Tinker)
-       *  bias
+       *  mean interior density relative to the background
        *  
        *  @param kk wave vector module
        *
@@ -7422,9 +7383,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *  
        *  @param kk wave vector module
        *
@@ -7520,9 +7479,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *  
        *  @param kk wave vector module
        *
@@ -7602,9 +7559,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (author=Tinker)
-       *  bias
+       *  mean interior density relative to the background
        *  
        *  @param kk wave vector module
        *
@@ -7685,9 +7640,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (author=Tinker)
-       *  bias
+       *  mean interior density relative to the background
        *  
        *  @param kk wave vector module
        *
@@ -7787,9 +7740,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *  
        *  @param kk wave vector module
        *
@@ -7884,9 +7835,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (model_MF=Tinker)
-       *  and Watson et al. (model_MF=Watson_SOH) mass functions
+       *  mean interior density relative to the background
        *  
        *  @param kk wave vector module
        *
@@ -7965,9 +7914,7 @@ namespace cbl {
        *  name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background; this
-       *  parameter is used only for Tinker et al. (author=Tinker)
-       *  bias
+       *  mean interior density relative to the background
        *  
        *  @param kk wave vector module
        *

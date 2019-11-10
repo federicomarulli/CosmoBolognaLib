@@ -29,7 +29,7 @@ histogram: $(OBJ1)
 
 
 clean:
-	rm -f *.o *~ \#* temp* core* histogram 
+	rm -f *.o *~ histogram \#* temp* core* histogram 
 
 histogram.o: histogram.cpp makefile $(dirLib)*.$(ES) 
 	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c histogram.cpp

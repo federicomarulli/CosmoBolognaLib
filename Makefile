@@ -418,87 +418,87 @@ CPT_Library:
 
 allExamples:
 	$(call colorecho, "\n"Compiling the example code: vector.cpp ... "\n")
-	cd $(PWD)/Examples/vectors ; make CXX=$(CXX)
+	cd $(PWD)/Examples/vectors ; make CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: eigen.cpp ... "\n")
-	cd $(PWD)/Examples/eigen ; make CXX=$(CXX)
+	cd $(PWD)/Examples/eigen ; make CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: randomNumbers.cpp ... "\n")
-	cd $(PWD)/Examples/randomNumbers ; make CXX=$(CXX)
+	cd $(PWD)/Examples/randomNumbers ; make CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: randomNumbers_custom.cpp ... "\n")
-	cd $(PWD)/Examples/randomNumbers ; make randomNumbers_custom CXX=$(CXX) 
+	cd $(PWD)/Examples/randomNumbers ; make randomNumbers_custom CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)' 
 	$(call colorecho, "\n"Compiling the example code: correlated_samples.cpp ... "\n")
-	cd $(PWD)/Examples/randomNumbers ; make correlated_samples CXX=$(CXX) 
+	cd $(PWD)/Examples/randomNumbers ; make correlated_samples CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)' 
 	$(call colorecho, "\n"Compiling the example code: histogram.cpp ... "\n")
-	cd $(PWD)/Examples/histogram ; make histogram CXX=$(CXX) 	
+	cd $(PWD)/Examples/histogram ; make histogram CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)' 	
 	$(call colorecho, "\n"Compiling the example code: integration_gsl.cpp ... "\n")
-	cd $(PWD)/Examples/wrappers ; make integration_gsl CXX=$(CXX)
+	cd $(PWD)/Examples/wrappers ; make integration_gsl CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: minimisation_gsl.cpp ... "\n")
-	cd $(PWD)/Examples/wrappers ; make minimisation_gsl CXX=$(CXX)
+	cd $(PWD)/Examples/wrappers ; make minimisation_gsl CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: integration_cuba.cpp ... "\n")
-	cd $(PWD)/Examples/wrappers ; make integration_cuba CXX=$(CXX)
+	cd $(PWD)/Examples/wrappers ; make integration_cuba CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: fits.cpp ... "\n")
-	cd $(PWD)/Examples/wrappers ; make fits CXX=$(CXX)
+	cd $(PWD)/Examples/wrappers ; make fits CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: covsample.cpp ... "\n")
-	cd $(PWD)/Examples/covsample ; make CXX=$(CXX) 
+	cd $(PWD)/Examples/covsample ; make CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)' 
 	$(call colorecho, "\n"Compiling the example code: cosmology.cpp ... "\n")
-	cd $(PWD)/Examples/cosmology ; make cosmology CXX=$(CXX)
+	cd $(PWD)/Examples/cosmology ; make cosmology CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: fsigma8.cpp ... "\n")
-	cd $(PWD)/Examples/cosmology ; make fsigma8 CXX=$(CXX)
+	cd $(PWD)/Examples/cosmology ; make fsigma8 CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: distances.cpp ... "\n")
-	cd $(PWD)/Examples/cosmology ; make distances CXX=$(CXX)
+	cd $(PWD)/Examples/cosmology ; make distances CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: model_cosmology.cpp ... "\n")
-	cd $(PWD)/Examples/cosmology ; make model_cosmology CXX=$(CXX)
+	cd $(PWD)/Examples/cosmology ; make model_cosmology CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: data1D.cpp ... "\n")
-	cd $(PWD)/Examples/data ; make data1D CXX=$(CXX)
+	cd $(PWD)/Examples/data ; make data1D CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: prior.cpp ... "\n")
-	cd $(PWD)/Examples/statistics/codes ; make prior CXX=$(CXX)
+	cd $(PWD)/Examples/statistics/codes ; make prior CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: fit.cpp ... "\n")
-	cd $(PWD)/Examples/statistics/codes ; make fit CXX=$(CXX)
+	cd $(PWD)/Examples/statistics/codes ; make fit CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the wrapper for the example code: fit.py ... "\n")
-	cd $(PWD)/Examples/statistics/codes ; make modelpy CXX=$(CXX) SWIG=$(SWIG)
+	cd $(PWD)/Examples/statistics/codes ; make modelpy CXX=$(CXX) SWIG=$(SWIG) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: sampler.cpp ... "\n")
-	cd $(PWD)/Examples/statistics/codes ; make sampler CXX=$(CXX)
+	cd $(PWD)/Examples/statistics/codes ; make sampler CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: catalogue.cpp ... "\n")
-	cd $(PWD)/Examples/catalogue ; make catalogue CXX=$(CXX) 
+	cd $(PWD)/Examples/catalogue ; make catalogue CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)' 
 	$(call colorecho, "\n"Compiling the example code: numberCounts.cpp ... "\n")
-	cd $(PWD)/Examples/numberCounts/codes ; make numberCounts CXX=$(CXX)
+	cd $(PWD)/Examples/numberCounts/codes ; make numberCounts CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: numberCounts_errors.cpp ... "\n")
-	cd $(PWD)/Examples/numberCounts/codes ; make numberCounts_errors CXX=$(CXX)
+	cd $(PWD)/Examples/numberCounts/codes ; make numberCounts_errors CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: 2pt_monopole.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 2pt_monopole CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_monopole CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: 2pt_monopole_errors.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 2pt_monopole_errors CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_monopole_errors CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: 2pt_multipoles.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 2pt_multipoles CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_multipoles CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: 2pt_2D.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 2pt_2D CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_2D CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: 2pt_projected.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 2pt_projected CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_projected CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: 2pt_angular.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 2pt_angular CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make 2pt_angular CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: 3pt.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 3pt CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make 3pt CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: 3pt_multipoles.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make 3pt_multipoles CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make 3pt_multipoles CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: model_2pt_monopole_BAO.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make model_2pt_monopole_BAO CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make model_2pt_monopole_BAO CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: model_2pt_monopole_RSD.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make model_2pt_monopole_RSD CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make model_2pt_monopole_RSD CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: model_2pt_projected.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make model_2pt_projected CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make model_2pt_projected CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: model_2pt_multipoles.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make model_2pt_multipoles CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make model_2pt_multipoles CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: model_2pt_2D.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make model_2pt_2D CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make model_2pt_2D CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: model_3pt.cpp ... "\n")
-	cd $(PWD)/Examples/clustering/codes ; make model_3pt CXX=$(CXX)
+	cd $(PWD)/Examples/clustering/codes ; make model_3pt CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: sizeFunction.cpp ... "\n")
-	cd $(PWD)/Examples/cosmicVoids/codes ; make sizeFunction CXX=$(CXX)
+	cd $(PWD)/Examples/cosmicVoids/codes ; make sizeFunction CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: cleanVoidCatalogue.cpp ... "\n")
-	cd $(PWD)/Examples/cosmicVoids/codes ; make cleanVoidCatalogue CXX=$(CXX)
+	cd $(PWD)/Examples/cosmicVoids/codes ; make cleanVoidCatalogue CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: modelling_VoidAbundances ... "\n")
-	cd $(PWD)/Examples/cosmicVoids/codes ; make modelling_VoidAbundances CXX=$(CXX)
+	cd $(PWD)/Examples/cosmicVoids/codes ; make modelling_VoidAbundances CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: readParameterFile.cpp ... "\n")
-	cd $(PWD)/Examples/readParameterFile/ ; make CXX=$(CXX) 
+	cd $(PWD)/Examples/readParameterFile/ ; make CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 
 python: $(dir_Python)CBL_wrap.o libCBL $(dir_Python)CBL.i $(PWD)/Makefile
 	make ALL
