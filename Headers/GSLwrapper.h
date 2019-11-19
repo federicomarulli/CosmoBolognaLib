@@ -139,16 +139,37 @@ namespace cbl {
        *  @return the definite integral of the function
        */
       double GSL_derivative (gsl_function Func, const double xx, const double hh, const double prec=1.e-2);
-    
+
       /**
-       *  @brief integral, using the GSL cquad method
+       *  @brief integral, using the gsl romberg method
        *
        *  it only works with a function defined as
        *  std::function<double(double)> that doesn't use fixed parameters
        *  (useful for class members, when the external parameters can be
        *  attributes of the class)
        *
-       *  @param Func the fuction to be integrated
+       *  The number of function evaluation is  \f$ 2^n+1 \f$, n being
+       *  the input parameter npoints
+       *
+       *  @param func the fuction to be integrated
+       *  @param a the lower limit of the integral
+       *  @param b the upper limit of the integral
+       *  @param npoints the number of points 
+       *  @param rel_err the relative error
+       *  @param abs_err the absolute error
+       *  @return the definite integral of the function
+       */
+      double GSL_integrate_romberg (gsl_function Func, const double a, const double b, const int npoints, const double eps_rel = 1.e-4, const double eps_abs = 1.e-12);
+    
+      /**
+       *  @brief integral, using the gsl cquad method
+       *
+       *  it only works with a function defined as
+       *  std::function<double(double)> that doesn't use fixed parameters
+       *  (useful for class members, when the external parameters can be
+       *  attributes of the class)
+       *
+       *  @param func the fuction to be integrated
        *  @param a the lower limit of the integral
        *  @param b the upper limit of the integral
        *  @param rel_err the relative error
@@ -243,6 +264,27 @@ namespace cbl {
        *  @return the definite integral of the function
        */
       double GSL_derivative (FunctionDoubleDouble func, const double xx, const double hh, const double prec=1.e-2);
+
+      /**
+       *  @brief integral, using the gsl romberg method
+       *
+       *  it only works with a function defined as
+       *  std::function<double(double)> that doesn't use fixed parameters
+       *  (useful for class members, when the external parameters can be
+       *  attributes of the class)
+       *
+       *  The number of function evaluation is  \f$ 2^n+1 \f$, n being
+       *  the input parameter npoints
+       *
+       *  @param func the fuction to be integrated
+       *  @param a the lower limit of the integral
+       *  @param b the upper limit of the integral
+       *  @param npoints the number of points 
+       *  @param rel_err the relative error
+       *  @param abs_err the absolute error
+       *  @return the definite integral of the function
+       */
+      double GSL_integrate_romberg (FunctionDoubleDouble func, const double a, const double b, const int npoints, const double eps_rel = 1.e-4, const double eps_abs = 1.e-12);
 
       /**
        *  @brief integral, using the GSL cquad method

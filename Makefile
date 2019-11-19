@@ -17,8 +17,9 @@ SWIG = swig
 Doxygen = doxygen
 
 # GSL installation directories
-dir_INC_GSL = /usr/local/include
-dir_LIB_GSL = /usr/local/lib
+GSL_VERSION = $(shell gsl-config --version)
+dir_INC_GSL = $(shell gsl-config --prefix)/include/
+dir_LIB_GSL = $(shell gsl-config --prefix)/lib/
 
 # FFTW installation directories
 dir_INC_FFTW = /usr/local/include
@@ -51,7 +52,20 @@ dir_Python = $(PWD)/Python/
 
 HH = $(dir_H)*.h 
 
-FLAGS0 = -std=c++11 -fopenmp
+# GSL-related flags
+gsl_version_full := $(wordlist 1,3,$(subst ., ,$(GSL_VERSION)))
+gsl_version_major := $(word 1,${gsl_version_full})
+gsl_version_minor := $(word 2,${gsl_version_full})
+
+
+GSL_VERSION_OK = 0
+ifeq ($(gsl_version_major),2)
+	ifeq ($(shell test $(gsl_version_minor) -gt 4; echo $$?),0)
+		GSL_VERSION_OK = 1
+	endif
+endif
+
+FLAGS0 = -std=c++11 -fopenmp -DGSL_VERSION_OK=$(GSL_VERSION_OK)
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 
 FLAGS_INC = -I$(HOME)/include/ -I$(dir_INC_GSL) -I$(dir_INC_FFTW) -I$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H)

@@ -2061,9 +2061,101 @@ double cbl::trapezoid_integration (const std::vector<double> xx, const std::vect
 // ============================================================================
 
 
+double cbl::binomial_coefficient(const int n, const int m)
+{
+  return gsl_sf_fact(n)/(gsl_sf_fact(m)*gsl_sf_fact(n-m));
+}
+
+
+// ============================================================================
+
+
+double cbl::wigner_3j(const int j1, const int j2, const int j3, const int m1, const int m2, const int m3)
+{
+  return gsl_sf_coupling_3j(2*j1, 2*j2, 2*j3, 2*m1, 2*m2, 2*m3);
+}
+
+
+// ============================================================================
+
+
+double cbl::wigner_6j(const int j1, const int j2, const int j3, const int j4, const int j5, const int j6)
+{
+  return gsl_sf_coupling_6j(2*j1, 2*j2, 2*j3, 2*j4, 2*j5, 2*j6);
+}
+
+
+// ============================================================================
+
+
+double cbl::clebsh_gordan(const int l1, const int l2, const int m1, const int m2, const int l3, const int m3)
+{
+  return pow(-1, l1-l2+m3)*sqrt(2*l3+1)*gsl_sf_coupling_3j(2*l1, 2*l2, 2*l3, 2*m1, 2*m2, 2*m3);
+}
+
+
+// ============================================================================
+
+
 double cbl::coupling_3j(const int l, const int l_prime, const int l2)
 {
   return  gsl_sf_coupling_3j(2*l, 2*l_prime, 2*l2, 0, 0, 0);
+}
+
+
+// ============================================================================
+
+
+double cbl::get_mu (const double r1, const double r2, const double r3) 
+{
+  return ( (r1*r1+r2*r2-r3*r3)/(2*r1*r2));
+}
+
+
+// ============================================================================
+
+
+double cbl::window_function(const double x, const double min, const double max)
+{
+  if ((x>min) && (x<max)) 
+    return 1.;
+  else if ((x<min) or (x>max))
+    return 0;
+  else 
+    return 0.5;
+
+  return 0.;
+}
+
+
+// ============================================================================
+
+
+double cbl::three_spherical_bessel_integral (const double r1, const double r2, const double r3, const int L1, const int L2, const int L3)
+{
+  double fact = pow(-1, (L1+L2+L3)*0.5);
+  double mu = get_mu(r1, r2, r3);
+  double beta = window_function(mu);
+
+  if ((fact!=fact) or (beta==0))
+    return 0;
+
+  double term1 = fact*beta*(2*L3+1)/(8*cbl::par::pi*r1*r2*r3)*pow(r1/r3, L3);
+  double tt = 0;
+
+  for (int L=0; L<L3+1; L++) {
+
+    double term2 = 0;
+    int min_ell = std::max(fabs(L1-(L3-L)), fabs(L2-L));
+    int max_ell = std::min(L1+(L3-L), L2+L);
+    for (int ell=min_ell; ell<max_ell+1; ell++){ //check
+      term2 += clebsh_gordan(L1, L3-L, 0, 0, ell, 0)*clebsh_gordan(L2, L, 0, 0, ell, 0)*wigner_6j(L1, L2, L3, L, (L3-L), ell)*cbl::legendre_polynomial(mu, ell);
+    }
+    tt += sqrt(binomial_coefficient(2*L3, 2*L))*pow(r2/r1, L)*term2;
+  }
+
+
+  return term1*tt/clebsh_gordan(L1, L2, 0, 0, L3, 0);
 }
 
 

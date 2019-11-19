@@ -128,6 +128,35 @@ double cbl::wrapper::gsl::GSL_derivative (gsl_function Func, const double xx, co
 // ============================================================================
 
 
+double cbl::wrapper::gsl::GSL_integrate_romberg (gsl_function Func, const double a, const double b, const int npoints, const double eps_rel, const double eps_abs)
+{ 
+#if GSL_VERSION_OK==1
+  gsl_set_error_handler_off();
+  
+  gsl_integration_romberg_workspace * ws = gsl_integration_romberg_alloc(npoints);
+
+  double Int;
+  size_t nevals;
+
+  int status = gsl_integration_romberg(&Func, a, b, eps_abs, eps_rel, &Int, &nevals, ws);
+
+  gsl_integration_romberg_free(ws);
+
+  check_GSL_fail(status, true, "GSL_integrate_romberg", "gsl_integration_romberg");
+
+  return Int;
+#else
+  
+  (void)Func; (void)a; (void)b; (void)npoints; (void)eps_rel; (void)eps_abs;
+  ErrorCBL("Romberg integration is available with GSL version >=2.5", "GSL_integrate_romberg", "GSLwrapper.cpp");
+
+  return 0;
+#endif
+}
+
+// ============================================================================
+
+
 double cbl::wrapper::gsl::GSL_integrate_cquad (gsl_function Func, const double a, const double b, const double rel_err, const double abs_err, const int nevals)
 {
   gsl_set_error_handler_off();
@@ -242,6 +271,22 @@ double cbl::wrapper::gsl::GSL_derivative (FunctionDoubleDouble func, const doubl
   Func.params = &params;
 
   return GSL_derivative(Func, xx, hh, prec);
+}
+
+
+// ============================================================================
+
+
+double cbl::wrapper::gsl::GSL_integrate_romberg (FunctionDoubleDouble func, const double a, const double b, const int npoints, const double rel_err, const double abs_err)
+{
+  STR_generic_func_GSL params;
+  params.f = func;
+
+  gsl_function Func;  
+  Func.function = generic_function;
+  Func.params = &params;
+  
+  return GSL_integrate_romberg(Func, a, b, npoints, rel_err, abs_err);
 }
 
 
