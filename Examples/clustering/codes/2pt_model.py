@@ -5,13 +5,14 @@
 
 # import Python modules for scientific computing and plotting 
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 
 # import the CosmoBolognaLib
 import CosmoBolognaLib as cbl
 
 # set the CosmoBolognaLib and the current directories
-cbl.SetDirs("../../../", "./")
+cbl.SetDirs(os.getcwd()+"/../../../", os.getcwd()+"/")
 
 # create an object of class Cosmology
 cosmo = cbl.Cosmology(cbl.CosmologicalModel__Planck15_)

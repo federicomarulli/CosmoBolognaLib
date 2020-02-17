@@ -139,8 +139,6 @@ FLAGS defined in the Makefile (e.g.: make C=icpc FLAGS="-O0 -g")
 
 > <KBD> $ make CLASS </KBD> 
 
-> <KBD> $ make CLASSpy </KBD>  [ ---> compile the Python wrapper for CLASS) ]
-
 > <KBD> $ make MPTbreeze </KBD> 
 
 > <KBD> $ make mangle </KBD>

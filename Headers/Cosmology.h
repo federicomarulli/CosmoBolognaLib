@@ -255,13 +255,13 @@ namespace cbl {
      *
      *  This class is used to handle objects of type <EM> cosmology
      *  </EM>. It can be used to estimate i) any kind of cosmic
-     *  distances and volumes, ii) the halo mass function and bias, iii)
-     *  the real-space and redshift-space dark matter power spectrum and
-     *  correlation function (with both CAMB, CLASS, MPTbreeze and the
-     *  analytic fitting forms by Eisenstein & Hu), iv) the accreted
-     *  mass function, v) several BAO parameters, and vi) the halo mass
-     *  function and bias in different non-Gaussian cosmological
-     *  frameworks.
+     *  distances and volumes, ii) the halo mass function and bias,
+     *  iii) the real-space and redshift-space dark matter power
+     *  spectrum and correlation function (with both CAMB, CLASS,
+     *  MPTbreeze and the analytic fitting forms by Eisenstein & Hu),
+     *  iv) the accreted mass function, v) several BAO parameters, and
+     *  vi) the halo mass function and bias in different non-Gaussian
+     *  cosmological frameworks.
      */
     class Cosmology {
 
@@ -382,17 +382,18 @@ namespace cbl {
        *
        *  where \f$F(x)\f$ is a generic filter
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -426,7 +427,7 @@ namespace cbl {
        *  @return the funciton to compute the not-yet-normalised 
        *  mass variances
        */
-      double m_func_sigma (const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, std::function<double(double)> filter={}, const bool unit1=false) const;
+      double m_func_sigma (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, std::function<double(double)> filter={}, const bool unit1=false) const;
 
       /**
        *  @brief the not-yet-normalised mass variance,
@@ -443,17 +444,18 @@ namespace cbl {
        *
        *  @param radius the radius, \f$R\f$
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -484,7 +486,7 @@ namespace cbl {
        *
        *  @return the not-yet-normalised \f$\sigma^2(R)\f$
        */
-      double m_sigma2R_notNormalised (const double radius, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const;
+      double m_sigma2R_notNormalised (const double radius, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const;
       
       /**
        *  @brief the not-yet-normalised mass variance,
@@ -501,17 +503,18 @@ namespace cbl {
        *
        *  @param mass the mass
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -541,7 +544,7 @@ namespace cbl {
        *
        *  @return the not-yet-normalised \f$\sigma^2(M)\f$
        */
-      double m_sigma2M_notNormalised (const double mass, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double m_sigma2M_notNormalised (const double mass, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
       
       /**
        *  @brief auxiliary function to compute the mass function of
@@ -743,6 +746,97 @@ namespace cbl {
        *  parameter m=(2+3<SUP>0.5</SUP>)/4
        */
       double m_serf_dz (const double yy) const;
+
+      /**
+       *  @brief write and read the table where the dark matter power
+       *  spectrum, computed with either CAMB or MPTbreeze, is stored
+       *
+       *  @param [in] code method used to compute the power spectrum;
+       *  valid codes are: CAMB [http://camb.info/] or MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465]
+
+       *  @param [in] NL false \f$\rightarrow\f$ linear power
+       *  spectrum; true \f$\rightarrow\f$ non-linear power spectrum
+       *
+       *  @param [out] lgkk vector of log(k)
+       *
+       *  @param [out] lgPk vector of log(P(k))
+       *
+       *  @param [in] redshift redshift
+       *  
+       *  @param [in] store_output if true the output files created by
+       *  the Boltmann solver are stored; if false the output files
+       *  are removed
+       *
+       *  @param [in] output_root output_root of the parameter file used
+       *  to compute the power spectrum; it can be any name
+       *
+       *  @param [in] k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @return none
+       */
+      void m_Table_Pk_CAMB_MPTbreeze (const std::string code, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100.) const;
+
+      /**
+       *  @brief write and read the table where the dark matter power
+       *  spectrum computed with CLASS is stored
+       *
+       *  @param [in] NL false \f$\rightarrow\f$ linear power
+       *  spectrum; true \f$\rightarrow\f$ non-linear power spectrum
+       *
+       *  @param [out] lgkk vector of log(k)
+       *
+       *  @param [out] lgPk vector of log(P(k))
+       *
+       *  @param [in] redshift redshift
+       *  
+       *  @param [in] store_output if true the output files created by
+       *  the Boltmann solver are stored; if false the output files
+       *  are removed
+       *
+       *  @param [in] output_root output_root of the parameter file used
+       *  to compute the power spectrum; it can be any name
+       *
+       *  @param [in] k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @return none
+       */
+      void m_Table_Pk_CLASS (const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100.) const;
+
+      /**
+       *  @brief write and read the table where the dark matter power
+       *  spectrum is stored; it is used when a parameter file is
+       *  provided in input
+       *
+       *  @param [in] code method used to compute the power spectrum;
+       *  valid codes are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465]
+       *
+       *  @param [in] file_par name of the parameter file; if a
+       *  parameter file is provided (i.e. file_par!=NULL), it will be
+       *  used, ignoring the cosmological parameters of the object
+       *
+       *  @param [in] NL false \f$\rightarrow\f$ linear power
+       *  spectrum; true \f$\rightarrow\f$ non-linear power spectrum
+       *
+       *  @param [out] lgkk vector of log(k)
+       *
+       *  @param [out] lgPk vector of log(P(k))
+       *
+       *  @param [in] redshift redshift
+       *
+       *  @param [in] output_root output_root of the parameter file
+       *  used to compute the power spectrum; it can be any name
+       *
+       *  @return none
+       *
+       *  @warning the input output_root parameter must be the same as
+       *  the one in the parameter file
+       */
+      void m_Table_Pk_parameterFile (const std::string code, const std::string file_par, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const std::string output_root="test") const;
 
       ///@}
 
@@ -2001,15 +2095,15 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass) const; valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param wwf rescaled variable w as in Lacey and Coles 1993
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -2017,7 +2111,7 @@ namespace cbl {
        *
        *  @return redshift
        */
-      double Redshift (const double mm, const double redshift, const double ff, const std::string method_SS, const double wwf, const bool store_output_CAMB=true, const std::string output_root="test") const; 
+      double Redshift (const double mm, const double redshift, const double ff, const std::string method_SS, const double wwf, const bool store_output=true, const std::string output_root="test") const; 
 
       /**
        *  @brief redshift at a given cosmic time
@@ -2367,15 +2461,15 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -2403,7 +2497,7 @@ namespace cbl {
        *
        *  @return file_grid name of the file where the grid is stored
        */
-      std::string create_grid_sigmaM (const std::string method_SS, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;         
+      std::string create_grid_sigmaM (const std::string method_SS, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;         
 
       /**
        *  @brief the mass function of dark matter haloes (filaments
@@ -2436,13 +2530,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -2503,7 +2597,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mass_function (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
+      double mass_function (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
 
       /**
        *  @brief the mass function of dark matter haloes (filaments and
@@ -2536,13 +2630,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -2597,7 +2691,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mass_function_fast (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double mass_function_fast (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief the mass function of dark matter haloes (filaments and
@@ -2634,9 +2728,9 @@ namespace cbl {
        *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
        *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        * 
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -2664,7 +2758,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -2696,7 +2790,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
     
       /**
        *  @brief number of dark matter haloes per steradian or square
@@ -2736,12 +2830,12 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], EisensteinHu
+       *  CLASS [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -2784,7 +2878,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double n_haloes (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double n_haloes (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief number of dark matter haloes per volume at fixed
@@ -2826,16 +2920,16 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param nbin_mass number of bin for the mass function
        *  computation
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -2895,7 +2989,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double n_haloes (const double Mass_min, const double Mass_max, const double Volume, const double redshift, const std::string model_MF, const std::string method_SS, const int nbin_mass=0, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
+      double n_haloes (const double Mass_min, const double Mass_max, const double Volume, const double redshift, const std::string model_MF, const std::string method_SS, const int nbin_mass=0, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
       
       /**
        *  @brief number of dark matter haloes per steradian or square
@@ -2936,7 +3030,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], EisensteinHu
+       *  CLASS [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param selection_function_file input file where the selection
@@ -2944,9 +3038,9 @@ namespace cbl {
        *
        *  @param column the columns to be read
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -2992,7 +3086,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double n_haloes_selection_function (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double n_haloes_selection_function (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief mass function for a range of masses
@@ -3024,12 +3118,12 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], EisensteinHu
+       *  CLASS [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -3075,7 +3169,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      std::vector<double> mass_function (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> mass_function (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief mass function given a selection function
@@ -3107,7 +3201,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], EisensteinHu
+       *  CLASS [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param selection_function_file input file where the selection
@@ -3115,9 +3209,9 @@ namespace cbl {
        *
        *  @param column the columns to be read
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -3163,7 +3257,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      std::vector<double> mass_function_selection_function_vector (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> mass_function_selection_function_vector (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief redshift distribution of dark matter haloes
@@ -3201,13 +3295,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -3252,7 +3346,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      std::vector<double> redshift_distribution_haloes (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> redshift_distribution_haloes (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief redshift distribution of dark matter haloes, given a
@@ -3288,7 +3382,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -3297,9 +3391,9 @@ namespace cbl {
        *
        *  @param column the columns to be read
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -3344,7 +3438,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      std::vector<double> redshift_distribution_haloes_selection_function (const std::vector<double> redshift, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> redshift_distribution_haloes_selection_function (const std::vector<double> redshift, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the mean redshift of a dark matter haloe sample,
@@ -3379,7 +3473,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -3388,9 +3482,9 @@ namespace cbl {
        *
        *  @param column the columns to be read
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -3435,7 +3529,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mean_redshift_haloes_selection_function (const double z_min, const double z_max, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double mean_redshift_haloes_selection_function (const double z_min, const double z_max, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
   
       /**
        *  @brief minimum halo mass, given the number of haloes in a
@@ -3483,13 +3577,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -3531,7 +3625,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double MhaloMin (const int n_halo, const double Area, const bool angle_rad, const double z_min, const double z_max, const double Mmax, const double lgM1_guess, const double lgM2_guess, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double MhaloMin (const int n_halo, const double Area, const bool angle_rad, const double z_min, const double z_max, const double Mmax, const double lgM1_guess, const double lgM2_guess, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
 
       /**
        *  @brief convert a cluster mass estimated in a different
@@ -3608,12 +3702,12 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], EisensteinHu
+       *  CLASS [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *     
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -3621,7 +3715,7 @@ namespace cbl {
        *
        *  @return p(z): formation probability
        */
-      double pz (const double m0, const double z0, const double frac, const double redshift, const std::string model_model, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test") const; 
+      double pz (const double m0, const double z0, const double frac, const double redshift, const std::string model_model, const std::string method_SS, const bool store_output=true, const std::string output_root="test") const; 
 
       /**
        *  @brief cumulative distribution 
@@ -3664,14 +3758,14 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], EisensteinHu
+       *  CLASS [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param [out] zf vector of z(f)
        *      
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -3679,7 +3773,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void medianzf (const double ff, const double mass, const double z0, const std::string model_model, const std::string method_SS, std::vector<double> &zf, const bool store_output_CAMB=true, const std::string output_root="test") const; 
+      void medianzf (const double ff, const double mass, const double z0, const std::string model_model, const std::string method_SS, std::vector<double> &zf, const bool store_output=true, const std::string output_root="test") const; 
   
       /**
        *  @brief rescaled variable w as in Lacey and Coles 1993
@@ -3698,12 +3792,12 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], EisensteinHu
+       *  CLASS [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *     
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -3711,7 +3805,7 @@ namespace cbl {
        *
        *  @return the conditional variable w
        */
-      double wf (const double mm, const double redshift, const double ff, const double zf, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test") const; 
+      double wf (const double mm, const double redshift, const double ff, const double zf, const std::string method_SS, const bool store_output=true, const std::string output_root="test") const; 
 
       /**
        *  @brief the unevolved mass function
@@ -3772,9 +3866,9 @@ namespace cbl {
        *  @param run true \f$\rightarrow\f$ write or read the table
        *  where the dark matter power spectrum is stored
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -3789,7 +3883,7 @@ namespace cbl {
        *
        *  @return the path to the power spectrum output
        */
-      std::string Pk_output_file (const std::string code, const bool NL, const double redshift, const bool run=0, const bool store_output_CAMB=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString);
+      std::string Pk_output_file (const std::string code, const bool NL, const double redshift, const bool run=0, const bool store_output=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString);
 
       /**
        *  @brief run CAMB [http://camb.info/]
@@ -3860,12 +3954,12 @@ namespace cbl {
        *  spectrum is stored
        *
        *  @param [in] code method used to compute the power spectrum;
-       *  valid codes are: CAMB [http://camb.info/], classgal_v1
+       *  valid codes are: CAMB [http://camb.info/], CLASS
        *  [http://class-code.net/], MPTbreeze-v1
-       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
-       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *  [http://arxiv.org/abs/1207.1465]
        *
-       *  @param [in] NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$ non-linear power spectrum
+       *  @param [in] NL false \f$\rightarrow\f$ linear power
+       *  spectrum; true \f$\rightarrow\f$ non-linear power spectrum
        *
        *  @param [out] lgkk vector of log(k)
        *
@@ -3873,9 +3967,8 @@ namespace cbl {
        *
        *  @param [in] redshift redshift
        *  
-       *  @param [in] store_output_CAMB if true the output files
-       *  created by CAMB are stored; if false the output files
-       *  created by CAMB are removed
+       *  @param [in] store_output if true the output files created
+       *  are stored; if false the output files created are removed
        *
        *  @param [in] output_root output_root of the parameter file used
        *  to compute the power spectrum; it can be any name
@@ -3889,14 +3982,14 @@ namespace cbl {
        *
        *  @return none
        */
-      void Table_PkCodes (const std::string code, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_max=100., std::string file_par=par::defaultString) const;
+      void Table_PkCodes (const std::string code, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const;
 
       /**
        *  @brief write or read the table where the dark matter two-point
        *  correlation function is stored
        *
        *  @param [in] code method used to compute the power spectrum;
-       *  valid codes are: CAMB [http://camb.info/], classgal_v1
+       *  valid codes are: CAMB [http://camb.info/], CLASS
        *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
@@ -3909,9 +4002,9 @@ namespace cbl {
        *
        *  @param [in] redshift redshift
        *
-       *  @param [in] store_output_CAMB if true the output files
-       *  created by CAMB are stored; if false the output files
-       *  created by CAMB are removed
+       *  @param [in] store_output if true the output files created by
+       *  the Boltmann solver are stored; if false the output files
+       *  are removed
        *
        *  @param [in] output_root output_root of the parameter file used
        *  to compute the power spectrum; it can be any name
@@ -3925,7 +4018,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void Table_XiCodes (const std::string code, const bool NL, std::vector<double> &rr, std::vector<double> &xi, const double redshift, const bool store_output_CAMB, const std::string output_root, const double k_max, std::string file_par) const;
+      void Table_XiCodes (const std::string code, const bool NL, std::vector<double> &rr, std::vector<double> &xi, const double redshift, const bool store_output, const std::string output_root, const double k_max, std::string file_par) const;
 
       /**
        *  @brief normalisation of the power spectrum
@@ -3933,17 +4026,18 @@ namespace cbl {
        *  this function sets the value of the private member m_Pk0_*,
        *  i.e. the normalisation of the power spectrum
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -3965,7 +4059,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void Pk_0 (const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      void Pk_0 (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief normalised power spectrum
@@ -3976,9 +4070,10 @@ namespace cbl {
        *
        *  @param kk the wave vector module
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -3987,9 +4082,9 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -4018,7 +4113,7 @@ namespace cbl {
        *
        *  @return P(k)
        */
-      double Pk (const double kk, const std::string method_Pk, const bool NL, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
+      double Pk (const double kk, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
 
       /**
        *  @brief normalised power spectrum
@@ -4029,9 +4124,10 @@ namespace cbl {
        *
        *  @param kk the wave vector module
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -4043,9 +4139,9 @@ namespace cbl {
        *  @param output_dir the output_dir directory
        *  where the output of external codes are written
        *  
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -4075,7 +4171,7 @@ namespace cbl {
        *
        *  @return P(k)
        */
-      std::vector<double> Pk (const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
+      std::vector<double> Pk (const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
 
       /**
        *  @brief return power spectrum first three multipoles using linear kaiser model
@@ -4092,9 +4188,10 @@ namespace cbl {
        *
        *  @param kk the scale at which compute the power spectrum
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -4107,9 +4204,9 @@ namespace cbl {
        *
        *  @param sigma_NL the BAO damping parameter
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -4137,7 +4234,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void Pk_Kaiser_multipoles (std::vector<double> &Pk0, std::vector<double> &Pk2, std::vector<double> &Pk4, const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const double bias, const double sigma_NL = 0., const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      void Pk_Kaiser_multipoles (std::vector<double> &Pk0, std::vector<double> &Pk2, std::vector<double> &Pk4, const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const double bias, const double sigma_NL = 0., const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief the dark matter power spectrum, de-wiggled (see
@@ -4155,9 +4252,9 @@ namespace cbl {
        *
        *  @param sigma_NL the non linear BAO damping
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -4184,7 +4281,7 @@ namespace cbl {
        *  @return P;<SUB>DW</SUB>(k): the De-Wiggled power
        *  spectrum of dark matter
        */
-      double Pk_DeWiggle (const double kk, const double redshift, const double sigma_NL, const bool store_output_CAMB=true, const std::string output_root = "test", const bool norm=1, const double k_min=0., const double k_max=100., const double aa=1., const double prec=1.e-2);
+      double Pk_DeWiggle (const double kk, const double redshift, const double sigma_NL, const bool store_output=true, const std::string output_root = "test", const bool norm=1, const double k_min=0., const double k_max=100., const double aa=1., const double prec=1.e-2);
  
       /**
        *  @brief the mass variance, \f$\sigma^2(R)\f$
@@ -4199,17 +4296,18 @@ namespace cbl {
        *
        *  @param radius the radius, \f$R\f$
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -4239,7 +4337,7 @@ namespace cbl {
        *
        *  @return \f$\sigma^2(R)\f$
        */
-      double sigma2R (const double radius, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double sigma2R (const double radius, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
 
       /**
        *  @brief the mass variance, \f$\sigma^2(M)\f$
@@ -4257,15 +4355,15 @@ namespace cbl {
        *
        *  @param method_Pk the method used to compute the power
        *  spectrum; valid choices for method_Pk are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -4295,7 +4393,7 @@ namespace cbl {
        *
        *  @return \f$\sigma^2(M)\f$
        */
-      double sigma2M (const double mass, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double sigma2M (const double mass, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
  
       /**
        *  @brief the nth-order derivative of the mass variance,
@@ -4305,17 +4403,18 @@ namespace cbl {
        *
        *  @param radius the radius, \f$R\f$
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -4350,7 +4449,7 @@ namespace cbl {
        *  incremental step; it is computationally efficient, but the
        *  accuracy might be lowt
        */
-      double dnsigma2R (const int nd, const double radius, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double dnsigma2R (const int nd, const double radius, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
 
       /**
        *  @brief the first derivative of the mass variance, \f${\rm
@@ -4360,17 +4459,18 @@ namespace cbl {
        *
        *  @param mass the mass, \f$M\f$
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -4405,7 +4505,7 @@ namespace cbl {
        *  incremental step; it is computationally efficient, but the
        *  accuracy might be low
        */
-      double dnsigma2M (const int nd, const double mass, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double dnsigma2M (const int nd, const double mass, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
 
       ///@}
 
@@ -4698,17 +4798,18 @@ namespace cbl {
        *
        *  @param rr the module of the comoving separation
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -4746,7 +4847,7 @@ namespace cbl {
        *  averaged (monopole) of the two-point correlation function of
        *  dark matter
        */
-      double xi_DM (const double rr, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const bool NL=true, const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi_DM (const double rr, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool NL=true, const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the dark matter angular two-point correlation function
@@ -4776,18 +4877,19 @@ namespace cbl {
        *  @param GSL false \f$\rightarrow\f$ FFTlog is used; true
        *  \f$\rightarrow\f$ the GSL libraries are used
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1
        *  \f$\rightarrow\f$ non-linear power spectrum
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -4816,7 +4918,7 @@ namespace cbl {
        *  @return \f$w_{DM}(\theta)\f$: the angular two point
        *  correlation function of dark matter
        */
-      double wtheta_DM (const double theta, const std::vector<double> zz, const std::vector<double> phiz, const std::string interpolationMethod, const CoordinateUnits coordUnits = CoordinateUnits::_degrees_, const bool GSL=false, const std::string method_Pk="CAMB", const bool NL=false, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double wtheta_DM (const double theta, const std::vector<double> zz, const std::vector<double> phiz, const std::string interpolationMethod, const CoordinateUnits coordUnits = CoordinateUnits::_degrees_, const bool GSL=false, const std::string method_Pk="CAMB", const bool NL=false, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the dark matter angular two-point correlation function
@@ -4890,15 +4992,16 @@ namespace cbl {
        *
        * @param interpolationMethod the method in interpolation
        *
-       * @param method_Pk method used to compute the power spectrum;
-       * valid choices for method_Pk are: CAMB [http://camb.info/],
-       * classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       * @param method_Pk method used to compute the power spectrum
+       * (i.e. the Boltmann solver); valid choices for method_Pk are:
+       * CAMB [http://camb.info/], CLASS
+       * [http://class-code.net/], MPTbreeze-v1
        * [http://arxiv.org/abs/1207.1465], EisensteinHu
        * [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       * @param store_output_CAMB if true the output files created by
-       * CAMB are stored; by CAMB during the computation of the power
-       * spectrum
+       * @param store_output if true the output files created by the
+       * Boltzmann solver are stored; if false the output files are
+       * removed
        *
        * @param output_root output_root of the parameter file used to
        * compute the power spectrum and &sigma;(mass); it can be any
@@ -4923,7 +5026,7 @@ namespace cbl {
        * @return vector containing the angular linear power spectrum up to \f$l_{max}\f$
        *
        */
-      std::vector<double> C_l_DM (const int lmax, const std::vector<double> zz, const std::vector<double> phiz, const std::string interpolationMethod, const std::string method_Pk="CAMB", const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      std::vector<double> C_l_DM (const int lmax, const std::vector<double> zz, const std::vector<double> phiz, const std::string interpolationMethod, const std::string method_Pk="CAMB", const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the dark matter two-point correlation function,
@@ -4942,9 +5045,9 @@ namespace cbl {
        *
        *  @param sigma_NL the non linear BAO damping
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -4972,7 +5075,7 @@ namespace cbl {
        *  averaged (monopole) of the two-point correlation function of
        *  dark matter
        */
-      double xi_DM_DeWiggle (const double rr, const double redshift, const double sigma_NL, const bool store_output_CAMB=true, const std::string output_root="test", const bool norm=1, const double k_min=0., const double k_max=100., const double aa=1., const double prec=1.e-2);
+      double xi_DM_DeWiggle (const double rr, const double redshift, const double sigma_NL, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double k_min=0., const double k_max=100., const double aa=1., const double prec=1.e-2);
 
       /**
        *  @brief get the dark matter two-point correlation function
@@ -4987,28 +5090,29 @@ namespace cbl {
        *  function of dark matter
        *
        *  @param [in] method_Pk method used to compute the power
-       *  spectrum; valid choices for method_Pk are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
-       *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  spectrum (i.e. the Boltzmann solver); valid choices for
+       *  method_Pk are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param [in] redshift redshift
        *
-       *  @param [in] store_output_CAMB if true the output files
-       *  created by CAMB are stored; if false the output files
-       *  created by CAMB are removed
+       *  @param [in] store_output if true the output files created by
+       *  the Boltzmann solver are stored; if false the output files
+       *  are removed
        *
        *  @param [in] output_root output_root of the parameter file used
        *  to compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
-       *  @param [in] xiType 0 \f$\rightarrow\f$ standard; 1 \f$\rightarrow\f$ Chuang & Wang
-       *  model
+       *  @param [in] xiType 0 \f$\rightarrow\f$ standard; 1
+       *  \f$\rightarrow\f$ Chuang & Wang model
        *
        *  @param [in] k_star k<SUB>*</SUB> of the Chuang & Wang model
        *
-       *  @param [in] xiNL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
-       *  non-linear power spectrum
+       *  @param [in] xiNL 0 \f$\rightarrow\f$ linear power spectrum;
+       *  1 \f$\rightarrow\f$ non-linear power spectrum
        *
        *  @param [in] norm 0 \f$\rightarrow\f$ don't normalise the
        *  power spectrum; 1 \f$\rightarrow\f$ normalise the power
@@ -5043,7 +5147,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void get_xi (std::vector<double> &rr, std::vector<double> &Xi, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      void get_xi (std::vector<double> &rr, std::vector<double> &Xi, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
   
       /**
        *  @brief get the barred dark matter correlation functions
@@ -5063,9 +5167,10 @@ namespace cbl {
        *  @param [out] Xi__ vector of double-barred &xi;(r)
        *
        *  @param [in] method_Pk method used to compute the power
-       *  spectrum; valid choices for method_Pk are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
-       *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  spectrum (i.e. the Boltzmann solver); valid choices for
+       *  method_Pk are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param [in] redshift redshift
@@ -5119,9 +5224,10 @@ namespace cbl {
        *
        *  @param rp r<SUB>p</SUB>: projected separation
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -5129,9 +5235,9 @@ namespace cbl {
        *
        *  @param pimax the upper limit of the line-of-sight integration
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -5173,7 +5279,7 @@ namespace cbl {
        *  @return w<SUB>p,DM</SUB>(&theta;): the projected correlation
        *  function of dark matter
        */
-      double wp_DM (const double rp, const std::string method_Pk, const double redshift, const double pimax, const bool store_output_CAMB=true, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=cbl::par::defaultString);
+      double wp_DM (const double rp, const std::string method_Pk, const double redshift, const double pimax, const bool store_output=true, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=cbl::par::defaultString);
 
       /**
        *  @brief the k<SUB>*</SUB> parameter 
@@ -5182,17 +5288,18 @@ namespace cbl {
        *  model the BAO (see e.g. Chuang & Wang 2012, Crocce &
        *  Scoccimarro2006, Matsubara 2008)
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -5207,7 +5314,7 @@ namespace cbl {
        *
        *  @return k<SUB>*</SUB>
        */
-      double k_star (const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const; 
+      double k_star (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const; 
 
 
       /**
@@ -5220,9 +5327,10 @@ namespace cbl {
        *  w(&theta;), is used; 1 \f$\rightarrow\f$ the spherically averaged
        *  correlation function, &xi;(r), is used
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -5230,9 +5338,9 @@ namespace cbl {
        *
        *  @param pimax the upper limit of the line-of-sight integration
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -5274,7 +5382,7 @@ namespace cbl {
        *  @return &sigma;<SUB>R</SUB>: the dark matter rms mass
        *  fluctuation
        */
-      double sigmaR_DM (const double RR, const int corrType, const std::string method_Pk, const double redshift, const double pimax=40, const bool store_output_CAMB=true, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      double sigmaR_DM (const double RR, const int corrType, const std::string method_Pk, const double redshift, const double pimax=40, const bool store_output=true, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief the dark matter rms mass fluctuation within 8 Mpc/h
@@ -5282,17 +5390,18 @@ namespace cbl {
        *  this function provides the rms mass fluctuation within 8
        *  Mpc/h, estimated directly from the power spectrum
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -5318,7 +5427,7 @@ namespace cbl {
        *  @return &sigma;<SUB>8</SUB>: the dark matter rms mass
        *  fluctuation within 8 Mpc/h
        */
-      double sigma8_Pk (const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const; 
+      double sigma8_Pk (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const; 
 
       /**
        *  @brief bias of dark matter haloes
@@ -5334,13 +5443,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -5390,7 +5499,7 @@ namespace cbl {
        *  cbl::Cosmology::Delta_vir can be used to convert
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
-      double bias_halo (const double Mass, const double redshift, const std::string author, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double bias_halo (const double Mass, const double redshift, const std::string author, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief bias of dark matter haloes
@@ -5406,9 +5515,9 @@ namespace cbl {
        *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
        *  correction of Warren 2004), Tinker (Tinker et al. 2010)
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -5437,7 +5546,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *    
@@ -5464,7 +5573,7 @@ namespace cbl {
        *  cbl::Cosmology::Delta_vir can be used to convert
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
-      double bias_halo (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_halo (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true);
   
       /**
        *  @brief the effective bias of dark matter haloes, with masses
@@ -5517,12 +5626,12 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], EisensteinHu
+       *  CLASS [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -5577,7 +5686,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double bias_eff (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_eff (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
  
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -5614,13 +5723,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -5670,7 +5779,7 @@ namespace cbl {
        *  cbl::Cosmology::Delta_vir can be used to convert
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
-      double bias_eff (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_eff (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
 
       /**
@@ -5709,7 +5818,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -5718,9 +5827,9 @@ namespace cbl {
        *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
        *  bias is computed with Eq.(2)
        * 
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -5765,7 +5874,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      std::vector<double> bias_eff_mass_grid (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_mass_grid (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -5801,7 +5910,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -5810,9 +5919,9 @@ namespace cbl {
        *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
        *  bias is computed with Eq.(2)
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -5857,7 +5966,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      std::vector<double> bias_eff_mass (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_mass (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -5897,7 +6006,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -5906,9 +6015,9 @@ namespace cbl {
        *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
        *  bias is computed with Eq.(2)
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -5953,7 +6062,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      std::vector<double> bias_eff_mass (const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_mass (const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief compute the effective bias of dark matter haloes, by
@@ -6019,7 +6128,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -6028,9 +6137,9 @@ namespace cbl {
        *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
        *  bias is computed with Eq.(2)
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -6082,7 +6191,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
+      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -6155,7 +6264,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -6168,9 +6277,9 @@ namespace cbl {
        *  @param column vector containing the columns with {mass,
        *  redshift, selection function}
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -6215,7 +6324,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const double redshift, const double Mass_min, const double Mass_max, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const double redshift, const double Mass_min, const double Mass_max, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -6297,7 +6406,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -6306,9 +6415,9 @@ namespace cbl {
        *  meanType="mean_pair_bias" \f$\rightarrow\f$ the effective
        *  bias is computed with Eq.(2)
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -6360,7 +6469,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      void generate_bias_eff_grid_two_cosmopars (std::vector<double> &parameter1, std::vector<double> &parameter2, std::vector<std::vector<double>> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cbl::cosmology::CosmologicalParameter cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
+      void generate_bias_eff_grid_two_cosmopars (std::vector<double> &parameter1, std::vector<double> &parameter2, std::vector<std::vector<double>> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cbl::cosmology::CosmologicalParameter cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
 
       /**
        *  @brief effective bias of dark matter haloes, computed using
@@ -6425,16 +6534,16 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param alpha the \f$\alpha\f$ parameter of the cluster mass
        *  scaling relation
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -6485,7 +6594,7 @@ namespace cbl {
        *  some applications (e.g. MCMC) where these quantities can be
        *  computed once
        */
-      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
        
       /**
        *  @brief effective bias of dark matter haloes, computed using
@@ -6550,16 +6659,16 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param alpha the \f$\alpha\f$ parameter of the cluster mass
        *  scaling relation
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -6610,7 +6719,7 @@ namespace cbl {
        *  some applications (e.g. MCMC) where these quantities can be
        *  computed once
        */
-      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid2D interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid2D interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief effective bias of dark matter haloes, computed using
@@ -6664,7 +6773,7 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -6677,9 +6786,9 @@ namespace cbl {
        *  @param alpha the \f$\alpha\f$ parameter of the cluster mass
        *  scaling relation
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -6724,7 +6833,7 @@ namespace cbl {
        *
        *  @return b<SUB>eff</SUB>: the effective dark matter bias
        */
-      std::vector<double> bias_eff_selection_function (const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output_CAMB=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_selection_function (const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
        
       ///@}
 
@@ -6760,22 +6869,24 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
-       *  @param method_Pk method used to compute the power spectrum and
-       *  &sigma;(mass); valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  and &sigma;(mass) (i.e. the Boltzmann solver); valid choices
+       *  for method_Pk are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *  
-       *  @param store_output_CAMB if true the output files created by CAMB are stored;
-       *  if false the output files created by CAMB are removed
+       *  @param store_output if true the output files created by the
+       *  Boltmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to compute
        *  the power spectrum and &sigma;(mass); it can be any name
        *
        *  @param kk wave vector module 
        *
-       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$ non-linear power
-       *  spectrum
+       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1
+       *  \f$\rightarrow\f$ non-linear power spectrum
        *
        *  @param k_min minimum wave vector module up to which the
        *  power spectrum is computed in order to estimate the power
@@ -6795,7 +6906,7 @@ namespace cbl {
        *
        *  @return f*&sigma;<SUB>8</SUB>
        */
-      double fsigma8 (const double redshift, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const double kk=1., const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
+      double fsigma8 (const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const double kk=1., const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
 
       /**
        *  @brief the non-linear dark matter power spectrum using
@@ -6812,9 +6923,10 @@ namespace cbl {
        *
        *  @param kk the wave vector module
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -6823,9 +6935,9 @@ namespace cbl {
        *  @param author author(s) who proposed the fitting functions; valid
        *  authors are: Pezzotta (Pezzotta, et.al, 2017), Bel (Bel et.al., 2019)
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -6855,7 +6967,7 @@ namespace cbl {
        *
        *  @return P<SUB>&delta;&delta;</SUB>: the non linear power spectrum using fitting functions
        */
-      double Pk_DeltaDelta_fitting_function (const double kk, const std::string method_Pk, const double redshift, const std::string author, const bool store_output_CAMB, const std::string output_root, const int norm, double k_min, double k_max, const double prec, const std::string file_par, const bool unit1);
+      double Pk_DeltaDelta_fitting_function (const double kk, const std::string method_Pk, const double redshift, const std::string author, const bool store_output, const std::string output_root, const int norm, double k_min, double k_max, const double prec, const std::string file_par, const bool unit1);
 
       /**
        *  @brief the dark matter cross power spectrum 
@@ -6876,9 +6988,10 @@ namespace cbl {
        *
        *  @param kk the wave vector module
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -6887,9 +7000,9 @@ namespace cbl {
        *  @param author author(s) who proposed the fitting functions; valid
        *  authors are: Pezzotta (Pezzotta, et.al, 2017), Bel (Bel et.al., 2019)
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -6922,7 +7035,7 @@ namespace cbl {
        *
        *  @return P<SUB>&delta;&theta;</SUB>: the cross power spectrum using fitting functions
        */
-      double Pk_DeltaTheta_fitting_function (const double kk, const std::string method_Pk, const double redshift, const std::string author, const bool store_output_CAMB, const std::string output_root, const bool NL, const int norm, double k_min, double k_max, const double prec, const std::string file_par, const bool unit1);
+      double Pk_DeltaTheta_fitting_function (const double kk, const std::string method_Pk, const double redshift, const std::string author, const bool store_output, const std::string output_root, const bool NL, const int norm, double k_min, double k_max, const double prec, const std::string file_par, const bool unit1);
 
       /**
        *  @brief the dark matter velocity divergence power spectrum 
@@ -6945,9 +7058,10 @@ namespace cbl {
        *
        *  @param kk the wave vector module
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -6957,7 +7071,7 @@ namespace cbl {
        *  valid authors are: Pezzotta (Pezzotta, et.al, 2017), Bel
        *  (Bel et.al., 2019)
        *
-       *  @param store_output_CAMB if true the output files created
+       *  @param store_output if true the output files created
        *  by CAMB are stored; if false the output files created by
        *  CAMB are removed
        *
@@ -6993,7 +7107,7 @@ namespace cbl {
        *  @return P<SUB>&theta;&theta;</SUB>: the velocity divergence
        *  power spectrum using fitting functions
        */
-      double Pk_ThetaTheta_fitting_function (const double kk, const std::string method_Pk, const double redshift, const std::string author, const bool store_output_CAMB, const std::string output_root, const bool NL, const int norm, double k_min, double k_max, const double prec, const std::string file_par, const bool unit1);
+      double Pk_ThetaTheta_fitting_function (const double kk, const std::string method_Pk, const double redshift, const std::string author, const bool store_output, const std::string output_root, const bool NL, const int norm, double k_min, double k_max, const double prec, const std::string file_par, const bool unit1);
 
       /**
        *  @brief the multipoles of the A and B correction terms for
@@ -7022,7 +7136,7 @@ namespace cbl {
        *
        *  @param method method used to compute the power spectrum;
        *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  CLASS [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -7031,7 +7145,7 @@ namespace cbl {
        *  @param output_dir the output_dir directory
        *  where the output of external codes are written
        *
-       *  @param store_output_CAMB if true the output files created
+       *  @param store_output if true the output files created
        *  by CAMB are stored; if false the output files created by
        *  CAMB are removed
        *
@@ -7057,7 +7171,7 @@ namespace cbl {
        *
        *  @return multipoles of A and B terms for TNS model (A0, A2, A4, B0, B2, B4)
        */
-      std::vector<std::vector<double>> Pk_TNS_AB_multipoles (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec);
+      std::vector<std::vector<double>> Pk_TNS_AB_multipoles (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec);
 
       /**
        *  @brief the A and B correction terms for the TNS model at
@@ -7089,7 +7203,7 @@ namespace cbl {
        *
        *  @param method method used to compute the power spectrum;
        *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  CLASS [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -7098,7 +7212,7 @@ namespace cbl {
        *  @param output_dir the output_dir directory
        *  where the output of external codes are written
        *
-       *  @param store_output_CAMB if true the output files created
+       *  @param store_output if true the output files created
        *  by CAMB are stored; if false the output files created by
        *  CAMB are removed
        *
@@ -7122,7 +7236,7 @@ namespace cbl {
        *
        *  @return A and B terms (total contribution) from multipoles
        */
-      std::vector<std::vector<double>> Pk_TNS_AB_1loop (std::vector<double> kk, const double mu, const std::string method, const double redshift, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec);
+      std::vector<std::vector<double>> Pk_TNS_AB_1loop (std::vector<double> kk, const double mu, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec);
 
 
       /**
@@ -7151,7 +7265,7 @@ namespace cbl {
        *
        *  @param method method used to compute the power spectrum;
        *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  CLASS [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -7160,7 +7274,7 @@ namespace cbl {
        *  @param output_dir the output_dir directory
        *  where the output of external codes are written
        *
-       *  @param store_output_CAMB if true the output files created
+       *  @param store_output if true the output files created
        *  by CAMB are stored; if false the output files created by
        *  CAMB are removed
        *
@@ -7185,7 +7299,7 @@ namespace cbl {
        *  @return A and B terms (expanded) for TNS model: A11, A12,
        *  A22, A23, A33, B12, B13, B14, B22, B23, B24, B33, B34, B44
        */
-      std::vector<std::vector<double>> Pk_TNS_AB_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min=0., const double k_max=100., const double prec=1.e-2);
+      std::vector<std::vector<double>> Pk_TNS_AB_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0., const double k_max=100., const double prec=1.e-2);
 
       /**
        *  @brief the expanded A and B correction terms for the TNS
@@ -7219,7 +7333,7 @@ namespace cbl {
        *
        *  @param method method used to compute the power spectrum;
        *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  CLASS [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -7228,7 +7342,7 @@ namespace cbl {
        *  @param output_dir the output_dir directory
        *  where the output of external codes are written
        *
-       *  @param store_output_CAMB if true the output files created
+       *  @param store_output if true the output files created
        *  by CAMB are stored; if false the output files created by
        *  CAMB are removed
        *
@@ -7254,7 +7368,7 @@ namespace cbl {
        *
        *  @return A and B terms (total contribution) for TNS model
        */ 
-      std::vector<std::vector<double>> Pk_TNS_AB_1loop (std::vector<double> kk, const double mu, const double linear_growth_rate, const double bias, const std::string method, const double redshift, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min=0., const double k_max=100., const double prec=1.e-2);
+      std::vector<std::vector<double>> Pk_TNS_AB_1loop (std::vector<double> kk, const double mu, const double linear_growth_rate, const double bias, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0., const double k_max=100., const double prec=1.e-2);
 
       /**
        *  @brief the non-linear power spectrum
@@ -7283,7 +7397,7 @@ namespace cbl {
        *
        *  @param method method used to compute the power spectrum;
        *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  CLASS [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -7292,7 +7406,7 @@ namespace cbl {
        *  @param output_dir the output_dir directory
        *  where the output of external codes are written
        *
-       *  @param store_output_CAMB if true the output files created
+       *  @param store_output if true the output files created
        *  by CAMB are stored; if false the output files created by
        *  CAMB are removed
        *
@@ -7316,7 +7430,7 @@ namespace cbl {
        *
        *  @return the non-linear power spectrum from perturbation theory
        */
-      std::vector<std::vector<double>> Pk_TNS_dd_dt_tt (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min=0., const double k_max=100., const double prec=1.e-2);
+      std::vector<std::vector<double>> Pk_TNS_dd_dt_tt (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0., const double k_max=100., const double prec=1.e-2);
 
       /**
        *  @brief the specific growth rate &beta;
@@ -7370,13 +7484,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -7432,7 +7546,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the specific growth rate &beta;
@@ -7465,14 +7579,14 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], EisensteinHu
+       *  CLASS [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param err_bias error on the bias
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -7528,7 +7642,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double error_beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double err_bias, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double error_beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double err_bias, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
   
       /**
        *  @brief the specific growth rate &beta;
@@ -7546,13 +7660,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -7608,7 +7722,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the error on the specific growth rate &beta;
@@ -7626,14 +7740,14 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum and
        *  &sigma;(mass); valid method_SS are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], EisensteinHu
+       *  CLASS [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param err_bias error on the bias
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -7689,7 +7803,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double error_beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const double err_bias, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double error_beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const double err_bias, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
  
       /**
        *  @brief the error on the specific growth rate &beta; from
@@ -7727,13 +7841,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -7789,7 +7903,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief the normalised quadrupole Q
@@ -7822,13 +7936,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -7883,7 +7997,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double quadrupole (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double quadrupole (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief the normalised quadrupole Q
@@ -7901,13 +8015,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -7957,7 +8071,7 @@ namespace cbl {
        *  cbl::Cosmology::Delta_vir can be used to convert
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
-      double quadrupole (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output_CAMB=true,  const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double quadrupole (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true,  const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the mean square bulk flow
@@ -7968,16 +8082,16 @@ namespace cbl {
        *  integral is computed
        *
        *  @param method_Pk method used to compute the power spectrum
-       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
-       *  EisensteinHu
+       *  and &sigma;(mass) (i.e. the Boltzmann solver); valid choices
+       *  for method_Pk are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -7999,7 +8113,7 @@ namespace cbl {
        *
        *  @return the mean square bulk flow
        */
-      double square_bulk_flow (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double square_bulk_flow (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the mean square bulk flow
@@ -8028,16 +8142,16 @@ namespace cbl {
        *  integral is computed
        *
        *  @param method_Pk method used to compute the power spectrum
-       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
-       *  EisensteinHu
+       *  and &sigma;(mass) (i.e. the Boltzmann solver); valid choices
+       *  for method_Pk are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -8059,7 +8173,7 @@ namespace cbl {
        *
        *  @return the mean square velocity dispersion
        */
-      double square_velocity_dispersion (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double square_velocity_dispersion (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
     
       /**
        *  @brief the Cosmic Mach Number
@@ -8070,16 +8184,16 @@ namespace cbl {
        *  integral is computed
        *
        *  @param method_Pk method used to compute the power spectrum
-       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
-       *  EisensteinHu
+       *  and &sigma;(mass) (i.e. the Boltzmann solver); valid choices
+       *  for method_Pk are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -8094,7 +8208,7 @@ namespace cbl {
        *
        *  @return the Cosmic Mach Number
        */
-      double CMN (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const;
+      double CMN (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const;
 
       /**
        *  @brief the hierarchical moments S<SUB>n</SUB>
@@ -8109,13 +8223,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -8144,7 +8258,7 @@ namespace cbl {
        *  @return the hierarchical moments, S<SUB>n</SUB>, given by the
        *  perturbation theory
        */
-      double Sn_PT (const int nn, const double RR, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double Sn_PT (const int nn, const double RR, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
   
       /**
        *  @brief the deprojected hierarchical moments
@@ -8160,13 +8274,13 @@ namespace cbl {
        *
        *  @param method_SS method used to compute the power spectrum
        *  and &sigma;(mass); valid method_SS are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+       *  [http://camb.info/], CLASS [http://class-code.net/],
        *  EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -8195,7 +8309,7 @@ namespace cbl {
        *  @return the deprojected hierarchical moments,
        *  &Sigma;<SUB>n</SUB>, given by the perturbation theory
        */
-      double Sigman_PT (const int nn, const double RR, const std::string method_SS, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double Sigman_PT (const int nn, const double RR, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
     
       /**
        *  @brief 1D monopole in the Kaiser limit
@@ -8210,16 +8324,17 @@ namespace cbl {
        *  @param bias_sigma8 b*&sigma;<SUB>8</SUB>
        *
        *  @param method_Pk method used to compute the power spectrum
-       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
-       *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  and &sigma;(mass) (i.e. the Boltzmann solver); valid choices
+       *  for method_Pk are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -8266,7 +8381,7 @@ namespace cbl {
        *  @return &xi;<SUB>0</SUB>
        *
        */
-      double xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const std::string method_Pk, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
     
       /**
        *  @brief 1D monopole in the Kaiser limit
@@ -8279,9 +8394,10 @@ namespace cbl {
        *  @param bias b
        *
        *  @param method_Pk method used to compute the power spectrum
-       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
-       *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  and &sigma;(mass) (i.e. the Boltzmann solver); valid choices
+       *  for method_Pk are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$ non-linear power
@@ -8292,9 +8408,9 @@ namespace cbl {
        *  @param output_dir the output_dir directory
        *  where the output of external codes are written
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -8323,7 +8439,7 @@ namespace cbl {
        *  @return &xi;<SUB>0</SUB>
        *
        */
-      std::vector<double> xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output_CAMB, const std::string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const std::string file_par);
+      std::vector<double> xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const std::string file_par);
 
       /**
        *  @brief 2D correlation function, &xi;(r<SUB>p</SUB>,&pi;),
@@ -8343,9 +8459,10 @@ namespace cbl {
        *  velocity dispersion
        *
        *  @param method_Pk method used to compute the power spectrum
-       *  and &sigma;(mass); valid choices for method_Pk are: CAMB
-       *  [http://camb.info/], classgal_v1 [http://class-code.net/],
-       *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  and &sigma;(mass) (i.e. the Boltzmann solver); valid choices
+       *  for method_Pk are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
        *  @param redshift the redshift
@@ -8367,9 +8484,9 @@ namespace cbl {
        *
        *  @param Xi__ vector of double-barred &xi;(r)
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -8432,7 +8549,7 @@ namespace cbl {
        *
        *  @return &xi;(r<SUB>p</SUB>,&pi;)
        */
-      double xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const std::string method_Pk, const double redshift, const int FV, const bool NL, std::vector<double> rr, std::vector<double> &Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output_CAMB=true, const std::string output_root="test", const int index=-1, const bool bias_nl=0, const double bA=-1., const bool xiType=0, const double k_star=-1., const bool xiNL=0, const double v_min=-3000., const double v_max=3000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const std::string method_Pk, const double redshift, const int FV, const bool NL, std::vector<double> rr, std::vector<double> &Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output=true, const std::string output_root="test", const int index=-1, const bool bias_nl=0, const double bA=-1., const bool xiType=0, const double k_star=-1., const bool xiNL=0, const double v_min=-3000., const double v_max=3000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the function &xi;<SUB>*</SUB> of the Chuang & Wang 2012
@@ -8444,9 +8561,9 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -8470,7 +8587,7 @@ namespace cbl {
        *
        *  @return &xi;<SUB>*</SUB>
        */
-      double xi_star (const double rr, const double redshift, const bool store_output_CAMB=true, const std::string output_root="test", const double k_star=-1., const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi_star (const double rr, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_star=-1., const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
   
       /**
        *  @brief the function &xi;<SUB>g,nw</SUB>(s) of the Chuang &
@@ -8502,9 +8619,9 @@ namespace cbl {
        *
        *  @param Xi__ vector of double-barred &xi;(r)
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -8512,7 +8629,7 @@ namespace cbl {
        *
        *  @return &xi;<SUB>g,nw</SUB>(s)
        */
-      double xisnl_gnw (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double bA, const double redshift, std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output_CAMB=true, const std::string output_root="test");
+      double xisnl_gnw (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double bA, const double redshift, std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output=true, const std::string output_root="test");
  
       /**
        *  @brief the function &xi;<SUB>g,BAO</SUB>(s) of the Chuang &
@@ -8542,9 +8659,9 @@ namespace cbl {
        *
        *  @param Xi__ vector of double-barred &xi;(r)
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -8563,7 +8680,7 @@ namespace cbl {
        *
        *  @return &xi;<SUB>g,BAO</SUB>(s)
        */
-      double xis_gBAO (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double redshift, std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output_CAMB=true, const std::string output_root="test", const double k_star=-1., const double x_min=-3000., const double x_max=3000., const int step_x=500);
+      double xis_gBAO (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double redshift, std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output=true, const std::string output_root="test", const double k_star=-1., const double x_min=-3000., const double x_max=3000., const int step_x=500);
  
       /**
        *  @brief 2D correlation function, &xi;(r<SUB>p</SUB>,&pi;),
@@ -8614,9 +8731,9 @@ namespace cbl {
        *
        *  @param Xi2__ vector of double-barred &xi;(r)
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -8678,7 +8795,7 @@ namespace cbl {
        *
        *  @return &xi;(r<SUB>p</SUB>,&pi;)
        */
-      double xi2D_CW (const double rp, const double pi, const double beta, const double bias_lin, const double bA, const double sigmav0, const double cmu, const double cs1, const double cs2, const double redshift, std::vector<double> rr1, std::vector<double> Xi1, std::vector<double> rr2, std::vector<double> Xi2, std::vector<double> &Xi1_, std::vector<double> &Xi1__, std::vector<double> &Xi2_, std::vector<double> &Xi2__, const bool store_output_CAMB=true, const std::string output_root="test", const bool BAO=1, const bool xiType=0, const double k_star=-1, const bool xiNL=0, const double r_min=0.1, const double r_max=150., const double v_min=-3000., const double v_max=3000., const int step_v=500, const double k_min=0., const double k_max=100., const double x_min=-3000., const double x_max=3000., const int step_x=500, const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi2D_CW (const double rp, const double pi, const double beta, const double bias_lin, const double bA, const double sigmav0, const double cmu, const double cs1, const double cs2, const double redshift, std::vector<double> rr1, std::vector<double> Xi1, std::vector<double> rr2, std::vector<double> Xi2, std::vector<double> &Xi1_, std::vector<double> &Xi1__, std::vector<double> &Xi2_, std::vector<double> &Xi2__, const bool store_output=true, const std::string output_root="test", const bool BAO=1, const bool xiType=0, const double k_star=-1, const bool xiNL=0, const double r_min=0.1, const double r_max=150., const double v_min=-3000., const double v_max=3000., const int step_v=500, const double k_min=0., const double k_max=100., const double x_min=-3000., const double x_max=3000., const int step_x=500, const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       ///@}
 
@@ -8743,7 +8860,10 @@ namespace cbl {
        *  @author alfonso.veropalumbo@unibo.it
        *
        *  @param redshift the redshift
-       *  @param method_Pk method used to compute the sound horizon;
+       *
+       *  @param method_Pk method used to compute the sound horizon
+       *  (i.e. the Boltzmann solver)
+       *
        *  @param T_CMB CMB temperature
        *
        *  @return y<SUB>s</SUB>
@@ -8801,15 +8921,16 @@ namespace cbl {
        *  @author Cosimo Fedeli
        *  @author cosimo.fedeli@oabo.inaf.it
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -8837,7 +8958,7 @@ namespace cbl {
        *
        *  @return A<SUB>m</SUB>
        */
-      double Am (const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      double Am (const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief the potential spectral amplitude 
@@ -8845,15 +8966,16 @@ namespace cbl {
        *  @author Cosimo Fedeli
        *  @author cosimo.fedeli@oabo.inaf.it
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -8881,7 +9003,7 @@ namespace cbl {
        *
        *  @return the potential spectral amplitude
        */
-      double potential_spectral_amplitude (const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double potential_spectral_amplitude (const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the bispectrum
@@ -8891,15 +9013,16 @@ namespace cbl {
        *
        *  @param kk wave vector module
        *  
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -8927,7 +9050,7 @@ namespace cbl {
        *
        *  @return the potential spectral amplitude
        */
-      double bispectrum (const std::vector<double> kk, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double bispectrum (const std::vector<double> kk, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
     
       /**
        *  @brief auxiliary function to estimate cosmological quantities
@@ -8940,15 +9063,16 @@ namespace cbl {
        *
        *  @param mass halo mass
        *  
-       *  @param method_Pk method used to compute the power spectrum; 
-       *  valid choices for method_Pk are: CAMB [http://camb.info/], classgal_v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
        *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -8976,7 +9100,7 @@ namespace cbl {
        *
        *  @return mrk
        */
-      double mrk (const double kk, const double mass, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double mrk (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief auxiliary function to estimate cosmological quantities
@@ -8989,15 +9113,16 @@ namespace cbl {
        *
        *  @param mass halo mass
        *  
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -9038,12 +9163,12 @@ namespace cbl {
        *
        *  @return frk
        */
-      double frk (const double kk, const double mass, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double frk (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /// @cond TEST_NG
       double bias_kernel (const double, void *); 
 
-      double frk_test (const double, const double, const std::string, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double frk_test (const double, const double, const std::string, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       /// @endcond
 
 
@@ -9057,15 +9182,16 @@ namespace cbl {
        *
        *  @param mass halo mass
        *  
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -9106,7 +9232,7 @@ namespace cbl {
        *
        *  @return bias correction
        */
-      double bias_correction (const double kk, const double mass, const std::string method_Pk, const bool store_output_CAMB=true, const std::string  output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_correction (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string  output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the skewness
@@ -9116,15 +9242,16 @@ namespace cbl {
        *
        *  @param mass halo mass
        *  
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -9165,7 +9292,7 @@ namespace cbl {
        *
        *  @return skewness
        */
-      double skewness (const double mass, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double skewness (const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the derivative of the skewness, ds/dM
@@ -9175,15 +9302,16 @@ namespace cbl {
        *
        *  @param mass halo mass
        *  
-       *  @param method_Pk method used to compute the power spectrum; valid
-       *  choices for method_Pk are: CAMB [http://camb.info/], classgal_v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
        *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -9224,7 +9352,7 @@ namespace cbl {
        *
        *  @return derivative of the skewness
        */
-      double dskewnessdM (const double mass, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double dskewnessdM (const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief correction to the halo mass in non-Gaussian cosmologies
@@ -9236,15 +9364,16 @@ namespace cbl {
        *  
        *  @param redshift the redshift
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        * 
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -9284,7 +9413,7 @@ namespace cbl {
        *
        *  @return bias correction
        */
-      double MF_correction (const double mass, const double redshift, const std::string method_Pk, const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double MF_correction (const double mass, const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       ///@}
 
@@ -9340,15 +9469,16 @@ namespace cbl {
        *  @param del_c critical value of the linear density field
        *  (default value set to \f$1.06\f$)
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -9378,7 +9508,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      double size_function (const double RV, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double size_function (const double RV, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
 
       /**
        *  @brief the void size function
@@ -9410,15 +9540,16 @@ namespace cbl {
        *  model name are SvdW (Sheth and van de Weygaert, 2004),
        *  linear and Vdn (Jennings et al., 2013)
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -9465,7 +9596,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      double size_function (const double RV, const double redshift, const std::string model_mf, const double del_v, const std::string model_sf, const std::string method_Pk="EisensteinHu", const bool store_output_CAMB=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double size_function (const double RV, const double redshift, const std::string model_mf, const double del_v, const std::string model_sf, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       ///@}
 
@@ -9664,9 +9795,9 @@ namespace cbl {
        */
       double Pk_ThetaTheta (const double kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const double qmin, const double qmax, const double prec=1.e-3);
 
-      std::vector<double> Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      std::vector<double> Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
       
-      std::vector<double> Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      std::vector<double> Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
 
       /**
        *  @brief compute the Theta-Theta non-linear power spectrum 
@@ -9685,9 +9816,10 @@ namespace cbl {
        *
        *  @param redshift the redshift
        * 
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -9709,9 +9841,9 @@ namespace cbl {
        *
        *  @param prec accuracy of the integration 
        *
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
@@ -9725,7 +9857,7 @@ namespace cbl {
        *
        *  @return the \f$\Theta-\Theta\f$ non-linear power spectrum
        */
-      std::vector<double> Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output_CAMB=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      std::vector<double> Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
 
       ///@}
       
@@ -11117,9 +11249,11 @@ namespace cbl {
       /**
        * @brief the \f$ \zeta (r_1, r_2, \theta) \f$
        *
-       * This function computes tree-level prediction for three-point correlation function
-       * of haloes in redshift space, as derived by Slepian&Eisenstein (2017) in configuration
-       * space, based on the work presented by Scoccimarro et al (1999) for the bispectrum.
+       * This function computes tree-level prediction for three-point
+       * correlation function of haloes in redshift space, as derived
+       * by Slepian&Eisenstein (2017) in configuration space, based on
+       * the work presented by Scoccimarro et al (1999) for the
+       * bispectrum.
        *
        * @param r1 the first triangle side
        *
@@ -11135,9 +11269,10 @@ namespace cbl {
        *
        * @param redshift the redshift
        *
-       * @param method_Pk method used to compute the power spectrum;
-       * valid choices for method_Pk are: CAMB [http://camb.info/],
-       * classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       * @param method_Pk method used to compute the power spectrum
+       * (i.e. the Boltzmann solver); valid choices for method_Pk are:
+       * CAMB [http://camb.info/], CLASS
+       * [http://class-code.net/], MPTbreeze-v1
        * [http://arxiv.org/abs/1207.1465], EisensteinHu
        * [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
@@ -11145,29 +11280,30 @@ namespace cbl {
        *
        * @param step_k the number of bins for k
        *
-       *  @param output_dir the output_dir directory
+       * @param output_dir the output_dir directory
        *  where the output of external codes are written
        *  
-       *  @param store_output_CAMB if true the output files created by
-       *  CAMB are stored; if false the output files created by CAMB
-       *  are removed
+       * @param store_output if true the output files created by the
+       * Boltzmann solver are stored; if false the output files are
+       * removed
        *
-       *  @param output_root output_root of the parameter file used to
-       *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       * @param output_root output_root of the parameter file used to
+       * compute the power spectrum and &sigma;(mass); it can be any
+       * name
        *
-       * @param force_RealSpace if true, force the computation
-       * to be in real space
+       * @param force_RealSpace if true, force the computation to be
+       * in real space
        *
        * @param include_limits include the \f$\theta\f$ limits
        *
        * @param max_ll maximum order in the model
        *
-       * @param use_k if true, use the \f$k_l\f$ part of the model \f$O(\beta^2)\f$
+       * @param use_k if true, use the \f$k_l\f$ part of the model
+       * \f$O(\beta^2)\f$
        *
        * @return the halo redshift space three-point correlation function
        */
-      std::vector<double> zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const std::string method_Pk, const int step_r, const int step_k, const std::string output_dir, const bool store_output_CAMB=true, const std::string output_root="test", const bool force_RealSpace = false, const bool include_limits=false, const int max_ll=4, const bool use_k=false);
+      std::vector<double> zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const std::string method_Pk, const int step_r, const int step_k, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const bool force_RealSpace = false, const bool include_limits=false, const int max_ll=4, const bool use_k=false);
 
       ///@}
        
@@ -11195,7 +11331,7 @@ namespace cbl {
       double kt;
       double mass;
       std::string method_Pk;
-      bool store_output_CAMB;
+      bool store_output;
       std::string output_root;
       int norm;
       double k_min;
@@ -11263,7 +11399,7 @@ namespace cbl {
       double redshift;
       std::string model_MF;
       std::string method_SS;
-      bool store_output_CAMB;
+      bool store_output;
       std::string output_root;
       double Delta;
       std::string interpType;
@@ -11300,7 +11436,7 @@ namespace cbl {
       double kt;
       double mass;
       std::string method_Pk;
-      bool store_output_CAMB;
+      bool store_output;
       std::string output_root;
       int norm;
       double k_min;

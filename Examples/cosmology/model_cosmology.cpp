@@ -76,6 +76,7 @@ int main () {
 
     modelCosmo.set_cosmological_parameters(Cpar, {OmegaM_prior, H0_prior, rs_prior});
 
+    
     // ----------------------------------------------------------------------
     // ------------- run chains and write output chain and model ------------
     // ----------------------------------------------------------------------
@@ -88,8 +89,10 @@ int main () {
     modelCosmo.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Covariance_);
     
     modelCosmo.sample_posterior(chain_size, nwalkers, seed);
+
+    modelCosmo.set_fit_range(cbl::Min(data->xx()), cbl::Max(data->xx()));
     
-    modelCosmo.write_results("./", "results", 0, 1);
+    modelCosmo.show_results();
   }
 
   

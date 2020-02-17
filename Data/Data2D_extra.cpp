@@ -87,13 +87,13 @@ void cbl::data::Data2D_extra::write (const string dir, const string file, const 
   for (int i=0; i<m_xsize; ++i)
     for (int j=0; j<m_ysize; ++j) {
       int index = j+m_ysize*i;
-      fout << setprecision(precision) << setw(15) << right << m_x[i]
-	   << "  " << setprecision(precision) << setw(15) << right << m_y[j]
-	   << "  " << setprecision(precision) << setw(15) << right << m_data[index]
-	   << "  " << setprecision(precision) << setw(15) << right << m_error[index];
+      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i]
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_y[j]
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index];
 
       for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-        fout << "  " << setprecision(precision) << setw(15) << right << m_extra_info[ex][index];
+        fout << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_extra_info[ex][index];
       fout << endl;
     }
 
@@ -103,39 +103,39 @@ void cbl::data::Data2D_extra::write (const string dir, const string file, const 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
         int index = j+m_ysize*i;
-        fout << setprecision(precision) << setw(15) << right << m_x[i]
-	     << "  " << setprecision(precision) << setw(15) << right << -m_y[j]
-	     << "  " << setprecision(precision) << setw(15) << right << m_data[index]
-	     << "  " << setprecision(precision) << setw(15) << right << m_error[index];
+        fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i]
+	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << -m_y[j]
+	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
+	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index];
 
         for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-          fout  << "  " << setprecision(precision) << setw(15) << m_extra_info[ex][index];
+          fout  << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << m_extra_info[ex][index];
         fout << endl;
       }
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
         int index = j+m_ysize*i;
-        fout << setprecision(precision) << setw(15) << right << -m_x[i]
-	     << "  " << setprecision(precision) << setw(15) << right << -m_y[j]
-	     << "  " << setprecision(precision) << setw(15) << right << m_data[index]
-	     << "  " << setprecision(precision) << setw(15) << right << m_error[index];
+        fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << -m_x[i]
+	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << -m_y[j]
+	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
+	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index];
 
         for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-          fout  << "  " << setprecision(precision) << setw(15) << right << m_extra_info[ex][index];
+          fout  << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_extra_info[ex][index];
         fout << endl;
       }
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
         int index = j+m_ysize*i;
-        fout << setprecision(precision) << setw(15) << right << -m_x[i]
-	     << "  " << setprecision(precision) << setw(15) << right << m_y[j]
-	     << "  " << setprecision(precision) << setw(15) << right << m_data[index]
-	     << "  " << setprecision(precision) << setw(15) << right << m_error[index];
+        fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << -m_x[i]
+	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_y[j]
+	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
+	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index];
 
         for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-          fout << "  " << setprecision(precision) << setw(15) << right << m_extra_info[ex][index];
+          fout << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_extra_info[ex][index];
         fout << endl;
       }
 

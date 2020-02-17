@@ -143,11 +143,11 @@ void cbl::statistics::Likelihood::m_set_grid_likelihood_2D (const std::string in
 // ============================================================================================
 
 
-cbl::statistics::Likelihood::Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const LikelihoodType likelihood_type, const std::vector<size_t> x_index, const int w_index, const std::shared_ptr<ModelParameters> model_parameters)
+cbl::statistics::Likelihood::Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const LikelihoodType likelihood_type, const std::vector<size_t> x_index, const int w_index, const std::shared_ptr<ModelParameters> model_parameters, const double prec, const int Nres)
 {
   set_data(data);
   set_model(model, model_parameters);
-  set_function(likelihood_type, x_index, w_index);
+  set_function(likelihood_type, x_index, w_index, prec, Nres);
 }
 
 
@@ -247,7 +247,7 @@ void cbl::statistics::Likelihood::set_grid (const int npoints, const std::vector
 // ============================================================================================
 
 
-void cbl::statistics::Likelihood::set_function (const LikelihoodType likelihood_type, const std::vector<size_t> x_index, const int w_index)
+void cbl::statistics::Likelihood::set_function (const LikelihoodType likelihood_type, const std::vector<size_t> x_index, const int w_index, const double prec, const int Nres)
 {
   m_x_index = x_index;
   m_w_index = w_index;
@@ -270,7 +270,7 @@ void cbl::statistics::Likelihood::set_function (const LikelihoodType likelihood_
 	break; 
 
       case (LikelihoodType::_Gaussian_Covariance_):
-	m_data->invert_covariance();
+	m_data->invert_covariance(prec, Nres);
 	m_log_likelihood_function = &LogLikelihood_Gaussian_1D_covariance;
 	break;
 

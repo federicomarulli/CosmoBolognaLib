@@ -75,8 +75,8 @@ namespace cbl {
 	/// the output_dir directory where the output of external codes are written
 	std::string output_dir;
 
-	/// true \f$\rightarrow\f$ the output files created by CAMB are stored; false \f$\rightarrow\f$ the output files created by CAMB are removed
-	bool store_output_CAMB;
+	/// true \f$\rightarrow\f$ the output files created by the Boltmann solver are stored; false \f$\rightarrow\f$ the output files are removed
+	bool store_output;
       
 	/// output root of the parameter file used to compute the dark matter power spectrum
 	std::string output_root;
@@ -750,7 +750,7 @@ namespace cbl {
        *    cbl::modelling::twopt::Pkmu_DeWiggled
        *
        *  - the dispersion + mode-coupling model, implemented in
-       *    cbl::modelling::twopt::Pkmu_DeWiggled
+       *    cbl::modelling::twopt::Pkmu_ModeCoupling
        *  
        *  Alcock-Paczynski effect has been introduced following Ballinger
        *  et al. 1998 (https://arxiv.org/pdf/astro-ph/9605017.pdf), 

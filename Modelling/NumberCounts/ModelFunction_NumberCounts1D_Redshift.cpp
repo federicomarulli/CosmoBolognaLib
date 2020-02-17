@@ -59,9 +59,9 @@ std::vector<double> cbl::modelling::numbercounts::number_density_redshift (const
     cosmo.set_parameter(pp->Cpar[i], parameter[i]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output_CAMB, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  std::vector<double> Pk = cosmo.Pk(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
-  std::vector<std::vector<double>> mass_function = cbl::modelling::numbercounts::mass_function(redshift, pp->Mass_vector, cosmo, pp->model_MF, pp->store_output_CAMB, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
+  std::vector<std::vector<double>> mass_function = cbl::modelling::numbercounts::mass_function(redshift, pp->Mass_vector, cosmo, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
 
   std::vector<double> number_density(redshift.size());
 
@@ -94,9 +94,9 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_redshift (const 
   }
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output_CAMB, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  std::vector<double> Pk = cosmo.Pk(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
-  std::vector<std::vector<double>> mass_function = cbl::modelling::numbercounts::mass_function (redshift, pp->Mass_vector, cosmo, pp->model_MF, pp->store_output_CAMB, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
+  std::vector<std::vector<double>> mass_function = cbl::modelling::numbercounts::mass_function (redshift, pp->Mass_vector, cosmo, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
 
   std::vector<double> number_counts(redshift.size());
   double deltaZ = redshift[1]-redshift[0];

@@ -43,7 +43,7 @@ using namespace cbl;
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const double redshift, const bool store_output_CAMB, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, function<double(double)> filter, const bool unit1) const 
+double cbl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const double redshift, const bool store_output, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, function<double(double)> filter, const bool unit1) const 
 {
   function<double(double)> func;
  
@@ -96,10 +96,10 @@ double cbl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const do
     func = ff;
   }
 
-  else if (method_Pk=="CAMB" || method_Pk=="classgal_v1") {
+  else if (method_Pk=="CAMB" || method_Pk=="CLASS") {
     
     vector<double> lgkk, lgPk; 
-    Table_PkCodes(method_Pk, false, lgkk, lgPk, redshift, store_output_CAMB, output_root, kmax, input_file);
+    Table_PkCodes(method_Pk, false, lgkk, lgPk, redshift, store_output, output_root, kmax, input_file);
 
     for (size_t i=0; i<lgkk.size(); i++) {
       const double KK = pow(10., lgkk[i])*fact;
@@ -130,14 +130,14 @@ double cbl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const do
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::m_sigma2R_notNormalised (const double radius, const string method_Pk, const double redshift, const bool store_output_CAMB, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+double cbl::cosmology::Cosmology::m_sigma2R_notNormalised (const double radius, const string method_Pk, const double redshift, const bool store_output, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
   auto filter = [&] (const double k)
   {
     return pow(TopHat_WF(k*radius),2);
   };
 
-  return cosmology::Cosmology::m_func_sigma(method_Pk, redshift, store_output_CAMB, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1);
+  return cosmology::Cosmology::m_func_sigma(method_Pk, redshift, store_output, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1);
 
 }
 
@@ -145,7 +145,7 @@ double cbl::cosmology::Cosmology::m_sigma2R_notNormalised (const double radius, 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::sigma2R (const double radius, const string method_Pk, const double redshift, const bool store_output_CAMB, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+double cbl::cosmology::Cosmology::sigma2R (const double radius, const string method_Pk, const double redshift, const bool store_output, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
   if (radius<0) ErrorCBL("the radius must be >0!", "sigma2R", "Sigma.cpp");
   
@@ -159,17 +159,17 @@ double cbl::cosmology::Cosmology::sigma2R (const double radius, const string met
   if (input_file==par::defaultString || is_parameter_file) {
     if (m_sigma8>0) 
       // sigma_8 = sigma(8Mpc/h)
-      fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, redshift, store_output_CAMB, output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor
+      fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, redshift, store_output, output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor
   }
 
-  return m_sigma2R_notNormalised(radius, method_Pk, redshift, store_output_CAMB, output_root, interpType, kmax, input_file, is_parameter_file, unit1)*fact;
+  return m_sigma2R_notNormalised(radius, method_Pk, redshift, store_output, output_root, interpType, kmax, input_file, is_parameter_file, unit1)*fact;
 }
 
 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::dnsigma2R (const int nd, const double radius, const string method_Pk, const double redshift, const bool store_output_CAMB, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+double cbl::cosmology::Cosmology::dnsigma2R (const int nd, const double radius, const string method_Pk, const double redshift, const bool store_output, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
   if (radius<0) ErrorCBL("the radius must be >0!", "dnsigma2R", "Sigma.cpp");
   
@@ -183,7 +183,7 @@ double cbl::cosmology::Cosmology::dnsigma2R (const int nd, const double radius, 
   if (input_file==par::defaultString || is_parameter_file) {
     if (m_sigma8>0) 
       // sigma_8 = sigma(8Mpc/h)
-      fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, 0., store_output_CAMB, output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor    
+      fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, 0., store_output, output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor    
   }
 
   if (nd==1) {
@@ -193,7 +193,7 @@ double cbl::cosmology::Cosmology::dnsigma2R (const int nd, const double radius, 
       return 2.*cbl::TopHat_WF(k*radius)*cbl::TopHat_WF_D1(k*radius)*k;
     };
 
-    return cbl::cosmology::Cosmology::m_func_sigma(method_Pk, redshift, store_output_CAMB, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1)*fact;
+    return cbl::cosmology::Cosmology::m_func_sigma(method_Pk, redshift, store_output, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1)*fact;
 
   }
 
@@ -205,7 +205,7 @@ double cbl::cosmology::Cosmology::dnsigma2R (const int nd, const double radius, 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::m_sigma2M_notNormalised (const double mass, const string method_Pk, const double redshift, const bool store_output_CAMB, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+double cbl::cosmology::Cosmology::m_sigma2M_notNormalised (const double mass, const string method_Pk, const double redshift, const bool store_output, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
   if (mass<0) ErrorCBL("the mass must be >0!", "m_sigma2M_notNormalised", "Sigma.cpp");
   
@@ -216,14 +216,14 @@ double cbl::cosmology::Cosmology::m_sigma2M_notNormalised (const double mass, co
     return pow(TopHat_WF(k*radius), 2);
   };
   
-  return Cosmology::m_func_sigma(method_Pk, redshift, store_output_CAMB, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1);
+  return Cosmology::m_func_sigma(method_Pk, redshift, store_output, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1);
 }
 
 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::sigma2M (const double mass, const string method_Pk, const double redshift, const bool store_output_CAMB, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+double cbl::cosmology::Cosmology::sigma2M (const double mass, const string method_Pk, const double redshift, const bool store_output, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
   if (mass<0) ErrorCBL("the mass must be >0!", "sigma2M", "Sigma.cpp");
   
@@ -237,17 +237,17 @@ double cbl::cosmology::Cosmology::sigma2M (const double mass, const string metho
   if (input_file==par::defaultString || is_parameter_file) {
     if (m_sigma8>0)
       // (sigma8 = sigma(8Mpc/h))
-      fact = pow(m_sigma8, 2)/m_sigma2M_notNormalised(Mass(8., rho_m(0., true)), method_Pk, 0., store_output_CAMB, output_root, interpType, kmax, input_file, is_parameter_file, true);
+      fact = pow(m_sigma8, 2)/m_sigma2M_notNormalised(Mass(8., rho_m(0., true)), method_Pk, 0., store_output, output_root, interpType, kmax, input_file, is_parameter_file, true);
   }
   
-  return m_sigma2M_notNormalised(mass, method_Pk, redshift, store_output_CAMB, output_root, interpType, kmax, input_file, is_parameter_file, unit1)*fact;
+  return m_sigma2M_notNormalised(mass, method_Pk, redshift, store_output, output_root, interpType, kmax, input_file, is_parameter_file, unit1)*fact;
 }
 
 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::dnsigma2M (const int nd, const double mass, const string method_Pk, const double redshift, const bool store_output_CAMB, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
+double cbl::cosmology::Cosmology::dnsigma2M (const int nd, const double mass, const string method_Pk, const double redshift, const bool store_output, const string output_root, const string interpType, const double kmax, const string input_file, const bool is_parameter_file, const bool unit1) const 
 {
   if (mass<0) ErrorCBL("the mass must be >0!", "dnsigma2M", "Sigma.cpp");
   
@@ -261,7 +261,7 @@ double cbl::cosmology::Cosmology::dnsigma2M (const int nd, const double mass, co
   if (input_file==par::defaultString || is_parameter_file) {
     if (m_sigma8>0)
       // (sigma8 = sigma(8Mpc/h))
-      fact = pow(m_sigma8, 2)/m_sigma2M_notNormalised(Mass(8., rho_m(0., true)), method_Pk, 0., store_output_CAMB, output_root, interpType, kmax, input_file, is_parameter_file, true);
+      fact = pow(m_sigma8, 2)/m_sigma2M_notNormalised(Mass(8., rho_m(0., true)), method_Pk, 0., store_output, output_root, interpType, kmax, input_file, is_parameter_file, true);
   }
 
   if (nd==1) {
@@ -280,7 +280,7 @@ double cbl::cosmology::Cosmology::dnsigma2M (const int nd, const double mass, co
       return 2.*cbl::TopHat_WF(k*radius)*cbl::TopHat_WF_D1(k*radius)*k*dRdM;
     };
 
-    return cosmology::Cosmology::m_func_sigma(method_Pk, redshift, store_output_CAMB, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1)*fact;
+    return cosmology::Cosmology::m_func_sigma(method_Pk, redshift, store_output, output_root, interpType, kmax, input_file, is_parameter_file, filter, unit1)*fact;
 
   }
   else
@@ -291,7 +291,7 @@ double cbl::cosmology::Cosmology::dnsigma2M (const int nd, const double mass, co
 // =====================================================================================
 
 
-std::string cbl::cosmology::Cosmology::create_grid_sigmaM (const string method_SS, const double redshift, const bool store_output_CAMB,const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const 
+std::string cbl::cosmology::Cosmology::create_grid_sigmaM (const string method_SS, const double redshift, const bool store_output,const string output_root, const string interpType, const double k_max, const string input_file, const bool is_parameter_file) const 
 {
   string norm = (m_sigma8>0) ? "_sigma8"+conv(m_sigma8, par::fDP3) : "_scalar_amp"+conv(m_scalar_amp, par::ee3);
 
@@ -319,9 +319,9 @@ std::string cbl::cosmology::Cosmology::create_grid_sigmaM (const string method_S
     for (size_t k=0; k<MM.size(); k++) {
       coutCBL << "\r............." << double(k)/double(MM.size())*100. << "% completed \r"; cout.flush(); 
 
-      SSS = sigma2M(MM[k], method_SS, redshift, store_output_CAMB, output_root, interpType, k_max, input_file, is_parameter_file, true);
+      SSS = sigma2M(MM[k], method_SS, redshift, store_output, output_root, interpType, k_max, input_file, is_parameter_file, true);
       Sigma = sqrt(SSS);
-      Dln_Sigma = dnsigma2M(1, MM[k], method_SS, redshift, store_output_CAMB, output_root, interpType, k_max, input_file, is_parameter_file, true)*(MM[k]/(2.*SSS));
+      Dln_Sigma = dnsigma2M(1, MM[k], method_SS, redshift, store_output, output_root, interpType, k_max, input_file, is_parameter_file, true)*(MM[k]/(2.*SSS));
       fout << MM[k] << "   " << Sigma << "   " << Dln_Sigma << endl;
     }
     

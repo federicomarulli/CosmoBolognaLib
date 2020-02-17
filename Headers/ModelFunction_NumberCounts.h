@@ -89,10 +89,8 @@ namespace cbl {
 	/// the output_dir directory where the output of external codes are written
 	std::string output_dir;
 
-	/// true \f$\rightarrow\f$ the output files created by CAMB
-	/// are stored; false \f$\rightarrow\f$ the output files
-	/// created by CAMB are removed
-	bool store_output_CAMB;
+	/// true \f$\rightarrow\f$ the output files created by the Boltzmann solver are stored; false \f$\rightarrow\f$ the output files are removed
+	bool store_output;
       
 	/// output root of the parameter file used to compute the dark matter power spectrum
 	std::string output_root;
@@ -202,10 +200,8 @@ namespace cbl {
 	/// method to compute the dark matter power spectrum
 	std::string method_Pk;
 
-	/// true \f$\rightarrow\f$ the output files created by CAMB
-	/// are stored; false \f$\rightarrow\f$ the output files
-	/// created by CAMB are removed
-	bool store_output_CAMB;
+	/// true \f$\rightarrow\f$ the output files created by the Boltzmann solver are stored; false \f$\rightarrow\f$ the output files are removedt
+	bool store_output;
 
 	/// output root of the parameter file used to compute the dark matter power spectrum
 	std::string output_root;
@@ -340,8 +336,9 @@ namespace cbl {
        * Bhattacharya (Bhattacharya et al. 2011), Courtin (Courtin et
        * al. 2010), Peacock (by Peacock at al. 2007)
        *
-       *  @param store_output_CAMB if true the output files created by CAMB are stored;
-       *  if false the output files created by CAMB are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        * @param Delta \f$\Delta\f$: the overdensity, defined as the
        * mean interior density relative to the background
@@ -355,7 +352,7 @@ namespace cbl {
        *
        * @return value of the mass function
        */
-      double mass_function (const double mass, cosmology::Cosmology cosmology, const double redshift, const std::string model_MF, const bool store_output_CAMB, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_Pk, const double kmax);
+      double mass_function (const double mass, cosmology::Cosmology cosmology, const double redshift, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_Pk, const double kmax);
 
       /**
        * @brief compute the mass function
@@ -380,8 +377,9 @@ namespace cbl {
        * Bhattacharya (Bhattacharya et al. 2011), Courtin (Courtin et
        * al. 2010), Peacock (by Peacock at al. 2007)
        *
-       *  @param store_output_CAMB if true the output files created by CAMB are stored;
-       *  if false the output files created by CAMB are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        * @param Delta \f$\Delta\f$: the overdensity, defined as the
        * mean interior density relative to the background
@@ -399,7 +397,7 @@ namespace cbl {
        *
        * @return values of the mass function
        */
-      std::vector<double> mass_function (const std::vector<double> mass, cosmology::Cosmology cosmology, const double redshift, const std::string model_MF, const bool store_output_CAMB, const double Delta, const bool isDelta_vir, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax);
+      std::vector<double> mass_function (const std::vector<double> mass, cosmology::Cosmology cosmology, const double redshift, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax);
 
       /**
        * @brief compute the mass function as function
@@ -425,8 +423,9 @@ namespace cbl {
        * Bhattacharya (Bhattacharya et al. 2011), Courtin (Courtin et
        * al. 2010), Peacock (by Peacock at al. 2007)
        *
-       *  @param store_output_CAMB if true the output files created by CAMB are stored;
-       *  if false the output files created by CAMB are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        * @param Delta \f$\Delta\f$: the overdensity, defined as the
        * mean interior density relative to the background
@@ -445,7 +444,7 @@ namespace cbl {
        * @return values of the mass function as a function of redshift
        * and mass
        */
-      std::vector<std::vector<double>> mass_function (const std::vector<double> redshift, const std::vector<double> mass, cosmology::Cosmology cosmology, const std::string model_MF, const bool store_output_CAMB, const double Delta, const bool isDelta_vir, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax);
+      std::vector<std::vector<double>> mass_function (const std::vector<double> redshift, const std::vector<double> mass, cosmology::Cosmology cosmology, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax);
 
       /**
        *  @brief the void size function
@@ -474,14 +473,16 @@ namespace cbl {
        *  @param del_c critical value of the linear density field
        *  (default value set to \f$1.06\f$)
        *
-       *  @param method_Pk method used to compute the power spectrum;
-       *  valid choices for method_Pk are: CAMB [http://camb.info/],
-       *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param store_output_CAMB if true the output files created by CAMB are stored;
-       *  if false the output files created by CAMB are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
@@ -511,7 +512,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      std::vector<double> size_function (cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="CAMB", const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> size_function (cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="CAMB", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        * @brief compute the number counts as function
@@ -543,8 +544,9 @@ namespace cbl {
        * Bhattacharya (Bhattacharya et al. 2011), Courtin (Courtin et
        * al. 2010), Peacock (by Peacock at al. 2007)
        *
-       *  @param store_output_CAMB if true the output files created by CAMB are stored;
-       *  if false the output files created by CAMB are removed
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
        *
        * @param Delta \f$\Delta\f$: the overdensity, defined as the
        * mean interior density relative to the background
@@ -552,18 +554,21 @@ namespace cbl {
        * @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
        * virial overdensity
        *
-       * @param interp_sigmaM interpolating function of \f$ \sigma(M)\f$
+       * @param interp_sigmaM interpolating function of \f$
+       * \sigma(M)\f$
        *
-       * @param interp_DlnsigmaM interpolating function of \f$ \mathrm{d} \ln(\sigma(M)) / \mathrm{d} M \f$
+       * @param interp_DlnsigmaM interpolating function of \f$
+       * \mathrm{d} \ln(\sigma(M)) / \mathrm{d} M \f$
        *
-       * @param npt_redshift number of redshifts bins to compute the integral
+       * @param npt_redshift number of redshifts bins to compute the
+       * integral
        *
        * @param npt_mass number of mass bins to compute the integral
        *
        * @return values of the mass function as a function of redshift
        * and mass
        */
-      double number_counts(const double redshift_min, const double redshift_max, const double Mass_min, const double Mass_max, cosmology::Cosmology cosmology, const double Area, const std::string model_MF, const bool store_output_CAMB, const double Delta, const bool isDelta_vir, const glob::FuncGrid interp_sigmaM, const  glob::FuncGrid interp_DlnsigmaM, const int npt_redshift=10, const int npt_mass=10);
+      double number_counts(const double redshift_min, const double redshift_max, const double Mass_min, const double Mass_max, cosmology::Cosmology cosmology, const double Area, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const glob::FuncGrid interp_sigmaM, const  glob::FuncGrid interp_DlnsigmaM, const int npt_redshift=10, const int npt_mass=10);
 
     }
   }

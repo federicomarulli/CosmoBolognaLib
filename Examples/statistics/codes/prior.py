@@ -13,6 +13,6 @@ nExtr = 2000
 sample = np.array([prior.sample(i) for i in range(nExtr)])
 psample = np.array([prior(ss) for ss in sample])
 
-plt.hist(sample, 20, normed=True)
+plt.hist(sample, 20, density=True)
 plt.plot(sample, psample, '.')
 plt.show(block=False)

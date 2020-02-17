@@ -44,7 +44,7 @@ using namespace cbl;
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double k_min, const double k_max, const int step,  const std::string output_dir, const bool store_output_CAMB, const int norm, const double Delta, const bool isDelta_vir, const std::string model_MF, const std::string selection_function_file, const std::vector<int> selection_function_column, const double z_min, const double z_max, const int z_step, const double Mass_min, const double Mass_max, const int Mass_step, const double area_degrees, const double prec)
+void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double k_min, const double k_max, const int step,  const std::string output_dir, const bool store_output, const int norm, const double Delta, const bool isDelta_vir, const std::string model_MF, const std::string selection_function_file, const std::vector<int> selection_function_column, const double z_min, const double z_max, const int z_step, const double Mass_min, const double Mass_max, const int Mass_step, const double area_degrees, const double prec)
 {
   m_data_model.isSnapshot = false;
 
@@ -58,7 +58,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
   m_data_model.norm = norm;
   
   m_data_model.output_dir = output_dir;
-  m_data_model.store_output_CAMB = store_output_CAMB;
+  m_data_model.store_output = store_output;
   m_data_model.output_root = "test";
   m_data_model.file_par = par::defaultString;
 
@@ -98,7 +98,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model_SF, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output_CAMB, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
+void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model_SF, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
 {
   m_data_model_SF.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model_SF.radii = radii;
@@ -110,7 +110,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model_SF (co
   m_data_model_SF.deltav_NL = deltav_NL;
   m_data_model_SF.delta_c = del_c;
   m_data_model_SF.method_Pk = method_Pk;
-  m_data_model_SF.store_output_CAMB = store_output_CAMB;
+  m_data_model_SF.store_output = store_output;
   m_data_model_SF.output_root = output_root;
   m_data_model_SF.interpType = interpType;
   m_data_model_SF.k_max = k_max;

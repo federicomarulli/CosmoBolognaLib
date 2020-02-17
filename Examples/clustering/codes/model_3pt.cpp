@@ -81,6 +81,7 @@ int main () {
         Q_DM.emplace_back(Q);
 
     fin.clear(); fin.close();
+    
 
     // ------------------------------------------------------------------------------------------------------------
     // ----------------- model the reduced three-point correlation function to estimate b1 and b2 -----------------
@@ -103,9 +104,9 @@ int main () {
     // ----------------------------------------------------------------------
 
     // minimum and maxium scales used in the fit
-    //const double theta_min = 0.;
-    //const double theta_max = 1.;
-    //model_threep.set_fit_range(theta_min, theta_max);
+    const double theta_min = 0.;
+    const double theta_max = 1.;
+    model_threep.set_fit_range(theta_min, theta_max);
 
     const int chain_size = 1000; // the size the chain lenght
     const int nwalkers = 10;     // the number of parallel walkers in the MCMC chains
@@ -119,7 +120,7 @@ int main () {
 
     const int burn_in = 100; // discard the first 100 chain steps 
     const int thin = 10;     // take 1 step every 10
-
+    
     // write the results on screen 
     model_threep.show_results(burn_in, thin, seed);
 

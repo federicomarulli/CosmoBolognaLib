@@ -9,7 +9,7 @@ from CosmoBolognaLib import DoubleVector as dv
 import os
 
 # set the CosmoBolognaLib and the current directories
-cbl.SetDirs("../../../", "./")
+cbl.SetDirs(os.getcwd()+"/../../../", os.getcwd()+"/")
 
 ''' Define the cosmology '''
 cosmo = cbl.Cosmology(cbl.CosmologicalModel__Planck15_)

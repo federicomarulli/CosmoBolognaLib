@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os
 import sys
@@ -6,26 +6,27 @@ import sys
 
 ####################################################
 
-### check the output of os.system ###
+### function to check the output of os.system ###
 
 def check_sys (out):
     if (out>0):
         sys.exit(0)
 
-### check if valgrind got any errors ###
+        
+### function to check if valgrind got any errors ###
 
 def check_valgrind ():
     if "ERROR SUMMARY: 0 errors from 0" in open("valgrind_output.dat").read():
-        print "\n valgrind: OK! \n"
+        print("\n valgrind: OK! \n")
         os.remove("valgrind_output.dat")
     else:
-        print "\n Error from vagrind! \n"
-        print "".join(file("valgrind_output.dat"))
+        print("\n Error from vagrind! \n")
+        print("".join(file("valgrind_output.dat")))
         os.remove("valgrind_output.dat")
         sys.exit(0)
 
         
-### run the example code (with or withoud valgrind) ###
+### function to run the example code (with or withoud valgrind) ###
 
 flags_Valgrind = "--track-origins=yes" #"--leak-check=full"
 
@@ -41,7 +42,7 @@ def com (ex, language, input):
             out = os.system("python3 "+ex+"  "+input)
             check_sys(out)
         else:
-            print "\n Error: language not allowed! \n"
+            print("\n Error: language not allowed! \n")
             sys.exit(0)
     else:
         if (language=="C++"):
@@ -55,15 +56,15 @@ def com (ex, language, input):
             out = os.system("python3 "+ex+"  "+input)
             check_sys(out)             
         else:
-            print "\n Error: language not allowed! \n"
+            print("\n Error: language not allowed! \n")
             sys.exit(0)
 
         
-### check if the example is ok ###
+### function to check if the example is ok ###
 
 def check (dir, file, language, input=""):
-    if (("all" in sys.argv and language!="python3") or file in sys.argv or ("python" in sys.argv and language=="python") or ("python3" in sys.argv and language=="python3") or ("C++" in sys.argv and language=="C++")):
-        print "\n\n-----> Testing ", file, "<-----\n"
+    if (("ALL" in sys.argv and language!="python3") or (file in sys.argv and "C++" in sys.argv and language=="C++") or (file in sys.argv and "python" in sys.argv and language=="python") or (file in sys.argv and "python3" in sys.argv and language=="python3") or ("all" in sys.argv and "python" in sys.argv and language=="python") or ("all" in sys.argv and "python3" in sys.argv and language=="python3") or ("all" in sys.argv and "C++" in sys.argv and language=="C++")):
+        print("\n\n-----> Testing ", file, "<-----\n")
         os.chdir(cwd+"/Examples/"+dir)
         com(file, language, input)
 
@@ -80,7 +81,7 @@ cwd = os.getcwd()
 if not ("nocompile" in sys.argv):
     out = os.system("make clean && make FLAGS=\"-O0 -g\" && make allExamples FLAGS=\"-O0 -g\"")
     check_sys(out)
-    
+
 
 ####################################################
 
@@ -150,10 +151,17 @@ check("readParameterFile", "readParameterFile", "C++")
 
 if not ("nopy" in sys.argv):
     os.chdir(cwd)
-    out = os.system("make clean && make cleanpy && make FLAGS=\"-O0 -g\" && make CAMB && make python")
+    out = os.system("make clean && cd Examples/statistics/codes && make modelpy && cd ../../.. && make cleanpy && make FLAGS=\"-O0 -g\"")
     check_sys(out)
-    
-    
+    if ("python" in sys.argv):
+        os.system("make python PY=python2")
+    elif ("python3" in sys.argv):
+        os.system("make python PY=python3")
+    else:
+        print("\n Error: language not allowed! \n")
+        sys.exit(0)    
+
+        
 ####################################################
 
 
@@ -205,4 +213,4 @@ if not ("nodoc" in sys.argv):
     os.chdir(cwd)
     out = os.system("make documentation")
     check_sys(out)
-    print "".join(file("Doc/WARNING_LOGFILE"))
+    print("".join(file("Doc/WARNING_LOGFILE")))

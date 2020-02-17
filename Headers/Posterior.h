@@ -534,6 +534,28 @@ namespace cbl {
 	/**
 	 * @brief show the results of the MCMC sampling on screen
 	 *
+	 * if the covariance matrix has been estimated from a set of
+	 * mock catalogues, and the input parameters ns (number of
+	 * samples used to estimate the covariance matrix) and nb
+	 * (number of data measurements, e.g. the bins of the dataset)
+	 * are provided (>0), then the parameter errors
+	 * (\f$\sigma_p\f$) will be corrected to take into account the
+	 * uncertainities in the covariance estimate (Percival et
+	 * al. 2014):
+	 *
+	 * \f[ \sigma_p = \sqrt{\frac{1+B(n_b-n_p)}{1+A+B(n_p+1)}} \f]
+	 *
+	 * where 
+	 *
+	 * \f[ A = \frac{2}{(n_s-n_b-1)(n_s-n_b-4)} \,, \f]
+	 *
+	 * \f[ B = \frac{(n_s-n_b-2)}{(n_s-n_b-1)(n_s-n_b-4)} \,. \f]
+	 *
+	 * this correction can be applied only if the likelihood is
+	 * Gaussian. Morever, the inverce covariance matrix estimator
+	 * has to be corrected to take into account the inverse
+	 * Wishart distribution (Hartlap, Simon and Schneider 2006).
+	 *
 	 * @param start the minimum chain position to be written
 	 *
 	 * @param thin the step used for dilution on screen
@@ -545,16 +567,45 @@ namespace cbl {
 	 * mode; false \f$\rightarrow\f$ do not show the posterior
 	 * mode
 	 *
+	 * @param ns number of samples used to estimate the covariance
+	 * matrix
+	 *
+	 * @param nb number of data measurements, e.g. the bins of the
+	 * dataset
+	 *
 	 * @return none
 	 */
-	void show_results (const int start, const int thin, const int nbins=50, const bool show_mode=false);
+	void show_results (const int start, const int thin, const int nbins=50, const bool show_mode=false, const int ns=-1, const int nb=-1);
 
 	/**
 	 * @brief store the results of the MCMC sampling to file
 	 * 
-	 * this function stores to file the posterior mean, standard
-	 * deviation, median, 18th and 82th percentiles, and
-	 * optionally the mode
+	 * this function stores to file the posterior mean, the
+	 * posterior standard deviation, the posterior median, 18th
+	 * and 82th posterior percentiles, and, optionally, the
+	 * posterior mode.
+	 *
+	 * If the covariance matrix has been estimated from a set of
+	 * mock catalogues, and the input parameters ns (number of
+	 * samples used to estimate the covariance matrix) and nb
+	 * (number of data measurements, e.g. the bins of the dataset)
+	 * are provided (>0), then the parameter errors
+	 * (\f$\sigma_p\f$) will be corrected to take into account the
+	 * uncertainities in the covariance estimate (Percival et
+	 * al. 2014):
+	 *
+	 * \f[ \sigma_p = \sqrt{\frac{1+B(n_b-n_p)}{1+A+B(n_p+1)}} \f]
+	 *
+	 * where 
+	 *
+	 * \f[ A = \frac{2}{(n_s-n_b-1)(n_s-n_b-4)} \,, \f]
+	 *
+	 * \f[ B = \frac{(n_s-n_b-2)}{(n_s-n_b-1)(n_s-n_b-4)} \,. \f]
+	 *
+	 * this correction can be applied only if the likelihood is
+	 * Gaussian. Morever, the inverce covariance matrix estimator
+	 * has to be corrected to take into account the inverse
+	 * Wishart distribution (Hartlap, Simon and Schneider 2006).
 	 *
 	 * @param output_dir the output directory 
 	 *
@@ -574,9 +625,15 @@ namespace cbl {
 	 * posterior mode; false \f$\rightarrow\f$ do not compute the
 	 * posterior mode
 	 *
+	 * @param ns number of samples used to estimate the covariance
+	 * matrix
+	 *
+	 * @param nb number of data measurements, e.g. the bins of the
+	 * dataset
+	 *
 	 * @return none
 	 */
-	void write_results (const std::string output_dir, const std::string root_file, const int start=0, const int thin=1, const int nbins=50, const bool fits=false, const bool compute_mode=false);
+	void write_results (const std::string output_dir, const std::string root_file, const int start=0, const int thin=1, const int nbins=50, const bool fits=false, const bool compute_mode=false, const int ns=-1, const int nb=-1);
 
 	/**
 	 * @brief write the model at xx, yy computing 16th, 50th and

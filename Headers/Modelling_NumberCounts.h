@@ -162,11 +162,11 @@ namespace cbl {
 	 *
 	 *  @param redshift redshift
 	 *
-	 *  @param method_Pk method used to compute the power
-	 *  spectrum; valid choices for method_Pk are: CAMB
-	 *  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	 *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465],
-	 *  EisensteinHu
+	 *  @param method_Pk method used to compute the power spectrum
+	 *  (i.e. the Boltzmann solver); valid choices for method_Pk
+	 *  are: CAMB [http://camb.info/], CLASS
+	 *  [http://class-code.net/], MPTbreeze-v1
+	 *  [http://arxiv.org/abs/1207.1465], EisensteinHu
 	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
 	 *    
 	 *  @param k_min minimum wave vector module up to which the
@@ -181,8 +181,9 @@ namespace cbl {
 	 *  @param output_dir the output_dir directory
 	 *  where the output of external codes are written
 	 *  
-	 *  @param store_output_CAMB if true the output files created by CAMB are stored;
-	 *  if false the output files created by CAMB are removed
+	 *  @param store_output if true the output files created by
+	 *  the Boltzmann solver are stored; if false the output files
+	 *  are removed
 	 *
 	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
 	 *  &rarr; normalize the power spectrum
@@ -220,7 +221,7 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output_CAMB=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const std::string selection_function_file=par::defaultString, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const int z_step=50, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
+	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const std::string selection_function_file=par::defaultString, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const int z_step=50, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
 
 	///@}
 		
@@ -252,14 +253,16 @@ namespace cbl {
 	 *  @param del_c critical value of the linear density field
 	 *  (default value set to \f$1.06\f$)
 	 *
-	 *  @param method_Pk method used to compute the power spectrum;
-	 *  valid choices for method_Pk are: CAMB [http://camb.info/],
-	 *  classgal_v1 [http://class-code.net/], MPTbreeze-v1
+	 *  @param method_Pk method used to compute the power spectrum
+	 *  (i.e. the Boltzmann solver); valid choices for method_Pk
+	 *  are: CAMB [http://camb.info/], CLASS
+	 *  [http://class-code.net/], MPTbreeze-v1
 	 *  [http://arxiv.org/abs/1207.1465], EisensteinHu
 	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
 	 *
-	 *  @param store_output_CAMB if true the output files created by CAMB are stored;
-	 *  if false the output files created by CAMB are removed
+	 *  @param store_output if true the output files created by
+	 *  the Boltzmann solver are stored; if false the output files
+	 *  are removed
 	 *
 	 *  @param output_root output_root of the parameter file used to
 	 *  compute the power spectrum and &sigma;(mass); it can be any
@@ -288,7 +291,7 @@ namespace cbl {
 	 *  @return none
 	 */
 	
-	void set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output_CAMB=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+	void set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
 
 	/**
@@ -300,11 +303,11 @@ namespace cbl {
 	 *
 	 *  @param redshift redshift
 	 *
-	 *  @param method_Pk method used to compute the power
-	 *  spectrum; valid choices for method_Pk are: CAMB
-	 *  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	 *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465],
-	 *  EisensteinHu
+	 *  @param method_Pk method used to compute the power spectrum
+	 *  (i.e. the Boltzmann solver); valid choices for method_Pk
+	 *  are: CAMB [http://camb.info/], CLASS
+	 *  [http://class-code.net/], MPTbreeze-v1
+	 *  [http://arxiv.org/abs/1207.1465], EisensteinHu
 	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
 	 *    
 	 *  @param k_min minimum wave vector module up to which the
@@ -319,8 +322,9 @@ namespace cbl {
 	 *  @param output_dir the output_dir directory
 	 *  where the output of external codes are written
 	 *  
-	 *  @param store_output_CAMB if true the output files created by CAMB are stored;
-	 *  if false the output files created by CAMB are removed
+	 *  @param store_output if true the output files created by
+	 *  the Boltzmann solver are stored; if false the output files
+	 *  are removed
 	 *
 	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
 	 *  &rarr; normalize the power spectrum
@@ -345,10 +349,10 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	virtual void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output_CAMB=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4) 
+	virtual void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4) 
 	{ 
 	  (void)cosmology; (void)redshift; (void)method_Pk; (void)k_min; (void)k_max; (void)step;
-	  (void)output_dir; (void)store_output_CAMB; (void)norm; (void)Delta; (void)isDelta_vir; (void)model_MF;
+	  (void)output_dir; (void)store_output; (void)norm; (void)Delta; (void)isDelta_vir; (void)model_MF;
 	  (void)Volume; (void)prec; (void)Mass_min; (void)Mass_max; (void)Mass_step;
 	  cbl::ErrorCBL("", "set_data_model_snapshot", "Modelling_NumberCounts.h");
 	}

@@ -10,9 +10,7 @@ import os
 import matplotlib.pyplot as plt
 
 # set the CosmoBolognaLib and local directories 
-dirLib  = os.getcwd()+"/../../../"
-cwd  = os.getcwd()+"/"
-cbl.SetDirs(dirLib, cwd)
+cbl.SetDirs(os.getcwd()+"/../../../", os.getcwd()+"/")
 
 # set the cosmological model 
 cosmology = cbl.Cosmology(cbl.CosmologicalModel__Planck18_)

@@ -252,18 +252,29 @@ namespace cbl {
       std::vector<std::vector<double>> inverse_covariance () const { return m_inverse_covariance; }
 
       /**
-       * @brief reset data object with new empty arrays
-       * large enough to store ndata data
-       * @param ndata the new number of data
-       * @return none
+       *  @brief reset data object with new empty arrays large enough
+       *  to store ndata data
+       *
+       *  @param ndata the new number of data
+       *
+       *  @return none
        */
       void reset (const int ndata);
 
       /**
        *  @brief invert the covariance matrix
+       *
+       *  @param prec the precision required in the inversion of the
+       *  covariance matrix
+       *
+       *  @param Nres \f$N_{res}\f$, the number of catalogue
+       *  resamplings used to estimate the covariance matrix;
+       *  \f$N_{res}=-1\f$ if the covariance matrix has not been
+       *  estimated with resampling methods
+       *
        *  @return none
        */
-      virtual void invert_covariance () { invert_matrix(m_covariance, m_inverse_covariance, 1.e-5); }
+      virtual void invert_covariance (const double prec, const int Nres) { invert_matrix(m_covariance, m_inverse_covariance, prec, Nres); }
 
       ///@}
       

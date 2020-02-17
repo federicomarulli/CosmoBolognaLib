@@ -164,19 +164,19 @@ namespace cbl {
 	  {
 	  case(ExitCode::_error_):
 	    m_message += (m_functionCBL!=par::defaultString && m_fileCBL!=par::defaultString)
-	      ? par::col_red+"*** Error in the CBL function "+par::col_purple+m_functionCBL+par::col_red+" of "+m_fileCBL+" ! ***\n"
+	      ? par::col_red+"*** Error in the CBL function "+par::col_purple+m_functionCBL+par::col_red+" of "+m_fileCBL+" ***\n"
 	      : par::col_red+"*** Error! ***\n";
 	    break;
 	  
 	  case(ExitCode::_IO_):
 	    m_message += (m_functionCBL!=par::defaultString && m_fileCBL!=par::defaultString)
-	      ? par::col_red+"*** Input/Output error in the CBL function "+par::col_blue+m_functionCBL+" of "+m_fileCBL+par::col_red+"! ***\n"
+	      ? par::col_red+"*** Input/Output error in the CBL function "+par::col_blue+m_functionCBL+" of "+m_fileCBL+par::col_red+" ***\n"
 	      : par::col_red+"*** Input/Output error! ***\n";
 	    break;
 	  
 	  case(ExitCode::_workInProgress_):
 	    m_message += (m_functionCBL!=par::defaultString && m_fileCBL!=par::defaultString)
-	      ? par::col_purple+"*** Work in progress in the CBL function "+par::col_blue+m_functionCBL+" of "+m_fileCBL+par::col_red+"! ***\n"
+	      ? par::col_purple+"*** Work in progress in the CBL function "+par::col_blue+m_functionCBL+" of "+m_fileCBL+par::col_red+" ***\n"
 	      : par::col_purple+"*** Work in progress! ***\n";
 	    break;
 	  }

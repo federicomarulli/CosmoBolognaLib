@@ -84,7 +84,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_projected::set_fiducia
   vector<double> wpDM(m_data_model->step);
   
   for (size_t i=0; i<(size_t)m_data_model->step; i++) 
-    wpDM[i] = m_data_model->cosmology->wp_DM(rad[i], m_data_model->method_Pk, m_data_model->redshift, m_data_model->pi_max, m_data_model->store_output_CAMB, m_data_model->output_root, m_data_model->NL, m_data_model->norm, m_data_model->r_min, m_data_model->r_max, m_data_model->k_min, m_data_model->k_max, m_data_model->aa, m_data_model->GSL, m_data_model->prec, m_data_model->file_par);
+    wpDM[i] = m_data_model->cosmology->wp_DM(rad[i], m_data_model->method_Pk, m_data_model->redshift, m_data_model->pi_max, m_data_model->store_output, m_data_model->output_root, m_data_model->NL, m_data_model->norm, m_data_model->r_min, m_data_model->r_max, m_data_model->k_min, m_data_model->k_max, m_data_model->aa, m_data_model->GSL, m_data_model->prec, m_data_model->file_par);
   
   m_data_model->func_xi = make_shared<glob::FuncGrid>(glob::FuncGrid(rad, wpDM, "Spline"));
 }

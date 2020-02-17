@@ -670,6 +670,16 @@ namespace cbl {
   /// typedef of a function returning a vector with a vector, a pointer and a vector reference in input
   typedef std::function< std::vector<double>(std::vector<double>, std::shared_ptr<void>, std::vector<double> &)> FunctionVectorVectorPtrVectorRef;
 
+  /// typedef of a 3D Tensor of int
+  typedef std::vector<std::vector<std::vector<int>>> Tensor3Di;
+    
+  /// typedef of a 3D Tensor of double
+  typedef std::vector<std::vector<std::vector<double>>> Tensor3Dd;
+    
+  /// typedef of a 4D Tensor of int
+  typedef std::vector<std::vector<std::vector<std::vector<int>>>> Tensor4Di;
+         
+
   /**
    *  @name Functions of generic use  
    */
@@ -865,7 +875,9 @@ namespace cbl {
     }
 
   /**
-   *  @brief given a number x, return the index of the closest element to x in vv
+   *  @brief given a number x, return the index of the closest element
+   *  to x in vv
+   *
    *  @param x the value
    *  @param vv the std::vector
    *  @return the index of the closest element to x in vv
@@ -882,7 +894,9 @@ namespace cbl {
     }
 
   /**
-   *  @brief given a number x, return the closest value in a std::vector
+   *  @brief given a number x, return the closest value in a
+   *  std::vector
+   *
    *  @param x the starting value
    *  @param values std::vector of values
    *  @return the closest value in the std::vector
@@ -1019,13 +1033,14 @@ namespace cbl {
    *  function from which check_memory is called; it is used when
    *  printing the error message
    *
-   *  @param exit 0 \f$\rightarrow\f$ warning message; 1 \f$\rightarrow\f$ error message;
-   *  (and exit)
+   *  @param exit 0 \f$\rightarrow\f$ warning message; 1
+   *  \f$\rightarrow\f$ error message; (and exit)
    *
-   *  @param type 1 \f$\rightarrow\f$ Physical Memory (RAM); 2 \f$\rightarrow\f$ Virtual
-   *  Memory
+   *  @param type 1 \f$\rightarrow\f$ Physical Memory (RAM); 2
+   *  \f$\rightarrow\f$ Virtual Memory
    *
-   *  @return 0 \f$\rightarrow\f$ memory problems; 1 \f$\rightarrow\f$ no memory problems 
+   *  @return 0 \f$\rightarrow\f$ memory problems; 1 \f$\rightarrow\f$
+   *  no memory problems
    */
   int check_memory (const double frac, const bool exit=true, const std::string func="", const int type=1);
 
@@ -1845,9 +1860,10 @@ namespace cbl {
    *
    *  http://mylinuxtechcorner.blogspot.com/2012/09/c-version-for-mkdir-p.html
    *
-   *  @param path the name of the directory to be created
+   *  @param path the name of the directory (or directories) to be
+   *  created recursively (with parents)
    *
-   *  @param rootPath the name of the root directory
+   *  @param rootPath the path to the root directory
    *
    *  @param mode the permissions for the directory
    *

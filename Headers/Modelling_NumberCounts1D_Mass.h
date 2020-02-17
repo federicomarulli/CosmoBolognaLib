@@ -126,7 +126,7 @@ namespace cbl {
 	 *
 	 *  @param method_Pk method used to compute the power
 	 *  spectrum; valid choices for method_Pk are: CAMB
-	 *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+	 *  [http://camb.info/], CLASS [http://class-code.net/],
 	 *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465],
 	 *  EisensteinHu
 	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]

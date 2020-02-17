@@ -596,6 +596,7 @@ namespace cbl {
 	{ (void)par; ErrorCBL("", "posterior_distribution", "ModelParameters.h"); return NULL; }
 
 	///@}
+	
 
 	/**
 	 * @brief show the results on the standard output
@@ -612,10 +613,16 @@ namespace cbl {
 	 * mode; false \f$\rightarrow\f$ do not show the posterior
 	 * mode
 	 *
+	 * @param ns number of samples used to estimate the covariance
+	 * matrix
+	 *
+	 * @param nb number of data measurements, e.g. the bins of the
+	 * dataset
+	 *
 	 * @return none
 	 */
-	virtual void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false)
-	{ (void)start; (void)thin; (void)nbins; (void)seed; (void)show_mode; ErrorCBL("", "show_results", "ModelParameters.h"); }
+	virtual void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false, const int ns=-1, const int nb=-1)
+	{ (void)start; (void)thin; (void)nbins; (void)seed; (void)show_mode; (void)ns; (void)nb; ErrorCBL("", "show_results", "ModelParameters.h"); }
 
 	/**
 	 * @brief store the results to file
@@ -636,10 +643,16 @@ namespace cbl {
 	 * posterior mode; false \f$\rightarrow\f$ do not compute the
 	 * posterior mode
 	 *
+	 * @param ns number of samples used to estimate the covariance
+	 * matrix
+	 *
+	 * @param nb number of data measurements, e.g. the bins of the
+	 * dataset
+	 *
 	 * @return none
 	 */
-	virtual void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false)
-	{ (void)dir; (void)file; (void)start; (void)thin; (void)nbins; (void)seed; (void)compute_mode; ErrorCBL("", "write_results", "ModelParameters.h"); }
+	virtual void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false, const int ns=-1, const int nb=-1)
+	{ (void)dir; (void)file; (void)start; (void)thin; (void)nbins; (void)seed; (void)compute_mode; (void)ns; (void)nb; ErrorCBL("", "write_results", "ModelParameters.h"); }
 
 	/**
 	 * @brief return the private member m_chain_size

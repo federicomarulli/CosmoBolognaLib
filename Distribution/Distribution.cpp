@@ -548,7 +548,7 @@ double cbl::glob::Distribution::mode ()
 
 void cbl::glob::Distribution::get_distribution (vector<double> &xx, vector<double> &fx, vector<double> &err, const std::vector<double> FF, const std::vector<double> WW, const int nbin, const bool linear, const std::string file_out, const double fact, const double V1, const double V2, const bool bin_type, const bool conv, const double sigma)
 {
-  if (xx.size()>0 || fx.size()>0 || FF.size()<=0 || nbin<=0) ErrorCBL("the following conditions have to be satisfied: xx.size()<=0, fx.size()<=0, FF.size()>0 and nbin>0. The values recived are instead: xx.size() = "+cbl::conv(xx.size(), par::fINT)+", fx.size() = "+cbl::conv(fx.size(), par::fINT)+", FF.size() = "+cbl::conv(FF.size(), par::fINT)+"and nbin = "+cbl::conv(nbin, par::fINT)+"!", "get_distribution", "Distribution.cpp");
+  if (xx.size()>0 || fx.size()>0 || FF.size()<=0 || nbin<=0) ErrorCBL("the following conditions have to be satisfied: xx.size()<=0, fx.size()<=0, FF.size()>0 and nbin>0. The values recived are instead: xx.size() = "+cbl::conv(xx.size(), par::fINT)+", fx.size() = "+cbl::conv(fx.size(), par::fINT)+", FF.size() = "+cbl::conv(FF.size(), par::fINT)+" and nbin = "+cbl::conv(nbin, par::fINT)+"!", "get_distribution", "Distribution.cpp");
 
   double minFF = (V1>cbl::par::defaultDouble) ? V1 : Min(FF)*0.9999;
   double maxFF = (V2>cbl::par::defaultDouble) ? V2 : Max(FF)*1.0001;

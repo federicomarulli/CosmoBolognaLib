@@ -63,6 +63,7 @@ void cbl::modelling::Modelling::m_set_posterior (const int seed)
     ErrorCBL("either the posterior is not defined or a wrong number of prior distributions has been provided!", "m_set_posterior", "Modelling.cpp");
 }
 
+
 // ============================================================================================
 
 
@@ -118,7 +119,7 @@ shared_ptr<cbl::statistics::ModelParameters> cbl::modelling::Modelling::posterio
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type, const vector<size_t> x_index, const int w_index)
+void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type, const vector<size_t> x_index, const int w_index, const double prec, const int Nres)
 {
   if (m_model==NULL)
     ErrorCBL("undefined  model!", "set_likelihood", "Modelling.cpp");
@@ -126,12 +127,13 @@ void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType
   if (m_fit_range) {
     if (m_data_fit==NULL)
       ErrorCBL("undefined fit range!", "set_likelihood", "Modelling.cpp");
-    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data_fit, m_model, likelihood_type, x_index, w_index));
+    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data_fit, m_model, likelihood_type, x_index, w_index, NULL, prec, Nres));
   }
+  
   else  {
-    if (m_data == NULL)
+    if (m_data==NULL)
       ErrorCBL("Error in set_likelihood of Modelling.cpp. Undefined dataset!", "set_likelihood", "Modelling.cpp");
-    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, likelihood_type, x_index, w_index));
+    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, likelihood_type, x_index, w_index, NULL, prec, Nres));
   }
 }
 
@@ -229,16 +231,23 @@ void cbl::modelling::Modelling::read_chain (const string input_dir, const string
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::show_results (const int start, const int thin, const int nbins, const bool show_mode)
+void cbl::modelling::Modelling::show_results (const int start, const int thin, const int nbins, const bool show_mode, const int ns)
 {
-  m_posterior->show_results(start, thin, nbins, show_mode);
+  if (m_data_fit==NULL)
+    ErrorCBL("undefined fit range!", "show_results", "Modelling.cpp");
+
+  m_posterior->show_results(start, thin, nbins, show_mode, ns, m_data_fit->ndata());
 }
+
 
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::write_results (const string dir, const string file, const int start, const int thin, const int nbins, const bool fits, const bool compute_mode)
+void cbl::modelling::Modelling::write_results (const string dir, const string file, const int start, const int thin, const int nbins, const bool fits, const bool compute_mode, const int ns)
 {
-  m_posterior->write_results(dir, file, start, thin, nbins, fits, compute_mode);
+  if (m_data_fit==NULL)
+    ErrorCBL("undefined fit range!", "write_results", "Modelling.cpp");
+  
+  m_posterior->write_results(dir, file, start, thin, nbins, fits, compute_mode, ns, m_data_fit->ndata());
 }
 

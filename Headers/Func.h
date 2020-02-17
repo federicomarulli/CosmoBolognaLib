@@ -67,8 +67,8 @@ namespace cbl {
    *
    *  @return the interpolated value of the input function
    *
-   *  @warning if _xx is outside the range of the input std::vector xx, the
-   *  returned value is the extrapolation
+   *  @warning if _xx is outside the range of the input std::vector
+   *  xx, the returned value is the extrapolation
    */
   double interpolated (const double _xx, const std::vector<double> xx, const std::vector<double> yy, const std::string type);
   
@@ -164,21 +164,22 @@ namespace cbl {
   double Legendre_polynomial_theta_average (const double theta_min, const double theta_max, const int ll);
 
   /**
-   *  @brief the average of the Legendre polynomial
-   *  of the l-th order over the \f$r_{12}, r_{13}, r_{23} \f$
+   *  @brief the average of the Legendre polynomial of the l-th order
+   *  over the \f$r_{12}, r_{13}, r_{23} \f$
+   *
    *  @param r12_min the lower limit of integration for \f$r_{12}\f$
    *  @param r12_max the upper limit of integration for \f$r_{12}\f$
    *  @param r13_min the lower limit of integration for \f$r_{13}\f$
    *  @param r13_max the upper limit of integration for \f$r_{13}\f$
    *  @param r23_min the lower limit of integration for \f$r_{23}\f$
-   *  @param r23_max the upper limit of integration for \f$r_{23}\f$*
+   *  @param r23_max the upper limit of integration for \f$r_{23}\f$
    *  @param ll the order of the Legendre polynomial
    *  @param rel_err the relative error
    *  @param abs_err the absolute error
    *  @param nevals the maximum number of integrals evaluation
-   *  @return the average of the Legendre polynomial
    *
-   *  of the l-th order over the mu range
+   *  @return the average of the Legendre polynomial of the l-th order
+   *  over the mu range
    */
   double Legendre_polynomial_triangles_average (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const double r23_min, const double r23_max, const int ll, const double rel_err=1.e-5, const double abs_err=1.e-8, const int nevals=100);
 
@@ -322,16 +323,11 @@ namespace cbl {
    * @param l2 the third index
    * @return the Wigner 3-j symbol
    */
-  double coupling_3j(const int l, const int l_prime, const int l2);
-
-  ///@}
-
+  double coupling_3j (const int l, const int l_prime, const int l2);
 
   /// @cond glob
   void gauleg (const double, const double, double *, double *, const int);
   /// @endcond
-
-  ///@}
 
 
   // ============================================================================================
@@ -384,57 +380,115 @@ namespace cbl {
   double determinant_matrix (const std::vector<std::vector<double>> mat); 
 
   /**
-   *  @brief method to invert a matrix using the GSL
+   *  @brief function to invert a matrix
+   *
+   *  this function implements the inversion of a given matrix using
+   *  the GSL
+   *
+   *  if the input matrix is a covariance estimated with a finite
+   *  number (Nres>0) of resamples (e.g. via jackknife or bootstrap),
+   *  the inverted matrix is corrected as follows (Hartlap, Simon and
+   *  Schneider 2006):
+   *
+   *  \f[ \hat{C}^{-1}=\left(1-\frac{n_b+1}{N_{res}-1}\right)C^{-1} \f]
+   *
+   *  where \f$n_b\f$ is the number of bins and \f$N_{res}\f$ is the
+   *  number of resamplings
+   *
    *  @param [in] mat the matrix to be inverted
+   *
    *  @param [out] mat_inv the inverted matrix
+   *
    *  @param [in] prec the precision required 
+   *
+   *  @param [in] Nres \f$N_{res}\f$, the number of catalogue
+   *  resamplings used to estimate the covariance matrix;
+   *  \f$N_{res}=-1\f$ if the covariance matrix has not been estimated
+   *  with resampling methods
+   *
    *  @return none
    */
-  void invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const double prec=1.e-10); 
+  void invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const double prec=1.e-10, const int Nres=-1); 
 
   /**
-   *  @brief method to invert a matrix using tge GSL
+   *  @brief function to invert a sub-matrix, extracted from a given
+   *  matrix
+   *
+   *  this function implements the inversion of a sub-matrix,
+   *  extracted from a given matrix, using the GSL
+   *
+   *  if the input matrix is a covariance estimated with a finite
+   *  number (Nres>0) of resamples (e.g. via jackknife or bootstrap),
+   *  the inverted matrix is corrected as follows (Hartlap, Simon and
+   *  Schneider 2006):
+   *
+   *  \f[ \hat{C}^{-1}=\left(1-\frac{n_b+1}{N_{res}-1}\right)C^{-1} \f]
+   *
+   *  where \f$n_b\f$ is the number of bins and \f$N_{res}\f$ is the
+   *  number of resamplings
+   *
    *  @param [in] mat the matrix to be inverted
+   *
    *  @param [out] mat_inv the inverted matrix
-   *  @param [in] i1
-   *  @param [in] i2
-   *  @param [in] prec the precision required 
+   *
+   *  @param [in] i1 minimum index considered
+   *
+   *  @param [in] i2 maximum index considered
+   *
+   *  @param [in] prec the precision required
+   *
+   *  @param [in] Nres \f$N_{res}\f$, the number of catalogue
+   *  resamplings used to estimate the covariance matrix;
+   *  \f$N_{res}=-1\f$ if the covariance matrix has not been estimated
+   *  with resampling methods
+   *
    *  @return none
    */
-  void invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const int i1, const int i2, const double prec=1.e-10); 
+  void invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const int i1, const int i2, const double prec=1.e-10, const int Nres=-1); 
 
   /**
-   *  @brief compute the covariance matrix
-   *  @param [in] mat the input matrix
+   *  @brief compute the covariance matrix from an input dataset
+   *
+   *  @param [in] mat the data input matrix
+   *
    *  @param [out] cov the output covariance matrix
-   *  @param [in] JK 0 &rarr; normalize to 1/(n-1); 1 &rarr; normalize
-   *  to n-1/n (for Jackknife)
+   *
+   *  @param [in] JK false &rarr; normalize to 1/(n-1); true &rarr;
+   *  normalize to n-1/n (for Jackknife)
+   *
    *  @return none
    */
-  void covariance_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &cov, const bool JK = 0);
+  void covariance_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &cov, const bool JK=false);
 
   /**
-   *  @brief compute the covariance matrix
+   *  @brief compute the covariance matrix, reading the dataset from files
+   *
    *  @param [in] file the std::vector containing the input files
+   *   
    *  @param [out] rad the std::vector containing the binned radii
+   *
    *  @param [out] mean the std::vector containing the mean values
+   *
    *  @param [out] cov the output covariance matrix
-   *  @param [in] JK 0 &rarr; normalize to 1/(n-1); 1 &rarr; normalize
-   *  to n-1/n (for Jackknife) 
+   *
+   *  @param [in] JK false &rarr; normalize to 1/(n-1); true &rarr;
+   *  normalize to n-1/n (for Jackknife)
+   *
    *  @return none
    */
-  void covariance_matrix (const std::vector<std::string> file, std::vector<double> &rad, std::vector<double> &mean, std::vector<std::vector<double>> &cov, const bool JK=0);
+  void covariance_matrix (const std::vector<std::string> file, std::vector<double> &rad, std::vector<double> &mean, std::vector<std::vector<double>> &cov, const bool JK=false);
 
   /**
-   *  @brief compute the covariance matrix
+   *  @brief compute the covariance matrix, reading the dataset from
+   *  files, and store it in a file
    *
    *  @param [in] file the std::vector containing the input files
    *
    *  @param [out] covariance_matrix_file the output covariance matrix
    *  file
    *
-   *  @param [in] JK 0 &rarr; normalize to 1/(n-1); 1 &rarr; normalize
-   *  to n-1/n (for Jackknife)
+   *  @param [in] JK false &rarr; normalize to 1/(n-1); true &rarr;
+   *  normalize to n-1/n (for Jackknife)
    *
    *  @return none
    */
@@ -454,12 +508,19 @@ namespace cbl {
    *
    *  @param [in] i2 maximum index
    *
+   *  @param [in] prec the precision required 
+   *
+   *  @param [in] Nres \f$N_{res}\f$, the number of catalogue
+   *  resamplings used to estimate the covariance matrix;
+   *  \f$N_{res}=-1\f$ if the covariance matrix has not been estimated
+   *  with resampling methods
+   *
    *  @return none
    *
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
    */
-  void read_invert_covariance (const std::string filecov, std::vector<std::vector<double>> &cov, std::vector<std::vector<double>> &cov_inv, const size_t i1, const size_t i2);
+  void read_invert_covariance (const std::string filecov, std::vector<std::vector<double>> &cov, std::vector<std::vector<double>> &cov_inv, const size_t i1, const size_t i2, const double prec=1.e-10, const int Nres=-1);
 
   /**
    *  @brief return a number sampled from a given distribution
@@ -524,11 +585,16 @@ namespace cbl {
   std::vector<size_t> minimum_maximum_indexes (const std::vector<double> xx, const double x_min, const double x_max);
 
   /**
-   * @brief get the cosine of the angle between two sides
+   * @brief get the cosine of the angle between two sides of a
+   * triangle
    *
    * \f$ mu = \frac{r_1^2+r_2^2-r_3^3}\frac{2*r_1*r_2}\f$
    *
-   * @return the cosine of the angle between two sides
+   * @param r1 the first side of the triangle
+   * @param r2 the second side of the triangle
+   * @param r3 the third side of the triangle
+   *
+   * @return the cosine of the angle between two sides of a triangle
    */
   double get_mu (const double r1, const double r2, const double r3);
 
@@ -541,9 +607,9 @@ namespace cbl {
    *
    * @return  unnormalized window function
    */
-  double window_function(const double mu, const double min=-1, const double max=1);
+  double window_function (const double x, const double min=-1, const double max=1);
 
-  /** 
+  /**
    * @brief get the binomial coefficient
    *
    * @param n first integer
@@ -554,7 +620,7 @@ namespace cbl {
   double binomial_coefficient(const int n, const int m);
 
   /**
-   * brief get the Clebsh-Gordan coefficient in the notation
+   * @brief get the Clebsh-Gordan coefficient in the notation
    * \f$ \sum_{l}\left\langle l_1 l_2 m_1 m_2  | l_3 m_3 \right\rangle \f$
    *
    * @param j1 index 
@@ -569,7 +635,7 @@ namespace cbl {
   double clebsh_gordan(const int j1, const int j2, const int m1, const int m2, const int j3, const int m3);
 
   /**
-   * brief Wigner \f$3-j\f$ symbol
+   * @brief Wigner \f$3-j\f$ symbol
    *
    * @param j1 index 
    * @param j2 index
@@ -583,7 +649,7 @@ namespace cbl {
   double wigner_3j(const int j1, const int j2, const int j3, const int m1, const int m2, const int m3);
 
   /**
-   * brief Wigner \f$6-j\f$ symbol
+   * @brief Wigner \f$6-j\f$ symbol
    *
    * @param j1 index 
    * @param j2 index
@@ -600,18 +666,23 @@ namespace cbl {
    * @brief compute the integral of three spherical bessel function, 
    * from Mehrem, 2011
    *
-   * \f[
-   *  \int_{0}^{\infty} k^{2} j_{L_{1}}\left(k r_{1}\right) j_{L_{2}}\left(k r_{2}\right) j_{L_{3}}\left(k r_{3}\right) d k = 
-   *  \frac{\pi \beta(\Delta)}{8 \pi^2 r_{1} r_{2} r_{3}  left\langle L_{1} L_{2} 00 | L_{3} 0\right\rangle}(i)^{L_{1}+L_{2}+L_{3}}
-   *  \left(2 L_{3}+1\right)\left(\frac{r_{1}}{r_{3}}\right)^{L_{3}} 
-   *  \sum_{L=0}^{L_{3}}\left(\begin{array}{c}{2 L_{3}} \\ {2 L}\end{array}\right)^{1 / 2}\left(\frac{r_{2}}{r_{1}}\right)^{L} \times
-   *  \sum_{l}\left\langle L_{1}\left(L_{3}-L\right) 00 | 0\right\rangle\left\langle L_{2} L 00 | l 0\right\rangle\left\
-   *  {\begin{array}{lll}{L_{1}} & {L_{2}} & {L_{3}} \\ {L} & {L_{3}-L} & {l}\end{array}\right\} P_{l}(\Delta)
-   * \f]
+   * \f[ \int_{0}^{\infty} k^{2} j_{L_{1}}\left(k r_{1}\right)
+   *  j_{L_{2}}\left(k r_{2}\right) j_{L_{3}}\left(k r_{3}\right) d k
+   *  = \frac{\pi \beta(\Delta)}{8 \pi^2 r_{1} r_{2} r_{3} left\langle
+   *  L_{1} L_{2} 00 | L_{3} 0\right\rangle}(i)^{L_{1}+L_{2}+L_{3}}
+   *  \left(2 L_{3}+1\right)\left(\frac{r_{1}}{r_{3}}\right)^{L_{3}}
+   *  \sum_{L=0}^{L_{3}}\left(\begin{array}{c}{2 L_{3}} \\ {2
+   *  L}\end{array}\right)^{1 / 2}\left(\frac{r_{2}}{r_{1}}\right)^{L}
+   *  \times \sum_{l}\left\langle L_{1}\left(L_{3}-L\right) 00 |
+   *  0\right\rangle\left\langle L_{2} L 00 | l 0\right\rangle\left\
+   *  {\begin{array}{lll}{L_{1}} & {L_{2}} & {L_{3}} \\ {L} &
+   *  {L_{3}-L} & {l}\end{array}\right\} P_{l}(\Delta) \f]
    *
-   * where \f$\sum_{l}\left\langle l_1 l_2 m_1 m_2  | l_3 m_3 \right\rangle\f$ is the Clebsh-Gordan coefficient,
-   * computed by cbl::clebsh_gordan, and \${\begin{array}{lll}{L_{1}} & {L_{2}} & {L_{3}} \\ {L} & {L_{3}-L} & {l}\end{array}\right\}\f$
-   * is the \f$6-j\f$ Wigner symbol.
+   * where \f$\sum_{l}\left\langle l_1 l_2 m_1 m_2 | l_3 m_3
+   * \right\rangle\f$ is the Clebsh-Gordan coefficient, computed by
+   * cbl::clebsh_gordan, and \f${\begin{array}{lll}{L_{1}} & {L_{2}} &
+   * {L_{3}} \\ {L} & {L_{3}-L} & {l}\end{array}\right\}\f$ is the
+   * \f$6-j\f$ Wigner symbol.
    *
    * @param r1
    * @param r2
@@ -654,15 +725,15 @@ namespace cbl {
    *
    *  @param idum seed for random number generator
    *
-   *  @return std::vector containing a correlated samples of given mean and
-   *  covariance
+   *  @return std::vector containing a correlated samples of given
+   *  mean and covariance
    *
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
    */
   std::vector<std::vector<double>> generate_correlated_data (const int nExtractions, const std::vector<double> mean, const std::vector<std::vector<double>> covariance, const int idum=12312);
 
-    /**
+  /**
    *  @brief reads a vector from a binary file
    *
    *  @param fin input stream
@@ -1023,7 +1094,7 @@ namespace cbl {
   template <typename T> 
     T volume_sphere (const T RR) 
     {
-      return 4./3.*par::pi*pow(RR,3);
+      return 4./3.*par::pi*pow(RR, 3);
     }
 
   /**
@@ -1426,7 +1497,7 @@ namespace cbl {
    *
    * @return none
    */
-  void sdss_atbound(double &angle, const double minval, const double maxval);
+  void sdss_atbound (double &angle, const double minval, const double maxval);
 
   /**
    * @brief set the angular coordinates in the
@@ -1438,7 +1509,7 @@ namespace cbl {
    *
    * @return none
    */
-  void sdss_atbound2(double &theta, double &phi);
+  void sdss_atbound2 (double &theta, double &phi);
 
   /**
    * @brief convert from equatorial
@@ -1931,8 +2002,8 @@ namespace cbl {
    *  @param indexR index correspondent to the comoving separation
    *  where the multipole is computed
    *
-   *  @param mu std::vector containing the angle between the separation
-   *  std::vector and the line of sight
+   *  @param mu std::vector containing the angle between the
+   *  separation std::vector and the line of sight
    *
    *  @param xi matrix containing the values of &xi;(r,&mu;)
    *
@@ -2272,11 +2343,13 @@ namespace cbl {
    *
    *  @param var 1/[H(z)a(z)]
    *
-   *  @param FV 0 \f$ \rightarrow \f$ exponential; \f$ \rightarrow \f$ 1 gaussian 
+   *  @param FV 0 \f$ \rightarrow \f$ exponential; \f$ \rightarrow \f$
+   *  Gaussian
    *
    *  @param index index for internal use
    *
-   *  @param bias_nl 0 \f$ \rightarrow \f$ linear bias; \f$ \rightarrow \f$ 1 non-linear bias 
+   *  @param bias_nl 0 \f$ \rightarrow \f$ linear bias; \f$
+   *  \rightarrow \f$ non-linear bias
    *
    *  @param bA the parameter b<SUB>A</SUB> used to model the bias
    *
@@ -2368,7 +2441,7 @@ namespace cbl {
    *
    *  @return &xi;(r<SUB>p</SUB>,&pi;)
    */
-  double xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12,  const std::shared_ptr<void> funcXiR, const std::shared_ptr<void> funcXiR_, const std::shared_ptr<void> funcXiR__, const double var, const int FV, const bool bias_nl=0, const double bA=0., const double v_min=-3000., const double v_max=3000., const int step_v=500);
+  double xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const std::shared_ptr<void> funcXiR, const std::shared_ptr<void> funcXiR_, const std::shared_ptr<void> funcXiR__, const double var, const int FV, const bool bias_nl=0, const double bA=0., const double v_min=-3000., const double v_max=3000., const int step_v=500);
 
   /**
    *  @brief pairwise velocity distribution
@@ -2646,17 +2719,21 @@ namespace cbl {
 
   /**
    * @brief multipole expansion of the per-mode covariance sigma2_k
-   * (see Grieb et al. 2016 , eq. 15 https://arxiv.org/pdf/1509.04293)
+   * (see Grieb et al. 2016, eq. 15 https://arxiv.org/pdf/1509.04293)
    *
    * \f[
    *
-   *   \sigma_{\ell_{1} \ell_{2}}^{2}(k) \equiv \frac{\left(2 \ell_{1}+1\right)\left(2 \ell_{2}+1\right)}{V_{\mathrm{s}}} 
-   *   \times \int_{-1}^{1}\left[P(k, \mu)+\frac{1}{\bar{n}}\right]^{2} \mathcal{L}_{\ell_{1}}(\mu) \mathcal{L}_{\ell_{2}}(\mu) \mathrm{d} \mu 
+   *   \sigma_{\ell_{1} \ell_{2}}^{2}(k) \equiv \frac{\left(2
+   *   \ell_{1}+1\right)\left(2 \ell_{2}+1\right)}{V_{\mathrm{s}}}
+   *   \times \int_{-1}^{1}\left[P(k,
+   *   \mu)+\frac{1}{\bar{n}}\right]^{2} \mathcal{L}_{\ell_{1}}(\mu)
+   *   \mathcal{L}_{\ell_{2}}(\mu) \mathrm{d} \mu
    *
    * \f]
    *
-   * where \f$P(k, \mu)\f$ is the polar power spectrum computed from input power spectrum multipoles
-   * and \f$\mathcal{L}\f$ are the Legendre polynomials.
+   * where \f$P(k, \mu)\f$ is the polar power spectrum computed from
+   * input power spectrum multipoles and \f$\mathcal{L}\f$ are the
+   * Legendre polynomials.
    *
    * @param nObjects number of objects in the sample
    * @param Volume the sample volume
@@ -2668,16 +2745,19 @@ namespace cbl {
   std::vector< std::vector<double>> sigma2_k (const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double>> Pk_multipoles, const std::vector<int> orders);
 
   /**
-   * @brief Covariance matrix for 2pcf multipoles
-   * (see Grieb et al. 2016 , eq. 18 https://arxiv.org/pdf/1509.04293)
+   * @brief Covariance matrix for two-point correlation multipoles
+   * (see Grieb et al. 2016, Eq. 18 https://arxiv.org/pdf/1509.04293)
    *
-   * \f[
-   *  C_{\ell_{1} \ell_{2}}^{\epsilon}\left(s_{i}, s_{j}\right)=\frac{\mathrm{i}^{\ell_{1}+\ell_{2}}}{2 \pi^{2}} \int_{0}^{\infty} k^{2} \sigma_{\ell_{1} \ell_{2}}^{2}(k) 
-   *  \bar{\jmath}_{\ell_{1}}\left(k s_{i}\right) \bar{\jmath}_{\ell_{2}}\left(k s_{j}\right) \mathrm{d} k
-   * \f]
+   * \f[ C_{\ell_{1} \ell_{2}}^{\epsilon}\left(s_{i},
+   *  s_{j}\right)=\frac{\mathrm{i}^{\ell_{1}+\ell_{2}}}{2 \pi^{2}}
+   *  \int_{0}^{\infty} k^{2} \sigma_{\ell_{1} \ell_{2}}^{2}(k)
+   *  \bar{\jmath}_{\ell_{1}}\left(k s_{i}\right)
+   *  \bar{\jmath}_{\ell_{2}}\left(k s_{j}\right) \mathrm{d} k \f]
    *
-   * where \f$\sigma_{\ell_{1} \ell_{2}}^{2}(k)\f$ is the multipole expansion of the per-mode covariance sigma2_k,
-   * computed by cbl::sigma2_k and \f$\bar{\jmath}\f$ is the shell-averaged Bessel function, computed by cbl::jl_distance_average.
+   * where \f$\sigma_{\ell_{1} \ell_{2}}^{2}(k)\f$ is the multipole
+   * expansion of the per-mode covariance sigma2_k, computed by
+   * cbl::sigma2_k and \f$\bar{\jmath}\f$ is the shell-averaged Bessel
+   * function, computed by cbl::jl_distance_average.
    *
    * @param rr output scales
    * @param covariance analytic covariance matrix
@@ -2695,18 +2775,25 @@ namespace cbl {
   void Covariance_XiMultipoles (std::vector<double> &rr, std::vector<std::vector<double>> &covariance, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double>> Pk_multipoles, const std::vector<int> orders, const cbl::BinType bin_type=cbl::BinType::_linear_);
 
   /**
-   * @brief Covariance matrix for 2pcf wedges
+   * @brief Covariance matrix for two-point correlation wedges (see
+   * Grieb et al. 2016, Eq. 19 (https://arxiv.org/pdf/1509.04293)
    *
-   * (see Grieb et al. 2016 , eq. 19 https://arxiv.org/pdf/1509.04293)
+   * \f[ C_{\mu \mu^{\prime}}^{\xi}\left(s_{i}, s_{j}\right)=
+   *    \sum_{\ell_{1}, \ell_{2}}
+   *    \frac{\mathrm{i}^{\ell_{1}+\ell_{2}}}{2 \pi^{2}}
+   *    \overline{\mathcal{L}}_{\ell_{1}, \mu}
+   *    \overline{\mathcal{L}}_{\ell_{2}, \mu^{\prime}} \times
+   *    \int_{0}^{\infty} k^{2} \sigma_{\ell_{1} \ell_{2}}^{2}(k)
+   *    \bar{\jmath}_{\ell_{1}}\left(k s_{i}\right)
+   *    \bar{\jmath}_{\ell_{2}}\left(k s_{j}\right) \mathrm{d} k \f]
    *
-   * \f[
-   *    C_{\mu \mu^{\prime}}^{\xi}\left(s_{i}, s_{j}\right)= \sum_{\ell_{1}, \ell_{2}} \frac{\mathrm{i}^{\ell_{1}+\ell_{2}}}{2 \pi^{2}} \overline{\mathcal{L}}_{\ell_{1}, \mu} 
-   *    \overline{\mathcal{L}}_{\ell_{2}, \mu^{\prime}} \times \int_{0}^{\infty} k^{2} \sigma_{\ell_{1} \ell_{2}}^{2}(k) \bar{\jmath}_{\ell_{1}}\left(k s_{i}\right) \bar{\jmath}_{\ell_{2}}\left(k s_{j}\right) \mathrm{d} k
-   * \f]
-   *
-   * where \f$\sigma_{\ell_{1} \ell_{2}}^{2}(k)\f$ is the multipole expansion of the per-mode covariance
-   * computed by cbl::sigma2_k, \f$\bar{\jmath}\f$ is the shell-averaged Bessel function, computed by cbl::jl_distance_average an
-   * \f$\overline{\mathcal{L}}\f$ is the average of the Legendre polynomial over the \f$\mu\f$ bin, computed by cbl::Legendre_polynomial_mu_average.
+   * where \f$\sigma_{\ell_{1} \ell_{2}}^{2}(k)\f$ is the multipole
+   * expansion of the per-mode covariance computed by cbl::sigma2_k,
+   * \f$\bar{\jmath}\f$ is the shell-averaged Bessel function,
+   * computed by cbl::jl_distance_average an
+   * \f$\overline{\mathcal{L}}\f$ is the average of the Legendre
+   * polynomial over the \f$\mu\f$ bin, computed by
+   * cbl::Legendre_polynomial_mu_average.
    *
    * @param rr output scales
    * @param covariance analytic covariance matrix
@@ -2890,9 +2977,8 @@ namespace cbl {
    */
   std::vector<std::vector<double>> XiWedges_AP (const std::vector<double> mu_min, const std::vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::shared_ptr<glob::FuncGrid> xi0_interp, const std::shared_ptr<glob::FuncGrid> xi2_interp, const std::shared_ptr<glob::FuncGrid> xi4_interp);
 
+  ///@}
+
 }
-
-///@}
-
 
 #endif

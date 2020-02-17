@@ -71,7 +71,7 @@ vector<vector<double>> cbl::wrapper::ccfits::read_table_fits (const std::string 
       else {
 	vv.erase(vv.begin(), vv.end());
 	vv.resize(nrows, fill_value);
-	no_col+=1;
+	no_col ++;
       }
     }
     cc.push_back(vv);

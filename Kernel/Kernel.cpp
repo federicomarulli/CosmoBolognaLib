@@ -44,8 +44,8 @@ using namespace glob;
 
 string cbl::fullpath (std::string path, const bool isDir)
 { 
-  string find = "~";
-  string replace = getenv("HOME");
+  const string find = "~";
+  const string replace = getenv("HOME");
   char buff[PATH_MAX];
 
   size_t pos = 0;

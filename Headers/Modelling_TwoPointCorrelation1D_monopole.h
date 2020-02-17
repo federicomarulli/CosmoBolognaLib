@@ -556,8 +556,8 @@ namespace cbl {
 	 *
 	 *  the model used is the following:
 	 *
-	 *  \f[\xi(s)= b^2 \xi_{DM}(\alpha s)\ + A_0 + A_1/s
-	 *  +A_2/s^2\f]
+	 *  \f[\xi(s)= b^2 \xi_{DM}(\alpha r)\ + A_0 + A_1/r
+	 *  +A_2/r^2\f]
 	 *
 	 *  where \f$\xi_{DM}\f$ is computed at the fiducial (fixed)
 	 *  cosmology, and {\f$b\sigma_8\f$, \f$A_0\f$, \f$A_1\f$,
@@ -586,8 +586,8 @@ namespace cbl {
 	 *
 	 *  the model used is the following:
 	 *
-	 *  \f[\xi(s)= b^2 \xi_{DM}(\alpha s, \Sigma_{NL})\ + A_0 + A_1/s
-	 *  +A_2/s^2\f]
+	 *  \f[\xi(s)= b^2 \xi_{DM}(\alpha r, \Sigma_{NL})\ + A_0 + A_1/r
+	 *  +A_2/r^2\f]
 	 *
 	 *  where \f$\xi_{DM}\f$ is computed at the fiducial (fixed)
 	 *  cosmology, with damping of the BAO peak
@@ -619,8 +619,8 @@ namespace cbl {
 	 *
 	 *  the model used is the following:
 	 *
-	 *  \f[\xi(s)= b^2 \xi_{DM}(\alpha s)\ + A_0 + A_1/s
-	 *  +A_2/s^2\f]
+	 *  \f[\xi(s)= b^2 \xi_{DM}(\alpha r)\ + A_0 + A_1/r
+	 *  +A_2/r^2\f]
 	 *
 	 *  the positions of the BAO peak, deap and linear point are
 	 *  provided in output as derived parameters
@@ -688,14 +688,13 @@ namespace cbl {
 	 *  and bias; specifically, the model considered is the
 	 *  following:
 	 * 
-	 *  \f$\xi(s) = b^2 \xi'(s) + b \xi''(s) + \xi'''(s) \, ;\f$
+	 *  \f$\xi(s) = b^2 \xi'(r) + b \xi''(r) + \xi'''(r) \, ;\f$
 	 *
-	 *  where b is the linear bias and the terms \f$\xi'(s)\f$,
-	 *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are the Fourier
+	 *  where b is the linear bias and the terms \f$\xi'(r)\f$,
+	 *  \f$\xi''(r)\f$, \f$\xi'''(r)\f$ are the Fourier
 	 *  anti-transform of the power spectrum terms obtained
 	 *  integrating the redshift space 2D power spectrum along
-	 *  \f$\mu\f$ (see
-	 *  cbl::modelling::twopt.:damped_Pk_terms).
+	 *  \f$\mu\f$ (see cbl::modelling::twopt.:damped_Pk_terms)
 	 *
 	 *  @param bias_prior prior for the parameter bias
 	 *  \f$b(z)\f$
@@ -716,14 +715,13 @@ namespace cbl {
 	 *  and bias; specifically, the model considered is the
 	 *  following:
 	 * 
-	 *  \f$\xi(s) = b^2 \xi'(s) + b \xi''(s) + \xi'''(s) \, ;\f$
+	 *  \f$\xi(s) = b^2 \xi'(r) + b \xi''(r) + \xi'''(r) \, ;\f$
 	 *
-	 *  where b is the linear bias and the terms \f$\xi'(s)\f$,
-	 *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are the Fourier
+	 *  where b is the linear bias and the terms \f$\xi'(r)\f$,
+	 *  \f$\xi''(r)\f$, \f$\xi'''(r)\f$ are the Fourier
 	 *  anti-transform of the power spectrum terms obtained
 	 *  integrating the redshift space 2D power spectrum along
-	 *  \f$\mu\f$ (see
-	 *  cbl::modelling::twopt.:damped_Pk_terms).
+	 *  \f$\mu\f$ (see cbl::modelling::twopt.:damped_Pk_terms)
 	 *
 	 *  @param M0_prior prior for the parameter \f$M_0\f$, the
 	 *  intercept of the scaling relation

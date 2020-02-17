@@ -153,3 +153,6 @@ static const std::function<double(double)> default_func = nullptr;
 %template(StringVector) std::vector<std::string>;
 %template(BoolVector) std::vector<bool>;
 %template(DoubleVectorVector) std::vector<std::vector<double> >;
+
+%template(nint) cbl::nint<int>;
+%template(nint) cbl::nint<double>;

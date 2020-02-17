@@ -605,10 +605,11 @@ double cbl::determinant_matrix (const std::vector<std::vector<double>> mat)
   return det;
 }
 
+
 // ============================================================================
 
 
-void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const double prec)
+void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const double prec, const int Nres)
 {
   int n = mat.size();
   int s;
@@ -626,7 +627,7 @@ void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector
     for (int j=0; j<n; j++)
       gsl_matrix_set(mm, i, j, mat[i][j]);
 
-  // make the LU decomposition of the matrix mm
+  // make the lower–upper (LU) decomposition of the matrix mm
   gsl_linalg_LU_decomp(mm, perm, &s);
 
   // invert the matrix mm
@@ -638,14 +639,22 @@ void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector
 
   for (int i=0; i<n; i++) {
     for (int j=0; j<n; j++) {
-      double fact = (i==j) ? 1 : 0;
+      const double fact = (i==j) ? 1 : 0;
       double prod = 0;
       for (int el=0; el<n; el++)
 	prod += mat[i][el]*mat_inv[el][j];
       
-      if (fabs(fact - prod) > prec)  
+      if (fabs(fact-prod)>prec)  
 	WarningMsgCBL("exceeded precision for element "+conv(i, par::fINT)+" "+conv(j, par::fINT)+"; "+conv(fact, par::fDP4)+" "+conv(prod, par::fDP4)+"!", "invert_matrix", "Func.cpp");
     }
+  }
+
+  if (Nres>0) {
+    const double fact = 1.-(mat[0].size()+1.)/(Nres-1.); // correction factor from Hartlap, Simon and Schneider 2006
+   
+    for (int i=0; i<n; i++)
+      for (int j=0; j<n; j++)
+	mat_inv[i][j] = gsl_matrix_get(im, i, j)*fact;
   }
   
   gsl_matrix_free(mm);
@@ -657,29 +666,29 @@ void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector
 // ============================================================================
 
 
-void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const int i1, const int i2, const double prec)
+void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const int i1, const int i2, const double prec, const int Nres)
 {
   int n = i2-i1;
   int s;
   if (n==0)
     ErrorCBL("the input matrix has null size", "invert_matrix", "Func.cpp");
 
-  mat_inv.erase(mat_inv.begin(),mat_inv.end());
+  mat_inv.erase(mat_inv.begin(), mat_inv.end());
   mat_inv = mat;
 
-  gsl_matrix *mm = gsl_matrix_alloc (n, n);
-  gsl_matrix *im = gsl_matrix_alloc (n, n);
-  gsl_permutation * perm = gsl_permutation_alloc (n);
+  gsl_matrix *mm = gsl_matrix_alloc(n, n);
+  gsl_matrix *im = gsl_matrix_alloc(n, n);
+  gsl_permutation * perm = gsl_permutation_alloc(n);
 
   for (int i=i1; i<i2; i++)
     for (int j=i1; j<i2; j++)
-      gsl_matrix_set(mm,i-i1,j-i1,mat[i][j]);
+      gsl_matrix_set(mm, i-i1, j-i1, mat[i][j]);
 
-  // Make LU decomposition of matrix m
-  gsl_linalg_LU_decomp (mm, perm, &s);
+  // make the lower–upper (LU) decomposition of the matrix mm
+  gsl_linalg_LU_decomp(mm, perm, &s);
 
-  // Invert the matrix m
-  gsl_linalg_LU_invert (mm, perm, im);
+  // invert the matrix mm
+  gsl_linalg_LU_invert(mm, perm, im);
 
   for (int i=0; i<n; i++) {
     for (int j=0; j<n; j++) {
@@ -688,19 +697,25 @@ void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector
       for (int el=0; el<n; el++)
 	prod += mat[i+i1][el+i1]*gsl_matrix_get(im, el, j); 
     
-      if (fabs(fact - prod) > prec)  
+      if (fabs(fact-prod)>prec)  
 	WarningMsgCBL("Exceeded precision for element "+conv(i,par::fINT)+" "+conv(j,par::fINT)+"; "+conv(fact,par::fDP4)+" "+conv(prod,par::fDP4)+"!", "invert_matrix", "Func.cpp");
     }
   }
 
+  const double fact = (Nres>0) ? 1.-(mat[0].size()+1.)/(Nres-1.) : 1.; // correction factor from Hartlap, Simon and Schneider 2006
+
   for (size_t i=0; i<mat.size(); i++) {
     for (size_t j=0; j<mat[i].size(); j++) {
       if (int(i)<i2 && int(i)>=i1 && int(j)<i2 && int(j)>=i1)
-	mat_inv[i][j] = gsl_matrix_get(im,i-i1,j-i1);
+	mat_inv[i][j] = gsl_matrix_get(im, i-i1, j-i1)*fact;
       else
-	mat_inv[i][j] = 0;
+	mat_inv[i][j] = 0.;
     }
   }
+
+  gsl_matrix_free(mm);
+  gsl_matrix_free(im);
+  gsl_permutation_free(perm);
 }
 
 
@@ -743,6 +758,7 @@ void cbl::covariance_matrix (const std::vector<std::vector<double>> mat, std::ve
 	  nm ++;
 	}
       }
+      
       if (nm>1) cov[i][j] = (JK) ? double(nm-1)/(nm)*cov[i][j] : cov[i][j]/(nm-1);
     }
 
@@ -796,7 +812,6 @@ void cbl::covariance_matrix (const std::vector<std::string> file, std::vector<do
 
 void cbl::covariance_matrix (const std::vector<std::string> file, const std::string covariance_matrix_file, const bool JK) 
 {  
-
   vector<double> rad, mean;
   vector<vector<double>> cov;
   covariance_matrix(file, rad, mean, cov, JK);
@@ -1293,7 +1308,7 @@ double cbl::func_grid_log_2D (double *xx, size_t dim, void *params)
 // ============================================================================================
 
 
-void cbl::sdss_atbound(double &angle, const double minval, const double maxval)
+void cbl::sdss_atbound (double &angle, const double minval, const double maxval)
 {
   while (angle < minval)
     angle += 360.;
@@ -1302,12 +1317,11 @@ void cbl::sdss_atbound(double &angle, const double minval, const double maxval)
     angle -= 360.0;
 }
 
-void cbl::sdss_atbound2(double &theta, double &phi)
+void cbl::sdss_atbound2 (double &theta, double &phi)
 {
-
   sdss_atbound(theta, -180.0, 180.0);
 
-  if (fabs(theta)>90){
+  if (fabs(theta)>90) {
     theta = 180.0 - theta;
     phi += 180.0;
   }
@@ -1469,7 +1483,7 @@ std::vector<size_t> cbl::minimum_maximum_indexes (const std::vector<double> xx, 
 // ============================================================================
 
 
-void cbl::read_invert_covariance (const std::string filecov, std::vector< std::vector<double>> &cov, std::vector<std::vector<double>> &cov_inv, const size_t i1, const size_t i2)
+void cbl::read_invert_covariance (const std::string filecov, std::vector< std::vector<double>> &cov, std::vector<std::vector<double>> &cov_inv, const size_t i1, const size_t i2, const double prec, const int Nres)
 {
   size_t size = i2-i1+1;
 
@@ -1497,7 +1511,7 @@ void cbl::read_invert_covariance (const std::string filecov, std::vector< std::v
   fin.clear(); fin.close();
 
   cov_inv = cov;
-  vector<vector<double>> cov_lim(size,vector<double>(size,0)), cov_lim_inv;
+  vector<vector<double>> cov_lim(size,vector<double>(size, 0)), cov_lim_inv;
 
   size_t tot_size = cov.size();
 
@@ -1510,7 +1524,7 @@ void cbl::read_invert_covariance (const std::string filecov, std::vector< std::v
     }
   }
   
-  invert_matrix(cov_lim, cov_lim_inv);
+  invert_matrix(cov_lim, cov_lim_inv, prec, Nres);
 
   for (size_t i=0; i<tot_size; i++) {
     for (size_t j=0; j<tot_size; j++) {
@@ -2115,7 +2129,7 @@ double cbl::get_mu (const double r1, const double r2, const double r3)
 // ============================================================================
 
 
-double cbl::window_function(const double x, const double min, const double max)
+double cbl::window_function (const double x, const double min, const double max)
 {
   if ((x>min) && (x<max)) 
     return 1.;

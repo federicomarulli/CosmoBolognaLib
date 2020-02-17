@@ -393,10 +393,10 @@ void cbl::data::Data1D_collection::write (const std::string dir, const std::stri
     fout << "### "<< header <<" ###" << endl;
 
   for (int i=0; i<ndata; i++) {
-    fout << setprecision(precision) << setw(15) << right << m_x[0][i] << "  ";
+    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[0][i] << "  ";
     for (int j=0; j<m_ndataset; j++)
-      fout << setprecision(precision) << setw(15) << right << m_data[m_index[j][i]]
-	   << "  " << setprecision(precision) << setw(15) << right << m_error[m_index[j][i]] << "  ";
+      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[m_index[j][i]]
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[m_index[j][i]] << "  ";
     fout << endl;
   }
 
@@ -421,9 +421,9 @@ void cbl::data::Data1D_collection::write (const std::string dir, const std::vect
       fout << "### "<< header <<" ###" << endl;
 
     for (int j=0; j<m_xsize[i]; j++)
-      fout << setprecision(precision) << setw(15) << right << m_x[i][j]
-	   << "  " << setprecision(precision) << setw(15) << right << m_data[m_index[i][j]]
-	   << "  " << setprecision(precision) << setw(15) << right << m_error[m_index[i][j]] << endl;
+      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i][j]
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[m_index[i][j]]
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[m_index[i][j]] << endl;
 
     fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
   }
@@ -534,14 +534,14 @@ void cbl::data::Data1D_collection::write_covariance (const string dir, const str
 	for (int n=0; n<m_xsize[j]; n++) {
 	  index1 = m_index[i][m];
 	  index2 = m_index[j][n];
-	  fout << setprecision(precision) << setw(15) << right << i
-	       << "  " << setprecision(precision) << setw(15) << right << j
-	       << "  " << setprecision(precision) << setw(15) << right << m_x[i][m]
-	       << "  " << setprecision(precision) << setw(15) << right << m_x[j][n]
-	       << "  " << setprecision(precision) << setw(15) << right << m_covariance[index1][index2]
-	       << "  " << setprecision(precision) << setw(15) << right << m_covariance[index1][index2]/sqrt(m_covariance[index1][index1]*m_covariance[index2][index2])
-	       << "  " << setprecision(precision) << setw(5) << right << index1
-	       << "  " << setprecision(precision) << setw(5) << right << index2 <<  endl;
+	  fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << i
+	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << j
+	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i][m]
+	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[j][n]
+	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_covariance[index1][index2]
+	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_covariance[index1][index2]/sqrt(m_covariance[index1][index1]*m_covariance[index2][index2])
+	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(5) << right << index1
+	       << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(5) << right << index2 <<  endl;
 	}
 
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;

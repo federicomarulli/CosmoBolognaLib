@@ -136,10 +136,8 @@ namespace cbl {
 	/// false &rarr; linear power spectrum; true &rarr; non-linear power spectrum
 	bool NL = false;
 
-	/// true \f$\rightarrow\f$ the output files created by CAMB
-	/// are stored; false \f$\rightarrow\f$ the output files
-	/// created by CAMB are removed
-	bool store_output_CAMB = true;
+	/// true \f$\rightarrow\f$ the output files created by the Boltmann solver are stored; false \f$\rightarrow\f$ the output files are removed
+	bool store_output = true;
 	
 	/// output_root of the parameter file used to compute the power spectrum 
 	std::string output_root = "test";

@@ -72,7 +72,7 @@ namespace cbl {
 	/// the parameter posterior distributions
 	std::vector<std::shared_ptr<PosteriorDistribution>> m_posterior_distribution;
 	
-	/// the best-fit parameter values, either the medians of the MCMC chain or the maxima of the posterior (depending of what has been calculated) 
+	/// the best-fit parameter values, either the medians of the MCMC chain or the maximum of the posterior (depending of what has been calculated) 
 	std::vector<double> m_parameter_bestfit_value;
 	
 	/// the function parameter covariance matrix
@@ -145,15 +145,14 @@ namespace cbl {
 	~PosteriorParameters () = default;
 
 	///@}
+
 	
 	/**
-	 * @brief return the number of free
-	 * parameters
+	 * @brief return the number of free parameters
 	 *
 	 * @return the number of free parameters
 	 */
 	size_t nparameters_free () const override;
-
 	
 	/**
 	 * @brief return the model parameter status
@@ -184,7 +183,7 @@ namespace cbl {
 	 *
 	 * @return the number of fixed parameters
 	 */
-	size_t nparameters_fixed() const override;
+	size_t nparameters_fixed () const override;
 
 	/**
 	 * @brief return the private member m_fixed_parameter
@@ -218,6 +217,7 @@ namespace cbl {
 	 */
 	void set_parameters (const size_t nparameters, const std::vector<std::shared_ptr<PriorDistribution>> priorDistributions, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames) override;
 
+	
 	/**
 	 *  @name Member functions used to set private/protected of the PosteriorParameters
 	 */
@@ -319,6 +319,7 @@ namespace cbl {
 	std::shared_ptr<Prior> prior () const;
 
 	///@}
+	
 
 	/**
 	 *  @name Member functions used to get/set best fit values
@@ -373,6 +374,7 @@ namespace cbl {
 	void write_bestfit_info ();
 
 	///@}
+
 	
 	/**
 	 *  @name Member functions used to interact with posterior distribution
@@ -407,11 +409,34 @@ namespace cbl {
 	  { cbl::checkDim(m_posterior_distribution, par, "m_posterior_distribution", false); return m_posterior_distribution[par]; }
 
 	///@}
+	
 
 	/**
 	 * @brief show the results on the standard output
 	 *
-	 * @param start the starting position 
+	 * if the covariance matrix has been estimated from a set of
+	 * mock catalogues, and the input parameters ns (number of
+	 * samples used to estimate the covariance matrix) and nb
+	 * (number of data measurements, e.g. the bins of the dataset)
+	 * are provided (>0), then the parameter errors
+	 * (\f$\sigma_p\f$) will be corrected to take into account the
+	 * uncertainities in the covariance estimate (Percival et
+	 * al. 2014):
+	 *
+	 * \f[ \sigma_p = \sqrt{\frac{1+B(n_b-n_p)}{1+A+B(n_p+1)}} \f]
+	 *
+	 * where 
+	 *
+	 * \f[ A = \frac{2}{(n_s-n_b-1)(n_s-n_b-4)} \,, \f]
+	 *
+	 * \f[ B = \frac{(n_s-n_b-2)}{(n_s-n_b-1)(n_s-n_b-4)} \,. \f]
+	 *
+	 * this correction can be applied only if the likelihood is
+	 * Gaussian. Morever, the inverce covariance matrix estimator
+	 * has to be corrected to take into account the inverse
+	 * Wishart distribution (Hartlap, Simon and Schneider 2006).
+	 *
+	 * @param start the starting position
 	 *
 	 * @param thin number of jumped indexes in the chain
 	 *
@@ -423,10 +448,16 @@ namespace cbl {
 	 * mode; false \f$\rightarrow\f$ do not show the posterior
 	 * mode
 	 *
+	 * @param ns number of samples used to estimate the covariance
+	 * matrix
+	 *
+	 * @param nb number of data measurements, e.g. the bins of the
+	 * dataset
+	 *
 	 * @return none
 	 */
-	void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false);
-
+	void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false, const int ns=-1, const int nb=-1);
+	
 	/**
 	 * @brief store the results to file
 	 *
@@ -434,9 +465,32 @@ namespace cbl {
 	 *
 	 * @param file name of the output file
 	 *
-	 * this function stores to file the posterior mean, standard
-	 * deviation, median, 18th and 82th percentiles, and
-	 * optionally the mode
+	 * this function stores to file the posterior mean, the
+	 * posterior standard deviation, the posterior median, 18th
+	 * and 82th posterior percentiles, and, optionally, the
+	 * posterior mode.
+	 *
+	 * If the covariance matrix has been estimated from a set of
+	 * mock catalogues, and the input parameters ns (number of
+	 * samples used to estimate the covariance matrix) and nb
+	 * (number of data measurements, e.g. the bins of the dataset)
+	 * are provided (>0), then the parameter errors
+	 * (\f$\sigma_p\f$) will be corrected to take into account the
+	 * uncertainities in the covariance estimate (Percival et
+	 * al. 2014):
+	 *
+	 * \f[ \sigma_p = \sqrt{\frac{1+B(n_b-n_p)}{1+A+B(n_p+1)}} \f]
+	 *
+	 * where 
+	 *
+	 * \f[ A = \frac{2}{(n_s-n_b-1)(n_s-n_b-4)} \,, \f]
+	 *
+	 * \f[ B = \frac{(n_s-n_b-2)}{(n_s-n_b-1)(n_s-n_b-4)} \,. \f]
+	 *
+	 * this correction can be applied only if the likelihood is
+	 * Gaussian. Morever, the inverce covariance matrix estimator
+	 * has to be corrected to take into account the inverse
+	 * Wishart distribution (Hartlap, Simon and Schneider 2006).
 	 * 
 	 * @param start the starting position 
 	 *
@@ -450,9 +504,15 @@ namespace cbl {
 	 * posterior mode; false \f$\rightarrow\f$ do not compute the
 	 * posterior mode
 	 *
+	 * @param ns number of samples used to estimate the covariance
+	 * matrix
+	 *
+	 * @param nb number of data measurements, e.g. the bins of the
+	 * dataset
+	 *
 	 * @return none
 	 */
-	void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false);
+	void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false, const int ns=-1, const int nb=-1);
 
 	/**
 	 * @brief return the private member m_chain_size

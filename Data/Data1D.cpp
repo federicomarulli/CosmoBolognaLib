@@ -155,9 +155,9 @@ void cbl::data::Data1D::write (const string dir, const string file, const string
     fout << "### " << header << " ###" << endl;
 
   for (size_t i=0; i<m_x.size(); i++)
-    fout << setprecision(precision) << setw(15) << right << m_x[i] 
-	 << "  " << setprecision(precision) << setw(15) << right << m_data[i] 
-	 << "  " << setprecision(precision) << setw(15) << right << m_error[i] << endl;
+    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i] 
+	 << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[i] 
+	 << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[i] << endl;
    
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
 }
@@ -177,12 +177,12 @@ void cbl::data::Data1D::write_covariance (const string dir, const string file, c
 
   for (int i=0; i<m_ndata; ++i) 
     for (int j=0; j<m_ndata; ++j) 
-      fout << setprecision(precision) << setw(15) << right << m_x[i]
-	   << "  " << setprecision(precision) << setw(15) << right << m_x[j]
-	   << "  " << setprecision(precision) << setw(15) << right << m_covariance[i][j]
-	   << "  " << setprecision(precision) << setw(15) << right << m_covariance[i][j]/sqrt(m_covariance[i][i]*m_covariance[j][j])
-	   << "  " << setprecision(precision) << setw(5) << right << i
-	   << "  " << setprecision(precision) << setw(5) << right << j <<  endl;
+      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i]
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[j]
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_covariance[i][j]
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_covariance[i][j]/sqrt(m_covariance[i][i]*m_covariance[j][j])
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(5) << right << i
+	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(5) << right << j <<  endl;
    
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
 }

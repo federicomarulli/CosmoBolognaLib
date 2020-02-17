@@ -142,7 +142,7 @@ std::vector<cbl::glob::FuncGrid> cbl::modelling::numbercounts::sigmaM_dlnsigmaM 
 // ===========================================================================================
 
 
-double cbl::modelling::numbercounts::mass_function (const double mass, cbl::cosmology::Cosmology cosmology, const double redshift, const std::string model_MF, const bool store_output_CAMB, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_Pk, const double kmax)
+double cbl::modelling::numbercounts::mass_function (const double mass, cbl::cosmology::Cosmology cosmology, const double redshift, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_Pk, const double kmax)
 {
   const double rho = cosmology.rho_m(0., true);
 
@@ -151,14 +151,14 @@ double cbl::modelling::numbercounts::mass_function (const double mass, cbl::cosm
   sigmaM_dlnsigmaM (sigmaM, dlnsigmaM, ((cosmology.unit()) ? mass : mass*cosmology.hh()), interp_Pk, kmax, rho);
   double _Delta = (isDelta_vir) ? cosmology.Delta_vir(Delta, redshift) : Delta;
 
-  return cosmology.mass_function(mass, sigmaM, dlnsigmaM, redshift, model_MF, store_output_CAMB, cbl::par::defaultString, _Delta);
+  return cosmology.mass_function(mass, sigmaM, dlnsigmaM, redshift, model_MF, store_output, cbl::par::defaultString, _Delta);
 }
 
 
 // ===========================================================================================
 
 
-std::vector<double> cbl::modelling::numbercounts::mass_function (const std::vector<double> mass, cbl::cosmology::Cosmology cosmology, const double redshift, const std::string model_MF, const bool store_output_CAMB, const double Delta, const bool isDelta_vir, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax)
+std::vector<double> cbl::modelling::numbercounts::mass_function (const std::vector<double> mass, cbl::cosmology::Cosmology cosmology, const double redshift, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax)
 {
   vector<double> mass_function(mass.size());
   
@@ -176,7 +176,7 @@ std::vector<double> cbl::modelling::numbercounts::mass_function (const std::vect
   double _Delta = (isDelta_vir) ? cosmology.Delta_vir(Delta, redshift) : Delta;
 
   for (size_t i=0; i<mass.size(); i++) 
-    mass_function[i] = cosmology.mass_function(mass[i], sigmaM[i], dlnsigmaM[i], redshift, model_MF, store_output_CAMB, cbl::par::defaultString, _Delta);
+    mass_function[i] = cosmology.mass_function(mass[i], sigmaM[i], dlnsigmaM[i], redshift, model_MF, store_output, cbl::par::defaultString, _Delta);
 
   return mass_function;
 }
@@ -185,7 +185,7 @@ std::vector<double> cbl::modelling::numbercounts::mass_function (const std::vect
 // ===========================================================================================
 
 
-std::vector<std::vector<double>> cbl::modelling::numbercounts::mass_function (const std::vector<double> redshift, const std::vector<double> mass, cbl::cosmology::Cosmology cosmology, const std::string model_MF, const bool store_output_CAMB, const double Delta, const bool isDelta_vir, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax)
+std::vector<std::vector<double>> cbl::modelling::numbercounts::mass_function (const std::vector<double> redshift, const std::vector<double> mass, cbl::cosmology::Cosmology cosmology, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax)
 {
   vector<vector<double>> mass_function(redshift.size(), vector<double>(mass.size()));
   
@@ -202,7 +202,7 @@ std::vector<std::vector<double>> cbl::modelling::numbercounts::mass_function (co
 
   for (size_t j=0; j<redshift.size(); j++) 
     for (size_t i=0; i<mass.size(); i++) 
-      mass_function[j][i] = cosmology.mass_function(mass[i], sigmaM[i], dlnsigmaM[i], redshift[j], model_MF, store_output_CAMB, par::defaultString, ((isDelta_vir) ? cosmology.Delta_vir(Delta, redshift[j]) : Delta));
+      mass_function[j][i] = cosmology.mass_function(mass[i], sigmaM[i], dlnsigmaM[i], redshift[j], model_MF, store_output, par::defaultString, ((isDelta_vir) ? cosmology.Delta_vir(Delta, redshift[j]) : Delta));
 
   return mass_function;
 }
@@ -211,7 +211,7 @@ std::vector<std::vector<double>> cbl::modelling::numbercounts::mass_function (co
 // ===========================================================================================
 
 
-double cbl::modelling::numbercounts::number_counts (const double redshift_min, const double redshift_max, const double Mass_min, const double Mass_max, cbl::cosmology::Cosmology cosmology, const double Area, const std::string model_MF, const bool store_output_CAMB, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const int npt_redshift, const int npt_mass)
+double cbl::modelling::numbercounts::number_counts (const double redshift_min, const double redshift_max, const double Mass_min, const double Mass_max, cbl::cosmology::Cosmology cosmology, const double Area, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const int npt_redshift, const int npt_mass)
 {
   
   double fact = (cosmology.unit()) ? 1 : cosmology.hh();
@@ -239,7 +239,7 @@ double cbl::modelling::numbercounts::number_counts (const double redshift_min, c
     double Int = 0;
 
     for (int j=0; j<npt_mass; j++) 
-      Int +=cosmology.mass_function(MM[j], sigmaM[j], dlnsigmaM[j], zz, model_MF, store_output_CAMB, cbl::par::defaultString, _Delta)*deltaM[j]*dV_dZ;
+      Int +=cosmology.mass_function(MM[j], sigmaM[j], dlnsigmaM[j], zz, model_MF, store_output, cbl::par::defaultString, _Delta)*deltaM[j]*dV_dZ;
     nc += Int*deltaz;
 
   }
@@ -270,12 +270,12 @@ double cbl::modelling::numbercounts::number_counts (const double redshift_min, c
 
 // ===========================================================================================
 
-std::vector<double> cbl::modelling::numbercounts::size_function (cbl::cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output_CAMB, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
+std::vector<double> cbl::modelling::numbercounts::size_function (cbl::cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
 {
 
   vector<double> size_function(radii.size());
   for (size_t i=0; i<radii.size(); i++)
-    size_function[i] = cosmology.size_function(radii[i], redshift, model, b_eff, slope, offset, deltav_NL, del_c, method_Pk, store_output_CAMB, output_root, interpType, k_max, input_file, is_parameter_file);
+    size_function[i] = cosmology.size_function(radii[i], redshift, model, b_eff, slope, offset, deltav_NL, del_c, method_Pk, store_output, output_root, interpType, k_max, input_file, is_parameter_file);
 
   return size_function;
   

@@ -119,10 +119,10 @@ namespace cbl {
 	 *  @param redshift redshift
 	 *
 	 *  @param method_Pk method used to compute the power spectrum
-	 *  and &sigma;(mass); valid choices for method_Pk are: CAMB
-	 *  [http://camb.info/], classgal_v1 [http://class-code.net/],
-	 *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465],
-	 *  EisensteinHu
+	 *  and &sigma;(mass) (i.e. the Boltzmann solver); valid
+	 *  choices for method_Pk are: CAMB [http://camb.info/],
+	 *  CLASS [http://class-code.net/], MPTbreeze-v1
+	 *  [http://arxiv.org/abs/1207.1465], EisensteinHu
 	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
 	 *
 	 *  @param sigmaNL damping of the wiggles in the linear power
@@ -135,8 +135,9 @@ namespace cbl {
 	 *  Gaussian form for f(v); where f(v) is the velocity
 	 *  distribution function
 	 *
-	 *  @param store_output_CAMB if true the output files created by CAMB are stored;
-	 *  if false the output files created by CAMB are removed
+	 *  @param store_output if true the output files created by
+	 *  the Boltzmann solver are stored; if false the output files
+	 *  are removed
 	 *
 	 *  @param output_root output_root of the parameter file used
 	 *  to compute the power spectrum and &sigma;(mass); it can be
@@ -195,7 +196,7 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double sigmaNL=0, const bool NL=true, const int FV=0, const bool store_output_CAMB=true, const std::string output_root="test", const bool bias_nl=false, const double bA=-1., const bool xiType=false, const double k_star=-1., const bool xiNL=false, const double v_min=-5000., const double v_max=5000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const int step=200, const double aa=0., const bool GSL=true, const double prec=1.e-2, const std::string file_par=par::defaultString);
+	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double sigmaNL=0, const bool NL=true, const int FV=0, const bool store_output=true, const std::string output_root="test", const bool bias_nl=false, const double bA=-1., const bool xiType=false, const double k_star=-1., const bool xiNL=false, const double v_min=-5000., const double v_max=5000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const int step=200, const double aa=0., const bool GSL=true, const double prec=1.e-2, const std::string file_par=par::defaultString);
 	      
 	///@}
 	

@@ -1163,14 +1163,14 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const 
 // =====================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const std::string method_Pk, const int step_r, const int step_k, const string output_dir, const bool store_output_CAMB, const string output_root, const bool force_RealSpace, const bool include_limits, const int max_ll, const bool use_k)
+std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const std::string method_Pk, const int step_r, const int step_k, const string output_dir, const bool store_output, const string output_root, const bool force_RealSpace, const bool include_limits, const int max_ll, const bool use_k)
 {
   double rmax = r1+r2;
 
   double beta = (force_RealSpace) ? 0 : linear_growth_rate(redshift)/b1;
   vector<double> rr = linear_bin_vector(step_r, 1., rmax);
   vector<double> kk = logarithmic_bin_vector(step_k, 1.e-4, 10.);
-  vector<double> _Pk = Pk(kk, method_Pk, false, redshift, output_dir, store_output_CAMB, output_root);  
+  vector<double> _Pk = Pk(kk, method_Pk, false, redshift, output_dir, store_output, output_root);  
 
   return zeta_RSD (r1, r2, ntheta, b1, b2, bt, beta, rr, kk, _Pk, include_limits, max_ll, use_k);
 }

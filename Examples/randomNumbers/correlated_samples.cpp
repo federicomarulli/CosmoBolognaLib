@@ -46,7 +46,7 @@ int main () {
     // write the output
     std::cout << std::endl << "Measured covariance : " << std::endl;
     std::vector<std::vector<double>> measured_covariance;
-    cbl::covariance_matrix (dataset, measured_covariance);
+    cbl::covariance_matrix(dataset, measured_covariance);
     cbl::Print(measured_covariance);
 
   }

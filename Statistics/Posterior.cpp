@@ -64,7 +64,7 @@ cbl::statistics::Posterior::Posterior (const std::vector<std::shared_ptr<PriorDi
 
 
 cbl::statistics::Posterior::Posterior (const std::vector<std::shared_ptr<PriorDistribution>> prior_distributions, const Likelihood &likelihood, const int seed) : Likelihood(likelihood)
-{
+{ 
   m_model_parameters = make_shared<PosteriorParameters>(PosteriorParameters(m_model->parameters()->nparameters(), prior_distributions, m_model->parameters()->type(), m_model->parameters()->name()));
 
   m_model->set_parameters(m_model_parameters);	
@@ -382,22 +382,21 @@ void cbl::statistics::Posterior::read_chain_ascii (const string input_dir, const
     getline(fin, line);
 
   vector<vector<double>> chain_value;
+
   m_logposterior_values.erase(m_logposterior_values.begin(), m_logposterior_values.end());
 
-  while (getline(fin, line))
-    {
-      stringstream ss(line);
-      double NUM;
-      vector<double> ll, params;
+  while (getline(fin, line)) {
+    stringstream ss(line);
+    double NUM;
+    vector<double> ll, params;
 
-      while (ss>>NUM) ll.push_back(NUM);
-      for (size_t i=1; i<ll.size()-3; i++) {
-	params.push_back(ll[i]);
-      }
+    while (ss>>NUM) ll.push_back(NUM);
+    for (size_t i=1; i<ll.size()-3; i++)
+      params.push_back(ll[i]);
 
-      m_logposterior_values.push_back(ll[ll.size()-1]);
-      chain_value.push_back(params);
-    }
+    m_logposterior_values.push_back(ll[ll.size()-1]);
+    chain_value.push_back(params);
+  }
   int chain_size = chain_value.size()/nwalkers;
 
   fin.clear(); fin.close();
@@ -579,21 +578,21 @@ void cbl::statistics::Posterior::write_maximization_results (const string dir_ou
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::show_results (const int start, const int thin, const int nbins, const bool show_mode)
+void cbl::statistics::Posterior::show_results (const int start, const int thin, const int nbins, const bool show_mode, const int ns, const int nb)
 {
-  m_model_parameters->show_results(start, thin, nbins, m_generate_seed(), show_mode);
+  m_model_parameters->show_results(start, thin, nbins, m_generate_seed(), show_mode, ns, nb);
 }
 
 
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::write_results (const string output_dir, const string root_file, const int start, const int thin, const int nbins, const bool fits, const bool compute_mode)
+void cbl::statistics::Posterior::write_results (const string output_dir, const string root_file, const int start, const int thin, const int nbins, const bool fits, const bool compute_mode, const int ns, const int nb)
 {
   const string extension = (fits) ? "_chain.fits" : "_chain.dat";
   write_chain(output_dir, root_file+extension, start, thin, fits);
 
-  m_model_parameters->write_results(output_dir, root_file, start, thin, nbins, m_generate_seed(), compute_mode);
+  m_model_parameters->write_results(output_dir, root_file, start, thin, nbins, m_generate_seed(), compute_mode, ns, nb);
 }
 
 

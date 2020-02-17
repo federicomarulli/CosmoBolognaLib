@@ -274,7 +274,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 
     // prepare default coordinates
     comovingCoordinates defaultComovingCoord = { par::defaultDouble, par::defaultDouble, par::defaultDouble};
-    observedCoordinates defaultObservedCoord = { par::defaultDouble, par::defaultDouble, 0.1};
+    observedCoordinates defaultObservedCoord = { par::defaultDouble, -1., 0.1};
   
     for (int cc=0; cc<comments; cc++) getline(finr, line); // ignore commented lines at the beginning of file
       
@@ -308,6 +308,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 	  else {
 	    ss>>Value_d;
 	    if (std::find(column.begin(), column.end(), jj)!=column.end()) {
+	      if ((varMap[column[index]]==Var::_RA_) || (varMap[column[index]]==Var::_Dec_)) Value_d = radians(Value_d, inputUnits);
 	      set_var(ii,
 		      varMap[column[index]],
 		      ((varMap[column[index]]==Var::_X_) || (varMap[column[index]]==Var::_Y_) || (varMap[column[index]]==Var::_Z_)) ?
@@ -323,7 +324,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
     finr.clear(); finr.close();
   }
 }
-
+    
 // ============================================================================
 
 

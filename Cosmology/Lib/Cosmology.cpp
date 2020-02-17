@@ -714,7 +714,7 @@ double cbl::cosmology::Cosmology::D_C (const double redshift) const
   }
   
   else {
-    string dir = par::DirCosmo+"Cosmology/Tables/dc_cDE/";
+    string dir = fullpath(par::DirCosmo)+"Cosmology/Tables/dc_cDE/";
     string file_in;
     if (m_model=="LCDM_Baldi_wmap7") file_in = dir+"LCDM-wmap7-comovingdist.dat"; 
     else if (m_model=="EXP005_Baldi_wmap7") file_in = dir+"EXP005-wmap7-comovingdist.dat";
@@ -756,7 +756,7 @@ double cbl::cosmology::Cosmology::D_C (const double redshift) const
 
 void cbl::cosmology::Cosmology::D_C_table (const std::string file_table, const double z_min, const double z_max, const int step, std::vector<double> &Redshift, std::vector<double> &dc) const
 {
-  string File_table = par::DirCosmo+"Cosmology/Tables/dc/"+file_table;
+  string File_table = fullpath(par::DirCosmo)+"Cosmology/Tables/dc/"+file_table;
  
   ifstream fin;
   fin.open (File_table.c_str());
@@ -1015,7 +1015,7 @@ double cbl::cosmology::Cosmology::Redshift (const double d_c, const double z1_gu
   else {
     WarningMsgCBL("the quantity prec is not used", "Redshift", "Cosmology.h");
 
-    string dir = par::DirCosmo+"Cosmology/Tables/dc_cDE/";
+    string dir = fullpath(par::DirCosmo)+"Cosmology/Tables/dc_cDE/";
     string file_in;
 
     if (m_model=="LCDM_Baldi_wmap7") file_in = dir+"LCDM-wmap7-comovingdist.dat"; 

@@ -11,7 +11,7 @@ F = gfortran
 PY = python
 
 # swig, used to create the python wrapper
-SWIG = swig
+SWIG = swig3.0
 
 # doxygen, used to create the documentation
 Doxygen = doxygen
@@ -22,12 +22,12 @@ dir_INC_GSL = $(shell gsl-config --prefix)/include/
 dir_LIB_GSL = $(shell gsl-config --prefix)/lib/
 
 # FFTW installation directories
-dir_INC_FFTW = /usr/local/include
-dir_LIB_FFTW = /usr/local/lib
+dir_INC_FFTW =
+dir_LIB_FFTW =
 
 # cfitsio installation directories
-dir_INC_cfitsio = /usr/local/include
-dir_LIB_cfitsio = /usr/local/lib
+dir_INC_cfitsio =
+dir_LIB_cfitsio =
 
 
 ############################################################################
@@ -52,42 +52,103 @@ dir_Python = $(PWD)/Python/
 
 HH = $(dir_H)*.h 
 
-# GSL-related flags
+###################
+### BASIC FLAGS ###
+###################
+
+FLAGS0 = -std=c++11 -fopenmp
+FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
+FLAGST = $(FLAGS0) $(FLAGS)
+
+FLAGS_INC = -I$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H)
+
+FLAGS_LINK = -shared
+
+#################
+### GSL FLAGS ###
+#################
+
+#Check the GSL version
 gsl_version_full := $(wordlist 1,3,$(subst ., ,$(GSL_VERSION)))
 gsl_version_major := $(word 1,${gsl_version_full})
 gsl_version_minor := $(word 2,${gsl_version_full})
 
-
 GSL_VERSION_OK = 0
 ifeq ($(gsl_version_major),2)
-	ifeq ($(shell test $(gsl_version_minor) -gt 4; echo $$?),0)
-		GSL_VERSION_OK = 1
-	endif
+  ifeq ($(shell test $(gsl_version_minor) -gt 4; echo $$?),0)
+    GSL_VERSION_OK = 1
+  endif
+endif
+FLAGS0 := $(FLAGS0) -DGSL_VERSION_OK=$(GSL_VERSION_OK)
+
+# add in FLAGS_INC
+ifeq ($(dir_INC_GSL),)
+  else
+    FLAGS_INC := $(FLAGS_INC) -I$(dir_INC_GSL)
 endif
 
-FLAGS0 = -std=c++11 -fopenmp -DGSL_VERSION_OK=$(GSL_VERSION_OK)
-FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
+# add search path when linking
+FLAGS_GSL = -lgsl -lgslcblas -lm
+ifeq ($(dir_LIB_GSL),)
+  else 
+  FLAGS_GSL := -Wl,-rpath,$(dir_LIB_GSL) -L$(dir_LIB_GSL) $(FLAGS_GSL) 
+endif
 
-FLAGS_INC = -I$(HOME)/include/ -I$(dir_INC_GSL) -I$(dir_INC_FFTW) -I$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H)
-FLAGS_FFTW = -Wl,-rpath,$(dir_LIB_FFTW) -L$(dir_LIB_FFTW) -lfftw3 #-lfftw3_omp
-FLAGS_GSL = -Wl,-rpath,$(dir_LIB_GSL) -L$(dir_LIB_GSL) -lgsl -lgslcblas -lm -L$(HOME)/lib
+##################
+### FFTW FLAGS ###
+##################
+
+# add in FLAGS_INC
+ifeq ($(dir_INC_FFTW),)
+  else
+  FLAGS_INC :=  $(FLAGS_INC) -I$(dir_INC_FFTW)
+endif
+
+# add search path when linking
+FLAGS_FFTW = -lfftw3 #-lfftw3_omp
+ifeq ($(dir_LIB_FFTW),)
+  else
+  FLAGS_FFTW := -Wl,-rpath,$(dir_LIB_FFTW) -L$(dir_LIB_FFTW) $(FLAGS_FFTW) #-lfftw3_omp
+endif
+
+
+####################
+### CCFITS FLAGS ###
+####################
 FLAGS_CCFITS = -Wl,-rpath,$(dir_CCfits)/lib -L$(dir_CCfits)/lib -lCCfits
-FLAGS_FFTLOG = -fPIC -w
-FLAGS_Recfast = -Wall -O3 -fPIC -D RECFASTPPPATH=\"$(PWD)/External/Recfast/\"
+CCfits_LIB = $(dir_CCfits)/lib/libCCfits.$(ES)
 
+ifeq ($(dir_INC_cfitsio),)
+    CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits && sed -i -e "s/bad_cast/bad_cast\&/g" ColumnT.h && ./configure CXX=$(CXX) --prefix=$(dir_CCfits) && make && make install
+  else
+    CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits &&  sed -i -e "s/bad_cast/bad_cast\&/g" ColumnT.h && ./configure CXX=$(CXX) --with-cfitsio-include=$(dir_INC_cfitsio) --with-cfitsio-libdir=$(dir_LIB_cfitsio) --prefix=$(dir_CCfits) && make && make install 
+endif
+
+
+####################
+### FFTLOG FLAGS ###
+####################
+FLAGS_FFTLOG = -fPIC -w
+
+#####################
+### RECFAST FLAGS ###
+#####################
+FLAGS_Recfast = -Wall -O3 -fPIC -D RECFASTPPPATH=\"$(PWD)/External/Recfast/\"
+FLAGST_Recfast = $(FLAGS0) $(FLAGS_Recfast)
+
+##################
+### CUBA FLAGS ###
+##################
 CUBA_LIB = $(dir_CUBA)libcuba.a
 CUBA_COMPILE = cd $(dir_CUBA) && ./configure CC=$(CC) CFLAGS=-fPIC && make lib
 
-CCfits_LIB = $(dir_CCfits)/lib/libCCfits.$(ES)
-CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits && ./configure CXX=$(CXX) --with-cfitsio-include=$(dir_INC_cfitsio) --with-cfitsio-libdir=$(dir_LIB_cfitsio) --prefix=$(dir_CCfits) && make && make install
 
-FLAGS_LINK = -shared
-
-# Python-related flags
+####################
+### PYTHON FLAGS ###
+####################
 python_version_full := $(wordlist 2,4,$(subst ., ,$(shell $(PY) --version 2>&1)))
 python_version_major := $(word 1,${python_version_full})
 python_version_minor := $(word 2,${python_version_full})
-
 
 ifeq ($(python_version_major),2)
 	PYINC = $(shell $(PY) -c 'from distutils import sysconfig; print sysconfig.get_config_var("INCLUDEDIR")')
@@ -116,10 +177,6 @@ ifeq ($(SYS),Darwin)
         ES = dylib
 	FLAGS_PY = -L$(PYLIB) -lpython$(PYVERSION) -ldl	
 endif
-
-FLAGST = $(FLAGS0) $(FLAGS)
-FLAGST_Recfast = $(FLAGS0) $(FLAGS_Recfast)
-
 
 ####################################################################
 
@@ -248,7 +305,7 @@ OBJ_READP = $(dir_READP)ReadParameters.o
 
 OBJ_CBL = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_READP)
 
-OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/*.o $(PWD)/External/classgal_v1/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o $(OBJ_CBL) $(PWD)/External/CPT_Library/*.o
+OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/*.o $(PWD)/External/CLASS/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o $(OBJ_CBL) $(PWD)/External/CPT_Library/*.o
 
 
 # objects for python compilation -> if OBJ_PYTHON=OBJ_CBL then all the CBL will be converted in python modules
@@ -275,7 +332,6 @@ ALL:
 	make CCfits
 	make CAMB
 	make CLASS
-	make CLASSpy
 	make MPTbreeze
 	make mangle
 	make CPT_Library
@@ -416,10 +472,7 @@ CCfits: $(CCfits_LIB)
 
 CAMB: $(PWD)/External/CAMB/camb
 
-CLASS: $(PWD)/External/classgal_v1/class
-
-CLASSpy:
-	cd $(PWD)/External/classgal_v1/python/ ; $(PY) setup.py install --user
+CLASS: $(PWD)/External/CLASS/class
 
 MPTbreeze: $(PWD)/External/MPTbreeze-v1/mptbreeze
 
@@ -582,9 +635,9 @@ purgeALL:
 	rm -rf External/VIPERS/venice3.9/venice
 	rm -rf External/mangle/bin
 	cd External/mangle/src; make cleaner ; rm -f Makefile libmangle.a; true
-	cd External/classgal_v1/ ; make clean ; rm -rf class libclass.a python/build/* ; true
-	rm -rf External/classgal_v1/output_linear/*
-	rm -rf External/classgal_v1/output_nonlinear/*
+	cd External/CLASS/ ; make clean ; rm -rf class libclass.a python/build/* ; true
+	rm -rf External/CLASS/output_linear/*
+	rm -rf External/CLASS/output_nonlinear/*
 	cd External/fftlog-f90-master/ ; make clean ; rm -f fftlog-f90 ; true
 	cd External/MPTbreeze-v1/Cuba-1.4/ ; rm -rf config.h config.log config.status demo-fortran.dSYM/ libcuba.a makefile *~ ; true
 	rm -rf External/MPTbreeze-v1/mptbreeze
@@ -1212,7 +1265,7 @@ $(dir_Recfast)/src/Rec_corrs_CT.Recfast.o: $(dir_Recfast)/src/Rec_corrs_CT.Recfa
 
 $(dir_Python)CBL_wrap.o: $(dir_Python)CBL_wrap.cxx $(dir_Python)CBL.i $(HH) $(PWD)/Makefile 
 	$(call colorecho, "\n"Compiling the python wrapper. It may take a few minutes ... "\n")
-	$(CXX) $(FLAGST) -Wno-uninitialized $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)CBL_wrap.cxx -o $(dir_Python)CBL_wrap.o
+	$(CXX) $(FLAGST) -Wno-stringop-overflow -Wno-uninitialized $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)CBL_wrap.cxx -o $(dir_Python)CBL_wrap.o
 
 $(dir_Python)CBL_wrap.cxx: $(dir_Python)CBL.i $(HH) $(PWD)/Makefile
 	$(call colorecho, "\n"Running swig. It may take a few minutes ... "\n")
@@ -1225,8 +1278,8 @@ $(dir_Python)CBL_wrap.cxx: $(dir_Python)CBL.i $(HH) $(PWD)/Makefile
 $(PWD)/External/CAMB/camb:
 	cd $(PWD)/External/CAMB ; make clean && make F90C=$(F) && make clean && cd ../..
 
-$(PWD)/External/classgal_v1/class:
-	cd $(PWD)/External/classgal_v1 ; make clean && make CC=$(CC) OPTFLAG=-O3 && make clean && cd ../..
+$(PWD)/External/CLASS/class:
+	cd $(PWD)/External/CLASS ; make clean && make CC=$(CC) OPTFLAG=-O3 && make clean && cd ../..
 
 $(PWD)/External/MPTbreeze-v1/mptbreeze:
 	cd External/MPTbreeze-v1/Cuba-1.4/ ; ./configure CC=$(CC) F77=$(F) && make lib && cd ../../../

@@ -172,7 +172,7 @@ namespace cbl {
 	 *
 	 *  @param method_Pk method used to compute the power
 	 *  spectrum; valid choices for method_Pk are: CAMB
-	 *  [http://camb.info/], classgal_v1 [http://class-code.net/],
+	 *  [http://camb.info/], CLASS [http://class-code.net/],
 	 *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465],
 	 *  EisensteinHu [http://background.uchicago.edu/~whu/transfer/transferpage.html]
 	 *
@@ -210,8 +210,9 @@ namespace cbl {
 	 *
 	 *  @param output_dir the output_directory
 	 *
-	 *  @param store_output_CAMB if true the output files created by CAMB are stored;
-	 *  if false the output files created by CAMB are removed
+	 *  @param store_output if true the output files created by
+	 *  the Boltmann solver are stored; if false the output files
+	 *  are removed
 	 *
 	 *  @param output_root the output file root
 	 *
@@ -222,7 +223,7 @@ namespace cbl {
          *
 	 *  @return none
 	 */
-	void set_data_model_zeta_RSD (const double r1, const double r2, const cbl::cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk="CAMB", const bool NL=false, const int max_ll=5, const double k_min=1.e-4, const double k_max=100, const int step_k=500, const double r_min=1.e-4, const double r_max=200, const int step_r=200, const bool force_realSpace=false, const bool use_k=false, const std::string output_dir=cbl::par::defaultString, const bool store_output_CAMB=true, const std::string output_root=cbl::par::defaultString, const int norm=-1, const double prec=1.e-4);
+	void set_data_model_zeta_RSD (const double r1, const double r2, const cbl::cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk="CAMB", const bool NL=false, const int max_ll=5, const double k_min=1.e-4, const double k_max=100, const int step_k=500, const double r_min=1.e-4, const double r_max=200, const int step_r=200, const bool force_realSpace=false, const bool use_k=false, const std::string output_dir=cbl::par::defaultString, const bool store_output=true, const std::string output_root=cbl::par::defaultString, const int norm=-1, const double prec=1.e-4);
 
 	/**
 	 *  @brief set the data model for the three-point correlation

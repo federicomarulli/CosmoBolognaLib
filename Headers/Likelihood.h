@@ -170,13 +170,21 @@ namespace cbl {
        *
        *  @param x_index index(s) of the extra info std::vector containing the point(s) where to evaluate the model
        *
-       *  @param w_index std::vector containing the data point weight 
+       *  @param w_index std::vector containing the data point weight
        *
-       * @param model_parameters parameters of the likelihood
+       *  @param model_parameters parameters of the likelihood
+       *
+       *  @param prec the precision required in the inversion of the
+       *  covariance matrix
+       *
+       *  @param Nres \f$N_{res}\f$, the number of catalogue
+       *  resamplings used to estimate the covariance matrix;
+       *  \f$N_{res}=-1\f$ if the covariance matrix has not been
+       *  estimated with resampling methods
        *
        *  @return object of class Likelihood
        */
-      Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const LikelihoodType likelihood_type, const std::vector<size_t> x_index={0,2}, const int w_index=-1, const std::shared_ptr<ModelParameters> model_parameters=NULL);
+      Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const LikelihoodType likelihood_type, const std::vector<size_t> x_index={0,2}, const int w_index=-1, const std::shared_ptr<ModelParameters> model_parameters=NULL, const double prec=1.e-10, const int Nres=-1);
 
       /**
        *  @brief default destructor
@@ -188,94 +196,106 @@ namespace cbl {
       ///@}
 
       /**
-       * @brief return the likelihood parameters
+       *  @brief return the likelihood parameters
        *
-       * @return pointer containing the likelihood parameters
+       *  @return pointer containing the likelihood parameters
        */
       std::shared_ptr<ModelParameters> parameters () const { return m_model_parameters; }
 
       /**
-       * @brief evaluate the likelihood
+       *  @brief evaluate the likelihood
        *
-       * @param pp the likelihood parameters
+       *  @param pp the likelihood parameters
        *
-       * @return the likelihood \f$ \mathcal{L} \f$
+       *  @return the likelihood \f$ \mathcal{L} \f$
        */
       double operator() (std::vector<double> &pp) const;
 
       /**
-       * @brief evaluate the log-likelihood
+       *  @brief evaluate the log-likelihood
        *
-       * @param pp the likelihood parameters
+       *  @param pp the likelihood parameters
        *
-       * @return the log-likelihood \f$ \log(\mathcal{L}) \f$
+       *  @return the log-likelihood \f$ \log(\mathcal{L}) \f$
        */
       double log (std::vector<double> &pp) const;
 
       /**
-       * @brief set the data for the likelihood analysis 
+       *  @brief set the data for the likelihood analysis
        *
-       * @param data pointer to the dataset
+       *  @param data pointer to the dataset
        *
-       * @return none
+       *  @return none
        */
       void set_data (std::shared_ptr<data::Data> data);
 
       /**
-       * @brief set the model for the likelihood analysis 
+       *  @brief set the model for the likelihood analysis
        *
-       * @param model pointer to the model
+       *  @param model pointer to the model
        *
-       * @param model_parameters parameters of the likelihood
+       *  @param model_parameters parameters of the likelihood
        *
-       * @return none
+       *  @return none
        */
       void set_model (std::shared_ptr<Model> model=NULL, const std::shared_ptr<ModelParameters> model_parameters=NULL);
 
       /**
-       * @brief set the likelihood function 
-       * with internal values of LikelihoodType 
+       *  @brief set the likelihood function with internal values of
+       *  LikelihoodType
        *
-       * @return none
+       *  @return none
        */
       void unset_grid ();
 
       /**
-       * @brief set the likelihood function 
-       * as a grid, to speed up computation: this only
-       * works for one or two free parameters
+       *  @brief set the likelihood function as a grid, to speed up
+       *  computation: this only works for one or two free parameters
        *
-       * @param npoints the number of grid points
-       * @param parameter_limits
-       * @param file the file to read/write the likelihood
-       * computed on a grid
-       * @param read if true, read the likelihood grid
-       * from a list
+       *  @param npoints the number of grid points
        *
-       * @return none
+       *  @param parameter_limits
+       *
+       *  @param file the file to read/write the likelihood computed
+       *  on a grid
+       *
+       *  @param read if true, read the likelihood grid from a list
+       *
+       *  @return none
        */
       void set_grid (const int npoints, const std::vector<std::vector<double>> parameter_limits, const std::string file, const bool read=false);
 
       /**
-       * @brief set the likelihood type using the LikelihoodType object 
+       *  @brief set the likelihood type using the LikelihoodType
+       *  object
        *
-       * @param likelihood_type the likelihood type, specified with the 
-       * LikelihoodType object
+       *  @param likelihood_type the likelihood type, specified with
+       *  the LikelihoodType object
        *
-       *  @param x_index index(s) of the extra info std::vector containing the point(s) where to evaluate the model
+       *  @param x_index index(s) of the extra info std::vector
+       *  containing the point(s) where to evaluate the model
        *
-       *  @param w_index index of the extra info std::vector containing the data point weight 
+       *  @param w_index index of the extra info std::vector
+       *  containing the data point weight
        *
-       * @return none
+       *  @param prec the precision required in the inversion of the
+       *  covariance matrix
+       *
+       *  @param Nres \f$N_{res}\f$, the number of catalogue
+       *  resamplings used to estimate the covariance matrix;
+       *  \f$N_{res}=-1\f$ if the covariance matrix has not been
+       *  estimated with resampling methods
+       *
+       *  @return none
        */
-      void set_function (const LikelihoodType likelihood_type, const std::vector<size_t> x_index={0,2}, const int w_index=-1);
+      void set_function (const LikelihoodType likelihood_type, const std::vector<size_t> x_index={0,2}, const int w_index=-1, const double prec=1.e-10, const int Nres=-1);
 
       /**
-       * @brief set the likelihood function 
+       *  @brief set the likelihood function 
        *
-       * @param loglikelihood_function the loglikelihood function
+       *  @param loglikelihood_function the loglikelihood function
        *
-       * @return none
+       *  @return none
        */
       void set_function (const LogLikelihood_function loglikelihood_function);
 
