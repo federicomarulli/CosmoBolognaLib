@@ -10,6 +10,7 @@
 #Then unignore all folders
 !*/
 
+
 #Now in details...
 
 #Ignore those things...
@@ -292,5 +293,21 @@ dmypy.json
 
 #Unignore specific examples
 !Examples/statistics/codes/fit.py
+
+#Unignore specific external software
+!External/CLASS/*
+
+!External/CLASS/*/*
+
+!External/CLASS/RealSpaceInterface/__pycache__/
+
+!External/CLASS/RealSpaceInterface/static/fonts/open-iconic/FONT-LICENSE
+
+!External/CLASS/RealSpaceInterface/static/fonts/open-iconic/ICON-LICENSE
+
+!External/CLASS/doc/input/doxyconf
+
+!External/CLASS/doc/input/latex/class.log
+
 
 # End of https://www.gitignore.io/api/c++,cmake,python,autotools,executable,jupyternotebook,jupyternotebooks
