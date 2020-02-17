@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 import os
 import sys
@@ -63,7 +63,7 @@ def com (ex, language, input):
 ### function to check if the example is ok ###
 
 def check (dir, file, language, input=""):
-    if (("ALL" in sys.argv and language!="python3") or (file in sys.argv and "C++" in sys.argv and language=="C++") or (file in sys.argv and "python" in sys.argv and language=="python") or (file in sys.argv and "python3" in sys.argv and language=="python3") or ("all" in sys.argv and "python" in sys.argv and language=="python") or ("all" in sys.argv and "python3" in sys.argv and language=="python3") or ("all" in sys.argv and "C++" in sys.argv and language=="C++")):
+    if (("all" in sys.argv and language!="python3") or file in sys.argv or ("python" in sys.argv and language=="python") or ("python3" in sys.argv and language=="python3") or ("C++" in sys.argv and language=="C++")):
         print("\n\n-----> Testing ", file, "<-----\n")
         os.chdir(cwd+"/Examples/"+dir)
         com(file, language, input)
@@ -178,6 +178,9 @@ check("statistics/codes", "prior.py", "python3")
 
 check("statistics/codes", "fit.py", "python")
 check("statistics/codes", "fit.py", "python3")
+
+check("catalogue", "divide_catalogue.py", "python")
+check("catalogue", "divide_catalogue.py", "python3")
 
 check("catalogue", "catalogue.py", "python")
 check("catalogue", "catalogue.py", "python3")

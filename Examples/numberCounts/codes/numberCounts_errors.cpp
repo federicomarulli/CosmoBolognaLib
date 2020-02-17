@@ -34,8 +34,9 @@ int main () {
     // construct the sub-regions used for jackknife and bootstrap
 
     std::cout << "I'm constructing the sub-regions used for jackknife and bootstrap..." << std::endl;
-    const double cellSize = 2;
-    cbl::set_ObjectRegion_RaDec(catalogue, cellSize);
+    const int nCells_Ra = 3;
+    const int nCells_Dec = 3;
+    cbl::set_ObjectRegion_RaDec(catalogue, nCells_Ra, nCells_Dec);
 
     
     // -------------------------------------------------------------------

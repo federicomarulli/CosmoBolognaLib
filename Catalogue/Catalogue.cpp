@@ -379,10 +379,12 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const std::ve
 
 size_t cbl::catalogue::Catalogue::nRegions () 
 {
-  if (m_nRegions==0) m_nRegions = Max(Var::_Region_)+1;
-  
-  WarningMsgCBL("The total number of region is "+conv(m_nRegions, par::fINT)+", deducted from the maximum value of the input regions; if needed, this number can be changed with the function set_region_number()", "Catalogue", "Catalogue.cpp");
-  
+  if (m_nRegions==0) {
+    m_nRegions = Max(Var::_Region_)+1;
+
+    WarningMsgCBL("The total number of region is "+conv(m_nRegions, par::fINT)+", deducted from the maximum value of the input regions; if needed, this number can be changed with the function set_region_number()", "Catalogue", "Catalogue.cpp");
+  }
+
   return m_nRegions;
 }
 

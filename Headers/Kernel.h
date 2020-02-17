@@ -354,6 +354,11 @@
  *  objects
  */
 /**
+ *  @example divide_catalogue.py
+ *
+ *  This example shows how to divide the a catalogue in sub regions
+ */
+/**
  *  @example fft_fftlog.py
  *
  *  This example shows how to computes the discrete Fourier

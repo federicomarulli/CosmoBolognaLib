@@ -17,30 +17,13 @@
 
 6) update test.py, adding the command for the new example(s)
 
-7) run one of the following commands
+7) run the following command:
 
-   - for one or more C++ examples:
-     ./test.py valgrind C++ new_example1 new_example2 ...
+   ./test.py valgrind new_example1 new_example2 ...
 
-   - for one or more python2 examples:
-     ./test.py valgrind python new_example1 new_example2 ...
+   alternatively, to test all the examples at once, the command is:
 
-   - for one or more python3 examples:
-     ./test.py valgrind python3 new_example1 new_example2 ...
-
-   alternatively, to test all the examples at once, the commands are the following
-
-   - for all C++ examples:
-     ./test.py valgrind all C++
-     
-   - for all python examples:
-     ./test.py valgrind all python
-
-   - for all python3 examples:
-     ./test.py valgrind all python3
-
-   - for all examples:
-     ./test.py valgrind ALL
+   ./test.py valgrind all
 
    to speed up the test, valgrind can be removed from the above
    commands, and/or one or more of the following options can be added

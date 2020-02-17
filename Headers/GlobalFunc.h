@@ -400,14 +400,6 @@ namespace cbl {
   void set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, const int nx, const int ny, const int nz);
 
   /**
-   *  @brief set the object region in angular SubBoxes
-   *  @param data input data catalogue
-   *  @param Cell_size size of the cell in degrees
-   *  @return none
-   */
-  void set_ObjectRegion_RaDec (catalogue::Catalogue &data, const double Cell_size);
-
-  /**
    *  @brief set the object region in sub-regions using mangle
    *  @param data input data catalogue
    *  @param nSamples number of sub-regions
@@ -428,13 +420,48 @@ namespace cbl {
   void set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nx, const int ny, const int nz);
 
   /**
+   * @brief convert to colatitude 
+   * \f[ \theta = 90 - \delta \f]
+   * @param latitude vector containing the latitudes
+   * @return vector containing the colatitude
+   */
+  std::vector<double> colatitude (std::vector<double> latitude);
+
+  /**
+   *  @brief set the object region in angular SubBoxes
+   *  @param data input data catalogue
+   *  @param nCells_Ra the number of cells along the R.A. direction
+   *  @param nCells_Dec the number of cells along the Dec. direction
+   *  @param use_colatitude convert declination to colatitude. This allows a
+   *  contigous pixelization. Default is true. Set to false if you sample already
+   *  uses colatitude
+   *
+   *  @warning The cell area is: \f[ S \, = \Delta \alpha \left( cos(\delta_{max})-\cos(\delta_{min}))
+   *  with $\alpha$ the right ascension and $\delta$ the declination. The area discretization
+   *  is done w.r.t. the right ascension and the cosine of the declination. This implies that 
+   *  the number of cells in the declination axis will not correspond to a constant spacing in $\delta$.
+   *
+   *  @return none
+   */
+  void set_ObjectRegion_RaDec (catalogue::Catalogue &data, const int nCells_Ra, const int nCells_Dec, const bool use_colatitude=true);
+
+  /**
    *  @brief set the object region in angular SubBoxes
    *  @param data input data catalogue
    *  @param random random catalogue
-   *  @param Cell_size size of the cell in degrees
+   *  @param nCells_Ra the number of cells along the R.A. direction
+   *  @param nCells_Dec the number of cells along the Dec. direction
+   *  @param use_colatitude convert declination to colatitude. This allows a
+   *  contigous pixelization. Default is true. Set to false if you sample already
+   *  uses colatitude
+   *
+   *  @warning The cell area is: \f[ S \, = \Delta \alpha \left( cos(\delta_{max})-\cos(\delta_{min}))
+   *  with $\alpha$ the right ascension and $\delta$ the declination. The area discretization
+   *  is done w.r.t. the right ascension and the cosine of the declination. This implies that 
+   *  the number of cells in the declination axis will not correspond to a constant spacing in $\delta$.
    *  @return none
    */
-  void set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalogue &random, const double Cell_size);
+  void set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nCells_Ra, const int nCells_Dec, const bool use_colatitude=true);
 
   /**
    *  @brief set the object region in sub-regions using mangle

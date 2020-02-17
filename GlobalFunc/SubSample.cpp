@@ -142,68 +142,6 @@ void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, const int nSample
 // ============================================================================
 
 
-void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, const double Cell_size)
-{
-  vector<double> Lim;
-  
-  double Cell_sz = radians(Cell_size);
-
-  vector<double> data_x = data.var(catalogue::Var::_RA_);
-  vector<double> data_y = data.var(catalogue::Var::_Dec_);
-
-  for (size_t i=0; i<data.nObjects(); i++)
-    data_x[i] *= cos(data_y[i]);
-
-  Lim.push_back(Min(data_x));
-  Lim.push_back(Max(data_x));
-
-  Lim.push_back(Min(data_y));
-  Lim.push_back(Max(data_y));
-
-  const int nDec = (Lim[3]-Lim[2])/Cell_sz;
-
-  vector<double> cell_size_x(nDec);
-  vector<int> n_cells_x(nDec);
-  vector<vector<int>> cells;
-  int n = 0;
-
-  for (int i=0; i<nDec; i++) {
-    
-    double cd = Lim[2]+(i+0.5)*Cell_sz;
-    n_cells_x[i] = ceil((Lim[1]-Lim[0])*cos(cd)/Cell_sz);
-    cell_size_x[i] = (Lim[1]-Lim[0])/n_cells_x[i];
-
-    vector<int> vv(n_cells_x[i]);
-    for (int j=0; j<n_cells_x[i]; j++) {
-      vv[j] = n;
-      n ++;
-    }
-    
-    cells.push_back(vv);
-  }
-
-  vector<long> dataReg(data.nObjects());
-  
-#pragma omp parallel num_threads(omp_get_max_threads())
-  {
-
-#pragma omp for schedule(static, 2) 
-    for (size_t i=0; i<data.nObjects(); i++) {
-      int j1 = min(int((data_y[i]-Lim[2])/Cell_sz), nDec-1);
-      int i1 = min(int((data_x[i]-Lim[0])/cell_size_x[j1]), n_cells_x[j1]-1);
-      dataReg[i] = cells[j1][i1];
-    }
-
-  }
-
-  data.set_region(dataReg, n);
-}
-
-
-
-// ============================================================================
-
-
 void cbl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nx, const int ny, const int nz)
 {
   coutCBL << "I'm putting data and random objects in box-sized regions."<<endl;
@@ -346,55 +284,94 @@ void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalo
   cbl::check_regions(data, random);
 }
 
+// ============================================================================
+
+
+vector<double> cbl::colatitude(vector<double> latitude)
+{
+  vector<double> colatitude(latitude.size());
+  
+  for (size_t i=0; i<latitude.size(); i++)
+    colatitude[i] = cbl::par::pi/2-latitude[i];
+
+  return colatitude;
+}
+
 
 // ============================================================================
 
 
-void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalogue &random, const double Cell_size)
+void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, const int nCells_Ra, const int nCells_Dec, const bool use_colatitude)
 {
-  vector<double> Lim;
-  
-  double Cell_sz = radians(Cell_size);
-
   vector<double> data_x = data.var(catalogue::Var::_RA_);
-  vector<double> data_y = data.var(catalogue::Var::_Dec_);
+  vector<double> data_y = (use_colatitude) ? cbl::colatitude(data.var(catalogue::Var::_Dec_)) : data.var(catalogue::Var::_Dec_);
+  vector<double> cos_data_y(data.nObjects(), 0);
+  for (size_t i=0; i<data.nObjects(); i++)
+    cos_data_y[i] = cos(data_y[i]);
+
+  double min_ra = Min(data_x);
+  double max_ra = Max(data_x);
+  double deltaRa = (max_ra-min_ra)/nCells_Ra;
+
+  double min_cdec = Min(cos_data_y);
+  double max_cdec = Max(cos_data_y);
+  double deltaCDec = (max_cdec-min_cdec)/nCells_Dec;
+
+  int nCells = nCells_Ra*nCells_Dec;
+  double Area = deltaRa*deltaCDec*nCells;
+
+  coutCBL << "Survey area is: " << Area << endl;
+  coutCBL << "Number of cells will be: " << nCells << endl;
+
+  vector<long> dataReg(data.nObjects());
+
+#pragma omp parallel num_threads(omp_get_max_threads())
+  {
+    
+#pragma omp for schedule(static, 2) 
+    for (size_t i=0; i<data.nObjects(); i++) {
+      int j1 = min(int((cos_data_y[i]-min_cdec)/deltaCDec), nCells_Dec-1);
+      int i1 = min(int((data_x[i]-min_ra)/deltaRa), nCells_Ra-1);
+      dataReg[i] = i1*nCells_Dec+j1;
+    }
+  }
+
+  data.set_region(dataReg, nCells);
+}
+
+
+
+// ============================================================================
+
+
+void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nCells_Ra, const int nCells_Dec, const bool use_colatitude)
+{
+  vector<double> data_x = data.var(catalogue::Var::_RA_);
+  vector<double> data_y = (use_colatitude) ? cbl::colatitude(data.var(catalogue::Var::_Dec_)) : data.var(catalogue::Var::_Dec_);
+  vector<double> cos_data_y(data.nObjects(), 0);
+  for (size_t i=0; i<data.nObjects(); i++) 
+    cos_data_y[i] = cos(data_y[i]);
+  
 
   vector<double> random_x = random.var(catalogue::Var::_RA_);
-  vector<double> random_y = random.var(catalogue::Var::_Dec_);
-
-  for (size_t i=0; i<data.nObjects(); i++)
-    data_x[i] *= cos(data_y[i]);
-
+  vector<double> random_y = (use_colatitude) ? cbl::colatitude(random.var(catalogue::Var::_Dec_)) : random.var(catalogue::Var::_Dec_);
+  vector<double> cos_random_y(random.nObjects(), 0);
   for (size_t i=0; i<random.nObjects(); i++)
-    random_x[i] *= cos(random_y[i]);
+    cos_random_y[i] = cos(random_y[i]);
 
-  Lim.push_back(Min(data_x));
-  Lim.push_back(Max(data_x));
+  double min_ra = Min(random_x);
+  double max_ra = Max(random_x);
+  double deltaRa = (max_ra-min_ra)/nCells_Ra;
 
-  Lim.push_back(Min(data_y));
-  Lim.push_back(Max(data_y));
+  double min_cdec = Min(cos_random_y);
+  double max_cdec = Max(cos_random_y);
+  double deltaCDec = (max_cdec-min_cdec)/nCells_Dec;
 
-  const int nDec = (Lim[3]-Lim[2])/Cell_sz;
+  int nCells = nCells_Ra*nCells_Dec;
+  double Area = deltaRa*deltaCDec*nCells;
 
-  vector<double> cell_size_x(nDec);
-  vector<int> n_cells_x(nDec);
-  vector<vector<int>> cells;
-  int n = 0;
-
-  for (int i=0; i<nDec; i++) {
-    
-    double cd = Lim[2]+(i+0.5)*Cell_sz;
-    n_cells_x[i] = ceil((Lim[1]-Lim[0])*cos(cd)/Cell_sz);
-    cell_size_x[i] = (Lim[1]-Lim[0])/n_cells_x[i];
-
-    vector<int> vv(n_cells_x[i]);
-    for (int j=0; j<n_cells_x[i]; j++) {
-      vv[j] = n;
-      n ++;
-    }
-    
-    cells.push_back(vv);
-  }
+  coutCBL << "Survey area is: " << Area << endl;
+  coutCBL << "Number of cells will be: " << nCells << endl;
 
   vector<long> dataReg(data.nObjects());
   vector<long> randReg(random.nObjects());
@@ -404,27 +381,27 @@ void cbl::set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalog
     
 #pragma omp for schedule(static, 2) 
     for (size_t i=0; i<data.nObjects(); i++) {
-      int j1 = min(int((data_y[i]-Lim[2])/Cell_sz), nDec-1);
-      int i1 = min(int((data_x[i]-Lim[0])/cell_size_x[j1]), n_cells_x[j1]-1);
-      dataReg[i] = cells[j1][i1];
+      int j1 = min(int((cos_data_y[i]-min_cdec)/deltaCDec), nCells_Dec-1);
+      int i1 = min(int((data_x[i]-min_ra)/deltaRa), nCells_Ra-1);
+      dataReg[i] = i1*nCells_Dec+j1;
     }
 
 #pragma omp for schedule(static, 2) 
     for (size_t i=0; i<random.nObjects(); i++) {
-      int j1 = min(int((random_y[i]-Lim[2])/Cell_sz), nDec-1);
-      int i1 = min(int((random_x[i]-Lim[0])/cell_size_x[j1]), n_cells_x[j1]-1);
-      randReg[i] = cells[j1][i1];
+      int j1 = min(int((cos_random_y[i]-min_cdec)/deltaCDec), nCells_Dec-1);
+      int i1 = min(int((random_x[i]-min_ra)/deltaRa), nCells_Ra-1);
+      randReg[i] = i1*nCells_Dec+j1;
     }
   }
 
-  data.set_region(dataReg, n);
-  random.set_region(randReg, n);
+  data.set_region(dataReg, nCells);
+  random.set_region(randReg, nCells);
 
   cbl::check_regions(data, random);
 }
 
-
 // ============================================================================
+
 
 
 void cbl::check_regions (catalogue::Catalogue &data, catalogue::Catalogue &random)
