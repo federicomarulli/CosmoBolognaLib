@@ -264,34 +264,21 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_x
 
   m_data_model->rr = rad;
 
-  if (m_data_model->sigmaNL==0) {    
+  vector<double> Pk(m_data_model->step, 0), PkNW(m_data_model->step, 0);
+  m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
 
-    vector<double> Pk(m_data_model->step, 0);
-    m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
-
-    for (size_t i=0; i<(size_t)m_data_model->step; i++) 
-      Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-
-    m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
-
+  for (size_t i=0; i<(size_t)m_data_model->step; i++) {
+    Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+    PkNW[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
   }
 
-  else {
+  m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
+  m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
 
-    vector<double> Pk(m_data_model->step, 0), PkNW(m_data_model->step, 0);
-    m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
+  std::vector<double> template_parameters = {m_data_model->sigmaNL_perp, m_data_model->sigmaNL_par, m_data_model->linear_growth_rate_z, m_data_model->bias, 0.};
+  cbl::Print(template_parameters);
 
-    for (size_t i=0; i<(size_t)m_data_model->step; i++) {
-      Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-      PkNW[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-    }
-
-    m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
-    m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
-
-  }
-
-  vector<vector<double>> xil = Xi_l(rad, m_data_model->nmultipoles, 0, {1., 1., m_data_model->sigmaNL_perp, m_data_model->sigmaNL_par, m_data_model->bias, m_data_model->linear_growth_rate_z, 0.}, {m_data_model->func_Pk, m_data_model->func_Pk_NW}, m_data_model->prec);
+  vector<vector<double>> xil = Xi_l(rad, m_data_model->nmultipoles, "dispersion_dewiggled", {m_data_model->sigmaNL_perp, m_data_model->sigmaNL_par, m_data_model->linear_growth_rate_z, m_data_model->bias, 0.}, {m_data_model->func_Pk, m_data_model->func_Pk_NW}, m_data_model->prec, 1, 1);
 
   m_data_model->func_multipoles.erase(m_data_model->func_multipoles.begin(), m_data_model->func_multipoles.end());
 
@@ -612,10 +599,23 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_full
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_BAO (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution Bperp_prior, const statistics::PriorDistribution Bpar_prior, const statistics::PriorDistribution Aperp0_prior, const statistics::PriorDistribution Apar0_prior, const statistics::PriorDistribution Aperp1_prior, const statistics::PriorDistribution Apar1_prior, const statistics::PriorDistribution Aperp2_prior, const statistics::PriorDistribution Apar2_prior, const bool compute_XiDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_BAO (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution Bperp_prior, const statistics::PriorDistribution Bpar_prior, const statistics::PriorDistribution Aperp0_prior, const statistics::PriorDistribution Apar0_prior, const statistics::PriorDistribution Aperp1_prior, const statistics::PriorDistribution Apar1_prior, const statistics::PriorDistribution Aperp2_prior, const statistics::PriorDistribution Apar2_prior, const bool compute_XiTemplate, const bool isRealSpace)
 {
   // compute the fiducial dark matter two-point correlation function
-  if (compute_XiDM) set_fiducial_xiDM();
+
+  if (m_data_model->nWedges>2)
+    ErrorCBL("BAO modelling can be done only with two wedges!", "set_model_BAO", "Modelling_TwoPointCorrelation_wedges");
+
+  if (isRealSpace) {
+    double lgf = m_data_model->linear_growth_rate_z;
+    m_data_model->linear_growth_rate_z = 0.;
+
+    set_fiducial_xiDM();
+
+    m_data_model->linear_growth_rate_z = lgf;
+  }
+  else if (compute_XiTemplate)
+    set_fiducial_xiDM();
 
   m_data_model->dataset_order = m_wedges_order;
 
