@@ -170,6 +170,7 @@ std::vector<double> cbl::modelling::twopt::xiWedges_BAO (const std::vector<doubl
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
 
   vector<vector<double>> new_rad(pp->nWedges);
+  vector<double> Xi(rad.size());
 
   for(size_t i=0; i<rad.size(); i++)
     new_rad[pp->dataset_order[i]].push_back(rad[i]);
@@ -182,24 +183,31 @@ std::vector<double> cbl::modelling::twopt::xiWedges_BAO (const std::vector<doubl
   // AP parameter that contains the distance information
   double alpha_parallel = parameter[1];
 
-  vector<vector<double>> xiww = cbl::XiWedges_AP({0., 0.5}, {0.5, 0.5}, alpha_perpendicular, alpha_parallel,  pp->rr, pp->func_multipoles[0], pp->func_multipoles[1], pp->func_multipoles[2]);
+  int n=0;
 
-  cbl::glob::FuncGrid xiperp(pp->rr, xiww[0], "Spline");
-  cbl::glob::FuncGrid xipar(pp->rr, xiww[1], "Spline");
+  for (int i=0; i<2; i++) {
+    double mu_min = double(i)/pp->nWedges;
+    double mu_max = double(i+1)/pp->nWedges;
+    const double delta = (mu_max-mu_min);
 
-  vector<vector<double>> Xiw(2);
+    const double B = parameter[2+i];
+    const double A0 = parameter[4+i];
+    const double A1 = parameter[6+i];
+    const double A2 = parameter[8+i];
 
-  for (size_t i=0; i<new_rad[0].size(); i++)
-    Xiw[0].push_back(parameter[2]*parameter[2]*xiperp(new_rad[0][i])+parameter[4]+parameter[6]/new_rad[0][i]+parameter[8]/(new_rad[0][i]*new_rad[0][i]));
+    for (size_t j=0; j<new_rad[i].size(); j++) {
+      
+      const double rr = new_rad[i][j];
 
-  for (size_t i=0; i<new_rad[1].size(); i++)
-    Xiw[1].push_back(parameter[3]*parameter[3]*xipar(new_rad[1][i])+parameter[5]+parameter[7]/new_rad[1][i]+parameter[9]/(new_rad[1][i]*new_rad[1][i]));
-
-  vector<double> Xi;
-
-  for (size_t i=0; i<Xiw.size(); i++)
-    for (size_t j=0; j<Xiw[i].size(); j++)
-      Xi.push_back(Xiw[i][j]);
+      auto integrand = [&] (const double mu_fid) 
+      {
+	return twopt::Xi_polar(rr, mu_fid, alpha_perpendicular, alpha_parallel, pp->func_multipoles);
+      };
+      
+      Xi[n] = B*wrapper::gsl::GSL_integrate_qag(integrand, mu_min, mu_max)/delta+A0+A1/rr+A2/(rr*rr);
+      n+=1;
+    }
+  }
 
   return Xi;
 }

@@ -1006,6 +1006,43 @@ namespace cbl {
       std::vector<std::vector<double>> Xi_rppi (const std::vector<double> rp, const std::vector<double> pi, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5, const double alpha_perp = 1., const double alpha_par = 1.);
 
       /**
+       *  @brief the cartesian two-point correlation function
+       *
+       *  The function computes the polar two-point correlation function
+       *  from its multipoles as expressed in Kazin et al. 2013
+       *  (https://arxiv.org/pdf/1303.4391.pdf, appendix A)
+       *
+       *  \f[ \xi_(s_{true}, \mu_{true}) = \sum \xi_l(s_{true} (s_{fid}, \mu_{fid}, \alpha_{\perp}, \alpha_{\par}) ) 
+       *  		     			L_l(\mu_{true}( \mu_{fid}, \alpha_{\perp}, \alpha_{\par})))
+       *
+       *  where \f$xi_l(s)\f$ are the two-point
+       *  correlation function monopoles up to l=4,
+       *  and \f$ \mathcal{L}_l(\mu)\f$
+       *  are the Legendre polynomial.
+       *  
+       *  The relations between fiducial and true quantities are:
+       *
+       *  \f[
+       *     &s_{\mathrm{true}}=s_{\mathrm{fid}} \cdot \sqrt{\alpha_{\|}^{2} \mu_{\mathrm{fid}}}^{2}+\alpha_{\perp}^{2}\left(1-\mu_{\mathrm{fid}}^{2}\right)}\\
+       *     &\mu_{\mathrm{true}}=\mu_{\mathrm{fid}} \frac{\alpha_{\|}}{\sqrt{\alpha_{\|}^{2} \mu_{\mathrm{f}}^{2}+\alpha_{\perp}^{2}\left(1-\mu_{\mathrm{fid}}^{2}\right)}}
+       *  \f]
+       *
+       *  @param s_fid fiducial separation 
+       * 
+       *  @param mu_fid fiducial \f$\mu\f$  
+       *
+       *  @param alpha_perpendicular  Alcock-Paczynski perpendicular parameter
+       *
+       *  @param alpha_parallel  Alcock-Paczynski perpendicular parameter
+       *
+       *  @param xi_multipoles vector containing two-point correlation function multipoles
+       *  interpolating functions    
+       *
+       *  @return the polar two-point correlation function.
+       */
+      double Xi_polar (const double rad_fid, const double mu_fid, const double alpha_perpendicular, const double alpha_parallel, const std::vector<std::shared_ptr<cbl::glob::FuncGrid>> xi_multipoles);
+
+      /**
        *  @brief the projected two-point correlation function
        *
        *  The function computes the projected two-point correlation

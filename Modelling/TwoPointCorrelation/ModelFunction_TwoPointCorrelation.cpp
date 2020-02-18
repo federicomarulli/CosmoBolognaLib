@@ -412,6 +412,26 @@ std::vector<double> cbl::modelling::twopt::Xi_l (const std::vector<double> rr, c
 // ============================================================================================
 
 
+double cbl::modelling::twopt::Xi_polar(const double rad_fid, const double mu_fid, const double alpha_perpendicular, const double alpha_parallel, const std::vector<std::shared_ptr<cbl::glob::FuncGrid>> xi_multipoles)
+{
+  const double apar2 = alpha_parallel*alpha_parallel;
+  const double aperp2 = alpha_perpendicular*alpha_perpendicular;
+
+  double mu_fid_sq = mu_fid*mu_fid;
+  const double factor = sqrt(apar2*mu_fid_sq+(1.-mu_fid_sq)*aperp2);
+  const double mu_true = mu_fid * alpha_parallel/factor;
+  const double mu_true_sq = mu_true*mu_true;
+  const double st = rad_fid*factor;
+
+  return xi_multipoles[0]->operator()(st)+
+         xi_multipoles[1]->operator()(st)*0.5*(3*mu_true_sq-1)+
+	 xi_multipoles[2]->operator()(st)*0.125*(35*mu_true_sq*mu_true_sq-30*mu_true_sq+3);
+}
+
+
+// ============================================================================================
+
+
 std::vector<std::vector<double>> cbl::modelling::twopt::Xi_rppi (const std::vector<double> rp, const std::vector<double> pi, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec, const double alpha_perp, const double alpha_par)
 {
   const int nr=200;
