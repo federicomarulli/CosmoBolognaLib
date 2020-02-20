@@ -86,16 +86,16 @@ cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::Modelling_TwoPointC
 
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range (const double xmin, const double xmax, const int nWedges)
 {
-  vector<vector<double>> fr(m_nWedges, vector<double>(2, -1.));
+  vector<vector<double>> fit_range(m_nWedges, vector<double>(2, -1.));
 
   int mp = (0<nWedges && nWedges<m_nWedges) ? nWedges : m_nWedges;
 
   for (int i=0; i<mp; i++) {
-    fr[i][0] = xmin;
-    fr[i][1] = xmax;
+    fit_range[i][0] = xmin;
+    fit_range[i][1] = xmax;
   }
 
-  set_fit_range(fr);
+  set_fit_range(fit_range);
 }
 
 
@@ -670,6 +670,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::write_model (c
 
   m_data_model->dataset_order = new_dataset_order;
   m_likelihood->write_model(output_dir, output_file, parameters, new_xx);
+  m_data_model->dataset_order = dataset_order_original;
 }
 
 

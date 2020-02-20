@@ -164,7 +164,6 @@ double statistics::LogLikelihood_Gaussian_1D_covariance (std::vector<double> &li
 
   vector<double> computed_model = pp->model->operator()(pp->xx, likelihood_parameter);
 
-
   // ----- compute the difference between model and data at each bin ----- 
   
   vector<double> diff(pp->data->ndata(), 0);

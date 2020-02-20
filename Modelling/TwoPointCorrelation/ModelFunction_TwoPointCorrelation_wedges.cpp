@@ -169,11 +169,7 @@ std::vector<double> cbl::modelling::twopt::xiWedges_BAO (const std::vector<doubl
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
 
-  vector<vector<double>> new_rad(pp->nWedges);
   vector<double> Xi(rad.size());
-
-  for(size_t i=0; i<rad.size(); i++)
-    new_rad[pp->dataset_order[i]].push_back(rad[i]);
 
   // input parameters
 
@@ -183,30 +179,26 @@ std::vector<double> cbl::modelling::twopt::xiWedges_BAO (const std::vector<doubl
   // AP parameter that contains the distance information
   double alpha_parallel = parameter[1];
 
-  int n=0;
+  for (size_t i=0; i<rad.size(); i++) {
+    const int wedge = pp->dataset_order[i];
+    const double rr = rad[i];
 
-  for (int i=0; i<2; i++) {
-    double mu_min = double(i)/pp->nWedges;
-    double mu_max = double(i+1)/pp->nWedges;
+    double mu_min = double(wedge)/pp->nWedges;
+    double mu_max = double(wedge+1)/pp->nWedges;
     const double delta = (mu_max-mu_min);
 
-    const double B = parameter[2+i];
-    const double A0 = parameter[4+i];
-    const double A1 = parameter[6+i];
-    const double A2 = parameter[8+i];
+    const double B = parameter[2+wedge];
+    const double A0 = parameter[4+wedge];
+    const double A1 = parameter[6+wedge];
+    const double A2 = parameter[8+wedge];
 
-    for (size_t j=0; j<new_rad[i].size(); j++) {
-      
-      const double rr = new_rad[i][j];
+    auto integrand = [&] (const double mu_fid) 
+    {
+      return twopt::Xi_polar(rr, mu_fid, alpha_perpendicular, alpha_parallel, pp->func_multipoles);
+    };
 
-      auto integrand = [&] (const double mu_fid) 
-      {
-	return twopt::Xi_polar(rr, mu_fid, alpha_perpendicular, alpha_parallel, pp->func_multipoles);
-      };
-      
-      Xi[n] = B*wrapper::gsl::GSL_integrate_qag(integrand, mu_min, mu_max)/delta+A0+A1/rr+A2/(rr*rr);
-      n+=1;
-    }
+
+    Xi[i] = B*wrapper::gsl::GSL_integrate_qag(integrand, mu_min, mu_max)/delta+A0+A1/rr+A2/(rr*rr);
   }
 
   return Xi;
