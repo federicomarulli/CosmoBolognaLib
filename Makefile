@@ -1,8 +1,8 @@
 # C++ compiler, main compiler, openMP support required
-CXX = g++
+CXX = g++-7
 
 # C compiler, used to compile CUBA libraries
-CC = gcc
+CC = gcc-7
 
 # Fortran 90 compiler, used to compile some external libraries
 F = gfortran
@@ -11,7 +11,7 @@ F = gfortran
 PY = python
 
 # swig, used to create the python wrapper
-SWIG = swig3.0
+SWIG = swig
 
 # doxygen, used to create the documentation
 Doxygen = doxygen
@@ -257,7 +257,7 @@ OBJ_KERNEL = $(dir_KERNEL)Kernel.o
 
 OBJ_WRAP = $(dir_WRAP)GSLwrapper.o $(dir_WRAP)CUBAwrapper.o $(dir_WRAP)FITSwrapper.o 
 
-OBJ_FUNCGRID = $(dir_FUNCGRID)FuncGrid.o
+OBJ_FUNCGRID = $(dir_FUNCGRID)FuncGrid.o $(dir_FUNCGRID)FuncGrid_Bspline.o
 
 OBJ_FFT = $(OBJ_FFTLOG) $(dir_FFT)FFTlog.o 
 
@@ -684,6 +684,9 @@ $(dir_WRAP)FITSwrapper.o: $(dir_WRAP)FITSwrapper.cpp $(HH) $(PWD)/Makefile
 
 $(dir_FUNCGRID)FuncGrid.o: $(dir_FUNCGRID)FuncGrid.cpp $(HH) $(PWD)/Makefile 
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNCGRID)FuncGrid.cpp -o $(dir_FUNCGRID)FuncGrid.o
+
+$(dir_FUNCGRID)FuncGrid_Bspline.o: $(dir_FUNCGRID)FuncGrid_Bspline.cpp $(HH) $(PWD)/Makefile 
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNCGRID)FuncGrid_Bspline.cpp -o $(dir_FUNCGRID)FuncGrid_Bspline.o
 
 
 ####################################################################

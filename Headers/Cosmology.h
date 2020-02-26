@@ -4174,83 +4174,22 @@ namespace cbl {
       std::vector<double> Pk (const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
 
       /**
-       *  @brief return power spectrum first three multipoles using linear kaiser model
+       *  @brief  the dark matter linear power spectrum.
        *
-       *  this function provides the power spectrum P(k); it can use
-       *  either CAMB, CLASS, MPTbreeze or the analytic
-       *  approximation by Eisenstein & Hu
-       *
-       *  @param Pk0 the monopole of the power spectrum
-       *
-       *  @param Pk2 the quadrupole of the power spectrum
-       *
-       *  @param Pk4 the hexadecapole of the power spectrum
-       *
-       *  @param kk the scale at which compute the power spectrum
-       *
-       *  @param method_Pk method used to compute the power spectrum
-       *  (i.e. the Boltzmann solver); valid choices for method_Pk
-       *  are: CAMB [http://camb.info/], CLASS
-       *  [http://class-code.net/], MPTbreeze-v1
-       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
-       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
-       *
-       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1
-       *  \f$\rightarrow\f$ non-linear power spectrum
-       *
-       *  @param redshift the redshift
-       * 
-       *  @param bias the linear bias
-       *
-       *  @param sigma_NL the BAO damping parameter
-       *
-       *  @param store_output if true the output files created by the
-       *  Boltzmann solver are stored; if false the output files are
-       *  removed
-       *
-       *  @param output_root the output_root parameter of the
-       *  parameter file used to compute the power spectrum; it can be
-       *  any name
-       *
-       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
-       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
-       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
-       *
-       *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed in order to estimate the power
-       *  spectrum normalisation; this parameter is used only if
-       *  either norm=1, or norm=-1 and sigma8 is set
-       *
-       *  @param k_max maximum wave vector module up to which the
-       *  power spectrum is computed in order to estimate the power
-       *  spectrum normalisation; this parameter is used only if
-       *  either norm=1, or norm=-1 and sigma8 is set
-       *
-       *  @param prec accuracy of the integration 
-       *
-       *  @param file_par name of the parameter file; if a parameter
-       *  file is provided (i.e. file_par!=NULL), it will be used,
-       *  ignoring the cosmological parameters of the object
-       *
-       *  @return none
-       */
-      void Pk_Kaiser_multipoles (std::vector<double> &Pk0, std::vector<double> &Pk2, std::vector<double> &Pk4, const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const double bias, const double sigma_NL = 0., const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
-
-      /**
-       *  @brief the dark matter power spectrum, de-wiggled (see
-       *  e.g. Anderson et al 2014)
-       *
-       *  this function provides the De-Wiggled dark matter power
-       *  spectrum
+       *  This function provides the linear dark matter power
+       *  spectrum. 
+       *  Valid choices are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/]
        *
        *  @author Alfonso Veropalumbo
        *  @author alfonso.veropalumbo@unibo.it
        *  
-       *  @param kk the wave vector module
+       *  @param method method to obtain power spectrum
+       *  with no wiggles. It can be "CAMB" or "CLASS"
+       *
+       *  @param kk array containing the wave vector module
        *
        *  @param redshift the redshift
-       *
-       *  @param sigma_NL the non linear BAO damping
        *
        *  @param store_output if true the output files created by the
        *  Boltzmann solver are stored; if false the output files are
@@ -4264,25 +4203,147 @@ namespace cbl {
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
-       *  @param k_min minimum wave vector module up to which the
-       *  power spectrum is computed in order to estimate the power
-       *  spectrum normalisation; this parameter is used only if
-       *  either norm=1, or norm=-1 and sigma8 is set
+       *  @param prec accuracy of the integration 
        *
-       *  @param k_max maximum wave vector module up to which the
-       *  power spectrum is computed in order to estimate the power
-       *  spectrum normalisation; this parameter is used only if
-       *  either norm=1, or norm=-1 and sigma8 is set
+       *  @return P;<SUB>DW</SUB>(k): the De-Wiggled power
+       *  spectrum of dark matter
+       */
+      std::vector<double> Pk_DM_Linear (const std::string method, const std::vector<double> kk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double prec=1.e-4);
+
+      /**
+       *  @brief the dark matter power spectrum without BAO wiggles.
        *
-       *  @param aa parameter \e a of Eq. 24 of Anderson et al. 2012
+       *  This function provides the No Wiggles dark matter power
+       *  spectrum. It follows the method proposed in Vlah et al. 2015
+       *  (https://arxiv.org/abs/1509.02120, Appendix A).
+       *  The no wiggles power spectrum is obtained by interpolating the oscillatory
+       *  part of the linear power spectrum with a basis spline of a given order
+       *  and number of knots.
+       *
+       *  @author Alfonso Veropalumbo
+       *  @author alfonso.veropalumbo@unibo.it
+       *
+       *  @param kk array containing the wave vector module
+       *
+       *  @param redshift the redshift
+       *
+       *  @param linear_method method to compute the linear
+       *  power spectrum. It can be "CAMB" or "CLASS"
+       *
+       *  @param order basis spline order
+       *
+       *  @param nknots number of knots
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
        *
        *  @param prec accuracy of the integration 
        *
        *  @return P;<SUB>DW</SUB>(k): the De-Wiggled power
        *  spectrum of dark matter
        */
-      double Pk_DeWiggle (const double kk, const double redshift, const double sigma_NL, const bool store_output=true, const std::string output_root = "test", const bool norm=1, const double k_min=0., const double k_max=100., const double aa=1., const double prec=1.e-2);
- 
+      std::vector<double> Pk_DM_NoWiggles_bspline (const std::vector<double> kk, const double redshift, const std::string linear_method, const int order, const int nknots, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double prec=1.e-4);
+
+      /**
+       *  @brief  the dark matter power spectrum without BAO wiggles.
+       *
+       *  This function provides the No Wiggles dark matter power
+       *  spectrum. It can be computed with EisensteinHu approximate formulas
+       *  [http://arxiv.org/abs/1207.1465] or by bspline interpolation (see 
+       *  cbl::cosmology::Cosmology:::Pk_DM_NoWiggles_bspline).
+       *
+       *  @author Alfonso Veropalumbo
+       *  @author alfonso.veropalumbo@unibo.it
+       *  
+       *  @param method method to obtain power spectrum
+       *  with no wiggles. It can be "EisensteinHu" or "bspline"
+       *
+       *  @param kk array containing the wave vector module
+       *
+       *  @param redshift the redshift
+       *
+       *  @param linear_method method to compute the linear
+       *  power spectrum. It can be "CAMB" or "CLASS"
+       *  This is used only when method=="bspline"
+       *
+       *  @param order basis spline order. 
+       *  This is used only when method=="bspline"
+       *
+       *  @param nknots number of knots
+       *  This is used only when method=="bspline"
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @return P;<SUB>DW</SUB>(k): the De-Wiggled power
+       *  spectrum of dark matter
+       */
+      std::vector<double> Pk_DM_NoWiggles (const std::string method, const std::vector<double> kk, const double redshift, const std::string linear_method="CAMB", const int order=4, const int nknots=10, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double prec=1.e-4);
+
+      /**
+       *  @brief the dark matter power spectrum, de-wiggled (see
+       *  e.g. Anderson et al 2014)
+       *
+       *  this function provides the De-Wiggled dark matter power
+       *  spectrum
+       *
+       *  @author Alfonso Veropalumbo
+       *  @author alfonso.veropalumbo@unibo.it
+       *  
+       *  @param linear_method method to obtain linear power spectrum
+       *
+       *  @param nowiggles_method method to obtain power spectrum
+       *  with no wiggles
+       *
+       *  @param kk array containing the wave vector module
+       *
+       *  @param redshift the redshift
+       *
+       *  @param sigma_NL the non linear BAO damping
+       *
+       *  @param order basis spline order
+       *
+       *  @param nknots number of knots
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @return P;<SUB>DW</SUB>(k): the De-Wiggled power
+       *  spectrum of dark matter
+       */
+       std::vector<double> Pk_DM_DeWiggled (const std::string linear_method, const std::string nowiggles_method, const std::vector<double> kk, const double redshift, const double sigma_NL, const int order=4, const int nknots=10, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double prec=1.e-4);
+
       /**
        *  @brief the mass variance, \f$\sigma^2(R)\f$
        *
