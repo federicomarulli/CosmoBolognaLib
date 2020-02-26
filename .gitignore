@@ -9,7 +9,7 @@
 !*.*
 #Then unignore all folders
 !*/
-
+!External/*
 
 #Now in details...
 
