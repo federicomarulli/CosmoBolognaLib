@@ -147,6 +147,7 @@ static const std::string col_yellow = "\033[0;33m";
 static const std::string col_purple = "\033[0;35m";
 static const std::function<double(double)> default_func = nullptr;
 
+%template(SizetVector) std::vector<size_t>;
 %template(IntVector) std::vector<int>;
 %template(LongVector) std::vector<long>;
 %template(DoubleVector) std::vector<double>;
@@ -155,4 +156,4 @@ static const std::function<double(double)> default_func = nullptr;
 %template(DoubleVectorVector) std::vector<std::vector<double> >;
 
 %template(nint) cbl::nint<int>;
-%template(nint) cbl::nint<double>;
+%template(ndouble) cbl::nint<double>;

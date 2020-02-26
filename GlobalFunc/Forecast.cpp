@@ -67,9 +67,30 @@ std::vector<double> cbl::fit_covariance_matrix_2PCF_monopole (const std::vector<
 
   cbl::cosmology::Cosmology cosmo = cosmology;
   vector<double> kk = cbl::logarithmic_bin_vector(200, 1.e-4, 1.e2);
-  vector<double> Pk0, Pk2, Pk4;
+  vector<double> Pk0(kk.size()), Pk2(kk.size()), Pk4(kk.size());
+  double linear_growth_rate = cosmo.linear_growth_rate(redshift, 1);
+  double beta = linear_growth_rate/bias;
+  
+  double pk0_fact = bias*bias*(1+2.*beta/3+beta*beta/5);
+  double pk2_fact = 4./3*beta+4./7*beta*beta;
+  double pk4_fact = 8./35*beta+beta;
 
-  cosmo.Pk_Kaiser_multipoles (Pk0, Pk2, Pk4, kk, method_Pk, NL, redshift, bias, sigma_NL); 
+  if (sigma_NL==0 or NL==true) {
+    for (size_t i=0; i<kk.size(); i++) {
+      double pkDM = cosmo.Pk(kk[i], method_Pk, NL, redshift);
+      Pk0[i] = pkDM*pk0_fact;
+      Pk2[i] = pkDM*pk2_fact;
+      Pk4[i] = pkDM*pk4_fact;
+    }
+  }
+  else {
+    vector<double> PkDM = cosmo.Pk_DM_DeWiggled(method_Pk, "EisensteinHu", kk, redshift, sigma_NL);
+    for (size_t i=0; i<kk.size(); i++) {
+      Pk0[i] = PkDM[i]*pk0_fact;
+      Pk2[i] = PkDM[i]*pk2_fact;
+      Pk4[i] = PkDM[i]*pk4_fact;
+    }
+  }
 
   vector<double> nObj = linear_bin_vector(20, 0.2*nObjects, nObjects);
   vector<double> Vol = linear_bin_vector(20, 0.2*Volume, Volume);
@@ -145,9 +166,31 @@ std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_multipoles (const cbl::
 {
   cbl::cosmology::Cosmology cosmo = cosmology;
   vector<double> kk = cbl::logarithmic_bin_vector(200, 1.e-4, 1.e2);
-  vector<double> Pk0, Pk2, Pk4;
+  vector<double> Pk0(kk.size()), Pk2(kk.size()), Pk4(kk.size());
+  double linear_growth_rate = cosmo.linear_growth_rate(redshift, 1);
+  double beta = linear_growth_rate/bias;
+  
+  double pk0_fact = bias*bias*(1+2.*beta/3+beta*beta/5);
+  double pk2_fact = 4./3*beta+4./7*beta*beta;
+  double pk4_fact = 8./35*beta+beta;
 
-   cosmo.Pk_Kaiser_multipoles (Pk0, Pk2, Pk4, kk, method_Pk, NL, redshift, bias, sigma_NL); 
+  if (sigma_NL==0 or NL==true) {
+    for (size_t i=0; i<kk.size(); i++) {
+      double pkDM = cosmo.Pk(kk[i], method_Pk, NL, redshift);
+      Pk0[i] = pkDM*pk0_fact;
+      Pk2[i] = pkDM*pk2_fact;
+      Pk4[i] = pkDM*pk4_fact;
+    }
+  }
+  else {
+    vector<double> PkDM = cosmo.Pk_DM_DeWiggled(method_Pk, "EisensteinHu", kk, redshift, sigma_NL);
+    for (size_t i=0; i<kk.size(); i++) {
+      Pk0[i] = PkDM[i]*pk0_fact;
+      Pk2[i] = PkDM[i]*pk2_fact;
+      Pk4[i] = PkDM[i]*pk4_fact;
+    }
+  }
+
 
    vector<double> rr;
    vector<vector<double>> xil(3), covariance;

@@ -95,6 +95,8 @@
 #include <gsl/gsl_statistics_double.h>
 #include <gsl/gsl_poly.h>
 #include <gsl/gsl_sf_erf.h>
+#include <gsl/gsl_bspline.h>
+#include <gsl/gsl_multifit.h>
 /// @endcond
 
 /// @cond FFTWinc

@@ -82,6 +82,7 @@
 #include "TwoPointCorrelation.h"
 #include "ModelFunction_TwoPointCorrelation_wedges.h"
 #include "FuncGrid.h"
+#include "FuncGrid_Bspline.h"
 #include "NumberCounts1D_Mass.h"
 #include "ThreePointCorrelation_comoving_connected.h"
 #include "EisensteinHu.h"
