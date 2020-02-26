@@ -9,6 +9,9 @@
 // launching the code on remote systems)
 std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 
+using namespace cbl;
+using namespace catalogue;
+
 
 int main () {
 
@@ -50,14 +53,14 @@ int main () {
     // length of the simulation box
     double boxside = 500.;
 
-    // compute simulation properties
+    // compute simulation properties (only for boxes)
     tracers_catalogue.compute_catalogueProperties(boxside);
 
     // store the mean particle separation of the simulation
     double mps = tracers_catalogue.mps();      
 
-    // store the numerical density of the simulation
-    double density = tracers_catalogue.numdensity();      
+    // store the volume of the simulation
+    double volume = tracers_catalogue.volume();
 
     // generate the chain mesh of the inpute tracer catalogue
     cbl::chainmesh::ChainMesh3D ChM(2*mps, tracers_catalogue.var(cbl::catalogue::Var::_X_), tracers_catalogue.var(cbl::catalogue::Var::_Y_), tracers_catalogue.var(cbl::catalogue::Var::_Z_), void_catalogue_in.Max(cbl::catalogue::Var::_Radius_));
@@ -73,7 +76,7 @@ int main () {
      double ratio = 0.8; // variable used to compute the central density and the density contrast of a void
      
     // sets the central density if not read from file:
-    void_catalogue_in.compute_centralDensity(input_tracersCata, ChM, density, ratio);
+    void_catalogue_in.compute_centralDensity(input_tracersCata, ChM, volume, ratio);
 
     // sets the density contrast if not read from file:
     void_catalogue_in.compute_densityContrast(input_tracersCata, ChM, ratio);

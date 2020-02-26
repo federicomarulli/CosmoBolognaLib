@@ -105,7 +105,7 @@ else :
       
       trcat = temp
       temp = None
-      print("Finished reading input tracers catalogue.")
+      print(" Finished reading input tracers catalogue.")
       
     else :
       
@@ -129,7 +129,7 @@ else :
 
   # observed coordinates
   else :
-    print("Observed coordinates not supported yet...")
+    print("Observed coordinates not supported with this configuration...")
     exit(1)
 
 trcat.compute_catalogueProperties(param.findDouble('boxside'))
@@ -155,7 +155,7 @@ ChM = cbl.ChainMesh3D (2.*trcat.mps(),
 if not param.findBool('centralDensity') : 
   vdcat.compute_centralDensity(trcat,
                                ChM,
-                               trcat.numdensity(),
+                               trcat.volume(),
                                param.findDouble('ratio'))
 
 # sets the density contrast if not read from file:
@@ -171,7 +171,6 @@ ol_crit = cbl.Var__DensityContrast_ if param.findInt('ol_crit') == 1 else cbl.Va
 threshold = 1. + param.findDouble('deltav_NL')
 
 # build the catalogue:
-print('\n')
 tw0 = time.time()
 tc0 = time.clock()
 vdcat_cleaned = cbl.Catalogue (vdcat,

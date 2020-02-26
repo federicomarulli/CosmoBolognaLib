@@ -1265,7 +1265,7 @@ namespace cbl {
        *  @param clean a 3 element bool vector. clean[0] = true, erase
        *  voids outside a given interval; clean[1] = true, erase voids
        *  with voids higher than a given threshold; clean[2] = true,
-       *  erase voids with density contrast lower than a given value.
+       *  erase voids with density contrast lower than a given value
        *
        *  @param delta_r the interval of accepted radii
        *
@@ -1298,6 +1298,106 @@ namespace cbl {
        */
       Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
 
+      /**
+       *  @brief constructor that modifies an input void catalogue
+       *  according to a set of user selected criteria. If all the
+       *  steps are selected the final result is a catalogue of
+       *  spherical, not-overlapped voids. Since the volume of the
+       *  catalogue must be provided, this cleaning algorithm works
+       *  with tracer catalogues with any geometry.
+       * 
+       *  @param input_voidCatalogue the input void catalogue to be modified
+       *
+       *  @param Volume the volume of the tracer catalogue in \f$ Mpc^{3} h^{-3} \f$
+       *
+       *  @param clean a 3 element bool vector. clean[0] = true, erase
+       *  voids outside a given interval; clean[1] = true, erase voids
+       *  with voids higher than a given threshold; clean[2] = true,
+       *  erase voids with density contrast lower than a given value
+       *
+       *  @param delta_r the interval of accepted radii
+       *
+       *  @param threshold the density threshold
+       *
+       *  @param statistical_relevance the minimum accepted density contrast
+       *
+       *  @param rescale true = for each void finds the larger radius enclosing
+       *  density = threshold, false = skip the step
+       *
+       *  @param tracers_catalogue object of class Catalogue with the tracers defining
+       *  the void distribution (necessary if rescale = true)
+       *
+       *  @param ChM object of ChainMesh3D class
+       *
+       *  @param ratio distance from the void centre at which the
+       *  density contrast is evaluated in units of the void
+       *  radius. Ex: ratio = 0.1 \f$\rightarrow\f$ 10% of the void
+       *  radius lenght
+       *
+       *  @param checkoverlap true \f$\rightarrow\f$ erase all the
+       *  voids wrt a given criterion, false \f$\rightarrow\f$ skip
+       *  the step
+       *
+       *  @param ol_criterion the criterion for the overlap step
+       *  (valid criteria: Var::_DensityContrast_,
+       *  Var::_CentralDensity_)
+       * 
+       *  @return an object of class Catalogue
+       */
+      Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const double Volume, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
+
+            /**
+       *  @brief constructor that modifies an input void catalogue
+       *  according to a set of user selected criteria. If all the
+       *  steps are selected the final result is a catalogue of
+       *  spherical, not-overlapped voids. This version takes into
+       *  account the variation of the number density with the
+       *  redshift, therefore it can works with loghtcones.
+       * 
+       *  @param input_voidCatalogue the input void catalogue to be modified
+       *
+       *  @param par_numdensity coefficients of the polynomial
+       *  describing the variation of the number density as a function
+       *  of the redshift, from the highest to the lowest order. Ex.:
+       *  par_density = {-0.001, 0.005, -0.01} \f$\rightarrow\f$
+       *  numdensity = \f$ -0.001 \cdot z^2 + 0.005 \cdot z -0.01 \f$
+       *
+       *  @param clean a 3 element bool vector. clean[0] = true, erase
+       *  voids outside a given interval; clean[1] = true, erase voids
+       *  with voids higher than a given threshold; clean[2] = true,
+       *  erase voids with density contrast lower than a given value
+       *
+       *  @param delta_r the interval of accepted radii
+       *
+       *  @param threshold the density threshold
+       *
+       *  @param statistical_relevance the minimum accepted density contrast
+       *
+       *  @param rescale true = for each void finds the larger radius enclosing
+       *  density = threshold, false = skip the step
+       *
+       *  @param tracers_catalogue object of class Catalogue with the tracers defining
+       *  the void distribution (necessary if rescale = true)
+       *
+       *  @param ChM object of ChainMesh3D class
+       *
+       *  @param ratio distance from the void centre at which the
+       *  density contrast is evaluated in units of the void
+       *  radius. Ex: ratio = 0.1 \f$\rightarrow\f$ 10% of the void
+       *  radius lenght
+       *
+       *  @param checkoverlap true \f$\rightarrow\f$ erase all the
+       *  voids wrt a given criterion, false \f$\rightarrow\f$ skip
+       *  the step
+       *
+       *  @param ol_criterion the criterion for the overlap step
+       *  (valid criteria: Var::_DensityContrast_,
+       *  Var::_CentralDensity_)
+       * 
+       *  @return an object of class Catalogue
+       */
+      Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const std::vector<double> par_numdensity, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
+      
       ///@} 
 
       
@@ -1892,21 +1992,44 @@ namespace cbl {
        *
        *  @param tracers_catalogue the density field tracers catalogue
        *
-       *  @param density the numerical density of the density field tracers catalogue
+       *  @param ChM a 3D chain mesh object, used to speed-up the
+       *  search of close pairs
+       *
+       *  @param Volume the volume of the tracer catalogue in \f$ Mpc^{3} h^{-3} \f$
        *
        *  @param ratio the ratio \f$r\f$ 
+       *
+       *  @return none
+       */
+      void compute_centralDensity (const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const double Volume, const double ratio=0.1);
+
+      /**
+       *  @brief compute the central density of each object in a void catalogue.
+       *  The central density is defined as \f$ n_0=\frac{r\,N_v}{V(R_0)} \f$,
+       *  \f$r\f$ is the ratio between the number of particle around the centre
+       *  of the void to be used as tracers of the central density and the total 
+       *  number of particles contained in the void, \f$N_v\f$.
+       *  The distance between the furthest of those \f$r\,N_v\f$ particles 
+       *  from the centre of the void determines the radius of the centre \f$R_0\f$.
+       *  \f$V(R_0)\f$ is the volume of a sphere with radius \f$R_0\f$.
+       *
+       *  @param tracers_catalogue the density field tracers catalogue
        *
        *  @param ChM a 3D chain mesh object, used to speed-up the
        *  search of close pairs
        *
-       *  @return none
+       *  @param par_numdensity coefficients of the polynomial
+       *  describing the variation of the number density as a function
+       *  of the redshift, from the highest to the lowest order. Ex.:
+       *  par_density = {-0.001, 0.005, -0.01} \f$\rightarrow\f$
+       *  numdensity = \f$ -0.001 \cdot z^2 + 0.005 \cdot z -0.01 \f$
        *
-       *  @warning if the choice of \f$r\f$ is too low to select more than 3 tracers
-       *  this function will select by dafault the 3 tracers closer to the void centre
-       *  to map the central density.
+       *  @param ratio the ratio \f$r\f$ 
+       *
+       *  @return none
        */
-      void compute_centralDensity (const std::shared_ptr< Catalogue > tracers_catalogue, chainmesh::ChainMesh3D ChM, const double density, const double ratio=0.1);
-
+      void compute_centralDensity (const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const std::vector<double> par_numdensity, const double ratio=0.1);
+      
       /**
        *  @brief compute density contrast of cosmic voids in catalogue
        *  as the ratio between the central density and the overall

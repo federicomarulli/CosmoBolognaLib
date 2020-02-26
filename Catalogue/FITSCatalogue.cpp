@@ -53,6 +53,8 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 
   for (size_t dd=0; dd<file.size(); ++dd) {
 
+    coutCBL << "I'm reading the catalogue: " << file[dd] << endl;
+
     // read the columns from the table searching by names
     vector<vector<double>> table = wrapper::ccfits::read_table_fits(file[dd], column_names, 1, 1.);
     

@@ -63,7 +63,7 @@ def com (ex, language, input):
 ### function to check if the example is ok ###
 
 def check (dir, file, language, input=""):
-    if (("all" in sys.argv and language!="python3") or file in sys.argv or ("python" in sys.argv and language=="python") or ("python3" in sys.argv and language=="python3") or ("C++" in sys.argv and language=="C++")):
+    if (("ALL" in sys.argv and language!="python3") or (file in sys.argv and "C++" in sys.argv and language=="C++") or (file in sys.argv and "python" in sys.argv and language=="python") or (file in sys.argv and "python3" in sys.argv and language=="python3") or ("all" in sys.argv and "python" in sys.argv and language=="python") or ("all" in sys.argv and "python3" in sys.argv and language=="python3") or ("all" in sys.argv and "C++" in sys.argv and language=="C++")):
         print("\n\n-----> Testing ", file, "<-----\n")
         os.chdir(cwd+"/Examples/"+dir)
         com(file, language, input)
@@ -166,6 +166,9 @@ if not ("nopy" in sys.argv):
 
 
 ### check the python examples -> check(directory, example_executable, language, input) ###
+
+check("funcGrid", "funcgrid_bspline.py", "python")
+check("funcGrid", "funcgrid_bspline.py", "python3")
 
 check("wrappers", "fft_fftlog.py", "python")
 check("wrappers", "fft_fftlog.py", "python3")

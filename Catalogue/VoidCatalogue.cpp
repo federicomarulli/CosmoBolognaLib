@@ -66,7 +66,7 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
   Catalogue final_catalogue;
   Catalogue displacement_catalogue;
   
-  if (algorithm==VoidAlgorithm::_LaZeVo_){ // Begin of LaZeVo method
+  if (algorithm==VoidAlgorithm::_LaZeVo_) { // Begin of LaZeVo method
     cout << endl; coutCBL << par::col_green << "LaZeVo algorithm" << par::col_default << endl << endl;
     Catalogue rand_catalogue; // 'Catalogue' constructor for random halo objects
     
@@ -77,10 +77,10 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
     
     // LOOP FOR THE DIFFERENT REALISATIONS OF THE RANDOM CATALOGUE (different seeds)
       
-    for (int rndd=1; rndd<=n_rec; ++rndd){ // 'for' cycle - Cycling to the number of realizations 'n_rec' set up in the 'input_param.ini' file 
+    for (int rndd=1; rndd<=n_rec; ++rndd) { // 'for' cycle - Cycling to the number of realizations 'n_rec' set up in the 'input_param.ini' file 
       coutCBL << rndd << " of " << n_rec << " random realisations " << endl;
 
-      if (rand_file=="not_provided"){
+      if (rand_file=="not_provided") {
         Catalogue temp_catalogue {RandomType::_createRandom_box_, tracer_catalogue, 1., 10, cosm, false, 10., {}, {}, {}, 10, rndd};
         rand_catalogue = temp_catalogue;
       }
@@ -150,23 +150,23 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 #pragma omp parallel num_threads(omp_get_max_threads())
 	  {	    
 #pragma omp for ordered schedule(dynamic)
-	    for (auto i=index_halo_cat_temp.begin(); i<index_halo_cat_temp.end(); i++){ // loop on each object of the catalogue
+	    for (auto i=index_halo_cat_temp.begin(); i<index_halo_cat_temp.end(); i++) { // loop on each object of the catalogue
  
 #pragma omp ordered
 	      ChM.get_searching_region(r_max); // with parallelisation this has to be inside the loop...
 	      vector<long int> close_objects = ChM.close_objects(halo_cat->coordinate(*i)); // searching for objects near the halo
 	      
-	      if (close_objects.size()>0){
+	      if (close_objects.size()>0) {
 
 		double distance = r_max*10.;
 		unsigned int k_dist = -1;
 		
-		for (auto&& k : close_objects){ // searching for the closer random object that is not already been paired
-		  if (!used[k]){
+		for (auto&& k : close_objects) { // searching for the closer random object that is not already been paired
+		  if (!used[k]) {
 		    double new_distance = cbl::Euclidean_distance(halo_cat->xx(*i), rand_cat->xx(k),
 								  halo_cat->yy(*i), rand_cat->yy(k),
 								  halo_cat->zz(*i), rand_cat->zz(k));	
-		    if (new_distance < distance){
+		    if (new_distance < distance) {
 		      distance = new_distance;
 		      k_dist = k;
 		    }
@@ -177,7 +177,7 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 #pragma omp ordered
 		{
 		  // if the minimum distance is "acceptable"
-		  if (distance<r_max*10.){ // we pair the halo index with the index of the closer random ojbect (that we record it as "used")
+		  if (distance<r_max*10.) { // we pair the halo index with the index of the closer random ojbect (that we record it as "used")
 		    temp_vect_i[paired] = *i;
 		    temp_vect_k[paired] = k_dist;         
 		    used[k_dist] = true;
@@ -202,7 +202,7 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 	  }// pragma parallel
 
 	  
-	  if (unpaired<min_unpaired){
+	  if (unpaired<min_unpaired) {
 	    min_unpaired = unpaired;
 	    vect_i = temp_vect_i;
 	    vect_k = temp_vect_k;
@@ -238,20 +238,20 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 	vector<unsigned int> vect_k_tot = vect_k;
 	vector<unsigned int> vect_i_tot = vect_i;
 	  
-	if (add_unpaired){
+	if (add_unpaired) {
 
 	  vector<unsigned int> vect_k_unpaired = index_halo_cat; // vector with all the indices (we use the initial index vector created for haloes)
 	  vector<unsigned int> vect_i_unpaired = index_halo_cat;
 	  
 	  // remove from this vector (containing all the indices) the indices of the paired random objects
 	  std::sort(vect_k.begin(),vect_k.end());
-	  for (size_t j = vect_k.size(); j --> 0;){
+	  for (size_t j = vect_k.size(); j --> 0;) {
 	    vect_k_unpaired.erase(vect_k_unpaired.begin()+vect_k[j]);
 	  }
 
 	  // remove from this vector (containing all the indices) the indices of the paired objects
 	  std::sort(vect_i.begin(),vect_i.end());
-	  for (size_t j = vect_i.size(); j --> 0;){
+	  for (size_t j = vect_i.size(); j --> 0;) {
 	    vect_i_unpaired.erase(vect_i_unpaired.begin()+vect_i[j]);
 	  }
 	
@@ -266,13 +266,13 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 	  // value that determines the level of convergence
 	  epsilon = int(convergence_fact*min_unpaired);
 
-	  for (int n_for=0; n_for<epsilon; n_for++){
+	  for (int n_for=0; n_for<epsilon; n_for++) {
 	    std::shuffle(index_unpaired.begin(), index_unpaired.end(), std::default_random_engine(n_for));
 	    
 #pragma omp parallel num_threads(omp_get_max_threads())
 	    {	
 #pragma omp for schedule(static)
-	      for (size_t index=0; index<min_unpaired-1; index+=2){
+	      for (size_t index=0; index<min_unpaired-1; index+=2) {
 	  
 		unsigned int index_halo_1 = vect_i_unpaired[index_unpaired[index]];
 		unsigned int index_halo_2 = vect_i_unpaired[index_unpaired[index+1]];
@@ -299,7 +299,7 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 					  halo_cat->zz(index_halo_2), rand_cat->zz(index_random_1));
 
 
-		if (distance_new < distance_old){ // if the new distance is smaller we exchange the 2 indices in the vector of random ojbects
+		if (distance_new < distance_old) { // if the new distance is smaller we exchange the 2 indices in the vector of random ojbects
 		  vect_k_unpaired[index_unpaired[index]] = index_random_2;
 		  vect_k_unpaired[index_unpaired[index+1]] = index_random_1;
 	  
@@ -331,13 +331,13 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 	std::iota (std::begin(index_tot), std::end(index_tot), 0);
  
 	// how many time we loop over all the haloes
-	for (int n_for=0; n_for<epsilon; n_for++){
+	for (int n_for=0; n_for<epsilon; n_for++) {
 	  std::shuffle(index_tot.begin(), index_tot.end(), std::default_random_engine(n_for));
 	  
 #pragma omp parallel num_threads(omp_get_max_threads())
 	  {	
 #pragma omp for schedule(static)
-	    for (size_t index=0; index<vect_k_tot.size()-1; index+=2){
+	    for (size_t index=0; index<vect_k_tot.size()-1; index+=2) {
 	  
 	      unsigned int index_halo_1 = vect_i_tot[index_tot[index]];
 	      unsigned int index_halo_2 = vect_i_tot[index_tot[index+1]];
@@ -364,7 +364,7 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 					halo_cat->zz(index_halo_2), rand_cat->zz(index_random_1));
 
 
-	      if (distance_new < distance_old){ // if the new distance is smaller we exchange the 2 indices in the vector of random ojbects
+	      if (distance_new < distance_old) { // if the new distance is smaller we exchange the 2 indices in the vector of random ojbects
 		vect_k_tot[index_tot[index]] = index_random_2;
 		vect_k_tot[index_tot[index+1]] = index_random_1;		    
 	      }
@@ -382,7 +382,7 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
       
 
 	// creating catalogues with the initial and final positions and with the displacement values
-	for (size_t ii=0; ii<vect_k_tot.size(); ii++){
+	for (size_t ii=0; ii<vect_k_tot.size(); ii++) {
 	
 	  cbl::comovingCoordinates initial_coordinates = {halo_cat->xx(vect_i_tot[ii]), halo_cat->yy(vect_i_tot[ii]), halo_cat->zz(vect_i_tot[ii])};    
 	  auto inital_halo_coord = make_shared<cbl::catalogue::Halo>(initial_coordinates);
@@ -700,8 +700,8 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 		      int o = Pp[io][jo][ko][no]; 
 
 		      vector<double> final_coord = {final_cat->xx(o), final_cat->yy(o), final_cat->zz(o)};
-		      for (int LL=0; LL<=3; ++LL){
-			for (int KK=0; KK<=3; ++KK){
+		      for (int LL=0; LL<=3; ++LL) {
+			for (int KK=0; KK<=3; ++KK) {
 			  vector<double> Temp = {temp_x, temp_y, temp_z};
 			  if (KK!=0) Temp[KK-1] = Temp[KK-1]+substep; 
 			  if (LL!=0) Temp[LL-1] = Temp[LL-1]+fact_sub;
@@ -711,10 +711,10 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 		      
 		      vector<double> displ_coord = {displ_cat->xx(o), displ_cat->yy(o), displ_cat->zz(o)};
 
-		      for (int ii=0; ii<=3; ii++){
+		      for (int ii=0; ii<=3; ii++) {
 			if (ii!=3) v_0[ii][0] += displ_coord[ii]*exp(-dist[0][0]*sg);
 			sum[ii][0] += exp(-dist[0][ii]*sg);
-			for (int nn=0; nn<=2; nn++){
+			for (int nn=0; nn<=2; nn++) {
 			  if (ii!=0) v_0[ii-1][nn+1] += displ_coord[nn]*exp(-dist[ii][0]*sg);
 			  sum[ii][nn+1] += exp(-dist[nn+1][ii]*sg);
 			  v_[nn][ii] += displ_coord[nn]*exp(-dist[ii][nn+1]*sg);
@@ -724,10 +724,10 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 		    }
 		  
 
-		  for (int nn=0; nn<=2; nn++){
+		  for (int nn=0; nn<=2; nn++) {
 		    v_0[nn][0] = v_0[nn][0]/sum[0][0];
 		    v_[nn][0] = v_[nn][0]/sum[nn+1][0];
-		    for (int ii=1; ii<=3; ii++){
+		    for (int ii=1; ii<=3; ii++) {
 		      v_0[ii-1][nn+1] = v_0[ii-1][nn+1]/sum[0][ii];
 		      v_[nn][ii] = v_[nn][ii]/sum[nn+1][ii];
 		    }
@@ -871,11 +871,11 @@ cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catal
 
       bool control = false;
 	
-      while (control==false){
+      while (control==false) {
 	  
 	int new_counter = 0;
 
-	for(auto&& temp_number : near_cells){ // loop over the indices of the cells thar are inside a radius of lenght r_max
+	for(auto&& temp_number : near_cells) { // loop over the indices of the cells thar are inside a radius of lenght r_max
 
 	  temp_x = x_void[temp_number];
 	  temp_y = y_void[temp_number];
@@ -962,9 +962,11 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
   if (clean[0] || clean[1] || clean[2]) {
     vector<int> counter(clean.size(), 0);
     vector<bool> remove(catalogue->nObjects(), false);
-    coutCBL << "Input void catalogue cleaning procedure started ..." << endl;
+    cout << endl;
+    coutCBL << par::col_blue << " *** CLEANING PROCEDURE STARTED *** \n" << par::col_default << endl;
     double cleaning_time = omp_get_wtime();
     coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
+    if (catalogue->nObjects()==0) ErrorCBL("Empty void catalogue!", "Catalogue", "VoidCatalogue.cpp"); 
     for (size_t i=0; i<catalogue->nObjects(); i++) {
       
       //remove object i from catalogue if not belonging to a given interval of radii:
@@ -993,9 +995,11 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
     }
     
     catalogue->remove_objects(remove);
-    
-    coutCBL << "############ Removed Voids ############" << "\n" <<
-      "\t r_min - r_max criterion : " << counter[0] << "\n" <<
+
+    cout << endl;
+    coutCBL << par::col_green << " --- Removing spurious voids --- \n" << par::col_default << endl;
+    coutCBL << "Removed voids: " << endl;
+    cout << "\t r_min - r_max criterion : " << counter[0] << "\n" <<
       "\t central density too high: " << counter[1] << "\n" <<
       "\t statistically irrelevant: " << counter[2] << "\n" <<
       "\t total removed: " << counter[0]+counter[1]+counter[2] << endl;
@@ -1004,10 +1008,8 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
     coutCBL << "Time spent by the cleaning procedure: " << omp_get_wtime()-cleaning_time << " seconds \n" << endl;
   }
   
-  cout << endl;
   coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
-  
-
+  if (catalogue->nObjects()==0) ErrorCBL("Empty void catalogue!", "Catalogue", "VoidCatalogue.cpp"); 
   
   // ---------------------------------------------------- //
   // ----------------- Radius Rescaling ----------------- //
@@ -1017,9 +1019,10 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
     
     tracers_catalogue->compute_catalogueProperties();
     double density = tracers_catalogue->numdensity();
+    double volume = tracers_catalogue->volume();
     
     cout << endl;
-    coutCBL << "Rescaling radii ... " << endl;
+    coutCBL << par::col_green << " --- Rescaling radii --- \n" << par::col_default << endl;
 
     double rescaling_time = omp_get_wtime();
     
@@ -1028,17 +1031,19 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
     
     //counter for regions without any tracer:
     int void_voids = 0;
-    
-    //counter for negative radius voids:
-    int negative = 0;
 
     //counter for voids that the procedure can't clean properly:
     int bad_rescaled = 0;
+    
+    int num_obj = catalogue->nObjects();
 
 #pragma omp parallel num_threads(omp_get_max_threads())
     {
 #pragma omp for ordered schedule(dynamic)
-      for (size_t j = 0; j<catalogue->nObjects(); j++) {
+      for (int j = 0; j<num_obj; j++) {
+	
+#pragma omp critical
+	coutCBL << "..." << int(double(j)/double(num_obj)*100) << "% completed\r"; cout.flush();
 	double value = (3.*catalogue->radius(j) < delta_r[1]) ? 3.*catalogue->radius(j) : delta_r[1];
 #pragma omp ordered
 	ChM.get_searching_region(value);
@@ -1051,8 +1056,7 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
 	  double distance = catalogue->distance(j, tracers_catalogue->catalogue_object(k));
 	  if (distance < value) distances.emplace_back(distance);
 	}
-	
-	
+		
 	// find radius at which the required density (threshold) is reached
 	if (distances.size() > 0) {
 
@@ -1067,13 +1071,12 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
 	  else while (kk/(volume_sphere(distances[kk-1])*density) < threshold && kk < (int) distances.size()-1) kk++; // or you expand (check -1)
 	  
 	
-
 	  // linear interpolation:
 	  double new_radius = interpolated(threshold,
 					   {kk/(volume_sphere(distances[kk-1])*density), (kk+1)/(volume_sphere(distances[kk])*density)},
 					   {distances[kk-1], distances[kk]}, "Linear"); // gsl function
 
-	  if ((kk/(volume_sphere(new_radius)*density))>(threshold+0.15) || (kk/(volume_sphere(new_radius)*density))<(threshold-0.15)){
+	  if ((kk/(volume_sphere(new_radius)*density))>(threshold+0.15) || (kk/(volume_sphere(new_radius)*density))<(threshold-0.15)) {
 	    remove[j] = true;
 #pragma omp critical
 	    bad_rescaled++;
@@ -1084,7 +1087,7 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
 	    {
 	      remove[j] = true;
 #pragma omp critical
-	      negative++;
+	      bad_rescaled++;
 	    }  
 	}
       
@@ -1093,16 +1096,14 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
 #pragma omp critical
 	  void_voids++;
 	}
-	
-      
+	 
       }//for
-
     }
     
     catalogue->remove_objects(remove);
+    coutCBL << "Removed voids:   " << endl;
     cout << "\t Empty voids removed: " << void_voids << endl;
-    cout << "\t Negative voids removed: " << negative << endl;
-    cout << "\t Bad rescaled voids removed: " << bad_rescaled << "\n" << endl;
+    cout << "\t Bad rescaled voids removed: " << bad_rescaled  << endl;
     //if (negative > 0) WarningMsg("Warning: there were "+conv(negative,par::fINT)+" negative radii.");
    
     
@@ -1118,10 +1119,10 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
     }
     
     catalogue->remove_objects(remove_outofrange);
-    coutCBL << "Removed voids out of range ["+conv(delta_r[0],par::fDP2)+","+conv(delta_r[1],par::fDP2)+"] : " << outofrange << endl;
+    cout << "\t Out of range ["+conv(delta_r[0],par::fDP2)+","+conv(delta_r[1],par::fDP2)+"] : " << outofrange << endl;
     
     //compute new central density and density contrast:
-    catalogue->compute_centralDensity(tracers_catalogue, ChM, density, ratio);
+    catalogue->compute_centralDensity(tracers_catalogue, ChM, volume, ratio);
     catalogue->compute_densityContrast(tracers_catalogue, ChM, ratio);
 
     //float rescaling_time = float( clock() - begin_time ) / CLOCKS_PER_SEC;
@@ -1131,14 +1132,15 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
   }//rescale part
   
   coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
-
+  if (catalogue->nObjects()==0) ErrorCBL("Empty void catalogue!", "Catalogue", "VoidCatalogue.cpp"); 
     
   // ---------------------------------------------------- //
   // ------------------ Overlap Check ------------------- //
   // ---------------------------------------------------- //
   
   if (checkoverlap) {
-    coutCBL << "Checking for overlapping voids ..." << endl;
+    cout << endl;
+    coutCBL << par::col_green << " --- Checking for overlapping voids --- \n" << par::col_default << endl;
 
     double ol_time = omp_get_wtime();
 
@@ -1173,25 +1175,519 @@ cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voi
   }//overlap check
   cout << endl;
   coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
+  if (catalogue->nObjects()==0) ErrorCBL("Empty void catalogue!", "Catalogue", "VoidCatalogue.cpp");
+  
+  //float olchecking_time = float( clock() - begin_time ) / CLOCKS_PER_SEC;
+  //olchecking_time = olchecking_time - rescaling_time - cleaning_time;
+  cout << endl;
+  coutCBL << "Total time spent: " << omp_get_wtime()-start_time << " seconds \n" << endl;
+
+  m_object = catalogue->sample();
+}
+
+
+//********************************** VERSION 2.0 **********************************//
+
+cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const double Volume, const std::vector<bool> clean, const std::vector<double> delta_r, const double threshold, const double statistical_relevance, bool rescale, const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const double ratio, const bool checkoverlap, const Var ol_criterion)
+{
+
+  auto catalogue = input_voidCatalogue;
+  //clock_t begin_time = clock();
+  const double start_time = omp_get_wtime();
+    
+  // ---------------------------------------------------- //
+  // ---------------- Cleaning Procedure ---------------- //
+  // ---------------------------------------------------- //
+
+  if (clean.size() != 3) ErrorCBL("wrong vector size!", "Catalogue", "VoidCatalogue.cpp");  
+  if (clean[0] || clean[1] || clean[2]) {
+    vector<int> counter(clean.size(), 0);
+    vector<bool> remove(catalogue->nObjects(), false);
+    cout << endl;
+    coutCBL << par::col_blue << " *** CLEANING PROCEDURE STARTED *** \n" << par::col_default << endl;
+    double cleaning_time = omp_get_wtime();
+    coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
+    if (catalogue->nObjects()==0) ErrorCBL("Empty void catalogue!", "Catalogue", "VoidCatalogue.cpp");
+    
+    for (size_t i=0; i<catalogue->nObjects(); i++) {
+      
+      //remove object i from catalogue if not belonging to a given interval of radii:
+      if (clean[0] && 
+	  (catalogue->radius(i) < delta_r[0] || 
+	   delta_r[1] < catalogue->radius(i))) {
+	remove[i] = true;
+	counter[0]++;
+      }
+      
+      //remove object i from catalogue if central density is too high:
+      if (clean[1] &&
+	  catalogue->centralDensity(i) > threshold &&
+	  !remove[i]) {
+	remove[i] = true;
+	counter[1]++;
+      }
+      
+      //remove object i from catalogue if not statistically significant:
+      if (clean[2] &&
+	  catalogue->densityContrast(i) < statistical_relevance &&
+	  !remove[i]) {
+	remove[i] = true;
+	counter[2]++;
+      }
+    }
+    
+    catalogue->remove_objects(remove);
+
+    cout << endl;
+    coutCBL << par::col_green << " --- Removing spurious voids --- \n" << par::col_default << endl;
+    coutCBL << "Removed voids: " << endl;
+    cout << "\t r_min - r_max criterion : " << counter[0] << "\n" <<
+      "\t central density too high: " << counter[1] << "\n" <<
+      "\t statistically irrelevant: " << counter[2] << "\n" <<
+      "\t total removed: " << counter[0]+counter[1]+counter[2] << endl;
+
+    //float cleaning_time = float( clock() - start_time ) / CLOCKS_PER_SEC;
+    coutCBL << "Time spent by the cleaning procedure: " << omp_get_wtime()-cleaning_time << " seconds \n" << endl;
+  }
+  
+  cout << endl;
+  coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
+  if (catalogue->nObjects()==0) ErrorCBL("Empty void catalogue!", "Catalogue", "VoidCatalogue.cpp"); 
+  
+  // ---------------------------------------------------- //
+  // ----------------- Radius Rescaling ----------------- //
+  // ---------------------------------------------------- //
+  
+  if (rescale) {
+    
+    const double density = tracers_catalogue->nObjects()/Volume;
+    const double mps = pow(density, -1./3.);
+    coutCBL << "Sample volume = " << Volume << " (Mpc/h)^3" << endl;
+    coutCBL << "Sample density = " << density << " (Mpc/h)^-3" << endl;
+    coutCBL << "Sample mps = " << mps << " Mpc/h" << endl;
+    
+    cout << endl;
+    coutCBL << par::col_green << " --- Rescaling radii --- \n" << par::col_default << endl;
+
+    double rescaling_time = omp_get_wtime();
+    
+    //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
+    vector<bool> remove(catalogue->nObjects(), false);
+    
+    //counter for regions without any tracer:
+    int void_voids = 0;
+
+    //counter for voids that the procedure can't clean properly:
+    int bad_rescaled = 0;
+
+    int num_obj = catalogue->nObjects();
+
+#pragma omp parallel num_threads(omp_get_max_threads())
+    {
+#pragma omp for ordered schedule(dynamic)
+      for (int j = 0; j<num_obj; j++) {
+	
+#pragma omp critical
+	coutCBL << "..." << int(double(j)/double(num_obj)*100) << "% completed\r"; cout.flush();
+	
+	double value = (3.*catalogue->radius(j) < delta_r[1]) ? 3.*catalogue->radius(j) : delta_r[1];
+#pragma omp ordered
+	ChM.get_searching_region(value);
+	vector<long> close = ChM.close_objects(catalogue->coordinate(j));
+	
+	//compute distances between the void and the surrounding particles
+	vector<double> distances;
+
+	for (auto&& k : close) {
+	  double distance = catalogue->distance(j, tracers_catalogue->catalogue_object(k));
+	  if (distance < value) distances.emplace_back(distance);
+	}
+	
+	// find radius at which the required density (threshold) is reached
+	if (distances.size() > 0) {
+
+	  // find starting radius
+	  std::sort (distances.begin(), distances.end());
+	  vector<double>::iterator up = std::upper_bound(distances.begin(), distances.end(), catalogue->radius(j));
+	  auto kk = std::distance(distances.begin(), up);
+
+	  // shrink or expand to match the required threshold
+	  if (kk/(volume_sphere(distances[kk-1])*density) > threshold)
+	    while (kk/(volume_sphere(distances[kk-1])*density) > threshold && kk > 1) kk--; // either you shrink
+	  else while (kk/(volume_sphere(distances[kk-1])*density) < threshold && kk < (int) distances.size()-1) kk++; // or you expand (check -1)
+	  
+	  // linear interpolation:
+	  double new_radius = interpolated(threshold,
+					   {kk/(volume_sphere(distances[kk-1])*density), (kk+1)/(volume_sphere(distances[kk])*density)},
+					   {distances[kk-1], distances[kk]}, "Linear"); // gsl function
+
+	  if ((kk/(volume_sphere(new_radius)*density))>(threshold+0.15) || (kk/(volume_sphere(new_radius)*density))<(threshold-0.15)) {
+	    remove[j] = true;
+#pragma omp critical
+	    bad_rescaled++;
+	  }
+	  
+	  if (new_radius > 0) catalogue->set_var(j, Var::_Radius_, fabs(new_radius));
+	  else
+	    {
+	      remove[j] = true;
+#pragma omp critical
+	      bad_rescaled++;
+	    }  
+	}
+      
+	else {
+	  remove[j] = true;
+#pragma omp critical
+	  void_voids++;
+	}
+	 
+      }//for
+    }
+    
+    catalogue->remove_objects(remove);
+    coutCBL << "Removed voids:   " << endl;
+    cout << "\t Empty voids removed: " << void_voids << endl;
+    cout << "\t Bad rescaled voids removed: " << bad_rescaled  << endl;
+    //if (negative > 0) WarningMsg("Warning: there were "+conv(negative,par::fINT)+" negative radii.");
+   
+    
+    //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
+    vector<bool> remove_outofrange(catalogue->nObjects(), false);
+    int outofrange = 0;
+    for (size_t ii = 0; ii<catalogue->nObjects(); ii++) {
+      if (catalogue->radius(ii) < delta_r[0] ||
+	  delta_r[1] < catalogue->radius(ii)) {
+	remove_outofrange[ii] = true;
+	outofrange++;
+      }
+    }
+    
+    catalogue->remove_objects(remove_outofrange);
+    cout << "\t Out of range ["+conv(delta_r[0],par::fDP2)+","+conv(delta_r[1],par::fDP2)+"] : " << outofrange << endl;
+    
+    //compute new central density and density contrast:
+    catalogue->compute_centralDensity(tracers_catalogue, ChM, Volume, ratio);
+    catalogue->compute_densityContrast(tracers_catalogue, ChM, ratio);
+
+    //float rescaling_time = float( clock() - begin_time ) / CLOCKS_PER_SEC;
+    //rescaling_time = rescaling_time - cleaning_time;
+    coutCBL << "Time spent by the rescaling procedure: " << omp_get_wtime()-rescaling_time << " seconds \n" << endl;
+    
+  }//rescale part
+  
+  coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
+  if (catalogue->nObjects()==0) ErrorCBL("Empty void catalogue!", "Catalogue", "VoidCatalogue.cpp"); 
+    
+  // ---------------------------------------------------- //
+  // ------------------ Overlap Check ------------------- //
+  // ---------------------------------------------------- //
+  
+  if (checkoverlap) {
+    cout << endl;
+    coutCBL << par::col_green << " --- Checking for overlapping voids --- \n" << par::col_default << endl;
+
+    double ol_time = omp_get_wtime();
+
+    if (ol_criterion == Var::_CentralDensity_) catalogue->sort(ol_criterion, false);
+    else if (ol_criterion == Var::_DensityContrast_) catalogue->sort(ol_criterion, true);
+    else ErrorCBL("allowed overlap criteria are '_CentralDensity_' or '_DensityContrast_' .", "Catalogue", "VoidCatalogue.cpp");
+       
+    vector<bool> remove(catalogue->nObjects(), false);
+    
+    coutCBL << "Generating chain-mesh for void centres ..." << endl;
+    chainmesh::ChainMesh3D ChM_voids(catalogue->Min(Var::_Radius_),
+				     catalogue->var(Var::_X_),
+				     catalogue->var(Var::_Y_),
+				     catalogue->var(Var::_Z_),
+				     2.*catalogue->Max(Var::_Radius_));
+    for (size_t i = 0; i<catalogue->nObjects(); i++) {
+      vector<long> close = ChM_voids.close_objects(catalogue->coordinate(i));
+      unsigned int h = 0;
+      while (!remove[i] && h<close.size()) {
+	double distance = catalogue->distance(i, catalogue->catalogue_object(close[h]));
+	if ((distance < catalogue->radius(i)+catalogue->radius(close[h]) && (int) i < close[h]) ||
+	    ((int) i > close[h] && remove[close[h]])) h++;
+	else if (distance < catalogue->radius(i)+catalogue->radius(close[h]) && (int) i > close[h]) remove[i] = true;
+	else h++;
+      }//while
+    }//for
+    int overlap_removed = 0;
+    for (size_t i = 0; i<remove.size(); i++) if (remove[i]) overlap_removed++;
+    catalogue->remove_objects(remove);
+    coutCBL << "Voids removed to avoid overlap: " << overlap_removed << endl;
+    coutCBL << "Time spent by the overlap-checking procedure: " << omp_get_wtime()-ol_time << " seconds" << endl;
+  }//overlap check
+  cout << endl;
+  coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
+  if (catalogue->nObjects()==0) ErrorCBL("Empty void catalogue!", "Catalogue", "VoidCatalogue.cpp");
+  
+  //float olchecking_time = float( clock() - begin_time ) / CLOCKS_PER_SEC;
+  //olchecking_time = olchecking_time - rescaling_time - cleaning_time;
+  cout << endl;
+  coutCBL << "Total time spent: " << omp_get_wtime()-start_time << " seconds \n" << endl;
+
+  m_object = catalogue->sample();
+}
+
+
+//********************************** VERSION 3.0 **********************************//
+
+cbl::catalogue::Catalogue::Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const std::vector<double> par_numdensity, const std::vector<bool> clean, const std::vector<double> delta_r, const double threshold, const double statistical_relevance, bool rescale, const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const double ratio, const bool checkoverlap, const Var ol_criterion)
+{
+
+  auto catalogue = input_voidCatalogue;
+  //clock_t begin_time = clock();
+  const double start_time = omp_get_wtime();
+    
+  // ---------------------------------------------------- //
+  // ---------------- Cleaning Procedure ---------------- //
+  // ---------------------------------------------------- //
+
+  if (clean.size() != 3) ErrorCBL("wrong vector size!", "Catalogue", "VoidCatalogue.cpp");  
+  if (clean[0] || clean[1] || clean[2]) {
+    vector<int> counter(clean.size(), 0);
+    vector<bool> remove(catalogue->nObjects(), false);
+    cout << endl;
+    coutCBL << par::col_blue << " *** CLEANING PROCEDURE STARTED *** \n" << par::col_default << endl;
+    double cleaning_time = omp_get_wtime();
+    coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
+    if (catalogue->nObjects()==0) ErrorCBL("Empty void catalogue!", "Catalogue", "VoidCatalogue.cpp"); 
+    for (size_t i=0; i<catalogue->nObjects(); i++) {
+      
+      //remove object i from catalogue if not belonging to a given interval of radii:
+      if (clean[0] && 
+	  (catalogue->radius(i) < delta_r[0] || 
+	   delta_r[1] < catalogue->radius(i))) {
+	remove[i] = true;
+	counter[0]++;
+      }
+      
+      //remove object i from catalogue if central density is too high:
+      if (clean[1] &&
+	  catalogue->centralDensity(i) > threshold &&
+	  !remove[i]) {
+	remove[i] = true;
+	counter[1]++;
+      }
+      
+      //remove object i from catalogue if not statistically significant:
+      if (clean[2] &&
+	  catalogue->densityContrast(i) < statistical_relevance &&
+	  !remove[i]) {
+	remove[i] = true;
+	counter[2]++;
+      }
+    }
+    
+    catalogue->remove_objects(remove);
+
+    cout << endl;
+    coutCBL << par::col_green << " --- Removing spurious voids --- \n" << par::col_default << endl;
+    coutCBL << "Removed voids: " << endl;
+    cout << "\t r_min - r_max criterion : " << counter[0] << "\n" <<
+      "\t central density too high: " << counter[1] << "\n" <<
+      "\t statistically irrelevant: " << counter[2] << "\n" <<
+      "\t total removed: " << counter[0]+counter[1]+counter[2] << endl;
+
+    //float cleaning_time = float( clock() - start_time ) / CLOCKS_PER_SEC;
+    coutCBL << "Time spent by the cleaning procedure: " << omp_get_wtime()-cleaning_time << " seconds \n" << endl;
+  }
+  
+  coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
+  if (catalogue->nObjects()==0) ErrorCBL("Empty void catalogue!", "Catalogue", "VoidCatalogue.cpp"); 
+  
+  // ---------------------------------------------------- //
+  // ----------------- Radius Rescaling ----------------- //
+  // ---------------------------------------------------- //
+  
+  if (rescale) {
+    
+    cout << endl;
+    coutCBL << par::col_green << " --- Rescaling radii --- \n" << par::col_default << endl;
+
+    double rescaling_time = omp_get_wtime();
+    
+    //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
+    vector<bool> remove(catalogue->nObjects(), false);
+    
+    //counter for regions without any tracer:
+    int void_voids = 0;
+
+    //counter for voids that the procedure can't clean properly:
+    int bad_rescaled = 0;
+
+    int num_obj = catalogue->nObjects();
+
+#pragma omp parallel num_threads(omp_get_max_threads())
+    {
+#pragma omp for ordered schedule(dynamic)
+      for (int j = 0; j<num_obj; j++) {
+	
+#pragma omp critical
+	coutCBL << "..." << int(double(j)/double(num_obj)*100) << "% completed\r"; cout.flush();
+	
+	double value = (3.*catalogue->radius(j) < delta_r[1]) ? 3.*catalogue->radius(j) : delta_r[1];
+#pragma omp ordered
+	ChM.get_searching_region(value);
+	vector<long> close = ChM.close_objects(catalogue->coordinate(j));
+	
+	//compute distances between the void and the surrounding particles
+	vector<double> distances;
+
+	for (auto&& k : close) {
+	  double distance = catalogue->distance(j, tracers_catalogue->catalogue_object(k));
+	  if (distance < value) distances.emplace_back(distance);
+	}	
+	
+	// find radius at which the required density (threshold) is reached
+	if (distances.size() > 0) {
+
+	  // redshift if the centre of the considered void
+	  double zz = catalogue->redshift(j); 
+	  
+	  // compute the number density using a Nth-order polynomial
+	  double density = 0.;
+	  for (size_t N=par_numdensity.size(); N-->0;) density += par_numdensity[par_numdensity.size()-1-N]*pow(zz,N);
+	  
+	  // find starting radius
+	  std::sort (distances.begin(), distances.end());
+	  vector<double>::iterator up = std::upper_bound(distances.begin(), distances.end(), catalogue->radius(j));
+	  auto kk = std::distance(distances.begin(), up);
+
+	  // shrink or expand to match the required threshold
+	  if (kk/(volume_sphere(distances[kk-1])*density) > threshold)
+	    while (kk/(volume_sphere(distances[kk-1])*density) > threshold && kk > 1) kk--; // either you shrink
+	  else while (kk/(volume_sphere(distances[kk-1])*density) < threshold && kk < (int) distances.size()-1) kk++; // or you expand (check -1)
+	  
+	
+	  // linear interpolation:
+	  double new_radius = interpolated(threshold,
+					   {kk/(volume_sphere(distances[kk-1])*density), (kk+1)/(volume_sphere(distances[kk])*density)},
+					   {distances[kk-1], distances[kk]}, "Linear"); // gsl function
+
+	  if ((kk/(volume_sphere(new_radius)*density))>(threshold+0.15) || (kk/(volume_sphere(new_radius)*density))<(threshold-0.15)) {
+	    remove[j] = true;
+#pragma omp critical
+	    bad_rescaled++;
+	  }
+	  
+	  if (new_radius > 0) catalogue->set_var(j, Var::_Radius_, fabs(new_radius));
+	  else
+	    {
+	      remove[j] = true;
+#pragma omp critical
+	      bad_rescaled++;
+	    }  
+	}
+      
+	else {
+	  remove[j] = true;
+#pragma omp critical
+	  void_voids++;
+	}
+	 
+      }//for
+    }
+    
+    catalogue->remove_objects(remove);
+    coutCBL << "Removed voids:   " << endl;
+    cout << "\t Empty voids removed: " << void_voids << endl;
+    cout << "\t Bad rescaled voids removed: " << bad_rescaled  << endl;
+    //if (negative > 0) WarningMsg("Warning: there were "+conv(negative,par::fINT)+" negative radii.");
+   
+    
+    //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
+    vector<bool> remove_outofrange(catalogue->nObjects(), false);
+    int outofrange = 0;
+    for (size_t ii = 0; ii<catalogue->nObjects(); ii++) {
+      if (catalogue->radius(ii) < delta_r[0] ||
+	  delta_r[1] < catalogue->radius(ii)) {
+	remove_outofrange[ii] = true;
+	outofrange++;
+      }
+    }
+    
+    catalogue->remove_objects(remove_outofrange);
+    cout << "\t Out of range ["+conv(delta_r[0],par::fDP2)+","+conv(delta_r[1],par::fDP2)+"] : " << outofrange << endl;
+    
+    //compute new central density and density contrast:
+    catalogue->compute_centralDensity(tracers_catalogue, ChM, par_numdensity, ratio);
+    catalogue->compute_densityContrast(tracers_catalogue, ChM, ratio);
+
+    //float rescaling_time = float( clock() - begin_time ) / CLOCKS_PER_SEC;
+    //rescaling_time = rescaling_time - cleaning_time;
+    coutCBL << "Time spent by the rescaling procedure: " << omp_get_wtime()-rescaling_time << " seconds \n" << endl;
+    
+  }//rescale part
+  
+  coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
+  if (catalogue->nObjects()==0) ErrorCBL("Empty void catalogue!", "Catalogue", "VoidCatalogue.cpp");  
+
+    
+  // ---------------------------------------------------- //
+  // ------------------ Overlap Check ------------------- //
+  // ---------------------------------------------------- //
+  
+  if (checkoverlap) {
+    cout << endl;
+    coutCBL << par::col_green << " --- Checking for overlapping voids --- \n" << par::col_default << endl;
+
+    double ol_time = omp_get_wtime();
+
+    if (ol_criterion == Var::_CentralDensity_) catalogue->sort(ol_criterion, false);
+    else if (ol_criterion == Var::_DensityContrast_) catalogue->sort(ol_criterion, true);
+    else ErrorCBL("allowed overlap criteria are '_CentralDensity_' or '_DensityContrast_' .", "Catalogue", "VoidCatalogue.cpp");
+       
+    vector<bool> remove(catalogue->nObjects(), false);
+    
+    coutCBL << "Generating chain-mesh for void centres ..." << endl;
+    chainmesh::ChainMesh3D ChM_voids(catalogue->Min(Var::_Radius_),
+				     catalogue->var(Var::_X_),
+				     catalogue->var(Var::_Y_),
+				     catalogue->var(Var::_Z_),
+				     2.*catalogue->Max(Var::_Radius_));
+    for (size_t i = 0; i<catalogue->nObjects(); i++) {
+      vector<long> close = ChM_voids.close_objects(catalogue->coordinate(i));
+      unsigned int h = 0;
+      while (!remove[i] && h<close.size()) {
+	double distance = catalogue->distance(i, catalogue->catalogue_object(close[h]));
+	if ((distance < catalogue->radius(i)+catalogue->radius(close[h]) && (int) i < close[h]) ||
+	    ((int) i > close[h] && remove[close[h]])) h++;
+	else if (distance < catalogue->radius(i)+catalogue->radius(close[h]) && (int) i > close[h]) remove[i] = true;
+	else h++;
+      }//while
+    }//for
+    int overlap_removed = 0;
+    for (size_t i = 0; i<remove.size(); i++) if (remove[i]) overlap_removed++;
+    catalogue->remove_objects(remove);
+    coutCBL << "Voids removed to avoid overlap: " << overlap_removed << endl;
+    coutCBL << "Time spent by the overlap-checking procedure: " << omp_get_wtime()-ol_time << " seconds" << endl;
+  }//overlap check
+  cout << endl;
+  coutCBL << "Voids in the Catalogue: " << catalogue->nObjects() << endl;
+  if (catalogue->nObjects()==0) ErrorCBL("Empty void catalogue!", "Catalogue", "VoidCatalogue.cpp"); 
 
   //float olchecking_time = float( clock() - begin_time ) / CLOCKS_PER_SEC;
   //olchecking_time = olchecking_time - rescaling_time - cleaning_time;
   cout << endl;
   coutCBL << "Total time spent: " << omp_get_wtime()-start_time << " seconds \n" << endl;
 
-  
   m_object = catalogue->sample();
 }
 
 
+// ============================================================================
 
-//-----------------------------------------------------------------------------------------------------------------------------------------------//
 
-void cbl::catalogue::Catalogue::compute_centralDensity (const shared_ptr<Catalogue> tracers_catalogue, cbl::chainmesh::ChainMesh3D ChM, const double density, const double ratio) {
-
+void cbl::catalogue::Catalogue::compute_centralDensity (const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const double Volume, const double ratio)
+{
   //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
   vector<bool> remove(m_object.size(), false);
 
+  //compute the number density of the tracer catalogue
+  const double density = m_object.size()/Volume;
+  
   //counter for regions without any tracer:
   int void_voids = 0;
 #pragma omp parallel num_threads(omp_get_max_threads())
@@ -1215,7 +1711,7 @@ void cbl::catalogue::Catalogue::compute_centralDensity (const shared_ptr<Catalog
 	int NN = 0;
 	while (distances[NN]<ratio*m_object[j]->radius() && NN<(int)distances.size()-1) NN++; // check -1
 	
-	if (NN > 0){
+	if (NN > 0) {
 	  double central_density;
 
 	
@@ -1243,8 +1739,8 @@ void cbl::catalogue::Catalogue::compute_centralDensity (const shared_ptr<Catalog
     }//for
   }
 
-  if (void_voids > 0){
-    for (size_t j=m_object.size(); j --> 0;){
+  if (void_voids > 0) {
+    for (size_t j=m_object.size(); j --> 0;) {
       if (remove[j]) m_object.erase(m_object.begin()+j);
     }
   }
@@ -1253,7 +1749,87 @@ void cbl::catalogue::Catalogue::compute_centralDensity (const shared_ptr<Catalog
   
 }
 
-//-----------------------------------------------------------------------------------------------------------------------------------------------//
+
+// ============================================================================
+
+
+void cbl::catalogue::Catalogue::compute_centralDensity (const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const std::vector<double> par_numdensity, const double ratio)
+{
+  //vector to memorize which element of the catalogue has to be removed at the end of the procedure:
+  vector<bool> remove(m_object.size(), false);
+
+  //counter for regions without any tracer:
+  int void_voids = 0;
+#pragma omp parallel num_threads(omp_get_max_threads())
+  {
+#pragma omp for ordered schedule(static)
+    for (size_t j = 0; j<m_object.size(); j++) {
+#pragma omp ordered  
+      ChM.get_searching_region(m_object[j]->radius());
+      vector<long> close = ChM.close_objects(m_object[j]->coords());
+
+      //compute distances between the void and the surrounding particles
+      vector<double> distances;
+      for (auto&& k : close) {
+	double distance = cbl::catalogue::Catalogue::distance(j, tracers_catalogue->catalogue_object(k));
+	if (distance < m_object[j]->radius()) distances.emplace_back(distance);
+      }
+    
+      //FIND CENTRAL DENSITY
+      if (distances.size() > 0) {
+	
+	// redshift if the centre of the considered void
+	double zz = m_object[j]->redshift();   
+	
+	// compute the number density using a Nth-order polynomial
+	double density = 0.;
+	for (size_t N=par_numdensity.size(); N-->0;) density += par_numdensity[par_numdensity.size()-1-N]*pow(zz,N);
+
+	std::sort (distances.begin(), distances.end());
+	int NN = 0;
+	while (distances[NN]<ratio*m_object[j]->radius() && NN<(int)distances.size()-1) NN++; // check -1
+	
+	if (NN > 0) {
+	  double central_density;
+
+	
+	  if (NN/(volume_sphere(distances[NN-1])*density)<(NN+1)/(volume_sphere(distances[NN])*density))
+	    central_density = interpolated(ratio*m_object[j]->radius(),
+					   {distances[NN-1], distances[NN]},
+					   {NN/(volume_sphere(distances[NN-1])*density), (NN+1)/(volume_sphere(distances[NN])*density)}, "Linear");
+	  else
+	    central_density = interpolated(ratio*m_object[j]->radius(),
+					   {distances[NN], distances[NN-1]},
+					   {(NN+1)/(volume_sphere(distances[NN])*density), NN/(volume_sphere(distances[NN-1])*density)}, "Linear");
+	
+	  m_object[j]->set_centralDensity(central_density);
+	}
+	else m_object[j]->set_centralDensity(0.);	
+      }
+      
+      else {
+	vector<double>().swap(distances);
+#pragma omp critical
+	void_voids ++;
+	remove[j] = true;
+      }
+      
+    }//for
+  }
+
+  if (void_voids > 0) {
+    for (size_t j=m_object.size(); j --> 0;) {
+      if (remove[j]) m_object.erase(m_object.begin()+j);
+    }
+  }
+
+  coutCBL << "I removed " << void_voids << " voids in calculating the central density!" << endl;
+  
+}
+
+
+// ============================================================================
+
 
 void cbl::catalogue::Catalogue::compute_densityContrast (const shared_ptr<Catalogue> tracers_catalogue, cbl::chainmesh::ChainMesh3D ChM, const double ratio) {
   
@@ -1306,8 +1882,8 @@ void cbl::catalogue::Catalogue::compute_densityContrast (const shared_ptr<Catalo
     }//for
   }
   
-  if (void_voids > 0 || cloud_in_void > 0){
-    for (size_t j=m_object.size(); j --> 0;){
+  if (void_voids > 0 || cloud_in_void > 0) {
+    for (size_t j=m_object.size(); j --> 0;) {
       if (remove[j]) m_object.erase(m_object.begin()+j);
     }
   }
@@ -1315,3 +1891,4 @@ void cbl::catalogue::Catalogue::compute_densityContrast (const shared_ptr<Catalo
   coutCBL << "I removed " << void_voids+cloud_in_void << " voids in calculating the density contrast!" << endl;
   
 }
+

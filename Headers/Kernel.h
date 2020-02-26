@@ -350,6 +350,11 @@
  *  distances 
  */
 /**
+ *  @example funcgrid_bspline.py
+ *
+ *  This example shows how to interpolate a function using b-spline
+ */
+/**
  *  @example catalogue.py
  *
  *  This example shows how to construct a catalogue of extragalactic
@@ -442,6 +447,12 @@
  *  To see the notebook, click here: <a
  *  href="https://colab.research.google.com/drive/1tpQ1Tj06RRwOfZtxYXPC1Sr_Hdb679w8">
  *  notebook</a>
+ */
+/**
+ *  @example no_wiggles_pk.ipynb 
+ *  
+ *  This \b notebook explains how to compute the de-wiggled power
+ *  spectrum model
  */
 
 /**
