@@ -58,10 +58,10 @@ void cbl::data::Data1D::read (const string input_file, const int skip_nlines, co
   if (column_data.size()!=column_errors.size()) ErrorCBL("the sizes of column_data and columt_errors must be equal!", "read", "Data1D.cpp");
   
   // default column of input data values
-  int column_data_default = column_x;
+  int column_data_default = column_x+1;
   
   // default column of input error values
-  int column_error_default = column_x+1;
+  int column_error_default = column_x+2;
   
   ifstream fin(input_file.c_str()); checkIO(fin, input_file);
   string line;
@@ -84,16 +84,18 @@ void cbl::data::Data1D::read (const string input_file, const int skip_nlines, co
       stringstream ss(line);
       vector<double> num; double NUM;
       while (ss>>NUM) num.emplace_back(NUM);
+
+      if (num.size()<2) ErrorCBL("there are less than 2 columns in the input file!", "read", "Data1D.cpp");
       
       // if column_x is larger than 0, the column of x coordinates is
       // the one specified in input
-      const int ind_x = max(0, column_x-1);
+      size_t ind_x = max(0, column_x-1);
       checkDim(num, ind_x+1, "num", false);
       m_x.emplace_back(num[ind_x]);
 
       // if the size of the column_data vector is larger than 1, the
       // columns of data values are the ones specified in input
-      const int ind_data = (column_data.size()<1) ? column_data_default : column_data[cl]-1;
+      const size_t ind_data = (column_data.size()<1) ? column_data_default-1 : column_data[cl]-1;
       checkDim(num, ind_data+1, "num", false);
       m_data.emplace_back(num[ind_data]);
 
@@ -101,7 +103,7 @@ void cbl::data::Data1D::read (const string input_file, const int skip_nlines, co
       // columns of error values are the ones specified in input; if
       // the error column is not present, the errors will be set to 1,
       // by default
-      const size_t ind_error = (column_errors.size()<1) ? column_error_default : column_errors[cl]-1;
+      const size_t ind_error = (column_errors.size()<1) ? column_error_default-1 : column_errors[cl]-1;
       if (num.size()<ind_error+1 && column_errors.size()>1)
 	WarningMsgCBL("the errors cannot be retrieved from the provided input file, and will be set to 1", "read", "Data1D.cpp");
       m_error.emplace_back((num.size()<ind_error+1) ? 1 : num[ind_error]);

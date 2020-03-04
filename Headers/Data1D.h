@@ -111,7 +111,7 @@ namespace cbl {
        *
        *  @return object of class Data1D
        */
-      Data1D (const std::string input_file, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={})
+      Data1D (const std::string input_file, const int skip_nlines=0, const int column_x=1, const std::vector<int> column_data={}, const std::vector<int> column_errors={})
 	: Data(cbl::data::DataType::_1D_)
 	{ read(input_file, skip_nlines, column_x, column_data, column_errors); }
 
@@ -285,7 +285,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void read (const std::string input_file, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={}) override;
+      void read (const std::string input_file, const int skip_nlines=0, const int column_x=1, const std::vector<int> column_data={}, const std::vector<int> column_errors={}) override;
 
       /**
        *  @brief print the data on screen

@@ -1427,36 +1427,48 @@ void cbl::cosmology::Cosmology::get_barred_xi (std::vector<double> rr, std::vect
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::Pk_DM_NoWiggles_bspline (const vector<double> kk, const double redshift, const string linear_method, const int order, const int nknots, const bool store_output, const std::string output_root, const bool norm, const double prec)
+vector<double> cbl::cosmology::Cosmology::Pk_DM_NoWiggles_gaussian (const vector<double> kk, const vector<double> PkLin, const vector<double> PkApprox, const double lambda, const string kind)
 {
-  vector<double> log_kk(kk.size());
-  vector<double> PkCAMB(kk.size());
-  vector<double> PkEH(kk.size());
   vector<double> PkNW(kk.size());
   vector<double> OF(kk.size());
 
-  for (size_t i=0; i<kk.size(); i++) {
-    log_kk[i] = log10(kk[i]);
-    PkCAMB[i] = Pk(kk[i], linear_method, false, redshift, store_output, output_root, norm, 1.e-5, 1.e3, prec);
-    PkEH[i] = Pk(kk[i], "EisensteinHu", false, redshift, store_output, output_root, norm, 1.e-5, 1.e3, prec);
-    OF[i] = PkCAMB[i]/PkEH[i];
-  }
+  for (size_t i=0; i<kk.size(); i++) 
+    OF[i] = PkLin[i]/PkApprox[i];
 
   // Get Pk normalization
-  glob::FuncGrid interp_camb(kk, PkCAMB, "Spline");
-  double integral = interp_camb.integrate_qag(1.e-5, 1.e3);
+  glob::FuncGrid interp_OF(kk, OF, "Spline");
 
-  // Create b-spline
-  glob::FuncGrid_Bspline bspline(log_kk, OF, nknots, order);
-  vector<double> interp = bspline.eval_func(log_kk);
-  for (size_t i=0; i<kk.size(); i++) 
-    PkNW[i] = interp[i]*PkEH[i];
-  
-  glob::FuncGrid interp_nw(kk, PkNW, "Spline");
-  double interp_integral = interp_nw.integrate_qag(1.e-5, 1.e3);
+  // Smooth the oscillatory part
+  if (kind=="gaussian_3d")
+  {
+    double norm = sqrt(2/par::pi)/lambda*log(10.);
+    for (size_t i=0; i<kk.size(); i++)
+    {
+      auto integrand = [&] (const double log_q) {
+	double qq = pow(10, log_q);
+	double x = qq*kk[i]/(lambda*lambda);
+	double fact = -(qq*qq+kk[i]*kk[i])/(2*lambda*lambda)+gsl_sf_lnsinh(x)-log(kk[i]*qq)+3*log(qq)+log(interp_OF(qq));
+	return gsl_sf_exp(fact);
+      };
 
-  for (size_t i=0; i<kk.size(); i++) 
-    PkNW[i] = PkNW[i]*integral/interp_integral;
+      PkNW[i] = wrapper::gsl::GSL_integrate_cquad(integrand, -5, 3)*PkApprox[i]*norm;
+    }
+  }
+  else if (kind=="gaussian_1d")
+  {
+    double norm = 1./(sqrt(2*par::pi)*lambda);
+    for (size_t i=0; i<kk.size(); i++)
+    {
+      double log_k = log10(kk[i]);
+      auto integrand = [&] (const double log_q) {
+	return interp_OF(pow(10., log_q))*exp(-pow(log_k-log_q, 2)/(2*lambda*lambda));
+      };
+
+      PkNW[i] = wrapper::gsl::GSL_integrate_cquad(integrand, -5, 3)*norm*PkApprox[i];
+    }
+  }
+  else 
+    ErrorCBL("wrong name for gaussian wiggles smoothing!", "Pk_DM_NoWiggles_gaussian", "PkXi.cpp", glob::ExitCode::_error_);
 
   return PkNW;
 }
@@ -1465,20 +1477,67 @@ vector<double> cbl::cosmology::Cosmology::Pk_DM_NoWiggles_bspline (const vector<
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::Pk_DM_NoWiggles (const string method, const vector<double> kk, const double redshift, const string linear_method, const int order, const int nknots, const bool store_output, const std::string output_root, const bool norm, const double prec)
+vector<double> cbl::cosmology::Cosmology::Pk_DM_NoWiggles_bspline (const vector<double> kk, const vector<double> PkLin, const vector<double> PkApprox, const int order, const int nknots)
 {
-  vector<double> pk;
+  vector<double> log_kk(kk.size());
+  vector<double> PkNW(kk.size());
+  vector<double> OF(kk.size());
+
+  for (size_t i=0; i<kk.size(); i++) {
+    log_kk[i] = log10(kk[i]);
+    OF[i] = PkLin[i]/PkApprox[i];
+  }
+
+  // Create b-spline
+  glob::FuncGrid_Bspline bspline(log_kk, OF, nknots, order);
+  vector<double> interp = bspline.eval_func(log_kk);
+  for (size_t i=0; i<kk.size(); i++) 
+    PkNW[i] = interp[i]*PkApprox[i];
+  
+  return PkNW;
+}
+
+
+// =====================================================================================
+
+
+vector<double> cbl::cosmology::Cosmology::Pk_DM_NoWiggles (const string method, const vector<double> kk, const double redshift, const string linear_method, const int order, const int nknots, const double lambda, const bool store_output, const std::string output_root, const bool norm, const double prec)
+{
+  vector<double> PkNW;
   if (method == "EisensteinHu") {
     for (size_t i=0; i<kk.size(); i++) 
-      pk.push_back(Pk(kk[i], "EisensteinHu", false, redshift, store_output, output_root, norm, 1.e-5, 1.e3, prec));
+      PkNW.push_back(Pk(kk[i], "EisensteinHu", false, redshift, store_output, output_root, norm, 1.e-5, 1.e3, prec));
   }
-  else if (method == "bspline") {
-    pk = Pk_DM_NoWiggles_bspline(kk, redshift, linear_method, order, nknots, store_output, output_root, norm, prec);
+  else if (method == "bspline" or method=="gaussian_1d" or method=="gaussian_3d"){
+    vector<double> PkLin(kk.size());
+    vector<double> PkApprox(kk.size());
+
+    for (size_t i=0; i<kk.size(); i++) {
+      PkLin[i] = Pk(kk[i], linear_method, false, redshift, store_output, output_root, norm, 1.e-5, 1.e3, prec);
+      PkApprox[i] = Pk(kk[i], "EisensteinHu", false, redshift, store_output, output_root, norm, 1.e-5, 1.e3, prec);
+    }
+
+    if (method == "bspline") {
+      PkNW = Pk_DM_NoWiggles_bspline(kk, PkLin, PkApprox, order, nknots);
+    }
+    else if (method == "gaussian_3d" or method == "gaussian_1d") {
+      PkNW = Pk_DM_NoWiggles_gaussian(kk, PkLin, PkApprox, lambda, method);
+    }
+
+    // Get Pk normalization
+    glob::FuncGrid interp_camb(kk, PkLin, "Spline");
+    double integral = interp_camb.integrate_qag(1.e-5, 1.e3);
+
+    glob::FuncGrid interp_nw(kk, PkNW, "Spline");
+    double interp_integral = interp_nw.integrate_qag(1.e-5, 1.e3);
+
+    for (size_t i=0; i<kk.size(); i++) 
+      PkNW[i] = PkNW[i]*integral/interp_integral;
   }
   else 
     ErrorCBL("wrong name for pk no wiggles!", "Pk_NoWiggles", "PkXi.cpp", glob::ExitCode::_error_);
 
-  return pk;
+  return PkNW;
 }
 
 
@@ -1502,10 +1561,10 @@ vector<double> cbl::cosmology::Cosmology::Pk_DM_Linear (const string method, con
 // =====================================================================================
 
 
-vector<double> cbl::cosmology::Cosmology::Pk_DM_DeWiggled (const string linear_method, const string nowiggles_method, const vector<double> kk, const double redshift, const double sigma_NL, const int order, const int nknots, const bool store_output, const std::string output_root, const bool norm, const double prec)
+vector<double> cbl::cosmology::Cosmology::Pk_DM_DeWiggled (const string linear_method, const string nowiggles_method, const vector<double> kk, const double redshift, const double sigma_NL, const int order, const int nknots, const double lambda, const bool store_output, const std::string output_root, const bool norm, const double prec)
 {
   vector<double> PkLin = Pk_DM_Linear(linear_method, kk, redshift, store_output, output_root, norm, prec); 
-  vector<double> PkNW = Pk_DM_NoWiggles(nowiggles_method, kk, redshift, linear_method, order, nknots, store_output, output_root, norm, prec);
+  vector<double> PkNW = Pk_DM_NoWiggles(nowiggles_method, kk, redshift, linear_method, order, nknots, lambda, store_output, output_root, norm, prec);
   vector<double> PkDW(kk.size(), 0);
 
   for (size_t i=0; i<kk.size(); i++) 
