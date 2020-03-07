@@ -153,13 +153,13 @@ python_version_minor := $(word 2,${python_version_full})
 ifeq ($(python_version_major),2)
 	PYINC = $(shell $(PY) -c 'from distutils import sysconfig; print sysconfig.get_config_var("INCLUDEDIR")')
 	PYLIB = $(shell $(PY) -c 'from distutils import sysconfig; print sysconfig.get_config_var("LIBDIR")')    
-	SWIG_FLAG = -python -c++
+	SWIG_FLAG = -python -c++ -threads
 	PYVERSION = $(python_version_major).$(python_version_minor)
 endif
 ifeq ($(python_version_major),3)
 	PYINC = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("INCLUDEDIR"))')
 	PYLIB = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("LIBDIR"))')    
-	SWIG_FLAG = -python -c++ -py3
+	SWIG_FLAG = -python -c++ -py3 -threads
 	PYVERSION = $(python_version_major).$(python_version_minor)m
 endif
 

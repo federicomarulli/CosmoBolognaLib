@@ -1506,6 +1506,26 @@ void cbl::catalogue::Catalogue::write_data (const std::string outputFile, const 
   fout.clear(); fout.close();
 }
 
+// ============================================================================
+
+
+Catalogue cbl::catalogue::Catalogue::sub_catalogue (const cbl::catalogue::MaskObject &mask, const bool excl) const
+{
+  vector<shared_ptr<Object>> objects;
+  vector<bool> w(m_object.size());
+  
+  bool fact = (excl) ? false : true;
+
+  for (size_t i=0; i<m_object.size(); i++) 
+    w[i] = mask(m_object[i])&&fact;
+  
+  for (size_t i=0; i<m_object.size(); i++)
+    if (w[i])
+      objects.push_back(m_object[i]);
+ 
+  return Catalogue{objects};
+}
+
 
 // ============================================================================
 

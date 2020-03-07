@@ -1,6 +1,6 @@
 // SWIG Interface to CosmoBolognaLib
 
-%module CosmoBolognaLib
+%module(directors="1") CosmoBolognaLib
 
 //%import "../Doc/documentation.i"
 

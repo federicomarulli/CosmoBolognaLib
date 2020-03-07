@@ -188,6 +188,9 @@ check("catalogue", "divide_catalogue.py", "python3")
 check("catalogue", "catalogue.py", "python")
 check("catalogue", "catalogue.py", "python3")
 
+check("catalogue", "mask_catalogue.py", "python")
+check("catalogue", "mask_catalogue.py", "python3")
+
 check("clustering/codes", "2pt_monopole.py", "python")
 check("clustering/codes", "2pt_monopole.py", "python3")
 

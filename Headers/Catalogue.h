@@ -193,6 +193,13 @@ namespace cbl {
       
     };
 
+    /// typedef of a function returning a bool with an oobject reference in input
+    struct MaskObject {
+      virtual bool operator() (const std::shared_ptr<Object> obj) const {(void) obj; return true;}
+      virtual ~MaskObject () {}
+    };
+
+
     /**
      * @brief return a vector containing the
      * Var names
@@ -238,7 +245,6 @@ namespace cbl {
     inline std::vector<Var> VarCast (const std::vector<std::string> varNames)
     { return castFromNames<Var>(varNames, VarNames()); }
 
-    
     /**
      *  @enum RandomType
      *  @brief the type of random catalogue
@@ -2319,6 +2325,15 @@ namespace cbl {
        *  @return object of class catalogue
        */
       Catalogue sub_catalogue (const Var var_name, const double down, const double up, const bool excl=false) const;
+
+      /**
+       *  @brief create a sub-catalogue
+       *  @param mask function of type std::function<bool(shared_ptr<Object>)> to flag objects
+       *  @param excl false &rarr; create a subcatalogue inside
+       *  down-up; true &rarr; create a subcatalogue outside down-up
+       *  @return object of class catalogue
+       */
+      Catalogue sub_catalogue (const MaskObject &mask, const bool excl=false) const;
 
       /**
        *  @brief create a sub-catalogue

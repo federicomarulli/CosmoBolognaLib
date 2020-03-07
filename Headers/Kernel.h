@@ -366,6 +366,11 @@
  *  This example shows how to divide the a catalogue in sub regions
  */
 /**
+ *  @example mask_catalogue.py
+ *
+ *  This example shows how to extract subsamples from a catalogue
+ */
+/**
  *  @example fft_fftlog.py
  *
  *  This example shows how to computes the discrete Fourier

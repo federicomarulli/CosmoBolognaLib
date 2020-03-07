@@ -14,6 +14,8 @@
 %shared_ptr(cbl::catalogue::HostHalo);
 %shared_ptr(cbl::catalogue::Catalogue);
 
+%feature("director") MaskObject;
+
 %{
 #include "Object.h"
 #include "RandomObject.h"
