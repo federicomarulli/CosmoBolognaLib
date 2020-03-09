@@ -1,8 +1,8 @@
 # C++ compiler, main compiler, openMP support required
-CXX = g++-7
+CXX = g++
 
 # C compiler, used to compile CUBA libraries
-CC = gcc-7
+CC = gcc
 
 # Fortran 90 compiler, used to compile some external libraries
 F = gfortran
