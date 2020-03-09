@@ -14,7 +14,7 @@
 %shared_ptr(cbl::catalogue::HostHalo);
 %shared_ptr(cbl::catalogue::Catalogue);
 
-%feature("director") MaskObject;
+%feature("director") cbl::catalogue::MaskObject;
 
 %{
 #include "Object.h"

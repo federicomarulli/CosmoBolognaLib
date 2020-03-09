@@ -12,6 +12,7 @@ std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 int main () {
 
   try {
+
   
     std::string file_catalogue = "cat.dat";
   
@@ -82,11 +83,24 @@ int main () {
 
     cbl::catalogue::Catalogue catalogue4; catalogue4.add_objects(object);
 
+    // --------------------------------------------------------------
+    // -------- method V : Subsample a catalogue with a mask --------
+    // --------------------------------------------------------------
+
+    cbl::catalogue::mask_function mask = [&] (const std::shared_ptr<cbl::catalogue::Object> obj)
+    {
+      if (obj->xx()>-70 && obj->xx()<10)
+        return true;
+      return false;
+    };
+
+    cbl::catalogue::Catalogue catalogue5 = catalogue1.sub_catalogue(mask);
   
     std::cout << "The number of galaxy in catalogue1 is " << catalogue1.nObjects() << std::endl;
     std::cout << "The number of galaxy in catalogue2 is " << catalogue2.nObjects() << std::endl;
     std::cout << "The number of galaxy in catalogue3 is " << catalogue3.nObjects() << std::endl;
     std::cout << "The number of galaxy in catalogue4 is " << catalogue4.nObjects() << std::endl;
+    std::cout << "The number of galaxy in catalogue5 is " << catalogue5.nObjects() << std::endl;
 
   }
 

@@ -193,9 +193,44 @@ namespace cbl {
       
     };
 
-    /// typedef of a function returning a bool with an oobject reference in input
+    /**
+     * @brief Definition of a new type
+     * to manage mask function
+     *
+     * This function can contain one or more
+     * checks on object variables, returning a bool
+     *
+     * @param obj pointer to an object of type cbl::catalogue::Object
+     *
+     * @return bool
+     */
+    typedef std::function<bool(const std::shared_ptr<Object> obj)> mask_function;
+
+    /**
+     * @brief object that encapsulate the 
+     * mask function.
+     *
+     * Mask should be an object that operates on
+     * object of type std::shared_ptr<cbl::catalogue::Object>,
+     * returning a bool
+     * 
+     */
     struct MaskObject {
+      /**
+       * @brief call function
+       * This function can contain one or more
+       * checks on object variables, returning a bool
+       *
+       * @param obj pointer to an object of type cbl::catalogue::Object
+       *
+       * @return bool 
+       */
       virtual bool operator() (const std::shared_ptr<Object> obj) const {(void) obj; return true;}
+
+      /**
+       * @brief Default destructor
+       * @return None
+       */
       virtual ~MaskObject () {}
     };
 
@@ -2329,6 +2364,15 @@ namespace cbl {
       /**
        *  @brief create a sub-catalogue
        *  @param mask function of type std::function<bool(shared_ptr<Object>)> to flag objects
+       *  @param excl false &rarr; create a subcatalogue inside
+       *  down-up; true &rarr; create a subcatalogue outside down-up
+       *  @return object of class catalogue
+       */
+      Catalogue sub_catalogue (const mask_function mask, const bool excl=false) const;
+
+      /**
+       *  @brief create a sub-catalogue
+       *  @param mask object of type cbl::catalogue::MaskObject
        *  @param excl false &rarr; create a subcatalogue inside
        *  down-up; true &rarr; create a subcatalogue outside down-up
        *  @return object of class catalogue

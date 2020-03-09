@@ -4285,18 +4285,18 @@ namespace cbl {
       std::vector<double> Pk_DM_NoWiggles_bspline (const std::vector<double> kk, const std::vector<double> PkLin, const std::vector<double> PkApprox, const int order, const int nknots);
 
       /**
-       *  @brief  the dark matter power spectrum without BAO wiggles.
+       *  @brief the dark matter power spectrum without BAO wiggles
        *
        *  This function provides the No Wiggles dark matter power
        *  spectrum. It can be computed with:
        *  - EisensteinHu approximate formulas
        *  [http://arxiv.org/abs/1207.1465]:
        *  -  bspline interpolation (see 
-       *  cbl::cosmology::Cosmology:::Pk_DM_NoWiggles_bspline).
+       *  cbl::cosmology::Cosmology::Pk_DM_NoWiggles_bspline).
        *  - gaussian 3d smoothing  (see 
-       *  cbl::cosmology::Cosmology:::Pk_DM_NoWiggles_gaussian_3d).
+       *  cbl::cosmology::Cosmology::Pk_DM_NoWiggles_gaussian_3d).
        *  - gaussian 1d smoothing  (see 
-       *  cbl::cosmology::Cosmology:::Pk_DM_NoWiggles_gaussian_1d).
+       *  cbl::cosmology::Cosmology::Pk_DM_NoWiggles_gaussian_1d).
        *
        *  @author Alfonso Veropalumbo
        *  @author alfonso.veropalumbo@unibo.it

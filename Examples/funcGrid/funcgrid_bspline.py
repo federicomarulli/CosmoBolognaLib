@@ -6,7 +6,7 @@ from CosmoBolognaLib import DoubleVector as dv
 # Define the function to put on a grid
 npoints = 200
 xx = np.linspace(0., 4*np.pi, 200)
-func = np.cos(xx) * np.exp(- 0.1*xx)
+func = np.cos(xx)*np.exp(-0.1*xx)
 
 # Define the b-spline
 # number of breakpoints
@@ -19,7 +19,7 @@ order = 4
 interp_func = cbl.FuncGrid_Bspline(dv(xx), dv(func), nknots, order)
 
 # Compute the interpolated values
-xx2 =  np.linspace(0., 4*np.pi, 50) 
+xx2 = np.linspace(0., 4*np.pi, 50) 
 func2 = interp_func.eval_func(dv(xx2))
 
 # Plot results
@@ -30,4 +30,4 @@ plt.xlabel("x")
 plt.ylabel("f(x)")
 
 plt.legend(loc="best")
-plt.show()
+plt.show(block=False)
