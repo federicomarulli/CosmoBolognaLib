@@ -74,7 +74,7 @@ void cbl::data::Data2D_extra::Print (const int precision) const
 // ======================================================================================
 
 
-void cbl::data::Data2D_extra::write (const string dir, const string file, const string header, const bool full, const int precision, const int rank) const 
+void cbl::data::Data2D_extra::write (const string dir, const string file, const string header, const bool full, const int prec, const int ww, const int rank) const 
 {
   (void)rank;
 
@@ -84,16 +84,23 @@ void cbl::data::Data2D_extra::write (const string dir, const string file, const 
   if (header!=par::defaultString)
     fout << "### " << header << " ###" << endl;
 
+  const int bp = std::cout.precision();
+
   for (int i=0; i<m_xsize; ++i)
     for (int j=0; j<m_ysize; ++j) {
       int index = j+m_ysize*i;
-      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_y[j]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index];
+      cbl::Print(m_x[index], prec, ww, false, false, fout);
+      fout << "  " ;
+      cbl::Print(m_y[index], prec, ww, false, false, fout);
+      fout << "  " ;
+      cbl::Print(m_data[index], prec, ww, false, false, fout);
+      fout << "  " ;
+      cbl::Print(m_error[index], prec, ww, false, false, fout);
 
-      for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-        fout << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_extra_info[ex][index];
+      for (size_t ex=0; ex<m_extra_info.size(); ++ex) {
+	fout << "  " ;
+	cbl::Print(m_extra_info[ex][index], prec, ww, false, false, fout);
+      }
       fout << endl;
     }
 
@@ -103,44 +110,59 @@ void cbl::data::Data2D_extra::write (const string dir, const string file, const 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
         int index = j+m_ysize*i;
-        fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << -m_y[j]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index];
-
-        for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-          fout  << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << m_extra_info[ex][index];
-        fout << endl;
+	cbl::Print(m_x[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(-m_y[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_data[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_error[index], prec, ww, false, false, fout);
+	
+	for (size_t ex=0; ex<m_extra_info.size(); ++ex) {
+	  fout << "  " ;
+	  cbl::Print(m_extra_info[ex][index], prec, ww, false, false, fout);
+	}
+	fout << endl;
+      }
+    
+    for (int i=0; i<m_xsize; ++i)
+      for (int j=0; j<m_ysize; ++j) {
+        int index = j+m_ysize*i;
+	cbl::Print(-m_x[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(-m_y[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_data[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_error[index], prec, ww, false, false, fout);
+	
+	for (size_t ex=0; ex<m_extra_info.size(); ++ex) {
+	  fout << "  " ;
+	  cbl::Print(m_extra_info[ex][index], prec, ww, false, false, fout);
+	}
+	fout << endl;
       }
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
         int index = j+m_ysize*i;
-        fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << -m_x[i]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << -m_y[j]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index];
-
-        for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-          fout  << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_extra_info[ex][index];
-        fout << endl;
-      }
-
-    for (int i=0; i<m_xsize; ++i)
-      for (int j=0; j<m_ysize; ++j) {
-        int index = j+m_ysize*i;
-        fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << -m_x[i]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_y[j]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index];
-
-        for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-          fout << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_extra_info[ex][index];
-        fout << endl;
-      }
-
+	cbl::Print(-m_x[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_y[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_data[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_error[index], prec, ww, false, false, fout);
+	
+	for (size_t ex=0; ex<m_extra_info.size(); ++ex) {
+	  fout << "  " ;
+	  cbl::Print(m_extra_info[ex][index], prec, ww, false, false, fout);
+	}
+	fout << endl;
+      } 
   }
 
+  std::cout.precision(bp);
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl << endl;
 }
 

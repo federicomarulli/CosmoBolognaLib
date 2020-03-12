@@ -698,12 +698,12 @@ namespace cbl {
       /**
        *  @brief print the data on screen
        *
-       *  @param precision the float precision
+       *  @param prec the float precision
        *
        *  @return none
        */
-      virtual void Print (const int precision=4) const 
-      { (void)precision; ErrorCBL("", "Print", "Data.h"); }
+      virtual void Print (const int prec=4) const 
+      { (void)prec; ErrorCBL("", "Print", "Data.h"); }
       
       /**
        *  @brief write the data
@@ -711,12 +711,13 @@ namespace cbl {
        *  @param file output file
        *  @param header text with the variable names to be written at
        *  the first line of the output file
-       *  @param precision the float precision
+       *  @param prec the float precision
+       *  @param ww number of characters to be used as field width
        *  @param rank cpu index (for MPI usage)
        *  @return none
        */
-      virtual void write (const std::string dir, const std::string file, const std::string header, const int precision=4, const int rank=0) const 
-      { (void)dir; (void)file; (void)header; (void)precision; (void)rank; ErrorCBL("", "write", "Data.h"); }
+      virtual void write (const std::string dir, const std::string file, const std::string header, const int prec=4, const int ww=8, const int rank=0) const 
+      { (void)dir; (void)file; (void)header; (void)prec; (void)ww; (void)rank; ErrorCBL("", "write", "Data.h"); }
 
       /**
        *  @brief write the data
@@ -727,12 +728,13 @@ namespace cbl {
        *  @param full false &rarr; simply store the data; true &rarr;
        *  duplicate the data in the other three quadrands (usefull
        *  e.g. when storing the 2D correlation function)
-       *  @param precision the float precision
+       *  @param prec the float precision
+       *  @param ww number of characters to be used as field width
        *  @param rank cpu index (for MPI usage)
        *  @return none
        */
-      virtual void write (const std::string dir, const std::string file, const std::string header, const bool full, const int precision=10, const int rank=0) const
-      { (void)dir; (void)file; (void)header; (void)full; (void)precision; (void)rank; ErrorCBL("", "write", "Data.h"); }
+      virtual void write (const std::string dir, const std::string file, const std::string header, const bool full, const int prec=10, const int ww=8, const int rank=0) const
+      { (void)dir; (void)file; (void)header; (void)full; (void)prec; (void)ww; (void)rank; ErrorCBL("", "write", "Data.h"); }
 
       /**
        *  @brief write the data
@@ -740,12 +742,13 @@ namespace cbl {
        *  @param files output file
        *  @param header text with the variable names to be written at
        *  the first line of the output file
-       *  @param precision the float precision
+       *  @param prec the float precision
+       *  @param ww number of characters to be used as field width
        *  @param rank cpu index (for MPI usage)
        *  @return none
        */
-      virtual void write (const std::string dir, const std::vector<std::string> files, const std::string header, const int precision=10, const int rank=0) const
-      { (void)dir; (void)files; (void)header; (void)precision; (void)rank; ErrorCBL("", "write", "Data.h"); }
+      virtual void write (const std::string dir, const std::vector<std::string> files, const std::string header, const int prec=10, const int ww=8, const int rank=0) const
+      { (void)dir; (void)files; (void)header; (void)prec; (void)ww; (void)rank; ErrorCBL("", "write", "Data.h"); }
       
       /**
        *  @brief write the interval variable m_covariance on a file,

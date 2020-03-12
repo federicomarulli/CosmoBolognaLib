@@ -9,7 +9,6 @@ from __future__ import print_function
 import CosmoBolognaLib as cbl
 from CosmoBolognaLib import StringVector as sv
 
-import time
 
 # define a std::vector of input files (in this case with dim=1) 
 file_cat = "cat.dat"
@@ -32,12 +31,7 @@ class PYMaskObject(cbl.MaskObject):
 mask = PYMaskObject()
 
 # Apply the mask
-print("Start")
-start = time.time()
 cat2 = catalogue.sub_catalogue(mask)
-stop = time.time()
-print(stop-start)
-print("Stop")
 
 # Verify the mask works by comparing with a simpler version of the same operation
 cat3 = catalogue.sub_catalogue(cbl.Var__X_, -70, 10)

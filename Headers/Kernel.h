@@ -424,6 +424,13 @@
  *  constraints from void counting
  */
 /**
+ *  @example Covariance.ipynb 
+ *  
+ *  This \b notebook shows basic functionalities of the
+ *  CovarianceMatrix and TaperedCovarianceMatrix classes
+ *
+ */
+/**
  *  @example analyzeChains.ipynb 
  *  
  *  This \b notebook is aimed to help in post-processing Markov chain
@@ -1092,6 +1099,8 @@ namespace cbl {
    *
    *  @param use_coutCBL if true, coutCBL is used instead of std::cout
    *
+   *  @param stream object of class std::ostream 
+   *
    *  @param header string added at the beginning of the line
    *
    *  @param colour output colour 
@@ -1099,22 +1108,23 @@ namespace cbl {
    *  @return none
    */
   template <typename T> 
-    void Print (const T value, const int prec, const int ww, const bool insert_new_line=true, const bool use_coutCBL=true, const std::string header="", const std::string colour=cbl::par::col_default) 
+    void Print (const T value, const int prec, const int ww, const bool insert_new_line=true, const bool use_coutCBL=true, std::ostream &stream=std::cout, const std::string header="", const std::string colour=cbl::par::col_default) 
     {
       const int bp = std::cout.precision(); 
       if (fabs(value)<pow(10, -prec) || fabs(value)>pow(10, prec)) {
 	if (use_coutCBL)
 	  coutCBL << header << colour << std::scientific << std::setprecision(prec) << std::setw(ww) << value;
 	else
-	  std::cout << header << colour << std::scientific << std::setprecision(prec) << std::setw(ww) << value;
+	  stream << header << std::scientific << std::setprecision(prec) << std::setw(ww) << value;
       }
       else {
-	if (use_coutCBL)
+	if (use_coutCBL) 
 	  coutCBL << header << colour << std::fixed << std::setprecision(prec) << std::setw(ww) << value;
-	else
-	  std::cout << header << colour << std::fixed << std::setprecision(prec) << std::setw(ww) << value;
+	else 
+	  stream << header << std::fixed << std::setprecision(prec) << std::setw(ww) << value;
       }
-      if (insert_new_line) std::cout << par::col_default << std::endl;
+      if (insert_new_line && use_coutCBL) coutCBL << par::col_default << std::endl;
+      if (insert_new_line && !use_coutCBL) stream << std::endl;
       std::cout.precision(bp);
     }
   

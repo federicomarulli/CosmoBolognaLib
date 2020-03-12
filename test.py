@@ -151,9 +151,9 @@ check("readParameterFile", "readParameterFile", "C++")
 
 if not ("nopy" in sys.argv):
     os.chdir(cwd)
-    out = os.system("make clean && cd Examples/statistics/codes && make modelpy && cd ../../.. && make cleanpy && make FLAGS=\"-O0 -g\"")
+    out = os.system("cd Examples/statistics/codes && make modelpy && cd ../../.. && make cleanpy")
     check_sys(out)
-    if ("python" in sys.argv):
+    if ("ALL" in sys.argv or "python" in sys.argv):
         os.system("make python PY=python2")
     elif ("python3" in sys.argv):
         os.system("make python PY=python3")

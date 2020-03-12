@@ -382,13 +382,15 @@ namespace cbl {
        *  duplicate the data in the other three quadrands (usefull
        *  e.g. when storing the 2D correlation function)
        *
-       *  @param precision the floating point precision
+       *  @param prec the floating point precision
+       *
+       *  @param ww number of characters to be used as field width
        *
        *  @param rank cpu index (for MPI usage)
        *
        *  @return none
        */
-      void write (const std::string dir, const std::string file, const std::string header, const bool full, const int precision=4, const int rank=0) const;
+      void write (const std::string dir, const std::string file, const std::string header, const bool full, const int prec=4, const int ww=8, const int rank=0) const;
           
       /**
        *  @brief write the covariance

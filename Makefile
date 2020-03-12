@@ -255,7 +255,7 @@ OBJ_RECfast = $(dir_Recfast)/src/cosmology.Recfast.o \
 
 OBJ_KERNEL = $(dir_KERNEL)Kernel.o
 
-OBJ_WRAP = $(dir_WRAP)GSLwrapper.o $(dir_WRAP)CUBAwrapper.o $(dir_WRAP)FITSwrapper.o 
+OBJ_WRAP = $(dir_WRAP)EigenWrapper.o $(dir_WRAP)GSLwrapper.o $(dir_WRAP)CUBAwrapper.o $(dir_WRAP)FITSwrapper.o 
 
 OBJ_FUNCGRID = $(dir_FUNCGRID)FuncGrid.o $(dir_FUNCGRID)FuncGrid_Bspline.o
 
@@ -265,7 +265,7 @@ OBJ_RAN = $(dir_RAN)RandomNumbers.o
 
 OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)SphericalHarmonics_Coefficients.o
 
-OBJ_DATA = $(dir_DATA)Data.o $(dir_DATA)Data1D.o $(dir_DATA)Data1D_collection.o $(dir_DATA)Data2D.o $(dir_DATA)Data1D_extra.o $(dir_DATA)Data2D_extra.o
+OBJ_DATA = $(dir_DATA)Data.o $(dir_DATA)Data1D.o $(dir_DATA)Data1D_collection.o $(dir_DATA)Data2D.o $(dir_DATA)Data1D_extra.o $(dir_DATA)Data2D_extra.o $(dir_DATA)CovarianceMatrix.o $(dir_DATA)TaperedCovarianceMatrix.o
 
 OBJ_FIELD = $(dir_FIELD)Field3D.o
 
@@ -668,6 +668,8 @@ $(dir_KERNEL)Kernel.o: $(dir_KERNEL)Kernel.cpp $(HH) $(PWD)/Makefile
 
 ####################################################################
 
+$(dir_WRAP)EigenWrapper.o: $(dir_WRAP)EigenWrapper.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP)EigenWrapper.cpp -o $(dir_WRAP)EigenWrapper.o 
 
 $(dir_WRAP)GSLwrapper.o: $(dir_WRAP)GSLwrapper.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP)GSLwrapper.cpp -o $(dir_WRAP)GSLwrapper.o 
@@ -732,6 +734,12 @@ $(dir_DATA)Data1D_extra.o: $(dir_DATA)Data1D_extra.cpp $(HH) $(PWD)/Makefile
 
 $(dir_DATA)Data2D_extra.o: $(dir_DATA)Data2D_extra.cpp $(HH) $(PWD)/Makefile  
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_DATA)Data2D_extra.cpp -o $(dir_DATA)Data2D_extra.o
+
+$(dir_DATA)CovarianceMatrix.o: $(dir_DATA)CovarianceMatrix.cpp $(HH) $(PWD)/Makefile  
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_DATA)CovarianceMatrix.cpp -o $(dir_DATA)CovarianceMatrix.o
+
+$(dir_DATA)TaperedCovarianceMatrix.o: $(dir_DATA)TaperedCovarianceMatrix.cpp $(HH) $(PWD)/Makefile  
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_DATA)TaperedCovarianceMatrix.cpp -o $(dir_DATA)TaperedCovarianceMatrix.o
 
 
 #################################################################### 
