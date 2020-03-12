@@ -209,7 +209,7 @@ void cbl::data::Data2D::Print (const int precision) const
 // ======================================================================================
 
 
-void cbl::data::Data2D::write (const string dir, const string file, const string header, const bool full, const int precision, const int rank) const 
+void cbl::data::Data2D::write (const string dir, const string file, const string header, const bool full, const int prec, const int ww, const int rank) const 
 {
   (void)rank;
   
@@ -219,47 +219,62 @@ void cbl::data::Data2D::write (const string dir, const string file, const string
   if (header!=par::defaultString)
     fout << "### " << header << " ###" << endl;
 
+  const int bp = std::cout.precision();
+  
   for (int i=0; i<m_xsize; ++i)
     for (int j=0; j<m_ysize; ++j) {
       int index = j+m_ysize*i;
-      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_y[j]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index] << endl;
+      cbl::Print(m_x[index], prec, ww, false, false, fout);
+      fout << "  " ;
+      cbl::Print(m_y[index], prec, ww, false, false, fout);
+      fout << "  " ;
+      cbl::Print(m_error[index], prec, ww, false, false, fout);
+      fout << "  " ;
+      cbl::Print(m_error[index], prec, ww, true, false, fout);
     }
 
- 
+
   if (full) { // duplicate the information in the other 3 quadrants
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
 	int index = j+m_ysize*i;
-	fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << m_x[i]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << -m_y[j]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index]<< endl;
+	cbl::Print(m_x[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(-m_y[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_error[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_error[index], prec, ww, true, false, fout);
       }
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
 	int index = j+m_ysize*i;
-	fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << -m_x[i]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << -m_y[j]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index] << endl;
+	cbl::Print(-m_x[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(-m_y[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_error[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_error[index], prec, ww, true, false, fout);
       }
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
 	int index = j+m_ysize*i;
-	fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << -m_x[i]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_y[j]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[index]
-	     << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[index]<< endl;
+	cbl::Print(-m_x[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(-m_y[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_error[index], prec, ww, false, false, fout);
+	fout << "  " ;
+	cbl::Print(m_error[index], prec, ww, true, false, fout);
       }
     
   }
-
+  
+  std::cout.precision(bp);
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl << endl;
 }
 

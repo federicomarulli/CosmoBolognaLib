@@ -384,13 +384,15 @@ namespace cbl {
        *  @param header text with the variable names to be written at
        *  the first line of the output file
        *
-       *  @param precision the float precision
+       *  @param prec the float precision
+       *
+       *  @param ww number of characters to be used as field width 
        *
        *  @param rank cpu index (for MPI usage)
        *
        *  @return none
        */
-      void write (const std::string dir, const std::string file, const std::string header, const int precision=10, const int rank=0) const override;
+      void write (const std::string dir, const std::string file, const std::string header, const int prec=4, const int ww=8, const int rank=0) const override;
       
       /**
        *  @brief write the data
@@ -404,11 +406,13 @@ namespace cbl {
        *
        *  @param precision the float precision
        *
+       *  @param ww number of characters to be used as field width 
+       *
        *  @param rank cpu index (for MPI usage)
        *
        *  @return none
        */
-      void write (const std::string dir, const std::vector<std::string> files, const std::string header, const int precision=10, const int rank=0) const override;
+      void write (const std::string dir, const std::vector<std::string> files, const std::string header, const int precision=10, const int ww=8, const int rank=0) const override;
 
       /**
        *  @brief write the interval variable m_covariance on a file,

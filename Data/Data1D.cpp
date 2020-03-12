@@ -146,7 +146,7 @@ void cbl::data::Data1D::Print (const int precision) const
 // ======================================================================================
 
 
-void cbl::data::Data1D::write (const string dir, const string file, const string header, const int precision, const int rank) const 
+void cbl::data::Data1D::write (const string dir, const string file, const string header, const int prec, const int ww, int rank) const 
 {
   (void)rank;
   
@@ -156,11 +156,16 @@ void cbl::data::Data1D::write (const string dir, const string file, const string
   if (header!=par::defaultString)
     fout << "### " << header << " ###" << endl;
 
-  for (size_t i=0; i<m_x.size(); i++)
-    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i] 
-	 << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[i] 
-	 << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[i] << endl;
-   
+  const int bp = std::cout.precision();
+
+  for (size_t i=0; i<m_x.size(); i++) {
+    cbl::Print(m_x[i], prec, ww, false, false, fout);
+    fout << "  " ;
+    cbl::Print(m_data[i], prec, ww, false, false, fout);
+    fout << "  " ;
+    cbl::Print(m_error[i], prec, ww, true, false, fout);
+  }
+  std::cout.precision(bp);
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
 }
 

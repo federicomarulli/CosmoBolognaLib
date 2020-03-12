@@ -245,7 +245,7 @@ void cbl::measure::numbercounts::NumberCounts2D::write (const string dir, const 
   if(system(mkdir.c_str())) {}
 
   string header = "# bin1_center bin2_center counts error r1_1 r2_1 r1_2 r2_2";
-  m_dataset->write(dir, file, header, false, 8, rank);
+  m_dataset->write(dir, file, header, false, 4, 8, rank);
 }
 
 

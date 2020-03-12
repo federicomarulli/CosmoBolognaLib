@@ -285,12 +285,13 @@ namespace cbl {
        *  @param full false &rarr; simply store the data; true &rarr;
        *  duplicate the data in the other three quadrands (usefull
        *  e.g. when storing the 2D correlation function)
-       *  @param precision the floating point precision for the output
+       *  @param prec the floating point precision for the output
        *  file
+       *  @param ww number of characters to be used as field width
        *  @param rank cpu index (for MPI usage)
        *  @return none
        */
-      virtual void write (const std::string dir, const std::string file, const std::string header, const bool full, const int precision=4, const int rank=0) const override;
+      virtual void write (const std::string dir, const std::string file, const std::string header, const bool full, const int prec=4, const int ww=8, const int rank=0) const override;
       
       ///@}
 

@@ -142,7 +142,7 @@ void cbl::data::Data1D_extra::Print (const int precision) const
 // ======================================================================================
 
 
-void cbl::data::Data1D_extra::write (const string dir, const string file, const string header, const int precision, const int rank) const 
+void cbl::data::Data1D_extra::write (const string dir, const string file, const string header, const int prec, const int ww, const int rank) const 
 {
   (void)rank;
   
@@ -152,12 +152,15 @@ void cbl::data::Data1D_extra::write (const string dir, const string file, const 
   fout << "### "<< header <<" ###" << endl;
 
   for (size_t i=0; i<m_x.size(); ++i) {
-    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i] 
-	 << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[i] 
-	 << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[i];
-    
-    for (size_t ex=0; ex<m_extra_info.size(); ++ex)
-      fout << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << m_extra_info[ex][i];
+    cbl::Print(m_x[i], prec, ww, false, false, fout);
+    fout << "  " ;
+    cbl::Print(m_data[i], prec, ww, false, false, fout);
+    fout << "  " ;
+    cbl::Print(m_error[i], prec, ww, false, false, fout);
+    for (size_t ex=0; ex<m_extra_info.size(); ++ex) {
+      fout << "  " ;
+      cbl::Print(m_extra_info[ex][i], prec, ww, false, false, fout);
+    }
     fout << endl;
   }
   

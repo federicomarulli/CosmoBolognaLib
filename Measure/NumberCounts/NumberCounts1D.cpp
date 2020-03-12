@@ -253,7 +253,7 @@ void cbl::measure::numbercounts::NumberCounts1D::write (const string dir, const 
   if (system(mkdir.c_str())) {}
 
   string header = "bin_center  histogram  error  lower_edge upper_edge unweighted_counts  unweighted_counts_error  hist_normalization ave_bin err_bin";
-  m_dataset->write(dir, file, header, 10, rank);
+  m_dataset->write(dir, file, header, 4, 8, rank);
 }
 
 

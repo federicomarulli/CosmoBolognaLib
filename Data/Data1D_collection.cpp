@@ -377,7 +377,7 @@ void cbl::data::Data1D_collection::Print (const int precision) const
 // ======================================================================================
 
 
-void cbl::data::Data1D_collection::write (const std::string dir, const std::string file, const std::string header, const int precision, const int rank) const
+void cbl::data::Data1D_collection::write (const std::string dir, const std::string file, const std::string header, const int prec, const int ww, const int rank) const
 {
   (void)rank;
 
@@ -392,14 +392,19 @@ void cbl::data::Data1D_collection::write (const std::string dir, const std::stri
   if (header!=par::defaultString)
     fout << "### "<< header <<" ###" << endl;
 
+  const int bp = std::cout.precision();
+  
   for (int i=0; i<ndata; i++) {
-    fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[0][i] << "  ";
-    for (int j=0; j<m_ndataset; j++)
-      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[m_index[j][i]]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[m_index[j][i]] << "  ";
-    fout << endl;
+    cbl::Print(m_x[0][i], prec, ww, false, false, fout);
+    fout << "  " ;
+    for (int j=0; j<m_ndataset; j++) {
+      cbl::Print(m_data[m_index[j][i]], prec, ww, false, false, fout);
+      fout << "  " ;
+      cbl::Print(m_error[m_index[j][i]], prec, ww, true, false, fout);
+    }
   }
 
+  std::cout.precision(bp);
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
 }
 
@@ -407,7 +412,7 @@ void cbl::data::Data1D_collection::write (const std::string dir, const std::stri
 // ======================================================================================
 
 
-void cbl::data::Data1D_collection::write (const std::string dir, const std::vector<std::string> files, const std::string header, const int precision, const int rank) const
+void cbl::data::Data1D_collection::write (const std::string dir, const std::vector<std::string> files, const std::string header, const int prec, const int ww, const int rank) const
 {
   (void)rank;
 
@@ -420,11 +425,18 @@ void cbl::data::Data1D_collection::write (const std::string dir, const std::vect
     if (header!=par::defaultString)
       fout << "### "<< header <<" ###" << endl;
 
-    for (int j=0; j<m_xsize[i]; j++)
-      fout << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_x[i][j]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_data[m_index[i][j]]
-	   << "  " << setiosflags(ios::fixed) << setprecision(precision) << setw(15) << right << m_error[m_index[i][j]] << endl;
+    const int bp = std::cout.precision();
 
+    for (int j=0; j<m_xsize[i]; j++){
+      cbl::Print(m_x[i][j], prec, ww, false, false, fout);
+      fout << "  " ;
+      cbl::Print(m_data[m_index[i][j]], prec, ww, false, false, fout);
+      fout << "  " ;
+      cbl::Print(m_error[m_index[i][j]], prec, ww, false, false, fout);
+      fout << endl;
+    }
+
+    std::cout.precision(bp);
     fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
   }
 

@@ -456,7 +456,7 @@ void cbl::statistics::PosteriorParameters::write_bestfit_info ()
 	ErrorCBL("no such kind of parameter!", "write_bestfit_info", "PosteriorParameters.cpp");
       }
 
-      Print(m_parameter_bestfit_value[i], 5, 10, true, true, "value = ");
+      Print(m_parameter_bestfit_value[i], 5, 10, true, true, std::cout, "value = ");
     }
   }
   
@@ -698,30 +698,30 @@ void cbl::statistics::PosteriorParameters::show_results (const int start, const 
     case statistics::ParameterType::_Base_:
       if (m_parameter_prior[i]->distributionType()==glob::DistributionType::_Constant_) {
 	coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_purple << "FIXED" << endl;
-	Print(m_parameter_prior[i]->sample(), 5, 10, true, true, "value ="); 
+	Print(m_parameter_prior[i]->sample(), 5, 10, true, true, std::cout, "value ="); 
 	cout << endl;
       }
       else {
 	coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_green << "FREE" << endl;
 	
-	Print(posterior->mean(), 5, 10, true, true, "Posterior mean = "); 
-	Print(std, 5, 10, true, true, "Posterior standard deviation = "); 
-	Print(posterior->median(), 5, 10, true, true, "Posterior median = "); 
-	Print((posterior->median()-posterior->percentile(18))-std_diff, 5, 10, true, true, "Posterior 18th percentile = "); 
-	Print((posterior->percentile(82)-posterior->median())+std_diff, 5, 10, true, true, "Posterior 82th percentile = "); 
-	if (show_mode) Print(posterior->mode(), 5, 10, true, true, "Posterior mode = "); 
+	Print(posterior->mean(), 5, 10, true, true, std::cout, "Posterior mean = "); 
+	Print(std, 5, 10, true, true, std::cout, "Posterior standard deviation = "); 
+	Print(posterior->median(), 5, 10, true, true, std::cout, "Posterior median = "); 
+	Print((posterior->median()-posterior->percentile(18))-std_diff, 5, 10, true, true, std::cout, "Posterior 18th percentile = "); 
+	Print((posterior->percentile(82)-posterior->median())+std_diff, 5, 10, true, true, std::cout, "Posterior 82th percentile = "); 
+	if (show_mode) Print(posterior->mode(), 5, 10, true, true, std::cout, "Posterior mode = "); 
 	cout << endl;
       }
       break;
 
     case statistics::ParameterType::_Derived_:
       coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_bred << "OUTPUT" << endl;
-      Print(posterior->mean(), 5, 10, true, true, "Posterior mean = "); 
-      Print(std, 5, 10, true, true, "Posterior standard deviation = "); 
-      Print(posterior->median(), 5, 10, true, true, "Posterior median = "); 
-      Print((posterior->median()-posterior->percentile(18))-std_diff, 5, 10, true, true, "Posterior 18th percentile = "); 
-      Print((posterior->percentile(82)-posterior->median())+std_diff, 5, 10, true, true, "Posterior 82th percentile = "); 
-      if (show_mode) Print(posterior->mode(), 5, 10, true, true, "Posterior mode = "); 
+      Print(posterior->mean(), 5, 10, true, true, std::cout, "Posterior mean = "); 
+      Print(std, 5, 10, true, true, std::cout, "Posterior standard deviation = "); 
+      Print(posterior->median(), 5, 10, true, true, std::cout, "Posterior median = "); 
+      Print((posterior->median()-posterior->percentile(18))-std_diff, 5, 10, true, true, std::cout, "Posterior 18th percentile = "); 
+      Print((posterior->percentile(82)-posterior->median())+std_diff, 5, 10, true, true, std::cout, "Posterior 82th percentile = "); 
+      if (show_mode) Print(posterior->mode(), 5, 10, true, true, std::cout, "Posterior mode = "); 
       cout << endl;
       break;
 
