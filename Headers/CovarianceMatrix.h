@@ -495,11 +495,11 @@ namespace cbl {
        * This function add two covariance matrices of order N and M.
        * It creates a block matrix of order N+M
        *
-       * @param cc object of class Catalogue
+       * @param covariance object of class CovarianceMatrix
        *
-       * @return object of class catalogue
+       * @return object of class CovarianceMatrix
        */
-      CovarianceMatrix operator += (const CovarianceMatrix cc) const;
+      CovarianceMatrix operator += (const CovarianceMatrix covariance) const;
 
       /**
        * @brief overloading of the += operator, to sum two covariance
@@ -508,11 +508,11 @@ namespace cbl {
        * This function add two covariance matrices of order N and M.
        * It creates a block matrix of order N+M
        *
-       * @param cc object of class CovarianceMatrix
+       * @param covariance object of class CovarianceMatrix
        *
        * @return object of class CovarianceMatrix
        */
-      CovarianceMatrix operator += (const std::shared_ptr<CovarianceMatrix> cc) const;
+      CovarianceMatrix operator += (const std::shared_ptr<CovarianceMatrix> covariance) const;
 
       /**
        * @brief overloading of the += operator, to sum several covariance
@@ -522,11 +522,11 @@ namespace cbl {
        * with several covariance matrices of order M_i.
        * It creates a block matrix of order \f$ N+\sum_i^n M_i\f$.
        *
-       * @param cc object of class Catalogue 
+       * @param covariance object of class CovarianceMatrix
        *
-       * @return object of class catalogue
+       * @return object of class CovarianceMatrix
        */
-      CovarianceMatrix operator += (const std::vector<CovarianceMatrix> cc) const;
+      CovarianceMatrix operator += (const std::vector<CovarianceMatrix> covariance) const;
 
       /**
        * @brief overloading of the += operator, to sum several covariance
@@ -536,11 +536,11 @@ namespace cbl {
        * with several covariance matrices of order M_i.
        * It creates a block matrix of order \f$ N+\sum_i^n M_i\f$.
        *
-       * @param cc object of class CovarianceMatrix
+       * @param covariance object of class CovarianceMatrix
        *
        * @return object of class CovarianceMatrix
        */
-      CovarianceMatrix operator += (const std::vector<std::shared_ptr<CovarianceMatrix>> cc) const;
+      CovarianceMatrix operator += (const std::vector<std::shared_ptr<CovarianceMatrix>> covariance) const;
 
       ///@}
       

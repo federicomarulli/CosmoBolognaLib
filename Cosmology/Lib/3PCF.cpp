@@ -1163,7 +1163,7 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const 
 // =====================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const std::string method_Pk, const int step_r, const int step_k, const string output_dir, const bool store_output, const string output_root, const bool force_RealSpace, const bool include_limits, const int max_ll, const bool use_k)
+std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const std::string method_Pk, const int step_r, const int step_k, const std::string output_dir, const bool store_output, const std::string output_root, const bool force_RealSpace, const bool include_limits, const int max_ll, const bool use_k)
 {
   double rmax = r1+r2;
 

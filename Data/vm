@@ -1,1 +1,1 @@
-gvim ../Headers/Data*.h *cpp &
+gvim ../Headers/Data*.h ../Headers/CovarianceMatrix.h *cpp &

@@ -11,7 +11,7 @@ F = gfortran
 PY = python
 
 # swig, used to create the python wrapper
-SWIG = swig
+SWIG = swig3.0
 
 # doxygen, used to create the documentation
 Doxygen = doxygen

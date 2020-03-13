@@ -116,7 +116,7 @@ namespace cbl {
 	 *
 	 * @return None
 	 */
-	void m_set_knots(const double xmin=cbl::par::defaultDouble, const double xmax=cbl::par::defaultDouble);
+	void m_set_knots (const double xmin=cbl::par::defaultDouble, const double xmax=cbl::par::defaultDouble);
 
 	/**
 	 * @brief set the b-spline knots
@@ -128,7 +128,7 @@ namespace cbl {
 	 *
 	 * @return None
 	 */
-	void m_set_knots(const std::vector<double> breakpoints);
+	void m_set_knots (const std::vector<double> breakpoints);
 
 	/**
 	 * @brief compute basis spline coefficients
@@ -142,17 +142,16 @@ namespace cbl {
 	 *
 	 * @return None
 	 */
-	void m_linear_fit(const double frac=0.1);
+	void m_linear_fit (const double frac=0.1);
 
 	/**
-	 * @brief compute the integral of the function
-	 * over the range [Min(m_x)-Max(m_x)] and set internal
-	 * variable m_integral
+	 * @brief compute the integral of the function over the range
+	 * [Min(m_x)-Max(m_x)] and set internal variable m_integral
 	 * This is used to renormalize the output
 	 *
 	 * @return None
 	 */
-	void m_compute_func_integral();
+	void m_compute_func_integral ();
 	
       ///@}
 
@@ -204,7 +203,7 @@ namespace cbl {
 	 *  @brief default destructor
 	 *  @return none
 	 */
-	~FuncGrid_Bspline() = default;
+	~FuncGrid_Bspline () = default;
 
       ///@}
 

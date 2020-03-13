@@ -200,7 +200,7 @@ void cbl::data::CovarianceMatrix::write (const string dir, const string file, co
 // ======================================================================================
 
 
-void cbl::data::CovarianceMatrix::measure(const std::vector<std::shared_ptr<Data>> dataset, const double normalization, const double prec)
+void cbl::data::CovarianceMatrix::measure (const std::vector<std::shared_ptr<Data>> dataset, const double normalization, const double prec)
 {
   const size_t nbins = dataset[0]->ndata();
   const size_t nmocks = dataset.size();
@@ -308,11 +308,10 @@ cbl::data::CovarianceMatrix cbl::data::CovarianceMatrix::operator += (const cbl:
 }
 
 
-
 // ======================================================================================
 
 
-cbl::data::CovarianceMatrix cbl::data::CovarianceMatrix::operator += (const shared_ptr<cbl::data::CovarianceMatrix> covariance) const
+cbl::data::CovarianceMatrix cbl::data::CovarianceMatrix::operator += (const std::shared_ptr<CovarianceMatrix> covariance) const
 {
   const size_t new_size = m_order+covariance->order();
   vector<vector<double>> matrix(new_size, vector<double>(new_size, 0));
@@ -329,11 +328,10 @@ cbl::data::CovarianceMatrix cbl::data::CovarianceMatrix::operator += (const shar
 }
 
 
-
 // ======================================================================================
 
 
-cbl::data::CovarianceMatrix cbl::data::CovarianceMatrix::operator += (const vector<cbl::data::CovarianceMatrix> covariance) const 
+cbl::data::CovarianceMatrix CovarianceMatrix::operator += (const std::vector<CovarianceMatrix> covariance) const 
 {
   size_t new_size = m_order;
 
@@ -365,7 +363,7 @@ cbl::data::CovarianceMatrix cbl::data::CovarianceMatrix::operator += (const vect
 // ======================================================================================
 
 
-cbl::data::CovarianceMatrix cbl::data::CovarianceMatrix::operator += (const vector<shared_ptr<cbl::data::CovarianceMatrix>> covariance) const
+cbl::data::CovarianceMatrix cbl::data::CovarianceMatrix::operator += (const std::vector<std::shared_ptr<CovarianceMatrix>> covariance) const
 {
   size_t new_size = m_order;
 

@@ -287,7 +287,7 @@ void cbl::set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalo
 // ============================================================================
 
 
-vector<double> cbl::colatitude(vector<double> latitude)
+vector<double> cbl::colatitude (std::vector<double> latitude)
 {
   vector<double> colatitude(latitude.size());
   

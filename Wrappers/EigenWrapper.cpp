@@ -69,7 +69,7 @@ vector<vector<double>> cbl::wrapper::eigen::EigenToMatrix (const Eigen::MatrixXd
 // ============================================================================
 
 
-Eigen::MatrixXd cbl::wrapper::eigen::VectorToEigen (const vector<double> vec)
+Eigen::MatrixXd cbl::wrapper::eigen::VectorToEigen (const std::vector<double> vec)
 { 
   return Eigen::VectorXd::Map(vec.data(), vec.size());
 }
@@ -78,7 +78,7 @@ Eigen::MatrixXd cbl::wrapper::eigen::VectorToEigen (const vector<double> vec)
 // ============================================================================
 
 
-Eigen::MatrixXd cbl::wrapper::eigen::MatrixToEigen (const vector<vector<double>> mat)
+Eigen::MatrixXd cbl::wrapper::eigen::MatrixToEigen (const std::vector<std::vector<double>> mat)
 {
   const int rows = static_cast<int>(mat.size());
   const int cols = static_cast<int>(mat[0].size());
@@ -95,7 +95,7 @@ Eigen::MatrixXd cbl::wrapper::eigen::MatrixToEigen (const vector<vector<double>>
 // ============================================================================
 
 
-Eigen::MatrixXd cbl::wrapper::eigen::SquareMatrixToEigen (const vector<double> mat)
+Eigen::MatrixXd cbl::wrapper::eigen::SquareMatrixToEigen (const std::vector<double> mat)
 {
   int order = sqrt(mat.size());
   return MatrixToEigen(reshape(mat, order, order));

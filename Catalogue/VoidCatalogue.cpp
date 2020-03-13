@@ -48,7 +48,7 @@ using namespace cbl;
 
 //********************************** Carlo Cannarozzo **********************************//
 
-cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catalogue tracer_catalogue, const double nSub, const vector<string> random_catalogue_vector, const string dir_output, const string output, const double r_max, const double cellsize, const int n_rec, const int n_iter, const bool swapping, const bool add_unpaired, const double convergence_fact, const double step_size, const double gaussian_smoothing, const double protovoid_distance)
+cbl::catalogue::Catalogue::Catalogue (const VoidAlgorithm algorithm, const Catalogue tracer_catalogue, const double nSub, const std::vector<std::string> random_catalogue_vector, const std::string dir_output, const std::string output, const double r_max, const double cellsize, const int n_rec, const int n_iter, const bool swapping, const bool add_unpaired, const double convergence_fact, const double step_size, const double gaussian_smoothing, const double protovoid_distance)
 {
   
   // -------------------------------------------- //

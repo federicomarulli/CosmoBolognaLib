@@ -424,10 +424,14 @@
  *  constraints from void counting
  */
 /**
- *  @example Covariance.ipynb 
+ *  @example covarianceMatrix.ipynb
  *  
  *  This \b notebook shows basic functionalities of the
  *  CovarianceMatrix and TaperedCovarianceMatrix classes
+ *
+ *  To see the notebook, click here: <a
+ *  href="https://github.com/federicomarulli/CosmoBolognaLib/blob/master/Examples/data/covarianceMatrix.ipynb">
+ *  notebook</a>
  *
  */
 /**

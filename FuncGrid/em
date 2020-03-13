@@ -1,1 +1,1 @@
-emacs ../Headers/FuncGrid.h *cpp &
+emacs ../Headers/FuncGrid.h ../Headers/FuncGrid_Bspline.h *cpp &

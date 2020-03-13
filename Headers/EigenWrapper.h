@@ -98,10 +98,10 @@ namespace cbl {
        * @brief convert a std::vector<double> to
        * an Eigen::MatrixXd object
        *
-       * This function converts a std::vector<double> to
-       * an Eigen::MatrixXd object. It assumes that the input vector
-       * is a flat square matrix of order equal to the square root of the
-       * vector size. 
+       * This function converts a std::vector<double> to an
+       * Eigen::MatrixXd object. It assumes that the input vector is a
+       * flat square matrix of order equal to the square root of the
+       * vector size.
        *
        * @param mat object of type vector<double>
        *

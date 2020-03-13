@@ -51,7 +51,7 @@ cbl::glob::FuncGrid_Bspline::FuncGrid_Bspline (const std::vector<double> x, cons
 // ============================================================================
 
 
-cbl::glob::FuncGrid_Bspline::FuncGrid_Bspline (const std::vector<double> x, const std::vector<double> fx, const vector<double> breakpoints, const int order, const double frac)
+cbl::glob::FuncGrid_Bspline::FuncGrid_Bspline (const std::vector<double> x, const std::vector<double> fx, const std::vector<double> breakpoints, const int order, const double frac)
 {
   this->set(x, fx, breakpoints, order, frac);
 }
@@ -83,7 +83,7 @@ void cbl::glob::FuncGrid_Bspline::m_set_bspline(const vector<double> x, const ve
 // ============================================================================
 
 
-void cbl::glob::FuncGrid_Bspline::m_set_knots(const double xmin, const double xmax)
+void cbl::glob::FuncGrid_Bspline::m_set_knots (const double xmin, const double xmax)
 {
   gsl_bspline_knots_uniform((xmin!=par::defaultDouble) ? xmin : Min(m_x),
       			    (xmax!=par::defaultDouble) ? xmax : Max(m_x),
@@ -94,7 +94,7 @@ void cbl::glob::FuncGrid_Bspline::m_set_knots(const double xmin, const double xm
 // ============================================================================
 
 
-void cbl::glob::FuncGrid_Bspline::m_set_knots(const vector<double> breakpoints)
+void cbl::glob::FuncGrid_Bspline::m_set_knots (const std::vector<double> breakpoints)
 {
   shared_ptr<gsl_vector> bp(gsl_vector_alloc(m_nbreakpoints), gsl_vector_free); 
 
@@ -108,7 +108,7 @@ void cbl::glob::FuncGrid_Bspline::m_set_knots(const vector<double> breakpoints)
 // ============================================================================
 
 
-void cbl::glob::FuncGrid_Bspline::m_compute_func_integral()
+void cbl::glob::FuncGrid_Bspline::m_compute_func_integral ()
 {
   auto func = [&] (const double &xx) {return this->operator()(xx, par::defaultDouble);};
 
@@ -135,13 +135,13 @@ void cbl::glob::FuncGrid_Bspline::m_linear_fit(const double frac)
 
   // Construct the fit matrix X
   shared_ptr<gsl_matrix> XX(gsl_matrix_alloc(n, m_ncoefficients), gsl_matrix_free);
-   for (size_t i = 0; i < n; ++i)
+  for (size_t i = 0; i < n; ++i)
     {
       /* compute B_j(xi) for all j */
       gsl_bspline_eval(m_x[i], m_Bcoeff.get(), m_bspline.get());
       /* fill in row i of X */
       for (int j = 0; j < m_ncoefficients; ++j)
-          gsl_matrix_set(XX.get(), i, j, gsl_vector_get(m_Bcoeff.get(), j));
+	gsl_matrix_set(XX.get(), i, j, gsl_vector_get(m_Bcoeff.get(), j));
     }
 
   // Compute coefficients
@@ -158,7 +158,7 @@ void cbl::glob::FuncGrid_Bspline::m_linear_fit(const double frac)
 // ============================================================================
 
 
-void cbl::glob::FuncGrid_Bspline::set(const std::vector<double> x, const std::vector<double> fx, const int nbreakpoints, const int order, const double frac, const double xmin, const double xmax)
+void cbl::glob::FuncGrid_Bspline::set (const std::vector<double> x, const std::vector<double> fx, const int nbreakpoints, const int order, const double frac, const double xmin, const double xmax)
 {
   this->m_set_bspline(x, fx, nbreakpoints, order);
   this->m_set_knots(xmin, xmax);
@@ -170,7 +170,7 @@ void cbl::glob::FuncGrid_Bspline::set(const std::vector<double> x, const std::ve
 // ============================================================================
 
 
-void cbl::glob::FuncGrid_Bspline::set(const std::vector<double> x, const std::vector<double> fx, const vector<double> breakpoints, const int order, const double frac)
+void cbl::glob::FuncGrid_Bspline::set (const std::vector<double> x, const std::vector<double> fx, const std::vector<double> breakpoints, const int order, const double frac)
 {
   this->m_set_bspline(x, fx, static_cast<int>(breakpoints.size()), order);
   this->m_set_knots(breakpoints);
