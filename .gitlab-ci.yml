@@ -7,9 +7,9 @@ before_script:
   - apt-get update
   - apt-get install -y gcc g++ libgfortran3
   - apt-get install -y libgsl-dev libgsl23 libgslcblas0
-  - apt-get install libfftw3-dev
-  - apt-get install libcfitsio5 libcfitio-dev
-  - apt-get install swig3
+  - apt-get install -y libfftw3-dev
+  - apt-get install -y libcfitsio5 libcfitio-dev
+  - apt-get install -y swig3
 
 # Try to compile CosmoBolognaLib
 compile:
