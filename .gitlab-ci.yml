@@ -5,6 +5,7 @@ image: ubuntu:18.04
 # Define commands that run before each job's script
 before_script:
   - apt-get update
+  - apt-get install -y build-essential
   - apt-get install -y gcc g++ libgfortran3
   - apt-get install -y libgsl-dev libgsl23 libgslcblas0
   - apt-get install -y libfftw3-dev
