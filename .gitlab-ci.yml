@@ -9,11 +9,10 @@ compile_cpp:
   - export TERM=xterm-256color
   - make
   - make allExamples
+  - ./test.py nocompile nopy nodoc ALL
   artifacts:
     paths:
+    - External
+    - Examples
     - Headers/*.h
     - ./*.so
-  
-test:
-  script:
-  - ./test.py nocompile nopy nodoc ALL
