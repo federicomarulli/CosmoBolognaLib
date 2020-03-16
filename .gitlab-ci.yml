@@ -1,22 +1,6 @@
 # Specify the docker image to use (only used if using docker runners)
 # See: http://doc.gitlab.com/ee/ci/docker/using_docker_images.html
-image: ubuntu:18.04
-
-# Define commands that run before each job's script
-before_script:
-  - apt-get update
-  - apt-get install -y build-essential
-  - apt-get install -y gcc g++ gfortran libgfortran3
-  - apt-get install -y python python-dev
-  - apt-get install -y python-pip
-  - apt-get install -y libgsl-dev libgsl23 libgslcblas0
-  - apt-get install -y libfftw3-dev
-  - apt-get install -y libcfitsio5 libcfitsio-dev
-  - apt-get install -y swig3.0
-  - apt-get install -y cython
-  - pip install numpy scipy matplotlib
-  - export TERM=xterm
-  - export PYTHONPATH=$PYTHONPATH:/$HOME/CosmoBolognaLib/Python/  
+image: registry.gitlab.com/federicomarulli/cosmobolognalib 
 
 # Try to compile CosmoBolognaLib
 compile_cpp:
@@ -25,8 +9,9 @@ compile_cpp:
   - make
   - make allExamples
   artifacts:
-  Headers/*.h
-  *.so
+  paths:
+  - Headers/*.h
+  - *.so
   
 test:
   script:
