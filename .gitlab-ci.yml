@@ -8,12 +8,13 @@ before_script:
   - apt-get install -y build-essential
   - apt-get install -y gcc g++ gfortran libgfortran3
   - apt-get install -y python python-dev
+  - apt-get install -y python-pip
   - apt-get install -y libgsl-dev libgsl23 libgslcblas0
   - apt-get install -y libfftw3-dev
   - apt-get install -y libcfitsio5 libcfitsio-dev
   - apt-get install -y swig3.0
   - apt-get install -y cython
-
+  -apt install python-pip
 
 # Try to compile CosmoBolognaLib
 compile:
