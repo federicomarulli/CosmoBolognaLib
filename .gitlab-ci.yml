@@ -15,6 +15,7 @@ before_script:
   - apt-get install -y swig3.0
   - apt-get install -y cython
   - pip install numpy scipy matplotlib
+  - export TERM=dumb
 
 # Try to compile CosmoBolognaLib
 compile:
