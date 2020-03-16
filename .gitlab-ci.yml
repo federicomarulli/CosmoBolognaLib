@@ -16,12 +16,18 @@ before_script:
   - apt-get install -y cython
   - pip install numpy scipy matplotlib
   - export TERM=xterm
+  - export PYTHONPATH=$PYTHONPATH:/$HOME/CosmoBolognaLib/Python/  
 
 # Try to compile CosmoBolognaLib
-compile:
+compile_cpp:
   script:
   # Compile our app
   - make
-  - make python
   - make allExamples
+  artifacts:
+  Headers/*.h
+  *.so
+  
+test:
+  script:
   - ./test.py nocompile nopy nodoc ALL
