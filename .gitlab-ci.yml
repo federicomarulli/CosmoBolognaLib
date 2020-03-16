@@ -9,9 +9,9 @@ compile_cpp:
   - make
   - make allExamples
   artifacts:
-  paths:
-  - Headers/*.h
-  - *.so
+    paths:
+    - Headers/*.h
+    - ./*.so
   
 test:
   script:
