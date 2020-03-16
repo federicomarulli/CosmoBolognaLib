@@ -1,0 +1,22 @@
+# Specify the docker image to use (only used if using docker runners)
+# See: http://doc.gitlab.com/ee/ci/docker/using_docker_images.html
+image: ubuntu:18.04
+
+# Define commands that run before each job's script
+before_script:
+  - apt-get update
+  - apt-get install -y gcc g++ libgfortran
+  - apt-get install -y libgsl-dev ligbsl23 libgslcblas0
+  - apt-get install libfftw3-dev
+  - apt-get install libcfitsio5 libcfitio-dev
+  - apt-get install swig3
+
+# Try to compile CosmoBolognaLib
+compile:
+  script:
+  # Compile our app
+  - make
+  - make python
+  - make allExamples
+  - ./test.py nocompile nopy nodoc ALL
+ 
