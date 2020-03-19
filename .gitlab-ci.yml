@@ -4,7 +4,7 @@ image: registry.gitlab.com/federicomarulli/cosmobolognalib
 
 compile_py2:
   tags:
-  - astrotower
+  - colab
   script:
   # Compile our app
   - make 
@@ -22,7 +22,7 @@ compile_py2:
     
 compile_py3:
   tags:
-  - astrotower
+  - colab
   script:
   # Compile our app
   - make PY=python3
