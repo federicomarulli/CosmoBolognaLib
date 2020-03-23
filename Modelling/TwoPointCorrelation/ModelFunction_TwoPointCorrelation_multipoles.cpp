@@ -152,17 +152,13 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles_sigma8_bias (const std::
 
 // ============================================================================================
 
-
 std::vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
-  // structure contaning the required input data
+    // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
 
-  vector<vector<double>> new_rad(pp->nmultipoles);
+  vector<double> Xi(rad.size());
 
-  for(size_t i=0; i<rad.size(); i++)
-    new_rad[pp->dataset_order[i]].push_back(rad[i]);
-  
   // input parameters
 
   // AP parameter that contains the distance information
@@ -171,63 +167,24 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const std::vector<d
   // AP parameter that contains the distance information
   double alpha_parallel = parameter[1];
 
-  vector<vector<double>> Xil(2);
+  for (size_t i=0; i<rad.size(); i++) {
+    const int mult = pp->dataset_order[i];
+    const int ell = 2*mult;
+    const double rr = rad[i];
+    const double fact = (2*ell+1);
+        
+    const double B = parameter[2+mult];
+    const double A0 = parameter[4+mult];
+    const double A1 = parameter[6+mult];
+    const double A2 = parameter[8+mult];
 
-  for(size_t i=0; i<new_rad[0].size(); i++) {
+    auto integrand = [&] (const double mu_fid) 
+    {
+      return twopt::Xi_polar(rr, mu_fid, alpha_perpendicular, alpha_parallel, pp->func_multipoles)*cbl::legendre_polynomial(mu_fid, ell);
+    };
 
-    auto xi_mu_0 = [&] (const double mu)
-      {
-	double alpha = sqrt(mu*mu*alpha_parallel*alpha_parallel+(1-mu*mu)*alpha_perpendicular*alpha_perpendicular);
-	double sp = new_rad[0][i]*alpha;
-	double mup = mu*alpha_parallel/alpha;
-	double val=0;
-	for (int j=0; j<pp->nmultipoles; j++)
-	  val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
-	return val;
-      };
-
-    double xi0 = cbl::wrapper::gsl::GSL_integrate_qag(xi_mu_0, 0, 1);
-
-    Xil[0].push_back(parameter[2]*xi0+parameter[4]+parameter[6]/new_rad[0][i]+parameter[8]/(new_rad[0][i]*new_rad[0][i]));
-
+    Xi[i] = B*fact*wrapper::gsl::GSL_integrate_qag(integrand, 0, 1)+A0+A1/rr+A2/(rr*rr);
   }
-
-  for(size_t i=0; i<new_rad[1].size(); i++) {
-
-    auto xi_mu_0 = [&] (const double mu)
-      {
-	double alpha = sqrt(mu*mu*alpha_parallel*alpha_parallel+(1-mu*mu)*alpha_perpendicular*alpha_perpendicular);
-	double sp = new_rad[1][i]*alpha;
-	double mup = mu*alpha_parallel/alpha;
-	double val = 0;
-	for (int j=0; j<pp->nmultipoles; j++)
-	  val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
-	return val;
-      };
-
-    auto xi_mu_2 = [&] (const double mu)
-      {
-	double alpha =sqrt(mu*mu*alpha_parallel*alpha_parallel+(1-mu*mu)*alpha_perpendicular*alpha_perpendicular);
-	double sp = new_rad[1][i]*alpha;
-	double mup = mu*alpha_parallel/alpha;
-	double val=0;
-	for (int j=0; j<pp->nmultipoles; j++)
-	  val += pp->func_multipoles[j]->operator()(sp)*cbl::legendre_polynomial(mup, j*2);
-      
-	return 3*val*mu*mu;
-      };
-
-    double xi0 = cbl::wrapper::gsl::GSL_integrate_qag(xi_mu_0, 0, 1);
-    double ximu2 = cbl::wrapper::gsl::GSL_integrate_qag(xi_mu_2, 0, 1);
-
-    Xil[1].push_back(2.5*(parameter[3]*ximu2-parameter[2]*xi0)+parameter[5]+parameter[7]/new_rad[1][i]+parameter[9]/(new_rad[1][i]*new_rad[1][i]));
-  }
-
-  vector<double> Xi;
-
-  for (size_t i=0; i<Xil.size(); i++)
-    for (size_t j=0; j<Xil[i].size(); j++)
-      Xi.push_back(Xil[i][j]);
 
   return Xi;
 }

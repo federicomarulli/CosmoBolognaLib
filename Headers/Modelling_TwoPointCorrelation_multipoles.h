@@ -634,15 +634,17 @@ namespace cbl {
 	 *  @param A22_prior prior for the parameter \f$A^2_2\f$
 	 *
 	 *  @param compute_XiDM true \f$\rightarrow\f$ compute the
-	 *  fiducial model of the dark matter two-point correlation
-	 *  function
+	 *  fiducial model of two-point correlation function multipoles
 	 *
+	 *  @param isRealSpace true \f$\rightarrow\f$ assume real space when
+	 *  computing two-point correlation function multipoles
+     *
 	 *  @return none
 	 *
 	 *  @warning the current implementation works only for
 	 *  monopole and quadrupole
 	 */
-	void set_model_BAO (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution B0_prior={}, const statistics::PriorDistribution B2_prior={}, const statistics::PriorDistribution A00_prior={}, const statistics::PriorDistribution A20_prior={}, const statistics::PriorDistribution A01_prior={}, const statistics::PriorDistribution A21_prior={}, const statistics::PriorDistribution A02_prior={}, const statistics::PriorDistribution A22_prior={}, const bool compute_XiDM=true);
+	void set_model_BAO (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution B0_prior={}, const statistics::PriorDistribution B2_prior={}, const statistics::PriorDistribution A00_prior={}, const statistics::PriorDistribution A20_prior={}, const statistics::PriorDistribution A01_prior={}, const statistics::PriorDistribution A21_prior={}, const statistics::PriorDistribution A02_prior={}, const statistics::PriorDistribution A22_prior={}, const bool compute_XiDM=true, const bool isRealSpace=false);
 
         /**
          *  @brief write the model at xx for given parameters

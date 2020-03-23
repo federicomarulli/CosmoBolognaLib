@@ -260,43 +260,31 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fiduci
   cout << endl; coutCBL << "Setting up the fiducial two-point correlation function model" << endl;
 
   m_data_model->nmultipoles = 3;
-
+  
   const vector<double> rad = linear_bin_vector(m_data_model->step, m_data_model->r_min, m_data_model->r_max);
 
-  if (m_data_model->sigmaNL==0) {    
+  m_data_model->rr = rad;
 
-    vector<double> Pk(m_data_model->step,0);
-    m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
+  vector<double> Pk(m_data_model->step, 0), PkNW(m_data_model->step, 0);
+  m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
 
-    for (size_t i=0; i<(size_t)m_data_model->step; i++) 
-      Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-
-    m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
-
+  for (size_t i=0; i<(size_t)m_data_model->step; i++) {
+    Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+    PkNW[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
   }
 
-  else {
+  m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
+  m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
 
-    vector<double> Pk(m_data_model->step, 0), PkNW(m_data_model->step, 0);
-    m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
+  std::vector<double> template_parameters = {m_data_model->sigmaNL_perp, m_data_model->sigmaNL_par, m_data_model->linear_growth_rate_z, m_data_model->bias, 0.};
+  cbl::Print(template_parameters);
 
-    for (size_t i=0; i<(size_t)m_data_model->step; i++) {
-      Pk[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-      PkNW[i] =  m_data_model->cosmology->Pk(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-    }
-
-    m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
-    m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
-  }
-
-  vector<double> parameters = {1., 1., m_data_model->sigmaNL_perp, m_data_model->sigmaNL_par, m_data_model->bias, m_data_model->linear_growth_rate_z, 0., 0.};
-
-  vector<vector<double>> xil = Xi_l(rad, m_data_model->nmultipoles, 0, parameters, {m_data_model->func_Pk, m_data_model->func_Pk_NW}, m_data_model->prec);
+  vector<vector<double>> xil = Xi_l(rad, m_data_model->nmultipoles, "dispersion_dewiggled", {m_data_model->sigmaNL_perp, m_data_model->sigmaNL_par, m_data_model->linear_growth_rate_z, m_data_model->bias, 0.}, {m_data_model->func_Pk, m_data_model->func_Pk_NW}, m_data_model->prec, 1, 1);
 
   m_data_model->func_multipoles.erase(m_data_model->func_multipoles.begin(), m_data_model->func_multipoles.end());
+
   for (int i=0; i< m_data_model->nmultipoles; i++)
     m_data_model->func_multipoles.push_back(make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(rad, xil[i], "Spline")));
-
 }
 
 
@@ -599,14 +587,27 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_BAO (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution B0_prior, const statistics::PriorDistribution B2_prior, const statistics::PriorDistribution A00_prior, const statistics::PriorDistribution A20_prior, const statistics::PriorDistribution A01_prior, const statistics::PriorDistribution A21_prior, const statistics::PriorDistribution A02_prior, const statistics::PriorDistribution A22_prior, const bool compute_XiDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_BAO (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution B0_prior, const statistics::PriorDistribution B2_prior, const statistics::PriorDistribution A00_prior, const statistics::PriorDistribution A20_prior, const statistics::PriorDistribution A01_prior, const statistics::PriorDistribution A21_prior, const statistics::PriorDistribution A02_prior, const statistics::PriorDistribution A22_prior, const bool compute_XiTemplate, const bool isRealSpace)
 {
+    
   // compute the fiducial dark matter two-point correlation function
-  if (compute_XiDM) set_fiducial_xiDM();
 
+  if (m_nmultipoles>2)
+    ErrorCBL("BAO modelling can be done only with two multipoles!", "set_model_BAO", "Modelling_TwoPointCorrelation_multipoles");
+
+  if (isRealSpace) {
+    double lgf = m_data_model->linear_growth_rate_z;
+    m_data_model->linear_growth_rate_z = 0.;
+
+    set_fiducial_xiDM();
+
+    m_data_model->linear_growth_rate_z = lgf;
+  }
+  else if (compute_XiTemplate)
+    set_fiducial_xiDM();
+  
   m_data_model->nmultipoles = m_nmultipoles;
   m_data_model->dataset_order = m_multipoles_order;
-  m_data_model->use_pole = m_use_pole;
 
   // set the model parameters
   const int nparameters = 10;
