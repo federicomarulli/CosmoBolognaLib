@@ -45,12 +45,12 @@ using namespace cbl;
 // ============================================================================================
 
 
-shared_ptr<cbl::modelling::cosmology::CMB_DistancePrior> cbl::modelling::cosmology::CMB_DistancePrior::Create (const string distance_prior_name)
+shared_ptr<cbl::modelling::cosmo::CMB_DistancePrior> cbl::modelling::cosmo::CMB_DistancePrior::Create (const string distance_prior_name)
 {
   if (distance_prior_name == "Aubourg15_Planck15")
-    return move(unique_ptr<cbl::modelling::cosmology::Aubourg15_Planck15>(new cbl::modelling::cosmology::Aubourg15_Planck15()));
+    return move(unique_ptr<cbl::modelling::cosmo::Aubourg15_Planck15>(new cbl::modelling::cosmo::Aubourg15_Planck15()));
   else if (distance_prior_name == "Aubourg15_WMAP09")
-    return move(unique_ptr<cbl::modelling::cosmology::Aubourg15_WMAP09>(new cbl::modelling::cosmology::Aubourg15_WMAP09()));
+    return move(unique_ptr<cbl::modelling::cosmo::Aubourg15_WMAP09>(new cbl::modelling::cosmo::Aubourg15_WMAP09()));
   else ErrorCBL("no such type of distance_prior_name!", "Create", "Modelling_Cosmology.cpp");
 
   return NULL;
@@ -60,7 +60,7 @@ shared_ptr<cbl::modelling::cosmology::CMB_DistancePrior> cbl::modelling::cosmolo
 // ============================================================================================
 
 
-cbl::modelling::cosmology::Modelling_Cosmology::Modelling_Cosmology (const std::shared_ptr<cbl::data::Data> dataset, const std::vector<std::string> data_type)
+cbl::modelling::cosmo::Modelling_Cosmology::Modelling_Cosmology (const std::shared_ptr<cbl::data::Data> dataset, const std::vector<std::string> data_type)
 {
   m_data = dataset;
   m_data_type = data_type;
@@ -70,7 +70,7 @@ cbl::modelling::cosmology::Modelling_Cosmology::Modelling_Cosmology (const std::
 // ============================================================================================
 
 
-void cbl::modelling::cosmology::Modelling_Cosmology::set_fiducial_cosmology(const cbl::cosmology::Cosmology cosmology)
+void cbl::modelling::cosmo::Modelling_Cosmology::set_fiducial_cosmology(const cbl::cosmology::Cosmology cosmology)
 {
   m_cosmology = move(make_shared<cbl::cosmology::Cosmology>(cosmology));
 }
@@ -79,7 +79,7 @@ void cbl::modelling::cosmology::Modelling_Cosmology::set_fiducial_cosmology(cons
 // ============================================================================================
 
 
-void cbl::modelling::cosmology::Modelling_Cosmology::set_cosmological_parameters(const vector<cbl::cosmology::CosmologicalParameter> cosmoPar_name, const vector<cbl::statistics::PriorDistribution> cosmoPar_prior, const string distance_prior, const vector<string> external_dataset)
+void cbl::modelling::cosmo::Modelling_Cosmology::set_cosmological_parameters(const vector<cbl::cosmology::CosmologicalParameter> cosmoPar_name, const vector<cbl::statistics::PriorDistribution> cosmoPar_prior, const string distance_prior, const vector<string> external_dataset)
 {
   (void)distance_prior;
   (void)external_dataset;
@@ -98,7 +98,7 @@ void cbl::modelling::cosmology::Modelling_Cosmology::set_cosmological_parameters
   m_data_model.data_type = m_data_type;
 
   if(distance_prior != par::defaultString){
-    m_data_model.distance_prior = cbl::modelling::cosmology::CMB_DistancePrior::Create(distance_prior);
+    m_data_model.distance_prior = cbl::modelling::cosmo::CMB_DistancePrior::Create(distance_prior);
     m_data_fit = cbl::data::join_dataset({m_data, m_data_model.distance_prior->dataset()});
     m_fit_range = true;
   }
@@ -111,7 +111,7 @@ void cbl::modelling::cosmology::Modelling_Cosmology::set_cosmological_parameters
 
   // construct the model
   if(distance_prior != par::defaultString)
-    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&cbl::modelling::cosmology::cosmological_measurements_model_CMB_DistancePrior, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&cbl::modelling::cosmo::cosmological_measurements_model_CMB_DistancePrior, nParams, cosmoPar_type, cosmoPar_string, inputs));
   else
-    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&cbl::modelling::cosmology::cosmological_measurements_model, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&cbl::modelling::cosmo::cosmological_measurements_model, nParams, cosmoPar_type, cosmoPar_string, inputs));
 }

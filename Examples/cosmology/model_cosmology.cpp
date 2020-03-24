@@ -58,7 +58,7 @@ int main () {
     // ---------------- modelling cosmological parameters from BAO information ------------
     // ------------------------------------------------------------------------------------
 
-    cbl::modelling::cosmology::Modelling_Cosmology modelCosmo(data, data_type);
+    cbl::modelling::cosmo::Modelling_Cosmology modelCosmo(data, data_type);
 
     
     // ---------------------------------------------------------------------

@@ -45,7 +45,7 @@ namespace cbl {
 
   namespace modelling {
 
-    namespace cosmology{
+    namespace cosmo{
 
       class CMB_DistancePrior
       {
@@ -59,14 +59,14 @@ namespace cbl {
 
 	CMB_DistancePrior() {}
 
-	~CMB_DistancePrior() {}
+	virtual ~CMB_DistancePrior() = default;
 
 	static std::shared_ptr<CMB_DistancePrior> Create (const std::string distance_prior_name);
 
 	virtual std::shared_ptr<data::Data> dataset()
 	{ ErrorCBL("no dataset for base class!", "dataset", "Modelling_Cosmology_DistancePrior.h"); return NULL; }
 	  
-	virtual std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
+	virtual std::vector<double> model (const cosmology::Cosmology cosmology)
 	{ (void)cosmology; ErrorCBL("no model for base class!", "model", "Modelling_Cosmology_DistancePrior.h"); std::vector<double> vv; return vv; }
 
       };
@@ -97,7 +97,7 @@ namespace cbl {
 
 	std::shared_ptr<data::Data> dataset() {return m_dataset; }
 
-	std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
+	std::vector<double> model (const cosmology::Cosmology cosmology)
 	  {
 	    std::vector<double> mm(3, 0);
 
@@ -137,7 +137,7 @@ namespace cbl {
 
 	std::shared_ptr<data::Data> dataset() {return m_dataset; }
 
-	std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
+	std::vector<double> model (const cosmology::Cosmology cosmology)
 	  {
 	    std::vector<double> mm(3, 0);
 

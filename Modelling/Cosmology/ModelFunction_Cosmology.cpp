@@ -42,7 +42,7 @@ using namespace cbl;
 // ============================================================================================
 
 
-double cbl::modelling::cosmology::cosmological_measurements (const double redshift, const std::string data_type, const cbl::cosmology::Cosmology cosmology)
+double cbl::modelling::cosmo::cosmological_measurements (const double redshift, const std::string data_type, const cbl::cosmology::Cosmology cosmology)
 {
   if(data_type == "DV")
     return cosmology.D_V(redshift);
@@ -98,7 +98,7 @@ double cbl::modelling::cosmology::cosmological_measurements (const double redshi
 // ============================================================================================
 
 
-std::vector<double> cbl::modelling::cosmology::cosmological_measurements_model (const std::vector<double> redshift, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<double> cbl::modelling::cosmo::cosmological_measurements_model (const std::vector<double> redshift, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model_cosmology> pp = static_pointer_cast<STR_data_model_cosmology>(inputs);
@@ -116,7 +116,7 @@ std::vector<double> cbl::modelling::cosmology::cosmological_measurements_model (
   vector<double> output;
 
   for(size_t i=0; i<redshift.size(); i++) 
-    output.push_back(cbl::modelling::cosmology::cosmological_measurements(redshift[i], pp->data_type[i], cosmo));
+    output.push_back(cbl::modelling::cosmo::cosmological_measurements(redshift[i], pp->data_type[i], cosmo));
 
   return output;
 }
@@ -125,7 +125,7 @@ std::vector<double> cbl::modelling::cosmology::cosmological_measurements_model (
 // ============================================================================================
 
 
-std::vector<double> cbl::modelling::cosmology::cosmological_measurements_model_CMB_DistancePrior (const std::vector<double> redshift, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<double> cbl::modelling::cosmo::cosmological_measurements_model_CMB_DistancePrior (const std::vector<double> redshift, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model_cosmology> pp = static_pointer_cast<STR_data_model_cosmology>(inputs);
@@ -143,7 +143,7 @@ std::vector<double> cbl::modelling::cosmology::cosmological_measurements_model_C
   vector<double> output;
 
   for(size_t i=0; i<redshift.size()-pp->distance_prior->dataset()->ndata(); i++)
-    output.push_back(cbl::modelling::cosmology::cosmological_measurements(redshift[i], pp->data_type[i], cosmo));
+    output.push_back(cbl::modelling::cosmo::cosmological_measurements(redshift[i], pp->data_type[i], cosmo));
 
   vector<double> mm = pp->distance_prior->model(cosmo);
   for(size_t i=0; i<mm.size(); i++)
