@@ -33,9 +33,9 @@ External/MPTbreeze-v1/Cuba-1.4/
 External/mangle/src/
 /*.dSYM/
 
-Python/
-/*.cxx
-/*.py
+Python/*.cxx
+Python/*.py
+Python/*.h
 
 Doc/html/
 
@@ -311,6 +311,5 @@ dmypy.json
 
 #Ignore class executable
 External/CLASS/class
-
 
 # End of https://www.gitignore.io/api/c++,cmake,python,autotools,executable,jupyternotebook,jupyternotebooks
