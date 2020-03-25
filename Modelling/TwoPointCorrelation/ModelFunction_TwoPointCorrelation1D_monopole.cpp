@@ -359,7 +359,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology (const std::vect
     for (int j = 0;j<pp->poly_order; j++)
       poly += parameter[j+3]*pow(rad[i], -j);
 
-    xi[i] = xi_ratio(fsigma8, bsigma8)*pp->cosmology->xi_DM(rad[i]*alpha, pp->method_Pk, pp->redshift, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par)/pow(pp->sigma8_z, 2)+poly;
+    xi[i] = xi_ratio(fsigma8, bsigma8)*pp->cosmology->xi_DM(rad[i]*alpha, pp->method_Pk, pp->NL, pp->redshift, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par)/pow(pp->sigma8_z, 2)+poly;
   }
 
   return xi;
@@ -687,7 +687,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters_selecti
 
   // set the function to estimate the linear dark matter power spectrum at z=0, by interpolating it from a grid
   
-  const vector<double> Pk_grid = cosmo.Pk(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, -1, pp->k_min, pp->k_max, pp->prec, pp->file_par);
+  const vector<double> Pk_grid = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, -1, pp->k_min, pp->k_max, pp->prec, pp->file_par);
   glob::FuncGrid interp_Pk(pp->kk, Pk_grid, "Spline");
 
 

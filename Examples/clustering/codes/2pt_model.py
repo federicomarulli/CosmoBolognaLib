@@ -22,10 +22,10 @@ kk = np.logspace(-3, 0, 100)
 rr = np.linspace(1., 100, 50)
 
 # compute the power spectrum using CAMB
-PkCAMB = np.asarray([cosmo.Pk(kk[i], "CAMB", False, 0.2) for i in range(len(kk))])
+PkCAMB = np.asarray([cosmo.Pk_DM(kk[i], "CAMB", False, 0.2) for i in range(len(kk))])
 
 # compute the two point correlation function using CAMB
-xiCAMB = [cosmo.xi_DM(rr[i], "CAMB", 0.2, True, "test", False) for i in range(len(rr))]
+xiCAMB = np.asarray([cosmo.xi_DM(rr[i], "CAMB", False, 0.2) for i in range(len(rr))])
 
 
 # plot the results
@@ -35,11 +35,11 @@ plt.loglog(kk, PkCAMB, label="CAMB linear")
 plt.xlabel(r"$k \, \, [h\, \mathrm{Mpc}^{-1}]$")
 plt.ylabel(r"$P(k) \, \, [(h^{-1}\mathrm{Mpc})^3]$")
 plt.legend(loc="upper right")
-plt.show(block=False)
 
 plt.figure(2)
 plt.xlabel(r"$r \, \, [\mathrm{Mpc}\, h^{-1}]$")
 plt.ylabel(r"$\xi(r)$")
 plt.loglog(rr, xiCAMB, label="CAMB linear")
 plt.legend(loc="upper right")
+
 plt.show(block=False)

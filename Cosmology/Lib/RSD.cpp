@@ -203,7 +203,7 @@ double cbl::cosmology::Cosmology::Pk_DeltaDelta_fitting_function (const double k
 {
   double Pkdd = 0;
   if(author == "Pezzotta" || author == "Bel")
-  Pkdd = Pk(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
+  Pkdd = Pk_DM(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
   else WarningMsgCBL("the current implementation is not correct with author = " + author, "Pk_DeltaDelta_fitting_function", "RSD.cpp");
   return Pkdd;
 }
@@ -218,11 +218,11 @@ double cbl::cosmology::Cosmology::Pk_DeltaTheta_fitting_function (const double k
   double kd = 1./(-0.017 + 1.496*pow(sigma8_z, 2.));
   double Pkdt = 0;
   if (author == "Pezzotta"){
-    Pkdt = sqrt(Pk(kk, method_Pk, true, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1)*Pk(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1))*exp(-kk/kd);
+    Pkdt = sqrt(Pk_DM(kk, method_Pk, true, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1)*Pk_DM(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1))*exp(-kk/kd);
   }
   else if (author == "Bel"){
     double b = 0.091 + 0.702*sigma8_z*sigma8_z;
-    Pkdt = sqrt(Pk(kk, method_Pk, true, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1)*Pk(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1))*exp(-kk/kd-b*pow(kk,6.0));
+    Pkdt = sqrt(Pk_DM(kk, method_Pk, true, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1)*Pk_DM(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1))*exp(-kk/kd-b*pow(kk,6.0));
   }
   else WarningMsgCBL("the current implementation is not correct with author = " + author, "Pk_DeltaTheta_fitting_function", "RSD.cpp");
     return Pkdt;
@@ -238,14 +238,14 @@ double cbl::cosmology::Cosmology::Pk_ThetaTheta_fitting_function (const double k
   double Pktt = 0;
   if (author == "Pezzotta"){
     double kt = 1./(-0.048 + 1.917*sigma8_z*sigma8_z);
-    Pktt = Pk(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1)*exp(-kk/kt);
+    Pktt = Pk_DM(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1)*exp(-kk/kt);
   }
 
   else if (author == "Bel"){
     double a1 = -0.817 + 3.198*sigma8_z;
     double a2 = 0.877 - 4.191*sigma8_z;
     double a3 = -1.199 + 4.629*sigma8_z;
-    Pktt = Pk(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1)*exp(-kk*(a1 + a2*kk + a3*kk*kk));
+    Pktt = Pk_DM(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1)*exp(-kk*(a1 + a2*kk + a3*kk*kk));
   }
   
   else WarningMsgCBL("the current implementation is not correct with author = " + author, "Pk_ThetaTheta_fitting_function", "RSD.cpp");

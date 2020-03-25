@@ -17,7 +17,7 @@ cosmo = cbl.Cosmology(cbl.CosmologicalModel__Planck15_)
 ''' Compute Pk '''
 redshift = 1
 kk = np.logspace(-4, 2, 200)
-Pk_DM = np.array( [cosmo.Pk (_kk, "CAMB", False, redshift) for _kk in kk] )
+Pk_DM = np.array( [cosmo.Pk_DM(_kk, "CAMB", False, redshift) for _kk in kk] )
 
 ''' Parameters for 3pt signal '''
 rr = dv(np.linspace(1., 300, 200))

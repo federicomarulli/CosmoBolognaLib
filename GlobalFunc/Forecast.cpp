@@ -65,8 +65,8 @@ std::vector<double> cbl::fit_covariance_matrix_2PCF_monopole (const std::vector<
     for (int j=0; j<nbins; j++)
       diff[i][j] = mock_xi0[i][j]-mock_mean[j];
 
-  cbl::cosmology::Cosmology cosmo = cosmology;
-  vector<double> kk = cbl::logarithmic_bin_vector(200, 1.e-4, 1.e2);
+  cosmology::Cosmology cosmo = cosmology;
+  vector<double> kk = logarithmic_bin_vector(200, 1.e-4, 1.e2);
   vector<double> Pk0(kk.size()), Pk2(kk.size()), Pk4(kk.size());
   double linear_growth_rate = cosmo.linear_growth_rate(redshift, 1);
   double beta = linear_growth_rate/bias;
@@ -77,7 +77,7 @@ std::vector<double> cbl::fit_covariance_matrix_2PCF_monopole (const std::vector<
 
   if (sigma_NL==0 or NL==true) {
     for (size_t i=0; i<kk.size(); i++) {
-      double pkDM = cosmo.Pk(kk[i], method_Pk, NL, redshift);
+      double pkDM = cosmo.Pk_DM(kk[i], method_Pk, NL, redshift);
       Pk0[i] = pkDM*pk0_fact;
       Pk2[i] = pkDM*pk2_fact;
       Pk4[i] = pkDM*pk4_fact;
@@ -104,7 +104,7 @@ std::vector<double> cbl::fit_covariance_matrix_2PCF_monopole (const std::vector<
 
     vector<double> rr;
     vector<vector<double>> covariance, icovariance;
-    cbl::Covariance_XiMultipoles (rr, covariance, nbins, rMin, rMax, _nObjects, _Volume, kk, {Pk0, Pk2, Pk4}, {0}, bin_type);
+    Covariance_XiMultipoles (rr, covariance, nbins, rMin, rMax, _nObjects, _Volume, kk, {Pk0, Pk2, Pk4}, {0}, bin_type);
     for (int i=0; i<nbins; i++)
       for (int j=0; j<nbins; j++)
 	covariance[i][j] /=term;
@@ -133,7 +133,7 @@ std::vector<double> cbl::fit_covariance_matrix_2PCF_monopole (const std::vector<
 
   vector<double> start = {nObjects, Volume};
   vector<vector<double>> limits = { {min_nObj, max_nObj}, {min_Vol, max_Vol}};
-  return cbl::wrapper::gsl::GSL_minimize_nD(func, start, limits);
+  return wrapper::gsl::GSL_minimize_nD(func, start, limits);
 }
 
 
@@ -142,7 +142,7 @@ std::vector<double> cbl::fit_covariance_matrix_2PCF_monopole (const std::vector<
 
 std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_monopole (const cbl::cosmology::Cosmology cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const std::string method_Pk, const double sigma_NL, const bool NL)
 {
-  auto data = cbl::generate_mock_2PCF_multipoles(cosmology, bias, nObjects, Volume, redshift, rMin, rMax, nbins, bin_type, method_Pk, sigma_NL, NL);
+  auto data = generate_mock_2PCF_multipoles(cosmology, bias, nObjects, Volume, redshift, rMin, rMax, nbins, bin_type, method_Pk, sigma_NL, NL);
 
   int ndata = data->ndata()/3;
 
@@ -156,7 +156,7 @@ std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_monopole (const cbl::co
       covariance[i][j] = data->covariance(i, j);
   }
 
-  return make_shared<cbl::data::Data1D> (cbl::data::Data1D(rad, xi0, covariance));
+  return make_shared<data::Data1D> (data::Data1D(rad, xi0, covariance));
 }
 
 // ============================================================================
@@ -164,8 +164,8 @@ std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_monopole (const cbl::co
 
 std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_multipoles (const cbl::cosmology::Cosmology cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const std::string method_Pk, const double sigma_NL, const bool NL)
 {
-  cbl::cosmology::Cosmology cosmo = cosmology;
-  vector<double> kk = cbl::logarithmic_bin_vector(200, 1.e-4, 1.e2);
+  cosmology::Cosmology cosmo = cosmology;
+  vector<double> kk = logarithmic_bin_vector(200, 1.e-4, 1.e2);
   vector<double> Pk0(kk.size()), Pk2(kk.size()), Pk4(kk.size());
   double linear_growth_rate = cosmo.linear_growth_rate(redshift, 1);
   double beta = linear_growth_rate/bias;
@@ -176,7 +176,7 @@ std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_multipoles (const cbl::
 
   if (sigma_NL==0 or NL==true) {
     for (size_t i=0; i<kk.size(); i++) {
-      double pkDM = cosmo.Pk(kk[i], method_Pk, NL, redshift);
+      double pkDM = cosmo.Pk_DM(kk[i], method_Pk, NL, redshift);
       Pk0[i] = pkDM*pk0_fact;
       Pk2[i] = pkDM*pk2_fact;
       Pk4[i] = pkDM*pk4_fact;
@@ -195,11 +195,11 @@ std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_multipoles (const cbl::
    vector<double> rr;
    vector<vector<double>> xil(3), covariance;
 
-   cbl::Covariance_XiMultipoles (rr, covariance, nbins, rMin, rMax, nObjects, Volume, kk, {Pk0, Pk2, Pk4}, {0, 2, 4}, bin_type);
+   Covariance_XiMultipoles (rr, covariance, nbins, rMin, rMax, nObjects, Volume, kk, {Pk0, Pk2, Pk4}, {0, 2, 4}, bin_type);
 
-  xil[0] = cbl::wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk0, 0);
-  xil[1] = cbl::wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk2, 2);
-  xil[2] = cbl::wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk4, 4);
+  xil[0] = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk0, 0);
+  xil[1] = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk2, 2);
+  xil[2] = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk4, 4);
 
   vector<double> rad, xi;
   for (int i=0; i<3; i++) {
@@ -209,6 +209,6 @@ std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_multipoles (const cbl::
     }
   }
 
-  return make_shared<cbl::data::Data1D>(cbl::data::Data1D(rad, xi, covariance));
+  return make_shared<data::Data1D>(data::Data1D(rad, xi, covariance));
 }
 

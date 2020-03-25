@@ -152,6 +152,7 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles_sigma8_bias (const std::
 
 // ============================================================================================
 
+
 std::vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
     // structure contaning the required input data

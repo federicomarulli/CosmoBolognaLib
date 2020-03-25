@@ -1170,7 +1170,7 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const 
   double beta = (force_RealSpace) ? 0 : linear_growth_rate(redshift)/b1;
   vector<double> rr = linear_bin_vector(step_r, 1., rmax);
   vector<double> kk = logarithmic_bin_vector(step_k, 1.e-4, 10.);
-  vector<double> _Pk = Pk(kk, method_Pk, false, redshift, output_dir, store_output, output_root);  
+  vector<double> _Pk = Pk_DM(kk, method_Pk, false, redshift, output_dir, store_output, output_root);  
 
   return zeta_RSD (r1, r2, ntheta, b1, b2, bt, beta, rr, kk, _Pk, include_limits, max_ll, use_k);
 }

@@ -95,7 +95,7 @@ std::vector<double> cbl::lognormal::LogNormal::get_xi_model(const std::vector<do
 
   for (size_t i=0; i<kG.size(); i++) {
     kG[i] = pow(10,kG[i]);
-    PkG.push_back(fact*m_cosmology->Pk(kG[i], m_author, m_NL, stat[0], true, m_model));
+    PkG.push_back(fact*m_cosmology->Pk_DM(kG[i], m_author, m_NL, stat[0], true, m_model));
   }
 
   return cbl::wrapper::fftlog::transform_FFTlog (radius, 1, kG, PkG, 0, 0, 2.*par::pi, 1);
@@ -186,7 +186,7 @@ void cbl::lognormal::LogNormal::generate_LogNormal_mock (const double rmin, cons
 
     for (size_t i=0; i<kG.size(); i++) {
       kG[i] = pow(10,kG[i]);
-      PkG.push_back(fact*m_cosmology->Pk(kG[i], m_author, m_NL, stat[0], true, m_model));
+      PkG.push_back(fact*m_cosmology->Pk_DM(kG[i], m_author, m_NL, stat[0], true, m_model));
     }
 
     cbl::glob::FuncGrid interpPk(kG, PkG, "Spline");

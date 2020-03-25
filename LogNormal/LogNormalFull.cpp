@@ -109,7 +109,7 @@ void cbl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosmolog
 
   vector<double> kk = logarithmic_bin_vector(nk, kmin, kmax), Pk;
   for (size_t i=0;i<kk.size();i++)
-    Pk.push_back(m_cosmology->Pk(kk[i], m_author, 0, 0.));
+    Pk.push_back(m_cosmology->Pk_DM(kk[i], m_author, 0, 0.));
 
   m_func_pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, Pk, "Spline"));
 }

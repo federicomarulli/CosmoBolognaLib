@@ -175,7 +175,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_HOD (const
   //  creation of vector containing pk values for interpolation
   vector<double> pk_vec;
   for (int i=0; i<step; i++)
-    pk_vec.emplace_back(m_data_HOD->cosmology->Pk(m_data_HOD->kkvec[i], method_Pk, NL, redshift));
+    pk_vec.emplace_back(m_data_HOD->cosmology->Pk_DM(m_data_HOD->kkvec[i], method_Pk, NL, redshift));
   
   m_data_HOD->pk_vec = pk_vec;
 

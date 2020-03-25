@@ -70,7 +70,7 @@ struct background
   double cs2_fld; /**< \f$ c^2_{s~DE} \f$: sound speed of the fluid
 		     in the frame comoving with the fluid (so, this is
 		     not [delta p/delta rho] in the synchronous or
-		     newtonian gauge!!!) */
+		     newtonian gauge!) */
 
   short use_ppf; /**< flag switching on PPF perturbation equations
                     instead of true fluid equations for
@@ -81,6 +81,11 @@ struct background
   double c_gamma_over_c_fld; /**< ppf parameter defined in eq. (16) of 0808.3125 [astro-ph] */
 
   double Omega0_ur; /**< \f$ \Omega_{0 \nu r} \f$: ultra-relativistic neutrinos */
+
+  double Omega0_idr; /**< \f$ \Omega_{0 idr} \f$: interacting dark radiation */
+  double T_idr;      /**< \f$ T_{idr} \f$: current temperature of interacting dark radiation in Kelvins */
+
+  double Omega0_idm_dr; /**< \f$ \Omega_{0 idm_dr} \f$: dark matter interacting with dark radiation */
 
   double Omega0_dcdmdr; /**< \f$ \Omega_{0 dcdm}+\Omega_{0 dr} \f$: decaying cold dark matter (dcdm) decaying to dark radiation (dr) */
 
@@ -184,6 +189,8 @@ struct background
   int index_bg_rho_fld;       /**< fluid density */
   int index_bg_w_fld;         /**< fluid equation of state */
   int index_bg_rho_ur;        /**< relativistic neutrinos/relics density */
+  int index_bg_rho_idm_dr;    /**< density of dark matter interacting with dark radiation */
+  int index_bg_rho_idr;       /**< density of interacting dark radiation */
   int index_bg_rho_dcdm;      /**< dcdm density */
   int index_bg_rho_dr;        /**< dr density */
 
@@ -295,6 +302,8 @@ struct background
   short has_lambda;    /**< presence of cosmological constant? */
   short has_fld;       /**< presence of fluid with constant w and cs2? */
   short has_ur;        /**< presence of ultra-relativistic neutrinos/relics? */
+  short has_idr;       /**< presence of interacting dark radiation? */
+  short has_idm_dr;    /**< presence of dark matter interacting with dark radiation? */
   short has_curvature; /**< presence of global spatial curvature? */
 
   //@}
@@ -575,20 +584,12 @@ extern "C" {
 //@}
 
 /**
- * @name Some numbers useful in numerical algorithms - but not
- * affecting precision, otherwise would be in precision structure
+ * @name Some limits on possible background parameters
  */
 
 //@{
 
-//#define _H0_BIG_ 1./2997.9     /**< maximal \f$ H_0 \f$ in \f$ Mpc^{-1} (h=1.0) \f$ */
-//#define _H0_SMALL_ 0.3/2997.9  /**< minimal \f$ H_0 \f$ in \f$ Mpc^{-1} (h=0.3) \f$ */
-#define _TCMB_BIG_ 2.8         /**< maximal \f$ T_{cmb} \f$ in K */
-#define _TCMB_SMALL_ 2.7       /**< minimal \f$ T_{cmb}  \f$ in K */
-#define _TOLERANCE_ON_CURVATURE_ 1.e-5 /**< if \f$ | \Omega_k | \f$ smaller than this, considered as flat */
-#define _OMEGAK_BIG_ 0.5      /**< maximal \f$ Omega_k \f$ */
-#define _OMEGAK_SMALL_ -0.5   /**< minimal \f$ Omega_k \f$ */
-#define _h_BIG_ 1.            /**< maximal \f$ h \f$ */
+#define _h_BIG_ 1.5            /**< maximal \f$ h \f$ */
 #define _h_SMALL_ 0.3         /**< minimal \f$ h \f$ */
 #define _omegab_BIG_ 0.039    /**< maximal \f$ omega_b \f$ */
 #define _omegab_SMALL_ 0.005  /**< minimal \f$ omega_b \f$ */

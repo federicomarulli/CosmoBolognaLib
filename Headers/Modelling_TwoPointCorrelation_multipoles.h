@@ -634,11 +634,12 @@ namespace cbl {
 	 *  @param A22_prior prior for the parameter \f$A^2_2\f$
 	 *
 	 *  @param compute_XiDM true \f$\rightarrow\f$ compute the
-	 *  fiducial model of two-point correlation function multipoles
+	 *  fiducial model of the dark matter two-point correlation
+	 *  function
 	 *
 	 *  @param isRealSpace true \f$\rightarrow\f$ assume real space when
 	 *  computing two-point correlation function multipoles
-     *
+     	 *
 	 *  @return none
 	 *
 	 *  @warning the current implementation works only for

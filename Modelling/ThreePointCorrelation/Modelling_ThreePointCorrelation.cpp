@@ -157,5 +157,5 @@ void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_model_ze
   }
   m_data_model.linear_growth_rate_z = m_data_model.cosmology->linear_growth_rate(m_data_model.redshift, 1.);
 
-  m_data_model.Pk_DM = m_data_model.cosmology->Pk(m_data_model.kk, m_data_model.method_Pk, m_data_model.NL, m_data_model.redshift, m_data_model.output_dir, m_data_model.store_output, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec);
+  m_data_model.Pk_DM = m_data_model.cosmology->Pk_DM(m_data_model.kk, m_data_model.method_Pk, m_data_model.NL, m_data_model.redshift, m_data_model.output_dir, m_data_model.store_output, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec);
 }

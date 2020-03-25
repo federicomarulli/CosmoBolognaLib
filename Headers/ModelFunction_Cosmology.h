@@ -51,10 +51,10 @@ namespace cbl {
       struct STR_data_model_cosmology{
 
 	/// cosmology
-	std::shared_ptr<cosmology::Cosmology> cosmology;
+	std::shared_ptr<cbl::cosmology::Cosmology> cosmology;
 
 	/// cosmological parameters
-	std::vector<cosmology::CosmologicalParameter> Cpar;
+	std::vector<cbl::cosmology::CosmologicalParameter> Cpar;
 
 	/// data type
 	std::vector<std::string> data_type;
@@ -89,7 +89,7 @@ namespace cbl {
        *
        *  @return cosmological measurements
        */     
-      double cosmological_measurements(const double redshift, const std::string data_type, const cosmology::Cosmology cosmology);
+      double cosmological_measurements(const double redshift, const std::string data_type, const cbl::cosmology::Cosmology cosmology);
 
       /**
        *  @brief model for the generic cosmological measurements

@@ -688,14 +688,9 @@ void cbl::statistics::PosteriorParameters::show_results (const int start, const 
   
   for (size_t i=0; i<m_nparameters; i++) {
 
-    auto posterior = m_posterior_distribution[i];
-
-    const double std = posterior->std()*corr;
-    const double std_diff = (posterior->std()*(corr-1.))*0.5;
-    
     switch (m_parameter_type[i]) {
-      
-    case statistics::ParameterType::_Base_:
+
+      case statistics::ParameterType::_Base_:
       if (m_parameter_prior[i]->distributionType()==glob::DistributionType::_Constant_) {
 	coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_purple << "FIXED" << endl;
 	Print(m_parameter_prior[i]->sample(), 5, 10, true, true, std::cout, "value ="); 
@@ -703,7 +698,11 @@ void cbl::statistics::PosteriorParameters::show_results (const int start, const 
       }
       else {
 	coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_green << "FREE" << endl;
-	
+
+	auto posterior = m_posterior_distribution[i];
+	const double std = posterior->std()*corr;
+	const double std_diff = (posterior->std()*(corr-1.))*0.5;
+
 	Print(posterior->mean(), 5, 10, true, true, std::cout, "Posterior mean = "); 
 	Print(std, 5, 10, true, true, std::cout, "Posterior standard deviation = "); 
 	Print(posterior->median(), 5, 10, true, true, std::cout, "Posterior median = "); 
@@ -714,18 +713,22 @@ void cbl::statistics::PosteriorParameters::show_results (const int start, const 
       }
       break;
 
-    case statistics::ParameterType::_Derived_:
-      coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_bred << "OUTPUT" << endl;
-      Print(posterior->mean(), 5, 10, true, true, std::cout, "Posterior mean = "); 
-      Print(std, 5, 10, true, true, std::cout, "Posterior standard deviation = "); 
-      Print(posterior->median(), 5, 10, true, true, std::cout, "Posterior median = "); 
-      Print((posterior->median()-posterior->percentile(18))-std_diff, 5, 10, true, true, std::cout, "Posterior 18th percentile = "); 
-      Print((posterior->percentile(82)-posterior->median())+std_diff, 5, 10, true, true, std::cout, "Posterior 82th percentile = "); 
-      if (show_mode) Print(posterior->mode(), 5, 10, true, true, std::cout, "Posterior mode = "); 
-      cout << endl;
-      break;
-
-    default:
+      case statistics::ParameterType::_Derived_:
+      {
+	auto posterior = m_posterior_distribution[i];
+	const double std = posterior->std()*corr;
+	const double std_diff = (posterior->std()*(corr-1.))*0.5;
+	coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_bred << "OUTPUT" << endl;
+	Print(posterior->mean(), 5, 10, true, true, std::cout, "Posterior mean = "); 
+	Print(std, 5, 10, true, true, std::cout, "Posterior standard deviation = "); 
+	Print(posterior->median(), 5, 10, true, true, std::cout, "Posterior median = "); 
+	Print((posterior->median()-posterior->percentile(18))-std_diff, 5, 10, true, true, std::cout, "Posterior 18th percentile = "); 
+	Print((posterior->percentile(82)-posterior->median())+std_diff, 5, 10, true, true, std::cout, "Posterior 82th percentile = "); 
+	if (show_mode) Print(posterior->mode(), 5, 10, true, true, std::cout, "Posterior mode = "); 
+	cout << endl;
+	break;
+      }
+      default:
       ErrorCBL("no such kind of parameter!", "show_results", "PosteriorParameters.cpp");
     }
   }
@@ -766,15 +769,15 @@ void cbl::statistics::PosteriorParameters::write_results (const string dir, cons
   for (size_t i=0; i<m_nparameters; i++) {
     auto posterior = m_posterior_distribution[i];
 
-    const double std = posterior->std()*corr;
-    const double std_diff = (posterior->std()*(corr-1.))*0.5;
-    
     if (m_parameter_type[i]==statistics::ParameterType::_Base_ && m_parameter_prior[i]->distributionType()==glob::DistributionType::_Constant_) {
-      fout << m_parameter_name[i] << " FIXED " << posterior->sample() << " 0 0 0 0 0";
+      fout << m_parameter_name[i] << " FIXED " << m_parameter_prior[i]->sample() << " 0 0 0 0 0";
       if (compute_mode)
 	fout << "0";
     }
     else {
+
+      const double std = posterior->std()*corr;
+      const double std_diff = (posterior->std()*(corr-1.))*0.5;
       fout << m_parameter_name[i] << " FREE " << posterior->mean() << " " << std << " " << posterior->median() << " " << (posterior->median()-posterior->percentile(18))-std_diff << " " << (posterior->percentile(82)-posterior->median())+std_diff;
       if (compute_mode)
 	fout << " " << posterior->mode() << endl;

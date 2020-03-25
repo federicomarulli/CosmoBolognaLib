@@ -57,7 +57,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
     vector<double> kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.)), Pk(m_data_model->step,0);
 
     for (size_t i=0; i<kk.size(); i++)
-      Pk[i] = m_data_model->cosmology->Pk(kk[i], m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+      Pk[i] = m_data_model->cosmology->Pk_DM(kk[i], m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
 
     m_data_model->kk = kk;
     m_data_model->func_Pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, Pk, "Spline"));
@@ -68,8 +68,8 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
 
     vector<double> kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.)), Pk(m_data_model->step,0), PkNW(m_data_model->step,0), PkDW(m_data_model->step,0);
     for (size_t i=0; i<kk.size(); i++) {
-      Pk[i] = m_data_model->cosmology->Pk(kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-      PkNW[i] = m_data_model->cosmology->Pk(kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+      Pk[i] = m_data_model->cosmology->Pk_DM(kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+      PkNW[i] = m_data_model->cosmology->Pk_DM(kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
       PkDW[i] = PkNW[i]*(1+(Pk[i]/PkNW[i]-1)*exp(-0.5*pow(kk[i]*m_data_model->sigmaNL, 2)));
     }
 
@@ -125,7 +125,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_fiduci
   vector<double> PkDM(kk.size());
   
   for (size_t i=0; i<kk.size(); i++)
-    PkDM[i] = m_data_HOD->cosmology->Pk(kk[i], m_data_HOD->method_Pk, m_data_HOD->NL, m_data_HOD->redshift, m_data_HOD->store_output, m_data_HOD->output_root, m_data_HOD->norm, m_data_HOD->k_min, m_data_HOD->k_max, m_data_HOD->prec, m_data_HOD->input_file);
+    PkDM[i] = m_data_HOD->cosmology->Pk_DM(kk[i], m_data_HOD->method_Pk, m_data_HOD->NL, m_data_HOD->redshift, m_data_HOD->store_output, m_data_HOD->output_root, m_data_HOD->norm, m_data_HOD->k_min, m_data_HOD->k_max, m_data_HOD->prec, m_data_HOD->input_file);
 
   m_data_HOD->func_Pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, PkDM, "Spline"));
 }

@@ -53,7 +53,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian::set_fiduc
   
   if (m_data_model->sigmaNL==0) {  
     for (size_t i=0; i<(size_t)m_data_model->step; i++)
-      xiDM[i] = m_data_model->cosmology->xi_DM(rad[i], m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->NL, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->aa, m_data_model->GSL, m_data_model->prec, m_data_model->file_par);
+      xiDM[i] = m_data_model->cosmology->xi_DM(rad[i], m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->aa, m_data_model->GSL, m_data_model->prec, m_data_model->file_par);
   }
 
   else {

@@ -1127,7 +1127,7 @@ namespace cbl {
 	else 
 	  stream << header << std::fixed << std::setprecision(prec) << std::setw(ww) << value;
       }
-      if (insert_new_line && use_coutCBL) coutCBL << par::col_default << std::endl;
+      if (insert_new_line && use_coutCBL) std::cout << par::col_default << std::endl;
       if (insert_new_line && !use_coutCBL) stream << std::endl;
       std::cout.precision(bp);
     }

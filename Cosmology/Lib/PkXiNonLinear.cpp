@@ -158,7 +158,7 @@ double cbl::cosmology::Cosmology::Pk_ThetaTheta (const double kk, const std::sha
 
 std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
 {
-  vector<double> pkLin = Pk(kk, method_Pk, false, redshift, output_dir, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
+  vector<double> pkLin = Pk_DM(kk, method_Pk, false, redshift, output_dir, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
 
   for (size_t i=0; i<kk.size(); i++)
     pkLin[i] /= pow(2*par::pi, 3);
@@ -179,7 +179,7 @@ std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaDelta (const std::vector<
 
 std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
 {
-  vector<double> pkLin = Pk(kk, method_Pk, false, redshift, output_dir, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
+  vector<double> pkLin = Pk_DM(kk, method_Pk, false, redshift, output_dir, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
 
   for (size_t i=0; i<kk.size(); i++)
     pkLin[i] /= pow(2*par::pi, 3);
@@ -199,7 +199,7 @@ std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaTheta (const std::vector<
 
 std::vector<double> cbl::cosmology::Cosmology::Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
 {
-  vector<double> pkLin = Pk(kk, method_Pk, false, redshift, output_dir, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
+  vector<double> pkLin = Pk_DM(kk, method_Pk, false, redshift, output_dir, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
 
   for (size_t i=0; i<kk.size(); i++)
     pkLin[i] /= pow(2*par::pi, 3);

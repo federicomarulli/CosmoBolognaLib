@@ -27,7 +27,7 @@ kk = np.logspace(-4, 2, 500)
 rr = np.linspace(1, 150, 100)
 
 # compute the matter power spectrum
-Pk = np.array([cosmology.Pk(_kk, "CAMB", False, redshift) for _kk in kk])
+Pk = np.array([cosmology.Pk_DM(_kk, "CAMB", False, redshift) for _kk in kk])
 interpPk = cbl.FuncGrid(dv(kk), dv(Pk), "Spline")
 
 # set the redshift errors

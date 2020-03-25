@@ -2050,7 +2050,7 @@ std::vector<double> cbl::generate_correlated_data (const std::vector<double> mea
     gsl_matrix_get_row(row, VV, i);
     cov_sample.push_back(0);
     for (size_t j=0; j<sample_size; j++)
-      cov_sample[i]+=gsl_vector_get(row, j)*sample[j];
+      cov_sample[i] += gsl_vector_get(row, j)*sample[j];
     cov_sample[i] = std[i]*cov_sample[i]+mean[i];
   }
 

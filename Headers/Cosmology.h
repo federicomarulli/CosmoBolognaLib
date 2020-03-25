@@ -4062,10 +4062,10 @@ namespace cbl {
       void Pk_0 (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
-       *  @brief normalised power spectrum
+       *  @brief the dark matter power spectrum
        *
-       *  this function provides the power spectrum P(k); it can use
-       *  either CAMB, CLASS, MPTbreeze or the analytic
+       *  this function provides the dark matter power spectrum P(k);
+       *  it can use either CAMB, CLASS, MPTbreeze or the analytic
        *  approximation by Eisenstein & Hu
        *
        *  @param kk the wave vector module
@@ -4111,15 +4111,15 @@ namespace cbl {
        *
        *  @param unit1 true \f$\rightarrow\f$ force cosmological units
        *
-       *  @return P(k)
+       *  @return the dark matter power spectrum 
        */
-      double Pk (const double kk, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
+      double Pk_DM (const double kk, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
 
       /**
-       *  @brief normalised power spectrum
+       *  @brief the dark matter power spectrum
        *
-       *  this function provides the power spectrum P(k); it can use
-       *  either CAMB, CLASS, MPTbreeze or the analytic
+       *  this function provides the dark matter power spectrum;
+       *  it can use either CAMB, CLASS, MPTbreeze or the analytic
        *  approximation by Eisenstein & Hu
        *
        *  @param kk the wave vector module
@@ -4131,7 +4131,7 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1
+       *  @param NL false \f$\rightarrow\f$ linear power spectrum; true
        *  \f$\rightarrow\f$ non-linear power spectrum
        *
        *  @param redshift the redshift
@@ -4169,9 +4169,9 @@ namespace cbl {
        *
        *  @param unit1 true \f$\rightarrow\f$ force cosmological units
        *
-       *  @return P(k)
+       *  @return the dark matter power spectrum
        */
-      std::vector<double> Pk (const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
+      std::vector<double> Pk_DM (const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
 
       /**
        *  @brief  the dark matter linear power spectrum.
@@ -4914,6 +4914,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param NL false \f$\rightarrow\f$ linear DM two-point
+       *  correlation function; true \f$\rightarrow\f$ non-linear DM
+       *  two-point correlation function
+       *
        *  @param redshift the redshift
        *
        *  @param store_output if true the output files created by the
@@ -4923,9 +4927,6 @@ namespace cbl {
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
-       *
-       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
-       *  non-linear power spectrum
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4956,7 +4957,7 @@ namespace cbl {
        *  averaged (monopole) of the two-point correlation function of
        *  dark matter
        */
-      double xi_DM (const double rr, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool NL=true, const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi_DM (const double rr, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the dark matter angular two-point correlation function
