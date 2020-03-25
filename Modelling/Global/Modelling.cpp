@@ -224,6 +224,7 @@ void cbl::modelling::Modelling::write_chain (const string output_dir, const stri
 
 void cbl::modelling::Modelling::read_chain (const string input_dir, const string input_file, const int nwalkers, const int skip_header, const bool fits)
 {
+  m_set_posterior(666);
   m_posterior->read_chain(input_dir, input_file, nwalkers, skip_header, fits);
 }
 
