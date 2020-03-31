@@ -617,13 +617,13 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_BAO (const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution BB_prior, const statistics::PriorDistribution A0_prior, const statistics::PriorDistribution A1_prior, const statistics::PriorDistribution A2_prior)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_BAO (const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution bs8_prior, const statistics::PriorDistribution A0_prior, const statistics::PriorDistribution A1_prior, const statistics::PriorDistribution A2_prior)
 {
   vector<statistics::PriorDistribution>  polynomial_prior = {A0_prior, A1_prior, A2_prior};
   
   vector<double> polynomial_value(polynomial_prior.size(), par::defaultDouble);
 
-  set_model_linear(alpha_prior, statistics::PriorDistribution(glob::DistributionType::_Constant_, 0), BB_prior, polynomial_prior);
+  set_model_linear(alpha_prior, statistics::PriorDistribution(glob::DistributionType::_Constant_, 0), bs8_prior, polynomial_prior);
 }
 
 

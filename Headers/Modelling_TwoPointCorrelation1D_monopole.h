@@ -549,23 +549,27 @@ namespace cbl {
 	void set_model_linear_cosmology_clusters (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
 	
 	/**
-	 *  @brief set the parameter to model the monopole of the
-	 *  two-point correlation function in real space, taking into
-	 *  accout geometric distortions (that is the Alcock-Paczynski
-	 *  effect), and using a second order polynomial
+	 *  @brief set the function to model the monopole of the
+	 *  two-point correlation function, taking into accout
+	 *  geometric distortions (that is the Alcock-Paczynski
+	 *  effect), and using a second order polynomial. The
+	 *  redshift-space distortions are accounted by the polynomial
+	 *  factors, and not used to constrain the linear growth rate
+	 *  parameter.
 	 *
-	 *  the model used is the following:
+	 *  The model is the following:
 	 *
-	 *  \f[\xi(s)= b^2 \xi_{DM}(\alpha r)\ + A_0 + A_1/r
-	 *  +A_2/r^2\f]
+	 *  \f[ \xi(s)= \left(b\sigma_8\right)^2 \frac{\xi_{DM}(\alpha
+	 *  r)}{\sigma_8}\ + A_0 + \frac{A_1}{r} + \frac{A_2}{r^2} \f]
 	 *
-	 *  where \f$\xi_{DM}\f$ is computed at the fiducial (fixed)
-	 *  cosmology, and {\f$b\sigma_8\f$, \f$A_0\f$, \f$A_1\f$,
-	 *  \f$A_2\f$} are considered as nuisance parameters
+	 *  where the dark matter two-point correlation function,
+	 *  \f$\xi_{DM}\f$, is computed at the fiducial (fixed)
+	 *  cosmology, and {\f$A_0\f$, \f$A_1\f$, \f$A_2\f$} are
+	 *  considered as nuisance parameters
 	 *
 	 *  @param alpha_prior prior for the parameter \f$\alpha\f$
 	 *
-	 *  @param BB_prior prior for the parameter
+	 *  @param bs8_prior prior for the parameter
 	 *  \f$b(z)\sigma_8(z)\f$
 	 *
 	 *  @param A0_prior prior for the parameter \f$A_0\f$
@@ -576,7 +580,7 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_model_BAO (const statistics::PriorDistribution alpha_prior={}, const statistics::PriorDistribution BB_prior={}, const statistics::PriorDistribution A0_prior={}, const statistics::PriorDistribution A1_prior={}, const statistics::PriorDistribution A2_prior={});
+	void set_model_BAO (const statistics::PriorDistribution alpha_prior={}, const statistics::PriorDistribution bs8_prior={}, const statistics::PriorDistribution A0_prior={}, const statistics::PriorDistribution A1_prior={}, const statistics::PriorDistribution A2_prior={});
 
 	/**
 	 *  @brief set the parameter to model the monopole of the

@@ -581,20 +581,22 @@ namespace cbl {
 	 *  the monopole and quadrupole of the two-point correlation
 	 *  function are computed as follows (Ross et al. 2017):
 	 *
-	 *  \f[ \xi_0(s) = B_0\xi_0(s, \alpha_{\perp},
+	 *  \f[ \xi_0(s) = B_0\xi_0^{DM}(s, \alpha_{\perp},
 	 *  \alpha_{\parallel})+A_0^0+\frac{A_0^1}{s}+\frac{A_0^2}{s^2}
 	 *  \f]
 	 *
-	 *  \f[ \xi_2(s) = \frac{5}{2}\left[B_2\xi_{\mu2}(s,
-	 *  \alpha_{\perp}, \alpha_{\parallel})-B_0\xi_0(s,
+	 *  \f[ \xi_2(s) = \frac{5}{2}\left[B_2\xi_2^{DM}(s,
+	 *  \alpha_{\perp}, \alpha_{\parallel})-B_0\xi_0^{DM}(s,
 	 *  \alpha_{\perp}, \alpha_{\parallel})\right]
 	 *  +A_2^0+\frac{A_2^1}{s}+\frac{A_2^2}{s^2} \f]
 	 *
-	 *  where \f$\xi_0(s, \alpha_{\perp}, \alpha_{\parallel})\f$
-	 *  is the monopole computed at the fiducial cosmology,
-	 *  \f$\xi_{\mu2}(s, \alpha_{\perp}, \alpha_{\parallel}) =
-	 *  3\int_0^1\mathrm{d}\mu\mu^2\xi(s, \mu, \alpha_{\perp},
-	 *  \alpha_{\parallel})\f$.
+	 *  where \f$\xi_0^{DM}(s, \alpha_{\perp},
+	 *  \alpha_{\parallel})\f$ is the monopole of the dark matter
+	 *  two-point correlation function computed at the fiducial
+	 *  cosmology, and \f$\xi_2^{DM}(s, \alpha_{\perp},
+	 *  \alpha_{\parallel}) =
+	 *  3\int_0^1\mathrm{d}\mu\mu^2\xi_0^{DM}(s, \mu,
+	 *  \alpha_{\perp}, \alpha_{\parallel})\f$.
 	 *
 	 *  The function takes as inputs ten parameters
 	 *    - \f$\alpha_{\perp}\f$
@@ -608,10 +610,13 @@ namespace cbl {
 	 *    - \f$A^0_2\f$
 	 *    - \f$A^2_2\f$
 	 *
-	 *  the dark matter two-point correlation function is computed
-	 *  using the input cosmological parameters
+	 *  the dark matter two-point correlation function,
+	 *  \f$\xi_0^{DM}\f$, is computed using the input cosmological
+	 *  parameters, and {\f$B_0\f$, \f$B_2\f$, \f$A^0_0\f$,
+	 *  \f$A^2_0\f$, \f$A^0_1\f$, \f$A^2_1\f$, \f$A^0_2\f$,
+	 *  \f$A^2_2\f$} are considered as nuisance parameters
 	 *
-	 *  @param alpha_perpendicular_prior prior for the parameter 
+	 *  @param alpha_perpendicular_prior prior for the parameter
 	 *  \f$\alpha_{\perp}\f$
 	 *
 	 *  @param alpha_parallel_prior prior for the parameter
@@ -637,8 +642,9 @@ namespace cbl {
 	 *  fiducial model of the dark matter two-point correlation
 	 *  function
 	 *
-	 *  @param isRealSpace true \f$\rightarrow\f$ assume real space when
-	 *  computing two-point correlation function multipoles
+	 *  @param isRealSpace true \f$\rightarrow\f$ assume real
+	 *  space when computing two-point correlation function
+	 *  multipoles
      	 *
 	 *  @return none
 	 *

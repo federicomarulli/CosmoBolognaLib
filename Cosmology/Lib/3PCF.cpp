@@ -614,198 +614,136 @@ std::vector<double> cbl::cosmology::Cosmology::Q_DM_eq (const std::vector<double
 double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volume, const double nObjects, const int l, const int l_prime, const double r1, const double r2, const double r1_prime, const double r2_prime, const double deltaR, const std::vector<double> kk, const std::vector<double> Pk, const std::vector<double> rr, const std::vector<double> Xi, const double prec)
 {
   (void)prec;
-  double dlnK = log10(kk[1])-log10(kk[0]);
-  double fact = dlnK/(2.*par::pi*par::pi)*log(10.);
 
-  const double inverse_density = Volume/nObjects;
-  const string interpType = "Spline";
+  const double kr0 = 1.; //check
 
-  glob::FuncGrid interpXi (rr, Xi, interpType);
+  size_t nk = static_cast<int>(kk.size());
+  size_t nr = static_cast<int>(rr.size());
+  double dlogr = log(rr[1])-log(rr[0]);
 
-  vector<double> pk_sn;
-  for (size_t i=0; i<kk.size(); i++)
-    pk_sn.push_back(Pk[i]+inverse_density);
+  const double density = nObjects/Volume;
 
   // r binning
 
   function<double(double, int, double)> func1; 
   function<double(double, int, int, double, double)> func2; 
-  function<double(double, double)> noise;
+  function<double(double, double)> func1_noise; 
 
   if (deltaR<0) {
     func1 = [&] (const double kk, const int l, const double rr) {
       return jl(kk*rr, l); };
     func2 = [&] (const double kk, const int l, const int lp, const double rr, const double rrp) {
       return jl(kk*rr, l)*jl(kk*rrp, lp); };
-    noise = [&] (const double xx, const double x1) {
-      if (xx!=x1)
-        return 0.;
-      return 1.;
-    };
   } else {
     func1 = [&] (const double kk, const int l, const double rr) {
       return jl_distance_average(kk, l, rr-deltaR*0.5, rr+deltaR*0.5); };
     func2 = [&] (const double kk, const int l, const int lp, const double rr, const double rrp) {
       return jl_distance_average(kk, l, rr-deltaR*0.5, rr+deltaR*0.5)*jl_distance_average(kk, lp, rrp-deltaR*0.5, rrp+deltaR*0.5); };
-    noise = [&] (const double xx, const double x1) {
-      if ( (xx<=x1+0.5*deltaR) && (xx>=x1-0.5*deltaR))
-        return 1.;
+  }
+
+  func1_noise = [&] (const double rr, const double bin) {
+    double rmin = bin-deltaR/2;
+    double rmax = bin+deltaR/2;
+    if (rr>=rmin && rr<=rmax && deltaR>0)
+      return 1./(4*par::pi/3*(pow(rmax, 3)-pow(rmin, 3)));
+    else 
       return 0.;
-    };
-  }
-
-  vector<double> f_r1(kk.size(), 0), f_r2(kk.size(), 0), f_r1p(kk.size(), 0), f_r2p(kk.size(), 0);
-  vector<double> f_r1_r1p(kk.size(), 0), f_r1_r2p(kk.size(), 0), f_r2_r1p(kk.size(), 0), f_r2_r2p(kk.size(), 0);
-
-  for (size_t j=0; j<kk.size(); j++) {
-    double _kk = kk[j];
-    double prod = pow(_kk, 3)*Pk[j]*fact;
-    double prodSN = pow(_kk, 3)*pk_sn[j]*fact;
-    f_r1[j] = func1(_kk, l, r1)*prod;
-    f_r2[j] = func1(_kk, l, r2)*prod;
-    f_r1p[j] = func1(_kk, l_prime, r1_prime)*prod;
-    f_r2p[j] = func1(_kk, l_prime, r2_prime)*prod;
-    f_r1_r1p[j] = func2(_kk, l, l_prime, r1, r1_prime)*prodSN;
-    f_r1_r2p[j] = func2(_kk, l, l_prime, r1, r2_prime)*prodSN;
-    f_r2_r1p[j] = func2(_kk, l, l_prime, r2, r1_prime)*prodSN;
-    f_r2_r2p[j] = func2(_kk, l, l_prime, r2, r2_prime)*prodSN;
-  }
-
-
-  auto integrand = [&] (const double rad) {  
-    double Xi_r = interpXi(rad);
-
-    double f_r_r1 = 0, f_r_r2 =0, f_r_r1p = 0, f_r_r2p = 0;
-
-    for (size_t j=0; j<kk.size(); j++) {
-      double _kk = kk[j];
-      double jlr = jl(_kk*rad, l);
-      double jlrp = jl(_kk*rad, l_prime);
-      f_r_r1 += f_r1[j]*jlr;
-      f_r_r2 += f_r2[j]*jlr;
-      f_r_r1p += f_r1p[j]*jlrp;
-      f_r_r2p += f_r2p[j]*jlrp;
-    }
-
-    f_r_r1 += noise(rad, r1);
-    f_r_r2 += noise(rad, r2);
-    f_r_r1p += noise(rad, r1_prime);
-    f_r_r2p += noise(rad, r2_prime);
-
-    double sum=0;
-    for (int l2=abs(l-l_prime); l2<l+l_prime+1; l2++) {
-      double wig = coupling_3j(l, l_prime, l2);
-      if (wig!=0) {
-        double t1 = (2*l2+1)*pow(wig,2);
-        double f_r_r1_r1p = 0,  f_r_r1_r2p = 0, f_r_r2_r1p = 0, f_r_r2_r2p = 0;
-        for (size_t j=0; j<kk.size(); j++) {
-          double _kk = kk[j];
-          double jlr = jl(_kk*rad, l2);
-          f_r_r1_r1p += f_r1_r1p[j]*jlr;
-          f_r_r1_r2p += f_r1_r2p[j]*jlr;
-          f_r_r2_r1p += f_r2_r1p[j]*jlr;
-          f_r_r2_r2p += f_r2_r2p[j]*jlr;
-        }
-
-        double t2 = pow(-1, l2)*Xi_r*(f_r_r1_r1p*f_r_r2_r2p+f_r_r2_r1p*f_r_r1_r2p);
-        double t3  = pow(-1, 0.5*(l+l_prime+l2))*(f_r_r1*f_r_r1p*f_r_r2_r2p+f_r_r1*f_r_r2p*f_r_r2_r1p+f_r_r2*f_r_r1p*f_r_r1_r2p+f_r_r2*f_r_r2p*f_r_r1_r1p);
-        sum += t1*(t2+t3);
-      }
-    }
-
-    return rad*rad*sum;
   };
 
-  return wrapper::gsl::GSL_integrate_cquad(integrand, 1., 1000, prec)*4.*par::pi/Volume*(2*l+1)*(2*l_prime+1)*pow(-1, l+l_prime);
-
-  /*
-  // l2
-  vector<int> l2;
-  for (int ll=abs(l-l_prime); ll<l+l_prime+1; ll++)
-    l2.push_back(ll);
-
-  const int n_l2 = (int)l2.size();
-
-  // integrand
+  // integrand 
+  
+  // Terms of type  I_ll = int [(Pk+1/n) jl] jl
     
-  vector<double> pk_r1 = pk_sn, pk_r2 = pk_sn;
-  vector<double> pk_r1p = pk_sn, pk_r2p = pk_sn;
+  vector<double> pk_r1 = Pk, pk_r2 = Pk;
+  vector<double> pk_r1p = Pk, pk_r2p = Pk;
 
-  for (int i=0; i<nk; i++) {
+  for (size_t i=0; i<nk; i++) {
     pk_r1[i] *= func1(kk[i], l, r1);
     pk_r2[i] *= func1(kk[i], l, r2);
     pk_r1p[i] *= func1(kk[i], l_prime, r1_prime);
     pk_r2p[i] *= func1(kk[i], l_prime, r2_prime);
   }
 
-  const double kr0 = 2.*par::pi; //check
+  vector<double> I1_r_r1 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r1, l, 0, kr0, 1);
+  vector<double> I1_r_r2 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r2, l, 0, kr0, 1);
+  vector<double> I1_r_r1p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r1p, l_prime, 0, kr0, 1);
+  vector<double> I1_r_r2p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r2p, l_prime, 0, kr0, 1);
 
-  vector<double> f_r_r1 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r1, l, 0, kr0, 1);
-  vector<double> f_r_r2 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r2, l, 0, kr0, 1);
-  vector<double> f_r_r1p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r1p, l_prime, 0, kr0, 1);
-  vector<double> f_r_r2p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r2p, l_prime, 0, kr0, 1);
-
-  glob::FuncGrid interp_f_r_r1(rr, f_r_r1, interpType);
-  glob::FuncGrid interp_f_r_r2(rr, f_r_r2, interpType);
-  glob::FuncGrid interp_f_r_r1p(rr, f_r_r1p, interpType);
-  glob::FuncGrid interp_f_r_r2p(rr, f_r_r2p, interpType);
-  
-  vector<double> pk_r1_r1p = pk_sn, pk_r2_r2p = pk_sn, pk_r2_r1p = pk_sn, pk_r1_r2p = pk_sn;
-  for (int i=0; i<nk; i++) {
-    pk_r1_r1p[i] *= func2(kk[i], l, l_prime, r1, r1_prime);
-    pk_r2_r2p[i] *= func2(kk[i], l, l_prime, r2, r2_prime);
-    pk_r2_r1p[i] *= func2(kk[i], l, l_prime, r2, r1_prime);
-    pk_r1_r2p[i] *= func2(kk[i], l, l_prime, r1, r2_prime);
+  for (size_t i=0; i<nr; i++) {
+    I1_r_r1[i] += func1_noise(rr[i], r1)/density;
+    I1_r_r2[i] += func1_noise(rr[i], r2)/density;
+    I1_r_r1p[i] += func1_noise(rr[i], r1_prime)/density;
+    I1_r_r2p[i] += func1_noise(rr[i], r2_prime)/density;
   }
 
-  vector<std::shared_ptr<glob::FuncGrid>> interp_f_r_r1_r1p(n_l2), interp_f_r_r2_r2p(n_l2), interp_f_r_r1_r2p(n_l2), interp_f_r_r2_r1p(n_l2);
+  // l2
+  vector<int> l2;
+  for (int ll=abs(l-l_prime); ll<l+l_prime+1; ll++)
+    l2.push_back(ll);
 
-  for (int ll=0; ll<n_l2; ll++) {
-    vector<double> f_r_r1_r1p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r1_r1p, l2[ll], 0, kr0, 1);
-    vector<double> f_r_r2_r2p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r2_r2p, l2[ll], 0, kr0, 1);
-    vector<double> f_r_r2_r1p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r2_r1p, l2[ll], 0, kr0, 1);
-    vector<double> f_r_r1_r2p = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r1_r2p, l2[ll], 0, kr0, 1);
-    interp_f_r_r1_r1p[ll] = make_shared<glob::FuncGrid> (glob::FuncGrid(rr, f_r_r1_r1p, interpType));
-    interp_f_r_r2_r2p[ll] = make_shared<glob::FuncGrid> (glob::FuncGrid(rr, f_r_r2_r2p, interpType));
-    interp_f_r_r2_r1p[ll] = make_shared<glob::FuncGrid> (glob::FuncGrid(rr, f_r_r2_r1p, interpType));
-    interp_f_r_r1_r2p[ll] = make_shared<glob::FuncGrid> (glob::FuncGrid(rr, f_r_r1_r2p, interpType));
+  const size_t n_l2 = l2.size();
+
+  // Terms of type  I_l1_l2_l = int [(Pk+1/n) jl1 jl2] jl
+  
+  vector<double> pk_r1_r1p = Pk, pk_r2_r2p = Pk, pk_r2_r1p = Pk, pk_r1_r2p = Pk;
+  for (size_t i=0; i<nk; i++) {
+    pk_r1_r1p[i] = (pk_r1_r1p[i]+1./density)*func2(kk[i], l, l_prime, r1, r1_prime);
+    pk_r2_r2p[i] = (pk_r2_r2p[i]+1./density)*func2(kk[i], l, l_prime, r2, r2_prime);
+    pk_r2_r1p[i] = (pk_r2_r1p[i]+1./density)*func2(kk[i], l, l_prime, r2, r1_prime);
+    pk_r1_r2p[i] = (pk_r1_r2p[i]+1./density)*func2(kk[i], l, l_prime, r1, r2_prime);
+  }
+
+  vector<vector<double>> I2_r1_r1p(n_l2, vector<double>(nr, 0.));
+  vector<vector<double>> I2_r2_r2p(n_l2, vector<double>(nr, 0.));
+  vector<vector<double>> I2_r2_r1p(n_l2, vector<double>(nr, 0.));
+  vector<vector<double>> I2_r1_r2p(n_l2, vector<double>(nr, 0.));
+
+  for (size_t ll=0; ll<n_l2; ll++) {
+    double wig = gsl_sf_coupling_3j(2*l, 2*l_prime, 2*l2[ll], 0, 0, 0);
+    if (wig!=0) {
+      I2_r1_r1p[ll] = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r1_r1p, l2[ll], 0, kr0, 1);
+      I2_r2_r2p[ll] = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r2_r2p, l2[ll], 0, kr0, 1);
+      I2_r2_r1p[ll] = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r2_r1p, l2[ll], 0, kr0, 1);
+      I2_r1_r2p[ll] = wrapper::fftlog::transform_FFTlog(rr, 1, kk, pk_r1_r2p, l2[ll], 0, kr0, 1);
+    }
   }
 
   // integrand
 
-  auto integrand = [&] (const double rr)
-  {
-    double Xi_r = interp_Xi(rr);
+  double Int = 0;
 
-    double f_r_r1 = interp_f_r_r1(rr);
-    double f_r_r2 = interp_f_r_r2 (rr);
-    double f_r_r1p = interp_f_r_r1p(rr);
-    double f_r_r2p = interp_f_r_r2p(rr);
-    
+  for (size_t i=0; i<nr; i++) {
     double sum = 0;
 
-    for (int ll=0; ll<n_l2; ll++) {
-      double wig = gsl_sf_coupling_3j(2*l, 2*l_prime, 2*l2[ll], 0, 0, 0);
+    double Xi_r = Xi[i];
+
+    double f_r_r1 = I1_r_r1[i];
+    double f_r_r2 = I1_r_r2[i];
+    double f_r_r1p = I1_r_r1p[i];
+    double f_r_r2p = I1_r_r2p[i];
+
+    for (size_t ll=0; ll<n_l2; ll++) {
+      int ell2 = l2[ll];
+      double wig = gsl_sf_coupling_3j(2*l, 2*l_prime, 2*ell2, 0, 0, 0);
       if (wig!=0) {
-        double t1 = (2*l2[ll]+1)*pow(wig,2);
-	double f_r_r1_r1p = interp_f_r_r1_r1p[ll]->operator()(rr);
-	double f_r_r2_r2p = interp_f_r_r2_r2p[ll]->operator()(rr);
-	double f_r_r2_r1p = interp_f_r_r2_r1p[ll]->operator()(rr);
-	double f_r_r1_r2p = interp_f_r_r1_r2p[ll]->operator()(rr);
+	double t1 = (2*ell2+1)*pow(wig,2);
+	double f_r_r1_r1p = I2_r1_r1p[ll][i];
+	double f_r_r2_r2p = I2_r2_r2p[ll][i];
+	double f_r_r2_r1p = I2_r2_r1p[ll][i];
+	double f_r_r1_r2p = I2_r1_r2p[ll][i];
 
 	double t2 = pow(-1, l2[ll])*Xi_r*(f_r_r1_r1p*f_r_r2_r2p+f_r_r2_r1p*f_r_r1_r2p);
-	double t3  = pow(-1, 0.5*(l+l_prime+l2[ll]))*(f_r_r1*f_r_r1p*f_r_r2_r2p+f_r_r1*f_r_r2p*f_r_r2_r1p+f_r_r2*f_r_r1p*f_r_r1_r2p+f_r_r2*f_r_r2p*f_r_r1_r1p);
+	double t3  = pow(-1, 0.5*(l+l_prime+ell2))*(f_r_r1*f_r_r1p*f_r_r2_r2p+f_r_r1*f_r_r2p*f_r_r2_r1p+f_r_r2*f_r_r1p*f_r_r1_r2p+f_r_r2*f_r_r2p*f_r_r1_r1p);
 	sum += t1*(t2+t3);
-     }
-    }
+      }
 
-    return rr*rr*sum;
-  };
+      Int += rr[i]*rr[i]*sum*rr[i];
+    }
+  }
   
   double fact = 4.*par::pi/Volume*(2*l+1)*(2*l_prime+1)*pow(-1, l+l_prime);
   
-  return fact*wrapper::gsl::GSL_integrate_cquad(integrand, 1., 1000, prec);
-*/
+  return fact*Int*dlogr;
 }
 
 
@@ -814,8 +752,13 @@ double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volum
 
 std::vector<std::vector<double>> cbl::cosmology::Cosmology::zeta_covariance (const double Volume, const double nObjects, const std::vector<double> theta, const double r1, const double r2, const double deltaR, const std::vector<double> kk, const std::vector<double> Pk, const int norders, const double prec, const bool method, const int nExtractions, std::vector<double> mean, const int seed)
 {
-  vector<double> rr = linear_bin_vector(4100, 1.e-5, 1.e3);
-  vector<double> Xi = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk, 0);
+  (void)method;
+  (void)nExtractions;
+  (void)mean;
+  (void)seed;
+
+  vector<double> rr, Xi;
+  wrapper::fftlog::transform_FFTlog(rr, Xi, 1, kk, Pk, 0);
 
   vector<vector<double>> zeta_l1l2_covariance(norders, vector<double>(norders, 0.));
 
@@ -828,45 +771,19 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::zeta_covariance (con
   const int ntheta = int(theta.size());
 
   vector<vector<double>> Pl_theta(ntheta, vector<double>(norders, 0));
-  for (int i=0; i<ntheta; i++)
+  for (int i=0; i<ntheta; i++) {
     for (int j=0; j<norders; j++)
       Pl_theta[i][j] = legendre_polynomial (cos(theta[i]), j);
-
-  if (!method) {
-
-    coutCBL << "method 1" << endl;
-    vector<vector<double>> zeta_covariance(ntheta, vector<double>(ntheta, 0));
-    for (int i=0; i<ntheta; i++)
-      for (int j=0; j<ntheta; j++)
-	for (int l1=0; l1<norders; l1++)
-	  for (int l2=0; l2<norders; l2++)
-	    zeta_covariance[i][j] += zeta_l1l2_covariance[l1][l2]*Pl_theta[i][l1]*Pl_theta[j][l2];
-
-    return zeta_covariance;
-  }
-  
-  else
-  {
-    coutCBL << "method 2" << endl;
-    vector<vector<double>> zeta_covariance;
-    vector<double> mean_signal(norders, 0.);
-    mean_signal = (mean.size()==0) ? mean_signal : mean; 
-
-    vector<vector<double>> zeta_l_extracted = generate_correlated_data (nExtractions, mean_signal, zeta_l1l2_covariance, seed);
-    
-    vector<vector<double>> zeta_extracted(nExtractions, vector<double>(ntheta, 0));
-    for (int i=0; i<nExtractions; i++)
-      for (int j=0; j<ntheta; j++)
-	for (int l=0; l<norders; l++)
-	  zeta_extracted[i][j] += zeta_l_extracted[i][l]*Pl_theta[j][l];
-
-    covariance_matrix (zeta_extracted, zeta_covariance); 
-    coutCBL <<"Done!"<<endl;
-
-    return zeta_covariance;
   }
 
-  vector<vector<double>> vv; return vv;
+  vector<vector<double>> zeta_covariance(ntheta, vector<double>(ntheta, 0));
+  for (int i=0; i<ntheta; i++)
+    for (int j=0; j<ntheta; j++)
+      for (int l1=0; l1<norders; l1++)
+	for (int l2=0; l2<norders; l2++)
+	  zeta_covariance[i][j] += zeta_l1l2_covariance[l1][l2]*Pl_theta[i][l1]*Pl_theta[j][l2];
+
+  return zeta_covariance;
 }
 
 

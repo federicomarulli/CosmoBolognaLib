@@ -324,31 +324,33 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CAMB_MPTbreeze (const string code, co
   // ------------------------------------------------------------------------------------------------------------
 
   if ((!fin_CAMB && code=="CAMB") || (!fin_MPTbreeze && code=="MPTbreeze-v1")) {
+
+    const string nn = output_root+"_t"+conv(omp_get_thread_num(), par::fINT);
     
-    file_par = dirCAMB+"params_"+output_root+"_t"+conv(omp_get_thread_num(), par::fINT)+".ini";
+    file_par = dirCAMB+"params_"+nn+".ini";
     if (system(("cp params.ini "+file_par).c_str())) {}
     
     string sed;
    
-    sed = "sed '/test/s//"+output_root+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/do_nonlinear = 0/s//do_nonlinear = "+conv(NL, par::fINT)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/hubble = 70/s//hubble = "+conv(m_hh*100., par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/omega_baryon = 0.0462/s//omega_baryon = "+conv(m_Omega_baryon, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/omega_cdm = 0.2538/s//omega_cdm = "+conv(m_Omega_CDM, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/omega_lambda = 0.7/s//omega_lambda = "+conv(m_Omega_DE, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/omega_neutrino = 0/s//omega_neutrino = "+conv(m_Omega_neutrinos, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/transfer_redshift(1) = 0/s//transfer_redshift(1) = "+conv(redshift, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/massless_neutrinos = 3.046/s//massless_neutrinos = "+conv(m_massless_neutrinos, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/massive_neutrinos = 0/s//massive_neutrinos = "+conv(m_massive_neutrinos, par::fINT)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/scalar_spectral_index(1) = 0.96/s//scalar_spectral_index(1) = "+conv(m_n_spec, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/w = -1/s//w = "+conv(m_w0, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/wa = 0/s//wa = "+conv(m_wa, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/test/s//"+output_root+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/do_nonlinear = 0/s//do_nonlinear = "+conv(NL, par::fINT)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/hubble = 70/s//hubble = "+conv(m_hh*100., par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/omega_baryon = 0.0462/s//omega_baryon = "+conv(m_Omega_baryon, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/omega_cdm = 0.2538/s//omega_cdm = "+conv(m_Omega_CDM, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/omega_lambda = 0.7/s//omega_lambda = "+conv(m_Omega_DE, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/omega_neutrino = 0/s//omega_neutrino = "+conv(m_Omega_neutrinos, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/transfer_redshift(1) = 0/s//transfer_redshift(1) = "+conv(redshift, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/massless_neutrinos = 3.046/s//massless_neutrinos = "+conv(m_massless_neutrinos, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/massive_neutrinos = 0/s//massive_neutrinos = "+conv(m_massive_neutrinos, par::fINT)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/scalar_spectral_index(1) = 0.96/s//scalar_spectral_index(1) = "+conv(m_n_spec, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/w = -1/s//w = "+conv(m_w0, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/wa = 0/s//wa = "+conv(m_wa, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
     if (m_scalar_amp>0) {
-      sed = "sed '/scalar_amp(1) = 2.1e-9/s//scalar_amp(1) = "+conv(m_scalar_amp, par::ee3)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-      sed = "sed '/pivot_scalar = 0.05/s//pivot_scalar = "+conv(m_scalar_pivot, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
+      sed = "sed '/scalar_amp(1) = 2.1e-9/s//scalar_amp(1) = "+conv(m_scalar_amp, par::ee3)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+      sed = "sed '/pivot_scalar = 0.05/s//pivot_scalar = "+conv(m_scalar_pivot, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
     }
-    sed = "sed '/transfer_kmax = 2/s//transfer_kmax = "+conv(k_max, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/re_optical_depth = 0.09/s//re_optical_depth = "+conv(m_tau, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/transfer_kmax = 2/s//transfer_kmax = "+conv(k_max, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/re_optical_depth = 0.09/s//re_optical_depth = "+conv(m_tau, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
 
     
     // ----------------------------
@@ -470,46 +472,48 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CLASS (const bool NL, std::vector<dou
     // --------- set the cosmological parameters in the file params.ini ---------
     // --------------------------------------------------------------------------
 
-    file_par = dirC+"params_"+output_root+"_t"+conv(omp_get_thread_num(), par::fINT)+".ini";
+    const string nn = output_root+"_t"+conv(omp_get_thread_num(), par::fINT);
+    
+    file_par = dirC+"params_"+nn+".ini";
     if (system(("cp params.ini "+file_par).c_str())) {}
     
     string sed;
 
-    sed = "sed '/output\\/test_/s//"+output_root+"_/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/output\\/test_/s//"+output_root+"_/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
 
     if (NL) {
-      sed = "sed '/non linear =/s//non linear = halofit/g' "+file_par+" > temp; mv temp "+file_par+"";
+      sed = "sed '/non linear =/s//non linear = halofit/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+"";
       if (system(sed.c_str())) {}
     }
 
-    sed = "sed '/h = 0.67556/s//h = "+conv(m_hh, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/Omega_b = 0.022032/s//Omega_b = "+conv(m_Omega_baryon, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/Omega_cdm = 0.12038/s//Omega_cdm = "+conv(m_Omega_CDM, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/N_ncdm = 0/s//N_ncdm = "+conv(m_massive_neutrinos, par::fINT)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/Omega_ncdm = /s//Omega_ncdm = "+conv(m_Omega_neutrinos, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/h = 0.67556/s//h = "+conv(m_hh, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/Omega_b = 0.022032/s//Omega_b = "+conv(m_Omega_baryon, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/Omega_cdm = 0.12038/s//Omega_cdm = "+conv(m_Omega_CDM, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/N_ncdm = 0/s//N_ncdm = "+conv(m_massive_neutrinos, par::fINT)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/Omega_ncdm = /s//Omega_ncdm = "+conv(m_Omega_neutrinos, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
 
     if (m_Omega_neutrinos>0) { // check!!!
-      sed = "sed '/m_ncdm = 0.04, 0.04, 0.04/s//#m_ncdm/g' "+file_par+" > temp; mv temp "+file_par+""; 
+      sed = "sed '/m_ncdm = 0.04, 0.04, 0.04/s//#m_ncdm/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; 
       if (system(sed.c_str())) {}
     }
 
-    sed = "sed '/Omega_Lambda = 0.7/s//Omega_Lambda = "+conv(m_Omega_DE, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/Omega_k = 0./s//Omega_k = "+conv(m_Omega_k, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/z_pk = 0/s//z_pk = "+conv(redshift, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/N_ur = 3.046/s//N_eff = "+conv(m_massless_neutrinos, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/N_ncdm = 0/s//N_ncdm = "+conv(m_massive_neutrinos, par::fINT)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/n_s = 0.9619/s//n_s = "+conv(m_n_spec, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/Omega_Lambda = 0.7/s//Omega_Lambda = "+conv(m_Omega_DE, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/Omega_k = 0./s//Omega_k = "+conv(m_Omega_k, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/z_pk = 0/s//z_pk = "+conv(redshift, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/N_ur = 3.046/s//N_eff = "+conv(m_massless_neutrinos, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/N_ncdm = 0/s//N_ncdm = "+conv(m_massive_neutrinos, par::fINT)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/n_s = 0.9619/s//n_s = "+conv(m_n_spec, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
 
     double w00 = max(-0.999,m_w0); // check!!!
-    sed = "sed '/w0_fld = -0.9/s//w0_fld = "+conv(w00, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/w0_fld = -0.9/s//w0_fld = "+conv(w00, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
 
-    sed = "sed '/wa_fld = 0./s//wa_fld = "+conv(m_wa, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/wa_fld = 0./s//wa_fld = "+conv(m_wa, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
     if (m_scalar_amp>0) {
-      sed = "sed '/A_s = 2.215e-9/s//A_s = "+conv(m_scalar_amp, par::ee3)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-      sed = "sed '/k_pivot = 0.05/s//k_pivot = "+conv(m_scalar_pivot, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
+      sed = "sed '/A_s = 2.215e-9/s//A_s = "+conv(m_scalar_amp, par::ee3)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+      sed = "sed '/k_pivot = 0.05/s//k_pivot = "+conv(m_scalar_pivot, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
     }
-    sed = "sed '/P_k_max_h\\/Mpc = 1/s//P_k_max_h\\/Mpc = "+conv(k_max, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/tau_reio = 0.0925/s//tau_reio = "+conv(m_tau, par::fDP6)+"/g' "+file_par+" > temp; mv temp "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/P_k_max_h\\/Mpc = 1/s//P_k_max_h\\/Mpc = "+conv(k_max, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/tau_reio = 0.0925/s//tau_reio = "+conv(m_tau, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
 
     
     // -----------------------------

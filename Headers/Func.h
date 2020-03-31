@@ -1817,8 +1817,8 @@ namespace cbl {
    *  as predicted by the large-scale limit of the Kaiser/Hamilton
    *  model:
    * 
-   *  \f[ \frac{\xi(s)}{\xi(r)} = 1 + \frac{2\beta}{3} +
-   *  \frac{\beta^2}{5} \f]
+   * \f[ \left(b \cdot\sigma_8\right)^2 \frac{\xi_{DM}(\alpha \cdot
+	 r)}{\sigma_8}\ + A_0 + \frac{A_1}{r} + \frac{A_2}{r^2} \f]
    *
    *  @param f_sigma8 f*&sigma;<SUB>8</SUB>
    *  

@@ -5090,9 +5090,11 @@ namespace cbl {
        * using the Limber approximation up to a given \f$l_{max}\f$:
        * \f[ C_l = \int_{z_{min}}^{z_{max}}\phi^2(z) D^2(z) P(\frac{l}{D_C(z)}) \frac{H(z)}{c \cdot D_c(z)} dz \f]
        *
-       * where l is the multipole order, \f$\phi(z)\f$ is the tracers redshift distribution, \f$P\f$ is the \f$z=0\f$ power
-       * spectrum and \f$D(z)\f$ is the growth factor. \f$D_C(z)\f$ and \f$H(z)\f$ are
-       * respectively the comoving function and the Hubble parameter.
+       * where l is the multipole order, \f$\phi(z)\f$ is the tracers
+       * redshift distribution, \f$P\f$ is the \f$z=0\f$ power
+       * spectrum and \f$D(z)\f$ is the growth factor. \f$D_C(z)\f$
+       * and \f$H(z)\f$ are respectively the comoving function and the
+       * Hubble parameter.
        *
        * @param lmax the maximum multipole order
        *

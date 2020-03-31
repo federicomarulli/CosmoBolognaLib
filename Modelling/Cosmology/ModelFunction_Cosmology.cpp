@@ -44,50 +44,51 @@ using namespace cbl;
 
 double cbl::modelling::cosmo::cosmological_measurements (const double redshift, const std::string data_type, const cbl::cosmology::Cosmology cosmology)
 {
-  if(data_type == "DV")
+  if (data_type=="DV")
     return cosmology.D_V(redshift);
   
-  else if (data_type == "DV/rs")
+  else if (data_type=="DV/rs")
     return cosmology.D_V(redshift)/cosmology.rs();
   
-  else if (data_type == "rs/DV")
+  else if (data_type=="rs/DV")
     return cosmology.rs()/cosmology.D_V(redshift);
   
-  else if(data_type == "DA")
+  else if(data_type=="DA")
     return cosmology.D_A(redshift);
   
-  else if (data_type == "DA/rs")
+  else if (data_type=="DA/rs")
     return cosmology.D_A(redshift)/cosmology.rs();
   
-  else if (data_type == "rs/DA")
+  else if (data_type=="rs/DA")
     return cosmology.rs()/cosmology.D_A(redshift);
 
-  else if(data_type == "DM")
+  else if(data_type=="DM")
     return cosmology.D_M(redshift);
   
-  else if (data_type == "DM/rs")
+  else if (data_type=="DM/rs")
     return cosmology.D_M(redshift)/cosmology.rs();
   
-  else if (data_type == "rs/DM")
+  else if (data_type=="rs/DM")
     return cosmology.rs()/cosmology.D_M(redshift);
   
-  else if(data_type == "HH")
+  else if(data_type=="HH")
     return cosmology.HH(redshift);
 
-  else if (data_type == "HH*rs")
+  else if (data_type=="HH*rs")
     return cosmology.HH(redshift)*cosmology.rs();
 
-  else if(data_type == "DH")
+  else if(data_type=="DH")
     return cbl::par::cc/cosmology.HH(redshift);
 
-  else if (data_type == "DH/rs")
+  else if (data_type=="DH/rs")
     return cbl::par::cc/cosmology.HH(redshift)/cosmology.rs();
 
-  else if (data_type == "rs/DH")
+  else if (data_type=="rs/DH")
     return cosmology.rs()/(cbl::par::cc/cosmology.HH(redshift));
 
-  else if (data_type == "DL")
+  else if (data_type=="DL")
     return cosmology.D_L(redshift);
+
   else
     ErrorCBL("the input data_type is not allowed!", "cosmological_measurements", "ModelFunction_Cosmology.cpp");
 

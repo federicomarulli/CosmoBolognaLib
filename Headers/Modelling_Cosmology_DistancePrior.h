@@ -81,15 +81,15 @@ namespace cbl {
 	  std::vector<double> data = {0.02245, 0.1386, 94.33};
 	  std::vector<std::vector<double>> covariance(3, std::vector<double>(3, 0));
 	  covariance[0][0] =  1.286e-7;
-	  covariance[0][1] =  -6.033e-7;
-	  covariance[0][2] =  -1.443e-5;
+	  covariance[0][1] = -6.033e-7;
+	  covariance[0][2] = -1.443e-5;
 
-	  covariance[1][0] =  -6.033e-7;
+	  covariance[1][0] = -6.033e-7;
 	  covariance[1][1] =  7.542e-6;
-	  covariance[1][2] =  -3.605e-5;
+	  covariance[1][2] = -3.605e-5;
 
 	  covariance[2][0] =  1.443e-5;
-	  covariance[2][1] =  -3.605e-5;
+	  covariance[2][1] = -3.605e-5;
 	  covariance[2][2] =  0.004264;
 
 	  m_dataset = std::make_shared<data::Data1D>(data::Data1D(redshift, data, covariance));
