@@ -1525,11 +1525,15 @@ vector<double> cbl::cosmology::Cosmology::Pk_DM_NoWiggles_gaussian (const vector
     for (size_t i=0; i<kk.size(); i++)
     {
       double log_k = log10(kk[i]);
+
+      double log_qmin = log_k-4*lambda;
+      double log_qmax = log_k+4*lambda;
+	
       auto integrand = [&] (const double log_q) {
 	return interp_OF(pow(10., log_q))*exp(-pow(log_k-log_q, 2)/(2*lambda*lambda));
       };
 
-      PkNW[i] = wrapper::gsl::GSL_integrate_cquad(integrand, -5, 3)*norm*PkApprox[i];
+      PkNW[i] = wrapper::gsl::GSL_integrate_cquad(integrand, log_qmin, log_qmax)*norm*PkApprox[i];
     }
   }
   else 
