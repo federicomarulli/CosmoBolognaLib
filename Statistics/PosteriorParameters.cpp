@@ -647,7 +647,7 @@ void cbl::statistics::PosteriorParameters::initialize_chain_ball_bestfit (const 
 // ============================================================================================
 
 
-void cbl::statistics::PosteriorParameters::set_posterior_distribution (const int start, const int thin, const int nbins, const int seed)
+void cbl::statistics::PosteriorParameters::set_posterior_distribution (const int start, const int thin, const int nbins, const int seed, const vector<double> weight)
 {
   m_posterior_distribution.erase(m_posterior_distribution.begin(), m_posterior_distribution.end());
   m_posterior_distribution.resize(m_nparameters);
@@ -657,12 +657,12 @@ void cbl::statistics::PosteriorParameters::set_posterior_distribution (const int
     if (m_parameter_prior[index]->distributionType()==glob::DistributionType::_Constant_)  
       m_posterior_distribution[index] = make_shared<PosteriorDistribution>(PosteriorDistribution(glob::DistributionType::_Constant_, m_parameter_prior[index]->sample()));
     else 
-      m_posterior_distribution[index] = make_shared<PosteriorDistribution>(PosteriorDistribution(glob::DistributionType::_Discrete_, parameter_chain_values(index, start, thin), {}, nbins, "Spline", seed));
+      m_posterior_distribution[index] = make_shared<PosteriorDistribution>(PosteriorDistribution(glob::DistributionType::_Discrete_, parameter_chain_values(index, start, thin), weight, nbins, "Spline", seed));
   }
 
   for (size_t i=0; i<m_nparameters_derived; i++) {
     const int index = m_derived_parameter[i];
-    m_posterior_distribution[index] = make_shared<PosteriorDistribution>(PosteriorDistribution(glob::DistributionType::_Discrete_, parameter_chain_values(index, start, thin), {}, nbins, "Spline", seed));
+    m_posterior_distribution[index] = make_shared<PosteriorDistribution>(PosteriorDistribution(glob::DistributionType::_Discrete_, parameter_chain_values(index, start, thin), weight, nbins, "Spline", seed));
   }
 }
 
@@ -670,9 +670,9 @@ void cbl::statistics::PosteriorParameters::set_posterior_distribution (const int
 // ============================================================================================
 
 
-void cbl::statistics::PosteriorParameters::show_results (const int start, const int thin, const int nbins, const int seed, const bool show_mode, const int ns, const int nb)
+void cbl::statistics::PosteriorParameters::show_results (const int start, const int thin, const int nbins, const int seed, const bool show_mode, const int ns, const int nb, const vector<double> weight)
 {
-  set_posterior_distribution(start, thin, nbins, seed);
+  set_posterior_distribution(start, thin, nbins, seed, weight);
   set_parameter_covariance(start, thin);
 
   const int dp = cout.precision(); cout.precision(4);
@@ -740,9 +740,9 @@ void cbl::statistics::PosteriorParameters::show_results (const int start, const 
 // ============================================================================================
 
 
-void cbl::statistics::PosteriorParameters::write_results (const string dir, const string file, const int start, const int thin, const int nbins, const int seed, const bool compute_mode, const int ns, const int nb)
+void cbl::statistics::PosteriorParameters::write_results (const string dir, const string file, const int start, const int thin, const int nbins, const int seed, const bool compute_mode, const int ns, const int nb, const vector<double> weight)
 {
-  set_posterior_distribution(start, thin, nbins, seed);
+  set_posterior_distribution(start, thin, nbins, seed, weight);
   set_parameter_covariance(start, thin);
   
   const string mkdir = "mkdir -p "+dir; if (system(mkdir.c_str())) {}

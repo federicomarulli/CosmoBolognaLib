@@ -62,6 +62,9 @@ namespace cbl {
 	/// value of the log
 	std::vector<double> m_logposterior_values;
 
+	/// the chain weight
+	std::vector<double> m_weight;
+
 	/// the MCMC acceptance rate
 	std::vector<double> m_acceptance;
 
@@ -175,6 +178,17 @@ namespace cbl {
 	 *  @return the value of the un-normalized posterior
 	 */
 	double operator () (std::vector<double> &pp) const;
+
+	/**
+	 * @brief return the internal member m_weights
+	 *
+	 * @param start the minimum chain position to be written
+	 *
+	 * @param thin the step used for dilution
+	 *
+	 * @return vector containing the posterior weights
+	 */
+	std::vector<double> weight (const int start=0, const int thin=1)  const;
 
 	/**
 	 *  @brief evaluate the logarithm of the un-normalized
@@ -422,6 +436,38 @@ namespace cbl {
 	void sample_stretch_move (const double aa=2, const bool parallel=true, const std::string outputFile=par::defaultString, const int start=0, const int thin=1, const int nbins=50);
 
 	/**
+	 * @brief perform importance sampling
+	 *
+	 * Importance sampling is a convenient
+	 * technique to join independet dataset
+	 *
+	 * This function takes in input a chain
+	 * and computes the posterior looping over all entries
+	 * It's possible to specify the columns, in case the input
+	 * chain has different ordering, or larger number of parameters
+	 *
+	 * It's possible to sum or overwrite the log likelihood
+	 *
+	 * @param input_dir input directory
+	 *
+	 * @param input_file the input file
+	 *
+	 * @param nwalkers the number of parallel chains
+	 *
+	 * @param columns the columns of the input file to be read.
+	 *
+	 * @param skip_header the lines to be skipped in
+	 * the chain file
+	 *
+	 * @param fits false \f$\rightarrow\f$ ascii file; true
+	 * \f$\rightarrow\f$ fits file
+	 *
+	 * @warning columns is used for ascii chain files
+	 * @return None
+	 */
+	void importance_sampling (const std::string input_dir, const std::string input_file, const int nwalkers, const std::vector<size_t> columns={}, const int skip_header=1, const bool fits=false);
+
+	/**
 	 * @brief write the chains obtained after 
 	 * the MCMC sampling on an ascii file
 	 *
@@ -468,6 +514,7 @@ namespace cbl {
 	 * @param fits false \f$\rightarrow\f$ ascii file; true
 	 * \f$\rightarrow\f$ fits file
 	 *
+	 * @warning columns only work for ascii chain file
 	 * @return none
 	 */
 	void write_chain (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1, const bool fits=false);
@@ -481,12 +528,14 @@ namespace cbl {
 	 *
 	 * @param nwalkers the number of parallel chains
 	 *
+	 * @param columns the columns of the input file to be read.
+	 *
 	 * @param skip_header the lines to be skipped in
 	 * the chain file
 	 *
 	 * @return none
 	 */
-	void read_chain_ascii (const std::string input_dir, const std::string input_file, const int nwalkers, const int skip_header=1);
+	void read_chain_ascii (const std::string input_dir, const std::string input_file, const int nwalkers, const std::vector<size_t> columns={}, const int skip_header=1);
 
 	/**
 	 * @brief read the chains from an ascii file
@@ -497,9 +546,11 @@ namespace cbl {
 	 *
 	 * @param nwalkers the number of parallel chains
 	 *
+	 * @param columns the columns of the input file to be read.
+	 *
 	 * @return none
 	 */
-	void read_chain_fits (const std::string input_dir, const std::string input_file, const int nwalkers);
+	void read_chain_fits (const std::string input_dir, const std::string input_file, const int nwalkers, const std::vector<size_t> columns);
 
 	/**
 	 * @brief read the chains
@@ -510,6 +561,8 @@ namespace cbl {
 	 *
 	 * @param nwalkers the number of parallel chains
 	 *
+	 * @param columns the columns of the input file to be read.
+	 *
 	 * @param skip_header the lines to be skipped in
 	 * the chain file
 	 *
@@ -518,7 +571,7 @@ namespace cbl {
 	 *
 	 * @return none
 	 */
-	void read_chain (const std::string input_dir, const std::string input_file, const int nwalkers, const int skip_header=1, const bool fits=false);
+	void read_chain (const std::string input_dir, const std::string input_file, const int nwalkers, const std::vector<size_t> columns={}, const int skip_header=1, const bool fits=false);
 
 	/**
 	 * @brief write maximization results on a file

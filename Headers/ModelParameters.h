@@ -579,10 +579,12 @@ namespace cbl {
 	 *
 	 * @param seed seed for random extraction
 	 *
+	 * @param weight chain weight
+	 *
 	 * @return none
 	 */
-	virtual void set_posterior_distribution (const int start, const int thin, const int nbins, const int seed=34121)
-	{ (void)start; (void)thin; (void)nbins; (void)seed; ErrorCBL("", "set_posterior_distribution", "ModelParameters.h"); }
+	virtual void set_posterior_distribution (const int start, const int thin, const int nbins, const int seed=34121, const std::vector<double> weight={})
+	{ (void)start; (void)thin; (void)nbins; (void)seed; (void)weight; ErrorCBL("", "set_posterior_distribution", "ModelParameters.h"); }
 
 	/**
 	 *  @brief get the posterior distribution for the 
@@ -619,10 +621,12 @@ namespace cbl {
 	 * @param nb number of data measurements, e.g. the bins of the
 	 * dataset
 	 *
+	 * @param weight chain weight
+	 *
 	 * @return none
 	 */
-	virtual void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false, const int ns=-1, const int nb=-1)
-	{ (void)start; (void)thin; (void)nbins; (void)seed; (void)show_mode; (void)ns; (void)nb; ErrorCBL("", "show_results", "ModelParameters.h"); }
+	virtual void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false, const int ns=-1, const int nb=-1, const std::vector<double> weight={})
+	{ (void)start; (void)thin; (void)nbins; (void)seed; (void)show_mode; (void)ns; (void)nb; (void)weight; ErrorCBL("", "show_results", "ModelParameters.h"); }
 
 	/**
 	 * @brief store the results to file
@@ -651,8 +655,8 @@ namespace cbl {
 	 *
 	 * @return none
 	 */
-	virtual void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false, const int ns=-1, const int nb=-1)
-	{ (void)dir; (void)file; (void)start; (void)thin; (void)nbins; (void)seed; (void)compute_mode; (void)ns; (void)nb; ErrorCBL("", "write_results", "ModelParameters.h"); }
+	virtual void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false, const int ns=-1, const int nb=-1, const std::vector<double> weight={})
+	{ (void)dir; (void)file; (void)start; (void)thin; (void)nbins; (void)seed; (void)compute_mode; (void)ns; (void)nb; (void)weight; ErrorCBL("", "write_results", "ModelParameters.h"); }
 
 	/**
 	 * @brief return the private member m_chain_size

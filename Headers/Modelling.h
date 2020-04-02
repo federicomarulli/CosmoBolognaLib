@@ -474,6 +474,36 @@ namespace cbl {
       void sample_posterior (const int chain_size, const int nwalkers, const std::string input_dir, const std::string input_file, const int seed=34123, const double aa=2, const bool parallel=true);
 
       /**
+       * @brief perform importance sampling
+       *
+       * Importance sampling is a convenient
+       * technique to join independet dataset
+       *
+       * This function takes in input a chain
+       * and computes the posterior looping over all entries
+       * It's possible to specify the columns, in case the input
+       * chain has different ordering, or larger number of parameters
+       *
+       * @param input_dir input directory
+       *
+       * @param input_file the input file
+       *
+       * @param nwalkers the number of parallel chains
+       *
+       * @param columns the columns of the input file to be read.
+       *
+       * @param skip_header the lines to be skipped in
+       * the chain file
+       *
+       * @param fits false \f$\rightarrow\f$ ascii file; true
+       * \f$\rightarrow\f$ fits file
+       *
+       * @warning columns is used for ascii chain files
+       * @return None
+       */
+      void importance_sampling (const std::string input_dir, const std::string input_file, const int nwalkers, const std::vector<size_t> columns={}, const int skip_header=1, const bool fits=false);
+
+      /**
        *  @brief write the chains obtained after the MCMC sampling
        *
        *  @param output_dir the output directory
@@ -500,6 +530,8 @@ namespace cbl {
        *
        *  @param nwalkers the number of parallel chains
        *
+	 * @param columns the columns of the input file to be read.
+	 *
        *  @param skip_header the lines to be skipped in the chain
        *  file
        *
@@ -508,7 +540,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void read_chain (const std::string input_dir, const std::string input_file, const int nwalkers, const int skip_header=1, const bool fits=false);
+      void read_chain (const std::string input_dir, const std::string input_file, const int nwalkers, const std::vector<size_t> columns={}, const int skip_header=1, const bool fits=false);
 
       /**
        *  @brief show the results of the MCMC sampling on screen

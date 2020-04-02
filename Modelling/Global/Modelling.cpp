@@ -211,6 +211,16 @@ void cbl::modelling::Modelling::sample_posterior (const int chain_size, const in
 
 
 // ============================================================================================
+
+
+void cbl::modelling::Modelling::importance_sampling(const std::string input_dir, const std::string input_file, const int nwalkers,  const vector<size_t> columns, const int skip_header, const bool fits)
+{
+  m_posterior->importance_sampling(input_dir, input_file, nwalkers, columns, skip_header, fits);
+}
+
+
+
+// ============================================================================================
       
 
 void cbl::modelling::Modelling::write_chain (const string output_dir, const string output_file, const int start, const int thin, const bool fits)
@@ -222,10 +232,10 @@ void cbl::modelling::Modelling::write_chain (const string output_dir, const stri
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::read_chain (const string input_dir, const string input_file, const int nwalkers, const int skip_header, const bool fits)
+void cbl::modelling::Modelling::read_chain (const string input_dir, const string input_file, const int nwalkers, const vector<size_t> columns, const int skip_header, const bool fits)
 {
   m_set_posterior(666);
-  m_posterior->read_chain(input_dir, input_file, nwalkers, skip_header, fits);
+  m_posterior->read_chain(input_dir, input_file, nwalkers, columns, skip_header, fits);
 }
 
 

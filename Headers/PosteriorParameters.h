@@ -393,9 +393,11 @@ namespace cbl {
 	 *
 	 * @param seed seed for random extraction
 	 *
+	 * @param weight chain weight
+	 *
 	 * @return none
 	 */
-	void set_posterior_distribution (const int start, const int thin, const int nbins, const int seed=34121);
+	void set_posterior_distribution (const int start, const int thin, const int nbins, const int seed=34121, const std::vector<double> weight={});
 
 	/**
 	 *  @brief get the posterior distribution for the 
@@ -454,9 +456,11 @@ namespace cbl {
 	 * @param nb number of data measurements, e.g. the bins of the
 	 * dataset
 	 *
+	 * @param weight chain weight
+	 *
 	 * @return none
 	 */
-	void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false, const int ns=-1, const int nb=-1);
+	void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false, const int ns=-1, const int nb=-1, const std::vector<double> weight={});
 	
 	/**
 	 * @brief store the results to file
@@ -510,9 +514,11 @@ namespace cbl {
 	 * @param nb number of data measurements, e.g. the bins of the
 	 * dataset
 	 *
+	 * @param weight chain weight
+	 *
 	 * @return none
 	 */
-	void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false, const int ns=-1, const int nb=-1);
+	void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false, const int ns=-1, const int nb=-1, const std::vector<double> weight={});
 
 	/**
 	 * @brief return the private member m_chain_size

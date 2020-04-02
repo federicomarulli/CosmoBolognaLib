@@ -45,7 +45,7 @@ int main () {
     
     const string dir_input = cbl::par::DirLoc+"../input/";
     const string dir_output = cbl::par::DirLoc+"../output/";
-    const string file_data = "data.dat";
+    const string file_data = "data1.dat";
     const string file_output_start = "model_starting_values.dat";
     const string file_output_bestfit = "model_bestfit.dat";
     
