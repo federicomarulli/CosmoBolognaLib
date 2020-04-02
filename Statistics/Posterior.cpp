@@ -663,7 +663,7 @@ void cbl::statistics::Posterior::write_maximization_results (const string dir_ou
 
 void cbl::statistics::Posterior::show_results (const int start, const int thin, const int nbins, const bool show_mode, const int ns, const int nb)
 {
-  m_model_parameters->show_results(start, thin, nbins, m_generate_seed(), show_mode, ns, nb, m_weight);
+  m_model_parameters->show_results(start, thin, nbins, m_generate_seed(), show_mode, ns, nb, weight(start, thin));
 }
 
 
@@ -675,7 +675,7 @@ void cbl::statistics::Posterior::write_results (const string output_dir, const s
   const string extension = (fits) ? "_chain.fits" : "_chain.dat";
   write_chain(output_dir, root_file+extension, start, thin, fits);
 
-  m_model_parameters->write_results(output_dir, root_file, start, thin, nbins, m_generate_seed(), compute_mode, ns, nb, m_weight);
+  m_model_parameters->write_results(output_dir, root_file, start, thin, nbins, m_generate_seed(), compute_mode, ns, nb, weight(start, thin));
 }
 
 

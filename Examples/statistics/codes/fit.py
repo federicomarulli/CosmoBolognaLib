@@ -66,16 +66,8 @@ def go (data, model, nwalkers, chain_size, results_name, model_name):
     for i in range(posterior.parameters().nparameters()):
         print("Posterior median of %s = %g\n"%(posterior.parameters().name(i), posterior.parameters().bestfit_value(i)))
 
-    # show all the MCMC statistics on screen
-    burn_in = 0
-    thin = 1
-    posterior.show_results(burn_in, thin)
-
     # store the chain ouputs
-    posterior.write_results("../output/", results_name, burn_in, thin)
-
-    # store the best-fit model
-    posterior.write_model_from_chain("../output/", model_name, [], [], burn_in, thin)
+    posterior.write_results("../output/", results_name)
 
     return posterior
 
@@ -95,7 +87,7 @@ def plot_contours(posterior, burn_in, thin, figure, color):
     notFixedChains = np.array(list(compress(table, notFixed))).T
 
     corner.corner(notFixedChains, \
-                  weights=1./np.array(weights),\
+                  weights=np.array(weights),\
                   labels=notFixedNames,\
                   truths=(1, 2, 1), truth_color='black', \
                   plot_datapoints=False, plot_density=False, levels=(1-np.exp(-0.5), 1-np.exp(-2), 1-np.exp(-4.5)),\
@@ -104,9 +96,9 @@ def plot_contours(posterior, burn_in, thin, figure, color):
 
 # Set parameters for posterior sampling
 nwalkers = 100
-chain_size = 5000
-burn_in = 100
-thin = 10
+chain_size = 500
+burn_in = 0
+thin = 1
 
 # set the stuff used to construct the model: here an object of class cosmology, just as an example 
 cosmology = cbl.Cosmology()

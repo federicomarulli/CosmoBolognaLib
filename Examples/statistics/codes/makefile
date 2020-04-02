@@ -76,7 +76,7 @@ modelpy: ModelPY_wrap.o ModelPY.i
 
 clean:
 	rm -f *.o *.cxx ModelPY_wrap.cxx modelpy.py _modelpy.so *~ \#* temp* core* prior fit sampler
-	rm -rf __pycache__ 
+	rm -rf __pycache__
 
 prior.o: prior.cpp makefile $(dirLib)*.$(ES) 
 	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c prior.cpp

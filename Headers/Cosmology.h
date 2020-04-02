@@ -5343,6 +5343,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param NL false \f$\rightarrow\f$ linear DM two-point
+       *  correlation function; true \f$\rightarrow\f$ non-linear DM
+       *  two-point correlation function
+       *
        *  @param redshift the redshift
        *
        *  @param pimax the upper limit of the line-of-sight integration
@@ -5354,9 +5358,6 @@ namespace cbl {
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
-       *
-       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
-       *  non-linear power spectrum
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -5391,7 +5392,7 @@ namespace cbl {
        *  @return w<SUB>p,DM</SUB>(&theta;): the projected correlation
        *  function of dark matter
        */
-      double wp_DM (const double rp, const std::string method_Pk, const double redshift, const double pimax, const bool store_output=true, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=cbl::par::defaultString);
+      double wp_DM (const double rp, const std::string method_Pk, const bool NL, const double redshift, const double pimax, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=cbl::par::defaultString);
 
       /**
        *  @brief the k<SUB>*</SUB> parameter 

@@ -653,7 +653,9 @@ namespace cbl {
 	 * @param nb number of data measurements, e.g. the bins of the
 	 * dataset
 	 *
-	 * @return none
+         * @param weight chain weight 
+	 *
+         * @return none
 	 */
 	virtual void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false, const int ns=-1, const int nb=-1, const std::vector<double> weight={})
 	{ (void)dir; (void)file; (void)start; (void)thin; (void)nbins; (void)seed; (void)compute_mode; (void)ns; (void)nb; (void)weight; ErrorCBL("", "write_results", "ModelParameters.h"); }

@@ -530,8 +530,8 @@ namespace cbl {
        *
        *  @param nwalkers the number of parallel chains
        *
-	 * @param columns the columns of the input file to be read.
-	 *
+       * @param columns the columns of the input file to be read.
+       *
        *  @param skip_header the lines to be skipped in the chain
        *  file
        *
@@ -687,7 +687,7 @@ namespace cbl {
 
       /**
        *  @brief write the model at xx with best-fit parameters
-       *  obtained from likelihood maximization
+       *  obtained from posterior maximization
        *
        *  @param output_dir the output directory
        *

@@ -126,9 +126,8 @@ namespace cbl {
         void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> parameters);
 
         /**
-         *  @brief write the model at xx, yy
-         *  with best-fit parameters obtained from likelihood
-         *  maximization       
+         *  @brief write the model at xx, yy with best-fit parameters
+         *  obtained from posterior maximization
          *  
          *  @param output_dir the output directory
          *  @param output_file the output file

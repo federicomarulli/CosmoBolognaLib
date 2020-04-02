@@ -1057,7 +1057,7 @@ double cbl::cosmology::Cosmology::xi_DM (const double rr, const std::string meth
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::wp_DM (const double rp, const std::string method_Pk, const double redshift, const double pimax, const bool store_output, const std::string output_root, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const std::string file_par)
+double cbl::cosmology::Cosmology::wp_DM (const double rp, const std::string method_Pk, const bool NL, const double redshift, const double pimax, const bool store_output, const std::string output_root, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const std::string file_par)
 {
   int Norm = norm;
   if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
@@ -1160,7 +1160,7 @@ double cbl::cosmology::Cosmology::sigmaR_DM (const double RR, const int corrType
     int index = 0;
     while (index<int(rad.size())) {
       RRR = rad[index];
-      XI = (corrType==1) ? xi_DM(rad[index], method_Pk, NL, redshift, store_output, output_root, norm, k_min, k_max, aa, GSL, prec, file_par) : wp_DM(rad[index], method_Pk, redshift, pimax, store_output, output_root, NL, norm, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
+      XI = (corrType==1) ? xi_DM(rad[index], method_Pk, NL, redshift, store_output, output_root, norm, k_min, k_max, aa, GSL, prec, file_par) : wp_DM(rad[index], method_Pk, NL, redshift, pimax, store_output, output_root, norm, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
       fout <<RRR<<"   "<<XI<<endl;
       coutCBL <<"xi("<<RRR<<") = "<<XI<<endl;
       rr.push_back(RRR);
