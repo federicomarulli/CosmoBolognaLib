@@ -58,3 +58,9 @@ V4.21 minor bugs fixed in likelihood modules
 V4.22 minor bugs fixed in some python examples
 
 V5.0 classes for statistical analyses substantially improved; new estimators for the three-point correlation function
+
+V5.1 classes for modelling improved; bugs fixed; tools for void analysis updated
+
+V5.2 new notebook and example codes for cosmic void analyses; makefile updated to have Python 3.x-compatible CosmoBolognaLib modules
+
+V5.3 new functions to model number counts, redshift-space distortions and three-point correlation function
