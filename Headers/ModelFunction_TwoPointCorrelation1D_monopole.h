@@ -452,12 +452,19 @@ namespace cbl {
        *
        *  the function computes:
        *
-       *  \f[\xi_0(s) = \left[ (b)^2 + \frac{2}{3}f \cdot b + \frac{1}{5}(f)^2 \right] 
-       *  \cdot \xi_{\rm DM}(\frac{D_V(redshift)}{D_V^{fid}(redshift}\cdot s) \f]
+       *  \f[ \xi_0(s) =
+       *  \xi_{DM}\left(\frac{D_V(z)}{D_V^{fit}(z)}\cdot s\right)
+       *  b^2\left[1 + \frac{2\beta}{3} + \frac{\beta^2}{5}\right] \f]
+       * 
+       *  where \f$ \beta=\beta(z)=\frac{f(z)}{b(z)} \f$. The Kaiser
+       *  factor \f$ \left[1 + \frac{2\beta}{3} +
+       *  \frac{\beta^2}{5}\right] \f$ is computed by cbl::xi_ratio,
+       *  while the linear growth rate \f$ f(z) \f$ is computed by
+       *  cbl::cosmology::Cosmology::linear_growth_rate
        *
        *  the model has 1+n parameters: 
-       *    - \f$b\f$
-       *    - cosmological paramters
+       *    - the bias \f$b\f$
+       *    - n cosmological paramters provided in input
        *
        *  the dark matter two-point correlation function is computed
        *  using the input cosmological parameters

@@ -2597,7 +2597,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mass_function (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
+      double mass_function (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
 
       /**
        *  @brief the mass function of dark matter haloes (filaments and
@@ -2691,7 +2691,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mass_function_fast (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double mass_function_fast (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief the mass function of dark matter haloes (filaments and
@@ -2790,7 +2790,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
     
       /**
        *  @brief number of dark matter haloes per steradian or square
@@ -2989,7 +2989,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double n_haloes (const double Mass_min, const double Mass_max, const double Volume, const double redshift, const std::string model_MF, const std::string method_SS, const int nbin_mass=0, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
+      double n_haloes (const double Mass_min, const double Mass_max, const double Volume, const double redshift, const std::string model_MF, const std::string method_SS, const int nbin_mass=0, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
       
       /**
        *  @brief number of dark matter haloes per steradian or square
@@ -4059,7 +4059,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void Pk_0 (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      void Pk_0 (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief the dark matter power spectrum
@@ -4113,7 +4113,7 @@ namespace cbl {
        *
        *  @return the dark matter power spectrum 
        */
-      double Pk_DM (const double kk, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
+      double Pk_DM (const double kk, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
 
       /**
        *  @brief the dark matter power spectrum
@@ -4171,7 +4171,7 @@ namespace cbl {
        *
        *  @return the dark matter power spectrum
        */
-      std::vector<double> Pk_DM (const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
+      std::vector<double> Pk_DM (const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
 
       /**
        *  @brief  the dark matter linear power spectrum.
@@ -4957,7 +4957,7 @@ namespace cbl {
        *  averaged (monopole) of the two-point correlation function of
        *  dark matter
        */
-      double xi_DM (const double rr, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi_DM (const double rr, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the dark matter angular two-point correlation function
@@ -5187,7 +5187,7 @@ namespace cbl {
        *  averaged (monopole) of the two-point correlation function of
        *  dark matter
        */
-      double xi_DM_DeWiggle (const double rr, const double redshift, const double sigma_NL, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double k_min=0., const double k_max=100., const double aa=1., const double prec=1.e-2);
+      double xi_DM_DeWiggle (const double rr, const double redshift, const double sigma_NL, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double k_min=0.001, const double k_max=100., const double aa=1., const double prec=1.e-2);
 
       /**
        *  @brief get the dark matter two-point correlation function
@@ -5259,7 +5259,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void get_xi (std::vector<double> &rr, std::vector<double> &Xi, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      void get_xi (std::vector<double> &rr, std::vector<double> &Xi, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
   
       /**
        *  @brief get the barred dark matter correlation functions
@@ -5325,7 +5325,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void get_barred_xi (std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const std::string method_Pk, const double redshift, const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
+      void get_barred_xi (std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const std::string method_Pk, const double redshift, const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=100., const double aa=0., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
 
       /**
        *  @brief the dark matter projected correlation function
@@ -5392,7 +5392,7 @@ namespace cbl {
        *  @return w<SUB>p,DM</SUB>(&theta;): the projected correlation
        *  function of dark matter
        */
-      double wp_DM (const double rp, const std::string method_Pk, const bool NL, const double redshift, const double pimax, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=cbl::par::defaultString);
+      double wp_DM (const double rp, const std::string method_Pk, const bool NL, const double redshift, const double pimax, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=cbl::par::defaultString);
 
       /**
        *  @brief the k<SUB>*</SUB> parameter 
@@ -5495,7 +5495,7 @@ namespace cbl {
        *  @return &sigma;<SUB>R</SUB>: the dark matter rms mass
        *  fluctuation
        */
-      double sigmaR_DM (const double RR, const int corrType, const std::string method_Pk, const double redshift, const double pimax=40, const bool store_output=true, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      double sigmaR_DM (const double RR, const int corrType, const std::string method_Pk, const double redshift, const double pimax=40, const bool store_output=true, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief the dark matter rms mass fluctuation within 8 Mpc/h
@@ -5540,7 +5540,7 @@ namespace cbl {
        *  @return &sigma;<SUB>8</SUB>: the dark matter rms mass
        *  fluctuation within 8 Mpc/h
        */
-      double sigma8_Pk (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const; 
+      double sigma8_Pk (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool NL=0, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const; 
 
       /**
        *  @brief bias of dark matter haloes
@@ -5612,7 +5612,7 @@ namespace cbl {
        *  cbl::Cosmology::Delta_vir can be used to convert
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
-      double bias_halo (const double Mass, const double redshift, const std::string author, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double bias_halo (const double Mass, const double redshift, const std::string author, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief bias of dark matter haloes
@@ -5686,7 +5686,7 @@ namespace cbl {
        *  cbl::Cosmology::Delta_vir can be used to convert
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
-      double bias_halo (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_halo (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true);
   
       /**
        *  @brief the effective bias of dark matter haloes, with masses
@@ -5799,7 +5799,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double bias_eff (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_eff (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
  
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -5892,7 +5892,7 @@ namespace cbl {
        *  cbl::Cosmology::Delta_vir can be used to convert
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
-      double bias_eff (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_eff (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
 
       /**
@@ -5987,7 +5987,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      std::vector<double> bias_eff_mass_grid (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_mass_grid (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -6079,7 +6079,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      std::vector<double> bias_eff_mass (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_mass (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -6175,7 +6175,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      std::vector<double> bias_eff_mass (const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_mass (const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief compute the effective bias of dark matter haloes, by
@@ -6304,7 +6304,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
+      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -6437,7 +6437,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const double redshift, const double Mass_min, const double Mass_max, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const double redshift, const double Mass_min, const double Mass_max, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -6582,7 +6582,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      void generate_bias_eff_grid_two_cosmopars (std::vector<double> &parameter1, std::vector<double> &parameter2, std::vector<std::vector<double>> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cbl::cosmology::CosmologicalParameter cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
+      void generate_bias_eff_grid_two_cosmopars (std::vector<double> &parameter1, std::vector<double> &parameter2, std::vector<std::vector<double>> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cbl::cosmology::CosmologicalParameter cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
 
       /**
        *  @brief effective bias of dark matter haloes, computed using
@@ -6707,7 +6707,7 @@ namespace cbl {
        *  some applications (e.g. MCMC) where these quantities can be
        *  computed once
        */
-      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
        
       /**
        *  @brief effective bias of dark matter haloes, computed using
@@ -6832,7 +6832,7 @@ namespace cbl {
        *  some applications (e.g. MCMC) where these quantities can be
        *  computed once
        */
-      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid2D interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid2D interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief effective bias of dark matter haloes, computed using
@@ -6946,7 +6946,7 @@ namespace cbl {
        *
        *  @return b<SUB>eff</SUB>: the effective dark matter bias
        */
-      std::vector<double> bias_eff_selection_function (const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_selection_function (const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
        
       ///@}
 
@@ -7019,7 +7019,7 @@ namespace cbl {
        *
        *  @return f*&sigma;<SUB>8</SUB>
        */
-      double fsigma8 (const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const double kk=1., const bool NL=0, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
+      double fsigma8 (const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const double kk=1., const bool NL=0, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
 
       /**
        *  @brief the non-linear dark matter power spectrum using
@@ -7412,7 +7412,7 @@ namespace cbl {
        *  @return A and B terms (expanded) for TNS model: A11, A12,
        *  A22, A23, A33, B12, B13, B14, B22, B23, B24, B33, B34, B44
        */
-      std::vector<std::vector<double>> Pk_TNS_AB_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0., const double k_max=100., const double prec=1.e-2);
+      std::vector<std::vector<double>> Pk_TNS_AB_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=100., const double prec=1.e-2);
 
       /**
        *  @brief the expanded A and B correction terms for the TNS
@@ -7481,7 +7481,7 @@ namespace cbl {
        *
        *  @return A and B terms (total contribution) for TNS model
        */ 
-      std::vector<std::vector<double>> Pk_TNS_AB_1loop (std::vector<double> kk, const double mu, const double linear_growth_rate, const double bias, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0., const double k_max=100., const double prec=1.e-2);
+      std::vector<std::vector<double>> Pk_TNS_AB_1loop (std::vector<double> kk, const double mu, const double linear_growth_rate, const double bias, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=100., const double prec=1.e-2);
 
       /**
        *  @brief the non-linear power spectrum
@@ -7543,7 +7543,7 @@ namespace cbl {
        *
        *  @return the non-linear power spectrum from perturbation theory
        */
-      std::vector<std::vector<double>> Pk_TNS_dd_dt_tt (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0., const double k_max=100., const double prec=1.e-2);
+      std::vector<std::vector<double>> Pk_TNS_dd_dt_tt (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=100., const double prec=1.e-2);
 
       /**
        *  @brief the specific growth rate &beta;
@@ -7659,7 +7659,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the specific growth rate &beta;
@@ -7755,7 +7755,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double error_beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double err_bias, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double error_beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double err_bias, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
   
       /**
        *  @brief the specific growth rate &beta;
@@ -7835,7 +7835,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the error on the specific growth rate &beta;
@@ -7916,7 +7916,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double error_beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const double err_bias, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double error_beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const double err_bias, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
  
       /**
        *  @brief the error on the specific growth rate &beta; from
@@ -8016,7 +8016,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief the normalised quadrupole Q
@@ -8110,7 +8110,7 @@ namespace cbl {
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double quadrupole (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double quadrupole (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief the normalised quadrupole Q
@@ -8184,7 +8184,7 @@ namespace cbl {
        *  cbl::Cosmology::Delta_vir can be used to convert
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
-      double quadrupole (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true,  const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double quadrupole (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true,  const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the mean square bulk flow
@@ -8226,7 +8226,7 @@ namespace cbl {
        *
        *  @return the mean square bulk flow
        */
-      double square_bulk_flow (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double square_bulk_flow (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the mean square bulk flow
@@ -8286,7 +8286,7 @@ namespace cbl {
        *
        *  @return the mean square velocity dispersion
        */
-      double square_velocity_dispersion (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double square_velocity_dispersion (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
     
       /**
        *  @brief the Cosmic Mach Number
@@ -8425,10 +8425,23 @@ namespace cbl {
       double Sigman_PT (const int nn, const double RR, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
     
       /**
-       *  @brief 1D monopole in the Kaiser limit
+       *  @brief monopole of the redshift-space two-point correlation
+       *  function in the Kaiser limit
        *
-       *  this function provides the monopole &xi;<SUB>0</SUB>(r)
-       *  predicted at large scales, in the Kaiser limit
+       *  this function provides the monopole of the two-point
+       *  correlation function of biased tracers, predicted at large
+       *  scales in the Kaiser limit:
+       *
+       *  \f[ \xi_0(s) =
+       *  \xi_{DM}(s)\left(\frac{b\sigma_8}{\sigma_8}\right)^2 \left[
+       *  1 + \frac{2}{3}\frac{f\sigma_8}{b\sigma_8} +
+       *  \frac{1}{5}\left(\frac{f\sigma_8}{b\sigma_8}\right)^2
+       *  \right] \f]
+       *
+       *  The Kaiser factor \f$ \left[ 1 +
+       *  \frac{2}{3}\frac{f\sigma_8}{b\sigma_8} +
+       *  \frac{1}{5}\left(\frac{f\sigma_8}{b\sigma_8}\right)^2
+       *  \right] \f$ is computed by cbl::xi_ratio
        *
        *  @param rad comoving separation
        *
@@ -8458,8 +8471,8 @@ namespace cbl {
        *
        *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
        *
-       *  @param xiNL 0 \f$\rightarrow\f$ linear power spectrum; 1
-       *  \f$\rightarrow\f$ non-linear power spectrum
+       *  @param NL false \f$\rightarrow\f$ linear power spectrum;
+       *  true \f$\rightarrow\f$ non-linear power spectrum
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -8494,13 +8507,24 @@ namespace cbl {
        *  @return &xi;<SUB>0</SUB>
        *
        */
-      double xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool NL=false, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
     
       /**
-       *  @brief 1D monopole in the Kaiser limit
+       *  @brief monopole of the redshift-space two-point correlation
+       *  function in the Kaiser limit
        *
-       *  this function provides the monopole &xi;<SUB>0</SUB>(r)
-       *  predicted at large scales, in the Kaiser limit
+       *  this function provides the monopole of the two-point
+       *  correlation function of biased tracers, predicted at large
+       *  scales in the Kaiser limit:
+       *
+       *  \f[ \xi_0(s) = \xi_{DM}(s)b^2\left[1 + \frac{2\beta}{3} +
+       *  \frac{\beta^2}{5}\right] \f]
+       * 
+       *  where \f$ \beta=\beta(z)=\frac{f(z)}{b(z)} \f$. The Kaiser
+       *  factor \f$ \left[1 + \frac{2\beta}{3} +
+       *  \frac{\beta^2}{5}\right] \f$ is computed by cbl::xi_ratio,
+       *  while the linear growth rate \f$ f(z) \f$ is computed by
+       *  cbl::cosmology::Cosmology::linear_growth_rate
        *
        *  @param rad comoving separations
        *
@@ -8513,13 +8537,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$ non-linear power
-       *  spectrum
-       *
        *  @param redshift the redshift
        *
-       *  @param output_dir the output_dir directory
-       *  where the output of external codes are written
+       *  @param output_dir the directory where the dark matter power
+       *  spectrum will be stored
        *
        *  @param store_output if true the output files created by the
        *  Boltzmann solver are stored; if false the output files are
@@ -8528,6 +8549,9 @@ namespace cbl {
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
+       *
+       *  @param NL false \f$\rightarrow\f$ linear power spectrum;
+       *  true \f$\rightarrow\f$ non-linear power spectrum
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -8541,18 +8565,16 @@ namespace cbl {
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
        *
-       *  @param step number of steps
-       *
        *  @param prec accuracy of the integration
        *
-       *  @param file_par name of the parameter file; if a
-       *  parameter file is provided (i.e. file_par!=NULL), it will be
-       *  used, ignoring the cosmological parameters of the object
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will be used,
+       *  ignoring the cosmological parameters of the object
        *
        *  @return &xi;<SUB>0</SUB>
        *
        */
-      std::vector<double> xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const std::string file_par);
+      std::vector<double> xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const double redshift, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const bool NL=false, const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief 2D correlation function, &xi;(r<SUB>p</SUB>,&pi;),
@@ -8662,7 +8684,7 @@ namespace cbl {
        *
        *  @return &xi;(r<SUB>p</SUB>,&pi;)
        */
-      double xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const std::string method_Pk, const double redshift, const int FV, const bool NL, std::vector<double> rr, std::vector<double> &Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output=true, const std::string output_root="test", const int index=-1, const bool bias_nl=0, const double bA=-1., const bool xiType=0, const double k_star=-1., const bool xiNL=0, const double v_min=-3000., const double v_max=3000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const std::string method_Pk, const double redshift, const int FV, const bool NL, std::vector<double> rr, std::vector<double> &Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output=true, const std::string output_root="test", const int index=-1, const bool bias_nl=0, const double bA=-1., const bool xiType=0, const double k_star=-1., const bool xiNL=0, const double v_min=-3000., const double v_max=3000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the function &xi;<SUB>*</SUB> of the Chuang & Wang 2012
@@ -8700,7 +8722,7 @@ namespace cbl {
        *
        *  @return &xi;<SUB>*</SUB>
        */
-      double xi_star (const double rr, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_star=-1., const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi_star (const double rr, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_star=-1., const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
   
       /**
        *  @brief the function &xi;<SUB>g,nw</SUB>(s) of the Chuang &
@@ -8788,8 +8810,8 @@ namespace cbl {
        *  @param x_max maximum velocity used in the integral of the
        *  Chuang & Wang model
        *
-       *  @param step_x number of steps in the integral of the Chuang &
-       *  Wang model
+       *  @param step_x number of steps in the integral of the Chuang
+       *  & Wang model
        *
        *  @return &xi;<SUB>g,BAO</SUB>(s)
        */
@@ -8799,8 +8821,8 @@ namespace cbl {
        *  @brief 2D correlation function, &xi;(r<SUB>p</SUB>,&pi;),
        *  predicted by the Chuang & Wang model
        *
-       *  @param rp r<SUB>p</SUB>: the comoving separation perpendicular
-       *  to the line-of-sight
+       *  @param rp r<SUB>p</SUB>: the comoving separation
+       *  perpendicular to the line-of-sight
        *
        *  @param pi &pi;: the comoving separation parallel to the
        *  line-of-sight
@@ -8852,10 +8874,11 @@ namespace cbl {
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
        *
-       *  @param BAO 0 \f$\rightarrow\f$ no BAO convolution; 1 \f$\rightarrow\f$ BAO
-       *  convolution
+       *  @param BAO 0 \f$\rightarrow\f$ no BAO convolution; 1
+       *  \f$\rightarrow\f$ BAO convolution
        *
-       *  @param xiType 0 \f$\rightarrow\f$ standard; 1 \f$\rightarrow\f$ Chuang & Wang model
+       *  @param xiType 0 \f$\rightarrow\f$ standard; 1
+       *  \f$\rightarrow\f$ Chuang & Wang model
        *
        *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
        *
@@ -8891,8 +8914,8 @@ namespace cbl {
        *  @param x_max maximum velocity used in the integral of the
        *  Chuang & Wang model
        *
-       *  @param step_x number of steps in the integral of the Chuang &
-       *  Wang model
+       *  @param step_x number of steps in the integral of the Chuang
+       *  & Wang model
        *
        *  @param aa parameter \e a of Eq. 24 of Anderson et
        *  al. 2012
@@ -8902,14 +8925,14 @@ namespace cbl {
        *
        *  @param prec accuracy of the integration
        *
-       *  @param file_par name of the parameter file; if a
-       *  parameter file is provided (i.e. file_par!=NULL), it will be
-       *  used, ignoring the cosmological parameters of the object
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will be used,
+       *  ignoring the cosmological parameters of the object
        *
        *  @return &xi;(r<SUB>p</SUB>,&pi;)
        */
-      double xi2D_CW (const double rp, const double pi, const double beta, const double bias_lin, const double bA, const double sigmav0, const double cmu, const double cs1, const double cs2, const double redshift, std::vector<double> rr1, std::vector<double> Xi1, std::vector<double> rr2, std::vector<double> Xi2, std::vector<double> &Xi1_, std::vector<double> &Xi1__, std::vector<double> &Xi2_, std::vector<double> &Xi2__, const bool store_output=true, const std::string output_root="test", const bool BAO=1, const bool xiType=0, const double k_star=-1, const bool xiNL=0, const double r_min=0.1, const double r_max=150., const double v_min=-3000., const double v_max=3000., const int step_v=500, const double k_min=0., const double k_max=100., const double x_min=-3000., const double x_max=3000., const int step_x=500, const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
-
+      double xi2D_CW (const double rp, const double pi, const double beta, const double bias_lin, const double bA, const double sigmav0, const double cmu, const double cs1, const double cs2, const double redshift, std::vector<double> rr1, std::vector<double> Xi1, std::vector<double> rr2, std::vector<double> Xi2, std::vector<double> &Xi1_, std::vector<double> &Xi1__, std::vector<double> &Xi2_, std::vector<double> &Xi2__, const bool store_output=true, const std::string output_root="test", const bool BAO=1, const bool xiType=0, const double k_star=-1, const bool xiNL=0, const double r_min=0.1, const double r_max=150., const double v_min=-3000., const double v_max=3000., const int step_v=500, const double k_min=0.001, const double k_max=100., const double x_min=-3000., const double x_max=3000., const int step_x=500, const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      
       ///@}
 
 
@@ -9071,7 +9094,7 @@ namespace cbl {
        *
        *  @return A<SUB>m</SUB>
        */
-      double Am (const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      double Am (const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief the potential spectral amplitude 
@@ -9116,7 +9139,7 @@ namespace cbl {
        *
        *  @return the potential spectral amplitude
        */
-      double potential_spectral_amplitude (const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double potential_spectral_amplitude (const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the bispectrum
@@ -9163,7 +9186,7 @@ namespace cbl {
        *
        *  @return the potential spectral amplitude
        */
-      double bispectrum (const std::vector<double> kk, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double bispectrum (const std::vector<double> kk, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
     
       /**
        *  @brief auxiliary function to estimate cosmological quantities
@@ -9213,7 +9236,7 @@ namespace cbl {
        *
        *  @return mrk
        */
-      double mrk (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double mrk (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief auxiliary function to estimate cosmological quantities
@@ -9276,12 +9299,12 @@ namespace cbl {
        *
        *  @return frk
        */
-      double frk (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double frk (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /// @cond TEST_NG
       double bias_kernel (const double, void *); 
 
-      double frk_test (const double, const double, const std::string, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double frk_test (const double, const double, const std::string, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       /// @endcond
 
 
@@ -9345,7 +9368,7 @@ namespace cbl {
        *
        *  @return bias correction
        */
-      double bias_correction (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string  output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_correction (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string  output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the skewness
@@ -9405,7 +9428,7 @@ namespace cbl {
        *
        *  @return skewness
        */
-      double skewness (const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double skewness (const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the derivative of the skewness, ds/dM
@@ -9465,7 +9488,7 @@ namespace cbl {
        *
        *  @return derivative of the skewness
        */
-      double dskewnessdM (const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double dskewnessdM (const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief correction to the halo mass in non-Gaussian cosmologies
@@ -9526,7 +9549,7 @@ namespace cbl {
        *
        *  @return bias correction
        */
-      double MF_correction (const double mass, const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double MF_correction (const double mass, const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       ///@}
 
@@ -9709,7 +9732,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      double size_function (const double RV, const double redshift, const std::string model_mf, const double del_v, const std::string model_sf, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double size_function (const double RV, const double redshift, const std::string model_mf, const double del_v, const std::string model_sf, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       ///@}
 
@@ -9908,9 +9931,9 @@ namespace cbl {
        */
       double Pk_ThetaTheta (const double kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const double qmin, const double qmax, const double prec=1.e-3);
 
-      std::vector<double> Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      std::vector<double> Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
       
-      std::vector<double> Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      std::vector<double> Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
 
       /**
        *  @brief compute the Theta-Theta non-linear power spectrum 
@@ -9970,7 +9993,7 @@ namespace cbl {
        *
        *  @return the \f$\Theta-\Theta\f$ non-linear power spectrum
        */
-      std::vector<double> Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0., const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      std::vector<double> Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
 
       ///@}
       

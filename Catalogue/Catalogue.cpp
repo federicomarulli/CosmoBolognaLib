@@ -781,7 +781,7 @@ void cbl::catalogue::Catalogue::set_region_number (const size_t nRegions)
 {
   for (size_t i=0; i<m_object.size(); i++)
     if (m_object[i]->region()>=static_cast<int>(nRegions))
-      ErrorCBL("region index for object "+conv(i, par::fINT)+" is larger than input number of regions!"+conv(m_object[i]->region(), par::fINT)+" > "+conv(nRegions, par::fINT), "set_region_number", "Catalogue.cpp");
+      ErrorCBL("region index for object "+conv(i, par::fINT)+" is larger than input number of regions! "+conv(m_object[i]->region(), par::fINT)+" >= "+conv(nRegions, par::fINT), "set_region_number", "Catalogue.cpp");
 
   m_nRegions = nRegions;
 }

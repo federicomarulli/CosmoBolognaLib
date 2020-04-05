@@ -295,7 +295,7 @@ double cbl::xi_ratio (const double beta)
 
 double cbl::xi_ratio (const double f_sigma8, const double bias_sigma8)
 { 
-  return (bias_sigma8!=0) ? 1.+2./3.*f_sigma8/bias_sigma8+0.2*pow(f_sigma8/bias_sigma8,2) : -1.e30;
+  return (bias_sigma8!=0) ? 1.+2./3.*f_sigma8/bias_sigma8+0.2*pow(f_sigma8/bias_sigma8, 2) : -1.e30;
 }
 
 

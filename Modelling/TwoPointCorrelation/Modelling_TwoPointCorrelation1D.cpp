@@ -125,9 +125,6 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (con
 
     m_data_model->cosmology_mass = cosmology_mass;
     m_data_model->redshift_source = redshift_source;
-
-    cout <<"FINITO"<<endl;
-    exit(1);
   }
 }
 
@@ -165,7 +162,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_HOD (const
   //  creation of vectors containing mass function and bias values for interpolation
   vector<double> mass_function_vec;
   vector<double> bias_vec;
-  for (int i=0; i<m_step; i++){
+  for (int i=0; i<m_step; i++) {
     mass_function_vec.emplace_back(m_data_HOD->cosmology->mass_function(m_data_HOD->massvec[i], redshift, model_MF, "CAMB"));
     bias_vec.emplace_back(m_data_HOD->cosmology->bias_halo(m_data_HOD->massvec[i], redshift, model_MF, "CAMB"));
   }  
@@ -207,8 +204,13 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_HOD (const
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model_cluster_selection_function (const cosmology::Cosmology cosmology, const cosmology::Cosmology test_cosmology, const double mean_redshift, const string model_MF, const string model_bias, const string selection_function_file, const std::vector<int> selection_function_column, const double z_min, const double z_max, const double Mass_min, const double Mass_max, const double Delta, const bool isDelta_vir, const string method_Pk, const bool store_output, const string output_dir, const double k_min, const double k_max, const double prec, const int step, const int mass_step)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model_cluster_selection_function (const cosmology::Cosmology cosmology, const cosmology::Cosmology test_cosmology, const double mean_redshift, const string model_MF, const string model_bias, const string selection_function_file, const std::vector<int> selection_function_column, const double z_min, const double z_max, const double Mass_min, const double Mass_max, const string file_par, const double Delta, const bool isDelta_vir, const string method_Pk, const bool store_output, const string output_dir, const double k_min, const double k_max, const double prec, const int step, const int mass_step)
 {
+  if (file_par!=par::defaultString)
+    WarningMsgCBL("check the consistency between the parameters of the object cosmology, provided in input, and the ones in the parameter file", "set_data_model_cluster_selection_function", "Modelling_TwoPointCorrelation1D.cpp");
+  
+  m_data_model = make_shared<STR_data_model>(STR_data_model());
+  
   m_data_model->cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model->test_cosmology = make_shared<cosmology::Cosmology>(test_cosmology);
   m_data_model->redshift = mean_redshift;

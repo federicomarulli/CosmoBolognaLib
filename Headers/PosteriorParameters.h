@@ -573,7 +573,8 @@ namespace cbl {
 	 *
 	 * @return the chain value
 	 */
-	double chain_value (const int param, const int pos, const int ww) const { return m_chain_value[param][m_inds_to_index(pos, ww)]; }
+	double chain_value (const int param, const int pos, const int ww) const
+	{ return m_chain_value[param][m_inds_to_index(pos, ww)]; }
 
 	/**
 	 * @brief return the private member m_values at the pp-th step
@@ -614,7 +615,8 @@ namespace cbl {
 	 *
 	 * @return none
 	 */
-	void set_chain_value (const int param, const int pos, const int ww, const double value) { m_chain_value[param][m_inds_to_index(pos, ww)] = value; }
+	void set_chain_value (const int param, const int pos, const int ww, const double value)
+	{ m_chain_value[param][m_inds_to_index(pos, ww)] = value; }
 
 	/**
 	 *  @brief set the chain values

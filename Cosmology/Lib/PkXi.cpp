@@ -150,8 +150,7 @@ void cbl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, 
 
   // --------------------------------------------------------------------------
 
-  string Camb = dir+"camb "+File_par;
-  if (system(Camb.c_str())) {}
+  if (system((dir+"camb "+File_par).c_str())) {}
 
   if (delete_output) {
     string RM = (output_dir == "./") ? "rm -rf "+OutputRoot+"*" : "rm -rf "+output_dir; 
@@ -166,7 +165,7 @@ void cbl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, 
 void cbl::cosmology::Cosmology::run_CAMB (std::vector<double> &kk, std::vector<double> &Pk, const bool NL, const double redshift, const std::string output_root, const std::string output_dir, const double k_max, const std::string file_par) const 
 {
   string dir = fullpath(par::DirCosmo)+"External/CAMB/";
-
+  
   string File_par = file_par;
 
   bool delete_output = (output_dir==par::defaultString) ? true : false;
@@ -219,9 +218,9 @@ void cbl::cosmology::Cosmology::run_CAMB (std::vector<double> &kk, std::vector<d
 
 
   // --------------------------------------------------------------------------
+
   
-  string Camb = dir+"camb "+File_par;
-  if (system(Camb.c_str())) {}
+  if (system((dir+"camb "+File_par).c_str())) {}
 
   // read the power spectrum
   string file_inCAMB = OutputRoot+"_matterpower.dat";
@@ -895,7 +894,7 @@ std::vector<double> cbl::cosmology::Cosmology::Pk_DM (const std::vector<double> 
   else if (method_Pk=="CAMB") {
 
     vector<double> _kk, _pk;
-
+    
     run_CAMB(_kk, _pk, NL, redshift, output_root, output_dir, Max(newk), file_par);
     glob::FuncGrid interp_Pk(_kk, _pk, "Spline");
     Pk = interp_Pk.eval_func(newk);

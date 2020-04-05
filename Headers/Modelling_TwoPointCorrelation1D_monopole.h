@@ -502,10 +502,15 @@ namespace cbl {
 	 *  of the two-point correlation function in redshift space,
 	 *  using a given selection function to estimate the bias
 	 * 
+	 *  the monopole of the two-point correlation function in
+	 *  redshift space is computed by
+	 *  cbl::modelling::twopt::xi0_linear_cosmology_clusters_selection_function
+	 *
 	 *  the dark matter two-point correlation function is computed
 	 *  using the input cosmological parameters; the linear
-	 *  effective bias is computed for each cosmology using the
-	 *  provided halo masses by cbl::cosmology::bias_eff
+	 *  effective bias is a derived parameter, that is computed
+	 *  for each cosmology, using the provided halo masses, by
+	 *  cbl::cosmology::bias_eff
 	 *
 	 *  @param alpha_prior prior for the \f$\alpha\f$ parameter of
 	 *  the cluster mass scaling relation

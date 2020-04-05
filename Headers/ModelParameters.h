@@ -653,7 +653,7 @@ namespace cbl {
 	 * @param nb number of data measurements, e.g. the bins of the
 	 * dataset
 	 *
-         * @param weight chain weight 
+	 * @param weight chain weight
 	 *
          * @return none
 	 */

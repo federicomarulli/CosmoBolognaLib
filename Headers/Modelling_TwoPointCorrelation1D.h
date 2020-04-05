@@ -404,10 +404,14 @@ namespace cbl {
 	 *  @param Mass_min minimum halo mass
 	 *
 	 *  @param Mass_max maximum halo mass
+	 *  
+	 *  @param file_par name of the parameter file; if a parameter
+	 *  file is provided (i.e. file_par!=NULL), it will be used,
+	 *  ignoring the cosmological parameters of the object
 	 *
 	 *  @param Delta \f$\Delta\f$ the overdensity
 	 *
-	 *  @param isDelta_vir true \f$\rightarray\f$ \f$\Delta\f$ is
+	 *  @param isDelta_vir true \f$\rightarrow\f$ \f$\Delta\f$ is
 	 *  the virial overdensity
 	 *
 	 *  @param method_Pk method used to compute the power
@@ -438,7 +442,7 @@ namespace cbl {
 	 *
 	 *  @return none
 	 */
-	void set_data_model_cluster_selection_function (const cbl::cosmology::Cosmology cosmology, const cbl::cosmology::Cosmology test_cosmology, const double mean_redshift, const std::string model_MF, const std::string model_bias, const std::string selection_function_file, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const double Delta=200, const bool isDelta_vir=false, const std::string method_Pk="CAMB", const bool store_output=true, const std::string output_dir=par::defaultString, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const int step=200, const int mass_step=50);
+	void set_data_model_cluster_selection_function (const cbl::cosmology::Cosmology cosmology, const cbl::cosmology::Cosmology test_cosmology, const double mean_redshift, const std::string model_MF, const std::string model_bias, const std::string selection_function_file, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const std::string file_par=par::defaultString, const double Delta=200, const bool isDelta_vir=false, const std::string method_Pk="CAMB", const bool store_output=true, const std::string output_dir=par::defaultString, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const int step=200, const int mass_step=50);
 
 	///@}
 	

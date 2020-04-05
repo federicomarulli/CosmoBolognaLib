@@ -476,32 +476,34 @@ namespace cbl {
       /**
        * @brief perform importance sampling
        *
-       * Importance sampling is a convenient
-       * technique to join independet dataset
+       * Importance sampling is a convenient technique to join
+       * independet datasets.
        *
-       * This function takes in input a chain
-       * and computes the posterior looping over all entries
-       * It's possible to specify the columns, in case the input
-       * chain has different ordering, or larger number of parameters
+       * This function takes in input a chain and computes the
+       * likelihood or posterior looping over all entries. It's
+       * possible to specify the columns, in case the input chain has
+       * different ordering, or larger number of parameters.
        *
        * @param input_dir input directory
        *
        * @param input_file the input file
        *
-       * @param nwalkers the number of parallel chains
+       * @param n_walkers the number of parallel chains
        *
-       * @param columns the columns of the input file to be read.
+       * @param column the columns of the input file to be read
        *
-       * @param skip_header the lines to be skipped in
-       * the chain file
+       * @param header_lines_to_skip the lines to be skipped in the
+       * chain file
        *
-       * @param fits false \f$\rightarrow\f$ ascii file; true
-       * \f$\rightarrow\f$ fits file
+       * @param is_FITS_format true \f$\rightarrow\f$ the format of
+       * the input file is FITS; false \f$\rightarrow\f$ the format of
+       * the input file is ASCII
        *
-       * @warning columns is used for ascii chain files
-       * @return None
+       * @warning column is used only for ASCII chain files
+       *
+       * @return none
        */
-      void importance_sampling (const std::string input_dir, const std::string input_file, const int nwalkers, const std::vector<size_t> columns={}, const int skip_header=1, const bool fits=false);
+      void importance_sampling (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false);
 
       /**
        *  @brief write the chains obtained after the MCMC sampling

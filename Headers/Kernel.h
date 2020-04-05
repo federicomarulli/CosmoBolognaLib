@@ -470,6 +470,16 @@
  *  This \b notebook explains how to compute the de-wiggled power
  *  spectrum model
  */
+/**
+ *  @example BAO_primer.ipynb 
+ *  
+ *  This \b notebook explains how to extract cosmological constraints
+ *  from Baryon Acoustic Oscillations
+ *  
+ *  To see the notebook, click here: <a
+ *  href="https://colab.research.google.com/drive/1VTn7b0dy8XPDR7at11HecATsXDbu5vzP">
+ *  notebook</a>
+ */
 
 /**
  *  @brief The global namespace of the <B> \e CosmoBolognaLib </B>

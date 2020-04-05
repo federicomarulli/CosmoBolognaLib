@@ -400,7 +400,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_bias_cosmology (const std:
   for (size_t i=0; i<rad.size(); i++)
     new_rad[i] *= alpha;
 
-  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->NL, pp->redshift, pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->step, pp->prec, pp->file_par);
+  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, pp->output_dir, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
 }
 
 
@@ -566,7 +566,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_one_cosmo_par_clusters (co
   for (size_t i=0; i<rad.size(); i++)
     new_rad[i] *= alpha;
   
-  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->NL, pp->redshift, pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->step, pp->prec, pp->file_par);
+  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, pp->output_dir, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
 }
 
 
@@ -602,7 +602,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_two_cosmo_pars_clusters (c
   for (size_t i=0; i<rad.size(); i++)
     new_rad[i] *= alpha;
   
-  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->NL, pp->redshift, pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->step, pp->prec, pp->file_par);
+  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, pp->output_dir, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
 }
 
 
@@ -641,9 +641,6 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters (const 
   vector<double> new_rad = rad;
   for (size_t i=0; i<rad.size(); i++)
     new_rad[i] *= alpha;
-  
-  //return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->NL, pp->redshift, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->step, pp->prec, pp->file_par);
-
 
   // return the redshift-space monopole of the two-point correlation function
   const double sigma8 = parameter[0];
@@ -739,9 +736,9 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters_selecti
   
   // compute the real-space monopole of the two-point correlation function at z=0, by Fourier transforming the P(k)
   vector<double> xi = wrapper::fftlog::transform_FFTlog(new_rad, 1, pp->kk, Pk_grid, 0);
-
-  // compute the redshift-space monopole at z=pp->redshift
-  const double fact = pow(bias, 2)*xi_ratio(cosmo.linear_growth_rate(pp->redshift, 1), bias)*pow(cosmo.DD(pp->redshift)/cosmo.DD(0), 2);
+  
+  // compute the redshift-space monopole at z=pp->redshift (scaling by D(z)/D(0) the monopole at z=0) 
+  const double fact = bias*bias*xi_ratio(cosmo.linear_growth_rate(pp->redshift, 1.)/bias)*pow(cosmo.DD(pp->redshift)/cosmo.DD(0), 2);
   for (size_t i=0; i<xi.size(); i++)
     xi[i] *= fact;
 

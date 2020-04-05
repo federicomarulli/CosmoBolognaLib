@@ -71,12 +71,12 @@ def go (data, model, nwalkers, chain_size, results_name, model_name):
 
     return posterior
 
-def plot_contours(posterior, burn_in, thin, figure, color):
+def plot_contours (posterior, burn_in, thin, figure, color):
 
     # read the chains
     nPar = posterior.parameters().nparameters()
     table = np.array( [posterior.parameters().parameter_chain_values(i, burn_in, thin) for i in range(nPar)] )
-    names = [ posterior.parameters().name(i) for i in range(nPar)]
+    names = [posterior.parameters().name(i) for i in range(nPar)]
     status = [posterior.parameters().status(i) for i in range(nPar)]
     weights = posterior.weight(burn_in, thin)
 
@@ -94,7 +94,7 @@ def plot_contours(posterior, burn_in, thin, figure, color):
                   color=color, fill_contours=True, hist_kwargs={"density" : True, "color":color}, fig=figure)
 
 
-# Set parameters for posterior sampling
+# set parameters for posterior sampling
 nwalkers = 100
 chain_size = 500
 burn_in = 0
@@ -117,14 +117,14 @@ data2 = cbl.Data1D(dir_input+file_data2)
 model2 = getModel1D(cosmology, 1)
 posterior2 = go(data2, model2, nwalkers, chain_size, "model2", "model2.dat")
 
-#Plot the contours
+# plot the contours
 
 fig, axes = plt.subplots(3, 3, figsize=(15, 15))
 
 plot_contours(posterior2, burn_in, thin, fig, "r")
 plot_contours(posterior1, burn_in, thin, fig, "b")
 
-#Do the importance sampling
+# do the importance sampling
 posterior1.importance_sampling("../output/", "model2_chain.dat", nwalkers)
 
 # store the chain ouputs
@@ -132,4 +132,4 @@ posterior1.write_results("../output/", "model_1+2_importance_sampling")
 
 plot_contours(posterior1, burn_in, thin, fig, "g")
 
-plt.show()
+plt.show(block=False)

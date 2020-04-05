@@ -305,12 +305,12 @@ namespace cbl {
 	 *
 	 * @param chain_size the chain lenght
 	 *
-	 * @param nwalkers the number of parallel
+	 * @param n_walkers the number of parallel
 	 * chains
 	 *
 	 * @return none
 	 */
-	void initialize_chains (const int chain_size, const int nwalkers);
+	void initialize_chains (const int chain_size, const int n_walkers);
 
 	/**
 	 * @brief initialize the chains in a ball around the posterior
@@ -326,7 +326,7 @@ namespace cbl {
 	 *
 	 * @param chain_size the chain lenght
 	 *
-	 * @param nwalkers the number of parallel
+	 * @param n_walkers the number of parallel
 	 * chains
 	 *
 	 * @param radius radius of the ball in parameter space
@@ -342,7 +342,7 @@ namespace cbl {
 	 *
 	 * @return none
 	 */
-	void initialize_chains (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3);
+	void initialize_chains (const int chain_size, const int n_walkers, const double radius, const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3);
 
 	/**
 	 * @brief initialize the chains in a ball around the input
@@ -354,7 +354,7 @@ namespace cbl {
 	 *
 	 * @param chain_size the chain lenght
 	 *
-	 * @param nwalkers the number of parallel
+	 * @param n_walkers the number of parallel
 	 * chains
 	 *
 	 * @param value vector containing the input values, centres of
@@ -364,7 +364,7 @@ namespace cbl {
 	 *
 	 * @return none
 	 */
-	void initialize_chains (const int chain_size, const int nwalkers, std::vector<double> &value, const double radius);
+	void initialize_chains (const int chain_size, const int n_walkers, std::vector<double> &value, const double radius);
 
 	/**
 	 * @brief initialize the chains with input values
@@ -374,8 +374,8 @@ namespace cbl {
 	 *
 	 * @param chain_size the chain lenght
 	 *
-	 * @param chain_value matrix of size (nwalkers, nparameters),
-	 * starting values of the chain
+	 * @param chain_value matrix of size (n_walkers,
+	 * n_parameters), starting values of the chain
 	 *
 	 * @return none
 	 */
@@ -390,7 +390,7 @@ namespace cbl {
 	 *
 	 * @param chain_size the chain lenght
 	 *
-	 * @param nwalkers the number of parallel
+	 * @param n_walkers the number of parallel
 	 * chains
 	 *
 	 * @param input_dir input directory
@@ -399,7 +399,7 @@ namespace cbl {
 	 *
 	 * @return none
 	 */
-	void initialize_chains (const int chain_size, const int nwalkers, const std::string input_dir, const std::string input_file);
+	void initialize_chains (const int chain_size, const int n_walkers, const std::string input_dir, const std::string input_file);
 
 	/**
 	 *  @brief sample the posterior using the stretch-move sampler
@@ -438,38 +438,41 @@ namespace cbl {
 	/**
 	 * @brief perform importance sampling
 	 *
-	 * Importance sampling is a convenient
-	 * technique to join independet dataset
+	 * Importance sampling is a convenient technique to join
+	 * independet datasets.
 	 *
-	 * This function takes in input a chain
-	 * and computes the posterior looping over all entries
-	 * It's possible to specify the columns, in case the input
-	 * chain has different ordering, or larger number of parameters
+	 * This function takes in input a chain and computes the
+	 * posterior looping over all entries. It's possible to
+	 * specify the columns, in case the input chain has different
+	 * ordering, or larger number of parameters.
 	 *
-	 * It's possible to sum or overwrite the log likelihood
+	 * It's possible either to sum or overwrite the log
+	 * likelihood.
 	 *
 	 * @param input_dir input directory
 	 *
 	 * @param input_file the input file
 	 *
-	 * @param nwalkers the number of parallel chains
+	 * @param n_walkers the number of parallel chains
 	 *
-	 * @param columns the columns of the input file to be read.
+	 * @param column the column of the input file to be read
 	 *
-	 * @param skip_header the lines to be skipped in
-	 * the chain file
+	 * @param header_lines_to_skip the lines to be skipped in the
+	 * chain file
+	 * 
+	 * @param is_FITS_format true \f$\rightarrow\f$ the format of
+	 * the input file is FITS; false \f$\rightarrow\f$ the format
+	 * of the input file is ASCII
 	 *
-	 * @param fits false \f$\rightarrow\f$ ascii file; true
-	 * \f$\rightarrow\f$ fits file
+	 * @warning column is used only for ASCII chain files
 	 *
-	 * @warning columns is used for ascii chain files
-	 * @return None
+	 * @return none
 	 */
-	void importance_sampling (const std::string input_dir, const std::string input_file, const int nwalkers, const std::vector<size_t> columns={}, const int skip_header=1, const bool fits=false);
+	void importance_sampling (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false);
 
 	/**
-	 * @brief write the chains obtained after 
-	 * the MCMC sampling on an ascii file
+	 * @brief write the chains obtained after the MCMC sampling on
+	 * an ascii file
 	 *
 	 * @param output_dir the output directory
 	 *
@@ -484,8 +487,8 @@ namespace cbl {
 	void write_chain_ascii (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1);
 
 	/**
-	 * @brief write the chains obtained after 
-	 * the MCMC sampling on a fits file
+	 * @brief write the chains obtained after the MCMC sampling on
+	 * a FITS file
 	 *
 	 * @param output_dir the output directory
 	 *
@@ -511,13 +514,15 @@ namespace cbl {
 	 *
 	 * @param thin the step used for dilution
 	 *
-	 * @param fits false \f$\rightarrow\f$ ascii file; true
-	 * \f$\rightarrow\f$ fits file
+	 * @param is_FITS_format true \f$\rightarrow\f$ the format of
+	 * the input file is FITS; false \f$\rightarrow\f$ the format
+	 * of the input file is ASCII
 	 *
-	 * @warning columns only work for ascii chain file
+	 * @warning column only work for ascii chain file
+	 *
 	 * @return none
 	 */
-	void write_chain (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1, const bool fits=false);
+	void write_chain (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1, const bool is_FITS_format=false);
 
 	/**
 	 * @brief read the chains from an ascii file
@@ -526,16 +531,16 @@ namespace cbl {
 	 *
 	 * @param input_file the intput file
 	 *
-	 * @param nwalkers the number of parallel chains
+	 * @param n_walkers the number of parallel chains
 	 *
-	 * @param columns the columns of the input file to be read.
+	 * @param column the columns of the input file to be read.
 	 *
-	 * @param skip_header the lines to be skipped in
-	 * the chain file
+	 * @param header_lines_to_skip the lines to be skipped in the
+	 * chain file
 	 *
 	 * @return none
 	 */
-	void read_chain_ascii (const std::string input_dir, const std::string input_file, const int nwalkers, const std::vector<size_t> columns={}, const int skip_header=1);
+	void read_chain_ascii (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1);
 
 	/**
 	 * @brief read the chains from an ascii file
@@ -544,13 +549,13 @@ namespace cbl {
 	 *
 	 * @param input_file the input file
 	 *
-	 * @param nwalkers the number of parallel chains
+	 * @param n_walkers the number of parallel chains
 	 *
-	 * @param columns the columns of the input file to be read.
+	 * @param column the columns of the input file to be read.
 	 *
 	 * @return none
 	 */
-	void read_chain_fits (const std::string input_dir, const std::string input_file, const int nwalkers, const std::vector<size_t> columns);
+	void read_chain_fits (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column);
 
 	/**
 	 * @brief read the chains
@@ -559,19 +564,20 @@ namespace cbl {
 	 *
 	 * @param input_file the input file
 	 *
-	 * @param nwalkers the number of parallel chains
+	 * @param n_walkers the number of parallel chains
 	 *
-	 * @param columns the columns of the input file to be read.
+	 * @param column the columns of the input file to be read.
 	 *
-	 * @param skip_header the lines to be skipped in
-	 * the chain file
+	 * @param header_lines_to_skip the lines to be skipped in the
+	 * chain file
 	 *
-	 * @param fits false \f$\rightarrow\f$ ascii file; true
-	 * \f$\rightarrow\f$ fits file
+	 * @param is_FITS_format true \f$\rightarrow\f$ the format of
+	 * the input file is FITS; false \f$\rightarrow\f$ the format
+	 * of the input file is ASCII
 	 *
 	 * @return none
 	 */
-	void read_chain (const std::string input_dir, const std::string input_file, const int nwalkers, const std::vector<size_t> columns={}, const int skip_header=1, const bool fits=false);
+	void read_chain (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false);
 
 	/**
 	 * @brief write maximization results on a file

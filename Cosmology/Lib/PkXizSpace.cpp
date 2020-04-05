@@ -43,12 +43,12 @@ using namespace cbl;
 // =====================================================================================
 
  
-double cbl::cosmology::Cosmology::xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const std::string method_Pk, const double redshift, const bool store_output, const std::string output_root, const bool xiType, const double k_star, const bool xiNL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const std::string file_par)
+double cbl::cosmology::Cosmology::xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const std::string method_Pk, const double redshift, const bool store_output, const std::string output_root, const bool xiType, const double k_star, const bool NL, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const std::string file_par)
 {
   // ----- get the real-space DM xi(r) ----- 
 
   vector<double> rr, Xi;
-  get_xi(rr, Xi, method_Pk, redshift, store_output, output_root, xiType, k_star, xiNL, norm, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
+  get_xi(rr, Xi, method_Pk, redshift, store_output, output_root, xiType, k_star, NL, norm, r_min, r_max, k_min, k_max, aa, GSL, prec, file_par);
   
   double XiR = interpolated(rad, rr, Xi, "Linear");
 
@@ -59,15 +59,15 @@ double cbl::cosmology::Cosmology::xi0_Kaiser (const double rad, const double f_s
 // =====================================================================================
 
  
-std::vector<double> cbl::cosmology::Cosmology::xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const bool NL, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const int step, const double prec, const std::string file_par)
+std::vector<double> cbl::cosmology::Cosmology::xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par)
 {
-  const vector<double> kk = logarithmic_bin_vector(step, k_min, k_max);
+  const vector<double> kk = logarithmic_bin_vector(100, k_min, k_max);
   const vector<double> Pk = this->Pk_DM(kk, method_Pk, NL, redshift, output_dir, store_output, output_root, norm, k_min, k_max, prec, file_par);
 
   vector<double> xi = wrapper::fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
 
-  const double fact = bias*bias*xi_ratio(linear_growth_rate(redshift, 1.), bias);
-
+  const double fact = bias*bias*xi_ratio(linear_growth_rate(redshift, 1.)/bias);
+  
   for (size_t i=0; i<xi.size(); i++)
     xi[i] *= fact;
 
