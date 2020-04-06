@@ -59,8 +59,11 @@ namespace cbl {
 	/// the prior distribution
 	std::shared_ptr<cbl::statistics::Prior> m_prior;
 
-	/// value of the log
-	std::vector<double> m_logposterior_values;
+	/// the logarithm of the likelihood
+	std::vector<double> m_log_likelihood;
+	
+	/// the logarithm of the posterior
+	std::vector<double> m_log_posterior;
 
 	/// the chain weight
 	std::vector<double> m_weight;
@@ -194,7 +197,7 @@ namespace cbl {
 	 *  @brief evaluate the logarithm of the un-normalized
 	 *  posterior
 	 *
-	 *  \f[ P((\vec{\theta} | \vec{d}) =
+	 *  \f[ P(\vec{\theta} | \vec{d}) =
 	 *  \mathcal{L}(\vec{d}|\vec{\theta}) \cdot Pr(\vec{\theta})
 	 *  \f]
 	 *
@@ -464,11 +467,15 @@ namespace cbl {
 	 * the input file is FITS; false \f$\rightarrow\f$ the format
 	 * of the input file is ASCII
 	 *
+	 * @param apply_to_likelihood true \f$\rightarrow\f$ the
+	 * likelihood ratio is used as weight; false \f$\rightarrow\f$
+	 * the posterior ratio is used as weight
+	 *
 	 * @warning column is used only for ASCII chain files
 	 *
 	 * @return none
 	 */
-	void importance_sampling (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false);
+	void importance_sampling (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false, const bool apply_to_likelihood=false);
 
 	/**
 	 * @brief write the chains obtained after the MCMC sampling on
@@ -566,7 +573,7 @@ namespace cbl {
 	 *
 	 * @param n_walkers the number of parallel chains
 	 *
-	 * @param column the columns of the input file to be read.
+	 * @param column the columns of the input file to be read
 	 *
 	 * @param header_lines_to_skip the lines to be skipped in the
 	 * chain file

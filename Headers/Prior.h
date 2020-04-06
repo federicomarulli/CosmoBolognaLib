@@ -58,69 +58,68 @@ namespace cbl {
      */
     class Prior {
 
-      protected:
+    protected:
 
-	/// prior function
-	Prior_function m_prior_function;
+      /// prior function
+      Prior_function m_prior_function;
 
-	/// inputs of the prior function
-	std::shared_ptr<void> m_prior_function_inputs;
+      /// inputs of the prior function
+      std::shared_ptr<void> m_prior_function_inputs;
 
-      public:
+    public:
 
-	/**
-	 *  @name Constructors/destructors
-	 */
-	///@{
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{
 
-	/**
-	 *  @brief default constructor
-	 *
-	 *  @return object of class Prior
-	 */
-	Prior () {}
+      /**
+       *  @brief default constructor
+       *
+       *  @return object of class Prior
+       */
+      Prior () {}
 
-	/**
-	 * @brief constructor
-	 *
-	 * @param prior_function the prior function
-	 *
-	 * @param prior_function_inputs inputs for the prior function
-	 *
-	 * @return object of class Prior
-	 */
-	Prior (const Prior_function prior_function, const std::shared_ptr<void> prior_function_inputs);
+      /**
+       * @brief constructor
+       *
+       * @param prior_function the prior function
+       *
+       * @param prior_function_inputs inputs for the prior function
+       *
+       * @return object of class Prior
+       */
+      Prior (const Prior_function prior_function, const std::shared_ptr<void> prior_function_inputs);
 
-	/**
-	 *  @brief default destructor
-	 *
-	 *  @return none
-	 */
-	~Prior () = default;
+      /**
+       *  @brief default destructor
+       *
+       *  @return none
+       */
+      ~Prior () = default;
 
-	///@}
+      ///@}
 	
-	/**
-	 * compute the prior for input
-	 * parameters
-	 *
-	 * @param parameters the input parameters
-	 *
-	 * @return the prior function
-	 */
-	double operator() (const std::vector<double> parameters);
+      /**
+       * compute the prior for input
+       * parameters
+       *
+       * @param parameters the input parameters
+       *
+       * @return the prior function
+       */
+      double operator () (const std::vector<double> parameters);
 	
-	/**
-	 * @brief compute the prior for input
-	 * parameters
-	 *
-	 * @param parameters the input parameters
-	 *
-	 * @return the prior function
-	 */
-	double log (const std::vector<double> parameters);
+      /**
+       * @brief compute the logarithm of the prior for the input
+       * parameters
+       *
+       * @param parameter vector containing the input parameters
+       *
+       * @return the prior function
+       */
+      double log (const std::vector<double> parameter);
 	
-
     };
   }
 }

@@ -51,13 +51,12 @@ void cbl::data::TaperedCovarianceMatrix::m_set_tapering(const double tapering_fa
   m_tapering_function.resize(m_order, m_order);
 
   for (int i=0; i<static_cast<int>(m_order); i++)
-    for (int j=0; j<static_cast<int>(m_order); j++){
+    for (int j=0; j<static_cast<int>(m_order); j++) {
       double xx = abs(i-j);
       if (xx<m_tapering_factor)
 	m_tapering_function(i, j) = pow(1-xx/m_tapering_factor, 4)*(4*xx/m_tapering_factor+1);
       else
 	m_tapering_function(i, j) = 0;
-
     }
 }
 
@@ -69,20 +68,14 @@ void cbl::data::TaperedCovarianceMatrix::m_set (const vector<double> covariance,
 {
   (void)prec;
 
-  cout << "Done" << endl;
   m_hartlap_factor = hartlap_factor(m_order, nmeasures);
 
-  cout << m_order << endl;
-
-  cout << m_tapering_function.rows() << " " << m_tapering_function.rows() << endl;
-
   m_matrix = cbl::wrapper::eigen::SquareMatrixToEigen(covariance).cwiseProduct(m_tapering_function);
-
-  cout << m_matrix.rows() << " " << m_matrix.rows() << endl;
 
   m_precision = m_matrix.inverse().cwiseProduct(m_tapering_function);
   
   m_variance = m_matrix.diagonal();
+  
   m_std = m_variance.cwiseSqrt();
 
   m_correlation = m_matrix.cwiseQuotient((m_std * m_std.transpose()));

@@ -372,7 +372,7 @@ void cbl::statistics::LikelihoodParameters::write_bestfit_info ()
 	ErrorCBL("no such kind of parameter!", "write_bestfit_info", "LikelihoodParameters.cpp");
       }
 
-      Print(m_parameter_bestfit_value[i], 5, 10, true, true, std::cout, "value = "); 
+      Print(m_parameter_bestfit_value[i], 5, 10, "value = ", "\n", true, std::cout); 
       cout << endl;
     }
   }

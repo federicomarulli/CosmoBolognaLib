@@ -219,18 +219,15 @@ void cbl::data::Data2D::write (const string dir, const string file, const string
   if (header!=par::defaultString)
     fout << "### " << header << " ###" << endl;
 
-  const int bp = std::cout.precision();
+  const int bp = cout.precision();
   
   for (int i=0; i<m_xsize; ++i)
     for (int j=0; j<m_ysize; ++j) {
       int index = j+m_ysize*i;
-      cbl::Print(m_x[index], prec, ww, false, false, fout);
-      fout << "  " ;
-      cbl::Print(m_y[index], prec, ww, false, false, fout);
-      fout << "  " ;
-      cbl::Print(m_error[index], prec, ww, false, false, fout);
-      fout << "  " ;
-      cbl::Print(m_error[index], prec, ww, true, false, fout);
+      cbl::Print(m_x[index], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_y[index], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_error[index], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_error[index], prec, ww, "", "\n", false, fout);
     }
 
 
@@ -239,42 +236,33 @@ void cbl::data::Data2D::write (const string dir, const string file, const string
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
 	int index = j+m_ysize*i;
-	cbl::Print(m_x[index], prec, ww, false, false, fout);
-	fout << "  " ;
-	cbl::Print(-m_y[index], prec, ww, false, false, fout);
-	fout << "  " ;
-	cbl::Print(m_error[index], prec, ww, false, false, fout);
-	fout << "  " ;
-	cbl::Print(m_error[index], prec, ww, true, false, fout);
+	cbl::Print(m_x[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(-m_y[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_error[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_error[index], prec, ww, "", "\n", false, fout);
       }
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
 	int index = j+m_ysize*i;
-	cbl::Print(-m_x[index], prec, ww, false, false, fout);
-	fout << "  " ;
-	cbl::Print(-m_y[index], prec, ww, false, false, fout);
-	fout << "  " ;
-	cbl::Print(m_error[index], prec, ww, false, false, fout);
-	fout << "  " ;
-	cbl::Print(m_error[index], prec, ww, true, false, fout);
+	cbl::Print(-m_x[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(-m_y[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_error[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_error[index], prec, ww, "", "\n", false, fout);
       }
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
 	int index = j+m_ysize*i;
-	cbl::Print(-m_x[index], prec, ww, false, false, fout);
-	fout << "  " ;
-	cbl::Print(-m_y[index], prec, ww, false, false, fout);
-	fout << "  " ;
-	cbl::Print(m_error[index], prec, ww, false, false, fout);
-	fout << "  " ;
-	cbl::Print(m_error[index], prec, ww, true, false, fout);
+	cbl::Print(-m_x[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(-m_y[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_error[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_error[index], prec, ww, "", "\n", false, fout);
       }
     
   }
   
-  std::cout.precision(bp);
+  cout.precision(bp);
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl << endl;
 }
 

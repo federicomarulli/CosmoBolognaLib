@@ -499,11 +499,15 @@ namespace cbl {
        * the input file is FITS; false \f$\rightarrow\f$ the format of
        * the input file is ASCII
        *
+       * @param apply_to_likelihood true \f$\rightarrow\f$ the
+       * likelihood ratio is used as weight; false \f$\rightarrow\f$
+       * the posterior ratio is used as weight
+       *
        * @warning column is used only for ASCII chain files
        *
        * @return none
        */
-      void importance_sampling (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false);
+      void importance_sampling (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false, const bool apply_to_likelihood=false);
 
       /**
        *  @brief write the chains obtained after the MCMC sampling

@@ -57,6 +57,7 @@ void cbl::glob::Distribution::m_set_distribution_normalization ()
   function<double(double)> f = bind(m_func, std::placeholders::_1, m_distribution_func_fixed_pars, m_distribution_func_pars);
 
   m_distribution_normalization = wrapper::gsl::GSL_integrate_cquad(f, m_xmin, m_xmax, 1.e-4);
+  m_log_distribution_normalization = log(m_distribution_normalization);
 }
 
 
@@ -161,6 +162,26 @@ cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distrib
 // ======================================================================================
 
 
+double cbl::glob::Distribution::operator() (const double xx)
+{
+  if (xx<m_xmin || xx>m_xmax) return 0;
+  else return m_func(xx, m_distribution_func_fixed_pars, m_distribution_func_pars)/m_distribution_normalization;
+}
+
+
+// ======================================================================================
+
+
+double cbl::glob::Distribution::log_distribution (const double xx)
+{
+  if (xx<m_xmin || xx>m_xmax) return par::defaultDouble;
+  else return log(m_func(xx, m_distribution_func_fixed_pars, m_distribution_func_pars))-m_log_distribution_normalization;
+}
+
+
+// ======================================================================================
+
+
 void cbl::glob::Distribution::set_limits(const double xmin, const double xmax)
 {
   m_xmin = xmin; 
@@ -181,6 +202,7 @@ void cbl::glob::Distribution::set_constant_distribution (const double value)
 
   m_func = &identity<double>; 
   m_distribution_normalization = 1.;
+  m_log_distribution_normalization = 0.;
 }
 
 // ======================================================================================
@@ -201,6 +223,7 @@ void cbl::glob::Distribution::set_uniform_distribution (const double xmin, const
   m_func = &identity<double>; 
 
   m_distribution_normalization = m_xmax-m_xmin;
+  m_log_distribution_normalization = log(m_xmax-m_xmin);
 }
 
 
@@ -220,6 +243,7 @@ void cbl::glob::Distribution::set_gaussian_distribution (const double mean, cons
   m_func = &gaussian<double>; 
 
   m_distribution_normalization = 0.5*(erf((m_xmax-mean)/sigma)-erf((m_xmin-mean)/sigma));
+  m_log_distribution_normalization = log(m_distribution_normalization);
 }
 
 
@@ -250,6 +274,7 @@ void cbl::glob::Distribution::set_poisson_distribution (const double mean, const
   m_func = &closest_probability; 
 
   m_distribution_normalization = accumulate(weights.begin(), weights.end(), 0);
+  m_log_distribution_normalization = log(m_distribution_normalization);
 }
 
 
@@ -280,6 +305,7 @@ void cbl::glob::Distribution::set_discrete_values (const std::vector<double> dis
 
   m_func = &closest_probability; 
   m_distribution_normalization = accumulate(ww.begin(), ww.end(), 0);
+  m_log_distribution_normalization = log(m_distribution_normalization);
 }
 
 

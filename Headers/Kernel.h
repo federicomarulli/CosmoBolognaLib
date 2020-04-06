@@ -1108,37 +1108,34 @@ namespace cbl {
    *
    *  @param ww number of characters to be used as field width
    *
-   *  @param insert_new_line if true, it inserts a new-line character
-   *  and flushes the stream (i.e. it adds std::endl)
+   *  @param header string that is added at the beginning of the line
+   *
+   *  @param end string that is added at the end of the line
    *
    *  @param use_coutCBL if true, coutCBL is used instead of std::cout
    *
    *  @param stream object of class std::ostream 
-   *
-   *  @param header string added at the beginning of the line
    *
    *  @param colour output colour 
    *
    *  @return none
    */
   template <typename T> 
-    void Print (const T value, const int prec, const int ww, const bool insert_new_line=true, const bool use_coutCBL=true, std::ostream &stream=std::cout, const std::string header="", const std::string colour=cbl::par::col_default) 
+    void Print (const T value, const int prec, const int ww, const std::string header="", const std::string end="\n", const bool use_coutCBL=true, std::ostream &stream=std::cout, const std::string colour=cbl::par::col_default) 
     {
       const int bp = std::cout.precision(); 
       if (fabs(value)<pow(10, -prec) || fabs(value)>pow(10, prec)) {
 	if (use_coutCBL)
-	  coutCBL << header << colour << std::scientific << std::setprecision(prec) << std::setw(ww) << value;
+	  coutCBL << header << colour << std::scientific << std::setprecision(prec) << std::setw(ww) << std::right << value << par::col_default << end;
 	else
-	  stream << header << std::scientific << std::setprecision(prec) << std::setw(ww) << value;
+	  stream << header << std::scientific << std::setprecision(prec) << std::setw(ww) << std::right << value << end;
       }
       else {
 	if (use_coutCBL) 
-	  coutCBL << header << colour << std::fixed << std::setprecision(prec) << std::setw(ww) << value;
+	  coutCBL << header << colour << std::fixed << std::setprecision(prec) << std::setw(ww) << std::right << value << par::col_default << end;
 	else 
-	  stream << header << std::fixed << std::setprecision(prec) << std::setw(ww) << value;
+	  stream << header << std::fixed << std::setprecision(prec) << std::setw(ww) << std::right << value << end;
       }
-      if (insert_new_line && use_coutCBL) std::cout << par::col_default << std::endl;
-      if (insert_new_line && !use_coutCBL) stream << std::endl;
       std::cout.precision(bp);
     }
   
@@ -1189,8 +1186,8 @@ namespace cbl {
 	ErrorCBL("the two input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
       
       for (size_t i=0; i<vect1.size(); i++) {
-	Print(vect1[i], prec, ww, false);
-	Print(vect2[i], prec, ww, true);
+	Print(vect1[i], prec, ww, "", "  ");
+	Print(vect2[i], prec, ww);
       }
     }
 
@@ -1238,9 +1235,9 @@ namespace cbl {
 	ErrorCBL("the three input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
       
       for (size_t i=0; i<vect1.size(); i++) {
-	Print(vect1[i], prec, ww, false);
-	Print(vect2[i], prec, ww, false);
-	Print(vect3[i], prec, ww, true);	
+	Print(vect1[i], prec, ww, "", "  ");
+	Print(vect2[i], prec, ww, "", "  ");
+	Print(vect3[i], prec, ww);	
       }
     }
 
@@ -1285,9 +1282,9 @@ namespace cbl {
       for (size_t i=0; i<mat.size(); i++) {
 	for (size_t j=0; j<mat[i].size(); j++)
 	  if (j==0)
-	    Print(mat[i][j], prec, ww, false);
+	    Print(mat[i][j], prec, ww, "", "  ");
 	  else
-	    Print(mat[i][j], prec, ww, false, false); 
+	    Print(mat[i][j], prec, ww, "", "  "); 
 	std::cout << std::endl;
       }
     }

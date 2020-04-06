@@ -148,6 +148,9 @@ namespace cbl {
 
       /// distribution normalization
       double m_distribution_normalization;
+      
+      /// natural log of distribution normalization
+      double m_log_distribution_normalization;
 
       /// distribution mean
       double m_mean;
@@ -333,11 +336,7 @@ namespace cbl {
        *
        * @return the distribution value
        */
-      double operator () (double xx) 
-      {
-	if (xx<m_xmin || xx>m_xmax) return 0;
-	else return m_func(xx, m_distribution_func_fixed_pars, m_distribution_func_pars)/m_distribution_normalization;
-      }
+      double operator () (double xx);
 
       /**
        * @brief evaluate log-distribution 
@@ -346,11 +345,7 @@ namespace cbl {
        *
        * @return the log-distribution value
        */
-      double log_distribution (double xx) 
-      {
-	if (xx<m_xmin || xx>m_xmax) return par::defaultDouble;
-	else return log(m_func(xx, m_distribution_func_fixed_pars, m_distribution_func_pars)/m_distribution_normalization);
-      }
+      double log_distribution (double xx);
 
       /**
        * @brief set distribution seed

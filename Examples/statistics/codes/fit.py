@@ -65,10 +65,10 @@ def go (data, model, nwalkers, chain_size, results_name, model_name):
     print ("\n")
     for i in range(posterior.parameters().nparameters()):
         print("Posterior median of %s = %g\n"%(posterior.parameters().name(i), posterior.parameters().bestfit_value(i)))
-
+    
     # store the chain ouputs
     posterior.write_results("../output/", results_name)
-
+    
     return posterior
 
 def plot_contours (posterior, burn_in, thin, figure, color):
@@ -102,7 +102,7 @@ thin = 1
 
 # set the stuff used to construct the model: here an object of class cosmology, just as an example 
 cosmology = cbl.Cosmology()
-   
+
 # construct the dataset by reading an input file 
 data1 = cbl.Data1D(dir_input+file_data1)
 
@@ -132,4 +132,4 @@ posterior1.write_results("../output/", "model_1+2_importance_sampling")
 
 plot_contours(posterior1, burn_in, thin, fig, "g")
 
-plt.show(block=False)
+plt.show()

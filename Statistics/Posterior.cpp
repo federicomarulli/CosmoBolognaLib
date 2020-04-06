@@ -80,7 +80,7 @@ cbl::statistics::Posterior::Posterior (const std::vector<std::shared_ptr<PriorDi
 // ============================================================================================
 
 
-double cbl::statistics::Posterior::operator() (std::vector<double> &pp) const
+double cbl::statistics::Posterior::operator () (std::vector<double> &pp) const
 {
   pp = m_model_parameters->full_parameter(pp);
   double prior = m_prior->operator()(pp);
@@ -200,7 +200,7 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
   function<bool(vector<double> &)> checkWrong = [&] (vector<double> &pp)
     {
       bool ch = true;
-      if (post(pp) < -par::defaultDouble)
+      if (post(pp)<-par::defaultDouble)
 	ch = false;
       return ch;
     };
@@ -266,7 +266,7 @@ void cbl::statistics::Posterior::sample_stretch_move (const double aa, const boo
   
   vector<vector<double>> chain_values;
 
-  sampler.get_chain_function_acceptance(chain_values, m_logposterior_values, m_acceptance);
+  sampler.get_chain_function_acceptance(chain_values, m_log_posterior, m_acceptance);
 
   m_model_parameters->set_chain_values(chain_values, n_walkers);
 
@@ -274,14 +274,14 @@ void cbl::statistics::Posterior::sample_stretch_move (const double aa, const boo
   m_model_parameters->set_bestfit_values(start, thin, nbins, m_generate_seed());
 
   m_weight.erase(m_weight.begin(), m_weight.end());
-  m_weight.resize(m_logposterior_values.size(), 1.);
+  m_weight.resize(m_log_posterior.size(), 1.);
 }
 
 
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::importance_sampling (const std::string input_dir, const std::string input_file, const int n_walkers, const vector<size_t> column, const int header_lines_to_skip, const bool is_FITS_format)
+void cbl::statistics::Posterior::importance_sampling (const std::string input_dir, const std::string input_file, const int n_walkers, const vector<size_t> column, const int header_lines_to_skip, const bool is_FITS_format, const bool apply_to_likelihood)
 {
   // import the chains
   read_chain(input_dir, input_file, n_walkers, column, header_lines_to_skip, is_FITS_format);
@@ -292,16 +292,22 @@ void cbl::statistics::Posterior::importance_sampling (const std::string input_di
   // loop over the chains, put a parallel loop here!
   for (int chain_position=0; chain_position<chain_size; ++chain_position) {
     
-#pragma omp parallel for schedule(dynamic)
+    //#pragma omp parallel for schedule(dynamic)
     for (int walker_index=0; walker_index<n_walkers; ++walker_index) {
-      
+
       vector<double> pp(n_parameters);
       for (int parameter=0; parameter<n_parameters; ++parameter) 
 	pp[parameter] = m_model_parameters->chain_value(parameter, chain_position, walker_index);
 
-      const double log_post = log(pp);
-      m_weight[chain_position*n_walkers+walker_index] = exp(log_post-m_logposterior_values[chain_position*n_walkers+walker_index]);
-      //m_logposterior_values[chain_position*n_walkers+walker_index] = log_post;
+      // compute the logarithm of the posterior, of likelihood, at the parameters of the input chain
+      const double log_dist = (apply_to_likelihood) ? Likelihood::log(pp) : log(pp);
+
+      // value of the logarithm of the posterior, or likelihood, of the input chain
+      const double input_log_dist = (apply_to_likelihood) ?
+	m_log_likelihood[chain_position*n_walkers+walker_index] : m_log_posterior[chain_position*n_walkers+walker_index];
+
+      // compute the weight as posterior, or likelihood, ratio
+      m_weight[chain_position*n_walkers+walker_index] = exp(log_dist-input_log_dist);
 
     }
     
@@ -321,7 +327,7 @@ void cbl::statistics::Posterior::write_chain_ascii (const string output_dir, con
   const int chain_size = m_model_parameters->chain_size();
   const int n_walkers = m_model_parameters->chain_nwalkers();
   
-  checkDim(m_logposterior_values, n_walkers*chain_size, "m_logposterior_values", false);
+  checkDim(m_log_posterior, n_walkers*chain_size, "m_log_posterior", false);
   
   string MK = "mkdir -p "+output_dir;
   if (system(MK.c_str())) {}
@@ -334,23 +340,33 @@ void cbl::statistics::Posterior::write_chain_ascii (const string output_dir, con
   fout << "# step ";
   for (int k=0; k<nparameters; k++) 
     fout << m_model_parameters->name(k) << "  ";
-  fout << " log(Likelihood) log(Prior)  log(Posterior)  Weight" << endl;
+  fout << " log(Likelihood)  log(Prior)  log(Posterior)  Weight" << endl;
 
   int nn = 0;
   
   for (int j=start; j<chain_size; j+=thin) {
     for (int i=0; i<n_walkers; i++) {
-
       fout << setw(6) << nn++ << "  ";
+      
       vector<double> pp(nparameters);
-
+      
       for (int k=0; k<nparameters; k++) {
 	pp[k] = m_model_parameters->chain_value(k, j, i);
-	fout << setw(10) << m_model_parameters->chain_value(k, j, i) << "  ";
+	cbl::Print(m_model_parameters->chain_value(k, j, i), 5, 14, "", "  ", false, fout);
       }
 
-      const double pr = m_prior->log(pp);
-      fout << m_logposterior_values[j*n_walkers+i]-pr << "  " << pr << " " << m_logposterior_values[j*n_walkers+i] << " " << m_weight[j*n_walkers+i] << endl;
+      if (m_log_likelihood.size()>size_t(j*n_walkers+i)) {
+	cbl::Print(m_log_likelihood[j*n_walkers+i], 5, 14, "", "  ", false, fout);
+	cbl::Print(m_log_posterior[j*n_walkers+i]-m_log_likelihood[j*n_walkers+i], 5, 14, "", "  ", false, fout);
+      }
+      else {
+	const double pr = m_prior->log(pp);
+	cbl::Print(m_log_posterior[j*n_walkers+i]-pr, 5, 14, "", "  ", false, fout);
+	cbl::Print(pr, 5, 14, "", "  ", false, fout);
+      }
+
+      cbl::Print(m_log_posterior[j*n_walkers+i], 5, 14, "", "  ", false, fout);
+      cbl::Print(m_weight[j*n_walkers+i], 5, 14, "", "\n", false, fout);
     }
   }
 
@@ -369,7 +385,7 @@ void cbl::statistics::Posterior::write_chain_fits (const string output_dir, cons
   const int chain_size = m_model_parameters->chain_size();
   const int n_walkers = m_model_parameters->chain_nwalkers();
 
-  checkDim(m_logposterior_values, n_walkers*chain_size, "m_logposterior_values", false);
+  checkDim(m_log_posterior, n_walkers*chain_size, "m_log_posterior", false);
   
   string MK = "mkdir -p "+output_dir;
   if (system(MK.c_str())) {}
@@ -384,26 +400,34 @@ void cbl::statistics::Posterior::write_chain_fits (const string output_dir, cons
   names.push_back("Log(Posterior)");
   names.push_back("Weight");
   
-  vector<vector<double>> values(nparameters+5);
+  vector<vector<double>> value(nparameters+5);
 
   int n = 0;
   for (int j=start; j<chain_size; j+=thin) 
     for (int i=0; i<n_walkers; i++) {
-      values[0].emplace_back(n);
+      value[0].emplace_back(n);
       vector<double> pp(nparameters);
       for (int k=0; k<nparameters; k++) {
-	values[k+1].emplace_back(m_model_parameters->chain_value(k, j, i));
+	value[k+1].emplace_back(m_model_parameters->chain_value(k, j, i));
 	pp[k] = m_model_parameters->chain_value(k, j, i);
       }
-      double lpr = m_prior->log(pp);
-      values[nparameters+1].emplace_back(m_logposterior_values[j*n_walkers+i]-lpr);
-      values[nparameters+2].emplace_back(lpr);
-      values[nparameters+3].emplace_back(m_logposterior_values[j*n_walkers+i]);
-      values[nparameters+4].emplace_back(m_weight[j*n_walkers+i]);
+
+      if (m_log_likelihood.size()>size_t(j*n_walkers+i)) {
+	value[nparameters+1].emplace_back(m_log_likelihood[j*n_walkers+i]);
+	value[nparameters+2].emplace_back(m_log_posterior[j*n_walkers+i]-m_log_likelihood[j*n_walkers+i]);
+      }
+      else {
+	const double lpr = m_prior->log(pp);
+	value[nparameters+1].emplace_back(m_log_posterior[j*n_walkers+i]-lpr);
+	value[nparameters+2].emplace_back(lpr);
+      }
+      
+      value[nparameters+3].emplace_back(m_log_posterior[j*n_walkers+i]);
+      value[nparameters+4].emplace_back(m_weight[j*n_walkers+i]);
       n ++;
     }
   
-  cbl::wrapper::ccfits::write_table_fits(output_dir, output_file, names, values);
+  cbl::wrapper::ccfits::write_table_fits(output_dir, output_file, names, value);
 
 
   coutCBL << "I wrote the file: " << output_dir+output_file << endl;
@@ -434,13 +458,13 @@ void cbl::statistics::Posterior::read_chain_ascii (const string input_dir, const
 
   std::function<vector<double>(const vector<double> params)> assign;
 
-  if (column.size() == 0) {
+  if (column.size()==0) {
     assign = [&] (const vector<double> params) {
-	  vector<double> pp(nparameters);
-	  for (int i=0; i<nparameters; i++)
-	    pp[i] = params[i+1];
-	  return pp;
-	};
+      vector<double> pp(nparameters);
+      for (int i=0; i<nparameters; i++)
+	pp[i] = params[i+1];
+      return pp;
+    };
   }
   else {
     checkDim(column, nparameters, "columns");
@@ -460,7 +484,8 @@ void cbl::statistics::Posterior::read_chain_ascii (const string input_dir, const
 
   vector<vector<double>> chain_value;
 
-  m_logposterior_values.erase(m_logposterior_values.begin(), m_logposterior_values.end());
+  m_log_likelihood.erase(m_log_likelihood.begin(), m_log_likelihood.end());
+  m_log_posterior.erase(m_log_posterior.begin(), m_log_posterior.end());
   m_weight.erase(m_weight.begin(), m_weight.end());
 
   while (getline(fin, line)) {
@@ -472,7 +497,8 @@ void cbl::statistics::Posterior::read_chain_ascii (const string input_dir, const
 
     vector<double> params = assign(ll); 
 
-    m_logposterior_values.push_back(ll[ll.size()-2]);
+    m_log_likelihood.push_back(ll[ll.size()-4]);
+    m_log_posterior.push_back(ll[ll.size()-2]);
     m_weight.push_back(ll[ll.size()-1]);
 
     chain_value.push_back(params);
@@ -481,9 +507,9 @@ void cbl::statistics::Posterior::read_chain_ascii (const string input_dir, const
 
   fin.clear(); fin.close();
 
-  checkDim(chain_value, n_walkers*chain_size, m_model_parameters->nparameters(), "chain_from_file");
-  checkDim(m_logposterior_values, n_walkers*chain_size, "logposterior_from_file");
-  checkDim(m_weight, n_walkers*chain_size, "weight_from_file");
+  checkDim(chain_value, n_walkers*chain_size, m_model_parameters->nparameters(), "chain_value");
+  checkDim(m_log_posterior, n_walkers*chain_size, "m_log_posterior");
+  checkDim(m_weight, n_walkers*chain_size, "m_weight");
 
   chain_value = cbl::transpose(chain_value);
 
@@ -498,19 +524,21 @@ void cbl::statistics::Posterior::read_chain_ascii (const string input_dir, const
 
 void cbl::statistics::Posterior::read_chain_fits (const string input_dir, const string input_file, const int n_walkers, const vector<size_t> column)
 {
-  const int nparameters = m_model_parameters->nparameters();
-
   (void)column;
+  
+  const int nparameters = m_model_parameters->nparameters();
 
   string file = input_dir+input_file;
   coutCBL << "Reading the chain file " << file << endl;
 
   vector<string> names = m_model_parameters->name();
+  names.push_back("Log(Likelihood)");
   names.push_back("Log(Posterior)");
   names.push_back("Weight");
 
   vector<vector<double>> chain_value(nparameters);
-  m_logposterior_values.erase(m_logposterior_values.begin(), m_logposterior_values.end());
+  m_log_likelihood.erase(m_log_likelihood.begin(), m_log_likelihood.end());
+  m_log_posterior.erase(m_log_posterior.begin(), m_log_posterior.end());
   m_weight.erase(m_weight.begin(), m_weight.end());
 
   vector<vector<double>> values = cbl::wrapper::ccfits::read_table_fits(file, names);
@@ -518,14 +546,16 @@ void cbl::statistics::Posterior::read_chain_fits (const string input_dir, const 
   for (int i=0; i<nparameters; i++)
     chain_value[i] = values[i];
 
-  m_logposterior_values = values[nparameters];
+  m_log_likelihood = values[nparameters-2];
+  m_log_posterior = values[nparameters];
   m_weight = values[nparameters+1];
 
-  int chain_size = m_logposterior_values.size()/n_walkers;
+  int chain_size = m_log_posterior.size()/n_walkers;
  
-  checkDim(chain_value, nparameters, n_walkers*chain_size, "chain_from_file"); 
-  checkDim(m_logposterior_values, n_walkers*chain_size, "logposterior_from_file"); 
-  checkDim(m_weight, n_walkers*chain_size, "weight_from_file"); 
+  checkDim(chain_value, nparameters, n_walkers*chain_size, "chain_value");
+  checkDim(m_log_likelihood, n_walkers*chain_size, "m_log_likelihood"); 
+  checkDim(m_log_posterior, n_walkers*chain_size, "m_log_posterior"); 
+  checkDim(m_weight, n_walkers*chain_size, "m_weight"); 
 
   m_model_parameters->set_chain_values(chain_value, n_walkers);
 

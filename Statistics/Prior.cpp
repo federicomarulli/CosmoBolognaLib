@@ -50,7 +50,7 @@ cbl::statistics::Prior::Prior (const Prior_function prior_function, const std::s
 // ============================================================================================
 
 
-double cbl::statistics::Prior::operator() (const vector<double> parameters)
+double cbl::statistics::Prior::operator () (const vector<double> parameters)
 {
   return m_prior_function(parameters, m_prior_function_inputs);
 }
@@ -59,8 +59,8 @@ double cbl::statistics::Prior::operator() (const vector<double> parameters)
 // ============================================================================================
 
 
-double cbl::statistics::Prior::log (const vector<double> parameters)
+double cbl::statistics::Prior::log (const vector<double> parameter)
 {
-  double prior = this->operator()(parameters);
+  double prior = this->operator()(parameter);
   return (prior>0) ? std::log(prior) : par::defaultDouble;
 }

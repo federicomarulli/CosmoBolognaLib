@@ -179,7 +179,7 @@ cbl::data::Data1D_collection::Data1D_collection (const std::vector<std::vector<d
   m_ndataset = m_x.size();
   m_xsize.resize(m_ndataset,0);
 
-  int nn=0;
+  int nn = 0;
   
   for (int i=0; i<m_ndataset; i++) {
     m_xsize[i] = m_x[i].size();
@@ -392,19 +392,17 @@ void cbl::data::Data1D_collection::write (const std::string dir, const std::stri
   if (header!=par::defaultString)
     fout << "### "<< header <<" ###" << endl;
 
-  const int bp = std::cout.precision();
+  const int bp = cout.precision();
   
   for (int i=0; i<ndata; i++) {
-    cbl::Print(m_x[0][i], prec, ww, false, false, fout);
-    fout << "  " ;
+    cbl::Print(m_x[0][i], prec, ww, "", "  ", false, fout);
     for (int j=0; j<m_ndataset; j++) {
-      cbl::Print(m_data[m_index[j][i]], prec, ww, false, false, fout);
-      fout << "  " ;
-      cbl::Print(m_error[m_index[j][i]], prec, ww, true, false, fout);
+      cbl::Print(m_data[m_index[j][i]], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_error[m_index[j][i]], prec, ww, "", "\n", false, fout);
     }
   }
 
-  std::cout.precision(bp);
+  cout.precision(bp);
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
 }
 
@@ -425,18 +423,15 @@ void cbl::data::Data1D_collection::write (const std::string dir, const std::vect
     if (header!=par::defaultString)
       fout << "### "<< header <<" ###" << endl;
 
-    const int bp = std::cout.precision();
+    const int bp = cout.precision();
 
     for (int j=0; j<m_xsize[i]; j++){
-      cbl::Print(m_x[i][j], prec, ww, false, false, fout);
-      fout << "  " ;
-      cbl::Print(m_data[m_index[i][j]], prec, ww, false, false, fout);
-      fout << "  " ;
-      cbl::Print(m_error[m_index[i][j]], prec, ww, false, false, fout);
-      fout << endl;
+      cbl::Print(m_x[i][j], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_data[m_index[i][j]], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_error[m_index[i][j]], prec, ww, "", "\n", false, fout);
     }
 
-    std::cout.precision(bp);
+    cout.precision(bp);
     fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
   }
 

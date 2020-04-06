@@ -159,13 +159,11 @@ void cbl::data::Data1D::write (const string dir, const string file, const string
   const int bp = std::cout.precision();
 
   for (size_t i=0; i<m_x.size(); i++) {
-    cbl::Print(m_x[i], prec, ww, false, false, fout);
-    fout << "  " ;
-    cbl::Print(m_data[i], prec, ww, false, false, fout);
-    fout << "  " ;
-    cbl::Print(m_error[i], prec, ww, true, false, fout);
+    cbl::Print(m_x[i], prec, ww, "", "  ", false, fout);
+    cbl::Print(m_data[i], prec, ww, "", "  ", false, fout);
+    cbl::Print(m_error[i], prec, ww, "", "\n", false, fout);
   }
-  std::cout.precision(bp);
+  cout.precision(bp);
   fout.close(); cout << endl; coutCBL << "I wrote the file: " << file_out << endl;
 }
 

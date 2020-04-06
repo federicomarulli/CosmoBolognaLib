@@ -152,15 +152,11 @@ void cbl::data::Data1D_extra::write (const string dir, const string file, const 
   fout << "### "<< header <<" ###" << endl;
 
   for (size_t i=0; i<m_x.size(); ++i) {
-    cbl::Print(m_x[i], prec, ww, false, false, fout);
-    fout << "  " ;
-    cbl::Print(m_data[i], prec, ww, false, false, fout);
-    fout << "  " ;
-    cbl::Print(m_error[i], prec, ww, false, false, fout);
-    for (size_t ex=0; ex<m_extra_info.size(); ++ex) {
-      fout << "  " ;
-      cbl::Print(m_extra_info[ex][i], prec, ww, false, false, fout);
-    }
+    cbl::Print(m_x[i], prec, ww, "", "  ", false, fout);
+    cbl::Print(m_data[i], prec, ww, "", "  ", false, fout);
+    cbl::Print(m_error[i], prec, ww, "", "  ", false, fout);
+    for (size_t ex=0; ex<m_extra_info.size(); ++ex)
+      cbl::Print(m_extra_info[ex][i], prec, ww, "", "  ", false, fout);
     fout << endl;
   }
   

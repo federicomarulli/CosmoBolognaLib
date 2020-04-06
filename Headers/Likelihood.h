@@ -209,16 +209,17 @@ namespace cbl {
        *
        *  @return the likelihood \f$ \mathcal{L} \f$
        */
-      double operator() (std::vector<double> &pp) const;
+      double operator () (std::vector<double> &pp) const;
 
       /**
-       *  @brief evaluate the log-likelihood
+       *  @brief evaluate the logarithm of the likelihood for the
+       *  input parameters
        *
-       *  @param pp the likelihood parameters
+       *  @param parameter the likelihood parameters
        *
        *  @return the log-likelihood \f$ \log(\mathcal{L}) \f$
        */
-      double log (std::vector<double> &pp) const;
+      double log (std::vector<double> &parameter) const;
 
       /**
        *  @brief set the data for the likelihood analysis

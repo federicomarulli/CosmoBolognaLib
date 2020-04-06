@@ -154,17 +154,18 @@ cbl::statistics::Likelihood::Likelihood (const std::shared_ptr<data::Data> data,
 // ============================================================================================
 
 
-double cbl::statistics::Likelihood::operator() (std::vector<double> &pp) const
+double cbl::statistics::Likelihood::operator () (std::vector<double> &pp) const
 {
   return exp(this->log(pp));
 }
 
+
 // ============================================================================================
 
 
-double cbl::statistics::Likelihood::log (std::vector<double> &pp) const
+double cbl::statistics::Likelihood::log (std::vector<double> &parameter) const
 {
-  return (m_use_grid) ? m_log_likelihood_function_grid(pp, m_likelihood_inputs) : m_log_likelihood_function(pp, m_likelihood_inputs);
+  return (m_use_grid) ? m_log_likelihood_function_grid(parameter, m_likelihood_inputs) : m_log_likelihood_function(parameter, m_likelihood_inputs);
 }
 
 

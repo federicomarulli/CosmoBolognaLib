@@ -456,7 +456,7 @@ void cbl::statistics::PosteriorParameters::write_bestfit_info ()
 	ErrorCBL("no such kind of parameter!", "write_bestfit_info", "PosteriorParameters.cpp");
       }
 
-      Print(m_parameter_bestfit_value[i], 5, 10, true, true, std::cout, "value = ");
+      Print(m_parameter_bestfit_value[i], 5, 10, "value = ", "\n", true, std::cout);
     }
   }
   
@@ -693,8 +693,7 @@ void cbl::statistics::PosteriorParameters::show_results (const int start, const 
       case statistics::ParameterType::_Base_:
       if (m_parameter_prior[i]->distributionType()==glob::DistributionType::_Constant_) {
 	coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_purple << "FIXED" << endl;
-	Print(m_parameter_prior[i]->sample(), 5, 10, true, true, std::cout, "value ="); 
-	cout << endl;
+	Print(m_parameter_prior[i]->sample(), 5, 10, "value =", "\n", true, std::cout); 
       }
       else {
 	coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_green << "FREE" << endl;
@@ -703,12 +702,12 @@ void cbl::statistics::PosteriorParameters::show_results (const int start, const 
 	const double std = posterior->std()*corr;
 	const double std_diff = (posterior->std()*(corr-1.))*0.5;
 
-	Print(posterior->mean(), 5, 10, true, true, std::cout, "Posterior mean = "); 
-	Print(std, 5, 10, true, true, std::cout, "Posterior standard deviation = "); 
-	Print(posterior->median(), 5, 10, true, true, std::cout, "Posterior median = "); 
-	Print((posterior->median()-posterior->percentile(18))-std_diff, 5, 10, true, true, std::cout, "Posterior 18th percentile = "); 
-	Print((posterior->percentile(82)-posterior->median())+std_diff, 5, 10, true, true, std::cout, "Posterior 82th percentile = "); 
-	if (show_mode) Print(posterior->mode(), 5, 10, true, true, std::cout, "Posterior mode = "); 
+	Print(posterior->mean(), 5, 10, "Posterior mean = ", "\n", true, std::cout); 
+	Print(std, 5, 10, "Posterior standard deviation = ", "\n", true, std::cout); 
+	Print(posterior->median(), 5, 10, "Posterior median = ", "\n", true, std::cout); 
+	Print((posterior->median()-posterior->percentile(18))-std_diff, 5, 10, "Posterior 18th percentile = ", "\n", true, std::cout); 
+	Print((posterior->percentile(82)-posterior->median())+std_diff, 5, 10, "Posterior 82th percentile = ", "\n", true, std::cout); 
+	if (show_mode) Print(posterior->mode(), 5, 10, "Posterior mode = ", "\n", true, std::cout); 
 	cout << endl;
       }
       break;
@@ -719,12 +718,12 @@ void cbl::statistics::PosteriorParameters::show_results (const int start, const 
 	const double std = posterior->std()*corr;
 	const double std_diff = (posterior->std()*(corr-1.))*0.5;
 	coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_bred << "OUTPUT" << endl;
-	Print(posterior->mean(), 5, 10, true, true, std::cout, "Posterior mean = "); 
-	Print(std, 5, 10, true, true, std::cout, "Posterior standard deviation = "); 
-	Print(posterior->median(), 5, 10, true, true, std::cout, "Posterior median = "); 
-	Print((posterior->median()-posterior->percentile(18))-std_diff, 5, 10, true, true, std::cout, "Posterior 18th percentile = "); 
-	Print((posterior->percentile(82)-posterior->median())+std_diff, 5, 10, true, true, std::cout, "Posterior 82th percentile = "); 
-	if (show_mode) Print(posterior->mode(), 5, 10, true, true, std::cout, "Posterior mode = "); 
+	Print(posterior->mean(), 5, 10, "Posterior mean = ", "\n", true, std::cout); 
+	Print(std, 5, 10, "Posterior standard deviation = ", "\n", true, std::cout); 
+	Print(posterior->median(), 5, 10, "Posterior median = ", "\n", true, std::cout); 
+	Print((posterior->median()-posterior->percentile(18))-std_diff, 5, 10, "Posterior 18th percentile = ", "\n", true, std::cout); 
+	Print((posterior->percentile(82)-posterior->median())+std_diff, 5, 10, "Posterior 82th percentile = ", "\n", true, std::cout); 
+	if (show_mode) Print(posterior->mode(), 5, 10, "Posterior mode = ", "\n", true, std::cout); 
 	cout << endl;
 	break;
       }
