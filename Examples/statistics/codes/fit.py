@@ -125,7 +125,7 @@ plot_contours(posterior2, burn_in, thin, fig, "r")
 plot_contours(posterior1, burn_in, thin, fig, "b")
 
 # do the importance sampling
-posterior1.importance_sampling("../output/", "model2_chain.dat", nwalkers)
+posterior1.importance_sampling("../output/", "model2_chain.dat")
 
 # store the chain ouputs
 posterior1.write_results("../output/", "model_1+2_importance_sampling")
