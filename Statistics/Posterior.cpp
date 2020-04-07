@@ -64,7 +64,7 @@ cbl::statistics::Posterior::Posterior (const std::vector<std::shared_ptr<PriorDi
 
 
 cbl::statistics::Posterior::Posterior (const std::vector<std::shared_ptr<PriorDistribution>> prior_distributions, const Likelihood &likelihood, const int seed) : Likelihood(likelihood)
-{ 
+{
   m_model_parameters = make_shared<PosteriorParameters>(PosteriorParameters(m_model->parameters()->nparameters(), prior_distributions, m_model->parameters()->type(), m_model->parameters()->name()));
 
   m_model->set_parameters(m_model_parameters);	
@@ -281,8 +281,8 @@ void cbl::statistics::Posterior::sample_stretch_move (const double aa, const boo
 // ============================================================================================
 
 
-void cbl::statistics::Posterior::importance_sampling (const std::string input_dir, const std::string input_file, const int n_walkers, const vector<size_t> column, const int header_lines_to_skip, const bool is_FITS_format, const bool apply_to_likelihood)
-{
+void cbl::statistics::Posterior::importance_sampling (const std::string input_dir, const std::string input_file, const vector<size_t> column, const int header_lines_to_skip, const bool is_FITS_format, const bool apply_to_likelihood, const int n_walkers)
+{ 
   // import the chains
   read_chain(input_dir, input_file, n_walkers, column, header_lines_to_skip, is_FITS_format);
 
@@ -292,7 +292,7 @@ void cbl::statistics::Posterior::importance_sampling (const std::string input_di
   // loop over the chains, put a parallel loop here!
   for (int chain_position=0; chain_position<chain_size; ++chain_position) {
     
-    //#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(dynamic)
     for (int walker_index=0; walker_index<n_walkers; ++walker_index) {
 
       vector<double> pp(n_parameters);
@@ -301,7 +301,7 @@ void cbl::statistics::Posterior::importance_sampling (const std::string input_di
 
       // compute the logarithm of the posterior, of likelihood, at the parameters of the input chain
       const double log_dist = (apply_to_likelihood) ? Likelihood::log(pp) : log(pp);
-
+      
       // value of the logarithm of the posterior, or likelihood, of the input chain
       const double input_log_dist = (apply_to_likelihood) ?
 	m_log_likelihood[chain_position*n_walkers+walker_index] : m_log_posterior[chain_position*n_walkers+walker_index];

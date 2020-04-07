@@ -106,7 +106,7 @@ namespace cbl {
 	 *
 	 *  @return object of class Posterior
 	 */
-	Posterior () {}
+	Posterior () = default;
 
 	/**
 	 *  @brief constructor
@@ -456,8 +456,6 @@ namespace cbl {
 	 *
 	 * @param input_file the input file
 	 *
-	 * @param n_walkers the number of parallel chains
-	 *
 	 * @param column the column of the input file to be read
 	 *
 	 * @param header_lines_to_skip the lines to be skipped in the
@@ -471,11 +469,14 @@ namespace cbl {
 	 * likelihood ratio is used as weight; false \f$\rightarrow\f$
 	 * the posterior ratio is used as weight
 	 *
+	 * @param n_walkers this parameter is used here only to
+	 * parallelize the computation
+	 *
 	 * @warning column is used only for ASCII chain files
 	 *
 	 * @return none
 	 */
-	void importance_sampling (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false, const bool apply_to_likelihood=false);
+	void importance_sampling (const std::string input_dir, const std::string input_file, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false, const bool apply_to_likelihood=false, const int n_walkers=100);
 
 	/**
 	 * @brief write the chains obtained after the MCMC sampling on

@@ -213,9 +213,10 @@ void cbl::modelling::Modelling::sample_posterior (const int chain_size, const in
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::importance_sampling (const std::string input_dir, const std::string input_file, const int n_walkers,  const vector<size_t> column, const int header_lines_to_skip, const bool is_FITS_format, const bool apply_to_likelihood)
+void cbl::modelling::Modelling::importance_sampling (const std::string input_dir, const std::string input_file, const int seed, const vector<size_t> column, const int header_lines_to_skip, const bool is_FITS_format, const bool apply_to_likelihood)
 {
-  m_posterior->importance_sampling(input_dir, input_file, n_walkers, column, header_lines_to_skip, is_FITS_format, apply_to_likelihood);
+  m_set_posterior(seed);
+  m_posterior->importance_sampling(input_dir, input_file, column, header_lines_to_skip, is_FITS_format, apply_to_likelihood);
 }
 
 

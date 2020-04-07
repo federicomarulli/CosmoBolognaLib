@@ -1,1 +1,1 @@
-emacs ../Headers/Data*.h ../Headers/CovarianceMatrix.h *cpp &
+emacs ../Headers/Data*.h ../Headers/CovarianceMatrix.h ../Headers/Table.h *cpp &

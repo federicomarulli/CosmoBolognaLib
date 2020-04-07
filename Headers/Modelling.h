@@ -334,7 +334,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void maximize_posterior (const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3, const int seed=34123);
+      void maximize_posterior (const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3, const int seed=666);
 
       /**
        *  @brief sample the posterior, initializing the chains by
@@ -356,7 +356,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void sample_posterior (const int chain_size, const int nwalkers, const int seed=34123, const double aa=2, const bool parallel=true);
+      void sample_posterior (const int chain_size, const int nwalkers, const int seed=666, const double aa=2, const bool parallel=true);
 
       /**
        *  @brief sample the posterior, initializing the chains in a
@@ -394,7 +394,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void sample_posterior (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3, const int seed=34123, const double aa=2, const bool parallel=true);
+      void sample_posterior (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3, const int seed=666, const double aa=2, const bool parallel=true);
 
       /**
        *  @brief sample the posterior, initializing the chains by
@@ -421,7 +421,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void sample_posterior (const int chain_size, const int nwalkers, std::vector<double> &value, const double radius, const int seed=34123, const double aa=2, const bool parallel=true);
+      void sample_posterior (const int chain_size, const int nwalkers, std::vector<double> &value, const double radius, const int seed=666, const double aa=2, const bool parallel=true);
 
       /**
        *  @brief sample the posterior, initializing the chains with
@@ -444,7 +444,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void sample_posterior (const int chain_size, const std::vector<std::vector<double>> chain_value, const int seed=34123, const double aa=2, const bool parallel=true);
+      void sample_posterior (const int chain_size, const std::vector<std::vector<double>> chain_value, const int seed=666, const double aa=2, const bool parallel=true);
 
       /**
        *  @brief sample the posterior, initializing the chains
@@ -471,7 +471,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void sample_posterior (const int chain_size, const int nwalkers, const std::string input_dir, const std::string input_file, const int seed=34123, const double aa=2, const bool parallel=true);
+      void sample_posterior (const int chain_size, const int nwalkers, const std::string input_dir, const std::string input_file, const int seed=666, const double aa=2, const bool parallel=true);
 
       /**
        * @brief perform importance sampling
@@ -488,7 +488,7 @@ namespace cbl {
        *
        * @param input_file the input file
        *
-       * @param n_walkers the number of parallel chains
+       * @param seed the seed
        *
        * @param column the columns of the input file to be read
        *
@@ -507,7 +507,7 @@ namespace cbl {
        *
        * @return none
        */
-      void importance_sampling (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false, const bool apply_to_likelihood=false);
+      void importance_sampling (const std::string input_dir, const std::string input_file, const int seed=666, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false, const bool apply_to_likelihood=false);
 
       /**
        *  @brief write the chains obtained after the MCMC sampling

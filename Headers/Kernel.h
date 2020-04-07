@@ -344,6 +344,10 @@
  * This example shows how to measure and model the void size function,
  * extracting constraints on the cosmological parameters of the model
  */
+/** @example table.py
+ *
+ *  This example shows how read and write files in a Table object 
+ */
 /** @example distances.py
  *
  *  This example shows how to convert redshifts into comoving

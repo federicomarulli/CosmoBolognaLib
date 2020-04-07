@@ -132,4 +132,4 @@ posterior1.write_results("../output/", "model_1+2_importance_sampling")
 
 plot_contours(posterior1, burn_in, thin, fig, "g")
 
-plt.show()
+plt.show(block=False)

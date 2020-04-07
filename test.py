@@ -167,6 +167,9 @@ if not ("nopy" in sys.argv):
 
 ### check the python examples -> check(directory, example_executable, language, input) ###
 
+check("data", "table.py", "python")
+check("data", "table.py", "python3")
+
 check("funcGrid", "funcgrid_bspline.py", "python")
 check("funcGrid", "funcgrid_bspline.py", "python3")
 
