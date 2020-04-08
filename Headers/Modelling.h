@@ -520,12 +520,17 @@ namespace cbl {
        *
        *  @param thin the step used for dilution
        *
-       *  @param fits false \f$\rightarrow\f$ ascii file; true
-       *  \f$\rightarrow\f$ fits file
+       *  @param is_FITS_format true \f$\rightarrow\f$ the format of
+       *  the input file is FITS; false \f$\rightarrow\f$ the format
+       *  of the input file is ASCII
+       *
+       *  @param prec decimal precision
+       *
+       *  @param ww number of characters to be used as field width
        *
        *  @return none
        */
-      void write_chain (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1, const bool fits=false);
+      void write_chain (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1, const bool is_FITS_format=false, const int prec=5, const int ww=14);
 
       /**
        *  @brief read the chains

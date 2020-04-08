@@ -220,13 +220,12 @@ void cbl::modelling::Modelling::importance_sampling (const std::string input_dir
 }
 
 
-
 // ============================================================================================
       
 
-void cbl::modelling::Modelling::write_chain (const string output_dir, const string output_file, const int start, const int thin, const bool fits)
+void cbl::modelling::Modelling::write_chain (const string output_dir, const string output_file, const int start, const int thin, const bool is_FITS_format, const int prec, const int ww)
 {
-  m_posterior->write_chain(output_dir, output_file, start, thin, fits);
+  m_posterior->write_chain(output_dir, output_file, start, thin, is_FITS_format, prec, ww);
 }
 
 

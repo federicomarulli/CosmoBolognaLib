@@ -396,7 +396,7 @@ namespace cbl {
 	 * @param n_walkers the number of parallel
 	 * chains
 	 *
-	 * @param input_dir input directory
+	 * @param input_dir the input directory
 	 *
 	 * @param input_file the input file
 	 *
@@ -452,7 +452,7 @@ namespace cbl {
 	 * It's possible either to sum or overwrite the log
 	 * likelihood.
 	 *
-	 * @param input_dir input directory
+	 * @param input_dir the input directory
 	 *
 	 * @param input_file the input file
 	 *
@@ -479,59 +479,27 @@ namespace cbl {
 	void importance_sampling (const std::string input_dir, const std::string input_file, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false, const bool apply_to_likelihood=false, const int n_walkers=100);
 
 	/**
-	 * @brief write the chains obtained after the MCMC sampling on
-	 * an ascii file
+	 * @brief read the chains
 	 *
-	 * @param output_dir the output directory
+	 * @param input_dir the input directory
 	 *
-	 * @param output_file the output file
+	 * @param input_file the input file
 	 *
-	 * @param start the minimum chain position to be written
+	 * @param n_walkers the number of parallel chains
 	 *
-	 * @param thin the step used for dilution
+	 * @param column the columns of the input file to be read
 	 *
-	 * @return none
-	 */
-	void write_chain_ascii (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1);
-
-	/**
-	 * @brief write the chains obtained after the MCMC sampling on
-	 * a FITS file
-	 *
-	 * @param output_dir the output directory
-	 *
-	 * @param output_file the output file
-	 *
-	 * @param start the minimum chain position to be written
-	 *
-	 * @param thin the step used for dilution
-	 *
-	 * @return none
-	 */
-	void write_chain_fits (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1);
-
-	/**
-	 * @brief write the chains obtained after 
-	 * the MCMC sampling
-	 *
-	 * @param output_dir the output directory
-	 *
-	 * @param output_file the output file
-	 *
-	 * @param start the minimum chain position to be written
-	 *
-	 * @param thin the step used for dilution
+	 * @param header_lines_to_skip the lines to be skipped in the
+	 * chain file
 	 *
 	 * @param is_FITS_format true \f$\rightarrow\f$ the format of
 	 * the input file is FITS; false \f$\rightarrow\f$ the format
 	 * of the input file is ASCII
 	 *
-	 * @warning column only work for ascii chain file
-	 *
 	 * @return none
 	 */
-	void write_chain (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1, const bool is_FITS_format=false);
-
+	void read_chain (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false);
+	
 	/**
 	 * @brief read the chains from an ascii file
 	 *
@@ -566,27 +534,68 @@ namespace cbl {
 	void read_chain_fits (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column);
 
 	/**
-	 * @brief read the chains
+	 * @brief write the chains obtained after 
+	 * the MCMC sampling
 	 *
-	 * @param input_dir the input directory
+	 * @param output_dir the output directory
 	 *
-	 * @param input_file the input file
+	 * @param output_file the output file
 	 *
-	 * @param n_walkers the number of parallel chains
+	 * @param start the minimum chain position to be written
 	 *
-	 * @param column the columns of the input file to be read
-	 *
-	 * @param header_lines_to_skip the lines to be skipped in the
-	 * chain file
+	 * @param thin the step used for dilution
 	 *
 	 * @param is_FITS_format true \f$\rightarrow\f$ the format of
 	 * the input file is FITS; false \f$\rightarrow\f$ the format
 	 * of the input file is ASCII
 	 *
+	 * @param prec decimal precision
+	 *
+	 * @param ww number of characters to be used as field width
+	 *
+	 * @warning column only work for ascii chain file
+	 *
 	 * @return none
 	 */
-	void read_chain (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false);
+	void write_chain (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1, const bool is_FITS_format=false, const int prec=5, const int ww=14);
+	
+	/**
+	 * @brief write the chains obtained after the MCMC sampling on
+	 * an ascii file
+	 *
+	 * @param output_dir the output directory
+	 *
+	 * @param output_file the output file
+	 *
+	 * @param start the minimum chain position to be written
+	 *
+	 * @param thin the step used for dilution
+	 *
+	 * @param prec decimal precision
+	 *
+	 * @param ww number of characters to be used as field width
+	 *
+	 * @return none
+	 */
+	void write_chain_ascii (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1, const int prec=5, const int ww=14);
 
+	/**
+	 * @brief write the chains obtained after the MCMC sampling on
+	 * a FITS file
+	 *
+	 * @param output_dir the output directory
+	 *
+	 * @param output_file the output file
+	 *
+	 * @param start the minimum chain position to be written
+	 *
+	 * @param thin the step used for dilution
+	 *
+	 * @return none
+	 */
+	void write_chain_fits (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1);
+
+	
 	/**
 	 * @brief write maximization results on a file
 	 *

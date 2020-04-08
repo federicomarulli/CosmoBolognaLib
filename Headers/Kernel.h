@@ -1566,19 +1566,19 @@ namespace cbl {
     {
       if (equal) {
 	if (int(mat.size())!=val_i) 
-	  ErrorCBL("the dimension of: " + matrix + " is:" + conv(mat.size(), par::fINT) + " != " + conv(val_i, par::fINT) + "!", "checkDim", "Kernel.h");
+	  ErrorCBL("the dimension of " + matrix + " is: " + conv(mat.size(), par::fINT) + " != " + conv(val_i, par::fINT) + "!", "checkDim", "Kernel.h");
 	else 
 	  for (size_t k=0; k<mat.size(); k++)
 	    if (int(mat[k].size())!=val_j) 
-	      ErrorCBL("the dimension of: " + matrix + " is:" + conv(mat[k].size(), par::fINT) + " != " + conv(val_j, par::fINT) + "!", "checkDim", "Kernel.h");
+	      ErrorCBL("the dimension of " + matrix + " is: " + conv(mat[k].size(), par::fINT) + " != " + conv(val_j, par::fINT) + "!", "checkDim", "Kernel.h");
       }
       else {
 	if (int(mat.size())<val_i) 
-	  ErrorCBL("the dimension of: " + matrix + " is:" + conv(mat.size(), par::fINT) + " < " + conv(val_i, par::fINT) + "!", "checkDim", "Kernel.h");
+	  ErrorCBL("the dimension of " + matrix + " is: " + conv(mat.size(), par::fINT) + " < " + conv(val_i, par::fINT) + "!", "checkDim", "Kernel.h");
 	else 
 	  for (size_t k=0; k<mat.size(); k++)
 	    if (int(mat[k].size())<val_j) 
-	      ErrorCBL("the dimension of: " + matrix + " is:" + conv(mat[k].size(), par::fINT) + " < " + conv(val_j, par::fINT) + "!", "checkDim", "Kernel.h");
+	      ErrorCBL("the dimension of " + matrix + " is: " + conv(mat[k].size(), par::fINT) + " < " + conv(val_j, par::fINT) + "!", "checkDim", "Kernel.h");
       }
     }
 

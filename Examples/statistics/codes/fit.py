@@ -118,18 +118,17 @@ model2 = getModel1D(cosmology, 1)
 posterior2 = go(data2, model2, nwalkers, chain_size, "model2", "model2.dat")
 
 # plot the contours
-
 fig, axes = plt.subplots(3, 3, figsize=(15, 15))
-
 plot_contours(posterior2, burn_in, thin, fig, "r")
 plot_contours(posterior1, burn_in, thin, fig, "b")
 
 # do the importance sampling
 posterior1.importance_sampling("../output/", "model2_chain.dat")
 
-# store the chain ouputs
+# store the weighted chain ouputs
 posterior1.write_results("../output/", "model_1+2_importance_sampling")
 
+# plot the weighted contours
 plot_contours(posterior1, burn_in, thin, fig, "g")
 
-plt.show(block=False)
+plt.show(block=True)
