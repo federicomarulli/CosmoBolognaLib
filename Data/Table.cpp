@@ -42,6 +42,16 @@ using namespace data;
 // ======================================================================================
 
 
+void cbl::data::Table::m_set (const std::vector<std::string> names, const size_t nrows)
+{
+  vector<vector<double>> values(names.size(), vector<double>(nrows, 0.));
+  m_set(names, values);
+}
+
+
+// ======================================================================================
+
+
 void cbl::data::Table::m_set (const std::vector<std::string> names, const std::vector<std::vector<double>> values)
 {
   this->insert(names, values);
@@ -74,6 +84,15 @@ cbl::data::Table::Table (const std::vector<std::string> names, const std::vector
 // ======================================================================================
 
 
+cbl::data::Table::Table (const std::vector<std::string> names, const size_t nrows)
+{
+  m_set(names, nrows);
+}
+
+
+// ======================================================================================
+
+
 cbl::data::Table::Table (const std::string input_dir, const std::string input_file, const std::vector<std::string> names, const vector<size_t> use_cols, const size_t header_lines_to_skip)
 {
   this->read(input_dir, input_file, names, use_cols, header_lines_to_skip);
@@ -83,7 +102,7 @@ cbl::data::Table::Table (const std::string input_dir, const std::string input_fi
 // ======================================================================================
 
 
-vector<double> cbl::data::Table::operator[] (const std::string name)
+vector<double>& cbl::data::Table::operator[] (const std::string name)
 {
   table_map::iterator it = m_table.find(name);
 
@@ -99,10 +118,10 @@ vector<double> cbl::data::Table::operator[] (const std::string name)
 
 vector<vector<double>> cbl::data::Table::operator[] (const std::vector<std::string> names)
 {
-  vector<vector<double>> columns;
+  vector<vector<double>> columns(names.size());
 
   for (size_t i=0; i<names.size(); i++)
-    columns.push_back(this->operator[](names[i]));
+    columns[i] = this->operator[](names[i]);
 
   return columns;
 }

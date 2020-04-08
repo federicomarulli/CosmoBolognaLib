@@ -69,6 +69,17 @@ namespace cbl {
 	 *
 	 * @param names the column names
 	 *
+	 * @param nrows the columns lenght
+	 *
+	 * @return none
+	 */
+	void m_set (const std::vector<std::string> names, const size_t nrows);
+
+	/*
+	 * @brief function to set internal members
+	 *
+	 * @param names the column names
+	 *
 	 * @param values the table values
 	 *
 	 * @return none
@@ -108,6 +119,20 @@ namespace cbl {
 	 */
 	Table (const std::vector<std::string> names, const std::vector<std::vector<double>> values);
 
+	/*
+	 * @brief Constructor of object Table
+	 *
+	 * This constructor initialize the table
+	 * It creates empty columns of size nrows
+	 *
+	 * @param names the column names
+	 *
+	 * @param nrows the columns lenght
+	 *
+	 * @return object of type Table
+	 */
+	Table (const std::vector<std::string> names, const size_t nrows);
+
 	/**
 	 * @brief  Constructor of object Table
 	 *
@@ -141,7 +166,7 @@ namespace cbl {
 	 *
 	 * @return vector containing the column values
 	 */
-	std::vector<double> operator[] (const std::string name);
+	std::vector<double> & operator[] (const std::string name);
 
 	/**
 	 * @brief function to get some columns

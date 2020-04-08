@@ -37,7 +37,7 @@
 %include "Table.h"
 
 %extend cbl::data::Table {
-  std::vector<double> __getitem__(const std::string name) {
+  std::vector<double> & __getitem__(const std::string name) {
     return (*($self))[name];
   }
 

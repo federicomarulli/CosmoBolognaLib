@@ -17,11 +17,19 @@ header_lines_to_skip = 2
 # define the Table object, reading from file
 table = cbl.Table("./", "data.dat", names, use_cols, header_lines_to_skip)
 
-# print the column with name "c5"
-print(table["c5"])
-
 # insert a new column wit name c6
 table.insert("c6", [-1, -2, -3])
 
+# modify a column element
+table["c5"][0] = 100
+
 # write the table on an ascii file
 table.write("./", "data_out.dat")
+
+# Plot table columns
+import matplotlib.pyplot as plt
+
+plt.plot(table["c1"], table["c2"], "o", label="c1-c2")
+plt.plot(table["c1"], table["c3"], "s", label="c1-c3")
+plt.legend(loc="best")
+plt.show(block=False)
