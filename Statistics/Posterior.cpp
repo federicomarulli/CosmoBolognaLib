@@ -282,40 +282,47 @@ void cbl::statistics::Posterior::sample_stretch_move (const double aa, const boo
 
 
 void cbl::statistics::Posterior::importance_sampling (const std::string input_dir, const std::string input_file, const vector<size_t> column, const int header_lines_to_skip, const bool is_FITS_format, const bool apply_to_likelihood, const int n_walkers)
-{
-  (void)n_walkers;
-  
-  // import the chains
-  read_chain(input_dir, input_file, 1, column, header_lines_to_skip, is_FITS_format);
+{ 
+  // import the chain
+  read_chain(input_dir, input_file, n_walkers, column, header_lines_to_skip, is_FITS_format);
  
   const int n_parameters = m_model_parameters->nparameters();
   const int chain_size = m_model_parameters->chain_size();
 
-  vector<double> log_dist, input_log_dist;
-  
-  // loop over the chains, put a parallel loop here!
+  vector<double> log_dist(m_log_likelihood.size(), 1.), input_log_dist(m_log_likelihood.size(), 1.);
+ 
+  // loop on the chain
   for (int chain_position=0; chain_position<chain_size; ++chain_position) {
-
-    vector<double> pp(n_parameters);
-    for (int parameter=0; parameter<n_parameters; ++parameter) 
-      pp[parameter] = m_model_parameters->chain_value(parameter, chain_position, 0);
     
-    // compute the logarithm of the posterior, of likelihood, at the parameters of the input chain
-    log_dist.emplace_back((apply_to_likelihood) ? Likelihood::log(pp) : log(pp));
+    // loop to parallelize the computation
+#pragma omp parallel for schedule(dynamic)
+    for (int walker_index=0; walker_index<n_walkers; ++walker_index) {
+      
+      vector<double> pp(n_parameters);
+      for (int parameter=0; parameter<n_parameters; ++parameter) 
+	pp[parameter] = m_model_parameters->chain_value(parameter, chain_position, walker_index);
+      
+      // compute the logarithm of the posterior, of likelihood, at the parameters of the input chain
+      log_dist[chain_position*n_walkers+walker_index] = (apply_to_likelihood) ? Likelihood::log(pp) : log(pp);
+      
+      // value of the logarithm of the posterior, or likelihood, of the input chain
+      input_log_dist[chain_position*n_walkers+walker_index] =
+	(apply_to_likelihood) ? m_log_likelihood[chain_position*n_walkers+walker_index]
+	: m_log_posterior[chain_position*n_walkers+walker_index];
+    }
     
-    // value of the logarithm of the posterior, or likelihood, of the input chain
-    input_log_dist.emplace_back((apply_to_likelihood) ? m_log_likelihood[chain_position] : m_log_posterior[chain_position]);      
-
     coutCBL << int(double(chain_position)/(chain_size)*100.) << "% \r"; cout.flush();
   }
-
+  
   
   // compute the weights as posterior, or likelihood, normalized ratios
   
   const double shift = Max(input_log_dist)-Max(log_dist);
 
-  for (int chain_position=0; chain_position<chain_size; ++chain_position)
-    m_weight[chain_position] = exp(log_dist[chain_position]-input_log_dist[chain_position]+shift);
+  for (int chain_position=0; chain_position<chain_size; ++chain_position) 
+#pragma omp parallel for schedule(dynamic)
+    for (int walker_index=0; walker_index<n_walkers; ++walker_index) 
+      m_weight[chain_position*n_walkers+walker_index] = exp(log_dist[chain_position*n_walkers+walker_index]-input_log_dist[chain_position*n_walkers+walker_index]+shift);
   
 }
 

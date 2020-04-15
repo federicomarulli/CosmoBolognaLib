@@ -4,9 +4,11 @@
 
 %{
 #include "ReadParameters.h"
+#include "ParameterFile.h"
 %}
 
 %include "ReadParameters.h"
+%include "ParameterFile.h"
 
 %extend cbl::glob::ReadParameters
 {
@@ -23,4 +25,10 @@
   %template(findVectorLong) find_vector< long >;
   %template(findVectorFloat) find_vector< float >;
   %template(findVectorDouble) find_vector< double >;
+}
+
+%extend cbl::glob::ParameterFile {
+  std::vector<std::string> & __getitem__(const std::string key) {
+    return (*($self))[key];
+  }
 }

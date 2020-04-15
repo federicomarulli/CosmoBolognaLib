@@ -312,8 +312,8 @@ double cbl::glob::FuncGrid2D::operator () (const double xx, const double yy) con
 
   double val;
   
-  if (extr) 
-    ErrorCBL("points outside the interpolation range...", "operator ()", "FuncGrid.cpp", glob::ExitCode::_workInProgress_);
+  if (extr)
+    ErrorCBL("Point ("+conv(xx, par::fDP2)+", "+conv(yy, par::fDP2)+") is outside the interpolation range...", "operator ()", "FuncGrid.cpp", glob::ExitCode::_workInProgress_);
   
   else
     val = gsl_spline2d_eval(m_spline.get(), xx, yy, m_acc_x.get(), m_acc_y.get());
