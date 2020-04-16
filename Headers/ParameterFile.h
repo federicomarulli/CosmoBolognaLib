@@ -62,6 +62,9 @@ namespace cbl {
 	/// map with all the vector type parameter name/value couples
 	parameter_map m_parameters; 
 
+	/// list of keys in order of insertion
+	std::vector<std::string> m_keys;
+
 	/**
 	 * @brief
 	 *    Remove white spaces treading and leading each std::string (private function)
@@ -149,23 +152,77 @@ namespace cbl {
 	///@{
 	
 	/**
-	 * @brief Method to get entries of the parameter file
+	 * @brief Method to set/get entries of the parameter file
+	 *
+	 * This method return a reference to the
+	 * parameter values. It can be modified by the user at wish.
+	 * Use with caution
 	 *
 	 * @param key std::string, parameter name
+	 *
 	 * @return reference to the values of the requested parameter of type T, 
 	 * 	   if the key is not found is automatically created.
 	 */
 	std::vector<std::string> & operator[] (const std::string key); 
 
 	/** 
-	 * @brief Method to get entries of the parameter file
+	 * @brief Method to set entries of the parameter file
+	 *
+	 * Modify a parameter value.
+	 * This method throws an error if the keys has not been found
+	 * It also throws an error if pos is larger than m_parameters[key].size()+1
 	 *
 	 * @param key std::string, parameter name
+	 *
+	 * @param value the parameter value
+	 *
+	 * @param pos position in the values vector
 	 * 
+	 * @return None
+	 */
+	void set_key (const std::string key, std::string value, const size_t pos=0);
+
+	/** 
+	 * @brief Method to set entries of the parameter file
+	 *
+	 * Override values for a parameter.
+	 * This method throws an error if the keys has not been found
+	 *
+	 * @param key std::string, parameter name
+	 *
+	 * @param values the parameter values
+	 * 
+	 * @return None
+	 */
+	void set_key (const std::string key, const std::vector<std::string> values);
+
+	/** 
+	 * @brief Method to get one value for a specific parameter
+	 *
+	 * @param key std::string, parameter name
+	 *
+	 * @param default_value parameter to return if the key is not
+	 * found 
+	 *
+	 * @param pos position in the values vector
+	 *
 	 * @return value of the requested parameter of type T, 
 	 *    if the key is not found returns the default values
 	 */
-	std::vector<std::string> get (const std::string key, const std::vector<std::string> default_values) const;
+	std::string get_key (const std::string key, const std::string default_value, const size_t pos=0) const;
+
+	/** 
+	 * @brief Method to get entries of the parameter file
+	 *
+	 * @param key std::string, parameter name
+	 *
+	 * @param default_values parameter to return if the key is not
+	 * found 
+	 *
+	 * @return value of the requested parameter of type T, 
+	 *    if the key is not found returns the default values
+	 */
+	std::vector<std::string> get_key (const std::string key, const std::vector<std::string> default_values) const;
 
 	///@}
 

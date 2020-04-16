@@ -31,4 +31,8 @@
   std::vector<std::string> & __getitem__(const std::string key) {
     return (*($self))[key];
   }
+
+  void __setitem__(const std::string key, const std::vector<std::string> values) {
+    (*($self))[key] = values;
+  }
 }

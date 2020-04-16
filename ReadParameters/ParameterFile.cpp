@@ -106,28 +106,28 @@ void cbl::glob::ParameterFile::read (const std::string parameter_file)
       string::size_type eqpos = line.find('=');
 
       if (eqpos!=string::npos) {
-	string key = line.substr(0, eqpos);
+	string key = m_trim(line.substr(0, eqpos));
 	string val = line.substr(eqpos+1, string::npos);
+
+	m_keys.emplace_back(key);
 	    
 	// trim and store
 	if (val.find('{') == string::npos) 
 	{
 	  std::string value = m_trim(val);
 	  if (m_trim(val) == "")
-	    m_parameters[m_trim(key)] = {};
+	    m_parameters[key] = {};
 	  else
-	    m_parameters[m_trim(key)] = {m_trim(val)};
+	    m_parameters[key] = {m_trim(val)};
 	}
 	else {
 	  vector<string> vval = m_trim_vect(val);
-	  m_parameters[m_trim(key)] = vval;
+	  m_parameters[key] = vval;
 	}
 	  
       }
     }
   }
-  coutCBL << "Qui" << endl;
-
   fin.clear(); fin.close();
 }
 
@@ -140,9 +140,8 @@ void cbl::glob::ParameterFile::write (const std::string parameter_file)
   // open the input parameter file
   ofstream fout(parameter_file.c_str()); checkIO(fout, parameter_file);
 
-  for (parameter_map::iterator it = m_parameters.begin(); it != m_parameters.end(); ++it) 
+  for (auto &&key : m_keys) 
   {
-    string key = it->first;
     vector<string> values = m_parameters.at(key);
 
     fout << key << " = ";
@@ -160,7 +159,6 @@ void cbl::glob::ParameterFile::write (const std::string parameter_file)
   }
 
   fout.clear(); fout.close();
-
 }
 
 
@@ -169,6 +167,10 @@ void cbl::glob::ParameterFile::write (const std::string parameter_file)
 
 std::vector<std::string> & cbl::glob::ParameterFile::operator[] (const std::string key)
 {
+  // Add a new entry
+  if (m_parameters.find(key) == m_parameters.end()) 
+    m_keys.emplace_back(key);
+
   return m_parameters[key];
 }
 
@@ -176,7 +178,62 @@ std::vector<std::string> & cbl::glob::ParameterFile::operator[] (const std::stri
 // ============================================================================
 
 
-std::vector<std::string> cbl::glob::ParameterFile::get (const std::string key, const std::vector<std::string> default_values) const
+void cbl::glob::ParameterFile::set_key (const std::string key, std::string value, const size_t pos)
+{
+  if (m_parameters.find(key) == m_parameters.end()) 
+    ErrorCBL("Key "+key+" has not been found, exiting.", "cbl::cbl::glob::ParameterFile::operator[]", "ReadParameters/ParameterFile.cpp");
+  
+  vector<string> &vv = m_parameters.at(key);
+
+  if (vv.size()>pos)
+    m_parameters[key][pos] = value;
+  else if (vv.size()==pos) {
+    WarningMsgCBL("Found "+conv(pos, par::fINT)+" values for key "+key+" == "+conv(pos, par::fINT)+". I will add one parameter.", "cbl::cbl::glob::ParameterFile::set_key()", "ReadParameters/ParameterFile.cpp");
+    m_parameters[key].push_back(value);
+  }
+  else
+    ErrorCBL("Found "+conv(vv.size(), par::fINT)+" values for key "+key+" < "+conv(pos, par::fINT)+". Exiting.", "cbl::cbl::glob::ParameterFile::set_key()", "ReadParameters/ParameterFile.cpp");
+}
+
+
+// ============================================================================
+
+
+void cbl::glob::ParameterFile::set_key (const std::string key, const std::vector<std::string> values)
+{
+  if (m_parameters.find(key) == m_parameters.end()) 
+    ErrorCBL("Key "+key+" has not been found, exiting.", "cbl::cbl::glob::ParameterFile::operator[]", "ReadParameters/ParameterFile.cpp");
+  
+  m_parameters[key].erase(m_parameters[key].begin(), m_parameters[key].end());
+  m_parameters[key] = values;
+}
+
+
+// ============================================================================
+
+
+std::string cbl::glob::ParameterFile::get_key (const std::string key, const std::string default_value, const size_t pos) const
+{
+  if (m_parameters.find(key) == m_parameters.end()) {
+    WarningMsgCBL("Key "+key+" has not been found, I will return default_value.", "cbl::cbl::glob::ParameterFile::get_key", "ReadParameters/ParameterFile.cpp");
+    return default_value;
+  }
+
+  const vector<string> &vv = m_parameters.at(key);
+
+  if (vv.size() <= pos) {
+    WarningMsgCBL("Found "+conv(pos, par::fINT)+" values for key "+key+" <= "+conv(pos, par::fINT)+", I will return default_values.", "cbl::cbl::glob::ParameterFile::get_key()", "ReadParameters/ParameterFile.cpp");
+    return default_value;
+  }
+
+  return vv[pos];
+}
+
+
+// ============================================================================
+
+
+std::vector<std::string> cbl::glob::ParameterFile::get_key (const std::string key, const std::vector<std::string> default_values) const
 {
   if (m_parameters.find(key) == m_parameters.end()) {
     WarningMsgCBL("Key "+key+" has not been found, I will return default_values.", "cbl::cbl::glob::ParameterFile::operator[]", "ReadParameters/ParameterFile.cpp");

@@ -428,6 +428,12 @@
  *  constraints from void counting
  */
 /**
+ * @example parameter_file.py
+ *
+ *  This example shows how to read, use and edit a parameter
+ *  file
+ */
+/**
  *  @example covarianceMatrix.ipynb
  *  
  *  This \b notebook shows basic functionalities of the

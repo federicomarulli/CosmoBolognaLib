@@ -215,6 +215,8 @@ check("cosmicVoids/codes", "sizeFunction.py", "python3")
 check("cosmicVoids/codes", "cleanVoidCatalogue.py", "python", "../input/parameter_file.ini") 
 check("cosmicVoids/codes", "cleanVoidCatalogue.py", "python3", "../input/parameter_file.ini")
 
+check("readParameterFile", "parameter_file", "python") 
+check("readParameterFile", "parameter_file", "python3") 
 
 ####################################################
 

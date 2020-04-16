@@ -41,6 +41,10 @@
     return (*($self))[name];
   }
 
+  void __setitem__(const std::string name, const std::vector<double> values) {
+    (*($self))[name] = values;
+  }
+
   std::vector<std::vector<double>> __getitem__(const std::vector<std::string> names) {
     return (*($self))[names];
   }
