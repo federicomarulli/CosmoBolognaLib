@@ -368,7 +368,10 @@ bool cbl::glob::Distribution::isIncluded (const double value) const
 
 double cbl::glob::Distribution::sample () const
 {
-  return m_distribution_random->operator()();
+  double value = m_distribution_random->operator()();
+  while (!isIncluded(value))
+    value = m_distribution_random->operator()();
+  return value;
 }
 
 

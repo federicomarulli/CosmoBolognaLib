@@ -1517,8 +1517,10 @@ Catalogue cbl::catalogue::Catalogue::sub_catalogue (const mask_function mask, co
   
   bool fact = (excl) ? false : true;
 
-  for (size_t i=0; i<m_object.size(); i++) 
+  for (size_t i=0; i<m_object.size(); i++) {
+    coutCBL << m_object[i]->magnitude() << endl;
     w[i] = mask(m_object[i])&&fact;
+  }
 
   for (size_t i=0; i<m_object.size(); i++)
     if (w[i])
