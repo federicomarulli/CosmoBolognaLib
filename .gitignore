@@ -18,11 +18,9 @@
 Tables/
 output*/
 
-External/CAMB/forutils/
-/Release/
+External/CAMB/forutils/Release/
 
-External/CAMB/fortran/
-/Release/
+External/CAMB/fortran/Release/
 
 External/CLASS/
 /class.dSYM/
