@@ -1,6 +1,6 @@
 /********************************************************************
- *  Copyright (C) 2010 by Federico Marulli and Tommaso Ronconi      *
- *  federico.marulli3@unibo.it, tommaso.ronconi@outlook.it          *
+ *  Copyright (C) 2010 by Federico Marulli and Alfonso Veropalumbo  *
+ *  federico.marulli3@unibo.it, alfonso.veropalumbo@uniroma3.it     *
  *                                                                  *
  *  This program is free software; you can redistribute it and/or   *
  *  modify it under the terms of the GNU General Public License as  *

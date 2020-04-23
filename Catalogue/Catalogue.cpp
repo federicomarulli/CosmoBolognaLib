@@ -28,7 +28,7 @@
  *
  *  @author Federico Marulli
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unibo.it
  */
 
 #include "Field3D.h"
@@ -1517,10 +1517,8 @@ Catalogue cbl::catalogue::Catalogue::sub_catalogue (const mask_function mask, co
   
   bool fact = (excl) ? false : true;
 
-  for (size_t i=0; i<m_object.size(); i++) {
-    coutCBL << m_object[i]->magnitude() << endl;
+  for (size_t i=0; i<m_object.size(); i++) 
     w[i] = mask(m_object[i])&&fact;
-  }
 
   for (size_t i=0; i<m_object.size(); i++)
     if (w[i])

@@ -28,7 +28,7 @@
  *
  *  @author Federico Marulli
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unibo.it
  */
 
 #include "Cosmology.h"
@@ -578,7 +578,7 @@ double cbl::cosmology::Cosmology::HH (const double redshift) const
 
 double cbl::cosmology::Cosmology::OmegaM (const double redshift) const
 {
-  return m_Omega_matter/EE2(redshift)*1./(1.+redshift);
+  return m_Omega_matter/EE2(redshift)*(1.+redshift)*(1.+redshift)*(1.+redshift);
 }
 
 
@@ -587,9 +587,7 @@ double cbl::cosmology::Cosmology::OmegaM (const double redshift) const
 
 double cbl::cosmology::Cosmology::OmegaDE (const double redshift) const 
 {
-  if (m_wa!=0) ErrorCBL("w_a!=0", "OmegaDE", "Cosmology.cpp", ExitCode::_workInProgress_);
-
-  return m_Omega_DE/EE2(redshift)*pow(1./(1.+redshift),1.-3.*m_w0);
+  return m_Omega_DE/EE2(redshift)*f_DE(redshift);
 } 
 
 
@@ -598,7 +596,7 @@ double cbl::cosmology::Cosmology::OmegaDE (const double redshift) const
 
 double cbl::cosmology::Cosmology::OmegaR (const double redshift) const 
 {
-  return m_Omega_radiation/EE2(redshift);
+  return m_Omega_radiation/EE2(redshift)*pow(1.+redshift,4.);
 }
 
 
@@ -616,7 +614,7 @@ double cbl::cosmology::Cosmology::OmegaR_zeq (const double z_eq) const
 
 double cbl::cosmology::Cosmology::OmegaK (const double redshift) const 
 {
-  return m_Omega_k/EE2(redshift)*pow(1./(1.+redshift),2);
+  return m_Omega_k/EE2(redshift)*(1.+redshift)*(1.+redshift);
 } 
 
 
@@ -625,7 +623,7 @@ double cbl::cosmology::Cosmology::OmegaK (const double redshift) const
 
 double cbl::cosmology::Cosmology::OmegaNu (const double redshift) const
 {
-  return m_Omega_neutrinos/EE2(redshift)*1./(1.+redshift);
+  return m_Omega_neutrinos/EE2(redshift)*(1.+redshift)*(1.+redshift)*(1.+redshift);
 }
 
 
@@ -634,11 +632,7 @@ double cbl::cosmology::Cosmology::OmegaNu (const double redshift) const
 
 double cbl::cosmology::Cosmology::Omega (const double redshift) const 
 {
-  if (m_wa!=0) ErrorCBL("w_a!=0", "Omega", "Cosmology.cpp", ExitCode::_workInProgress_);
-
-  const double aa = 1./(1.+redshift);
-
-  return (m_Omega_radiation+m_Omega_matter*aa+m_Omega_DE*pow(aa,1.-3.*m_w0))/EE2(redshift);
+  return (m_Omega_radiation*pow(1.+redshift,4.)+m_Omega_matter*pow(1.+redshift,3.)+m_Omega_DE*f_DE(redshift)*pow(1.+redshift,4.))/EE2(redshift);
 } 
 
 
@@ -667,11 +661,7 @@ double cbl::cosmology::Cosmology::neutrino_mass () const
 
 double cbl::cosmology::Cosmology::gg (const double redshift) const 
 {
-  auto func = [&] (const double aa) { return pow(aa*HH(1./aa-1.), -3); };
-  
-  const double aa = 1./(1+redshift);
-  
-  return 2.5*OmegaM(redshift)*aa*aa*pow(HH(redshift), 3)*wrapper::gsl::GSL_integrate_qag(func, 0, aa);
+  return DD(redshift)*(1.+redshift);
 }
 
 
@@ -679,11 +669,30 @@ double cbl::cosmology::Cosmology::gg (const double redshift) const
 
 
 double cbl::cosmology::Cosmology::DD (const double redshift) const 
-{
-  // by Carroll, Press, & Turner 1992
-  //return 5.*OmegaM(redshift)/(2*(1+redshift))/(1./70.+209./140.*OmegaM(redshift)-pow(OmegaM(redshift),2)/140.+pow(OmegaM(redshift),4./7.)); 
+{   
+   const double aa = 1./(1.+redshift);
+  
+   auto func = [&] (const double aa) { return pow(aa*EE(1./aa-1.),-3.); };
+   
+   return cbl::wrapper::gsl::GSL_integrate_qag(func, 0., aa)*2.5*Omega_matter()*EE(redshift);
+}
 
-  return 1./(1.+redshift)*gg(redshift);
+
+// =====================================================================================
+
+
+double cbl::cosmology::Cosmology::DD_norm (const double redshift, const double redshift_norm, const double kk, const bool compute_from_growth_rate, const double prec) const 
+{   
+  if (m_w0!=-1. or m_wa!=0 or compute_from_growth_rate) {
+    
+    auto func = [kk, prec, this] (const double aa) {
+      return linear_growth_rate(1./aa-1., kk, prec)/aa;
+    };
+    
+    return exp(cbl::wrapper::gsl::GSL_integrate_qag(func, 1./(1.+redshift_norm), 1./(1.+redshift)));
+  }
+
+  else return DD(redshift)/DD(redshift_norm);
 }
 
 
@@ -695,7 +704,7 @@ double cbl::cosmology::Cosmology::sigma8 (const double redshift) const
   if (m_sigma8<0)
     ErrorCBL("sigma8 at z=0 is not set!", "sigma8", "Cosmology.cpp");
 
-  return m_sigma8*DD(redshift)/DD(0.);
+  return m_sigma8*DD_norm(redshift);
 }
 
 
@@ -923,11 +932,9 @@ double cbl::cosmology::Cosmology::cosmic_time (const double redshift) const
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::EE2 (const double redshift) const // see e.g. de Araujo 2005
+double cbl::cosmology::Cosmology::EE2 (const double redshift) const
 {
-  double aa = 1./(1.+redshift);
-  return m_Omega_radiation+m_Omega_matter*aa+m_Omega_k*aa*aa+m_Omega_DE*pow(aa,1.-3.*m_w0);
-
+  return m_Omega_matter*pow((1.+redshift),3)+m_Omega_DE*f_DE(redshift)+m_Omega_k*pow((1.+redshift),2)+m_Omega_radiation*pow(1.+redshift,4);
 }
 
 

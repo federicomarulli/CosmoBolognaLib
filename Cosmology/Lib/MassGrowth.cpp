@@ -29,7 +29,7 @@
  *
  *  @authors Federico Marulli, Carlo Giocoli 
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unibo.it
  */
 
 #include "Cosmology.h"
@@ -70,8 +70,8 @@ double cbl::cosmology::Cosmology::pw (const double ww, const double ff, const st
 
 double cbl::cosmology::Cosmology::pz (const double m0, const double z0, const double frac, const double redshift, const std::string model_model, const std::string method_SS, const bool store_output, const std::string output_root) const
 {
-  double dcz0 = deltac(z0)/DD(z0)*DD(0.);
-  double dcz = deltac(redshift)/DD(redshift)*DD(0.);
+  double dcz0 = deltac(z0)/DD_norm(z0);
+  double dcz = deltac(redshift)/DD_norm(redshift);
   double SS = sigma2M(m0, method_SS, redshift, store_output, output_root); 
   double mf = m0*frac;
   double SSf = sigma2M(mf, method_SS, redshift, store_output, output_root);
@@ -152,8 +152,8 @@ void cbl::cosmology::Cosmology::medianwf (const double ff, const std::string mod
 
 double cbl::cosmology::Cosmology::wf (const double mm, const double redshift, const double ff, const double zf, const std::string method_SS, const bool store_output, const std::string output_root) const
 {
-  double deltacz = deltac(redshift)/DD(redshift)*DD(0.);
-  double deltaczf = deltac(zf)/DD(zf)*DD(0.);
+  double deltacz = deltac(redshift)/DD_norm(redshift);
+  double deltaczf = deltac(zf)/DD_norm(zf);
   double SS = sigma2M(mm, method_SS, redshift, store_output, output_root); 
   double mf = mm*ff;
   double SSf = sigma2M(mf, method_SS, redshift, store_output, output_root); 
@@ -169,7 +169,7 @@ double cbl::cosmology::Cosmology::Redshift (const double mm, const double redshi
 {
   int const nn = 128;
   vector<double> lzi = linear_bin_vector(nn, 0., 1.7);
-  double dc0 = deltac(redshift)/DD(redshift)*DD(0.);
+  double dc0 = deltac(redshift)/DD_norm(redshift);
   double SS = sigma2M(mm, method_SS, redshift, store_output, output_root); 
   double mf = mm*ff;
   double SSf = sigma2M(mf, method_SS, redshift, store_output, output_root); 
@@ -179,7 +179,7 @@ double cbl::cosmology::Cosmology::Redshift (const double mm, const double redshi
 
   for (int i=0; i<nn; i++) {
     double zi = -1 + pow(10.,lzi[i]);
-    dci[i] = deltac(zi)/DD(zi)*DD(0.);
+    dci[i] = deltac(zi)/DD_norm(zi);
   }
   
   return -1.+pow(10.,interpolated(dd, dci, lzi, "Poly"));

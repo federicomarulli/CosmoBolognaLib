@@ -28,7 +28,7 @@
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *
- *  @authors federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
+ *  @authors federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
  */
 
 #include "Table.h"
@@ -93,7 +93,7 @@ cbl::data::Table::Table (const std::vector<std::string> names, const size_t nrow
 // ======================================================================================
 
 
-cbl::data::Table::Table (const std::string input_dir, const std::string input_file, const std::vector<std::string> names, const vector<size_t> use_cols, const size_t header_lines_to_skip)
+cbl::data::Table::Table (const std::string input_dir, const std::string input_file, const std::vector<std::string> names, const std::vector<size_t> use_cols, const size_t header_lines_to_skip)
 {
   this->read(input_dir, input_file, names, use_cols, header_lines_to_skip);
 }

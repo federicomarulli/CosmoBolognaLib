@@ -28,7 +28,7 @@
  *
  *  @author Federico Marulli 
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unibo.it
  */
 
 #ifndef __COSM__
@@ -1849,18 +1849,17 @@ namespace cbl {
        *  this function computes the following quantity (e.g. Eq.1 by
        *  Hamilton 2001):
        *
-       *  \f[ g(z) \equiv D(z)(1+z) = \frac{5 \Omega_{M,0} H(a)}{2a}
-       *  \int_0^a \frac{{\rm d}\,a'}{a^{'3} H^3(a')} \f]
+       *  \f[ g(z) \equiv D(z)(1+z) \f]
        *
-       *  where \f$a=1/(1+z)\f$
+       *  where \f$a=1/(1+z)\f$ and \f$D(z)\f$ is computed by
+       *  cbl::cosmology::Cosmology::DD
        *
        *  @param redshift the redshift
        *
        *  @return the linear growth factor
        *
-       *  @warning the current implementation is valid in a
-       *  Friedmann-Robertson-Walker Universe containing only matter
-       *  and vacuum energy (e.g. Hamilton 2001 and references
+       *  @warning the current implementation is valid only for
+       *  &Lambda;CDM cosmologies (e.g. Percival 2005 and references
        *  therein)
        */
       double gg (const double redshift=0.) const;   
@@ -1869,25 +1868,54 @@ namespace cbl {
        *  @brief the amplitude of the growing mode at a given
        *  redshift, \f$D(z)\f$
        *
-       *  this function computes the following quantity (e.g. Eq.1
-       *  by Hamilton 2001):
+       *  this function computes the following quantity (see Eq.15
+       *  by Percival 2005):
        *
-       *  \f[ D(z) = \frac{g(z)}{1+z} = \frac{5 \Omega_{M,0} H(a)}{2}
-       *  \int_0^a \frac{{\rm d}\,a'}{a^{'3} H^3(a')} \f]
+       *  \f[ D(z) = \frac{5 \Omega_{M,0} }{2} E(a)
+       *  \int_0^a \frac{{\rm d}\,a'}{[a' E(a')]^3} \f]
        *
-       *  where \f$a=1/(1+z)\f$ and \f$g(z)\f$ is computed by
-       *  cbl::cosmology::Cosmology::gg
+       *  where \f$a=1/(1+z)\f$
        *
        *  @param redshift the redshift 
        *
        *  @return the amplitude of the growing mode
        *
-       *  @warning the current implementation is valid in a
-       *  Friedmann-Robertson-Walker Universe containing only matter
-       *  and vacuum energy (e.g. Hamilton 2001 and references
+       *  @warning the current implementation is valid only for
+       *  &Lambda;CDM cosmologies (e.g. Percival 2005 and references
        *  therein)
        */
-      double DD (const double redshift=0.) const;   
+      double DD (const double redshift) const;
+
+            /**
+       *  @brief the normalised amplitude of the growing mode at a given
+       *  redshift, \f$D(z)/D(0)\f$
+       *
+       *  For non-&Lambda;CDM cosmologies the function computes the
+       *  integral of the linear growth rate \f$f(z)\f$, given by the function
+       *  cbl::cosmology::Cosmology::linear_growth_rate. Otherwise it
+       *  makes use of the function cbl::cosmology::Cosmology::DD
+       *
+       *  @param redshift the redshift 
+       *
+       *  @param redshift_norm the redshift at with the amplitude of
+       *  the growing mode is normalised
+       *
+       *  @param kk wave vector module
+       *
+       *  @param compute_from_growth_rate if true the normalised of
+       *  amplitude of the growing mode is computed integrating the
+       *  linear growth rate \f$f(z)\f$
+       *
+       *  @param prec precision used for the resolution of the
+       *  differential equation in the case w different than -1
+       *
+       *  @return the amplitude of the growing mode normalised to its
+       *  value at z=0
+       *
+       *  @warning The contribution of the radiation is not taken into
+       *  account
+       */
+      double DD_norm (const double redshift, const double redshift_norm=0., const double kk=-1., const bool compute_from_growth_rate=false, const double prec=1.e-4) const;  
 
       /**
        *  @brief &sigma;<SUB>8</SUB> at a given redshift
@@ -1915,11 +1943,9 @@ namespace cbl {
       /**
        *  @brief auxiliary function used to compute the deceleration
        *  parameter
-       * 
-       *  see e.g. de Araujo 2005
        *  
        *  @param redshift the redshift
-       *  @return E<SUB>2</SUB>
+       *  @return E<SUP>2</SUP>
        */
       double EE2 (const double redshift=0.) const;
     
@@ -6968,13 +6994,20 @@ namespace cbl {
        *  1998, Kiakotou, Elgarøy & Lahav 2008, Gong et al. 2009
        *
        *  @param redshift the redshift
+       *
        *  @param kk wave vector module
+       *
+       *  @param prec precision used for the resolution of the
+       *  differential equation in the case w<SUB>a</SUB> different
+       *  than 0
+       *
        *  @return the linear growth rate
        *
-       *  @warning the current implementation is not correct if w_a is
-       *  different than 0
+       *  @warning for w<SUB>a</SUB> different than 0 the current
+       *  implementation does not take into account the precence of
+       *  massive neutrinos
        */
-      double linear_growth_rate (const double redshift, const double kk=-1.) const;
+      double linear_growth_rate (const double redshift, const double kk=-1., const double prec=1.e-4) const;
 
       /**
        *  @brief f*&sigma;<SUB>8</SUB>: the linear growth rate times

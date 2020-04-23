@@ -29,7 +29,7 @@
  *
  *  @author Alfonso Veropalumbo 
  *
- *  @author alfonso.veropalumbo@unbo.it
+ *  @author alfonso.veropalumbo@unibo.it
  */
 
 #include "FFTlog.h"

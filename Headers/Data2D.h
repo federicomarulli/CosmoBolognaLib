@@ -27,7 +27,7 @@
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *
- *  @authors federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
+ *  @authors federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
  */
 
 #ifndef __DATA2D__

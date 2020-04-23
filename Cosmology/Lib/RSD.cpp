@@ -30,7 +30,7 @@
  *
  *  @author Federico Marulli
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unibo.it
  */
 
 #include "Cosmology.h"
@@ -39,31 +39,46 @@ using namespace std;
 
 using namespace cbl;
 
+/// boost parameter for internal usage
+typedef boost::numeric::odeint::runge_kutta_dopri5< double > stepper_type;
+
 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::linear_growth_rate (const double redshift, const double kk) const
+double cbl::cosmology::Cosmology::linear_growth_rate (const double redshift, const double kk, const double prec) const
 {
-  if (m_wa!=0) WarningMsgCBL("the current implementation is not correct with m_wa="+conv(m_wa, par::fDP3), "linear_growth_rate", "RSD.cpp");
-  
-  if (redshift>10) WarningMsgCBL("the approximation to compute the linear growth rate is not very accurate at z>10 (see Kiakotou, Elgaroy & Lahav 2008)!", "linear_growth_rate", "RSD.cpp");
-  
+  double ff = 1;
 
-  // Wang & Steinhardt 1998
-
-  double alpha0 = 3./(5.-m_w0/(1.-m_w0));
-  double alpha1 = 3./125.*(1.-m_w0)*(1.-3.*m_w0/2.)/pow(1.-6.*m_w0/5.,3);
-  double alpha = alpha0+alpha1*(1-OmegaM(redshift));
-
-  
   // Kiakotou, Elgarøy & Lahav 2008
-  
   double fnu = m_Omega_neutrinos/m_Omega_matter;
-  double ff = -1.;
 
-  if (fnu>0) {
+  if (fnu<=0) {
+
+    auto func = [&] (const double y, double &dyda, const double ln_aa)
+      {
+	const double zz = 1./exp(ln_aa)-1.;
+	const double OmM = OmegaM(zz);
+	dyda = -y*y-y*(1.-0.5*(OmM+(1.+3.*w0()+3.*wa()*zz/(1.+zz))*OmegaDE(zz)))+1.5*OmM; 
+      };
+  
+    boost::numeric::odeint::integrate_adaptive( make_controlled(1e-8, 1e-8, stepper_type() ),
+			func, ff, log(1.e-8), log(1./(1.+redshift)), prec);
+    
+    return ff;
+  }
+  
+  else {
+          
+    if (redshift>10) WarningMsgCBL("the approximation to compute the linear growth rate is not very accurate at z>10 (see Kiakotou, Elgaroy & Lahav 2008)!", "linear_growth_rate", "RSD.cpp");
+    if (m_wa!=0 or m_w0!=-1.) WarningMsgCBL("the current implementation is not correct with massive neutrinos and the parameters m_wa="+conv(m_wa, par::fDP3)+" and m_w0="+conv(m_w0, par::fDP3) , "linear_growth_rate", "RSD.cpp");
     if (kk<0) ErrorCBL("kk<0!", "linear_growth_rate", "RSD.cpp");
+
+    // Wang & Steinhardt 1998
+    double alpha0 = 3./(5.-m_w0/(1.-m_w0));
+    double alpha1 = 3./125.*(1.-m_w0)*(1.-3.*m_w0/2.)/pow(1.-6.*m_w0/5.,3);
+    double alpha = alpha0+alpha1*(1-OmegaM(redshift));
+    double param = (alpha-4./7.)*m_Omega_k; // Gong et al. 2009 
 
     double kkk[] = {0.001, 0.01, 0.05, 0.07, 0.1, 0.5};
     double aa[] = {0., 0.132, 0.613, 0.733, 0.786, 0.813};
@@ -71,7 +86,7 @@ double cbl::cosmology::Cosmology::linear_growth_rate (const double redshift, con
     double cc[] = {0., 7.13, 21.13, 21.45, 15.5, -0.844};
     
     vector<double> lgKK;
-//lgKK.push_back(log10(0.005)); // to improve the interpolation
+    //lgKK.push_back(log10(0.005)); // to improve the interpolation
     for (int i=0; i<6; i++) lgKK.push_back(log10(kkk[i]));
 
     //vector<double> KK;
@@ -89,16 +104,12 @@ double cbl::cosmology::Cosmology::linear_growth_rate (const double redshift, con
 
     else mu = pow(1-fnu, alpha0); 
     
-    ff = mu*pow(OmegaM(redshift), alpha);
+    ff = mu*pow(OmegaM(redshift), alpha) + param; // Gong et al. 2009 
   }
 
-  else 
-    ff = pow(OmegaM(redshift), alpha);
-  
-  ff += (alpha-4./7.)*m_Omega_k; // Gong et al. 2009 
-
   return ff;
-}
+  
+  }
 
 
 // =====================================================================================

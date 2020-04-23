@@ -29,7 +29,7 @@
  *
  *  @author Federico Marulli, Alfonso Veropalumbo
  *
- *  @author federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
+ *  @author federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
  */
 
 #ifndef __MODELLINGTWOPOINTANG__

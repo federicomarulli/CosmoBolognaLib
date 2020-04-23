@@ -28,7 +28,7 @@
  *
  *  @author Federico Marulli 
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unibo.it
  */
 
 #ifndef __KERNEL__
@@ -101,6 +101,10 @@
 
 /// @cond FFTWinc
 #include <fftw3.h>
+/// @endcond
+
+/// @cond BOOSTinc
+#include <boost/numeric/odeint.hpp>
 /// @endcond
 
 /// @cond FFTWinc

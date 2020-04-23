@@ -27,7 +27,7 @@
  *
  *  @authors Federico Marulli
  *
- *  @authors federico.marulli3@unbo.it
+ *  @authors federico.marulli3@unibo.it
  */
 
 #ifndef __DATA2D_EXTRA__

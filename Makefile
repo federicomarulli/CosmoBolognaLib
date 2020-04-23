@@ -207,7 +207,7 @@ Dir_MODEL_NC = Modelling/NumberCounts/
 Dir_MODEL_TWOP = Modelling/TwoPointCorrelation/
 Dir_MODEL_THREEP = Modelling/ThreePointCorrelation/
 Dir_GLOB = GlobalFunc/
-Dir_READP = ReadParameters/
+Dir_PARF = ParameterFile/
 
 dir_KERNEL = $(addprefix $(PWD)/,$(Dir_KERNEL))
 dir_WRAP = $(addprefix $(PWD)/,$(Dir_WRAP))
@@ -233,7 +233,7 @@ dir_MODEL_NC = $(addprefix $(PWD)/,$(Dir_MODEL_NC))
 dir_MODEL_TWOP = $(addprefix $(PWD)/,$(Dir_MODEL_TWOP))
 dir_MODEL_THREEP = $(addprefix $(PWD)/,$(Dir_MODEL_THREEP))
 dir_GLOB = $(addprefix $(PWD)/,$(Dir_GLOB))
-dir_READP = $(addprefix $(PWD)/,$(Dir_READP))
+dir_PARF = $(addprefix $(PWD)/,$(Dir_PARF))
 
 
 ##### FFTlog object files #####
@@ -301,16 +301,16 @@ OBJ_MODEL_THREEP = $(dir_MODEL_THREEP)Modelling_ThreePointCorrelation.o $(dir_MO
 
 OBJ_GLOB = $(dir_GLOB)FuncCosmology.o $(dir_GLOB)Func.o $(dir_GLOB)SubSample.o $(dir_GLOB)Reconstruction.o $(dir_GLOB)Forecast.o
 
-OBJ_READP = $(dir_READP)ReadParameters.o $(dir_READP)ParameterFile.o
+OBJ_PARF = $(dir_PARF)ReadParameters.o $(dir_PARF)ParameterFile.o
 
-OBJ_CBL = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_READP)
+OBJ_CBL = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_PARF)
 
-OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/*.o $(PWD)/External/CLASS/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o $(OBJ_CBL) $(PWD)/External/CPT_Library/*.o
+OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/fortran/Release/*.o $(PWD)/External/CLASS/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o $(OBJ_CBL) $(PWD)/External/CPT_Library/*.o
 
 
 # objects for python compilation -> if OBJ_PYTHON=OBJ_CBL then all the CBL will be converted in python modules
 
-OBJ_PYTHON = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_READP)
+OBJ_PYTHON = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_PARF)
 
 
 ##### CBL source files #####
@@ -383,8 +383,8 @@ ALL:
 	make -j3 libMODEL_THREEP
 	$(call colorecho, "\n"Compiling the library: libGLOB... "\n")
 	make -j3 libGLOB
-	$(call colorecho, "\n"Compiling the library: libREADP... "\n")
-	make -j3 libREADP
+	$(call colorecho, "\n"Compiling the library: libPARF... "\n")
+	make -j3 libPARF
 	$(call colorecho, "\n"Compiling the full library: libCBL... "\n")
 	make -j3 libCBL
 
@@ -460,8 +460,8 @@ libMODEL_THREEP: $(OBJ_MODEL_THREEP) $(PWD)/Makefile
 libGLOB: $(OBJ_GLOB) $(PWD)/Makefile
 	$(CXX) $(FLAGS_LINK) -o $(PWD)/libGLOB.$(ES) $(OBJ_GLOB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP
 
-libREADP: $(OBJ_READP) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libREADP.$(ES) $(OBJ_READP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP -lGLOB
+libPARF: $(OBJ_PARF) $(PWD)/Makefile
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libPARF.$(ES) $(OBJ_PARF) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP -lGLOB
 
 libCBL: $(OBJ_CBL) $(PWD)/Makefile
 	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCBL.$(ES) $(OBJ_CBL) $(CUBA_LIB) $(FLAGS_CCFITS) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran 
@@ -470,7 +470,7 @@ CUBA: $(CUBA_LIB)
 
 CCfits: $(CCfits_LIB)
 
-CAMB: $(PWD)/External/CAMB/camb
+CAMB: $(PWD)/External/CAMB/fortran/camb	
 
 CLASS: $(PWD)/External/CLASS/class
 
@@ -514,6 +514,8 @@ allExamples:
 	cd $(PWD)/Examples/cosmology ; make distances CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: model_cosmology.cpp ... "\n")
 	cd $(PWD)/Examples/cosmology ; make model_cosmology CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
+	$(call colorecho, "\n"Compiling the example code: Pk_dynamical_DE.cpp ... "\n")
+	cd $(PWD)/Examples/cosmology ; make Pk_dynamical_DE CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: data1D.cpp ... "\n")
 	cd $(PWD)/Examples/data ; make data1D CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: prior.cpp ... "\n")
@@ -564,8 +566,8 @@ allExamples:
 	cd $(PWD)/Examples/cosmicVoids/codes ; make cleanVoidCatalogue CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: modelling_VoidAbundances ... "\n")
 	cd $(PWD)/Examples/cosmicVoids/codes ; make modelling_VoidAbundances CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
-	$(call colorecho, "\n"Compiling the example code: readParameterFile.cpp ... "\n")
-	cd $(PWD)/Examples/readParameterFile/ ; make CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
+	$(call colorecho, "\n"Compiling the example code: parameterFile.cpp ... "\n")
+	cd $(PWD)/Examples/parameterFile/ ; make CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 
 python: $(dir_Python)CBL_wrap.o libCBL $(dir_Python)CBL.i $(PWD)/Makefile
 	make ALL
@@ -597,7 +599,7 @@ cleanExamples:
 	cd $(PWD)/Examples/numberCounts/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/cosmicVoids/codes ; make clean && cd ../../..
-	cd $(PWD)/Examples/readParameterFile ; make clean && cd ../..
+	cd $(PWD)/Examples/parameterFile ; make clean && cd ../..
 	rm -rf $(PWD)/Examples/cosmology/results* $(PWD)/Examples/histogram/*.dat $(PWD)/Examples/statistics/output/* $(PWD)/Examples/numberCounts/output/* $(PWD)/Examples/clustering/output/* $(PWD)/Examples/cosmicVoids/output/*
 
 
@@ -610,7 +612,7 @@ cleanpy:
 
 
 cleanTEMP:
-	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_KERNEL)*~ $(dir_WRAP)*~ $(dir_FUNCGRID)*~ $(dir_FFT)*~ $(dir_RAN)*~ $(dir_FUNC)*~ $(dir_DATA)*~ $(dir_FIELD)*~ $(dir_HIST)*~ $(dir_DISTR)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_NC)*~ $(dir_TWOP)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_NC)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_READP)*~ $(dir_H)*~ $(PWD)/\#* $(dir_KERNEL)\#* $(dir_WRAP)\#* $(dir_FUNCGRID)\#* $(dir_FFT)\#* $(dir_RAN)\#* $(dir_FUNC)\#* $(dir_DATA)\#* $(dir_FIELD)\#* $(dir_HIST)\#*  $(dir_DISTR)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_NC)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_READP)\#* $(dir_H)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
+	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_KERNEL)*~ $(dir_WRAP)*~ $(dir_FUNCGRID)*~ $(dir_FFT)*~ $(dir_RAN)*~ $(dir_FUNC)*~ $(dir_DATA)*~ $(dir_FIELD)*~ $(dir_HIST)*~ $(dir_DISTR)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_NC)*~ $(dir_TWOP)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_NC)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_PARF)*~ $(dir_H)*~ $(PWD)/\#* $(dir_KERNEL)\#* $(dir_WRAP)\#* $(dir_FUNCGRID)\#* $(dir_FFT)\#* $(dir_RAN)\#* $(dir_FUNC)\#* $(dir_DATA)\#* $(dir_FIELD)\#* $(dir_HIST)\#*  $(dir_DISTR)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_NC)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_PARF)\#* $(dir_H)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
 
 clean:
 	make cleanExamples
@@ -626,12 +628,13 @@ purgeALL:
 	rm -rf Doc/html/* Doc/xml/* 
 	rm -rf Cosmology/Tables/*
 	rm -rf External/EisensteinHu/output_linear/*
-	cd External/CAMB ; make clean 
-	rm -rf External/CAMB/camb
+	cd External/CAMB/forutils ; make clean
+	cd External/CAMB/fortran ; make clean
+	rm -rf External/CAMB/fortran/camb
 	rm -rf External/CAMB/output_linear/*
 	rm -rf External/CAMB/output_nonlinear/*
-	rm -rf External/CAMB/test_*
-	rm -rf External/CAMB/NULL*
+	rm -rf External/CAMB/inifiles/test_*
+	rm -rf External/CAMB/inifiles/NULL*
 	rm -rf External/VIPERS/venice3.9/venice
 	rm -rf External/mangle/bin
 	cd External/mangle/src; make cleaner ; rm -f Makefile libmangle.a; true
@@ -1228,11 +1231,11 @@ $(dir_GLOB)Forecast.o: $(dir_GLOB)Forecast.cpp $(HH) $(PWD)/Makefile
 #################################################################### 
 
 
-$(dir_READP)ReadParameters.o: $(dir_READP)ReadParameters.cpp $(HH) $(PWD)/Makefile 
-	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_READP)ReadParameters.cpp -o $(dir_READP)ReadParameters.o
+$(dir_PARF)ReadParameters.o: $(dir_PARF)ReadParameters.cpp $(HH) $(PWD)/Makefile 
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_PARF)ReadParameters.cpp -o $(dir_PARF)ReadParameters.o
 
-$(dir_READP)ParameterFile.o: $(dir_READP)ParameterFile.cpp $(HH) $(PWD)/Makefile 
-	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_READP)ParameterFile.cpp -o $(dir_READP)ParameterFile.o
+$(dir_PARF)ParameterFile.o: $(dir_PARF)ParameterFile.cpp $(HH) $(PWD)/Makefile 
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_PARF)ParameterFile.cpp -o $(dir_PARF)ParameterFile.o
 
 
 #################################################################### 
@@ -1291,8 +1294,9 @@ $(dir_Python)CBL_wrap.cxx: $(dir_Python)CBL.i $(HH) $(PWD)/Makefile
 #################################################################### 
 
 
-$(PWD)/External/CAMB/camb:
-	cd $(PWD)/External/CAMB ; make clean && make F90C=$(F) && make clean && cd ../..
+$(PWD)/External/CAMB/fortran/camb:
+	cd $(PWD)/External/CAMB/forutils ; make clean
+	cd $(PWD)/External/CAMB/fortran ; make clean && make F90C=$(F) && make clean && cd ../../../
 
 $(PWD)/External/CLASS/class:
 	cd $(PWD)/External/CLASS ; make clean && make CC=$(CC) OPTFLAG=-O3 && make clean && cd ../..

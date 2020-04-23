@@ -30,7 +30,7 @@
  *
  *  @author Federico Marulli
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unibo.it
  */
 
 #include "FuncGrid_Bspline.h"
@@ -98,15 +98,15 @@ std::string cbl::cosmology::Cosmology::Pk_output_file (const string code, const 
 
 void cbl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, const std::string output_root, const std::string output_dir, const double k_max, const std::string file_par) const 
 {
-  string dir = fullpath(par::DirCosmo)+"External/CAMB/";
+  string dir = fullpath(par::DirCosmo)+"External/CAMB/inifiles/";
 
   string File_par = file_par;
 
   bool delete_output = (output_dir==par::defaultString) ? true : false;
 
-  string mkdir = "mkdir -p "+output_dir; if (system(mkdir.c_str())) {} 
+  if (output_dir!=par::defaultString) if (system(("mkdir -p "+output_dir).c_str())) {} 
 
-  string OutputRoot = (output_dir==par::defaultString) ? dir+output_root : output_dir+"/"+output_root;
+  string OutputRoot = (output_dir==par::defaultString) ? dir+output_root : cbl::par::DirLoc+output_dir+"/"+output_root;
 
   OutputRoot = (omp_get_max_threads()>1) ? OutputRoot+"_t"+conv(omp_get_thread_num(), par::fINT) : OutputRoot;
 
@@ -117,19 +117,19 @@ void cbl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, 
     // --------------------------------------------------------------------------
 
     string file_par_default = dir+"params_cut.ini";
-    File_par = OutputRoot+"params.ini";
+    File_par = OutputRoot+"_params.ini";
 
-    string CP = "cp "+file_par_default+" "+File_par; if (system(CP.c_str())) {}
+    if (system(("cp "+file_par_default+" "+File_par).c_str())) {}
     ofstream fout(File_par.c_str(), std::ios_base::app | std::ios_base::out);
     double HH0 = m_hh*100.;
 
     fout << "output_root = " << OutputRoot << endl;
     fout << "do_nonlinear = " << conv(NL, par::fINT) << endl;
     fout << "hubble = " << conv(HH0, par::fDP6) << endl;
-    fout << "omega_baryon = " << conv(m_Omega_baryon, par::fDP6) << endl;
-    fout << "omega_cdm = " << conv(m_Omega_CDM, par::fDP6) << endl;
-    fout << "omega_lambda = " << conv(m_Omega_DE, par::fDP6) << endl;
-    fout << "omega_neutrino = " << conv(m_Omega_neutrinos, par::fDP6) << endl;
+    fout << "ombh2 =" << conv(m_Omega_baryon*m_hh*m_hh, par::fDP6) << endl;
+    fout << "omch2 = " << conv(m_Omega_CDM*m_hh*m_hh, par::fDP6) << endl;
+    fout << "omk = " << conv(m_Omega_k, par::fDP6) << endl;
+    fout << "omnuh2 = " << conv(m_Omega_neutrinos*m_hh*m_hh, par::fDP6) << endl;
     fout << "transfer_redshift(1) = " << conv(redshift, par::fDP6) << endl;
     fout << "massless_neutrinos = " << conv(m_massless_neutrinos, par::fDP6) << endl;
     fout << "massive_neutrinos = " << conv(m_massive_neutrinos, par::fINT) << endl;
@@ -142,6 +142,8 @@ void cbl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, 
     }
     fout << "transfer_kmax = "+conv(k_max, par::fDP6) << endl;
     fout << "re_optical_depth = "+conv(m_tau, par::fDP6) << endl;
+    fout << "feedback_level = 1" << endl;
+    fout << "print_sigma8 = T" << endl;
     fout << endl;
 
     fout.clear(); fout.close();
@@ -150,10 +152,11 @@ void cbl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, 
 
   // --------------------------------------------------------------------------
 
-  if (system((dir+"camb "+File_par).c_str())) {}
+  if (chdir((dir+"../fortran/").c_str())) {}
+  if (system(("./camb "+File_par).c_str())) {}
 
   if (delete_output) {
-    string RM = (output_dir == "./") ? "rm -rf "+OutputRoot+"*" : "rm -rf "+output_dir; 
+    string RM = "rm -f "+OutputRoot+"*";
     if (system(RM.c_str())) {}
   }
 }
@@ -164,17 +167,14 @@ void cbl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, 
 
 void cbl::cosmology::Cosmology::run_CAMB (std::vector<double> &kk, std::vector<double> &Pk, const bool NL, const double redshift, const std::string output_root, const std::string output_dir, const double k_max, const std::string file_par) const 
 {
-  string dir = fullpath(par::DirCosmo)+"External/CAMB/";
-  
+  string dir = fullpath(par::DirCosmo)+"External/CAMB/inifiles/";
   string File_par = file_par;
-
   bool delete_output = (output_dir==par::defaultString) ? true : false;
-
-  string mkdir = "mkdir -p "+output_dir; if (system(mkdir.c_str())) {} 
-
-  string OutputRoot = (output_dir==par::defaultString) ? dir+output_root : output_dir+"/"+output_root;
-
-
+  
+  if (output_dir!=par::defaultString) if (system(("mkdir -p "+output_dir).c_str())) {}
+  
+  string OutputRoot = (output_dir==par::defaultString) ? dir+output_root : cbl::par::DirLoc+output_dir+"/"+output_root;
+  
   OutputRoot = (omp_get_max_threads() > 1) ? OutputRoot+"_t"+conv(omp_get_thread_num(), par::fINT) : OutputRoot;
 
 
@@ -185,19 +185,19 @@ void cbl::cosmology::Cosmology::run_CAMB (std::vector<double> &kk, std::vector<d
     // --------------------------------------------------------------------------
 
     string file_par_default = dir+"params_cut.ini";
-    File_par = OutputRoot+"params.ini";
+    File_par = OutputRoot+"_params.ini";
 
-    string CP = "cp "+file_par_default+" "+File_par; if (system(CP.c_str())) {}
+    if (system(("cp "+file_par_default+" "+File_par).c_str())) {}
     ofstream fout(File_par.c_str(), std::ios_base::app | std::ios_base::out);
     double HH0 = m_hh*100.;
 
     fout << "output_root = " << OutputRoot << endl;
     fout << "do_nonlinear = " << conv(NL, par::fINT) << endl;
     fout << "hubble = " << conv(HH0, par::fDP6) << endl;
-    fout << "omega_baryon = " << conv(m_Omega_baryon, par::fDP6) << endl;
-    fout << "omega_cdm = " << conv(m_Omega_CDM, par::fDP6) << endl;
-    fout << "omega_lambda = " << conv(m_Omega_DE, par::fDP6) << endl;
-    fout << "omega_neutrino = " << conv(m_Omega_neutrinos, par::fDP6) << endl;
+    fout << "ombh2 =" << conv(m_Omega_baryon*m_hh*m_hh, par::fDP6) << endl;
+    fout << "omch2 = " << conv(m_Omega_CDM*m_hh*m_hh, par::fDP6) << endl;
+    fout << "omk = " << conv(m_Omega_k, par::fDP6) << endl;
+    fout << "omnuh2 = " << conv(m_Omega_neutrinos*m_hh*m_hh, par::fDP6) << endl;
     fout << "transfer_redshift(1) = " << conv(redshift, par::fDP6) << endl;
     fout << "massless_neutrinos = " << conv(m_massless_neutrinos, par::fDP6) << endl;
     fout << "massive_neutrinos = " << conv(m_massive_neutrinos, par::fINT) << endl;
@@ -211,6 +211,7 @@ void cbl::cosmology::Cosmology::run_CAMB (std::vector<double> &kk, std::vector<d
     fout << "transfer_kmax = "+conv(k_max, par::fDP6) << endl;
     fout << "re_optical_depth = "+conv(m_tau, par::fDP6) << endl;
     fout << "feedback_level = -1" << endl;
+    fout << "print_sigma8 = F" << endl;
     fout << endl;
 
     fout.clear(); fout.close();
@@ -219,8 +220,8 @@ void cbl::cosmology::Cosmology::run_CAMB (std::vector<double> &kk, std::vector<d
 
   // --------------------------------------------------------------------------
 
-  
-  if (system((dir+"camb "+File_par).c_str())) {}
+  if (chdir((dir+"../fortran/").c_str())) {}
+  if (system(("./camb "+File_par).c_str())) {}
 
   // read the power spectrum
   string file_inCAMB = OutputRoot+"_matterpower.dat";
@@ -237,10 +238,7 @@ void cbl::cosmology::Cosmology::run_CAMB (std::vector<double> &kk, std::vector<d
     } 
   fin.clear(); fin.close();
 
-  if (delete_output) {
-    string RM = (output_dir == "./") ? "rm -rf "+OutputRoot+"*" : "rm -rf "+output_dir; 
-    if (system(RM.c_str())) {}
-  }
+  if (delete_output) if (system(("rm -f "+OutputRoot+"*").c_str())) {}
 }
 
 
@@ -297,12 +295,12 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CAMB_MPTbreeze (const string code, co
 
   // ----- CAMB tables -----
 
-  const string dirCAMB = fullpath(par::DirCosmo)+"External/CAMB/";
+  const string dirCAMB = fullpath(par::DirCosmo)+"External/CAMB/fortran/";
   if (chdir(dirCAMB.c_str())) {}
 
-  const string dirCAMB_output = dirCAMB+dir_grid+"/";
+  const string dirCAMB_output = dirCAMB+"../"+dir_grid+"/";
   
-  const string fileCAMB_in = dirCAMB_output+"Pk.dat"; 
+  const string fileCAMB_in = dirCAMB_output+"Pk.dat";
   ifstream fin_CAMB;
   fin_CAMB.open(fileCAMB_in.c_str());
 
@@ -321,26 +319,26 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CAMB_MPTbreeze (const string code, co
   // ------------------------------------------------------------------------------------------------------------
   // --------- set the CAMB parameter file if it does not exist, or if the MPTbreeze one does not exist ---------
   // ------------------------------------------------------------------------------------------------------------
-
+  
   if ((!fin_CAMB && code=="CAMB") || (!fin_MPTbreeze && code=="MPTbreeze-v1")) {
 
     const string nn = output_root+"_t"+conv(omp_get_thread_num(), par::fINT);
-    
-    file_par = dirCAMB+"params_"+nn+".ini";
-    if (system(("cp params.ini "+file_par).c_str())) {}
+
+    file_par = dirCAMB+"../inifiles/params_"+nn+".ini";
+    if (system(("cp ../inifiles/params.ini "+file_par).c_str())) {}
     
     string sed;
    
     sed = "sed '/test/s//"+output_root+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
     sed = "sed '/do_nonlinear = 0/s//do_nonlinear = "+conv(NL, par::fINT)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
     sed = "sed '/hubble = 70/s//hubble = "+conv(m_hh*100., par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/omega_baryon = 0.0462/s//omega_baryon = "+conv(m_Omega_baryon, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/omega_cdm = 0.2538/s//omega_cdm = "+conv(m_Omega_CDM, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/omega_lambda = 0.7/s//omega_lambda = "+conv(m_Omega_DE, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/omega_neutrino = 0/s//omega_neutrino = "+conv(m_Omega_neutrinos, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
-    sed = "sed '/transfer_redshift(1) = 0/s//transfer_redshift(1) = "+conv(redshift, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/massless_neutrinos = 3.046/s//massless_neutrinos = "+conv(m_massless_neutrinos, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
-    sed = "sed '/massive_neutrinos = 0/s//massive_neutrinos = "+conv(m_massive_neutrinos, par::fINT)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/ombh2 = 0.0226/s//ombh2 = "+conv(m_Omega_baryon*m_hh*m_hh, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/omch2 = 0.112/s//omch2 = "+conv(m_Omega_CDM*m_hh*m_hh, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/omk = 0/s//omk = "+conv(m_Omega_k, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/omnuh2 = 0.00064/s//omnuh2 = "+conv(m_Omega_neutrinos*m_hh*m_hh, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par+""; if (system(sed.c_str())) {}
+    sed = "sed '/transfer_redshift(1) = 0/s//transfer_redshift(1) = "+conv(redshift, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}    
+    sed = "sed '/massless_neutrinos = 2.046/s//massless_neutrinos = "+conv(m_massless_neutrinos, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
+    sed = "sed '/massive_neutrinos = 1/s//massive_neutrinos = "+conv(m_massive_neutrinos, par::fINT)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
     sed = "sed '/scalar_spectral_index(1) = 0.96/s//scalar_spectral_index(1) = "+conv(m_n_spec, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
     sed = "sed '/w = -1/s//w = "+conv(m_w0, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
     sed = "sed '/wa = 0/s//wa = "+conv(m_wa, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
@@ -351,7 +349,6 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CAMB_MPTbreeze (const string code, co
     sed = "sed '/transfer_kmax = 2/s//transfer_kmax = "+conv(k_max, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
     sed = "sed '/re_optical_depth = 0.09/s//re_optical_depth = "+conv(m_tau, par::fDP6)+"/g' "+file_par+" > temp_"+nn+"; mv temp_"+nn+" "+file_par; if (system(sed.c_str())) {}
 
-    
     // ----------------------------
     // --------- run CAMB ---------
     // ----------------------------
@@ -374,7 +371,7 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CAMB_MPTbreeze (const string code, co
     // ---------------------------------
     
     WarningMsgCBL("check the consistency of the input redshift with the one set in the parameter file", "m_Table_Pk_parameterFile", "PkXi.cpp");
-    file_par = "../CAMB/params_"+output_root+"_t"+conv(omp_get_thread_num(), par::fINT)+".ini";
+    file_par = "../CAMB/inifiles/params_"+output_root+"_t"+conv(omp_get_thread_num(), par::fINT)+".ini";
 
     if (chdir(dirMPTbreeze.c_str())) {}
 
@@ -383,8 +380,7 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CAMB_MPTbreeze (const string code, co
     if (system(("./mptbreeze -noverbose -camb "+file_par+" -fileTF ../CAMB/"+output_root+"_transfer_out.dat -sigma8 "+conv(m_sigma8, par::fDP6)+" -omegam "+conv(m_Omega_matter, par::fDP6)+" -ns "+conv(m_n_spec, par::fDP6)+" -w "+conv(m_w0, par::fDP6)+" -redshift "+conv(redshift, par::fDP6)+" -filePk ../CAMB/"+output_root+"_matterpower.dat").c_str())) {}
     
   }
-
-
+  
   if (chdir(dirCAMB.c_str())) {}
   
   if (!fin_CAMB && code=="CAMB") {
@@ -395,13 +391,11 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CAMB_MPTbreeze (const string code, co
     if (system(("mv "+output_root+"_matterpower*dat "+dirMPTbreeze_output+"Pk.dat").c_str())) {}
     if (system(("mv "+output_root+"_transfer*dat "+dirCAMB_output+"transfer_out.dat").c_str())) {}
   }
-  
+
   if (system(("rm -f "+file_par+" *_params.ini").c_str())) {}
-  
   
   fin_CAMB.clear(); fin_CAMB.close();
   fin_MPTbreeze.clear(); fin_MPTbreeze.close();
-  
 
   // ---------------------------------------
   // --------- get the output P(k) ---------
@@ -415,23 +409,26 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CAMB_MPTbreeze (const string code, co
   string line;
 
   while (getline(fin, line)) {
-    stringstream ss(line);
-    vector<double> num;
-    double aa;
-    while (ss>>aa) num.push_back(aa);
+    if (line.find("#")!=0) {
+      stringstream ss(line);
+      vector<double> num;
+      double aa;
+      while (ss>>aa) num.push_back(aa);
     
-    if (num[0]>0 && num[1]>0) {
-      lgkk.push_back(log10(num[0]));
+      if (num[0]>0 && num[1]>0) {
 
-      if (code=="MPTbreeze-v1") 
-	lgPk.push_back(log10(pow(2.*par::pi, 3)*(num[1]+num[2]+num[3])));
-      else
-	lgPk.push_back(log10(num[1]));
+	lgkk.push_back(log10(num[0]));
+
+	if (code=="MPTbreeze-v1") 
+	  lgPk.push_back(log10(pow(2.*par::pi, 3)*(num[1]+num[2]+num[3])));
+	else
+	  lgPk.push_back(log10(num[1]));
+      }
     }
   }
-  
+
   fin.clear(); fin.close();
-  
+
   if (lgkk.size()==0 || lgPk.size()==0)
     ErrorCBL("lgkk.size()="+conv(lgkk.size(), par::fINT)+", lgPk.size()="+conv(lgPk.size(), par::fINT), "m_Table_Pk_CAMB_MPTbreeze", "PkXi.cpp");
   
@@ -805,10 +802,10 @@ void cbl::cosmology::Cosmology::Pk_0 (const std::string method_Pk, const double 
   else ErrorCBL("method_Pk is wrong!", "Pk_0", "PkXi.cpp");
 
 
-  if (method_Pk=="EisensteinHu") m_Pk0_EH = 2.*pow(par::pi*m_sigma8,2)/Int*pow(DD(redshift)/DD(0),2);
-  if (method_Pk=="CAMB") m_Pk0_CAMB = 2.*pow(par::pi*m_sigma8,2)/Int*pow(DD(redshift)/DD(0),2);
-  if (method_Pk=="MPTbreeze-v1") m_Pk0_MPTbreeze = 2.*pow(par::pi*m_sigma8,2)/Int*pow(DD(redshift)/DD(0),2);
-  if (method_Pk=="CLASS") m_Pk0_CLASS = 2.*pow(par::pi*m_sigma8,2)/Int*pow(DD(redshift)/DD(0),2);
+  if (method_Pk=="EisensteinHu") m_Pk0_EH = 2.*pow(par::pi*m_sigma8,2)/Int*pow(DD_norm(redshift),2);
+  if (method_Pk=="CAMB") m_Pk0_CAMB = 2.*pow(par::pi*m_sigma8,2)/Int*pow(DD_norm(redshift),2);
+  if (method_Pk=="MPTbreeze-v1") m_Pk0_MPTbreeze = 2.*pow(par::pi*m_sigma8,2)/Int*pow(DD_norm(redshift),2);
+  if (method_Pk=="CLASS") m_Pk0_CLASS = 2.*pow(par::pi*m_sigma8,2)/Int*pow(DD_norm(redshift),2);
 
 }
 
@@ -912,7 +909,7 @@ std::vector<double> cbl::cosmology::Cosmology::Pk_DM (const std::vector<double> 
 	auto func_sigma = [&] (double _k){
 	  return pow(TopHat_WF(_k*RR)*_k, 2)*interpPk(_k); 
 	};
-	sigma8 = sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))*DD(0.)/DD(redshift);
+	sigma8 = sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))/DD_norm(redshift);
       }
 
       m_Pk0_CAMB = pow(m_sigma8/sigma8,2);
@@ -1204,7 +1201,7 @@ double cbl::cosmology::Cosmology::sigma8_Pk (const std::string method_Pk, const 
 { 
   if (NL) WarningMsgCBL("sigma8 is defined for the linear P(k)!", "sigma8_Pk", "PkXi.cpp");
 
-  if (m_sigma8>0) return m_sigma8*DD(redshift)/DD(0.);
+  if (m_sigma8>0) return m_sigma8*DD_norm(redshift);
 
   else {
   
@@ -2374,7 +2371,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_AB_terms_1loo
       return pow(TopHat_WF(_k*RR)*_k, 2)*interpPk(_k);
     };
 
-    sigma8 = sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))*DD(0.)/DD(redshift);
+    sigma8 = sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))/DD_norm(redshift);
     m_Pk0_CAMB = pow(m_sigma8/sigma8,2);
     }
     else { m_Pk0_CAMB = 1.;}
@@ -2502,7 +2499,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_dd_dt_tt (std
       return pow(TopHat_WF(_k*RR)*_k, 2)*interpPk(_k);
     };
 
-    sigma8 = sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))*DD(0.)/DD(redshift);
+    sigma8 = sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))/DD_norm(redshift);
     m_Pk0_CAMB = pow(m_sigma8/sigma8,2);
     }
     else { m_Pk0_CAMB = 1.;}

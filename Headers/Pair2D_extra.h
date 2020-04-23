@@ -29,7 +29,7 @@
  *
  *  @authors Federico Marulli
  *
- *  @authors federico.marulli3@unbo.it
+ *  @authors federico.marulli3@unibo.it
  */
 
 #ifndef __PAIR2D_EXTRA__

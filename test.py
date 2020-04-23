@@ -21,7 +21,7 @@ def check_valgrind ():
         os.remove("valgrind_output.dat")
     else:
         print("\n Error from vagrind! \n")
-        print("".join(file("valgrind_output.dat")))
+        print("".join(open("valgrind_output.dat")))
         os.remove("valgrind_output.dat")
         sys.exit(0)
 
@@ -109,6 +109,7 @@ check("cosmology", "cosmology", "C++")
 check("cosmology", "fsigma8", "C++")
 check("cosmology", "distances", "C++") 
 check("cosmology", "model_cosmology", "C++") 
+check("cosmology", "Pk_dynamical_DE", "C++") 
 
 check("data", "data1D", "C++")
 
@@ -141,7 +142,7 @@ check("cosmicVoids/codes", "sizeFunction", "C++")
 check("cosmicVoids/codes", "cleanVoidCatalogue", "C++")
 check("cosmicVoids/codes", "modelling_VoidAbundances", "C++") 
 
-check("readParameterFile", "readParameterFile", "C++") 
+check("parameterFile", "readParameterFile", "C++") 
 
 
 ####################################################
@@ -215,8 +216,9 @@ check("cosmicVoids/codes", "sizeFunction.py", "python3")
 check("cosmicVoids/codes", "cleanVoidCatalogue.py", "python", "../input/parameter_file.ini") 
 check("cosmicVoids/codes", "cleanVoidCatalogue.py", "python3", "../input/parameter_file.ini")
 
-check("readParameterFile", "parameter_file.py", "python") 
-check("readParameterFile", "parameter_file.py", "python3") 
+check("parameterFile", "parameter_file.py", "python") 
+check("parameterFile", "parameter_file.py", "python3") 
+
 
 ####################################################
 

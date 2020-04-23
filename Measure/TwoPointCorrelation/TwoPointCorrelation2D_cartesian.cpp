@@ -31,7 +31,7 @@
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *
- *  @authors federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
+ *  @authors federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
  */
 
 
@@ -194,7 +194,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::read (const std::stri
 void cbl::measure::twopt::TwoPointCorrelation2D_cartesian::write (const std::string dir, const std::string file, const bool full, const int rank) const 
 {
   vector<double> xx = m_dataset->xx(), yy = m_dataset->yy();
-
+  
   checkDim(xx, m_dd->nbins_D1(), "rp"); checkDim(yy, m_dd->nbins_D2(), "pi");
   
   string header = "[1] perpendicular separation at the bin centre # [2] parallel separation at the bin centre # [3] 2D two-point correlation function # [4] error";

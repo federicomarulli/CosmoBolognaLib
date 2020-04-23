@@ -30,7 +30,7 @@
  *
  *  @author Federico Marulli, Carlo Cannarozzo, Tommaso Ronconi
  *
- *  @author federico.marulli3@unbo.it,
+ *  @author federico.marulli3@unibo.it,
  *  carlo.cannarozzo@studio.unibo.it, tommaso.ronconi@studio.unibo.it
  */
 

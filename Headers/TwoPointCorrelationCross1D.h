@@ -29,7 +29,7 @@
  *
  *  @authors Federico Marulli, Carlo Giocoli
  *
- *  @authors federico.marulli3@unbo.it, carlo.giocoli@unibo.it
+ *  @authors federico.marulli3@unibo.it, carlo.giocoli@unibo.it
  */
 
 #ifndef __TWOPOINTCROSS1D__

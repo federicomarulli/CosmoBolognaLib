@@ -29,7 +29,7 @@ data1D: $(OBJ1)
 
 
 clean:
-	rm -f *.o *~ \#* temp* core* data1D 
+	rm -f *.o *~ \#* temp* core* data1D data_out.dat 
 
 data1D.o: data1D.cpp makefile $(dirLib)*.$(ES) 
 	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c data1D.cpp

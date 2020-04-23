@@ -28,7 +28,7 @@
  *
  *  @author Federico Marulli 
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unibo.it
  */
 
 #include "Cosmology.h"
@@ -75,7 +75,7 @@ double cbl::cosmology::Cosmology::bias_halo (const double Mass, const double Sig
 double cbl::cosmology::Cosmology::m_bias_halo_generator (const double Sigma, const double redshift, const std::string author, const double Delta) const
 {
   const double deltacz = deltac(redshift);
-  const double sigmaz = Sigma*DD(redshift)/DD(0.);
+  const double sigmaz = Sigma*DD_norm(redshift);
   
   double bias = -1000.;
 

@@ -30,7 +30,7 @@
  *
  *  @author Alfonso Veropalumbo
  *
- *  @author alfonso.veropalumbo@unbo.it
+ *  @author alfonso.veropalumbo@unibo.it
  */
 
 #include "FITSwrapper.h"

@@ -28,7 +28,7 @@
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *
- *  @authors federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
+ *  @authors federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
  */
 
 #include "Data2D.h"
@@ -224,9 +224,9 @@ void cbl::data::Data2D::write (const string dir, const string file, const string
   for (int i=0; i<m_xsize; ++i)
     for (int j=0; j<m_ysize; ++j) {
       int index = j+m_ysize*i;
-      cbl::Print(m_x[index], prec, ww, "", "  ", false, fout);
-      cbl::Print(m_y[index], prec, ww, "", "  ", false, fout);
-      cbl::Print(m_error[index], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_x[i], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_y[j], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_data[index], prec, ww, "", "  ", false, fout);
       cbl::Print(m_error[index], prec, ww, "", "\n", false, fout);
     }
 
@@ -236,27 +236,27 @@ void cbl::data::Data2D::write (const string dir, const string file, const string
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
 	int index = j+m_ysize*i;
-	cbl::Print(m_x[index], prec, ww, "", "  ", false, fout);
-	cbl::Print(-m_y[index], prec, ww, "", "  ", false, fout);
-	cbl::Print(m_error[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_x[i], prec, ww, "", "  ", false, fout);
+	cbl::Print(-m_y[j], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_data[index], prec, ww, "", "  ", false, fout);
 	cbl::Print(m_error[index], prec, ww, "", "\n", false, fout);
       }
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
 	int index = j+m_ysize*i;
-	cbl::Print(-m_x[index], prec, ww, "", "  ", false, fout);
-	cbl::Print(-m_y[index], prec, ww, "", "  ", false, fout);
-	cbl::Print(m_error[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(-m_x[i], prec, ww, "", "  ", false, fout);
+	cbl::Print(-m_y[j], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_data[index], prec, ww, "", "  ", false, fout);
 	cbl::Print(m_error[index], prec, ww, "", "\n", false, fout);
       }
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
 	int index = j+m_ysize*i;
-	cbl::Print(-m_x[index], prec, ww, "", "  ", false, fout);
-	cbl::Print(-m_y[index], prec, ww, "", "  ", false, fout);
-	cbl::Print(m_error[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(-m_x[i], prec, ww, "", "  ", false, fout);
+	cbl::Print(-m_y[j], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_data[index], prec, ww, "", "  ", false, fout);
 	cbl::Print(m_error[index], prec, ww, "", "\n", false, fout);
       }
     

@@ -29,7 +29,7 @@
  *
  *  @author Alfonso Veropalumbo, Federico Marulli 
  *
- *  @author alfonso.veropalumbo@unibo.it, federico.marulli3@unbo.it
+ *  @author alfonso.veropalumbo@unibo.it, federico.marulli3@unibo.it
  */
 
 #ifndef __EH__

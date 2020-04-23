@@ -28,7 +28,7 @@
  *
  *  @authors Federico Marulli, Tommaso Ronconi
  *
- *  @authors federico.marulli3@unbo.it, tommaso.ronconi@studio.unibo.it
+ *  @authors federico.marulli3@unibo.it, tommaso.ronconi@studio.unibo.it
  */
 
 #ifndef __VOID__

@@ -29,7 +29,7 @@
  *
  *  @author Federico Marulli 
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unibo.it
  */
 
 #include "Cosmology.h"
@@ -146,8 +146,8 @@ double cbl::cosmology::Cosmology::mass_function (const double Mass, const double
 
 double cbl::cosmology::Cosmology::m_MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const double Delta, const bool default_delta, const double delta_t) 
 { 
-  const double deltacz = (default_delta) ? deltac(redshift) : fabs(delta_t*DD(redshift)/DD(0.));
-  const double sigmaz = Sigma*DD(redshift)/DD(0.);
+  const double deltacz = (default_delta) ? deltac(redshift) : fabs(delta_t*DD_norm(redshift));
+  const double sigmaz = Sigma*DD_norm(redshift);
   
   const double RHO = rho_m(0., true); 
   

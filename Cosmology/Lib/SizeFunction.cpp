@@ -29,7 +29,7 @@
  *
  *  @authors Federico Marulli, Tommaso Ronconi
  *
- *  @authors federico.marulli3@unbo.it, tommaso.ronconi@studio.unibo.it
+ *  @authors federico.marulli3@unibo.it, tommaso.ronconi@studio.unibo.it
  */
 
 #include "Cosmology.h"
@@ -98,6 +98,8 @@ double cbl::cosmology::Cosmology::size_function (const double RV, const double r
   
   double del_v = deltav_L(deltav_NL, b_eff, slope, offset);
   double RL;
+  double fact = DD_norm(redshift);
+
   if ((model == "Vdn") || (model == "SvdW"))
     RL = RV/r_rL(del_v);
   
@@ -108,10 +110,10 @@ double cbl::cosmology::Cosmology::size_function (const double RV, const double r
     { ErrorCBL("the model name is not allowed; the allowed names are: SvdW (Sheth and van de Weygaert, 2004), linear/Vdn (Jennings, Li and Hu, 2013)", "size_function", "SizeFunction.cpp"); return 0; }
   
   double sigmaR = sqrt(sigma2R(RL, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file));
-  double sigmaRz = sigmaR*DD(redshift)/DD(0.);
+  double sigmaRz = sigmaR*fact;
   double SSSR = sigmaRz*sigmaRz;
         
-  double Dln_SigmaR = dnsigma2R(1, RL, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file)*(RL/(2.*SSSR))*pow(DD(redshift)/DD(0.), 2.);
+  double Dln_SigmaR = dnsigma2R(1, RL, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file)*(RL/(2.*SSSR))*pow(fact, 2.);
   
   if (model == "Vdn")
     return f_nu(sigmaRz, del_v, del_c)/volume_sphere(RV)*fabs(Dln_SigmaR);

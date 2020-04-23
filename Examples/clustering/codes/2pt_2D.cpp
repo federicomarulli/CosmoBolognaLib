@@ -59,12 +59,14 @@ int main () {
     const double piMax = 50.;    // maximum separation in the second dimension 
     const int nbins_D2 = 10;     // number of bins in the second dimension
     const double shift_D2 = 0.5; // spatial shift used to set the bin centre in the second dimension
-  
+    
     // construct the object using a static factory
     const auto xi2DCart = cbl::measure::twopt::TwoPointCorrelation::Create(cbl::measure::twopt::TwoPType::_2D_Cartesian_, catalogue, random_catalogue, cbl::BinType::_linear_, rpMin, rpMax, nbins_D1, shift_D1, cbl::BinType::_linear_, piMin, piMax, nbins_D2, shift_D2);
-
+    
     // measure the 2D correlation function and compute Poisson errors
     xi2DCart->measure(cbl::measure::ErrorType::_Poisson_, dir_pairs);
+    
+    // store the output
     xi2DCart->write(dir_output, "xi_rp_pi_linlin.dat");
 
   }

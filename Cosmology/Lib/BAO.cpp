@@ -28,7 +28,7 @@
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *
- *  @author federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
+ *  @author federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
  */
 
 #include "Cosmology.h"

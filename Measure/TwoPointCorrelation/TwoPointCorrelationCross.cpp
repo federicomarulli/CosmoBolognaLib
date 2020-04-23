@@ -29,7 +29,7 @@
  *
  *  @author Federico Marulli, Carlo Giocoli
  *
- *  @author federico.marulli3@unbo.it, carlo.giocoli@unibo.it
+ *  @author federico.marulli3@unibo.it, carlo.giocoli@unibo.it
  */
 
 #include "TwoPointCorrelationCross.h"

@@ -28,7 +28,7 @@
  *
  *  @author Federico Marulli
  *
- *  @author federico.marulli3@unbo.it
+ *  @author federico.marulli3@unibo.it
  */
 
 #include "NumberCounts2D.h"

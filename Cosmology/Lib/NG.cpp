@@ -30,7 +30,7 @@
  *
  *  @authors Federico Marulli, Cosimo Fedeli 
  *
- *  @authors federico.marulli3@unbo.it, cosimo.fedeli@oabo.inaf.it
+ *  @authors federico.marulli3@unibo.it, cosimo.fedeli@oabo.inaf.it
  */
 
 #include "Cosmology.h"

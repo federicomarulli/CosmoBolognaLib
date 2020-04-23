@@ -17,7 +17,8 @@ FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCf
 OBJ1 = cosmology.o 
 OBJ2 = fsigma8.o
 OBJ3 = distances.o 
-OBJ4 = model_cosmology.o 
+OBJ4 = model_cosmology.o
+OBJ5 = Pk_dynamical_DE.o
 
 ES = so
 
@@ -37,10 +38,13 @@ distances: $(OBJ3)
 	$(CXX) $(OBJ3) -o distances $(FLAGS_LIB) 
 
 model_cosmology: $(OBJ4) 
-	$(CXX) $(OBJ4) -o model_cosmology $(FLAGS_LIB) 
+	$(CXX) $(OBJ4) -o model_cosmology $(FLAGS_LIB)
+
+Pk_dynamical_DE: $(OBJ5) 
+	$(CXX) $(OBJ5) -o Pk_dynamical_DE $(FLAGS_LIB)
 
 clean:
-	rm -f *.o cosmology fsigma8 distances model_cosmology *~ \#* temp* core*
+	rm -f *.o cosmology fsigma8 distances model_cosmology Pk_dynamical_DE *~ \#* temp* core*
 
 cosmology.o: cosmology.cpp makefile $(dirLib)*.$(ES)
 	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c cosmology.cpp
@@ -53,3 +57,6 @@ distances.o: distances.cpp makefile $(dirLib)*.$(ES)
 
 model_cosmology.o: model_cosmology.cpp makefile $(dirLib)*.$(ES)
 	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_cosmology.cpp
+
+Pk_dynamical_DE.o: Pk_dynamical_DE.cpp makefile $(dirLib)*.$(ES)
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c Pk_dynamical_DE.cpp

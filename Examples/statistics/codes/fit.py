@@ -10,7 +10,7 @@ from __future__ import print_function
 # import Python modules for scientific computing 
 import os
 import numpy as np
-
+import pandas as pd
 # import Python modules for plotting
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -90,8 +90,40 @@ def plot_contours (posterior, burn_in, thin, figure, color):
                   weights=np.array(weights),\
                   labels=notFixedNames,\
                   truths=(1, 2, 1), truth_color='black', \
-                  plot_datapoints=False, plot_density=False, levels=(1-np.exp(-0.5), 1-np.exp(-2), 1-np.exp(-4.5)),\
+                  plot_datapoints=False, show_titles=True, smooth=True, plot_density=False, levels=(1-np.exp(-0.5), 1-np.exp(-2), 1-np.exp(-4.5)),\
                   color=color, fill_contours=True, hist_kwargs={"density" : True, "color":color}, fig=figure)
+
+def decentering(dir_input, file_data):
+    file_output = "data1dec.dat"
+    file_name = dir_input+file_data
+    data1 = np.loadtxt(file_name)
+    samples = pd.DataFrame(data1[:,:])
+    #print(samples)
+    samples[1] = samples[1].add(2.2)
+    samples[2] = samples[2].add(0)
+    samples.to_csv(dir_input+file_output,header=None,index=None,sep='\t',mode='w')
+    #print("\n\n",samples)
+    return file_output
+
+
+
+def join_probe(posterior,dir_input,file_data_1, file_data_2, nwalkers):
+
+    joined_file_name = "joined_impsamp.dat"
+    #posterior_1.read_chain(dir_input, file_data_1, nwalkers)
+    file_name_1 = dir_input+file_data_1
+    file_name_2 = dir_input+file_data_2
+    imp_chain_1 = np.loadtxt(file_name_1)
+    imp_chain_2 = np.loadtxt(file_name_2)
+    samples_1 = pd.DataFrame(imp_chain_1[:,:])
+    samples_2 = pd.DataFrame(imp_chain_2[:,:])
+    joined_samples = pd.concat([samples_1,samples_2])
+    open(dir_input+joined_file_name,"w").close()
+    joined_samples.to_csv(dir_input+joined_file_name,header=None,index=None,sep='\t',mode="w")
+
+    joined_posterior = posterior
+    joined_posterior.read_chain(dir_input, joined_file_name,nwalkers)
+    return joined_posterior
 
 
 # set parameters for posterior sampling
@@ -103,8 +135,11 @@ thin = 1
 # set the stuff used to construct the model: here an object of class cosmology, just as an example 
 cosmology = cbl.Cosmology()
 
+file_decentered = decentering(dir_input,file_data1)
+
 # construct the dataset by reading an input file 
-data1 = cbl.Data1D(dir_input+file_data1)
+#data1 = cbl.Data1D(dir_input+file_data1)
+data1 = cbl.Data1D(dir_input+file_decentered)
 
 # set the model to construct the likelihood
 model1 = getModel1D(cosmology, 0)
@@ -121,8 +156,9 @@ posterior2 = go(data2, model2, nwalkers, chain_size, "model2", "model2.dat")
 
 fig, axes = plt.subplots(3, 3, figsize=(15, 15))
 
-plot_contours(posterior2, burn_in, thin, fig, "r")
-plot_contours(posterior1, burn_in, thin, fig, "b")
+#plot_contours(posterior1, burn_in, thin, fig, "b")
+#plot_contours(posterior2, burn_in, thin, fig, "y")
+#plot_contours(posterior1, burn_in, thin, fig, "r")
 
 # do the importance sampling
 posterior1.importance_sampling("../output/", "model2_chain.dat")
@@ -132,4 +168,20 @@ posterior1.write_results("../output/", "model_1+2_importance_sampling")
 
 plot_contours(posterior1, burn_in, thin, fig, "g")
 
-plt.show(block=False)
+# do the importance sampling
+posterior2.importance_sampling("../output/", "model1_chain.dat")
+
+#store the chain outputs
+posterior2.write_results("../output/", "model_2+1_importance_sampling")
+plot_contours(posterior2, burn_in, thin, fig, "r")
+
+#join samples
+
+file_impsamp1 = "model_1+2_importance_sampling_chain.dat"
+file_impsamp2 = "model_2+1_importance_sampling_chain.dat"
+
+joined_posterior = join_probe(posterior1, dir_output, file_impsamp1, file_impsamp2, 1)
+
+plot_contours(joined_posterior,burn_in, thin, fig, "k")
+
+plt.show()

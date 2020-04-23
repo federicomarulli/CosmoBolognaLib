@@ -29,7 +29,7 @@
  *
  *  @author Federico Marulli, Michele Moresco
  *
- *  @author federico.marulli3@unbo.it, michele.moresco@unibo.it
+ *  @author federico.marulli3@unibo.it, michele.moresco@unibo.it
  */
 
 #ifndef __MODELLINGTHREEPOINT__

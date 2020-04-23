@@ -28,7 +28,7 @@
  *
  *  @authors Federico Marulli, Tommaso Ronconi
  *
- *  @authors federico.marulli3@unbo.it, tronconi@sissa.it
+ *  @authors federico.marulli3@unibo.it, tronconi@sissa.it
  */
 
 #ifndef __HOSTHALO__

@@ -30,7 +30,7 @@
  *
  *  @authors Federico Marulli, Michele Moresco
  *
- *  @authors federico.marulli3@unbo.it, michele.moresco@unibo.it
+ *  @authors federico.marulli3@unibo.it, michele.moresco@unibo.it
  */
 
 

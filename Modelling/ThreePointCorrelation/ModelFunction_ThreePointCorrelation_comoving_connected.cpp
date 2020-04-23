@@ -31,7 +31,7 @@
  *
  *  @authors Federico Marulli
  *
- *  @authors federico.marulli3@unbo.it
+ *  @authors federico.marulli3@unibo.it
  */
 
 #include "ModelFunction_ThreePointCorrelation.h"

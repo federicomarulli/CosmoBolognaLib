@@ -29,7 +29,7 @@
  *
  *  @author Alfonso Veropalumbo 
  *
- *  @author alfonso.veropalumbo@unbo.it
+ *  @author alfonso.veropalumbo@unibo.it
  */
 
 #ifndef __FFTlog__
