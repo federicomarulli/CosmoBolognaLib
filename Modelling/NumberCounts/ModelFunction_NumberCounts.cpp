@@ -272,10 +272,8 @@ double cbl::modelling::numbercounts::number_counts (const double redshift_min, c
 
 std::vector<double> cbl::modelling::numbercounts::size_function (cbl::cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
 {
-
-  vector<double> size_function(radii.size());
-  for (size_t i=0; i<radii.size(); i++)
-    size_function[i] = cosmology.size_function(radii[i], redshift, model, b_eff, slope, offset, deltav_NL, del_c, method_Pk, store_output, output_root, interpType, k_max, input_file, is_parameter_file);
+  
+  vector<double> size_function = cosmology.size_function(radii, redshift, model, b_eff, slope, offset, deltav_NL, del_c, method_Pk, store_output, output_root, interpType, k_max, input_file, is_parameter_file);
 
   return size_function;
   

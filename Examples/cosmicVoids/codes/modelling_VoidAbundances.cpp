@@ -61,7 +61,6 @@ int main () {
 
     
     // measure the number counts and compute Poissonian errors 
-
     ptr_NC->measure(cbl::measure::ErrorType::_Poisson_, "../output/NumberCounts.out", 0, 3213);
     ptr_NC->write(dir, "Size_distribution_Poisson.dat");
 
@@ -128,7 +127,7 @@ int main () {
 
     // set the likelihood
     model_SF.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_);
- 
+       
     // maximize the posterior
     model_SF.maximize_posterior({val_s8, val_Om});
     

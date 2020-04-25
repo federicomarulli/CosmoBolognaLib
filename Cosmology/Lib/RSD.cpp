@@ -48,8 +48,9 @@ typedef boost::numeric::odeint::runge_kutta_dopri5< double > stepper_type;
 
 double cbl::cosmology::Cosmology::linear_growth_rate (const double redshift, const double kk, const double prec) const
 {
-  double ff = 1;
-
+  double a_in = 1.e-8;
+  double ff = (m_Omega_radiation==0.) ? 1. : (a_in/m_Omega_radiation*m_Omega_matter)/(a_in/m_Omega_radiation*m_Omega_matter+2./3.); // Dodelson eq. (7.59)
+  
   // Kiakotou, Elgarøy & Lahav 2008
   double fnu = m_Omega_neutrinos/m_Omega_matter;
 
@@ -59,11 +60,11 @@ double cbl::cosmology::Cosmology::linear_growth_rate (const double redshift, con
       {
 	const double zz = 1./exp(ln_aa)-1.;
 	const double OmM = OmegaM(zz);
-	dyda = -y*y-y*(1.-0.5*(OmM+(1.+3.*w0()+3.*wa()*zz/(1.+zz))*OmegaDE(zz)))+1.5*OmM; 
+	dyda = -y*y-y*(1.-0.5*(OmM+OmegaR(zz)+(1.+3.*w0()+3.*wa()*zz/(1.+zz))*OmegaDE(zz)))+1.5*OmM; 
       };
   
     boost::numeric::odeint::integrate_adaptive( make_controlled(1e-8, 1e-8, stepper_type() ),
-			func, ff, log(1.e-8), log(1./(1.+redshift)), prec);
+			func, ff, log(a_in), log(1./(1.+redshift)), prec);
     
     return ff;
   }

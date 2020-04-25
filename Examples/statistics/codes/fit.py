@@ -30,11 +30,14 @@ except ImportError:
     pass
 
 
+
 # set the input/output file/directories 
 dir_input = "../input/"
 dir_output = "../output/"
 file_data1 = "data1.dat"
 file_data2 = "data2.dat"
+
+
 
 def go (data, model, nwalkers, chain_size, results_name, model_name):
 
@@ -42,7 +45,7 @@ def go (data, model, nwalkers, chain_size, results_name, model_name):
     likelihood = cbl.Likelihood(data, model, cbl.LikelihoodType__Gaussian_Error_)
 
     # set the model parameter
-    valA, valB, valC = 1., 1., 1. 
+    valA, valB, valC = 1., 2., 1. 
 
     # limits for A and B
     minA, maxA = -10., 10.
@@ -71,7 +74,9 @@ def go (data, model, nwalkers, chain_size, results_name, model_name):
     
     return posterior
 
-def plot_contours (posterior, burn_in, thin, figure, color):
+
+
+def plot_contours (posterior, burn_in, thin, figure, axes, color, label):
 
     # read the chains
     nPar = posterior.parameters().nparameters()
@@ -89,28 +94,18 @@ def plot_contours (posterior, burn_in, thin, figure, color):
     corner.corner(notFixedChains, \
                   weights=np.array(weights),\
                   labels=notFixedNames,\
-                  truths=(1, 2, 1), truth_color='black', \
+                  truths=(1, 2., 4.), truth_color='black', \
                   plot_datapoints=False, show_titles=True, smooth=True, plot_density=False, levels=(1-np.exp(-0.5), 1-np.exp(-2), 1-np.exp(-4.5)),\
                   color=color, fill_contours=True, hist_kwargs={"density" : True, "color":color}, fig=figure)
 
-def decentering(dir_input, file_data):
-    file_output = "data1dec.dat"
-    file_name = dir_input+file_data
-    data1 = np.loadtxt(file_name)
-    samples = pd.DataFrame(data1[:,:])
-    #print(samples)
-    samples[1] = samples[1].add(2.2)
-    samples[2] = samples[2].add(0)
-    samples.to_csv(dir_input+file_output,header=None,index=None,sep='\t',mode='w')
-    #print("\n\n",samples)
-    return file_output
+    axes[0][1].plot(1,1,color, label=label)
+    axes[0][1].legend(loc="best", fontsize=11)
 
 
 
-def join_probe(posterior,dir_input,file_data_1, file_data_2, nwalkers):
+# function that joines two chains: one after the other
+def join_probes(posterior,dir_input,file_data_1, file_data_2, nwalkers):
 
-    joined_file_name = "joined_impsamp.dat"
-    #posterior_1.read_chain(dir_input, file_data_1, nwalkers)
     file_name_1 = dir_input+file_data_1
     file_name_2 = dir_input+file_data_2
     imp_chain_1 = np.loadtxt(file_name_1)
@@ -118,12 +113,15 @@ def join_probe(posterior,dir_input,file_data_1, file_data_2, nwalkers):
     samples_1 = pd.DataFrame(imp_chain_1[:,:])
     samples_2 = pd.DataFrame(imp_chain_2[:,:])
     joined_samples = pd.concat([samples_1,samples_2])
+    joined_file_name = "joined_impsamp.dat"
     open(dir_input+joined_file_name,"w").close()
     joined_samples.to_csv(dir_input+joined_file_name,header=None,index=None,sep='\t',mode="w")
 
     joined_posterior = posterior
     joined_posterior.read_chain(dir_input, joined_file_name,nwalkers)
+
     return joined_posterior
+
 
 
 # set parameters for posterior sampling
@@ -135,11 +133,8 @@ thin = 1
 # set the stuff used to construct the model: here an object of class cosmology, just as an example 
 cosmology = cbl.Cosmology()
 
-file_decentered = decentering(dir_input,file_data1)
-
 # construct the dataset by reading an input file 
-#data1 = cbl.Data1D(dir_input+file_data1)
-data1 = cbl.Data1D(dir_input+file_decentered)
+data1 = cbl.Data1D(dir_input+file_data1)
 
 # set the model to construct the likelihood
 model1 = getModel1D(cosmology, 0)
@@ -152,13 +147,12 @@ data2 = cbl.Data1D(dir_input+file_data2)
 model2 = getModel1D(cosmology, 1)
 posterior2 = go(data2, model2, nwalkers, chain_size, "model2", "model2.dat")
 
-# plot the contours
+# do the importance sampling and plot the contours
 
 fig, axes = plt.subplots(3, 3, figsize=(15, 15))
 
-#plot_contours(posterior1, burn_in, thin, fig, "b")
-#plot_contours(posterior2, burn_in, thin, fig, "y")
-#plot_contours(posterior1, burn_in, thin, fig, "r")
+plot_contours(posterior1, burn_in, thin, fig, axes, "b", "Posterior 1")
+plot_contours(posterior2, burn_in, thin, fig, axes, "y", "Posterior 2")
 
 # do the importance sampling
 posterior1.importance_sampling("../output/", "model2_chain.dat")
@@ -166,22 +160,25 @@ posterior1.importance_sampling("../output/", "model2_chain.dat")
 # store the chain ouputs
 posterior1.write_results("../output/", "model_1+2_importance_sampling")
 
-plot_contours(posterior1, burn_in, thin, fig, "g")
+# plot the contours
+plot_contours(posterior1, burn_in, thin, fig, axes, "g", "imp. sampling 1+2")
 
 # do the importance sampling
 posterior2.importance_sampling("../output/", "model1_chain.dat")
 
-#store the chain outputs
+# store the chain outputs
 posterior2.write_results("../output/", "model_2+1_importance_sampling")
-plot_contours(posterior2, burn_in, thin, fig, "r")
 
-#join samples
+# plot the contours
+plot_contours(posterior2, burn_in, thin, fig, axes, "r", "imp. sampling 2+1")
 
 file_impsamp1 = "model_1+2_importance_sampling_chain.dat"
 file_impsamp2 = "model_2+1_importance_sampling_chain.dat"
 
-joined_posterior = join_probe(posterior1, dir_output, file_impsamp1, file_impsamp2, 1)
+# join chains from importance sampling
+joined_posterior = join_probes(posterior1, dir_output, file_impsamp1, file_impsamp2, 1)
 
-plot_contours(joined_posterior,burn_in, thin, fig, "k")
+# plot the contours
+plot_contours(joined_posterior,burn_in, thin, fig, axes, "k", "imp. sampling concat.")
 
 plt.show()

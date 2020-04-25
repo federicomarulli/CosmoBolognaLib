@@ -93,7 +93,7 @@ double cbl::cosmology::Cosmology::f_nu (const double SS, const double del_v, con
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::size_function (const double RV, const double redshift, const std::string model, const double b_eff, double slope, double offset,  const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file) const
+double cbl::cosmology::Cosmology::size_function (const double RV, const double redshift, const std::string model, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file) const
 {
   
   double del_v = deltav_L(deltav_NL, b_eff, slope, offset);
@@ -109,7 +109,7 @@ double cbl::cosmology::Cosmology::size_function (const double RV, const double r
   else 
     { ErrorCBL("the model name is not allowed; the allowed names are: SvdW (Sheth and van de Weygaert, 2004), linear/Vdn (Jennings, Li and Hu, 2013)", "size_function", "SizeFunction.cpp"); return 0; }
   
-  double sigmaR = sqrt(sigma2R(RL, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file));
+  double sigmaR = sqrt(sigma2R(RL, method_Pk, 0., true, output_root, interpType, k_max, input_file, is_parameter_file));
   double sigmaRz = sigmaR*fact;
   double SSSR = sigmaRz*sigmaRz;
         
@@ -123,6 +123,59 @@ double cbl::cosmology::Cosmology::size_function (const double RV, const double r
   
   else 
     { ErrorCBL("the model name is not allowed: the allowed names are: SvdW (Sheth and van de Weygaert, 2004), linear/Vdn (Jennings, Li and Hu, 2013)", "size_function", "SizeFunction.cpp"); return 0; }
+    
+}
+
+
+// =====================================================================================
+
+
+std::vector<double> cbl::cosmology::Cosmology::size_function (const std::vector<double> RV, const double redshift, const std::string model, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file) const
+{
+  
+  double del_v = deltav_L(deltav_NL, b_eff, slope, offset);
+
+  std::vector<double> RL (RV.size());
+  
+  if ((model == "Vdn") || (model == "SvdW"))
+    for (size_t i=0; i<RV.size(); i++) RL[i] = RV[i]/r_rL(del_v);
+  
+  else if (model == "linear")
+    for (size_t i=0; i<RV.size(); i++) RL[i] = RV[i];
+  
+  else 
+    ErrorCBL("the model name is not allowed; the allowed names are: SvdW (Sheth and van de Weygaert, 2004), linear/Vdn (Jennings, Li and Hu, 2013)", "size_function", "SizeFunction.cpp");
+    
+  double fact = DD_norm(redshift);
+
+  std::vector<double> sigmaR(RV.size());
+  std::vector<double> sigmaRz(RV.size());
+  std::vector<double> SSSR(RV.size());
+  std::vector<double> Dln_SigmaR(RV.size());
+  
+  for (size_t i=0; i<RV.size(); i++) {
+    
+    sigmaR[i] = sqrt(sigma2R(RL[i], method_Pk, 0., true, output_root, interpType, k_max, input_file, is_parameter_file));
+    sigmaRz[i] = sigmaR[i]*fact;
+    SSSR[i] = sigmaRz[i]*sigmaRz[i];  
+    Dln_SigmaR[i] = dnsigma2R(1, RL[i], method_Pk, 0., true, output_root, interpType, k_max, input_file, is_parameter_file)*(RL[i]/(2.*SSSR[i]))*pow(fact, 2.);
+    
+  }
+
+  if (!store_output) m_remove_output_Pk_tables(method_Pk, false, 0.); 
+
+  std::vector<double> result(RV.size());
+  
+  if (model == "Vdn")
+    for (size_t i=0; i<RV.size(); i++) result[i] = f_nu(sigmaRz[i], del_v, del_c)/volume_sphere(RV[i])*fabs(Dln_SigmaR[i]);
+  
+  else if ((model == "SvdW") || (model == "linear"))
+    for (size_t i=0; i<RV.size(); i++) result[i] = f_nu(sigmaRz[i], del_v, del_c)/volume_sphere(RL[i])*fabs(Dln_SigmaR[i]);
+  
+  else 
+    ErrorCBL("the model name is not allowed: the allowed names are: SvdW (Sheth and van de Weygaert, 2004), linear/Vdn (Jennings, Li and Hu, 2013)", "size_function", "SizeFunction.cpp");
+
+  return result;
     
 }
 
