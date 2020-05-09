@@ -43,6 +43,26 @@
 namespace cbl {
 
   namespace catalogue {
+
+    /**
+     * @class Struct with minimal information
+     * for clustering analysis
+     */
+    struct ClusteringObject{
+     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+       
+      // Comoving coordinates in eigen array
+      cbl::Vector4D pos;
+
+      // weight
+      double weight;
+
+      // region
+      int region;
+
+    };
+    // Eigen coordinate
+    
     
     /**
      * @enum ObjectType
@@ -157,6 +177,9 @@ namespace cbl {
       /// region (used for jackknife/bootstrap)
       long m_region = cbl::par::defaultLong;
 
+      /// Clustering information
+      ClusteringObject m_clustering_info;
+
       /// ID
       int m_ID = cbl::par::defaultInt;
       
@@ -172,8 +195,22 @@ namespace cbl {
       /// displacement along the z-axis
       double m_z_displacement = cbl::par::defaultDouble;
 
+      /**
+       * @param set internal member m_clustering info
+       * @brief set internal member m_clustering_info according
+       * to object x, y, z, weight and region
+       * @return None
+       */
+      void m_set_clustering_info () 
+      {
+	m_clustering_info.pos = {m_xx, m_yy, m_zz, 0.};
+	m_clustering_info.weight = m_weight;
+	m_clustering_info.region = m_region;
+      }
+
     
     public :
+      EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     
       /**
        *  @name Constructors/destructors
@@ -209,7 +246,10 @@ namespace cbl {
        *  @return object of class Object
        */
       Object (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_ra(par::defaultDouble), m_dec(par::defaultDouble), m_redshift(par::defaultDouble), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
+	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_ra(par::defaultDouble), m_dec(par::defaultDouble), m_redshift(par::defaultDouble), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) 
+      {
+	m_set_clustering_info();
+      }
     
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -246,6 +286,7 @@ namespace cbl {
 	{
 	  cbl::polar_coord(m_xx, m_yy, m_zz, m_ra, m_dec, m_dc);
 	  m_redshift = cosm.Redshift(m_dc, z1_guess, z2_guess);
+	  m_set_clustering_info();
 	}
 
       /**
@@ -271,7 +312,10 @@ namespace cbl {
        *  @return object of class Object
        */
       Object (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
+	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) 
+      {
+	m_set_clustering_info();
+      }
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -299,7 +343,10 @@ namespace cbl {
        *  @return object of class Object
        */
       Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
+	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) 
+      {
+	m_set_clustering_info();
+      }
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -333,6 +380,7 @@ namespace cbl {
 	{ 
 	  m_dc = cosm.D_C(m_redshift); 
 	  cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
+	  m_set_clustering_info();
 	}
 
       /**
@@ -368,6 +416,7 @@ namespace cbl {
 	{ 
 	  m_dc = cosm.D_C(m_redshift);
 	  cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
+	  m_set_clustering_info();
 	}
 
       /**
@@ -390,7 +439,9 @@ namespace cbl {
        */
       Object (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
       : m_xx(xx), m_yy(yy), m_zz(zz), m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(sqrt(xx*xx+yy*yy+zz*zz)), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) 
-      {}   
+      {
+	m_set_clustering_info();
+      }   
 
       /**
        *  @brief default destructor
@@ -764,6 +815,15 @@ namespace cbl {
 	    ErrorCBL("one or more of the m_xx, m_yy, m_zz variables is not defined!", "coords", "Object.h");
 	  return {m_xx, m_yy, m_zz};
 	}
+
+      /**
+       *  @brief get the object coordinates in Eigen array
+       *  @return an object containing the minimal quantities needed for clustering analysis
+       */
+      ClusteringObject clustering_info () const
+	{
+	  return m_clustering_info;
+	}
     
       /**
        *  @brief get the member \e m_vx
@@ -1020,7 +1080,8 @@ namespace cbl {
        *  @return none
        */
       void set_xx (const double xx)
-      { m_xx = xx; }
+      { m_xx = xx; m_set_clustering_info(); }
+
  
       /**
        *  @brief set the member \e m_yy
@@ -1028,7 +1089,7 @@ namespace cbl {
        *  @return none
        */
       void set_yy (const double yy)
-      { m_yy = yy; }
+      { m_yy = yy; m_set_clustering_info(); }
     
       /**
        *  @brief set the member \e m_zz
@@ -1036,7 +1097,7 @@ namespace cbl {
        *  @return none
        */
       void set_zz (const double zz)
-      { m_zz = zz; }
+      { m_zz = zz; m_set_clustering_info(); }
     
       /**
        *  @brief set the member \e m_ra, updating the
@@ -1049,6 +1110,7 @@ namespace cbl {
       {
 	m_ra = radians(ra, inputUnits);
 	if (m_dc>par::defaultDouble) cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
+	m_set_clustering_info();
       }
     
       /**
@@ -1062,6 +1124,7 @@ namespace cbl {
       {
 	m_dec = radians(dec, inputUnits);
 	if (m_dc>par::defaultDouble) cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
+	m_set_clustering_info();
       }
       
       /**
@@ -1080,6 +1143,7 @@ namespace cbl {
 	m_redshift = redshift;
 	m_dc = cosmology.D_C(m_redshift); 
 	cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
+	m_set_clustering_info();
       }
     
       /**
@@ -1092,6 +1156,7 @@ namespace cbl {
       {
 	m_dc = dc;
 	cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
+	m_set_clustering_info();
       }
     
       /**
@@ -1100,7 +1165,9 @@ namespace cbl {
        *  @return none
        */
       void set_weight (const double weight)
-      { m_weight = weight; }
+      { m_weight = weight; 
+	m_set_clustering_info();
+      }
       
       /**
        *  @brief set the member \e m_region
@@ -1109,7 +1176,7 @@ namespace cbl {
        *  @return none
        */
       void set_region (const long region)
-      { if (region<0) ErrorCBL("Error in Object.h: region must be >0 !", "", "Object.h"); m_region = region; }
+      { if (region<0) ErrorCBL("Error in Object.h: region must be >0 !", "", "Object.h"); m_region = region; m_set_clustering_info(); }
       
       /**
        *  @brief set the member \e m_ID

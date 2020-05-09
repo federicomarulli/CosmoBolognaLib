@@ -73,6 +73,9 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_all::m_cou
 
   chainmesh::ChainMesh_Catalogue cm;
 
+  double rMinSq = rmin*rmin;
+  double rMaxSq = rmax*rmax;
+
   double deltaBin = (rmax-rmin)/double(nbins);
   double binSize_inv = 1./deltaBin;
 
@@ -80,7 +83,10 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_all::m_cou
 
   auto cat = cm.catalogue();
 
-  const int nObjects = catalogue.nObjects();
+  const size_t nCells = cm.nCell_NonEmpty();
+  const vector<long int> nonEmpty_Cells = cm.NonEmpty_Cells();
+
+  coutCBL << nCells << " " << cat->nObjects() << endl;
 
   // thread number
   int tid = 0;
@@ -103,46 +109,44 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_all::m_cou
 
     // parallelized loop
 #pragma omp for schedule(static, 2)
-    for (int i=0; i<nObjects; i++)
+    //for (auto &&cell : nonEmpty_Cells)
+    for (size_t cell=0; cell<nonEmpty_Cells.size(); cell++)
+    {
+      const vector<long> cell_objects = cm.get_list(nonEmpty_Cells[cell]);
+      const vector<long> close_objects = cm.close_objects_cell(nonEmpty_Cells[cell], -1);
+
+      for (auto &&i : cell_objects)
       {
 
 	alm_n.reset();
 
-	double ixx = cat->xx(i);
-	double iyy = cat->yy(i);
-	double izz = cat->zz(i);
-	double iww = cat->weight(i);
+	ClusteringObject iobj = cat->clustering_info(i);
 
-	if(iww<0)
+	if(iobj.weight<0)
 	  alm_r.reset();
 
-	vector<long> close_objects = cm.close_objects({ixx, iyy, izz}, -1);
+	for (auto &&j : close_objects)
+	{
+	  ClusteringObject jobj = cat->clustering_info(j);
 
-	for (size_t j=0; j<close_objects.size(); j++) {
+	  cbl::Vector4D diff = iobj.pos-jobj.pos;
 
-	  double jxx = cat->xx(close_objects[j]);
-	  double jyy = cat->yy(close_objects[j]);
-	  double jzz = cat->zz(close_objects[j]);
-	  double jww = cat->weight(close_objects[j]);
+	  double rrSq = diff.squaredNorm();
 
-	  double xx = jxx-ixx;
-	  double yy = jyy-iyy;
-	  double zz = jzz-izz;
+	  if (rrSq>=rMinSq && rrSq<=rMaxSq && i!=j) {
 
-	  double rr = sqrt(xx*xx+yy*yy+zz*zz);
+	    double rr = sqrt(rrSq);
 
-	  if (rr>=rmin && rr<=rmax && i!=close_objects[j]) {
-
-	    vector<complex<double>> _alm = alm_n.alm(xx/rr, yy/rr, zz/rr);
+	    vector<complex<double>> _alm = alm_n.alm(diff[0]/rr, diff[1]/rr, diff[2]/rr);
 
 	    int jbin = max(0, min(int((rr-rmin)*binSize_inv), nbins));
 
-	    _NN[jbin] += iww*jww*jww;
+	    _NN[jbin] += iobj.weight*jobj.weight*jobj.weight;
 
-	    alm_n.add (_alm, jww, jbin);
-	    if (iww<0 && jww <0) {
-	      alm_r.add(_alm, jww, jbin);
-	      _RR[jbin] -= iww*jww*jww;
+	    alm_n.add (_alm, jobj.weight, jbin);
+	    if (iobj.weight<0 && jobj.weight <0) {
+	      alm_r.add(_alm, jobj.weight, jbin);
+	      _RR[jbin] -= iobj.weight*jobj.weight*jobj.weight;
 	    }
 	  }
 	}
@@ -151,16 +155,17 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_all::m_cou
 	  for (int b2=0; b2<nbins; b2++)
 	    for (int l=0; l<norders; l++) {
 	      index = l+b2*norders+b1*norders*nbins;
-	      _NNN[index] += iww*alm_n.power(l, b1, b2);
-	      if (iww<0)
-		_RRR[index] -= iww*alm_r.power(l, b1, b2);
+	      _NNN[index] += iobj.weight*alm_n.power(l, b1, b2);
+	      if (iobj.weight<0)
+		_RRR[index] -= iobj.weight*alm_r.power(l, b1, b2);
 	    }
-
-	// estimate the computational time and update the time count
-	if (i==int(nObjects*0.25)) coutCBL << ".............25% completed" << endl;
-	if (i==int(nObjects*0.5)) coutCBL << ".............50% completed" << endl;
-	if (i==int(nObjects*0.75)) coutCBL << ".............75% completed"<< endl;   
       }
+
+      // estimate the computational time and update the time count
+      if (cell==int(nCells*0.25)) coutCBL << ".............25% completed" << endl;
+      if (cell==int(nCells*0.5)) coutCBL << ".............50% completed" << endl;
+      if (cell==int(nCells*0.75)) coutCBL << ".............75% completed"<< endl;   
+    }
 #pragma omp critical
     {
       for (int b1=0; b1<nbins; b1++){

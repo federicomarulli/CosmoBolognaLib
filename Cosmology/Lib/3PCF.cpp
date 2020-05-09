@@ -645,8 +645,8 @@ double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volum
     double rmin = bin-deltaR/2;
     double rmax = bin+deltaR/2;
     if (rr>=rmin && rr<=rmax && deltaR>0)
-      return 1./(4*par::pi*pow(rr, 2));
-      //return 1./(4*par::pi/3*(pow(rmax, 3)-pow(rmin, 3)));
+      //return 1./(4*par::pi*pow(rr, 2));
+      return 1./(4*par::pi/3*(pow(rmax, 3)-pow(rmin, 3)));
     else 
       return 0.;
   };

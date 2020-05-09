@@ -35,10 +35,10 @@ int main () {
     // ---------------- construct the random catalogue (with cubic geometry) ----------------
     // --------------------------------------------------------------------------------------
 
-    const double N_R = 2.; // random/data ratio
+    const double N_R = 1000.; // random/data ratio
    
     cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::RandomType::_createRandom_box_, catalogue, N_R};
-  
+
     // -------------------------------------------------------------------------------
     // ---------------- measure the three-point correlation functions ----------------
     // -------------------------------------------------------------------------------
@@ -46,24 +46,36 @@ int main () {
     // binning parameters
 
     const double rMin = 5.;  
-    const double rMax = 10.;
+    const double rMax = 11.;
     const double binSize = 2;
-    const int nOrders = 11;
+    const int nOrders = 2;
   
     // output data
   
     const std::string dir_output = cbl::par::DirLoc+"../output/";
-    const std::string dir_triplets = cbl::par::DirLoc+"../output/triplets/";
-    const std::string file_output = "zeta_multipoles.dat";
+    std::string dir_triplets = cbl::par::DirLoc+"../output/triplets/Single/";
+    std::string file_output = "zeta_multipoles_single.dat";
   
     // measure the connected three-point correlation functions legendre coefficients and write the output
 
-    const auto ThreeP = cbl::measure::threept::ThreePointCorrelation_comoving_multipoles::Create(catalogue, random_catalogue,
+    const auto ThreeP_Single = cbl::measure::threept::ThreePointCorrelation_comoving_multipoles::Create(catalogue, random_catalogue,
+        9., 11., 9., 11., nOrders);
+
+    ThreeP_Single->measure(cbl::measure::ErrorType::_None_, dir_triplets);
+  
+    ThreeP_Single->write(dir_output, file_output);
+
+    // measure the connected three-point correlation functions legendre coefficients and write the output
+
+    dir_triplets = cbl::par::DirLoc+"../output/triplets/All/";
+    file_output = "zeta_multipoles_all.dat";
+
+    const auto ThreeP_All = cbl::measure::threept::ThreePointCorrelation_comoving_multipoles::Create(catalogue, random_catalogue,
         rMin, rMax, binSize, nOrders);
 
-    ThreeP->measure(cbl::measure::ErrorType::_None_, dir_triplets);
+    ThreeP_All->measure(cbl::measure::ErrorType::_None_, dir_triplets);
   
-    ThreeP->write(dir_output, file_output);
+    ThreeP_All->write(dir_output, file_output);
 
   }
 

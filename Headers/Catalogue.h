@@ -1650,6 +1650,15 @@ namespace cbl {
       double z_displacement (const int i) const { return m_object[i]->z_displacement(); };
 
       /**
+       *  @brief get the object coordinates in Eigen array
+       *  @return an object containing the minimal quantities needed for clustering analysis
+       */
+      ClusteringObject clustering_info (const int i) const
+	{
+	  return m_object[i]->clustering_info();
+	}
+
+      /**
        *  @brief get the private member m_nRegions
        *
        *  @return the total number of regions

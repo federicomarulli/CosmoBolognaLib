@@ -57,7 +57,7 @@ HH = $(dir_H)*.h
 ###################
 
 FLAGS0 = -std=c++11 -fopenmp
-FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
+FLAGS = -march=native -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 FLAGST = $(FLAGS0) $(FLAGS)
 
 FLAGS_INC = -I$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H)
