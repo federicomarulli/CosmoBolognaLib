@@ -642,7 +642,7 @@ double cbl::cosmology::Cosmology::Omega (const double redshift) const
 double cbl::cosmology::Cosmology::Omega_neutrinos (const double Mnu) const
 {
   if (m_hh<1.e-33) ErrorCBL("m_hh should be >0", "Omega_neutrinos", "Cosmology.cpp");
-  return Mnu/(93.8*pow(m_hh, 2));
+  return Mnu/(93.04*pow(m_hh, 2));
 }
 
 
@@ -652,7 +652,7 @@ double cbl::cosmology::Cosmology::Omega_neutrinos (const double Mnu) const
 double cbl::cosmology::Cosmology::neutrino_mass () const
 {
   if (m_hh<1.e-33) ErrorCBL("m_hh should be >0", "neutrino_mass", "Cosmology.cpp");
-  return m_Omega_neutrinos*93.8*pow(m_hh, 2);
+  return m_Omega_neutrinos*93.04*pow(m_hh, 2);
 }
 
 

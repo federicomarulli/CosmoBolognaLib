@@ -305,7 +305,7 @@ OBJ_PARF = $(dir_PARF)ReadParameters.o $(dir_PARF)ParameterFile.o
 
 OBJ_CBL = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_PARF)
 
-OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/fortran/Release/*.o $(PWD)/External/CLASS/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o $(OBJ_CBL) $(PWD)/External/CPT_Library/*.o
+OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/fortran/Release/*.o $(PWD)/External/CLASS/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o $(OBJ_CBL) $(PWD)/External/CPT_Library/*.o $(PWD)/External/CAMB_SPT_private/*.o
 
 
 # objects for python compilation -> if OBJ_PYTHON=OBJ_CBL then all the CBL will be converted in python modules

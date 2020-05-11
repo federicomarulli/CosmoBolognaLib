@@ -230,6 +230,9 @@ void cbl::cosmology::Cosmology::run_CAMB (std::vector<double> &kk, std::vector<d
   kk.erase(kk.begin(), kk.end());
   Pk.erase(Pk.begin(), Pk.end());
 
+  string line;
+  getline(fin, line);
+
   double KK, PK;
   while (fin >> KK >> PK) 
     if (KK>0 && PK>0) {
@@ -2542,4 +2545,191 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_dd_dt_tt (std
 
   return Pk_TNS_terms;
 }
+
+
+//====================================================================
+
+
+std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_eTNS_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec)
+{
+  string dir = fullpath(par::DirCosmo)+"External/CAMB_SPT_private/";
+  string output_tmpCPT = dir+"tmpCPT_eTNS/";
+  string MKout = "mkdir -p " + output_tmpCPT; if (system(MKout.c_str())) {}
+  double HH0 = m_hh*100.;
+
+  // input Pklin_z0
+  const vector<double> Pklin = Pk_DM(kk, method, false, 0., output_dir, store_output, output_root, norm, k_min, k_max, prec);
+  string file = "Pklin.dat";
+  ofstream File_Pklin(output_tmpCPT + file);
+  for (size_t nn=0; nn<kk.size(); ++nn)
+  File_Pklin << kk[nn] << "\t" << Pklin[nn] << endl;
+  File_Pklin.close();
+
+  // setting parameters for Pk_xy
+  string File_par = "SPT_NLB_params.ini";
+  ofstream fsPkt(output_tmpCPT + File_par);
+  fsPkt << "output_root = SPT_NLB \n" // OutputRoot 
+	<< "get_scalar_cls = F \n" 
+    	<< "get_vector_cls = F \n" 
+    	<< "get_tensor_cls = F \n" 
+    	<< "COBE_normalize = F \n" 
+    	<< "CMB_outputscale = 7.4311e12\n" 
+    	<< "get_transfer = T \n" 
+    	<< "do_nonlinear = 3 \n" 
+    	<< "DoNonLocalBias = T \n" 
+    	<< "RSDmodel = 1 \n" 
+    	<< "w = " << conv(m_w0, par::fDP6) <<"\n" 
+    	<< "cs2_lam = 1 \n" 
+    	<< "hubble = " << conv(HH0, par::fDP6) <<"\n" 
+    	<< "use_physical = T \n" 
+    	<< "ombh2 = " << conv(m_Omega_baryon*m_hh*m_hh, par::fDP6) <<"\n" 
+    	<< "omch2 = " << conv(m_Omega_CDM*m_hh*m_hh, par::fDP6) <<"\n" 
+    	<< "omnuh2 = " << conv(m_Omega_neutrinos*m_hh*m_hh, par::fDP6) <<"\n" 
+    	<< "omk = " << conv(m_Omega_k, par::fDP6) <<"\n" 
+    	<< "temp_cmb = " << cbl::par::TCMB <<"\n" 
+    	<< "helium_fraction = 0.24 \n" 
+    	<< "massless_neutrinos = " << conv(m_massless_neutrinos, par::fDP6) <<"\n" 
+    	<< "massive_neutrinos = " << conv(m_massive_neutrinos, par::fINT) <<"\n" 
+    	<< "nu_mass_eigenstates = 1 \n" 
+    	<< "nu_mass_degeneracies = 0 \n" 
+    	<< "nu_mass_fractions = 1 \n" 
+    	<< "transfer_high_precision = T \n" 
+    	<< "transfer_kmax = " << k_max <<"\n" 
+    	<< "transfer_k_per_logint = 20 \n" 
+    	<< "transfer_num_redshifts = 1 \n" 
+    	<< "transfer_interp_matterpower = T \n" 
+    	<< "transfer_power_var = 7 \n" 
+    	<< "transfer_redshift(1) = " << cbl::conv(redshift, cbl::par::fDP1) <<"\n" 
+    	<< "transfer_filename(1) = Tk_z.dat \n" 
+    	<< "transfer_matterpower(1) = Pk_z.dat \n" 
+    	<< "reionization = T \n" 
+    	<< "re_use_optical_depth = T \n" 
+    	<< "re_optical_depth = " << conv(m_tau, par::fDP6) <<"\n" 
+    	<< "re_delta_redshift = 1.5 \n" 
+    	<< "re_ionization_frac = -1 \n" 
+    	<< "pivot_scalar = " << conv(m_scalar_pivot, par::fDP6) <<"\n" 
+    	<< "pivot_tensor = 0.002 \n" 
+    	<< "initial_power_num = 1 \n" 
+    	<< "scalar_spectral_index(1) = " << conv(m_n_spec, par::fDP6) <<"\n" 
+    	<< "scalar_nrun(1) = 0 \n" 
+    	<< "scalar_amp(1) = " << conv(m_scalar_amp, par::ee3) <<"\n" 
+    	<< "RECFAST_fudge_He = 0.86 \n" 
+    	<< "RECFAST_Heswitch = 6 \n" 
+    	<< "RECFAST_Hswitch = T \n" 
+    	<< "RECFAST_fudge = 1.14 \n" 
+    	<< "do_lensing_bispectrum = F \n" 
+    	<< "do_primordial_bispectrum = F \n" 
+    	<< "initial_condition = 1 \n" 
+    	<< "accurate_polarization = T \n" 
+    	<< "accurate_reionization = T \n" 
+    	<< "accurate_BB = F \n" 
+    	<< "do_late_rad_truncation = T \n" 
+    	<< "do_tensor_neutrinos = T \n" 
+    	<< "feedback_level = 1 \n" 
+    	<< "massive_nu_approx = 1 \n" 
+    	<< "number_of_threads = 0 \n" 
+    	<< "accuracy_boost = 2 \n" 
+    	<< "l_accuracy_boost = 1 \n" 
+    	<< "high_accuracy_default = F \n" 
+    	<< "l_sample_boost = 1 ";
+  fsPkt.close();
+  string calc_pk_eTNScorrection  = "cd " + output_tmpCPT + " && " + dir + "camb < "  + File_par; if (system (calc_pk_eTNScorrection.c_str())) {}
+
+  double Kspt, PKlin, PDD, PDV, PVV, PB2D, PB2V, PB22, PBS2D, PBS2V, PB2S2, PBS22, sigma32PKlin, BB1, BB2, BBS2;
+  vector<double> k_spt, Pdd, Pdv, Pvv, Pb2d, Pb2v, Pb22, Pbs2d, Pbs2v, Pb2s2, Pbs22, sigma32Pklin, Bb1, Bb2, Bbs2;
+
+  const string filenamePK = output_tmpCPT + "SPT_NLB_Pk_z.dat"; // k, Pklin, Pdd, Pdv, Pvv, Pb2d, Pb2v, Pb22, Pbs2d, Pbs2v, Pb2s2, Pbs22, sigma3^2Pklin, Bb1, Bb2, Bbs2
+
+  ifstream finPK(filenamePK.c_str());    
+  while (finPK >> Kspt >> PKlin >> PDD >> PDV >> PVV >> PB2D >> PB2V >> PB22 >> PBS2D >> PBS2V >> PB2S2 >> PBS22 >> sigma32PKlin >> BB1 >> BB2 >> BBS2) {
+	k_spt.emplace_back(Kspt);
+	Pdd.emplace_back(PDD);
+	Pdv.emplace_back(PDV);
+	Pvv.emplace_back(PVV);
+	Pb2d.emplace_back(PB2D);
+	Pb2v.emplace_back(PB2V);
+	Pb22.emplace_back(PB22);
+	Pbs2d.emplace_back(PBS2D);
+	Pbs2v.emplace_back(PBS2V);
+	Pb2s2.emplace_back(PB2S2);
+	Pbs22.emplace_back(PBS22);
+	sigma32Pklin.emplace_back(sigma32PKlin);
+	Bb1.emplace_back(BB1);
+	Bb2.emplace_back(BB2);
+	Bbs2.emplace_back(BBS2);
+    }
+  finPK.clear();
+
+  vector<double> Pdd_new(kk.size()), Pdv_new(kk.size()), Pvv_new(kk.size()), Pb2d_new(kk.size()), Pb2v_new(kk.size()), Pb22_new(kk.size()), Pbs2d_new(kk.size()), Pbs2v_new(kk.size()), Pb2s2_new(kk.size()), Pbs22_new(kk.size()), sigma32Pklin_new(kk.size()), Bb1_new(kk.size()), Bb2_new(kk.size()), Bbs2_new(kk.size());
+
+  glob::FuncGrid interp_Pdd(k_spt, Pdd, "Spline");
+  glob::FuncGrid interp_Pdv(k_spt, Pdv, "Spline");
+  glob::FuncGrid interp_Pvv(k_spt, Pvv, "Spline");
+  glob::FuncGrid interp_Pb2d(k_spt, Pb2d, "Spline");
+  glob::FuncGrid interp_Pb2v(k_spt, Pb2v, "Spline");
+  glob::FuncGrid interp_Pb22(k_spt, Pb22, "Spline");
+  glob::FuncGrid interp_Pbs2d(k_spt, Pbs2d, "Spline");
+  glob::FuncGrid interp_Pbs2v(k_spt, Pbs2v, "Spline");
+  glob::FuncGrid interp_Pb2s2(k_spt, Pb2s2, "Spline");
+  glob::FuncGrid interp_Pbs22(k_spt, Pbs22, "Spline");
+  glob::FuncGrid interp_sigma32Pklin(k_spt, sigma32Pklin, "Spline");
+  glob::FuncGrid interp_Bb1(k_spt, Bb1, "Spline");
+  glob::FuncGrid interp_Bb2(k_spt, Bb2, "Spline");
+  glob::FuncGrid interp_Bbs2(k_spt, Bbs2, "Spline");
+
+  Pdd_new = interp_Pdd.eval_func(kk);
+  Pdv_new = interp_Pdv.eval_func(kk);
+  Pvv_new = interp_Pvv.eval_func(kk);
+  Pb2d_new = interp_Pb2d.eval_func(kk);
+  Pb2v_new = interp_Pb2v.eval_func(kk);
+  Pb22_new = interp_Pb22.eval_func(kk);
+  Pbs2d_new = interp_Pbs2d.eval_func(kk);
+  Pbs2v_new = interp_Pbs2v.eval_func(kk);
+  Pb2s2_new = interp_Pb2s2.eval_func(kk);
+  Pbs22_new = interp_Pbs22.eval_func(kk);
+  sigma32Pklin_new = interp_sigma32Pklin.eval_func(kk);
+  Bb1_new = interp_Bb1.eval_func(kk);
+  Bb2_new = interp_Bb2.eval_func(kk);
+  Bbs2_new = interp_Bbs2.eval_func(kk);
+
+  // define the normalization
+  int Norm = norm;
+  if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
+  if (Norm==1) {
+    double sigma8;
+    const double RR = 8.;
+    glob::FuncGrid interpPk(kk, Pklin, "Spline");
+    auto func_sigma = [&] (double _k){
+      return pow(TopHat_WF(_k*RR)*_k, 2)*interpPk(_k);
+    };
+
+    sigma8 = sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))/DD_norm(redshift);
+    m_Pk0_CAMB = pow(m_sigma8/sigma8,2);
+    }
+    else { m_Pk0_CAMB = 1.;}
+
+   for (size_t i=0; i<kk.size(); i++){
+     Pdd_new[i]   *= m_Pk0_CAMB;
+     Pdv_new[i]   *= m_Pk0_CAMB;
+     Pvv_new[i]   *= m_Pk0_CAMB;
+     Pb2d_new[i]  *= m_Pk0_CAMB;
+     Pb2v_new[i]  *= m_Pk0_CAMB;
+     Pb22_new[i]  *= m_Pk0_CAMB;
+     Pbs2d_new[i] *= m_Pk0_CAMB;
+     Pbs2v_new[i] *= m_Pk0_CAMB;
+     Pb2s2_new[i] *= m_Pk0_CAMB;
+     Pbs22_new[i] *= m_Pk0_CAMB;
+     sigma32Pklin_new[i] *= m_Pk0_CAMB;
+     Bb1_new[i]   *= m_Pk0_CAMB;
+     Bb2_new[i]   *= m_Pk0_CAMB;
+     Bbs2_new[i]  *= m_Pk0_CAMB;
+ }
+
+  vector<vector<double>> Pk_AB = {Pdd_new, Pdv_new, Pvv_new, Pb2d_new, Pb2v_new, Pb22_new, Pbs2d_new, Pbs2v_new, Pb2s2_new, Pbs22_new, sigma32Pklin_new, Bb1_new, Bb2_new, Bbs2_new};
+
+  string RM = "rm -rf " + output_tmpCPT; if (system (RM.c_str())) {}
+
+  return Pk_AB;
+}
+
 

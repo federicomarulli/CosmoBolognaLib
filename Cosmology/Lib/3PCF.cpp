@@ -645,8 +645,7 @@ double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volum
     double rmin = bin-deltaR/2;
     double rmax = bin+deltaR/2;
     if (rr>=rmin && rr<=rmax && deltaR>0)
-      return 1./(4*par::pi*pow(rr, 2));
-      //return 1./(4*par::pi/3*(pow(rmax, 3)-pow(rmin, 3)));
+      return 1./(4*par::pi/3*(pow(rmax, 3)-pow(rmin, 3)));
     else 
       return 0.;
   };
@@ -737,9 +736,9 @@ double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volum
 	double t3  = pow(-1, 0.5*(l+l_prime+ell2))*(f_r_r1*f_r_r1p*f_r_r2_r2p+f_r_r1*f_r_r2p*f_r_r2_r1p+f_r_r2*f_r_r1p*f_r_r1_r2p+f_r_r2*f_r_r2p*f_r_r1_r1p);
 	sum += t1*(t2+t3);
       }
-
-      Int += rr[i]*rr[i]*sum*rr[i];
     }
+
+    Int += rr[i]*rr[i]*sum*rr[i];
   }
   
   double fact = 4.*par::pi/Volume*(2*l+1)*(2*l_prime+1)*pow(-1, l+l_prime);

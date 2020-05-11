@@ -7465,6 +7465,72 @@ namespace cbl {
        */
       std::vector<std::vector<double>> Pk_TNS_AB_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=100., const double prec=1.e-2);
 
+
+      /**
+       *  @brief The expanded correction terms for the extended TNS model
+       *  (eTNS)
+       *
+       *  the expanded correction terms for the eTNS model are
+       *  computed at 1-loop using the Standard Perturbation Theory
+       *  implemented in the CAMB-integrated version by Shun Saito.
+       *  [http://www2.yukawa.kyoto-u.ac.jp/~atsushi.taruya/cpt_pack.html].
+       *  Details can be found in Saito et al. (2014) and Beutler et al. (2014) 
+       *  [https://arxiv.org/abs/1405.1447 and https://arxiv.org/abs/1312.4611v2].
+       *
+       *  \f[ P_{\mathrm{g}}(k, \mu)= \exp \left\{-\left(f k \mu \sigma_{v}\right)^{2}\right\}\left[P_{\mathrm{g}, \delta \delta}(k)\right.\\
+       *  +2 f \mu^{2} P_{\mathrm{g}, \delta \theta}(k)+f^{2} \mu^{4} P_{\theta \theta}(k) \\
+       *  \left.+b_{1}^{3} A(k, \mu, \beta)+b_{1}^{4} B(k, \mu, \beta)\right]\f]
+       *
+       *  \f[ P_{\mathrm{g}, \delta \delta}(k) =b_{1}^{2} P_{\delta \delta}(k)+2 b_{2} b_{1} P_{b 2, \delta}(k)+2 b_{s 2} b_{1} P_{b s 2, \delta}(k) \\
+       *  +2 b_{3 \mathrm{n} 1} b_{1} \sigma_{3}^{2}(k) P_{\mathrm{m}}^{\mathrm{L}}(k)+b_{2}^{2} P_{b 22}(k) \\
+       *  +2 b_{2} b_{s 2} P_{b 2 s 2}(k)+b_{s 2}^{2} P_{b s 22}(k)+N \f]
+       *  
+       *  \f[ P_{\mathrm{g}, \delta \theta}(k) =b_{1} P_{\delta \theta}(k)+b_{2} P_{b 2, \theta}(k)+b_{s 2} P_{b s 2, \theta}(k) \\
+       *  +b_{3 \mathrm{nl}} \sigma_{3}^{2}(k) P_{\mathrm{m}}^{lin}(k) \f]
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param method method used to compute the linear power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  CLASS [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_dir the output_dir directory
+       *  where the output of external codes are written
+       *
+       *  @param store_output if true the output files created
+       *  by CAMB are stored; if false the output files created by
+       *  CAMB are removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can
+       *  be any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @return expanded terms of the eTNS model: Pdd, Pdv, Pvv,
+       *  Pb2d, Pb2v, Pb22, Pbs2d, Pbs2v, Pb2s2, Pbs22, sigma32Pklin, Bb1, Bb2, Bbs2
+       */
+      std::vector<std::vector<double>> Pk_eTNS_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=100., const double prec=1.e-2);
+
       /**
        *  @brief the expanded A and B correction terms for the TNS
        *  model
