@@ -107,7 +107,7 @@
 #include <boost/numeric/odeint.hpp>
 /// @endcond
 
-/// @cond FFTWinc
+/// @cond EIGENinc
 #include <Eigen/Dense>
 /// @endcond
 

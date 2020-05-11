@@ -17,6 +17,7 @@
 %feature("director") cbl::catalogue::MaskObject;
 
 %{
+#include <Eigen/Dense>
 #include "Object.h"
 #include "RandomObject.h"
 #include "Halo.h"

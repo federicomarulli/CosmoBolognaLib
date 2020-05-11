@@ -120,33 +120,33 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_all::m_cou
 
 	alm_n.reset();
 
-	ClusteringObject iobj = cat->clustering_info(i);
+        cbl::Vector4D ipos = cat->coordinates(i);
+        double iww = cat->weight(i);
 
-	if(iobj.weight<0)
+	if(iww<0)
 	  alm_r.reset();
 
 	for (auto &&j : close_objects)
 	{
-	  ClusteringObject jobj = cat->clustering_info(j);
-
-	  cbl::Vector4D diff = iobj.pos-jobj.pos;
+	  cbl::Vector4D diff = ipos-cat->coordinates(j);
 
 	  double rrSq = diff.squaredNorm();
 
 	  if (rrSq>=rMinSq && rrSq<=rMaxSq && i!=j) {
 
 	    double rr = sqrt(rrSq);
+            double jww = cat->weight(j);
 
 	    vector<complex<double>> _alm = alm_n.alm(diff[0]/rr, diff[1]/rr, diff[2]/rr);
 
 	    int jbin = max(0, min(int((rr-rmin)*binSize_inv), nbins));
 
-	    _NN[jbin] += iobj.weight*jobj.weight*jobj.weight;
+	    _NN[jbin] += iww*jww*jww;
 
-	    alm_n.add (_alm, jobj.weight, jbin);
-	    if (iobj.weight<0 && jobj.weight <0) {
-	      alm_r.add(_alm, jobj.weight, jbin);
-	      _RR[jbin] -= iobj.weight*jobj.weight*jobj.weight;
+	    alm_n.add (_alm, jww, jbin);
+	    if (iww<0 && jww <0) {
+	      alm_r.add(_alm, jww, jbin);
+	      _RR[jbin] -= iww*jww*jww;
 	    }
 	  }
 	}
@@ -155,9 +155,9 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_all::m_cou
 	  for (int b2=0; b2<nbins; b2++)
 	    for (int l=0; l<norders; l++) {
 	      index = l+b2*norders+b1*norders*nbins;
-	      _NNN[index] += iobj.weight*alm_n.power(l, b1, b2);
-	      if (iobj.weight<0)
-		_RRR[index] -= iobj.weight*alm_r.power(l, b1, b2);
+	      _NNN[index] += iww*alm_n.power(l, b1, b2);
+	      if (iww<0)
+		_RRR[index] -= iww*alm_r.power(l, b1, b2);
 	    }
       }
 

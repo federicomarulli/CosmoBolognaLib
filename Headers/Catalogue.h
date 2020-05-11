@@ -1653,9 +1653,9 @@ namespace cbl {
        *  @brief get the object coordinates in Eigen array
        *  @return an object containing the minimal quantities needed for clustering analysis
        */
-      ClusteringObject clustering_info (const int i) const
+      cbl::Vector4D coordinates (const int i) const
 	{
-	  return m_object[i]->clustering_info();
+	  return m_object[i]->coordinates();
 	}
 
       /**
