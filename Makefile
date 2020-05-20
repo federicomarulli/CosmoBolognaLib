@@ -30,8 +30,8 @@ dir_INC_cfitsio =
 dir_LIB_cfitsio =
 
 # boost installation directories
-dir_INC_boost =
-dir_LIB_boost =
+dir_INC_BOOST =
+dir_LIB_BOOST =
 
 
 ############################################################################
@@ -136,7 +136,7 @@ endif
 # add in FLAGS_INC
 ifeq ($(dir_INC_BOOST),)
   else
-  FLAGS_INC :=  $(FLAGS_INC) -I$(dir_INC_BOOST)
+  FLAGS_INC :=  $(FLAGS_INC) -isystem$(dir_INC_BOOST)
 endif
 
 ####################
