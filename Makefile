@@ -1313,7 +1313,7 @@ $(PWD)/External/CAMB/fortran/camb:
 	cd $(PWD)/External/CAMB/fortran ; make clean && make F90C=$(F) && make clean && cd ../../../
 
 $(PWD)/External/CLASS/class:
-	cd $(PWD)/External/CLASS ; make clean && make CC=$(CC) OPTFLAG=-O3 && make clean && cd ../..
+	cd $(PWD)/External/CLASS ; make clean && make CC=$(CC) PYTHON=$(PY) OPTFLAG=-O3 && make clean && cd ../..
 
 $(PWD)/External/MPTbreeze-v1/mptbreeze:
 	cd External/MPTbreeze-v1/Cuba-1.4/ ; ./configure CC=$(CC) F77=$(F) && make lib && cd ../../../
