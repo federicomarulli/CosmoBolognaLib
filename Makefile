@@ -29,6 +29,10 @@ dir_LIB_FFTW =
 dir_INC_cfitsio =
 dir_LIB_cfitsio =
 
+# boost installation directories
+dir_INC_boost =
+dir_LIB_boost =
+
 
 ############################################################################
 ### hopefully, the user would never modify the makefile after this point ###
@@ -124,6 +128,16 @@ ifeq ($(dir_INC_cfitsio),)
     CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits &&  sed -i -e "s/bad_cast/bad_cast\&/g" ColumnT.h && ./configure CXX=$(CXX) --with-cfitsio-include=$(dir_INC_cfitsio) --with-cfitsio-libdir=$(dir_LIB_cfitsio) --prefix=$(dir_CCfits) && make && make install 
 endif
 
+###################
+### BOOST FLAGS ###
+###################
+
+
+# add in FLAGS_INC
+ifeq ($(dir_INC_BOOST),)
+  else
+  FLAGS_INC :=  $(FLAGS_INC) -I$(dir_INC_BOOST)
+endif
 
 ####################
 ### FFTLOG FLAGS ###

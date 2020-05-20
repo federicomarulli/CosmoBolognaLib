@@ -2633,7 +2633,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_eTNS_terms_1loop 
     	<< "high_accuracy_default = F \n" 
     	<< "l_sample_boost = 1 ";
   fsPkt.close();
-  string calc_pk_eTNScorrection  = "cd " + output_tmpCPT + " && " + dir + "camb < "  + File_par; if (system (calc_pk_eTNScorrection.c_str())) {}
+  string calc_pk_eTNScorrection  = "cd " + output_tmpCPT + " && " + dir + "camb "  + File_par; if (system (calc_pk_eTNScorrection.c_str())) {}
 
   double Kspt, PKlin, PDD, PDV, PVV, PB2D, PB2V, PB22, PBS2D, PBS2V, PB2S2, PBS22, sigma32PKlin, BB1, BB2, BBS2;
   vector<double> k_spt, Pdd, Pdv, Pvv, Pb2d, Pb2v, Pb22, Pbs2d, Pbs2v, Pb2s2, Pbs22, sigma32Pklin, Bb1, Bb2, Bbs2;

@@ -582,6 +582,63 @@ void cbl::read_matrix (const std::string file_matrix, std::vector<double> &xx, s
 
 }
 
+// ============================================================================
+
+std::vector<std::vector<double>> cbl::read_file (const std::string file_name, const std::string path_name, const std::vector<int> column_data, const int skip_nlines)
+{
+  const string input_file (path_name+file_name);
+  const int cl_max = column_data.size();
+
+  ifstream fin(input_file.c_str()); checkIO(fin, input_file);
+  string line;
+
+  // skip lines in case of header
+  if (skip_nlines>0)
+    for (int i=0; i<skip_nlines; ++i)
+      getline(fin, line);
+
+  // get the number of lines to read
+  unsigned int n_lines = 0;
+  while(getline(fin, line)) n_lines++;
+  
+  fin.clear(); fin.close();
+
+  // vector of vectors to return
+  vector<vector<double>> final_data(cl_max, vector<double>(n_lines, 0));
+  
+#pragma omp parallel num_threads(cl_max>omp_get_max_threads() ? omp_get_max_threads() : cl_max)
+  {
+    // share ifstream between the CPUs
+    ifstream Fin (input_file);
+    string Line;
+
+    if (skip_nlines>0)
+      for (int i=0; i<skip_nlines; ++i)
+	getline(Fin, Line);
+    
+    // loop on the columns to read
+#pragma omp for schedule(dynamic)
+    for (int cl=0; cl<cl_max; ++cl) {
+    
+      // read the file lines
+      for (unsigned int nn=0; nn<n_lines; ++nn) {
+	
+	getline(Fin, Line);
+	stringstream ss(Line);
+	vector<double> num; double NUM;   
+	while (ss>>NUM) num.emplace_back(NUM);
+
+	// store the data
+	final_data[cl][nn] = num[column_data[cl]-1];
+      }
+    }
+    
+    Fin.clear(); Fin.close();
+  }
+
+  return final_data;
+}
+
 
 // ============================================================================
 

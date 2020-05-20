@@ -373,6 +373,26 @@ namespace cbl {
   void read_matrix (const std::string file_matrix, std::vector<double> &xx, std::vector<double> &yy, std::vector<std::vector<double>> &matrix, const std::vector<int> col={});
 
   /**
+   *  @brief read a data from a file ASCII
+   *
+   *  @param file_name the name of the file to read
+   *
+   *  @param path_name the path where the file is stored
+   *
+   *  @param column_data vector containing the indices of the columns
+   *  to read, starting the counting from 1
+   *
+   *  @param skip_nlines the number of lines to skip 
+   *
+   *  @return a vector of vectors containing the columns (first index)
+   *  and the lines (second index) read from the file
+   *
+   *  @author Sofia Contarini
+   *  @author sofia.contarini3@unibo.it
+   */
+  std::vector<std::vector<double>> read_file (const std::string file_name, const std::string path_name, const std::vector<int> column_data, const int skip_nlines=0);
+
+  /**
    *  @brief compute the determinant of a matrix
    *  @param mat the matrix
    *  @return the determinant
