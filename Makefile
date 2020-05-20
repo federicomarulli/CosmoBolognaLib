@@ -126,6 +126,7 @@ ifeq ($(dir_INC_cfitsio),)
     CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits && sed -i -e "s/bad_cast/bad_cast\&/g" ColumnT.h && ./configure CXX=$(CXX) --prefix=$(dir_CCfits) && make && make install
   else
     CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits &&  sed -i -e "s/bad_cast/bad_cast\&/g" ColumnT.h && ./configure CXX=$(CXX) --with-cfitsio-include=$(dir_INC_cfitsio) --with-cfitsio-libdir=$(dir_LIB_cfitsio) --prefix=$(dir_CCfits) && make && make install 
+  FLAGS_INC :=  $(FLAGS_INC) -I$(dir_INC_cfitsio)
 endif
 
 ###################
