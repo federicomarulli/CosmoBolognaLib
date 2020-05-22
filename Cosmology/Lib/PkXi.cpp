@@ -80,7 +80,7 @@ std::string cbl::cosmology::Cosmology::Pk_output_file (const string code, const 
 
   string dir = dir_cosmo+"External/"+code+"/";
   string dirC = dir_cosmo+"External/CAMB/";
-  if (chdir (dirC.c_str())) {}
+  if (chdir(dirC.c_str())) {}
 
   string dir_output = dir+dir_grid+"pk.dat";
 
@@ -89,6 +89,8 @@ std::string cbl::cosmology::Cosmology::Pk_output_file (const string code, const 
     Table_PkCodes(code, NL, lgkk, lgPk, redshift, store_output, output_root, k_max, file_par);   
   }
 
+  if (chdir(fullpath(par::DirLoc).c_str())) {}
+  
   return dir_output;
 }
 
@@ -159,6 +161,8 @@ void cbl::cosmology::Cosmology::run_CAMB (const bool NL, const double redshift, 
     string RM = "rm -f "+OutputRoot+"*";
     if (system(RM.c_str())) {}
   }
+
+  if (chdir(fullpath(par::DirLoc).c_str())) {}
 }
 
 
@@ -242,6 +246,7 @@ void cbl::cosmology::Cosmology::run_CAMB (std::vector<double> &kk, std::vector<d
   fin.clear(); fin.close();
 
   if (delete_output) if (system(("rm -f "+OutputRoot+"*").c_str())) {}
+  if (chdir(fullpath(par::DirLoc).c_str())) {}
 }
 
 
@@ -253,8 +258,8 @@ void cbl::cosmology::Cosmology::Table_PkCodes (const std::string code, const boo
   if (code=="MPTbreeze-v1") {
     if (m_sigma8<0)
       ErrorCBL("sigma8<0! The function set_sigma8() can be used to set the value of sigma8!", "Table_PkCodes", "PkXi.cpp");
-    //if (NL)
-    //WarningMsgCBL("NL is ignored by MPTbreeze-v1, that provides in output the non-linear power spectrum", "Table_PkCodes", "PkXi.cpp");  
+    if (NL)
+      WarningMsgCBL("NL is ignored by MPTbreeze-v1, that provides in output the non-linear power spectrum", "Table_PkCodes", "PkXi.cpp");  
   }
   
   if (file_par==par::defaultString) {
@@ -402,11 +407,10 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CAMB_MPTbreeze (const string code, co
   fin_CAMB.clear(); fin_CAMB.close();
   fin_MPTbreeze.clear(); fin_MPTbreeze.close();
 
+  
   // ---------------------------------------
   // --------- get the output P(k) ---------
   // ---------------------------------------
-
-  //if (chdir(fullpath(par::DirLoc).c_str())) {}
 
   const string file_in = (code=="CAMB") ? fileCAMB_in : fileMPT_in;
   ifstream fin(file_in.c_str()); checkIO(fin, file_in);
@@ -440,7 +444,7 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CAMB_MPTbreeze (const string code, co
   if (!store_output) 
     if (system(("rm -rf "+dirCAMB_output+" "+dirMPTbreeze_output).c_str())) {}
   
-  (void)code; (void)store_output; (void)output_root; (void)k_max;
+  if (chdir(fullpath(par::DirLoc).c_str())) {}
 }
 
 
@@ -535,8 +539,6 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CLASS (const bool NL, std::vector<dou
   // ---------------------------------------
   // --------- get the output P(k) ---------
   // ---------------------------------------
-
-  //if (chdir(fullpath(par::DirLoc).c_str())) {}
   
   fin.open(file_in.c_str()); checkIO(fin, file_in); 
   string line;
@@ -563,6 +565,8 @@ void cbl::cosmology::Cosmology::m_Table_Pk_CLASS (const bool NL, std::vector<dou
   
   if (!store_output) 
     if (system(("rm -rf "+dir_output).c_str())) {}
+
+  if (chdir(fullpath(par::DirLoc).c_str())) {}
 }
 
 
@@ -686,7 +690,7 @@ void cbl::cosmology::Cosmology::m_Table_Pk_parameterFile (const std::string code
     ErrorCBL("lgkk.size()="+conv(lgkk.size(), par::fINT)+", lgPk.size()="+conv(lgPk.size(), par::fINT), "Table_PkCodes", "PkXi.cpp");
     
   if (system(("rm -f "+dirB+output_root+"* ").c_str())) {}
-  
+  if (chdir(fullpath(par::DirLoc).c_str())) {}
 }
 
 
@@ -773,6 +777,8 @@ void cbl::cosmology::Cosmology::Table_XiCodes (const std::string code, const boo
     string RM = "rm -rf "+dir_grid;
     if (system(RM.c_str())) {}
   }
+  
+  if (chdir(fullpath(par::DirLoc).c_str())) {}
 }
 
 
@@ -1238,7 +1244,7 @@ double cbl::cosmology::Cosmology::sigma8_Pk (const std::string method_Pk, const 
     const double RHO = rho_m(0., true); 
     const double MM = Mass(RR, RHO);
     double Int = -1., error = -1.;
-
+    
     const int limit_size = 1000;
     gsl_integration_workspace *ww = gsl_integration_workspace_alloc(limit_size);
     gsl_function Func;
@@ -1261,7 +1267,7 @@ double cbl::cosmology::Cosmology::sigma8_Pk (const std::string method_Pk, const 
     else if (method_Pk=="CAMB" || method_Pk=="MPTbreeze-v1" || method_Pk=="CLASS") {
       vector<double> lgkk, lgPk;
       Table_PkCodes(method_Pk, NL, lgkk, lgPk, redshift, store_output, output_root, k_max, file_par);
-
+      
       cbl::glob::STR_SSM str;
       str.unit = true;
       str.hh = m_hh;
