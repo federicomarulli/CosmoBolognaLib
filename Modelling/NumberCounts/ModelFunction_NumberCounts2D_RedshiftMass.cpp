@@ -127,7 +127,8 @@ std::vector<std::vector<double>> cbl::modelling::numbercounts::number_counts_red
   for (size_t i=0; i<npar; ++i)
     cosmo.set_parameter(pp->Cpar[i], parameter[i]);
   
-  if (!pp->is_sigma8_free) parameter[pp->Cpar.size()-1] = cosmo.sigma8();
+  // Moved below for convenience...
+  //if (!pp->is_sigma8_free) parameter[pp->Cpar.size()-1] = cosmo.sigma8();
   
   std::vector<std::vector<double>> number_counts(redshift.size(), std::vector<double>(mass.size()));
 
@@ -135,6 +136,12 @@ std::vector<std::vector<double>> cbl::modelling::numbercounts::number_counts_red
   const std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
   
   const std::vector<cbl::glob::FuncGrid> interp = cbl::modelling::numbercounts::sigmaM_dlnsigmaM(pp->Mass_vector, cosmo, pp->kk, Pk, "Spline", pp->k_max);
+
+  // SigmaM has been computed in the previous line, just take sigma8 from it -> M8 = Mass(8., cosmo.rho_m()), probably...
+  if (!pp->is_sigma8_free) parameter[pp->Cpar.size()-1] = interp[0](Mass(8., cosmo.rho_m())); 
+  
+  // Debug line, full of suprises...
+  //cout << setprecision(10) << parameter[pp->Cpar.size()-1] << " " << cosmo.sigma8_Pk("EisensteinHu", 0.) << " " << sqrt(cosmo.sigma2R(8., "EisensteinHu", 0.)) << "                               " <<  endl;
   
   double deltaz = 0.5*(redshift[1]-redshift[0]);
   double deltaLogM = 0.5*(log10(mass[1])-log10(mass[0]));
