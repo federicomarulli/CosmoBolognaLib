@@ -8,7 +8,7 @@ FLAGST = $(FLAGS0) $(FLAGS)
 
 dirLib = $(PWD)/../../../
 dirH = $(dirLib)Headers/
-dir_Eigen = $(dirLib)External/eigen-3.3.7/
+dir_Eigen = $(dirLib)External/Eigen/eigen-3.3.7/
 dir_CCfits = $(dirLib)External/CCfits/include
 dirCUBA = $(dirLib)External/Cuba-4.2/
 

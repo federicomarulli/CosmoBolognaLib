@@ -38,11 +38,13 @@ dir_LIB_BOOST =
 ### hopefully, the user would never modify the makefile after this point ###
 ############################################################################
 
+EIGEN_VERSION = 3.3.7
+
 Dir_H = Headers/
 Dir_CCfits = External/CCfits/
 Dir_CUBA = External/Cuba-4.2/
 Dir_FFTLOG = External/fftlog-f90-master/
-Dir_Eigen = External/eigen-3.3.7/
+Dir_Eigen = External/Eigen/eigen-$(EIGEN_VERSION)/
 Dir_Recfast = External/Recfast/
 
 dir_H = $(addprefix $(PWD)/,$(Dir_H))
@@ -343,6 +345,7 @@ define colorecho
 endef
 
 ALL:
+	make Eigen
 	make CUBA  
 	make CCfits
 	make CAMB
@@ -480,6 +483,8 @@ libPARF: $(OBJ_PARF) $(PWD)/Makefile
 
 libCBL: $(OBJ_CBL) $(PWD)/Makefile
 	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCBL.$(ES) $(OBJ_CBL) $(CUBA_LIB) $(FLAGS_CCFITS) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran 
+
+Eigen: $(PWD)/External/Eigen/eigen-$(EIGEN_VERSION)/Eigen/Dense
 
 CUBA: $(CUBA_LIB)
 
@@ -643,6 +648,7 @@ purgeALL:
 	rm -rf Doc/html/* Doc/xml/* 
 	rm -rf Cosmology/Tables/*
 	rm -rf External/EisensteinHu/output_linear/*
+	rm -rf External/Eigen/eigen-$(EIGEN_VERSION)/
 	cd External/CAMB/forutils ; make clean
 	cd External/CAMB/fortran ; make clean
 	rm -rf External/CAMB/fortran/camb
@@ -1311,6 +1317,8 @@ $(dir_Python)CBL_wrap.cxx: $(dir_Python)CBL.i $(HH) $(PWD)/Makefile
 
 #################################################################### 
 
+$(PWD)/External/Eigen/eigen-$(EIGEN_VERSION)/Eigen/Dense:
+	cd $(PWD)/External/Eigen/ && tar -xzf eigen-$(EIGEN_VERSION).tar.gz
 
 $(PWD)/External/CAMB/fortran/camb:
 	cd $(PWD)/External/CAMB/forutils ; make clean

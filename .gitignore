@@ -18,6 +18,8 @@
 Tables/
 output*/
 
+External/Eigen/eigen-3.3.7/
+
 External/CAMB/forutils/Release/
 
 External/CAMB/fortran/Release/
