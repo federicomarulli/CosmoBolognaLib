@@ -38,8 +38,8 @@
 namespace cbl {
 
   /**
-   * @brief cast an object of type enum class
-   * from its index
+   * @brief cast an object of type enum class from its index
+   *
    * @param i the enum index
    * @return object of class T
    */
@@ -47,30 +47,31 @@ namespace cbl {
     T castFromValue (const int i) { return static_cast<T>(i); }
 
   /**
-   * @brief cast an object of type enum class
-   * from its name
+   * @brief cast an object of type enum class from its name
+   *
    * @param name the enum name
-   * @param list std::vector containing the names of the 
-   * enum
+   *
+   * @param list std::vector containing the names of the enum
+   *
    * @return object of class T
    */
   template<typename T, typename std::enable_if<std::is_enum<T>::value>::type* = nullptr>
     T castFromName (const std::string name, const std::vector<std::string> list) { 
     std::vector<std::string>::const_iterator it = std::find(list.begin(), list.end(), name);
-      
+    
     if (it!=list.end()) 
       return castFromValue<T>(int(it-list.begin()));
-      
+    
     else {
-      std::cerr << par::col_red << std::endl <<"*** Error in castFromName of EnumCast! The name doensn't correspond to any element in list ***" << std::endl << par::col_default << std::endl;
+      std::cerr << par::col_red << std::endl <<"*** Error in castFromName of EnumCast.h! The name does not correspond to any element in list ***" << std::endl << par::col_default << std::endl;
       exit(1);
     }
-
+    
   }
 
   /**
-   * @brief cast objects of type enum class
-   * from indeces
+   * @brief cast objects of type enum class from indeces
+   *
    * @param ii the enum indeces
    * @return object of class T
    */
@@ -84,11 +85,12 @@ namespace cbl {
     }
 
   /**
-   * @brief cast an object of type enum class
-   * from names
+   * @brief cast an object of type enum class from names
+   *
    * @param names the enum names
-   * @param list std::vector containing the names of the 
-   * enum
+   *
+   * @param list std::vector containing the names of the enum
+   *
    * @return object of class T
    */
   template<typename T, typename std::enable_if<std::is_enum<T>::value>::type* = nullptr>
@@ -98,6 +100,7 @@ namespace cbl {
 
       for (size_t i=0; i<names.size(); i++)
 	en[i] = castFromName<T>(names[i], list);
+
       return en;
     }
 

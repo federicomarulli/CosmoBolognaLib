@@ -67,7 +67,7 @@ namespace cbl {
     /**
      *  @brief generic function: the inputs are the values at which the
      *  function is computed, a pointer to a set of data used to
-     *  construct the function and a vector of  parameters
+     *  construct the function and a vector of parameters
      */
     typedef std::function<std::vector<std::vector<double>>(std::vector<std::vector<double>>, std::shared_ptr<void>, std::vector<double> &)> model_function_generic;
 

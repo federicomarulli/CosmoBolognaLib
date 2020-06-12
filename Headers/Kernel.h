@@ -105,6 +105,8 @@
 
 /// @cond BOOSTinc
 #include <boost/numeric/odeint.hpp>
+#include <boost/math/special_functions/binomial.hpp>
+#include <boost/math/special_functions/beta.hpp>
 /// @endcond
 
 /// @cond FFTWinc

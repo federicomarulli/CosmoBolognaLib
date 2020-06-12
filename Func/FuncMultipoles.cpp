@@ -1025,7 +1025,7 @@ void cbl::Covariance_XiMultipoles (std::vector<double> &rr, std::vector<std::vec
   Func.params = &params;
 
   double k_min= max(1.e-4, cbl::Min(kk));
-  double k_max = min(Max(kk),1.); //1.e0; 
+  double k_max = min(Max(kk), 1.); //1.e0; 
   double prec = 1.e-2;
   complex<double> ii = complex<double>(0., 1.);
 

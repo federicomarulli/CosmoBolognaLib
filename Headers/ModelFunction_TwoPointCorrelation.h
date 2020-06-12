@@ -258,6 +258,30 @@ namespace cbl {
 	/// pointer to a function of FuncGrid class, used to interpolate the B44 term (TNS) of the power spectrum
 	std::shared_ptr<glob::FuncGrid> func_Pk_B44;
 
+  /// pointer to a function of FuncGrid class, used to interpolate the Pk_b2d term (eTNS) of the power spectrum
+  std::shared_ptr<glob::FuncGrid> func_Pk_b2d;
+
+  /// pointer to a function of FuncGrid class, used to interpolate the Pk_b2v term (eTNS) of the power spectrum
+  std::shared_ptr<glob::FuncGrid> func_Pk_b2v;
+
+  /// pointer to a function of FuncGrid class, used to interpolate the Pk_b22 term (eTNS) of the power spectrum
+  std::shared_ptr<glob::FuncGrid> func_Pk_b22;
+
+  /// pointer to a function of FuncGrid class, used to interpolate the Pk_bs2d term (eTNS) of the power spectrum
+  std::shared_ptr<glob::FuncGrid> func_Pk_bs2d;
+
+  /// pointer to a function of FuncGrid class, used to interpolate the Pk_bs2v term (eTNS) of the power spectrum
+  std::shared_ptr<glob::FuncGrid> func_Pk_bs2v;
+
+  /// pointer to a function of FuncGrid class, used to interpolate the Pk_b2s2 term (eTNS) of the power spectrum
+  std::shared_ptr<glob::FuncGrid> func_Pk_b2s2;
+
+  /// pointer to a function of FuncGrid class, used to interpolate the Pk_bs22 term (eTNS) of the power spectrum
+  std::shared_ptr<glob::FuncGrid> func_Pk_bs22;
+
+  /// pointer to a function of FuncGrid class, used to interpolate the sigma32Pklin term (eTNS) of the power spectrum
+  std::shared_ptr<glob::FuncGrid> func_sigma32Pklin;
+
 	/// pointer to a function of FuncGrid class, used to interpolate the power spectrum 1-loop correction
 	std::shared_ptr<glob::FuncGrid> func_Pk1loop;
 

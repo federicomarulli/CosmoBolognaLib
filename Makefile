@@ -42,7 +42,7 @@ Dir_H = Headers/
 Dir_CCfits = External/CCfits/
 Dir_CUBA = External/Cuba-4.2/
 Dir_FFTLOG = External/fftlog-f90-master/
-Dir_Eigen = External/eigen-3.3.4/
+Dir_Eigen = External/eigen-3.3.7/
 Dir_Recfast = External/Recfast/
 
 dir_H = $(addprefix $(PWD)/,$(Dir_H))
@@ -119,8 +119,8 @@ endif
 ####################
 ### CCFITS FLAGS ###
 ####################
-FLAGS_CCFITS = -Wl,-rpath,$(dir_CCfits)/lib -L$(dir_CCfits)/lib -lCCfits
-CCfits_LIB = $(dir_CCfits)/lib/libCCfits.$(ES)
+FLAGS_CCFITS = -Wl,-rpath,$(dir_CCfits)lib -L$(dir_CCfits)lib -lCCfits
+CCfits_LIB = $(dir_CCfits)lib/libCCfits.$(ES)
 
 ifeq ($(dir_INC_cfitsio),)
     CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits && sed -i -e "s/bad_cast/bad_cast\&/g" ColumnT.h && ./configure CXX=$(CXX) --prefix=$(dir_CCfits) && make && make install
@@ -278,7 +278,7 @@ OBJ_FFT = $(OBJ_FFTLOG) $(dir_FFT)FFTlog.o
 
 OBJ_RAN = $(dir_RAN)RandomNumbers.o
 
-OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)SphericalHarmonics_Coefficients.o
+OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)LegendrePolynomials.o $(dir_FUNC)SphericalHarmonics_Coefficients.o
 
 OBJ_DATA = $(dir_DATA)Data.o $(dir_DATA)Data1D.o $(dir_DATA)Data1D_collection.o $(dir_DATA)Data2D.o $(dir_DATA)Data1D_extra.o $(dir_DATA)Data2D_extra.o $(dir_DATA)CovarianceMatrix.o $(dir_DATA)TaperedCovarianceMatrix.o $(dir_DATA)Table.o
 
@@ -727,6 +727,9 @@ $(dir_FUNC)FuncXi.o: $(dir_FUNC)FuncXi.cpp $(HH) $(PWD)/Makefile
 
 $(dir_FUNC)FuncMultipoles.o: $(dir_FUNC)FuncMultipoles.cpp $(HH) $(PWD)/Makefile  
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)FuncMultipoles.cpp -o $(dir_FUNC)FuncMultipoles.o
+
+$(dir_FUNC)LegendrePolynomials.o: $(dir_FUNC)LegendrePolynomials.cpp $(HH) $(PWD)/Makefile 
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)LegendrePolynomials.cpp -o $(dir_FUNC)LegendrePolynomials.o
 
 $(dir_FUNC)SphericalHarmonics_Coefficients.o: $(dir_FUNC)SphericalHarmonics_Coefficients.cpp $(HH) $(PWD)/Makefile 
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)SphericalHarmonics_Coefficients.cpp -o $(dir_FUNC)SphericalHarmonics_Coefficients.o

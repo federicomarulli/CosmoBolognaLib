@@ -114,7 +114,7 @@ FLAGS defined in the Makefile (e.g.: make C=icpc FLAGS="-O0 -g")
 > <KBD> $ make lib* </KBD> [ ---> compile the * library (e.g. make libFUNC will compile the library libFUNC.so) ]
 
 > <KBD> $ make python </KBD> [ ---> compile the Python wrappers (SWIG
-  >=v3.0.7 is required); in this case, CosmoBolognaLib/Python/ has to be added in PYTHONPATH (e.g. in .bashrc add the following line: export PYTHONPATH=$PYTHONPATH:/path_to/CosmoBolognaLib/Python/); to specify a different python version set the PY variable (e.g. make python PY=python3) ]
+  >=v3.0.7 is required); in this case, CosmoBolognaLib/Python/ has to be added in PYTHONPATH (e.g. in .bashrc add the following line: export PYTHONPATH=$PYTHONPATH:/path_to/CosmoBolognaLib/Python/); to specify a different python version set the PY variable (e.g. make python PY=python2) ]
 
 > <KBD> $ make cleanpy </KBD> [ ---> remove the Python wrappers ]
     

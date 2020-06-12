@@ -174,13 +174,19 @@ namespace cbl {
 
       /**
        *  @brief set parameters for interpolated distribution
-       *  @param func the distribution func 
-       *  @param fixed_pars fixed parameters
-       *  @param pars distribution free parameters
+       *
+       *  @param func the probability distribution function
+       *
+       *  @param modelInput pointer to the data possibly used to
+       *  construct the probability distribution function
+       *
+       *  @param parameter the parameters of the probability
+       *  distribution function
+       *
        *  @return none
        */
-      virtual void set_custom_distribution (const distribution_func func, const std::shared_ptr<void> fixed_pars, const std::vector<double> pars)
-      { (void)func; (void)fixed_pars; (void)pars; ErrorCBL("error!", "set_custom_distribution", "RandomNumbers.h"); }
+      virtual void set_custom_distribution (const distribution_func func, const std::shared_ptr<void> modelInput, const std::vector<double> parameter)
+      { (void)func; (void)modelInput; (void)parameter; ErrorCBL("error!", "set_custom_distribution", "RandomNumbers.h"); }
 
     };
 
@@ -210,7 +216,7 @@ namespace cbl {
        */
       ConstantRandomNumbers (const double value) : RandomNumbers(1)
       {
-	m_value=value;
+	m_value = value;
       }
 
       /**
@@ -225,7 +231,8 @@ namespace cbl {
        *  @param value the value to be returned
        *  @return none
        */
-      void set_value(const double value) {m_value = value;}
+      void set_value(const double value)
+      { m_value = value; }
 
       /**
        * @brief extract number from the distribution
@@ -587,11 +594,11 @@ namespace cbl {
       /// the probability distribution function
       distribution_func m_func;
 
-      /// parameters of the distribution function
-      std::vector<double> m_func_pars;
+      /// parameters of the probability distribution function
+      std::vector<double> m_func_parameter;
       
-      /// void pointer for the distribution function
-      std::shared_ptr<void> m_func_fixed_pars;
+      /// pointer to the data possibly used to construct the probability the distribution function
+      std::shared_ptr<void> m_func_modelInput;
 
       /// the distribution normalization
       double m_normalization;
@@ -601,16 +608,23 @@ namespace cbl {
       /**
        *  @brief constructor
        *
-       *  @param func function
-       *  @param fixed_pars function fixed parameters
-       *  @param pars function free parameters
+       *  @param func the probability distribution function
+       *
+       *  @param modelInput pointer to the data possibly used to
+       *  construct the probability distribution function
+       *
+       *  @param parameter the parameters of the probability
+       *  distribution function
+       *
        *  @param seed the random number generator seed
+       *
        *  @param MinVal minimum value
+       *
        *  @param MaxVal maximum value
        *
        *  @return object of class RandomNumbers
        */
-      CustomDistributionRandomNumbers (const distribution_func func, const std::shared_ptr<void> fixed_pars, const std::vector<double> pars, const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble);
+      CustomDistributionRandomNumbers (const distribution_func func, const std::shared_ptr<void> modelInput, const std::vector<double> parameter, const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble);
 
       /**
        *  @brief default destructor
@@ -629,13 +643,17 @@ namespace cbl {
       /**
        *  @brief set parameters for interpolated distribution
        *
-       *  @param func function
-       *  @param fixed_pars function fixed parameters
-       *  @param pars function free parameters
+       *  @param func the probability distribution function
+       *
+       *  @param modelInput pointer to the data possibly used to
+       *  construct the probability distribution function
+       *
+       *  @param parameter the parameters of the probability
+       *  distribution function
        *
        *  @return none
        */
-      void set_custom_distribution (const distribution_func func, const std::shared_ptr<void> fixed_pars, const std::vector<double> pars);
+      void set_custom_distribution (const distribution_func func, const std::shared_ptr<void> modelInput, const std::vector<double> parameter);
 
       /**
        * @brief extract number from the distribution

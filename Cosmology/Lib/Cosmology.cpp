@@ -94,16 +94,16 @@ std::string cbl::cosmology::CosmologicalParameter_name (const CosmologicalParame
 
   case (CosmologicalParameter::_hh_):
     name = "hh";
-    break;
-   
-  case (CosmologicalParameter::_ln_scalar_amp_):           
-    name = "ln_scalar_amp";
     break; 
 
-  case (CosmologicalParameter::_scalar_amp_):           
+  case (CosmologicalParameter::_scalar_amp_):
     name = "scalar_amp";
     break;
-    
+   
+  case (CosmologicalParameter::_ln_scalar_amp_):
+    name = "ln_scalar_amp";
+    break;
+		    
   case (CosmologicalParameter::_scalar_pivot_):           
     name = "scalar_pivot";
     break;
@@ -369,13 +369,13 @@ double cbl::cosmology::Cosmology::value (const CosmologicalParameter parameter) 
   case (CosmologicalParameter::_hh_):
     param_value = m_hh;
     break;
-   
-  case (CosmologicalParameter::_ln_scalar_amp_):           
-    param_value = log(1.e10*m_scalar_amp);
-    break; 
 
   case (CosmologicalParameter::_scalar_amp_):           
     param_value = m_scalar_amp;
+    break;
+    
+  case (CosmologicalParameter::_ln_scalar_amp_):           
+    param_value = log(1.e10*m_scalar_amp);
     break;
     
   case (CosmologicalParameter::_scalar_pivot_):           
@@ -473,12 +473,12 @@ void cbl::cosmology::Cosmology::set_parameter (const CosmologicalParameter param
     set_hh(value, false); 
     break;
 
-  case (CosmologicalParameter::_ln_scalar_amp_):           
-    set_scalar_amp(exp(value)*1.e-10);
-    break;
-
   case (CosmologicalParameter::_scalar_amp_):           
     set_scalar_amp(value);
+    break;
+    
+  case (CosmologicalParameter::_ln_scalar_amp_):           
+    set_scalar_amp(exp(value)*1.e-10);
     break;
     
   case (CosmologicalParameter::_scalar_pivot_):           

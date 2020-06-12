@@ -49,34 +49,45 @@ using namespace modelling::numbercounts;
 
 void cbl::modelling::numbercounts::Modelling_NumberCounts2D_RedshiftMass::set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior)
 {
-  m_data_model.Cpar = cosmo_param;
+  std::vector<cbl::cosmology::CosmologicalParameter> param = cosmo_param;
+  
+  // check if sigma8 is a free parameter
+  if (find(param.begin(), param.end(), cosmology::CosmologicalParameter::_sigma8_)!=param.end())
+    m_data_model.is_sigma8_free = true;
+  
+  if (!m_data_model.is_sigma8_free)
+    param.push_back(cosmology::CosmologicalParameter::_sigma8_);
+  
+  m_data_model.Cpar = param;
 
-  const size_t nParams = cosmo_param.size();
-  checkDim(cosmo_param, nParams, "cosmoPar_prior");
+  const size_t nParams = param.size();
+  checkDim(param, nParams, "cosmoPar_prior");
 
-  vector<statistics::ParameterType> cosmoPar_type(nParams, statistics::ParameterType::_Base_);
+  vector<statistics::ParameterType> cosmoPar_type((m_data_model.is_sigma8_free) ? nParams : nParams-1, statistics::ParameterType::_Base_);
+  if (!m_data_model.is_sigma8_free)
+    cosmoPar_type.push_back(statistics::ParameterType::_Derived_);
+  
   vector<string> cosmoPar_string(nParams);
 
   for (size_t i=0; i<nParams; i++)
-    cosmoPar_string[i] = CosmologicalParameter_name(cosmo_param[i]);
-
+    cosmoPar_string[i] = CosmologicalParameter_name(param[i]);
+    
   // input data used to construct the model
   auto inputs = make_shared<STR_NC_data_model>(m_data_model);
-
+  
   // set prior
   m_set_prior(cosmo_param_prior);
-
+  
   // construct the model
   switch (m_HistogramType) {
-
   case (glob::HistogramType::_N_V_):
-    m_model = make_shared<statistics::Model2D>(statistics::Model2D(&number_counts_mass_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    m_model = make_shared<statistics::Model2D>(statistics::Model2D(&number_counts_redshift_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
     break;
   case (glob::HistogramType::_n_V_):
-    m_model = make_shared<statistics::Model2D>(statistics::Model2D(&number_density_mass_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    m_model = make_shared<statistics::Model2D>(statistics::Model2D(&number_density_redshift_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
     break;
   case (glob::HistogramType::_dn_dV_):
-    m_model = make_shared<statistics::Model2D>(statistics::Model2D(&mass_function_mass_redshift, nParams, cosmoPar_type, cosmoPar_string, inputs));
+    m_model = make_shared<statistics::Model2D>(statistics::Model2D(&mass_function_redshift_mass, nParams, cosmoPar_type, cosmoPar_string, inputs));
     break;
   default:
     ErrorCBL("no such a variable in the list!", "set_model_NumberCounts_cosmology", "Modelling_NumberCounts2D_RedshiftMass.cpp");

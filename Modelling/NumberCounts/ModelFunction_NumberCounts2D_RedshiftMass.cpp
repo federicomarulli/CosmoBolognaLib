@@ -43,7 +43,7 @@ using namespace cbl;
 // ===========================================================================================
 
 
-std::vector<std::vector<double>> cbl::modelling::numbercounts::mass_function_mass_redshift (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<std::vector<double>> cbl::modelling::numbercounts::mass_function_redshift_mass (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
@@ -61,14 +61,14 @@ std::vector<std::vector<double>> cbl::modelling::numbercounts::mass_function_mas
   // compute the power spectrum
   std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
 
-  return cbl::modelling::numbercounts::mass_function (redshift, mass, cosmo, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
+  return cbl::modelling::numbercounts::mass_function(redshift, mass, cosmo, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
 }
 
 
 // ===========================================================================================
 
 
-std::vector<std::vector<double>> cbl::modelling::numbercounts::number_density_mass_redshift (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<std::vector<double>> cbl::modelling::numbercounts::number_density_redshift_mass (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
@@ -111,7 +111,7 @@ std::vector<std::vector<double>> cbl::modelling::numbercounts::number_density_ma
 // ===========================================================================================
 
 
-std::vector<std::vector<double>> cbl::modelling::numbercounts::number_counts_mass_redshift (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<std::vector<double>> cbl::modelling::numbercounts::number_counts_redshift_mass (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
@@ -123,27 +123,29 @@ std::vector<std::vector<double>> cbl::modelling::numbercounts::number_counts_mas
 
   // set the cosmological parameters used to compute the dark matter
   // two-point correlation function in real space
-  for (size_t i=0; i<pp->Cpar.size(); ++i)
+  const size_t npar = (pp->is_sigma8_free) ? pp->Cpar.size() : pp->Cpar.size()-1;
+  for (size_t i=0; i<npar; ++i)
     cosmo.set_parameter(pp->Cpar[i], parameter[i]);
-
+  
+  if (!pp->is_sigma8_free) parameter[pp->Cpar.size()-1] = cosmo.sigma8();
+  
   std::vector<std::vector<double>> number_counts(redshift.size(), std::vector<double>(mass.size()));
 
   // compute the power spectrum
   const std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
-
-  const std::vector<cbl::glob::FuncGrid> interp = cbl::modelling::numbercounts::sigmaM_dlnsigmaM (pp->Mass_vector, cosmo, pp->kk, Pk, "Spline", pp->k_max);
+  
+  const std::vector<cbl::glob::FuncGrid> interp = cbl::modelling::numbercounts::sigmaM_dlnsigmaM(pp->Mass_vector, cosmo, pp->kk, Pk, "Spline", pp->k_max);
   
   double deltaz = 0.5*(redshift[1]-redshift[0]);
   double deltaLogM = 0.5*(log10(mass[1])-log10(mass[0]));
 
-  for (size_t i=0; i<redshift.size(); i++){ 
-    std::vector<double> zlim = {redshift[i]-deltaz, redshift[i]+deltaz};
+  for (size_t i=0; i<redshift.size(); i++) { 
+    std::vector<double> zlim = {max(redshift[i]-deltaz, 0.), redshift[i]+deltaz};
     for (size_t j=0; j<mass.size(); j++) {
-      std::vector<double> Mlim = {pow(10, log10(mass[j])-deltaLogM), pow(10, log10(mass[j])+deltaLogM)};
+      std::vector<double> Mlim = {max(pow(10, log10(mass[j])-deltaLogM), 0.), pow(10, log10(mass[j])+deltaLogM)};
       number_counts[i][j] = cbl::modelling::numbercounts::number_counts(zlim[0], zlim[1], Mlim[0], Mlim[1], cosmo, pp->area_rad, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, interp[0], interp[1], 10, 10);
-
     }
   }
-
+    
   return number_counts;
 }

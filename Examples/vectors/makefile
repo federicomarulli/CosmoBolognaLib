@@ -7,7 +7,7 @@ dirLib = $(PWD)/../../
 dirH = $(dirLib)Headers/
 dirCUBA = $(dirLib)External/Cuba-4.2/
 dir_CCfits = $(dirLib)External/CCfits/include
-dir_Eigen = $(dirLib)External/eigen-3.3.4/
+dir_Eigen = $(dirLib)External/eigen-3.3.7/
 
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 

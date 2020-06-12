@@ -184,6 +184,23 @@ namespace cbl {
   double Legendre_polynomial_triangles_average (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const double r23_min, const double r23_max, const int ll, const double rel_err=1.e-5, const double abs_err=1.e-8, const int nevals=100);
 
   /**
+   *  @brief the average of the Legendre polynomial up to a maximum
+   *  order lMax of all triangles with sides r12, r13
+   *
+   *  @param r12 first triangle side
+   *  @param r13 second triangle side
+   *  @param deltaR the bin width
+   *  @param lMax the maximum Legedre polynomial order
+   *  @param rel_err the relative error
+   *  @param abs_err the absolute error
+   *  @param nevals the maximum number of integrals evaluation
+   *
+   *  @return the average of the Legendre polynomial of the l-th order
+   *  over the mu range
+   */
+  std::vector<std::vector<double>> Legendre_polynomial_triangles_average (const double r12, const double r13, const double deltaR, const int lMax, const double rel_err=1.e-5, const double abs_err=1.e-8, const int nevals=100);
+
+  /**
    *  @brief the order l, degree m spherical harmonics
    * 
    *  @param l the degree l 

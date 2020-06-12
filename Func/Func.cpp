@@ -1856,6 +1856,8 @@ double cbl::Legendre_polynomial_theta_average (const double theta_min, const dou
 
 double cbl::Legendre_polynomial_triangles_average (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const double r23_min, const double r23_max, const int ll, const double rel_err, const double abs_err, const int nevals)
 {
+  double norm = 2*(pow(r12_max, 3)-pow(r12_min,3))*(pow(r13_max, 3)-pow(r13_min, 3))/9;
+
   auto r12_integrand = [&] (const double r12) {
 
     auto r13_integrand = [&] (const double r13) {
@@ -1865,16 +1867,44 @@ double cbl::Legendre_polynomial_triangles_average (const double r12_min, const d
       if ((mu_min<=1) & (mu_max>=-1)) {
 	double low = max(mu_min, -1.);
 	double up = min(1., mu_max);
-	return Legendre_polynomial_mu_average (low, up, ll)*(up-low);
+	return r13*r13*Legendre_polynomial_mu_average (low, up, ll)*(up-low);
       }
       return 0.;
 
     };
 
-    return cbl::wrapper::gsl::GSL_integrate_cquad(r13_integrand, r13_min, r13_max, rel_err, abs_err, nevals);
+    return r12*r12*cbl::wrapper::gsl::GSL_integrate_cquad(r13_integrand, r13_min, r13_max, rel_err, abs_err, nevals);
   };
 
-  return cbl::wrapper::gsl::GSL_integrate_cquad(r12_integrand, r12_min, r12_max, rel_err, abs_err, nevals)/((r12_max-r12_min)*(r13_max-r13_min));
+  return cbl::wrapper::gsl::GSL_integrate_cquad(r12_integrand, r12_min, r12_max, rel_err, abs_err, nevals)/norm; //((r12_max-r12_min)*(r13_max-r13_min));
+}
+
+
+
+// ============================================================================
+
+
+vector<vector<double>> cbl::Legendre_polynomial_triangles_average (const double r12, const double r13, const double deltaR, const int lMax, const double rel_err, const double abs_err, const int nevals)
+{
+  double r12_min = r12;
+  double r12_max = r12+deltaR;
+
+  double r13_min = r13;
+  double r13_max = r13+deltaR;
+
+  double r23_min = max(0., r13_min-r12_max);
+  double r23_max = r13_max+r12_max;
+
+  int nBins_R23 = int(( r23_max-r23_min)/deltaR);
+  int nOrders = lMax+1;
+
+  vector<vector<double>> leg_pols(nBins_R23, vector<double>(nOrders, 0.)); 
+
+  for (int ell=0; ell<nOrders; ell++) 
+    for (int i=0; i<nBins_R23; i++) 
+      leg_pols[i][ell] = cbl::Legendre_polynomial_triangles_average(r12_min, r12_max, r13_min, r13_max, r23_min+i*deltaR, r23_min+(i+1)*deltaR, ell, rel_err, abs_err, nevals);
+    
+  return leg_pols;
 }
 
 
@@ -2036,12 +2066,19 @@ double cbl::jl_distance_average (const double kk, const int order, const double 
 {
   double volume = (pow(r_up,3)-pow(r_down,3))/3;
 
+  auto integrand = [&] (const double rr) {
+    return rr * rr * gsl_sf_bessel_jl(order, kk*rr);
+  };
+
+  double Int = cbl::wrapper::gsl::GSL_integrate_qag(integrand, r_down, r_up);
+
+  /*
   cbl::glob::STR_jl_distance_average str;
   str.order = order;
   str.k = kk;
 
   gsl_function Func;
-   
+
   Func.function=&cbl::jl_spherical_integrand;
   Func.params=&str;
 
@@ -2049,6 +2086,7 @@ double cbl::jl_distance_average (const double kk, const int order, const double 
   int limit_size = 1000;
 
   double Int = cbl::wrapper::gsl::GSL_integrate_qag(Func, r_down, r_up, prec, limit_size, 6);
+  */
 
   return Int/volume;
 }
@@ -2134,7 +2172,7 @@ double cbl::trapezoid_integration (const std::vector<double> xx, const std::vect
 
 double cbl::binomial_coefficient(const int n, const int m)
 {
-  return gsl_sf_fact(n)/(gsl_sf_fact(m)*gsl_sf_fact(n-m));
+  return double(gsl_sf_fact(n))/double(gsl_sf_fact(m)*gsl_sf_fact(n-m));
 }
 
 

@@ -2,7 +2,7 @@
  *  Copyright (C) 2016 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
- *  This program is free software; you can redistribute it and/or   * 
+ *  This program is free software; you can redistribute it and/or   *
  *  modify it under the terms of the GNU General Public License as  *
  *  published by the Free Software Foundation; either version 2 of  *
  *  the License, or (at your option) any later version.             *
@@ -49,20 +49,21 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles (const std::vector<doubl
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
-  
+
   // input parameters
   vector<shared_ptr<glob::FuncGrid>> pk_interp(2);
   vector<shared_ptr<glob::FuncGrid>> pk_interp_Scoccimarro_CPT(3);
   vector<shared_ptr<glob::FuncGrid>> pk_interp_TNS_CPT(17);
+  vector<shared_ptr<glob::FuncGrid>> pk_interp_eTNS_CPT(25);
   vector<shared_ptr<glob::FuncGrid>> pk_interp_Dispersion(1);
   std::vector<double> Xi_ll;
 
-  if (pp->Pk_mu_model=="dispersion_dewiggled") { 
+  if (pp->Pk_mu_model=="dispersion_dewiggled") {
     pk_interp[0] = pp->func_Pk;
     pk_interp[1] = pp->func_Pk_NW;
     Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, {parameter[2], parameter[3], parameter[4]/pp->sigma8_z, parameter[5]/pp->sigma8_z, parameter[6] }, pk_interp, pp->prec, parameter[0], parameter[1]);
   }
-  else if (pp->Pk_mu_model=="dispersion_modecoupling") { 
+  else if (pp->Pk_mu_model=="dispersion_modecoupling") {
     pk_interp[0] = pp->func_Pk;
     pk_interp[1] = pp->func_Pk1loop;
     Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, {parameter[2]/pp->sigma8_z, parameter[3]/pp->sigma8_z, parameter[4], parameter[5] }, pk_interp, pp->prec, parameter[0], parameter[1]);
@@ -70,7 +71,7 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles (const std::vector<doubl
   else if (pp->Pk_mu_model=="DispersionGauss" || pp->Pk_mu_model=="DispersionLorentz") {
     pk_interp_Dispersion[0] = pp->func_Pk;
     Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_Dispersion, pp->prec, 1., 1.);
-  }  
+  }
   else if (pp->Pk_mu_model=="ScoccimarroPezzottaGauss" || pp->Pk_mu_model=="ScoccimarroPezzottaLorentz") {
     pk_interp[0] = pp->func_Pk;
     pk_interp[1] = pp->func_Pk_nonlin;
@@ -80,7 +81,7 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles (const std::vector<doubl
     pk_interp[0] = pp->func_Pk;
     pk_interp[1] = pp->func_Pk_nonlin;
     Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2], parameter[3], parameter[4], parameter[5], parameter[6], parameter[7] }, pk_interp, pp->prec, 1., 1.);
-  }  
+  }
   else if (pp->Pk_mu_model=="ScoccimarroGauss" || pp->Pk_mu_model=="ScoccimarroLorentz") {
     pk_interp_Scoccimarro_CPT[0] = pp->func_Pk_DeltaDelta;
     pk_interp_Scoccimarro_CPT[1] = pp->func_Pk_DeltaTheta;
@@ -106,11 +107,41 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles (const std::vector<doubl
     pk_interp_TNS_CPT[15] = pp->func_Pk_B34;
     pk_interp_TNS_CPT[16] = pp->func_Pk_B44;
 
-    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_TNS_CPT, pp->prec, 1., 1.);    
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_TNS_CPT, pp->prec, 1., 1.);
+  }
+  else if (pp->Pk_mu_model=="eTNSGauss" || pp->Pk_mu_model=="eTNSLorentz") {
+    pk_interp_eTNS_CPT[0]  = pp->func_Pk_DeltaDelta;
+    pk_interp_eTNS_CPT[1]  = pp->func_Pk_DeltaTheta;
+    pk_interp_eTNS_CPT[2]  = pp->func_Pk_ThetaTheta;
+    pk_interp_eTNS_CPT[3]  = pp->func_Pk_A11;
+    pk_interp_eTNS_CPT[4]  = pp->func_Pk_A12;
+    pk_interp_eTNS_CPT[5]  = pp->func_Pk_A22;
+    pk_interp_eTNS_CPT[6]  = pp->func_Pk_A23;
+    pk_interp_eTNS_CPT[7]  = pp->func_Pk_A33;
+    pk_interp_eTNS_CPT[8]  = pp->func_Pk_B12;
+    pk_interp_eTNS_CPT[9]  = pp->func_Pk_B13;
+    pk_interp_eTNS_CPT[10] = pp->func_Pk_B14;
+    pk_interp_eTNS_CPT[11] = pp->func_Pk_B22;
+    pk_interp_eTNS_CPT[12] = pp->func_Pk_B23;
+    pk_interp_eTNS_CPT[13] = pp->func_Pk_B24;
+    pk_interp_eTNS_CPT[14] = pp->func_Pk_B33;
+    pk_interp_eTNS_CPT[15] = pp->func_Pk_B34;
+    pk_interp_eTNS_CPT[16] = pp->func_Pk_B44;
+
+    pk_interp_eTNS_CPT[17]  = pp->func_Pk_b2d;
+    pk_interp_eTNS_CPT[18]  = pp->func_Pk_b2v;
+    pk_interp_eTNS_CPT[19] = pp->func_Pk_b22;
+    pk_interp_eTNS_CPT[20] = pp->func_Pk_bs2d;
+    pk_interp_eTNS_CPT[21] = pp->func_Pk_bs2v;
+    pk_interp_eTNS_CPT[22] = pp->func_Pk_b2s2;
+    pk_interp_eTNS_CPT[23] = pp->func_Pk_bs22;
+    pk_interp_eTNS_CPT[24] = pp->func_sigma32Pklin;
+
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] , parameter[3] , parameter[4] }, pk_interp_eTNS_CPT, pp->prec, 1., 1.);
   }
 
   else ErrorCBL("the chosen model ("+pp->Pk_mu_model+") is not currently implemented!", "xiMultipoles", "ModelFunction_TwoPointCorrelation_multipoles.cpp");
-  
+
   return Xi_ll;
 }
 
@@ -139,7 +170,7 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles_sigma8_bias (const std::
 
   // f(z)*sigma8(z)
   double fsigma8 = pp->linear_growth_rate_z*sigma8;
-  
+
   // bias(z)*sigma8(z)
   double bsigma8 = bias*sigma8;
 
@@ -173,13 +204,13 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const std::vector<d
     const int ell = 2*mult;
     const double rr = rad[i];
     const double fact = (2*ell+1);
-        
+
     const double B = parameter[2+mult];
     const double A0 = parameter[4+mult];
     const double A1 = parameter[6+mult];
     const double A2 = parameter[8+mult];
 
-    auto integrand = [&] (const double mu_fid) 
+    auto integrand = [&] (const double mu_fid)
     {
       return twopt::Xi_polar(rr, mu_fid, alpha_perpendicular, alpha_parallel, pp->func_multipoles)*cbl::legendre_polynomial(mu_fid, ell);
     };
@@ -189,4 +220,3 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles_BAO (const std::vector<d
 
   return Xi;
 }
-

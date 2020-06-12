@@ -143,8 +143,11 @@ namespace cbl {
 	/// the survey volume
 	double Volume;
 
-	/// false &rarr; don't use selection function; true &rarr; use selection function
+	/// false &rarr; don't use the selection function; true &rarr; use the selection function
         bool use_SF;
+
+	/// true &rarr; sigma8 is a free parameter; false &rarr; sigma8 can be considered a derived parameter
+	bool is_sigma8_free;
 	
 	/// function to interpolate the selection function in mass and redshift
 	std::shared_ptr<glob::FuncGrid2D> interp_SelectionFunction;

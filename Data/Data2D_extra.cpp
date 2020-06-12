@@ -89,18 +89,12 @@ void cbl::data::Data2D_extra::write (const string dir, const string file, const 
   for (int i=0; i<m_xsize; ++i)
     for (int j=0; j<m_ysize; ++j) {
       int index = j+m_ysize*i;
-      cbl::Print(m_x[i], prec, ww, "", "", false, fout);
-      fout << "  " ;
-      cbl::Print(m_y[j], prec, ww, "", "", false, fout);
-      fout << "  " ;
-      cbl::Print(m_data[index], prec, ww, "", "", false, fout);
-      fout << "  " ;
-      cbl::Print(m_error[index], prec, ww, "", "", false, fout);
-
-      for (size_t ex=0; ex<m_extra_info.size(); ++ex) {
-	fout << "  " ;
-	cbl::Print(m_extra_info[ex][index], prec, ww, "", "", false, fout);
-      }
+      cbl::Print(m_x[i], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_y[j], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_data[index], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_error[index], prec, ww, "", "  ", false, fout);
+      for (size_t ex=0; ex<m_extra_info.size(); ++ex) 
+	cbl::Print(m_extra_info[ex][index], prec, ww, "", "  ", false, fout);
       fout << endl;
     }
 
@@ -110,54 +104,36 @@ void cbl::data::Data2D_extra::write (const string dir, const string file, const 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
         int index = j+m_ysize*i;
-	cbl::Print(m_x[i], prec, ww, "", "", false, fout);
-	fout << "  " ;
-	cbl::Print(-m_y[j], prec, ww, "", "", false, fout);
-	fout << "  " ;
-	cbl::Print(m_data[index], prec, ww, "", "", false, fout);
-	fout << "  " ;
-	cbl::Print(m_error[index], prec, ww, "", "", false, fout);
-	
-	for (size_t ex=0; ex<m_extra_info.size(); ++ex) {
-	  fout << "  " ;
-	  cbl::Print(m_extra_info[ex][index], prec, ww, "", "", false, fout);
-	}
+	cbl::Print(m_x[i], prec, ww, "", "  ", false, fout);
+	cbl::Print(-m_y[j], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_data[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_error[index], prec, ww, "", "  ", false, fout);
+	for (size_t ex=0; ex<m_extra_info.size(); ++ex) 
+	  cbl::Print(m_extra_info[ex][index], prec, ww, "", "  ", false, fout);
 	fout << endl;
       }
     
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
         int index = j+m_ysize*i;
-	cbl::Print(-m_x[i], prec, ww, "", "", false, fout);
-	fout << "  " ;
-	cbl::Print(-m_y[j], prec, ww, "", "", false, fout);
-	fout << "  " ;
-	cbl::Print(m_data[index], prec, ww, "", "", false, fout);
-	fout << "  " ;
-	cbl::Print(m_error[index], prec, ww, "", "", false, fout);
-	
-	for (size_t ex=0; ex<m_extra_info.size(); ++ex) {
-	  fout << "  " ;
-	  cbl::Print(m_extra_info[ex][index], prec, ww, "", "", false, fout);
-	}
+	cbl::Print(-m_x[i], prec, ww, "", "  ", false, fout);
+	cbl::Print(-m_y[j], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_data[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_error[index], prec, ww, "", "  ", false, fout);
+	for (size_t ex=0; ex<m_extra_info.size(); ++ex) 
+	  cbl::Print(m_extra_info[ex][index], prec, ww, "", "  ", false, fout);
 	fout << endl;
       }
 
     for (int i=0; i<m_xsize; ++i)
       for (int j=0; j<m_ysize; ++j) {
         int index = j+m_ysize*i;
-	cbl::Print(-m_x[i], prec, ww, "", "", false, fout);
-	fout << "  " ;
-	cbl::Print(m_y[j], prec, ww, "", "", false, fout);
-	fout << "  " ;
-	cbl::Print(m_data[index], prec, ww, "", "", false, fout);
-	fout << "  " ;
-	cbl::Print(m_error[index], prec, ww, "", "", false, fout);
-	
-	for (size_t ex=0; ex<m_extra_info.size(); ++ex) {
-	  fout << "  " ;
-	  cbl::Print(m_extra_info[ex][index], prec, ww, "", "", false, fout);
-	}
+	cbl::Print(-m_x[i], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_y[j], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_data[index], prec, ww, "", "  ", false, fout);
+	cbl::Print(m_error[index], prec, ww, "", "  ", false, fout);
+	for (size_t ex=0; ex<m_extra_info.size(); ++ex) 
+	  cbl::Print(m_extra_info[ex][index], prec, ww, "", "  ", false, fout);
 	fout << endl;
       } 
   }
@@ -212,9 +188,8 @@ shared_ptr<Data> cbl::data::Data2D_extra::cut (const double xmin, const double x
       data[index1] = m_data[i];
       error[index1] = m_error[i];
 
-      for (size_t j=0; j<m_extra_info.size(); j++) {
+      for (size_t j=0; j<m_extra_info.size(); j++) 
 	extra_info[j][index1] = m_extra_info[j][i];
-      }
 
       int index2 = 0;
       for (int j=0; j<m_ndata; j++) {

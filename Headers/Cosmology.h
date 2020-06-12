@@ -198,42 +198,51 @@ namespace cbl {
 	};
 
     /**
-     * @brief return a vector containing the
-     * CosmologicalParameter names
-     * @return a vector containing the
-     * CosmologicalParameter names
+     * @brief return a vector containing the CosmologicalParameter
+     * names
+     *
+     * @return a vector containing the CosmologicalParameter names
      */
-    inline std::vector<std::string> CosmologicalParameterNames () { return {"Omega_matter_LCDM", "Omega_matter", "Omega_baryon", "Omega_baryon_h2", "Omega_matter", "massless_neutrinos", "massive_neutrinos", "neutrino_mass", "Omega_DE", "Omega_radiation", "H0", "hh", "ln_scalar_amp", "scalar_amp", "scalar_pivot", "n_spec", "w0", "wa", "fNL", "sigma8", "tau", "rs"}; }
+    inline std::vector<std::string> CosmologicalParameterNames () { return {"Omega_matter_LCDM", "Omega_matter", "Omega_baryon", "Omega_baryon_h2", "Omega_matter", "massless_neutrinos", "massive_neutrinos", "neutrino_mass", "Omega_DE", "Omega_radiation", "H0", "hh", "scalar_amp", "ln_scalar_amp", "scalar_pivot", "n_spec", "w0", "wa", "fNL", "sigma8", "tau", "rs"}; }
     
     /**
      *
      * @brief cast an enum of type CosmologicalParameter
      * from its index
-     * @param cosmologicalParameterIndex the cosmologicalParameter index
+     *
+     * @param cosmologicalParameterIndex the cosmologicalParameter
+     * index
+     *
      * @return object of class CosmologicalParameter
      */
     inline CosmologicalParameter CosmologicalParameterCast (const int cosmologicalParameterIndex) { return castFromValue<CosmologicalParameter>(cosmologicalParameterIndex); }
 
     /**
-     * @brief cast an enum of type CosmologicalParameter
-     * from its name
+     * @brief cast an enum of type CosmologicalParameter from its name
+     *
      * @param cosmologicalParameterName the cosmologicalParameter name
+     *
      * @return object of class CosmologicalParameter
      */
     inline CosmologicalParameter CosmologicalParameterCast (const std::string cosmologicalParameterName) { return castFromName<CosmologicalParameter>(cosmologicalParameterName, CosmologicalParameterNames()); }
 
     /**
-     * @brief cast an enum of type CosmologicalParameter
-     * from indeces
-     * @param cosmologicalParameterIndeces the cosmologicalParameter indeces
+     * @brief cast an enum of type CosmologicalParameter from indeces
+     *
+     * @param cosmologicalParameterIndeces the cosmologicalParameter
+     * indeces
+     *
      * @return object of class CosmologicalParameter
      */
     inline std::vector<CosmologicalParameter> CosmologicalParameterCast (const std::vector<int> cosmologicalParameterIndeces) { return castFromValues<CosmologicalParameter>(cosmologicalParameterIndeces); } 
 
     /**
-     * @brief cast an enum of type CosmologicalParameter
-     * from thier names
-     * @param cosmologicalParameterNames the cosmologicalParameter names
+     * @brief cast an enum of type CosmologicalParameter from thier
+     * names
+     *
+     * @param cosmologicalParameterNames the cosmologicalParameter
+     * names
+     *
      * @return vector of CosmologicalParameter enums
      */
     inline std::vector<CosmologicalParameter> CosmologicalParameterCast (const std::vector<std::string> cosmologicalParameterNames) { return castFromNames<CosmologicalParameter>(cosmologicalParameterNames, CosmologicalParameterNames()); }

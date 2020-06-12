@@ -404,7 +404,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
     priors[i] = polynomial_prior[i];
   }
 
-  //set the priors
+  // set the priors
   m_set_prior(priors);
 
   // construct the model

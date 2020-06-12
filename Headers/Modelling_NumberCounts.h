@@ -226,7 +226,7 @@ namespace cbl {
 	///@}
 		
 	/**
-	 *  @name Member functions used to set the model parameters
+	 *  @brief Member functions used to set the model parameters
 	 *
 	 *  @param cosmology the cosmological model used to compute
 	 *  the void size function
@@ -264,9 +264,9 @@ namespace cbl {
 	 *  the Boltzmann solver are stored; if false the output files
 	 *  are removed
 	 *
-	 *  @param output_root output_root of the parameter file used to
-	 *  compute the power spectrum and &sigma;(mass); it can be any
-	 *  name
+	 *  @param output_root output_root of the parameter file used
+	 *  to compute the power spectrum and &sigma;(mass); it can be
+	 *  any name
 	 *
 	 *  @param interpType method to interpolate the power spectrum
 	 *
@@ -275,18 +275,20 @@ namespace cbl {
 	 *           
 	 *  @param input_file either the parameter file or the power
 	 *  spectrum file; if a parameter file is provided,
-	 *  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	 *  used to compute the power spectrum; if a power spectrum file
-	 *  is provided, i.e. input_file!=NULL and
+	 *  i.e. input_file!=NULL and is_parameter_file=true, it will
+	 *  be used to compute the power spectrum; if a power spectrum
+	 *  file is provided, i.e. input_file!=NULL and
 	 *  is_parameter_file=false, then the provided power spectrum
-	 *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	 *  is computed by integrating the computed/provided power
-	 *  spectrum ignoring the cosmological parameters of the object
+	 *  will be used directly; in both cases
+	 *  &sigma;<SUP>2</SUP>(M) is computed by integrating the
+	 *  computed/provided power spectrum ignoring the cosmological
+	 *  parameters of the object
 	 *
-	 *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	 *  is a parameter file, used to compute the power spectrum with
-	 *  the method specified by method_Pk; false \f$\rightarrow\f$
-	 *  the input_file is a file containing the power spectrum
+	 *  @param is_parameter_file true \f$\rightarrow\f$ the
+	 *  input_file is a parameter file, used to compute the power
+	 *  spectrum with the method specified by method_Pk; false
+	 *  \f$\rightarrow\f$ the input_file is a file containing the
+	 *  power spectrum
 	 *
 	 *  @return none
 	 */

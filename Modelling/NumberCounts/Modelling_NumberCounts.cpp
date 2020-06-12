@@ -78,7 +78,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
 
   m_data_model.prec = prec;
 
-  m_data_model.area_rad = area_degrees*pow(par::pi/180.,2);
+  m_data_model.area_rad = area_degrees*pow(par::pi/180., 2);
   if (m_data_model.z_min>0)
     m_data_model.Volume = cosmology.Volume(z_min, z_max, area_degrees);
 
@@ -91,6 +91,8 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
   }
   else
     m_data_model.use_SF = false;
+
+  m_data_model.is_sigma8_free = false;
 }
 
 

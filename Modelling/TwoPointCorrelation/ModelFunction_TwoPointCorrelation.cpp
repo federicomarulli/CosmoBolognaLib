@@ -375,7 +375,19 @@ double cbl::modelling::twopt::Pkmu (const double kk, const double mu, const std:
   else if (model=="TaruyaLorentz") {
     if (parameter.size()!=3)
       ErrorCBL("the "+model+" model has 3 parameters, while in the parameter vector in input has "+conv(parameter.size(), par::fINT)+" parameters!", "Pkmu", "ModelFunction_TwoPointCorrelation.cpp");
-    pkmu = Pkmu_TNS(kp, mup, "Gaussian", parameter[0], parameter[1], parameter[2], pk_interp[0], pk_interp[1], pk_interp[2], pk_interp[3], pk_interp[4], pk_interp[5], pk_interp[6], pk_interp[7], pk_interp[8], pk_interp[9], pk_interp[10], pk_interp[11], pk_interp[12], pk_interp[13], pk_interp[14], pk_interp[15], pk_interp[16]);
+    pkmu = Pkmu_TNS(kp, mup, "Lorentzian", parameter[0], parameter[1], parameter[2], pk_interp[0], pk_interp[1], pk_interp[2], pk_interp[3], pk_interp[4], pk_interp[5], pk_interp[6], pk_interp[7], pk_interp[8], pk_interp[9], pk_interp[10], pk_interp[11], pk_interp[12], pk_interp[13], pk_interp[14], pk_interp[15], pk_interp[16]);
+  }
+
+  else if (model=="eTNSGauss") {
+    if (parameter.size()!=5)
+      ErrorCBL("the "+model+" model has 5 parameters, while in the parameter vector in input has "+conv(parameter.size(), par::fINT)+" parameters!", "Pkmu", "ModelFunction_TwoPointCorrelation.cpp");
+    pkmu = Pkmu_eTNS(kp, mup, "Gaussian", parameter[0], parameter[1], parameter[2], parameter[3], parameter[4], pk_interp[0], pk_interp[1], pk_interp[2], pk_interp[3], pk_interp[4], pk_interp[5], pk_interp[6], pk_interp[7], pk_interp[8], pk_interp[9], pk_interp[10], pk_interp[11], pk_interp[12], pk_interp[13], pk_interp[14], pk_interp[15], pk_interp[16], pk_interp[17], pk_interp[18], pk_interp[19], pk_interp[20], pk_interp[21], pk_interp[22], pk_interp[23], pk_interp[24]);
+  }
+
+  else if (model=="eTNSLorentz") {
+    if (parameter.size()!=5)
+      ErrorCBL("the "+model+" model has 5 parameters, while in the parameter vector in input has "+conv(parameter.size(), par::fINT)+" parameters!", "Pkmu", "ModelFunction_TwoPointCorrelation.cpp");
+    pkmu = Pkmu_eTNS(kp, mup, "Lorentzian", parameter[0], parameter[1], parameter[2], parameter[3], parameter[4], pk_interp[0], pk_interp[1], pk_interp[2], pk_interp[3], pk_interp[4], pk_interp[5], pk_interp[6], pk_interp[7], pk_interp[8], pk_interp[9], pk_interp[10], pk_interp[11], pk_interp[12], pk_interp[13], pk_interp[14], pk_interp[15], pk_interp[16], pk_interp[17], pk_interp[18], pk_interp[19], pk_interp[20], pk_interp[21], pk_interp[22], pk_interp[23], pk_interp[24]);
   }
 
   else

@@ -198,9 +198,8 @@ std::shared_ptr<Data> cbl::data::Data1D_extra::cut (const std::vector<bool> mask
       data[index1] = m_data[i];
       error[index1] = m_error[i];
 
-      for (size_t j=0; j<m_extra_info.size(); j++) {
+      for (size_t j=0; j<m_extra_info.size(); j++)
 	extra_info[j][index1] = m_extra_info[j][i];
-      }
 
       int index2 = 0;
       for (int j=0; j<m_ndata; j++) {
