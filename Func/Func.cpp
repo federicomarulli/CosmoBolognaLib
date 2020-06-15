@@ -32,6 +32,7 @@
  */
 
 #include "Func.h"
+#include "LegendrePolynomials.h"
 
 using namespace std;
 
@@ -1884,26 +1885,72 @@ double cbl::Legendre_polynomial_triangles_average (const double r12_min, const d
 // ============================================================================
 
 
-vector<vector<double>> cbl::Legendre_polynomial_triangles_average (const double r12, const double r13, const double deltaR, const int lMax, const double rel_err, const double abs_err, const int nevals)
+vector<vector<double>> cbl::Legendre_polynomial_triangles_average (const double rMin, const double rMax, const double deltaR, const int lMax, const double rel_err, const double abs_err, const int nevals)
 {
-  double r12_min = r12;
-  double r12_max = r12+deltaR;
+  (void)abs_err;
+  const int nBins = int((rMax-rMin)/deltaR);
 
-  double r13_min = r13;
-  double r13_max = r13+deltaR;
+  vector<double> r12, r13, r23;
 
-  double r23_min = max(0., r13_min-r12_max);
-  double r23_max = r13_max+r12_max;
 
-  int nBins_R23 = int(( r23_max-r23_min)/deltaR);
+  for (int i=0; i<nBins; i++)
+    for (int j=i; j<nBins; j++) {
+
+      double r12_min = rMin+i*deltaR;
+      double r12_max = r12_min+deltaR;
+
+      double r13_min = rMin+j*deltaR;
+      double r13_max = r13_min+deltaR;
+
+      double r23_min = max(0., r13_min-r12_max);
+      double r23_max = r13_max+r12_max;
+
+      int nBins_R23 = int(( r23_max-r23_min)/deltaR);
+
+      for ( int k=0; k<nBins_R23; k++) {
+	r12.push_back(0.5*(r12_min+r12_max));
+	r13.push_back(0.5*(r13_min+r13_max));
+	r23.push_back(r23_min+(k+0.5)*deltaR);
+      }
+
+    }
+  int nTriangles = static_cast<int>(r12.size());
   int nOrders = lMax+1;
 
-  vector<vector<double>> leg_pols(nBins_R23, vector<double>(nOrders, 0.)); 
+  vector<vector<double>> leg_pols(nTriangles, vector<double>(nOrders+3, 0.)); 
 
-  for (int ell=0; ell<nOrders; ell++) 
-    for (int i=0; i<nBins_R23; i++) 
-      leg_pols[i][ell] = cbl::Legendre_polynomial_triangles_average(r12_min, r12_max, r13_min, r13_max, r23_min+i*deltaR, r23_min+(i+1)*deltaR, ell, rel_err, abs_err, nevals);
+#pragma omp parallel num_threads(omp_get_max_threads())
+  {
+
+    LegendrePolynomials legendre(lMax);
     
+#pragma omp for schedule(dynamic)
+    for (int i=0; i<nTriangles; i++) {
+
+      double r12_min = r12[i]-0.5*deltaR;
+      double r12_max = r12[i]+0.5*deltaR;
+
+      double r13_min = r13[i]-0.5*deltaR;
+      double r13_max = r13[i]+0.5*deltaR;
+
+      double r23_min = r23[i]-0.5*deltaR;
+      double r23_max = r23[i]+0.5*deltaR;
+
+      leg_pols[i][0] = r12[i];
+      leg_pols[i][1] = r13[i];
+      leg_pols[i][2] = r23[i];
+
+      vector<double> integral = legendre.triangle_integral(r12_min, r12_max, r13_min, r13_max, r23_min, r23_max, rel_err, nevals);
+      
+      for (int ell=0; ell<nOrders; ell++) 
+	leg_pols[i][ell+3] = integral[ell];
+
+      //for (int ell=0; ell<nOrders; ell++) 
+      //	leg_pols[i][ell+3] = cbl::Legendre_polynomial_triangles_average(r12_min, r12_max, r13_min, r13_max, r23_min, r23_max, ell, rel_err, abs_err, nevals);
+      
+    }
+  }
+
   return leg_pols;
 }
 

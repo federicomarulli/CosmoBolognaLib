@@ -50,6 +50,7 @@ void cbl::glob::LegendrePolynomials::m_set_coefficients (const int lMax)
 {
 
   auto old_handler = gsl_set_error_handler_off();
+  (void)old_handler;
 
   m_nOrders = lMax+1;
 
@@ -78,7 +79,7 @@ void cbl::glob::LegendrePolynomials::m_set_coefficients (const int lMax)
       m_coefficients(i,j) = fact*binomial_coeff(i, j)*binomial_coeff( double(i+j-1)*0.5, i);
   }
 
-  gsl_set_error_handler(old_handler);
+  //gsl_set_error_handler(old_handler);
 }
 
 

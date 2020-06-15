@@ -65,15 +65,10 @@ namespace cbl {
 	 * Set the coefficients of the Legendre Polynomials according
 	 * to the following recursive relation:
 	 *
-	 * \f[
-	 *	P_{n}(x)=2^{n} \sum_{k=0}^{n} x^{k}\left(\begin{array}{l}
-	 * 	n \\
-	 *	k
+	 * \f[ P_{n}(x)=2^{n} \sum_{k=0}^{n}
+	 *	x^{k}\left(\begin{array}{l} n \\ k
 	 *	\end{array}\right)\left(\begin{array}{c}
- 	 *	\frac{n+k-1}{2} \\
-	 *	n
-	 *	\end{array}\right)
-	 * \f]
+	 *	\frac{n+k-1}{2} \\ n \end{array}\right) \f]
 	 *
 	 * @param lMax maximum order of Legendre polynomials
 	 *
