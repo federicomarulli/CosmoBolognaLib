@@ -95,10 +95,10 @@ namespace cbl {
 	 *
 	 * @param lMax maximum order of Legendre polynomials
 	 *
-	 * @return Object of type LegendrePolynomials
+	 * @param safe True \f$\rightarrow \f$ check input range is
+	 * among -1 a 1 False \f$ \rightarrow \f$ do not check input
 	 *
-	 * @return safe True \f$\rightarrow \f$ check input range is among -1 a 1
-	 * 		False \f$ \rightarrow \f$ do not check input
+	 * @return Object of type LegendrePolynomials
 	 */
 	LegendrePolynomials (const int lMax, const bool safe=false);
 
@@ -188,7 +188,7 @@ namespace cbl {
 	 * @param r23_min the third side lower edge
 	 * @param r23_max the third side upper edge
 	 * @param rel_err the relative integration error
-	 * @param neval maximum number of function evaluation
+	 * @param nevals maximum number of function evaluation
 	 *
 	 * @return the Legendre polynomials averaged over a triangle
 	 */

@@ -77,19 +77,24 @@ void cbl::statistics::Model::stats_from_chains (const std::vector<std::vector<do
   vector<double> _low(sz1*sz2, 0);
   vector<double> _up(sz1*sz2, 0);
 
-  vector<vector<double>> models;
+  vector<vector<double>> models(floor((m_parameters->chain_size()-start)/thin)*m_parameters->chain_nwalkers(), vector<double>(0));
 
-  for (size_t j=start; j<m_parameters->chain_size(); j+=thin) {
-    for (size_t i=0; i<m_parameters->chain_nwalkers(); i++) {
-      vector<double> parameters;
+#pragma omp parallel num_threads(omp_get_max_threads())
+  {
+#pragma omp for schedule(static,2)    
+    for (size_t j=start; j<m_parameters->chain_size(); j+=thin) {
+      
+      for (size_t i=0; i<m_parameters->chain_nwalkers(); i++) {
 
-      for (size_t k=0; k<m_parameters->nparameters(); k++) 
-	parameters.push_back(m_parameters->chain_value(k, j, i));
-
-      models.push_back(flatten(this->operator()(xx, parameters)));
+	vector<double> parameters(m_parameters->nparameters());
+	for (size_t k=0; k<m_parameters->nparameters(); k++)
+	  parameters[k] = m_parameters->chain_value(k, j, i);
+	
+	models[(j-start)/thin*m_parameters->chain_nwalkers()+i] = flatten(this->operator()(xx, parameters));
+      }
     }
   }
-
+  
   vector<vector<double>> tr_models = transpose(models);
   
   for (size_t i=0; i<tr_models.size(); i++) {

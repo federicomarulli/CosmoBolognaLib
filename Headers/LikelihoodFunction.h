@@ -58,10 +58,13 @@ namespace cbl {
       
       /// Gaussian likelihood covariance
       _Gaussian_Covariance_,
+      
+      /// Sellentin likelihood
+      _Gaussian_Sellentin_,
 
       /// Poissonian likelihood
       _Poissonian_,
-      
+        
       /// Likelihood function defined by the user
       _UserDefined_
 
@@ -73,7 +76,7 @@ namespace cbl {
      * @return a vector containing the
      * LikelihoodType names
      */
-    inline std::vector<std::string> LikelihoodTypeNames () {return {"NotSet", "Gaussian_Error", "Gaussian_ColikelihoodTypeiance", "Poissonian", "UserDefined"}; }
+    inline std::vector<std::string> LikelihoodTypeNames () {return {"NotSet", "Gaussian_Error", "Gaussian_Covariance", "Gaussian_Sellentin", "Poissonian", "UserDefined"}; }
 
     /**
      * @brief cast an enum of type LikelihoodType

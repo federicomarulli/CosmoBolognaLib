@@ -49,7 +49,7 @@ void cbl::modelling::threept::Modelling_ThreePointCorrelation_comoving_connected
   // set the model parameters
   const int nparameters = 4;
 
-  vector<statistics::ParameterType> parameterType = {statistics::ParameterType::_Base_};
+  vector<statistics::ParameterType> parameterType(4, statistics::ParameterType::_Base_);
 
   vector<string> parameterName(nparameters);
   parameterName[0] = "b1";

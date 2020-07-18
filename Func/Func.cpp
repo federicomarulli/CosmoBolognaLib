@@ -33,6 +33,7 @@
 
 #include "Func.h"
 #include "LegendrePolynomials.h"
+#include "EigenWrapper.h"
 
 using namespace std;
 
@@ -669,6 +670,30 @@ double cbl::determinant_matrix (const std::vector<std::vector<double>> mat)
 
 void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const double prec, const int Nres)
 {
+  int size = mat.size();
+
+  Eigen::MatrixXd matrix = cbl::wrapper::eigen::MatrixToEigen(mat);
+  Eigen::MatrixXd inverse = matrix.inverse();
+
+  Eigen::MatrixXd unity = matrix * inverse;
+
+  for (int i=0; i<size; i++) {
+    for (int j=0; j<size; j++) {
+      const double fact = (i==j) ? 1 : 0;
+      double prod = unity(i, j);
+      if (fabs(fact-prod)>prec)  
+	WarningMsgCBL("exceeded precision for element "+conv(i, par::fINT)+" "+conv(j, par::fINT)+"; "+conv(fact, par::fDP4)+" "+conv(prod, par::fDP4)+"!", "invert_matrix", "Func.cpp");
+    }
+  }
+
+  if (Nres>0) {
+    const double fact = 1.-(size+1.)/(Nres-1.); // correction factor from Hartlap, Simon and Schneider 2006
+    inverse *= fact;
+  }
+
+  mat_inv = cbl::wrapper::eigen::EigenToMatrix(inverse);
+   
+  /*
   int n = mat.size();
   int s;
   if (n==0)
@@ -718,6 +743,7 @@ void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector
   gsl_matrix_free(mm);
   gsl_matrix_free(im);
   gsl_permutation_free(perm);
+  */
 }
 
 

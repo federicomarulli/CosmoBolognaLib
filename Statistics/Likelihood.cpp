@@ -275,6 +275,19 @@ void cbl::statistics::Likelihood::set_function (const LikelihoodType likelihood_
 	m_log_likelihood_function = &LogLikelihood_Gaussian_1D_covariance;
 	break;
 
+      case (LikelihoodType::_Gaussian_Sellentin_):
+	if (Nres < 1) 
+	  ErrorCBL("Sellentin likelihood requires a number of mocks > 1; input is "+conv(Nres, par::fINT)+"!", "set_function", "Likelihood.cpp"); 
+
+	m_data->invert_covariance(prec, -1);
+
+	m_log_likelihood_function = [&] (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> input)
+	{
+	  double chi2 = -2 * LogLikelihood_Gaussian_1D_covariance ( likelihood_parameter, input);
+	  return -0.5 * Nres * std::log( 1 + chi2/(Nres-1) );
+	};
+	break;
+
       case (LikelihoodType::_Poissonian_):
 	m_log_likelihood_function = &LogLikelihood_Poissonian_1D_;
 	break; 
