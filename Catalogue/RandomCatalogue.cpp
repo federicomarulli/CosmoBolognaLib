@@ -188,7 +188,6 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
 	  //dec.push_back(asin((sin_dec_max-sin_dec_min)*ran()+sin_dec_min));
 	  dec.push_back((dec_max-dec_min)*ran()+dec_min);
 	}
-	
       }
       
       else
