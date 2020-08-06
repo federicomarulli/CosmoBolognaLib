@@ -31,7 +31,7 @@
  *
  *  @authors Federico Marulli, Michele Moresco, Alfonso Veropalumbo
  *
- *  @authors federico.marulli3@unbo.it, michele.moresco@unibo.it,
+ *  @authors federico.marulli3@unibo.it, michele.moresco@unibo.it,
  *  alfonso.veropalumbo@unibo.it
  */
 
@@ -326,6 +326,8 @@ namespace cbl {
 	
 	///@}
 
+	virtual void write_jackknife_resampling (const std::string dir) const override;
+	
     
 	/**
 	 *  @name Input/Output methods

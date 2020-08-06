@@ -30,7 +30,7 @@
  *
  *  @authors Federico Marulli, Michele Moresco, Alfonso Veropalumbo
  *
- *  @authors federico.marulli3@unbo.it, michele.moresco@unibo.it,
+ *  @authors federico.marulli3@unibo.it, michele.moresco@unibo.it,
  *  alfonso.veropalumbo@unibo.it
  */
 
@@ -156,6 +156,13 @@ namespace cbl {
     
 	///@}
 
+	/**
+	 *  @name Matrix to store the three-point correlation function for each Jackknife resampling
+	 */
+	///@{
+
+	/// jackknife resampling matrix
+	std::vector< std::vector<double> > m_resampling_threept;
 
 	/**
 	 *  @name Object triplets
@@ -799,6 +806,9 @@ namespace cbl {
 	 */
 	virtual void write (const std::string dir, const std::string file, const bool connected) const
 	{ (void)dir; (void)file; (void)connected; cbl::ErrorCBL("", "write", "ThreePointCorrelation.h"); }
+
+	virtual void write_jackknife_resampling (const std::string dir) const
+	{ (void)dir;}
 
 	/**
 	 *  @brief write the measured three-point correlation covariance

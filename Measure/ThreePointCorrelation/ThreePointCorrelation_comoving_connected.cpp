@@ -32,7 +32,7 @@
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *
- *  @authors federico.marulli3@unbo.it, alfonso.veropalumbo@unibo.it
+ *  @authors federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
  */
 
 
@@ -185,8 +185,10 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (c
 
     for (int j=0; j<m_ddd->nbins(); j++) 
       if (m_ddd_regions[i]->TT1D(j)>0 && m_rrr_regions[i]->TT1D(j)>0) 
-	resampling_threept[i][j] = ((m_ddd_regions[i]->TT1D(j)/norm1)/(m_rrr_regions[i]->TT1D(j)/norm4))-3.*((m_ddr_regions[i]->TT1D(j)/norm2)/(m_rrr_regions[i]->TT1D(j)/norm4))+3.*(((m_drr_regions[i]->TT1D(j)/norm3)/(m_rrr_regions[i]->TT1D(j)/norm4)))-1.;
+	   resampling_threept[i][j] = ((m_ddd_regions[i]->TT1D(j)/norm1)/(m_rrr_regions[i]->TT1D(j)/norm4))-3.*((m_ddr_regions[i]->TT1D(j)/norm2)/(m_rrr_regions[i]->TT1D(j)/norm4))+3.*(((m_drr_regions[i]->TT1D(j)/norm3)/(m_rrr_regions[i]->TT1D(j)/norm4)))-1.;   
   }
+
+  m_resampling_threept=resampling_threept;
 
   vector<vector<double>> cov_mat;
   cbl::covariance_matrix(resampling_threept, cov_mat, doJK);
@@ -264,6 +266,27 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::write (con
 	 << "   " << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << m_zeta[i]
 	 << "   " << setiosflags(ios::fixed) << setprecision(4) << setw(10) << right << m_error[i] << endl;
     
+  fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl << endl;
+}  
+
+// ============================================================================================
+
+
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::write_jackknife_resampling (const std::string dir) const
+{      
+  
+  string file="zeta_jackknife_resampling.dat";
+  string file_out = dir+file;
+  ofstream fout(file_out.c_str()); checkIO(fout, file_out);
+
+  fout << "# i  j  zeta_resampling" << endl;
+  
+  for (size_t i=0; i<m_resampling_threept.size(); i++){ 
+    for(size_t j=0; j<m_resampling_threept[0].size(); j++){
+      fout << i << "\t" << j << "\t" << setiosflags(ios::fixed) << setprecision(4) << setw(10) << m_resampling_threept[i][j]  << endl; 
+    }
+  }
+
   fout.close(); coutCBL << endl << "I wrote the file: " << file_out << endl << endl;
 }  
 
