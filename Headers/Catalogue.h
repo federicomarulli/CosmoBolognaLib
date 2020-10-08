@@ -1,6 +1,6 @@
 /********************************************************************
  *  Copyright (C) 2015 by Federico Marulli and Alfonso Veropalumbo  *
- *  federico.marulli3@unibo.it                                      * 
+ *  federico.marulli3@unibo.it                                      *
  *                                                                  *
  *  This program is free software; you can redistribute it and/or   *
  *  modify it under the terms of the GNU General Public License as  *
@@ -21,19 +21,19 @@
 /**
  *  @file Headers/Catalogue.h
  *
- *  @brief The class Catalogue  
+ *  @brief The class Catalogue
  *
  *  This file defines the interface of the class Catalogue, used
  *  handle catalogues of astronomical sources
  *
- *  @authors Federico Marulli, Alfonso Veropalumbo 
+ *  @authors Federico Marulli, Alfonso Veropalumbo
  *
  *  @authors federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
  */
 
 
 #ifndef __CATALOGUE__
-#define __CATALOGUE__ 
+#define __CATALOGUE__
 
 #include "Field3D.h"
 #include "ChainMesh.h"
@@ -55,7 +55,7 @@ namespace cbl {
   /**
    *  @brief The namespace of the functions and classes used to handle
    *  <B> catalogues of astronomical sources </B>
-   *  
+   *
    *  The \e catalogue namespace contains all the functions and
    *  classes used to handle catalogues of astronomical sources
    */
@@ -67,33 +67,33 @@ namespace cbl {
      *  @brief the catalogue variables
      */
     enum class Var {
-    
+
       /// coordinate x
       _X_,
-    
+
       /// coordinate y
-      _Y_, 
+      _Y_,
 
       /// coordinate z
       _Z_,
 
       /// Right Ascension
-      _RA_, 
+      _RA_,
 
       /// Declination
-      _Dec_, 
+      _Dec_,
 
       /// redshift
-      _Redshift_, 
+      _Redshift_,
 
       /// comoving distance
-      _Dc_, 
+      _Dc_,
 
       /// weight
       _Weight_,
 
       /// mass
-      _Mass_, 
+      _Mass_,
 
       /// magnitude
       _Magnitude_,
@@ -102,27 +102,27 @@ namespace cbl {
       _SFR_,
 
       /// specific star formation rate
-      _sSFR_, 
+      _sSFR_,
 
       /// richness
       _Richness_,
 
       /// richness error
       _RichnessError_,
-      
+
       /// velocity along the x direction
-      _Vx_, 
+      _Vx_,
 
       /// velocity along the y direction
-      _Vy_, 
+      _Vy_,
 
       /// velocity along the z direction
-      _Vz_, 
+      _Vz_,
 
       /// region
       _Region_,
-      
-      /// radius 
+
+      /// radius
       _Radius_,
 
       /// densityContrast
@@ -130,13 +130,13 @@ namespace cbl {
 
       /// centralDensity
       _CentralDensity_,
-      
+
       /// xx displacement
       _X_displacement_,
 
       /// yy displacement
-      _Y_displacement_,   
-   
+      _Y_displacement_,
+
       /// zz displacement
       _Z_displacement_,
 
@@ -187,10 +187,10 @@ namespace cbl {
 
       /// parent unique identification number
       _Parent_,
-	
+
       /// generic property
       _Generic_
-      
+
     };
 
     /**
@@ -207,13 +207,13 @@ namespace cbl {
     typedef std::function<bool(const std::shared_ptr<Object> obj)> mask_function;
 
     /**
-     * @brief object that encapsulate the 
+     * @brief object that encapsulate the
      * mask function.
      *
      * Mask should be an object that operates on
      * object of type std::shared_ptr<cbl::catalogue::Object>,
      * returning a bool
-     * 
+     *
      */
     struct MaskObject {
       /**
@@ -223,7 +223,7 @@ namespace cbl {
        *
        * @param obj pointer to an object of type cbl::catalogue::Object
        *
-       * @return bool 
+       * @return bool
        */
       virtual bool operator() (const std::shared_ptr<Object> obj) const {(void) obj; return true;}
 
@@ -269,7 +269,7 @@ namespace cbl {
      * @return object of class Var
      */
     inline std::vector<Var> VarCast (const std::vector<int> varIndeces)
-    { return castFromValues<Var>(varIndeces); } 
+    { return castFromValues<Var>(varIndeces); }
 
     /**
      * @brief cast an enum of type Var
@@ -290,14 +290,14 @@ namespace cbl {
       _createRandom_box_,
 
       /// random catalogue with square geometry in observed coordinates (R.A., Dec)
-      _createRandom_square_,   
+      _createRandom_square_,
 
       /// random catalogue obtained with shuffling in observed coordinates (R.A., Dec)
       _createRandom_shuffle_,
 
-      /// random catalogue obtained with shuffling in observed coordinates (R.A., Dec) and redshift 
+      /// random catalogue obtained with shuffling in observed coordinates (R.A., Dec) and redshift
       _createRandom_shuffleTOT_,
-      
+
       /// random catalogue with conic geometry
       _createRandom_cone_,
 
@@ -306,9 +306,9 @@ namespace cbl {
 
       /// random catalogue for VIPERS
       _createRandom_VIPERS_,
-	
+
      /// create random for SDSS, using stripes
-      _createRandom_SDSS_stripes_    
+      _createRandom_SDSS_stripes_
     };
 
     /**
@@ -345,7 +345,7 @@ namespace cbl {
      * @return object of class RandomType
      */
     inline std::vector<RandomType> RandomTypeCast (const std::vector<int> randomTypeIndeces)
-    { return castFromValues<RandomType>(randomTypeIndeces); } 
+    { return castFromValues<RandomType>(randomTypeIndeces); }
 
     /**
      * @brief cast an enum of type RandomType
@@ -362,13 +362,13 @@ namespace cbl {
      *  @brief the algorithm used to look for Voids
      */
     enum class VoidAlgorithm {
-       
+
       /// Lagrangian Zel'dovich approximation Void algorithm used to move particles
       _LaZeVo_,
 
       /// Random Induced walk Void Algorithm used to move particles
-      _RIVA_      
-      
+      _RIVA_
+
     };
 
     /**
@@ -379,19 +379,19 @@ namespace cbl {
      */
     inline std::vector<std::string> VoidAlgorithmNames ()
     { return {"LaZeVo", "RIVA"}; }
-    
+
     /**
      *  @enum CharEncode
      *  @brief character encoding of input file
      */
     enum class CharEncode {
-    
+
       /// Format ASCII file
       _ascii_,
-      
+
       /// Format binary file
       _binary_
-      
+
     };
 
     /**
@@ -402,22 +402,22 @@ namespace cbl {
      */
     inline std::vector<std::string> CharEncodeNames ()
     { return {"ascii", "binary"}; }
-    
+
     /**
      *  @enum EstimateCriterion
      *  @brief method used to estimate mass, radius and velocity of a halo
      */
     enum class EstimateCriterion {
-    
-      /// 
+
+      ///
       _m200_,
-      
-      /// 
+
+      ///
       _c200_,
 
       ///
       _t200_
-      
+
     };
 
     /**
@@ -454,7 +454,7 @@ namespace cbl {
      * @return object of class EstimateCriterion
      */
     inline std::vector<EstimateCriterion> EstimateCriterionCast (const std::vector<int> estimateCriterionIndeces)
-    { return castFromValues<EstimateCriterion>(estimateCriterionIndeces); } 
+    { return castFromValues<EstimateCriterion>(estimateCriterionIndeces); }
 
     /**
      * @brief cast an enum of type EstimateCriterion
@@ -474,7 +474,7 @@ namespace cbl {
       /// the number of particles of each type in the snapshot file
       int npart[6];
 
-      /// the mass of each particle type 
+      /// the mass of each particle type
       double massarr[6];
 
       /// time of output, or expansion factor for cosmological simulations
@@ -523,7 +523,7 @@ namespace cbl {
       int flag_entr_ics;
 
       /// currently unused space which fills the header to a total length of 256 bytes leaving room for future additions
-      short la[40]; 
+      short la[40];
     };
 
     /**
@@ -535,7 +535,7 @@ namespace cbl {
       /// number of groups in file
       uint32_t Ngroups;
 
-      /// total number of groups 
+      /// total number of groups
       uint32_t totNgroups;
 
       /// number of particle IDs in corresponding file
@@ -553,7 +553,7 @@ namespace cbl {
       /// total number of subgroups
       uint32_t totNsubs;
     };
-    
+
     /**
      *  @class Catalogue Catalogue.h "Headers/Catalogue.h"
      *
@@ -563,12 +563,12 @@ namespace cbl {
      *  </EM>
      */
     class Catalogue {
-      
+
     private :
-      
+
       /// vector containing the objects of the catalogue
       std::vector<std::shared_ptr<Object>> m_object;
-      
+
       /// vector containing the object indexes
       std::vector<int> m_index;
 
@@ -583,12 +583,12 @@ namespace cbl {
 
       /// number of regions
       size_t m_nRegions = 0;
-      
+
       /**
        *  @name private variables and functions used to read catalogues from standard GADGET files
        */
       ///@{
-      
+
       /// contains the block-header temporary value
       int m_blockheader;
 
@@ -646,17 +646,17 @@ namespace cbl {
        *  @return none
        */
       void m_check_it_out (std::ifstream &finr, const bool swap);
-      
-      ///@}   
 
-      
+      ///@}
+
+
     public :
-      
+
       /**
        *  @name Constructors/destructors
        */
       ///@{
-    
+
       /**
        *  @brief default constructor
        *  @return object of class Catalogue
@@ -669,12 +669,12 @@ namespace cbl {
        *  @return object of class Catalogue
        */
       Catalogue (const Catalogue &cat);
-      
+
       /**
        *  @brief constructor
        *
        *  @param objectType the object type, specified in the
-       *  cbl::catalogue::ObjectType enumeration 
+       *  cbl::catalogue::ObjectType enumeration
        *
        *  @param coordinateType the coordinate type, specified in the
        *  cbl::CoordinateType enumeration
@@ -705,7 +705,7 @@ namespace cbl {
        *  @brief constructor
        *
        *  @param objectType the object type, specified in the
-       *  cbl::catalogue::ObjectType enumeration 
+       *  cbl::catalogue::ObjectType enumeration
        *
        *  @param coordinateType the coordinate type, specified in the
        *  cbl::CoordinateType enumeration
@@ -730,7 +730,7 @@ namespace cbl {
        */
       Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<double> coord1, const std::vector<double> coord2, const std::vector<double> coord3, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
 	: Catalogue(objectType, coordinateType, coord1, coord2, coord3, {}, cosm, inputUnits) {}
-      
+
       /**
        *  @brief constructor, reading a file with coordinates
        *
@@ -767,7 +767,7 @@ namespace cbl {
        *  @param fact a factor used to multiply the coordinates,
        *  i.e. coordinate_i=coordinate_i*fact
        *
-       *  @param cosm object of class Cosmology 
+       *  @param cosm object of class Cosmology
        *
        *  @param inputUnits the units of the input coordinates
        *
@@ -796,10 +796,10 @@ namespace cbl {
        *  @param file vector containing the files where the input
        *  catalogues are stored
        *
-       *  @param cosm object of class Cosmology 
+       *  @param cosm object of class Cosmology
        *
        *  @param inputUnits the units of the input coordinates
-       * 
+       *
        *  @return an object of class Catalogue
        */
       Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
@@ -835,10 +835,10 @@ namespace cbl {
        *  @param fact a factor used to multiply the coordinates,
        *  i.e. coordinate_i=coordinate_i*fact
        *
-       *  @param cosm object of class Cosmology 
+       *  @param cosm object of class Cosmology
        *
        *  @param inputUnits the units of the input coordinates
-       * 
+       *
        *  @param seed the seed for random number generation
        *
        *  @return an object of class Catalogue
@@ -876,14 +876,14 @@ namespace cbl {
        *
        *  @param read_regions if true, read also the object regions
        *  from the FITS file
-       *  
+       *
        *  @param nSub the fracton of objects that will be randomly
        *  selected (nSub=1 \f$ \rightarrow \f$ all objects are selected)
        *
        *  @param fact a factor used to multiply the coordinates,
        *  i.e. coordinate_i=coordinate_i*fact
        *
-       *  @param cosm object of class Cosmology 
+       *  @param cosm object of class Cosmology
        *
        *  @param inputUnits the units of the input coordinates
        *
@@ -892,13 +892,13 @@ namespace cbl {
        *  @return an object of class Catalogue
        */
       Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const bool read_weights, const bool read_regions, const double nSub, const double fact, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
-      
+
       /**
        *  @brief constructor, using vectors of generic objects
        *  @param object objects of class T, specified in the
        *  cbl::catalogue::ObjectType enumeration
        *  @return objects of type Catalogue
-       */ 
+       */
       template<typename T> Catalogue (std::vector<T> object) {
 	for (size_t i=0; i<object.size(); i++)
 	  m_object.push_back(move(std::make_shared<T>(T(object[i]))));
@@ -926,7 +926,7 @@ namespace cbl {
        *  @param attribute vector containing the list of attributes
        *  contained in the file, used to construct the catalogue
        *
-       *  @param column vector containing the column number which 
+       *  @param column vector containing the column number which
        *  correspond to each element of the vector 'attributes'
        *
        *  @param file vector containing the files where the input
@@ -937,7 +937,7 @@ namespace cbl {
        *
        *  @param nSub the fracton of objects that will be randomly
        *  selected (nSub=1 \f$ \rightarrow \f$ all objects are selected)
-       * 
+       *
        *  @param seed the seed for random number generation
        *
        *  @return an object of class Catalogue
@@ -995,12 +995,12 @@ namespace cbl {
 
       ///@}
 
-      
+
       /**
-       *  @name Constructors of random catalogues 
+       *  @name Constructors of random catalogues
        */
       ///@{
-      
+
       /**
        *  @brief constructor that creates a random catalogue in a
        *  cubic box, warped by geometric distortions
@@ -1020,7 +1020,7 @@ namespace cbl {
        *
        *  @param dir_in the input directory where the original random
        *  catalogue is stored
-       *     
+       *
        *  @param Zguess_min minimum redshift used to search the redshift
        *
        *  @param Zguess_max maximum redshift used to search the redshift
@@ -1065,7 +1065,7 @@ namespace cbl {
        *  computed the redshift distribution for the random catalogue;
        *  if it is not provided, the redshifts of the input catalogue
        *  will be used
-       *  
+       *
        *  @param RA vector containg the right ascensions of the random
        *  objects; if it is not provided, it will be created by the
        *  function
@@ -1085,7 +1085,7 @@ namespace cbl {
        *  the constructor type explicit
        */
       Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin=10, const cosmology::Cosmology &cosm={}, const bool conv=false, const double sigma=0., const std::vector<double> redshift={}, const std::vector<double> RA={}, const std::vector<double> Dec={}, int z_ndigits=10, const int seed=3213);
-      
+
       /**
        *  @brief constructor that creates a random catalogue in a cone
        *
@@ -1100,12 +1100,12 @@ namespace cbl {
        *  @param nbin number of redshift bins used to compute the
        *  redshift distribution
        *
-       *  @param Angle angle of the cone 
+       *  @param Angle angle of the cone
        *
        *  @param redshift vector containing the redshift of the
        *  objects in the catalogue
        *
-       *  @param cosm object of class Cosmology 
+       *  @param cosm object of class Cosmology
        *
        *  @param conv true &rarr; compute the Gaussian convolvolution of
        *  the distribution; false &rarr; do not convolve
@@ -1123,10 +1123,10 @@ namespace cbl {
       Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const double Angle, const std::vector<double> redshift, const cosmology::Cosmology &cosm={}, const bool conv=false, const double sigma=0., const int seed=3213);
 
       /**
-       *  @brief constructor that creates a random catalogue using the 
+       *  @brief constructor that creates a random catalogue using the
        *  a mask in the MANGLE format for the angular distribution
        *  and taking the redshift distribution from an input catalogue
-       * 
+       *
        *  @param type the type of random catalogue, that must be
        *  set to \_createRandom_MANGLE\_
        *
@@ -1155,12 +1155,12 @@ namespace cbl {
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
        */
-      Catalogue (const RandomType type, const std::vector<std::string> mangle_mask, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology cosm, const bool conv=false, const double sigma=0., const int seed=3213);   
+      Catalogue (const RandomType type, const std::vector<std::string> mangle_mask, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology cosm, const bool conv=false, const double sigma=0., const int seed=3213);
 
       /**
        *  @brief constructor that creates a random catalogue using
        *  the SDSS stripes.
-       * 
+       *
        *  @param type the type of random catalogue, that must be
        *  set to \_createRandom_SDSS_stripes\_
        *
@@ -1193,20 +1193,20 @@ namespace cbl {
        *  the constructor type explicit
        */
       Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const bool dndz_per_stripe, const int nbin, const cosmology::Cosmology cosm, const bool conv=false, const double sigma=0, const int seed=3213);
-	
+
       /// @cond extrandom
-      
-      Catalogue (const RandomType type, const std::string WField, const bool isSpectroscopic, const Catalogue catalogue, const Catalogue catalogue_for_nz, const double N_R, const cosmology::Cosmology &cosm, const int step_redshift, const std::vector<double> lim, const double redshift_min, const double redshift_max, const bool do_convol, const double sigma, const bool use_venice, const bool do_zdistr_with_venice, const std::string file_random, const std::string mask, const std::string pointing_file, const std::string dir_venice, const int seed); 
-      
+
+      Catalogue (const RandomType type, const std::string WField, const bool isSpectroscopic, const Catalogue catalogue, const Catalogue catalogue_for_nz, const double N_R, const cosmology::Cosmology &cosm, const int step_redshift, const std::vector<double> lim, const double redshift_min, const double redshift_max, const bool do_convol, const double sigma, const bool use_venice, const bool do_zdistr_with_venice, const std::string file_random, const std::string mask, const std::string pointing_file, const std::string dir_venice, const int seed);
+
       /// @endcond
 
       ///@}
-      
+
       /**
-       *  @name Constructor of Void catalogues 
+       *  @name Constructor of Void catalogues
        */
       ///@{
-      
+
       /**
        * @brief constructor that creates a void catalogue extracting
        * cosmic voids from a catalogue of tracers. This void finder is
@@ -1220,7 +1220,7 @@ namespace cbl {
        * _RIVA_)
        *
        * @param tracer_catalogue the input tracer catalogue
-       *      
+       *
        * @param nSub factor for the dilution of the tracer
        * catalogue. nSub=1 to not subsample
        *
@@ -1294,13 +1294,13 @@ namespace cbl {
        * @return none
        */
       Catalogue (const VoidAlgorithm algorithm, const Catalogue tracer_catalogue, const double nSub, const std::vector<std::string> random_catalogue_vector, const std::string dir_output, const std::string output, const double r_max, const double cellsize, const int n_rec=1, const int n_iter=1, const bool swapping=true, const bool add_unpaired=true, const double convergence_fact=1., const double step_size=0.9, const double gaussian_smoothing=1., const double protovoid_distance=2.);
-      
+
       /**
        *  @brief constructor that modifies an input void catalogue
-       *  according to a set of user selected criteria. If all the 
+       *  according to a set of user selected criteria. If all the
        *  steps are selected the final result is a catalogue of spherical,
        *  not-overlapped voids.
-       * 
+       *
        *  @param input_voidCatalogue the input void catalogue to be modified
        *
        *  @param clean a 3 element bool vector. clean[0] = true, erase
@@ -1334,7 +1334,7 @@ namespace cbl {
        *  @param ol_criterion the criterion for the overlap step
        *  (valid criteria: Var::_DensityContrast_,
        *  Var::_CentralDensity_)
-       * 
+       *
        *  @return an object of class Catalogue
        */
       Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
@@ -1346,7 +1346,7 @@ namespace cbl {
        *  spherical, not-overlapped voids. Since the volume of the
        *  catalogue must be provided, this cleaning algorithm works
        *  with tracer catalogues with any geometry.
-       * 
+       *
        *  @param input_voidCatalogue the input void catalogue to be modified
        *
        *  @param Volume the volume of the tracer catalogue in \f$ Mpc^{3} h^{-3} \f$
@@ -1382,7 +1382,7 @@ namespace cbl {
        *  @param ol_criterion the criterion for the overlap step
        *  (valid criteria: Var::_DensityContrast_,
        *  Var::_CentralDensity_)
-       * 
+       *
        *  @return an object of class Catalogue
        */
       Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const double Volume, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
@@ -1394,7 +1394,7 @@ namespace cbl {
        *  spherical, not-overlapped voids. This version takes into
        *  account the variation of the number density with the
        *  redshift, therefore it can works with loghtcones.
-       * 
+       *
        *  @param input_voidCatalogue the input void catalogue to be modified
        *
        *  @param par_numdensity coefficients of the polynomial
@@ -1434,24 +1434,24 @@ namespace cbl {
        *  @param ol_criterion the criterion for the overlap step
        *  (valid criteria: Var::_DensityContrast_,
        *  Var::_CentralDensity_)
-       * 
+       *
        *  @return an object of class Catalogue
        */
       Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const std::vector<double> par_numdensity, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
-      
-      ///@} 
 
-      
+      ///@}
+
+
       /**
        *  @name Constructors used to read catalogues from standard GADGET files
        */
       ///@{
-      
+
       /**
        *  @brief constructor that reads object of selected type from Gadget snapshots
        *
        *  @param objectType the object type, specified in the
-       *  cbl::catalogue::ObjectType enumeration 
+       *  cbl::catalogue::ObjectType enumeration
        *
        *  @param file_cn the the name common to all the files in which
        *  the gadget snapshot is divided (path/to/file/common_name)
@@ -1477,10 +1477,10 @@ namespace cbl {
        */
       Catalogue (const ObjectType objectType, const std::string file_cn=par::defaultString, const bool snapformat=false, const bool swap=false, const double fact=0.001, const bool read_catalogue=true, const double nSub=1.1, const std::string component_to_read="ALL");
 
-      
+
       /**
        *  @brief constructor that reads objects of class HostHalo with satellite dependencies
-       *  from group and subgroup files generated by the gadget implementation of the 
+       *  from group and subgroup files generated by the gadget implementation of the
        *  FoF and SUBFIND algorithms (respectively)
        *
        *  @param snap the snapshot number
@@ -1489,25 +1489,25 @@ namespace cbl {
        *
        *  @param swap true = swap endianism, false = do not swap endianism
        *
-       *  @param long_ids true = IDs are stored in double precision, 
+       *  @param long_ids true = IDs are stored in double precision,
        *  false = IDs are stored in single precision
        *
        *  @param scaleFact a factor used to multiply the coordinates,
-       *  i.e. coordinate_i=coordinate_i*scaleFact 
+       *  i.e. coordinate_i=coordinate_i*scaleFact
        *
        *  @param massFact a factor used to multiply the masses,
-       *  i.e. mass_i=mass_i*scaleFact 
+       *  i.e. mass_i=mass_i*scaleFact
        *
-       *  @param estimate_crit the criterion used to estimate mass, radius 
-       *  and velocity dispersion of the group 
+       *  @param estimate_crit the criterion used to estimate mass, radius
+       *  and velocity dispersion of the group
        *
        *  @param veldisp whether the average velocity dispersion within the estimated radius
        *  has been computed or not in the GADGET run considered
        *
-       *  @param masstab whether the mass table is present or not 
+       *  @param masstab whether the mass table is present or not
        *
-       *  @param add_satellites whether to add the satellites identified by the 
-       *  SUBFIND algorithm to the catalogue 
+       *  @param add_satellites whether to add the satellites identified by the
+       *  SUBFIND algorithm to the catalogue
        *
        *  @param verbose true = build the catalogue verbosely, false = keep it quiet..
        *
@@ -1516,7 +1516,7 @@ namespace cbl {
       Catalogue (const int snap, const std::string basedir, const bool swap=false, const bool long_ids=false, const double scaleFact=1.0, const double massFact=1.0, const EstimateCriterion estimate_crit=EstimateCriterion::_m200_, const bool veldisp=false, const bool masstab=false, const bool add_satellites=false, const bool verbose=false);
 
       ///@}
-    
+
       /**
        *  @name Member functions used to get the private members and their properties
        */
@@ -1527,31 +1527,31 @@ namespace cbl {
        *  @return the vector containing the objects of the catalogue
        */
       std::vector<std::shared_ptr<Object> > sample () const { return m_object; };
-      
+
       /**
        *  @brief get the private member Catalogue::m_index
        *  @return the vector containing the object indexes
        */
       std::vector<int> index () const { return m_index; };
-      
+
       /**
        * @brief get the private member Catalogue::m_object[i]->m_xx
        * @param i the object index
-       * @return the coordinate x of the i-th object 
+       * @return the coordinate x of the i-th object
        */
       double xx (const int i) const { return m_object[i]->xx(); };
 
       /**
        * @brief get the private member Catalogue::m_object[i]->m_yy
        * @param i the object index
-       * @return the coordinate y of the i-th object 
+       * @return the coordinate y of the i-th object
        */
       double yy (const int i) const { return m_object[i]->yy(); };
 
       /**
        * @brief get the private member Catalogue::m_object[i]->m_zz
        * @param i the object index
-       * @return the coordinate z of the i-th object 
+       * @return the coordinate z of the i-th object
        */
       double zz (const int i) const { return m_object[i]->zz(); };
 
@@ -1574,7 +1574,7 @@ namespace cbl {
        * @param i the object index
        * @return the velocity along the z direction of the i-th object
        */
-      double vz (const int i) const { return m_object[i]->vz(); }; 
+      double vz (const int i) const { return m_object[i]->vz(); };
 
       /**
        * @brief get the private member Catalogue::m_object[i]->m_dc
@@ -1589,7 +1589,7 @@ namespace cbl {
        * @return the Right Ascension of the i-th object
        */
       double ra (const int i) const { return m_object[i]->ra(); };
-    
+
       /**
        * @brief get the private member Catalogue::m_object[i]->m_dec
        * @param i the object index
@@ -1655,23 +1655,23 @@ namespace cbl {
        *  @return the total number of regions
        */
       size_t nRegions ();
-      
+
       /**
        *  @brief get the list of regions in which the catalogue is
        *  divided
        *
-       *  @return the list of regions 
+       *  @return the list of regions
        */
       std::vector<long> region_list () const;
-      
+
       /**
        *  @brief get the list of fields where the objects have been
        *  observed
        *
-       *  @return the list of fields 
+       *  @return the list of fields
        */
       std::vector<std::string> field_list () const { return different_elements(field()); }
-      
+
       /**
        *  @brief get the total number of fields where the objects have
        *  been observed
@@ -1721,7 +1721,7 @@ namespace cbl {
        * @return ID of the i-th object
        */
       int ID (const int i) const { return m_object[i]->ID(); }
-      
+
       /**
        * @brief get the private member
        * Catalogue::m_object[i]->m_richness
@@ -1736,7 +1736,7 @@ namespace cbl {
        * @return generic properties of the i-th object
        */
       double generic (const int i) const { return m_object[i]->generic(); }
-    
+
       /**
        *  @brief get the private member Catalogue::m_object[ii]->m_tot_mass
        *  @param i the object index
@@ -1745,34 +1745,34 @@ namespace cbl {
       double tot_mass (const int i) const { return m_object[i]->tot_mass(); }
 
       /**
-       * @brief get the values of the object regions  
+       * @brief get the values of the object regions
        * @return the object regions
        */
       std::vector<long> region () const;
 
       /**
-       * @brief get the values of the object fields  
+       * @brief get the values of the object fields
        * @return the object fields
        */
       std::vector<std::string> field () const;
-    
+
       /**
        *  @brief get the private member Catalogue::m_object[ii]->m_satellites
        *  @param index the object index
        *  @return the vector of pointers to the satellite objects of the i-th object
        */
       std::vector<std::shared_ptr<Object>> satellites (const int index) const { return m_object[index]->satellites(); }
-      
+
       /**
-       * @brief get the value of the i-th object variable  
+       * @brief get the value of the i-th object variable
        * @param index the index of the object
        * @param var_name the variable name
        * @return i-th variable Var
        */
       double var (const int index, const Var var_name) const;
-      
+
       /**
-       * @brief get the values of the object variables  
+       * @brief get the values of the object variables
        * @param var_name the variable name
        * @return the vector of the variable Var
        */
@@ -1780,7 +1780,7 @@ namespace cbl {
 
       /**
        * @brief check if the given variable of the i-th object is set
-       *  
+       *
        * @param index the index of the object
        *
        * @param var_name the variable name
@@ -1789,10 +1789,10 @@ namespace cbl {
        * \f$ \rightarrow \f$ false
        */
       bool isSetVar (const int index, const Var var_name) const;
-      
+
       /**
        * @brief check if the given object variables are set
-       *  
+       *
        * @param var_name the variable name
        *
        * @return if the given variables are set \f$ \rightarrow \f$
@@ -1813,13 +1813,13 @@ namespace cbl {
        *  @return reference to Catalogue object
        */
       inline std::shared_ptr<Object> operator[] (const size_t i) const { return m_object[i]; };
-      
+
       /**
        * @brief get the object vector
        * @return vector of pointers to objects of the catalogue
        */
-      inline std::vector<std::shared_ptr<Object>> catalogue_object () const { return m_object; }   
-      
+      inline std::vector<std::shared_ptr<Object>> catalogue_object () const { return m_object; }
+
       /**
        * @brief get the X, Y, Z coordinates of the i-th object of the
        * catalogue
@@ -1828,13 +1828,22 @@ namespace cbl {
        * @return vector containing the three coordinates
        */
       std::vector<double> coordinate (const int i) const { return m_object[i]->coords(); }
-    
+
+      /**
+       * @brief get the X, Y, Z coordinates of the i-th object of the
+       * catalogue in a Eigen array
+       *
+       * @param i the object index
+       * @return Eigen array containing the three coordinates
+       */
+      Vector4D eigen_coordinate (const int i) const {return m_object[i]->eigen_coords(); };
+
       /**
        * @brief get the number of objects of the catalogue
        * @return the number of objects
        */
       size_t nObjects () const { return m_object.size(); }
-  
+
       /**
        * @brief get the minimum value of a variable of the catalogue
        * objects
@@ -1871,11 +1880,11 @@ namespace cbl {
        * @param [out] stats vector of 4 dimensional vector containing
        * the mean, the median, the standard deviation, and the
        * difference between the third and first quartiles of the
-       * variable 
+       * variable
        * @return none
        */
       void stats_var (const std::vector<Var> var_name, std::vector<std::vector<double>> &stats) const;
-  
+
       /**
        * @brief get the distribution of a variable
        * @param [in] var_name the variable name
@@ -1901,7 +1910,7 @@ namespace cbl {
        * @return none
        */
       void var_distr (const Var var_name, std::vector<double> &_var, std::vector<double> &dist, std::vector<double> &err, const int nbin, const bool linear=true, const std::string file_out=par::defaultString, const double Volume=1., const bool norm=false, const double V1=par::defaultDouble, const double V2=par::defaultDouble, const std::string bin_type="Linear", const bool convolution=false, const double sigma=0.) const;
-    
+
       /**
        * @brief get the total weight of the objects of the catalogue
        * @return the total weight
@@ -1925,12 +1934,12 @@ namespace cbl {
        * @return private variable m_mps
        */
       double mps () const { return m_mps; }
-    
+
       ///@}
-  
-  
+
+
       /**
-       *  @name Member functions used to set the private members 
+       *  @name Member functions used to set the private members
        */
       ///@{
 
@@ -1960,12 +1969,12 @@ namespace cbl {
        * @return none
        */
       void set_field (const std::vector<std::string> field);
-      
+
       /**
        * @brief set a private variable
        * @param index index of the variable to set
        * @param var_name name of the variable
-       * @param value variable value       
+       * @param value variable value
        * @param cosmology object of class Cosmology, used to estimate
        * the comoving distance from the given redshift
        * @return none
@@ -1977,11 +1986,11 @@ namespace cbl {
        * @param index index of the variable to set
        * @param var_name name of the variable
        * @param value variable value
-       * @param cosmology object of class Cosmology       
+       * @param cosmology object of class Cosmology
        * @return none
        */
       void set_var (const int index, const Var var_name, const int value, const cosmology::Cosmology cosmology={});
-      
+
       /**
        * @brief set a private variable
        * @param var_name name of the variable
@@ -2025,9 +2034,9 @@ namespace cbl {
        *  @brief compute the central density of each object in a void catalogue.
        *  The central density is defined as \f$ n_0=\frac{r\,N_v}{V(R_0)} \f$,
        *  \f$r\f$ is the ratio between the number of particle around the centre
-       *  of the void to be used as tracers of the central density and the total 
+       *  of the void to be used as tracers of the central density and the total
        *  number of particles contained in the void, \f$N_v\f$.
-       *  The distance between the furthest of those \f$r\,N_v\f$ particles 
+       *  The distance between the furthest of those \f$r\,N_v\f$ particles
        *  from the centre of the void determines the radius of the centre \f$R_0\f$.
        *  \f$V(R_0)\f$ is the volume of a sphere with radius \f$R_0\f$.
        *
@@ -2038,7 +2047,7 @@ namespace cbl {
        *
        *  @param Volume the volume of the tracer catalogue in \f$ Mpc^{3} h^{-3} \f$
        *
-       *  @param ratio the ratio \f$r\f$ 
+       *  @param ratio the ratio \f$r\f$
        *
        *  @return none
        */
@@ -2048,9 +2057,9 @@ namespace cbl {
        *  @brief compute the central density of each object in a void catalogue.
        *  The central density is defined as \f$ n_0=\frac{r\,N_v}{V(R_0)} \f$,
        *  \f$r\f$ is the ratio between the number of particle around the centre
-       *  of the void to be used as tracers of the central density and the total 
+       *  of the void to be used as tracers of the central density and the total
        *  number of particles contained in the void, \f$N_v\f$.
-       *  The distance between the furthest of those \f$r\,N_v\f$ particles 
+       *  The distance between the furthest of those \f$r\,N_v\f$ particles
        *  from the centre of the void determines the radius of the centre \f$R_0\f$.
        *  \f$V(R_0)\f$ is the volume of a sphere with radius \f$R_0\f$.
        *
@@ -2065,12 +2074,12 @@ namespace cbl {
        *  par_density = {-0.001, 0.005, -0.01} \f$\rightarrow\f$
        *  numdensity = \f$ -0.001 \cdot z^2 + 0.005 \cdot z -0.01 \f$
        *
-       *  @param ratio the ratio \f$r\f$ 
+       *  @param ratio the ratio \f$r\f$
        *
        *  @return none
        */
       void compute_centralDensity (const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const std::vector<double> par_numdensity, const double ratio=0.1);
-      
+
       /**
        *  @brief compute density contrast of cosmic voids in catalogue
        *  as the ratio between the central density and the overall
@@ -2087,9 +2096,9 @@ namespace cbl {
        *
        *  @return none
        *
-       *  @warning to obtain the density contrast this function computes the 
-       *  central density of each void in the catalogue using the internal 
-       *  function compute_centralDensity; if the choice of \f$r\f$ is too low 
+       *  @warning to obtain the density contrast this function computes the
+       *  central density of each void in the catalogue using the internal
+       *  function compute_centralDensity; if the choice of \f$r\f$ is too low
        *  to select more than 3 tracers the program will select by dafault the
        *  3 tracers closer to the void centre to map the central density.
        */
@@ -2097,12 +2106,12 @@ namespace cbl {
 
       ///@}
 
-    
+
       /**
        *  @name Member functions used to add or remove ojects to the catalogue
        */
       ///@{
-    
+
       /**
        * @brief add one single object to the catalogue
        * @param object pointer to an object of type \e Object
@@ -2123,7 +2132,7 @@ namespace cbl {
        * @param sample vector of pointers to objects of type \e Object
        * @return none
        */
-      void add_objects (std::vector<std::shared_ptr<Object> > sample) { 
+      void add_objects (std::vector<std::shared_ptr<Object> > sample) {
 	for (auto &&i : sample)
 	  m_object.push_back(move(i));
       }
@@ -2134,13 +2143,13 @@ namespace cbl {
        * @return none
        */
       template<typename T>
-	void add_objects (std::vector<T> sample) { 
+	void add_objects (std::vector<T> sample) {
 	for (auto &&i : sample)
 	  add_object(i);
       }
-    
+
       /**
-       * @brief replace existing objects with new ones 
+       * @brief replace existing objects with new ones
        * @param sample vector of objects of type \e T
        * @return none
        */
@@ -2151,7 +2160,7 @@ namespace cbl {
       }
 
       /**
-       * @brief replace existing objects with new ones 
+       * @brief replace existing objects with new ones
        * @param sample vector of pointers to objects of type \e Object
        * @return none
        */
@@ -2162,24 +2171,24 @@ namespace cbl {
       }
 
       /**
-       * @brief remove all objects 
+       * @brief remove all objects
        * @return none
        */
       void remove_objects () { m_object.erase(m_object.begin(), m_object.end()); }
-      
+
       /**
        * @brief remove an existing object
        * @param index the index of the object to be removed
        * @return none
        */
       void remove_object (const int index) { m_object.erase(m_object.begin()+index); }
-      
+
       /**
        * @brief remove a set of existing objects
        * @param index vector of boolean variables
        * @return none
        */
-      void remove_objects (const std::vector<bool> index); 
+      void remove_objects (const std::vector<bool> index);
 
       /**
        * @brief swap two existing objects
@@ -2190,7 +2199,7 @@ namespace cbl {
       void swap_objects (const int ind1, const int ind2);
 
       /**
-       *  @brief bubble sort of a catalogue wrt a variable 
+       *  @brief bubble sort of a catalogue wrt a variable
        *
        *  @param var_name the name of the variable to use in order to
        *  sort the catalogue
@@ -2203,22 +2212,22 @@ namespace cbl {
       void sort (const Var var_name, const bool increasing=false);
 
       /**
-       *  @brief shuffle objects in the catalogue 
+       *  @brief shuffle objects in the catalogue
        *
        *  @param seed the seed for random number generation
        *
        *  @return none
        */
       void shuffle (const int seed);
-      
+
       ///@}
 
-    
+
       /**
        *  @name Member functions used to operate on the ojects to the catalogue
        */
       ///@{
-    
+
       /**
        *  @brief compute the comoving coordinates (x, y, z) from the
        *  observed coordinates (R.A., Dec, redshift)
@@ -2227,7 +2236,7 @@ namespace cbl {
        *  @param inputUnits the units of the input coordinates
        *  @return none
        */
-      void computeComovingCoordinates (const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits=CoordinateUnits::_radians_); 
+      void computeComovingCoordinates (const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits=CoordinateUnits::_radians_);
 
       /**
        *  @brief compute the polar coordinates (R.A., Dec,
@@ -2236,7 +2245,7 @@ namespace cbl {
        *  @param outputUnits the units of the output coordinates
        *  @return none
        */
-      void computePolarCoordinates (const CoordinateUnits outputUnits=CoordinateUnits::_radians_); 
+      void computePolarCoordinates (const CoordinateUnits outputUnits=CoordinateUnits::_radians_);
 
       /**
        *  @brief compute the polar coordinates (R.A., Dec,
@@ -2249,34 +2258,34 @@ namespace cbl {
        *  @param outputUnits the units of the output coordinates
        *  @return none
        */
-      void computePolarCoordinates (const cosmology::Cosmology &cosmology, const double z1=0., const double z2=10., const CoordinateUnits outputUnits=CoordinateUnits::_radians_); 
+      void computePolarCoordinates (const cosmology::Cosmology &cosmology, const double z1=0., const double z2=10., const CoordinateUnits outputUnits=CoordinateUnits::_radians_);
 
       /**
        * @brief normalize (x, y, z) (i.e. &rarr; (x/dc, y/dc, z/dc))
        * @return none
        */
-      void normalizeComovingCoordinates (); 
-  
+      void normalizeComovingCoordinates ();
+
       /**
        * @brief back to (x, y, z) (i.e. the inverse of norm_xyv())
        * @return none
        */
-      void restoreComovingCoordinates ();  
+      void restoreComovingCoordinates ();
 
       /**
        * @brief order the catalogue according to the input vector
        * @param vv vector used to order the catalogue
        * @return none
        */
-      void Order (const std::vector<int> vv); 
+      void Order (const std::vector<int> vv);
 
       /**
        * @brief restore the original vector (i.e. the opposite of
        * Order(std::vector<int>))
        * @return none
        */
-      void Order ();  
-    
+      void Order ();
+
       /**
        * @brief write the comoving coordinates of the catalogue to an
        * output file
@@ -2305,7 +2314,7 @@ namespace cbl {
        *  @return none
        */
       void write_data (const std::string outputFile, const std::vector<Var> var_name={}) const;
-      
+
       /**
        * @brief get the distrance between the i-th object of the
        * catalogue and another object
@@ -2315,7 +2324,7 @@ namespace cbl {
        * the object obj
        */
       double distance (const int i, std::shared_ptr<Object> obj) const;
-    
+
       /**
        * @brief get the angular distrance between the i-th object of the
        * catalogue and another object
@@ -2325,10 +2334,10 @@ namespace cbl {
        * the object obj
        */
       double angsep_xyz (const int i, std::shared_ptr<Object> obj) const;
-    
+
       /**
        * @brief overloading of the += operator, to sum two catalogues
-       * @param cc object of class Catalogue 
+       * @param cc object of class Catalogue
        * @return object of class catalogue
        */
       Catalogue operator += (std::shared_ptr<Catalogue> cc)
@@ -2340,7 +2349,7 @@ namespace cbl {
 
       /**
        * @brief overloading of the += operator, to sum two catalogues
-       * @param cc object of class Catalogue 
+       * @param cc object of class Catalogue
        * @return object of class catalogue
        */
       Catalogue operator += (const Catalogue cc)
@@ -2383,7 +2392,7 @@ namespace cbl {
        *  @brief create a sub-catalogue
        *  @param mangle_mask name of the mangle polygon file
        *  @param excl false &rarr; create a subcatalogue with objects
-       *  inside the mask; true &rarr; create a subcatalogue outside 
+       *  inside the mask; true &rarr; create a subcatalogue outside
        *  the mask
        *  @return object of class catalogue
        */
@@ -2391,7 +2400,7 @@ namespace cbl {
 
       /**
        *  @brief create a diluted catalogue
-       * 
+       *
        *  @param nSub the fracton of objects that will be randomly
        *  selected (nSub=1 \f$ \rightarrow \f$ all objects are selected)
        *
@@ -2400,15 +2409,15 @@ namespace cbl {
        *  @return object of class catalogue
        */
       Catalogue diluted_catalogue (const double nSub, const int seed=3213) const;
-      
+
       /**
        * @brief create a smoothed version of the catalogue
-       * averaging quantities on a X, Y, Z grid 
+       * averaging quantities on a X, Y, Z grid
        *
        * defalut averaged quantities are X, Y, Z, RA, DEC, REDSHIFT,
        * WEIGHT; others quantities must be passed trough a vector
        *
-       * @param gridsize the cell size 
+       * @param gridsize the cell size
        * @param cosmology object of class Cosmology, used to estimate
        * the comoving distance from the given redshift
        * @param vars the vector of variable to average on
@@ -2482,11 +2491,10 @@ namespace cbl {
       data::ScalarField3D density_field (const double cell_size, const Catalogue mask_catalogue, const int interpolation_type=0, const double kernel_radius=0., const bool useMass=false) const;
 
       ///@}
-      
+
     };
-    
+
   }
 }
 
 #endif
-

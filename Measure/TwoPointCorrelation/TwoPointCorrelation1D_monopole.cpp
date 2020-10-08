@@ -2,7 +2,7 @@
  *  Copyright (C) 2015 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
- *  This program is free software; you can redistribute it and/or   * 
+ *  This program is free software; you can redistribute it and/or   *
  *  modify it under the terms of the GNU General Public License as  *
  *  published by the Free Software Foundation; either version 2 of  *
  *  the License, or (at your option) any later version.             *
@@ -51,18 +51,18 @@ using namespace twopt;
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_monopole::set_parameters (const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info) 
+void cbl::measure::twopt::TwoPointCorrelation1D_monopole::set_parameters (const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info)
 {
-  if (!compute_extra_info) 
+  if (!compute_extra_info)
     m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
       : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
-  else 
+  else
     m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_extra_, rMin, rMax, nbins, shift, angularUnits, angularWeight))
       : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_extra_, rMin, rMax, nbins, shift, angularUnits, angularWeight));
-    
+
   m_rr = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits))
     : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits));
-  
+
   m_dr = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits))
     : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, nbins, shift, angularUnits));
 }
@@ -73,16 +73,16 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::set_parameters (const 
 
 void cbl::measure::twopt::TwoPointCorrelation1D_monopole::set_parameters (const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight, const bool compute_extra_info)
 {
-  if (!compute_extra_info) 
+  if (!compute_extra_info)
     m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
       : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
-  else 
+  else
     m_dd = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_extra_, rMin, rMax, binSize, shift, angularUnits, angularWeight))
       : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_extra_, rMin, rMax, binSize, shift, angularUnits, angularWeight));
-    
+
   m_rr = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits))
     : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits));
-  
+
   m_dr = (binType==BinType::_logarithmic_) ? move(Pair::Create(PairType::_comoving_log_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits))
     : move(Pair::Create(PairType::_comoving_lin_, PairInfo::_standard_, rMin, rMax, binSize, shift, angularUnits));
 }
@@ -91,7 +91,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::set_parameters (const 
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_monopole::read (const std::string dir, const std::string file) 
+void cbl::measure::twopt::TwoPointCorrelation1D_monopole::read (const std::string dir, const std::string file)
 {
   m_dataset->read(dir+file);
 }
@@ -100,7 +100,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::read (const std::strin
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation1D_monopole::write (const std::string dir, const std::string file, const int rank) const 
+void cbl::measure::twopt::TwoPointCorrelation1D_monopole::write (const std::string dir, const std::string file, const int rank) const
 {
   vector<double> xx = m_dataset->xx();
 
@@ -108,7 +108,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::write (const std::stri
 
   string header = "[1] separation at the bin centre # [2] spherically averagerded two-point correlation function # [3] error";
   if (m_compute_extra_info) header += " # [4] mean separation # [5] standard deviation of the separation distribution # [6] mean redshift # [7] standard deviation of the redshift distribution";
-  
+
   m_dataset->write(dir, file, header, 5, rank);
 }
 
@@ -143,12 +143,12 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measure (const ErrorTy
 
 void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
 {
-  // ----------- count the data-data, random-random and data-random pairs, or read them from file ----------- 
-  
+  // ----------- count the data-data, random-random and data-random pairs, or read them from file -----------
+
   count_allPairs(m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
-  
-  
-  // ----------- compute the monopole of the two-point correlation function ----------- 
+
+
+  // ----------- compute the monopole of the two-point correlation function -----------
 
   if (estimator==Estimator::_natural_)
     m_dataset = correlation_NaturalEstimator(m_dd, m_rr);
@@ -156,7 +156,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measurePoisson (const 
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
     ErrorCBL("the chosen estimator is not implemented!", "measurePoisson", "TwoPointCorrelation1D_monopole.cpp");
-  
+
 }
 
 
@@ -169,18 +169,18 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknife (cons
     string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
-  
+
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
-  
+
   vector<vector<double> > xi_SubSamples, covariance;
 
   vector<shared_ptr<Pair> > dd_regions, rr_regions, dr_regions;
 
   count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
-  
+
   vector<shared_ptr<Data> > data_SS = (estimator==Estimator::_natural_) ? XiJackknife(dd_regions, rr_regions) : XiJackknife(dd_regions, rr_regions, dr_regions);
-  
+
   for (size_t i=0; i<nRegions; i++) {
 
     if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
@@ -196,16 +196,16 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknife (cons
   }
 
   covariance_matrix(xi_SubSamples, covariance, 1);
-  
+
   if (estimator==Estimator::_natural_)
     m_dataset = correlation_NaturalEstimator(m_dd, m_rr);
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
     ErrorCBL("the chosen estimator is not implemented!", "measureJackknife", "TwoPointCorrelation1D_monopole.cpp");
-  
+
   m_dataset->set_covariance(covariance);
-  
+
 }
 
 
@@ -218,17 +218,17 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknifeTest (
     string mkdir = "mkdir -p "+dir_output_resample;
     if (system(mkdir.c_str())) {}
   }
-  
+
   vector<long> region_list = m_data->region_list();
   size_t nRegions = region_list.size();
   vector<double> weights(nRegions, 1.);
-  
+
   vector<vector<double> > xi_SubSamples, covariance;
 
   count_allPairs_region_test(m_twoPType, weights, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
-  
+
   vector<shared_ptr<Data> > data_SS = (estimator==Estimator::_natural_) ? XiJackknifeTest(m_dd_res, m_rr_res) : XiJackknifeTest(m_dd_res, m_rr_res, m_dr_res);
-  
+
   for (size_t i=0; i<nRegions; i++) {
 
     if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
@@ -244,16 +244,16 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureJackknifeTest (
   }
 
   covariance_matrix(xi_SubSamples, covariance, 1);
-  
+
   if (estimator==Estimator::_natural_)
     m_dataset = correlation_NaturalEstimator(m_dd, m_rr);
   else if (estimator==Estimator::_LandySzalay_)
     m_dataset = correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
   else
     ErrorCBL("the chosen estimator is not implemented!", "measureJackknifeTest", "TwoPointCorrelation1D_monopole.cpp");
-  
+
   m_dataset->set_covariance(covariance);
-  
+
 }
 
 // ============================================================================================
@@ -272,7 +272,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureBootstrap (cons
   vector<vector<double> > xi_SubSamples, covariance;
 
   vector<shared_ptr<Pair> > dd_regions, rr_regions, dr_regions;
-  
+
   count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
 
   vector<shared_ptr<Data> > data_SS = (estimator==Estimator::_natural_) ? XiBootstrap(nMocks, dd_regions, rr_regions, seed) : XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions, seed);
@@ -292,7 +292,7 @@ void cbl::measure::twopt::TwoPointCorrelation1D_monopole::measureBootstrap (cons
   }
 
   covariance_matrix(xi_SubSamples, covariance, 0);
-  
+
   if (estimator==Estimator::_natural_)
     m_dataset = correlation_NaturalEstimator(m_dd, m_rr);
   else if (estimator==Estimator::_LandySzalay_)

@@ -723,19 +723,19 @@ double cbl::cosmology::Cosmology::zeta_multipoles_covariance (const double Volum
     double f_r_r2p = I1_r_r2p[i];
 
     for (size_t ll=0; ll<n_l2; ll++) {
-      int ell2 = l2[ll];
-      double wig = gsl_sf_coupling_3j(2*l, 2*l_prime, 2*ell2, 0, 0, 0);
-      if (wig!=0) {
-	double t1 = (2*ell2+1)*pow(wig,2);
-	double f_r_r1_r1p = I2_r1_r1p[ll][i];
-	double f_r_r2_r2p = I2_r2_r2p[ll][i];
-	double f_r_r2_r1p = I2_r2_r1p[ll][i];
-	double f_r_r1_r2p = I2_r1_r2p[ll][i];
+        int ell2 = l2[ll];
+        double wig = gsl_sf_coupling_3j(2*l, 2*l_prime, 2*ell2, 0, 0, 0);
+        if (wig!=0) {
+            double t1 = (2*ell2+1)*pow(wig,2);
+            double f_r_r1_r1p = I2_r1_r1p[ll][i];
+            double f_r_r2_r2p = I2_r2_r2p[ll][i];
+            double f_r_r2_r1p = I2_r2_r1p[ll][i];
+            double f_r_r1_r2p = I2_r1_r2p[ll][i];
 
-	double t2 = pow(-1, l2[ll])*Xi_r*(f_r_r1_r1p*f_r_r2_r2p+f_r_r2_r1p*f_r_r1_r2p);
-	double t3  = pow(-1, 0.5*(l+l_prime+ell2))*(f_r_r1*f_r_r1p*f_r_r2_r2p+f_r_r1*f_r_r2p*f_r_r2_r1p+f_r_r2*f_r_r1p*f_r_r1_r2p+f_r_r2*f_r_r2p*f_r_r1_r1p);
-	sum += t1*(t2+t3);
-      }
+            double t2 = pow(-1, l2[ll])*Xi_r*(f_r_r1_r1p*f_r_r2_r2p+f_r_r2_r1p*f_r_r1_r2p);
+            double t3  = pow(-1, 0.5*(l+l_prime+ell2))*(f_r_r1*f_r_r1p*f_r_r2_r2p + f_r_r1*f_r_r2p*f_r_r2_r1p + f_r_r2*f_r_r1p*f_r_r1_r2p + f_r_r2*f_r_r2p*f_r_r1_r1p);
+            sum += t1*(t2+t3);
+        }
     }
 
     Int += rr[i]*rr[i]*sum*rr[i];

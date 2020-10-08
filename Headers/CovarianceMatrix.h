@@ -40,25 +40,25 @@ namespace cbl {
   /**
    *  @brief The namespace of the functions and classes used to handle
    *  <B> data </B> of any kind
-   *  
+   *
    *  The \e data namespace contains all the main functions and
    *  classes to handle data of any kind
    */
   namespace data {
 
-     
+
     /**
      *  @class CovarianceMatrix CovarianceMatrix.h
      *  "Headers/CovarianceMatrix.h"
      *
      *  @brief The class CovarianceMatrix
      *
-     *  This is the base class used to manage 
+     *  This is the base class used to manage
      *  covariance matrices
      */
     class CovarianceMatrix
     {
-      
+
     protected:
 
       /// number of data
@@ -66,10 +66,10 @@ namespace cbl {
 
       /// covariance matrix
       Eigen::MatrixXd m_matrix;
-      
+
       /// precision matrix
       Eigen::MatrixXd m_precision;
-      
+
       /// correlation matrix
       Eigen::MatrixXd m_correlation;
 
@@ -106,7 +106,7 @@ namespace cbl {
       virtual void m_set (const std::vector<double> matrix, const double nmeasures=-1, const double prec=1.e-10);
 
       /**
-       * @brief compute the hartlap 
+       * @brief compute the hartlap
        * factor. This is used to de-bias
        * precision matrix measured from covariance
        * measured from limited number of datasets
@@ -136,7 +136,7 @@ namespace cbl {
        *  @return an object of class CovarianceMatrix
        */
       CovarianceMatrix () { m_set_default(); }
-      
+
       /**
        *  @brief constructor which sets the
        *  covariance matrix
@@ -150,7 +150,7 @@ namespace cbl {
        *
        *  @return an object of class CovarianceMatrix
        */
-      CovarianceMatrix (std::vector<std::vector<double>> covariance_matrix, const double nmeasures=-1, const double prec=1.e-10) 
+      CovarianceMatrix (std::vector<std::vector<double>> covariance_matrix, const double nmeasures=-1, const double prec=1.e-10)
       { set_from_matrix(covariance_matrix, nmeasures, prec); }
 
       /**
@@ -185,15 +185,15 @@ namespace cbl {
        *
        *  @return an object of class CovarianceMatrix
        */
-      CovarianceMatrix (const std::string filename, const int cov_col=2, const int skipped_lines=0, const double nmeasures=-1, const double prec=1.e-10) 
+      CovarianceMatrix (const std::string filename, const int cov_col=2, const int skipped_lines=0, const double nmeasures=-1, const double prec=1.e-10)
       {read(filename, cov_col, skipped_lines, prec, nmeasures); }
-
 
       /**
        *  @brief default destructor
        *  @return none
        */
       virtual ~CovarianceMatrix () = default;
+
 
       ///@}
 
@@ -218,7 +218,7 @@ namespace cbl {
        *  @return the covariance matrix
        */
       std::vector<std::vector<double>> operator() () const;
-      
+
       /**
        *  @brief get the value of the correlation matrix at index i,j
        *
@@ -238,7 +238,7 @@ namespace cbl {
        * \f$ Corr_{i,j} = \frac{Cov_{i,j}}{\sqrt{Cov_{i,i} \cdot Cov{j,j}}} \f$
        */
       std::vector<std::vector<double>> correlation () const;
-      
+
       /**
        *  @brief get the value of the precision matrix at index i,j
        *
@@ -248,14 +248,14 @@ namespace cbl {
        *
        *  @return the value of the precision matrix at position i,j
        */
-      double precision (const int i, const int j) const {return m_precision(i, j);} 
+      double precision (const int i, const int j) const {return m_precision(i, j);}
 
       /**
        *  @brief get the precision matrix
        *
        *  @return the std::vector containing the precision matrix
        */
-      std::vector<std::vector<double>> precision () const; 
+      std::vector<std::vector<double>> precision () const;
 
       /**
        *  @brief get the value of the precision matrix at index i,j
@@ -277,7 +277,7 @@ namespace cbl {
        *
        *  @return the value of the precision matrix at position i,j
        */
-      double precision_hartlap (const int i, const int j) const {return m_hartlap_factor*m_precision(i, j);} 
+      double precision_hartlap (const int i, const int j) const {return m_hartlap_factor*m_precision(i, j);}
 
       /**
        *  @brief get the value of the precision matrix at index i,j
@@ -295,7 +295,7 @@ namespace cbl {
        *
        *  @return the std::vector containing the precision matrix
        */
-      std::vector<std::vector<double>> precision_hartlap () const; 
+      std::vector<std::vector<double>> precision_hartlap () const;
 
       /**
        *  @brief get value of the standard deviation at index i
@@ -332,20 +332,20 @@ namespace cbl {
       /**
        *   @brief return the covariance matrix order
        *
-       *   @return the covariance matrix order 
+       *   @return the covariance matrix order
        */
       size_t order () const { return m_order; }
 
       ///@}
-      
+
 
       /**
        *  @name Member functions to set the private/protected members
        */
       ///@{
-      
+
       /**
-       *  @brief set the covariance matrix by passing a 
+       *  @brief set the covariance matrix by passing a
        *  std::vector<std::vector<double>> object;
        *
        *  @param covariance std::vector<std::vector<double>> containing the covariance matrix
@@ -357,7 +357,7 @@ namespace cbl {
        *
        *  @return none
        */
-      void set_from_matrix (const std::vector<std::vector<double>> covariance, const double nmeasures=-1, const double prec=1.e-10) 
+      void set_from_matrix (const std::vector<std::vector<double>> covariance, const double nmeasures=-1, const double prec=1.e-10)
       { m_set(cbl::flatten(covariance), nmeasures, prec); }
 
       /**
@@ -421,7 +421,7 @@ namespace cbl {
        * @return None
        */
       void measure (const std::vector<std::vector<std::shared_ptr<Data>>> dataset, const double normalization=1, const double prec=1.e-10);
-      
+
       ///@}
 
 
@@ -446,7 +446,7 @@ namespace cbl {
        *  @return none
        */
       void read (const std::string filename, const int cov_col=2, const int skipped_lines=0, const double nmeasures=-1, const double prec=1.e-10);
-      
+
       /**
        *  @brief write the covariance matrix
        *
@@ -465,7 +465,7 @@ namespace cbl {
       void write (const std::string dir, const std::string file, const int precision=4, const int rank=0) const;
 
       ///@}
-      
+
       /**
        *  @name Member functions for covariance matrix cut
        */
@@ -488,7 +488,7 @@ namespace cbl {
        */
 
       ///@{
-      
+
       /**
        * @brief overloading of the += operator, to sum two catalogues
        *
@@ -504,7 +504,7 @@ namespace cbl {
       /**
        * @brief overloading of the += operator, to sum two covariance
        * matrices
-       * 
+       *
        * This function add two covariance matrices of order N and M.
        * It creates a block matrix of order N+M
        *
@@ -543,8 +543,8 @@ namespace cbl {
       CovarianceMatrix operator += (const std::vector<std::shared_ptr<CovarianceMatrix>> covariance) const;
 
       ///@}
-      
-      
+
+
     };
 
 

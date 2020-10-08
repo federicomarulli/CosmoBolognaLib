@@ -23,6 +23,7 @@
 %include Lib/NumberCounts.i
 %include Lib/TwoPointCorrelation.i
 %include Lib/ThreePointCorrelation.i
+%include Lib/CovarianceMatrix.i
 %include Lib/Modelling.i
 %include Lib/Modelling_Cosmology.i
 %include Lib/Modelling_NumberCounts.i

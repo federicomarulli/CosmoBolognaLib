@@ -409,7 +409,6 @@
 
     y=(rk/rknl)
 
-
     ph=a*y**(f1*3)/(1+b*y**(f2)+(f3*c*y)**(3-gam))
     ph=ph/(1+xmu*y**(-1)+xnu*y**(-2))*(1+this%fnu*0.977)
     plinaa=plin*(1+this%fnu*47.48*rk**2/(1+1.5*rk**2))
