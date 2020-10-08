@@ -80,7 +80,7 @@ void cbl::measure::covmat::CovarianceMatrix_TwoPointCorrelation1D_monopole::m_co
     std::vector<double> random_pairs_thread(m_nBins, 0);
 
     // parallelized loop
-#pragma omp for schedule(static, 2)
+#pragma omp for schedule(dynamic)
     for (int i=0; i<nObj; ++i) {
 
       Vector4D pos_i = m_random->eigen_coordinate(i);
@@ -170,7 +170,7 @@ void cbl::measure::covmat::CovarianceMatrix_TwoPointCorrelation1D_monopole::m_co
       std::vector<std::vector<double>> matrix_thread(m_nBins, std::vector<double>(m_nBins, 0));
 
       // parallelized loop
-  #pragma omp for schedule(static, 2)
+  #pragma omp for schedule(dynamic)
       for (int i=0; i<nObj; ++i) {
 
         Vector4D pos_i = m_random->eigen_coordinate(i);
@@ -287,7 +287,7 @@ void cbl::measure::covmat::CovarianceMatrix_TwoPointCorrelation1D_monopole::m_co
       std::vector<std::vector<double>> matrix_thread(m_nBins, std::vector<double>(m_nBins, 0));
 
       // parallelized loop
-  #pragma omp for schedule(static, 2)
+#pragma omp for schedule(dynamic)
       for (int i=0; i<nObj; ++i) {
         Vector4D pos_i = m_random->eigen_coordinate(i);
         double ww_i = m_random->weight(i);
