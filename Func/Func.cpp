@@ -34,6 +34,7 @@
 #include "Func.h"
 #include "LegendrePolynomials.h"
 #include "EigenWrapper.h"
+#include "CUBAWrapper.h"
 
 using namespace std;
 
@@ -2338,6 +2339,32 @@ double cbl::three_spherical_bessel_integral (const double r1, const double r2, c
 
 
   return term1*tt/clebsh_gordan(L1, L2, 0, 0, L3, 0);
+}
+
+
+// ============================================================================
+
+
+double cbl::average_three_spherical_bessel_integral (const double r1_min, const double r1_max, const double r2_min, const double r2_max, const double r3, const int L1, const int L2, const int L3)
+{
+    // limits of the integral
+    int ndim = 2;
+    std::vector<std::vector<double>> integration_limits(ndim);
+    integration_limits[0] = {pow(r1_min, 3), pow(r1_max, 3)};
+    integration_limits[1] = {pow(r2_min, 3), pow(r2_max, 3)};
+
+    double V1 = pow(r1_max, 3)-pow(r1_min, 3);
+    double V2 = pow(r2_max, 3)-pow(r2_min, 3);
+
+    // wrapper to CUBA libraries
+
+    auto integrand = [&] (const vector<double> xx) 
+    {
+        return three_spherical_bessel_integral(pow(xx[0], 1./3), pow(xx[1], 1./3), r3, L1, L2, L3);
+    };
+    cbl::wrapper::cuba::CUBAwrapper CW(integrand, ndim);
+
+    return CW.IntegrateCuhre(integration_limits)/(V1*V2);
 }
 
 

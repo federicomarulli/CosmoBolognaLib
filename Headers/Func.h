@@ -733,6 +733,23 @@ namespace cbl {
   double three_spherical_bessel_integral (const double r1, const double r2, const double r3, const int L1, const int L2, const int L3);
 
   /**
+   * @brief compute the integral of three spherical bessel function, 
+   * from Mehrem, 2011, averaged on r1-r2 shells
+   *
+   * @param r1_min
+   * @param r1_max
+   * @param r2_min
+   * @param r2_max
+   * @param r3
+   * @param L1 the order of the first spherical bessel function
+   * @param L2 the order of the second spherical bessel function
+   * @param L3 the order of the third spherical bessel function
+   *
+   * @return the integral of three spherical bessel function, averaged
+   */
+  double average_three_spherical_bessel_integral (const double r1_min, const double r1_max, const double r2_min, const double r2_max, const double r3, const int L1, const int L2, const int L3);
+
+  /**
    *  @brief generate a covariant sample of n points using a
    *  covariance matrix
    *
