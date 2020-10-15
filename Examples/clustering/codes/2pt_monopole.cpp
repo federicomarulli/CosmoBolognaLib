@@ -25,18 +25,18 @@ int main () {
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
   
-    const std::string file_catalogue = cbl::par::DirLoc+"../input/cat.dat";
+    const std::string file_catalogue = cbl::par::DirLoc+"../input/mock_1.dat";
 
-    const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
+    const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_comoving_, {file_catalogue}, cosmology};
     
   
     // --------------------------------------------------------------------------------------
     // ---------------- construct the random catalogue (with cubic geometry) ----------------
     // --------------------------------------------------------------------------------------
 
-    const double N_R = 1.; // random/data ratio
-  
-    const cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::RandomType::_createRandom_box_, catalogue, N_R};
+    const std::string file_random = cbl::par::DirLoc+"../input/mock_1_random.dat";
+
+    const cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::ObjectType::_Random_, cbl::CoordinateType::_comoving_, {file_random}, cosmology};
     
   
     // --------------------------------------------------------------------------------------------
@@ -45,9 +45,9 @@ int main () {
 
     // binning parameters and output data
 
-    const double rMin = 5.;   // minimum separation 
-    const double rMax = 20.;  // maximum separation 
-    const int nbins = 5;     // number of bins
+    const double rMin = 9.;   // minimum separation 
+    const double rMax = 32.;  // maximum separation 
+    const int nbins = 10;     // number of bins
     const double shift = 0.5; // spatial shift used to set the bin centre
   
     const std::string dir = cbl::par::DirLoc+"../output/";
@@ -56,7 +56,7 @@ int main () {
   
     // measure the monopole and compute Poisson errors 
 
-    cbl::measure::twopt::TwoPointCorrelation1D_monopole TwoP {catalogue, random_catalogue, cbl::BinType::_logarithmic_, rMin, rMax, nbins, shift};
+    cbl::measure::twopt::TwoPointCorrelation1D_monopole TwoP {catalogue, random_catalogue, cbl::BinType::_linear_, rMin, rMax, nbins, shift};
 
     TwoP.measure(cbl::measure::ErrorType::_Poisson_, dir);
     

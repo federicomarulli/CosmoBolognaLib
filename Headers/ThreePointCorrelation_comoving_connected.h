@@ -341,6 +341,9 @@ namespace cbl {
 	 */
 	void write (const std::string dir, const std::string file) const override;
 
+
+	virtual void write_jackknife_resampling (const std::string dir) const override;
+
         /**
          *  @brief write the measured three-point correlation covariance
          *  @param dir output directory

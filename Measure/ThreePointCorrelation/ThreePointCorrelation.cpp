@@ -562,7 +562,7 @@ void cbl::measure::threept::ThreePointCorrelation::write_triplets (std::shared_p
   ofstream fout(file_out.c_str()); checkIO(fout, file_out);
 
   for (int i=0; i<TT->nbins(); i++) 
-    fout << TT->TT1D(i) << endl;
+    fout << setprecision(20) << TT->TT1D(i) << endl;
   
   fout.clear(); fout.close(); coutCBL << "I wrote the file " << file << endl << endl;
 }
@@ -593,4 +593,3 @@ void cbl::measure::threept::ThreePointCorrelation::read_triplets (std::shared_pt
     fin.clear(); fin.close(); coutCBL << "I read the file " << file_in << endl;
   }
 }
- 

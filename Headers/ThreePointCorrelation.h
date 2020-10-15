@@ -187,9 +187,20 @@ namespace cbl {
 	/// number of data-random-random triplets
 	std::vector<std::shared_ptr<triplets::Triplet>> m_drr_regions;
 
+
 	///@}
 
+	/**
+	 *  @name Matrix to store the three-point correlation function for each Jackknife resampling
+	 */
+	///@{
+
+	/// jackknife resampling matrix
+	std::vector< std::vector<double> > m_resampling_threept;
+
  
+	///@}
+	
 	/**
 	 *  @name Member functions to count the number of triplets and for I/O 
 	 */
@@ -799,6 +810,9 @@ namespace cbl {
 	 */
 	virtual void write (const std::string dir, const std::string file, const bool connected) const
 	{ (void)dir; (void)file; (void)connected; cbl::ErrorCBL("", "write", "ThreePointCorrelation.h"); }
+
+	virtual void write_jackknife_resampling (const std::string dir) const
+	{ (void)dir;}
 
 	/**
 	 *  @brief write the measured three-point correlation covariance
