@@ -34,7 +34,7 @@
 #include "Func.h"
 #include "LegendrePolynomials.h"
 #include "EigenWrapper.h"
-#include "CUBAWrapper.h"
+#include "CUBAwrapper.h"
 
 using namespace std;
 
