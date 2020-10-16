@@ -1,9 +1,0 @@
-<map id="cbl::modelling::Modelling2D" name="cbl::modelling::Modelling2D">
-<area shape="rect" id="node1" title="The class Modelling2D." alt="" coords="240,68,444,95"/>
-<area shape="rect" id="node3" href="$d7/d90/classcbl_1_1modelling_1_1numbercounts_1_1Modelling__NumberCounts2D.html" title="The class Modelling_NumberCounts2D." alt="" coords="509,21,725,62"/>
-<area shape="rect" id="node5" href="$d5/d8f/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation2D.html" title="The class Modelling_TwoPointCorrelation2D." alt="" coords="492,93,741,134"/>
-<area shape="rect" id="node2" href="$de/ddc/classcbl_1_1modelling_1_1Modelling.html" title="The class Modelling." alt="" coords="5,68,192,95"/>
-<area shape="rect" id="node4" href="$db/d78/classcbl_1_1modelling_1_1numbercounts_1_1Modelling__NumberCounts2D__RedshiftMass.html" title="The class Modelling_NumberCounts2D_RedshiftMass." alt="" coords="801,5,1017,61"/>
-<area shape="rect" id="node6" href="$d6/dc0/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation2D__cartesian.html" title="The class Modelling_TwoPointCorrelation2D_cartesian." alt="" coords="789,85,1028,141"/>
-<area shape="rect" id="node7" href="$dd/dce/classcbl_1_1modelling_1_1twopt_1_1Modelling__TwoPointCorrelation2D__polar.html" title="The class Modelling_TwoPointCorrelation2D_polar." alt="" coords="789,165,1028,221"/>
-</map>
