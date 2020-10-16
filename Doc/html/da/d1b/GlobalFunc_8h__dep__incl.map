@@ -1,7 +1,0 @@
-<map id="Headers/GlobalFunc.h" name="Headers/GlobalFunc.h">
-<area shape="rect" id="node2" href="$d2/d22/Forecast_8cpp.html" title="Functions to generate mock 2PCF/3PCF signal and provide forecasts. " alt="" coords="5,80,173,107"/>
-<area shape="rect" id="node3" href="$d2/dae/GlobalFunc_2Func_8cpp_source.html" title="GlobalFunc/Func.cpp" alt="" coords="197,80,344,107"/>
-<area shape="rect" id="node4" href="$d3/d84/FuncCosmology_8cpp.html" title="Generic functions that use the class Cosmology. " alt="" coords="369,80,581,107"/>
-<area shape="rect" id="node5" href="$d1/d1f/Reconstruction_8cpp.html" title="Functions to compute displacement for the reconstructed density field of a collection of points..." alt="" coords="605,80,811,107"/>
-<area shape="rect" id="node6" href="$db/d1c/SubSample_8cpp.html" title="Functions for dividing a catalogue in sub&#45;samples. " alt="" coords="835,80,1019,107"/>
-</map>
