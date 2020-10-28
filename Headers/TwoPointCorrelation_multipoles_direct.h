@@ -81,7 +81,7 @@ namespace cbl {
            *  @param PP pointer to an object of class Pair
            *  @param dir output directory
            *  @param file output file
-           *  @return none
+           *  
            */
           void write_pairs (const std::shared_ptr<pairs::Pair> PP, const std::string dir, const std::string file) const override;
 
@@ -90,7 +90,7 @@ namespace cbl {
            *  @param [out] PP pointer to an object of class Pair
            *  @param [in] dir vector of input directories
            *  @param [in] file input file
-           *  @return none
+           *  
            */
           void read_pairs (std::shared_ptr<pairs::Pair> PP, const std::vector<std::string> dir, const std::string file) const override;
 
@@ -99,7 +99,7 @@ namespace cbl {
            *  @param PP pointer to a vector of objects of class Pair
            *  @param dir output directory
            *  @param file output file
-           *  @return none
+           *  
            */
           void write_pairs (const std::vector<std::shared_ptr<pairs::Pair>> PP, const std::string dir, const std::string file) const override;
 
@@ -108,7 +108,7 @@ namespace cbl {
            *  @param [out] PP pointer to a vector of objects of class Pair
            *  @param [in] dir vector of input directories
            *  @param [in] file input file
-           *  @return none
+           *  
            */
           void read_pairs (std::vector<std::shared_ptr<pairs::Pair>> PP, const std::vector<std::string> dir, const std::string file) const override;
 
@@ -236,7 +236,7 @@ namespace cbl {
 
           /**
            *  @brief default constructor
-           *  @return object of class TwoPointCorrelation_multipoles_direct
+           *  _multipoles_direct
            */
           TwoPointCorrelation_multipoles_direct () { m_twoPType = TwoPType::_multipoles_direct_; }
 
@@ -313,7 +313,7 @@ namespace cbl {
            *  samples, used to improve performances in random-random
            *  pair counts
 	   *
-           *  @return object of class TwoPointCorrelation_monopole
+           *  _monopole
            */
           TwoPointCorrelation_multipoles_direct (const catalogue::Catalogue data, const catalogue::Catalogue random, const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
             : TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelation1D(data, random, compute_extra_info, random_dilution_fraction)
@@ -321,7 +321,7 @@ namespace cbl {
 
           /**
            *  @brief default destructor
-           *  @return none
+           *  
            */
           ~TwoPointCorrelation_multipoles_direct () = default;
 
@@ -411,7 +411,7 @@ namespace cbl {
            *  @param compute_extra_info true &rarr; compute extra
            *  information related to the pairs, such as the mean pair
            *  separation and redshift
-           *  @return none
+           *  
            */
           void set_parameters (const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
 
@@ -428,7 +428,7 @@ namespace cbl {
            *  @param compute_extra_info true &rarr; compute extra
            *  information related to the pairs, such as the mean pair
            *  separation and redshift
-           *  @return none
+           *  
            */
           void set_parameters (const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
 
@@ -444,7 +444,7 @@ namespace cbl {
 	   *  function
 	   *  @param dir input directory
 	   *  @param file input file
-	   *  @return none
+	   *  
 	   */
 	  void read (const std::string dir, const std::string file) override
 	  { (void)dir; (void)file; ErrorCBL("", "read", "TwoPointCorrelation_multipoles_direct.h", glob::ExitCode::_workInProgress_); }
@@ -455,7 +455,7 @@ namespace cbl {
            *  @param dir output directory
            *  @param file output file
            *  @param rank cpu index (for MPI usage)
-           *  @return none
+           *  
            */
 	  void write (const std::string dir=par::defaultString, const std::string file=par::defaultString, const int rank=0) const override;
 

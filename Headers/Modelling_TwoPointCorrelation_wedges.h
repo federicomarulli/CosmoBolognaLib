@@ -92,7 +92,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class Modelling_TwoPointCorrelation_wedges
+	 *  _TwoPointCorrelation_wedges
 	 */
 	Modelling_TwoPointCorrelation_wedges () = default;
 
@@ -105,9 +105,6 @@ namespace cbl {
 	 *	 
 	 *  @param mu_integral_limits the \f$\mu\f$ integral limits
 	 *  used to measure the wedges
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation_wedges
 	 */
 	Modelling_TwoPointCorrelation_wedges (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop, const int nWedges=2, const std::vector<std::vector<double>> mu_integral_limits={{0., 0.5}, {0.5, 1.}});
 
@@ -121,15 +118,12 @@ namespace cbl {
 	 *	 
 	 *  @param mu_integral_limits the \f$\mu\f$ integral limits
 	 *  used to measure the wedges
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation_wedges
 	 */
 	Modelling_TwoPointCorrelation_wedges (const std::shared_ptr<data::Data> twop_dataset, const int nWedges, const std::vector<std::vector<double>> mu_integral_limits={{0., 0.5}, {0.5, 1.}});
       
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_TwoPointCorrelation_wedges () = default;
 	
@@ -139,7 +133,7 @@ namespace cbl {
 	 *  @brief set the fiducial model for the dark matter power
 	 *  spectrum
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_fiducial_PkDM ();
 	
@@ -147,7 +141,7 @@ namespace cbl {
 	 *  @brief set the fiducial model for the dark matter
 	 *  two-point correlation function and associated quantities
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_fiducial_xiDM ();
 
@@ -158,7 +152,7 @@ namespace cbl {
 	 *  @param xmax the maximum x value
 	 *  @param nWedges the number of wedges
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_fit_range (const double xmin, const double xmax, const int nWedges=-1);
 
@@ -168,7 +162,7 @@ namespace cbl {
 	 *  @param fit_range vector containing the fitting range for
 	 *  the wedges
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_fit_range (std::vector<std::vector<double>> fit_range);
 
@@ -218,7 +212,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_fullShape_DeWiggled (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution SigmaNL_perpendicular_prior={}, const statistics::PriorDistribution SigmaNL_parallel_prior={}, statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaS_prior={}, const bool compute_PkDM=true);
 
@@ -259,7 +253,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_Dispersion (statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const bool DFoG=true, const bool compute_PkDM=true); // [Jorge]
 
@@ -306,7 +300,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const statistics::PriorDistribution kd_prior={}, const statistics::PriorDistribution kt_prior={}, const bool DFoG=true, const bool compute_PkDM=true); 
 
@@ -361,7 +355,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const statistics::PriorDistribution kd_prior={}, const statistics::PriorDistribution bb_prior={}, const statistics::PriorDistribution a1_prior={}, const statistics::PriorDistribution a2_prior={}, const statistics::PriorDistribution a3_prior={}, const bool DFoG=true, const bool compute_PkDM=true);
 
@@ -402,7 +396,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const bool DFoG=true, const bool compute_PkDM=true);
 
@@ -442,7 +436,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_TNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const bool DFoG=true, const bool compute_PkDM=true);
 
@@ -488,7 +482,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_fullShape_ModeCoupling (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaV_prior={}, const statistics::PriorDistribution AMC_prior={}, const bool compute_PkDM=true);
 
@@ -536,7 +530,7 @@ namespace cbl {
 	 *  @param isRealSpace true \f$\rightarrow\f$ assume real space when
 	 *  computing two-point correlation function multipoles
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_BAO (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution Bperp_prior={}, const statistics::PriorDistribution Bpar_prior={}, const statistics::PriorDistribution Aperp0_prior={}, const statistics::PriorDistribution Apar0_prior={}, const statistics::PriorDistribution Aperp1_prior={}, const statistics::PriorDistribution Apar1_prior={}, const statistics::PriorDistribution Aperp2_prior={}, const statistics::PriorDistribution Apar2_prior={}, const bool compute_XiDM=true, const bool isRealSpace=false);
 
@@ -553,7 +547,7 @@ namespace cbl {
          *  used to compute the model; if this vector is not provided,
          *  the model will be computed using the best-fit parameters
          *
-         *  @return none
+         *  
          */
         void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters);
 
@@ -566,7 +560,7 @@ namespace cbl {
          *  @param output_file the output file
          *  @param xx vector of points at which the model is computed,
          *
-         *  @return none
+         *  
          */
         void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx);
 
@@ -581,7 +575,7 @@ namespace cbl {
          *  @param start the starting position for each chain
          *  @param thin the position step
          *
-         *  @return none
+         *  
          */
         void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start=0, const int thin=1);
 

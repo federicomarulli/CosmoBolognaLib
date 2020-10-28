@@ -143,15 +143,17 @@ namespace cbl {
 	/// the survey volume
 	double Volume;
 
-	/// false &rarr; don't use selection function; true &rarr; use selection function
+	/// false &rarr; don't use the selection function; true &rarr; use the selection function
         bool use_SF;
+
+	/// true &rarr; sigma8 is a free parameter; false &rarr; sigma8 can be considered a derived parameter
+	bool is_sigma8_free;
 	
 	/// function to interpolate the selection function in mass and redshift
 	std::shared_ptr<glob::FuncGrid2D> interp_SelectionFunction;
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of type STR_data_model
 	 */
 	STR_NC_data_model () = default;
       };
@@ -200,16 +202,24 @@ namespace cbl {
 	/// method to compute the dark matter power spectrum
 	std::string method_Pk;
 
-	/// true \f$\rightarrow\f$ the output files created by the Boltzmann solver are stored; false \f$\rightarrow\f$ the output files are removedt
+	/// wave vector module required to compute the growth factor
+	/// with the method "Pk_ratio"
+	double k_Pk_ratio;
+
+	/// true \f$\rightarrow\f$ the output files created by the
+	/// Boltzmann solver are stored; false \f$\rightarrow\f$ the
+	/// output files are removedt
 	bool store_output;
 
-	/// output root of the parameter file used to compute the dark matter power spectrum
+	/// output root of the parameter file used to compute the dark
+	/// matter power spectrum
 	std::string output_root;
 
 	/// interpType method to interpolate the power spectrum
 	std::string interpType;
 
-	/// maximum wave vector module up to which the power spectrum is computed
+	/// maximum wave vector module up to which the power spectrum
+	/// is computed
 	double k_max;
 
 	/// either the parameter file or the power spectrum file
@@ -221,7 +231,6 @@ namespace cbl {
       
 	/**
 	 *  @brief default constructor
-	 *  @return object of type STR_data_model
 	 */
 	STR_NCSF_data_model () = default;
       };
@@ -265,7 +274,7 @@ namespace cbl {
        *
        * @param rho the mean density of the Universe
        *
-       * @return none
+       * 
        */
       void sigmaM_dlnsigmaM (double &sigmaM, double &dlnsigmaM, const double mass, const cbl::glob::FuncGrid interp_Pk, const double kmax, const double rho);
 
@@ -288,7 +297,7 @@ namespace cbl {
        *
        * @param rho the mean density of the Universe
        *
-       * @return none
+       * 
        */
       void sigmaM_dlnsigmaM (std::vector<double> &sigmaM, std::vector<double> &dlnsigmaM, const std::vector<double> mass, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax, const double rho);
 
@@ -480,6 +489,15 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param k_Pk_ratio wave vector module required to compute
+       *  the growth factor (cbl::cosmology::Cosmology::DD_norm())
+       *  with the method "Pk_ratio". This parameter represents
+       *  wavenumber at which the ratio between the the power
+       *  spectra at different redshift is computed. It is
+       *  recommended to use this method when dealing with
+       *  cosmologies alternative to the LCDM. To avoid to compute
+       *  the growth factor with this method, set k_Pk_ratio=-1.
+       *
        *  @param store_output if true the output files created by the
        *  Boltzmann solver are stored; if false the output files are
        *  removed
@@ -512,7 +530,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      std::vector<double> size_function (cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="CAMB", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> size_function (cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="Eisensteinhu", const double k_Pk_ratio=1., const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        * @brief compute the number counts as function

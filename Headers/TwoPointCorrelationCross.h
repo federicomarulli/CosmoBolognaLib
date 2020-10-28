@@ -165,7 +165,7 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the
 	 *  two-point correlation function
 	 *
-	 *  @return none
+	 *  
 	 */
 	void count_allPairs (const TwoPType type, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_SzapudiSzalay_);
 
@@ -245,7 +245,8 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
-	 *  @return none
+	 *  @return none, or an error message if the derived object
+	 *  does not have this member
 	 */
 	virtual void measurePoisson (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_)
 	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)count_d1d2; (void)count_rr; (void)count_d1r; (void)count_d2r; (void)tcount; (void)estimator; cbl::ErrorCBL("", "measurePoisson", "TwoPointCorrelation.h"); }
@@ -262,7 +263,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of class TwoPointCorrelationCross
+	 *  Cross
 	 */
 	TwoPointCorrelationCross () = default;
 
@@ -286,14 +287,14 @@ namespace cbl {
 	 *  of objects in the diluted and original random samples, used
 	 *  to improve performances in random-random pair counts
 	 *
-	 *  @return object of class TwoPointCorrelation
+	 *  
 	 */
 	TwoPointCorrelationCross (const catalogue::Catalogue data1, const catalogue::Catalogue data2, const catalogue::Catalogue random, const bool compute_extra_info=false, const double random_dilution_fraction=1.) 
 	  : TwoPointCorrelation(data1, random, compute_extra_info, random_dilution_fraction), m_data2(std::make_shared<catalogue::Catalogue>(catalogue::Catalogue(std::move(data2)))) {}
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~TwoPointCorrelationCross () = default;
 	

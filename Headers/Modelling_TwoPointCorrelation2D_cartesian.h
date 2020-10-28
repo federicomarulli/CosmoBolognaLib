@@ -73,8 +73,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class
-	 *  Modelling_TwoPointCorrelation2D_cartesian
 	 */
 	Modelling_TwoPointCorrelation2D_cartesian () = default;
 
@@ -82,9 +80,6 @@ namespace cbl {
 	 *  @brief constructor
 	 *  
 	 *  @param twop the two-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation2D_cartesian
 	 */
 	Modelling_TwoPointCorrelation2D_cartesian (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
 	  : Modelling_TwoPointCorrelation2D(twop) {}
@@ -94,16 +89,13 @@ namespace cbl {
 	 *  
 	 *  @param twop_dataset the dataset containing the two-point
 	 *  correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation_monopole
 	 */
 	Modelling_TwoPointCorrelation2D_cartesian (const std::shared_ptr<data::Data> twop_dataset)
 	  : Modelling_TwoPointCorrelation2D() { set_data(twop_dataset); }
       
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_TwoPointCorrelation2D_cartesian () = default;
 	
@@ -119,7 +111,7 @@ namespace cbl {
 	 *  @brief set the fiducial model for dark matter 
 	 *  two point correlation function
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_fiducial_xiDM ();
 
@@ -142,7 +134,7 @@ namespace cbl {
 	 *  @param sigma12_prior prior for the parameter
 	 *  \f$\sigma_{12}(z)\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_dispersionModel_AP (const statistics::PriorDistribution alpha_perp_prior={}, const statistics::PriorDistribution alpha_par_prior={}, const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={});
 
@@ -159,7 +151,7 @@ namespace cbl {
 	 *  @param sigma12_prior prior for the parameter
 	 *  \f$\sigma_{12}(z)\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_dispersionModel (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={});
 	

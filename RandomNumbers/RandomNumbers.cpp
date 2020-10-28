@@ -277,9 +277,9 @@ double cbl::random::DistributionRandomNumbers::operator () ()
 // =====================================================================================
 
 
-cbl::random::CustomDistributionRandomNumbers::CustomDistributionRandomNumbers (const distribution_func func, const shared_ptr<void> fixed_pars, const vector<double> pars, const int seed, const double MinVal, const double MaxVal) : RandomNumbers(seed, MinVal, MaxVal)
+cbl::random::CustomDistributionRandomNumbers::CustomDistributionRandomNumbers (const distribution_func func, const shared_ptr<void> modelInput, const vector<double> parameter, const int seed, const double MinVal, const double MaxVal) : RandomNumbers(seed, MinVal, MaxVal)
 {
-  set_custom_distribution(func, fixed_pars, pars);
+  set_custom_distribution(func, modelInput, parameter);
   m_uniform_generator = make_shared<UniformRandomNumbers>(0., 1., seed);
 }
 
@@ -296,13 +296,13 @@ void cbl::random::CustomDistributionRandomNumbers::set_seed (const int seed)
 // =====================================================================================
 
 
-void cbl::random::CustomDistributionRandomNumbers::set_custom_distribution (const distribution_func func, const shared_ptr<void> fixed_pars, const vector<double> pars)
+void cbl::random::CustomDistributionRandomNumbers::set_custom_distribution (const distribution_func func, const shared_ptr<void> modelInput, const vector<double> pars)
 {
   m_func = func;
-  m_func_fixed_pars = fixed_pars;
-  m_func_pars = pars;
+  m_func_modelInput = modelInput;
+  m_func_parameter = pars;
 
-  m_normalization = wrapper::gsl::GSL_integrate_qag(m_func, m_func_fixed_pars, m_func_pars, m_MinVal, m_MaxVal);
+  m_normalization = wrapper::gsl::GSL_integrate_qag(m_func, m_func_modelInput, m_func_parameter, m_MinVal, m_MaxVal);
 }
 
 
@@ -311,7 +311,7 @@ void cbl::random::CustomDistributionRandomNumbers::set_custom_distribution (cons
 
 double cbl::random::CustomDistributionRandomNumbers::operator () ()
 {
-  auto f = [this] (double xx) {return wrapper::gsl::GSL_integrate_qag(m_func, m_func_fixed_pars, m_func_pars, m_MinVal, xx)/m_normalization;};
+  auto f = [this] (double xx) { return wrapper::gsl::GSL_integrate_qag(m_func, m_func_modelInput, m_func_parameter, m_MinVal, xx)/m_normalization; };
   return wrapper::gsl::GSL_root_brent(f, m_uniform_generator->operator()(), m_MinVal, m_MaxVal);
 }
 

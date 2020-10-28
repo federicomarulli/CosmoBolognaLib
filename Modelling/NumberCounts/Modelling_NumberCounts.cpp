@@ -78,7 +78,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
 
   m_data_model.prec = prec;
 
-  m_data_model.area_rad = area_degrees*pow(par::pi/180.,2);
+  m_data_model.area_rad = area_degrees*pow(par::pi/180., 2);
   if (m_data_model.z_min>0)
     m_data_model.Volume = cosmology.Volume(z_min, z_max, area_degrees);
 
@@ -91,6 +91,8 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
   }
   else
     m_data_model.use_SF = false;
+
+  m_data_model.is_sigma8_free = false;
 }
 
 
@@ -98,7 +100,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model_SF, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
+void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model_SF, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const double k_Pk_ratio, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
 {
   m_data_model_SF.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model_SF.radii = radii;
@@ -110,6 +112,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model_SF (co
   m_data_model_SF.deltav_NL = deltav_NL;
   m_data_model_SF.delta_c = del_c;
   m_data_model_SF.method_Pk = method_Pk;
+  m_data_model_SF.k_Pk_ratio = k_Pk_ratio;
   m_data_model_SF.store_output = store_output;
   m_data_model_SF.output_root = output_root;
   m_data_model_SF.interpType = interpType;

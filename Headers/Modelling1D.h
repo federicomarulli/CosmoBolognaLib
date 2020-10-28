@@ -73,13 +73,13 @@ namespace cbl {
 
         /**
          *  @brief default constuctor
-         *  @return object of class Modelling
+         *  
          */
         Modelling1D () {}
 
         /**
          *  @brief default destructor
-         *  @return none
+         *  
          */
         ~Modelling1D () = default;
 
@@ -97,7 +97,7 @@ namespace cbl {
          *
          *  @param xmax maximum x value used for the fit
          *
-         *  @return none
+         *  
          */
         void set_fit_range (const double xmin, const double xmax);
 
@@ -115,7 +115,7 @@ namespace cbl {
          *  used to compute the model; if this vector is not provided,
          *  the model will be computed using the best-fit parameters
          *
-         *  @return none
+         *  
          */
         void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters);
 
@@ -127,7 +127,7 @@ namespace cbl {
          *  @param output_file the output file
          *  @param xx vector of points at which the model is computed,
          *
-         *  @return none
+         *  
          */
         void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx);
 
@@ -142,7 +142,7 @@ namespace cbl {
          *  @param start the starting position for each chain
          *  @param thin the position step
          *
-         *  @return none
+         *  
          */
         void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start=0, const int thin=1);
 

@@ -69,7 +69,7 @@ namespace cbl {
       /**
        *  @brief default constructor
        *
-       *  @return object of class Model1D
+       *  
        */
       Model1D () : Model() {m_dimension=Dim::_1D_;}
 
@@ -86,7 +86,7 @@ namespace cbl {
        *
        *  @param inputs inputs of the model
        *
-       *  @return object of class Model1D
+       *  
        */
       Model1D (const model_function_1D function, const size_t nparameters, std::vector<ParameterType> parameterTypes={}, std::vector<std::string> parameterNames={}, const std::shared_ptr<void> inputs=NULL) : Model(nparameters, parameterTypes, parameterNames, inputs)
       { set_function(function); m_dimension=Dim::_1D_; }
@@ -104,7 +104,7 @@ namespace cbl {
        *
        *  @param inputs inputs of the model
        *
-       *  @return object of class Model1D
+       *  
        */
       Model1D (const std::vector<double> (*function)(const std::vector<double> xx, std::vector<double> &val), const size_t nparameters, std::vector<ParameterType> parameterTypes={}, std::vector<std::string> parameterNames={}, const std::shared_ptr<void> inputs=NULL) : Model(nparameters, parameterTypes, parameterNames, inputs)
       { set_function(function); m_dimension=Dim::_1D_; }
@@ -112,7 +112,7 @@ namespace cbl {
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       ~Model1D () = default;
 
@@ -123,7 +123,7 @@ namespace cbl {
        *
        * @param function pointer to a model_function_1D
        * 
-       * @return none 
+       *  
        */
       void set_function (const model_function_1D function);
 
@@ -135,7 +135,7 @@ namespace cbl {
        * @warning function passed in this way doesn't allow for
        * input parameters
        * 
-       * @return none 
+       *  
        */
       void set_function (const std::vector<double> (*function)(const std::vector<double> xx, std::vector<double> &val));
 
@@ -181,7 +181,7 @@ namespace cbl {
        *  @param up_model the model at 84th percentile
        *  @param start the starting position for each chain
        *  @param thin the position step
-       *  @return none
+       *  
        */
       void stats_from_chains (const std::vector<double> xx, std::vector<double> &median_model, std::vector<double> &low_model, std::vector<double> &up_model, const int start=0, const int thin=1) override;
 
@@ -196,7 +196,7 @@ namespace cbl {
        *  used to compute the model; if this vector is not provided,
        *  the model will be computed using the best-fit parameters
        *
-       *  @return none
+       *  
        */
       void write (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters) override;
 
@@ -209,7 +209,7 @@ namespace cbl {
        *  @param output_file the output file
        *  @param xx vector of points at which the model is computed,
        *
-       *  @return none
+       *  
        */
       void write_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx) override;
 
@@ -224,7 +224,7 @@ namespace cbl {
        *  @param start the starting position for each chain
        *  @param thin the position step
        *
-       *  @return none
+       *  
        */
       void write_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start=0, const int thin=1) override;
 	

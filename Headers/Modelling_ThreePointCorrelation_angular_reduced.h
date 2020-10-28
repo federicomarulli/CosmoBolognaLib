@@ -76,8 +76,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class
-	 *  Modelling_ThreePointCorrelation_angular_reduced
 	 */
 	Modelling_ThreePointCorrelation_angular_reduced () = default;
 
@@ -85,9 +83,6 @@ namespace cbl {
 	 *  @brief constructor
 	 *  
 	 *  @param threep the three-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_ThreePointCorrelation_angular_reduced
 	 */
 	Modelling_ThreePointCorrelation_angular_reduced (const std::shared_ptr<cbl::measure::threept::ThreePointCorrelation> threep)
 	  : Modelling_ThreePointCorrelation_angular_connected(threep) {}
@@ -97,16 +92,13 @@ namespace cbl {
 	 *  
 	 *  @param threep_dataset the dataset containing the
 	 *  three-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_ThreePointCorrelation_angular_reduced
 	 */
 	Modelling_ThreePointCorrelation_angular_reduced (const std::shared_ptr<data::Data> threep_dataset)
 	  : Modelling_ThreePointCorrelation_angular_connected() { set_data(threep_dataset); }
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	~Modelling_ThreePointCorrelation_angular_reduced () = default;
 	

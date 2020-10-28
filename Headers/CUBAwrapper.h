@@ -192,7 +192,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of type CUBAwrapper
 	 */
 	CUBAwrapper () = default;
 
@@ -203,8 +202,6 @@ namespace cbl {
 	 *  @param function_parameters suppoer function parameters
 	 *  @param parameters parameters
 	 *  @param ndim the integral dimension
-	 *
-	 *  @return object of type CUBAwrapper
 	 */
 	CUBAwrapper (FunctionDoubleVectorPtrVectorRef func, const std::shared_ptr<void> function_parameters, std::vector<double> &parameters, const int ndim);
 
@@ -212,13 +209,12 @@ namespace cbl {
 	 *  @brief default constructor
 	 *  @param func the integrand
 	 *  @param ndim the integral dimension
-	 *  @return object of type CUBAwrapper
 	 */
 	CUBAwrapper (FunctionDoubleVector func, const int ndim);
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  default destructor
 	 */
 	~CUBAwrapper () = default;
 
@@ -229,8 +225,6 @@ namespace cbl {
 	 *  @param function_parameters suppoer function parameters
 	 *  @param parameters parameters
 	 *  @param ndim the integral dimension
-	 *
-	 *  @return none
 	 */
 	void set_integrand (FunctionDoubleVectorPtrVectorRef func, const std::shared_ptr<void> function_parameters, std::vector<double> &parameters, const int ndim);
 
@@ -238,7 +232,6 @@ namespace cbl {
 	 *  @brief set the integrand
 	 *  @param func the integrand
 	 *  @param ndim the integral dimension
-	 *  @return none
 	 */
 	void set_integrand (FunctionDoubleVector func, const int ndim);
 	
@@ -247,8 +240,6 @@ namespace cbl {
 	 *
 	 *  @param integration_limits vector containing integration
 	 *  limits
-	 *
-	 *  @return none
 	 */
 	void set_limits (std::vector<std::vector<double>> integration_limits)
 	{ (void)integration_limits; ErrorCBL("", "set_limits", "CUBAwrapper.h", glob::ExitCode::_workInProgress_); };

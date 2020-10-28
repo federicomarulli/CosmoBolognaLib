@@ -76,7 +76,7 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Halo
+       *  
        */
       Halo ()
 	: Object(), m_vx(par::defaultDouble), m_vy(par::defaultDouble), m_vz(par::defaultDouble), m_mass(par::defaultDouble) {}
@@ -109,7 +109,7 @@ namespace cbl {
        *
        *  @param mass the halo mass
        *
-       *  @return object of class Halo
+       *  
        */
       Halo (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
@@ -150,7 +150,7 @@ namespace cbl {
        *
        *  @param mass the halo mass
        *
-       *  @return object of class Halo
+       *  
        */
       Halo (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
 	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
@@ -183,7 +183,7 @@ namespace cbl {
        *
        *  @param mass the halo mass
        *
-       *  @return object of class Halo
+       *  
        */
       Halo (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
@@ -219,7 +219,7 @@ namespace cbl {
        *
        *  @param mass the halo mass
        *
-       *  @return object of class Halo
+       *  
        */
       Halo (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
 	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
@@ -257,7 +257,7 @@ namespace cbl {
        *
        *  @param mass the halo mass
        *
-       *  @return object of class Halo
+       *  
        */
       Halo (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
 	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
@@ -296,7 +296,7 @@ namespace cbl {
        *
        *  @param mass the halo mass
        *
-       *  @return object of class Halo
+       *  
        */
       Halo (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
 	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
@@ -339,14 +339,13 @@ namespace cbl {
        *
        *  @param mass the halo mass
        *
-       *  @return object of class Halo
+       *  
        */
       Halo (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
 	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
       
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~Halo () = default;
 
@@ -397,7 +396,6 @@ namespace cbl {
       /**
        *  @brief set the protected member \e m_vx
        *  @param vx the the halo peculiar velocity along the x direction
-       *  @return none
        */
       void set_vx (const double vx=par::defaultDouble) override
       { m_vx = vx; }
@@ -405,7 +403,6 @@ namespace cbl {
       /**
        *  @brief set the protected member \e m_vy
        *  @param vy the the halo peculiar velocity along the y direction
-       *  @return none
        */
       void set_vy (const double vy=par::defaultDouble) override
       { m_vy = vy; }
@@ -413,7 +410,6 @@ namespace cbl {
       /**
        *  @brief set the protected member \e m_vz
        *  @param vz the the halo peculiar velocity along the z direction
-       *  @return none
        */
       void set_vz (const double vz=par::defaultDouble) override
       { m_vz = vz; }
@@ -421,7 +417,6 @@ namespace cbl {
       /**
        *  @brief set the protected member \e m_mass
        *  @param mass the mass of the halo
-       *  @return none
        */
       void set_mass (const double mass=par::defaultDouble) override
       { m_mass = mass; }

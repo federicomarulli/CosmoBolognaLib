@@ -74,7 +74,7 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Data1D
+       *  1D
        */
       Data1D ()
 	: Data(DataType::_1D_) {}
@@ -109,7 +109,7 @@ namespace cbl {
        *  if the input file has only 2 columns, the errors will be set
        *  to 1
        *
-       *  @return object of class Data1D
+       *  1D
        */
       Data1D (const std::string input_file, const int skip_nlines=0, const int column_x=1, const std::vector<int> column_data={}, const std::vector<int> column_errors={})
 	: Data(cbl::data::DataType::_1D_)
@@ -122,7 +122,7 @@ namespace cbl {
        *
        *  @param data vector containing data
        *
-       *  @return object of class Data1D
+       *  1D
        */
       Data1D (const std::vector<double> x, const std::vector<double> data)
 	: Data(cbl::data::DataType::_1D_, data)
@@ -138,7 +138,7 @@ namespace cbl {
        *
        *  @param error vector containing the errors
        *
-       *  @return object of class Data1D
+       *  1D
        */
       Data1D (const std::vector<double> x, const std::vector<double> data, const std::vector<double> error) 
 	: Data(cbl::data::DataType::_1D_, data, error)
@@ -154,7 +154,7 @@ namespace cbl {
        *
        *  @param covariance matrix containing the covariance 
        *
-       *  @return object of class Data1D
+       *  1D
        */
       Data1D (const std::vector<double> x, const std::vector<double> data, const std::vector<std::vector<double>> covariance)
 	: Data(cbl::data::DataType::_1D_, data, covariance)
@@ -162,7 +162,6 @@ namespace cbl {
       
       /**
        *  @brief default destructor
-       *  @return none
        */
       virtual ~Data1D () = default;
 
@@ -217,7 +216,6 @@ namespace cbl {
       /**
        *  @brief get data for Data1D
        *  @param [out] data vector containing the dataset
-       *  @return none
        */
       void get_data (std::vector<double> &data) const override
       { data = m_data; }
@@ -225,7 +223,6 @@ namespace cbl {
       /**
        *  @brief get standard deviation for Data1D
        *  @param [out] error vector containing the standard deviation
-       *  @return none
        */
       void get_error (std::vector<double> &error) const override
       { error = m_error; }
@@ -241,7 +238,6 @@ namespace cbl {
       /**
        *  @brief set interval variable m_x
        *  @param x vector containing x points
-       *  @return none
        */
       void set_xx (const std::vector<double> x);
 
@@ -282,8 +278,6 @@ namespace cbl {
        *  default, assuming that only 1 random vector has to be read;
        *  if the input file has only 2 columns, the errors will be set
        *  to 1
-       *
-       *  @return none
        */
       void read (const std::string input_file, const int skip_nlines=0, const int column_x=1, const std::vector<int> column_data={}, const std::vector<int> column_errors={}) override;
 
@@ -311,8 +305,6 @@ namespace cbl {
        *  @param ww number of characters to be used as field width
        *
        *  @param rank cpu index (for MPI usage)
-       *
-       *  @return none
        */
       void write (const std::string dir, const std::string file, const std::string header, const int prec=4, const int ww=8, const int rank=0) const override;
       
@@ -324,8 +316,6 @@ namespace cbl {
        *  @param file the output file
        *
        *  @param precision the float precision
-       *
-       *  @return none
        */
       void write_covariance (const std::string dir, const std::string file, const int precision=10) const override;
       

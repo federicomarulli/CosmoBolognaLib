@@ -164,16 +164,13 @@ void cbl::glob::Histogram1D::put (const int bin, const double weight, const doub
 {
   m_histo.get()->bin[bin] += weight;
   m_histo_error.get()->bin[bin] += weight*weight;
-  m_counts[bin] += 1;
+  m_counts[bin] ++;
 
   double Wn = m_histo.get()->bin[bin];
   double mean_prev = m_var[bin];
   double var_prev = m_var_err[bin];
   m_var[bin] = (Wn==0) ? 0 : mean_prev+weight/Wn*(var-mean_prev);
   m_var_err[bin] = (Wn==0) ? 0 : var_prev+weight*(var-mean_prev)*(var-m_var[bin]);
-
-  if (m_var[bin]!= m_var[bin])
-    cout << Wn << " " << mean_prev << " " << var_prev << " " << m_var[bin] << " " << m_var_err[bin] << " " << var << " " << weight << endl;
 }
 
 
@@ -190,7 +187,7 @@ void cbl::glob::Histogram1D::put (const std::vector<int> bins, const std::vector
 // ============================================================================
 
 
-double cbl::glob::Histogram1D::normalization ( const int i, const HistogramType hist_type, const double fact) const
+double cbl::glob::Histogram1D::normalization (const int i, const HistogramType hist_type, const double fact) const
 {
   double norm;
 
@@ -227,7 +224,7 @@ double cbl::glob::Histogram1D::normalization ( const int i, const HistogramType 
 // ============================================================================
 
 
-double cbl::glob::Histogram1D::operator() ( const int i, const HistogramType hist_type, const double fact) const
+double cbl::glob::Histogram1D::operator() (const int i, const HistogramType hist_type, const double fact) const
 {
   return m_histo.get()->bin[i]/normalization(i, hist_type, fact);
 
@@ -237,7 +234,7 @@ double cbl::glob::Histogram1D::operator() ( const int i, const HistogramType his
 // ============================================================================
 
 
-std::vector<double> cbl::glob::Histogram1D::operator() ( const HistogramType hist_type, const double fact) const
+std::vector<double> cbl::glob::Histogram1D::operator() (const HistogramType hist_type, const double fact) const
 {
   vector<double> hist(m_nbins, 0);
 
@@ -251,7 +248,7 @@ std::vector<double> cbl::glob::Histogram1D::operator() ( const HistogramType his
 // ============================================================================
 
 
-double cbl::glob::Histogram1D::error ( const int i, const HistogramType hist_type, const double fact) const
+double cbl::glob::Histogram1D::error (const int i, const HistogramType hist_type, const double fact) const
 {
   return sqrt(m_histo_error.get()->bin[i])/normalization(i, hist_type, fact);
 }
@@ -260,7 +257,7 @@ double cbl::glob::Histogram1D::error ( const int i, const HistogramType hist_typ
 // ============================================================================
 
 
-std::vector<double> cbl::glob::Histogram1D::error ( const HistogramType hist_type, const double fact) const
+std::vector<double> cbl::glob::Histogram1D::error (const HistogramType hist_type, const double fact) const
 {
   vector<double> hist(m_nbins, 0);
 
@@ -290,7 +287,7 @@ void cbl::glob::Histogram1D::write (const string dir, const string file, const H
   string mkdir = "mkdir -p "+dir;
   if (system(mkdir.c_str())) {}
   
-  string output_file = dir+file;cout <<output_file<<endl;
+  string output_file = dir+file;
   ofstream fout (output_file.c_str());
 
   fout << "# bin_center hist hist_err weighted_counts weighted_counts_err counts counts_err  lower_edge upper_edge histogram_normalization var var_err" << endl;
@@ -462,9 +459,9 @@ std::vector<std::vector<int>> cbl::glob::Histogram2D::digitize (const std::vecto
 void cbl::glob::Histogram2D::put (const double var1, const double var2, const double weight)
 {
   const vector<int> bins = digitize(var1, var2);
-  if (bins[0]>-1 && bins[1]>-1){
-    put(bins[0], bins[1], weight);
-  }
+ 
+  if (bins[0]>-1 && bins[1]>-1)
+    put(bins[0], bins[1], weight, var1, var2);
 }
 
 
@@ -485,7 +482,7 @@ void cbl::glob::Histogram2D::put (const int i, const int j, const double weight,
 {
   m_histo.get()->bin[i*m_nbins2+j] += weight;
   m_histo_error.get()->bin[i*m_nbins2+j] += weight*weight;
-  m_counts[i][j] += 1;
+  m_counts[i][j] ++;
 
   double Wn = m_histo.get()->bin[i*m_nbins2+j];
   double mean_prev = m_var1[i][j];
@@ -515,7 +512,7 @@ void cbl::glob::Histogram2D::put (const std::vector<std::vector<int>> bins, cons
 // ============================================================================
 
 
-double cbl::glob::Histogram2D::normalization ( const int i, const int j, const HistogramType hist_type, const double fact) const
+double cbl::glob::Histogram2D::normalization (const int i, const int j, const HistogramType hist_type, const double fact) const
 {
   double norm;
 
@@ -557,6 +554,7 @@ double cbl::glob::Histogram2D::operator() (const int i, const int j, const Histo
   return m_histo.get()->bin[i*m_nbins2+j]/normalization(i, j, hist_type, fact);
 }
 
+
 // ============================================================================
 
 
@@ -565,7 +563,7 @@ vector<vector<double>> cbl::glob::Histogram2D::error_bins1 () const
   std::vector<vector<double>> vv = m_var1_err;
   for (size_t i=0; i<m_nbins1; i++)
     for (size_t j=0; j<m_nbins2; j++)
-      vv[i][j] = sqrt(vv[i][j]/m_histo.get()->bin[i*m_nbins2+j]);
+      vv[i][j] = (m_histo.get()->bin[i*m_nbins2+j]>0) ? sqrt(vv[i][j]/m_histo.get()->bin[i*m_nbins2+j]) : 0.;
   return vv;
 }
 
@@ -578,7 +576,7 @@ vector<vector<double>> cbl::glob::Histogram2D::error_bins2 () const
   std::vector<vector<double>> vv = m_var2_err;
   for (size_t i=0; i<m_nbins1; i++)
     for (size_t j=0; j<m_nbins2; j++)
-      vv[i][j] = sqrt(vv[i][j]/m_histo.get()->bin[i*m_nbins2+j]);
+      vv[i][j] = (m_histo.get()->bin[i*m_nbins2+j]>0) ? sqrt(vv[i][j]/m_histo.get()->bin[i*m_nbins2+j]) : 0.;
   return vv;
 }
 

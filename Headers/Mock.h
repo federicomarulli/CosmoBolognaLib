@@ -67,7 +67,7 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Mock
+       *  
        */
       Mock ()
 	: Halo(), m_generic(par::defaultDouble) {}
@@ -102,7 +102,7 @@ namespace cbl {
        *
        *  @param generic the mock generic variable
        *
-       *  @return object of class Mock
+       *  
        */
       Mock (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
 	: Halo(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
@@ -145,7 +145,7 @@ namespace cbl {
        *   
        *  @param generic the mock generic variable
        *
-       *  @return object of class Mock
+       *  
        */
       Mock (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
 	: Halo(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
@@ -180,7 +180,7 @@ namespace cbl {
        *
        *  @param generic the mock generic variable
        *
-       *  @return object of class Mock
+       *  
        */
       Mock (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
 	: Halo(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
@@ -218,7 +218,7 @@ namespace cbl {
        *
        *  @param generic the mock generic variable
        *
-       *  @return object of class Mock
+       *  
        */
       Mock (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
 	: Halo(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
@@ -258,7 +258,7 @@ namespace cbl {
        *
        *  @param generic the mock generic variable
        *
-       *  @return object of class Mock
+       *  
        */
       Mock (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
 	: Halo(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
@@ -298,7 +298,7 @@ namespace cbl {
        *
        *  @param generic the mock generic variable
        *
-       *  @return object of class Mock
+       *  
        */
       Mock (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
 	: Halo(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
@@ -342,14 +342,13 @@ namespace cbl {
        *
        *  @param generic the mock generic variable
        *
-       *  @return object of class Mock
+       *  
        */
       Mock (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
 	: Halo(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
       
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~Mock () = default;
 
@@ -378,7 +377,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_generic
        *  @param generic the generic variable of the mock object
-       *  @return none
        */
       void set_generic (const double generic=par::defaultDouble) override { m_generic = generic; }
     

@@ -103,7 +103,7 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measurePoisson (const std::string dir_output_pairs= par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_) override;
 
@@ -139,7 +139,7 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measureJackknife (const std::string dir_output_pairs= par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample= par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_) override;
 
@@ -179,8 +179,6 @@ namespace cbl {
 	 *  correlation function
 	 *
 	 *  @param seed the seed for random number generation
-	 *
-	 *  @return none
 	 */
 	void measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample = par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213) override;
 
@@ -192,7 +190,7 @@ namespace cbl {
 	 *
 	 *  @param rr vector of random-random pairs, divided per regions
 	 *
-	 *  @return none
+	 *  @return vector of pointers to objects of type Data
 	 */
 	std::vector<std::shared_ptr<data::Data>> XiJackknife (const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr) override;
 
@@ -206,7 +204,7 @@ namespace cbl {
 	 *
 	 *  @param dr vector of data-random pairs, divided per regions
 	 *
-	 *  @return none
+	 *  @return vector of pointers to objects of type Data
 	 */
 	std::vector<std::shared_ptr<data::Data>> XiJackknife (const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const std::vector<std::shared_ptr<pairs::Pair>> dr) override;
 
@@ -223,7 +221,7 @@ namespace cbl {
 	 *
 	 *  @param seed the seed for random number generation
 	 *
-	 *  @return none
+	 *  @return vector of pointers to objects of type Data  
 	 */
 	std::vector<std::shared_ptr<data::Data>> XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const int seed=3213) override;
 
@@ -242,7 +240,7 @@ namespace cbl {
 	 *
 	 *  @param seed the seed for random number generation
 	 *
-	 *  @return none
+	 *  @return vector of pointers to objects of type Data  
 	 */
 	std::vector<std::shared_ptr<data::Data>> XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair>> dd, const std::vector<std::shared_ptr<pairs::Pair>> rr, const std::vector<std::shared_ptr<pairs::Pair>> dr, const int seed=3213) override;
 
@@ -255,7 +253,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of class TwoPointCorrelation_deprojected
+	 *  _deprojected
 	 */
 	TwoPointCorrelation_deprojected () { m_twoPType = TwoPType::_deprojected_; }
 
@@ -290,7 +288,7 @@ namespace cbl {
 	 *  @param random_dilution_fraction fraction between the number
 	 *  of objects in the diluted and original random samples, used
 	 *  to improve performances in random-random pair counts
-	 *  @return object of class TwoPointCorrelation_deprojected
+	 *  _deprojected
 	 */
 	TwoPointCorrelation_deprojected (catalogue::Catalogue data, catalogue::Catalogue random, const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const double piMax_integral, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation_projected(data, random, BinType::_logarithmic_, rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, piMax_integral, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
@@ -325,7 +323,7 @@ namespace cbl {
 	 *  @param random_dilution_fraction fraction between the number
 	 *  of objects in the diluted and original random samples, used
 	 *  to improve performances in random-random pair counts
-	 *  @return object of class TwoPointCorrelation_2D_deprojected
+	 *  _2D_deprojected
 	 */
 	TwoPointCorrelation_deprojected (catalogue::Catalogue data, catalogue::Catalogue random, const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const double piMax_integral, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation_projected(data, random, BinType::_logarithmic_, rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, piMax_integral, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
@@ -333,7 +331,7 @@ namespace cbl {
       
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	~TwoPointCorrelation_deprojected () = default;
 
@@ -419,7 +417,7 @@ namespace cbl {
 	 *
 	 *  @param seed the seed for random number generation
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const int nMocks = 0., const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213) override;
       
@@ -435,7 +433,7 @@ namespace cbl {
 	 *  @brief read the deprojected two-point correlation function
 	 *  @param dir input directory
 	 *  @param file input file
-	 *  @return none
+	 *  
 	 */
 	void read (const std::string dir, const std::string file) override;
       
@@ -444,7 +442,7 @@ namespace cbl {
 	 *  @param dir output directory
 	 *  @param file output file
 	 *  @param rank cpu index (for MPI usage)
-	 *  @return none
+	 *  
 	 */
 	void write (const std::string dir=par::defaultString, const std::string file=par::defaultString, const int rank=0) const override;
     

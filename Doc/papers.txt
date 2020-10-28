@@ -2,14 +2,45 @@
 ----- the list of publications that used the CosmoBolognaLib -----
 ------------------------------------------------------------------
 
-25. Allevato et al.
+31. Marulli, Veropalumbo, García-Farieta, Moresco, Moscardini, Cimatti
+    C^3 - Cluster Clustering Cosmology I. New constraints on the
+    cosmic growth rate at z~0.3 from redshift-space clustering
+    anisotropies
+    2020, submitted to ApJ
+
+30. Sarpa, Veropalumbo, Schimd, Branchini, Matarrese
+    Extended Fast Action Minimisation method: application to SDSS-DR12
+    Combined Sample
+    2020, submitted to MNRAS
+    
+29. Giocoli, Monaco, Moscardini, Castro, Meneghetti, Metcalf, Baldi
+    Testing the Reliability of Fast Methods for Weak Lensing
+    Simulations: WL-MOKA on PINOCCHIO
+    2020, MNRAS, 496, 1307
+
+28. García-Farieta, Marulli, Moscardini, Veropalumbo, Casas-Miranda
+    Validating the methodology for constraining the linear growth rate
+    from clustering anisotropies
+    2020, MNRAS, 494, 1658
+
+27. Moresco, Jimenez, Verde, Cimatti, Pozzetti
+    Setting the Stage for Cosmic Chronometers. II. Impact of Stellar
+    Population Synthesis Models Systematics and Full Covariance Matrix
+    2020, ApJ, 898, 82
+
+26. Girelli, Pozzetti, Bolzonella, Giocoli, Marulli, Baldi
+    The stellar-to-halo mass relation over the past 12
+    Gyr. I. Standard ΛCDM model
+    2020, A&A, 634, 135
+
+25. Verza, Pisani, Carbone, Hamaus, Guzzo
+    The Void Size Function in Dynamical Dark Energy Cosmologies
+    2019, JCAP, 12, 040
+    
+24. Allevato et al.
     The Chandra COSMOS Legacy Survey: clustering dependence of Type 2
     AGN on host galaxy properties
-    2019, A&A, in press
-
-24. Verza, Pisani, Carbone, Hamaus, Guzzo
-    The Void Size Function in Dynamical Dark Energy Cosmologies
-    2019, submitted to JCAP
+    2019, A&A, 632, 88
 
 23. Keihänen et al.
     Estimating the galaxy two-point correlation function using a split

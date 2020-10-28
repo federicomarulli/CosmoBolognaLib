@@ -102,7 +102,7 @@ namespace cbl {
 	 * @param nbreakpoints number of breakpoints
 	 * @param order the basis spline order.
 	 *
-	 * @return None
+	 * 
 	 */
 	void m_set_bspline(const std::vector<double> x, const std::vector<double> fx, const int nbreakpoints, const int order);
 
@@ -114,7 +114,7 @@ namespace cbl {
 	 * @param xmin minimum breakpoint
 	 * @param xmax maximum breakpoint
 	 *
-	 * @return None
+	 * 
 	 */
 	void m_set_knots (const double xmin=cbl::par::defaultDouble, const double xmax=cbl::par::defaultDouble);
 
@@ -126,7 +126,7 @@ namespace cbl {
 	 *
 	 * @param breakpoints the breakpoints
 	 *
-	 * @return None
+	 * 
 	 */
 	void m_set_knots (const std::vector<double> breakpoints);
 
@@ -140,7 +140,7 @@ namespace cbl {
 	 * @param frac fraction of the fx to use as fit error.
 	 * Default value is 0.1
 	 *
-	 * @return None
+	 * 
 	 */
 	void m_linear_fit (const double frac=0.1);
 
@@ -149,7 +149,7 @@ namespace cbl {
 	 * [Min(m_x)-Max(m_x)] and set internal variable m_integral
 	 * This is used to renormalize the output
 	 *
-	 * @return None
+	 * 
 	 */
 	void m_compute_func_integral ();
 	
@@ -201,7 +201,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	~FuncGrid_Bspline () = default;
 
@@ -225,7 +225,7 @@ namespace cbl {
 	 * @param xmin minimum breakpoint
 	 * @param xmax maximum breakpoint
 	 *
-	 * @return None
+	 * 
 	 */
 	void set (const std::vector<double> x, const std::vector<double> fx, const int nbreakpoints, const int order=4, const double frac=0.1, const double xmin=cbl::par::defaultDouble, const double xmax=cbl::par::defaultDouble);
 
@@ -240,7 +240,7 @@ namespace cbl {
 	 * @param frac fraction of the fx to use as fit error.
 	 * Default is 0.1
 	 *
-	 * @return None
+	 * 
 	 */
 	void set (const std::vector<double> x, const std::vector<double> fx, const std::vector<double> breakpoints, const int order=4, const double frac=0.1);
       	

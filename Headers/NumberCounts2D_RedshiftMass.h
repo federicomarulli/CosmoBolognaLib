@@ -76,13 +76,13 @@ namespace cbl {
 	  /**
 	   *  @brief default constructor
 	   *
-	   *  @return object of class NumberCounts2D_RedshiftMass
+	   *  2D_RedshiftMass
 	   */
 	  NumberCounts2D_RedshiftMass () {}
 
 	  /**
 	   *  @brief default destructor
-	   *  @return none
+	   *  
 	   */
 	  virtual ~NumberCounts2D_RedshiftMass () = default;
 
@@ -111,7 +111,7 @@ namespace cbl {
 	   *
 	   * @param fact factor used to normalized the distribution
 	   *
-	   * @return object of class NumberCounts2D_RedshiftMass
+	   * 2D_RedshiftMass
 	   */
 	  NumberCounts2D_RedshiftMass (const catalogue::Catalogue data, const size_t nbins1, const size_t nbins2, const double minVar1=par::defaultDouble, const double maxVar1=par::defaultDouble, const double minVar2=par::defaultDouble, const double maxVar2=par::defaultDouble, const double shift1=0.5, const double shift2=0.5, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.) : NumberCounts2D (catalogue::Var::_Redshift_, BinType::_linear_, catalogue::Var::_Mass_, BinType::_logarithmic_, data, nbins1, nbins2, minVar1, maxVar1, minVar2, maxVar2, shift1, shift2, hist_type, fact) {} 
 

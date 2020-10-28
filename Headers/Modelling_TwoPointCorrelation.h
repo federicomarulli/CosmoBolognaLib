@@ -89,13 +89,13 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class ModellingTwoPointCorrelation
+	 *  TwoPointCorrelation
 	 */
 	Modelling_TwoPointCorrelation () = default;
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_TwoPointCorrelation () = default;
 

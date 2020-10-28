@@ -68,87 +68,82 @@ namespace cbl {
        */
       class Modelling_Cosmology : public Modelling1D {
 
-	protected:
+      protected:
 
-	  /// cosmology
-	  std::shared_ptr<cbl::cosmology::Cosmology> m_cosmology;
+	/// cosmology
+	std::shared_ptr<cbl::cosmology::Cosmology> m_cosmology;
 
-	  /// map with cosmological parameters
-	  std::map<cbl::cosmology::CosmologicalParameter, int> m_map_cosmoPar;
+	/// map with cosmological parameters
+	std::map<cbl::cosmology::CosmologicalParameter, int> m_map_cosmoPar;
 
-	  /// the cosmological measurements
-	  std::vector<std::string> m_data_type;
+	/// the cosmological measurements
+	std::vector<std::string> m_data_type;
 
-	  /// the container of parameters for model computation
-	  STR_data_model_cosmology m_data_model;
+	/// the container of parameters for model computation
+	STR_data_model_cosmology m_data_model;
 
-	public:
+      public:
 
-	  /**
-	   *  @name Constructors/destructors
-	   */
-	  ///@{
+	/**
+	 *  @name Constructors/destructors
+	 */
+	///@{
 
-	  /**
-	   *  @brief default constuctor
-	   *  @return object of class Modelling
-	   */
-	  Modelling_Cosmology () {}
+	/**
+	 *  @brief default constuctor
+	 *  
+	 */
+	Modelling_Cosmology () {}
 
-	  /**
-	   *  @brief constuctor
-	   *
-	   *  @param dataset the dataset containing the input
-	   *  measurements to be modelled
-	   *
-	   *  @param data_type the type of cosmological measurements
-	   *  to be modelled
-	   *
-	   *  @return object of class Modelling
-	   */
-	  Modelling_Cosmology (const std::shared_ptr<cbl::data::Data> dataset, const std::vector<std::string> data_type);
+	/**
+	 *  @brief constuctor
+	 *
+	 *  @param dataset the dataset containing the input
+	 *  measurements to be modelled
+	 *
+	 *  @param data_type the type of cosmological measurements
+	 *  to be modelled
+	 *
+	 *  
+	 */
+	Modelling_Cosmology (const std::shared_ptr<cbl::data::Data> dataset, const std::vector<std::string> data_type);
 
-	  /**
-	   *  @brief default destructor
-	   *  @return none
-	   */
-	  ~Modelling_Cosmology () {}
+	/**
+	 *  @brief default destructor
+	 */
+	~Modelling_Cosmology () {}
 
-	  ///@}
+	///@}
 
-	  /**
-	   *  @brief set the fiducial cosmology
-	   *
-	   *  @param cosmology the fiducial cosmology
-	   * 
-	   *  @return none
-	   */
-	  void set_fiducial_cosmology (const cbl::cosmology::Cosmology cosmology);
+	/**
+	 *  @brief set the fiducial cosmology
+	 *
+	 *  @param cosmology the fiducial cosmology
+	 */
+	void set_fiducial_cosmology (const cbl::cosmology::Cosmology cosmology);
 
-	  /**
-	   *  @brief set the fiducial cosmology
-	   *
-	   * 
-	   *  @return none
-	   */
-	  std::shared_ptr<cbl::cosmology::Cosmology> fiducial_cosmology () {return m_cosmology;}
+	/**
+	 *  @brief set the fiducial cosmology
+	 *
+	 *  @return pointer to object of class Cosmology
+	 */
+	std::shared_ptr<cbl::cosmology::Cosmology> fiducial_cosmology ()
+	{ return m_cosmology; }
 
-	  /**
-	   *  @brief set the cosmological parameters
-	   *
-	   *  @param cosmoPar_name vector of cosmological
-	   *  parameter names
-	   *
-	   *  @param cosmoPar_prior vector of cosmological
-	   *  parameter priors
-	   *
-	   *  @param distance_prior the CMB distance prior name
-	   *
-	   *  @param external_dataset external dataset file name
-	   * 
-	   *  @return none
-	   */
-	  void set_cosmological_parameters (const std::vector<cbl::cosmology::CosmologicalParameter> cosmoPar_name, const std::vector<cbl::statistics::PriorDistribution> cosmoPar_prior, const std::string distance_prior=par::defaultString, const std::vector<std::string> external_dataset={});
+	/**
+	 *  @brief set the cosmological parameters
+	 *
+	 *  @param cosmoPar_name vector of cosmological
+	 *  parameter names
+	 *
+	 *  @param cosmoPar_prior vector of cosmological
+	 *  parameter priors
+	 *
+	 *  @param distance_prior the CMB distance prior name
+	 *
+	 *  @param external_dataset external dataset file name
+	 */
+	void set_cosmological_parameters (const std::vector<cbl::cosmology::CosmologicalParameter> cosmoPar_name, const std::vector<cbl::statistics::PriorDistribution> cosmoPar_prior, const std::string distance_prior=par::defaultString, const std::vector<std::string> external_dataset={});
 
       };
     }

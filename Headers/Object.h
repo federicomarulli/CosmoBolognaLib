@@ -104,7 +104,7 @@ namespace cbl {
      * @brief cast an enum of type ObjectType
      * from indeces
      * @param objectTypeIndeces the objectType indeces
-     * @return object of class ObjectType
+     * @return vector of objects of class ObjectType
      */
     inline std::vector<ObjectType> ObjectTypeCast (const std::vector<int> objectTypeIndeces)
     { return castFromValues<ObjectType>(objectTypeIndeces); } 
@@ -113,7 +113,7 @@ namespace cbl {
      * @brief cast an enum of type ObjectType
      * from thier names
      * @param objectTypeNames the objectType names
-     * @return vector of ObjectType enums
+     * @return vector of objects of class ObjectType
      */
     inline std::vector<ObjectType> ObjectTypeCast (const std::vector<std::string> objectTypeNames)
     { return castFromNames<ObjectType>(objectTypeNames, ObjectTypeNames()); }
@@ -182,7 +182,7 @@ namespace cbl {
     
       /**
        *  @brief default constructor
-       *  @return object of class Object
+       *  
        */
       Object () = default;
       
@@ -206,7 +206,7 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of class Object
+       *  
        */
       Object (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
 	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_ra(par::defaultDouble), m_dec(par::defaultDouble), m_redshift(par::defaultDouble), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
@@ -239,7 +239,7 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of class Object
+       *  
        */
       Object (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
 	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement)
@@ -268,7 +268,7 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of class Object
+       *  
        */
       Object (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
 	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
@@ -296,7 +296,7 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of class Object
+       *  
        */
       Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
 	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
@@ -326,7 +326,7 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of class Object
+       *  
        */
       Object (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
 	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement)
@@ -361,7 +361,7 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of class Object
+       *  
        */
       Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
 	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement)
@@ -386,7 +386,7 @@ namespace cbl {
        *  @param x_displacement the displacement along the x-axis
        *  @param y_displacement the displacement along the y-axis
        *  @param z_displacement the displacement along the z-axis
-       *  @return object of class Object
+       *  
        */
       Object (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
       : m_xx(xx), m_yy(yy), m_zz(zz), m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(sqrt(xx*xx+yy*yy+zz*zz)), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) 
@@ -394,7 +394,6 @@ namespace cbl {
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       virtual ~Object () = default;
 
@@ -1017,7 +1016,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_xx
        *  @param xx the coordinate x of the object
-       *  @return none
        */
       void set_xx (const double xx)
       { m_xx = xx; }
@@ -1025,7 +1023,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_yy
        *  @param yy the coordinate y of the object
-       *  @return none
        */
       void set_yy (const double yy)
       { m_yy = yy; }
@@ -1033,7 +1030,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_zz
        *  @param zz the coordinate z of the object
-       *  @return none
        */
       void set_zz (const double zz)
       { m_zz = zz; }
@@ -1043,7 +1039,6 @@ namespace cbl {
        *  comoving coordinates accordingly (if already set)
        *  @param ra the Right Ascension of the object
        *  @param inputUnits the units of the input coordinates
-       *  @return none
        */
       void set_ra (const double ra, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
       {
@@ -1056,7 +1051,6 @@ namespace cbl {
        *  comoving coordinates accordingly (if already set)
        *  @param dec the Declination of the object
        *  @param inputUnits the units of the input coordinates
-       *  @return none
        */
       void set_dec (const double dec, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
       {
@@ -1073,7 +1067,6 @@ namespace cbl {
        *  @param cosmology object of class Cosmology, used to estimate
        *  the comoving distance from the given redshift
        *
-       *  @return none
        */
       void set_redshift (const double redshift, const cosmology::Cosmology cosmology)
       {
@@ -1086,7 +1079,6 @@ namespace cbl {
        *  @brief set the member \e m_dc, updating the
        *  comoving coordinates accordingly
        *  @param dc the comoving distance of the object
-       *  @return none
        */
       void set_dc (const double dc)
       {
@@ -1097,7 +1089,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_weight
        *  @param weight the weight of the object
-       *  @return none
        */
       void set_weight (const double weight)
       { m_weight = weight; }
@@ -1106,7 +1097,6 @@ namespace cbl {
        *  @brief set the member \e m_region
        *  @param region the index of the subRegion in which the object
        *  is located 
-       *  @return none
        */
       void set_region (const long region)
       { if (region<0) ErrorCBL("Error in Object.h: region must be >0 !", "", "Object.h"); m_region = region; }
@@ -1114,7 +1104,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_ID
        *  @param ID the ID
-       *  @return none
        */
       void set_ID (const int ID)
       { m_ID = ID; }
@@ -1122,7 +1111,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_field
        *  @param field the field were the object has been observed
-       *  @return none
        */
       void set_field (const std::string field)
       { m_field = field; }
@@ -1130,7 +1118,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_x_displacement
        *  @param x_displacement the displacement (in Mpc) of the x coordinate
-       *  @return none
        */
       void set_x_displacement (const double x_displacement)
       { m_x_displacement = x_displacement; }
@@ -1138,7 +1125,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_y_displacement
        *  @param y_displacement the displacement (in Mpc) of the y coordinate
-       *  @return none
        */
       void set_y_displacement (const double y_displacement)
       { m_y_displacement = y_displacement; }
@@ -1146,7 +1132,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_z_displacement
        *  @param z_displacement the displacement (in Mpc) of the x coordinate
-       *  @return none
        */
       void set_z_displacement (const double z_displacement)
       { m_z_displacement = z_displacement; }
@@ -1234,7 +1219,10 @@ namespace cbl {
       
       /**
        *  @brief set the member \e m_bias
-       *  @param bias the bias 
+       *
+       *  @param bias the bias, or an error message if the derived
+       *  object does not have this member
+       *
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
@@ -1243,7 +1231,10 @@ namespace cbl {
     
       /**
        *  @brief set the member \e m_generic
-       *  @param generic the generic variable
+       *
+       *  @param generic the generic variable, or an error message if
+       *  the derived object does not have this member
+       *
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
@@ -1273,6 +1264,7 @@ namespace cbl {
        *  @param centralDensity the central density
        *  @return none, or an error message if the derived object does
        *  not have this member
+
        */
       virtual void set_centralDensity (const double centralDensity)
       { (void)centralDensity; cbl::ErrorCBL("", "set_centralDensity", "Object.h"); }

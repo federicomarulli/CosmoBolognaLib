@@ -72,8 +72,6 @@ namespace cbl {
 
 	  /**
 	   *  @brief default constuctor
-	   *  @return object of class
-	   *  ModellingTwoPointCorrelation_projected
 	   */
 	  Modelling_TwoPointCorrelation_projected () = default;
 
@@ -81,9 +79,6 @@ namespace cbl {
 	   *  @brief constructor
 	   *  
 	   *  @param twop the two-point correlation function to model
-	   *
-	   *  @return object of type
-	   *  Modelling_TwoPointCorrelation_projected
 	   */
 	  Modelling_TwoPointCorrelation_projected (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
 	    : Modelling_TwoPointCorrelation1D_monopole(twop) {}
@@ -93,16 +88,13 @@ namespace cbl {
 	   *  
 	   *  @param twop_dataset the dataset containing the two-point
 	   *  correlation function to model
-	   *
-	   *  @return object of type
-	   *  Modelling_TwoPointCorrelation_projected
 	   */
 	  Modelling_TwoPointCorrelation_projected (const std::shared_ptr<data::Data> twop_dataset)
 	    : Modelling_TwoPointCorrelation1D_monopole() { set_data(twop_dataset); }
 
 	  /**
 	   *  @brief default destructor
-	   *  @return none
+	   *  
 	   */
 	  ~Modelling_TwoPointCorrelation_projected () = default;
 
@@ -118,7 +110,7 @@ namespace cbl {
 	   *  @brief set the fiducial model for the dark matter
 	   *  projected correlation function
 	   *
-	   *  @return none
+	   *  
 	   */
 	  void set_fiducial_wpDM ();
 	
@@ -133,7 +125,7 @@ namespace cbl {
 	   *  @param bsigma8_prior prior for the parameter
 	   *  \f$b(z)\sigma_8(z)\f$
 	   *
-	   *  @return none
+	   *  
 	   */
 	  void set_model_linearBias (const statistics::PriorDistribution bsigma8_prior);
 
@@ -168,7 +160,7 @@ namespace cbl {
 	   *
 	   *  @param alpha_prior \f$\alpha\f$ prior
 	   *
-	   *  @return none
+	   *  
 	   */
 	  void set_model_HOD (const statistics::PriorDistribution Mmin_prior={}, const statistics::PriorDistribution sigmalgM_prior={}, const statistics::PriorDistribution M0_prior={}, const statistics::PriorDistribution M1_prior={}, const statistics::PriorDistribution alpha_prior={});
 	  

@@ -75,7 +75,7 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Cluster
+       *  
        */
       Cluster ()
 	: Object(), m_mass(par::defaultDouble), m_richness(par::defaultDouble), m_richness_error(par::defaultDouble), m_bias(par::defaultDouble) {}
@@ -108,7 +108,7 @@ namespace cbl {
        *
        *  @param bias the cluster linear bias
        *
-       *  @return object of class Cluster
+       *  
        */
       Cluster (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
@@ -149,7 +149,7 @@ namespace cbl {
        *
        *  @param bias the cluster linear bias
        *
-       *  @return object of class Cluster
+       *  
        */
       Cluster (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
 	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
@@ -182,7 +182,7 @@ namespace cbl {
        *
        *  @param bias the cluster linear bias
        *
-       *  @return object of class Cluster
+       *  
        */
       Cluster (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
@@ -218,7 +218,7 @@ namespace cbl {
        *
        *  @param bias the cluster linear bias
        *
-       *  @return object of class Cluster
+       *  
        */
       Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
 	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
@@ -256,7 +256,7 @@ namespace cbl {
        *
        *  @param bias the cluster linear bias
        *
-       *  @return object of class Cluster
+       *  
        */
       Cluster (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
 	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
@@ -295,7 +295,7 @@ namespace cbl {
        *
        *  @param bias the cluster linear bias
        *
-       *  @return object of class Cluster
+       *  
        */
       Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
 	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
@@ -338,14 +338,13 @@ namespace cbl {
        *
        *  @param bias the cluster bias
        *
-       *  @return object of class Cluster
+       *  
        */
       Cluster (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
 	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
       
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~Cluster () = default;
 
@@ -396,7 +395,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_mass
        *  @param mass the mass of the cluster
-       *  @return none
        */
       void set_mass (const double mass=par::defaultDouble) override
       { m_mass = mass; }
@@ -404,7 +402,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_richness
        *  @param richness the richness of the cluster
-       *  @return none
        */
       void set_richness (const double richness=par::defaultDouble) override
       { m_richness = richness; }
@@ -412,7 +409,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_richness_error
        *  @param richness_error the richness of the cluster
-       *  @return none
        */
       void set_richness_error (const double richness_error=par::defaultDouble) override
       { m_richness_error = richness_error; }
@@ -420,7 +416,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_bias
        *  @param bias the linear bias of the cluster
-       *  @return none
        */
       void set_bias (const double bias=par::defaultDouble) override
       { m_bias = bias; }

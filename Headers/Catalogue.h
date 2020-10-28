@@ -229,7 +229,6 @@ namespace cbl {
 
       /**
        * @brief Default destructor
-       * @return None
        */
       virtual ~MaskObject () {}
     };
@@ -266,7 +265,7 @@ namespace cbl {
      * @brief cast an enum of type Var
      * from indeces
      * @param varIndeces the var indeces
-     * @return object of class Var
+     * @return vector of objects of class Var
      */
     inline std::vector<Var> VarCast (const std::vector<int> varIndeces)
     { return castFromValues<Var>(varIndeces); } 
@@ -275,7 +274,7 @@ namespace cbl {
      * @brief cast an enum of type Var
      * from thier names
      * @param varNames the var names
-     * @return objects of class Var
+     * @return vector of objects of class Var
      */
     inline std::vector<Var> VarCast (const std::vector<std::string> varNames)
     { return castFromNames<Var>(varNames, VarNames()); }
@@ -342,7 +341,7 @@ namespace cbl {
      * @brief cast an enum of type RandomType
      * from indeces
      * @param randomTypeIndeces the randomType indeces
-     * @return object of class RandomType
+     * @return vector of objects of class RandomType
      */
     inline std::vector<RandomType> RandomTypeCast (const std::vector<int> randomTypeIndeces)
     { return castFromValues<RandomType>(randomTypeIndeces); } 
@@ -351,7 +350,7 @@ namespace cbl {
      * @brief cast an enum of type RandomType
      * from thier names
      * @param randomTypeNames the randomType names
-     * @return objects of class RandomType
+     * @return vector of objects of class RandomType
      */
     inline std::vector<RandomType> RandomTypeCast (const std::vector<std::string> randomTypeNames)
     { return castFromNames<RandomType>(randomTypeNames, RandomTypeNames()); }
@@ -451,7 +450,7 @@ namespace cbl {
      * @brief cast an enum of type EstimateCriterion
      * from indeces
      * @param estimateCriterionIndeces the estimateCriterion indeces
-     * @return object of class EstimateCriterion
+     * @return vector of objects of class EstimateCriterion
      */
     inline std::vector<EstimateCriterion> EstimateCriterionCast (const std::vector<int> estimateCriterionIndeces)
     { return castFromValues<EstimateCriterion>(estimateCriterionIndeces); } 
@@ -460,7 +459,7 @@ namespace cbl {
      * @brief cast an enum of type EstimateCriterion
      * from thier names
      * @param estimateCriterionNames the estimateCriterion names
-     * @return objects of class EstimateCriterion
+     * @return vector of objects of class EstimateCriterion
      */
     inline std::vector<EstimateCriterion> EstimateCriterionCast (const std::vector<std::string> estimateCriterionNames)
     { return castFromNames<EstimateCriterion>(estimateCriterionNames, EstimateCriterionNames()); }
@@ -599,7 +598,7 @@ namespace cbl {
        *
        * @param swap whether to swap or not the header
        *
-       * @return an object of type cbl::catalogue::SubFindTab_Header
+       * @return an object of type SubFindTab_Header 
        */
       SubFindTab_Header m_read_header (std::ifstream& finh, const bool swap=false);
 
@@ -608,7 +607,7 @@ namespace cbl {
        *
        *  @param header the un-swapped header
        *
-       *  @return an object of type cbl::catalogue::Gadget_Header
+       *  @return an object of type Gadget_Header 
        */
       Gadget_Header m_swap_header (Gadget_Header header);
 
@@ -617,7 +616,7 @@ namespace cbl {
        *
        * @param header the un-swapped header
        *
-       * @return an object of type cbl::catalogue::SubFindTab_Header
+       *  @return an object of type SubFindTab_Header 
        */
       SubFindTab_Header m_swap_header (SubFindTab_Header header) ;
 
@@ -629,8 +628,6 @@ namespace cbl {
        *
        *  @param swap true \f$\rightarrow\f$ swap endianism, false
        *  \f$\rightarrow\f$ do not swap endianism
-       *
-       *  @return none
        */
       void m_check_it_in (std::ifstream& finr, const bool swap);
 
@@ -642,8 +639,6 @@ namespace cbl {
        *
        *  @param swap true \f$\rightarrow\f$ swap endianism, false
        *  \f$\rightarrow\f$ do not swap endianism
-       *
-       *  @return none
        */
       void m_check_it_out (std::ifstream &finr, const bool swap);
       
@@ -659,16 +654,31 @@ namespace cbl {
     
       /**
        *  @brief default constructor
-       *  @return object of class Catalogue
        */
       Catalogue () = default;
 
       /**
        *  @brief default copy constructor
-       *  @param cat object of class Catalogue
-       *  @return object of class Catalogue
+       *  
        */
-      Catalogue (const Catalogue &cat);
+      Catalogue (const Catalogue&) = default;
+
+      /**
+       *  @brief default move constructor
+       */
+      Catalogue (Catalogue&&) = default;
+
+      /**
+       *  @brief default copy assignment
+       *  @return object of type Catalogue 
+       */
+      Catalogue& operator=(const Catalogue&) = default;
+
+      /**
+       *  @brief default move assignment
+       *  @return object of type Catalogue  
+       */
+      Catalogue& operator=(Catalogue&&) = default;
       
       /**
        *  @brief constructor
@@ -697,7 +707,7 @@ namespace cbl {
        *
        *  @param inputUnits the units of the input coordinates
        *
-       *  @return object of type catalogue
+       *  
        */
       Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<double> coord1, const std::vector<double> coord2, const std::vector<double> coord3, const std::vector<double> weight={}, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_);
 
@@ -726,7 +736,7 @@ namespace cbl {
        *
        *  @param inputUnits the units of the input coordinates
        *
-       *  @return object of type catalogue
+       *  
        */
       Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<double> coord1, const std::vector<double> coord2, const std::vector<double> coord3, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
 	: Catalogue(objectType, coordinateType, coord1, coord2, coord3, {}, cosm, inputUnits) {}
@@ -780,7 +790,7 @@ namespace cbl {
        *
        *  @param seed the seed for random number generation
        *
-       *  @return an object of class Catalogue
+       *  
        */
       Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const int col1=1, const int col2=2, const int col3=3, const int colWeight=-1, const int colRegion=-1, const double nSub=1.1, const double fact=1., const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const CharEncode charEncode=CharEncode::_ascii_, const std::string comment="#", const int seed=3213);
 
@@ -800,7 +810,7 @@ namespace cbl {
        *
        *  @param inputUnits the units of the input coordinates
        * 
-       *  @return an object of class Catalogue
+       *  
        */
       Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
 	: Catalogue(objectType, coordinateType, file, 1, 2, 3, -1, -1, 1.1, 1., cosm, inputUnits, CharEncode::_ascii_) {}
@@ -841,7 +851,7 @@ namespace cbl {
        * 
        *  @param seed the seed for random number generation
        *
-       *  @return an object of class Catalogue
+       *  
        *
        *  @warning The vector column must be sorted in ascending
        *  order. The column datas will be read as double types, unless
@@ -889,7 +899,7 @@ namespace cbl {
        *
        *  @param seed the seed for random number generation
        *
-       *  @return an object of class Catalogue
+       *  
        */
       Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const bool read_weights, const bool read_regions, const double nSub, const double fact, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
       
@@ -897,7 +907,7 @@ namespace cbl {
        *  @brief constructor, using vectors of generic objects
        *  @param object objects of class T, specified in the
        *  cbl::catalogue::ObjectType enumeration
-       *  @return objects of type Catalogue
+       *  
        */ 
       template<typename T> Catalogue (std::vector<T> object) {
 	for (size_t i=0; i<object.size(); i++)
@@ -909,7 +919,7 @@ namespace cbl {
        *  objects
        *  @param sample vector of objects of type \e Object, specified
        *  in the cbl::catalogue::ObjectType enumeration
-       *  @return object of class Catalogue
+       *  
        */
       Catalogue (std::vector<std::shared_ptr<Object> > sample) {
 	for (auto &&i : sample)
@@ -940,7 +950,7 @@ namespace cbl {
        * 
        *  @param seed the seed for random number generation
        *
-       *  @return an object of class Catalogue
+       *  
        */
       Catalogue (const ObjectType objectType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments=0, const double nSub=1.1, const int seed=3213);
 
@@ -959,7 +969,7 @@ namespace cbl {
        *
        *  @param seed the seed for random number generation
        *
-       *  @return an object of class Catalogue
+       *  
        */
       Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const Var var_name, const int nbin, const int seed=3213);
 
@@ -983,13 +993,12 @@ namespace cbl {
        *
        *  @param seed the seed for random number generation
        *
-       *  @return an object of class Catalogue
+       *  
        */
       Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const cbl::catalogue::Var var_name1, const int nbin1, const cbl::catalogue::Var var_name2, const int nbin2, const int seed=3213);
 
       /**
        * @brief default destructor
-       * @return none
        */
       ~Catalogue () = default;
 
@@ -1025,7 +1034,7 @@ namespace cbl {
        *
        *  @param Zguess_max maximum redshift used to search the redshift
        *
-       *  @return an object of class Catalogue
+       *  
        *
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
@@ -1079,7 +1088,7 @@ namespace cbl {
        *
        *  @param seed the seed for random number generation
        *
-       *  @return an object of class Catalogue
+       *  
        *
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
@@ -1115,7 +1124,7 @@ namespace cbl {
        *
        *  @param seed the seed for random number generation
        *
-       *  @return an object of class Catalogue
+       *  
        *
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
@@ -1150,7 +1159,7 @@ namespace cbl {
        *
        *  @param seed the seed for random number generation
        *
-       *  @return an object of class Catalogue
+       *  
        *
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
@@ -1187,7 +1196,7 @@ namespace cbl {
        *
        *  @param seed the seed for random number generation
        *
-       *  @return an object of class Catalogue
+       *  
        *
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
@@ -1229,8 +1238,6 @@ namespace cbl {
        * "not_provided" if the random catalogue is not available: a
        * new random catalogue will be created with the same objects
        * and geometry of the tracer catalogue
-       *
-       * @param dir_output path to the output directory
        *
        * @param dir_output path of the output directory where to store
        * the different reconstructions, the divergence field, the
@@ -1291,7 +1298,7 @@ namespace cbl {
        * initial void, other cells with negative divergence will be
        * added later
        *
-       * @return none
+       * 
        */
       Catalogue (const VoidAlgorithm algorithm, const Catalogue tracer_catalogue, const double nSub, const std::vector<std::string> random_catalogue_vector, const std::string dir_output, const std::string output, const double r_max, const double cellsize, const int n_rec=1, const int n_iter=1, const bool swapping=true, const bool add_unpaired=true, const double convergence_fact=1., const double step_size=0.9, const double gaussian_smoothing=1., const double protovoid_distance=2.);
       
@@ -1335,7 +1342,7 @@ namespace cbl {
        *  (valid criteria: Var::_DensityContrast_,
        *  Var::_CentralDensity_)
        * 
-       *  @return an object of class Catalogue
+       *  
        */
       Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
 
@@ -1383,7 +1390,7 @@ namespace cbl {
        *  (valid criteria: Var::_DensityContrast_,
        *  Var::_CentralDensity_)
        * 
-       *  @return an object of class Catalogue
+       *  
        */
       Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const double Volume, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
 
@@ -1435,7 +1442,7 @@ namespace cbl {
        *  (valid criteria: Var::_DensityContrast_,
        *  Var::_CentralDensity_)
        * 
-       *  @return an object of class Catalogue
+       *  
        */
       Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const std::vector<double> par_numdensity, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
       
@@ -1473,7 +1480,7 @@ namespace cbl {
        *  "ALL" = read all the components positions, else select one of the following:
        *  "Gas", "Halo", "Disk", "Bulge", "Stars", "Boundary".
        *
-       *  @return object of type catalogue
+       *  
        */
       Catalogue (const ObjectType objectType, const std::string file_cn=par::defaultString, const bool snapformat=false, const bool swap=false, const double fact=0.001, const bool read_catalogue=true, const double nSub=1.1, const std::string component_to_read="ALL");
 
@@ -1511,7 +1518,7 @@ namespace cbl {
        *
        *  @param verbose true = build the catalogue verbosely, false = keep it quiet..
        *
-       *  @return object of type catalogue
+       *  
        */
       Catalogue (const int snap, const std::string basedir, const bool swap=false, const bool long_ids=false, const double scaleFact=1.0, const double massFact=1.0, const EstimateCriterion estimate_crit=EstimateCriterion::_m200_, const bool veldisp=false, const bool masstab=false, const bool add_satellites=false, const bool verbose=false);
 
@@ -1859,7 +1866,6 @@ namespace cbl {
        * @param [out] stats 4 dimensional vector containing the mean,
        * the median, the standard deviation, and the difference between
        * the third and first quartiles of the variable
-       * @return none
        */
       void stats_var (const Var var_name, std::vector<double> & stats) const;
 
@@ -1872,7 +1878,6 @@ namespace cbl {
        * the mean, the median, the standard deviation, and the
        * difference between the third and first quartiles of the
        * variable 
-       * @return none
        */
       void stats_var (const std::vector<Var> var_name, std::vector<std::vector<double>> &stats) const;
   
@@ -1898,7 +1903,6 @@ namespace cbl {
        * gaussian function
        * @param [in] sigma &sigma;: the standard deviation of the
        * gaussian function used to convolve the distribution
-       * @return none
        */
       void var_distr (const Var var_name, std::vector<double> &_var, std::vector<double> &dist, std::vector<double> &err, const int nbin, const bool linear=true, const std::string file_out=par::defaultString, const double Volume=1., const bool norm=false, const double V1=par::defaultDouble, const double V2=par::defaultDouble, const std::string bin_type="Linear", const bool convolution=false, const double sigma=0.) const;
     
@@ -1942,22 +1946,18 @@ namespace cbl {
        * @param nRegions the total number of regions; if this parameter
        * is \f$<0\f$, its value will be set to the size of the region
        * vector
-       *
-       * @return none
        */
       void set_region (const std::vector<long> region, const int nRegions=-1);
 
       /**
        * @brief set the private variable m_nRegion
        * @param nRegions the total number of regions
-       * @return none
        */
       void set_region_number (const size_t nRegions);
 
       /**
        * @brief set a private variable
        * @param field vector containing the object fields
-       * @return none
        */
       void set_field (const std::vector<std::string> field);
       
@@ -1968,7 +1968,6 @@ namespace cbl {
        * @param value variable value       
        * @param cosmology object of class Cosmology, used to estimate
        * the comoving distance from the given redshift
-       * @return none
        */
       void set_var (const int index, const Var var_name, const double value, const cosmology::Cosmology cosmology={});
 
@@ -1977,8 +1976,7 @@ namespace cbl {
        * @param index index of the variable to set
        * @param var_name name of the variable
        * @param value variable value
-       * @param cosmology object of class Cosmology       
-       * @return none
+       * @param cosmology object of class Cosmology     
        */
       void set_var (const int index, const Var var_name, const int value, const cosmology::Cosmology cosmology={});
       
@@ -1988,7 +1986,6 @@ namespace cbl {
        * @param var vector of variables
        * @param cosmology object of class Cosmology, used to estimate
        * the comoving distance from the given redshift
-       * @return none
        */
       void set_var (const Var var_name, const std::vector<double> var, const cosmology::Cosmology cosmology={});
 
@@ -1997,7 +1994,6 @@ namespace cbl {
        * @param var_name name of the variable
        * @param var vector of variables
        * @param cosmology object of class Cosmology
-       * @return none
        */
       void set_var (const Var var_name, const std::vector<int> var, const cosmology::Cosmology cosmology={});
 
@@ -2005,7 +2001,6 @@ namespace cbl {
        *  @brief set the private member HostHalo::m_satellites
        *  @param index index of the variable to set
        *  @param satellite the vector of shared pointers to satellite objects
-       *  @return none
        */
       void set_satellite (const int index, const std::shared_ptr<Object> satellite={}) {
 	m_object[index]->set_satellite(satellite);
@@ -2015,7 +2010,6 @@ namespace cbl {
        *  @brief set the private member HostHalo::m_satellites
        *  @param index index of the variable to set
        *  @param satellites the vector of shared pointers to satellite objects
-       *  @return none
        */
       void set_satellites (const int index, const std::vector<std::shared_ptr<Object>> satellites={}) {
 	m_object[index]->set_satellites(satellites);
@@ -2038,9 +2032,7 @@ namespace cbl {
        *
        *  @param Volume the volume of the tracer catalogue in \f$ Mpc^{3} h^{-3} \f$
        *
-       *  @param ratio the ratio \f$r\f$ 
-       *
-       *  @return none
+       *  @param ratio the ratio \f$r\f$
        */
       void compute_centralDensity (const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const double Volume, const double ratio=0.1);
 
@@ -2066,8 +2058,6 @@ namespace cbl {
        *  numdensity = \f$ -0.001 \cdot z^2 + 0.005 \cdot z -0.01 \f$
        *
        *  @param ratio the ratio \f$r\f$ 
-       *
-       *  @return none
        */
       void compute_centralDensity (const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const std::vector<double> par_numdensity, const double ratio=0.1);
       
@@ -2084,8 +2074,6 @@ namespace cbl {
        *  search of close pairs
        *
        *  @param ratio the ratio \f$r\f$ used to compute the central density
-       *
-       *  @return none
        *
        *  @warning to obtain the density contrast this function computes the 
        *  central density of each void in the catalogue using the internal 
@@ -2106,14 +2094,12 @@ namespace cbl {
       /**
        * @brief add one single object to the catalogue
        * @param object pointer to an object of type \e Object
-       * @return none
        */
       void add_object (std::shared_ptr<Object> object) { m_object.push_back(move(object)); }
 
       /**
        * @brief add one single object to the catalogue
        * @param object object of type \e T
-       * @return none
        */
       template<typename T>
 	void add_object (T object) { m_object.push_back(move(std::make_shared<T>(T(object)))); }
@@ -2121,7 +2107,6 @@ namespace cbl {
       /**
        * @brief add some objects to the catalogue
        * @param sample vector of pointers to objects of type \e Object
-       * @return none
        */
       void add_objects (std::vector<std::shared_ptr<Object> > sample) { 
 	for (auto &&i : sample)
@@ -2131,7 +2116,6 @@ namespace cbl {
       /**
        * @brief add some objects to the catalogue
        * @param sample vector of objects of type \e T
-       * @return none
        */
       template<typename T>
 	void add_objects (std::vector<T> sample) { 
@@ -2142,7 +2126,6 @@ namespace cbl {
       /**
        * @brief replace existing objects with new ones 
        * @param sample vector of objects of type \e T
-       * @return none
        */
       template<typename T>
 	void replace_objects(std::vector<T> sample) {
@@ -2153,7 +2136,6 @@ namespace cbl {
       /**
        * @brief replace existing objects with new ones 
        * @param sample vector of pointers to objects of type \e Object
-       * @return none
        */
       void replace_objects (std::vector<std::shared_ptr<Object> > sample) {
 	m_object.erase(m_object.begin(), m_object.end());
@@ -2163,21 +2145,19 @@ namespace cbl {
 
       /**
        * @brief remove all objects 
-       * @return none
+       * remove all objects of the catalogue
        */
       void remove_objects () { m_object.erase(m_object.begin(), m_object.end()); }
       
       /**
        * @brief remove an existing object
        * @param index the index of the object to be removed
-       * @return none
        */
       void remove_object (const int index) { m_object.erase(m_object.begin()+index); }
       
       /**
        * @brief remove a set of existing objects
        * @param index vector of boolean variables
-       * @return none
        */
       void remove_objects (const std::vector<bool> index); 
 
@@ -2185,7 +2165,6 @@ namespace cbl {
        * @brief swap two existing objects
        * @param ind1 the index of the first object to swap
        * @param ind2 the index of the second object to swap
-       * @return none
        */
       void swap_objects (const int ind1, const int ind2);
 
@@ -2197,8 +2176,6 @@ namespace cbl {
        *
        *  @param increasing if true order from lower to higher, if
        *  false from higher to lower
-       *
-       *  @return none
        */
       void sort (const Var var_name, const bool increasing=false);
 
@@ -2206,8 +2183,6 @@ namespace cbl {
        *  @brief shuffle objects in the catalogue 
        *
        *  @param seed the seed for random number generation
-       *
-       *  @return none
        */
       void shuffle (const int seed);
       
@@ -2225,7 +2200,6 @@ namespace cbl {
        *
        *  @param cosm object of class Cosmology
        *  @param inputUnits the units of the input coordinates
-       *  @return none
        */
       void computeComovingCoordinates (const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits=CoordinateUnits::_radians_); 
 
@@ -2234,7 +2208,6 @@ namespace cbl {
        *  d<SUB>c</SUB>) from the comoving coordinates (x, y, z)
        *
        *  @param outputUnits the units of the output coordinates
-       *  @return none
        */
       void computePolarCoordinates (const CoordinateUnits outputUnits=CoordinateUnits::_radians_); 
 
@@ -2247,33 +2220,34 @@ namespace cbl {
        *  @param z1 the minimum redshift used in the computation
        *  @param z2 the maximum redshift used in the computation
        *  @param outputUnits the units of the output coordinates
-       *  @return none
        */
       void computePolarCoordinates (const cosmology::Cosmology &cosmology, const double z1=0., const double z2=10., const CoordinateUnits outputUnits=CoordinateUnits::_radians_); 
 
       /**
-       * @brief normalize (x, y, z) (i.e. &rarr; (x/dc, y/dc, z/dc))
-       * @return none
+       * @brief normalize comoving coordinates
+       *
+       * function to normalize comoving coordinates, that is it
+       * transforms (x, y, z) into (x/dc, y/dc, z/dc))
        */
       void normalizeComovingCoordinates (); 
   
       /**
-       * @brief back to (x, y, z) (i.e. the inverse of norm_xyv())
-       * @return none
+       * @brief restore comoving coordinates
+       *
+       * function to normalize comoving coordinates, that is it
+       * transforms (x/dc, y/dc, z/dc)) into (x, y, z)
        */
       void restoreComovingCoordinates ();  
 
       /**
        * @brief order the catalogue according to the input vector
        * @param vv vector used to order the catalogue
-       * @return none
        */
       void Order (const std::vector<int> vv); 
 
       /**
        * @brief restore the original vector (i.e. the opposite of
        * Order(std::vector<int>))
-       * @return none
        */
       void Order ();  
     
@@ -2281,7 +2255,6 @@ namespace cbl {
        * @brief write the comoving coordinates of the catalogue to an
        * output file
        * @param outputFile the name of the output file
-       * @return none
        */
       void write_comoving_coordinates (const std::string outputFile) const;
 
@@ -2289,7 +2262,6 @@ namespace cbl {
        * @brief write the polar coordinates of the catalogue to an
        * output file
        * @param outputFile the name of the output file
-       * @return none
        */
       void write_obs_coordinates (const std::string outputFile) const;
 
@@ -2301,8 +2273,6 @@ namespace cbl {
        *
        *  @param var_name vector containing the variable names to be
        *  written
-       *
-       *  @return none
        */
       void write_data (const std::string outputFile, const std::vector<Var> var_name={}) const;
       
@@ -2329,7 +2299,7 @@ namespace cbl {
       /**
        * @brief overloading of the += operator, to sum two catalogues
        * @param cc object of class Catalogue 
-       * @return object of class catalogue
+       * @return object of class Catalogue
        */
       Catalogue operator += (std::shared_ptr<Catalogue> cc)
       {
@@ -2341,7 +2311,7 @@ namespace cbl {
       /**
        * @brief overloading of the += operator, to sum two catalogues
        * @param cc object of class Catalogue 
-       * @return object of class catalogue
+       * @return object of class Catalogue
        */
       Catalogue operator += (const Catalogue cc)
       {
@@ -2357,7 +2327,7 @@ namespace cbl {
        *  @param up maximum variable used to cut the catalogue
        *  @param excl false &rarr; create a subcatalogue inside
        *  down-up; true &rarr; create a subcatalogue outside down-up
-       *  @return object of class catalogue
+       *  @return object of class Catalogue
        */
       Catalogue sub_catalogue (const Var var_name, const double down, const double up, const bool excl=false) const;
 
@@ -2366,7 +2336,7 @@ namespace cbl {
        *  @param mask function of type std::function<bool(shared_ptr<Object>)> to flag objects
        *  @param excl false &rarr; create a subcatalogue inside
        *  down-up; true &rarr; create a subcatalogue outside down-up
-       *  @return object of class catalogue
+       *  @return object of class Catalogue
        */
       Catalogue sub_catalogue (const mask_function mask, const bool excl=false) const;
 
@@ -2375,7 +2345,7 @@ namespace cbl {
        *  @param mask object of type cbl::catalogue::MaskObject
        *  @param excl false &rarr; create a subcatalogue inside
        *  down-up; true &rarr; create a subcatalogue outside down-up
-       *  @return object of class catalogue
+       *  @return object of class Catalogue
        */
       Catalogue sub_catalogue (const MaskObject &mask, const bool excl=false) const;
 
@@ -2385,7 +2355,7 @@ namespace cbl {
        *  @param excl false &rarr; create a subcatalogue with objects
        *  inside the mask; true &rarr; create a subcatalogue outside 
        *  the mask
-       *  @return object of class catalogue
+       *  @return object of class Catalogue
        */
       Catalogue mangle_cut (const std::string mangle_mask, const bool excl=false) const;
 
@@ -2397,7 +2367,7 @@ namespace cbl {
        *
        *  @param seed the seed for random number generation
        *
-       *  @return object of class catalogue
+       *  @return object of class Catalogue
        */
       Catalogue diluted_catalogue (const double nSub, const int seed=3213) const;
       
@@ -2414,7 +2384,7 @@ namespace cbl {
        * @param vars the vector of variable to average on
        * @param SUB the number of sub-catalogue used to create the
        * chain-mesh (use SUB>1 when there could be memory problems)
-       * @return object of class catalogue
+       * @return pointer to an object of class Catalogue
        */
       std::shared_ptr<Catalogue> smooth (const double gridsize, const cosmology::Cosmology cosmology, const std::vector<Var> vars={}, const int SUB=1);
 
@@ -2445,7 +2415,6 @@ namespace cbl {
       /**
        * @brief compute catalogue volume, number density and mean particle separation
        * @param boxside side lenght of the cubic catalogue box
-       * @return none
        */
       void compute_catalogueProperties (const double boxside=par::defaultDouble);
 

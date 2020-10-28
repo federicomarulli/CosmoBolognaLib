@@ -229,17 +229,16 @@ double cbl::modelling::numbercounts::number_counts (const double redshift_min, c
     dlnsigmaM[j] = interp_DlnsigmaM(MM[j]*fact);
   }
 
-  double nc =0;
+  double nc = 0.;
 
-  for(int i=0; i<npt_redshift; i++) {
+  for (int i=0; i<npt_redshift; i++) {
     double zz = redshift_min+(i+0.5)*deltaz;
     double _Delta = (isDelta_vir) ? cosmology.Delta_vir(Delta, zz) : Delta;
     double dV_dZ = Area*cosmology.dV_dZdOmega(zz, true);
 
     double Int = 0;
-
     for (int j=0; j<npt_mass; j++) 
-      Int +=cosmology.mass_function(MM[j], sigmaM[j], dlnsigmaM[j], zz, model_MF, store_output, cbl::par::defaultString, _Delta)*deltaM[j]*dV_dZ;
+      Int += cosmology.mass_function(MM[j], sigmaM[j], dlnsigmaM[j], zz, model_MF, store_output, cbl::par::defaultString, _Delta)*deltaM[j]*dV_dZ;
     nc += Int*deltaz;
 
   }
@@ -270,10 +269,10 @@ double cbl::modelling::numbercounts::number_counts (const double redshift_min, c
 
 // ===========================================================================================
 
-std::vector<double> cbl::modelling::numbercounts::size_function (cbl::cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
+std::vector<double> cbl::modelling::numbercounts::size_function (cbl::cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const double k_Pk_ratio, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
 {
   
-  vector<double> size_function = cosmology.size_function(radii, redshift, model, b_eff, slope, offset, deltav_NL, del_c, method_Pk, store_output, output_root, interpType, k_max, input_file, is_parameter_file);
+  vector<double> size_function = cosmology.size_function(radii, redshift, model, b_eff, slope, offset, deltav_NL, del_c, method_Pk, k_Pk_ratio, store_output, output_root, interpType, k_max, input_file, is_parameter_file);
 
   return size_function;
   

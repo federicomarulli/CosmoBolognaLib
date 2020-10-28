@@ -105,7 +105,7 @@ namespace cbl {
     
       /**
        *  @brief default constructor
-       *  @return object of class ChainMesh
+       *  
        */
       ChainMesh () {}
 
@@ -113,13 +113,12 @@ namespace cbl {
        *  @brief constructor 
        *  @param cell_size double storing the cell size
        *  @param nDim the number of dimensions
-       *  @return object of class ChainMesh
+       *  
        */
       ChainMesh (const double cell_size, const long nDim);
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~ChainMesh () {}
 
@@ -127,7 +126,6 @@ namespace cbl {
        *  @brief function that set parameters for the chain-mesh 
        *  @param cell_size double storing the cell size
        *  @param nDim the number of dimensions
-       *  @return none
        */
       void set_par (const double cell_size, const long nDim);
 
@@ -168,7 +166,6 @@ namespace cbl {
        * @param index the unique index 
        * @param nn the number of cells along the box axis
        * @param indx vector of the indices of the nD space cell
-       * @return none
        */  
       void index_to_inds (const long index, const std::vector<long> nn, std::vector<long> &indx) const;
 
@@ -178,14 +175,12 @@ namespace cbl {
        * @param rMax the maximum radius, to set the interal variable m_search_region
        * @param nMIN minimum number of cells
        * @param nMAX maximum number of cells
-       * @return none
        */
       void create_chain_mesh (const std::vector<std::vector<double> > data, const double rMax, const long nMIN=10, const long nMAX=300);
   
       /**
        * @brief create the chain mesh
        * @param data the vector containing the coordinate of the object
-       * @return none
        */
       void create_chain_mesh_m2 (const std::vector<std::vector<double> > data);
 
@@ -194,7 +189,6 @@ namespace cbl {
        * of cell around a generic center
        * @param r_max the maximum radius
        * @param r_min the minimum radius
-       * @return none
        */
       void get_searching_region (const double r_max, const double r_min = -1);
 
@@ -236,13 +230,12 @@ namespace cbl {
     public:
       /**
        *  @brief default constructor
-       *  @return an object of class ChainMesh1D
+       *  
        */
       ChainMesh1D () {}
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~ChainMesh1D () {}
 
@@ -253,7 +246,6 @@ namespace cbl {
        *  @param rMAX the maximum separation
        *  @param nMIN the allowed minimum number of chain-mesh cells in each dimension 
        *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
-       *  @return none
        */
       void set_par (const double cell_size, const std::vector<double> xx, const double rMAX, const long nMIN=0, const long nMAX=300);
 
@@ -264,7 +256,7 @@ namespace cbl {
        *  @param rMAX the maximum separation
        *  @param nMIN the allowed minimum number of chain-mesh cells in each dimension 
        *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
-       *  @return object of the class ChainMesh1D
+       *  
        */
       ChainMesh1D (const double cell_size, const std::vector<double> xx, const double rMAX, const long nMIN=0, const long nMAX=300);
     };
@@ -282,13 +274,12 @@ namespace cbl {
     public:
       /**
        *  @brief default constructor
-       *  @return object of class ChainMesh1D
+       *  1D
        */
       ChainMesh2D () {}
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~ChainMesh2D () {}
 
@@ -300,7 +291,6 @@ namespace cbl {
        *  @param rMAX the maximum separation
        *  @param nMIN the allowed minimum number of chain-mesh cells in each dimension 
        *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
-       *  @return none
        */
       void set_par (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const double rMAX, const long nMIN=0, const long nMAX=300);
 
@@ -312,7 +302,7 @@ namespace cbl {
        *  @param rMAX the maximum separation
        *  @param nMIN the allowed minimum number of chain-mesh cells in each dimension 
        *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension 
-       *  @return object of the class ChainMesh2D
+       *  
        */
       ChainMesh2D (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const double rMAX, const long nMIN=0, const long nMAX=300);
     };
@@ -331,13 +321,12 @@ namespace cbl {
     
       /**
        *  @brief default constructor
-       *  @return an object of class ChainMesh3D
+       *  
        */
       ChainMesh3D () {}
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~ChainMesh3D () {}
 
@@ -352,7 +341,6 @@ namespace cbl {
        *  in each dimension
        *  @param nMAX the allowed maximum number of chain-mesh cells
        *  in each dimension
-       *  @return none
        */
       void set_par (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const double rMAX, const long nMIN=0, const long nMAX=300);
 
@@ -367,7 +355,7 @@ namespace cbl {
        *  in each dimension
        *  @param nMAX the allowed maximum number of chain-mesh cells
        *  in each dimension
-       *  @return object of the class ChainMesh3D
+       *  
        */
       ChainMesh3D (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const double rMAX, const long nMIN=0, const long nMAX=300);
     };

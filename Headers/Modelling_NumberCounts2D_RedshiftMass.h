@@ -78,14 +78,14 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class Modelling_NumberCounts2D_RedshiftMass
+	 *  _NumberCounts2D_RedshiftMass
 	 */
 	Modelling_NumberCounts2D_RedshiftMass () = default;
 	
 	/**
 	 *  @brief constuctor
 	 *  @param nc the number counts to model
-	 *  @return object of class Modelling_NumberCounts2D_RedshiftMass
+	 *  _NumberCounts2D_RedshiftMass
 	 */
 	Modelling_NumberCounts2D_RedshiftMass (const std::shared_ptr<cbl::measure::numbercounts::NumberCounts> nc) 
 	  : Modelling_NumberCounts2D (nc) {}
@@ -96,14 +96,14 @@ namespace cbl {
 	 *  @param hist_type the histogram type
 	 *  @param fact the normalization factor
 	 *
-	 *  @return object of class Modelling_NumberCounts2D_RedshiftMass
+	 *  _NumberCounts2D_RedshiftMass
 	 */
 	Modelling_NumberCounts2D_RedshiftMass (const std::shared_ptr<cbl::data::Data> dataset, glob::HistogramType hist_type, double fact)
 	  : Modelling_NumberCounts2D (dataset, hist_type, fact) {}
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_NumberCounts2D_RedshiftMass () = default;
 
@@ -126,7 +126,7 @@ namespace cbl {
 	 *  @param cosmo_param_prior vector containing the priors for
 	 *  the cosmological parameters
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
 	///@}

@@ -111,7 +111,6 @@ namespace cbl {
       /**
        *  @brief set the data type 
        *  @param dataType the data type
-       *  @return none
        */
       void set_dataType (const DataType dataType) { m_dataType = dataType; } 
 
@@ -125,7 +124,7 @@ namespace cbl {
       /**
        *  @brief default constructor
        *
-       *  @return an object of class Data
+       *  
        */
       Data () = default;
       
@@ -134,7 +133,7 @@ namespace cbl {
        *
        *  @param dataType the data type
        *
-       *  @return an object of class Data
+       *  
        */
       Data (const DataType dataType) : m_dataType(dataType) {}
 
@@ -146,7 +145,7 @@ namespace cbl {
        *
        *  @param ndata the number of data
        *
-       *  @return an object of class Data
+       *  
        */
       Data (const DataType dataType, const int ndata)
 	: m_dataType(dataType)
@@ -159,7 +158,7 @@ namespace cbl {
        *
        *  @param data vector containing the data
        *
-       *  @return an object of class Data
+       *  
        */
       Data (const DataType dataType, const std::vector<double> data); 
 
@@ -173,7 +172,7 @@ namespace cbl {
        *
        *  @param error vector containing the errors
        *
-       *  @return an object of class Data
+       *  
        */
       Data (const DataType dataType, const std::vector<double> data, const std::vector<double> error);
 
@@ -187,13 +186,12 @@ namespace cbl {
        *
        *  @param covariance matrix containing the covariance
        *
-       *  @return an object of class Data
+       *  
        */
       Data (const DataType dataType, const std::vector<double> data, const std::vector<std::vector<double>> covariance);
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       virtual ~Data () = default;
 
@@ -256,8 +254,6 @@ namespace cbl {
        *  to store ndata data
        *
        *  @param ndata the new number of data
-       *
-       *  @return none
        */
       void reset (const int ndata);
 
@@ -345,7 +341,8 @@ namespace cbl {
       /**
        *  @brief get data for Data1D
        *  @param [out] data std::vector containing the dataset
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void get_data (std::vector<double> &data) const
       { (void)data; ErrorCBL("", "data", "Data.h"); }
@@ -406,7 +403,8 @@ namespace cbl {
       /**
        *  @brief get data for Data1D_collection, Data2D
        *  @param [out] data std::vector containing the dataset
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void get_data (std::vector<std::vector<double>> &data) const
       { (void)data; ErrorCBL("", "data", "Data.h"); }
@@ -423,7 +421,8 @@ namespace cbl {
       /**
        *  @brief get standard deviation for Data1D
        *  @param [out] error std::vector containing the staandard deviation
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void get_error (std::vector<double> &error) const
       { (void)error; ErrorCBL("", "error", "Data.h"); }
@@ -431,7 +430,8 @@ namespace cbl {
       /**
        *  @brief get standard deviation for Data1D_Collection, Data2D
        *  @param [out] error std::vector containing the staandard deviation
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void get_error (std::vector<std::vector<double>> &error) const
       { (void)error; ErrorCBL("", "error", "Data.h"); }
@@ -462,7 +462,8 @@ namespace cbl {
       /**
        *  @brief set interval variable m_x
        *  @param x std::vector containing x points
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_xx (const std::vector<double> x)
       { (void)x; ErrorCBL("", "set_xx", "Data.h"); }
@@ -470,7 +471,8 @@ namespace cbl {
       /**
        *  @brief set interval variable m_y, for Data2D
        *  @param y std::vector containing y points
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_yy (const std::vector<double> y)
       { (void)y; ErrorCBL("", "set_yy", "Data.h"); }
@@ -480,7 +482,8 @@ namespace cbl {
        *  for Data1D_collection
        *  @param i index to the i-th dataset
        *  @param x std::vector containing x points
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_xx (const int i, const std::vector<double> x) 
       { (void)i; (void)x; ErrorCBL("", "set_xx", "Data.h"); }
@@ -488,7 +491,8 @@ namespace cbl {
       /**
        *  @brief set interval variable m_x, for Data1D_collection
        *  @param x std::vector containing x points
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_xx (const std::vector<std::vector<double>> x)
       { (void)x; ErrorCBL("", "set_xx", "Data.h"); }
@@ -497,7 +501,8 @@ namespace cbl {
        *  @brief set interval variable m_data, for Data1D_collection,
        *  Data2D
        *  @param data std::vector containing data points 
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_data (const std::vector<std::vector<double>> data) 
       { (void)data; ErrorCBL("", "set_data", "Data.h"); }
@@ -506,7 +511,8 @@ namespace cbl {
        *  @brief set interval variable m_error_fx
        *  @param extra_info std::vector containing std::vectors with extra
        *  information
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_extra_info (const std::vector<std::vector<double>> extra_info)
       { (void)extra_info; ErrorCBL("", "set_extra_info", "Data.h"); }
@@ -514,21 +520,18 @@ namespace cbl {
       /**
        *  @brief set interval variable data
        *  @param data std::vector containing data points 
-       *  @return none
        */
       void set_data (const std::vector<double> data);
 
       /**
        *  @brief set interval variable m_error_fx
        *  @param error std::vector containing data standard deviation
-       *  @return none
        */
       void set_error (const std::vector<double> error);
 
       /**
        *  @brief set interval variable m_error_fx
        *  @param covariance std::vector containing the covariance matrix
-       *  @return none
        */
       void set_error (const std::vector<std::vector<double>> covariance);
 
@@ -544,8 +547,6 @@ namespace cbl {
        *  @param cov_col covariance matrix column, starting from 0
        *
        *  @param skipped_lines comment lines to be skipped
-       *
-       *  @return none
        */
       void set_covariance (const std::string filename, const int cov_col=2, const int skipped_lines=0);
 
@@ -554,21 +555,18 @@ namespace cbl {
        *  @param value covariance matrix value
        *  @param i the first index 
        *  @param j the second index 
-       *  @return none
        */
       void set_covariance (const double value, const int i, const int j) { m_covariance[i][j] = value; }
 
       /**
        *  @brief set interval the variable m_covariance
        *  @param covariance std::vector containing the covariance matrix
-       *  @return none
        */
       void set_covariance (const std::vector<std::vector<double>> covariance);
 
       /**
        *  @brief set interval the variable m_covariance
        *  @param error std::vector containing the data standard deviation
-       *  @return none
        */
       void set_covariance (const std::vector<double> error);
       
@@ -655,7 +653,8 @@ namespace cbl {
        *  if the input file has only 2 columns, the errors will be set
        *  to 1
        *
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void read (const std::string input_file, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={})
       { (void)input_file; (void)skip_nlines; (void)column_x, (void)column_data, (void)column_errors, ErrorCBL("", "read", "Data.h"); }
@@ -690,7 +689,8 @@ namespace cbl {
        *  if the input file has only 2 columns, the errors will be set
        *  to 1
        *
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void read (const std::vector<std::string> input_file, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={})
       { (void)input_file; (void)skip_nlines; (void)column_x, (void)column_data, (void)column_errors, ErrorCBL("", "read", "Data.h"); }
@@ -700,7 +700,8 @@ namespace cbl {
        *
        *  @param prec the float precision
        *
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void Print (const int prec=4) const 
       { (void)prec; ErrorCBL("", "Print", "Data.h"); }
@@ -714,7 +715,9 @@ namespace cbl {
        *  @param prec the float precision
        *  @param ww number of characters to be used as field width
        *  @param rank cpu index (for MPI usage)
-       *  @return none
+       *
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void write (const std::string dir, const std::string file, const std::string header, const int prec=4, const int ww=8, const int rank=0) const 
       { (void)dir; (void)file; (void)header; (void)prec; (void)ww; (void)rank; ErrorCBL("", "write", "Data.h"); }
@@ -731,7 +734,8 @@ namespace cbl {
        *  @param prec the float precision
        *  @param ww number of characters to be used as field width
        *  @param rank cpu index (for MPI usage)
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void write (const std::string dir, const std::string file, const std::string header, const bool full, const int prec=10, const int ww=8, const int rank=0) const
       { (void)dir; (void)file; (void)header; (void)full; (void)prec; (void)ww; (void)rank; ErrorCBL("", "write", "Data.h"); }
@@ -745,7 +749,8 @@ namespace cbl {
        *  @param prec the float precision
        *  @param ww number of characters to be used as field width
        *  @param rank cpu index (for MPI usage)
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void write (const std::string dir, const std::vector<std::string> files, const std::string header, const int prec=10, const int ww=8, const int rank=0) const
       { (void)dir; (void)files; (void)header; (void)prec; (void)ww; (void)rank; ErrorCBL("", "write", "Data.h"); }
@@ -755,7 +760,8 @@ namespace cbl {
        *  @param dir the output directory
        *  @param file the output file
        *  @param precision the float precision
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void write_covariance (const std::string dir, const std::string file, const int precision=10) const
       { (void)dir; (void)file; (void)precision; ErrorCBL("", "write_covariance", "Data.h"); }
@@ -775,7 +781,6 @@ namespace cbl {
        *  @param [out] data std::vector containing data
        *  @param [out] error std::vector containing data standard deviations
        *  @param [out] covariance_matrix std::vector containing data covariance matrix
-       *  @return none
        */
       void cut(const std::vector<bool> mask, std::vector<double> &data, std::vector<double> &error, std::vector<std::vector<double>> &covariance_matrix) const;
 

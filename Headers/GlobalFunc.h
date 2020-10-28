@@ -53,7 +53,7 @@ namespace cbl {
    *  @brief overloading of the + operator, to sum two catalogues
    *  @param c1 object of class Catalogue
    *  @param c2 object of class Catalogue
-   *  @return object of class catalogue
+   *  @return the result of the + operator 
    */
   inline catalogue::Catalogue operator + (const catalogue::Catalogue &c1, const catalogue::Catalogue &c2)
     {
@@ -113,8 +113,6 @@ namespace cbl {
    *  the output smoothed distribution
    *
    *  @param [in] seed the random seed
-   *
-   *  @return none
    */
   void Vmax_DC_distribution (std::vector<double> &dc, std::vector<double> &nObj, const std::vector<double> D_C, const std::vector<double> zobj_min, const std::vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, cosmology::Cosmology &cosm, const double Area, const int nObjRan, const bool norm=1, const std::string file_Vmax=par::defaultString, const double delta_dc_Vmax=100., const int seed=3213);
 
@@ -192,8 +190,6 @@ namespace cbl {
    *
    *  @param [out] rM_AP the maximum value of the comoving distance
    *  over all the test cosmologies cosm2
-   * 
-   *  @return none
    */
   void max_separations_AP (const double Rp_max, const double Pi_max, const double redshift, const cosmology::Cosmology &cosm1, const std::vector<cosmology::Cosmology> &cosm2, double &rpM_AP, double &piM_AP, double &rM_AP);
 
@@ -271,7 +267,6 @@ namespace cbl {
    *  @param [in] real_cosm an object of class Cosmology
    *  @param [out] redshift_min the minimum redshift
    *  @param [out] redshift_max the maximum redshift
-   *  @return none
    */
   void redshift_range (const double mean_redshift, const double boxSide, cosmology::Cosmology &real_cosm, double &redshift_min, double &redshift_max); 
 
@@ -330,8 +325,6 @@ namespace cbl {
    *  @param[in] redshift_max the maximum redshift
    *
    *  @param[in] seed the random seed
-   *
-   *  @return none
    */
   void coord_zSpace (std::vector<double> &ra, std::vector<double> &dec, std::vector<double> &redshift, std::vector<double> &xx, std::vector<double> &yy, std::vector<double> &zz, const std::vector<double> vx, const std::vector<double> vy, const std::vector<double> vz, const double sigmaV, cosmology::Cosmology &real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int seed=3213);
 
@@ -384,8 +377,6 @@ namespace cbl {
    *  @param [in] idum the random seed
    *
    *  @param [out] Volume the mock volume
-   *
-   *  @return none
    */
   void create_mocks (const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const std::vector<double> vx, const std::vector<double> vy, const std::vector<double> vz, const std::vector<double> var1, const std::vector<double> var2, const std::vector<double> var3, const std::string output_dir, const double boxSize, const int frac, const double Bord, const double mean_redshift, cosmology::Cosmology &real_cosm, const int REAL, const double sigmaV, const int idum, double &Volume);
 
@@ -395,7 +386,6 @@ namespace cbl {
    *  @param nx side fraction used to divide the box in the x direction 
    *  @param ny side fraction used to divide the box in the y direction 
    *  @param nz side fraction used to divide the box in the z direction 
-   *  @return none
    */
   void set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, const int nx, const int ny, const int nz);
 
@@ -404,7 +394,6 @@ namespace cbl {
    *  @param data input data catalogue
    *  @param nSamples number of sub-regions
    *  @param polygonfile name of the input file with polygons
-   *  @return none
    */
   void set_ObjectRegion_mangle (catalogue::Catalogue &data, const int nSamples, const std::string polygonfile);
 
@@ -415,7 +404,6 @@ namespace cbl {
    *  @param nx side fraction used to divide the box in the x direction 
    *  @param ny side fraction used to divide the box in the y direction 
    *  @param nz side fraction used to divide the box in the z direction 
-   *  @return none
    */
   void set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nx, const int ny, const int nz);
 
@@ -448,8 +436,6 @@ namespace cbl {
    *  of the declination. This implies that the number of cells in the
    *  declination axis will not correspond to a constant spacing in
    *  \f$\delta\f$.
-   *
-   *  @return none
    */
   void set_ObjectRegion_RaDec (catalogue::Catalogue &data, const int nCells_Ra, const int nCells_Dec, const bool use_colatitude=true);
 
@@ -475,8 +461,6 @@ namespace cbl {
    *  of the declination. This implies that the number of cells in the
    *  declination axis will not correspond to a constant spacing in
    *  \f$\delta\f$.
-   *
-   *  @return none
    */
   void set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nCells_Ra, const int nCells_Dec, const bool use_colatitude=true);
 
@@ -486,7 +470,6 @@ namespace cbl {
    *  @param random random catalogue
    *  @param nSamples number of sub-regions
    *  @param polygonfile name of the input file with polygons
-   *  @return none
    */
   void set_ObjectRegion_mangle (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nSamples, const std::string polygonfile);
 
@@ -494,7 +477,6 @@ namespace cbl {
    *  @brief set the object region in SDSS stripes
    *  @param data input data catalogue
    *  @param random random catalogue
-   *  @return none
    */
   void set_ObjectRegion_SDSS_stripes (catalogue::Catalogue &data, catalogue::Catalogue &random);
 
@@ -502,7 +484,6 @@ namespace cbl {
    *  @brief check if the subdivision process produced the correct results
    *  @param data input data catalogue
    *  @param random random catalogue
-   *  @return none
    */
   void check_regions (catalogue::Catalogue &data, catalogue::Catalogue &random);
 
@@ -537,13 +518,11 @@ namespace cbl {
    * @param smoothing_radius the smoothing radius for density field
    * computation
    *
-   * @param interpolation_type 0 \f$ \rightarrow \f$ compute density 
-   * field using Nearest Grid Point (NGP) method; 0 \f$ \rightarrow \f$ 
-   * compute density field using Cloud-in-cell (CIC) method;
-   *
-   * @return none
+   * @param interpolation_type 0 \f$ \rightarrow \f$ compute density
+   * field using Nearest Grid Point (NGP) method; 0 \f$ \rightarrow
+   * \f$ compute density field using Cloud-in-cell (CIC) method
    */
-  void reconstruction_fourier_space(const catalogue::Catalogue data, const catalogue::Catalogue random, const bool random_RSD, const cosmology::Cosmology cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type=0);
+  void reconstruction_fourier_space (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool random_RSD, const cosmology::Cosmology cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type=0);
 
   /**
    * @brief return a sample with objects displaced, according to the

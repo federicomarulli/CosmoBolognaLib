@@ -72,8 +72,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class
-	 *  Modelling_TwoPointCorrelation2D_polar
 	 */
 	Modelling_TwoPointCorrelation2D_polar () = default;
 
@@ -81,9 +79,6 @@ namespace cbl {
 	 *  @brief constructor
 	 *  
 	 *  @param twop the two-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation2D_polar
 	 */
 	Modelling_TwoPointCorrelation2D_polar (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
 	  : Modelling_TwoPointCorrelation2D(twop) {}
@@ -93,16 +88,13 @@ namespace cbl {
 	 *  
 	 *  @param twop_dataset the dataset containing the two-point
 	 *  correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation_monopole
 	 */
 	Modelling_TwoPointCorrelation2D_polar (const std::shared_ptr<data::Data> twop_dataset)
 	  : Modelling_TwoPointCorrelation2D() { set_data(twop_dataset); }
       
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_TwoPointCorrelation2D_polar () = default;
 	

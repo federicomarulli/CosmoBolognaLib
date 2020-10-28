@@ -83,7 +83,7 @@ namespace cbl {
 	 *
 	 * @param seed the seed
 	 *
-	 * @return none
+	 * 
 	 */
 	void m_set_seed (const int seed);
 
@@ -104,7 +104,7 @@ namespace cbl {
 	/**
 	 *  @brief default constructor
 	 *
-	 *  @return object of class Posterior
+	 *  
 	 */
 	Posterior () = default;
 
@@ -119,7 +119,7 @@ namespace cbl {
 	 *  @param seed general seed for prior/posterior distribution
 	 *  and sampler
 	 *
-	 *  @return object of class Posterior
+	 *  
 	 */
 	Posterior (const std::vector<std::shared_ptr<PriorDistribution>> prior_distributions, const Likelihood &likelihood, const int seed=5341);
 
@@ -144,14 +144,14 @@ namespace cbl {
 	 *  @param seed general seed for prior/posterior distribution
 	 *  and sampler
 	 *
-	 *  @return object of class Posterior
+	 *  
 	 */
 	Posterior (const std::vector<std::shared_ptr<PriorDistribution>> prior_distributions, const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const LikelihoodType likelihood_type, const std::vector<size_t> x_index, const int w_index, const int seed=5341);
 
 	/**
 	 *  @brief default destructor
 	 *
-	 *  @return none
+	 *  
 	 */
 	~Posterior () = default;
 
@@ -218,7 +218,7 @@ namespace cbl {
 	 *
 	 * @param model_parameters parameters of the model
 	 *
-	 * @return none
+	 * 
 	 */
 	void set_model (std::shared_ptr<Model> model=NULL, const std::shared_ptr<ModelParameters> model_parameters=NULL);
 
@@ -242,7 +242,7 @@ namespace cbl {
 	 *
 	 * @param seed the seed
 	 *
-	 * @return none
+	 * 
 	 */
 	void set (const std::vector<std::shared_ptr<PriorDistribution>> prior_distributions, const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const LikelihoodType likelihood_type, const std::vector<size_t> x_index, const int w_index, const int seed);
 
@@ -277,7 +277,7 @@ namespace cbl {
 	 *
 	 *  @param epsilon the simplex side
 	 *
-	 *  @return none
+	 *  
 	 */
 	void maximize (const std::vector<double> start, const std::vector<std::vector<double>> parameter_limits, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3)
 	{ (void)start; (void)parameter_limits; (void)max_iter; (void)tol; (void)epsilon; ErrorCBL("the method is used without parameter_ranges!", "maximize", "Posterior.h"); }
@@ -295,7 +295,7 @@ namespace cbl {
 	 *  
 	 *  @param epsilon the simplex side
 	 *
-	 *  @return none
+	 *  
 	 */
 	void maximize (const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-4);
 
@@ -311,7 +311,7 @@ namespace cbl {
 	 * @param n_walkers the number of parallel
 	 * chains
 	 *
-	 * @return none
+	 * 
 	 */
 	void initialize_chains (const int chain_size, const int n_walkers);
 
@@ -343,7 +343,7 @@ namespace cbl {
 	 *
 	 * @param epsilon the simplex side
 	 *
-	 * @return none
+	 * 
 	 */
 	void initialize_chains (const int chain_size, const int n_walkers, const double radius, const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3);
 
@@ -365,7 +365,7 @@ namespace cbl {
 	 *
 	 * @param radius radius of the ball in the parameter space
 	 *
-	 * @return none
+	 * 
 	 */
 	void initialize_chains (const int chain_size, const int n_walkers, std::vector<double> &value, const double radius);
 
@@ -380,7 +380,7 @@ namespace cbl {
 	 * @param chain_value matrix of size (n_walkers,
 	 * n_parameters), starting values of the chain
 	 *
-	 * @return none
+	 * 
 	 */
 	void initialize_chains (const int chain_size, const std::vector<std::vector<double>> chain_value);
 
@@ -400,7 +400,7 @@ namespace cbl {
 	 *
 	 * @param input_file the input file
 	 *
-	 * @return none
+	 * 
 	 */
 	void initialize_chains (const int chain_size, const int n_walkers, const std::string input_dir, const std::string input_file);
 
@@ -431,7 +431,7 @@ namespace cbl {
 	 *  @param nbins the number of bins to estimate the posterior
 	 *  distribution, used to assess its properties 
 	 *
-	 *  @return none
+	 *  
 	 *
 	 *  @warning if parallel is set true, than pointers cannot be
 	 *  used inside the posterior function
@@ -474,7 +474,7 @@ namespace cbl {
 	 *
 	 * @warning column is used only for ASCII chain files
 	 *
-	 * @return none
+	 * 
 	 */
 	void importance_sampling (const std::string input_dir, const std::string input_file, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false, const bool apply_to_likelihood=false, const int n_walkers=100);
 
@@ -496,7 +496,7 @@ namespace cbl {
 	 * the input file is FITS; false \f$\rightarrow\f$ the format
 	 * of the input file is ASCII
 	 *
-	 * @return none
+	 * 
 	 */
 	void read_chain (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false);
 	
@@ -514,7 +514,7 @@ namespace cbl {
 	 * @param header_lines_to_skip the lines to be skipped in the
 	 * chain file
 	 *
-	 * @return none
+	 * 
 	 */
 	void read_chain_ascii (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column={}, const int header_lines_to_skip=1);
 
@@ -529,7 +529,7 @@ namespace cbl {
 	 *
 	 * @param column the columns of the input file to be read.
 	 *
-	 * @return none
+	 * 
 	 */
 	void read_chain_fits (const std::string input_dir, const std::string input_file, const int n_walkers, const std::vector<size_t> column);
 
@@ -555,7 +555,7 @@ namespace cbl {
 	 *
 	 * @warning column only work for ascii chain file
 	 *
-	 * @return none
+	 * 
 	 */
 	void write_chain (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1, const bool is_FITS_format=false, const int prec=5, const int ww=14);
 	
@@ -575,7 +575,7 @@ namespace cbl {
 	 *
 	 * @param ww number of characters to be used as field width
 	 *
-	 * @return none
+	 * 
 	 */
 	void write_chain_ascii (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1, const int prec=5, const int ww=14);
 
@@ -591,7 +591,7 @@ namespace cbl {
 	 *
 	 * @param thin the step used for dilution
 	 *
-	 * @return none
+	 * 
 	 */
 	void write_chain_fits (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1);
 
@@ -603,7 +603,7 @@ namespace cbl {
 	 *
 	 * @param root_file the root of the output file to be written
 	 *
-	 * @return none
+	 * 
 	 */
 	void write_maximization_results (const std::string output_dir, const std::string root_file);
 
@@ -649,7 +649,7 @@ namespace cbl {
 	 * @param nb number of data measurements, e.g. the bins of the
 	 * dataset
 	 *
-	 * @return none
+	 * 
 	 */
 	void show_results (const int start, const int thin, const int nbins=50, const bool show_mode=false, const int ns=-1, const int nb=-1);
 
@@ -707,7 +707,7 @@ namespace cbl {
 	 * @param nb number of data measurements, e.g. the bins of the
 	 * dataset
 	 *
-	 * @return none
+	 * 
 	 */
 	void write_results (const std::string output_dir, const std::string root_file, const int start=0, const int thin=1, const int nbins=50, const bool fits=false, const bool compute_mode=false, const int ns=-1, const int nb=-1);
 
@@ -727,7 +727,7 @@ namespace cbl {
 	 *
 	 * @param thin the step used for dilution on screen
 	 *
-	 * @return none
+	 * 
 	 */
 	void write_model_from_chain (const std::string output_dir, const std::string output_file, const std::vector<double> xx={}, const std::vector<double> yy={}, const int start=0, const int thin=1);
     };

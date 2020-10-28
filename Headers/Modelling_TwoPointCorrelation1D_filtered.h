@@ -71,8 +71,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class
-	 *  Modelling_TwoPointCorrelation1D_filtered
 	 */
 	Modelling_TwoPointCorrelation1D_filtered () = default;
 
@@ -80,9 +78,6 @@ namespace cbl {
 	 *  @brief constructor
 	 *  
 	 *  @param twop the two-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation1D_filtered
 	 */
 	Modelling_TwoPointCorrelation1D_filtered (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
 	  : Modelling_TwoPointCorrelation1D_monopole(twop) {}
@@ -92,16 +87,12 @@ namespace cbl {
 	 *  
 	 *  @param twop_dataset the dataset containing the two-point
 	 *  correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation1D_filtered
 	 */
 	Modelling_TwoPointCorrelation1D_filtered (const std::shared_ptr<data::Data> twop_dataset)
 	  : Modelling_TwoPointCorrelation1D_monopole() { set_data(twop_dataset); }
       
 	/**
 	 *  @brief default destructor
-	 *  @return none
 	 */
 	virtual ~Modelling_TwoPointCorrelation1D_filtered () = default;
 	

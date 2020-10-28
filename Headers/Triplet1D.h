@@ -70,7 +70,9 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters
-       *  @return none
+       * 
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_parameters () = 0;
   
@@ -120,9 +122,7 @@ namespace cbl {
       ///@{
 
       /**
-       *  @brief default constructor
-       *  @return object of class Triplet1D, with protected
-       *  members set to -1
+       *  @brief default constructor 
        */
       Triplet1D () 
 	: m_r12(-1), m_r12_binSize(-1), m_r13(-1), m_r13_binSize(-1), m_nbins(-1), m_binSize(-1)
@@ -135,7 +135,6 @@ namespace cbl {
        *  @param r13 the size of r<SUB>13</SUB>
        *  @param r13_binSize the size of r<SUB>13</SUB> bin
        *  @param nbins the number of bins
-       *  @return object of class Triplet1D
        */
       Triplet1D (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
 	: m_r12(r12), m_r12_binSize(r12_binSize), m_r13(r13), m_r13_binSize(r13_binSize) , m_nbins(nbins)
@@ -143,7 +142,7 @@ namespace cbl {
 
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Triplet1D () = default;
       
@@ -229,7 +228,7 @@ namespace cbl {
        *  @brief set the member m_TT1D[i]
        *  @param i the bin index
        *  @param tt the number of triplets in the bin
-       *  @return none
+       *  
        */
       void set_TT1D (const int i, const double tt) { checkDim(m_TT1D, i, "m_TT1D"); m_TT1D[i] = tt; }
 
@@ -238,7 +237,7 @@ namespace cbl {
        *  the number of triplets
        *  @param i the bin index
        *  @param tt the number of triplets in the bin
-       *  @return none
+       *  
        */
       void add_TT1D (const int i, const double tt) { checkDim(m_TT1D, i, "m_TT1D"); m_TT1D[i] += tt; }
       
@@ -254,7 +253,7 @@ namespace cbl {
        *  @brief sum the number of triplets
        *  @param tt pointer to an object of class Triplet
        *  @param ww the weight
-       *  @return none
+       *  
        */
       void Sum (const std::shared_ptr<Triplet> tt, const double ww=1) override;
 
@@ -288,7 +287,9 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters
-       *  @return none
+       *  
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_parameters () = 0;
   
@@ -304,7 +305,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Triplet1D_comoving
        */
       Triplet1D_comoving () = default;
                                                                 
@@ -315,14 +315,13 @@ namespace cbl {
        *  @param r13 the size of r<SUB>13</SUB>
        *  @param r13_binSize the size of r<SUB>13</SUB> bin
        *  @param nbins the number of bins
-       *  @return object of class Triplet1D_comoving
        */
       Triplet1D_comoving (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
 	: Triplet1D(r12, r12_binSize, r13, r13_binSize, nbins) {}
       
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       virtual ~Triplet1D_comoving () = default;
 
@@ -356,9 +355,8 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters
-       *  @return none
        *
-       *  @warning This method has not been implemented yet
+       *  @warning this method has not been implemented yet
        */
       void set_parameters () override;
       
@@ -374,8 +372,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Triplet1D_comoving_theta, with protected
-       *  members set to -1
        */
       Triplet1D_comoving_theta () 
 	{ m_tripletType = TripletType::_comoving_theta_; }
@@ -387,7 +383,6 @@ namespace cbl {
        *  @param r13 the size of r<SUB>13</SUB>
        *  @param r13_binSize the size of r<SUB>13</SUB> bin
        *  @param nbins the number of bins
-       *  @return object of class Triplet1D_comoving_theta
        */
       Triplet1D_comoving_theta (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
 	: Triplet1D_comoving(r12, r12_binSize, r13, r13_binSize, nbins)
@@ -408,8 +403,6 @@ namespace cbl {
        *  @param r13 distance between object1 and object3
        *  @param r23 distance between object2 and object3
        *  @param klin triplet bin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       void get_triplet (const double r12, const double r13, const double r23, int &klin) override;   
 
@@ -417,8 +410,6 @@ namespace cbl {
        *  @brief update the triplet
        *  @param klin triplet bin
        *  @param ww the weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       void set_triplet (const int klin, const double ww=1.) override;
 
@@ -429,7 +420,7 @@ namespace cbl {
        *  @param r13 distance between object1 and object3
        *  @param r23 distance between object2 and object3
        *  @param ww total weight
-       *  @return none
+       *  
        */
       void put (const double r12, const double r13, const double r23, const double ww=1.) override;
     
@@ -439,7 +430,7 @@ namespace cbl {
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param obj3 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, const std::shared_ptr<catalogue::Object> obj3) override;
 
@@ -472,7 +463,7 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters
-       *  @return none
+       *  
        *
        *  @warning This method has not been implemented yet
        */
@@ -490,8 +481,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Triplet1D_multipoles_direct, with protected
-       *  members set to -1
        */
       Triplet1D_multipoles_direct () 
 	{ m_tripletType = TripletType::_multipoles_direct_; }
@@ -503,7 +492,6 @@ namespace cbl {
        *  @param r13 the size of r<SUB>13</SUB>
        *  @param r13_binSize the size of r<SUB>13</SUB> bin
        *  @param norders the number of Legendre multipoles
-       *  @return object of class Triplet1D_multipoles_direct
        */
       Triplet1D_multipoles_direct (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int norders) 
 	: Triplet1D_comoving(r12, r12_binSize, r13, r13_binSize, norders)
@@ -524,8 +512,6 @@ namespace cbl {
        *  @param r13 distance between object1 and object3
        *  @param r23 distance between object2 and object3
        *  @param klin triplet bin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       void get_triplet (const double r12, const double r13, const double r23, int &klin)    
       { (void)r12; (void)r13; (void)r23; (void)klin; ErrorCBL("", "get_triplet", "Triplet1D.h!"); }
@@ -534,8 +520,6 @@ namespace cbl {
        *  @brief update the triplet
        *  @param klin triplet bin
        *  @param ww the weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       void set_triplet (const int klin, const double ww=1.)   
       { (void)klin; (void)ww; cbl::ErrorCBL("", "get_triplet", "Triplet1D.h!"); }
@@ -547,7 +531,7 @@ namespace cbl {
        *  @param r13 distance between object1 and object3
        *  @param r23 distance between object2 and object3
        *  @param ww total weight
-       *  @return none
+       *  
        */
       void put (const double r12, const double r13, const double r23, const double ww=1.) override;
     
@@ -557,7 +541,7 @@ namespace cbl {
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param obj3 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, const std::shared_ptr<catalogue::Object> obj3) override;
 
@@ -597,7 +581,7 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters
-       *  @return none
+       *  
        *
        *  @warning This method has not been implemented yet
        */
@@ -614,9 +598,7 @@ namespace cbl {
       ///@{
 
       /**
-       *  @brief default constructor
-       *  @return object of class Triplet1D_comoving_side, with
-       *  protected members set to -1
+       *  @brief default constructor 
        */
       Triplet1D_comoving_side () 
       { m_tripletType = TripletType::_comoving_side_; }
@@ -628,7 +610,6 @@ namespace cbl {
        *  @param r13 the size of r<SUB>13</SUB>
        *  @param r13_binSize the size of r<SUB>13</SUB> bin
        *  @param nbins the number of bins
-       *  @return object of class Triplet1D_comoving_side
        */
       Triplet1D_comoving_side (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
 	: Triplet1D_comoving(r12, r12_binSize, r13, r13_binSize, nbins)
@@ -649,8 +630,6 @@ namespace cbl {
        *  @param r13 distance between object1 and object3
        *  @param r23 distance between object2 and object3
        *  @param klin triplet bin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       void get_triplet (const double r12, const double r13, const double r23, int &klin) override;   
 
@@ -658,8 +637,6 @@ namespace cbl {
        *  @brief update the triplet
        *  @param klin triplet bin
        *  @param ww the weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       void set_triplet (const int klin, const double ww=1.) override;
 
@@ -670,7 +647,7 @@ namespace cbl {
        *  @param r13 distance between object1 and object3
        *  @param r23 distance between object2 and object3
        *  @param ww total weight
-       *  @return none
+       *  
        */
       void put (const double r12, const double r13, const double r23, const double ww=1.) override;
     
@@ -680,7 +657,7 @@ namespace cbl {
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param obj3 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, const std::shared_ptr<catalogue::Object> obj3) override;
 
@@ -714,7 +691,7 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters
-       *  @return none
+       *  
        *
        *  @warning This method has not been implemented yet
        */
@@ -732,8 +709,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Triplet1D_comoving_costheta, with protected
-       *  members set to -1
        */
       Triplet1D_comoving_costheta () 
 	{ m_tripletType = TripletType::_comoving_costheta_; }
@@ -745,7 +720,6 @@ namespace cbl {
        *  @param r13 the size of r<SUB>13</SUB>
        *  @param r13_binSize the size of r<SUB>13</SUB> bin
        *  @param nbins the number of bins
-       *  @return object of class Triplet1D_comoving_costheta
        */
       Triplet1D_comoving_costheta (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
 	: Triplet1D_comoving(r12, r12_binSize, r13, r13_binSize, nbins)
@@ -766,8 +740,6 @@ namespace cbl {
        *  @param r13 distance between object1 and object3
        *  @param r23 distance between object2 and object3
        *  @param klin triplet bin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       void get_triplet (const double r12, const double r13, const double r23, int &klin) override;   
 
@@ -775,8 +747,6 @@ namespace cbl {
        *  @brief update the triplet
        *  @param klin triplet bin
        *  @param ww the weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       void set_triplet (const int klin, const double ww=1.) override;
 
@@ -787,7 +757,7 @@ namespace cbl {
        *  @param r13 distance between object1 and object3
        *  @param r23 distance between object2 and object3
        *  @param ww total weight
-       *  @return none
+       *  
        */
       void put (const double r12, const double r13, const double r23, const double ww=1.) override;
     
@@ -797,7 +767,7 @@ namespace cbl {
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param obj3 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, const std::shared_ptr<catalogue::Object> obj3) override;
 
@@ -833,9 +803,9 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters
-       *  @return none
-       *
-       *  @warning This method has not been implemented yet
+       *  
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_parameters () = 0;
 
@@ -851,7 +821,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Triplet1D_angular
        */
       Triplet1D_angular () = default;
            
@@ -862,14 +831,13 @@ namespace cbl {
        *  @param r13 the size of r<SUB>13</SUB>
        *  @param r13_binSize the size of r<SUB>13</SUB> bin
        *  @param nbins the number of bins
-       *  @return object of class Triplet1D_angular
        */
       Triplet1D_angular (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins) 
 	: Triplet1D(r12, r12_binSize, r13, r13_binSize, nbins) {}
 
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       virtual ~Triplet1D_angular () = default;
 

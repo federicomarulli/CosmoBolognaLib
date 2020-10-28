@@ -73,7 +73,7 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return an object of class Data2D_extra
+       *  2D_extra
        */
       Data2D_extra () { set_dataType(DataType::_2D_extra_); }
 
@@ -89,7 +89,7 @@ namespace cbl {
        *  @param extra_info vector containing vectors of extra generic
        *  information
        *
-       *  @return an object of class Data2D_extra
+       *  2D_extra
        */
       Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> data, const std::vector<std::vector<double>> extra_info)
 	: Data2D(x, y, data), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
@@ -109,7 +109,7 @@ namespace cbl {
        *  @param extra_info vector containing vectors of extra generic
        *  information
        *
-       *  @return an object of class Data2D_extra
+       *  2D_extra
        */
       Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<double> error, const std::vector<std::vector<double>> extra_info) : Data2D(x, y, data, error), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
       
@@ -128,7 +128,7 @@ namespace cbl {
        *  @param extra_info vector containing vectors of extra generic
        *  information
        *
-       *  @return an object of class Data2D_extra
+       *  2D_extra
        */
       Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> data, const std::vector<std::vector<double>> covariance, const std::vector<std::vector<double>> extra_info) : Data2D(x, y, data, covariance), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
       
@@ -147,13 +147,12 @@ namespace cbl {
        *  @param extra_info vector containing vectors of extra generic
        *  information
        *
-       *  @return an object of class Data2D_extra
+       *  2D_extra
        */
       Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<std::vector<double>> covariance, const std::vector<std::vector<double>> extra_info) : Data2D(x, y, data, covariance), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       virtual ~Data2D_extra () = default;
 
@@ -218,7 +217,6 @@ namespace cbl {
       /**
        *  @brief set the extra info
        *  @param extra_info vector containing vectors with extra info
-       *  @return none
        */
       void set_extra_info (const std::vector<std::vector<double>> extra_info) { m_extra_info = extra_info; }
 
@@ -259,9 +257,7 @@ namespace cbl {
        *  default, assuming that only 1 random vector has to be read;
        *  if the input file has only 2 columns, the errors will be set
        *  to 1
-       *
        *  @return none
-       *
        *  @warning this function is not implemented yet: work in
        *  progress!
        */
@@ -271,7 +267,7 @@ namespace cbl {
        *  @brief print the data on screen
        *
        *  @param precision the float precision
-       *
+       *  
        *  @return none
        */
       virtual void Print (const int precision=4) const override;

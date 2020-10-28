@@ -76,8 +76,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class
-	 *  Modelling_ThreePointCorrelation_comoving_connected
 	 */
 	Modelling_ThreePointCorrelation_comoving_connected () = default;
 
@@ -85,9 +83,6 @@ namespace cbl {
 	 *  @brief constructor
 	 *  
 	 *  @param threep the three-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_ThreePointCorrelation_comoving_connected
 	 */
 	Modelling_ThreePointCorrelation_comoving_connected (const std::shared_ptr<cbl::measure::threept::ThreePointCorrelation> threep)
 	  : Modelling_ThreePointCorrelation(threep) {}
@@ -97,9 +92,6 @@ namespace cbl {
 	 *  
 	 *  @param threep_dataset the dataset containing the
 	 *  three-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_ThreePointCorrelation_comoving_connected
 	 */
 	Modelling_ThreePointCorrelation_comoving_connected (const std::shared_ptr<data::Data> threep_dataset)
 	  : Modelling_ThreePointCorrelation() { set_data(threep_dataset); }
@@ -107,7 +99,7 @@ namespace cbl {
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_ThreePointCorrelation_comoving_connected () = default;
 	
@@ -126,7 +118,7 @@ namespace cbl {
          *
          * @param beta_prior the beta prior
          *
-         * @return none
+         * 
          */
 	void set_model_RSD (const statistics::PriorDistribution b1_prior, const statistics::PriorDistribution b2_prior, const statistics::PriorDistribution bt_prior, const statistics::PriorDistribution beta_prior);
       

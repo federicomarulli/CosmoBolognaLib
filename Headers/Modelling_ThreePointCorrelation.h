@@ -89,21 +89,21 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class ModellingThreePointCorrelation
+	 *  ThreePointCorrelation
 	 */
 	Modelling_ThreePointCorrelation () = default;
 	
 	/**
 	 *  @brief constuctor
 	 *  @param threep the three-point correlation function to model
-	 *  @return object of class Modelling_ThreePointCorrelation
+	 *  _ThreePointCorrelation
 	 */
 	Modelling_ThreePointCorrelation (const std::shared_ptr<cbl::measure::threept::ThreePointCorrelation> threep)
 	  { m_data = threep->dataset(); }
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_ThreePointCorrelation () = default;
 
@@ -154,7 +154,7 @@ namespace cbl {
 	 *  @param Q_DM vector contaning the DM reduced three-point
 	 *  correlation function
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_data_model (const std::vector<double> Q_DM);
 
@@ -221,7 +221,7 @@ namespace cbl {
 	 *
 	 *  @param prec accuracy of the GSL integration
          *
-	 *  @return none
+	 *  
 	 */
 	void set_data_model_zeta_RSD (const double r1, const double r2, const cbl::cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk="CAMB", const bool NL=false, const int max_ll=5, const double k_min=1.e-4, const double k_max=100, const int step_k=500, const double r_min=1.e-4, const double r_max=200, const int step_r=200, const bool force_realSpace=false, const bool use_k=false, const std::string output_dir=cbl::par::defaultString, const bool store_output=true, const std::string output_root=cbl::par::defaultString, const int norm=-1, const double prec=1.e-4);
 
@@ -244,7 +244,7 @@ namespace cbl {
 	 *  @param Pk_DM vector containing the theoretical dark matter 
          *  power-spectrum
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_data_Q_nonlocal (const cosmology::Cosmology cosmology, const double r1, const double r2, const std::vector<double> theta, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM);
 

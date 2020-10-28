@@ -106,13 +106,13 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class LogNormal
+       *  
        */
       LogNormal() {};
 
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~LogNormal() {};
 
@@ -124,7 +124,7 @@ namespace cbl {
        *  than the random catalogue used to measure &xi;(r))
        *
        *  @param nLN number of lognormal realizations
-       *  @return object of class LogNormal
+       *  
        */
       LogNormal (const std::shared_ptr<catalogue::Catalogue> data, const std::shared_ptr<catalogue::Catalogue> random, const int nLN) : m_nLN(nLN), m_data(data), m_random(random)
       {
@@ -135,7 +135,7 @@ namespace cbl {
        *  @brief set data and random catalogues
        *  @param data input data catalogue
        *  @param random input random catalogue
-       *  @return none
+       *  
        */
       void setCatalogues (const std::shared_ptr<catalogue::Catalogue> data, const std::shared_ptr<catalogue::Catalogue> random);
     
@@ -143,7 +143,7 @@ namespace cbl {
        *  @brief set the starting two-point correlation function
        *  @param rr binned comoving separation 
        *  @param xi input two-point correlation function
-       *  @return none
+       *  
        */
       void setParameters_from_xi (const std::vector<double> rr, const std::vector<double> xi);
 
@@ -155,14 +155,14 @@ namespace cbl {
        *  @param author the method used to compute dark matter power spectrum
        *  @param NL 0 &rarr; compute the linear power spectrum; 1 &rarr; compute the non-linear power spectrum
        *  @param model the cosmological model used to compute distances
-       *  @return none
+       *  
        */
       void setParameters_from_model (const std::shared_ptr<cosmology::Cosmology> cosmology, const double bias, const bool Real=1, const std::string author="CAMB", const bool NL=0, const std::string model="LCDM");
     
       /**
        *  @brief set the total number of realizations
        *  @param nLN the number of realizations
-       *  @return none
+       *  
        */
       void set_nLN (const int nLN);
     
@@ -203,7 +203,7 @@ namespace cbl {
        *
        *  @param seed the seed for random number generation
        *
-       *  @return none
+       *  
        */
       void generate_LogNormal_mock (const double rmin, const std::string dir, const int start=0, const std::string filename="lognormal_", const int seed=3213);
     

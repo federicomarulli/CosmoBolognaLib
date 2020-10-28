@@ -174,18 +174,19 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
         
 	random::UniformRandomNumbers ran(0., 1., seed);
 	
-	const double ra_min = catalogue.Min(Var::_RA_),
-	  	     ra_max = catalogue.Max(Var::_RA_),
+	const double cos_ra_min = cos(catalogue.Min(Var::_RA_)),
+	             cos_ra_max = cos(catalogue.Max(Var::_RA_)), 
 	  //sin_dec_min = sin(catalogue.Min(Var::_Dec_)),
 	  //sin_dec_max = sin(catalogue.Max(Var::_Dec_));
-	             cos_dec_min = cos(par::pi/2-catalogue.Min(Var::_Dec_)),
-	             cos_dec_max = cos(par::pi/2-catalogue.Max(Var::_Dec_));
+	             dec_min = catalogue.Min(Var::_Dec_),
+	             dec_max = catalogue.Max(Var::_Dec_);
+	            
 
 	
 	for (size_t i=0; i<nRandom; i++) {
-	  ra.push_back((ra_max-ra_min)*ran()+ra_min);
+	  ra.push_back(acos(cos_ra_min+(cos_ra_max-cos_ra_min)*ran()));
 	  //dec.push_back(asin((sin_dec_max-sin_dec_min)*ran()+sin_dec_min));
-	  dec.push_back(par::pi/2-acos(cos_dec_min+(cos_dec_max-cos_dec_min)*ran()));
+	  dec.push_back((dec_max-dec_min)*ran()+dec_min);
 	}
 	
       }

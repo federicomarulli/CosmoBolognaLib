@@ -71,7 +71,6 @@ namespace cbl {
       
       /**
        *  @brief default constructor
-       *  @return object of class Void
        */
       Void () 
       	: Object(), m_radius(par::defaultDouble), m_densityContrast(par::defaultDouble), m_centralDensity(par::defaultDouble) {}
@@ -102,7 +101,7 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @return object of class Void
+       *  
        */
       Void (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
@@ -141,7 +140,7 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @return object of class Void
+       *  
        */
       Void (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
 	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
@@ -172,7 +171,7 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @return object of class Void
+       *  
        */
       Void (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
@@ -206,7 +205,7 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @return object of class Void
+       *  
        */
       Void (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
 	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
@@ -242,7 +241,7 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @return object of class Void
+       *  
        */
       Void (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
 	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
@@ -278,7 +277,7 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @return object of class Void
+       *  
        */
       Void (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
 	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
@@ -318,14 +317,13 @@ namespace cbl {
        *
        *  @param centralDensity central density
        *
-       *  @return object of class Void
+       *  
        */
       Void (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
 	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
       
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~Void () = default;
 
@@ -369,7 +367,6 @@ namespace cbl {
       /**
        *  @brief get the private member \e m_radius
        *  @param radius the radius of the sphere with volume equivalent to that of the void
-       *  @return none
        */
       void set_radius (const double radius=par::defaultDouble) override
       { m_radius = radius; }
@@ -377,7 +374,6 @@ namespace cbl {
       /**
        *  @brief get the private member \e m_densityContrast
        *  @param densityContrast ratio between the central density of the void and the density at its border
-       *  @return none
        */
       void set_densityContrast (const double densityContrast=par::defaultDouble)
       { m_densityContrast = densityContrast; }
@@ -385,7 +381,6 @@ namespace cbl {
       /**
        *  @brief get the private member \e m_centralDensity
        *  @param centralDensity the central density of the void
-       *  @return none
        */
       void set_centralDensity (const double centralDensity=par::defaultDouble)
       { m_centralDensity = centralDensity; }

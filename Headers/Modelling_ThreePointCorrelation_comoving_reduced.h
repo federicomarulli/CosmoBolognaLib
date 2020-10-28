@@ -76,8 +76,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class
-	 *  Modelling_ThreePointCorrelation_comoving_reduced
 	 */
 	Modelling_ThreePointCorrelation_comoving_reduced () = default;
 
@@ -86,9 +84,6 @@ namespace cbl {
 	 *  
 	 *  @param threep the three-point correlation function to
 	 *  model
-	 *
-	 *  @return object of type
-	 *  Modelling_ThreePointCorrelation_comoving_reduced
 	 */
 	Modelling_ThreePointCorrelation_comoving_reduced (const std::shared_ptr<cbl::measure::threept::ThreePointCorrelation> threep)
 	  : Modelling_ThreePointCorrelation_comoving_connected(threep) {}
@@ -98,16 +93,13 @@ namespace cbl {
 	 *  
 	 *  @param threep_dataset the dataset containing the
 	 *  three-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_ThreePointCorrelation_comoving_reduced
 	 */
 	Modelling_ThreePointCorrelation_comoving_reduced (const std::shared_ptr<data::Data> threep_dataset)
 	  : Modelling_ThreePointCorrelation_comoving_connected() { set_data(threep_dataset); }
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_ThreePointCorrelation_comoving_reduced () = default;
 	
@@ -121,7 +113,7 @@ namespace cbl {
 	 *
 	 *  @param bias2_prior prior for the parameter \f$\b_2\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_nonlinear_localbias (const statistics::PriorDistribution bias1_prior={}, const statistics::PriorDistribution bias2_prior={});
 
@@ -136,7 +128,7 @@ namespace cbl {
 	 *
 	 *  @param g2_prior prior for the parameter \f$\g_2\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_nonlinear_nonlocalbias (const statistics::PriorDistribution bias1_prior={}, const statistics::PriorDistribution bias2_prior={}, const statistics::PriorDistribution g2_prior={});
 
@@ -153,7 +145,7 @@ namespace cbl {
 	 *
 	 *  @param alpha_prior prior for the parameter \f$\alpha\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_nonlinear_nonlocalbias_alpha (const statistics::PriorDistribution bias1_prior={}, const statistics::PriorDistribution bias2_prior={}, const statistics::PriorDistribution g2_prior={}, const statistics::PriorDistribution alpha_prior={});
 

@@ -74,8 +74,6 @@ namespace cbl {
 	 *
 	 *  @param [out] _wsave working array
 	 *  @param [out] _ok 1 &rarr; all went ok; 0 &rarr; error in initializations
-	 *
-	 *  @return none
 	 */
 	void fhti_ (int *_n, double *_mu, double *_q, double *_dlnr, double *_kr, int *_kropt, double *_wsave, int *_ok);
 
@@ -96,8 +94,6 @@ namespace cbl {
 	 *  transform
 	 *
 	 *  @param _wsave working array
-	 *
-	 *  @return none
 	 */
 	void fftl_ (int *_n, double *_a, double *_rk, int *_dir, double *_wsave);
       }
@@ -151,9 +147,7 @@ namespace cbl {
        *  @param kropt 0 &rarr; use input kr as is; 1 &rarr; change kr
        *  to nearest low-ringing kr, quietly; 2 &rarr; change kr to
        *  nearest low-ringing kr, verbosely; 3 &rarr; change kr
-       *  interactively.
-       *
-       *  @return the transformed array
+       *  interactively
        */
       void transform_FFTlog (std::vector<double> &yy, std::vector<double> &fy, const int dir, const std::vector<double> xx, const std::vector<double> fx, const double mu=0, const double q=0, const double kr=1, const int kropt=0);
 

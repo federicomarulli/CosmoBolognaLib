@@ -78,14 +78,14 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class Modelling_NumberCounts2D
+	 *  _NumberCounts2D
 	 */
 	Modelling_NumberCounts2D () = default;
 	
 	/**
 	 *  @brief constuctor
 	 *  @param nc the number counts to model
-	 *  @return object of class Modelling_NumberCounts2D
+	 *  _NumberCounts2D
 	 */
 	Modelling_NumberCounts2D (const std::shared_ptr<cbl::measure::numbercounts::NumberCounts> nc) 
 	  : Modelling_NumberCounts (nc) {m_data = nc->dataset();}
@@ -96,14 +96,14 @@ namespace cbl {
 	 *  @param hist_type the histogram type
 	 *  @param fact the normalization factor
 	 *
-	 *  @return object of class Modelling_NumberCounts2D
+	 *  _NumberCounts2D
 	 */
 	Modelling_NumberCounts2D (const std::shared_ptr<cbl::data::Data> dataset, glob::HistogramType hist_type, double fact)
 	  : Modelling_NumberCounts (hist_type, fact) {m_data = dataset;}
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_NumberCounts2D () = default;
 

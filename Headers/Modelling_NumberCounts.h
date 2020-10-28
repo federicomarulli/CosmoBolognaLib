@@ -94,14 +94,14 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class Modelling_NumberCounts
+	 *  _NumberCounts
 	 */
 	Modelling_NumberCounts () = default;
 	
 	/**
 	 *  @brief constuctor
 	 *  @param nc the number counts to model
-	 *  @return object of class Modelling_NumberCounts
+	 *  _NumberCounts
 	 */
 	Modelling_NumberCounts (const std::shared_ptr<cbl::measure::numbercounts::NumberCounts> nc)
 	{ m_HistogramType = nc->HistogramType(); m_fact = nc->fact(); }
@@ -110,14 +110,14 @@ namespace cbl {
 	 *  @brief constuctor
 	 *  @param hist_type the histogram type
 	 *  @param fact the normalization factor
-	 *  @return object of class Modelling_NumberCounts
+	 *  _NumberCounts
 	 */
 	Modelling_NumberCounts (glob::HistogramType hist_type, double fact)
 	{ m_HistogramType = hist_type; m_fact = fact;}
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_NumberCounts () = default;
 
@@ -219,14 +219,14 @@ namespace cbl {
 	 *
 	 *  @param prec the precision
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const std::string selection_function_file=par::defaultString, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const int z_step=50, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
 
 	///@}
 		
 	/**
-	 *  @name Member functions used to set the model parameters
+	 *  @brief Member functions used to set the model parameters
 	 *
 	 *  @param cosmology the cosmological model used to compute
 	 *  the void size function
@@ -260,13 +260,22 @@ namespace cbl {
 	 *  [http://arxiv.org/abs/1207.1465], EisensteinHu
 	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
 	 *
+	 *  @param k_Pk_ratio wave vector module required to compute
+	 *  the growth factor (cbl::cosmology::Cosmology::DD_norm())
+	 *  with the method "Pk_ratio". This parameter represents
+	 *  wavenumber at which the ratio between the the power
+	 *  spectra at different redshift is computed. It is
+	 *  recommended to use this method when dealing with
+	 *  cosmologies alternative to the LCDM. To avoid to compute
+	 *  the growth factor with this method, set k_Pk_ratio=-1.
+	 *
 	 *  @param store_output if true the output files created by
 	 *  the Boltzmann solver are stored; if false the output files
 	 *  are removed
 	 *
-	 *  @param output_root output_root of the parameter file used to
-	 *  compute the power spectrum and &sigma;(mass); it can be any
-	 *  name
+	 *  @param output_root output_root of the parameter file used
+	 *  to compute the power spectrum and &sigma;(mass); it can be
+	 *  any name
 	 *
 	 *  @param interpType method to interpolate the power spectrum
 	 *
@@ -275,23 +284,25 @@ namespace cbl {
 	 *           
 	 *  @param input_file either the parameter file or the power
 	 *  spectrum file; if a parameter file is provided,
-	 *  i.e. input_file!=NULL and is_parameter_file=true, it will be
-	 *  used to compute the power spectrum; if a power spectrum file
-	 *  is provided, i.e. input_file!=NULL and
+	 *  i.e. input_file!=NULL and is_parameter_file=true, it will
+	 *  be used to compute the power spectrum; if a power spectrum
+	 *  file is provided, i.e. input_file!=NULL and
 	 *  is_parameter_file=false, then the provided power spectrum
-	 *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
-	 *  is computed by integrating the computed/provided power
-	 *  spectrum ignoring the cosmological parameters of the object
+	 *  will be used directly; in both cases
+	 *  &sigma;<SUP>2</SUP>(M) is computed by integrating the
+	 *  computed/provided power spectrum ignoring the cosmological
+	 *  parameters of the object
 	 *
-	 *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
-	 *  is a parameter file, used to compute the power spectrum with
-	 *  the method specified by method_Pk; false \f$\rightarrow\f$
-	 *  the input_file is a file containing the power spectrum
+	 *  @param is_parameter_file true \f$\rightarrow\f$ the
+	 *  input_file is a parameter file, used to compute the power
+	 *  spectrum with the method specified by method_Pk; false
+	 *  \f$\rightarrow\f$ the input_file is a file containing the
+	 *  power spectrum
 	 *
-	 *  @return none
+	 *  
 	 */
 	
-	void set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+	void set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const double k_Pk_ratio=-1., const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
 
 	/**
@@ -347,7 +358,8 @@ namespace cbl {
        	 *
 	 *  @param prec the precision
 	 *
-	 *  @return none
+	 *  @return none, or an error message if the derived object
+	 *  does not have this member
 	 */
 	virtual void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4) 
 	{ 

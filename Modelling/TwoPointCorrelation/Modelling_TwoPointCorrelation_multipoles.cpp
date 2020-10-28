@@ -2,7 +2,7 @@
  *  Copyright (C) 2016 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
- *  This program is free software; you can redistribute it and/or   * 
+ *  This program is free software; you can redistribute it and/or   *
  *  modify it under the terms of the GNU General Public License as  *
  *  published by the Free Software Foundation; either version 2 of  *
  *  the License, or (at your option) any later version.             *
@@ -129,10 +129,10 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fit_ra
   }
 
   m_data_fit = m_data->cut(mask);
-  
-  m_fit_range = true; 
 
-  if (m_ModelIsSet) 
+  m_fit_range = true;
+
+  if (m_ModelIsSet)
     m_data_model->dataset_order = m_multipoles_order;
 }
 
@@ -248,6 +248,68 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_fiduci
     m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B44);
   }
 
+  else if (m_data_model->Pk_mu_model=="eTNSGauss"  || m_data_model->Pk_mu_model=="eTNSLorentz") {
+    vector<vector<double>> Pk_AB    = m_data_model->cosmology->Pk_TNS_AB_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->output_dir, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+    vector<vector<double>> Pk_eTNS_terms = m_data_model->cosmology->Pk_eTNS_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->output_dir, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+
+    m_data_model->func_Pk_DeltaDelta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[0], "Spline"));
+    m_data_model->func_Pk_DeltaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[1], "Spline"));
+    m_data_model->func_Pk_ThetaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[2], "Spline"));
+
+    m_data_model->func_Pk_A11 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[0], "Spline"));
+    m_data_model->func_Pk_A12 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[1], "Spline"));
+    m_data_model->func_Pk_A22 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[2], "Spline"));
+    m_data_model->func_Pk_A23 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[3], "Spline"));
+    m_data_model->func_Pk_A33 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[4], "Spline"));
+    m_data_model->func_Pk_B12 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[5], "Spline"));
+    m_data_model->func_Pk_B13 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[6], "Spline"));
+    m_data_model->func_Pk_B14 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[7], "Spline"));
+    m_data_model->func_Pk_B22 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[8], "Spline"));
+    m_data_model->func_Pk_B23 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[9], "Spline"));
+    m_data_model->func_Pk_B24 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[10], "Spline"));
+    m_data_model->func_Pk_B33 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[11], "Spline"));
+    m_data_model->func_Pk_B34 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[12], "Spline"));
+    m_data_model->func_Pk_B44 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[13], "Spline"));
+
+    m_data_model->func_Pk_b2d = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[3], "Spline"));
+    m_data_model->func_Pk_b2v = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[4], "Spline"));
+    m_data_model->func_Pk_b22 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[5], "Spline"));
+    m_data_model->func_Pk_bs2d = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[6], "Spline"));
+    m_data_model->func_Pk_bs2v = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[7], "Spline"));
+    m_data_model->func_Pk_b2s2 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[8], "Spline"));
+    m_data_model->func_Pk_bs22 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[9], "Spline"));
+    m_data_model->func_sigma32Pklin = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[10], "Spline"));
+
+    //-------------------------
+
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_DeltaDelta);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_DeltaTheta);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_ThetaTheta);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A11);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A12);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A22);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A23);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A33);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B12);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B13);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B14);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B22);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B23);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B24);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B33);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B34);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B44);
+
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_b2d);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_b2v);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_b22);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_bs2d);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_bs2v);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_b2s2);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_bs22);
+    m_data_model->funcs_pk.push_back(m_data_model->func_sigma32Pklin);
+  }
+
   else ErrorCBL("the chosen model ("+m_data_model->Pk_mu_model+") is not currently implemented!", "set_fiducial_PkDM", "Modelling_TwoPointCorrelation_multipoles.cpp");
 }
 
@@ -319,7 +381,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 
   //set the priors
   m_set_prior(priors);
-  
+
   // construct the model
   m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiMultipoles, nparameters, parameterType, parameterName, m_data_model));
   m_ModelIsSet = true;
@@ -516,6 +578,44 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 // ============================================================================================
 
 
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_eTNS (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution bias2_prior, const statistics::PriorDistribution sigma12_prior, const statistics::PriorDistribution Ncorr_prior, const bool DFoG, const bool compute_PkDM)
+{
+  if (DFoG) m_data_model->Pk_mu_model = "eTNSGauss";
+  else m_data_model->Pk_mu_model = "eTNSLorentz";
+
+  // compute the fiducial dark matter two-point correlation function
+  if (compute_PkDM) set_fiducial_PkDM();
+
+  m_data_model->nmultipoles = m_nmultipoles;
+  m_data_model->dataset_order = m_multipoles_order;
+  m_data_model->use_pole = m_use_pole;
+
+  // set the model parameters
+  const int nparameters = 5;
+
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b*sigma8";
+  parameterName[2] = "bias2";
+  parameterName[3] = "sigma12";
+  parameterName[4] = "Ncorr";
+
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, bias2_prior, sigma12_prior, Ncorr_prior};
+
+  //set the priors
+  m_set_prior(priors);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiMultipoles, nparameters, parameterType, parameterName, m_data_model));
+  m_ModelIsSet = true;
+}
+
+
+// ============================================================================================
+
+
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_fullShape_ModeCoupling (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution SigmaV_prior, const statistics::PriorDistribution AMC_prior, const bool compute_PkDM)
 {
   m_data_model->Pk_mu_model = "dispersion_modecoupling";
@@ -588,7 +688,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_BAO (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution B0_prior, const statistics::PriorDistribution B2_prior, const statistics::PriorDistribution A00_prior, const statistics::PriorDistribution A20_prior, const statistics::PriorDistribution A01_prior, const statistics::PriorDistribution A21_prior, const statistics::PriorDistribution A02_prior, const statistics::PriorDistribution A22_prior, const bool compute_XiTemplate, const bool isRealSpace)
 {
-    
+
   // compute the fiducial dark matter two-point correlation function
 
   if (m_nmultipoles>2)
@@ -604,7 +704,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
   }
   else if (compute_XiTemplate)
     set_fiducial_xiDM();
-  
+
   m_data_model->nmultipoles = m_nmultipoles;
   m_data_model->dataset_order = m_multipoles_order;
   m_data_model->use_pole = m_use_pole;
@@ -643,7 +743,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::write_model (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const std::vector<double> parameters)
 {
   if (m_likelihood==NULL) ErrorCBL("this function requires the likelihood to be defined (with the function set_likelihood)!", "write_model", "Modelling_TwoPointCorrelation_multipoles.cpp");
-  
+
   int nmultipoles_original = m_data_model->nmultipoles;
   vector<int> dataset_order_original = m_data_model->dataset_order;
 
@@ -652,7 +752,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::write_mode
   vector<bool> new_use_pole(3, false);
   vector<int> new_dataset_order;
   vector<double> new_xx;
-  
+
   if (xx.size()==0)
     new_xx = m_data_fit->xx();
   else

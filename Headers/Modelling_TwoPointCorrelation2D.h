@@ -72,7 +72,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class Modelling_TwoPointCorrelation2D
+	 *  _TwoPointCorrelation2D
 	 */
 	Modelling_TwoPointCorrelation2D () = default;
 
@@ -80,8 +80,6 @@ namespace cbl {
 	 *  @brief constructor
 	 *  
 	 *  @param twop the two-point correlation function to model
-	 *
-	 *  @return object of type Modelling_TwoPointCorrelation2D
 	 */
 	Modelling_TwoPointCorrelation2D (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop);
 
@@ -91,14 +89,12 @@ namespace cbl {
 	 *  @param dataset the two-point correlation dataset
 	 *  
 	 *  @param twoPType the two-point correlation type
-	 *
-	 *  @return object of type Modelling_TwoPointCorrelation2D
 	 */
 	Modelling_TwoPointCorrelation2D (const std::shared_ptr<cbl::data::Data> dataset, const measure::twopt::TwoPType twoPType);
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_TwoPointCorrelation2D () = default;
 
@@ -194,7 +190,7 @@ namespace cbl {
 	 *  file is provided (i.e. file_par!=NULL), it will be used,
 	 *  ignoring the cosmological parameters of the object
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double sigmaNL=0, const bool NL=true, const int FV=0, const bool store_output=true, const std::string output_root="test", const bool bias_nl=false, const double bA=-1., const bool xiType=false, const double k_star=-1., const bool xiNL=false, const double v_min=-5000., const double v_max=5000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0., const double k_max=100., const int step=200, const double aa=0., const bool GSL=true, const double prec=1.e-2, const std::string file_par=par::defaultString);
 	      

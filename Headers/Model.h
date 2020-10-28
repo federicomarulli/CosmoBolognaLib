@@ -67,7 +67,7 @@ namespace cbl {
     /**
      *  @brief generic function: the inputs are the values at which the
      *  function is computed, a pointer to a set of data used to
-     *  construct the function and a vector of  parameters
+     *  construct the function and a vector of parameters
      */
     typedef std::function<std::vector<std::vector<double>>(std::vector<std::vector<double>>, std::shared_ptr<void>, std::vector<double> &)> model_function_generic;
 
@@ -103,8 +103,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *
-       *  @return object of class Model
        */
       Model () = default;
 
@@ -118,8 +116,6 @@ namespace cbl {
        * @param parameterNames the parameter names
        *
        * @param inputs inputs of the model
-       *
-       * @return object of class Model
        */
       Model (const int nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames, const std::shared_ptr<void> inputs)
 	{ set_inputs(inputs); set_parameters(nparameters, parameterTypes, parameterNames); }
@@ -127,7 +123,7 @@ namespace cbl {
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       virtual ~Model () = default;
 
@@ -138,14 +134,14 @@ namespace cbl {
        *
        * @return the model dimension
        */
-      Dim dimension() const {return m_dimension;}
+      Dim dimension() const { return m_dimension; }
 
       /**
        * @brief set the model function, for Model1D
        *
        * @param function pointer to a model_function_1D
        * 
-       * @return none 
+       *  
        */
       void set_function (const model_function_1D function)
       { (void)function; ErrorCBL("", "set_function", "Model.h"); } 
@@ -158,7 +154,7 @@ namespace cbl {
        * @warning function passed in this way doesn't allow for
        * input parameters 
        * 
-       * @return none 
+       *  
        */
       void set_function (const std::vector<double>(*function)(const std::vector<double> xx, std::vector<double> &val))
       { (void)function; ErrorCBL("", "set_function", "Model.h"); } 
@@ -168,7 +164,7 @@ namespace cbl {
        *
        * @param function pointer to a model_function_2D
        *
-       * @return none 
+       *  
        */
       void set_function (const model_function_2D function)
       { (void)function; ErrorCBL("", "set_function", "Model.h"); } 
@@ -178,7 +174,7 @@ namespace cbl {
        *
        *  @param inputs the inputs of the model
        *
-       *  @return none
+       *  
        */
       void set_inputs (std::shared_ptr<void> inputs) { m_inputs = inputs; }
 
@@ -187,7 +183,7 @@ namespace cbl {
        * 
        *  @param parameters pointer to parameters
        *
-       *  @return none
+       *  
        */
       void set_parameters (const std::shared_ptr<ModelParameters> parameters) {m_parameters = parameters;}
 
@@ -200,7 +196,7 @@ namespace cbl {
        *
        *  @param parameterNames the parameter names
        *
-       *  @return none
+       *  
        */
       void set_parameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames);
 
@@ -297,7 +293,7 @@ namespace cbl {
        *  @param up_model the model at 84th percentile
        *  @param start the starting position for each chain
        *  @param thin the position step
-       *  @return none
+       *  
        */
       void stats_from_chains (const std::vector<std::vector<double>> xx, std::vector<std::vector<double>> &median_model, std::vector<std::vector<double>> &low_model, std::vector<std::vector<double>> &up_model, const int start=0, const int thin=1);
 
@@ -311,7 +307,9 @@ namespace cbl {
        *  @param up_model the model at 84th percentile
        *  @param start the starting position for each chain
        *  @param thin the position step
-       *  @return none
+       *  
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void stats_from_chains (const std::vector<double> xx, std::vector<double> &median_model, std::vector<double> &low_model, std::vector<double> &up_model, const int start=0, const int thin=1)
       { (void)xx; (void)median_model; (void)low_model; (void)up_model; (void)start; (void)thin; ErrorCBL("", "stats_from_chains", "Model.h"); } 
@@ -330,7 +328,9 @@ namespace cbl {
        *  @param up_model the model at 84th percentile
        *  @param start the starting position for each chain
        *  @param thin the position step
-       *  @return none
+       *
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void stats_from_chains (const std::vector<double> xx, const std::vector<double> yy, std::vector<std::vector<double>> &median_model, std::vector<std::vector<double>> &low_model, std::vector<std::vector<double>> &up_model, const int start=0, const int thin=1)
       { (void)xx; (void)yy; (void)median_model; (void)low_model; (void)up_model; (void)start; (void)thin; ErrorCBL("", "stats_from_chains", "Model.h"); } 
@@ -346,7 +346,8 @@ namespace cbl {
        *  used to compute the model; if this vector is not provided,
        *  the model will be computed using the best-fit parameters
        *
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void write (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters)
       { (void)output_dir; (void)output_file; (void)xx; (void)parameters; cbl::ErrorCBL("", "write", "Model.h"); }
@@ -365,7 +366,8 @@ namespace cbl {
        *  used to compute the model; if this vector is not provided,
        *  the model will be computed using the best-fit parameters
        *
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void write (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> parameters)
       { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)parameters; cbl::ErrorCBL("", "write", "Model.h"); }
@@ -379,7 +381,8 @@ namespace cbl {
        *  @param output_file the output file
        *  @param xx vector of points at which the model is computed,
        *
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void write_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx)
       { (void)output_dir; (void)output_file; (void)xx; cbl::ErrorCBL("", "write_at_bestfit", "Model.h"); }
@@ -396,7 +399,8 @@ namespace cbl {
        *  @param yy vector of points at which the model is computed,
        *  second axis
        *
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void write_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy)
       { (void)output_dir; (void)output_file; (void)xx; (void)yy; cbl::ErrorCBL("", "write_at_bestfit", "Model.h"); }
@@ -412,7 +416,8 @@ namespace cbl {
        *  @param start the starting position for each chain
        *  @param thin the position step
        *
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void write_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start=0, const int thin=1)
       { (void)output_dir; (void)output_file; (void)xx; (void)start; (void)thin; cbl::ErrorCBL("", "write_from_chains", "Model.h"); }
@@ -431,11 +436,11 @@ namespace cbl {
        *  @param start the starting position for each chain
        *  @param thin the position step
        *
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void write_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const int start=0, const int thin=1)
       { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)start; (void)thin; cbl::ErrorCBL("", "write_from_chains", "Model.h"); }
-
 
     };
   }

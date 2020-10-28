@@ -93,7 +93,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of class ThreePointCorrelation_angular_connected
+	 *  _angular_connected
 	 */
 	ThreePointCorrelation_angular_connected () = default;
 
@@ -108,7 +108,7 @@ namespace cbl {
 	 *  @param perc_increase the ratio
 	 *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
 	 *  @param nbins number of bins
-	 *  @return object of class ThreePointCorrelation_angular_connected
+	 *  _angular_connected
 	 */
 	ThreePointCorrelation_angular_connected (const catalogue::Catalogue data, const catalogue::Catalogue random, const double side_s, const double side_u, const double perc_increase, const int nbins)
 	  : ThreePointCorrelation(data, random) { ErrorCBL("", "ThreePointCorrelation_angular_connected", "ThreePointCorrelation_angular_connected.h", cbl::glob::ExitCode::_workInProgress_); set_parameters(side_s, side_u, perc_increase, nbins); }
@@ -124,14 +124,14 @@ namespace cbl {
 	 *  @param r13 the size of r<SUB>13</SUB>
 	 *  @param r13_binSize the size of r<SUB>13</SUB> bin
 	 *  @param nbins number of bins
-	 *  @return object of class ThreePointCorrelation_angular_connected
+	 *  _angular_connected
 	 */
 	ThreePointCorrelation_angular_connected (const catalogue::Catalogue data, const catalogue::Catalogue random, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
 	  : ThreePointCorrelation(data, random) { ErrorCBL("", "ThreePointCorrelation_angular_connected", "ThreePointCorrelation_angular_connected.h", cbl::glob::ExitCode::_workInProgress_); set_parameters(r12, r12_binSize, r13, r13_binSize, nbins); }
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	~ThreePointCorrelation_angular_connected () = default;
 
@@ -150,7 +150,7 @@ namespace cbl {
 	 *  @param perc_increase the ratio
 	 *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
 	 *  @param nbins number of bins
-	 *  @return none
+	 *  
 	 *
 	 *  @warning This method has not been implemented yet
 	 */
@@ -163,7 +163,7 @@ namespace cbl {
 	 *  @param r13 the size of r<SUB>13</SUB>
 	 *  @param r13_binSize the size of r<SUB>13</SUB> bin 
 	 *  @param nbins number of bins
-	 *  @return none
+	 *  
 	 *
 	 *  @warning This method has not been implemented yet
 	 */
@@ -238,7 +238,7 @@ namespace cbl {
 	 *
 	 * @param seed the seed for random number generation
 	 *
-	 * @return none
+	 * 
 	 *
 	 * @warning This method has not been implemented yet
 	 */
@@ -257,7 +257,7 @@ namespace cbl {
 	 *  function
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  
 	 *
 	 *  @warning This method has not been implemented yet
 	 */
@@ -267,7 +267,7 @@ namespace cbl {
 	 *  @brief write the measured three-point correlation covariance
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  
 	 */
 	void write_covariance (const std::string dir, const std::string file) const override;
 

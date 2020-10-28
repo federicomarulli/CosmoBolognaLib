@@ -79,7 +79,7 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return an object of class Data2D
+       *  2D
        */
       Data2D ()
 	: Data(DataType::_2D_) {}
@@ -114,7 +114,7 @@ namespace cbl {
        *  if the input file has only 2 columns, the errors will be set
        *  to 1
        *
-       *  @return an object of class Data2D
+       *  2D
        *
        *  @warning this function is not implemented yet: work in
        *  progress!
@@ -133,7 +133,7 @@ namespace cbl {
        * 
        *  @param data matrix containing the f(x,y) values
        *
-       *  @return an object of class Data2D
+       *  2D
        */
       Data2D (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> data);
 
@@ -149,7 +149,7 @@ namespace cbl {
        *
        *  @param error matrix containing the errors
        *
-       *  @return an object of class Data2D
+       *  2D
        */
       Data2D (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> data, const std::vector<std::vector<double>> error); 
 
@@ -165,7 +165,7 @@ namespace cbl {
        *
        *  @param error vector containing the errors
        *
-       *  @return an object of class Data2D
+       *  2D
        */
       Data2D (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<double> error); 
 
@@ -181,13 +181,12 @@ namespace cbl {
        *
        *  @param covariance matrix containing the covariance 
        *
-       *  @return an object of class Data2D
+       *  2D
        */
       Data2D (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<std::vector<double>> covariance); 
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~Data2D () = default;
 
@@ -272,7 +271,6 @@ namespace cbl {
       /**
        *  @brief get data
        *  @param [out] data vector containing the dataset
-       *  @return none
        */
       void get_data (std::vector<std::vector<double>> &data) const override;
 
@@ -288,7 +286,6 @@ namespace cbl {
       /**
        *  @brief get error
        *  @param [out] error vector containing the error
-       *  @return none
        */
       void get_error (std::vector<std::vector<double>> &error) const override;
 
@@ -303,14 +300,12 @@ namespace cbl {
       /**
        *  @brief set interval variable m_x
        *  @param x vector containing x points
-       *  @return none
        */
       void set_xx (const std::vector<double> x) override { m_x = x; m_xsize=m_x.size();}
 
       /**
        *  @brief set interval variable m_y
        *  @param y vector containing y points
-       *  @return none
        */
       void set_yy (const std::vector<double> y) override { m_y = y; m_ysize=m_y.size(); }
 
@@ -387,8 +382,6 @@ namespace cbl {
        *  @param ww number of characters to be used as field width
        *
        *  @param rank cpu index (for MPI usage)
-       *
-       *  @return none
        */
       void write (const std::string dir, const std::string file, const std::string header, const bool full, const int prec=4, const int ww=8, const int rank=0) const;
           
@@ -400,8 +393,6 @@ namespace cbl {
        *  @param file the output file
        *
        *  @param precision the floating point precision
-       *
-       *  @return none
        */
       void write_covariance (const std::string dir, const std::string file, const int precision=10) const override;
 

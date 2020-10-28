@@ -90,7 +90,7 @@ namespace cbl {
 	/**
 	 *  @brief private member to set the parameter types
 	 *
-	 *  @return none
+	 *  
 	 */
 	void m_set_parameter_type () override;
 
@@ -118,7 +118,7 @@ namespace cbl {
 	/**
 	 *  @brief default constructor
 	 *
-	 *  @return object of class PosteriorParameters
+	 *  
 	 */
 	PosteriorParameters () = default;
 
@@ -133,14 +133,14 @@ namespace cbl {
 	 *
 	 *  @param parameterNames the parameter names
 	 *
-	 *  @return object of class PosteriorParameters
+	 *  
 	 */
 	PosteriorParameters (const size_t nparameters, const std::vector<std::shared_ptr<PriorDistribution>> priorDistributions, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames);
 
 	/**
 	 *  @brief default destructor
 	 *
-	 *  @return none
+	 *  
 	 */
 	~PosteriorParameters () = default;
 
@@ -213,7 +213,7 @@ namespace cbl {
 	 *
 	 *  @param parameterNames the parameter names
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_parameters (const size_t nparameters, const std::vector<std::shared_ptr<PriorDistribution>> priorDistributions, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames) override;
 
@@ -230,7 +230,7 @@ namespace cbl {
 	 *
 	 * @param thin number of jumped indexes in the chain
 	 *
-	 * @return none
+	 * 
 	 */
 	void set_parameter_covariance (const int start=0, const int thin=1);
 
@@ -268,7 +268,7 @@ namespace cbl {
 	 *
 	 * @param priorDistribution the prior distribution
 	 *
-	 * @return none
+	 * 
 	 */
 	void set_prior_distribution (const int p, const std::shared_ptr<PriorDistribution> priorDistribution);
 
@@ -278,7 +278,7 @@ namespace cbl {
 	 *
 	 * @param priorDistribution the prior distributions
 	 *
-	 * @return none
+	 * 
 	 */
 	void set_prior_distribution (const std::vector<std::shared_ptr<PriorDistribution>> priorDistribution);
 
@@ -288,7 +288,7 @@ namespace cbl {
 	 *
 	 * @param ran_generator the random generator
 	 *
-	 * @return none
+	 * 
 	 */
 	void set_prior_distribution_seed (const std::shared_ptr<random::UniformRandomNumbers_Int> ran_generator);
 	
@@ -347,7 +347,7 @@ namespace cbl {
 	 *
 	 *  @param bestfit_value parameter bestfit values
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_bestfit_values (const std::vector<double> bestfit_value);
 	
@@ -362,14 +362,14 @@ namespace cbl {
 	 *
 	 *  @param seed seed for random extraction
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_bestfit_values (const int start, const int thin, const int nbins, const int seed) override;
 	
 	/**
 	 *  @brief write bestfit info
 	 *
-	 *  @return none
+	 *  
 	 */
 	void write_bestfit_info ();
 
@@ -395,7 +395,7 @@ namespace cbl {
 	 *
 	 * @param weight chain weight
 	 *
-	 * @return none
+	 * 
 	 */
 	void set_posterior_distribution (const int start, const int thin, const int nbins, const int seed=34121, const std::vector<double> weight={});
 
@@ -458,7 +458,7 @@ namespace cbl {
 	 *
 	 * @param weight chain weight
 	 *
-	 * @return none
+	 * 
 	 */
 	void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false, const int ns=-1, const int nb=-1, const std::vector<double> weight={});
 	
@@ -516,7 +516,7 @@ namespace cbl {
 	 *
 	 * @param weight chain weight
 	 *
-	 * @return none
+	 * 
 	 */
 	void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false, const int ns=-1, const int nb=-1, const std::vector<double> weight={});
 
@@ -541,14 +541,14 @@ namespace cbl {
          *
 	 * @param nwalkers the number of parallel walkers
 	 *
-	 * @return none
+	 * 
 	 */
 	void set_chain (const size_t size, const size_t nwalkers);
 
 	/**
 	 * @brief reset the chain using m_size and m_nwalkers
 	 *
-	 * @return none
+	 * 
 	 */
 	void reset_chain ();
 
@@ -557,7 +557,7 @@ namespace cbl {
 	 *
 	 * @param append the lenght of the empty chunk of the chain 
 	 *
-	 * @return none
+	 * 
 	 */
 	void expand_chain (const int append);
 
@@ -613,7 +613,7 @@ namespace cbl {
 	 *
 	 * @param value the chain value
 	 *
-	 * @return none
+	 * 
 	 */
 	void set_chain_value (const int param, const int pos, const int ww, const double value)
 	{ m_chain_value[param][m_inds_to_index(pos, ww)] = value; }
@@ -625,7 +625,7 @@ namespace cbl {
 	 *
 	 *  @param nwalkers the number of parallel walkers
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_chain_values (const std::vector<std::vector<double>> values, const int nwalkers);
 
@@ -634,7 +634,7 @@ namespace cbl {
 	 *
 	 *  @param values the input chain values
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_chain_values (const std::vector<std::vector<std::vector<double>>> values);
 
@@ -643,7 +643,7 @@ namespace cbl {
 	 *
 	 * @param values the starting values
 	 *
-	 * @return none
+	 * 
 	 */
 	void initialize_chain (const std::vector<std::vector<double>> values);
 
@@ -651,7 +651,7 @@ namespace cbl {
 	 * @brief initialize the chain values
 	 * random sampling the parameter priors
 	 *
-	 * @return none
+	 * 
 	 */
 	void initialize_chain_from_prior ();
 
@@ -664,7 +664,7 @@ namespace cbl {
 	 *
 	 * @param seed the random number generator seed
 	 *
-	 * @return none
+	 * 
 	 */
 	void initialize_chain_ball (const std::vector<double> center, const double radius, const double seed);
 
@@ -676,7 +676,7 @@ namespace cbl {
 	 *
 	 * @param seed the random number generator seed
 	 *
-	 * @return none
+	 * 
 	 */
 	void initialize_chain_ball_bestfit (const double radius, const double seed);
     };

@@ -76,13 +76,13 @@ namespace cbl {
 	  /**
 	   *  @brief default constructor
 	   *
-	   *  @return object of class NumberCounts1D_Mass
+	   *  1D_Mass
 	   */
 	  NumberCounts1D_Mass () {}
 
 	  /**
 	   *  @brief default destructor
-	   *  @return none
+	   *  
 	   */
 	  virtual ~NumberCounts1D_Mass () = default;
 
@@ -104,7 +104,7 @@ namespace cbl {
 	   *
 	   *  @param fact factor used to normalized the distribution
 	   *
-	   *  @return object of class NumberCounts1D_Mass
+	   *  1D_Mass
 	   */
 	  NumberCounts1D_Mass (const catalogue::Catalogue data, const size_t nbins, const double minVar=par::defaultDouble, const double maxVar=par::defaultDouble, const double shift = 0.5, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.) : NumberCounts1D(catalogue::Var::_Mass_, BinType::_logarithmic_, data, nbins, minVar, maxVar, shift, hist_type, fact) {} 
 

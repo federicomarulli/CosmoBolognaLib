@@ -64,104 +64,109 @@ namespace cbl {
      */
     class Modelling2D : public Modelling {
 
-      public:
+    public:
 
-        /**
-         *  @name Constructors/destructors
-         */
-        ///@{
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{
 
-        /**
-         *  @brief default constuctor
-         *  @return object of class Modelling
-         */
-        Modelling2D () {}
+      /**
+       *  @brief default constuctor
+       *  
+       */
+      Modelling2D () {}
 
-        /**
-         *  @brief default destructor
-         *  @return none
-         */
-        ~Modelling2D () = default;
+      /**
+       *  @brief default destructor
+       *  
+       */
+      ~Modelling2D () = default;
 
-        ///@}
+      ///@}
 
-        /**
-         *  @name Member functions used to set internal parameters
-         */
-        ///@{
+      /**
+       *  @name Member functions used to set internal parameters
+       */
+      ///@{
 
-        /**
-         *  @brief set the fit range 
-         *
-         *  @param xmin minimum x value used for the fit
-         *
-         *  @param xmax maximum x value used for the fit
-         *
-         *  @param ymin minimum y value used for the fit
-         *
-         *  @param ymax maximum y value used for the fit
-         *
-         *  @return none
-         */
-        void set_fit_range (const double xmin, const double xmax, const double ymin, const double ymax);
+      /**
+       *  @brief set the fit range 
+       *
+       *  @param xmin minimum x value used for the fit
+       *
+       *  @param xmax maximum x value used for the fit
+       *
+       *  @param ymin minimum y value used for the fit
+       *
+       *  @param ymax maximum y value used for the fit
+       *
+       *  
+       */
+      void set_fit_range (const double xmin, const double xmax, const double ymin, const double ymax);
 
-        ///@}
+      ///@}
+      
+      /**
+       *  @name Member functions used for Input/Output
+       */
+      ///@{
 
-        /**
-         *  @brief write the model at xx, yy
-         *  for given parameters
-         *
-         *  @param output_dir the output directory
-         *  @param output_file the output file
-         *  @param xx vector of points at which the model is computed,
-         *  first axis
-         *  @param yy vector of points at which the model is computed,
-         *  second axis
-         *  @param parameters vector containing the input parameters
-         *  used to compute the model; if this vector is not provided,
-         *  the model will be computed using the best-fit parameters
-         *
-         *  @return none
-         */
-        void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> parameters);
+      /**
+       *  @brief write the model at xx, yy
+       *  for given parameters
+       *
+       *  @param output_dir the output directory
+       *  @param output_file the output file
+       *  @param xx vector of points at which the model is computed,
+       *  first axis
+       *  @param yy vector of points at which the model is computed,
+       *  second axis
+       *  @param parameters vector containing the input parameters
+       *  used to compute the model; if this vector is not provided,
+       *  the model will be computed using the best-fit parameters
+       *
+       *  
+       */
+      void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> parameters);
 
-        /**
-         *  @brief write the model at xx, yy with best-fit parameters
-         *  obtained from posterior maximization
-         *  
-         *  @param output_dir the output directory
-         *  @param output_file the output file
-         *  @param xx vector of points at which the model is computed,
-         *  first axis
-         *  @param yy vector of points at which the model is computed,
-         *  second axis
-         *
-         *  @return none
-         */
-        void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy);
+      /**
+       *  @brief write the model at xx, yy with best-fit parameters
+       *  obtained from posterior maximization
+       *  
+       *  @param output_dir the output directory
+       *  @param output_file the output file
+       *  @param xx vector of points at which the model is computed,
+       *  first axis
+       *  @param yy vector of points at which the model is computed,
+       *  second axis
+       *
+       *  
+       */
+      void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy);
 
-        /**
-         *  @brief write the model at xx, yy
-         *  computing 16th, 50th and 84th percentiles
-         *  from the chains.
-         *
-         *  @param output_dir the output directory
-         *  @param output_file the output file
-         *  @param xx vector of points at which the model is computed,
-         *  first axis
-         *  @param yy vector of points at which the model is computed,
-         *  second axis
-         *  @param start the starting position for each chain
-         *  @param thin the position step
-         *
-         *  @return none
-         */
-        void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const int start=0, const int thin=1);
+      /**
+       *  @brief write the model at xx, yy
+       *  computing 16th, 50th and 84th percentiles
+       *  from the chains.
+       *
+       *  @param output_dir the output directory
+       *  @param output_file the output file
+       *  @param xx vector of points at which the model is computed,
+       *  first axis
+       *  @param yy vector of points at which the model is computed,
+       *  second axis
+       *  @param start the starting position for each chain
+       *  @param thin the position step
+       *
+       *  
+       */
+      void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const int start=0, const int thin=1);
 
-        ///@}
+      ///@}
 
-  };
-}
+    };
+  }
 }
 
 #endif

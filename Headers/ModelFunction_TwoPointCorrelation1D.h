@@ -183,7 +183,6 @@ namespace cbl {
 
 	/**
 	 * @brief default constructor
-	 * @return object of type STR_data_HOD
 	 */
 	STR_data_HOD () = default;
 	

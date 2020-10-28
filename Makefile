@@ -11,7 +11,7 @@ F = gfortran
 PY = python
 
 # swig, used to create the python wrapper
-SWIG = swig3.0
+SWIG = swig
 
 # doxygen, used to create the documentation
 Doxygen = doxygen
@@ -29,16 +29,22 @@ dir_LIB_FFTW =
 dir_INC_cfitsio =
 dir_LIB_cfitsio =
 
+# boost installation directories
+dir_INC_BOOST =
+dir_LIB_BOOST =
+
 
 ############################################################################
 ### hopefully, the user would never modify the makefile after this point ###
 ############################################################################
 
+EIGEN_VERSION = 3.3.7
+
 Dir_H = Headers/
 Dir_CCfits = External/CCfits/
 Dir_CUBA = External/Cuba-4.2/
 Dir_FFTLOG = External/fftlog-f90-master/
-Dir_Eigen = External/eigen-3.3.4/
+Dir_Eigen = External/Eigen/eigen-$(EIGEN_VERSION)/
 Dir_Recfast = External/Recfast/
 
 dir_H = $(addprefix $(PWD)/,$(Dir_H))
@@ -60,7 +66,7 @@ FLAGS0 = -std=c++11 -fopenmp
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 FLAGST = $(FLAGS0) $(FLAGS)
 
-FLAGS_INC = -I$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H)
+FLAGS_INC = -isystem$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H) 
 
 FLAGS_LINK = -shared
 
@@ -115,15 +121,26 @@ endif
 ####################
 ### CCFITS FLAGS ###
 ####################
-FLAGS_CCFITS = -Wl,-rpath,$(dir_CCfits)/lib -L$(dir_CCfits)/lib -lCCfits
-CCfits_LIB = $(dir_CCfits)/lib/libCCfits.$(ES)
+FLAGS_CCFITS = -Wl,-rpath,$(dir_CCfits)lib -L$(dir_CCfits)lib -lCCfits
+CCfits_LIB = $(dir_CCfits)lib/libCCfits.$(ES)
 
 ifeq ($(dir_INC_cfitsio),)
     CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits && sed -i -e "s/bad_cast/bad_cast\&/g" ColumnT.h && ./configure CXX=$(CXX) --prefix=$(dir_CCfits) && make && make install
   else
     CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits &&  sed -i -e "s/bad_cast/bad_cast\&/g" ColumnT.h && ./configure CXX=$(CXX) --with-cfitsio-include=$(dir_INC_cfitsio) --with-cfitsio-libdir=$(dir_LIB_cfitsio) --prefix=$(dir_CCfits) && make && make install 
+  FLAGS_INC :=  $(FLAGS_INC) -I$(dir_INC_cfitsio)
 endif
 
+###################
+### BOOST FLAGS ###
+###################
+
+
+# add in FLAGS_INC
+ifeq ($(dir_INC_BOOST),)
+  else
+  FLAGS_INC :=  $(FLAGS_INC) -isystem$(dir_INC_BOOST)
+endif
 
 ####################
 ### FFTLOG FLAGS ###
@@ -160,7 +177,7 @@ ifeq ($(python_version_major),3)
 	PYINC = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("INCLUDEDIR"))')
 	PYLIB = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("LIBDIR"))')    
 	SWIG_FLAG = -python -c++ -py3 -threads
-	PYVERSION = $(python_version_major).$(python_version_minor)m
+	PYVERSION = $(python_version_major).$(python_version_minor)
 endif
 
 PFLAGS = -I$(PYINC)/python$(PYVERSION)
@@ -263,7 +280,7 @@ OBJ_FFT = $(OBJ_FFTLOG) $(dir_FFT)FFTlog.o
 
 OBJ_RAN = $(dir_RAN)RandomNumbers.o
 
-OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)SphericalHarmonics_Coefficients.o
+OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)LegendrePolynomials.o $(dir_FUNC)SphericalHarmonics_Coefficients.o
 
 OBJ_DATA = $(dir_DATA)Data.o $(dir_DATA)Data1D.o $(dir_DATA)Data1D_collection.o $(dir_DATA)Data2D.o $(dir_DATA)Data1D_extra.o $(dir_DATA)Data2D_extra.o $(dir_DATA)CovarianceMatrix.o $(dir_DATA)TaperedCovarianceMatrix.o $(dir_DATA)Table.o
 
@@ -305,7 +322,7 @@ OBJ_PARF = $(dir_PARF)ReadParameters.o $(dir_PARF)ParameterFile.o
 
 OBJ_CBL = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_PARF)
 
-OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/fortran/Release/*.o $(PWD)/External/CLASS/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o $(OBJ_CBL) $(PWD)/External/CPT_Library/*.o
+OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/fortran/Release/*.o $(PWD)/External/CLASS/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o $(OBJ_CBL) $(PWD)/External/CPT_Library/*.o $(PWD)/External/CAMB_SPT_private/*.o
 
 
 # objects for python compilation -> if OBJ_PYTHON=OBJ_CBL then all the CBL will be converted in python modules
@@ -328,6 +345,7 @@ define colorecho
 endef
 
 ALL:
+	make Eigen
 	make CUBA  
 	make CCfits
 	make CAMB
@@ -335,6 +353,7 @@ ALL:
 	make MPTbreeze
 	make mangle
 	make CPT_Library
+	make CAMB_SPT_private
 	$(call colorecho, "\n"Compiling the library: libKERNEL... "\n")
 	make -j3 libKERNEL
 	$(call colorecho, "\n"Compiling the library: libWRAP... "\n")
@@ -466,6 +485,8 @@ libPARF: $(OBJ_PARF) $(PWD)/Makefile
 libCBL: $(OBJ_CBL) $(PWD)/Makefile
 	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCBL.$(ES) $(OBJ_CBL) $(CUBA_LIB) $(FLAGS_CCFITS) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran 
 
+Eigen: $(PWD)/External/Eigen/eigen-$(EIGEN_VERSION)/Eigen/Dense
+
 CUBA: $(CUBA_LIB)
 
 CCfits: $(CCfits_LIB)
@@ -482,6 +503,9 @@ venice: $(PWD)/External/VIPERS/venice3.9/venice
 
 CPT_Library: 
 	cd $(PWD)/External/CPT_Library/ ; make all
+
+CAMB_SPT_private:
+	cd $(PWD)/External/CAMB_SPT_private/ ; make all
 
 allExamples:
 	$(call colorecho, "\n"Compiling the example code: vector.cpp ... "\n")
@@ -628,6 +652,7 @@ purgeALL:
 	rm -rf Doc/html/* Doc/xml/* 
 	rm -rf Cosmology/Tables/*
 	rm -rf External/EisensteinHu/output_linear/*
+	rm -rf External/Eigen/eigen-$(EIGEN_VERSION)/
 	cd External/CAMB/forutils ; make clean
 	cd External/CAMB/fortran ; make clean
 	rm -rf External/CAMB/fortran/camb
@@ -651,6 +676,8 @@ purgeALL:
 	cd External/CCfits ; rm -rf bin lib include CCfits *.fit .deps .libs; true
 	cd External/Recfast; make tidy
 	cd External/CPT_Library ; make clean 
+	cd External/CAMB_SPT_private ; make clean 
+	rm -rf External/CAMB_SPT_private/camb
 
 #################################################################### 
 
@@ -712,6 +739,9 @@ $(dir_FUNC)FuncXi.o: $(dir_FUNC)FuncXi.cpp $(HH) $(PWD)/Makefile
 
 $(dir_FUNC)FuncMultipoles.o: $(dir_FUNC)FuncMultipoles.cpp $(HH) $(PWD)/Makefile  
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)FuncMultipoles.cpp -o $(dir_FUNC)FuncMultipoles.o
+
+$(dir_FUNC)LegendrePolynomials.o: $(dir_FUNC)LegendrePolynomials.cpp $(HH) $(PWD)/Makefile 
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)LegendrePolynomials.cpp -o $(dir_FUNC)LegendrePolynomials.o
 
 $(dir_FUNC)SphericalHarmonics_Coefficients.o: $(dir_FUNC)SphericalHarmonics_Coefficients.cpp $(HH) $(PWD)/Makefile 
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_FUNC)SphericalHarmonics_Coefficients.cpp -o $(dir_FUNC)SphericalHarmonics_Coefficients.o
@@ -1284,7 +1314,7 @@ $(dir_Recfast)/src/Rec_corrs_CT.Recfast.o: $(dir_Recfast)/src/Rec_corrs_CT.Recfa
 
 $(dir_Python)CBL_wrap.o: $(dir_Python)CBL_wrap.cxx $(dir_Python)CBL.i $(HH) $(PWD)/Makefile 
 	$(call colorecho, "\n"Compiling the python wrapper. It may take a few minutes ... "\n")
-	$(CXX) $(FLAGST) -Wno-stringop-overflow -Wno-uninitialized $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)CBL_wrap.cxx -o $(dir_Python)CBL_wrap.o
+	$(CXX) $(FLAGST) -Wno-stringop-overflow -Wno-uninitialized -Wno-missing-field-initializers -Wno-unused-parameter $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)CBL_wrap.cxx -o $(dir_Python)CBL_wrap.o
 
 $(dir_Python)CBL_wrap.cxx: $(dir_Python)CBL.i $(HH) $(PWD)/Makefile
 	$(call colorecho, "\n"Running swig. It may take a few minutes ... "\n")
@@ -1293,13 +1323,15 @@ $(dir_Python)CBL_wrap.cxx: $(dir_Python)CBL.i $(HH) $(PWD)/Makefile
 
 #################################################################### 
 
+$(PWD)/External/Eigen/eigen-$(EIGEN_VERSION)/Eigen/Dense:
+	cd $(PWD)/External/Eigen/ && tar -xzf eigen-$(EIGEN_VERSION).tar.gz
 
 $(PWD)/External/CAMB/fortran/camb:
 	cd $(PWD)/External/CAMB/forutils ; make clean
 	cd $(PWD)/External/CAMB/fortran ; make clean && make F90C=$(F) && make clean && cd ../../../
 
 $(PWD)/External/CLASS/class:
-	cd $(PWD)/External/CLASS ; make clean && make CC=$(CC) OPTFLAG=-O3 && make clean && cd ../..
+	cd $(PWD)/External/CLASS ; make clean && make CC=$(CC) PYTHON=$(PY) OPTFLAG=-O3 && make clean && cd ../..
 
 $(PWD)/External/MPTbreeze-v1/mptbreeze:
 	cd External/MPTbreeze-v1/Cuba-1.4/ ; ./configure CC=$(CC) F77=$(F) && make lib && cd ../../../
@@ -1313,4 +1345,7 @@ $(PWD)/External/VIPERS/venice3.9/venice:
 
 $(PWD)/External/CPT_Library:
 	cd $(PWD)/External/CPT_Library ; make clean && make F90C=$(F) && make clean && cd ../..
+
+$(PWD)/External/CAMB_SPT_private:
+	cd $(PWD)/External/CAMB_SPT_private ; make clean && make F90C=$(F) && make clean && cd ../..
 

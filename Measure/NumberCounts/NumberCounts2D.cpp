@@ -44,7 +44,7 @@ using namespace measure::numbercounts;
 // ============================================================================
 
 
-cbl::measure::numbercounts::NumberCounts2D::NumberCounts2D(const catalogue::Var var1, const BinType bin_type1, const catalogue::Var var2, const BinType bin_type2, const catalogue::Catalogue data, const size_t nbins1, const size_t nbins2, const double minVar1, const double maxVar1, const double minVar2, const double maxVar2, const double shift1, const double shift2, const glob::HistogramType hist_type, const double fact)
+cbl::measure::numbercounts::NumberCounts2D::NumberCounts2D (const catalogue::Var var1, const BinType bin_type1, const catalogue::Var var2, const BinType bin_type2, const catalogue::Catalogue data, const size_t nbins1, const size_t nbins2, const double minVar1, const double maxVar1, const double minVar2, const double maxVar2, const double shift1, const double shift2, const glob::HistogramType hist_type, const double fact)
 {
   m_Var1 = var1;
   m_Var2 = var2;
@@ -87,14 +87,14 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measurePois
   vector<double> error(m_histogram->nbins1()*m_histogram->nbins2());
 
   vector<vector<double>> ave_var1 = m_histogram->averaged_bins1();
-  vector<vector<double>> ave_var2 = m_histogram->error_bins2();
-  vector<vector<double>> err_var1 = m_histogram->averaged_bins1();
+  vector<vector<double>> ave_var2 = m_histogram->averaged_bins2();
+  vector<vector<double>> err_var1 = m_histogram->error_bins1();
   vector<vector<double>> err_var2 = m_histogram->error_bins2();
 
   vector<vector<double>> extra_info(11);
 
-  for(size_t i=0; i<m_histogram->nbins1(); i++)
-    for(size_t j=0; j<m_histogram->nbins2(); j++){
+  for (size_t i=0; i<m_histogram->nbins1(); i++)
+    for (size_t j=0; j<m_histogram->nbins2(); j++) {
       hist[i*m_histogram->nbins2()+j] = m_histogram->operator()(i, j, m_HistogramType, m_fact);
       error[i*m_histogram->nbins2()+j] = m_histogram->error(i, j, m_HistogramType, m_fact);
       extra_info[0].push_back(edges1[i]);
@@ -152,6 +152,7 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measureJack
 
   return m_dataset;
 }
+
 
 // ============================================================================
 
@@ -226,12 +227,12 @@ void cbl::measure::numbercounts::NumberCounts2D::compute_covariance (const vecto
   vector<vector<double>> measures(histo.size(), vector<double>(histo[0]->nbins1()*histo[0]->nbins2(),0));
   vector<vector<double>> cov;
 
-  for(size_t i=0; i<histo.size(); i++)
-    for(size_t j=0; j<histo[i]->nbins1(); j++)
-      for(size_t k=0; k<histo[i]->nbins2(); k++)
+  for (size_t i=0; i<histo.size(); i++)
+    for (size_t j=0; j<histo[i]->nbins1(); j++)
+      for (size_t k=0; k<histo[i]->nbins2(); k++)
 	measures[i][j*histo[0]->nbins2()+k] = histo[i]->operator()(j, k, m_HistogramType, m_fact);
 
-  covariance_matrix (measures, cov, JK);
+  covariance_matrix(measures, cov, JK);
   m_dataset->set_covariance(cov);
 }
 
@@ -242,9 +243,10 @@ void cbl::measure::numbercounts::NumberCounts2D::compute_covariance (const vecto
 void cbl::measure::numbercounts::NumberCounts2D::write (const string dir, const string file, const int rank) const 
 {
   string mkdir = "mkdir -p "+dir;
-  if(system(mkdir.c_str())) {}
+  if (system(mkdir.c_str())) {}
 
-  string header = "# bin1_center bin2_center counts error r1_1 r2_1 r1_2 r2_2";
+  string header = "# bin1_center bin2_center  histogram  error  bin1_low bin1_up  bin2_low bin2_up unweighted_counts  unweighted_counts_error hist_normalization bin1_mean bin1_std bin2_mean bin2_std";
+  
   m_dataset->write(dir, file, header, false, 4, 8, rank);
 }
 
@@ -255,7 +257,7 @@ void cbl::measure::numbercounts::NumberCounts2D::write (const string dir, const 
 void cbl::measure::numbercounts::NumberCounts2D::write_covariance (const string dir, const string file) const 
 { 
   string mkdir = "mkdir -p "+dir;
-  if(system(mkdir.c_str())) {}
+  if (system(mkdir.c_str())) {}
   m_dataset->write_covariance(dir, file, 8);
 }
 

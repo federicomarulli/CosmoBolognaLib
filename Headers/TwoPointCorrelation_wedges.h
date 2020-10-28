@@ -144,7 +144,7 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measurePoisson (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_) override;
 
@@ -180,7 +180,7 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measureJackknife (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample = par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_) override;
 
@@ -223,7 +223,7 @@ namespace cbl {
 	 *
 	 *  @param seed the seed for random number generation
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measureBootstrap (const int nMocks, const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample = par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213) override;
 
@@ -297,7 +297,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of class TwoPointCorrelation_wedges
+	 *  _wedges
 	 */
 	TwoPointCorrelation_wedges () { m_twoPType = TwoPType::_wedges_; }
 	
@@ -362,7 +362,7 @@ namespace cbl {
 	 *  samples, used to improve performances in random-random
 	 *  pair counts
 	 *
-	 *  @return object of class TwoPointCorrelation_wedges
+	 *  _wedges
 	 */
 	TwoPointCorrelation_wedges (catalogue::Catalogue data, catalogue::Catalogue random, const BinType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const int nWedges=2, const int nbins_mu=50, const double shift_mu=0.5, const std::vector<std::vector<double>> mu_integral_limits={{0., 0.5}, {0.5, 1.}}, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, nbins_rad, shift_rad, BinType::_linear_, 0., 1., nbins_mu, shift_mu, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
@@ -438,7 +438,7 @@ namespace cbl {
 	 *  samples, used to improve performances in random-random
 	 *  pair counts
 	 *
-	 *  @return object of class TwoPointCorrelation_wedges
+	 *  _wedges
 	 */
 	TwoPointCorrelation_wedges (catalogue::Catalogue data, catalogue::Catalogue random, const BinType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const int nWedges=2, const double binSize_mu=1., const double shift_mu=0.5, const std::vector<std::vector<double>> mu_integral_limits={{0., 0.5}, {0.5, 1.}}, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation2D_polar(data, random, binType_rad, rMin, rMax, binSize_rad, shift_rad, BinType::_linear_, 0., 1., binSize_mu, shift_mu, angularUnits, angularWeight, compute_extra_info, random_dilution_fraction)
@@ -457,7 +457,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	~TwoPointCorrelation_wedges () = default;
 
@@ -599,7 +599,7 @@ namespace cbl {
 	 *
 	 *  @param seed the seed for random number generation
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={},  const std::string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213) override;
 
@@ -615,7 +615,7 @@ namespace cbl {
 	 *  @brief read the wedges of the two-point correlation function
 	 *  @param dir input directory
 	 *  @param file input file
-	 *  @return none
+	 *  
 	 */
 	void read (const std::string dir, const std::string file) override
 	{ (void)dir; (void)file; ErrorCBL("", "read", "TwoPointCorrelation_wedges.h", glob::ExitCode::_workInProgress_); }  
@@ -626,7 +626,7 @@ namespace cbl {
 	 *  @param dir output directory
 	 *  @param file output file
 	 *  @param rank cpu index (for MPI usage)
-	 *  @return none
+	 *  
 	 */
 	void write (const std::string dir=par::defaultString, const std::string file=par::defaultString, const int rank=0) const override;
 
@@ -642,7 +642,7 @@ namespace cbl {
 	 *  @brief read the measured covariance matrix
 	 *  @param dir input directory
 	 *  @param file input file
-	 *  @return none
+	 *  
 	 */
 	void read_covariance (const std::string dir, const std::string file) override;
 
@@ -650,7 +650,7 @@ namespace cbl {
 	 *  @brief write the measured two-point correlation
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  
 	 */
 	void write_covariance (const std::string dir, const std::string file) const override;
 
@@ -660,7 +660,7 @@ namespace cbl {
 	 *  functions used to compute the covariance matrix
 	 *  @param JK true &rarr; compute the jackknife covariance
 	 *  matrix; false compute the standard covariance matrix
-	 *  @return none
+	 *  
 	 */
 	void compute_covariance (const std::vector<std::shared_ptr<data::Data>> xi, const bool JK) override;
 
@@ -671,7 +671,7 @@ namespace cbl {
 	 *  covariance matrix
 	 *  @param JK true &rarr; compute the jackknife covariance
 	 *  matrix; false compute the standard covariance matrix
-	 *  @return none
+	 *  
 	 */
 	void compute_covariance (const std::vector<std::string> file, const bool JK) override;
 

@@ -86,8 +86,6 @@ namespace cbl {
       /**
        * @brief set internal attributes to
        * default values
-       *
-       * @return None
        */
       void m_set_default ();
 
@@ -101,7 +99,8 @@ namespace cbl {
        * @param prec the precision required in the inversion of the
        * covariance matrix
        *
-       * @return None
+       * @return none, or an error message if the derived object does
+       * not have this member
        */
       virtual void m_set (const std::vector<double> matrix, const double nmeasures=-1, const double prec=1.e-10);
 
@@ -133,7 +132,7 @@ namespace cbl {
       /**
        *  @brief default constructor
        *
-       *  @return an object of class CovarianceMatrix
+       *  
        */
       CovarianceMatrix () { m_set_default(); }
       
@@ -148,7 +147,7 @@ namespace cbl {
        *  @param prec the precision required in the inversion of the
        *  covariance matrix
        *
-       *  @return an object of class CovarianceMatrix
+       *  
        */
       CovarianceMatrix (std::vector<std::vector<double>> covariance_matrix, const double nmeasures=-1, const double prec=1.e-10) 
       { set_from_matrix(covariance_matrix, nmeasures, prec); }
@@ -160,7 +159,7 @@ namespace cbl {
        *
        *  @param nmeasures number of measures used to compute the covariance
        *
-       *  @return an object of class CovarianceMatrix
+       *  
        */
       CovarianceMatrix (std::vector<double> standard_deviation, const double nmeasures=-1)
       {set_from_standard_deviation(standard_deviation, nmeasures);}
@@ -183,7 +182,7 @@ namespace cbl {
        *  @param prec the precision required in the inversion of the
        *  	 covariance matrix
        *
-       *  @return an object of class CovarianceMatrix
+       *  
        */
       CovarianceMatrix (const std::string filename, const int cov_col=2, const int skipped_lines=0, const double nmeasures=-1, const double prec=1.e-10) 
       {read(filename, cov_col, skipped_lines, prec, nmeasures); }
@@ -191,7 +190,6 @@ namespace cbl {
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       virtual ~CovarianceMatrix () = default;
 
@@ -354,8 +352,6 @@ namespace cbl {
        *  	 covariance matrix
        *
        *  @param nmeasures number of measures used to compute the covariance
-       *
-       *  @return none
        */
       void set_from_matrix (const std::vector<std::vector<double>> covariance, const double nmeasures=-1, const double prec=1.e-10) 
       { m_set(cbl::flatten(covariance), nmeasures, prec); }
@@ -366,8 +362,6 @@ namespace cbl {
        *  @param standard_deviation std::vector containing the standard deviation
        *
        *  @param nmeasures number of measures used to compute the covariance
-       *
-       *  @return none
        */
       void set_from_standard_deviation (const std::vector<double> standard_deviation, const double nmeasures=-1);
 
@@ -390,8 +384,6 @@ namespace cbl {
        *
        * @param prec the precision required in the inversion of the
        * covariance matrix
-       *
-       * @return None
        */
       void measure (const std::vector<std::shared_ptr<Data>> dataset, const double normalization=1, const double prec=1.e-10);
 
@@ -417,13 +409,15 @@ namespace cbl {
        *
        * @param prec the precision required in the inversion of the
        * covariance matrix
-       *
-       * @return None
        */
       void measure (const std::vector<std::vector<std::shared_ptr<Data>>> dataset, const double normalization=1, const double prec=1.e-10);
       
       ///@}
 
+      /**
+       *  @name Member functions used for Input/Output
+       */
+      ///@{
 
       /**
        *  @brief set the covariance matrix, reading from
@@ -442,8 +436,6 @@ namespace cbl {
        *
        *  @param prec the precision required in the inversion of the
        *  	 covariance matrix
-       *
-       *  @return none
        */
       void read (const std::string filename, const int cov_col=2, const int skipped_lines=0, const double nmeasures=-1, const double prec=1.e-10);
       
@@ -459,8 +451,6 @@ namespace cbl {
        *  @param precision the float precision
        *
        *  @param rank cpu index (for MPI usage)
-       *
-       *  @return none
        */
       void write (const std::string dir, const std::string file, const int precision=4, const int rank=0) const;
 

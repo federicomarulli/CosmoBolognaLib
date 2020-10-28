@@ -184,6 +184,23 @@ namespace cbl {
   double Legendre_polynomial_triangles_average (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const double r23_min, const double r23_max, const int ll, const double rel_err=1.e-5, const double abs_err=1.e-8, const int nevals=100);
 
   /**
+   *  @brief the average of the Legendre polynomial up to a maximum
+   *  order lMax of all triangles with sides r12, r13
+   *
+   *  @param r12 first triangle side
+   *  @param r13 second triangle side
+   *  @param deltaR the bin width
+   *  @param lMax the maximum Legedre polynomial order
+   *  @param rel_err the relative error
+   *  @param abs_err the absolute error
+   *  @param nevals the maximum number of integrals evaluation
+   *
+   *  @return the average of the Legendre polynomial of the l-th order
+   *  over the mu range
+   */
+  std::vector<std::vector<double>> Legendre_polynomial_triangles_average (const double r12, const double r13, const double deltaR, const int lMax, const double rel_err=1.e-5, const double abs_err=1.e-8, const int nevals=100);
+
+  /**
    *  @brief the order l, degree m spherical harmonics
    * 
    *  @param l the degree l 
@@ -344,8 +361,6 @@ namespace cbl {
    *
    *  @param [in] col the columns to be read
    *
-   *  @return none
-   *
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
    */
@@ -365,12 +380,30 @@ namespace cbl {
    *
    *  @param [in] col the columns to be read
    *
-   *  @return none
-   *
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
    */
   void read_matrix (const std::string file_matrix, std::vector<double> &xx, std::vector<double> &yy, std::vector<std::vector<double>> &matrix, const std::vector<int> col={});
+
+  /**
+   *  @brief read a data from a file ASCII
+   *
+   *  @param file_name the name of the file to read
+   *
+   *  @param path_name the path where the file is stored
+   *
+   *  @param column_data vector containing the indices of the columns
+   *  to read, starting the counting from 1
+   *
+   *  @param skip_nlines the number of lines to skip 
+   *
+   *  @return a vector of vectors containing the columns (first index)
+   *  and the lines (second index) read from the file
+   *
+   *  @author Sofia Contarini
+   *  @author sofia.contarini3@unibo.it
+   */
+  std::vector<std::vector<double>> read_file (const std::string file_name, const std::string path_name, const std::vector<int> column_data, const int skip_nlines=0);
 
   /**
    *  @brief compute the determinant of a matrix
@@ -406,7 +439,6 @@ namespace cbl {
    *  \f$N_{res}=-1\f$ if the covariance matrix has not been estimated
    *  with resampling methods
    *
-   *  @return none
    */
   void invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const double prec=1.e-10, const int Nres=-1); 
 
@@ -442,7 +474,6 @@ namespace cbl {
    *  \f$N_{res}=-1\f$ if the covariance matrix has not been estimated
    *  with resampling methods
    *
-   *  @return none
    */
   void invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const int i1, const int i2, const double prec=1.e-10, const int Nres=-1); 
 
@@ -456,7 +487,6 @@ namespace cbl {
    *  @param [in] JK false &rarr; normalize to 1/(n-1); true &rarr;
    *  normalize to n-1/n (for Jackknife)
    *
-   *  @return none
    */
   void covariance_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &cov, const bool JK=false);
 
@@ -474,7 +504,6 @@ namespace cbl {
    *  @param [in] JK false &rarr; normalize to 1/(n-1); true &rarr;
    *  normalize to n-1/n (for Jackknife)
    *
-   *  @return none
    */
   void covariance_matrix (const std::vector<std::string> file, std::vector<double> &rad, std::vector<double> &mean, std::vector<std::vector<double>> &cov, const bool JK=false);
 
@@ -490,7 +519,6 @@ namespace cbl {
    *  @param [in] JK false &rarr; normalize to 1/(n-1); true &rarr;
    *  normalize to n-1/n (for Jackknife)
    *
-   *  @return none
    */
   void covariance_matrix (const std::vector<std::string> file, const std::string covariance_matrix_file, const bool JK=0);
 
@@ -515,7 +543,6 @@ namespace cbl {
    *  \f$N_{res}=-1\f$ if the covariance matrix has not been estimated
    *  with resampling methods
    *
-   *  @return none
    *
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
@@ -742,7 +769,6 @@ namespace cbl {
    *
    *  @param NN the number of elements to be read 
    *
-   *  @return none
    *
    *  @author Tommaso Ronconi
    *  @author tronconi@sissa.it
@@ -835,7 +861,6 @@ namespace cbl {
    *  @param [out] var the variance
    *  @param [out] skew the skewness
    *  @param [out] curt the kurtosis
-   *  @return none
    */
   void Moment (const std::vector<double> data, double &ave, double &adev, double &sdev, double &var, double &skew, double &curt);
 
@@ -1180,7 +1205,6 @@ namespace cbl {
    *  @param [out] Phi std::vector containing the binned values of the var
    *  function
    *  @param [out] err std::vector containing the Poisson errors
-   *  @return none
    */
   void measure_var_function (const std::vector<double> var, const int bin, const double V_min, const double V_max, const double Volume, std::vector<double> &Var, std::vector<double> &Phi, std::vector<double> &err);
 
@@ -1206,7 +1230,6 @@ namespace cbl {
    *  @param [in] conv true &rarr; compute the Gaussian convolvolution of
    *  the distribution; false &rarr; do not convolve
    *  @param [in] sigma &sigma; of the Gaussian kernel
-   *  @return none
    */
   void distribution (std::vector<double> &xx, std::vector<double> &fx, std::vector<double> &err, const std::vector<double> FF, const std::vector<double> WW, const int nbin, const bool linear=true, const std::string file_out=par::defaultString, const double fact=1., const double V1=par::defaultDouble, const double V2=par::defaultDouble, const std::string bin_type="Linear", const bool conv=false, const double sigma=0.);
 
@@ -1263,7 +1286,6 @@ namespace cbl {
    *  @param [in,out] xx std::vector containing the grid points
    *  @param [in,out] yy std::vector containing the values of the function at the
    *  grid points
-   *  @return none
    */
   void bin_function (const std::string file_grid, double func(double, void*), void *par, const int bin, const double x_min, const double x_max, const std::string binning, std::vector<double> &xx, std::vector<double> &yy);
 
@@ -1283,7 +1305,6 @@ namespace cbl {
    *  @param [in,out] xx2 std::vector containing the grid points in one direction
    *  @param [in,out] yy std::vector containing the values of the function at the
    *  grid points
-   *  @return none
    */
   void bin_function_2D (const std::string file_grid, double func(double *, size_t, void *), void * par, const int bin, const double x1_min, const double x1_max, const double x2_min, const double x2_max, const std::string binning, std::vector<double> &xx1, std::vector<double> &xx2, std::vector<std::vector<double>> &yy);
 
@@ -1311,7 +1332,6 @@ namespace cbl {
    *  @param [out] res convolution function
    *  @param [in] deltaX &Delta;x =
    *  (x<SUB>max</SUB>-x<SUB>min</SUB>)/n<SUB>x</SUB>
-   *  @return none
    *  
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
@@ -1381,7 +1401,6 @@ namespace cbl {
    *  @param [out] ra the Right Ascension [radians]
    *  @param [out] dec the Declination [radians]
    *  @param [out] dd the comoving distance
-   *  @return none
    */
   void polar_coord (const double XX, const double YY, const double ZZ, double &ra, double &dec, double &dd); 
 
@@ -1395,7 +1414,6 @@ namespace cbl {
    *  @param [out] XX the Cartesian coordinate x
    *  @param [out] YY the Cartesian coordinate y
    *  @param [out] ZZ the Cartesian coordinate z
-   *  @return none
    */
   void cartesian_coord (const double ra, const double dec, const double dd, double &XX, double &YY, double &ZZ);
 
@@ -1409,7 +1427,6 @@ namespace cbl {
    *  @param [out] ra std::vector containing the Right Ascension values [radians]
    *  @param [out] dec std::vector containing the Declination values [radians]
    *  @param [out] dd std::vector containing the comoving distances
-   *  @return none
    */
   void polar_coord (const std::vector<double> XX, const std::vector<double> YY, const std::vector<double> ZZ, std::vector<double> &ra, std::vector<double> &dec, std::vector<double> &dd); 
 
@@ -1423,7 +1440,6 @@ namespace cbl {
    *  @param [out] XX std::vector containing the Cartesian coordinates x
    *  @param [out] YY std::vector containing the Cartesian coordinates y
    *  @param [out] ZZ std::vector containing the Cartesian coordinates z
-   *  @return none
    */
   void cartesian_coord (const std::vector<double> ra, const std::vector<double> dec, const std::vector<double> dd, std::vector<double> &XX, std::vector<double> &YY, std::vector<double> &ZZ);
 
@@ -1495,7 +1511,6 @@ namespace cbl {
    *
    * @param maxval angle upper limit
    *
-   * @return none
    */
   void sdss_atbound (double &angle, const double minval, const double maxval);
 
@@ -1507,7 +1522,6 @@ namespace cbl {
    *
    * @param phi the second angular coordinate
    *
-   * @return none
    */
   void sdss_atbound2 (double &theta, double &phi);
 
@@ -1524,7 +1538,6 @@ namespace cbl {
    *
    * @param eta vector containing the \f$ \eta \f$ values
    *
-   * @return none
    */
   void eq2sdss (const std::vector<double> ra, const std::vector<double> dec, std::vector<double> &lambda, std::vector<double> &eta); 
 
@@ -1540,7 +1553,6 @@ namespace cbl {
    *
    * @param dec vector containing Dec. values
    *
-   * @return none
    */
   void sdss2eq (const std::vector<double> lambda, const std::vector<double> eta, std::vector<double> &ra, std::vector<double> &dec);
   
@@ -1556,7 +1568,6 @@ namespace cbl {
    *
    * @param str_u vector containing the list of stripes
    *
-   * @return none
    */
   void sdss_stripe (const std::vector<double> eta, const std::vector<double> lambda, std::vector<int> &stripe, std::vector<int> &str_u);
 
@@ -2771,7 +2782,7 @@ namespace cbl {
    * @param Pk_multipoles the power spectrum multipoles 
    * @param orders the power spectrum multipoles orders
    * @param bin_type the bin type
-   * @return none
+   *
    */
   void Covariance_XiMultipoles (std::vector<double> &rr, std::vector<std::vector<double>> &covariance, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double>> Pk_multipoles, const std::vector<int> orders, const cbl::BinType bin_type=cbl::BinType::_linear_);
 
@@ -2809,7 +2820,7 @@ namespace cbl {
    * @param Pk_multipoles the power spectrum multipoles 
    * @param orders the power spectrum multipoles orders
    * @param bin_type the bin type
-   * @return none
+   *
    */
   void Covariance_XiWedges (std::vector<double> &rr, std::vector<std::vector<double>> &covariance, const std::vector<double> mu, const std::vector<double> delta_mu, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double>> Pk_multipoles, const std::vector<int> orders, const cbl::BinType bin_type=cbl::BinType::_linear_);
 

@@ -106,7 +106,7 @@ namespace cbl {
      * @brief cast an enum of type TripletType
      * from indeces
      * @param tripletPTypeIndeces the tripletPType indeces
-     * @return object of class TripletType
+     * @return vector of objects of class TripletType
      */
     inline std::vector<TripletType> TripletTypeCast (const std::vector<int> tripletPTypeIndeces)
     { return castFromValues<TripletType>(tripletPTypeIndeces); } 
@@ -141,7 +141,9 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters
-       *  @return none
+       *  
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_parameters () = 0;
   
@@ -166,7 +168,7 @@ namespace cbl {
 
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       virtual ~Triplet () {}
 

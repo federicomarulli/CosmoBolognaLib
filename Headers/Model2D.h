@@ -69,7 +69,7 @@ namespace cbl {
       /**
        *  @brief default constructor
        *
-       *  @return object of class Model2D
+       *  
        */
       Model2D () : Model() {m_dimension=Dim::_2D_;} 
 
@@ -86,7 +86,7 @@ namespace cbl {
        *
        *  @param inputs list of model inputs
        *
-       *  @return object of class Model2D
+       *  
        */
       Model2D (model_function_2D function, const size_t nparameters, std::vector<ParameterType> parameterTypes={}, std::vector<std::string> parameterNames={}, std::shared_ptr<void> inputs=NULL)
 	: Model(nparameters, parameterTypes, parameterNames, inputs) { set_function(function); m_dimension=Dim::_2D_; }
@@ -94,7 +94,7 @@ namespace cbl {
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       ~Model2D () = default;
 
@@ -105,7 +105,7 @@ namespace cbl {
        *
        * @param function the model function
        * 
-       * @return none 
+       *  
        */
       void set_function (const model_function_2D function);
 
@@ -158,7 +158,7 @@ namespace cbl {
        *  @param up_model the model at 84th percentile
        *  @param start the starting position for each chain
        *  @param thin the position step
-       *  @return none
+       *  
        */
       void stats_from_chains (const std::vector<double> xx, const std::vector<double> yy, std::vector<std::vector<double>> &median_model, std::vector<std::vector<double>> &low_model, std::vector<std::vector<double>> &up_model, const int start=0, const int thin=1) override;
 
@@ -176,7 +176,7 @@ namespace cbl {
        *  used to compute the model; if this vector is not provided,
        *  the model will be computed using the best-fit parameters
        *
-       *  @return none
+       *  
        */
       void write (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> parameters) override;
 
@@ -192,7 +192,7 @@ namespace cbl {
        *  @param yy vector of points at which the model is computed,
        *  second axis
        *
-       *  @return none
+       *  
        */
       void write_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy) override;
 
@@ -210,7 +210,7 @@ namespace cbl {
        *  @param start the starting position for each chain
        *  @param thin the position step
        *
-       *  @return none
+       *  
        */
       void write_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const int start=0, const int thin=1) override;
 

@@ -60,7 +60,7 @@ namespace cbl {
        *
        * @return the mass function as a function of redshift and mass
        */
-      std::vector<std::vector<double>> mass_function_mass_redshift (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+      std::vector<std::vector<double>> mass_function_redshift_mass (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
 
       /**
        * @brief compute the number density as a function
@@ -76,7 +76,7 @@ namespace cbl {
        *
        * @return the number density as a function of redshift and mass
        */
-      std::vector<std::vector<double>> number_density_mass_redshift (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+      std::vector<std::vector<double>> number_density_redshift_mass (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
 
       /**
        * @brief compute the number counts as a function
@@ -92,7 +92,7 @@ namespace cbl {
        *
        * @return the number counts as a function of redshift and mass
        */
-      std::vector<std::vector<double>> number_counts_mass_redshift (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+      std::vector<std::vector<double>> number_counts_redshift_mass (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
 
     }
   }

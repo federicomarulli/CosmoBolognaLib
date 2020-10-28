@@ -93,8 +93,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of class
-	 *  ThreePointCorrelation_angular_reduced
 	 *
 	 *  @warning This method has not been implemented yet
 	 */
@@ -111,7 +109,7 @@ namespace cbl {
 	 *  @param perc_increase the ratio
 	 *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
 	 *  @param nbins number of bins
-	 *  @return object of class ThreePointCorrelation_angular_reduced
+	 *  _angular_reduced
 	 *
 	 *  @warning This method has not been implemented yet
 	 */
@@ -130,7 +128,7 @@ namespace cbl {
 	 *  @param r13 the size of r<SUB>13</SUB>
 	 *  @param r13_binSize the size of r<SUB>13</SUB> bin
 	 *  @param nbins number of bins
-	 *  @return object of class ThreePointCorrelation_angular_reduced
+	 *  _angular_reduced
 	 *
 	 *  @warning This method has not been implemented yet
 	 */
@@ -140,7 +138,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	~ThreePointCorrelation_angular_reduced () = default;
 
@@ -185,7 +183,7 @@ namespace cbl {
 	 *
 	 * @param seed the seed for random number generation
 	 *
-	 * @return none
+	 * 
 	 *
 	 * @warning This method has not been implemented yet 
 	 */
@@ -207,7 +205,7 @@ namespace cbl {
 	 *  @param connected 0 &rarr; write the reducted 3pt correlation
 	 *  function; 1 &rarr; write both the reduced and connected 3pt
 	 *  correlation function
-	 *  @return none
+	 *  
 	 *
 	 *  @warning This method has not been implemented yet
 	 */
@@ -217,7 +215,7 @@ namespace cbl {
 	 *  @brief write the measured three-point correlation covariance
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  
 	 */
 	void write_covariance (const std::string dir, const std::string file) const override;
 

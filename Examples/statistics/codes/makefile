@@ -8,7 +8,7 @@ FLAGST = $(FLAGS0) $(FLAGS)
 
 dirLib = $(PWD)/../../../
 dirH = $(dirLib)Headers/
-dir_Eigen = $(dirLib)External/eigen-3.3.4/
+dir_Eigen = $(dirLib)External/Eigen/eigen-3.3.7/
 dir_CCfits = $(dirLib)External/CCfits/include
 dirCUBA = $(dirLib)External/Cuba-4.2/
 
@@ -33,7 +33,7 @@ endif
 ifeq ($(python_version_major),3)
 	PYINC = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("INCLUDEDIR"))')
 	SWIG_FLAG = -python -c++ -py3
-	PYVERSION = $(python_version_major).$(python_version_minor)m
+	PYVERSION = $(python_version_major).$(python_version_minor)
 endif
 
 PFLAGS = -I$(PYINC)/python$(PYVERSION)
@@ -88,7 +88,7 @@ sampler.o: sampler.cpp makefile $(dirLib)*.$(ES)
 	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c sampler.cpp
 
 ModelPY_wrap.o: ModelPY_wrap.cxx ModelPY.i ModelPY.h
-	$(CXX) $(FLAGST) -Wno-uninitialized $(PFLAGS) -c -fPIC $(FLAGS_INC) ModelPY_wrap.cxx -o ModelPY_wrap.o
+	$(CXX) $(FLAGST) -Wno-uninitialized -Wno-missing-field-initializers -Wno-unused-parameter $(PFLAGS) -c -fPIC $(FLAGS_INC) ModelPY_wrap.cxx -o ModelPY_wrap.o
 
 ModelPY_wrap.cxx: ModelPY.h ModelPY.i
 	$(call colorecho, "\n"Running swig... "\n")

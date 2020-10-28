@@ -122,8 +122,6 @@ namespace cbl {
 	   * @param norders the number of multipoles, \f$ l_{max}+1 \f$
 	   * 
 	   * @param catalogue the catalogue
-	   *
-	   * @return the triplets
 	   */
 	  void  m_count_triplets (std::vector<double> &NNN, std::vector<double> &RRR, const double r12_min, const double r12_max, const double r13_min, const double r13_max, const int norders, const catalogue::Catalogue& catalogue) const;
 
@@ -137,7 +135,7 @@ namespace cbl {
 	   *  @param TL pointer to an object of class Triplet
 	   *  @param dir output directory
 	   *  @param file output file
-	   *  @return none
+	   *  
 	   */
 	  void m_write_triplets (const std::vector<double> TL, const std::string dir, const std::string file) const;
 
@@ -146,7 +144,7 @@ namespace cbl {
 	   *  @param [out] TL pointer to an object of class Triplet
 	   *  @param [in] dir input directory
 	   *  @param [in] file input file
-	   *  @return none
+	   *  
 	   */
 	  void m_read_triplets (std::vector<double> &TL, const std::vector<std::string> dir, const std::string file);
 
@@ -157,8 +155,6 @@ namespace cbl {
 
 	  /**
 	   * @brief default constructor
-	   *
-	   * @return object of type ThreePointCorrelation_comoving_multipoles
 	   */
 	  ThreePointCorrelation_comoving_multipoles_single () {}
 
@@ -179,17 +175,18 @@ namespace cbl {
 	   * 	it must be a multiple m_data.nobjects()
 	   * @param seed seed to shuffle the random sample
 	   *
-	   * @return object of type ThreePointCorrelation_comoving_multipoles
-	   * @warning this function will raise an error if m_random.nObjects() < split*m_data.nObjects
-	   * if m_random.nObjects() > split*m_data.nObjects, only random points up to split*m_data.nObjects
-	   * Negative values of the split factor allow to use the whole random sample.
+	   * @warning this function will raise an error if
+	   * m_random.nObjects() < split*m_data.nObjects if
+	   * m_random.nObjects() > split*m_data.nObjects, only random
+	   * points up to split*m_data.nObjects Negative values of the
+	   * split factor allow to use the whole random sample.
 	   */
 	  ThreePointCorrelation_comoving_multipoles_single (cbl::catalogue::Catalogue catalogue, cbl::catalogue::Catalogue random_catalogue, const double r12Min, const double r12Max, const double r13Min, const double r13Max, const size_t nOrders, const double split=-1, const size_t seed=234);
 
 	  /**
 	   * @brief default destructor
 	   *
-	   * @return None
+	   * 
 	   */
 	  ~ThreePointCorrelation_comoving_multipoles_single () {}
 
@@ -203,7 +200,7 @@ namespace cbl {
 	   * @param r13Max the maximum triangle second side
 	   * @param nOrders the number of Legendre multipoles
 	   *
-	   * @return None
+	   * 
 	   */
 	  void set_parameters (const double r12Min, const double r12Max, const double r13Min, const double r13Max, const size_t nOrders);
 
@@ -228,7 +225,7 @@ namespace cbl {
 	   *
 	   * @param seed the seed for random number generation
 	   *
-	   * @return none
+	   * 
 	   *
 	   * @warning no error have been implemented so far, any choice will
 	   * be ignored.
@@ -244,7 +241,7 @@ namespace cbl {
 	   *  @brief write the measured three-point correlation
 	   *  @param dir output directory
 	   *  @param file output file
-	   *  @return none
+	   *  
 	   */
 
 	  void write (const std::string dir, const std::string file) const;
@@ -265,7 +262,7 @@ namespace cbl {
 	   *  @param nBins the number of bins
 	   *  @param bin true \f$\rightarrow\f$ average legendre polynomials,
 	   *  	false \f$\rightarrow\f$ compute legendre polynomial at the bin center
-	   *  @return none
+	   *  
 	   */
 
 	  void resum (const std::string dir, const std::string file, const cbl::triplets::TripletType tripletType, const int nBins, const bool bin=true) const;

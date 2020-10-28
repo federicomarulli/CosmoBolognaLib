@@ -94,16 +94,16 @@ std::string cbl::cosmology::CosmologicalParameter_name (const CosmologicalParame
 
   case (CosmologicalParameter::_hh_):
     name = "hh";
-    break;
-   
-  case (CosmologicalParameter::_ln_scalar_amp_):           
-    name = "ln_scalar_amp";
     break; 
 
-  case (CosmologicalParameter::_scalar_amp_):           
+  case (CosmologicalParameter::_scalar_amp_):
     name = "scalar_amp";
     break;
-    
+   
+  case (CosmologicalParameter::_ln_scalar_amp_):
+    name = "ln_scalar_amp";
+    break;
+		    
   case (CosmologicalParameter::_scalar_pivot_):           
     name = "scalar_pivot";
     break;
@@ -152,8 +152,9 @@ void cbl::cosmology::Cosmology::set_default ()
 
   m_Omega_k = 1.-m_Omega_matter-m_Omega_radiation-m_Omega_DE;
   m_Omega_CDM = m_Omega_matter-m_Omega_baryon-m_Omega_neutrinos;
-  m_H0 = (m_unit) ? 100. : 100.*m_hh;
-  m_t_H = 1./m_H0;
+  m_H0 = (m_unit) ? 100. : m_hh*100.;
+  double HH0 = (m_unit) ? 100.*m_hh : m_H0;
+  m_t_H = 1./HH0;
   m_D_H = par::cc*m_t_H;
   m_RhoZero = rho_m(0.); 
   m_Pk0_EH = 1., m_Pk0_CAMB = 1., m_Pk0_MPTbreeze = 1., m_Pk0_CLASS = 1.;
@@ -369,13 +370,13 @@ double cbl::cosmology::Cosmology::value (const CosmologicalParameter parameter) 
   case (CosmologicalParameter::_hh_):
     param_value = m_hh;
     break;
-   
-  case (CosmologicalParameter::_ln_scalar_amp_):           
-    param_value = log(1.e10*m_scalar_amp);
-    break; 
 
   case (CosmologicalParameter::_scalar_amp_):           
     param_value = m_scalar_amp;
+    break;
+    
+  case (CosmologicalParameter::_ln_scalar_amp_):           
+    param_value = log(1.e10*m_scalar_amp);
     break;
     
   case (CosmologicalParameter::_scalar_pivot_):           
@@ -473,12 +474,12 @@ void cbl::cosmology::Cosmology::set_parameter (const CosmologicalParameter param
     set_hh(value, false); 
     break;
 
-  case (CosmologicalParameter::_ln_scalar_amp_):           
-    set_scalar_amp(exp(value)*1.e-10);
-    break;
-
   case (CosmologicalParameter::_scalar_amp_):           
     set_scalar_amp(value);
+    break;
+    
+  case (CosmologicalParameter::_ln_scalar_amp_):           
+    set_scalar_amp(exp(value)*1.e-10);
     break;
     
   case (CosmologicalParameter::_scalar_pivot_):           
@@ -569,7 +570,7 @@ double cbl::cosmology::Cosmology::EE (const double redshift) const
 
 double cbl::cosmology::Cosmology::HH (const double redshift) const 
 {
-  return m_H0*EE(redshift);
+  return m_hh*100*EE(redshift);
 }
 
 
@@ -642,7 +643,7 @@ double cbl::cosmology::Cosmology::Omega (const double redshift) const
 double cbl::cosmology::Cosmology::Omega_neutrinos (const double Mnu) const
 {
   if (m_hh<1.e-33) ErrorCBL("m_hh should be >0", "Omega_neutrinos", "Cosmology.cpp");
-  return Mnu/(93.8*pow(m_hh, 2));
+  return Mnu/(93.04*pow(m_hh, 2));
 }
 
 
@@ -652,7 +653,7 @@ double cbl::cosmology::Cosmology::Omega_neutrinos (const double Mnu) const
 double cbl::cosmology::Cosmology::neutrino_mass () const
 {
   if (m_hh<1.e-33) ErrorCBL("m_hh should be >0", "neutrino_mass", "Cosmology.cpp");
-  return m_Omega_neutrinos*93.8*pow(m_hh, 2);
+  return m_Omega_neutrinos*93.04*pow(m_hh, 2);
 }
 
 
@@ -681,15 +682,20 @@ double cbl::cosmology::Cosmology::DD (const double redshift) const
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::DD_norm (const double redshift, const double redshift_norm, const double kk, const bool compute_from_growth_rate, const double prec) const 
+double cbl::cosmology::Cosmology::DD_norm (const double redshift, const double redshift_norm, const std::string computing_method, const std::string method_Pk, const bool NL, const double kk, const double prec) const 
 {   
-  if (m_w0!=-1. or m_wa!=0 or compute_from_growth_rate) {
-    
+  if ((m_w0!=-1. or m_wa!=0 or computing_method=="growth_rate") and m_Omega_neutrinos==0.) {
+
     auto func = [kk, prec, this] (const double aa) {
       return linear_growth_rate(1./aa-1., kk, prec)/aa;
     };
     
     return exp(cbl::wrapper::gsl::GSL_integrate_qag(func, 1./(1.+redshift_norm), 1./(1.+redshift)));
+  }
+
+  else if (m_w0!=-1. or m_wa!=0 or computing_method=="Pk_ratio") {
+    cbl::cosmology::Cosmology cosm = *this;
+    return pow(cosm.Pk_DM(kk, method_Pk, NL, redshift, true, "test", 0)/cosm.Pk_DM(kk, method_Pk, NL, redshift_norm, true, "test", 0),0.5);
   }
 
   else return DD(redshift)/DD(redshift_norm);
@@ -980,6 +986,15 @@ double cbl::cosmology::Cosmology::z_eq () const
 {
   if (m_wa!=0) ErrorCBL("w_a!=0", "z_eq", "Cosmology.cpp", ExitCode::_workInProgress_);
   return pow(m_Omega_DE/m_Omega_matter,-1./(3.*m_w0))-1.;
+}
+
+
+// =====================================================================================
+
+
+double cbl::cosmology::Cosmology::z_eq_rad (const double T_CMB) const
+{
+  return 2.5e+4*m_Omega_matter*m_hh*m_hh*pow((T_CMB/2.7),-4.);
 }
 
 

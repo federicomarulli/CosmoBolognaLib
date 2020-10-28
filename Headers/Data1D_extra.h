@@ -73,7 +73,7 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Data1D_extra
+       *  1D_extra
        */
       Data1D_extra ()
 	: Data1D() { set_dataType(DataType::_1D_extra_); }
@@ -110,7 +110,7 @@ namespace cbl {
        *  if the input file has only 2 columns, the errors will be set
        *  to 1
        *
-       *  @return object of class Data1D
+       *  1D
        */
       Data1D_extra (const int n_extra_info, const std::string input_file, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={})
 	: Data1D()
@@ -126,7 +126,7 @@ namespace cbl {
        *  @param extra_info vector containing vectors of extra generic
        *  information
        *
-       *  @return an object of class Data1D_extra
+       *  1D_extra
        */
       Data1D_extra (const std::vector<double> x, const std::vector<double> data, const std::vector<std::vector<double>> extra_info)
 	: Data1D(x, data), m_extra_info(extra_info)
@@ -145,7 +145,7 @@ namespace cbl {
        *  @param extra_info vector containing vectors of extra generic
        *  information
        *
-       *  @return an object of class Data1D_extra
+       *  1D_extra
        */
       Data1D_extra (const std::vector<double> x, const std::vector<double> data, const std::vector<double> error, const std::vector<std::vector<double>> extra_info={})
 	: Data1D(x, data, error), m_extra_info(extra_info)
@@ -164,7 +164,7 @@ namespace cbl {
        *  @param extra_info vector containing vectors of extra generic
        *  information
        *
-       *  @return an object of class Data1D_extra
+       *  1D_extra
        */
       Data1D_extra (const std::vector<double> x, const std::vector<double> data, const std::vector<std::vector<double>> covariance, const std::vector<std::vector<double>> extra_info)
 	: Data1D(x, data, covariance), m_extra_info(extra_info)
@@ -172,7 +172,6 @@ namespace cbl {
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       virtual ~Data1D_extra () = default;
 
@@ -233,7 +232,6 @@ namespace cbl {
        *  @brief set interval variable m_error_fx
        *  @param extra_info vector containing vectors with extra
        *  information
-       *  @return none
        */
       void set_extra_info (const std::vector<std::vector<double>> extra_info) override { m_extra_info = extra_info; }
 

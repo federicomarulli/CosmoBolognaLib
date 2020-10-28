@@ -72,7 +72,9 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters
-       *  @return none
+       *
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_parameters () = 0;
   
@@ -144,8 +146,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Triplet2D, with protected
-       *  members set to -1
        */
       Triplet2D () 
 	: m_r12_D1(-1), m_r12_binSize_D1(-1), m_r13_D1(-1), m_r13_binSize_D1(-1), m_nbins_D1(-1), m_binSize_D1(-1), m_r12_D2(-1), m_r12_binSize_D2(-1), m_r13_D2(-1), m_r13_binSize_D2(-1), m_nbins_D2(-1), m_binSize_D2(-1)
@@ -171,7 +171,6 @@ namespace cbl {
        *  @param r13_binSize_D2 the size of r<SUB>13</SUB> bin in
        *  the second dimension
        *  @param nbins_D2 the number of bins in the second dimension
-       *  @return object of class Triplet2D
        */
       Triplet2D (const double r12_D1, const double r12_binSize_D1, const double r13_D1, const double r13_binSize_D1, const int nbins_D1, const double r12_D2, const double r12_binSize_D2, const double r13_D2, const double r13_binSize_D2, const int nbins_D2) 
 	: m_r12_D1(r12_D1), m_r12_binSize_D1(r12_binSize_D1), m_r13_D1(r13_D1), m_r13_binSize_D1(r13_binSize_D1), m_nbins_D1(nbins_D1), m_r12_D2(r12_D2), m_r12_binSize_D2(r12_binSize_D2), m_r13_D2(r13_D2), m_r13_binSize_D2(r13_binSize_D2), m_nbins_D2(nbins_D2)
@@ -179,7 +178,7 @@ namespace cbl {
 
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Triplet2D () = default;
       
@@ -303,7 +302,7 @@ namespace cbl {
        *  @brief sum the number of triplets
        *  @param tt pointer to an object of class Triplet
        *  @param ww the weight
-       *  @return none
+       *  
        *
        *  @warning This method has not been implemented yet
        */
@@ -340,9 +339,8 @@ namespace cbl {
        *  @param r13 distance between object1 and object3
        *  @param r23 distance between object2 and object3
        *  @param ww total weight
-       *  @return none
        *
-       *  @warning This method has not been implemented yet
+       *  @warning this method has not been implemented yet
        */
       void put (const double r12, const double r13, const double r23, const double ww=1.) override
       { (void)r12; (void)r13; (void)r23; (void)ww; ErrorCBL("", "put", "Triple2D.h", cbl::glob::ExitCode::_workInProgress_); }
@@ -353,8 +351,7 @@ namespace cbl {
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param obj3 pointer to an object of class Object
-       *  @return none
-       *
+       *  
        *  @warning This method has not been implemented yet
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, const std::shared_ptr<catalogue::Object> obj3) override

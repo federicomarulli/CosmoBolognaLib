@@ -100,7 +100,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair1D_extra
        */
       Pair1D_extra () = default;
 
@@ -111,14 +110,13 @@ namespace cbl {
        *  @param shift radial shift used to centre the output bins 
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_extra
        */
       Pair1D_extra (const double binSize, const int nbins, const double shift, const CoordinateUnits angularUnits, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(binSize, nbins, shift, angularUnits, angularWeight) {}
     
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       virtual ~Pair1D_extra () = default;
 
@@ -230,7 +228,7 @@ namespace cbl {
        *  @brief set the protected member Pair1D_extra::m_scale_mean[i]
        *  @param i the bin index 
        *  @param ss the mean scale
-       *  @return none
+       *  
        */
       void set_scale_mean (const int i, const double ss) { checkDim(m_scale_mean, i, "m_scale_mean"); m_scale_mean[i] = ss; }
 
@@ -238,7 +236,7 @@ namespace cbl {
        *  @brief set the protected member Pair1D_extra::m_scale_sigma[i]
        *  @param i the bin index 
        *  @param ss the standard deviation of the scale distribution
-       *  @return none
+       *  
        */
       void set_scale_sigma (const int i, const double ss) { checkDim(m_scale_sigma, i, "m_scale_sigma"); m_scale_sigma[i] = ss; }
 
@@ -246,7 +244,7 @@ namespace cbl {
        *  @brief set the protected member Pair1D_extra::m_z_mean[i]
        *  @param i the bin index 
        *  @param ss the mean redshift
-       *  @return none
+       *  
        */
       void set_z_mean (const int i, const double ss) { checkDim(m_z_mean, i, "m_z_mean"); m_z_mean[i] = ss; }
 
@@ -254,7 +252,7 @@ namespace cbl {
        *  @brief set the protected member Pair1D_extra::m_z_sigma[i]
        *  @param i the bin index 
        *  @param ss the standard deviation of the redshift distribution
-       *  @return none
+       *  
        */
       void set_z_sigma (const int i, const double ss) { checkDim(m_z_sigma, i, "m_z_sigma"); m_z_sigma[i] = ss; }
       
@@ -262,7 +260,7 @@ namespace cbl {
        *  @brief set the protected members by adding new data
        *  @param i the bin index
        *  @param data vector containing the new data to be added
-       *  @return none
+       *  
        */
       void add_data1D (const int i, const std::vector<double> data) override;
       
@@ -271,7 +269,7 @@ namespace cbl {
        *  @param i the bin index
        *  @param pair pair pointer to an object of class Pair
        *  @param ww a multiplicative factor used for bootstrap
-       *  @return none
+       *  
        */
       void add_data1D (const int i, const std::shared_ptr<pairs::Pair> pair, const double ww=1.) override;
       
@@ -287,7 +285,8 @@ namespace cbl {
        *  @brief sum the number of binned pairs
        *  @param pair an object of class Pair
        *  @param ww the weight
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void Sum (const std::shared_ptr<Pair> pair, const double ww=1) override;
       
@@ -319,7 +318,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair1D_angular_extra
        */
       Pair1D_angular_extra () = default;
 
@@ -338,7 +336,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_angular_extra
        */
       Pair1D_angular_extra (const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D_angular(thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight) {}
@@ -354,14 +351,13 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_angular_extra
        */
       Pair1D_angular_extra (const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D_angular(thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight) {}
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       virtual ~Pair1D_angular_extra () = default;
 
@@ -393,7 +389,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair1D_angular_lin_extra
        */
       Pair1D_angular_lin_extra ()
 	{
@@ -412,7 +407,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_angular_lin_extra
        */
       Pair1D_angular_lin_extra (const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(1., nbins, shift, angularUnits, angularWeight), Pair1D_angular(thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight)
@@ -441,7 +435,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_angular_lin_extra
        */
       Pair1D_angular_lin_extra (const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), Pair1D_angular(thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight)
@@ -461,7 +454,7 @@ namespace cbl {
       
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair1D_angular_lin_extra () = default;
       
@@ -478,7 +471,7 @@ namespace cbl {
        *  pair vector accordingly
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
   
@@ -510,7 +503,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair1D_angular_log_extra
        */
       Pair1D_angular_log_extra ()
 	{
@@ -529,7 +521,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_angular_log_extra
        */
       Pair1D_angular_log_extra (const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(1., nbins, shift, angularUnits, angularWeight), Pair1D_angular(thetaMin, thetaMax, nbins, shift, angularUnits, angularWeight)
@@ -558,7 +549,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_angular_log_extra
        */
       Pair1D_angular_log_extra (const double thetaMin, const double thetaMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), Pair1D_angular(thetaMin, thetaMax, binSize, shift, angularUnits, angularWeight)
@@ -578,7 +568,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair1D_angular_log_extra () = default;
 
@@ -595,7 +585,7 @@ namespace cbl {
        *  pair vector accordingly
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
 
@@ -627,7 +617,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair1D_comoving_extra
        */
       Pair1D_comoving_extra () = default;
     
@@ -640,7 +629,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving_extra
        */
       Pair1D_comoving_extra (const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D_comoving(rMin, rMax, nbins, shift, angularUnits, angularWeight) {} 
@@ -654,14 +642,13 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving_extra
        */
       Pair1D_comoving_extra (const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D_comoving(rMin, rMax, binSize, shift, angularUnits, angularWeight) {} 
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       virtual ~Pair1D_comoving_extra () = default;
 
@@ -693,7 +680,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair1D_comoving_lin_extra
        */
       Pair1D_comoving_lin_extra ()
 	{
@@ -710,7 +696,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving_lin_extra
        */
       Pair1D_comoving_lin_extra (const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(1., nbins, shift, angularUnits, angularWeight), Pair1D_comoving(rMin, rMax, nbins, shift, angularUnits, angularWeight)
@@ -737,7 +722,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving_lin_extra
        */
       Pair1D_comoving_lin_extra (const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), Pair1D_comoving(rMin, rMax, binSize, shift, angularUnits, angularWeight)
@@ -758,7 +742,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair1D_comoving_lin_extra () = default;
 
@@ -775,7 +759,7 @@ namespace cbl {
        *  pair vector accordingly
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
   
@@ -807,7 +791,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair1D_comoving_log_extra
        */
       Pair1D_comoving_log_extra ()
 	{
@@ -824,7 +807,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving_log_extra
        */
       Pair1D_comoving_log_extra (const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(1., nbins, shift, angularUnits, angularWeight), Pair1D_comoving(rMin, rMax, nbins, shift, angularUnits, angularWeight)
@@ -851,7 +833,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving_log_extra
        */
       Pair1D_comoving_log_extra (const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), Pair1D_comoving(rMin, rMax, binSize, shift, angularUnits, angularWeight)
@@ -871,7 +852,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair1D_comoving_log_extra () = default;
 
@@ -888,7 +869,7 @@ namespace cbl {
        *  pair vector accordingly
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
 
@@ -919,7 +900,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair1D_comoving_multipoles_extra
        */
       Pair1D_comoving_multipoles_extra () = default;
     
@@ -932,7 +912,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving_multipoles_extra
        */
       Pair1D_comoving_multipoles_extra (const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D_comoving_multipoles(rMin, rMax, nbins, shift, angularUnits, angularWeight) {} 
@@ -946,14 +925,13 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving_multipoles_extra
        */
       Pair1D_comoving_multipoles_extra (const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D_comoving_multipoles(rMin, rMax, binSize, shift, angularUnits, angularWeight) {} 
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       virtual ~Pair1D_comoving_multipoles_extra () = default;
 
@@ -983,7 +961,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair1D_comoving_multipoles_lin_extra
        */
       Pair1D_comoving_multipoles_lin_extra ()
 	{
@@ -1000,7 +977,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving_multipoles_lin_extra
        */
       Pair1D_comoving_multipoles_lin_extra (const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(1., nbins, shift, angularUnits, angularWeight), Pair1D_comoving_multipoles(rMin, rMax, nbins, shift, angularUnits, angularWeight)
@@ -1029,7 +1005,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving_multipoles_lin_extra
        */
       Pair1D_comoving_multipoles_lin_extra (const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), Pair1D_comoving_multipoles(rMin, rMax, binSize, shift, angularUnits, angularWeight)
@@ -1052,7 +1027,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair1D_comoving_multipoles_lin_extra () = default;
 
@@ -1069,7 +1044,6 @@ namespace cbl {
        *  pair vector accordingly
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
 
@@ -1077,7 +1051,8 @@ namespace cbl {
        *  @brief sum the number of binned pairs
        *  @param pair an object of class Pair
        *  @param ww the weight
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void Sum (const std::shared_ptr<Pair> pair, const double ww=1) override;
   
@@ -1108,7 +1083,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair1D_comoving_multipoles_log_extra
        */
       Pair1D_comoving_multipoles_log_extra ()
 	{
@@ -1125,7 +1099,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving_multipoles_log_extra
        */
       Pair1D_comoving_multipoles_log_extra (const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(1., nbins, shift, angularUnits, angularWeight), Pair1D_comoving_multipoles(rMin, rMax, nbins, shift, angularUnits, angularWeight)
@@ -1154,7 +1127,6 @@ namespace cbl {
        *  binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair1D_comoving_multipoles_log_extra
        */
       Pair1D_comoving_multipoles_log_extra (const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair1D(binSize, 50, shift, angularUnits, angularWeight), Pair1D_comoving_multipoles(rMin, rMax, binSize, shift, angularUnits, angularWeight)
@@ -1177,7 +1149,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair1D_comoving_multipoles_log_extra () = default;
 
@@ -1194,7 +1166,7 @@ namespace cbl {
        *  pair vector accordingly
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
 
@@ -1202,7 +1174,8 @@ namespace cbl {
        *  @brief sum the number of binned pairs
        *  @param pair an object of class Pair
        *  @param ww the weight
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void Sum (const std::shared_ptr<Pair> pair, const double ww=1) override;
   

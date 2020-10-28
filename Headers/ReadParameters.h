@@ -62,26 +62,20 @@ namespace cbl {
       ///@{
 
       /**
-       * @brief
-       *    Default empty constructor
-       * @return
-       *    Empty object of class ReadParameters
+       * @brief Default empty constructor
        */
       ReadParameters () = default;
 
       /**
-       * @brief
-       *    Constructor
-       * @param parameter_file
-       *    std::string with path and name of the parameter file to read
-       * @return
-       *    object of class ReadParameters
+       * @brief Constructor
+       *
+       * @param parameter_file std::string with path and name of the
+       * parameter file to read
        */
       ReadParameters (const std::string parameter_file);
 
       /**
-       * @brief
-       *   Default destructor
+       * @brief Default destructor
        */
       ~ReadParameters () = default;
 

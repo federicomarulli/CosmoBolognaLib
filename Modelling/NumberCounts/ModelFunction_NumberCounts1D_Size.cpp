@@ -64,7 +64,7 @@ std::vector<double> cbl::modelling::numbercounts::size_function_model (const std
     bias_slope = pp->b_slope;
     bias_offset = pp->b_offset;}
 
-  return cbl::modelling::numbercounts::size_function(cosmo, radii, pp->redshift, pp->model_SF, bias_eff, bias_slope, bias_offset, pp->deltav_NL, pp->delta_c, pp->method_Pk, pp->store_output, pp->output_root, pp->interpType, pp->k_max, pp->input_file, pp->is_parameter_file);
+  return cbl::modelling::numbercounts::size_function(cosmo, radii, pp->redshift, pp->model_SF, bias_eff, bias_slope, bias_offset, pp->deltav_NL, pp->delta_c, pp->method_Pk, pp->k_Pk_ratio, pp->store_output, pp->output_root, pp->interpType, pp->k_max, pp->input_file, pp->is_parameter_file);
   
 }
 

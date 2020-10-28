@@ -182,7 +182,7 @@ namespace cbl {
 
       /**
        * @brief set the grid parameters
-       * @return none
+       * 
        */
       void set_grid_parameters ();
 
@@ -195,7 +195,7 @@ namespace cbl {
        *  @param doRSD true \f$\rightarrow\f$do redshift-space
        *  mocks; false \f$\rightarrow\f$ do real-space mocks
        *
-       *  @return none
+       *  
        */
       void set_fields (const bool use_random, const bool doRSD);
 
@@ -208,14 +208,14 @@ namespace cbl {
        *  @param doRSD true \f$\rightarrow\f$do redshift-space
        *  mocks, false \f$\rightarrow\f$ do real-space mocks
        *
-       *  @return none
+       *  
        */
       void reset_fields (const bool use_random, const bool doRSD);
 
       /**
        *  @brief set the target dark matter clustering signal
        *
-       *  @return none
+       *  
        */
       void set_clustering_signal ();
 
@@ -224,39 +224,39 @@ namespace cbl {
        *
        *  @param smoothing_radius the gaussian kernel size
        *
-       *  @return none
+       *  
        */
       void set_density_field (const double smoothing_radius);
 
       /**
        *  @brief set the gravitational potential field
-       *  @return none
+       *  
        */
       void set_potential ();
 
       /**
        *  @brief set the radial velocity field
-       *  @return none
+       *  
        */
       void set_radial_velocity ();
 
       /**
        *  @brief set the visibility
-       *  @return none
+       *  
        */
       void set_visibility ();
 
       /**
        *  @brief set the visibility from random catalogue
        *
-       *  @return none
+       *  
        */
       void set_visibility_from_random ();
 
       /**
        *  @brief set the visibility for redshift space mocks
        *
-       *  @return none
+       *  
        */
       void set_visibility_from_random_RSD ();
 
@@ -276,7 +276,7 @@ namespace cbl {
        *
        *  @param file_out out file for the extracted sample
        *
-       *  @return none
+       *  
        */
       void extract_points_lognormal_field (const double nObjects, const bool doRSD, const std::vector<double> redshift, const std::vector<double> bias, const std::shared_ptr<data::Field3D> visibility, const std::string file_out);
 
@@ -285,7 +285,7 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class LogNormal
+       *  
        */
       LogNormalFull () = default;
 
@@ -296,7 +296,7 @@ namespace cbl {
        *  @param redshift_max the maximum redshift
        *  @param nredshift the number or redshift bins
        *  @param author the linear power spectrum method
-       *  @return object of class LogNormal
+       *  
        */
       LogNormalFull (const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int nredshift=500, const std::string author="CAMB");
 
@@ -314,7 +314,7 @@ namespace cbl {
        *  @param redshift_max the maximum redshift
        *  @param nredshift the number or redshift bins
        *  @param author the linear power spectrum
-       *  @return object of class LogNormal
+       *  
        */
       LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int nredshift=500, const std::string author="CAMB");
 
@@ -328,13 +328,13 @@ namespace cbl {
        *  @param redshift_max the maximum redshift
        *  @param nredshift the number or redshift bins
        *  @param author the linear power spectrum
-       *  @return object of class LogNormal
+       *  
        */
       LogNormalFull (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad, const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int nredshift=500, const std::string author="CAMB");
 
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~LogNormalFull () = default;
 
@@ -345,7 +345,7 @@ namespace cbl {
        *  @param redshift_max the maximum redshift
        *  @param nredshift the number or redshift bins
        *  @param author the linear power spectrum
-       *  @return none
+       *  
        */
       void set_cosmo_function (const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int nredshift=500, const std::string author="CAMB");
 
@@ -360,7 +360,7 @@ namespace cbl {
        *  @param zMin the minimum z-value
        *  @param zMax the maximum z-value
        *
-       *  @return none
+       *  
        */
       void set_grid_parameters (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax);
 
@@ -369,7 +369,7 @@ namespace cbl {
        *  @param rmin cell size
        *  @param random vector containing random samples
        *  @param pad the size of padding area around grid
-       *  @return none
+       *  
        */
       void set_grid_parameters (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad);
 
@@ -405,7 +405,7 @@ namespace cbl {
        *  visibility mask, false \f$\rightarrow\f$ don't use random
        *  for visibility mask
        *
-       *  @return none
+       *  
        */
       void generate_lognormal (const int start, const int stop, const bool doRSD, const double smoothing_radius, const std::vector<double> nObjects, const std::vector<std::vector<double>> redshift, const std::vector<std::vector<double> > bias, const std::string dir, const std::string filename, const int seed, const bool setfields=1, const bool use_random=true);
 

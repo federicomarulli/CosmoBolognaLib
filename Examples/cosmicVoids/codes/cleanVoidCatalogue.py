@@ -10,8 +10,6 @@ import os
 import CosmoBolognaLib as cbl                                 
 from CosmoBolognaLib import ErrorCBL
 
-# import timer
-import time
 
 ##########################################################
 # just remember that parameter files do have a purpose
@@ -171,8 +169,6 @@ ol_crit = cbl.Var__DensityContrast_ if param.findInt('ol_crit') == 1 else cbl.Va
 threshold = 1. + param.findDouble('deltav_NL')
 
 # build the catalogue:
-tw0 = time.time()
-tc0 = time.clock()
 vdcat_cleaned = cbl.Catalogue (vdcat,
                                [param.findBool('clean1'),
                                 param.findBool('clean2'),
@@ -186,8 +182,6 @@ vdcat_cleaned = cbl.Catalogue (vdcat,
                                param.findDouble('ratio'),
                                param.findBool('overlap'),
                                ol_crit)
-print('Cleaning the catalogue took: ', time.clock()-tc0, ' sec')
-print('Wall time: ', time.time()-tw0, ' sec')
 print('\n')
 
 # write the obtained catalogue in a file

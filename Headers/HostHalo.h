@@ -117,7 +117,7 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class HostHalo
+       *  
        */
       HostHalo ()
 	: Halo(), m_tot_mass(par::defaultDouble), m_mass_estimate(par::defaultDouble), m_radius_estimate(par::defaultDouble), m_veldisp_estimate(par::defaultDouble), m_xcm(par::defaultDouble), m_ycm(par::defaultDouble), m_zcm(par::defaultDouble), m_spin_x(par::defaultDouble), m_spin_y(par::defaultDouble), m_spin_z(par::defaultDouble), m_veldisp(par::defaultDouble), m_vmax(par::defaultDouble), m_vmax_rad(par::defaultDouble), m_radius(par::defaultDouble), m_parent(par::defaultInt), m_nsub(par::defaultInt), m_satellites({}) {}
@@ -180,7 +180,7 @@ namespace cbl {
        *
        *  @param satellites vector of pointers to satellites
        *
-       *  @return object of class HostHalo
+       *  
        */
       HostHalo (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double tot_mass=par::defaultDouble, const double mass_estimate=par::defaultDouble, const double radius_estimate=par::defaultDouble, const double veldisp_estimate=par::defaultDouble, const comovingCoordinates cm_coord={par::defaultDouble, par::defaultDouble, par::defaultDouble}, const double spin_x=par::defaultDouble, const double spin_y=par::defaultDouble, const double spin_z=par::defaultDouble, const double veldisp=par::defaultDouble, const double vmax=par::defaultDouble, const double vmax_rad=par::defaultDouble, const double radius=par::defaultDouble, const int parent=par::defaultInt, const int nsub=par::defaultInt, std::vector<std::shared_ptr<Object>> satellites = {})
 	: Halo(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_tot_mass(tot_mass), m_mass_estimate(mass_estimate), m_radius_estimate(radius_estimate), m_veldisp_estimate(veldisp_estimate), m_xcm(cm_coord.xx), m_ycm(cm_coord.yy), m_zcm(cm_coord.zz), m_spin_x(spin_x), m_spin_y(spin_y), m_spin_z(spin_z), m_veldisp(veldisp), m_vmax(vmax), m_vmax_rad(vmax_rad), m_radius(radius), m_parent(parent), m_nsub(nsub), m_satellites(satellites) {}
@@ -251,7 +251,7 @@ namespace cbl {
        *
        *  @param satellites vector of pointers to satellites
        *
-       *  @return object of class HostHalo
+       *  
        */
       HostHalo (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double tot_mass=par::defaultDouble, const double mass_estimate=par::defaultDouble, const double radius_estimate=par::defaultDouble, const double veldisp_estimate=par::defaultDouble, const comovingCoordinates cm_coord={par::defaultDouble, par::defaultDouble, par::defaultDouble}, const double spin_x=par::defaultDouble, const double spin_y=par::defaultDouble, const double spin_z=par::defaultDouble, const double veldisp=par::defaultDouble, const double vmax=par::defaultDouble, const double vmax_rad=par::defaultDouble, const double radius=par::defaultDouble, const int parent=par::defaultInt, const int nsub=par::defaultInt, std::vector<std::shared_ptr<Object>> satellites = {}) 
 	: Halo(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_tot_mass(tot_mass), m_mass_estimate(mass_estimate), m_radius_estimate(radius_estimate), m_veldisp_estimate(veldisp_estimate), m_xcm(cm_coord.xx), m_ycm(cm_coord.yy), m_zcm(cm_coord.zz), m_spin_x(spin_x), m_spin_y(spin_y), m_spin_z(spin_z), m_veldisp(veldisp), m_vmax(vmax), m_vmax_rad(vmax_rad), m_radius(radius), m_parent(parent), m_nsub(nsub), m_satellites(satellites) {}
@@ -314,7 +314,7 @@ namespace cbl {
        *
        *  @param satellites vector of pointers to satellites
        *
-       *  @return object of class HostHalo
+       *  
        */
       HostHalo (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double tot_mass=par::defaultDouble, const double mass_estimate=par::defaultDouble, const double radius_estimate=par::defaultDouble, const double veldisp_estimate=par::defaultDouble, const comovingCoordinates cm_coord={par::defaultDouble, par::defaultDouble, par::defaultDouble}, const double spin_x=par::defaultDouble, const double spin_y=par::defaultDouble, const double spin_z=par::defaultDouble, const double veldisp=par::defaultDouble, const double vmax=par::defaultDouble, const double vmax_rad=par::defaultDouble, const double radius=par::defaultDouble, const int parent=par::defaultInt, const int nsub=par::defaultInt, std::vector<std::shared_ptr<Object>> satellites = {}) 
 	: Halo(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_tot_mass(tot_mass), m_mass_estimate(mass_estimate), m_radius_estimate(radius_estimate), m_veldisp_estimate(veldisp_estimate), m_xcm(cm_coord.xx), m_ycm(cm_coord.yy), m_zcm(cm_coord.zz), m_spin_x(spin_x), m_spin_y(spin_y), m_spin_z(spin_z), m_veldisp(veldisp), m_vmax(vmax), m_vmax_rad(vmax_rad), m_radius(radius), m_parent(parent), m_nsub(nsub), m_satellites(satellites) {}
@@ -380,7 +380,7 @@ namespace cbl {
        *
        *  @param satellites vector of pointers to satellites
        *
-       *  @return object of class HostHalo
+       *  
        */
       HostHalo (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double tot_mass=par::defaultDouble, const double mass_estimate=par::defaultDouble, const double radius_estimate=par::defaultDouble, const double veldisp_estimate=par::defaultDouble, const comovingCoordinates cm_coord={par::defaultDouble, par::defaultDouble, par::defaultDouble}, const double spin_x=par::defaultDouble, const double spin_y=par::defaultDouble, const double spin_z=par::defaultDouble, const double veldisp=par::defaultDouble, const double vmax=par::defaultDouble, const double vmax_rad=par::defaultDouble, const double radius=par::defaultDouble, const int parent=par::defaultInt, const int nsub=par::defaultInt, std::vector<std::shared_ptr<Object>> satellites = {}) 
 	: Halo(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_tot_mass(tot_mass), m_mass_estimate(mass_estimate), m_radius_estimate(radius_estimate), m_veldisp_estimate(veldisp_estimate), m_xcm(cm_coord.xx), m_ycm(cm_coord.yy), m_zcm(cm_coord.zz), m_spin_x(spin_x), m_spin_y(spin_y), m_spin_z(spin_z), m_veldisp(veldisp), m_vmax(vmax), m_vmax_rad(vmax_rad), m_radius(radius), m_parent(parent), m_nsub(nsub), m_satellites(satellites) {}
@@ -448,7 +448,7 @@ namespace cbl {
        *
        *  @param satellites vector of pointers to satellites
        *
-       *  @return object of class HostHalo
+       *  
        */
       HostHalo (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double tot_mass=par::defaultDouble, const double mass_estimate=par::defaultDouble, const double radius_estimate=par::defaultDouble, const double veldisp_estimate=par::defaultDouble, const comovingCoordinates cm_coord={par::defaultDouble, par::defaultDouble, par::defaultDouble}, const double spin_x=par::defaultDouble, const double spin_y=par::defaultDouble, const double spin_z=par::defaultDouble, const double veldisp=par::defaultDouble, const double vmax=par::defaultDouble, const double vmax_rad=par::defaultDouble, const double radius=par::defaultDouble, const int parent=par::defaultInt, const int nsub=par::defaultInt, std::vector<std::shared_ptr<Object>> satellites = {}) 
 	: Halo(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_tot_mass(tot_mass), m_mass_estimate(mass_estimate), m_radius_estimate(radius_estimate), m_veldisp_estimate(veldisp_estimate), m_xcm(cm_coord.xx), m_ycm(cm_coord.yy), m_zcm(cm_coord.zz), m_spin_x(spin_x), m_spin_y(spin_y), m_spin_z(spin_z), m_veldisp(veldisp), m_vmax(vmax), m_vmax_rad(vmax_rad), m_radius(radius), m_parent(parent), m_nsub(nsub), m_satellites(satellites) {}
@@ -516,7 +516,7 @@ namespace cbl {
        *
        *  @param satellites vector of pointers to satellites
        *
-       *  @return object of class HostHalo
+       *  
        */
       HostHalo (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double tot_mass=par::defaultDouble, const double mass_estimate=par::defaultDouble, const double radius_estimate=par::defaultDouble, const double veldisp_estimate=par::defaultDouble, const comovingCoordinates cm_coord={par::defaultDouble, par::defaultDouble, par::defaultDouble}, const double spin_x=par::defaultDouble, const double spin_y=par::defaultDouble, const double spin_z=par::defaultDouble, const double veldisp=par::defaultDouble, const double vmax=par::defaultDouble, const double vmax_rad=par::defaultDouble, const double radius=par::defaultDouble, const int parent=par::defaultInt, const int nsub=par::defaultInt, std::vector<std::shared_ptr<Object>> satellites = {}) 
 	: Halo(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_tot_mass(tot_mass), m_mass_estimate(mass_estimate), m_radius_estimate(radius_estimate), m_veldisp_estimate(veldisp_estimate), m_xcm(cm_coord.xx), m_ycm(cm_coord.yy), m_zcm(cm_coord.zz), m_spin_x(spin_x), m_spin_y(spin_y), m_spin_z(spin_z), m_veldisp(veldisp), m_vmax(vmax), m_vmax_rad(vmax_rad), m_radius(radius), m_parent(parent), m_nsub(nsub), m_satellites(satellites) {}
@@ -587,14 +587,13 @@ namespace cbl {
        *
        *  @param satellites vector of pointers to satellites
        *
-       *  @return object of class HostHalo
+       *  
        */
       HostHalo (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double tot_mass=par::defaultDouble, const double mass_estimate=par::defaultDouble, const double radius_estimate=par::defaultDouble, const double veldisp_estimate=par::defaultDouble, const comovingCoordinates cm_coord={par::defaultDouble, par::defaultDouble, par::defaultDouble}, const double spin_x=par::defaultDouble, const double spin_y=par::defaultDouble, const double spin_z=par::defaultDouble, const double veldisp=par::defaultDouble, const double vmax=par::defaultDouble, const double vmax_rad=par::defaultDouble, const double radius=par::defaultDouble, const int parent=par::defaultInt, const int nsub=par::defaultInt, std::vector<std::shared_ptr<Object>> satellites = {}) 
 	: Halo(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_tot_mass(tot_mass), m_mass_estimate(mass_estimate), m_radius_estimate(radius_estimate), m_veldisp_estimate(veldisp_estimate), m_xcm(cm_coord.xx), m_ycm(cm_coord.yy), m_zcm(cm_coord.zz), m_spin_x(spin_x), m_spin_y(spin_y), m_spin_z(spin_z), m_veldisp(veldisp), m_vmax(vmax), m_vmax_rad(vmax_rad), m_radius(radius), m_parent(parent), m_nsub(nsub), m_satellites(satellites) {}
       
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~HostHalo () = default;
 
@@ -719,21 +718,18 @@ namespace cbl {
       /**
        *  @brief set the private member HostHalo::m_tot_mass
        *  @param tot_mass the total mass of the parent halo
-       *  @return none
        */
       void set_tot_mass (const double tot_mass=par::defaultDouble) override { m_tot_mass = tot_mass; }
     
       /**
        *  @brief set the private member HostHalo::m_mass_estimate
        *  @param mass_estimate the mass estimate of the host halo
-       *  @return none
        */
       void set_mass_estimate (const double mass_estimate=par::defaultDouble) override { m_mass_estimate = mass_estimate; }
     
       /**
        *  @brief set the private member HostHalo::m_radius_estimate
        *  @param radius_estimate the radius estimate of the host halo
-       *  @return none
        */
       void set_radius_estimate (const double radius_estimate=par::defaultDouble) override { m_radius_estimate = radius_estimate; }
     
@@ -741,91 +737,78 @@ namespace cbl {
       /**
        *  @brief set the private member HostHalo::m_veldisp_estimate
        *  @param veldisp_estimate the velocity dispersion estimate of the host halo
-       *  @return none
        */
       void set_veldisp_estimate (const double veldisp_estimate=par::defaultDouble) override { m_veldisp_estimate = veldisp_estimate; }
     
       /**
        *  @brief set the private member HostHalo::m_xcm
        *  @param xcm the x-axis coordinate of the centre of mass
-       *  @return none
        */
       void set_xcm (const double xcm=par::defaultDouble) override { m_xcm = xcm; }
     
       /**
        *  @brief set the private member HostHalo::m_ycm
        *  @param ycm the y-axis coordinate of the centre of mass
-       *  @return none
        */
       void set_ycm (const double ycm=par::defaultDouble) override { m_ycm = ycm; }
     
       /**
        *  @brief set the private member HostHalo::m_zcm
        *  @param zcm the z-axis coordinate of the centre of mass
-       *  @return none
        */
       void set_zcm (const double zcm=par::defaultDouble) override { m_zcm = zcm; }
     
       /**
        *  @brief set the private member HostHalo::m_spin_x
        *  @param spin_x the x-axis component of the spin
-       *  @return none
        */
       void set_spin_x (const double spin_x=par::defaultDouble) override { m_spin_x = spin_x; }
     
       /**
        *  @brief set the private member HostHalo::m_spin_y
        *  @param spin_y the y-axis component of the spin
-       *  @return none
        */
       void set_spin_y (const double spin_y=par::defaultDouble) override { m_spin_y = spin_y; }
     
       /**
        *  @brief set the private member HostHalo::m_spin_z
        *  @param spin_z the z-axis component of the spin
-       *  @return none
        */
       void set_spin_z (const double spin_z=par::defaultDouble) override { m_spin_z = spin_z; }
     
       /**
        *  @brief set the private member HostHalo::m_veldisp
        *  @param veldisp the velocity dispersion of the host halo
-       *  @return none
        */
       void set_veldisp (const double veldisp=par::defaultDouble) override { m_veldisp = veldisp; }
     
       /**
        *  @brief set the private member HostHalo::m_vmax
        *  @param vmax the maximum total velocity of the host halo
-       *  @return none
        */
       void set_vmax (const double vmax=par::defaultDouble) override { m_vmax = vmax; }
     
       /**
        *  @brief set the private member HostHalo::m_vmax_rad
        *  @param vmax_rad the maximum radial velocity of the host halo
-       *  @return none
        */
       void set_vmax_rad (const double vmax_rad=par::defaultDouble) override { m_vmax_rad = vmax_rad; }
     
       /**
        *  @brief set the private member HostHalo::m_radius
        *  @param radius the maximum radial velocity of the host halo
-       *  @return none
        */
       void set_radius (const double radius=par::defaultDouble) override { m_radius = radius; }
     
       /**
        *  @brief set the private member HostHalo::m_parent
        *  @param parent the id of the parent host halo
-       *  @return none
        */
       void set_parent (const int parent=par::defaultInt) override { m_parent = parent; }
 
       /**
        *  @brief set the private member HostHalo::m_nsub
        *  @param nsub the number of sub-groups in the host halo
-       *  @return none
        */
       void set_nsub (const int nsub=par::defaultInt) override { m_nsub = nsub; }
 
@@ -833,7 +816,6 @@ namespace cbl {
        *  @brief set the private member HostHalo::m_satellites
        *  @param satellite the vector of shared pointers to satellite
        *  objects
-       *  @return none
        */
       void set_satellite (const std::shared_ptr<Object> satellite={}) override {
 	m_satellites.push_back(satellite);
@@ -842,7 +824,6 @@ namespace cbl {
       /**
        *  @brief set the private member HostHalo::m_satellites
        *  @param satellites the vector of shared pointers to satellite objects
-       *  @return none
        */
       void set_satellites (const std::vector<std::shared_ptr<Object>> satellites={}) override {
 	for (size_t ii = 0; ii<satellites.size(); ii++)	m_satellites.push_back(satellites[ii]);

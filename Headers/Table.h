@@ -71,7 +71,7 @@ namespace cbl {
        *
        * @param nrows the columns lenght
        *
-       * @return none
+       * 
        */
       void m_set (const std::vector<std::string> names, const size_t nrows);
 
@@ -82,7 +82,7 @@ namespace cbl {
        *
        * @param values the table values
        *
-       * @return none
+       * 
        */
       void m_set (const std::vector<std::string> names, const std::vector<std::vector<double>> values);
 
@@ -98,7 +98,7 @@ namespace cbl {
       /**
        * @brief default constructor
        *
-       * @return object of type Table
+       * 
        */
       Table () = default;
 
@@ -113,7 +113,7 @@ namespace cbl {
        *
        * @param values the table values
        *
-       * @return object of type Table
+       * 
        */
       Table (const std::vector<std::string> names, const std::vector<std::vector<double>> values);
 
@@ -127,7 +127,7 @@ namespace cbl {
        *
        * @param nrows the columns lenght
        *
-       * @return object of type Table
+       * 
        */
       Table (const std::vector<std::string> names, const size_t nrows);
 
@@ -146,14 +146,14 @@ namespace cbl {
        *
        * @param header_lines_to_skip number of header lines
        *
-       * @return none
+       * 
        */
       Table (const std::string input_dir, const std::string input_file, const std::vector<std::string> names, const std::vector<size_t> use_cols={}, const size_t header_lines_to_skip=1);
 
       /**
        * @brief default destructor
        *
-       * @return none
+       * 
        */
       virtual ~Table() = default;
 
@@ -184,7 +184,7 @@ namespace cbl {
        *
        * @param replace 
        *
-       * @return none
+       * 
        */
       void insert (const std::string name, const std::vector<double> values, const bool replace=false);
 
@@ -197,7 +197,7 @@ namespace cbl {
        *
        * @param replace 
        *
-       * @return none
+       * 
        */
       void insert (const std::vector<std::string> names, const std::vector<std::vector<double>> values, const bool replace=false);
 
@@ -214,7 +214,7 @@ namespace cbl {
        *
        * @param header_lines_to_skip number of header lines
        *
-       * @return none
+       * 
        */
       void read (const std::string input_dir, const std::string input_file, const std::vector<std::string> names, const std::vector<size_t> use_cols = {}, const size_t header_lines_to_skip=1);
 
@@ -227,7 +227,7 @@ namespace cbl {
        *
        * @param names names of the colums to be wrote
        *
-       * @return none
+       * 
        */
       void write (const std::string output_dir, const std::string output_file, const std::vector<std::string> names={});
     };

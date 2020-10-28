@@ -181,4 +181,4 @@ joined_posterior = join_probes(posterior1, dir_output, file_impsamp1, file_impsa
 # plot the contours
 plot_contours(joined_posterior,burn_in, thin, fig, axes, "k", "imp. sampling concat.")
 
-plt.show()
+plt.show(block=False)

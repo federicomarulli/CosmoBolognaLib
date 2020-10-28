@@ -84,43 +84,45 @@ namespace cbl {
 	};
 
     /**
-     * @brief return a vector containing the
-     * CosmologicalModel names
-     * @return a vector containing the
-     * CosmologicalModel names
+     * @brief return a vector containing the CosmologicalModel names
+     *
+     * @return a vector containing the CosmologicalModel names
      */
     inline std::vector<std::string> CosmologicalModelNames () { return {"WMAP5", "WMAP7", "WMAP9", "Planck13", "Planck15", "Planck15_TT", "Planck18"}; }
 
     /**
+     * @brief cast an enum of type CosmologicalModel from its index
      *
-     * @brief cast an enum of type CosmologicalModel
-     * from its index
      * @param cosmologicalModelIndex the cosmologicalModel index
+     *
      * @return object of class CosmologicalModel
      */
     inline CosmologicalModel CosmologicalModelCast (const int cosmologicalModelIndex) { return castFromValue<CosmologicalModel>(cosmologicalModelIndex); }
 
     /**
-     * @brief cast an enum of type CosmologicalModel
-     * from its name
+     * @brief cast an enum of type CosmologicalModel from its name
+     *
      * @param cosmologicalModelName the cosmologicalModel name
+     * 
      * @return object of class CosmologicalModel
      */
     inline CosmologicalModel CosmologicalModelCast (const std::string cosmologicalModelName) { return castFromName<CosmologicalModel>(cosmologicalModelName, CosmologicalModelNames()); }
 
     /**
-     * @brief cast an enum of type CosmologicalModel
-     * from indeces
+     * @brief cast an enum of type CosmologicalModel from indeces
+     *
      * @param cosmologicalModelIndeces the cosmologicalModel indeces
-     * @return object of class CosmologicalModel
+     * 
+     * @return vector of objects of class CosmologicalModel
      */
     inline std::vector<CosmologicalModel> CosmologicalModelCast (const std::vector<int> cosmologicalModelIndeces) { return castFromValues<CosmologicalModel>(cosmologicalModelIndeces); } 
 
     /**
-     * @brief cast an enum of type CosmologicalModel
-     * from thier names
+     * @brief cast an enum of type CosmologicalModel from thier names
+     *
      * @param cosmologicalModelNames the cosmologicalModel names
-     * @return vector of CosmologicalModel enums
+     * 
+     * @return vector of objects of class CosmologicalModel
      */
     inline std::vector<CosmologicalModel> CosmologicalModelCast (const std::vector<std::string> cosmologicalModelNames) { return castFromNames<CosmologicalModel>(cosmologicalModelNames, CosmologicalModelNames()); }
 
@@ -198,43 +200,51 @@ namespace cbl {
 	};
 
     /**
-     * @brief return a vector containing the
-     * CosmologicalParameter names
-     * @return a vector containing the
-     * CosmologicalParameter names
+     * @brief return a vector containing the CosmologicalParameter
+     * names
+     *
+     * @return a vector containing the CosmologicalParameter names
      */
-    inline std::vector<std::string> CosmologicalParameterNames () { return {"Omega_matter_LCDM", "Omega_matter", "Omega_baryon", "Omega_baryon_h2", "Omega_matter", "massless_neutrinos", "massive_neutrinos", "neutrino_mass", "Omega_DE", "Omega_radiation", "H0", "hh", "ln_scalar_amp", "scalar_amp", "scalar_pivot", "n_spec", "w0", "wa", "fNL", "sigma8", "tau", "rs"}; }
+    inline std::vector<std::string> CosmologicalParameterNames () { return {"Omega_matter_LCDM", "Omega_matter", "Omega_baryon", "Omega_baryon_h2", "Omega_matter", "massless_neutrinos", "massive_neutrinos", "neutrino_mass", "Omega_DE", "Omega_radiation", "H0", "hh", "scalar_amp", "ln_scalar_amp", "scalar_pivot", "n_spec", "w0", "wa", "fNL", "sigma8", "tau", "rs"}; }
     
     /**
+     * @brief cast an enum of type CosmologicalParameter from its
+     * index
      *
-     * @brief cast an enum of type CosmologicalParameter
-     * from its index
-     * @param cosmologicalParameterIndex the cosmologicalParameter index
+     * @param cosmologicalParameterIndex the cosmologicalParameter
+     * index
+     *
      * @return object of class CosmologicalParameter
      */
     inline CosmologicalParameter CosmologicalParameterCast (const int cosmologicalParameterIndex) { return castFromValue<CosmologicalParameter>(cosmologicalParameterIndex); }
 
     /**
-     * @brief cast an enum of type CosmologicalParameter
-     * from its name
+     * @brief cast an enum of type CosmologicalParameter from its name
+     *
      * @param cosmologicalParameterName the cosmologicalParameter name
+     *
      * @return object of class CosmologicalParameter
      */
     inline CosmologicalParameter CosmologicalParameterCast (const std::string cosmologicalParameterName) { return castFromName<CosmologicalParameter>(cosmologicalParameterName, CosmologicalParameterNames()); }
 
     /**
-     * @brief cast an enum of type CosmologicalParameter
-     * from indeces
-     * @param cosmologicalParameterIndeces the cosmologicalParameter indeces
-     * @return object of class CosmologicalParameter
+     * @brief cast an enum of type CosmologicalParameter from indeces
+     *
+     * @param cosmologicalParameterIndeces the cosmologicalParameter
+     * indeces
+     *
+     * @return vector of objects of class CosmologicalParameter
      */
     inline std::vector<CosmologicalParameter> CosmologicalParameterCast (const std::vector<int> cosmologicalParameterIndeces) { return castFromValues<CosmologicalParameter>(cosmologicalParameterIndeces); } 
 
     /**
-     * @brief cast an enum of type CosmologicalParameter
-     * from thier names
-     * @param cosmologicalParameterNames the cosmologicalParameter names
-     * @return vector of CosmologicalParameter enums
+     * @brief cast an enum of type CosmologicalParameter from thier
+     * names
+     *
+     * @param cosmologicalParameterNames the cosmologicalParameter
+     * names
+     *
+     * @return vector of objects of class CosmologicalParameter
      */
     inline std::vector<CosmologicalParameter> CosmologicalParameterCast (const std::vector<std::string> cosmologicalParameterNames) { return castFromNames<CosmologicalParameter>(cosmologicalParameterNames, CosmologicalParameterNames()); }
 
@@ -365,8 +375,6 @@ namespace cbl {
 
       /**
        *  @brief internal function to set default values
-       *
-       *  @return none
        */
       void set_default ();
       
@@ -773,8 +781,6 @@ namespace cbl {
        *
        *  @param [in] k_max maximum wave vector module up to which the
        *  power spectrum is computed
-       *
-       *  @return none
        */
       void m_Table_Pk_CAMB_MPTbreeze (const std::string code, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100.) const;
 
@@ -800,8 +806,6 @@ namespace cbl {
        *
        *  @param [in] k_max maximum wave vector module up to which the
        *  power spectrum is computed
-       *
-       *  @return none
        */
       void m_Table_Pk_CLASS (const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100.) const;
       
@@ -818,8 +822,6 @@ namespace cbl {
        *  spectrum; true \f$\rightarrow\f$ non-linear power spectrum
        *
        *  @param redshift redshift
-       *
-       *  @return none
        */
       void m_remove_output_Pk_tables (const std::string code, const bool NL, const double redshift) const;
 
@@ -848,8 +850,6 @@ namespace cbl {
        *
        *  @param [in] output_root output_root of the parameter file
        *  used to compute the power spectrum; it can be any name
-       *
-       *  @return none
        *
        *  @warning the input output_root parameter must be the same as
        *  the one in the parameter file
@@ -924,8 +924,6 @@ namespace cbl {
        *  provided in cosmological units (i.e. in units of \e h,
        *  e.g. Mpc/h)
        *
-       *  @return object of class Cosmology
-       *
        *  @warning by default: \f$\Omega_k =
        *  1-\Omega_M-\Omega_{rad}-\Omega_{DM}\f$, \f$\Omega_{CDM} =
        *  \Omega_M-\Omega_b-\Omega_\nu\f$, \f$t_H = 1-H_0\f$, \f$D_H =
@@ -936,6 +934,11 @@ namespace cbl {
       /**
        *  @brief constructor using built-in cosmological models
        *
+       *  by default: \f$\Omega_k =
+       *  1-\Omega_M-\Omega_{rad}-\Omega_{DM}\f$, \f$\Omega_{CDM} =
+       *  \Omega_M-\Omega_b-\Omega_\nu\f$, \f$t_H = 1-H_0\f$ \f$D_H =
+       *  c/t_H\f$ \f$\rho_0 = \rho_0(\Omega_M, \Omega_nu)\f$
+       *
        *  @param cosmoModel the built-in cosmological model
        *
        *  @param model the cosmologial model used to compute distances
@@ -944,19 +947,11 @@ namespace cbl {
        *  phyical units; true \f$\rightarrow\f$ quantities are
        *  provided in cosmological units (i.e. in units of \e h,
        *  e.g. Mpc/h)
-       *
-       *  @return object of class Cosmology; by default:
-       *  \f$\Omega_k = 1-\Omega_M-\Omega_{rad}-\Omega_{DM}\f$,
-       *  \f$\Omega_{CDM} = \Omega_M-\Omega_b-\Omega_\nu\f$,
-       *  \f$t_H = 1-H_0\f$
-       *  \f$D_H = c/t_H\f$
-       *  \f$\rho_0 = \rho_0(\Omega_M, \Omega_nu)\f$
        */
       Cosmology (const CosmologicalModel cosmoModel, const std::string model="LCDM", const bool unit=true);    
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~Cosmology () = default;
     
@@ -1207,8 +1202,6 @@ namespace cbl {
 
       /**
        *  @brief print the values of the private members on the screen
-       *
-       *  @return none
        */
       void print_parameters () const;
       
@@ -1225,8 +1218,6 @@ namespace cbl {
        *  
        *  @param parameter cosmological parameter to set
        *  @param value the new value for the parameter 
-       *
-       *  @return none
        */
       void set_parameter (const CosmologicalParameter parameter, const double value);
 
@@ -1237,8 +1228,6 @@ namespace cbl {
        *  to set
        *  @param value vector containing the new values for the
        *  parameters
-       *
-       *  @return none
        */
       void set_parameters (const std::vector<CosmologicalParameter> parameter, const std::vector<double> value);
 
@@ -1249,8 +1238,6 @@ namespace cbl {
        *  @param Omega_matter &Omega;<SUB>M</SUB>: density of baryons,
        *  cold dark matter and massive neutrinos (in units of the
        *  critical density)
-       *
-       *  @return none
        */
       void set_Omega (const double Omega_matter=0.27) {
 	m_Omega_matter = Omega_matter; 
@@ -1264,8 +1251,6 @@ namespace cbl {
        *
        *  @param Omega_baryon &Omega;<SUB>b</SUB>: density of baryons,
        *  (in units of the critical density)
-       *
-       *  @return none
        */
       void set_OmegaB (const double Omega_baryon=0.046)
       {
@@ -1280,8 +1265,6 @@ namespace cbl {
        *  @param Omega_baryonh2 &Omega;<SUB>b</SUB>h<SUP>2</SUP>:
        *  density of baryons, (in units of the critical density) times
        *  h<SUP>2</SUP>
-       *
-       *  @return none
        */
       void set_OmegaB_h2 (const double Omega_baryonh2=0.0222)
       {
@@ -1295,8 +1278,6 @@ namespace cbl {
        *  @param Omega_matter &Omega;<SUB>M</SUB>: density of baryons,
        *  cold dark matter and massive neutrinos (in units of the
        *  critical density)
-       *
-       *  @return none
        */
       void set_OmegaM (const double Omega_matter=0.27)
       {
@@ -1309,8 +1290,6 @@ namespace cbl {
        *  @brief set the value of &Omega;<SUB>DE</SUB>
        *
        *  @param Omega_DE &Omega;<SUB>DE</SUB>: density of dark energy
-       *
-       *  @return none
        */
       void set_OmegaDE (const double Omega_DE=0.73)
       {
@@ -1327,7 +1306,6 @@ namespace cbl {
        *  number (for QED + non-instantaneous decoupling)
        *  @param massive_neutrinos the number of degenerate massive
        *  neutrino species
-       *  @return none
        */
       void set_OmegaNu (const double Omega_neutrinos=0., const double massless_neutrinos=3.04, const int massive_neutrinos=0)
       {
@@ -1344,8 +1322,6 @@ namespace cbl {
        *
        *  @param Omega_radiation \f$\Omega_{rad}\f$: the radiation
        *  density
-       *
-       *  @return none
        */
       void set_Omega_radiation (const double Omega_radiation)
       { 
@@ -1360,15 +1336,13 @@ namespace cbl {
        *
        *  @param warn true \f$\rightarrow\f$ print a warning message
        *  if m_unit is true
-       *
-       *  @return none
        */
       void set_hh (const double hh=0.7, const bool warn=true)
       {
 	if (m_unit && warn) WarningMsgCBL("if unit=true then H0=100 (by internal definition)", "set_hh", "Cosmology.h");
 	m_hh = hh; 
-	m_H0 = (m_unit) ? 100. : m_hh*100.;   
-	m_t_H = 1./m_H0; 
+	m_H0 = (m_unit) ? 100. : m_hh*100.;
+	m_t_H = 1./(m_hh*100.);
 	m_D_H = par::cc*m_t_H;
       };
 
@@ -1379,15 +1353,13 @@ namespace cbl {
        *
        *  @param warn true \f$\rightarrow\f$ print a warning message
        *  if m_unit is true
-       *
-       *  @return none
        */
       void set_H0 (const double H0=70., const bool warn=true)
       {
 	if (m_unit && warn) WarningMsgCBL("if unit=true then H0=100 (by internal definition)", "set_H0", "Cosmology.h");
 	m_hh = H0/100.; 
-	m_H0 = (m_unit) ? 100. : m_hh*100.;   
-	m_t_H = 1./m_H0; 
+	m_H0 = (m_unit) ? 100. : m_hh*100.;
+	m_t_H = 1./(m_hh*100.);
 	m_D_H = par::cc*m_t_H;
       };
 
@@ -1395,8 +1367,6 @@ namespace cbl {
        *  @brief set the value of &sigma;<SUB>8</SUB>
        *
        *  @param sigma8 &sigma;<SUB>8</SUB>: power spectrum normalisation
-       *
-       *  @return none
        */
       void set_sigma8 (const double sigma8=-1.) { m_sigma8 = sigma8; };
 
@@ -1405,8 +1375,6 @@ namespace cbl {
        *
        *  @param scalar_amp \f$A_s\f$: initial scalar amplitude of
        *  the power spectrum
-       *
-       *  @return none
        */
       void set_scalar_amp (const double scalar_amp=2.46e-9) { m_scalar_amp = scalar_amp; }; 
 
@@ -1414,8 +1382,6 @@ namespace cbl {
        *  @brief set the value of the scalar pivot
        *
        *  @param scalar_pivot the scalar pivot k in \f$Mpc^{-1}\f$
-       *
-       *  @return none
        */
       void set_scalar_pivot (const double scalar_pivot=0.05) { m_scalar_pivot = scalar_pivot; }; 
       
@@ -1423,8 +1389,6 @@ namespace cbl {
        *  @brief set the value of n<SUB>spec</SUB>
        *
        *  @param n_spec n<SUB>spec</SUB>: the primordial spectral index
-       *
-       *  @return none
        */
       void set_n_spec (const double n_spec) { m_n_spec = n_spec; }; 
 
@@ -1433,8 +1397,6 @@ namespace cbl {
        *
        *  @param w0 w<SUB>0</SUB>: parameter of the dark energy equation
        *  of state (CPL parameterisation)
-       *
-       *  @return none 
        */
       void set_w0 (const double w0=-1.) { m_w0 = w0; };  
     
@@ -1443,8 +1405,6 @@ namespace cbl {
        *
        *  @param wa w<SUB>a</SUB>: parameter of the dark energy
        *  equation of state (CPL parameterisation)
-       *
-       *  @return none
        */
       void set_wa (const double wa=0.) { m_wa = wa; };  
 
@@ -1453,8 +1413,6 @@ namespace cbl {
        *
        *  @param RhoZero: the mean density of the Universe at z=0
        *  [Msun*Mpc^-3]
-       *
-       *  @return none
        */
       void set_RhoZero (const double RhoZero=7.5e10) { m_RhoZero = RhoZero; };  
     
@@ -1462,8 +1420,6 @@ namespace cbl {
        *  @brief set the value of f<SUB>NL</SUB>
        *
        *  @param fNL f<SUB>NL</SUB>: the non-Gaussian amplitude
-       *
-       *  @return none
        */
       void set_fNL (const double fNL=0.) { m_fNL = fNL; };  
     
@@ -1472,8 +1428,6 @@ namespace cbl {
        *
        *  @param type_NG the non-Gaussian shape (type=1 local, type=2
        *  equilateral, type=3 enfolded, type=4 orthogonal)
-       *
-       *  @return none
        */
       void set_type_NG (const int type_NG=1) { m_type_NG = type_NG; };  
 
@@ -1482,8 +1436,6 @@ namespace cbl {
        *
        *  @param &tau; the Thomson scattering optical depth due to
        *  reionization
-       *
-       *  @return none
        */
       void set_tau (const double tau=0.09) { m_tau = tau; };  
     
@@ -1491,8 +1443,6 @@ namespace cbl {
        *  @brief set the value of the \f$r_s\f$;
        *
        *  @param rs the sound horizon
-       *
-       *  @return none
        */
       void set_rs (const double rs=-1) { m_rs = (rs==-1) ? rs_CAMB() : rs; };  
 
@@ -1500,8 +1450,6 @@ namespace cbl {
        *  @brief set the cosmologial model used to compute distances
        *
        *  @param model the cosmologial model used to compute distances
-       *
-       *  @return none
        */
       void set_model (const std::string model="LCDM") { m_model = model; };  
 
@@ -1510,8 +1458,6 @@ namespace cbl {
        *
        *  @param unit false \f$\rightarrow\f$ phyical units; true
        *  \f$\rightarrow\f$ cosmological units (i.e. in units of \e h)
-       *
-       *  @return none
        */
       void set_unit (const bool unit=true) { m_unit = unit; set_H0(100*m_hh, false); }
 
@@ -1904,7 +1850,7 @@ namespace cbl {
        */
       double DD (const double redshift) const;
 
-            /**
+       /**
        *  @brief the normalised amplitude of the growing mode at a given
        *  redshift, \f$D(z)/D(0)\f$
        *
@@ -1917,12 +1863,28 @@ namespace cbl {
        *
        *  @param redshift_norm the redshift at with the amplitude of
        *  the growing mode is normalised
+
+       *  @param computing_method if this string is "growth_rate" the
+       *  normalised of amplitude of the growing mode is computed
+       *  integrating the linear growth rate \f$f(z)\f$, if instead is
+       *  "Pk_ratio" this value is computed as the squared root of the
+       *  ratio between 2 P(k) spectra, at the specified wave vector
+       *  module and using the specified method. By default the
+       *  normalised growth factor is computed using the function
+       *  cbl::cosmology::Cosmology::DD
+       *
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], MGCAMB,
+       *  [https://arxiv.org/abs/1901.05956], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param NL false \f$\rightarrow\f$ linear power
+       *  spectrum; true \f$\rightarrow\f$ non-linear power spectrum
        *
        *  @param kk wave vector module
-       *
-       *  @param compute_from_growth_rate if true the normalised of
-       *  amplitude of the growing mode is computed integrating the
-       *  linear growth rate \f$f(z)\f$
        *
        *  @param prec precision used for the resolution of the
        *  differential equation in the case w different than -1
@@ -1933,7 +1895,7 @@ namespace cbl {
        *  @warning The contribution of the radiation is not taken into
        *  account
        */
-      double DD_norm (const double redshift, const double redshift_norm=0., const double kk=-1., const bool compute_from_growth_rate=false, const double prec=1.e-4) const;  
+      double DD_norm (const double redshift, const double redshift_norm=0., const std::string computing_method="classic", const std::string method_Pk="CAMB", const bool NL=false, const double kk=1., const double prec=1.e-4) const;  
 
       /**
        *  @brief &sigma;<SUB>8</SUB> at a given redshift
@@ -2013,9 +1975,16 @@ namespace cbl {
        *
        *  see e.g. de Araujo 2005
        *
-       *  @return z<SUB>acc</SUB>
+       *  @return z<SUB>eq</SUB>
        */
       double z_eq () const;
+
+      /**
+       *  @brief redshift of matter-radiation equality
+       *
+       *  @return z<SUB>eq</SUB>
+       */
+      double z_eq_rad (const double T_CMB=2.7255) const;
 
       /**
        *  @brief the sound speed
@@ -2059,7 +2028,7 @@ namespace cbl {
        *
        *  @param z_max maximum redshift
        *  @param mag_lim magnitude limit
-       *  @return z<SUB>acc</SUB>
+       *  @return r<SUB>s</SUB>
        */
       double Mag_Volume_limited (const double z_max=1., const double mag_lim=-20.) const;
 
@@ -2329,7 +2298,6 @@ namespace cbl {
        *  @param [in] step redshift step
        *  @param [out] Redshift vector of redshifts
        *  @param [out] dc vector of comoving line-of-sight distances
-       *  @return none
        */
       void D_C_table (const std::string file_table, const double z_min, const double z_max, const int step, std::vector<double> &Redshift, std::vector<double> &dc) const;
 
@@ -3785,7 +3753,6 @@ namespace cbl {
        *  @param [in] model_model valid authors are: NS (Nusser and Sheth), GTS
        *  (Giocoli et al. 2012)
        *  @param [out] wf vector of w(f)
-       *  @return none
        */
       void medianwf (const double ff, const std::string model_model, std::vector<double> &wf) const; 
 
@@ -3814,8 +3781,6 @@ namespace cbl {
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
        *  name
-       *
-       *  @return none
        */
       void medianzf (const double ff, const double mass, const double z0, const std::string model_model, const std::string method_SS, std::vector<double> &zf, const bool store_output=true, const std::string output_root="test") const; 
   
@@ -3953,8 +3918,6 @@ namespace cbl {
        *  @param file_par name of the parameter file; if a parameter
        *  file is provided (i.e. file_par!=NULL), it will use be used,
        *  ignoring the cosmological parameters of the object
-       *
-       *  @return none
        */
       void run_CAMB (const bool NL, const double redshift, const std::string output_root=par::defaultString, const std::string output_dir=par::defaultString, const double k_max=100., const std::string file_par=par::defaultString) const; 
 
@@ -3988,8 +3951,6 @@ namespace cbl {
        *  @param file_par name of the parameter file; if a parameter
        *  file is provided (i.e. file_par!=NULL), it will use be used,
        *  ignoring the cosmological parameters of the object
-       *
-       *  @return none
        */
       void run_CAMB (std::vector<double> &lgkk, std::vector<double> &lgPk, const bool NL, const double redshift, const std::string output_root="test", const std::string output_dir=par::defaultString, const double k_max=100., const std::string file_par=par::defaultString) const;
 
@@ -4023,8 +3984,6 @@ namespace cbl {
        *  @param [in] file_par name of the parameter file; if a
        *  parameter file is provided (i.e. file_par!=NULL), it will be
        *  used, ignoring the cosmological parameters of the object
-       *
-       *  @return none
        */
       void Table_PkCodes (const std::string code, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const;
 
@@ -4059,8 +4018,6 @@ namespace cbl {
        *  @param [in] file_par name of the parameter file; if a
        *  parameter file is provided (i.e. file_par!=NULL), it will be
        *  used, ignoring the cosmological parameters of the object
-       *
-       *  @return none
        */
       void Table_XiCodes (const std::string code, const bool NL, std::vector<double> &rr, std::vector<double> &xi, const double redshift, const bool store_output, const std::string output_root, const double k_max, std::string file_par) const;
 
@@ -4100,8 +4057,6 @@ namespace cbl {
        *  @param file_par name of the parameter file; if a parameter
        *  file is provided (i.e. file_par!=NULL), it will be used,
        *  ignoring the cosmological parameters of the object
-       *
-       *  @return none
        */
       void Pk_0 (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
@@ -5300,8 +5255,6 @@ namespace cbl {
        *  @param [in] file_par name of the parameter file; if a
        *  parameter file is provided (i.e. file_par!=NULL), it will be
        *  used, const ignoring the cosmological parameters of the object
-       *
-       *  @return none
        */
       void get_xi (std::vector<double> &rr, std::vector<double> &Xi, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
   
@@ -5366,8 +5319,6 @@ namespace cbl {
        *  @param [in] file_par name of the parameter file; if a
        *  parameter file is provided (i.e. file_par!=NULL), it will be
        *  used, ignoring the cosmological parameters of the object
-       *
-       *  @return none
        */
       void get_barred_xi (std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const std::string method_Pk, const double redshift, const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=100., const double aa=0., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
 
@@ -6344,9 +6295,6 @@ namespace cbl {
        *  @param redshift_source vector containing the redshifts of
        *  the source galaxies, in case the cluster masses are
        *  estimated from weak lensing
-       *
-       *  @return a vector containing the mean and standard deviation
-       *  of the effective dark matter bias
        */
       void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
       
@@ -6477,9 +6425,6 @@ namespace cbl {
        *  is a parameter file, used to compute the power spectrum with
        *  the method specified by method_Pk; false \f$\rightarrow\f$
        *  the input_file is a file containing the power spectrum
-       *
-       *  @return a vector containing the mean and standard deviation
-       *  of the effective dark matter bias
        */
       void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const double redshift, const double Mass_min, const double Mass_max, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
@@ -6622,9 +6567,6 @@ namespace cbl {
        *  @param redshift_source vector containing the redshifts of
        *  the source galaxies, in case the cluster masses are estimated
        *  from weak lensing
-       *
-       *  @return a vector containing the mean and standard deviation
-       *  of the effective dark matter bias
        */
       void generate_bias_eff_grid_two_cosmopars (std::vector<double> &parameter1, std::vector<double> &parameter2, std::vector<std::vector<double>> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cbl::cosmology::CosmologicalParameter cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
 
@@ -7464,6 +7406,72 @@ namespace cbl {
        *  A22, A23, A33, B12, B13, B14, B22, B23, B24, B33, B34, B44
        */
       std::vector<std::vector<double>> Pk_TNS_AB_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=100., const double prec=1.e-2);
+
+
+      /**
+       *  @brief The expanded correction terms for the extended TNS model
+       *  (eTNS)
+       *
+       *  the expanded correction terms for the eTNS model are
+       *  computed at 1-loop using the Standard Perturbation Theory
+       *  implemented in the CAMB-integrated version by Shun Saito.
+       *  [http://www2.yukawa.kyoto-u.ac.jp/~atsushi.taruya/cpt_pack.html].
+       *  Details can be found in Saito et al. (2014) and Beutler et al. (2014) 
+       *  [https://arxiv.org/abs/1405.1447 and https://arxiv.org/abs/1312.4611v2].
+       *
+       *  \f[ P_{\mathrm{g}}(k, \mu)= \exp \left\{-\left(f k \mu \sigma_{v}\right)^{2}\right\}\left[P_{\mathrm{g}, \delta \delta}(k)\right.\\
+       *  +2 f \mu^{2} P_{\mathrm{g}, \delta \theta}(k)+f^{2} \mu^{4} P_{\theta \theta}(k) \\
+       *  \left.+b_{1}^{3} A(k, \mu, \beta)+b_{1}^{4} B(k, \mu, \beta)\right]\f]
+       *
+       *  \f[ P_{\mathrm{g}, \delta \delta}(k) =b_{1}^{2} P_{\delta \delta}(k)+2 b_{2} b_{1} P_{b 2, \delta}(k)+2 b_{s 2} b_{1} P_{b s 2, \delta}(k) \\
+       *  +2 b_{3 \mathrm{n} 1} b_{1} \sigma_{3}^{2}(k) P_{\mathrm{m}}^{\mathrm{L}}(k)+b_{2}^{2} P_{b 22}(k) \\
+       *  +2 b_{2} b_{s 2} P_{b 2 s 2}(k)+b_{s 2}^{2} P_{b s 22}(k)+N \f]
+       *  
+       *  \f[ P_{\mathrm{g}, \delta \theta}(k) =b_{1} P_{\delta \theta}(k)+b_{2} P_{b 2, \theta}(k)+b_{s 2} P_{b s 2, \theta}(k) \\
+       *  +b_{3 \mathrm{nl}} \sigma_{3}^{2}(k) P_{\mathrm{m}}^{lin}(k) \f]
+       *
+       *  @author J.E. Garcia-Farieta
+       *  @author joegarciafa@unal.edu.co
+       *
+       *  @param kk the wave vector module
+       *
+       *  @param method method used to compute the linear power spectrum;
+       *  valid choices for method_Pk are: CAMB [http://camb.info/],
+       *  CLASS [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param redshift the redshift
+       *
+       *  @param output_dir the output_dir directory
+       *  where the output of external codes are written
+       *
+       *  @param store_output if true the output files created
+       *  by CAMB are stored; if false the output files created by
+       *  CAMB are removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can
+       *  be any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @return expanded terms of the eTNS model: Pdd, Pdv, Pvv,
+       *  Pb2d, Pb2v, Pb22, Pbs2d, Pbs2v, Pb2s2, Pbs22, sigma32Pklin, Bb1, Bb2, Bbs2
+       */
+      std::vector<std::vector<double>> Pk_eTNS_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=100., const double prec=1.e-2);
 
       /**
        *  @brief the expanded A and B correction terms for the TNS
@@ -9663,6 +9671,14 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param k_Pk_ratio wave vector module required to compute
+       *  the growth factor (cbl::cosmology::Cosmology::DD_norm())
+       *  with the method "Pk_ratio". This parameter represents
+       *  wavenumber at which the ratio between the the power
+       *  spectra at different redshift is computed. It is
+       *  recommended to use this method when dealing with
+       *  cosmologies alternative to the LCDM. To avoid to compute
+       *  the growth factor with this method, set k_Pk_ratio=-1.
        *  @param store_output if true the output files created by the
        *  Boltzmann solver are stored; if false the output files are
        *  removed
@@ -9695,13 +9711,13 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      double size_function (const double RV, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double size_function (const double RV, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const double k_Pk_ratio=-1., const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
 
       /**
        *  @brief the void size function
        *
-       *  @author Tommaso Ronconi
-       *  @author tommaso.ronconi@studio.unibo.it
+       *  @author Sofia Contarini
+       *  @author sofia.contarini3@unibo.it
        *
        *  @param RV vector of radii
        *
@@ -9731,6 +9747,15 @@ namespace cbl {
        *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param k_Pk_ratio wave vector module required to compute
+       *  the growth factor (cbl::cosmology::Cosmology::DD_norm())
+       *  with the method "Pk_ratio". This parameter represents
+       *  wavenumber at which the ratio between the the power
+       *  spectra at different redshift is computed. It is
+       *  recommended to use this method when dealing with
+       *  cosmologies alternative to the LCDM. To avoid to compute
+       *  the growth factor with this method, set k_Pk_ratio=-1.
        *
        *  @param store_output if true the output files created by the
        *  Boltzmann solver are stored; if false the output files are
@@ -9764,8 +9789,103 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013) for each radius
        */
-      std::vector<double> size_function (const std::vector<double> RV, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      std::vector<double> size_function (const std::vector<double> RV, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const double k_Pk_ratio=1., const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
 
+      /**
+       *  @brief number of voids computed from the void size function
+       *  model for bins of radii spaced in log scale. The considered
+       *  volume is computed from a (fraction of) a sphere shell,
+       *  included in between two different redshifts
+       *
+       *  @author Sofia Contarini
+       *  @author sofia.contarini3@unibo.it
+       *
+       *  @param min_r the minimum void radius
+       *
+       *  @param max_r the maximum void radius
+       *
+       *  @param num_bins number of bins of void radius
+       *
+       *  @param min_z the minimum redshift of the shell
+       *
+       *  @param max_z the maximum redshift of the shell
+       *
+       *  @param mean_z the mean redshift of the sample
+       *
+       *  @param factor a factor used to compute the volume as
+       *  fact*\f$(D_C(z_\mathrm{max})^3-D_C(z_\mathrm{min})^3)\f$,
+       *  where fact plays the role of the solid angle or the sky area
+       *  and whatever factor is required
+       *
+       *  @param model size function model name; valid choices for
+       *  model name are SvdW (Sheth and van de Weygaert, 2004),
+       *  linear and Vdn (Jennings et al., 2013)
+       *
+       *  @param b_eff the effective bias of the sample
+       *
+       *  @param slope first coefficent to convert the effective bias
+       *  (default value set to \f$0.854\f$)
+       *
+       *  @param offset second coefficent to convert the effective
+       *  bias (default value set to \f$0.420\f$)
+       *
+       *  @param deltav_NL the non linear density contrast:
+       *  \f$\rho_v/\rho_m\f$ (default value set to \f$-0.795\f$)
+       *
+       *  @param del_c critical value of the linear density field
+       *  (default value set to \f$1.06\f$)
+       *
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param k_Pk_ratio wave vector module required to compute
+       *  the growth factor (cbl::cosmology::Cosmology::DD_norm())
+       *  with the method "Pk_ratio". This parameter represents
+       *  wavenumber at which the ratio between the the power
+       *  spectra at different redshift is computed. It is
+       *  recommended to use this method when dealing with
+       *  cosmologies alternative to the LCDM. To avoid to compute
+       *  the growth factor with this method, set k_Pk_ratio=-1.
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return a vector of vectors with dimensions 2xnum_bins. The
+       *  first component contains the void radii (centres of the bins
+       *  computed in log scale), while the second the predicted void
+       *  counts
+       */
+      std::vector<std::vector<double>> Nvoids (const double min_r, const double max_r, const int num_bins, const double min_z, const double max_z, const double mean_z, const double factor, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const double k_Pk_ratio=1., const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      
       /**
        *  @brief the void size function
        *
@@ -9853,6 +9973,28 @@ namespace cbl {
        *  al.(2013)
        */
       double size_function (const double RV, const double redshift, const std::string model_mf, const double del_v, const std::string model_sf, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+
+      /**
+       *  @brief Supplementary function to compute a correction factor
+       *  to apply to the void size function, to predict the measured
+       *  abundance of voids affected by geometrical distortions
+       *  (Alcock-Paczyński change of volume). These are caused by the
+       *  assumption of a fiducial cosmology different from the true
+       *  one, see Correa et al. 2020
+       *  (https://arxiv.org/pdf/2007.12064.pdf)
+       *
+       *  @author Sofia Contarini
+       *  @author sofia.contarini3@unibo.it
+       *
+       *  @param cosm_true the true cosmology of the catalogue
+       *
+       *  @param redshift the vector of redshifts of different samples
+       *  of voids
+       *
+       *  @return a vector with the correction factors relative to the
+       *  void samples at different redshifts
+       */
+      std::vector<double> AP_corr(const cbl::cosmology::Cosmology cosm_true, const std::vector<double> redshift);
       
       ///@}
 
@@ -9954,18 +10096,87 @@ namespace cbl {
 
       ///@}
       /**
-       *  @name Functions to estimate the non linear power spectrum
+       *  @name Functions to estimate the non-linear power spectrum
        */
       ///@{
 
+      /**
+       * @brief function to estimate the non-linear power spectrum
+       *
+       * @param k the wavevector module
+       *
+       * @param q
+       *
+       * @param kq
+       *
+       * @return \f$ F_2 \f$
+       */
       double F2 (const double k, const double q, const double kq);
 
+      /**
+       * @brief function to estimate the non-linear power spectrum
+       *
+       * @param k the wavevector module
+       *
+       * @param q
+       *
+       * @param kq
+       *
+       * @return \f$ G_2 \f$
+       */
       double G2 (const double k, const double q, const double kq);
 
+      /**
+       * @brief function to estimate the non-linear power spectrum
+       *
+       * @param k the wavevector module
+       *
+       * @param PkLin linear power spectrum
+       *
+       * @param qmin
+       *
+       * @param qmax
+       *
+       * @param prec the integral precision
+       *
+       * @return \f$ f_k \f$
+       */
       double f_k (const double k, const std::shared_ptr<cbl::glob::FuncGrid> PkLin, const double qmin, const double qmax, const double prec=1.e-3);
 
+      /**
+       * @brief function to estimate the non-linear power spectrum
+       *
+       * @param k the wavevector module
+       *
+       * @param PkLin linear power spectrum
+       *
+       * @param qmin
+       *
+       * @param qmax
+       *
+       * @param prec the integral precision
+       *
+       * @return \f$ g_k \f$
+       */
       double g_k (const double k, const std::shared_ptr<cbl::glob::FuncGrid> PkLin, const double qmin, const double qmax, const double prec=1.e-3);
 
+      /**
+       * @brief the one-loop power spectrum
+       *
+       * @param kk the wavevector module
+       *
+       * @param PkLin linear power spectrum
+       *
+       * @param corrtype
+       *
+       * @param qmin
+       *
+       * @param qmax
+       *
+       * @param prec the integral precision
+       *
+       * @return one-loop power spectrum
+       */
       double Pk_1loop (const double kk, const std::shared_ptr<cbl::glob::FuncGrid> PkLin, const int corrtype, const double qmin, const double qmax, const double prec=1.e-3);
 
       /**
@@ -9997,7 +10208,7 @@ namespace cbl {
       double Pk_DeltaDelta (const double kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const double qmin, const double qmax, const double prec=1.e-3);
 
       /**
-       * @brief compute the Delta-Delta non linear power spectrum 
+       * @brief compute the Delta-Theta non linear power spectrum 
        * at 1-loop following MPTbreeze scheme (Crocce & Scoccimarro 2012)
        *
        * \f[
@@ -10020,7 +10231,7 @@ namespace cbl {
        *
        * @param prec the integral precision
        *
-       * @return the Delta-Delta non-linear power spectrum
+       * @return the Delta-Theta non-linear power spectrum
        */
       double Pk_DeltaTheta (const double kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const double qmin, const double qmax, const double prec=1.e-3);
 
@@ -10047,12 +10258,128 @@ namespace cbl {
        *
        * @param prec the integral precision
        *
-       * @return the Delta-Delta non-linear power spectrum
+       * @return the Theta-Theta non-linear power spectrum
        */
       double Pk_ThetaTheta (const double kk, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const double qmin, const double qmax, const double prec=1.e-3);
 
+      /**
+       *  @brief compute the Delta-Delta non linear power spectrum at
+       *  1-loop following MPTbreeze scheme (Crocce & Scoccimarro
+       *  2012)
+       *
+       *  \f[ P_{\delta \delta} (k) = \exp(f(k))^2
+       *    (P_L(k)+P_{1loop}(k)) \f]
+       *
+       *  where \f$ f(k) \f$ is the second order correction of the
+       *  non-linear propagator, \f$\P_L(k)\f$ is the linear power
+       *  spectrum and \f$ P_{1loop} \f$ is the one loop power
+       *  spectrum correction, computed by
+       *  cbl::cosmology::Cosmology::Pk_1loop.
+       *
+       *  @param kk the wavevector module
+       *
+       *  @param redshift the redshift
+       * 
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_dir the output directory
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will use be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @param unit1 true \f$\rightarrow\f$ force cosmological units
+       *
+       *  @return the \f$\Delta-\Delta\f$ non-linear power spectrum
+       */
       std::vector<double> Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
-      
+
+      /**
+       *  @brief compute the Delta-Theta non linear power spectrum 
+       *  at 1-loop following MPTbreeze scheme (Crocce & Scoccimarro 2012)
+       *
+       *  \f[ P_{\delta \theta} (k) = \exp(f(k))^2
+       *     (P_L(k)+P_{1loop}(k)) \f]
+       *
+       *  where \f$ f(k) \f$ is the second order correction of the non-linear
+       *  propagator, \f$\P_L(k)\f$ is the linear power spectrum
+       *  and \f$ P_{1loop} \f$ is the one loop power spectrum correction,
+       *  computed by cbl::cosmology::Cosmology::Pk_1loop.
+       *
+       *  @param kk the wavevector module
+       *
+       *  @param redshift the redshift
+       * 
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param output_dir the output directory
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will use be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @param unit1 true \f$\rightarrow\f$ force cosmological units
+       *
+       *  @return the \f$\Delta-\Theta\f$ non-linear power spectrum
+       */
       std::vector<double> Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const std::string output_dir, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
 
       /**
@@ -10081,6 +10408,14 @@ namespace cbl {
        *
        *  @param output_dir the output directory
        *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
        *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
@@ -10096,14 +10431,6 @@ namespace cbl {
        *  either norm=1, or norm=-1 and sigma8 is set
        *
        *  @param prec accuracy of the integration 
-       *
-       *  @param store_output if true the output files created by the
-       *  Boltzmann solver are stored; if false the output files are
-       *  removed
-       *
-       *  @param output_root the output_root parameter of the
-       *  parameter file used to compute the power spectrum; it can be
-       *  any name
        *
        *  @param file_par name of the parameter file; if a parameter
        *  file is provided (i.e. file_par!=NULL), it will use be used,
@@ -10190,8 +10517,6 @@ namespace cbl {
        *  in kk
        *
        *  @param prec the integral precision
-       *
-       *  @return none
        */
       void integrals_Q_nonLocal (std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_DM, const double prec) const;
 
@@ -10328,8 +10653,6 @@ namespace cbl {
        *  @param [in] kk vector of the wave vector modules
        *
        *  @param [in] Pk_DM the dark matter power spectrum
-       *
-       *  @return none
        */
       void integrals_zeta_Slepian (std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
 
@@ -10621,8 +10944,6 @@ namespace cbl {
        *  @param [in] kk vector of the wave vector modules
        *
        *  @param [in] Pk_DM the dark matter power spectrum
-       *
-       *  @return none
        */
       void integrals_zeta_BarrigaGatzanaga (std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
 
@@ -11113,8 +11434,6 @@ namespace cbl {
        * @param kk vector of wavevector modules
        *
        * @param Pk dark matter power spectrum
-       *
-       * @return none
        */
       void xi_r_n (std::vector<double> &xi_n, const std::vector<double> rr, const int nn, const std::vector<double> kk, const std::vector<double> Pk);
 
@@ -11140,8 +11459,6 @@ namespace cbl {
        * @param kk vector of wavevector modules
        *
        * @param Pk dark matter power spectrum
-       *
-       * @return none
        */
       void xi_r_n_pm (std::vector<double> &xi_n_p, std::vector<double> &xi_n_m, const std::vector<double> rr, const int nn, const std::vector<double> kk, const std::vector<double> Pk);
 
@@ -11167,8 +11484,6 @@ namespace cbl {
        * @param kk vector of wavevector modules
        *
        * @param Pk dark matter power spectrum
-       *
-       * @return none
        */
       void eff_l_l1 (std::vector<std::vector<double>> &eff, const std::vector<double> rr, const int l, const int l1, const std::vector<double> kk, const std::vector<double> Pk);
 
@@ -11198,8 +11513,6 @@ namespace cbl {
        * @param kk vector of wavevector modules
        *
        * @param Pk dark matter power spectrum
-       *
-       * @return none
        */
       void I_ELL_ell (std::vector<std::vector<double>> &II, const std::vector<double> rr, const int ll, const int LL, const std::vector<double> kk, const std::vector<double> Pk);
 
@@ -11227,8 +11540,6 @@ namespace cbl {
        * @param kk vector of wavevector modules
        *
        * @param Pk dark matter power spectrum
-       *
-       * @return none
        */
       void k_ell (std::vector<std::vector<double>> &KK, const std::vector<double> rr, const int ll, const std::vector<double> kk, const std::vector<double> Pk);
 

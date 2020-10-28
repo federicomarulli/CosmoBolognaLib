@@ -105,6 +105,8 @@
 
 /// @cond BOOSTinc
 #include <boost/numeric/odeint.hpp>
+#include <boost/math/special_functions/binomial.hpp>
+#include <boost/math/special_functions/beta.hpp>
 /// @endcond
 
 /// @cond FFTWinc
@@ -208,11 +210,11 @@
  *  This example shows how to menage priors
  */
 /**
-*  @example data1D.cpp
-*
-*  this example shows how to construct an object of class Data1D, used
-*  to handle 1D datasets of any type
-*/
+ *  @example data1D.cpp
+ *
+ *  this example shows how to construct an object of class Data1D, used
+ *  to handle 1D datasets of any type
+ */
 /**
  *  @example fit.cpp
  *
@@ -509,11 +511,11 @@ namespace cbl {
    */
   enum class Dim {
     
-    /// 1D, used e.g. for 1D pairs, in angular or comoving separations
-    _1D_,
+		  /// 1D, used e.g. for 1D pairs, in angular or comoving separations
+		  _1D_,
     
-    /// 2D pair, used e.g. for 2D pairs, in Cartesian or polar coordinates
-    _2D_
+		  /// 2D pair, used e.g. for 2D pairs, in Cartesian or polar coordinates
+		  _2D_
     
   };
 
@@ -531,11 +533,11 @@ namespace cbl {
    */
   enum class BinType { 
 
-    /// linear binning
-    _linear_,
+		      /// linear binning
+		      _linear_,
       
-    /// logarithmic binning
-    _logarithmic_
+		      /// logarithmic binning
+		      _logarithmic_
       
   };
 
@@ -585,17 +587,17 @@ namespace cbl {
    */
   enum class CoordinateUnits {
 
-    /// angle in radians
-    _radians_,
+			      /// angle in radians
+			      _radians_,
     
-    /// angle in degrees
-    _degrees_,
+			      /// angle in degrees
+			      _degrees_,
 
-    /// angle in arcseconds
-    _arcseconds_,
+			      /// angle in arcseconds
+			      _arcseconds_,
 
-    /// angle in arcminutes
-    _arcminutes_
+			      /// angle in arcminutes
+			      _arcminutes_
     
   };
   
@@ -647,11 +649,11 @@ namespace cbl {
    */
   enum class CoordinateType {
 
-    /// comoving coordinates (x, y, z)
-    _comoving_,
+			     /// comoving coordinates (x, y, z)
+			     _comoving_,
     
-    /// observed coordinates (R.A., Dec, redshift)
-    _observed_
+			     /// observed coordinates (R.A., Dec, redshift)
+			     _observed_
     
   };
 
@@ -753,7 +755,8 @@ namespace cbl {
     stream << par::col_blue << "CBL > " << par::col_default;
     return stream;
   }
-  
+
+  /// CBL print message
 #define coutCBL std::cout << headerCBL
 
   
@@ -764,8 +767,6 @@ namespace cbl {
    *  stored
    *
    *  @param input_DirLoc local directory of the main code
-   *
-   *  @return none
    */
   inline void SetDirs (const std::string input_DirCosmo, const std::string input_DirLoc)
   { par::DirCosmo = input_DirCosmo; par::DirLoc = input_DirLoc; }
@@ -780,18 +781,20 @@ namespace cbl {
    *
    *  @param fileCBL the CBL file containing the function in which the
    *  warning message is called
-   *
-   *  @return none
    */
   inline void WarningMsgCBL (const std::string msg, const std::string functionCBL, const std::string fileCBL)
   { std::cerr << std::endl << par::col_bred << "CBL > Warning in the CBL function " << cbl::par::col_yellow << functionCBL << cbl::par::col_bred << " of " << fileCBL << ": " << cbl::par::col_default << msg << std::endl << std::endl; }
 
   /**
    *  @brief throw an exception
+   *
    *  @param msg the message describing the exception
+   *
    *  @param exitCode the exit status
+   *
    *  @param header header of the error message
-   *  @return none
+   *
+   *  @return integer
    */
   inline int Error (const std::string msg, const cbl::glob::ExitCode exitCode=cbl::glob::ExitCode::_error_, const std::string header="\n")
   { throw cbl::glob::Exception(msg, exitCode, header); }
@@ -810,17 +813,21 @@ namespace cbl {
    *
    *  @param exitCode the exit status
    *
-   *  @return none
+   *  @return integer
    */
   inline int ErrorCBL (const std::string msg, const std::string functionCBL, const std::string fileCBL, const cbl::glob::ExitCode exitCode=cbl::glob::ExitCode::_error_)
   { throw cbl::glob::Exception(msg, exitCode, cbl::par::ErrorMsg, functionCBL, fileCBL); }
   
   /**
-   *  @brief produce a beep using the software totem
-   *  @return none
+   *  @brief produce a beep
+   *
+   *  function to produce a nice, useful beep
+   *
+   *  @param beep produced sound, to be specified to customize the
+   *  beep
    */
-  inline void Beep ()
-  { if (system("say beep")) {} }
+  inline void Beep (const std::string beep="beep")
+  { if (system(("say "+beep).c_str())) {} }
 
   /**
    *  @brief check if the value of a [string] variable has already
@@ -892,10 +899,10 @@ namespace cbl {
    *  @return a std::string containing T
    */
   template <typename T> std::string conv (const T val, const char *fact)
-    {
-      char VAL[20]; sprintf(VAL, fact, val); 
-      return std::string(VAL);
-    }
+  {
+    char VAL[20]; sprintf(VAL, fact, val); 
+    return std::string(VAL);
+  }
   
   /**
    *  @brief the nearest integer
@@ -903,8 +910,8 @@ namespace cbl {
    *  @return the integer value nearest to val
    */
   template <typename T> 
-    int nint (const T val) 
-    { return (val<0) ? val-0.5 : val+0.5; }
+  int nint (const T val) 
+  { return (val<0) ? val-0.5 : val+0.5; }
   
   /**
    *  @brief common logarithm (i.e. logarithm to base 10)
@@ -913,8 +920,8 @@ namespace cbl {
    *  par::defaultDouble
    */
   template <typename T> 
-    T Log (const T val) 
-    { return (val>0) ? log10(val) : par::defaultDouble; }
+  T Log (const T val) 
+  { return (val>0) ? log10(val) : par::defaultDouble; }
 
   /**
    *  @brief given a number x, return the closest of two values a, b
@@ -924,13 +931,13 @@ namespace cbl {
    *  @return a if x is closer to a, b if x is closer to b
    */
   template <typename T>
-    T closest (T x, T a, T b)
-    { 
-      if (a>b) ErrorCBL("the input parameter a must be <= than the input parameter b!", "closest", "Kernel.h");
-      else if (a==b) return a;
-      else return (fabs(x-a) < fabs(x-b)) ? a : b;
-      return 1;
-    }
+  T closest (T x, T a, T b)
+  { 
+    if (a>b) ErrorCBL("the input parameter a must be <= than the input parameter b!", "closest", "Kernel.h");
+    else if (a==b) return a;
+    else return (fabs(x-a) < fabs(x-b)) ? a : b;
+    return 1;
+  }
 
   /**
    *  @brief given a number x, return the index of the closest element
@@ -941,15 +948,15 @@ namespace cbl {
    *  @return the index of the closest element to x in vv
    */
   template <typename T>
-    T index_closest (T x, std::vector<T> vv)
-    { 
-      if (vv.size()==0) ErrorCBL("vv is an empty std::vector!", "index_closest", "Kernel.h");
-      std::vector<double>::iterator low, up;
-      low = lower_bound(vv.begin(), vv.end(), x);
-      up = upper_bound(vv.begin(), vv.end(), x);
-      int index = (closest(x, *low, *up)==*low) ? low-vv.begin() : up-vv.begin();
-      return index;
-    }
+  T index_closest (T x, std::vector<T> vv)
+  { 
+    if (vv.size()==0) ErrorCBL("vv is an empty std::vector!", "index_closest", "Kernel.h");
+    std::vector<double>::iterator low, up;
+    low = lower_bound(vv.begin(), vv.end(), x);
+    up = upper_bound(vv.begin(), vv.end(), x);
+    int index = (closest(x, *low, *up)==*low) ? low-vv.begin() : up-vv.begin();
+    return index;
+  }
 
   /**
    *  @brief given a number x, return the closest value in a
@@ -960,8 +967,8 @@ namespace cbl {
    *  @return the closest value in the std::vector
    */
   template <typename T>
-    T closest (T x, std::vector<T> values)
-    { return values[index_closest(x, values)]; }
+  T closest (T x, std::vector<T> values)
+  { return values[index_closest(x, values)]; }
   
   /**
    *  @brief substitute ~ with the full path
@@ -1040,7 +1047,6 @@ namespace cbl {
    *  @brief check if an input file can be opened
    *  @param fin std::ifstream object
    *  @param file the file name
-   *  @return none
    */
   void checkIO (const std::ifstream &fin, const std::string file="NULL");
 
@@ -1048,21 +1054,19 @@ namespace cbl {
    *  @brief check if an output file can be opened
    *  @param fout std::ofstream object
    *  @param file the file name
-   *  @return none
    */
   void checkIO (const std::ofstream &fout, const std::string file="NULL");
 
   /**
    *  @brief set evironment variables
-   *  @param Var std::vector containing the evironment variables to be set
-   *  @return none
+   *  @param Var std::vector containing the evironment variables to be
+   *  set
    */
   void set_EnvVar (const std::vector<std::string> Var);
 
   /**
    *  @brief check if an environment variable exists
    *  @param Var the evironment variable to be checked
-   *  @return none
    */
   void check_EnvVar (const std::string Var); 
 
@@ -1131,27 +1135,25 @@ namespace cbl {
    *  @param stream object of class std::ostream 
    *
    *  @param colour output colour 
-   *
-   *  @return none
    */
   template <typename T> 
-    void Print (const T value, const int prec, const int ww, const std::string header="", const std::string end="\n", const bool use_coutCBL=true, std::ostream &stream=std::cout, const std::string colour=cbl::par::col_default) 
-    {
-      const int bp = std::cout.precision(); 
-      if (fabs(value)<pow(10, -prec) || fabs(value)>pow(10, prec)) {
-	if (use_coutCBL)
-	  coutCBL << header << colour << std::scientific << std::setprecision(prec) << std::setw(ww) << std::right << value << par::col_default << end;
-	else
-	  stream << header << std::scientific << std::setprecision(prec) << std::setw(ww) << std::right << value << end;
-      }
-      else {
-	if (use_coutCBL) 
-	  coutCBL << header << colour << std::fixed << std::setprecision(prec) << std::setw(ww) << std::right << value << par::col_default << end;
-	else 
-	  stream << header << std::fixed << std::setprecision(prec) << std::setw(ww) << std::right << value << end;
-      }
-      std::cout.precision(bp);
+  void Print (const T value, const int prec, const int ww, const std::string header="", const std::string end="\n", const bool use_coutCBL=true, std::ostream &stream=std::cout, const std::string colour=cbl::par::col_default) 
+  {
+    const int bp = std::cout.precision(); 
+    if (fabs(value)<pow(10, -prec) || fabs(value)>pow(10, prec)) {
+      if (use_coutCBL)
+	coutCBL << header << colour << std::scientific << std::setprecision(prec) << std::setw(ww) << std::right << value << par::col_default << end;
+      else
+	stream << header << std::scientific << std::setprecision(prec) << std::setw(ww) << std::right << value << end;
     }
+    else {
+      if (use_coutCBL) 
+	coutCBL << header << colour << std::fixed << std::setprecision(prec) << std::setw(ww) << std::right << value << par::col_default << end;
+      else 
+	stream << header << std::fixed << std::setprecision(prec) << std::setw(ww) << std::right << value << end;
+    }
+    std::cout.precision(bp);
+  }
   
   /**
    *  @brief print the elements of a std::vector of non string values
@@ -1160,21 +1162,19 @@ namespace cbl {
    *  @param vect a std::vector
    *  @param prec decimal precision
    *  @param ww number of characters to be used as field width
-   *  @return none
    */
   template <typename T> 
-    void Print (const std::vector<T> vect, const int prec=4, const int ww=8) 
-    {
-      for (auto &&vi : vect)
-	Print(vi, prec, ww);
-    }
+  void Print (const std::vector<T> vect, const int prec=4, const int ww=8) 
+  {
+    for (auto &&vi : vect)
+      Print(vi, prec, ww);
+  }
   
   /**
    *  @brief print the elements of a std::vector of string values
    *  on the screen
    *  
    *  @param vect a std::vector
-   *  @return none
    */
   inline void Print (const std::vector<std::string> vect)
   {
@@ -1191,19 +1191,18 @@ namespace cbl {
    *  @param vect2 a std::vector
    *  @param prec decimal precision
    *  @param ww number of characters to be used as field width
-   *  @return none
    */
   template <typename T> 
-    void Print (const std::vector<T> vect1, const std::vector<T> vect2, const int prec=4, const int ww=8) 
-    {
-      if (vect1.size()!=vect2.size())
-	ErrorCBL("the two input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
+  void Print (const std::vector<T> vect1, const std::vector<T> vect2, const int prec=4, const int ww=8) 
+  {
+    if (vect1.size()!=vect2.size())
+      ErrorCBL("the two input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
       
-      for (size_t i=0; i<vect1.size(); i++) {
-	Print(vect1[i], prec, ww, "", "  ");
-	Print(vect2[i], prec, ww);
-      }
+    for (size_t i=0; i<vect1.size(); i++) {
+      Print(vect1[i], prec, ww, "", "  ");
+      Print(vect2[i], prec, ww);
     }
+  }
 
 
   /**
@@ -1213,17 +1212,15 @@ namespace cbl {
    *  @param vect1 a std::vector
    *
    *  @param vect2 a std::vector
-   *
-   *  @return none
    */
   inline void Print (const std::vector<std::string> vect1, const std::vector<std::string> vect2) 
-    {
-      if (vect1.size()!=vect2.size())
-	ErrorCBL("the two input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
+  {
+    if (vect1.size()!=vect2.size())
+      ErrorCBL("the two input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
       
-      for (size_t i=0; i<vect1.size(); i++) 
-	coutCBL << vect1[i] << "   " << vect2[i] << std::endl;
-    }
+    for (size_t i=0; i<vect1.size(); i++) 
+      coutCBL << vect1[i] << "   " << vect2[i] << std::endl;
+  }
 
 
   /**
@@ -1239,21 +1236,19 @@ namespace cbl {
    *  @param prec decimal precision
    *
    *  @param ww number of characters to be used as field width
-   *
-   *  @return none
    */
   template <typename T> 
-    void Print (const std::vector<T> vect1, const std::vector<T> vect2, const std::vector<T> vect3, const int prec=4, const int ww=8) 
-    {
-      if (vect1.size()!=vect2.size() || vect1.size()!=vect3.size())
-	ErrorCBL("the three input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
+  void Print (const std::vector<T> vect1, const std::vector<T> vect2, const std::vector<T> vect3, const int prec=4, const int ww=8) 
+  {
+    if (vect1.size()!=vect2.size() || vect1.size()!=vect3.size())
+      ErrorCBL("the three input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
       
-      for (size_t i=0; i<vect1.size(); i++) {
-	Print(vect1[i], prec, ww, "", "  ");
-	Print(vect2[i], prec, ww, "", "  ");
-	Print(vect3[i], prec, ww);	
-      }
+    for (size_t i=0; i<vect1.size(); i++) {
+      Print(vect1[i], prec, ww, "", "  ");
+      Print(vect2[i], prec, ww, "", "  ");
+      Print(vect3[i], prec, ww);	
     }
+  }
 
 
   /**
@@ -1265,17 +1260,15 @@ namespace cbl {
    *  @param vect2 a std::vector
    *
    *  @param vect3 a std::vector
-   *
-   *  @return none
    */
   inline void Print (const std::vector<std::string> vect1, const std::vector<std::string> vect2, const std::vector<std::string> vect3) 
-    {
-      if (vect1.size()!=vect2.size() || vect1.size()!=vect3.size())
-	ErrorCBL("the three input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
+  {
+    if (vect1.size()!=vect2.size() || vect1.size()!=vect3.size())
+      ErrorCBL("the three input vectors to be printed must have the same dimension!", "Print", "Kernel.h");
       
-      for (size_t i=0; i<vect1.size(); i++) 
-	coutCBL << vect1[i] << "   " << vect2[i] << "   " << vect3[i] << std::endl;
-    }
+    for (size_t i=0; i<vect1.size(); i++) 
+      coutCBL << vect1[i] << "   " << vect2[i] << "   " << vect3[i] << std::endl;
+  }
   
   
   /**
@@ -1287,41 +1280,37 @@ namespace cbl {
    *  @param prec decimal precision
    *
    *  @param ww number of characters to be used as field width
-   *
-   *  @return none
    */
   template <typename T> 
-    void Print (const std::vector<std::vector<T>> mat, const int prec=4, const int ww=8) 
-    {
-      for (size_t i=0; i<mat.size(); i++) {
-	for (size_t j=0; j<mat[i].size(); j++)
-	  if (j==0)
-	    Print(mat[i][j], prec, ww, "", "  ");
-	  else
-	    Print(mat[i][j], prec, ww, "", "  "); 
-	std::cout << std::endl;
-      }
+  void Print (const std::vector<std::vector<T>> mat, const int prec=4, const int ww=8) 
+  {
+    for (size_t i=0; i<mat.size(); i++) {
+      for (size_t j=0; j<mat[i].size(); j++)
+	if (j==0)
+	  Print(mat[i][j], prec, ww, "", "  ");
+	else
+	  Print(mat[i][j], prec, ww, "", "  "); 
+      std::cout << std::endl;
     }
+  }
 
-   /**
+  /**
    *  @brief print the elements of a matrix of string values on the
    *  screen
    *
    *  @param mat a matrix (i.e. a std::vector of std::vectors)
-   *
-   *  @return none
    */ 
   inline void Print (const std::vector<std::vector<std::string>> mat) 
-    {
-      for (size_t i=0; i<mat.size(); i++) {
-	for (size_t j=0; j<mat[i].size(); j++)
-	  if (j==0) 
-	    coutCBL << mat[i][j] << "   ";
-	  else 
-	    std::cout << mat[i][j] << "   ";
-	std::cout << std::endl;
-      }
+  {
+    for (size_t i=0; i<mat.size(); i++) {
+      for (size_t j=0; j<mat[i].size(); j++)
+	if (j==0) 
+	  coutCBL << mat[i][j] << "   ";
+	else 
+	  std::cout << mat[i][j] << "   ";
+      std::cout << std::endl;
     }
+  }
   
 
   /**
@@ -1330,11 +1319,11 @@ namespace cbl {
    *  @return the minimum element of the std::vector vect
    */
   template <typename T> 
-    T Min (const std::vector<T> vect) 
-    {
-      if (vect.size()==0) ErrorCBL("vect.size=0!", "Min", "Kernel.h");
-      return *min_element(vect.begin(), vect.end());
-    }
+  T Min (const std::vector<T> vect) 
+  {
+    if (vect.size()==0) ErrorCBL("vect.size=0!", "Min", "Kernel.h");
+    return *min_element(vect.begin(), vect.end());
+  }
 
   /**
    *  @brief maximum element of a std::vector
@@ -1342,11 +1331,11 @@ namespace cbl {
    *  @return the maximum element of the std::vector vect
    */
   template <typename T> 
-    T Max (const std::vector<T> vect) 
-    {
-      if (vect.size()==0) ErrorCBL("vect.size=0!", "Max", "Kernel.h");
-      return *max_element(vect.begin(), vect.end());
-    }
+  T Max (const std::vector<T> vect) 
+  {
+    if (vect.size()==0) ErrorCBL("vect.size=0!", "Max", "Kernel.h");
+    return *max_element(vect.begin(), vect.end());
+  }
 
   /**
    *  @brief get the unique elements of a std::vector
@@ -1355,14 +1344,14 @@ namespace cbl {
    *  std::vector
    */
   template <typename T> 
-    std::vector<T> different_elements (const std::vector<T> vect_input) 
-    {
-      std::vector<T> vect = vect_input;
-      sort(vect.begin(), vect.end());
-      typename std::vector<T>::iterator it = unique(vect.begin(), vect.end()); 
-      vect.resize(it-vect.begin());    
-      return vect;
-    }
+  std::vector<T> different_elements (const std::vector<T> vect_input) 
+  {
+    std::vector<T> vect = vect_input;
+    sort(vect.begin(), vect.end());
+    typename std::vector<T>::iterator it = unique(vect.begin(), vect.end()); 
+    vect.resize(it-vect.begin());    
+    return vect;
+  }
 
   /**
    *  @brief get the number of unique elements of a std::vector
@@ -1370,30 +1359,27 @@ namespace cbl {
    *  @return the number of unique elements of the input std::vector
    */
   template <typename T> 
-    int N_different_elements (const std::vector<T> vect_input) 
-    {
-      std::vector<T> vect = different_elements<T>(vect_input);
-      return vect.size();
-    }
+  int N_different_elements (const std::vector<T> vect_input) 
+  {
+    std::vector<T> vect = different_elements<T>(vect_input);
+    return vect.size();
+  }
 
   /**
    *  @brief erase all the equal elements of the input std::vector
    *  @param [in,out] vv a std::vector of integer values
-   *  @return none
    */
   void unique_unsorted (std::vector<int> & vv);
 
   /**
    *  @brief erase all the equal elements of the input std::vector
    *  @param [in,out] vv a std::vector of double values
-   *  @return none
    */
   void unique_unsorted (std::vector<double> & vv);
 
   /**
    *  @brief erase all the equal elements of the input std::vector
    *  @param [in,out] vv a std::vector of integer values
-   *  @return none
    */
   void unique_unsorted (std::vector<std::string> & vv);
 
@@ -1402,61 +1388,58 @@ namespace cbl {
    *  @param [in,out] vv a std::vector
    *  @param [in] ind a std::vector containing the elements of the input
    *  std::vector vv to be erased
-   *  @return none
    */
   template <typename T> 
-    void Erase (std::vector<T> &vv, std::vector<int> ind) 
-    {
-      for (auto &&i : ind) 
-	if (i>=int(vv.size())) ErrorCBL("the input value of ind is too large!", "Erase", "Kernel.h");
+  void Erase (std::vector<T> &vv, std::vector<int> ind) 
+  {
+    for (auto &&i : ind) 
+      if (i>=int(vv.size())) ErrorCBL("the input value of ind is too large!", "Erase", "Kernel.h");
 
-      unique_unsorted(ind);
-      int tt = 0;
-      for (auto &&i : ind) 
-	vv.erase(vv.begin()+i-(tt++));
-    }
+    unique_unsorted(ind);
+    int tt = 0;
+    for (auto &&i : ind) 
+      vv.erase(vv.begin()+i-(tt++));
+  }
 
   /**
    *  @brief erase some lines of a matrix
    *  @param [in,out] Mat a matrix (i.e. a std::vector of std::vectors)
    *  @param [in] ll a std::vector containing the lines of the input matrix
    *  Mat to be erased
-   *  @return none
    */
   template <typename T> 
-    void Erase_lines (std::vector<std::vector<T> > &Mat, std::vector<int> ll) 
-    {
-      for (auto &&i : ll)
-	if (i>=int(Mat.size())) ErrorCBL("the dimension of the input vector ll is too large!", "Erase_lines", "Kernel.h");
+  void Erase_lines (std::vector<std::vector<T> > &Mat, std::vector<int> ll) 
+  {
+    for (auto &&i : ll)
+      if (i>=int(Mat.size())) ErrorCBL("the dimension of the input vector ll is too large!", "Erase_lines", "Kernel.h");
 
-      unique_unsorted(ll);
-      int tt = 0;
-      for (auto &&i : ll)
-	Mat.erase(Mat.begin()+i-(tt++));
-    }
+    unique_unsorted(ll);
+    int tt = 0;
+    for (auto &&i : ll)
+      Mat.erase(Mat.begin()+i-(tt++));
+  }
 
   /**
    *  @brief erase some columns of a matrix
    *  @param [in,out] Mat a matrix (i.e. a std::vector of std::vectors)
    *  @param [in] col a std::vector containing the columns of the input
    *  matrix Mat to be erased
-   *  @return none
    */
   template <typename T> 
-    void Erase_columns (std::vector<std::vector<T> > &Mat, std::vector<int> col) 
-    {
-      for (auto &&i : col)
-	for (auto &&j : Mat)
-	  if (i>=int(j.size())) ErrorCBL("the dimension of the input vector col is too large!", "Erase_columns", "Kernel.h");
+  void Erase_columns (std::vector<std::vector<T> > &Mat, std::vector<int> col) 
+  {
+    for (auto &&i : col)
+      for (auto &&j : Mat)
+	if (i>=int(j.size())) ErrorCBL("the dimension of the input vector col is too large!", "Erase_columns", "Kernel.h");
 
-      unique_unsorted(col);
-      int tt = 0;
-      for (auto &&i : col) {
-	for (auto &&j : Mat)
-	  j.erase(j.begin()+i-tt);
-	tt ++;
-      }
+    unique_unsorted(col);
+    int tt = 0;
+    for (auto &&i : col) {
+      for (auto &&j : Mat)
+	j.erase(j.begin()+i-tt);
+      tt ++;
     }
+  }
  
   /**
    *  @brief select a submatrix containing lines and columns with all
@@ -1471,32 +1454,31 @@ namespace cbl {
    *  @param [in,out] Mat the matrix Mat(x,y) (i.e. a std::vector of
    *  std::vectors)
    *  @param [in] val a number 
-   *  @return none
    */
   template <typename T> 
-    void SubMatrix (std::vector<T> &xx, std::vector<T> &yy, std::vector<std::vector<T> > &Mat, T val) 
-    { 
-      std::vector<int> line, column;
+  void SubMatrix (std::vector<T> &xx, std::vector<T> &yy, std::vector<std::vector<T> > &Mat, T val) 
+  { 
+    std::vector<int> line, column;
 
-      for (unsigned int i=0; i<xx.size(); i++) {
-	if (i>=Mat.size()) ErrorCBL("the dimension of the input vector xx is too large!", "SubMatrix", "Kernel.h");
-	bool ll = 0;
+    for (unsigned int i=0; i<xx.size(); i++) {
+      if (i>=Mat.size()) ErrorCBL("the dimension of the input vector xx is too large!", "SubMatrix", "Kernel.h");
+      bool ll = 0;
 
-	for (unsigned int j=0; j<yy.size(); j++) {
-	  if (j>=Mat[i].size()) ErrorCBL("the dimension of the input vector yy is too large!", "SubMatrix", "Kernel.h");
-	  if (Mat[i][j]<val) {
-	    if (j<int(yy.size()*0.5)) {line.push_back(i); ll = 1;}
-	    else if (ll==0) {column.push_back(j);}
-	  }
+      for (unsigned int j=0; j<yy.size(); j++) {
+	if (j>=Mat[i].size()) ErrorCBL("the dimension of the input vector yy is too large!", "SubMatrix", "Kernel.h");
+	if (Mat[i][j]<val) {
+	  if (j<int(yy.size()*0.5)) {line.push_back(i); ll = 1;}
+	  else if (ll==0) {column.push_back(j);}
 	}
       }
-      
-      Erase(xx, line);
-      Erase_lines(Mat, line);
-      
-      Erase(yy, column);
-      Erase_columns(Mat, column);
     }
+      
+    Erase(xx, line);
+    Erase_lines(Mat, line);
+      
+    Erase(yy, column);
+    Erase_columns(Mat, column);
+  }
 
   /**
    *  @brief check if the dimensions of two std::vectors are equal
@@ -1506,10 +1488,10 @@ namespace cbl {
    *  dimensions are equal
    */
   template <typename T> 
-    bool isDimEqual (const std::vector<T> vect1, const std::vector<T> vect2) 
-    {
-      return (vect1.size()==vect2.size()) ? 1 : 0;
-    }
+  bool isDimEqual (const std::vector<T> vect1, const std::vector<T> vect2) 
+  {
+    return (vect1.size()==vect2.size()) ? 1 : 0;
+  }
 
   /**
    *  @brief check if the dimensions of two matrices are equal
@@ -1519,15 +1501,15 @@ namespace cbl {
    *  dimensions are equal
    */
   template <typename T> 
-    bool isDimEqual (const std::vector<std::vector<T> > mat1, const std::vector<std::vector<T> > mat2) 
-    {
-      bool is = (mat1.size()==mat2.size()) ? 1 : 0;
-      if (is) 
-	for (unsigned int i=0; i<mat1.size(); i++) {
-	  if (mat1[i].size()!=mat2[i].size()) is = 0;
-	}
-      return is;
-    }
+  bool isDimEqual (const std::vector<std::vector<T> > mat1, const std::vector<std::vector<T> > mat2) 
+  {
+    bool is = (mat1.size()==mat2.size()) ? 1 : 0;
+    if (is) 
+      for (unsigned int i=0; i<mat1.size(); i++) {
+	if (mat1[i].size()!=mat2[i].size()) is = 0;
+      }
+    return is;
+  }
 
   /**
    *  @brief check if the dimension of a std::vector is equal/lower
@@ -1543,21 +1525,19 @@ namespace cbl {
    *  @param equal true \f$\rightarrow\f$ check if the dimension is
    *  equal to val; false \f$\rightarrow\f$ check if the dimension is
    *  lower than val
-   *
-   *  @return none
    */
   template <typename T> 
-    void checkDim (const std::vector<T> vect, const int val, const std::string vector, bool equal=true) 
-    {
-      if (equal) {
-	if ((int)vect.size()!=val) 
-	  ErrorCBL("the dimension of " + vector + " is: " + conv(vect.size(), par::fINT) + " ( != " + conv(val, par::fINT) + " )", "checkDim", "Kernel.h");
-      }
-      else { 
-	if ((int)vect.size()<val)
-	  ErrorCBL("the dimension of " + vector + " is: " + conv(vect.size(), par::fINT) + " ( < " + conv(val, par::fINT) + " )", "checkDim", "Kernel.h");
-      }
+  void checkDim (const std::vector<T> vect, const int val, const std::string vector, bool equal=true) 
+  {
+    if (equal) {
+      if ((int)vect.size()!=val) 
+	ErrorCBL("the dimension of " + vector + " is: " + conv(vect.size(), par::fINT) + " ( != " + conv(val, par::fINT) + " )", "checkDim", "Kernel.h");
     }
+    else { 
+      if ((int)vect.size()<val)
+	ErrorCBL("the dimension of " + vector + " is: " + conv(vect.size(), par::fINT) + " ( < " + conv(val, par::fINT) + " )", "checkDim", "Kernel.h");
+    }
+  }
   
   /**
    *  @brief check if the dimensions of a matrix are higher than two
@@ -1569,47 +1549,46 @@ namespace cbl {
    *  error message)
    *  @param equal true \f$\rightarrow\f$ check if the dimension is equal to val;
    *  false \f$\rightarrow\f$ check if the dimension is lower than val
-   *  @return none
    */
   template <typename T> 
-    void checkDim (const std::vector<T> mat, const int val_i, const int val_j, const std::string matrix, const bool equal=true) 
-    {
-      if (equal) {
-	if (int(mat.size())!=val_i) 
-	  ErrorCBL("the dimension of " + matrix + " is: " + conv(mat.size(), par::fINT) + " != " + conv(val_i, par::fINT) + "!", "checkDim", "Kernel.h");
-	else 
-	  for (size_t k=0; k<mat.size(); k++)
-	    if (int(mat[k].size())!=val_j) 
-	      ErrorCBL("the dimension of " + matrix + " is: " + conv(mat[k].size(), par::fINT) + " != " + conv(val_j, par::fINT) + "!", "checkDim", "Kernel.h");
-      }
-      else {
-	if (int(mat.size())<val_i) 
-	  ErrorCBL("the dimension of " + matrix + " is: " + conv(mat.size(), par::fINT) + " < " + conv(val_i, par::fINT) + "!", "checkDim", "Kernel.h");
-	else 
-	  for (size_t k=0; k<mat.size(); k++)
-	    if (int(mat[k].size())<val_j) 
-	      ErrorCBL("the dimension of " + matrix + " is: " + conv(mat[k].size(), par::fINT) + " < " + conv(val_j, par::fINT) + "!", "checkDim", "Kernel.h");
-      }
+  void checkDim (const std::vector<T> mat, const int val_i, const int val_j, const std::string matrix, const bool equal=true) 
+  {
+    if (equal) {
+      if (int(mat.size())!=val_i) 
+	ErrorCBL("the dimension of " + matrix + " is: " + conv(mat.size(), par::fINT) + " != " + conv(val_i, par::fINT) + "!", "checkDim", "Kernel.h");
+      else 
+	for (size_t k=0; k<mat.size(); k++)
+	  if (int(mat[k].size())!=val_j) 
+	    ErrorCBL("the dimension of " + matrix + " is: " + conv(mat[k].size(), par::fINT) + " != " + conv(val_j, par::fINT) + "!", "checkDim", "Kernel.h");
     }
+    else {
+      if (int(mat.size())<val_i) 
+	ErrorCBL("the dimension of " + matrix + " is: " + conv(mat.size(), par::fINT) + " < " + conv(val_i, par::fINT) + "!", "checkDim", "Kernel.h");
+      else 
+	for (size_t k=0; k<mat.size(); k++)
+	  if (int(mat[k].size())<val_j) 
+	    ErrorCBL("the dimension of " + matrix + " is: " + conv(mat[k].size(), par::fINT) + " < " + conv(val_j, par::fINT) + "!", "checkDim", "Kernel.h");
+    }
+  }
 
   /**
    *  @brief check if two std::vectors are equal
    *
+   *  this function returns either an error if the given std::vectors
+   *  are different, or nothing if they are equal
+   *
    *  @param vect1 a std::vector
    *
    *  @param vect2 a std::vector
-   *
-   *  @return error if the given std::vectors are different; nothing
-   *  if they are equal
    */
   template <typename T> 
-    void checkEqual (const std::vector<T> vect1, const std::vector<T> vect2) 
-    {
-      checkDim(vect2, vect1.size(), "vect2");
-      for (size_t i=0; i<vect1.size(); i++)
-	if (vect1[i]!=vect2[i])
-	  ErrorCBL("vect1 and vect2 are different!", "checkEqual", "Kernel.h");
-    }
+  void checkEqual (const std::vector<T> vect1, const std::vector<T> vect2) 
+  {
+    checkDim(vect2, vect1.size(), "vect2");
+    for (size_t i=0; i<vect1.size(); i++)
+      if (vect1[i]!=vect2[i])
+	ErrorCBL("vect1 and vect2 are different!", "checkEqual", "Kernel.h");
+  }
   
   /**
    *  @brief fill a std::vector with linearly spaced values
@@ -1617,16 +1596,16 @@ namespace cbl {
    *  vv
    *  @param [in] min the minimum value of the range of values
    *  @param [in] max the maximum value of the range of values
-   *  @return none
+   *  @return a linearly spaced vector
    */
   template <typename T> 
-    std::vector<T> linear_bin_vector (const size_t nn, const T min, const T max)
-    {
-      std::vector<T> vv(nn);
-      for (size_t i = 0; i<nn; i++)
-	vv[i] = min+(max-min)*T(i)/T(nn-1);
-      return vv;
-    }
+  std::vector<T> linear_bin_vector (const size_t nn, const T min, const T max)
+  {
+    std::vector<T> vv(nn);
+    for (size_t i = 0; i<nn; i++)
+      vv[i] = min+(max-min)*T(i)/T(nn-1);
+    return vv;
+  }
 
   /**
    *  @brief fill a std::vector with logarithmically spaced values
@@ -1634,16 +1613,16 @@ namespace cbl {
    *  vv
    *  @param [in] min the minimum value of the range of values
    *  @param [in] max the maximum value of the range of values
-   *  @return none
+   *  @return a logarithmically spaced vector
    */
   template <typename T> 
-    std::vector<T> logarithmic_bin_vector (const size_t nn, const T min, const T max)
-    {
-      std::vector<T> vv(nn);
-      for (size_t i=0; i<nn; i++)
-	vv[i] = exp(log(min)+(log(max)-log(min))*T(i)/T(nn-1));
-      return vv;
-    }
+  std::vector<T> logarithmic_bin_vector (const size_t nn, const T min, const T max)
+  {
+    std::vector<T> vv(nn);
+    for (size_t i=0; i<nn; i++)
+      vv[i] = exp(log(min)+(log(max)-log(min))*T(i)/T(nn-1));
+    return vv;
+  }
 
   /**
    *  @brief locate a value in a given std::vector
@@ -1654,27 +1633,27 @@ namespace cbl {
    *  @return the std::vector index i such that vv[i]~xx
    */
   template <typename T> 
-    int locate (const std::vector<T> &vv, const T xx) 
-    {
-      size_t nn = vv.size ();
-      int jl = -1;
-      int ju = nn;
-      bool as = (vv[nn-1] >= vv[0]);
-      while (ju-jl > 1)
-	{
-	  int jm = (ju+jl)*0.5;
-	  if ((xx >= vv[jm]) == as)
-	    jl = jm;
-	  else
-	    ju = jm;
-	}
-      if (xx == vv[0])
-	return 0;
-      else if (xx == vv[nn-1])
-	return nn-2;
-      else
-	return jl;
-    }
+  int locate (const std::vector<T> &vv, const T xx) 
+  {
+    size_t nn = vv.size ();
+    int jl = -1;
+    int ju = nn;
+    bool as = (vv[nn-1] >= vv[0]);
+    while (ju-jl > 1)
+      {
+	int jm = (ju+jl)*0.5;
+	if ((xx >= vv[jm]) == as)
+	  jl = jm;
+	else
+	  ju = jm;
+      }
+    if (xx == vv[0])
+      return 0;
+    else if (xx == vv[nn-1])
+      return nn-2;
+    else
+      return jl;
+  }
 
   /**
    *  @brief extract elements from a given vector
@@ -1685,13 +1664,13 @@ namespace cbl {
    *  @return the vector with requested elements
    */
   template <typename T>
-    std::vector<T> extract_elements (std::vector<T> vec, std::vector<unsigned int> index)
-    {
-      std::vector<T> vv;
-      for (unsigned int i=0; i< index.size(); i++)
-	vv.push_back(vec[index[i]]);
-      return vv;
-    }
+  std::vector<T> extract_elements (std::vector<T> vec, std::vector<unsigned int> index)
+  {
+    std::vector<T> vv;
+    for (unsigned int i=0; i< index.size(); i++)
+      vv.push_back(vec[index[i]]);
+    return vv;
+  }
   
   /**
    *  @brief flatten a \f$ left( n\times m \right)  \f$ matrix
@@ -1702,15 +1681,15 @@ namespace cbl {
    *  @return the vectorized matrix
    */
   template <typename T>
-    std::vector<T> flatten(std::vector<std::vector<T>> matrix)
-    {
-      std::vector<T> flatten;
-      for (size_t i=0; i<matrix.size(); i++)
-	for (size_t j=0; j<matrix[i].size(); j++)
-	  flatten.push_back(matrix[i][j]);
+  std::vector<T> flatten(std::vector<std::vector<T>> matrix)
+  {
+    std::vector<T> flatten;
+    for (size_t i=0; i<matrix.size(); i++)
+      for (size_t j=0; j<matrix[i].size(); j++)
+	flatten.push_back(matrix[i][j]);
 
-      return flatten;
-    }
+    return flatten;
+  }
 
   /**
    *  @brief reshape a vector into a matrix of
@@ -1723,19 +1702,19 @@ namespace cbl {
    *  @return the reshaped matrix
    */
   template <typename T>
-    std::vector<std::vector<T>> reshape (std::vector<T> vec, const int size1, const int size2)
-    {
-      if (size1*size2!=int(vec.size()))
-	ErrorCBL("sizes does not match! "+conv(size1*size2, par::fINT)+" should be equal to "+conv(int(vec.size()), par::fINT), "reshape", "Kernel.h");
+  std::vector<std::vector<T>> reshape (std::vector<T> vec, const int size1, const int size2)
+  {
+    if (size1*size2!=int(vec.size()))
+      ErrorCBL("sizes does not match! "+conv(size1*size2, par::fINT)+" should be equal to "+conv(int(vec.size()), par::fINT), "reshape", "Kernel.h");
 
-      std::vector<std::vector<T>> matrix(size1, std::vector<T> (size2, 0));
+    std::vector<std::vector<T>> matrix(size1, std::vector<T> (size2, 0));
 
-      for (int i=0; i<size1; i++)
-	for (int j=0; j<size2; j++)
-	  matrix[i][j] = vec[j+i*size2];
+    for (int i=0; i<size1; i++)
+      for (int j=0; j<size2; j++)
+	matrix[i][j] = vec[j+i*size2];
 
-      return matrix;
-    }
+    return matrix;
+  }
   
   /**
    *  @brief transpose a matrix
@@ -1745,19 +1724,19 @@ namespace cbl {
    *  @return the transposed matrix
    */
   template <typename T>
-    std::vector<std::vector<T>> transpose (std::vector<std::vector<T>> matrix)
-    {
-      const int size1 = matrix.size();
-      const int size2 = matrix[0].size();
+  std::vector<std::vector<T>> transpose (std::vector<std::vector<T>> matrix)
+  {
+    const int size1 = matrix.size();
+    const int size2 = matrix[0].size();
       
-      std::vector<std::vector<T>> TRmatrix(size2, std::vector<T> (size1, 0));
+    std::vector<std::vector<T>> TRmatrix(size2, std::vector<T> (size1, 0));
 
-      for (int i=0; i<size1; i++)
-	for (int j=0; j<size2; j++)
-	  TRmatrix[j][i] = matrix[i][j];
+    for (int i=0; i<size1; i++)
+      for (int j=0; j<size2; j++)
+	TRmatrix[j][i] = matrix[i][j];
 
-      return TRmatrix;
-    }
+    return TRmatrix;
+  }
 
   /**
    *  @brief return false \f$ \rightarrow \f$ value
@@ -1770,24 +1749,24 @@ namespace cbl {
    *  @param include_limits true \f$ \rightarrow \f$ include limits;
    *  false \f$ \rightarrow \f$ exclude limits.
    *  
-      @return false \f$ \rightarrow \f$ 
+   @return false \f$ \rightarrow \f$ 
    *  values outside the range; 
    *  true \f$ \rightarrow \f$ value inside the range
    */
   template <typename T>
-    bool inRange (T value, T min, T max, bool include_limits = true) 
-    {
-      if (include_limits){
-	if (value>=min && max>=value)
-	  return true;
-      }
-      else{
-	if (value>min && max>value)
-	  return true;
-      }
-
-      return false;
+  bool inRange (T value, T min, T max, bool include_limits = true) 
+  {
+    if (include_limits){
+      if (value>=min && max>=value)
+	return true;
     }
+    else{
+      if (value>min && max>value)
+	return true;
+    }
+
+    return false;
+  }
 
   /**
    *  @brief return false \f$ \rightarrow \f$ if values are
@@ -1805,15 +1784,15 @@ namespace cbl {
    *  true \f$ \rightarrow \f$ values inside the range
    */
   template <typename T>
-    bool inRange (std::vector<T> value, std::vector<T> min, std::vector<T> max, bool include_limits = true) 
-    {
-      bool in_range = true;
+  bool inRange (std::vector<T> value, std::vector<T> min, std::vector<T> max, bool include_limits = true) 
+  {
+    bool in_range = true;
 
-      for (size_t i=0; i<value.size(); i++)
-	in_range *= inRange(value[i], min[i], max[i], include_limits);
+    for (size_t i=0; i<value.size(); i++)
+      in_range *= inRange(value[i], min[i], max[i], include_limits);
 
-      return in_range;
-    }
+    return in_range;
+  }
 
   /**
    *  @brief return false \f$ \rightarrow \f$ values
@@ -1830,15 +1809,15 @@ namespace cbl {
    *  true \f$ \rightarrow \f$ values inside the range
    */
   template <typename T>
-    bool inRange (std::vector<T> value, std::vector<std::vector<T>> ranges, bool include_limits = true) 
-    {
-      bool in_range = true;
+  bool inRange (std::vector<T> value, std::vector<std::vector<T>> ranges, bool include_limits = true) 
+  {
+    bool in_range = true;
 
-      for (size_t i=0; i<value.size(); i++)
-	in_range *= inRange(value[i], ranges[i][0], ranges[i][1], include_limits);
+    for (size_t i=0; i<value.size(); i++)
+      in_range *= inRange(value[i], ranges[i][0], ranges[i][1], include_limits);
 
-      return in_range;
-    }
+    return in_range;
+  }
 
   /**
    *  @brief return the value of 
@@ -1849,21 +1828,21 @@ namespace cbl {
    *  @return result
    */
   template <typename T> 
-    T v_M_vt (const std::vector<T> vv, const std::vector<std::vector<T>> MM)
-    {
-      const int size = vv.size();
+  T v_M_vt (const std::vector<T> vv, const std::vector<std::vector<T>> MM)
+  {
+    const int size = vv.size();
 
-      std::vector<double> ivv(size, 0);
-      for(int i=0; i<size; i++)
-	for(int j=0; j<size; j++)
-	  ivv[i] += vv[j]*MM[i][j];
+    std::vector<double> ivv(size, 0);
+    for(int i=0; i<size; i++)
+      for(int j=0; j<size; j++)
+	ivv[i] += vv[j]*MM[i][j];
 
-      double res=0;
-      for(int i=0; i<size; i++)
-	res += vv[i]*ivv[i];
+    double res=0;
+    for(int i=0; i<size; i++)
+      res += vv[i]*ivv[i];
 
-      return res;
-    }
+    return res;
+  }
 
   // sort two or more std::vectors at the same time
   namespace glob {
@@ -1884,7 +1863,6 @@ namespace cbl {
    *  @param p1 iterator to the first std::vector
    *  @param p2 iterator to the second std::vector
    *  @param dim dimension of the two std::vectors 
-   *  @return none
    */
   void sort_2vectors (std::vector<double>::iterator p1, std::vector<double>::iterator p2, const int dim);
 
@@ -1896,7 +1874,6 @@ namespace cbl {
    *  @param p2 iterator to the second std::vector
    *  @param p3 iterator to the third std::vector
    *  @param dim dimension of the three std::vectors 
-   *  @return none
    */
   void sort_3vectors (std::vector<double>::iterator p1, std::vector<double>::iterator p2, std::vector<double>::iterator p3, const int dim);
 
@@ -1909,7 +1886,6 @@ namespace cbl {
    *  @param p3 iterator to the third std::vector
    *  @param p4 iterator to the four std::vector
    *  @param dim dimension of the four std::vectors 
-   *  @return none
    */
   void sort_4vectors (std::vector<double>::iterator p1, std::vector<double>::iterator p2, std::vector<double>::iterator p3, std::vector<double>::iterator p4, const int dim);
 
@@ -1966,23 +1942,23 @@ namespace cbl {
    *  @return the sliced std::vector
    */
   template <typename T>
-    std::vector<T> slice (const std::vector<T> v, const int start=0, const  int end=-1)
-    {
-      int oldlen = v.size();
-      int newlen;
+  std::vector<T> slice (const std::vector<T> v, const int start=0, const  int end=-1)
+  {
+    int oldlen = v.size();
+    int newlen;
 
-      if (end==-1 || end>=oldlen)
-	newlen = oldlen-start;
-      else 
-	newlen = end-start;
+    if (end==-1 || end>=oldlen)
+      newlen = oldlen-start;
+    else 
+      newlen = end-start;
       
-      std::vector<T> nv(newlen);
+    std::vector<T> nv(newlen);
 
-      for (int i=0; i<newlen; i++) 
-	nv[i] = v[start+i];
+    for (int i=0; i<newlen; i++) 
+      nv[i] = v[start+i];
       
-      return nv;
-    }
+    return nv;
+  }
   
   ///@}
   

@@ -79,15 +79,6 @@ template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue:
 
 /// @endcond
 
-// ============================================================================
-
-
-cbl::catalogue::Catalogue::Catalogue (const Catalogue &cat) : 
-  m_object(cat.m_object), m_index(cat.m_index), m_volume(cat.m_volume), m_numdensity(cat.m_numdensity), m_mps(cat.m_mps),
-  m_nRegions(cat.m_nRegions), m_blockheader(cat.m_blockheader)
-{
-}
-
 
 // ============================================================================
 

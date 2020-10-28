@@ -32,6 +32,7 @@
  */
 
 #include "Func.h"
+#include "LegendrePolynomials.h"
 
 using namespace std;
 
@@ -580,6 +581,60 @@ void cbl::read_matrix (const std::string file_matrix, std::vector<double> &xx, s
 
   fin.clear(); fin.close();
 
+}
+
+// ============================================================================
+
+std::vector<std::vector<double>> cbl::read_file (const std::string file_name, const std::string path_name, const std::vector<int> column_data, const int skip_nlines)
+{
+  const string input_file (path_name+file_name);
+  const int cl_max = column_data.size();
+
+  ifstream fin(input_file.c_str()); checkIO(fin, input_file);
+  string line;
+
+  // get the number of lines to read
+  unsigned int n_lines = 0;
+  while(getline(fin, line)) n_lines++;
+  n_lines-=skip_nlines;
+  
+  fin.clear(); fin.close();
+
+  // vector of vectors to return
+  vector<vector<double>> final_data(cl_max, vector<double>(n_lines, 0));
+  
+#pragma omp parallel num_threads(cl_max>omp_get_max_threads() ? omp_get_max_threads() : cl_max)
+  {
+    // loop on the columns to read
+#pragma omp for schedule(dynamic)
+    for (int cl=0; cl<cl_max; ++cl) {
+
+      // share ifstream between the CPUs
+      ifstream Fin (input_file);
+      string Line;
+  
+      if (skip_nlines>0)
+	for (int i=0; i<skip_nlines; ++i)
+	  getline(Fin, Line);
+    
+    
+      // read the file lines
+      for (unsigned int nn=0; nn<n_lines; ++nn) {
+	
+	getline(Fin, Line);
+	stringstream ss(Line);
+	vector<double> num; double NUM;   
+	while (ss>>NUM) num.emplace_back(NUM);
+
+	// store the data
+	final_data[cl][nn] = num[column_data[cl]-1];
+      }
+      
+      Fin.clear(); Fin.close();
+    }
+  }
+
+  return final_data;
 }
 
 
@@ -1799,6 +1854,8 @@ double cbl::Legendre_polynomial_theta_average (const double theta_min, const dou
 
 double cbl::Legendre_polynomial_triangles_average (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const double r23_min, const double r23_max, const int ll, const double rel_err, const double abs_err, const int nevals)
 {
+  double norm = 2*(pow(r12_max, 3)-pow(r12_min,3))*(pow(r13_max, 3)-pow(r13_min, 3))/9;
+
   auto r12_integrand = [&] (const double r12) {
 
     auto r13_integrand = [&] (const double r13) {
@@ -1808,16 +1865,90 @@ double cbl::Legendre_polynomial_triangles_average (const double r12_min, const d
       if ((mu_min<=1) & (mu_max>=-1)) {
 	double low = max(mu_min, -1.);
 	double up = min(1., mu_max);
-	return Legendre_polynomial_mu_average (low, up, ll)*(up-low);
+	return r13*r13*Legendre_polynomial_mu_average (low, up, ll)*(up-low);
       }
       return 0.;
 
     };
 
-    return cbl::wrapper::gsl::GSL_integrate_cquad(r13_integrand, r13_min, r13_max, rel_err, abs_err, nevals);
+    return r12*r12*cbl::wrapper::gsl::GSL_integrate_cquad(r13_integrand, r13_min, r13_max, rel_err, abs_err, nevals);
   };
 
-  return cbl::wrapper::gsl::GSL_integrate_cquad(r12_integrand, r12_min, r12_max, rel_err, abs_err, nevals)/((r12_max-r12_min)*(r13_max-r13_min));
+  return cbl::wrapper::gsl::GSL_integrate_cquad(r12_integrand, r12_min, r12_max, rel_err, abs_err, nevals)/norm; //((r12_max-r12_min)*(r13_max-r13_min));
+}
+
+
+
+// ============================================================================
+
+
+vector<vector<double>> cbl::Legendre_polynomial_triangles_average (const double rMin, const double rMax, const double deltaR, const int lMax, const double rel_err, const double abs_err, const int nevals)
+{
+  (void)abs_err;
+  const int nBins = int((rMax-rMin)/deltaR);
+
+  vector<double> r12, r13, r23;
+
+
+  for (int i=0; i<nBins; i++)
+    for (int j=i; j<nBins; j++) {
+
+      double r12_min = rMin+i*deltaR;
+      double r12_max = r12_min+deltaR;
+
+      double r13_min = rMin+j*deltaR;
+      double r13_max = r13_min+deltaR;
+
+      double r23_min = max(0., r13_min-r12_max);
+      double r23_max = r13_max+r12_max;
+
+      int nBins_R23 = int(( r23_max-r23_min)/deltaR);
+
+      for ( int k=0; k<nBins_R23; k++) {
+	r12.push_back(0.5*(r12_min+r12_max));
+	r13.push_back(0.5*(r13_min+r13_max));
+	r23.push_back(r23_min+(k+0.5)*deltaR);
+      }
+
+    }
+  int nTriangles = static_cast<int>(r12.size());
+  int nOrders = lMax+1;
+
+  vector<vector<double>> leg_pols(nTriangles, vector<double>(nOrders+3, 0.)); 
+
+#pragma omp parallel num_threads(omp_get_max_threads())
+  {
+
+    LegendrePolynomials legendre(lMax);
+    
+#pragma omp for schedule(dynamic)
+    for (int i=0; i<nTriangles; i++) {
+
+      double r12_min = r12[i]-0.5*deltaR;
+      double r12_max = r12[i]+0.5*deltaR;
+
+      double r13_min = r13[i]-0.5*deltaR;
+      double r13_max = r13[i]+0.5*deltaR;
+
+      double r23_min = r23[i]-0.5*deltaR;
+      double r23_max = r23[i]+0.5*deltaR;
+
+      leg_pols[i][0] = r12[i];
+      leg_pols[i][1] = r13[i];
+      leg_pols[i][2] = r23[i];
+
+      vector<double> integral = legendre.triangle_integral(r12_min, r12_max, r13_min, r13_max, r23_min, r23_max, rel_err, nevals);
+      
+      for (int ell=0; ell<nOrders; ell++) 
+	leg_pols[i][ell+3] = integral[ell];
+
+      //for (int ell=0; ell<nOrders; ell++) 
+      //	leg_pols[i][ell+3] = cbl::Legendre_polynomial_triangles_average(r12_min, r12_max, r13_min, r13_max, r23_min, r23_max, ell, rel_err, abs_err, nevals);
+      
+    }
+  }
+
+  return leg_pols;
 }
 
 
@@ -1979,12 +2110,19 @@ double cbl::jl_distance_average (const double kk, const int order, const double 
 {
   double volume = (pow(r_up,3)-pow(r_down,3))/3;
 
+  auto integrand = [&] (const double rr) {
+    return rr * rr * gsl_sf_bessel_jl(order, kk*rr);
+  };
+
+  double Int = cbl::wrapper::gsl::GSL_integrate_qag(integrand, r_down, r_up);
+
+  /*
   cbl::glob::STR_jl_distance_average str;
   str.order = order;
   str.k = kk;
 
   gsl_function Func;
-   
+
   Func.function=&cbl::jl_spherical_integrand;
   Func.params=&str;
 
@@ -1992,6 +2130,7 @@ double cbl::jl_distance_average (const double kk, const int order, const double 
   int limit_size = 1000;
 
   double Int = cbl::wrapper::gsl::GSL_integrate_qag(Func, r_down, r_up, prec, limit_size, 6);
+  */
 
   return Int/volume;
 }
@@ -2077,7 +2216,7 @@ double cbl::trapezoid_integration (const std::vector<double> xx, const std::vect
 
 double cbl::binomial_coefficient(const int n, const int m)
 {
-  return gsl_sf_fact(n)/(gsl_sf_fact(m)*gsl_sf_fact(n-m));
+  return double(gsl_sf_fact(n))/double(gsl_sf_fact(m)*gsl_sf_fact(n-m));
 }
 
 

@@ -109,7 +109,7 @@ namespace cbl {
 	   * 
 	   * @param catalogue the catalogue
 	   *
-	   * @return none
+	   * 
 	   */
 	  void m_count_triplets (std::vector<double> &NNN, std::vector<double> &RRR, const double rmin, const double rmax, const int nbins, const int norders, const catalogue::Catalogue& catalogue) const;
 
@@ -123,7 +123,7 @@ namespace cbl {
 	   *  @param TL pointer to an object of class Triplet
 	   *  @param dir output directory
 	   *  @param file output file
-	   *  @return none
+	   *  
 	   */
 	  void m_write_triplets (const std::vector<double> TL, const std::string dir, const std::string file) const;
 
@@ -132,7 +132,7 @@ namespace cbl {
 	   *  @param [out] TL pointer to an object of class Triplet
 	   *  @param [in] dir input directory
 	   *  @param [in] file input file
-	   *  @return none
+	   *  
 	   */
 	  void m_read_triplets (std::vector<double> &TL, const std::vector<std::string> dir, const std::string file);
 
@@ -191,7 +191,7 @@ namespace cbl {
 	  /**
 	   * @brief default destructor
 	   *
-	   * @return None
+	   * 
 	   */
 	  ~ThreePointCorrelation_comoving_multipoles_all () {}
 
@@ -204,7 +204,7 @@ namespace cbl {
 	   * @param binSize the triangle side width
 	   * @param nOrders the number of Legendre multipoles
 	   *
-	   * @return None
+	   * 
 	   */
 	  void set_parameters (const double rMin, const double rMax, const double binSize, const size_t nOrders);
 
@@ -229,7 +229,7 @@ namespace cbl {
 	   *
 	   * @param seed the seed for random number generation
 	   *
-	   * @return none
+	   * 
 	   *
 	   * @warning no error have been implemented so far, any choice will
 	   * be ignored.
@@ -245,7 +245,7 @@ namespace cbl {
 	   *  @brief write the measured three-point correlation
 	   *  @param dir output directory
 	   *  @param file output file
-	   *  @return none
+	   *  
 	   */
 
 	  void write (const std::string dir, const std::string file) const;
@@ -266,7 +266,7 @@ namespace cbl {
 	   *  @param nBins the number of bins
 	   *  @param bin true \f$\rightarrow\f$ average legendre polynomials,
 	   *  	false \f$\rightarrow\f$ compute legendre polynomial at the bin center
-	   *  @return none
+	   *  
 	   */
 
 	  void resum (const std::string dir, const std::string file, const cbl::triplets::TripletType tripletType, const int nBins, const bool bin=true) const;

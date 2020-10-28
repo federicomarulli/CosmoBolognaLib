@@ -77,7 +77,7 @@ namespace cbl {
       
       /**
        *  @brief default constructor
-       *  @return object of class Galaxy
+       *  
        */
       Galaxy ()
 	: Object(), m_mass(par::defaultDouble), m_magnitude(par::defaultDouble), m_SFR(par::defaultDouble), m_sSFR(par::defaultDouble) {}
@@ -110,7 +110,7 @@ namespace cbl {
        *
        *  @param sSFR the galaxy specific star formation rate
        *
-       *  @return object of class Galaxy
+       *  
        */
       Galaxy (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
@@ -151,7 +151,7 @@ namespace cbl {
        *
        *  @param sSFR the galaxy specific star formation rate
        *
-       *  @return object of class Galaxy
+       *  
        */
       Galaxy (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
 	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
@@ -184,7 +184,7 @@ namespace cbl {
        *
        *  @param sSFR the galaxy specific star formation rate
        *
-       *  @return object of class Galaxy
+       *  
        */
       Galaxy (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
@@ -220,7 +220,7 @@ namespace cbl {
        *
        *  @param sSFR the galaxy specific star formation rate
        *
-       *  @return object of class Galaxy
+       *  
        */
       Galaxy (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
 	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
@@ -258,7 +258,7 @@ namespace cbl {
        *
        *  @param sSFR the galaxy specific star formation rate
        *
-       *  @return object of class Galaxy
+       *  
        */
       Galaxy (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
 	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
@@ -296,7 +296,7 @@ namespace cbl {
        *
        *  @param sSFR the galaxy specific star formation rate
        *
-       *  @return object of class Galaxy
+       *  
        */
       Galaxy (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
 	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
@@ -339,14 +339,13 @@ namespace cbl {
        *
        *  @param sSFR the galaxy specific star formation rate
        *
-       *  @return object of class Galaxy
+       *  
        */
       Galaxy (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble) 
 	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_magnitude(magnitude), m_SFR(SFR), m_sSFR(sSFR) {}
       
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~Galaxy () = default;
     
@@ -397,7 +396,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_mass
        *  @param mass the mass of the galaxy
-       *  @return none
        */
       void set_mass (const double mass=par::defaultDouble) override
       { m_mass = mass; } 
@@ -405,7 +403,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_magnitude
        *  @param magnitude the magnitude of the galaxy
-       *  @return none
        */
       void set_magnitude (const double magnitude=par::defaultDouble) override
       { m_magnitude = magnitude; }
@@ -413,7 +410,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_SFR
        *  @param SFR the star formation rate of the galaxy
-       *  @return none
        */
       void set_SFR (const double SFR=par::defaultDouble) override
       { m_SFR = SFR; }
@@ -421,7 +417,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_sSFR
        *  @param sSFR the specific star formation rate of the galaxy
-       *  @return none
        */
       void set_sSFR (const double sSFR=par::defaultDouble) override
       { m_sSFR = sSFR; }
@@ -437,7 +432,7 @@ namespace cbl {
       /**
        *  @brief check if the private member \e m_mass is set
        *
-       *  @return none
+       *  @return true if the mass is set; false otherwise
        */
       bool isSet_mass () override
       { return (cbl::isSet(m_mass)) ? true : false; } 

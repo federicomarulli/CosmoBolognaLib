@@ -401,21 +401,21 @@ int cbl::makeDir (std::string path, const std::string rootPath, const mode_t mod
 {
   struct stat st;
 
-  for (std::string::iterator iter=path.begin(); iter!=path.end();) {
-    std::string::iterator newIter = std::find(iter, path.end(), '/');
-    std::string newPath = rootPath+"/"+std::string(path.begin(), newIter);
-
+  for (string::iterator iter=path.begin(); iter!=path.end();) {
+    string::iterator newIter = find(iter, path.end(), '/');
+    string newPath = rootPath+"/"+string(path.begin(), newIter);
+    
     if (stat(newPath.c_str(), &st)!=0) {           
       if (mkdir(newPath.c_str(), mode)!=0 && errno!=EEXIST) 
-	return cbl::ErrorCBL("cannot create the directory "+newPath+strerror(errno), "makeDir", "Kernel.cpp");
+	return ErrorCBL("cannot create the directory "+newPath+strerror(errno), "makeDir", "Kernel.cpp");
     }
     else
       if (!S_ISDIR(st.st_mode)) {
 	errno = ENOTDIR;
-	return cbl::ErrorCBL(newPath+" is not a directory", "makeDir", "Kernel.cpp");
+	return ErrorCBL(newPath+" is not a directory", "makeDir", "Kernel.cpp");
       }
       else if (verbose)
-	cbl::WarningMsgCBL(newPath+" already exists", "makeDir", "Kernel.cpp");
+	WarningMsgCBL(newPath+" already exists", "makeDir", "Kernel.cpp");
 
     iter = newIter;
     if (newIter!=path.end()) ++iter;
