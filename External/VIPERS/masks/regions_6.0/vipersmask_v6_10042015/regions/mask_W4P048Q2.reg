@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/filetxRkny.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(331.95835,1.637637,331.97111,1.637638,331.97487,1.636477,332.06146,1.636555,332.06128,1.754612,332.05858,1.762064,332.05076,1.765051,331.95202,1.765121,331.94679,1.759183,331.94726,1.6382796) # color=red dash=1

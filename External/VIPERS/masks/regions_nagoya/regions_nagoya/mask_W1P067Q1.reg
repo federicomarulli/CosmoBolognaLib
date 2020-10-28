@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/filePn9sIP.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(31.472870,-4.479472,31.467857,-4.473867,31.463926,-4.472494,31.368775,-4.472546,31.362417,-4.475256,31.355975,-4.479461,31.356828,-4.604035,31.473057,-4.604633) # color=red dash=1

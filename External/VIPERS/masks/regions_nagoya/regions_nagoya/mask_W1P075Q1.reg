@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: /tmp/file3zZm10.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(33.419833,-4.60505,33.528437,-4.605611,33.531807,-4.603123,33.531879,-4.525981,33.527666,-4.517014,33.524818,-4.4733957,33.518989,-4.472562,33.431485,-4.472459,33.427696,-4.473617,33.422192,-4.477459,33.419642,-4.480645,33.418591,-4.598627) # color=red dash=1

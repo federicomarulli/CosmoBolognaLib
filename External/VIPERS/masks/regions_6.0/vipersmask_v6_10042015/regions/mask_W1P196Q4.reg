@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/file13MFSI.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(38.487234,-5.675087,38.491865,-5.677798,38.526202,-5.678103,38.533814,-5.67819,38.590981,-5.677873,38.60025,-5.673889,38.599935,-5.546244,38.597188,-5.543014,38.485683,-5.542947,38.482822,-5.546258,38.482775,-5.66878) # color=red dash=1

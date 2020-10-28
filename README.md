@@ -64,3 +64,5 @@ V5.1 classes for modelling improved; bugs fixed; tools for void analysis updated
 V5.2 new notebook and example codes for cosmic void analyses; makefile updated to have Python 3.x-compatible CosmoBolognaLib modules
 
 V5.3 new functions to model number counts, redshift-space distortions and three-point correlation function
+
+V5.4 new logo (by Sofia Contarini), new functions to model 2 and 3 point correlation functions

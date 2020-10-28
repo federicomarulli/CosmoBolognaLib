@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: /tmp/file9rtcgy.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(34.662676,-4.472284,34.761557,-4.472946,34.770842,-4.470191,34.770509,-4.345418,34.661938,-4.3416058,34.656214,-4.345552,34.656241,-4.46462) # color=red dash=1
