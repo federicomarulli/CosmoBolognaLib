@@ -353,7 +353,7 @@ ALL:
 	make MPTbreeze
 	make mangle
 	make CPT_Library
-	make CAMB_SPT_private
+	#make CAMB_SPT_private
 	$(call colorecho, "\n"Compiling the library: libKERNEL... "\n")
 	make -j3 libKERNEL
 	$(call colorecho, "\n"Compiling the library: libWRAP... "\n")
