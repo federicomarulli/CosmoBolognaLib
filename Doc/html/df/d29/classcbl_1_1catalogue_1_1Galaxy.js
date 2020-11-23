@@ -1,0 +1,28 @@
+var classcbl_1_1catalogue_1_1Galaxy =
+[
+    [ "Galaxy", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a92990cbce8d9e8fddf6f0a041e4738de", null ],
+    [ "Galaxy", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a12f3160bf37d2ec5bf9c8a3f8a99ed2d", null ],
+    [ "Galaxy", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#ae17e14ad1a25878f3ff38ccb63e6c3d4", null ],
+    [ "Galaxy", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#afc924013bd9b4f9c57761e6e0eceaabf", null ],
+    [ "Galaxy", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#ab59482c754b9f184f948074d3abfa9d6", null ],
+    [ "Galaxy", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#afe2c996e43cfeb8a154c3bfcf83dcdfe", null ],
+    [ "Galaxy", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a715eb92914edde118f9856d713d284d1", null ],
+    [ "Galaxy", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#aecc96504fdd314f7adbcf78dc78039e9", null ],
+    [ "~Galaxy", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a5d6b1cd2c2e213617f844b0bca5a1c9d", null ],
+    [ "isSet_magnitude", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#aa6af7df142f6da8ba398cbc58f6a936f", null ],
+    [ "isSet_mass", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#ac7efad2f51e678f52458bdfc0152e24c", null ],
+    [ "isSet_SFR", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a9c582b6c6c62c6e352609878cdbc2a90", null ],
+    [ "isSet_sSFR", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#ada34ad1c3eac3f25a7b3976227bbc2ae", null ],
+    [ "magnitude", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#afbfa607a3adef661532af5cd6cb7502d", null ],
+    [ "mass", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a78487caa11d88dd90df54ff124060776", null ],
+    [ "set_magnitude", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a1809d1d18b4b67fdbcca652745c44221", null ],
+    [ "set_mass", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#ad249fab7d04791fd4bd647939817f5d7", null ],
+    [ "set_SFR", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a590d2a51047c77046ebf0869b2bdd5e0", null ],
+    [ "set_sSFR", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a28d060bb4d0fb5aa264f97b8013bea15", null ],
+    [ "SFR", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a28cbc69993e20747e611e07dc8c75a76", null ],
+    [ "sSFR", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#aa548fa5a8538e3f0ca0bf5027aa72dc0", null ],
+    [ "m_magnitude", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a55b43600eaecba738a3634fa41c2d501", null ],
+    [ "m_mass", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a9341a2c594d9434de387536349503565", null ],
+    [ "m_SFR", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#ad37ccf6fbb6b8384c3ddf80c5daf077c", null ],
+    [ "m_sSFR", "df/d29/classcbl_1_1catalogue_1_1Galaxy.html#a8a8872173968eeaabd4b95f534183bb8", null ]
+];

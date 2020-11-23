@@ -1,0 +1,32 @@
+<map id="Headers/Histogram.h" name="Headers/Histogram.h">
+<area shape="rect" id="node1" title="Class used to handle binned variables." alt="" coords="2154,5,2314,32"/>
+<area shape="rect" id="node2" href="$d5/d38/NumberCounts_8h.html" title="The class NumberCounts." alt="" coords="2033,80,2222,107"/>
+<area shape="rect" id="node30" href="$da/dc6/Histogram_8cpp.html" title="Methods of the class Histogram." alt="" coords="2246,80,2435,107"/>
+<area shape="rect" id="node3" href="$d3/de8/Modelling__NumberCounts_8h.html" title="The class Modelling_NumberCounts." alt="" coords="1094,155,1297,196"/>
+<area shape="rect" id="node17" href="$d6/dec/NumberCounts1D_8h.html" title="The class NumberCounts1D." alt="" coords="1909,162,2116,189"/>
+<area shape="rect" id="node25" href="$d2/ddf/NumberCounts2D_8h.html" title="The class NumberCounts2D." alt="" coords="2235,162,2441,189"/>
+<area shape="rect" id="node29" href="$dd/d21/NumberCounts_8cpp.html" title="Methods of the class NumberCounts." alt="" coords="2466,155,2645,196"/>
+<area shape="rect" id="node4" href="$d6/d8f/Modelling__NumberCounts1D_8h.html" title="The class Modelling_NumberCounts1D." alt="" coords="473,244,675,285"/>
+<area shape="rect" id="node12" href="$d1/d18/Modelling__NumberCounts2D_8h.html" title="The class Modelling_NumberCounts2D." alt="" coords="975,244,1178,285"/>
+<area shape="rect" id="node16" href="$dc/d1b/Modelling__NumberCounts_8cpp.html" title="Methods of the class Modelling_NumberCounts." alt="" coords="1202,244,1423,285"/>
+<area shape="rect" id="node5" href="$d3/d6c/Modelling__NumberCounts1D__Mass_8h.html" title="The class Modelling_NumberCounts1D_Mass." alt="" coords="15,333,218,375"/>
+<area shape="rect" id="node7" href="$da/d3c/Modelling__NumberCounts1D__Redshift_8h.html" title="The class Modelling_NumberCounts1D_Redshift." alt="" coords="246,333,449,375"/>
+<area shape="rect" id="node9" href="$db/d0c/Modelling__NumberCounts1D__Size_8h.html" title="The class Modelling_NumberCounts1D_Size." alt="" coords="473,333,675,375"/>
+<area shape="rect" id="node11" href="$d5/dd4/Modelling__NumberCounts1D_8cpp.html" title="Methods of the class Modelling_NumberCounts1D." alt="" coords="700,333,939,375"/>
+<area shape="rect" id="node6" href="$dd/d97/Modelling__NumberCounts1D__Mass_8cpp.html" title="Methods of the class Modelling_NumberCounts1D_Mass." alt="" coords="5,423,217,479"/>
+<area shape="rect" id="node8" href="$df/d6c/Modelling__NumberCounts1D__Redshift_8cpp.html" title="Methods of the class Modelling_NumberCounts1D_Redshift." alt="" coords="241,423,453,479"/>
+<area shape="rect" id="node10" href="$d6/daa/Modelling__NumberCounts1D__Size_8cpp.html" title="Methods of the class Modelling_NumberCounts1D_Size." alt="" coords="477,423,689,479"/>
+<area shape="rect" id="node13" href="$de/db9/Modelling__NumberCounts2D__RedshiftMass_8h.html" title="The class Modelling_NumberCounts2D_RedshiftMass." alt="" coords="963,333,1166,375"/>
+<area shape="rect" id="node15" href="$d7/d30/Modelling__NumberCounts2D_8cpp.html" title="Methods of the class Modelling_NumberCounts2D." alt="" coords="1191,333,1429,375"/>
+<area shape="rect" id="node14" href="$dd/dba/Modelling__NumberCounts2D__RedshiftMass_8cpp.html" title="Methods of the class Modelling_NumberCounts2D_RedshiftMass." alt="" coords="959,423,1171,479"/>
+<area shape="rect" id="node18" href="$d8/d3a/NumberCounts1D__Mass_8h.html" title="The class NumberCounts1D_Mass." alt="" coords="1466,244,1661,285"/>
+<area shape="rect" id="node20" href="$db/d83/NumberCounts1D__Redshift_8h.html" title="The class NumberCounts1D_Redshift." alt="" coords="1697,244,1891,285"/>
+<area shape="rect" id="node22" href="$d7/de7/NumberCounts1D__Size_8h.html" title="The class NumberCounts1D_Size." alt="" coords="1915,244,2110,285"/>
+<area shape="rect" id="node24" href="$d0/d75/NumberCounts1D_8cpp.html" title="Methods of the class NumberCounts1D." alt="" coords="2134,244,2313,285"/>
+<area shape="rect" id="node19" href="$da/dfb/NumberCounts1D__Mass_8cpp.html" title="Methods of the class NumberCounts1D_Mass." alt="" coords="1453,333,1663,375"/>
+<area shape="rect" id="node21" href="$df/db9/NumberCounts1D__Redshift_8cpp.html" title="Methods of the class NumberCounts1D_Redshift." alt="" coords="1687,333,1915,375"/>
+<area shape="rect" id="node23" href="$df/da8/NumberCounts1D__Size_8cpp.html" title="Methods of the class NumberCounts1D_Size." alt="" coords="1939,333,2142,375"/>
+<area shape="rect" id="node26" href="$d3/de3/NumberCounts2D__RedshiftMass_8h.html" title="The class NumberCounts2D_RedshiftMass." alt="" coords="2337,244,2531,285"/>
+<area shape="rect" id="node28" href="$d1/d7d/NumberCounts2D_8cpp.html" title="Methods of the class NumberCounts2D." alt="" coords="2555,244,2734,285"/>
+<area shape="rect" id="node27" href="$d5/d5f/NumberCounts2D__RedshiftMass_8cpp.html" title="Methods of the class NumberCounts2D_RedshiftMass." alt="" coords="2303,333,2565,375"/>
+</map>
