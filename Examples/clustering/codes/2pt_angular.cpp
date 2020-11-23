@@ -32,9 +32,9 @@ int main () {
     const cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::RandomType::_createRandom_square_, catalogue, N_R};
     
   
-    // --------------------------------------------------------------------------------------------
-    // ---------------- measure the angular of the two-point correlation function ----------------
-    // --------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------
+    // ---------------- measure the angular two-point correlation function ----------------
+    // ------------------------------------------------------------------------------------
 
     // binning parameters and output data
 
@@ -48,7 +48,7 @@ int main () {
     const std::string file = "xi_angular.dat";
 
   
-    // measure the angular two-point correlation function
+    // measure the angular two-point correlation function and store the results
   
     cbl::measure::twopt::TwoPointCorrelation1D_angular TwoP {catalogue, random_catalogue, cbl::BinType::_linear_, angMin, angMax, nbins, shift, angularUnits};
   
