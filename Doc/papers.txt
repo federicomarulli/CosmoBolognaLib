@@ -2,6 +2,17 @@
 ----- the list of publications that used the CosmoBolognaLib -----
 ------------------------------------------------------------------
 
+31. Marulli, Veropalumbo, García-Farieta, Moresco, Moscardini, Cimatti
+    C^3 - Cluster Clustering Cosmology I. New constraints on the
+    cosmic growth rate at z~0.3 from redshift-space clustering
+    anisotropies
+    2020, submitted to ApJ
+
+30. Sarpa, Veropalumbo, Schimd, Branchini, Matarrese
+    Extended Fast Action Minimisation method: application to SDSS-DR12
+    Combined Sample
+    2020, submitted to MNRAS
+    
 29. Giocoli, Monaco, Moscardini, Castro, Meneghetti, Metcalf, Baldi
     Testing the Reliability of Fast Methods for Weak Lensing
     Simulations: WL-MOKA on PINOCCHIO
@@ -15,7 +26,7 @@
 27. Moresco, Jimenez, Verde, Cimatti, Pozzetti
     Setting the Stage for Cosmic Chronometers. II. Impact of Stellar
     Population Synthesis Models Systematics and Full Covariance Matrix
-    2020, Submitted to ApJ
+    2020, ApJ, 898, 82
 
 26. Girelli, Pozzetti, Bolzonella, Giocoli, Marulli, Baldi
     The stellar-to-halo mass relation over the past 12

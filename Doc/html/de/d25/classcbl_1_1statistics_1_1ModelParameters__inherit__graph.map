@@ -1,0 +1,5 @@
+<map id="cbl::statistics::ModelParameters" name="cbl::statistics::ModelParameters">
+<area shape="rect" id="node1" title="The class ModelParameters." alt="" coords="83,5,313,32"/>
+<area shape="rect" id="node2" href="$d6/de0/classcbl_1_1statistics_1_1LikelihoodParameters.html" title="The class LikelihoodParameters." alt="" coords="5,80,188,121"/>
+<area shape="rect" id="node3" href="$da/ddb/classcbl_1_1statistics_1_1PosteriorParameters.html" title="The class PosteriorParameters." alt="" coords="212,80,387,121"/>
+</map>

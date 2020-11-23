@@ -1,0 +1,36 @@
+<map id="Headers/Data1D.h" name="Headers/Data1D.h">
+<area shape="rect" id="node1" title="The class Data1D." alt="" coords="3133,5,3275,32"/>
+<area shape="rect" id="node2" href="$d8/db3/Data_8cpp.html" title="Methods of the class Data." alt="" coords="232,199,347,225"/>
+<area shape="rect" id="node3" href="$dc/da6/Data1D_8cpp.html" title="Methods of the class Data1D." alt="" coords="1561,95,1695,121"/>
+<area shape="rect" id="node4" href="$d2/d22/Forecast_8cpp.html" title="Functions to generate mock 2PCF/3PCF signal and provide forecasts." alt="" coords="1719,95,1899,121"/>
+<area shape="rect" id="node5" href="$d0/d67/Data1D__collection_8h.html" title="The class Data1D_collection." alt="" coords="184,95,395,121"/>
+<area shape="rect" id="node7" href="$df/dcd/Data1D__extra_8h.html" title="The class Data1D_extra." alt="" coords="1975,95,2158,121"/>
+<area shape="rect" id="node16" href="$d0/d75/NumberCounts1D_8cpp.html" title="Methods of the class NumberCounts1D." alt="" coords="2705,288,2884,329"/>
+<area shape="rect" id="node26" href="$d8/dbd/Modelling__Cosmology__DistancePrior_8h.html" title="The class Modelling_Cosmology." alt="" coords="3241,87,3465,129"/>
+<area shape="rect" id="node31" href="$dd/dd3/ThreePointCorrelation__comoving__connected_8cpp.html" title="Methods of the class ThreePointCorrelation_comoving_connected used to measure the connected three&#45;poi..." alt="" coords="3490,80,3729,136"/>
+<area shape="rect" id="node32" href="$d7/d43/ThreePointCorrelation__comoving__reduced_8cpp.html" title="Methods of the class ThreePointCorrelation_comoving_reduced used to measure the monopole of the three..." alt="" coords="3753,80,3991,136"/>
+<area shape="rect" id="node33" href="$d5/dc2/Modelling__TwoPointCorrelation__multipoles_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation_multipoles." alt="" coords="4016,80,4243,136"/>
+<area shape="rect" id="node34" href="$d9/d93/Modelling__TwoPointCorrelation__wedges_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation_wedges." alt="" coords="4267,80,4493,136"/>
+<area shape="rect" id="node6" href="$d3/dcb/Data1D__collection_8cpp.html" title="Methods of the class Data1D_collection." alt="" coords="5,199,208,225"/>
+<area shape="rect" id="node8" href="$d4/d86/Data1D__extra_8cpp.html" title="Methods of the class Data1D_extra." alt="" coords="1979,199,2154,225"/>
+<area shape="rect" id="node9" href="$d6/dec/NumberCounts1D_8h.html" title="The class NumberCounts1D." alt="" coords="2178,199,2385,225"/>
+<area shape="rect" id="node17" href="$dc/de9/TwoPointCorrelation1D_8cpp.html" title="Methods of the class TwoPointCorrelation1D used to measure the monopole of the two&#45;point correlation ..." alt="" coords="2409,191,2621,233"/>
+<area shape="rect" id="node18" href="$da/d20/TwoPointCorrelation1D__filtered_8cpp.html" title="Methods of the class TwoPointCorrelation1D_filtered used to measure the filtered monopole of the two&#45;..." alt="" coords="2645,191,2899,233"/>
+<area shape="rect" id="node19" href="$d2/d08/TwoPointCorrelation__deprojected_8cpp.html" title="Methods of the class TwoPointCorrelation_deprojected used to measure the projected two&#45;point correlat..." alt="" coords="2924,191,3191,233"/>
+<area shape="rect" id="node20" href="$da/d9b/TwoPointCorrelation__multipoles__direct_8cpp.html" title="Methods of the class TwoPointCorrelation_multipoles_direct used to measure the multipoles of the two&#45;..." alt="" coords="371,184,603,240"/>
+<area shape="rect" id="node21" href="$d4/dfe/TwoPointCorrelation__multipoles__integrated_8cpp.html" title="Methods of the class TwoPointCorrelation_multipoles_integrated used to measure the first three multip..." alt="" coords="627,184,859,240"/>
+<area shape="rect" id="node22" href="$d4/d45/TwoPointCorrelation__projected_8cpp.html" title="Methods of the class TwoPointCorrelation_projected used to measure the projected two&#45;point correlatio..." alt="" coords="883,191,1133,233"/>
+<area shape="rect" id="node23" href="$db/dcc/TwoPointCorrelation__wedges_8cpp.html" title="Methods of the class TwoPointCorrelation_multipoles used to measure the wedges of the two&#45;point corre..." alt="" coords="1157,191,1397,233"/>
+<area shape="rect" id="node24" href="$d5/dca/TwoPointCorrelationCross1D_8cpp.html" title="Methods of the class TwoPointCorrelationCross1D used to measure the 1D cross of the two&#45;point correla..." alt="" coords="1421,191,1659,233"/>
+<area shape="rect" id="node25" href="$dd/d0f/Modelling__TwoPointCorrelation1D_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation1D." alt="" coords="1683,191,1955,233"/>
+<area shape="rect" id="node10" href="$d8/d3a/NumberCounts1D__Mass_8h.html" title="The class NumberCounts1D_Mass." alt="" coords="2409,288,2604,329"/>
+<area shape="rect" id="node12" href="$db/d83/NumberCounts1D__Redshift_8h.html" title="The class NumberCounts1D_Redshift." alt="" coords="1955,288,2149,329"/>
+<area shape="rect" id="node14" href="$d7/de7/NumberCounts1D__Size_8h.html" title="The class NumberCounts1D_Size." alt="" coords="2184,288,2379,329"/>
+<area shape="rect" id="node11" href="$da/dfb/NumberCounts1D__Mass_8cpp.html" title="Methods of the class NumberCounts1D_Mass." alt="" coords="2407,377,2617,419"/>
+<area shape="rect" id="node13" href="$df/db9/NumberCounts1D__Redshift_8cpp.html" title="Methods of the class NumberCounts1D_Redshift." alt="" coords="1927,377,2155,419"/>
+<area shape="rect" id="node15" href="$df/da8/NumberCounts1D__Size_8cpp.html" title="Methods of the class NumberCounts1D_Size." alt="" coords="2180,377,2383,419"/>
+<area shape="rect" id="node27" href="$d0/de9/ModelFunction__Cosmology_8h.html" title="Global functions to model two&#45;point correlation functions of any type." alt="" coords="3266,191,3441,233"/>
+<area shape="rect" id="node29" href="$d5/d9a/Modelling__Cosmology_8cpp.html" title="Methods of the class Modelling_Cosmology." alt="" coords="3333,377,3528,419"/>
+<area shape="rect" id="node28" href="$dc/d47/Modelling__Cosmology_8h.html" title="The class Modelling_Cosmology." alt="" coords="3236,295,3471,322"/>
+<area shape="rect" id="node30" href="$d9/d3f/ModelFunction__Cosmology_8cpp.html" title="Global functions to model cosmological measurements." alt="" coords="2985,288,3212,329"/>
+</map>
