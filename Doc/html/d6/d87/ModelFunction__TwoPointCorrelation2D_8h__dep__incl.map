@@ -1,9 +1,0 @@
-<map id="Headers/ModelFunction_TwoPointCorrelation2D.h" name="Headers/ModelFunction_TwoPointCorrelation2D.h">
-<area shape="rect" id="node1" title="Global functions to model 2D two&#45;point correlation functions of any type." alt="" coords="438,5,627,47"/>
-<area shape="rect" id="node2" href="$d3/d4f/ModelFunction__TwoPointCorrelation2D__cartesian_8h.html" title="Functions to model the 2D two&#45;point correlation function in Cartesian coordinates." alt="" coords="312,95,489,151"/>
-<area shape="rect" id="node7" href="$de/dde/ModelFunction__TwoPointCorrelation2D_8cpp.html" title="Global functions to model 2D two&#45;point correlation functions of any type." alt="" coords="513,102,816,143"/>
-<area shape="rect" id="node3" href="$dd/d97/Modelling__TwoPointCorrelation2D__cartesian_8h.html" title="The class Modelling_TwoPointCorrelation2D_cartesian." alt="" coords="165,206,375,247"/>
-<area shape="rect" id="node6" href="$d2/d33/ModelFunction__TwoPointCorrelation2D__cartesian_8cpp.html" title="Functions to model the 2D two&#45;point correlation function in Cartesian coordinates." alt="" coords="399,199,666,255"/>
-<area shape="rect" id="node4" href="$db/dd4/Modelling__TwoPointCorrelation_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation." alt="" coords="5,310,260,351"/>
-<area shape="rect" id="node5" href="$da/d42/Modelling__TwoPointCorrelation2D__cartesian_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation_cartesian." alt="" coords="285,303,530,359"/>
-</map>
