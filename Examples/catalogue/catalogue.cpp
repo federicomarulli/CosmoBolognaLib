@@ -83,8 +83,9 @@ int main () {
 
     cbl::catalogue::Catalogue catalogue4; catalogue4.add_objects(object);
 
+    
     // --------------------------------------------------------------
-    // -------- method V : Subsample a catalogue with a mask --------
+    // -------- method V : subsample a catalogue with a mask --------
     // --------------------------------------------------------------
 
     cbl::catalogue::mask_function mask = [&] (const std::shared_ptr<cbl::catalogue::Object> obj)

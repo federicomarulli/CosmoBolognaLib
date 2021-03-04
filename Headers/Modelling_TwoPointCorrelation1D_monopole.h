@@ -72,8 +72,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class
-	 *  Modelling_TwoPointCorrelation1D_monopole
 	 */
 	Modelling_TwoPointCorrelation1D_monopole () = default;
 
@@ -81,9 +79,6 @@ namespace cbl {
 	 *  @brief constructor
 	 *  
 	 *  @param twop the two-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation1D_monopole
 	 */
 	Modelling_TwoPointCorrelation1D_monopole (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
 	  : Modelling_TwoPointCorrelation1D(twop) {}
@@ -93,16 +88,13 @@ namespace cbl {
 	 *  
 	 *  @param twop_dataset the dataset containing the two-point
 	 *  correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation1D_monopole
 	 */
 	Modelling_TwoPointCorrelation1D_monopole (const std::shared_ptr<data::Data> twop_dataset)
 	  : Modelling_TwoPointCorrelation1D(twop_dataset, cbl::measure::twopt::TwoPType::_monopole_) {}
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_TwoPointCorrelation1D_monopole () = default;
 
@@ -118,7 +110,7 @@ namespace cbl {
 	 *  @brief set the fiducial model for the dark matter
 	 *  two-point correlation function and associated quantities
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_fiducial_xiDM ();
 
@@ -126,7 +118,7 @@ namespace cbl {
 	 *  @brief set the fiducial model for the dark matter power
 	 *  spectrum
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_fiducial_PkDM ();
 		
@@ -134,7 +126,7 @@ namespace cbl {
 	 *  @brief set the fiducial model for the variance
 	 *  \f$\sigma(M)\f$ 
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_fiducial_sigma_data_model ();
 
@@ -143,7 +135,7 @@ namespace cbl {
 	 *  \f$\sigma(M)\f$ and its derivative \f$d\ln\sigma(M)/d\ln
 	 *  M\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_fiducial_sigma ();
 
@@ -169,7 +161,7 @@ namespace cbl {
 	 *  @param file_grid_bias the file where is the grid
 	 *  of effective bias is stored
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_bias_eff_grid (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<double> min_par, const std::vector<double> max_par, const std::vector<int> nbins_par, const std::string dir, const std::string file_grid_bias);
 
@@ -201,7 +193,7 @@ namespace cbl {
 	 *  @param file_grid_bias the file where is the grid
 	 *  of effective bias is stored
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_bias_eff_grid (const std::string file_selection_function, const std::vector<int> column, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<double> min_par, const std::vector<double> max_par, const std::vector<int> nbins_par, const std::string dir, const std::string file_grid_bias);
 	
@@ -220,7 +212,7 @@ namespace cbl {
 	 *    - \f$\alpha\f$
 	 *    - \f$f(z)\sigma_8(z)\f$
 	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$A_i\f$
+	 *    - \f${A_i}_{i=0}^N\f$
 	 *
 	 *  the dark matter two-point correlation function is computed
 	 *  using the input cosmological parameters
@@ -237,7 +229,7 @@ namespace cbl {
 	 *  for the polynomial part: order of the polynomial is
 	 *  the size of the vector \f$-1\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_linear (const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const std::vector<statistics::PriorDistribution> polynomial_prior);
 
@@ -257,7 +249,7 @@ namespace cbl {
 	 *    - \f$\alpha\f$
 	 *    - \f$f(z)\sigma_8(z)\f$
 	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$A_i\f$
+	 *    - \f${A_i}_{i=0}^N\f$
 	 *
 	 *  the positions of the BAO peak, dip, and linear point are
 	 *  provided in output as derived parameters
@@ -277,7 +269,7 @@ namespace cbl {
 	 *  for the polynomial part: order of the polynomial is
 	 *  the size of the vector \f$-1\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_linear_LinearPoint (const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const std::vector<statistics::PriorDistribution> polynomial_prior);
 
@@ -291,7 +283,7 @@ namespace cbl {
 	 *  for the polynomial part: order of the polynomial is
 	 *  the size of the vector \f$-1\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_polynomial_LinearPoint (const std::vector<statistics::PriorDistribution> polynomial_prior);
 
@@ -314,7 +306,7 @@ namespace cbl {
 	 *  @param bsigma8_prior prior for the parameter
 	 *  \f$b(z)\sigma_8(z)\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_Kaiser (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={});
 
@@ -338,7 +330,7 @@ namespace cbl {
 	 *  @param bias_prior prior for the parameter bias
 	 *  \f$b(z)\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_sigma8_bias (const statistics::PriorDistribution sigma8_prior={}, const statistics::PriorDistribution bias_prior={});
 	
@@ -354,7 +346,7 @@ namespace cbl {
 	 *
 	 *  the model has 1+N parameters: 
 	 *    - bias
-	 *    - cosmological paramters
+	 *    - N cosmological paramters
 	 *
 	 *  the dark matter two-point correlation function is computed
 	 *  using the input cosmological parameters
@@ -368,7 +360,7 @@ namespace cbl {
 	 *  @param cosmo_param_prior vector containing the priors for
 	 *  the cosmological parameters
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_linear_bias_cosmology (const statistics::PriorDistribution bias_prior={}, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
 	
@@ -394,7 +386,7 @@ namespace cbl {
 	 *  @param sigma8_prior prior for the parameter
 	 *  \f$\sigma_8(z)\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_linear_sigma8_clusters (const statistics::PriorDistribution sigma8_prior={});
 
@@ -436,7 +428,7 @@ namespace cbl {
 	 *  @param column vector containing the columns with {mass,
 	 *  redshift, selection function}
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_linear_cosmology_clusters_grid (const cbl::cosmology::CosmologicalParameter cosmo_param, const statistics::PriorDistribution cosmo_param_prior, const std::string dir, const std::string file_grid_bias, const double min_par, const double max_par, const int nbins_par, const std::string file_selection_function=par::defaultString, const std::vector<int> column={0, 1, 2});
 		
@@ -493,7 +485,7 @@ namespace cbl {
 	 *  @param column vector containing the columns with {mass,
 	 *  redshift, selection function}
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_linear_cosmology_clusters_grid (const cbl::cosmology::CosmologicalParameter cosmo_param1, const statistics::PriorDistribution cosmo_param_prior1, const cbl::cosmology::CosmologicalParameter cosmo_param2, const statistics::PriorDistribution cosmo_param_prior2, const std::string dir, const std::string file_grid_bias, const double min_par1, const double max_par1, const int nbins_par1, const double min_par2, const double max_par2, const int nbins_par2, const std::string file_selection_function=par::defaultString, const std::vector<int> column={0, 1, 2});
 	
@@ -520,7 +512,7 @@ namespace cbl {
 	 *  @param cosmo_param_prior the prior for the model
 	 *  cosmological parameters
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_linear_cosmology_cluster_selection_function (const statistics::PriorDistribution alpha_prior, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior);
 
@@ -549,7 +541,7 @@ namespace cbl {
 	 *  @param cosmo_param_prior vector containing the priors for
 	 *  the cosmological parameters
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_linear_cosmology_clusters (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
 	
@@ -583,7 +575,7 @@ namespace cbl {
 	 *
 	 *  @param A2_prior prior for the parameter \f$A_2\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_BAO (const statistics::PriorDistribution alpha_prior={}, const statistics::PriorDistribution bs8_prior={}, const statistics::PriorDistribution A0_prior={}, const statistics::PriorDistribution A1_prior={}, const statistics::PriorDistribution A2_prior={});
 
@@ -614,7 +606,7 @@ namespace cbl {
 	 *
 	 *  @param A2_prior prior for the parameter \f$A_2\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_BAO_sigmaNL (const statistics::PriorDistribution sigmaNL_prior={}, const statistics::PriorDistribution alpha_prior={}, const statistics::PriorDistribution BB_prior={}, const statistics::PriorDistribution A0_prior={}, const statistics::PriorDistribution A1_prior={}, const statistics::PriorDistribution A2_prior={});
 
@@ -649,7 +641,7 @@ namespace cbl {
 	 *
 	 *  @param A2_prior prior for the parameter \f$A_2\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_BAO_LinearPoint (const statistics::PriorDistribution alpha_prior={}, const statistics::PriorDistribution BB_prior={}, const statistics::PriorDistribution A0_prior={}, const statistics::PriorDistribution A1_prior={}, const statistics::PriorDistribution A2_prior={});
 
@@ -684,7 +676,7 @@ namespace cbl {
 	 *
 	 *  @param alpha_prior \f$\alpha\f$ prior
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_HOD (const statistics::PriorDistribution Mmin_prior={}, const statistics::PriorDistribution sigmalgM_prior={}, const statistics::PriorDistribution M0_prior={}, const statistics::PriorDistribution M1_prior={}, const statistics::PriorDistribution alpha_prior={});
 
@@ -711,7 +703,7 @@ namespace cbl {
 	 *  @param sigmaz_prior prior for the parameter
 	 *  \f$\sigma_z(z)\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_bias_sigmaz (const statistics::PriorDistribution bias_prior={}, const statistics::PriorDistribution sigmaz_prior={});
 
@@ -744,7 +736,7 @@ namespace cbl {
 	 *  @param sigmaz_prior prior for the parameter
 	 *  \f$\sigma_z(z)\f$
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_scaling_relation_sigmaz (const statistics::PriorDistribution M0_prior={}, const statistics::PriorDistribution slope_prior={}, const statistics::PriorDistribution scatter_prior={}, const statistics::PriorDistribution sigmaz_prior={});
 

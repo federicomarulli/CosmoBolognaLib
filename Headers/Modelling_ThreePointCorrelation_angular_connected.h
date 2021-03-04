@@ -76,8 +76,6 @@ public:
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class
-	 *  Modelling_ThreePointCorrelation_angular_connected
 	 */
 	Modelling_ThreePointCorrelation_angular_connected () = default;
 
@@ -85,9 +83,6 @@ public:
 	 *  @brief constructor
 	 *  
 	 *  @param threep the three-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_ThreePointCorrelation_angular_connected
 	 */
 	Modelling_ThreePointCorrelation_angular_connected (const std::shared_ptr<cbl::measure::threept::ThreePointCorrelation> threep)
 	: Modelling_ThreePointCorrelation(threep) {}
@@ -97,9 +92,6 @@ public:
 	 *  
 	 *  @param threep_dataset the dataset containing the
 	 *  three-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_ThreePointCorrelation_angular_connected
 	 */
 	Modelling_ThreePointCorrelation_angular_connected (const std::shared_ptr<data::Data> threep_dataset)
 	  : Modelling_ThreePointCorrelation() { set_data(threep_dataset); }
@@ -107,7 +99,7 @@ public:
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	~Modelling_ThreePointCorrelation_angular_connected () = default;
 	

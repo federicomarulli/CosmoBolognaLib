@@ -70,13 +70,54 @@ namespace cbl {
        *  @name Constructors/destructors
        */
       ///@{
-
+      
       /**
        *  @brief default constructor
-       *  @return an object of class Data2D_extra
        */
       Data2D_extra () { set_dataType(DataType::_2D_extra_); }
-
+      
+      /**
+       *  @brief constructor which reads the data from file
+       *
+       *  @param n_extra_info number of extra info
+       *
+       *  @param input_file the input data file
+       *
+       *  @param skip_nlines the header lines to be skipped
+       *
+       *  @param column vector containing the column(s) of x (and y)
+       *  values in the input file; if it is not provided, the first
+       *  column will be used by default
+       *
+       *  @param column_data the column of data values in the input
+       *  file; the size of column_data is the number of data to be
+       *  read (e.g. the size should be 3 in the case of the 3
+       *  multipole moments of the two-point correlation function); if
+       *  the size of column_data is larger than 1, more than 1 data
+       *  vectors are read and then added one after the other in a
+       *  single data object; if column_data is not provided, the
+       *  first column after column will be used by default, assuming
+       *  that only 1 data vector has to be read
+       *
+       *  @param column_errors the column of error values in the input
+       *  file; the size of column_error must be equal to the size of
+       *  column_data; if the size of column_error is larger than 1,
+       *  more than 1 error vectors are read and then added one after
+       *  the other in a single data object; if column_random is not
+       *  provided, the second column after column will be used by
+       *  default, assuming that only 1 random vector has to be read;
+       *  if the input file has less than 4 columns, the errors will
+       *  be set to 1
+       *
+       *  @param column_edges vector containing the columns of x and y
+       *  bin edge values in the input file; if it is not provided,
+       *  the third and four columns after the column of x values will
+       *  be used; if these columns do no exist the edges are not read
+       */
+      Data2D_extra (const int n_extra_info, const std::string input_file, const int skip_nlines=0, const std::vector<int> column={1, 2}, const std::vector<int> column_data={}, const std::vector<int> column_errors={}, const std::vector<int> column_edges={})
+	: Data2D()
+      { m_extra_info.resize(n_extra_info); read(input_file, skip_nlines, column, column_data, column_errors, column_edges); set_dataType(DataType::_2D_extra_); }
+      
       /**
        *  @brief constructor which gets the data from an input matrix
        *
@@ -89,10 +130,12 @@ namespace cbl {
        *  @param extra_info vector containing vectors of extra generic
        *  information
        *
-       *  @return an object of class Data2D_extra
+       *  @param bin_edges_x the x variable bin edges
+       *
+       *  @param bin_edges_y the y variable bin edges
        */
-      Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> data, const std::vector<std::vector<double>> extra_info)
-	: Data2D(x, y, data), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
+      Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> data, const std::vector<std::vector<double>> extra_info, const std::vector<double> bin_edges_x={}, const std::vector<double> bin_edges_y={})
+	: Data2D(x, y, data, bin_edges_x, bin_edges_y), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
 
       /**
        *  @brief constructor which gets both the data and the errors
@@ -109,9 +152,11 @@ namespace cbl {
        *  @param extra_info vector containing vectors of extra generic
        *  information
        *
-       *  @return an object of class Data2D_extra
+       *  @param bin_edges_x the x variable bin edges
+       *
+       *  @param bin_edges_y the y variable bin edges
        */
-      Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<double> error, const std::vector<std::vector<double>> extra_info) : Data2D(x, y, data, error), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
+      Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<double> error, const std::vector<std::vector<double>> extra_info, const std::vector<double> bin_edges_x={}, const std::vector<double> bin_edges_y={}) : Data2D(x, y, data, error, bin_edges_x, bin_edges_y), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
       
       /**
        *  @brief constructor which gets both the data and the
@@ -128,9 +173,11 @@ namespace cbl {
        *  @param extra_info vector containing vectors of extra generic
        *  information
        *
-       *  @return an object of class Data2D_extra
+       *  @param bin_edges_x the x variable bin edges
+       *
+       *  @param bin_edges_y the y variable bin edges
        */
-      Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> data, const std::vector<std::vector<double>> covariance, const std::vector<std::vector<double>> extra_info) : Data2D(x, y, data, covariance), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
+      Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> data, const std::vector<std::vector<double>> covariance, const std::vector<std::vector<double>> extra_info, const std::vector<double> bin_edges_x={}, const std::vector<double> bin_edges_y={}) : Data2D(x, y, data, covariance, bin_edges_x, bin_edges_y), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
       
       /**
        *  @brief constructor which gets both the data and the
@@ -147,13 +194,14 @@ namespace cbl {
        *  @param extra_info vector containing vectors of extra generic
        *  information
        *
-       *  @return an object of class Data2D_extra
+       *  @param bin_edges_x the x variable bin edges
+       *
+       *  @param bin_edges_y the y variable bin edges
        */
-      Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<std::vector<double>> covariance, const std::vector<std::vector<double>> extra_info) : Data2D(x, y, data, covariance), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
+      Data2D_extra (const std::vector<double> x, const std::vector<double> y, const std::vector<double> data, const std::vector<std::vector<double>> covariance, const std::vector<std::vector<double>> extra_info, const std::vector<double> bin_edges_x={}, const std::vector<double> bin_edges_y={}) : Data2D(x, y, data, covariance, bin_edges_x, bin_edges_y), m_extra_info(extra_info) { set_dataType(DataType::_2D_extra_); }
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       virtual ~Data2D_extra () = default;
 
@@ -218,13 +266,12 @@ namespace cbl {
       /**
        *  @brief set the extra info
        *  @param extra_info vector containing vectors with extra info
-       *  @return none
        */
       void set_extra_info (const std::vector<std::vector<double>> extra_info) { m_extra_info = extra_info; }
 
       ///@}
-
-
+      
+      
       /**
        *  @name Input/Output member functions
        */
@@ -237,8 +284,9 @@ namespace cbl {
        *
        *  @param skip_nlines the header lines to be skipped
        * 
-       *  @param column_x the column of x values in the input file; if
-       *  it is not provided, the first column will be used by default
+       *  @param column vector containing the column(s) of x (and y)
+       *  values in the input file; if it is not provided, the first
+       *  column will be used by default
        *
        *  @param column_data the column of data values in the input
        *  file; the size of column_data is the number of data to be
@@ -247,31 +295,33 @@ namespace cbl {
        *  the size of column_data is larger than 1, more than 1 data
        *  vectors are read and then added one after the other in a
        *  single data object; if column_data is not provided, the
-       *  first column after column_x will be used by default,
-       *  assuming that only 1 data vector has to be read
+       *  first column after column will be used by default, assuming
+       *  that only 1 data vector has to be read
        *
        *  @param column_errors the column of error values in the input
        *  file; the size of column_error must be equal to the size of
        *  column_data; if the size of column_error is larger than 1,
        *  more than 1 error vectors are read and then added one after
        *  the other in a single data object; if column_random is not
-       *  provided, the second column after column_x will be used by
+       *  provided, the second column after column will be used by
        *  default, assuming that only 1 random vector has to be read;
-       *  if the input file has only 2 columns, the errors will be set
-       *  to 1
+       *  if the input file has less than 4 columns, the errors will
+       *  be set to 1
+       *
+       *  @param column_edges vector containing the columns of x and y
+       *  bin edge values in the input file; if it is not provided,
+       *  the third and four columns after the column of x values will
+       *  be used; if these columns do no exist the edges are not read
        *
        *  @return none
-       *
-       *  @warning this function is not implemented yet: work in
-       *  progress!
        */
-      virtual void read (const std::string input_file, const int skip_nlines=0, const int column_x=-1, const std::vector<int> column_data={}, const std::vector<int> column_errors={}) override;
+      virtual void read (const std::string input_file, const int skip_nlines=0, const std::vector<int> column={1, 2}, const std::vector<int> column_data={}, const std::vector<int> column_errors={}, const std::vector<int> column_edges={}) override;
 
       /**
        *  @brief print the data on screen
        *
        *  @param precision the float precision
-       *
+       *  
        *  @return none
        */
       virtual void Print (const int precision=4) const override;

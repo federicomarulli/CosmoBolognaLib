@@ -76,7 +76,7 @@ namespace cbl {
       /**
        *  @brief default constructor
        *
-       *  @return object of class Prior
+       *  
        */
       Prior () {}
 
@@ -87,14 +87,12 @@ namespace cbl {
        *
        * @param prior_function_inputs inputs for the prior function
        *
-       * @return object of class Prior
+       * 
        */
       Prior (const Prior_function prior_function, const std::shared_ptr<void> prior_function_inputs);
 
       /**
        *  @brief default destructor
-       *
-       *  @return none
        */
       ~Prior () = default;
 

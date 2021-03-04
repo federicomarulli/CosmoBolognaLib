@@ -51,8 +51,8 @@ namespace cbl {
      *  @brief The namespace of the <B> number counts
      *  modelling </B>
      *  
-     *  The \e modelling::numbercounts namespace contains all the functions
-     *  and classes to model number counts
+     *  The \e modelling::numbercounts namespace contains all the
+     *  functions and classes to model number counts
      */
     namespace numbercounts {
     
@@ -66,10 +66,8 @@ namespace cbl {
        *  This file defines the interface of the base class
        *  Modelling_NumberCounts, used for modelling any kind of
        *  number counts measurements
-       *
        */
-      class Modelling_NumberCounts
-      {
+      class Modelling_NumberCounts : public Modelling {
       
       protected:
 
@@ -94,14 +92,14 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class Modelling_NumberCounts
+	 *  _NumberCounts
 	 */
 	Modelling_NumberCounts () = default;
 	
 	/**
 	 *  @brief constuctor
 	 *  @param nc the number counts to model
-	 *  @return object of class Modelling_NumberCounts
+	 *  _NumberCounts
 	 */
 	Modelling_NumberCounts (const std::shared_ptr<cbl::measure::numbercounts::NumberCounts> nc)
 	{ m_HistogramType = nc->HistogramType(); m_fact = nc->fact(); }
@@ -110,14 +108,14 @@ namespace cbl {
 	 *  @brief constuctor
 	 *  @param hist_type the histogram type
 	 *  @param fact the normalization factor
-	 *  @return object of class Modelling_NumberCounts
+	 *  _NumberCounts
 	 */
 	Modelling_NumberCounts (glob::HistogramType hist_type, double fact)
 	{ m_HistogramType = hist_type; m_fact = fact;}
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_NumberCounts () = default;
 
@@ -178,9 +176,6 @@ namespace cbl {
 	 *  @param step number of steps used to compute the binned
 	 *  power spectrum
 	 *
-	 *  @param output_dir the output_dir directory
-	 *  where the output of external codes are written
-	 *  
 	 *  @param store_output if true the output files created by
 	 *  the Boltzmann solver are stored; if false the output files
 	 *  are removed
@@ -219,9 +214,9 @@ namespace cbl {
 	 *
 	 *  @param prec the precision
 	 *
-	 *  @return none
+	 *  
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const std::string selection_function_file=par::defaultString, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const int z_step=50, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
+	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const std::string selection_function_file=par::defaultString, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const int z_step=50, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
 
 	///@}
 		
@@ -260,6 +255,15 @@ namespace cbl {
 	 *  [http://arxiv.org/abs/1207.1465], EisensteinHu
 	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
 	 *
+	 *  @param k_Pk_ratio wave vector module required to compute
+	 *  the growth factor (cbl::cosmology::Cosmology::DD_norm())
+	 *  with the method "Pk_ratio". This parameter represents
+	 *  wavenumber at which the ratio between the the power
+	 *  spectra at different redshift is computed. It is
+	 *  recommended to use this method when dealing with
+	 *  cosmologies alternative to the LCDM. To avoid to compute
+	 *  the growth factor with this method, set k_Pk_ratio=-1.
+	 *
 	 *  @param store_output if true the output files created by
 	 *  the Boltzmann solver are stored; if false the output files
 	 *  are removed
@@ -290,10 +294,10 @@ namespace cbl {
 	 *  \f$\rightarrow\f$ the input_file is a file containing the
 	 *  power spectrum
 	 *
-	 *  @return none
+	 *  
 	 */
 	
-	void set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+	void set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const double k_Pk_ratio=-1., const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
 
 	/**
@@ -321,9 +325,6 @@ namespace cbl {
 	 *  @param step number of steps used to compute the binned
 	 *  power spectrum
 	 *
-	 *  @param output_dir the output_dir directory
-	 *  where the output of external codes are written
-	 *  
 	 *  @param store_output if true the output files created by
 	 *  the Boltzmann solver are stored; if false the output files
 	 *  are removed
@@ -349,12 +350,13 @@ namespace cbl {
        	 *
 	 *  @param prec the precision
 	 *
-	 *  @return none
+	 *  @return none, or an error message if the derived object
+	 *  does not have this member
 	 */
-	virtual void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4) 
+	virtual void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4) 
 	{ 
 	  (void)cosmology; (void)redshift; (void)method_Pk; (void)k_min; (void)k_max; (void)step;
-	  (void)output_dir; (void)store_output; (void)norm; (void)Delta; (void)isDelta_vir; (void)model_MF;
+	  (void)store_output; (void)norm; (void)Delta; (void)isDelta_vir; (void)model_MF;
 	  (void)Volume; (void)prec; (void)Mass_min; (void)Mass_max; (void)Mass_step;
 	  cbl::ErrorCBL("", "set_data_model_snapshot", "Modelling_NumberCounts.h");
 	}

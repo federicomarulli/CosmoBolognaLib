@@ -44,9 +44,13 @@ using namespace cbl;
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double k_min, const double k_max, const int step,  const std::string output_dir, const bool store_output, const int norm, const double Delta, const bool isDelta_vir, const std::string model_MF, const std::string selection_function_file, const std::vector<int> selection_function_column, const double z_min, const double z_max, const int z_step, const double Mass_min, const double Mass_max, const int Mass_step, const double area_degrees, const double prec)
+void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double k_min, const double k_max, const int step, const bool store_output, const int norm, const double Delta, const bool isDelta_vir, const std::string model_MF, const std::string selection_function_file, const std::vector<int> selection_function_column, const double z_min, const double z_max, const int z_step, const double Mass_min, const double Mass_max, const int Mass_step, const double area_degrees, const double prec)
 {
   m_data_model.isSnapshot = false;
+
+  if (m_fit_range==false) ErrorCBL("You must set the fit range (through set_fit_range) first!","set_data_model","Modelling_NumberCounts.cpp");
+  m_data_model.edges_x = m_data->edges_xx();
+  m_data_model.edges_y = m_data->edges_yy();
 
   m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model.redshift = redshift;
@@ -57,7 +61,6 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
   m_data_model.kk = logarithmic_bin_vector(step, k_min, k_max);
   m_data_model.norm = norm;
   
-  m_data_model.output_dir = output_dir;
   m_data_model.store_output = store_output;
   m_data_model.output_root = "test";
   m_data_model.file_par = par::defaultString;
@@ -82,11 +85,11 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
   if (m_data_model.z_min>0)
     m_data_model.Volume = cosmology.Volume(z_min, z_max, area_degrees);
 
-  if(selection_function_file!=par::defaultString) {
+  if (selection_function_file!=par::defaultString) {
     m_data_model.use_SF = true;
     std::vector<double> mass, redshift;
     std::vector<std::vector<double>> SF;
-    read_matrix (selection_function_file, redshift, mass, SF, selection_function_column);
+    read_matrix(selection_function_file, redshift, mass, SF, selection_function_column);
     m_data_model.interp_SelectionFunction = make_shared<glob::FuncGrid2D> (glob::FuncGrid2D(redshift, mass, SF, "Cubic"));
   }
   else
@@ -100,7 +103,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model_SF, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
+void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model_SF, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const double k_Pk_ratio, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
 {
   m_data_model_SF.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model_SF.radii = radii;
@@ -112,6 +115,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model_SF (co
   m_data_model_SF.deltav_NL = deltav_NL;
   m_data_model_SF.delta_c = del_c;
   m_data_model_SF.method_Pk = method_Pk;
+  m_data_model_SF.k_Pk_ratio = k_Pk_ratio;
   m_data_model_SF.store_output = store_output;
   m_data_model_SF.output_root = output_root;
   m_data_model_SF.interpType = interpType;

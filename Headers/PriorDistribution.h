@@ -62,7 +62,7 @@ namespace cbl {
       /**
        *  @brief default constructor
        *
-       *  @return object of class PriorDistribution
+       *  
        */
       PriorDistribution () : Distribution () {}
 
@@ -73,7 +73,7 @@ namespace cbl {
        *
        *  @param value the value to be returned
        *
-       *  @return object of class PriorDistribution
+       *  
        */
       PriorDistribution (const glob::DistributionType priorType, const double value) : Distribution(priorType, value) {}
 
@@ -88,7 +88,7 @@ namespace cbl {
        *
        *  @param seed the distribution seed for random sampling
        *
-       *  @return object of class PriorDistribution
+       *  
        */
       PriorDistribution (const glob::DistributionType priorType, const double xmin, const double xmax, const int seed=1) : Distribution(priorType, xmin, xmax, seed) {}
 
@@ -106,7 +106,7 @@ namespace cbl {
        *
        *  @param seed the distribution seed for random sampling
        *
-       *  @return object of class PriorDistribution
+       *  
        */
       PriorDistribution (const glob::DistributionType priorType, const std::vector<double> prior_params, const double xmin, const double xmax, const int seed=1) : 
 	Distribution(priorType, prior_params, xmin, xmax, seed) {}
@@ -128,7 +128,7 @@ namespace cbl {
        *
        *  @param seed the distribution seed for random sampling
        *
-       *  @return object of class PriorDistribution
+       *  
        */
       PriorDistribution (const glob::DistributionType priorType, const distribution_func prior_func, const std::shared_ptr<void> prior_fixed_pars, const std::vector<double> prior_pars, const double xmin, const double xmax, const int seed=1)
 	: Distribution(priorType, prior_func, prior_fixed_pars, prior_pars, xmin, xmax, seed) {}
@@ -144,7 +144,7 @@ namespace cbl {
        *
        *  @param seed the distribution seed for random sampling
        *
-       *  @return object of class PriorDistribution
+       *  
        */
       PriorDistribution (const glob::DistributionType priorType, const std::vector<double> discrete_values, const std::vector<double> weights, const int seed=1)
 	: Distribution(priorType, discrete_values, weights, seed) {}
@@ -164,7 +164,7 @@ namespace cbl {
        *
        * @param seed the distribution seed for random sampling
        *
-       * @return object of class PriorDistribution
+       * 
        */
       PriorDistribution (const glob::DistributionType priorType, const std::vector<double> var, const std::vector<double> dist, const int nbin, const std::string interpolationType, const int seed=1)
 	: Distribution(priorType, var, dist, nbin, interpolationType, seed) {}
@@ -172,7 +172,7 @@ namespace cbl {
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       ~PriorDistribution () = default;
 

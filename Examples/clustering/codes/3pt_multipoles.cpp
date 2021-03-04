@@ -1,6 +1,6 @@
-// ========================================================================================
-// Example code: how to measure the connected and reduced three-point correlation functions
-// ========================================================================================
+// ============================================================================
+// Example code: how to measure the three-point correlation function multipoles
+// ============================================================================
 
 #include "ThreePointCorrelation_comoving_multipoles.h"
 #include "GlobalFunc.h"
@@ -58,10 +58,9 @@ int main () {
   
     // measure the connected three-point correlation functions legendre coefficients and write the output
 
-    const auto ThreeP = cbl::measure::threept::ThreePointCorrelation_comoving_multipoles::Create(catalogue, random_catalogue,
-        rMin, rMax, binSize, nOrders);
+    const auto ThreeP = cbl::measure::threept::ThreePointCorrelation::Create(catalogue, random_catalogue, rMin, rMax, binSize, nOrders);
 
-    ThreeP->measure(cbl::measure::ErrorType::_None_, dir_triplets);
+    ThreeP->measure(cbl::measure::ErrorType::_None_, dir_triplets, {}, 0, true, false, 666);
   
     ThreeP->write(dir_output, file_output);
 

@@ -46,6 +46,9 @@ using namespace measure::numbercounts;
 
 cbl::measure::numbercounts::NumberCounts1D::NumberCounts1D(const catalogue::Var var, const BinType bin_type, const catalogue::Catalogue data, const size_t nbins, const double minVar, const double maxVar, const double shift, const glob::HistogramType hist_type, const double fact)
 {
+  if (bin_type!=cbl::BinType::_linear_ && bin_type!=cbl::BinType::_logarithmic_)
+    cbl::WarningMsgCBL("This constructor allows only a linear or logarithmic binning", "NumberCounts1D", "NumberCounts1D.cpp");
+  
   m_Var = var;
 
   m_HistogramType = hist_type;
@@ -62,13 +65,38 @@ cbl::measure::numbercounts::NumberCounts1D::NumberCounts1D(const catalogue::Var 
 }
 
 
+
+// ============================================================================
+
+
+cbl::measure::numbercounts::NumberCounts1D::NumberCounts1D (const catalogue::Var var, const std::vector<double> vec_edges, const catalogue::Catalogue data, const glob::HistogramType hist_type, const double fact)
+{  
+  m_Var = var;
+
+  m_HistogramType = hist_type;
+  m_fact = fact;
+
+  set_data(data);
+
+  m_histogram = make_shared<glob::Histogram1D> (glob::Histogram1D ()); 
+
+  double _minVar = (vec_edges[0]>par::defaultDouble) ? vec_edges[0] : m_data->Min(m_Var)*0.999;
+  double _maxVar = (vec_edges[vec_edges.size()-1]>par::defaultDouble) ? vec_edges[vec_edges.size()-1] : m_data->Max(m_Var)*1.001;
+
+  const size_t nbins = vec_edges.size()-1;
+  const double shift = 0.5;
+
+  m_histogram->set(nbins, _minVar, _maxVar, shift, cbl::BinType::_custom_, vec_edges);
+}
+
+
 // ============================================================================
 
 
 shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts1D::m_measurePoisson ()
 {
   auto histogram =  make_shared<glob::Histogram1D> (glob::Histogram1D ());
-  histogram->set(m_histogram->nbins(), m_histogram->minVar(), m_histogram->maxVar(), m_histogram->shift(), m_histogram->bin_type());
+  histogram->set(m_histogram->nbins(), m_histogram->minVar(), m_histogram->maxVar(), m_histogram->shift(), m_histogram->bin_type(), m_histogram->edges());
 
   histogram->put(m_data->var(m_Var), m_data->var(catalogue::Var::_Weight_));
 
@@ -97,7 +125,9 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts1D::m_measurePois
   extra_info[5] = m_histogram->averaged_bins();
   extra_info[6] = m_histogram->error_bins();
 
-  auto dataset = make_shared<data::Data1D_extra> (data::Data1D_extra(bins, hist, error, extra_info));
+  std::vector<double> edges_in_mem_ = extra_info[0]; edges_in_mem_.emplace_back(extra_info[1][extra_info[1].size()-1]);
+  const std::vector<double> edges_in_mem = edges_in_mem_;
+  auto dataset = make_shared<data::Data1D_extra> (data::Data1D_extra(bins, hist, error, extra_info, edges_in_mem));
 
   return dataset;
 }
@@ -115,7 +145,7 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts1D::m_measureJack
 
   for (int i=0; i<nRegions; i++){
     histo_JK[i] = make_shared<glob::Histogram1D>(glob::Histogram1D());
-    histo_JK[i]->set(m_histogram->nbins(), m_histogram->minVar(), m_histogram->maxVar(), m_histogram->shift(), m_histogram->bin_type());
+    histo_JK[i]->set(m_histogram->nbins(), m_histogram->minVar(), m_histogram->maxVar(), m_histogram->shift(), m_histogram->bin_type(), m_histogram->edges());
   }
 
   vector<double> regions = m_data->var(catalogue::Var::_Region_);
@@ -166,7 +196,7 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts1D::m_measureBoot
 
   for (int i=0; i<nResamplings; i++) {
     histo_BS[i] = make_shared<glob::Histogram1D>(glob::Histogram1D());
-    histo_BS[i]->set(m_histogram->nbins(), m_histogram->minVar(), m_histogram->maxVar(), m_histogram->shift(), m_histogram->bin_type());
+    histo_BS[i]->set(m_histogram->nbins(), m_histogram->minVar(), m_histogram->maxVar(), m_histogram->shift(), m_histogram->bin_type(), m_histogram->edges());
     for (int n=0; n<nRegions; n++)
       region_weights[i][ran()] ++;
   }

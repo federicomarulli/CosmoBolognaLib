@@ -71,7 +71,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class Modelling_TwoPointCorrelation_deprojected
+	 *  _TwoPointCorrelation_deprojected
 	 */
 	Modelling_TwoPointCorrelation_deprojected () = default;
 
@@ -79,9 +79,6 @@ namespace cbl {
 	 *  @brief constructor
 	 *  
 	 *  @param twop the two-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation_deprojected
 	 */
 	Modelling_TwoPointCorrelation_deprojected (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
 	  : Modelling_TwoPointCorrelation_projected(twop) {}
@@ -91,16 +88,13 @@ namespace cbl {
 	 *  
 	 *  @param twop_dataset the dataset containing the two-point
 	 *  correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation_deprojected
 	 */
 	Modelling_TwoPointCorrelation_deprojected (const std::shared_ptr<data::Data> twop_dataset)
 	  : Modelling_TwoPointCorrelation_projected() { set_data(twop_dataset); }
       
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_TwoPointCorrelation_deprojected () = default;
 	

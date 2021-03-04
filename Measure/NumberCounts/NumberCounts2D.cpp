@@ -68,10 +68,37 @@ cbl::measure::numbercounts::NumberCounts2D::NumberCounts2D (const catalogue::Var
 // ============================================================================
 
 
+cbl::measure::numbercounts::NumberCounts2D::NumberCounts2D (const catalogue::Var var1, const catalogue::Var var2, const std::vector<double> vec_edges1, const std::vector<double> vec_edges2, const catalogue::Catalogue data, const glob::HistogramType hist_type, const double fact)
+{
+  m_Var1 = var1;
+  m_Var2 = var2;
+
+  m_HistogramType = hist_type;
+  m_fact = fact;
+
+  set_data(data);
+
+  m_histogram = make_shared<glob::Histogram2D> (glob::Histogram2D()); 
+
+  double _minVar1 = (vec_edges1[0]>par::defaultDouble) ? vec_edges1[0] : m_data->Min(m_Var1)*0.999;
+  double _maxVar1 = (vec_edges1[vec_edges1.size()-1]>par::defaultDouble) ? vec_edges1[vec_edges1.size()-1] : m_data->Max(m_Var1)*1.001;
+  double _minVar2 = (vec_edges2[0]>par::defaultDouble) ? vec_edges2[0] : m_data->Min(m_Var2)*0.999;
+  double _maxVar2 = (vec_edges2[vec_edges2.size()-1]>par::defaultDouble) ? vec_edges2[vec_edges2.size()-1] : m_data->Max(m_Var2)*1.001;
+
+  const size_t nbins1 = vec_edges1.size()-1, nbins2 = vec_edges2.size()-1;
+  const double shift1 = 0.5, shift2 = 0.5;
+
+  m_histogram->set(nbins1, nbins2, _minVar1, _maxVar1, _minVar2, _maxVar2, shift1, shift2, cbl::BinType::_custom_, cbl::BinType::_custom_, vec_edges1, vec_edges2);
+}
+
+
+// ============================================================================
+
+
 shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measurePoisson ()
 {
   auto histogram =  make_shared<glob::Histogram2D> (glob::Histogram2D ());
-  histogram->set(m_histogram->nbins1(), m_histogram->nbins2(), m_histogram->minVar1(), m_histogram->maxVar1(), m_histogram->minVar2(),  m_histogram->maxVar2(), m_histogram->shift1(), m_histogram->shift2(), m_histogram->bin_type1(), m_histogram->bin_type2());
+  histogram->set(m_histogram->nbins1(), m_histogram->nbins2(), m_histogram->minVar1(), m_histogram->maxVar1(), m_histogram->minVar2(),  m_histogram->maxVar2(), m_histogram->shift1(), m_histogram->shift2(), m_histogram->bin_type1(), m_histogram->bin_type2(), m_histogram->edges1(), m_histogram->edges2());
 
   histogram->put(m_data->var(m_Var1), m_data->var(m_Var2), m_data->var(catalogue::Var::_Weight_));
 
@@ -110,7 +137,9 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measurePois
       extra_info[10].push_back(err_var2[i][j]);
     }
 
-  auto dataset = make_shared<data::Data2D_extra> (data::Data2D_extra(bins1, bins2, hist, error, extra_info));
+  const vector<double> x_edges = edges1;
+  const vector<double> y_edges = edges2;
+  auto dataset = make_shared<data::Data2D_extra> (data::Data2D_extra(bins1, bins2, hist, error, extra_info, x_edges, y_edges));
 
   return dataset;
 }
@@ -128,7 +157,7 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measureJack
 
   for (int i=0; i<nRegions; i++) {
     histo_JK[i] = make_shared<glob::Histogram2D>(glob::Histogram2D());
-    histo_JK[i]->set(m_histogram->nbins1(), m_histogram->nbins2(), m_histogram->minVar1(), m_histogram->maxVar1(), m_histogram->minVar2(),  m_histogram->maxVar2(), m_histogram->shift1(), m_histogram->shift2(), m_histogram->bin_type1(), m_histogram->bin_type2());
+    histo_JK[i]->set(m_histogram->nbins1(), m_histogram->nbins2(), m_histogram->minVar1(), m_histogram->maxVar1(), m_histogram->minVar2(),  m_histogram->maxVar2(), m_histogram->shift1(), m_histogram->shift2(), m_histogram->bin_type1(), m_histogram->bin_type2(), m_histogram->edges1(), m_histogram->edges2());
   }
 
   vector<double> regions = m_data->var(catalogue::Var::_Region_);
@@ -169,7 +198,7 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measureBoot
 
   for (int i=0; i<nResamplings; i++) {
     histo_BS[i] = make_shared<glob::Histogram2D>(glob::Histogram2D());
-    histo_BS[i]->set(m_histogram->nbins1(), m_histogram->nbins2(), m_histogram->minVar1(), m_histogram->maxVar1(), m_histogram->minVar2(),  m_histogram->maxVar2(), m_histogram->shift1(), m_histogram->shift2(), m_histogram->bin_type1(), m_histogram->bin_type2());
+    histo_BS[i]->set(m_histogram->nbins1(), m_histogram->nbins2(), m_histogram->minVar1(), m_histogram->maxVar1(), m_histogram->minVar2(),  m_histogram->maxVar2(), m_histogram->shift1(), m_histogram->shift2(), m_histogram->bin_type1(), m_histogram->bin_type2(), m_histogram->edges1(), m_histogram->edges2());
     for (int n=0; n<nRegions; n++)
       region_weights[i][ran()] ++;
   }

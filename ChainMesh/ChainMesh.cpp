@@ -286,6 +286,96 @@ vector<long> cbl::chainmesh::ChainMesh::close_objects_cell (const int cell_index
 // ============================================================================
 
 
+vector<double> cbl::chainmesh::ChainMesh::interpolate (std::vector<std::vector<double>> points, std::vector<double> values, std::vector<std::vector<double>> xi, const int distNum, const double rMAX)
+{
+
+  if(points.size() != xi.size()) ErrorCBL("the dimension of points is different from the dimension of xi", "interpolate", "ChainMesh.cpp");
+  if(points[0].size() != values.size()) ErrorCBL("the size of points is different from the size of values", "interpolate", "ChainMesh.cpp");
+
+  const int nparams = points.size();
+  const int xi_values = xi[0].size();
+
+  std::vector<std::vector<double>> extremals(2, std::vector<double> (nparams, 0));
+  double delta = 0.;
+  for(int N=0; N<nparams; N++)
+  {
+   extremals[0][N] = std::max(*max_element(points[N].begin(), points[N].end()), *max_element(xi[N].begin(), xi[N].end()));
+   extremals[1][N] = std::min(*min_element(points[N].begin(), points[N].end()), *min_element(xi[N].begin(), xi[N].end()));
+  }
+
+  for(int N=0; N<nparams; N++){
+    delta = extremals[0][N]-extremals[1][N];
+    for(size_t ii=0; ii<points[0].size(); ii++){
+      points[N][ii] = 100. - (200./(delta))*(extremals[0][N] - points[N][ii]);
+    }
+    for(int ii=0; ii<xi_values; ii++){
+      xi[N][ii] = 100. - (200./(delta))*(extremals[0][N] - xi[N][ii]);
+  }
+}
+
+  std::vector<double> center(nparams);
+  std::vector<long> close;
+  std::vector<double> distances;
+  std::vector<double> indices;
+  int size_indices = 0;
+  double dist, sum_posterior = 0.;
+  int npoints = 0;
+  long dim_grid = 150.;
+  long nMAX = dim_grid+10;
+
+  std::vector<double> interp_values(xi[0].size(), *min_element(values.begin(), values.end()));
+
+  create_chain_mesh(points, rMAX, 0, nMAX);
+
+  for(size_t ii=0; ii<xi[0].size();ii++){
+    sum_posterior = 0.;
+    npoints=0.;
+    for(int N=0; N<nparams; N++) center[N] = xi[N][ii];
+    close = close_objects(center);
+    if(close.size()>0){
+      for (auto&& k : close) {
+        dist = 0.;
+        for(int N=0; N<nparams; N++) dist += pow((center[N]-points[N][k]), 2);
+        dist=sqrt(dist);
+        distances.push_back(dist);
+        indices.push_back(k);
+      }
+
+      cbl::sort_2vectors(distances.begin(),indices.begin(), distances.size());
+      size_indices = indices.size();
+      if(size_indices > distNum){
+        for(auto&&k : indices){
+          sum_posterior += values[k];
+          npoints++;
+          if(npoints>distNum) break;
+        }
+      }
+      else
+      {
+        for(auto&&k : indices){
+          sum_posterior += values[k];
+          npoints++;
+          if(npoints>size_indices) break;
+        }
+      }
+
+      if(npoints!=0) interp_values[ii] = sum_posterior/npoints;
+
+    }
+
+    distances.clear();
+    indices.clear();
+
+  }
+
+  return interp_values;
+
+}
+
+
+// ============================================================================
+
+
 vector<long> cbl::chainmesh::ChainMesh::close_objects (const vector<double> center, const long ii) const
 {
   // r2 != -1 ---> search in a nDim annulus from r1 to r2

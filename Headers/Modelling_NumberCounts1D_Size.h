@@ -78,14 +78,14 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class Modelling_NumberCounts1D_Size
+	 *  _NumberCounts1D_Size
 	 */
 	Modelling_NumberCounts1D_Size () = default;
 	
 	/**
 	 *  @brief constuctor
 	 *  @param nc the number counts to model
-	 *  @return object of class Modelling_NumberCounts1D_Size
+	 *  _NumberCounts1D_Size
 	 */
 	Modelling_NumberCounts1D_Size (const std::shared_ptr<cbl::measure::numbercounts::NumberCounts> nc) 
 	  : Modelling_NumberCounts1D (nc) {}
@@ -95,14 +95,14 @@ namespace cbl {
 	 *  @param dataset the number counts dataset
 	 *  @param hist_type the histogram type
 	 *  @param fact the normalization factor
-	 *  @return object of class Modelling_NumberCounts1D_Size
+	 *  _NumberCounts1D_Size
 	 */
 	Modelling_NumberCounts1D_Size (const std::shared_ptr<cbl::data::Data> dataset, glob::HistogramType hist_type, double fact)
 	  : Modelling_NumberCounts1D (dataset, hist_type, fact) {}
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_NumberCounts1D_Size () = default;
 	
@@ -122,14 +122,13 @@ namespace cbl {
 	 *  @param cosmo_params vector of enums containing cosmological
 	 *  parameters
 	 *
-\	 *  @param cosmo_param_priors vector containing the priors for
+	 *  @param cosmo_param_priors vector containing the priors for
 	 *  the cosmological parameters
-	 *
-	 *  @return none
+	 * 
 	 */
 	void set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_params={}, const std::vector<statistics::PriorDistribution> cosmo_param_priors={});
 
-		///@{
+	///@{
 
 	/**
 	 *  @brief set the cosmological parameters and parameters
@@ -150,7 +149,7 @@ namespace cbl {
 	 *  @param bias_priors the priors of the effective bias,
 	 *  b_slope and b_offset
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_NumberCounts_cosmology_and_bias (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_params={}, const std::vector<statistics::PriorDistribution> cosmo_param_priors={}, const std::vector<statistics::PriorDistribution> bias_priors={});
 

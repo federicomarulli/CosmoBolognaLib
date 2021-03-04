@@ -57,11 +57,11 @@ namespace cbl {
       /// cluster mass
       double m_mass;
     
-      /// cluster richness
-      double m_richness;
+      /// cluster mass proxy
+      double m_mass_proxy;
 
-      /// cluster richness error
-      double m_richness_error;
+      /// cluster proxy error
+      double m_mass_proxy_error;
       
       /// cluster linear bias
       double m_bias;
@@ -75,10 +75,10 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Cluster
+       *  
        */
       Cluster ()
-	: Object(), m_mass(par::defaultDouble), m_richness(par::defaultDouble), m_richness_error(par::defaultDouble), m_bias(par::defaultDouble) {}
+	: Object(), m_mass(par::defaultDouble), m_mass_proxy(par::defaultDouble), m_mass_proxy_error(par::defaultDouble), m_bias(par::defaultDouble) {}
 
       /**
        *  @brief constructor that uses comoving coordinates
@@ -100,18 +100,24 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @param mass the cluster mass
        *
-       *  @param richness the cluster richness
+       *  @param mass_proxy the cluster mass proxy
        *
-       *  @param richness_error the cluster richness error
+       *  @param mass_proxy_error the cluster mass proxy error
        *
        *  @param bias the cluster linear bias
        *
-       *  @return object of class Cluster
+       *  
        */
-      Cluster (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
+      Cluster (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
 
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -140,19 +146,25 @@ namespace cbl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
+       *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
        *   
        *  @param mass the cluster mass
        *
-       *  @param richness the cluster richness
+       *  @param mass_proxy the cluster mass proxy
        *
-       *  @param richness_error the error on the cluster richness
+       *  @param mass_proxy_error the error on the cluster mass proxy
        *
        *  @param bias the cluster linear bias
        *
-       *  @return object of class Cluster
+       *  
        */
-      Cluster (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
+      Cluster (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -174,18 +186,24 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @param mass the cluster mass
        *
-       *  @param richness the cluster richness
+       *  @param mass_proxy the cluster mass proxy
        *
-       *  @param richness_error the error on the cluster richness
+       *  @param mass_proxy_error the error on the cluster mass proxy
        *
        *  @param bias the cluster linear bias
        *
-       *  @return object of class Cluster
+       *  
        */
-      Cluster (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
+      Cluster (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -210,18 +228,24 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @param mass the cluster mass
        *
-       *  @param richness the cluster richness
+       *  @param mass_proxy the cluster mass proxy
        *
-       *  @param richness_error the error on the cluster richness
+       *  @param mass_proxy_error the error on the cluster mass proxy
        *
        *  @param bias the cluster linear bias
        *
-       *  @return object of class Cluster
+       *  
        */
-      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
+      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -248,18 +272,24 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @param mass the cluster mass
        *
-       *  @param richness the cluster richness
+       *  @param mass_proxy the cluster mass proxy
        *
-       *  @param richness_error the error on the cluster richness
+       *  @param mass_proxy_error the error on the cluster mass proxy
        *
        *  @param bias the cluster linear bias
        *
-       *  @return object of class Cluster
+       *  
        */
-      Cluster (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
+      Cluster (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -287,18 +317,24 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @param mass the cluster mass
        *
-       *  @param richness the cluster richness
+       *  @param mass_proxy the cluster mass proxy
        *
-       *  @param richness_error the error on the cluster richness
+       *  @param mass_proxy_error the error on the cluster mass proxy
        *
        *  @param bias the cluster linear bias
        *
-       *  @return object of class Cluster
+       *  
        */
-      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
+      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
 
       /**
        *  @brief constructor that uses both comoving and observed
@@ -330,22 +366,27 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @param mass the cluster mass
        *
-       *  @param richness the cluster richness
+       *  @param mass_proxy the cluster mass proxy
        *
-       *  @param richness_error the error on the cluster richness
+       *  @param mass_proxy_error the error on the cluster mass proxy
        *
        *  @param bias the cluster bias
        *
-       *  @return object of class Cluster
+       *  
        */
-      Cluster (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double mass=par::defaultDouble, const double richness=par::defaultDouble, const double richness_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_mass(mass), m_richness(richness), m_richness_error(richness_error), m_bias(bias) {}
+      Cluster (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
+	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
       
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~Cluster () = default;
 
@@ -365,18 +406,18 @@ namespace cbl {
       { return m_mass; }
 
       /**
-       *  @brief get the private member \e m_richness
-       *  @return the richness of the cluster
+       *  @brief get the private member \e m_mass_proxy
+       *  @return the mass proxy of the cluster
        */
-      double richness () const override
-      { return m_richness; }
+      double mass_proxy () const override
+      { return m_mass_proxy; }
 
       /**
-       *  @brief get the private member \e m_richness_error
-       *  @return the richness error of the cluster
+       *  @brief get the private member \e m_mass_proxy_error
+       *  @return the mass proxy error of the cluster
        */
-      double richness_error () const override
-      { return m_richness_error; }
+      double mass_proxy_error () const override
+      { return m_mass_proxy_error; }
 
       /**
        *  @brief get the private member \e m_bias
@@ -396,31 +437,27 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_mass
        *  @param mass the mass of the cluster
-       *  @return none
        */
       void set_mass (const double mass=par::defaultDouble) override
       { m_mass = mass; }
 
       /**
-       *  @brief set the private member \e m_richness
-       *  @param richness the richness of the cluster
-       *  @return none
+       *  @brief set the private member \e m_mass_proxy
+       *  @param mass_proxy the mass proxy of the cluster
        */
-      void set_richness (const double richness=par::defaultDouble) override
-      { m_richness = richness; }
+      void set_mass_proxy (const double mass_proxy=par::defaultDouble) override
+      { m_mass_proxy = mass_proxy; }
 
       /**
-       *  @brief set the private member \e m_richness_error
-       *  @param richness_error the richness of the cluster
-       *  @return none
+       *  @brief set the private member \e m_mass_proxy_error
+       *  @param mass_proxy_error the mass proxy of the cluster
        */
-      void set_richness_error (const double richness_error=par::defaultDouble) override
-      { m_richness_error = richness_error; }
+      void set_mass_proxy_error (const double mass_proxy_error=par::defaultDouble) override
+      { m_mass_proxy_error = mass_proxy_error; }
 
       /**
        *  @brief set the private member \e m_bias
        *  @param bias the linear bias of the cluster
-       *  @return none
        */
       void set_bias (const double bias=par::defaultDouble) override
       { m_bias = bias; }
@@ -440,23 +477,23 @@ namespace cbl {
        */
       bool isSet_mass () override
       { return (cbl::isSet(m_mass)) ? true : false; }
-
+      
       /**
-       *  @brief check if the private member \e m_richness is set
+       *  @brief check if the private member \e m_mass_proxy is set
        *  
-       *  @return true if the richness is set; false otherwise
+       *  @return true if the proxy is set; false otherwise
        */
-      bool isSet_richness () override
-      { return (cbl::isSet(m_richness)) ? true : false; }
+      bool isSet_mass_proxy () override
+      { return (cbl::isSet(m_mass_proxy)) ? true : false; }
 
       /**
-       *  @brief check if the private member \e m_richness_error is set
+       *  @brief check if the private member \e m_mass_proxy_error is set
        *  
-       *  @return true if the error on the richness is set; false
+       *  @return true if the error on the mass proxy error is set; false
        *  otherwise
        */
-      bool isSet_richness_error () override
-      { return (cbl::isSet(m_richness_error)) ? true : false; }
+      bool isSet_mass_proxy_error () override
+      { return (cbl::isSet(m_mass_proxy_error)) ? true : false; }
 
       /**
        *  @brief check if the private member \e m_bias is set

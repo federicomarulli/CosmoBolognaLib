@@ -87,8 +87,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class
-	 *  ModellingTwoPointCorrelation_multipoles
 	 */
 	Modelling_TwoPointCorrelation_multipoles () = default;
 
@@ -96,9 +94,6 @@ namespace cbl {
 	 *  @brief constructor
 	 *
 	 *  @param twop the two-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation_multipoles
 	 */
 	Modelling_TwoPointCorrelation_multipoles (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop);
 
@@ -109,34 +104,84 @@ namespace cbl {
 	 *  correlation function to model
 	 *
 	 *  @param nmultipoles the number of multipoles
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation_multipoles
 	 */
 	Modelling_TwoPointCorrelation_multipoles (const std::shared_ptr<data::Data> twop_dataset, const int nmultipoles);
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
 	 */
 	~Modelling_TwoPointCorrelation_multipoles () = default;
 
 	///@}
 
+	
+	/**
+	 *  @name Member functions used to write the output data
+	 */
+	///@{
+	
+	/**
+         *  @brief write the model at xx for given parameters
+         *
+	 *  @param output_dir the output directory
+	 *
+	 *  @param output_file the output file
+	 *
+	 *  @param nmultipoles the number of multipoles in output
+	 *
+	 *  @param xx vector of points at which the model is computed
+	 *
+	 *  @param parameters vector containing the input parameters
+         *  used to compute the model
+         */
+        void write_model (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const std::vector<double> parameters);
 
+        /**
+         *  @brief write the model at xx with best-fit parameters
+         *  obtained from likelihood maximization
+         *
+	 *  @param output_dir the output directory
+	 *
+	 *  @param output_file the output file
+	 *
+	 *  @param nmultipoles the number of multipoles in output
+         *
+	 *  @param xx vector of points at which the model is computed
+         */
+        void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx);
+
+        /**
+         *  @brief write the model at xx computing 16th, 50th and 84th
+         *  percentiles from the chains
+	 *
+	 *  @param output_dir the output directory
+	 *
+	 *  @param output_file the output file
+	 *
+	 *  @param nmultipoles the number of multipoles in output
+         *
+	 *  @param xx vector of points at which the model is computed,
+         *
+	 *  @param start the starting position for each chain
+         *
+	 *  @param thin the position step
+         */
+        void write_model_from_chains (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const int start=0, const int thin=1);
+
+	///@}
+	
+	
 	/**
 	 *  @name Member functions used to set the model parameters
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief set the scale range used for the fit
 	 *
 	 *  @param xmin the minimum x value
 	 *  @param xmax the maximum x value
 	 *  @param nmultipoles the number of multipoles
-	 *
-	 *  @return none
 	 */
 	void set_fit_range (const double xmin, const double xmax, const int nmultipoles=-1);
 
@@ -145,24 +190,18 @@ namespace cbl {
 	 *
 	 *  @param fit_range vector containing the fitting range for
 	 *  the multipoles
-	 *
-	 *  @return none
 	 */
 	void set_fit_range (std::vector<std::vector<double>> fit_range);
 
 	/**
 	 *  @brief set the fiducial model for the dark matter power
 	 *  spectrum
-	 *
-	 *  @return none
 	 */
 	void set_fiducial_PkDM ();
 
 	/**
 	 *  @brief set the fiducial model for the dark matter
 	 *  two-point correlation function and associated quantities
-	 *
-	 *  @return none
 	 */
 	void set_fiducial_xiDM ();
 
@@ -171,445 +210,12 @@ namespace cbl {
 	 *  multipole moments of the two-point correlation function
 	 *
 	 *  the multipoles of the two-point correlation function will
-	 *  be computed with the de-wiggled model as follows:
-	 *
-	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-	 *  j_l(ks) \f]
-	 *
-	 *  where \f$j_l(ks)\f$ are the bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
-	 *
-	 *  specifically, the model BAO-damped power spectrum \f$P(k,
-	 *  \mu)\f$ (see e.g. Vargas-Magana et al. 2018
-	 *  https://arxiv.org/pdf/1610.03506.pdf) is computed by
-	 *  cbl::modelling::twopt::Pkmu_DeWiggled
-	 *
-	 *  the model has 3+N parameters:
-	 *    - \f$\alpha_{\perp}\f$
-	 *    - \f$\alpha_{\parallel}\f$
-	 *    - \f$\Sigma_{NL,\perp}\f$
-	 *    - \f$\Sigma_{NL,\parallel}\f$
-	 *    - \f$f(z)\sigma_8(z)\f$
-	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$\Sigma_s\f$
-	 *
-	 *  the dark matter two-point correlation function is computed
-	 *  using the input cosmological parameters
-	 *
-	 *  @param alpha_perpendicular_prior prior for the parameter
-	 *  \f$\alpha_{\perp}\f$
-	 *
-	 *  @param alpha_parallel_prior prior for the parameter
-	 *  \f$\alpha_{\parallel}\f$
-	 *
-	 *  @param SigmaNL_perpendicular_prior prior for the parameter
-	 *  \f$\Sigma_{NL, \perp}\f$
-	 *
-	 *  @param SigmaNL_parallel_prior prior for the parameter
-	 *  \f$\Sigma_{NL, \parallel}\f$
-	 *
-	 *  @param alpha_parallel_prior prior for the parameter
-	 *  \f$\alpha_{\parallel}\f$
-	 *
-	 *  @param fsigma8_prior prior for the parameter
-	 *  \f$f(z)\sigma_8(z)\f$
-	 *
-	 *  @param bsigma8_prior prior for the parameter
-	 *  \f$b(z)\sigma_8(z)\f$
-	 *
-	 *  @param SigmaS_prior prior for the parameters
-	 *  \f$\Sigma_S\f$
-	 *
-	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
-	 *  fiducial model of the dark matter power spectrum
-	 *
-	 *  @return none
-	 */
-	void set_model_fullShape_DeWiggled (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution SigmaNL_perpendicular_prior={}, const statistics::PriorDistribution SigmaNL_parallel_prior={}, statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaS_prior={}, const bool compute_PkDM=true);
-
-  /**
-	 *  @brief set the Dispersion model to fit the multipole moments
-	 *  of the two-point correlation function
-	 *
-	 *  the multipoles of the two-point correlation function will
 	 *  be computed as follows:
 	 *
-	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-	 *  j_l(ks) \f]
+	 *  \f[ \xi_l(s) = i^l \int \frac{\mathrm{d} k}{2\pi^2} k^2
+	 *  P_l(k) j_l(ks) \f]
 	 *
-	 *  where \f$j_l(ks)\f$ are the bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
-	 *
-	 *  specifically, the Dispersion model power spectrum \f$P(k,
-	 *  \mu)\f$ (see e.g. Pezzotta et. al., 2017,
-	 *  https://arxiv.org/abs/1612.05645) is computed by
-	 *  cbl:modelling::twopt::Pkmu_Dispersion
-	 *
-	 *  the model has 3+N parameters:
-	 *    - \f$f(z)\sigma_8(z)\f$
-	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$\sigma_{12}\f$
-	 *
-	 *  the dark matter two-point correlation function is computed
-	 *  using the input cosmological parameters
-	 *
-	 *  @author J.E. Garcia-Farieta
-	 *  @author joegarciafa@unal.edu.co
-	 *
-	 *  @param fsigma8_prior prior for the parameter
-	 *  \f$f(z)\sigma_8(z)\f$
-	 *
-	 *  @param bsigma8_prior prior for the parameter
-	 *  \f$b(z)\sigma_8(z)\f$
-	 *
-	 *  @param sigma12_prior prior for the parameters
-	 *  \f$\sigma_{12}\f$
-	 *
-	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false \f$\rightarrow\f$ Lorentzian damping
-	 *
-	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
-	 *  fiducial model of the dark matter power spectrum
-	 *
-	 *  @return none
-	 */
-	void set_model_Dispersion (statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const bool DFoG=true, const bool compute_PkDM=true); // [Jorge]
-
-	/**
-	 *  @brief set the Scoccimarro model to fit the multipole moments
-	 *  of the two-point correlation function
-	 *
-	 *  the multipoles of the two-point correlation function will
-	 *  be computed as follows:
-	 *
-	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-	 *  j_l(ks) \f]
-	 *
-	 *  where \f$j_l(ks)\f$ are the bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
-	 *
-	 *  specifically, the Scoccimarro model power spectrum \f$P(k,
-	 *  \mu)\f$ (see e.g. Pezzotta et. al., 2017,
-	 *  https://arxiv.org/abs/1612.05645) is computed by
-	 *  cbl:modelling::twopt::Pkmu_Scoccimarro_fitPezzotta
-	 *
-	 *  the model has 5+N parameters:
-	 *    - \f$f(z)\sigma_8(z)\f$
-	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$\sigma_{12}\f$
-	 *    - \f$k_\delta\f$
-	 *    - \f$k_\theta\f$
-	 *
-	 *  the dark matter two-point correlation function is computed
-	 *  using the input cosmological parameters
-	 *
-	 *  @author J.E. Garcia-Farieta
-	 *  @author joegarciafa@unal.edu.co
-	 *
-	 *  @param fsigma8_prior prior for the parameter
-	 *  \f$f(z)\sigma_8(z)\f$
-	 *
-	 *  @param bsigma8_prior prior for the parameter
-	 *  \f$b(z)\sigma_8(z)\f$
-	 *
-	 *  @param sigma12_prior prior for the parameters
-	 *  \f$\sigma_{12}\f$
-	 *
-	 *  @param kd_prior prior for the parameters
-	 *  \f$ k_\delta\f$
-	 *
-	 *  @param kt_prior prior for the parameters
-	 *  \f$k_t\f$
-	 *
-	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
-	 *  \f$\rightarrow\f$ Lorentzian damping
-	 *
-	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
-	 *  fiducial model of the dark matter power spectrum
-	 *
-	 *  @return none
-	 */
-	void set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const statistics::PriorDistribution kd_prior={}, const statistics::PriorDistribution kt_prior={}, const bool DFoG=true, const bool compute_PkDM=true); // [Jorge]
-
-	/**
-	 *  @brief set the Scoccimarro model to fit the multipole
-	 *  moments of the two-point correlation function
-	 *
-	 *  the multipoles of the two-point correlation function will
-	 *  be computed as follows:
-	 *
-	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-	 *  j_l(ks) \f]
-	 *
-	 *  where \f$j_l(ks)\f$ are the bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
-	 *
-	 *  specifically, the Scoccimarro model power spectrum \f$P(k,
-	 *  \mu)\f$ (see e.g. Bel et. al., 2019,
-	 *  https://arxiv.org/abs/1809.09338) is computed by
-	 *  cbl:modelling::twopt::Pkmu_Scoccimarro_fitBel
-	 *
-	 *  the model has 8+N parameters:
-	 *    - \f$f(z)\sigma_8(z)\f$
-	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$\sigma_{12}\f$
-	 *    - \f$k_\delta\f$
-	 *    - \f$bb\f$
-	 *    - \f$a1\f$
-	 *    - \f$a2\f$
-	 *    - \f$a3\f$
-	 *
-	 *  the dark matter two-point correlation function is computed
-	 *  using the input cosmological parameters
-	 *
-	 *  @author J.E. Garcia-Farieta
-	 *  @author joegarciafa@unal.edu.co
-	 *
-	 *  @param fsigma8_prior prior for the parameter
-	 *  \f$f(z)\sigma_8(z)\f$
-	 *
-	 *  @param bsigma8_prior prior for the parameter
-	 *  \f$b(z)\sigma_8(z)\f$
-	 *
-	 *  @param sigma12_prior prior for the parameters
-	 *  \f$\sigma_{12}\f$
-	 *
-	 *  @param kd_prior prior for the parameters \f$ k_d\f$
-	 *
-	 *  @param bb_prior prior for the parameters \f$bb\f$
-	 *
-	 *  @param a1_prior prior for the parameters \f$a1\f$
-	 *
-	 *  @param a2_prior prior for the parameters \f$a2\f$
-	 *
-	 *  @param a3_prior prior for the parameters \f$a3\f$
-	 *
-	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
-	 *  \f$\rightarrow\f$ Lorentzian damping
-	 *
-	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
-	 *  fiducial model of the dark matter power spectrum
-	 *
-	 *  @return none
-	 */
-	void set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const statistics::PriorDistribution kd_prior={}, const statistics::PriorDistribution bb_prior={}, const statistics::PriorDistribution a1_prior={}, const statistics::PriorDistribution a2_prior={}, const statistics::PriorDistribution a3_prior={}, const bool DFoG=true, const bool compute_PkDM=true);
-
-	/**
-	 *  @brief set the Scoccimarro model to fit the multipole
-	 *  moments of the two-point correlation function
-	 *
-	 *  the multipoles of the two-point correlation function will
-	 *  be computed as follows:
-	 *
-	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-	 *  j_l(ks) \f]
-	 *
-	 *  where \f$j_l(ks)\f$ are the bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
-	 *
-	 *  specifically, the Scoccimarro model power spectrum \f$P(k,
-	 *  \mu)\f$ (see e.g. Scoccimarro et. al., 2004,
-	 *  https://arxiv.org/abs/astro-ph/0407214) is computed by
-	 *  cbl:modelling::twopt::Pkmu_Scoccimarro
-	 *
-	 *  the model has 3 parameters:
-	 *    - \f$f(z)\sigma_8(z)\f$
-	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$\sigma_{12}\f$
-	 *
-	 *  the dark matter two-point correlation function is computed
-	 *  using the input cosmological parameters
-	 *
-	 *  @author J.E. Garcia-Farieta
-	 *  @author joegarciafa@unal.edu.co
-	 *
-	 *  @param fsigma8_prior prior for the parameter
-	 *  \f$f(z)\sigma_8(z)\f$
-	 *
-	 *  @param bsigma8_prior prior for the parameter
-	 *  \f$b(z)\sigma_8(z)\f$
-	 *
-	 *  @param sigma12_prior prior for the parameters
-	 *  \f$\sigma_{12}\f$
-	 *
-	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
-	 *  \f$\rightarrow\f$ Lorentzian damping
-	 *
-	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
-	 *  fiducial model of the dark matter power spectrum
-	 *
-	 *  @return none
-	 */
-	void set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const bool DFoG=true, const bool compute_PkDM=true);
-
-        /**
-	 *  @brief set the TNS (Taruya, Nishimichi and Saito) model to fit the multipole
-	 *  moments of the two-point correlation function
-	 *
-	 *  the multipoles of the two-point correlation function will
-	 *  be computed as follows:
-	 *
-	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-	 *  j_l(ks) \f]
-	 *
-	 *  where \f$j_l(ks)\f$ are the bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
-	 *
-	 *  specifically, the TNS model power spectrum \f$P(k,
-	 *  \mu)\f$ (see e.g. Taruya et. al., 2010,
-	 *  https://arxiv.org/abs/1006.0699) is computed by
-	 *  cbl:modelling::twopt::Pkmu_TNS
-	 *
-	 *  the model has 3+N parameters:
-	 *    - \f$f(z)\sigma_8(z)\f$
-	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$\sigma_{12}\f$
-	 *
-	 *  the dark matter two-point correlation function is computed
-	 *  using the input cosmological parameters
-	 *
-	 *  @author J.E. Garcia-Farieta
-	 *  @author joegarciafa@unal.edu.co
-	 *
-	 *  @param fsigma8_prior prior for the parameter
-	 *  \f$f(z)\sigma_8(z)\f$
-	 *
-	 *  @param bsigma8_prior prior for the parameter
-	 *  \f$b(z)\sigma_8(z)\f$
-	 *
-	 *  @param sigma12_prior prior for the parameters
-	 *  \f$\sigma_{12}\f$
-	 *
-	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
-	 *  \f$\rightarrow\f$ Lorentzian damping
-	 *
-	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
-	 *  fiducial model of the dark matter power spectrum
-	 *
-	 *  @return none
-	 */
-	void set_model_TNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={}, const bool DFoG=true, const bool compute_PkDM=true);
-
-        /**
-	 *  @brief set the eTNS model, i.e extended-TNS (Taruya, Nishimichi and Saito) model to fit the multipole
-	 *  moments of the two-point correlation function
-	 *
-	 *  the multipoles of the two-point correlation function will
-	 *  be computed as follows:
-	 *
-	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-	 *  j_l(ks) \f]
-	 *
-	 *  where \f$j_l(ks)\f$ are the bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
-	 *
-	 *  specifically, the TNS model power spectrum \f$P(k,
-	 *  \mu)\f$ (see e.g. Taruya et. al., 2010,
-	 *  https://arxiv.org/abs/1006.0699 and Beutler et. al., https://arxiv.org/abs/1312.4611) is computed by
-	 *  cbl:modelling::twopt::Pkmu_eTNS
-	 *
-	 *  the model has 5+N parameters:
-         *    - \f$f(z)\sigma_8(z)\f$
-         *    - \f$b(z)\sigma_8(z)\f$
-         *    - \f$b_2\f$
-         *    - \f$\sigma_{12}\f$
-         *    - \f$N_{corr}\f$
-	 *
-	 *  the dark matter two-point correlation function is computed
-	 *  using the input cosmological parameters
-	 *
-	 *  @author J.E. Garcia-Farieta
-	 *  @author joegarciafa@unal.edu.co
-	 *
-	 *  @param fsigma8_prior prior for the parameter
-	 *  \f$f(z)\sigma_8(z)\f$
-	 *
-         *  @param bsigma8_prior prior for the parameter
-	 *  \f$b(z)\sigma_8(z)\f$
-	 *
-         *  @param bias2_prior prior for the parameter
-	 *  \f$b_2\f$
-	 *
-         *  @param sigma12_prior prior for the parameters
-	 *  \f$\sigma_{12}\f$
-	 *
-         *  @param Ncorr_prior prior for the parameters
-	 *  \f$N_{corr}\f$
-	 *
-	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
-	 *  \f$\rightarrow\f$ Lorentzian damping
-	 *
-	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
-	 *  fiducial model of the dark matter power spectrum
-	 *
-	 *  @return none
-	 */
-	void set_model_eTNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution bias2_prior={}, const statistics::PriorDistribution sigma12_prior={}, const statistics::PriorDistribution Ncorr_prior={}, const bool DFoG=true, const bool compute_PkDM=true);
-
-	/**
-	 *  @brief set the model to fit the full shape of the
-	 *  multipole moments of the two-point correlation function
-	 *
-	 *  the multipoles of the two-point correlation function will
-	 *  be computed with the mode-coupling model as follows:
-	 *
-	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-	 *  j_l(ks) \f]
-	 *
-	 *  where \f$j_l(ks)\f$ are the bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
-	 *
-	 *  specifically, the redshift-space power spectrum \f$P(k,
-	 *  \mu)\f$ (see e.g. Sanchez et al. 2013
-	 *  https://arxiv.org/pdf/1312.4854.pdf) is computed by
-	 *  cbl::modelling::twopt::Pkmu_ModeCoupling
-	 *
-	 *  the model has 3+N parameters:
-	 *    - \f$\alpha_{\perp}\f$
-	 *    - \f$\alpha_{\parallel}\f$
-	 *    - \f$f(z)\sigma_8(z)\f$
-	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$\sigma_v\f$
-	 *    - \f$A_{MC}\f$
-	 *
-	 *  the dark matter two-point correlation function is computed
-	 *  using the input cosmological parameters
-	 *
-	 *  @param alpha_perpendicular_prior prior for the parameter
-	 *  \f$\alpha_{\perp}\f$
-	 *
-	 *  @param alpha_parallel_prior prior for the parameter
-	 *  \f$\alpha_{\parallel}\f$
-	 *
-	 *  @param fsigma8_prior prior for the parameter
-	 *  \f$f(z)\sigma_8(z)\f$
-	 *
-	 *  @param bsigma8_prior prior for the parameter
-	 *  \f$b(z)\sigma_8(z)\f$
-	 *
-	 *  @param SigmaV_prior prior for the parameters
-	 *  \f$\sigma_v\f$
-	 *
-	 *  @param AMC_prior prior for the parameters
-	 *  \f$A_{MC}\f$
-	 *
-	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
-	 *  fiducial model of the dark matter power spectrum
-	 *
-	 *  @return none
-	 */
-	void set_model_fullShape_ModeCoupling (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaV_prior={}, const statistics::PriorDistribution AMC_prior={}, const bool compute_PkDM=true);
-
-	/**
-	 *  @brief set the model to fit the full shape of the
-	 *  multipole moments of the two-point correlation function
-	 *
-	 *  the multipoles of the two-point correlation function will
-	 *  be computed as follows:
-	 *
-	 *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-	 *  j_l(ks); \f]
-	 *
-	 *  where \f$j_l(ks)\f$ are the bessel functions and
+	 *  where \f$j_l(ks)\f$ are the Bessel functions and
 	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
 	 *
 	 *  the model has 2 parameters:
@@ -624,8 +230,6 @@ namespace cbl {
 	 *
 	 *  @param bias_prior prior for the parameter bias
 	 *  \f$b(z)\f$
-	 *
-	 *  @return none
 	 */
 	void set_model_fullShape_sigma8_bias (const statistics::PriorDistribution sigma8_prior={}, const statistics::PriorDistribution bias_prior={});
 
@@ -702,60 +306,435 @@ namespace cbl {
 	 *  space when computing two-point correlation function
 	 *  multipoles
      	 *
-	 *  @return none
-	 *
 	 *  @warning the current implementation works only for
 	 *  monopole and quadrupole
 	 */
 	void set_model_BAO (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution B0_prior={}, const statistics::PriorDistribution B2_prior={}, const statistics::PriorDistribution A00_prior={}, const statistics::PriorDistribution A20_prior={}, const statistics::PriorDistribution A01_prior={}, const statistics::PriorDistribution A21_prior={}, const statistics::PriorDistribution A02_prior={}, const statistics::PriorDistribution A22_prior={}, const bool compute_XiDM=true, const bool isRealSpace=false);
 
-        /**
-         *  @brief write the model at xx for given parameters
-         *
-         *  @param output_dir the output directory
+	/**
+	 *  @brief set the model to fit the full shape of the
+	 *  multipole moments of the two-point correlation function
 	 *
-         *  @param output_file the output file
+	 *  the multipoles of the two-point correlation function will
+	 *  be computed with the de-wiggled model as follows:
 	 *
-	 *  @param nmultipoles the number of multipoles in output
+	 *  \f[ \xi_l(s) = i^l \int \frac{\mathrm{d} k}{2\pi^2} k^2
+	 *  P_l(k) j_l(ks) \f]
 	 *
-	 *  @param xx vector of points at which the model is computed
+	 *  where \f$j_l(ks)\f$ are the Bessel functions and
+	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
 	 *
-	 *  @param parameters vector containing the input parameters
-         *  used to compute the model; if this vector is not provided,
-         *  the model will be computed using the best-fit parameters
-         *
-         *  @return none
-         */
-        void write_model (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const std::vector<double> parameters);
+	 *  specifically, the model BAO-damped power spectrum \f$P(k,
+	 *  \mu)\f$ (see e.g. Vargas-Magana et al. 2018
+	 *  https://arxiv.org/pdf/1610.03506.pdf) is computed by
+	 *  cbl::modelling::twopt::Pkmu_DeWiggled
+	 *
+	 *  the model has 7 parameters:
+	 *    - \f$\alpha_{\perp}\f$
+	 *    - \f$\alpha_{\parallel}\f$
+	 *    - \f$\Sigma_{NL,\perp}\f$
+	 *    - \f$\Sigma_{NL,\parallel}\f$
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\Sigma_s\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @param alpha_perpendicular_prior prior for the parameter
+	 *  \f$\alpha_{\perp}\f$
+	 *
+	 *  @param alpha_parallel_prior prior for the parameter
+	 *  \f$\alpha_{\parallel}\f$
+	 *
+	 *  @param SigmaNL_perpendicular_prior prior for the parameter
+	 *  \f$\Sigma_{NL, \perp}\f$
+	 *
+	 *  @param SigmaNL_parallel_prior prior for the parameter
+	 *  \f$\Sigma_{NL, \parallel}\f$
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param SigmaS_prior prior for the parameters
+	 *  \f$\Sigma_S\f$
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum  
+	 */
+	void set_model_fullShape_DeWiggled (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution SigmaNL_perpendicular_prior={}, const statistics::PriorDistribution SigmaNL_parallel_prior={}, statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaS_prior={}, const bool compute_PkDM=true);
+
+	/**
+	 *  @brief set the model to fit the full shape of the
+	 *  multipole moments of the two-point correlation function
+	 *
+	 *  the multipoles of the two-point correlation function will
+	 *  be computed with the mode-coupling model as follows:
+	 *
+	 *  \f[ \xi_l(s) = i^l \int \frac{\mathrm{d} k}{2\pi^2} k^2
+	 *  P_l(k) j_l(ks) \f]
+	 *
+	 *  where \f$j_l(ks)\f$ are the Bessel functions and
+	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
+	 *
+	 *  specifically, the redshift-space power spectrum \f$P(k,
+	 *  \mu)\f$ (see e.g. Sanchez et al. 2013
+	 *  https://arxiv.org/pdf/1312.4854.pdf) is computed by
+	 *  cbl::modelling::twopt::Pkmu_ModeCoupling
+	 *
+	 *  the model has 3 parameters:
+	 *    - \f$\alpha_{\perp}\f$
+	 *    - \f$\alpha_{\parallel}\f$
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_v\f$
+	 *    - \f$A_{MC}\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @param alpha_perpendicular_prior prior for the parameter
+	 *  \f$\alpha_{\perp}\f$
+	 *
+	 *  @param alpha_parallel_prior prior for the parameter
+	 *  \f$\alpha_{\parallel}\f$
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param SigmaV_prior prior for the parameters
+	 *  \f$\sigma_v\f$
+	 *
+	 *  @param AMC_prior prior for the parameters
+	 *  \f$A_{MC}\f$
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 */
+	void set_model_fullShape_ModeCoupling (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaV_prior={}, const statistics::PriorDistribution AMC_prior={}, const bool compute_PkDM=true);
+	
+	/**
+	 *  @brief set the dispersion model to fit the multipole
+	 *  moments of the two-point correlation function
+	 *
+	 *  the multipoles of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::Xi_l, in which the
+	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
+	 *  modelled with the so-called dispersion model, computed by
+	 *  cbl:modelling::twopt::Pkmu_dispersion (see e.g. Pezzotta
+	 *  et al. 2017, https://arxiv.org/abs/1612.05645)
+	 *
+	 *  the model has 5 parameters:
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_v\f$
+	 *    - \f$\alpha_{\perp}\f$
+	 *    - \f$\alpha_{\parallel}\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @author J.E. Garcia-Farieta
+	 *  @author joegarciafa@unal.edu.co
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param sigmav_prior prior for the parameters
+	 *  \f$\sigma_v\f$
+	 *
+	 *  @param alpha_perpendicular_prior prior for the parameter
+	 *  \f$\alpha_{\perp}\f$
+	 *
+	 *  @param alpha_parallel_prior prior for the parameter
+	 *  \f$\alpha_{\parallel}\f$
+	 *
+	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
+	 *  \f$\rightarrow\f$ Lorentzian damping
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 */
+	void set_model_dispersion (statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
+	
+	/**
+	 *  @brief set the Scoccimarro model to fit the multipole
+	 *  moments of the two-point correlation function
+	 *
+	 *  the multipoles of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::Xi_l, in which the
+	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
+	 *  modelled with the Scoccimarro model, computed by
+	 *  cbl:modelling::twopt::Pkmu_Scoccimarro (see Scoccimarro et
+	 *  al. 2004, https://arxiv.org/abs/astro-ph/0407214)
+	 *
+	 *  the model has 5 parameters:
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_v\f$
+	 *    - \f$\alpha_{\perp}\f$
+	 *    - \f$\alpha_{\parallel}\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @author J.E. Garcia-Farieta
+	 *  @author joegarciafa@unal.edu.co
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param sigmav_prior prior for the parameters
+	 *  \f$\sigma_v\f$
+	 *
+	 *  @param alpha_perpendicular_prior prior for the parameter
+	 *  \f$\alpha_{\perp}\f$
+	 *
+	 *  @param alpha_parallel_prior prior for the parameter
+	 *  \f$\alpha_{\parallel}\f$
+	 *
+	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
+	 *  \f$\rightarrow\f$ Lorentzian damping
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 */
+	void set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
+
+	/**
+	 *  @brief set the Scoccimarro model to fit the multipole
+	 *  moments of the two-point correlation function
+	 *
+	 *  the multipoles of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::Xi_l, in which the
+	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
+	 *  modelled with the Scoccimarro model, computed by
+	 *  cbl:modelling::twopt::Pkmu_Scoccimarro_fitPezzotta (see
+	 *  Scoccimarro et al. 2004,
+	 *  https://arxiv.org/abs/astro-ph/0407214; Pezzotta et al.,
+	 *  2017, https://arxiv.org/abs/1612.05645)
+	 *
+	 *  the model has 7 parameters:
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_v\f$
+	 *    - \f$k_\delta\f$
+	 *    - \f$k_\theta\f$
+	 *    - \f$\alpha_{\perp}\f$
+	 *    - \f$\alpha_{\parallel}\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @author J.E. Garcia-Farieta
+	 *  @author joegarciafa@unal.edu.co
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param sigmav_prior prior for the parameters
+	 *  \f$\sigma_v\f$
+	 *
+	 *  @param kd_prior prior for the parameters \f$k_\delta\f$
+	 *
+	 *  @param kt_prior prior for the parameters \f$k_\theta\f$
+	 *
+	 *  @param alpha_perpendicular_prior prior for the parameter
+	 *  \f$\alpha_{\perp}\f$
+	 *
+	 *  @param alpha_parallel_prior prior for the parameter
+	 *  \f$\alpha_{\parallel}\f$
+	 *
+	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
+	 *  \f$\rightarrow\f$ Lorentzian damping
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 */
+	void set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, const statistics::PriorDistribution kd_prior={}, const statistics::PriorDistribution kt_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
+
+	/**
+	 *  @brief set the Scoccimarro model to fit the multipole
+	 *  moments of the two-point correlation function
+	 *
+	 *  the multipoles of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::Xi_l, in which the
+	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
+	 *  modelled with the Scoccimarro model, computed by
+	 *  cbl:modelling::twopt::Pkmu_Scoccimarro_fitBel (see
+	 *  Scoccimarro et al. 2004,
+	 *  https://arxiv.org/abs/astro-ph/0407214; Bel et al. 2019,
+	 *  https://arxiv.org/abs/1809.09338)
+	 *
+	 *  the model has 10 parameters:
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_v\f$
+	 *    - \f$k_\delta\f$
+	 *    - \f$a_0\f$
+	 *    - \f$a_1\f$
+	 *    - \f$a_2\f$
+	 *    - \f$a_3\f$
+	 *    - \f$\alpha_{\perp}\f$
+	 *    - \f$\alpha_{\parallel}\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @author J.E. Garcia-Farieta
+	 *  @author joegarciafa@unal.edu.co
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param sigmav_prior prior for the parameters
+	 *  \f$\sigma_v\f$
+	 *
+	 *  @param kd_prior prior for the parameters \f$ k_d\f$
+	 *
+	 *  @param a0_prior prior for the parameters \f$bb\f$
+	 *
+	 *  @param a1_prior prior for the parameters \f$a1\f$
+	 *
+	 *  @param a2_prior prior for the parameters \f$a2\f$
+	 *
+	 *  @param a3_prior prior for the parameters \f$a3\f$
+	 *
+	 *  @param alpha_perpendicular_prior prior for the parameter
+	 *  \f$\alpha_{\perp}\f$
+	 *
+	 *  @param alpha_parallel_prior prior for the parameter
+	 *  \f$\alpha_{\parallel}\f$
+	 *
+	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
+	 *  \f$\rightarrow\f$ Lorentzian damping
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 */
+	void set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, const statistics::PriorDistribution kd_prior={}, const statistics::PriorDistribution a0_prior={}, const statistics::PriorDistribution a1_prior={}, const statistics::PriorDistribution a2_prior={}, const statistics::PriorDistribution a3_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
 
         /**
-         *  @brief write the model at xx with best-fit parameters
-         *  obtained from likelihood maximization
-         *
-         *  @param output_dir the output directory
-         *  @param output_file the output file
-	 *  @param nmultipoles the number of multipoles in output
-         *  @param xx vector of points at which the model is computed
-         *
-         *  @return none
-         */
-        void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx);
+	 *  @brief set the TNS (Taruya, Nishimichi and Saito) model to
+	 *  fit the multipole moments of the two-point correlation
+	 *  function
+	 *
+	 *  the multipoles of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::Xi_l, in which the
+	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
+	 *  modelled with the TNS model model, computed by
+	 *  cbl:modelling::twopt::Pkmu_TNS (see Taruya et al.  2010,
+	 *  https://arxiv.org/abs/1006.0699)
+	 *
+	 *  the model has 5 parameters:
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_v\f$
+	 *    - \f$\alpha_{\perp}\f$
+	 *    - \f$\alpha_{\parallel}\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @author J.E. Garcia-Farieta
+	 *  @author joegarciafa@unal.edu.co
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param sigmav_prior prior for the parameters
+	 *  \f$\sigma_v\f$
+	 *
+	 *  @param alpha_perpendicular_prior prior for the parameter
+	 *  \f$\alpha_{\perp}\f$
+	 *
+	 *  @param alpha_parallel_prior prior for the parameter
+	 *  \f$\alpha_{\parallel}\f$
+	 *
+	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
+	 *  \f$\rightarrow\f$ Lorentzian damping
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 */
+	void set_model_TNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
 
         /**
-         *  @brief write the model at xx computing 16th, 50th and 84th
-         *  percentiles from the chains
-         *
-         *  @param output_dir the output directory
-         *  @param output_file the output file
-	 *  @param nmultipoles the number of multipoles in output
-         *  @param xx vector of points at which the model is computed,
-         *  @param start the starting position for each chain
-         *  @param thin the position step
-         *
-         *  @return none
-         */
-        void write_model_from_chains (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const int start=0, const int thin=1);
+	 *  @brief set the eTNS model, i.e extended-TNS (Taruya,
+	 *  Nishimichi and Saito) model to fit the multipole moments
+	 *  of the two-point correlation function
+	 *
+	 *  the multipoles of the two-point correlation function are
+	 *  computed by cbl::modelling::twopt::Xi_l, in which the
+	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
+	 *  modelled with the extended TNS model model, computed by
+	 *  cbl:modelling::twopt::Pkmu_eTNS (see Taruya et al. 2010,
+	 *  https://arxiv.org/abs/1006.0699; Beutler et al. 2013,
+	 *  https://arxiv.org/abs/1312.4611)
+	 *
+	 * the model has 7 parameters: 
+	 *   - \f$f(z)\sigma_8(z)\f$ 
+	 *   - \f$b_1(z)\sigma_8(z)\f$ 
+	 *   - \f$b_2(z)\sigma_8(z)\f$ 
+	 *   - \f$\sigma_v\f$ 
+	 *   - \f$\alpha_{\perp}\f$ 
+	 *   - \f$\alpha_{\parallel}\f$
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @author J.E. Garcia-Farieta
+	 *  @author joegarciafa@unal.edu.co
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param b1sigma8_prior prior for the parameter
+	 *  \f$b_1(z)\sigma_8(z)\f$
+	 *
+	 *  @param b2sigma8_prior prior for the parameter
+	 *  \f$b_2(z)\sigma_8(z)\f$
+	 *
+	 *  @param sigmav_prior prior for the parameter
+	 *  \f$\sigma_v\f$
+	 *
+	 *  @param alpha_perpendicular_prior prior for the parameter
+	 *  \f$\alpha_{\perp}\f$
+	 *
+	 *  @param alpha_parallel_prior prior for the parameter
+	 *  \f$\alpha_{\parallel}\f$
+	 *
+	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
+	 *  \f$\rightarrow\f$ Lorentzian damping
+	 *
+	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
+	 *  fiducial model of the dark matter power spectrum
+	 */
+	void set_model_eTNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution b1sigma8_prior={}, const statistics::PriorDistribution b2sigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
 
+	///@}
+	
       };
     }
   }

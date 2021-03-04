@@ -62,7 +62,7 @@ namespace cbl {
     public:
       /**
        *  @brief default constructor
-       *  @return object of class ChainMesh_Catalogue
+       *  _Catalogue
        */
       ChainMesh_Catalogue () = default;
 
@@ -72,7 +72,7 @@ namespace cbl {
        *  @param cell_size the cell size
        *  @param cat pointer to an object of class Catalogue
        *  @param rmax the maximum separation
-       *  @return object of class ChainMesh_Catalogue
+       *  _Catalogue
        */
       ChainMesh_Catalogue (const double cell_size, std::shared_ptr<catalogue::Catalogue> cat, const double rmax) : ChainMesh(cell_size, 3)
 	{
@@ -81,7 +81,6 @@ namespace cbl {
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~ChainMesh_Catalogue () = default;
 
@@ -90,14 +89,12 @@ namespace cbl {
        *  @param cell_size storing the cell size
        *  @param cat pointer to an object Catalogue
        *  @param rmax the maximum separation
-       *  @return none
        */
       void set_par (const double cell_size, std::shared_ptr<catalogue::Catalogue> cat, const double rmax);
 
       /**
        *  @brief order the catalogue according to the input vector
        *  @param order vector used to order the catalogue
-       *  @return none
        */
       void get_order (std::vector<int> &order) const;
 

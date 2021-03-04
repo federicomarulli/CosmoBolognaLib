@@ -62,7 +62,7 @@ namespace cbl {
       /**
        *  @brief default constructor
        *
-       *  @return object of class PosteriorDistribution
+       *  
        */
       PosteriorDistribution () : Distribution() {}
 
@@ -73,7 +73,7 @@ namespace cbl {
        *
        *  @param value the value to be returned
        *
-       *  @return object of class PosteriorDistribution
+       *  
        */
       PosteriorDistribution (const glob::DistributionType posteriorType, const double value) : Distribution(posteriorType, value) {}
 
@@ -88,7 +88,7 @@ namespace cbl {
        *
        *  @param seed the distribution seed for random sampling
        *
-       *  @return object of class PosteriorDistribution
+       *  
        */
       PosteriorDistribution (const glob::DistributionType distributionType, const std::vector<double> discrete_values, const std::vector<double> weights, const int seed=1) : Distribution(distributionType, discrete_values, weights, seed) {}
 
@@ -107,14 +107,14 @@ namespace cbl {
        *
        * @param seed the distribution seed for random sampling
        *
-       * @return object of class PosteriorDistribution
+       * 
        */
       PosteriorDistribution (const glob::DistributionType distributionType, const std::vector<double> var, const std::vector<double> dist, const int nbin, const std::string interpolationType, const int seed=1) : Distribution(distributionType, var, dist, nbin, interpolationType, seed) {}
 
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       ~PosteriorDistribution () = default;
 

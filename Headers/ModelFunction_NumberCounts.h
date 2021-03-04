@@ -58,6 +58,12 @@ namespace cbl {
 
 	/// false &rarr; data not from a simulation snapshot; true &rarr; data from a simulation snapshot 
 	bool isSnapshot;
+	
+	/// the x variable bin edges
+	std::vector<double> edges_x;
+	
+	/// the y variable bin edges
+	std::vector<double> edges_y;
 
 	/// fiducial cosmology
 	std::shared_ptr<cosmology::Cosmology> cosmology;
@@ -85,9 +91,6 @@ namespace cbl {
 
 	/// vector of wave vector modules
 	std::vector<double> kk;
-
-	/// the output_dir directory where the output of external codes are written
-	std::string output_dir;
 
 	/// true \f$\rightarrow\f$ the output files created by the Boltzmann solver are stored; false \f$\rightarrow\f$ the output files are removed
 	bool store_output;
@@ -154,7 +157,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of type STR_data_model
 	 */
 	STR_NC_data_model () = default;
       };
@@ -203,16 +205,24 @@ namespace cbl {
 	/// method to compute the dark matter power spectrum
 	std::string method_Pk;
 
-	/// true \f$\rightarrow\f$ the output files created by the Boltzmann solver are stored; false \f$\rightarrow\f$ the output files are removedt
+	/// wave vector module required to compute the growth factor
+	/// with the method "Pk_ratio"
+	double k_Pk_ratio;
+
+	/// true \f$\rightarrow\f$ the output files created by the
+	/// Boltzmann solver are stored; false \f$\rightarrow\f$ the
+	/// output files are removedt
 	bool store_output;
 
-	/// output root of the parameter file used to compute the dark matter power spectrum
+	/// output root of the parameter file used to compute the dark
+	/// matter power spectrum
 	std::string output_root;
 
 	/// interpType method to interpolate the power spectrum
 	std::string interpType;
 
-	/// maximum wave vector module up to which the power spectrum is computed
+	/// maximum wave vector module up to which the power spectrum
+	/// is computed
 	double k_max;
 
 	/// either the parameter file or the power spectrum file
@@ -224,7 +234,6 @@ namespace cbl {
       
 	/**
 	 *  @brief default constructor
-	 *  @return object of type STR_data_model
 	 */
 	STR_NCSF_data_model () = default;
       };
@@ -268,7 +277,7 @@ namespace cbl {
        *
        * @param rho the mean density of the Universe
        *
-       * @return none
+       * 
        */
       void sigmaM_dlnsigmaM (double &sigmaM, double &dlnsigmaM, const double mass, const cbl::glob::FuncGrid interp_Pk, const double kmax, const double rho);
 
@@ -291,7 +300,7 @@ namespace cbl {
        *
        * @param rho the mean density of the Universe
        *
-       * @return none
+       * 
        */
       void sigmaM_dlnsigmaM (std::vector<double> &sigmaM, std::vector<double> &dlnsigmaM, const std::vector<double> mass, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax, const double rho);
 
@@ -483,6 +492,15 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
+       *  @param k_Pk_ratio wave vector module required to compute
+       *  the growth factor (cbl::cosmology::Cosmology::DD_norm())
+       *  with the method "Pk_ratio". This parameter represents
+       *  wavenumber at which the ratio between the the power
+       *  spectra at different redshift is computed. It is
+       *  recommended to use this method when dealing with
+       *  cosmologies alternative to the LCDM. To avoid to compute
+       *  the growth factor with this method, set k_Pk_ratio=-1.
+       *
        *  @param store_output if true the output files created by the
        *  Boltzmann solver are stored; if false the output files are
        *  removed
@@ -515,7 +533,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      std::vector<double> size_function (cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="CAMB", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> size_function (cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="Eisensteinhu", const double k_Pk_ratio=1., const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        * @brief compute the number counts as function
@@ -563,15 +581,10 @@ namespace cbl {
        * @param interp_DlnsigmaM interpolating function of \f$
        * \mathrm{d} \ln(\sigma(M)) / \mathrm{d} M \f$
        *
-       * @param npt_redshift number of redshifts bins to compute the
-       * integral
-       *
-       * @param npt_mass number of mass bins to compute the integral
-       *
        * @return values of the mass function as a function of redshift
        * and mass
        */
-      double number_counts(const double redshift_min, const double redshift_max, const double Mass_min, const double Mass_max, cosmology::Cosmology cosmology, const double Area, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const glob::FuncGrid interp_sigmaM, const  glob::FuncGrid interp_DlnsigmaM, const int npt_redshift=10, const int npt_mass=10);
+      double number_counts(const double redshift_min, const double redshift_max, const double Mass_min, const double Mass_max, cosmology::Cosmology cosmology, const double Area, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const glob::FuncGrid interp_sigmaM, const  glob::FuncGrid interp_DlnsigmaM);
 
     }
   }

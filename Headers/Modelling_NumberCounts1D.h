@@ -35,7 +35,6 @@
 #define __MODELLINGNC1D__
 
 
-#include "Modelling1D.h"
 #include "Modelling_NumberCounts.h"
 
 
@@ -56,18 +55,16 @@ namespace cbl {
     namespace numbercounts {
     
       /**
-       *  @class Modelling_NumberCounts1D
-       *  Modelling_NumberCounts1D.h
+       *  @class Modelling_NumberCounts1D Modelling_NumberCounts1D.h
        *  "Headers/Modelling_NumberCounts1D.h"
        *
        *  @brief The class Modelling_NumberCounts1D
        *
        *  This file defines the interface of the base class
-       *  Modelling_NumberCounts1D, used for modelling 
-       *  1D number counts measurements
-       *
+       *  Modelling_NumberCounts1D, used for modelling 1D number
+       *  counts measurements
        */
-      class Modelling_NumberCounts1D : public Modelling1D, public Modelling_NumberCounts
+      class Modelling_NumberCounts1D : public Modelling_NumberCounts
       {
 
       public:
@@ -76,34 +73,30 @@ namespace cbl {
 	 *  @name Constructors/destructors
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class Modelling_NumberCounts1D
 	 */
 	Modelling_NumberCounts1D () = default;
 	
 	/**
 	 *  @brief constuctor
 	 *  @param nc the number counts to model
-	 *  @return object of class Modelling_NumberCounts1D
 	 */
 	Modelling_NumberCounts1D (const std::shared_ptr<cbl::measure::numbercounts::NumberCounts> nc) 
-	  : Modelling_NumberCounts (nc) {m_data = nc->dataset();}
+	  : Modelling_NumberCounts(nc) { m_data = nc->dataset(); }
 	
 	/**
 	 *  @brief constuctor
 	 *  @param dataset the number counts dataset
 	 *  @param hist_type the histogram type
 	 *  @param fact the normalization factor
-	 *  @return object of class Modelling_NumberCounts1D
 	 */
 	Modelling_NumberCounts1D (const std::shared_ptr<cbl::data::Data> dataset, glob::HistogramType hist_type, double fact)
-	  : Modelling_NumberCounts (hist_type, fact) { m_data = dataset;}
+	  : Modelling_NumberCounts(hist_type, fact) { m_data = dataset; }
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
 	 */
 	virtual ~Modelling_NumberCounts1D () = default;
 

@@ -40,7 +40,9 @@ Other contributors:
   - Giovanni Gandolfi (HOD modelling)
   - Jorge Enrique García-Farieta (two-point correlation modelling)
   - Carlo Giocoli (mass accretion history)
+  - Giorgio Lesci (cluster number counts and weak-lensing profiles)
   - Jacopo Neri (mass function)
+  - Davide Pelliciari (probe combination)
   - Mauro Roncarelli (fast comoving distance estimator) 
   - Tommaso Ronconi (void number counts)
   - Elena Sarpa (code validation)
@@ -77,28 +79,15 @@ compiler directives (e.g. on Unix systems: ./configure --enable-shared
 
 then:
 
-------------------------------
---- for @b Python @b users ---
-
-
-> <KBD> $ pip install CosmoBolognaLib --user </KBD> 
- 
-or with sudo privileges:
-  
-> <KBD> $ sudo pip install CosmoBolognaLib </KBD>
-
-------------------------------
---- for @b C++ @b users and @b C++/Python @b developers ---
-
   - download the CosmobolognaLib:
 
-either, clone the public GitHub repository of the CosmobolognaLib
+either, clone the public GitLab repository of the CosmobolognaLib
 with:
 
-> <KBD> $ git clone git\@github.com:/federicomarulli/CosmoBolognaLib </KBD> 
+> <KBD> $ git clone git\@gitlab.com:/federicomarulli/CosmoBolognaLib </KBD> 
 
 or, alternatively, download the unzip the CosmoBolognaLib-master.zip archive
-at https://github.com/federicomarulli/CosmoBolognaLib/archive/master.zip
+at https://gitlab.com/federicomarulli/CosmoBolognaLib/archive/master.zip
 
   - enter the folder CosmoBolognaLib/ and type:
     

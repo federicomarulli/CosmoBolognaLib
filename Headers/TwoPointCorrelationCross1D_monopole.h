@@ -97,7 +97,7 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the cross
 	 *  two-point correlation function
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measurePoisson (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_SzapudiSzalay_) override;
 
@@ -110,7 +110,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of class TwoPointCorrelationCross1D_monopole
+	 *  Cross1D_monopole
 	 */
 	TwoPointCorrelationCross1D_monopole () { m_twoPType = TwoPType::_monopole_; }
 
@@ -140,7 +140,7 @@ namespace cbl {
 	 *  @param random_dilution_fraction fraction between the number
 	 *  of objects in the diluted and original random samples, used
 	 *  to improve performances in random-random pair counts
-	 *  @return object of class TwoPointCorrelationCross1D_monopole
+	 *  Cross1D_monopole
 	 */
 	TwoPointCorrelationCross1D_monopole (const catalogue::Catalogue data1, const catalogue::Catalogue data2, const catalogue::Catalogue random, const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation(data1, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelationCross(data1, data2, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelation1D(data1, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelationCross1D(data1, data2, random, compute_extra_info, random_dilution_fraction)
@@ -172,7 +172,7 @@ namespace cbl {
 	 *  @param random_dilution_fraction fraction between the number
 	 *  of objects in the diluted and original random samples, used
 	 *  to improve performances in random-random pair counts
-	 *  @return object of class TwoPointCorrelationCross1D_monopole
+	 *  Cross1D_monopole
 	 */
 	TwoPointCorrelationCross1D_monopole (const catalogue::Catalogue data1, const catalogue::Catalogue data2, const catalogue::Catalogue random, const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation(data1, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelationCross(data1, data2, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelation1D(data1, random, compute_extra_info, random_dilution_fraction), TwoPointCorrelationCross1D(data1, data2, random, compute_extra_info, random_dilution_fraction)
@@ -180,7 +180,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	~TwoPointCorrelationCross1D_monopole () = default;
 
@@ -205,7 +205,7 @@ namespace cbl {
 	 *  @param compute_extra_info true &rarr; compute extra
 	 *  information related to the pairs, such as the mean pair
 	 *  separation and redshift
-	 *  @return none
+	 *  
 	 */
 	void set_parameters (const BinType binType, const double rMin, const double rMax, const int nbins, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
 
@@ -222,7 +222,7 @@ namespace cbl {
 	 *  @param compute_extra_info true &rarr; compute extra
 	 *  information related to the pairs, such as the mean pair
 	 *  separation and redshift
-	 *  @return none
+	 *  
 	 */
 	void set_parameters (const BinType binType, const double rMin, const double rMax, const double binSize, const double shift, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
 
@@ -275,7 +275,7 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure monopole of
 	 *  the cross two-point correlation function
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={},  const std::string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_SzapudiSzalay_) override;
 	
@@ -291,7 +291,7 @@ namespace cbl {
 	 *  @brief read the monopole of the cross two-point correlation
 	 *  @param dir input directory
 	 *  @param file input file
-	 *  @return none
+	 *  
 	 */
 	void read (const std::string dir, const std::string file) override;
 
@@ -301,7 +301,7 @@ namespace cbl {
 	 *  @param dir output directory
 	 *  @param file output file
 	 *  @param rank cpu index (for MPI usage)
-	 *  @return none
+	 *  
 	 */
 	void write (const std::string dir=par::defaultString, const std::string file=par::defaultString, const int rank=0) const override;
 

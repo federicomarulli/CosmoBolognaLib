@@ -96,8 +96,6 @@ namespace cbl {
 	/**
 	 * @brief
 	 *    Default empty constructor
-	 * @return
-	 *    Empty object of class ParameterFile
 	 */
 	ParameterFile () = default;
 
@@ -106,8 +104,6 @@ namespace cbl {
 	 *    Constructor
 	 * @param parameter_file
 	 *    std::string with path and name of the parameter file to read
-	 * @return
-	 *    object of class ParameterFile
 	 */
 	ParameterFile (const std::string parameter_file);
 
@@ -129,7 +125,7 @@ namespace cbl {
 	 * @param parameter_file string with path and name of 
 	 * the parameter file to read
 	 *
-	 * @return none
+	 * 
 	 */
 
 	void read(const std::string parameter_file);
@@ -140,7 +136,7 @@ namespace cbl {
 	 * @param parameter_file string with path and name of 
 	 * the parameter file to write
 	 *
-	 * @return none
+	 * 
 	 */
 	void write(const std::string parameter_file);
 
@@ -178,7 +174,7 @@ namespace cbl {
 	 *
 	 * @param pos position in the values vector
 	 * 
-	 * @return None
+	 * 
 	 */
 	void set_key (const std::string key, std::string value, const size_t pos=0);
 
@@ -192,7 +188,7 @@ namespace cbl {
 	 *
 	 * @param values the parameter values
 	 * 
-	 * @return None
+	 * 
 	 */
 	void set_key (const std::string key, const std::vector<std::string> values);
 

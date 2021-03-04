@@ -77,13 +77,13 @@ namespace cbl {
 	  /**
 	   *  @brief default constructor
 	   *
-	   *  @return object of class NumberCounts1D_Redshift
+	   *  1D_Redshift
 	   */
 	  NumberCounts1D_Redshift () {}
 
 	  /**
 	   *  @brief default destructor
-	   *  @return none
+	   *  
 	   */
 	  virtual ~NumberCounts1D_Redshift () = default;
 
@@ -102,11 +102,28 @@ namespace cbl {
 	   *  
 	   *  @param hist_type the type of histogram
 	   *
-	   *  @param  fact factor used to normalized the distribution
+	   *  @param fact factor used to normalized the distribution
 	   *
-	   *  @return object of class NumberCounts1D_Redshift
+	   *  @param bin_type bin type
+	   *
+	   *  1D_Redshift
 	   */
-	  NumberCounts1D_Redshift (const catalogue::Catalogue data, const size_t nbins, const double minVar=par::defaultDouble, const double maxVar=par::defaultDouble, const double shift = 0.5, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.) : NumberCounts1D(catalogue::Var::_Redshift_, BinType::_linear_, data, nbins, minVar, maxVar, shift, hist_type, fact) {}
+	  NumberCounts1D_Redshift (const catalogue::Catalogue data, const size_t nbins, const double minVar=par::defaultDouble, const double maxVar=par::defaultDouble, const double shift = 0.5, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1., const BinType bin_type=BinType::_linear_) : NumberCounts1D(catalogue::Var::_Redshift_, bin_type, data, nbins, minVar, maxVar, shift, hist_type, fact) {}
+	  
+	  /**
+	   *  @brief constructor
+	   *
+	   *  @param data object of class Catalogue
+	   *
+	   *  @param vec_edges the bin edges, only used in the case of a custom BinType
+	   *
+	   *  @param hist_type the type of histogram
+	   *
+	   *  @param fact factor used to normalized the distribution
+	   *
+	   *  1D_Redshift
+	   */
+	  NumberCounts1D_Redshift (const catalogue::Catalogue data, const std::vector<double> vec_edges, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.) : NumberCounts1D(catalogue::Var::_Redshift_, vec_edges, data, hist_type, fact) {}
 
 	  ///@}
 

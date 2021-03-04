@@ -58,55 +58,55 @@ namespace cbl {
       
       /// Gaussian likelihood covariance
       _Gaussian_Covariance_,
-      
-      /// Sellentin likelihood
-      _Gaussian_Sellentin_,
 
       /// Poissonian likelihood
       _Poissonian_,
-        
+      
       /// Likelihood function defined by the user
       _UserDefined_
 
     };
 
     /**
-     * @brief return a vector containing the
-     * LikelihoodType names
-     * @return a vector containing the
-     * LikelihoodType names
+     * @brief return a vector containing the LikelihoodType names
+     *
+     * @return a vector containing the LikelihoodType names
      */
-    inline std::vector<std::string> LikelihoodTypeNames () {return {"NotSet", "Gaussian_Error", "Gaussian_Covariance", "Gaussian_Sellentin", "Poissonian", "UserDefined"}; }
+    inline std::vector<std::string> LikelihoodTypeNames () {return {"NotSet", "Gaussian_Error", "Gaussian_ColikelihoodTypeiance", "Poissonian", "UserDefined"}; }
 
     /**
-     * @brief cast an enum of type LikelihoodType
-     * from its index
+     * @brief cast an enum of type LikelihoodType from its index
+     *
      * @param likelihoodTypeIndex the likelihoodType index
+     *
      * @return object of class LikelihoodType
      */
     inline LikelihoodType LikelihoodTypeCast (const int likelihoodTypeIndex) {return castFromValue<LikelihoodType>(likelihoodTypeIndex);}
 
     /**
-     * @brief cast an enum of type LikelihoodType
-     * from its name
+     * @brief cast an enum of type LikelihoodType from its name
+     *
      * @param likelihoodTypeName the likelihoodType name
+     *
      * @return object of class LikelihoodType
      */
     inline LikelihoodType LikelihoodTypeCast (const std::string likelihoodTypeName) {return castFromName<LikelihoodType>(likelihoodTypeName, LikelihoodTypeNames());}
 
     /**
-     * @brief cast an enum of type LikelihoodType
-     * from indeces
+     * @brief cast an enum of type LikelihoodType from indeces
+     *
      * @param likelihoodTypeIndeces the likelihoodType indeces
-     * @return object of class LikelihoodType
+     *
+     * @return vector of objects of class LikelihoodType
      */
     inline std::vector<LikelihoodType> LikelihoodTypeCast (const std::vector<int> likelihoodTypeIndeces) {return castFromValues<LikelihoodType>(likelihoodTypeIndeces);} 
 
     /**
-     * @brief cast enums of type LikelihoodType
-     * from thier names
+     * @brief cast enums of type LikelihoodType from thier names
+     *
      * @param likelihoodTypeNames the likelihoodType names
-     * @return vector of LikelihoodType enums
+     *
+     * @return vector of objects of class LikelihoodType
      */
     inline std::vector<LikelihoodType> LikelihoodTypeCast (const std::vector<std::string> likelihoodTypeNames) {return castFromNames<LikelihoodType>(likelihoodTypeNames, LikelihoodTypeNames());}
 
@@ -150,8 +150,6 @@ namespace cbl {
        *  @param input_model pointers to the model 
        *  @param input_x_index vector contaning the x indeces
        *  @param input_w_index weight index
-       *
-       *  @return object of type STR_likelihood_inputs
        */ 
       STR_likelihood_inputs (const std::shared_ptr<data::Data> input_data, const std::shared_ptr<Model> input_model, const std::vector<size_t> input_x_index={0, 2}, const int input_w_index=-1); 
       
@@ -180,35 +178,13 @@ namespace cbl {
     double LogLikelihood_2D_interpolated (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> input);
 
     /**
-     *  @brief function to compute the gaussian loglikelihood 
+     *  @brief function to compute the Gaussian log-likelihood 
      *
      *  @param likelihood_parameter the parameters of the model
      *
      *  @param input pointer to an object of type STR_params
      *
-     *  @return the value of the loglikelihood 
-     */
-    double LogLikelihood_Gaussian_1D_error (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> input);
-
-    /**
-     *  @brief function to compute the gaussian loglikelihood 
-     *
-     *  @param likelihood_parameter the parameters of the model
-     *
-     *  @param input pointer to an object of type STR_params
-     *
-     *  @return the value of the loglikelihood 
-     */
-    double LogLikelihood_Gaussian_1D_covariance (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> input);
-
-    /**
-     *  @brief function to compute the gaussian loglikelihood 
-     *
-     *  @param likelihood_parameter the parameters of the model
-     *
-     *  @param input pointer to an object of type STR_params
-     *
-     *  @return the value of the loglikelihood 
+     *  @return the value of the loglikelihood
      *
      *  @warning the Gaussian likelihood does not allow for null
      *  standard deviation

@@ -76,13 +76,13 @@ namespace cbl {
 	  /**
 	   *  @brief default constructor
 	   *
-	   *  @return object of class NumberCounts1D_Mass
+	   *  1D_Mass
 	   */
 	  NumberCounts1D_Mass () {}
 
 	  /**
 	   *  @brief default destructor
-	   *  @return none
+	   *  
 	   */
 	  virtual ~NumberCounts1D_Mass () = default;
 
@@ -104,9 +104,27 @@ namespace cbl {
 	   *
 	   *  @param fact factor used to normalized the distribution
 	   *
-	   *  @return object of class NumberCounts1D_Mass
+	   *  @param bin_type bin type
+	   *
+	   *
+	   *  1D_Mass
 	   */
-	  NumberCounts1D_Mass (const catalogue::Catalogue data, const size_t nbins, const double minVar=par::defaultDouble, const double maxVar=par::defaultDouble, const double shift = 0.5, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.) : NumberCounts1D(catalogue::Var::_Mass_, BinType::_logarithmic_, data, nbins, minVar, maxVar, shift, hist_type, fact) {} 
+	  NumberCounts1D_Mass (const catalogue::Catalogue data, const size_t nbins, const double minVar=par::defaultDouble, const double maxVar=par::defaultDouble, const double shift = 0.5, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1., const BinType bin_type=BinType::_logarithmic_) : NumberCounts1D(catalogue::Var::_Mass_, bin_type, data, nbins, minVar, maxVar, shift, hist_type, fact) {}
+	  
+	  /**
+	   *  @brief constructor
+	   *
+	   *  @param data object of class Catalogue 
+	   *
+	   *  @param vec_edges bin edges
+	   *
+	   *  @param hist_type the type of histogram
+	   *
+	   *  @param fact factor used to normalized the distribution
+	   *
+	   *  1D_Mass
+	   */
+	  NumberCounts1D_Mass (const catalogue::Catalogue data, const std::vector<double> vec_edges, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.) : NumberCounts1D(catalogue::Var::_Mass_, vec_edges, data, hist_type, fact) {} 
 
 	  ///@}
 

@@ -108,7 +108,7 @@ namespace cbl {
        * @brief cast an enum of type ThreePType
        * from indeces
        * @param threePTypeIndeces the threePType indeces
-       * @return object of class ThreePType
+       * @return vector of objects of class ThreePType
        */
       inline std::vector<ThreePType> ThreePTypeCast (const std::vector<int> threePTypeIndeces) {return castFromValues<ThreePType>(threePTypeIndeces);} 
 
@@ -116,7 +116,7 @@ namespace cbl {
        * @brief cast an enum of type ThreePType
        * from thier names
        * @param threePTypeNames the threePType names
-       * @return vector of ThreePType enums
+       * @return vector of objects of class ThreePType
        */
       inline std::vector<ThreePType> ThreePTypeCast (const std::vector<std::string> threePTypeNames) {return castFromNames<ThreePType>(threePTypeNames, ThreePTypeNames());}
 
@@ -212,7 +212,7 @@ namespace cbl {
 	 * @param tt pointer to an object of class \e Triplet
 	 *
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0 &rarr; no time counter
-	 * @return none
+	 * 
 	 *
 	 * @warning the angular three-point correlation function is not
 	 * implemented yet
@@ -249,7 +249,7 @@ namespace cbl {
 	 *  @param tcount 1 &rarr; activate the CPU time counter; 0
 	 *  &rarr; no time counter
 	 *
-	 *  @return none
+	 *  
 	 */
 	void count_allTriplets (const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false);
             
@@ -275,7 +275,7 @@ namespace cbl {
 	 * @param weight region weights
 	 *
 	 * @param tcount true &rarr; activate the CPU time counter;
-	 * false &rarr; no time counter @return none
+	 * false &rarr; no time counter 
 	 *
 	 * @warning the angular three-point correlation function is
 	 * not implemented yet
@@ -314,7 +314,7 @@ namespace cbl {
 	 *  @param tcount 1 &rarr; activate the CPU time counter; 0
 	 *  &rarr; no time counter
 	 *
-	 *  @return none
+	 *  
 	 */
 	void count_allTriplets_region (const std::vector<std::vector<double>> weight, const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false);
 
@@ -328,7 +328,7 @@ namespace cbl {
 	 *  @param TT pointer to an object of class Triplet
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  
 	 */
 	void write_triplets (const std::shared_ptr<triplets::Triplet> TT, const std::string dir, const std::string file) const;
  
@@ -337,7 +337,7 @@ namespace cbl {
 	 *  @param [out] TT pointer to an object of class Triplet
 	 *  @param [in] dir input directory
 	 *  @param [in] file input file
-	 *  @return none
+	 *  
 	 */
 	void read_triplets (std::shared_ptr<triplets::Triplet> TT, const std::vector<std::string> dir, const std::string file);
     
@@ -354,7 +354,6 @@ namespace cbl {
 
 	/**
 	 * @brief default constructor
-	 * @return object of class ThreePointCorrelation
 	 */
 	ThreePointCorrelation () = default;
 
@@ -364,14 +363,12 @@ namespace cbl {
 	 *  catalogue
 	 *  @param random of class Catalogue containing the random data
 	 *  catalogue
-	 *  @return object of class ThreePointCorrelation
 	 */
 	ThreePointCorrelation (const catalogue::Catalogue data, const catalogue::Catalogue random) 
 	  : m_data(std::make_shared<catalogue::Catalogue>(catalogue::Catalogue(std::move(data)))), m_random(std::make_shared<catalogue::Catalogue>(catalogue::Catalogue(std::move(random)))) {}
 
 	/**
 	 * @brief default destructor
-	 * @return none
 	 */
 	virtual ~ThreePointCorrelation () = default;
       
@@ -421,6 +418,55 @@ namespace cbl {
 	 *  ThreePointCorrelation of a given type
 	 */
 	static std::shared_ptr<ThreePointCorrelation> Create (const ThreePType type, const catalogue::Catalogue data, const catalogue::Catalogue random, const triplets::TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins);
+
+	/**
+	 *  @brief static factory used to construct three-point
+	 *  correlation functions multipoles
+	 *
+	 *  @param data object of class Catalogue containing the input
+	 *  catalogue
+	 *  @param random of class Catalogue containing the random data
+	 *  catalogue
+	 *  @param r12Min the minimum triangle first side
+	 *  @param r12Max the maximum triangle first side
+	 *  @param r13Min the minimum triangle second side
+	 *  @param r13Max the maximum triangle second side
+	 *  @param nOrders the number of Legendre multipoles
+	 *  @param split factor to split the random sample. 
+	 * 	It must be a multiple m_data.nObjects()
+	 *  @param seed seed to shuffle the random sample
+	 *
+	 *  @return a pointer to an object of class
+	 *  ThreePointCorrelation_comoving_multipoles_single
+	 * @warning this function will raise an error if m_random.nObjects() < split*m_data.nObjects
+	 * if m_random.nObjects() > split*m_data.nObjects, only random points up to split*m_data.nObjects
+	 * Negative values of the split factor allow to use the whole random sample.
+	 */
+	static std::shared_ptr<ThreePointCorrelation> Create (const catalogue::Catalogue data, const catalogue::Catalogue random, const double r12Min, const double r12Max, const double r13Min, const double r13Max, const int nOrders, const double split=-1, const int seed=234);
+
+	/**
+	 *  @brief static factory used to construct three-point
+	 *  correlation functions multipoles
+	 *
+	 *  @param data object of class Catalogue containing the input
+	 *  catalogue
+	 *  @param random of class Catalogue containing the random data
+	 *  catalogue
+	 *  @param rMin the minimum triangle side
+	 *  @param rMax the maximum triangle side
+	 *  @param binSize the triangle side width
+	 *  @param nOrders the number of Legendre multipoles
+	 *  @param split factor to split the random sample. 
+	 * 	It must be a multiple m_data.nObjects()
+	 *  @param seed seed to shuffle the random sample
+	 *
+	 *  @return a pointer to an object of class
+	 *  ThreePointCorrelation_comoving_multipoles_all
+	 *  @warning this function will raise an error if m_random.nObjects() < split*m_data.nObjects
+	 *  if m_random.nObjects() > split*m_data.nObjects, only random points up to split*m_data.nObjects
+	 *  Negative values of the split factor allow to use the whole random sample.
+	 */
+	static std::shared_ptr<ThreePointCorrelation> Create (const catalogue::Catalogue data, const catalogue::Catalogue random, const double rMin, const double rMax, const double binSize, const int nOrders, const double split=-1, const int seed=234);
       
 	///@}
       
@@ -515,20 +561,17 @@ namespace cbl {
 	/**
 	 *  @brief add a data catalogue
 	 *  @param data object of class Catalogue 
-	 *  @return none
 	 */
 	void set_data (const catalogue::Catalogue data) { m_data = std::make_shared<catalogue::Catalogue>(catalogue::Catalogue(std::move(data))); }
 
 	/**
 	 *  @brief add a random catalogue
 	 *  @param random object of class Catalogue 
-	 *  @return none
 	 */
 	void set_random (const catalogue::Catalogue random) { m_random = std::make_shared<catalogue::Catalogue>(catalogue::Catalogue(std::move(random))); }
 
 	///@}
 
-      
 	/**
 	 *  @name Member functions to measure the threep-point correlation function
 	 */
@@ -564,7 +607,8 @@ namespace cbl {
 	 *
 	 * @param seed the seed for random number generation
 	 *
-	 * @return none
+	 * @return none, or an error message if the derived object
+	 * does not have this member
 	 */
 	virtual void measure (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
 	{ (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
@@ -604,7 +648,8 @@ namespace cbl {
 	 *
 	 * @param seed the seed for random number generation
 	 *
-	 * @return none
+	 * @return none, or an error message if the derived object
+	 * does not have this member
 	 */
 	virtual void measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
 	{ (void)weight; (void)doJK; (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
@@ -643,9 +688,10 @@ namespace cbl {
 	 *
 	 * @param seed the seed for random number generation
 	 *
-	 * @return none
+	 * @return none, or an error message if the derived object
+	 * does not have this member
 	 */
-	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
+	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
 	{ (void)errorType; (void)dir_output_triplets; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 
 	/**
@@ -681,7 +727,8 @@ namespace cbl {
 	 *
 	 * @param seed the seed for random number generation
 	 *
-	 * @return none
+	 * @return none, or an error message if the derived object
+	 * does not have this member
 	 */
 	virtual void measure (const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
 	{ (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h!"); }
@@ -724,7 +771,8 @@ namespace cbl {
 	 *
 	 * @param seed the seed for random number generation
 	 *
-	 * @return none
+	 * @return none, or an error message if the derived object
+	 * does not have this member
 	 */
 	virtual void measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
 	{ (void)weight; (void)doJK; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
@@ -766,14 +814,48 @@ namespace cbl {
 	 *
 	 * @param seed the seed for random number generation
 	 *
-	 * @return none
+	 * @return none, or an error message if the derived object
+	 * does not have this member
 	 */
 	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
 	{ (void)errorType; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 
+	
+	/**
+	 * @brief measure the three-point correlation function 
+	 * multipoles
+	 *
+	 * @param errorType type of error 
+	 *
+	 * @param dir_output_triplets name of the output directory used to
+	 * store the number of triplets
+	 * 
+	 * @param dir_input_triplets name of the input directories
+	 * containing the number of triplets
+	 *
+	 * @param nResamplings number of resamplings
+	 *
+	 * @param count_triplets 1 &rarr; count the triplets
+	 * triplets; 0 &rarr; read the triplets from a file
+	 *
+	 * @param tcount 1 &rarr; activate the CPU time counter; 0
+	 * &rarr; no time counter
+	 *
+	 * @param seed the seed for random number generation
+	 *
+	 * @return none, or an error message if the derived object
+	 * does not have this member
+	 *
+	 * @warning no error have been implemented so far, any choice
+	 * will be ignored
+	 */
+	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_triplets, const bool tcount, const int seed)
+	{ (void)errorType; (void)dir_output_triplets; (void)dir_input_triplets; (void)nResamplings; (void)count_triplets; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
+	
+	
 	///@}
       
-
+	
 	/**
 	 *  @name Input/Output member functions (customized in all the derived classes)
 	 */
@@ -783,10 +865,10 @@ namespace cbl {
 	 *  @brief write the measured three-point correlation
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
-	virtual void write (const std::string dir, const std::string file) const
-	{ (void)dir; (void)file; cbl::ErrorCBL("", "write", "ThreePointCorrelation.h"); }
+	virtual void write (const std::string dir, const std::string file) const = 0;
       
 	/**
 	 *  @brief write the measured three-point correlation
@@ -795,7 +877,8 @@ namespace cbl {
 	 *  @param connected 0 &rarr; write the reducted 3pt correlation
 	 *  function; 1 &rarr; write both the reduced and connected 3pt
 	 *  correlation function
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void write (const std::string dir, const std::string file, const bool connected) const
 	{ (void)dir; (void)file; (void)connected; cbl::ErrorCBL("", "write", "ThreePointCorrelation.h"); }
@@ -804,10 +887,12 @@ namespace cbl {
 	 *  @brief write the measured three-point correlation covariance
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
-	virtual void write_covariance (const std::string dir, const std::string file) const = 0;
-
+	virtual void write_covariance (const std::string dir, const std::string file) const
+	{ (void)dir; (void)file; cbl::ErrorCBL("", "write_covariance", "ThreePointCorrelation.h"); }
+	
 	///@}
       
       };

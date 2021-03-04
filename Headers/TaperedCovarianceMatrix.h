@@ -70,10 +70,8 @@ namespace cbl {
 	 * @brief privat member that sets the tapering matrix
 	 *
 	 * @param tapering_factor the tapering factor
-	 *
-	 * @return None
 	 */
-	void m_set_tapering(const double tapering_factor);
+	void m_set_tapering (const double tapering_factor);
 
 	/**
 	 * @brief set internal attributes
@@ -84,8 +82,6 @@ namespace cbl {
 	 *
 	 * @param prec the precision required in the inversion of the
 	 * covariance matrix
-	 *
-	 * @return None
 	 */
  	void m_set (const std::vector<double> matrix, const double nmeasures=-1, const double prec=1.e-10);
 
@@ -99,7 +95,7 @@ namespace cbl {
       /**
        *  @brief default constructor
        *
-       *  @return an object of class TaperedCovarianceMatrix
+       *  
        */
       TaperedCovarianceMatrix () { m_set_default(); }
 
@@ -111,14 +107,14 @@ namespace cbl {
        *
        *  @param covariance object of type cbl::data::CovarianceMatrix
        *
-       *  @return an object of class TaperedCovarianceMatrix
+       *  
        */
       TaperedCovarianceMatrix (const double tapering_factor, const CovarianceMatrix covariance) 
       { set(tapering_factor, covariance); }
 
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       virtual ~TaperedCovarianceMatrix () = default;
 
@@ -144,22 +140,20 @@ namespace cbl {
        * by means of a taper function \f$K\f$:
        *
        * Following Kauffam et al. 2008, the tapering function is:
-       * \f[
-       *    K(x)=\left\{\begin{array}{ll}
-       *    \left(1-\frac{x}{T_{\mathrm{p}}}\right)^{4}\left(4 \frac{x}{T_{\mathrm{p}}}+1\right) & \text { if } x<T_{\mathrm{p}} \\
-       *    0 & \text { if } x \geq T_{\mathrm{p}}
-       *    \end{array}\right.
-       * \f]
+       *
+       * \f[ K(x)=\left\{\begin{array}{ll}
+       *    \left(1-\frac{x}{T_{\mathrm{p}}}\right)^{4}\left(4
+       *    \frac{x}{T_{\mathrm{p}}}+1\right) & \text { if }
+       *    x<T_{\mathrm{p}} \\ 0 & \text { if } x \geq T_{\mathrm{p}}
+       *    \end{array}\right.  \f]
        *
        * \f$T_p\f$ is the tapering parameter
        *
        * @param tapering_factor the tapering parameter
        *
        * @param covariance object of type cbl::data::CovarianceMatrix
-       *
-       * @return None
        */
-      void set(const double tapering_factor, const CovarianceMatrix covariance);
+      void set (const double tapering_factor, const CovarianceMatrix covariance);
 
       ///@}
     };

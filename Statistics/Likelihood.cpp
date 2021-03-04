@@ -275,19 +275,6 @@ void cbl::statistics::Likelihood::set_function (const LikelihoodType likelihood_
 	m_log_likelihood_function = &LogLikelihood_Gaussian_1D_covariance;
 	break;
 
-      case (LikelihoodType::_Gaussian_Sellentin_):
-	if (Nres < 1) 
-	  ErrorCBL("Sellentin likelihood requires a number of mocks > 1; input is "+conv(Nres, par::fINT)+"!", "set_function", "Likelihood.cpp"); 
-
-	m_data->invert_covariance(prec, -1);
-
-	m_log_likelihood_function = [&] (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> input)
-	{
-	  double chi2 = -2 * LogLikelihood_Gaussian_1D_covariance ( likelihood_parameter, input);
-	  return -0.5 * Nres * std::log( 1 + chi2/(Nres-1) );
-	};
-	break;
-
       case (LikelihoodType::_Poissonian_):
 	m_log_likelihood_function = &LogLikelihood_Poissonian_1D_;
 	break; 
@@ -325,9 +312,8 @@ void cbl::statistics::Likelihood::set_function (const LikelihoodType likelihood_
   }
   else 
     ErrorCBL("data type not recognized or not yet implemented!", "set_function", "Likelihood.cpp");
-  
-  m_likelihood_function = [&] (vector<double> &par, const shared_ptr<void> input) { return exp(m_log_likelihood_function(par, input)); };
 
+  m_likelihood_function = [&] (vector<double> &par, const shared_ptr<void> input) { return exp(m_log_likelihood_function(par, input)); };
 }
 
 
@@ -339,6 +325,17 @@ void cbl::statistics::Likelihood::set_function (const Likelihood_function likeli
   m_likelihood_type = LikelihoodType::_UserDefined_;
   m_likelihood_function = likelihood_function;
   m_log_likelihood_function = [&] (vector<double> &par, const shared_ptr<void> input) { return std::log(m_likelihood_function(par, input)); };
+}
+
+
+// ============================================================================================
+
+
+void cbl::statistics::Likelihood::set_log_function (const Likelihood_function log_likelihood_function)
+{
+  m_likelihood_type = LikelihoodType::_UserDefined_;
+  m_log_likelihood_function = log_likelihood_function;
+  m_likelihood_function = [&] (vector<double> &par, const shared_ptr<void> input) { return exp(m_log_likelihood_function(par, input)); };
 }
 
 
@@ -373,9 +370,10 @@ void cbl::statistics::Likelihood::maximize (const std::vector<double> start, con
 
   m_likelihood_inputs = make_shared<STR_likelihood_inputs>(STR_likelihood_inputs(m_data, m_model, m_x_index, m_w_index));
 
-  function<double(vector<double> &)> ll = [this](vector<double> &pp) {
-    return -m_log_likelihood_function(pp, m_likelihood_inputs); 
-  };
+  function<double(vector<double> &)> ll = [this] (vector<double> &pp)
+					  {
+					    return -m_log_likelihood_function(pp, m_likelihood_inputs); 
+					  };
 
   coutCBL << "Maximizing the likelihood..." << endl;
   vector<double> result = cbl::wrapper::gsl::GSL_minimize_nD(ll, starting_par, limits_par, max_iter, tol, epsilon);
@@ -388,6 +386,7 @@ void cbl::statistics::Likelihood::maximize (const std::vector<double> start, con
 
 
 // ============================================================================================
+
 
 void cbl::statistics::Likelihood::write_results (const string dir_output, const string file)
 {
@@ -417,6 +416,7 @@ void cbl::statistics::Likelihood::write_results (const string dir_output, const 
   fout.clear(); fout.close();
   coutCBL << "I wrote the file " << dir_output+file << endl;
 }
+
 
 // ============================================================================================
 

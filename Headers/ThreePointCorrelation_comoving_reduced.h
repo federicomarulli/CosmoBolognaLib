@@ -91,9 +91,8 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of class ThreePointCorrelation_comoving_reduced
 	 */
-	ThreePointCorrelation_comoving_reduced () {}
+	ThreePointCorrelation_comoving_reduced () = default;
 
 	/**
 	 *  @brief constructor
@@ -108,7 +107,6 @@ namespace cbl {
 	 *  @param perc_increase the ratio
 	 *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
 	 *  @param nbins number of bins
-	 *  @return object of class ThreePointCorrelation_comoving_reduced
 	 */
 	ThreePointCorrelation_comoving_reduced (const catalogue::Catalogue data, const catalogue::Catalogue random, const triplets::TripletType tripletType, const double side_s, const double side_u, const double perc_increase, const int nbins)
 	  : ThreePointCorrelation_comoving_connected(data, random, tripletType, side_s, side_u, perc_increase, nbins) {m_QQ.push_back(0);} 
@@ -126,17 +124,14 @@ namespace cbl {
 	 *  @param r13 the size of r<SUB>13</SUB>
 	 *  @param r13_binSize the size of r<SUB>13</SUB> bin
 	 *  @param nbins number of bins
-	 *  @return object of class
-	 *  ThreePointCorrelation_comoving_reduced
 	 */
 	ThreePointCorrelation_comoving_reduced (const catalogue::Catalogue data, const catalogue::Catalogue random, const triplets::TripletType tripletType, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
 	  : ThreePointCorrelation_comoving_connected(data, random, tripletType, r12, r12_binSize, r13, r13_binSize, nbins) {m_QQ.push_back(0);}
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
 	 */
-	~ThreePointCorrelation_comoving_reduced () {}
+	~ThreePointCorrelation_comoving_reduced () = default;
 
 	///@}
 
@@ -145,7 +140,7 @@ namespace cbl {
 	 *  @name Member functions to get protected parameters
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief get the protected member
 	 *  ThreePointCorrelation_comoving_reduced::m_scale
@@ -170,13 +165,12 @@ namespace cbl {
 	std::vector<double> error () const override { return m_error; }
 
 	///@}
-
-
+	
 	/**
 	 *  @name Member functions to measure the three-point correlation function
 	 */
 	///@{
-
+	
 	/**
 	 * @brief method to measure the three-point correlation function
 	 *
@@ -209,8 +203,6 @@ namespace cbl {
 	 * &rarr; no time counter
 	 *
 	 * @param seed the seed for random number generation
-	 *
-	 * @return none
 	 */
 	void measure (const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213) override;
           
@@ -251,8 +243,6 @@ namespace cbl {
 	 * &rarr; no time counter
 	 *
 	 * @param seed the seed for random number generation
-	 *
-	 * @return none
 	 */
 	void measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213) override;
 
@@ -292,8 +282,6 @@ namespace cbl {
 	 * &rarr; no time counter
 	 *
 	 * @param seed the seed for random number generation
-	 *
-	 * @return none
 	 */
 	void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const int nResamplings = 100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213) override;
 
@@ -313,7 +301,6 @@ namespace cbl {
 	 *  @param connected 0 &rarr; write the reducted 3pt correlation
 	 *  function; 1 &rarr; write both the reduced and connected 3pt
 	 *  correlation function
-	 *  @return none
 	 */
 	void write (const std::string dir, const std::string file, const bool connected) const override;
     
@@ -321,7 +308,6 @@ namespace cbl {
 	 *  @brief write the measured three-point correlation covariance
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
 	 */
 	void write_covariance (const std::string dir, const std::string file) const override;
 

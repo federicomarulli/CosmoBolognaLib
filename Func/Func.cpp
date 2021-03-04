@@ -33,7 +33,6 @@
 
 #include "Func.h"
 #include "LegendrePolynomials.h"
-#include "EigenWrapper.h"
 
 using namespace std;
 
@@ -78,20 +77,20 @@ double cbl::Filter (const double r, const double rc)
 
 double cbl::degrees (const double angle, const CoordinateUnits inputUnits)
 {
-  if (inputUnits==CoordinateUnits::_radians_) 
+  if (inputUnits==CoordinateUnits::_radians_)
     return angle*180./par::pi;
-      
+
   else if (inputUnits==CoordinateUnits::_arcseconds_)
     return angle/3600.;
-      
+
   else if (inputUnits==CoordinateUnits::_arcminutes_)
     return angle/60.;
 
   else if (inputUnits==CoordinateUnits::_degrees_)
     return angle;
-  
-  else 
-    return ErrorCBL("inputUnits type not allowed!", "degrees", "Func.cpp"); 
+
+  else
+    return ErrorCBL("inputUnits type not allowed!", "degrees", "Func.cpp");
 }
 
 
@@ -102,17 +101,17 @@ double cbl::radians (const double angle, const CoordinateUnits inputUnits)
 {
   if (inputUnits==CoordinateUnits::_degrees_)
     return angle/180.*par::pi;
-  
+
   else if (inputUnits==CoordinateUnits::_arcseconds_)
     return angle/180.*par::pi/3600.;
-  
+
   else if (inputUnits==CoordinateUnits::_arcminutes_)
     return angle/180.*par::pi/60.;
 
   else if (inputUnits==CoordinateUnits::_radians_)
     return angle;
-  
-  else 
+
+  else
     return ErrorCBL("inputUnits type not allowed!", "radians", "Func.cpp");
 }
 
@@ -124,18 +123,18 @@ double cbl::arcseconds (const double angle, const CoordinateUnits inputUnits)
 {
   if (inputUnits==CoordinateUnits::_radians_)
     return angle*180./par::pi*3600.;
-      
+
   else if (inputUnits==CoordinateUnits::_degrees_)
     return angle*3600.;
-  
+
   else if (inputUnits==CoordinateUnits::_arcminutes_)
     return angle*60.;
 
   else if (inputUnits==CoordinateUnits::_arcseconds_)
     return angle;
-      
-  else 
-    return ErrorCBL("inputUnits type not allowed!", "arcseconds", "Func.cpp"); 
+
+  else
+    return ErrorCBL("inputUnits type not allowed!", "arcseconds", "Func.cpp");
 }
 
 
@@ -146,18 +145,18 @@ double cbl::arcminutes (const double angle, const CoordinateUnits inputUnits)
 {
   if (inputUnits==CoordinateUnits::_radians_)
     return angle*180./par::pi*60.;
-      
+
   else if (inputUnits==CoordinateUnits::_degrees_)
     return angle*60.;
-  
+
   else if (inputUnits==CoordinateUnits::_arcseconds_)
     return angle/60.;
 
   else if (inputUnits==CoordinateUnits::_arcminutes_)
     return angle;
 
-  else 
-    return ErrorCBL("inputUnits type not allowed!", "arcminutes", "Func.cpp"); 
+  else
+    return ErrorCBL("inputUnits type not allowed!", "arcminutes", "Func.cpp");
 }
 
 
@@ -168,17 +167,17 @@ double cbl::converted_angle (const double angle, const CoordinateUnits inputUnit
 {
   if (outputUnits==CoordinateUnits::_radians_)
     return radians(angle, inputUnits);
-      
+
   else if (outputUnits==CoordinateUnits::_degrees_)
     return degrees(angle, inputUnits);
-  
+
   else if (outputUnits==CoordinateUnits::_arcseconds_)
     return arcseconds(angle, inputUnits);
 
   else if (outputUnits==CoordinateUnits::_arcminutes_)
     return arcminutes(angle, inputUnits);
-  
-  else 
+
+  else
     return ErrorCBL("outputUnits type not allowed!", "converted_angle", "Func.cpp");
 }
 
@@ -186,30 +185,30 @@ double cbl::converted_angle (const double angle, const CoordinateUnits inputUnit
 // ============================================================================================
 
 
-void cbl::polar_coord (const double XX, const double YY, const double ZZ, double &ra, double &dec, double &dd) 
-{   
+void cbl::polar_coord (const double XX, const double YY, const double ZZ, double &ra, double &dec, double &dd)
+{
   dd = sqrt(XX*XX+YY*YY+ZZ*ZZ);
   ra = atan2(XX,YY);
-  dec = asin(ZZ/dd);  
+  dec = asin(ZZ/dd);
 }
 
-void cbl::cartesian_coord (const double ra, const double dec, const double dd, double &XX, double &YY, double &ZZ) 
+void cbl::cartesian_coord (const double ra, const double dec, const double dd, double &XX, double &YY, double &ZZ)
 {
   XX = dd*cos(dec)*sin(ra);
   YY = dd*cos(dec)*cos(ra);
   ZZ = dd*sin(dec);
 }
 
-void cbl::polar_coord (const std::vector<double> XX, const std::vector<double> YY, const std::vector<double> ZZ, std::vector<double> &ra, std::vector<double> &dec, std::vector<double> &dd) 
-{     
+void cbl::polar_coord (const std::vector<double> XX, const std::vector<double> YY, const std::vector<double> ZZ, std::vector<double> &ra, std::vector<double> &dec, std::vector<double> &dd)
+{
   for (size_t i=0; i<XX.size(); i++) {
     dd[i] = sqrt(XX[i]*XX[i]+YY[i]*YY[i]+ZZ[i]*ZZ[i]);
     ra[i] = atan2(XX[i],YY[i]);
     dec[i] = asin(ZZ[i]/dd[i]);
-  }  
+  }
 }
 
-void cbl::cartesian_coord (const std::vector<double> ra, const std::vector<double> dec, const std::vector<double> dd, std::vector<double> &XX, std::vector<double> &YY, std::vector<double> &ZZ) 
+void cbl::cartesian_coord (const std::vector<double> ra, const std::vector<double> dec, const std::vector<double> dd, std::vector<double> &XX, std::vector<double> &YY, std::vector<double> &ZZ)
 {
   for (size_t i=0; i<XX.size(); i++) {
     XX[i] = dd[i]*cos(dec[i])*sin(ra[i]);
@@ -238,7 +237,7 @@ double cbl::perpendicular_distance (const double ra1, const double ra2, const do
   if (fabs(costheta)<1.-1.e-30) theta = acos(costheta);
   else if (costheta>=1.-1.e-30) theta = 0.;
   else theta = par::pi;
-             
+
   double rp = (d1+d2)*tan(theta*0.5);
   rp *= 4.*d1*d2/((d1+d2)*(d1+d2));
 
@@ -267,7 +266,7 @@ double cbl::haversine_distance (const double ra1, const double ra2, const double
 // ============================================================================================
 
 
-double cbl::MC_Int (double func(const double), const double x1, const double x2, const int seed) 
+double cbl::MC_Int (double func(const double), const double x1, const double x2, const int seed)
 {
   int step = 100000;
   double delta_x = (x2-x1)/step;
@@ -279,12 +278,12 @@ double cbl::MC_Int (double func(const double), const double x1, const double x2,
     fmax = max_element (ff.begin(),ff.end());
   double f1 = *fmin;
   double f2 = *fmax;
-  
+
   f1 = (f1>0) ? f1*0.5 : -fabs(f1)*2.;
-  f2 *= 2.; 
+  f2 *= 2.;
 
   random::UniformRandomNumbers ran(0., 1., seed);
-  
+
   double xt, yt, INT;
   int sub = 0, subn = 0, numTOT = 10000000;
 
@@ -309,7 +308,7 @@ double cbl::MC_Int (double func(const double), const double x1, const double x2,
     }
     INT = (double(sub)/double(numTOT)*(x2-x1)*f2)-(double(subn)/double(numTOT)*(x2-x1)*fabs(f1));
   }
-  
+
   return INT;
 }
 
@@ -317,7 +316,7 @@ double cbl::MC_Int (double func(const double), const double x1, const double x2,
 // ============================================================================================
 
 
-double cbl::MC_Int (double func(const double, const double AA), const double AA, const double x1, const double x2, const int seed) 
+double cbl::MC_Int (double func(const double, const double AA), const double AA, const double x1, const double x2, const int seed)
 {
   int step = 100000;
   double delta_x = (x2-x1)/step;
@@ -329,9 +328,9 @@ double cbl::MC_Int (double func(const double, const double AA), const double AA,
     fmax = max_element (ff.begin(),ff.end());
   double f1 = *fmin;
   double f2 = *fmax;
-  
+
   f1 = (f1>0) ? f1*0.5 : -fabs(f1)*2.;
-  f2 *= 2.; 
+  f2 *= 2.;
 
   random::UniformRandomNumbers ran(0., 1., seed);
 
@@ -359,7 +358,7 @@ double cbl::MC_Int (double func(const double, const double AA), const double AA,
     }
     INT = (double(sub)/double(numTOT)*(x2-x1)*f2)-(double(subn)/double(numTOT)*(x2-x1)*fabs(f1));
   }
-  
+
   return INT;
 }
 
@@ -367,24 +366,24 @@ double cbl::MC_Int (double func(const double, const double AA), const double AA,
 // ============================================================================================
 
 
-double cbl::MC_Int (double func(const double, const double AA, const double BB, const double CC, const double DD, const double EE), const double AA, const double BB, const double CC, const double DD, const double EE, const double x1, const double x2, const int seed) 
+double cbl::MC_Int (double func(const double, const double AA, const double BB, const double CC, const double DD, const double EE), const double AA, const double BB, const double CC, const double DD, const double EE, const double x1, const double x2, const int seed)
 {
   int step = 100000;
   double delta_x = (x2-x1)/step;
   double xx = x1;
   vector<double> ff(step+1);
   for (int i=0; i<step+1; i++) {ff[i] = func(xx,AA,BB,CC,DD,EE); xx += delta_x;}
- 
+
   vector<double>::iterator fmin = min_element (ff.begin(),ff.end()),
     fmax = max_element (ff.begin(),ff.end());
   double f1 = *fmin;
   double f2 = *fmax;
-  
+
   f1 = (f1>0) ? f1*0.5 : -fabs(f1)*2.;
-  f2 *= 2.; 
+  f2 *= 2.;
 
   random::UniformRandomNumbers ran(0., 1., seed);
-  
+
   double xt, yt, INT;
   int sub = 0, subn = 0, numTOT = 100000;
 
@@ -409,7 +408,7 @@ double cbl::MC_Int (double func(const double, const double AA, const double BB, 
     }
     INT = (double(sub)/double(numTOT)*(x2-x1)*f2)-(double(subn)/double(numTOT)*(x2-x1)*fabs(f1));
   }
-  
+
   return INT;
 }
 
@@ -419,51 +418,51 @@ double cbl::MC_Int (double func(const double, const double AA, const double BB, 
 
 double cbl::interpolated (const double _xx, const std::vector<double> xx, const std::vector<double> yy, const std::string type)
 {
-  if (xx.size()!=yy.size() || xx.size()<2) 
+  if (xx.size()!=yy.size() || xx.size()<2)
     return ErrorCBL(conv(xx.size(), par::fINT)+"!="+conv(yy.size(), par::fINT)+" or "+conv(xx.size(), par::fINT)+"<2", "interpolated", "Func.cpp");
 
   size_t size = xx.size();
-  
+
   if (_xx<xx[0]) // perform a linear extrapolation
     return yy[0]+(_xx-xx[0])/(xx[1]-xx[0])*(yy[1]-yy[0]);
 
   else if (_xx>xx[size-1])
     return yy[size-2]+(_xx-xx[size-2])/(xx[size-1]-xx[size-2])*(yy[size-1]-yy[size-2]);
-  
+
 
   gsl_interp_accel *acc = gsl_interp_accel_alloc();
   const gsl_interp_type *TT;
-  
-  if (type=="Linear") 
+
+  if (type=="Linear")
     TT = gsl_interp_linear;
 
-  else if (type=="Poly") 
+  else if (type=="Poly")
     TT = gsl_interp_polynomial;
 
-  else if (type=="Spline") 
+  else if (type=="Spline")
     TT = gsl_interp_cspline;
 
-  else if (type=="Spline_periodic") 
+  else if (type=="Spline_periodic")
     TT = gsl_interp_cspline_periodic;
-  
-  else if (type=="Akima") 
+
+  else if (type=="Akima")
     TT = gsl_interp_akima;
-  
-  else if (type=="Akima_periodic") 
+
+  else if (type=="Akima_periodic")
     TT = gsl_interp_akima_periodic;
-  
-  else if (type=="Steffen") 
+
+  else if (type=="Steffen")
     TT = gsl_interp_steffen;
-  
-  else 
+
+  else
     ErrorCBL("the value of string 'type' is not permitted!", "interpolated", "Func.cpp");
 
   gsl_interp *interp = gsl_interp_alloc(TT, size);
   gsl_interp_init(interp, xx.data(), yy.data(), size);
-  
+
   double _yy;
   interp->type->eval(interp->state, xx.data(), yy.data(), interp->size, _xx, acc, &_yy);
-  
+
   gsl_interp_free(interp);
   gsl_interp_accel_free(acc);
 
@@ -481,7 +480,7 @@ double cbl::interpolated_2D (const double _x1, const double _x2, const std::vect
   const size_t size_x1 = x1.size();
   const size_t size_x2 = x2.size();
   double *ydata = new double[size_x1*size_x2];
-  
+
   if ((_x1>Max(x1) || Min(x1)>_x1) ||(_x2>Max(x2) || Min(x2)>_x2))
     extr = 1;
 
@@ -489,10 +488,10 @@ double cbl::interpolated_2D (const double _x1, const double _x2, const std::vect
   gsl_interp_accel *x2acc = gsl_interp_accel_alloc();
   const gsl_interp2d_type *TT = gsl_interp2d_bilinear;
 
-  if (type=="Linear") 
+  if (type=="Linear")
     TT = gsl_interp2d_bilinear;
 
-  else if (type=="Cubic") 
+  else if (type=="Cubic")
     TT = gsl_interp2d_bicubic;
 
   for (size_t i=0; i<size_x1; i++)
@@ -523,7 +522,7 @@ double cbl::interpolated_2D (const double _x1, const double _x2, const std::vect
 void cbl::read_vector (const std::string file_vector, std::vector<double> &xx, std::vector<double> &vec, const std::vector<int> col)
 {
   vector<int> cols = {0, 1};
-  cols = (col.size() != 2) ? cols : col; 
+  cols = (col.size() != 2) ? cols : col;
   const size_t max_col = Max(cols);
 
   xx.erase(xx.begin(), xx.end());
@@ -553,7 +552,7 @@ void cbl::read_vector (const std::string file_vector, std::vector<double> &xx, s
 void cbl::read_matrix (const std::string file_matrix, std::vector<double> &xx, std::vector<double> &yy, std::vector<std::vector<double>> &matrix, const std::vector<int> col)
 {
   vector<int> cols = {0, 1, 2};
-  cols = (col.size() != 3) ? cols : col; 
+  cols = (col.size() != 3) ? cols : col;
   const size_t max_col = Max(cols);
 
   matrix.erase(matrix.begin(), matrix.end());
@@ -584,65 +583,7 @@ void cbl::read_matrix (const std::string file_matrix, std::vector<double> &xx, s
 
 }
 
-// ============================================================================
-
-std::vector<std::vector<double>> cbl::read_file (const std::string file_name, const std::string path_name, const std::vector<int> column_data, const int skip_nlines)
-{
-  const string input_file (path_name+file_name);
-  const int cl_max = column_data.size();
-
-  ifstream fin(input_file.c_str()); checkIO(fin, input_file);
-  string line;
-
-  // skip lines in case of header
-  if (skip_nlines>0)
-    for (int i=0; i<skip_nlines; ++i)
-      getline(fin, line);
-
-  // get the number of lines to read
-  unsigned int n_lines = 0;
-  while(getline(fin, line)) n_lines++;
-  
-  fin.clear(); fin.close();
-
-  // vector of vectors to return
-  vector<vector<double>> final_data(cl_max, vector<double>(n_lines, 0));
-  
-#pragma omp parallel num_threads(cl_max>omp_get_max_threads() ? omp_get_max_threads() : cl_max)
-  {
-    // share ifstream between the CPUs
-    ifstream Fin (input_file);
-    string Line;
-
-    if (skip_nlines>0)
-      for (int i=0; i<skip_nlines; ++i)
-	getline(Fin, Line);
-    
-    // loop on the columns to read
-#pragma omp for schedule(dynamic)
-    for (int cl=0; cl<cl_max; ++cl) {
-    
-      // read the file lines
-      for (unsigned int nn=0; nn<n_lines; ++nn) {
-	
-	getline(Fin, Line);
-	stringstream ss(Line);
-	vector<double> num; double NUM;   
-	while (ss>>NUM) num.emplace_back(NUM);
-
-	// store the data
-	final_data[cl][nn] = num[column_data[cl]-1];
-      }
-    }
-    
-    Fin.clear(); Fin.close();
-  }
-
-  return final_data;
-}
-
-
-// ============================================================================
+//==================================================================================================================
 
 double cbl::determinant_matrix (const std::vector<std::vector<double>> mat)
 {
@@ -670,30 +611,6 @@ double cbl::determinant_matrix (const std::vector<std::vector<double>> mat)
 
 void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const double prec, const int Nres)
 {
-  int size = mat.size();
-
-  Eigen::MatrixXd matrix = cbl::wrapper::eigen::MatrixToEigen(mat);
-  Eigen::MatrixXd inverse = matrix.inverse();
-
-  Eigen::MatrixXd unity = matrix * inverse;
-
-  for (int i=0; i<size; i++) {
-    for (int j=0; j<size; j++) {
-      const double fact = (i==j) ? 1 : 0;
-      double prod = unity(i, j);
-      if (fabs(fact-prod)>prec)  
-	WarningMsgCBL("exceeded precision for element "+conv(i, par::fINT)+" "+conv(j, par::fINT)+"; "+conv(fact, par::fDP4)+" "+conv(prod, par::fDP4)+"!", "invert_matrix", "Func.cpp");
-    }
-  }
-
-  if (Nres>0) {
-    const double fact = 1.-(size+1.)/(Nres-1.); // correction factor from Hartlap, Simon and Schneider 2006
-    inverse *= fact;
-  }
-
-  mat_inv = cbl::wrapper::eigen::EigenToMatrix(inverse);
-   
-  /*
   int n = mat.size();
   int s;
   if (n==0)
@@ -726,24 +643,23 @@ void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector
       double prod = 0;
       for (int el=0; el<n; el++)
 	prod += mat[i][el]*mat_inv[el][j];
-      
-      if (fabs(fact-prod)>prec)  
+
+      if (fabs(fact-prod)>prec)
 	WarningMsgCBL("exceeded precision for element "+conv(i, par::fINT)+" "+conv(j, par::fINT)+"; "+conv(fact, par::fDP4)+" "+conv(prod, par::fDP4)+"!", "invert_matrix", "Func.cpp");
     }
   }
 
   if (Nres>0) {
     const double fact = 1.-(mat[0].size()+1.)/(Nres-1.); // correction factor from Hartlap, Simon and Schneider 2006
-   
+
     for (int i=0; i<n; i++)
       for (int j=0; j<n; j++)
 	mat_inv[i][j] = gsl_matrix_get(im, i, j)*fact;
   }
-  
+
   gsl_matrix_free(mm);
   gsl_matrix_free(im);
   gsl_permutation_free(perm);
-  */
 }
 
 
@@ -779,9 +695,9 @@ void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector
       double fact = (i==j) ? 1 : 0;
       double prod = 0;
       for (int el=0; el<n; el++)
-	prod += mat[i+i1][el+i1]*gsl_matrix_get(im, el, j); 
-    
-      if (fabs(fact-prod)>prec)  
+	prod += mat[i+i1][el+i1]*gsl_matrix_get(im, el, j);
+
+      if (fabs(fact-prod)>prec)
 	WarningMsgCBL("Exceeded precision for element "+conv(i,par::fINT)+" "+conv(j,par::fINT)+"; "+conv(fact,par::fDP4)+" "+conv(prod,par::fDP4)+"!", "invert_matrix", "Func.cpp");
     }
   }
@@ -806,34 +722,34 @@ void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector
 // ============================================================================
 
 
-void cbl::covariance_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &cov, const bool JK) 
-{  
+void cbl::covariance_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &cov, const bool JK)
+{
   cov.erase(cov.begin(), cov.end());
   vector<double> vv (mat[0].size(), 0.);
   for (size_t i=0; i<mat[0].size(); i++) cov.push_back(vv);
-  
+
 
   // measure the mean values at each bin
 
   vector<double> mean;
 
-  for (size_t i=0; i<mat[0].size(); i++) { // loop on the i-th bin 
-    
+  for (size_t i=0; i<mat[0].size(); i++) { // loop on the i-th bin
+
     vector<double> vect_temp;
     for (size_t j=0; j<mat.size(); j++) // loop on the j-th realisation
       vect_temp.push_back(mat[j][i]);
 
-    if (vect_temp.size()>2) 
+    if (vect_temp.size()>2)
       mean.push_back(Average(vect_temp));
-    else 
+    else
       mean.push_back(-1.e30);
-    
+
   }
-  
-  
+
+
   // compute the elements of the covariance matrix
-  
-  for (size_t i=0; i<cov.size(); i++) 
+
+  for (size_t i=0; i<cov.size(); i++)
     for (size_t j=0; j<cov.size(); j++) {
       int nm = 0;
       for (size_t k=0; k<mat.size(); k++) {
@@ -842,7 +758,7 @@ void cbl::covariance_matrix (const std::vector<std::vector<double>> mat, std::ve
 	  nm ++;
 	}
       }
-      
+
       if (nm>1) cov[i][j] = (JK) ? double(nm-1)/(nm)*cov[i][j] : cov[i][j]/(nm-1);
     }
 
@@ -852,14 +768,14 @@ void cbl::covariance_matrix (const std::vector<std::vector<double>> mat, std::ve
 // ============================================================================
 
 
-void cbl::covariance_matrix (const std::vector<std::string> file, std::vector<double> &rad, std::vector<double> &mean, std::vector<std::vector<double>> &cov, const bool JK) 
-{  
+void cbl::covariance_matrix (const std::vector<std::string> file, std::vector<double> &rad, std::vector<double> &mean, std::vector<std::vector<double>> &cov, const bool JK)
+{
   vector<vector<double>> xi_mocks;
 
   string line; double r,xi;
   for (size_t i=0; i<file.size(); i++) {
     rad.erase(rad.begin(),rad.end());
-    
+
     ifstream fin(file[i].c_str()); checkIO(fin, file[i]);
     getline(fin, line);
 
@@ -878,24 +794,24 @@ void cbl::covariance_matrix (const std::vector<std::string> file, std::vector<do
   covariance_matrix(xi_mocks, cov, JK);
 
   mean.erase(mean.begin(),mean.end());
-  
+
   for (size_t i=0; i<rad.size(); i++) {
     vector<double> vv;
-    
+
     for (size_t j=0; j<xi_mocks.size(); j++)
       if (xi_mocks[j][i]>-1.e30)
 	vv.push_back(xi_mocks[j][i]);
 
     mean.push_back(Average(vv));
   }
-  
+
 }
 
 // ============================================================================
 
 
-void cbl::covariance_matrix (const std::vector<std::string> file, const std::string covariance_matrix_file, const bool JK) 
-{  
+void cbl::covariance_matrix (const std::vector<std::string> file, const std::string covariance_matrix_file, const bool JK)
+{
   vector<double> rad, mean;
   vector<vector<double>> cov;
   covariance_matrix(file, rad, mean, cov, JK);
@@ -914,27 +830,27 @@ void cbl::covariance_matrix (const std::vector<std::string> file, const std::str
 
 // ============================================================================
 
- 
-double cbl::Average (const std::vector<double> vect) 
+
+double cbl::Average (const std::vector<double> vect)
 {
   if (vect.size()==0) ErrorCBL("the input vector has null size", "Average", "Func.cpp");
 
   double aver = 0., NT = 0.;
-  
+
 #pragma omp parallel num_threads(omp_get_max_threads())
   {
-    
+
     double averT = 0., nT = 0.;
-	
+
 #pragma omp for schedule(static, 2)
-    for (size_t i=0; i<vect.size(); ++i) 
+    for (size_t i=0; i<vect.size(); ++i)
       averT += 1./(++nT)*(vect[i]-averT);
-    
+
 #pragma omp critical
     aver += ((NT+=nT)>0) ? nT/NT*(averT-aver) : 0.;
-    
+
   }
-  
+
   return aver;
 }
 
@@ -942,43 +858,43 @@ double cbl::Average (const std::vector<double> vect)
 // ============================================================================
 
 
-double cbl::Average (const std::vector<double> vect, const std::vector<double> weight) 
+double cbl::Average (const std::vector<double> vect, const std::vector<double> weight)
 {
   if (vect.size()==0 || vect.size()!=weight.size())
     ErrorCBL("the input vector has null size, or vect.size()!=weight.size()!", "Average", "Func.cpp");
 
   double aver = 0., WeightTOT = 0.;
-  
+
 #pragma omp parallel num_threads(omp_get_max_threads())
   {
 
     double averT = 0., WeightT = 0.;
-    
+
 #pragma omp for schedule(static, 2)
-    for (size_t i=0; i<vect.size(); ++i) 
+    for (size_t i=0; i<vect.size(); ++i)
       averT += weight[i]/(WeightT+=weight[i])*(vect[i]-averT);
-    
+
 #pragma omp critical
     aver += ((WeightTOT+=WeightT)>0) ? WeightT/WeightTOT*(averT-aver) : 0.;
 
   }
-  
-  return aver;  
+
+  return aver;
 }
 
 
 // ============================================================================
 
 
-double cbl::Sigma (const std::vector<double> vect) 
+double cbl::Sigma (const std::vector<double> vect)
 {
   if (vect.size()==0) ErrorCBL("the input vector has null size", "Sigma", "Func.cpp");
-  
+
   double aver_n1 = 0., aver_n = 0., Sn = 0., sigma = 0., NT = 0.;
 
 #pragma omp parallel num_threads(omp_get_max_threads())
   {
-    
+
     double aver_n1T = 0., aver_nT = 0., SnT = 0., nT = 0.;
 
 #pragma omp for schedule(static, 2)
@@ -987,7 +903,7 @@ double cbl::Sigma (const std::vector<double> vect)
       aver_nT += 1./(++nT)*(vect[i]-aver_nT);
       SnT += (vect[i]-aver_n1T)*(vect[i]-aver_nT);
     }
-    
+
 #pragma omp critical
     {
       NT += nT;
@@ -998,9 +914,9 @@ double cbl::Sigma (const std::vector<double> vect)
 	sigma = sqrt(Sn/NT);
       }
     }
-    
+
   }
-  
+
   return sigma;
 }
 
@@ -1008,16 +924,16 @@ double cbl::Sigma (const std::vector<double> vect)
 // ============================================================================
 
 
-double cbl::Sigma (const std::vector<double> vect, const std::vector<double> weight) 
+double cbl::Sigma (const std::vector<double> vect, const std::vector<double> weight)
 {
   if (vect.size()==0 || vect.size()!=weight.size())
     ErrorCBL("the input vector has null size, or vect.size()!=weight.size()!", "Sigma", "Func.cpp");
-  
+
   double aver_n1 = 0., aver_n = 0., Sn = 0., sigma = 0., WeightTOT = 0.;
 
 #pragma omp parallel num_threads(omp_get_max_threads())
   {
-    
+
     double aver_n1T = 0., aver_nT = 0., SnT = 0., WeightT = 0.;
 
 #pragma omp for schedule(static, 2)
@@ -1026,7 +942,7 @@ double cbl::Sigma (const std::vector<double> vect, const std::vector<double> wei
       aver_nT += weight[i]/(WeightT+=weight[i])*(vect[i]-aver_nT);
       SnT += weight[i]*(vect[i]-aver_n1T)*(vect[i]-aver_nT);
     }
-    
+
 #pragma omp critical
     {
       WeightTOT += WeightT;
@@ -1037,9 +953,9 @@ double cbl::Sigma (const std::vector<double> vect, const std::vector<double> wei
 	sigma = sqrt(Sn/WeightTOT);
       }
     }
-    
+
   }
-  
+
   return sigma;
 }
 
@@ -1047,15 +963,15 @@ double cbl::Sigma (const std::vector<double> vect, const std::vector<double> wei
 // ============================================================================
 
 
-vector<double> cbl::Quartile (const std::vector<double> Vect) 
+vector<double> cbl::Quartile (const std::vector<double> Vect)
 {
   vector<double> vect = Vect;
-  sort(vect.begin(), vect.end()); 
+  sort(vect.begin(), vect.end());
   vector<double> vect1, vect2;
-  
+
   int start, n = vect.size();
   double first = 0., second = 0., third = 0.;
-  
+
   if (n>0) {
     if (n==1) {
       first = -1e10;
@@ -1065,9 +981,9 @@ vector<double> cbl::Quartile (const std::vector<double> Vect)
     if (n>1) {
       if (n % 2 == 0)  // the number of elemens is even
 	start = int(vect.size()*0.5);
-      else 
+      else
 	start = int(vect.size()*0.5)+1;
-	  
+
       for (size_t i=0; i<vect.size()*0.5; i++)
 	vect1.push_back(vect[i]);
       for (size_t i=start; i<vect.size(); i++)
@@ -1075,23 +991,23 @@ vector<double> cbl::Quartile (const std::vector<double> Vect)
 
       // first quartile
       n = vect1.size();
-      if (n % 2 == 0) 
+      if (n % 2 == 0)
 	first = (vect1[n*0.5-1]+vect1[(n*0.5)])*0.5;
-      else 
+      else
 	first = vect1[(n+1)*0.5-1];
-	  
+
       // second quartile = median
       n = vect.size();
-      if (n % 2 == 0)  
+      if (n % 2 == 0)
 	second = (vect[n*0.5-1]+vect[(n*0.5)])*0.5;
       else
 	second = vect[(n+1)*0.5-1];
-	 
+
       // third quartile
       n = vect2.size();
-      if (n % 2 == 0) 
+      if (n % 2 == 0)
 	third = (vect2[n*0.5-1]+vect2[(n*0.5)])*0.5;
-      else 
+      else
 	third = vect2[(n+1)*0.5-1];
     }
   }
@@ -1103,9 +1019,9 @@ vector<double> cbl::Quartile (const std::vector<double> Vect)
 // ============================================================================
 
 
-void cbl::Moment (const std::vector<double> data, double &ave, double &adev, double &sdev, double &var, double &skew, double &curt) 
+void cbl::Moment (const std::vector<double> data, double &ave, double &adev, double &sdev, double &var, double &skew, double &curt)
 {
-  ave = gsl_stats_mean(data.data(), 1, data.size());  
+  ave = gsl_stats_mean(data.data(), 1, data.size());
   adev = gsl_stats_absdev_m(data.data(), 1, data.size(), ave);
   var = gsl_stats_variance_m(data.data(), 1, data.size(), ave);
   sdev = sqrt(var);
@@ -1118,7 +1034,7 @@ void cbl::Moment (const std::vector<double> data, double &ave, double &adev, dou
 
 
 double cbl::relative_error_beta (const double bias, const double Volume, const double density) // from Eq. 20 of Bianchi et al. 2012
-{ 
+{
   double n0 = 1.7e-4; // in (h/Mpc)^3
   double CC = 4.9e2;  // in (Mpc/h)^1.5
 
@@ -1144,8 +1060,8 @@ void cbl::measure_var_function (const std::vector<double> var, const int bin, co
   for (int y=0; y<bin; y++) {
     double nHalo = 0.;
 
-    for (size_t k=0; k<var.size(); k++) 
-      if (V1<var[k] && var[k]<=V2) nHalo ++; 
+    for (size_t k=0; k<var.size(); k++)
+      if (V1<var[k] && var[k]<=V2) nHalo ++;
 
     double PHI = nHalo/(V2-V1)/Volume;
     double ERR = sqrt(nHalo)/(V2-V1)/Volume;
@@ -1153,9 +1069,9 @@ void cbl::measure_var_function (const std::vector<double> var, const int bin, co
     Var.push_back(pow(10.,(log10(V1)+log10(V2))*0.5));
     Phi.push_back(PHI);
     err.push_back(ERR);
-  
+
     V1 = V2;
-    V2 = V1*pow(10.,delta_logV);   
+    V2 = V1*pow(10.,delta_logV);
   }
 }
 
@@ -1163,9 +1079,9 @@ void cbl::measure_var_function (const std::vector<double> var, const int bin, co
 // ============================================================================================
 
 
-void cbl::bin_function (const std::string file_grid, double func(double, void *), void *par, const int bin, const double x_min, const double x_max, const std::string binning, std::vector<double> &xx, std::vector<double> &yy) 
+void cbl::bin_function (const std::string file_grid, double func(double, void *), void *par, const int bin, const double x_min, const double x_max, const std::string binning, std::vector<double> &xx, std::vector<double> &yy)
 {
-  if (binning != "lin" && binning != "loglin" && binning != "log") 
+  if (binning != "lin" && binning != "loglin" && binning != "log")
     ErrorCBL("binning can only be: lin, loglin or log!", "bin_function", "Func.cpp");
 
   xx.resize(bin), yy.resize(bin);
@@ -1174,8 +1090,8 @@ void cbl::bin_function (const std::string file_grid, double func(double, void *)
 
   if (fin) {
 
-    double XX, YY;    
-    
+    double XX, YY;
+
     for (int i=0; i<bin; i++) {
       fin >>XX>>YY;
       xx[i] = XX;
@@ -1188,18 +1104,18 @@ void cbl::bin_function (const std::string file_grid, double func(double, void *)
   }
 
   else {
-    
+
     coutCBL <<"I'm creating the grid file: "<<file_grid<<"..."<<endl;
 
     fin.clear(); fin.close();
 
     double X_min = x_min;
     double X_max = x_max;
-    
+
     if (binning != "lin") {
       if (x_min<0 || x_max<0)
 	ErrorCBL("x_min="+conv(x_min,par::fDP3)+", x_max="+conv(x_max,par::fDP3)+"!", "bin_function", "Func.cpp");
-    
+
       X_min = log10(x_min);
       X_max = log10(x_max);
     }
@@ -1215,9 +1131,9 @@ void cbl::bin_function (const std::string file_grid, double func(double, void *)
 	if (yy[i]<0) ErrorCBL("yy[i]<0!", "bin_function", "Func.cpp");
 	else yy[i] = log10(yy[i]);
       }
-      
-      fout <<xx[i]<<"   "<<yy[i]<<endl; 
-      coutCBL <<xx[i]<<"   "<<yy[i]<<endl; 
+
+      fout <<xx[i]<<"   "<<yy[i]<<endl;
+      coutCBL <<xx[i]<<"   "<<yy[i]<<endl;
     }
     fout.clear(); fout.close(); coutCBL <<"I wrote the file: "<<file_grid<<endl;
   }
@@ -1228,9 +1144,9 @@ void cbl::bin_function (const std::string file_grid, double func(double, void *)
 // ============================================================================================
 
 
-void cbl::bin_function_2D (const std::string file_grid, double func(double *, size_t, void *), void *par, const int bin, const double x1_min, const double x1_max, const double x2_min, const double x2_max, const std::string binning, std::vector<double> &xx1, std::vector<double> &xx2, std::vector<std::vector<double>> &yy) 
+void cbl::bin_function_2D (const std::string file_grid, double func(double *, size_t, void *), void *par, const int bin, const double x1_min, const double x1_max, const double x2_min, const double x2_max, const std::string binning, std::vector<double> &xx1, std::vector<double> &xx2, std::vector<std::vector<double>> &yy)
 {
-  if (binning != "lin" && binning != "loglin" && binning != "log") 
+  if (binning != "lin" && binning != "loglin" && binning != "log")
     ErrorCBL("binning can only be: lin, loglin or log !", "bin_function_2D", "Func.cpp");
 
   xx1.resize(bin), xx2.resize(bin); yy.resize(bin);
@@ -1239,8 +1155,8 @@ void cbl::bin_function_2D (const std::string file_grid, double func(double *, si
 
   if (fin) {
 
-    double XX1, XX2, YY;    
-    
+    double XX1, XX2, YY;
+
     for (int i=0; i<bin; i++) {
       for (int j=0; j<bin; j++) {
 	fin >>XX1>>XX2>>YY;
@@ -1258,8 +1174,8 @@ void cbl::bin_function_2D (const std::string file_grid, double func(double *, si
   }
 
   else {
-    
-    coutCBL <<"I'm creating the grid file: "<<file_grid<<"..."<<endl; 
+
+    coutCBL <<"I'm creating the grid file: "<<file_grid<<"..."<<endl;
 
     fin.clear(); fin.close();
 
@@ -1267,11 +1183,11 @@ void cbl::bin_function_2D (const std::string file_grid, double func(double *, si
     double X1_max = x1_max;
     double X2_min = x2_min;
     double X2_max = x2_max;
-    
+
     if (binning != "lin") {
       if (x1_min<0 || x1_max<0 || x2_min<0 || x2_max<0)
 	ErrorCBL("x1_min="+conv(x1_min,par::fDP3)+", x1_max="+conv(x1_max,par::fDP3)+", x2_min="+conv(x2_min,par::fDP3)+", x2_max="+conv(x2_max,par::fDP3)+"!", "bin_function_2D", "Func.cpp");
-    
+
       X1_min = log10(x1_min);
       X1_max = log10(x1_max);
       X2_min = log10(x2_min);
@@ -1286,19 +1202,19 @@ void cbl::bin_function_2D (const std::string file_grid, double func(double *, si
 
     for (int i=0; i<bin; i++) {
       for (int j=0; j<bin; j++) {
-	
-	if (binning=="lin") {vec[0] = xx1[i]; vec[1] = xx2[j];} 
+
+	if (binning=="lin") {vec[0] = xx1[i]; vec[1] = xx2[j];}
 	else {vec[0] = pow(10.,xx1[i]); vec[1] = pow(10.,xx2[j]);}
 
 	double ff = (binning=="log") ? log10(func(vec, 2, par)) : func(vec, 2, par);
 	yy[i].push_back(ff);
 
-	fout <<xx1[i]<<"   "<<xx2[j]<<"   "<<yy[i][j]<<endl; 
+	fout <<xx1[i]<<"   "<<xx2[j]<<"   "<<yy[i][j]<<endl;
 	coutCBL <<"--> "<<xx1[i]<<"   "<<xx2[j]<<"   "<<yy[i][j]<<endl;
-      
+
       }
     }
-    
+
     fout.clear(); fout.close(); coutCBL <<"I wrote the file: "<<file_grid<<endl;
   }
 
@@ -1323,7 +1239,7 @@ double cbl::func_grid_lin (double xx, void *params)
 double cbl::func_grid_loglin (double xx, void *params)
 {
   struct cbl::glob::STR_grid *pp = (struct cbl::glob::STR_grid *) params;
- 
+
   double lgx = log10(xx);
 
   return interpolated(lgx, pp->_xx, pp->_yy, "Linear");
@@ -1336,7 +1252,7 @@ double cbl::func_grid_loglin (double xx, void *params)
 double cbl::func_grid_log (double xx, void *params)
 {
   struct cbl::glob::STR_grid *pp = (struct cbl::glob::STR_grid *) params;
- 
+
   double lgx = log10(xx);
 
   return pow(10., interpolated(lgx, pp->_xx, pp->_yy, "Linear"));
@@ -1349,9 +1265,9 @@ double cbl::func_grid_log (double xx, void *params)
 double cbl::func_grid_lin_2D (double *xx, size_t dim, void *params)
 {
   (void)dim;
-  
+
   struct cbl::glob::STR_grid_2D *pp = (struct cbl::glob::STR_grid_2D *) params;
-   
+
   return interpolated_2D(xx[0], xx[1], pp->_xx1, pp->_xx2, pp->_yy, "Linear");
 }
 
@@ -1362,9 +1278,9 @@ double cbl::func_grid_lin_2D (double *xx, size_t dim, void *params)
 double cbl::func_grid_loglin_2D (double *xx, size_t dim, void *params)
 {
   (void)dim;
-  
+
   struct cbl::glob::STR_grid_2D *pp = (struct cbl::glob::STR_grid_2D *) params;
- 
+
   double lgx1 = log10(xx[0]);
   double lgx2 = log10(xx[1]);
 
@@ -1378,7 +1294,7 @@ double cbl::func_grid_loglin_2D (double *xx, size_t dim, void *params)
 double cbl::func_grid_log_2D (double *xx, size_t dim, void *params)
 {
   (void)dim;
-  
+
   struct cbl::glob::STR_grid_2D *pp = (struct cbl::glob::STR_grid_2D *) params;
 
   double lgx1 = log10(xx[0]);
@@ -1418,14 +1334,14 @@ void cbl::sdss_atbound2 (double &theta, double &phi)
 }
 
 
-void cbl::eq2sdss (const std::vector<double> ra, const std::vector<double> dec, std::vector<double> &lambda, std::vector<double> &eta) 
+void cbl::eq2sdss (const std::vector<double> ra, const std::vector<double> dec, std::vector<double> &lambda, std::vector<double> &eta)
 {
   lambda.resize(ra.size());
   eta.resize(ra.size());
 
   double SurveyCenterRa = 185.-90, SurveyCenterDec = 32.5;
   double d2r = par::pi/180.;
-  
+
   for (size_t i=0; i<ra.size(); i++) {
     double x = cos((ra[i]-SurveyCenterRa*d2r))*cos(dec[i]);
     double y = sin((ra[i]-SurveyCenterRa*d2r))*cos(dec[i]);
@@ -1442,19 +1358,19 @@ void cbl::eq2sdss (const std::vector<double> ra, const std::vector<double> dec, 
 // ============================================================================
 
 
-void cbl::sdss2eq (const std::vector<double> lambda, const std::vector<double> eta, std::vector<double> &ra, std::vector<double> &dec) 
+void cbl::sdss2eq (const std::vector<double> lambda, const std::vector<double> eta, std::vector<double> &ra, std::vector<double> &dec)
 {
   ra.resize(lambda.size());
   dec.resize(lambda.size());
 
   double SurveyCenterRa = 185., SurveyCenterDec = 32.5;
   double d2r = par::pi/180.;
-  
+
   for (size_t i=0; i<ra.size(); i++) {
     double x =  -1.0*sin(lambda[i]*d2r);
     double y = cos(lambda[i]*d2r)*cos(eta[i]*d2r+SurveyCenterDec*d2r);
     double z = cos(lambda[i]*d2r)*sin(eta[i]*d2r+SurveyCenterDec*d2r);
-  
+
     ra[i] = atan2(y,x)/d2r+SurveyCenterRa-90;
     dec[i] = asin(z)/d2r;
     sdss_atbound2(dec[i], ra[i]);
@@ -1503,21 +1419,21 @@ double cbl::number_from_distribution (const std::vector<double> xx, const std::v
 std::vector<double> cbl::vector_from_distribution (const int nRan, const std::vector<double> xx, const std::vector<double> fx, const double xmin, const double xmax, const int seed)
 {
   random::UniformRandomNumbers ran(0., 1., seed);
-  
+
   int sz = 100;
   bool Try = true;
 
   vector<double> Fx, new_x;
-  
+
   while (Try) {
 
     vector<double> Fx_test(sz, 0.);
-    const vector<double> new_x_test = linear_bin_vector(sz, xmin, xmax); 
-    
+    const vector<double> new_x_test = linear_bin_vector(sz, xmin, xmax);
+
     glob::FuncGrid dist(xx, fx, "Spline");
     const double NN = dist.integrate_qag(xmin, xmax);
-    
-    for (int i=1; i<sz; ++i) 
+
+    for (int i=1; i<sz; ++i)
       Fx_test[i] = dist.integrate_qag(xmin, new_x_test[i])/NN;
 
     if (is_sorted(Fx_test.begin(), Fx_test.end())) {
@@ -1525,19 +1441,19 @@ std::vector<double> cbl::vector_from_distribution (const int nRan, const std::ve
       new_x = new_x_test;
       Try = false;
     }
-   
+
     sz --;
     if (sz<30) ErrorCBL("the input distribution cannot be integrated properly!", "vector_from_distribution", "Func.cpp");
 
   }
 
   glob::FuncGrid ff(Fx, new_x, "Spline");
-  
+
   vector<double> varRandom;
-    
+
   while (varRandom.size()<unsigned(nRan)) {
     double xx = ff(ran());
-    if (xmin<=xx && xx<=xmax) 
+    if (xmin<=xx && xx<=xmax)
       varRandom.emplace_back(xx);
   }
 
@@ -1551,13 +1467,13 @@ std::vector<double> cbl::vector_from_distribution (const int nRan, const std::ve
 std::vector<size_t> cbl::minimum_maximum_indexes (const std::vector<double> xx, const double x_min, const double x_max)
 {
   size_t ind1 = xx.size(), ind2 = 0;
-  
-  for (size_t i=0; i<xx.size(); i++) 
+
+  for (size_t i=0; i<xx.size(); i++)
     if (x_min<xx[i] && xx[i]<x_max) {
       ind1 = min(i, ind1);
       ind2 = max(i, ind2);
     }
-  
+
   ind2 ++;
 
   return {ind1, ind2};
@@ -1586,7 +1502,7 @@ void cbl::read_invert_covariance (const std::string filecov, std::vector< std::v
     stringstream ss(line);
     vector<double> num; double NN = -1.e30;
     while (ss>>NN) num.push_back(NN);
-    if (num.size()==3 && num[2]>-1.e29) 
+    if (num.size()==3 && num[2]>-1.e29)
       cov[i].push_back(num[2]);
     else {i++; cov.push_back(vv);}
   }
@@ -1604,18 +1520,18 @@ void cbl::read_invert_covariance (const std::string filecov, std::vector< std::v
       if (i>i2 || i<i1 || j>i2 || j<i1) {
       }
       else
-	cov_lim[i-i1][j-i1] = cov[i][j]; 
+	cov_lim[i-i1][j-i1] = cov[i][j];
     }
   }
-  
+
   invert_matrix(cov_lim, cov_lim_inv, prec, Nres);
 
   for (size_t i=0; i<tot_size; i++) {
     for (size_t j=0; j<tot_size; j++) {
-      if (i>i2 || i<i1 || j>i2 || j<i1) 
+      if (i>i2 || i<i1 || j>i2 || j<i1)
 	cov_inv[i][j] = 0.;
       else
-	cov_inv[i][j] = cov_lim_inv[i-i1][j-i1]; 
+	cov_inv[i][j] = cov_lim_inv[i-i1][j-i1];
     }
   }
 
@@ -1639,8 +1555,8 @@ void cbl::convolution (const std::vector<double> f1, const std::vector<double> f
     ff2[i] = f2[i];
     rr[i] = 0.;
   }
-  
-  gsl_fft_real_wavetable *real; 
+
+  gsl_fft_real_wavetable *real;
   gsl_fft_halfcomplex_wavetable *hc;
   gsl_fft_real_workspace *work;
 
@@ -1652,11 +1568,11 @@ void cbl::convolution (const std::vector<double> f1, const std::vector<double> f
 
   gsl_fft_real_wavetable_free(real);
 
-  
+
   // Combining Fourier series coefficients (complex number product)
- 
+
   rr[0] = ff1[0]*ff2[0];
-  
+
   if (nn%2!=0) {
     for (unsigned int i=1; i<nn; i+=2) {
       rr[i] = ff1[i]*ff2[i]-ff1[i+1]*ff2[i+1];
@@ -1675,19 +1591,19 @@ void cbl::convolution (const std::vector<double> f1, const std::vector<double> f
   // Back to real space
 
   hc = gsl_fft_halfcomplex_wavetable_alloc(nn);
-  
+
   gsl_fft_halfcomplex_inverse(rr, 1., nn, hc, work);
 
   gsl_fft_halfcomplex_wavetable_free(hc);
 
-   
+
   // Re-order result
-  
+
   res.resize(nn, 0.);
 
   for (unsigned int i=0; i<=nn/2; i++)
     res[i] = deltaX*rr[i+nn/2];
-  
+
   for (unsigned int i=nn/2+1; i<nn; i++)
     res[i] = deltaX*rr[i-nn/2-1];
 
@@ -1703,12 +1619,12 @@ void cbl::distribution (std::vector<double> &xx, std::vector<double> &fx, std::v
 {
   if (xx.size()>0 || fx.size()>0 || FF.size()<=0 || nbin<=0)
     ErrorCBL("the following conditions have to be satisfied: xx.size()<=0, fx.size()<=0, FF.size()>0 and nbin>0. The values recived are instead: xx.size() = "+cbl::conv(xx.size(), par::fINT)+", fx.size() = "+cbl::conv(fx.size(), par::fINT)+", FF.size() = "+cbl::conv(FF.size(), par::fINT)+"and nbin = "+cbl::conv(nbin, par::fINT)+"!", "distribution", "Func.cpp");
-  
+
   double minFF = (V1>cbl::par::defaultDouble) ? V1 : Min(FF)*0.9999;
   double maxFF = (V2>cbl::par::defaultDouble) ? V2 : Max(FF)*1.0001;
 
-  
-  // using GSL to create the histogram 
+
+  // using GSL to create the histogram
 
   gsl_histogram *histo = gsl_histogram_alloc(nbin);
 
@@ -1723,17 +1639,17 @@ void cbl::distribution (std::vector<double> &xx, std::vector<double> &fx, std::v
   vector<double> Weight = WW;
   if (Weight.size()==0) Weight.resize(FF.size(), 1.);
   checkDim(Weight, FF.size(), "WW");
-  
+
   for (size_t i=0; i<FF.size(); i++)
     gsl_histogram_accumulate(histo, FF[i], Weight[i]);
-  
+
   double x1, x2;
 
   for (int i=0; i<nbin; i++) {
 
     gsl_histogram_get_range(histo, i, &x1, &x2);
     double val = gsl_histogram_get(histo, i);
-    
+
     if (linear) xx.push_back(0.5*(x1+x2));
     else xx.push_back(pow(10., 0.5*(log10(x1)+log10(x2))));
 
@@ -1751,15 +1667,15 @@ void cbl::distribution (std::vector<double> &xx, std::vector<double> &fx, std::v
       fx.push_back(val/((log10(x2)-log10(x1))*fact));
       err.push_back(sqrt(val)/((log10(x2)-log10(x1))*fact));
     }
-    
-  else 
+
+  else
     ErrorCBL("the value of string 'bin_type' is not permitted, possible selections are 'Linear', 'Log', 'Log10'!", "distribution", "Func.cpp");
 
-    
+
 
   }
 
-  
+
   // Gaussian convolution
 
   if (conv) {
@@ -1778,10 +1694,10 @@ void cbl::distribution (std::vector<double> &xx, std::vector<double> &fx, std::v
 
     for (int i=0; i<nbinN; i++)
       func[i] = 0;
-    
+
     for (int i=i1; i<i2; i++)
       func[i] = fx[i-i1];
-    
+
     for (int i=0; i<nbinK; i++) {
       func_tr[i][0] = 0;
       func_tr[i][1] = 0;
@@ -1801,7 +1717,7 @@ void cbl::distribution (std::vector<double> &xx, std::vector<double> &fx, std::v
       func_tr[i][0] = func_tr[i][0]*exp(-0.5*kk*kk*SS);
       func_tr[i][1] = func_tr[i][1]*exp(-0.5*kk*kk*SS);
     }
-    
+
     fftw_plan complex2real;
     complex2real = fftw_plan_dft_c2r_1d(nbinN, func_tr, func, FFTW_ESTIMATE);
     fftw_execute(complex2real);
@@ -1811,11 +1727,11 @@ void cbl::distribution (std::vector<double> &xx, std::vector<double> &fx, std::v
       fx[i-i1] = func[i]/nbinN;
   }
 
-  
+
   if (file_out!=par::defaultString && file_out!="") {
 
     ofstream fout(file_out.c_str()); checkIO(fout, file_out);
-    
+
     for (size_t i=0; i<xx.size(); i++)
       fout << xx[i] << "   " << fx[i] << "   " << err[i] << endl;
 
@@ -1870,7 +1786,7 @@ double cbl::Legendre_polynomial_mu_average (const double mu_min, const double mu
 
 
 // ============================================================================
-   
+
 
 double cbl::Legendre_polynomial_theta_average (const double theta_min, const double theta_max, const int ll)
 {
@@ -1943,13 +1859,13 @@ vector<vector<double>> cbl::Legendre_polynomial_triangles_average (const double 
   int nTriangles = static_cast<int>(r12.size());
   int nOrders = lMax+1;
 
-  vector<vector<double>> leg_pols(nTriangles, vector<double>(nOrders+3, 0.)); 
+  vector<vector<double>> leg_pols(nTriangles, vector<double>(nOrders+3, 0.));
 
 #pragma omp parallel num_threads(omp_get_max_threads())
   {
 
     LegendrePolynomials legendre(lMax);
-    
+
 #pragma omp for schedule(dynamic)
     for (int i=0; i<nTriangles; i++) {
 
@@ -1967,13 +1883,13 @@ vector<vector<double>> cbl::Legendre_polynomial_triangles_average (const double 
       leg_pols[i][2] = r23[i];
 
       vector<double> integral = legendre.triangle_integral(r12_min, r12_max, r13_min, r13_max, r23_min, r23_max, rel_err, nevals);
-      
-      for (int ell=0; ell<nOrders; ell++) 
+
+      for (int ell=0; ell<nOrders; ell++)
 	leg_pols[i][ell+3] = integral[ell];
 
-      //for (int ell=0; ell<nOrders; ell++) 
+      //for (int ell=0; ell<nOrders; ell++)
       //	leg_pols[i][ell+3] = cbl::Legendre_polynomial_triangles_average(r12_min, r12_max, r13_min, r13_max, r23_min, r23_max, ell, rel_err, abs_err, nevals);
-      
+
     }
   }
 
@@ -2017,9 +1933,9 @@ std::vector<std::vector<complex<double>>> cbl::spherical_harmonics (const int lm
   vector<vector<complex<double>>> coeff(nl);
 
   for(int ll=0; ll< nl; ll++){
-    
+
     vector<complex<double>> ylm(ll+1);
-    
+
     for (int mm=0; mm<ll+1; mm++){
       double fact = norm[mm]*gsl_sf_legendre_sphPlm (ll, mm, zz);
       ylm[mm] = fact*pow_exp[mm];
@@ -2051,11 +1967,11 @@ std::vector<std::complex<double>> cbl::spherical_harmonics_array (const int lmax
 
   gsl_sf_legendre_array_e(GSL_SF_LEGENDRE_SPHARM, lmax, zz, 1., Plm.data());
 
-  
+
   int n=0;
   for(int l=0; l<lmax+1; l++)
     for (int m=0; m<l+1; m++){
-      sph[n] = pow_exp[m]*Plm[n]; 
+      sph[n] = pow_exp[m]*Plm[n];
       n++;
     }
 
@@ -2171,13 +2087,13 @@ double cbl::jl_distance_average (const double kk, const int order, const double 
 std::vector<double> cbl::generate_correlated_data (const std::vector<double> mean, const std::vector<std::vector<double>> covariance, const int seed)
 {
   random::NormalRandomNumbers ran(0., 1., seed);
-  
+
   size_t sample_size = mean.size();
   vector<double> sample;
   vector<double> std;
 
   gsl_matrix *correlation = gsl_matrix_alloc(sample_size, sample_size);
-  
+
   for (size_t i=0; i<sample_size; i++) {
     std.push_back(sqrt(covariance[i][i]));
     sample.push_back(ran());
@@ -2189,16 +2105,16 @@ std::vector<double> cbl::generate_correlated_data (const std::vector<double> mea
     }
   }
 
-  
+
   // correlation matrix eigensystem
-  
+
   gsl_vector *eigenvalues = gsl_vector_alloc(sample_size);
   gsl_matrix *VV = gsl_matrix_alloc(sample_size, sample_size);
   gsl_matrix_set_zero(VV);
 
   gsl_matrix *eigenvectors = gsl_matrix_alloc(sample_size, sample_size);
 
-  gsl_eigen_symmv_workspace *ww = gsl_eigen_symmv_alloc(sample_size); 
+  gsl_eigen_symmv_workspace *ww = gsl_eigen_symmv_alloc(sample_size);
   gsl_eigen_symmv (correlation, eigenvalues, eigenvectors, ww);
   gsl_eigen_symmv_free(ww);
 
@@ -2211,7 +2127,7 @@ std::vector<double> cbl::generate_correlated_data (const std::vector<double> mea
       gsl_matrix_set(VV, i, j, v1*v2);
     }
   }
-  
+
   vector<double> cov_sample;
   for (size_t i=0; i<sample_size; i++) {
     gsl_vector *row = gsl_vector_alloc(sample_size);
@@ -2235,7 +2151,7 @@ double cbl::trapezoid_integration (const std::vector<double> xx, const std::vect
 
   for (size_t i=0; i<xx.size()-1; i++)
     Int += 0.5*(yy[i+1]+yy[i])*(xx[i+1]-xx[i]);
-  
+
   return Int;
 }
 
@@ -2288,7 +2204,7 @@ double cbl::coupling_3j(const int l, const int l_prime, const int l2)
 // ============================================================================
 
 
-double cbl::get_mu (const double r1, const double r2, const double r3) 
+double cbl::get_mu (const double r1, const double r2, const double r3)
 {
   return ( (r1*r1+r2*r2-r3*r3)/(2*r1*r2));
 }
@@ -2299,11 +2215,11 @@ double cbl::get_mu (const double r1, const double r2, const double r3)
 
 double cbl::window_function (const double x, const double min, const double max)
 {
-  if ((x>min) && (x<max)) 
+  if ((x>min) && (x<max))
     return 1.;
   else if ((x<min) or (x>max))
     return 0;
-  else 
+  else
     return 0.5;
 
   return 0.;
@@ -2347,12 +2263,12 @@ double cbl::three_spherical_bessel_integral (const double r1, const double r2, c
 std::vector<std::vector<double>> cbl::generate_correlated_data (const int nExtractions, const std::vector<double> mean, const std::vector<std::vector<double>> covariance, const int seed)
 {
   random::NormalRandomNumbers ran(0., 1., seed);
-  
+
   size_t sample_size = mean.size();
   vector<double> std;
 
   gsl_matrix *correlation = gsl_matrix_alloc(sample_size,sample_size);
-  
+
   for (size_t i=0; i<sample_size; i++) {
     std.push_back(sqrt(covariance[i][i]));
     for (size_t j=0; j<sample_size; j++) {
@@ -2371,16 +2287,16 @@ std::vector<std::vector<double>> cbl::generate_correlated_data (const int nExtra
     sample.push_back(subS);
   }
 
-  
+
   // correlation matrix eigensystem
-  
+
   gsl_vector *eigenvalues = gsl_vector_alloc(sample_size);
   gsl_matrix *VV = gsl_matrix_alloc(sample_size,sample_size);
   gsl_matrix_set_zero(VV);
 
   gsl_matrix *eigenvectors = gsl_matrix_alloc(sample_size,sample_size);
 
-  gsl_eigen_symmv_workspace *ww = gsl_eigen_symmv_alloc (sample_size); 
+  gsl_eigen_symmv_workspace *ww = gsl_eigen_symmv_alloc (sample_size);
   gsl_eigen_symmv (correlation, eigenvalues, eigenvectors, ww);
   gsl_eigen_symmv_free(ww);
 
@@ -2388,13 +2304,13 @@ std::vector<std::vector<double>> cbl::generate_correlated_data (const int nExtra
     for (size_t i=0; i<sample_size; i++) {
       if (gsl_vector_get(eigenvalues, j)<0)
         ErrorCBL("covariance matrix must be positive (semi-)definite but has at least one negative eigenvalue!", "generate_correlated_data", "Func.cpp");
-        
+
       double v1 = gsl_matrix_get(eigenvectors, i, j);
       double v2 = sqrt(gsl_vector_get(eigenvalues, j));
       gsl_matrix_set(VV, i, j, v1*v2);
     }
   }
-  
+
   vector<vector<double>> cov_sample;
 
   for (int k=0; k<nExtractions; k++) {
@@ -2406,12 +2322,12 @@ std::vector<std::vector<double>> cbl::generate_correlated_data (const int nExtra
 
       for (size_t j=0; j<sample_size; j++)
 	cov_SSample[i] += gsl_vector_get(row, j)*sample[k][j];
-      
+
       cov_SSample[i] = std[i]*cov_SSample[i]+mean[i];
     }
     cov_sample.push_back(cov_SSample);
   }
-  
+
   return cov_sample;
 }
 
@@ -2452,5 +2368,6 @@ void cbl::gauleg (const double x1, const double x2, double *x, double *w, const 
     w[n-i] = w[i-1];
   }
 }
+
 
 /// @endcond

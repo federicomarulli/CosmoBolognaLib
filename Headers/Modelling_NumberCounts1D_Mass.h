@@ -78,14 +78,14 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class Modelling_NumberCounts1D_Mass
+	 *  _NumberCounts1D_Mass
 	 */
 	Modelling_NumberCounts1D_Mass () = default;
 	
 	/**
 	 *  @brief constuctor
 	 *  @param nc the number counts to model
-	 *  @return object of class Modelling_NumberCounts1D_Mass
+	 *  _NumberCounts1D_Mass
 	 */
 	Modelling_NumberCounts1D_Mass (const std::shared_ptr<cbl::measure::numbercounts::NumberCounts> nc) 
 	  : Modelling_NumberCounts1D (nc) {}
@@ -95,14 +95,14 @@ namespace cbl {
 	 *  @param dataset the number counts dataset
 	 *  @param hist_type the histogram type
 	 *  @param fact the normalization factor
-	 *  @return object of class Modelling_NumberCounts1D_Mass
+	 *  _NumberCounts1D_Mass
 	 */
 	Modelling_NumberCounts1D_Mass (const std::shared_ptr<cbl::data::Data> dataset, glob::HistogramType hist_type, double fact)
 	  : Modelling_NumberCounts1D (dataset, hist_type, fact) {}
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_NumberCounts1D_Mass () = default;
 
@@ -140,9 +140,6 @@ namespace cbl {
 	 *  @param step number of steps used to compute the binned
 	 *  power spectrum
 	 *
-	 *  @param output_dir the output_dir directory
-	 *  where the output of external codes are written
-	 *  
 	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
 	 *  &rarr; normalize the power spectrum
 	 *
@@ -164,9 +161,9 @@ namespace cbl {
        	 *
 	 *  @param prec the precision
 	 *
-	 *  @return none
+	 *  
 	 */
-	void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4); 
+	void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4); 
 	
 	///@}
 
@@ -187,7 +184,7 @@ namespace cbl {
 	 *  @param cosmo_param_prior vector containing the priors for
 	 *  the cosmological parameters
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
 

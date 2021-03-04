@@ -64,13 +64,15 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member  
        */
       virtual void m_set_parameters_nbins () = 0;
   
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void m_set_parameters_binSize () = 0;
   
@@ -125,7 +127,6 @@ namespace cbl {
   
       /**
        *  @brief default constructor
-       *  @return object of class Pair2D
        */
       Pair2D ()
 	: m_binSize_inv_D1(1.), m_nbins_D1(50), m_shift_D1(0.5), m_binSize_inv_D2(1.), m_nbins_D2(50), m_shift_D2(0.5)
@@ -143,7 +144,6 @@ namespace cbl {
        *  in the second dimension
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D
        */
       Pair2D (const double binSize_D1, const int nbins_D1, const double shift_D1, const double binSize_D2, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: m_binSize_inv_D1(1./binSize_D1), m_nbins_D1(nbins_D1), m_shift_D1(shift_D1), m_binSize_inv_D2(1./binSize_D2), m_nbins_D2(nbins_D2), m_shift_D2(shift_D2)
@@ -151,7 +151,6 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
        */
       virtual ~Pair2D () = default;
       
@@ -270,7 +269,7 @@ namespace cbl {
        * @details set to 0 the m_PP1D and 
        * m_PP1D_weighted vector elements
        *
-       * @return none
+       * 
        */
       void reset () override;
 
@@ -278,7 +277,7 @@ namespace cbl {
        *  @brief set the protected member Pair2D::m_scale_D1[i]
        *  @param i the bin index in the first dimension
        *  @param pp the binned scale in the first dimension
-       *  @return none
+       *  
        */
       void set_scale_D1 (const int i, const double pp) { checkDim(m_scale_D1, i, "m_scale_D1"); m_scale_D1[i] = pp; }
 
@@ -286,7 +285,7 @@ namespace cbl {
        *  @brief set the protected member Pair2D::m_scale_D2[i]
        *  @param i the bin index in the second dimension
        *  @param pp the binned scale in the second dimension
-       *  @return none
+       *  
        */
       void set_scale_D2 (const int i, const double pp) { checkDim(m_scale_D2, i, "m_scale_D2"); m_scale_D2[i] = pp; }
       
@@ -295,7 +294,7 @@ namespace cbl {
        *  @param i the bin index in the first dimension
        *  @param j the bin index in the second dimension
        *  @param pp the number of pairs in the bin
-       *  @return none
+       *  
        */
       void set_PP2D (const int i, const int j, const double pp) { checkDim(m_PP2D, i, j, "m_PP2D"); m_PP2D[i][j] = pp; }
 
@@ -304,7 +303,7 @@ namespace cbl {
        *  @param i the bin index in the first dimension
        *  @param j the bin index in the second dimension
        *  @param pp the number of weighetd pairs in the bin
-       *  @return none
+       *  
        */
       void set_PP2D_weighted (const int i, const int j, const double pp) { checkDim(m_PP2D_weighted, i, j, "m_PP2D_weighted"); m_PP2D_weighted[i][j] = pp; }
       
@@ -313,7 +312,7 @@ namespace cbl {
        *  @param i the bin index in the first dimension
        *  @param j the bin index in the second dimension
        *  @param data the number of pairs in the bin
-       *  @return none
+       *  
        */
       void add_data2D (const int i, const int j, const std::vector<double> data) override;
       
@@ -323,7 +322,7 @@ namespace cbl {
        *  @param j the bin index in the second dimension
        *  @param pair pair pointer to an object of class Pair
        *  @param ww a multiplicative factor used for bootstrap
-       *  @return none
+       *  
        */
       void add_data2D (const int i, const int j, const std::shared_ptr<pairs::Pair> pair, const double ww=1.) override;
 
@@ -339,7 +338,7 @@ namespace cbl {
        *  @brief sum the number of binned pairs
        *  @param pp an object of class Pair
        *  @param ww the weight
-       *  @return none
+       *  
        */
       void Sum (const std::shared_ptr<Pair> pp, const double ww=1) override;
 
@@ -372,13 +371,15 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void m_set_parameters_nbins () = 0;
   
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void m_set_parameters_binSize () = 0;
   
@@ -416,7 +417,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair2D_comovingCartesian
        */
       Pair2D_comovingCartesian () : m_rpMin(0.1), m_rpMax(50.), m_piMin(0.1), m_piMax(50.) {}
 
@@ -436,7 +436,6 @@ namespace cbl {
        *  i.e. the shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingCartesian
        */
       Pair2D_comovingCartesian (const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(1., nbins_rp, shift_rp, 1., nbins_pi, shift_pi, angularUnits, angularWeight), m_rpMin(rpMin), m_rpMax(rpMax), m_piMin(piMin), m_piMax(piMax) {}
@@ -458,14 +457,12 @@ namespace cbl {
        *  i.e. the shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingCartesian
        */
       Pair2D_comovingCartesian (const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(binSize_rp, 50, shift_rp, binSize_pi, 50, shift_pi, angularUnits, angularWeight), m_rpMin(rpMin), m_rpMax(rpMax), m_piMin(piMin), m_piMax(piMax) {}
   
       /**
        *  @brief default destructor
-       *  @return none
        */
       virtual ~Pair2D_comovingCartesian () = default;
 
@@ -534,13 +531,13 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none
+       *  
        */
       void m_set_parameters_nbins () override;
     
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none
+       *  
        */
       void m_set_parameters_binSize () override;
 
@@ -555,7 +552,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair2D_comovingCartesian_linlin
        */
       Pair2D_comovingCartesian_linlin ()
 	{
@@ -579,7 +575,6 @@ namespace cbl {
        *  i.e. the shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingCartesian_linlin
        */
       Pair2D_comovingCartesian_linlin (const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(1., nbins_rp, shift_rp, 1., nbins_pi, shift_pi, angularUnits, angularWeight), Pair2D_comovingCartesian(rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight)
@@ -607,7 +602,6 @@ namespace cbl {
        *  i.e. the shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingCartesian_linlin
        */
       Pair2D_comovingCartesian_linlin (const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(binSize_rp, 50, shift_rp, binSize_pi, 50, shift_pi, angularUnits, angularWeight), Pair2D_comovingCartesian(rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight)
@@ -621,7 +615,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair2D_comovingCartesian_linlin () = default;
 
@@ -640,7 +634,7 @@ namespace cbl {
        *  @param ir the bin index in the first dimension
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
-       *  @return none
+       *  
        */
       void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
 
@@ -650,7 +644,7 @@ namespace cbl {
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
        *  @param weight the weight of the region
-       *  @return none
+       *  
        */
       void set (const int ir, const int jr, const double ww, const double weight=1) override;
 
@@ -660,7 +654,7 @@ namespace cbl {
        *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
   
@@ -693,13 +687,13 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none
+       *  
        */
       void m_set_parameters_nbins () override;
     
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none
+       *  
        */
       void m_set_parameters_binSize () override;
 
@@ -714,7 +708,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair2D_comovingCartesian_loglin
        */
       Pair2D_comovingCartesian_loglin ()
 	{
@@ -738,7 +731,6 @@ namespace cbl {
        *  i.e. the shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingCartesian_loglin
        */
       Pair2D_comovingCartesian_loglin (const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(1., nbins_rp, shift_rp, 1., nbins_pi, shift_pi, angularUnits, angularWeight), Pair2D_comovingCartesian(rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight)
@@ -766,7 +758,6 @@ namespace cbl {
        *  i.e. the shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingCartesian_loglin
        */
       Pair2D_comovingCartesian_loglin (const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(binSize_rp, 50, shift_rp, binSize_pi, 50, shift_pi, angularUnits, angularWeight), Pair2D_comovingCartesian(rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight)
@@ -780,7 +771,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair2D_comovingCartesian_loglin () = default;
 
@@ -799,7 +790,7 @@ namespace cbl {
        *  @param ir the bin index in the first dimension
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
-       *  @return none
+       *  
        */
       void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
 
@@ -809,7 +800,7 @@ namespace cbl {
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
        *  @param weight the weight of the region
-       *  @return none
+       *  
        */
       void set (const int ir, const int jr, const double ww, const double weight=1) override;
 
@@ -819,7 +810,7 @@ namespace cbl {
        *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
 
@@ -851,13 +842,13 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none
+       *  
        */
       void m_set_parameters_nbins () override;
     
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none
+       *  
        */
       void m_set_parameters_binSize () override;
 
@@ -872,7 +863,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair2D_comovingCartesian_linlog
        */
       Pair2D_comovingCartesian_linlog ()
 	{
@@ -896,7 +886,6 @@ namespace cbl {
        *  i.e. the shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingCartesian_linlog
        */
       Pair2D_comovingCartesian_linlog (const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(1., nbins_rp, shift_rp, 1., nbins_pi, shift_pi, angularUnits, angularWeight), Pair2D_comovingCartesian(rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight)
@@ -924,7 +913,6 @@ namespace cbl {
        *  i.e. the shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingCartesian_linlog
        */
       Pair2D_comovingCartesian_linlog (const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(binSize_rp, 50, shift_rp, binSize_pi, 50, shift_pi, angularUnits, angularWeight), Pair2D_comovingCartesian(rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight)
@@ -938,7 +926,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair2D_comovingCartesian_linlog () = default;
 
@@ -957,7 +945,7 @@ namespace cbl {
        *  @param ir the bin index in the first dimension
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
-       *  @return none
+       *  
        */
       void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
 
@@ -967,7 +955,7 @@ namespace cbl {
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
        *  @param weight the weight of the region
-       *  @return none
+       *  
        */
       void set (const int ir, const int jr, const double ww, const double weight=1) override;
 
@@ -977,7 +965,7 @@ namespace cbl {
        *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
 
@@ -1009,13 +997,13 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none
+       *  
        */
       void m_set_parameters_nbins () override;
     
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none
+       *  
        */
       void m_set_parameters_binSize () override;
 
@@ -1030,7 +1018,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair2D_comovingCartesian_loglog
        */
       Pair2D_comovingCartesian_loglog ()
 	{
@@ -1054,7 +1041,6 @@ namespace cbl {
        *  i.e. the shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingCartesian_loglog
        */
       Pair2D_comovingCartesian_loglog (const double rpMin, const double rpMax, const int nbins_rp, const double shift_rp, const double piMin, const double piMax, const int nbins_pi, const double shift_pi, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(1., nbins_rp, shift_rp, 1., nbins_pi, shift_pi, angularUnits, angularWeight), Pair2D_comovingCartesian(rpMin, rpMax, nbins_rp, shift_rp, piMin, piMax, nbins_pi, shift_pi, angularUnits, angularWeight)
@@ -1082,7 +1068,6 @@ namespace cbl {
        *  i.e. the shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingCartesian_loglog
        */
       Pair2D_comovingCartesian_loglog (const double rpMin, const double rpMax, const double binSize_rp, const double shift_rp, const double piMin, const double piMax, const double binSize_pi, const double shift_pi, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(binSize_rp, 50, shift_rp, binSize_pi, 50, shift_pi, angularUnits, angularWeight), Pair2D_comovingCartesian(rpMin, rpMax, binSize_rp, shift_rp, piMin, piMax, binSize_pi, shift_pi, angularUnits, angularWeight)
@@ -1096,7 +1081,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair2D_comovingCartesian_loglog () = default;
 
@@ -1115,7 +1100,7 @@ namespace cbl {
        *  @param ir the bin index in the first dimension
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
-       *  @return none
+       *  
        */
       void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
 
@@ -1125,7 +1110,7 @@ namespace cbl {
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
        *  @param weight the weight of the region
-       *  @return none
+       *  
        */
       void set (const int ir, const int jr, const double ww, const double weight=1) override;
 
@@ -1135,7 +1120,7 @@ namespace cbl {
        *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
 
@@ -1167,13 +1152,15 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void m_set_parameters_nbins () = 0;
   
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void m_set_parameters_binSize () = 0;
   
@@ -1211,7 +1198,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair2D_comovingPolar
        */
       Pair2D_comovingPolar () = default;
 
@@ -1229,7 +1215,6 @@ namespace cbl {
        *  i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingPolar
        */
       Pair2D_comovingPolar (const double rMin, const double rMax, const int nbins_D1, const double shift_D1, const double muMin, const double muMax, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(1., nbins_D1, shift_D1, 1., nbins_D2, shift_D2, angularUnits, angularWeight), m_rMin(rMin), m_rMax(rMax), m_muMin(muMin), m_muMax(muMax) {}
@@ -1248,14 +1233,13 @@ namespace cbl {
        *  i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingPolar
        */
       Pair2D_comovingPolar (const double rMin, const double rMax, const double binSize_D1, const double shift_D1, const double muMin, const double muMax, const double binSize_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(binSize_D1, 50, shift_D1, binSize_D2, 50, shift_D2, angularUnits, angularWeight), m_rMin(rMin), m_rMax(rMax), m_muMin(muMin), m_muMax(muMax) {}
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       virtual ~Pair2D_comovingPolar () = default;
 
@@ -1320,13 +1304,13 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none
+       *  
        */
       void m_set_parameters_nbins () override;
     
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none
+       *  
        */
       void m_set_parameters_binSize () override;
 
@@ -1341,7 +1325,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair2D_comovingPolar_linlin
        */
       Pair2D_comovingPolar_linlin ()
 	{
@@ -1363,7 +1346,6 @@ namespace cbl {
        *  i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingPolar_linlin
        */
       Pair2D_comovingPolar_linlin (const double rMin, const double rMax, const int nbins_D1, const double shift_D1, const double muMin, const double muMax, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(1., nbins_D1, shift_D1, 1., nbins_D2, shift_D2, angularUnits, angularWeight), Pair2D_comovingPolar(rMin, rMax, nbins_D1, shift_D1, muMin, muMax, nbins_D2, shift_D2, angularUnits, angularWeight)
@@ -1389,7 +1371,6 @@ namespace cbl {
        *  i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingPolar_linlin
        */
       Pair2D_comovingPolar_linlin (const double rMin, const double rMax, const double binSize_D1, const double shift_D1, const double muMin, const double muMax, const double binSize_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(binSize_D1, 50, shift_D1, binSize_D2, 50, shift_D2, angularUnits, angularWeight), Pair2D_comovingPolar(rMin, rMax, binSize_D1, shift_D1, muMin, muMax, binSize_D2, shift_D2, angularUnits, angularWeight)
@@ -1403,7 +1384,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair2D_comovingPolar_linlin () = default;
 
@@ -1422,7 +1403,7 @@ namespace cbl {
        *  @param ir the bin index in the first dimension
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
-       *  @return none
+       *  
        */
       void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
 
@@ -1432,7 +1413,7 @@ namespace cbl {
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
        *  @param weight the weight of the region
-       *  @return none
+       *  
        */
       void set (const int ir, const int jr, const double ww, const double weight=1) override;
 
@@ -1442,7 +1423,7 @@ namespace cbl {
        *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
 
@@ -1475,13 +1456,13 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none
+       *  
        */
       void m_set_parameters_nbins () override;
     
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none
+       *  
        */
       void m_set_parameters_binSize () override;
 
@@ -1496,7 +1477,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair2D_comovingPolar_loglin
        */
       Pair2D_comovingPolar_loglin ()
 	{
@@ -1518,7 +1498,6 @@ namespace cbl {
        *  i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingPolar_loglin
        */
       Pair2D_comovingPolar_loglin (const double rMin, const double rMax, const int nbins_D1, const double shift_D1, const double muMin, const double muMax, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(1., nbins_D1, shift_D1, 1., nbins_D2, shift_D2, angularUnits, angularWeight), Pair2D_comovingPolar(rMin, rMax, nbins_D1, shift_D1, muMin, muMax, nbins_D2, shift_D2, angularUnits, angularWeight)
@@ -1544,7 +1523,6 @@ namespace cbl {
        *  i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingPolar_loglin
        */
       Pair2D_comovingPolar_loglin (const double rMin, const double rMax, const double binSize_D1, const double shift_D1, const double muMin, const double muMax, const double binSize_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(binSize_D1, 50, shift_D1, binSize_D2, 50, shift_D2, angularUnits, angularWeight), Pair2D_comovingPolar(rMin, rMax, binSize_D1, shift_D1, muMin, muMax, binSize_D2, shift_D2, angularUnits, angularWeight)
@@ -1558,7 +1536,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair2D_comovingPolar_loglin () = default;
 
@@ -1577,7 +1555,7 @@ namespace cbl {
        *  @param ir the bin index in the first dimension
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
-       *  @return none
+       *  
        */
       void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
 
@@ -1587,7 +1565,7 @@ namespace cbl {
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
        *  @param weight the weight of the region
-       *  @return none
+       *  
        */
       void set (const int ir, const int jr, const double ww, const double weight=1) override;
 
@@ -1597,7 +1575,7 @@ namespace cbl {
        *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
 
@@ -1630,13 +1608,13 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none
+       *  
        */
       void m_set_parameters_nbins () override;
     
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none
+       *  
        */
       void m_set_parameters_binSize () override;
 
@@ -1651,7 +1629,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair2D_comovingPolar_linlog
        */
       Pair2D_comovingPolar_linlog ()
 	{
@@ -1673,7 +1650,6 @@ namespace cbl {
        *  i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingPolar_linlog
        */
       Pair2D_comovingPolar_linlog (const double rMin, const double rMax, const int nbins_D1, const double shift_D1, const double muMin, const double muMax, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(1., nbins_D1, shift_D1, 1., nbins_D2, shift_D2, angularUnits, angularWeight), Pair2D_comovingPolar(rMin, rMax, nbins_D1, shift_D1, muMin, muMax, nbins_D2, shift_D2, angularUnits, angularWeight)
@@ -1699,7 +1675,6 @@ namespace cbl {
        *  i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingPolar_linlog
        */
       Pair2D_comovingPolar_linlog (const double rMin, const double rMax, const double binSize_D1, const double shift_D1, const double muMin, const double muMax, const double binSize_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(binSize_D1, 50, shift_D1, binSize_D2, 50, shift_D2, angularUnits, angularWeight), Pair2D_comovingPolar(rMin, rMax, binSize_D1, shift_D1, muMin, muMax, binSize_D2, shift_D2, angularUnits, angularWeight)
@@ -1713,7 +1688,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair2D_comovingPolar_linlog () = default;
 
@@ -1732,7 +1707,7 @@ namespace cbl {
        *  @param ir the bin index in the first dimension
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
-       *  @return none
+       *  
        */
       void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
 
@@ -1742,7 +1717,7 @@ namespace cbl {
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
        *  @param weight the weight of the region
-       *  @return none
+       *  
        */
       void set (const int ir, const int jr, const double ww, const double weight=1) override;
 
@@ -1752,7 +1727,7 @@ namespace cbl {
        *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
 
@@ -1784,13 +1759,13 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none
+       *  
        */
       void m_set_parameters_nbins () override;
     
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none
+       *  
        */
       void m_set_parameters_binSize () override;
 
@@ -1805,7 +1780,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Pair2D_comovingPolar_loglog
        */
       Pair2D_comovingPolar_loglog ()
 	{
@@ -1827,7 +1801,6 @@ namespace cbl {
        *  i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingPolar_loglog
        */
       Pair2D_comovingPolar_loglog (const double rMin, const double rMax, const int nbins_D1, const double shift_D1, const double muMin, const double muMax, const int nbins_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(1., nbins_D1, shift_D1, 1., nbins_D2, shift_D2, angularUnits, angularWeight), Pair2D_comovingPolar(rMin, rMax, nbins_D1, shift_D1, muMin, muMax, nbins_D2, shift_D2, angularUnits, angularWeight)
@@ -1853,7 +1826,6 @@ namespace cbl {
        *  i.e. the radial shift is binSize*shift
        *  @param angularUnits angular units
        *  @param angularWeight angular weight function
-       *  @return object of class Pair2D_comovingPolar_loglog
        */
       Pair2D_comovingPolar_loglog (const double rMin, const double rMax, const double binSize_D1, const double shift_D1, const double muMin, const double muMax, const double binSize_D2, const double shift_D2, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr)
 	: Pair2D(binSize_D1, 50, shift_D1, binSize_D2, 50, shift_D2, angularUnits, angularWeight), Pair2D_comovingPolar(rMin, rMax, binSize_D1, shift_D1, muMin, muMax, binSize_D2, shift_D2, angularUnits, angularWeight)
@@ -1867,7 +1839,7 @@ namespace cbl {
   
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Pair2D_comovingPolar_loglog () = default;
 
@@ -1886,7 +1858,7 @@ namespace cbl {
        *  @param ir the bin index in the first dimension
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
-       *  @return none
+       *  
        */
       void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww) override;
 
@@ -1896,7 +1868,7 @@ namespace cbl {
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
        *  @param weight the weight of the region
-       *  @return none
+       *  
        */
       void set (const int ir, const int jr, const double ww, const double weight=1) override;
 
@@ -1906,7 +1878,7 @@ namespace cbl {
        *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none
+       *  
        */
       void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) override;
 

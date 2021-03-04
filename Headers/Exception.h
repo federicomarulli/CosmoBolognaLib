@@ -133,7 +133,7 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Data
+       *  
        */
       Exception ()
 	: m_message(par::col_red+"\n*** CosmoBolognaLib generic error! ***\n"+par::col_default), m_exitCode(ExitCode::_error_), m_functionCBL(cbl::par::defaultString), m_fileCBL(cbl::par::defaultString) {}
@@ -152,8 +152,6 @@ namespace cbl {
        *
        *  @param fileCBL the CBL file containing the function where
        *  the exception is raised
-       *
-       *  @return object of class Exception
        */
       explicit Exception (const std::string message, const ExitCode exitCode=ExitCode::_error_, const std::string header="\n", const std::string functionCBL=cbl::par::defaultString, const std::string fileCBL=cbl::par::defaultString)
 	: m_exitCode(exitCode), m_functionCBL(functionCBL), m_fileCBL(fileCBL)
@@ -186,7 +184,6 @@ namespace cbl {
     
       /**
        *  @brief default destructor
-       *  @return none
        */
       virtual ~Exception () noexcept = default;
 

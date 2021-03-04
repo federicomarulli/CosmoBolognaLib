@@ -163,7 +163,7 @@ void cbl::data::Table::insert (const std::vector<std::string> names, const std::
 void cbl::data::Table::read (const std::string input_dir, const std::string input_file, const std::vector<std::string> names, const vector<size_t> use_cols, const size_t header_lines_to_skip)
 {
   string file = input_dir+input_file;
- // coutCBL << "Reading the table " << file << endl;
+  coutCBL << "Reading the table " << file << endl;
 
   const size_t ncols = names.size();
 
@@ -209,7 +209,7 @@ void cbl::data::Table::read (const std::string input_dir, const std::string inpu
 
   m_set(names, cbl::transpose(values));
 
- // coutCBL << "Done!" << endl << endl;
+  coutCBL << "Done!" << endl << endl;
 }
 
 

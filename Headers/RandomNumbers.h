@@ -87,7 +87,7 @@ namespace cbl {
 
       /**
        * @brief default constructor
-       * @return object of class RandomNumbers
+       * 
        */
       RandomNumbers () = default;
       
@@ -96,14 +96,14 @@ namespace cbl {
        *  @param seed the random number generator seed
        *  @param MinVal lower limit of the random numbers range
        *  @param MaxVal upper limit of the random numbers range
-       *  @return object of class RandomNumbers
+       *  
        */
       RandomNumbers (const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble);
 
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       virtual ~RandomNumbers () = default;
 
@@ -117,7 +117,6 @@ namespace cbl {
       /**
        *  @brief set the random number generator seed
        *  @param seed the random number generator seed
-       *  @return none
        */
       void set_seed (const int seed);
 
@@ -125,22 +124,21 @@ namespace cbl {
        *  @brief set the range for the random number extraction
        *  @param MinVal lower limit of the random numbers range
        *  @param MaxVal upper limit of the random numbers range
-       *  @return none
        */
       void set_range (const double MinVal, const double MaxVal);
 
       /**
        *  @brief set the value for constant distribution
        *  @param value the value to be returned
-       *  @return none
        */
-      void set_value(const double value) 
+      void set_value (const double value) 
       { (void)value; ErrorCBL("error!", "set_value", "RandomNumbers.h"); }
 
       /**
        *  @brief set the mean for Poisson distribution
        *  @param mean the Poisson distribution mean
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_mean (const double mean)
       { (void)mean; ErrorCBL("error!", "set_mean", "RandomNumbers.h"); }
@@ -149,7 +147,8 @@ namespace cbl {
        *  @brief set parameters for Normal distribution
        *  @param mean the Normal distribution mean
        *  @param sigma the Normal distribution standard deviation
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_mean_sigma (const double mean, const double sigma)
       { (void)mean; (void)sigma; ErrorCBL("error!", "set_mean_sigma", "RandomNumbers.h"); }
@@ -158,7 +157,8 @@ namespace cbl {
        *  @brief set parameters for Discrete distribution
        *  @param values the values to be extracted
        *  @param weights the values weights
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_discrete_values (const std::vector<double> values, const std::vector<double> weights)
       { (void)values; (void)weights; ErrorCBL("error!", "set_discrete_values", "RandomNumbers.h"); }
@@ -167,7 +167,8 @@ namespace cbl {
        *  @brief set the parameters for the interpolated distribution
        *  @param values the values to be extracted
        *  @param weights the values weights
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_interpolated_distribution (const std::vector<double> values, const std::vector<double> weights)
       { (void)values; (void)weights; ErrorCBL("error!", "set_interpolated_distribution", "RandomNumbers.h"); }
@@ -183,7 +184,8 @@ namespace cbl {
        *  @param parameter the parameters of the probability
        *  distribution function
        *
-       *  @return none
+       *  @return none, or an error message if the derived object does
+       *  not have this member
        */
       virtual void set_custom_distribution (const distribution_func func, const std::shared_ptr<void> modelInput, const std::vector<double> parameter)
       { (void)func; (void)modelInput; (void)parameter; ErrorCBL("error!", "set_custom_distribution", "RandomNumbers.h"); }
@@ -212,7 +214,6 @@ namespace cbl {
       /**
        *  @brief constructor
        *  @param value the value to be returned
-       *  @return object of class ConstantRandomNumbers
        */
       ConstantRandomNumbers (const double value) : RandomNumbers(1)
       {
@@ -221,15 +222,12 @@ namespace cbl {
 
       /**
        *  @brief default destructor
-       *
-       *  @return none
        */
       ~ConstantRandomNumbers () = default; 
 
       /**
        *  @brief set the value for constant distribution
        *  @param value the value to be returned
-       *  @return none
        */
       void set_value(const double value)
       { m_value = value; }
@@ -270,14 +268,13 @@ namespace cbl {
        *  @param MinVal lower limit of the random numbers range
        *  @param MaxVal upper limit of the random numbers range
        *  @param seed the random number generator seed
-       *  @return object of class UniformRandomNumbers
        */
       UniformRandomNumbers (double MinVal, const double MaxVal, const int seed);
 
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       ~UniformRandomNumbers () = default; 
 
@@ -315,14 +312,13 @@ namespace cbl {
        *  @param MaxVal upper limit of the random numbers range;
        *  the corresponding upper limit will be floor(MaxVal)
        *  @param seed the random number generator seed
-       *  @return object of class UniformRandomNumbers
        */
       UniformRandomNumbers_Int (double MinVal, const double MaxVal, const int seed);
 
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       ~UniformRandomNumbers_Int () = default; 
 
@@ -363,21 +359,20 @@ namespace cbl {
        *  @param seed the random number generator seed
        *  @param MinVal lower limit of the random numbers range
        *  @param MaxVal upper limit of the random numbers range
-       *  @return object of class PoissonRandomNumbers
        */
       PoissonRandomNumbers (const double mean, const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble);
 
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       ~PoissonRandomNumbers () = default;
 
       /**
        *  @brief set the mean for Poisson distribution
        *  @param mean the Poisson distribution mean
-       *  @return none
+       *  
        */
       void set_mean (const double mean);
 
@@ -397,7 +392,6 @@ namespace cbl {
      *
      *  The base class to generate random numbers
      *  following a Normal distribution
-     *
      */
     class NormalRandomNumbers : public RandomNumbers
     {
@@ -422,14 +416,13 @@ namespace cbl {
        *  @param seed the random number generator seed
        *  @param MinVal lower limit of the random numbers range
        *  @param MaxVal upper limit of the random numbers range
-       *  @return object of class NormalRandomNumbers
        */
       NormalRandomNumbers (const double mean, const double sigma, const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble);
 
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       ~NormalRandomNumbers () = default;
 
@@ -437,7 +430,7 @@ namespace cbl {
        *  @brief set parameters for Normal distribution
        *  @param mean the Normal distribution mean
        *  @param sigma the Normal distribution standard deviation
-       *  @return none
+       *  
        */
       void set_mean_sigma (const double mean, const double sigma);
 
@@ -482,14 +475,14 @@ namespace cbl {
        *  @param seed the random number generator seed
        *  @param MinVal lower limit of the random numbers range
        *  @param MaxVal upper limit of the random numbers range
-       *  @return object of class RandomNumbers
+       *  
        */
       DiscreteRandomNumbers (const std::vector<double> values, const std::vector<double> weights, const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble);
 
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       ~DiscreteRandomNumbers () = default;
 
@@ -497,7 +490,7 @@ namespace cbl {
        *  @brief set parameters for Discrete distribution
        *  @param values the values to be extracted
        *  @param weights the values weights
-       *  @return none
+       *  
        */
       void set_discrete_values (const std::vector<double> values, const std::vector<double> weights);
 
@@ -539,21 +532,21 @@ namespace cbl {
        *  @param distribution_function density probability function at xx 
        *  @param interpolation_method the method to interpolate
        *  @param seed the random number generator seed
-       *  @return object of class RandomNumbers
+       *  
        */
       DistributionRandomNumbers (const std::vector<double> xx, const std::vector<double> distribution_function, const std::string interpolation_method, const int seed);
 
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       ~DistributionRandomNumbers () = default;
 
       /**
        *  @brief set the random number generator seed
        *  @param seed the random number generator seed
-       *  @return none
+       *  
        */
       void set_seed (const int seed);
 
@@ -562,7 +555,7 @@ namespace cbl {
        *  @param xx vector containing the values with known distribution function 
        *  @param distribution_function vector containing the distribution function at xx 
        *  @param interpolation_method the method of interpolation
-       *  @return none
+       *  
        */
       void set_interpolated_distribution (const std::vector<double> xx, const std::vector<double> distribution_function, const std::string interpolation_method);
 
@@ -622,21 +615,21 @@ namespace cbl {
        *
        *  @param MaxVal maximum value
        *
-       *  @return object of class RandomNumbers
+       *  
        */
       CustomDistributionRandomNumbers (const distribution_func func, const std::shared_ptr<void> modelInput, const std::vector<double> parameter, const int seed, const double MinVal = par::defaultDouble, const double MaxVal = -par::defaultDouble);
 
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       ~CustomDistributionRandomNumbers () = default;
 
       /**
        *  @brief set the random number generator seed
        *  @param seed the random number generator seed
-       *  @return none
+       *  
        */
       void set_seed (const int seed);
 
@@ -651,7 +644,7 @@ namespace cbl {
        *  @param parameter the parameters of the probability
        *  distribution function
        *
-       *  @return none
+       *  
        */
       void set_custom_distribution (const distribution_func func, const std::shared_ptr<void> modelInput, const std::vector<double> parameter);
 

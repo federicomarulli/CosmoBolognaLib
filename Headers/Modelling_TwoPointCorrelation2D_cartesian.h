@@ -73,8 +73,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class
-	 *  Modelling_TwoPointCorrelation2D_cartesian
 	 */
 	Modelling_TwoPointCorrelation2D_cartesian () = default;
 
@@ -82,9 +80,6 @@ namespace cbl {
 	 *  @brief constructor
 	 *  
 	 *  @param twop the two-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation2D_cartesian
 	 */
 	Modelling_TwoPointCorrelation2D_cartesian (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
 	  : Modelling_TwoPointCorrelation2D(twop) {}
@@ -94,16 +89,13 @@ namespace cbl {
 	 *  
 	 *  @param twop_dataset the dataset containing the two-point
 	 *  correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation_monopole
 	 */
 	Modelling_TwoPointCorrelation2D_cartesian (const std::shared_ptr<data::Data> twop_dataset)
 	  : Modelling_TwoPointCorrelation2D() { set_data(twop_dataset); }
       
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_TwoPointCorrelation2D_cartesian () = default;
 	
@@ -119,50 +111,44 @@ namespace cbl {
 	 *  @brief set the fiducial model for dark matter 
 	 *  two point correlation function
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_fiducial_xiDM ();
 
 	/**
-	 *  @brief set the model to fit the 2D two-point correlation
-	 *  function, in Cartesian coordinates
+	 *  @brief set the dispersion model to fit the 2D two-point
+	 *  correlation function, in Cartesian coordinates
+	 *
+	 *  the 2D two-point correlation function, in Cartesian
+	 *  coordinates, is computed by
+	 *  cbl::modelling::twopt::xi2D_dispersion
+	 *
+	 *  the model has 5 parameters:
+	 *    - \f$f(z)\sigma_8(z)\f$
+	 *    - \f$b(z)\sigma_8(z)\f$
+	 *    - \f$\sigma_v\f$
+	 *    - \f$\alpha_\perp=\frac{D_{\rm A,1}(z)}{D_{\rm A,2}(z)}\f$
+	 *    - \f$\alpha_\parallel=\frac{H_2(z)}{H_1(z)}\f$
+	 *
+	 *  @param fsigma8_prior prior for the parameter
+	 *  \f$f(z)\sigma_8(z)\f$
+	 *
+	 *  @param bsigma8_prior prior for the parameter
+	 *  \f$b(z)\sigma_8(z)\f$
+	 *
+	 *  @param sigmav_prior prior for the parameter
+	 *  \f$\sigma_v(z)\f$
 	 *
 	 *  @param alpha_perp_prior prior for the parameter
-	 *  \f$\alpha_\perp=\frac{D_{\rm A,1}(z)}{D_{\rm A,2}(z)}\f$
+	 *  \f$\alpha_\perp=\frac{D_{\rm A,1}(z)}{D_{\rm A,2}(z)}\f$;
+	 *  a Dirac delta function centred on 1, by default
 	 *
 	 *  @param alpha_par_prior prior for the parameter
-	 *  \f$\alpha_\parallel=\frac{H_2(z)}{H_1(z)}\f$
-	 *
-	 *  @param fsigma8_prior prior for the parameter
-	 *  \f$f(z)\sigma_8(z)\f$
-	 *
-	 *  @param bsigma8_prior prior for the parameter
-	 *  \f$b(z)\sigma_8(z)\f$
-	 *
-	 *  @param sigma12_prior prior for the parameter
-	 *  \f$\sigma_{12}(z)\f$
-	 *
-	 *  @return none
+	 *  \f$\alpha_\parallel=\frac{H_2(z)}{H_1(z)}\f$; a Dirac
+	 *  delta function centred on 1, by default
 	 */
-	void set_model_dispersionModel_AP (const statistics::PriorDistribution alpha_perp_prior={}, const statistics::PriorDistribution alpha_par_prior={}, const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={});
+	void set_model_dispersion (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, const statistics::PriorDistribution alpha_perp_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_par_prior={cbl::glob::DistributionType::_Constant_, 1.});
 
-	/**
-	 *  @brief set the model to fit the 2D two-point correlation
-	 *  function, in Cartesian coordinates
-	 *
-	 *  @param fsigma8_prior prior for the parameter
-	 *  \f$f(z)\sigma_8(z)\f$
-	 *
-	 *  @param bsigma8_prior prior for the parameter
-	 *  \f$b(z)\sigma_8(z)\f$
-	 *
-	 *  @param sigma12_prior prior for the parameter
-	 *  \f$\sigma_{12}(z)\f$
-	 *
-	 *  @return none
-	 */
-	void set_model_dispersionModel (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigma12_prior={});
-	
 	///@}
       
       };

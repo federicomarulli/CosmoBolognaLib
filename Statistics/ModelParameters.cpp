@@ -21,12 +21,12 @@
 /**
  *  @file Statistics/ModelParameters.cpp
  *
- *  @brief Methods of the class ModelParameters 
+ *  @brief Methods of the class ModelParameters
  *
  *  This file contains the implementation of the methods of the class
  *  ModelParameters
  *
- *  @authors Federico Marulli, Alfonso Veropalumbo 
+ *  @authors Federico Marulli, Alfonso Veropalumbo
  *
  *  @authors federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
  */
@@ -104,7 +104,16 @@ cbl::statistics::ModelParameters::ModelParameters (const size_t nparameters, std
 
 // ============================================================================================
 
-  
+
+cbl::statistics::ModelParameters::ModelParameters (const size_t nparameters, std::vector<std::string> parameterNames)
+{
+  set_parameters(nparameters, parameterNames);
+}
+
+
+// ============================================================================================
+
+
 size_t cbl::statistics::ModelParameters::nparameters () const
 {
   return m_nparameters;
@@ -165,7 +174,7 @@ void cbl::statistics::ModelParameters::set_parameters (const size_t nparameters,
     vector<string> pNames(m_nparameters);
     for (size_t i=0; i<m_nparameters; i++)
       pNames[i] = "par_"+conv(i+1, par::fINT);
-    
+
     m_parameter_type = parameterTypes;
     m_parameter_name = pNames;
   }
@@ -174,10 +183,40 @@ void cbl::statistics::ModelParameters::set_parameters (const size_t nparameters,
     vector<ParameterType> pTypes(m_nparameters);
     for (size_t i=0; i<m_nparameters; i++)
       pTypes[i] = ParameterType::_Base_;
-    
+
     m_parameter_type = pTypes;
     m_parameter_name = parameterNames;
   }
+
+  m_set_parameter_type();
+}
+
+
+// ============================================================================================
+
+
+void cbl::statistics::ModelParameters::set_parameters (const size_t nparameters, std::vector<std::string> parameterNames)
+{
+  if (nparameters==0)
+    ErrorCBL("nparameters should be > 0!", "set_parameters", "ModelParameters.cpp");
+
+  if ((parameterNames.size()!=nparameters) && (parameterNames.size()!=0))
+    ErrorCBL("wrong size for the vector parameterNames!", "set_parameters", "ModelParameters.cpp");
+
+  m_nparameters=nparameters;
+  m_parameter_name = parameterNames;
+
+  if (parameterNames.size()==0) {
+    vector<string> pNames(m_nparameters);
+    for (size_t i=0; i<m_nparameters; i++) pNames[i] = "par_"+conv(i+1, par::fINT);
+  }
+
+  vector<ParameterType> pTypes(m_nparameters);
+
+  for (size_t i=0; i<m_nparameters; i++)
+    pTypes[i] = ParameterType::_Base_;
+
+  m_parameter_type = pTypes;
 
   m_set_parameter_type();
 }

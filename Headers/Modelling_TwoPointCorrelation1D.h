@@ -35,8 +35,6 @@
 #ifndef __MODELLINGTWOPOINT1D__
 #define __MODELLINGTWOPOINT1D__
 
-
-#include "Modelling1D.h"
 #include "Modelling_TwoPointCorrelation.h"
 #include "ModelFunction_TwoPointCorrelation1D.h"
 
@@ -62,7 +60,7 @@ namespace cbl {
        *  methods to model 1D two-point correlation functions
        *
        */
-      class Modelling_TwoPointCorrelation1D : public Modelling1D, public Modelling_TwoPointCorrelation 
+      class Modelling_TwoPointCorrelation1D : public Modelling_TwoPointCorrelation 
       {
 
       protected:
@@ -77,11 +75,9 @@ namespace cbl {
 	 *  @name Constructors/destructors
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class
-	 *  Modelling_TwoPointCorrelation1D
 	 */
 	Modelling_TwoPointCorrelation1D () = default;
 
@@ -89,8 +85,6 @@ namespace cbl {
 	 *  @brief constructor
 	 *  
 	 *  @param twop the two-point correlation function to model
-	 *
-	 *  @return object of type Modelling_TwoPointCorrelation1D
 	 */
 	Modelling_TwoPointCorrelation1D (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop);
 
@@ -100,20 +94,16 @@ namespace cbl {
 	 *  @param dataset the two-point correlation dataset
 	 *  
 	 *  @param twoPType the two-point correlation type
-	 *
-	 *  @return object of type Modelling_TwoPointCorrelation1D
 	 */
 	Modelling_TwoPointCorrelation1D (const std::shared_ptr<cbl::data::Data> dataset, const measure::twopt::TwoPType twoPType);
 	
 	/**
 	 *  @brief default destructor
-	 *  @return none
 	 */
 	virtual ~Modelling_TwoPointCorrelation1D () = default;
 	
 	///@}
-
-
+	
 	/**
 	 *  @name Member functions used to get the protected members of the class
 	 */
@@ -128,6 +118,11 @@ namespace cbl {
 	
 	///@}
 	
+
+	/**
+	 *  @name Member functions used to set the model input data
+	 */
+	///@{
 	
 	/**
 	 *  @brief set the data used to construct generic models of
@@ -232,7 +227,7 @@ namespace cbl {
 	 *  source galaxies, in case the cluster masses are estimated from
 	 *  weak lensing
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double sigmaNL_perp=0., const double sigmaNL_par=0., const bool NL=true, const double bias=1., const double pimax=40., const double r_min=1., const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double aa=0., const bool GSL=true, const double prec=1.e-3, const std::string file_par=par::defaultString, const double Delta=200., const bool isDelta_vir=true, const std::vector<double> cluster_redshift={}, const std::vector<double> cluster_mass_proxy={}, const std::vector<double> cluster_mass_proxy_error={}, const std::string model_bias="Tinker", const std::string meanType="mean_bias", const int seed=666, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
 	
@@ -356,7 +351,7 @@ namespace cbl {
 	 *  @param halo_def the halo definition (see
 	 *  cbl::modelling::twopt::concentration)
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_data_HOD (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string model_MF="Tinker", const std::string model_bias="Tinker", const double Mh_min=0., const double Mh_max=1.e16, const double pi_max=100., const double r_max_int=100., const double r_min=1.e-3, const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=200, const double m_min=1.e7, const double m_max=1.e17, const int m_step=100, const std::string method_Pk="CAMB", const bool NL=true, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=0., const std::string interpType="Linear", const int norm=-1, const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const std::string model_cM="Duffy", const std::string profile="NFW", const std::string halo_def="vir");
 	
@@ -440,7 +435,7 @@ namespace cbl {
 	 * 
 	 *  @param mass_step
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_data_model_cluster_selection_function (const cbl::cosmology::Cosmology cosmology, const cbl::cosmology::Cosmology test_cosmology, const double mean_redshift, const std::string model_MF, const std::string model_bias, const std::string selection_function_file, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const std::string file_par=par::defaultString, const double Delta=200, const bool isDelta_vir=false, const std::string method_Pk="CAMB", const bool store_output=true, const std::string output_dir=par::defaultString, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const int step=200, const int mass_step=50);
 

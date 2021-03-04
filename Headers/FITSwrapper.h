@@ -98,8 +98,6 @@ namespace cbl {
        *  @param column_names vector containing the column names to write
        *  @param table vector containing the columns
        *  @param column_units vector containing the column units
-       *
-       *  @return none 
        */
       void write_table_fits (const std::string output_dir, const std::string file_fits, const std::vector<std::string> column_names, const std::vector<std::vector<double>> table, const std::vector<std::string> column_units={});
 

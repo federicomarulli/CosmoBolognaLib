@@ -104,7 +104,7 @@ namespace cbl {
      * @brief cast an enum of type ObjectType
      * from indeces
      * @param objectTypeIndeces the objectType indeces
-     * @return object of class ObjectType
+     * @return vector of objects of class ObjectType
      */
     inline std::vector<ObjectType> ObjectTypeCast (const std::vector<int> objectTypeIndeces)
     { return castFromValues<ObjectType>(objectTypeIndeces); } 
@@ -113,7 +113,7 @@ namespace cbl {
      * @brief cast an enum of type ObjectType
      * from thier names
      * @param objectTypeNames the objectType names
-     * @return vector of ObjectType enums
+     * @return vector of objects of class ObjectType
      */
     inline std::vector<ObjectType> ObjectTypeCast (const std::vector<std::string> objectTypeNames)
     { return castFromNames<ObjectType>(objectTypeNames, ObjectTypeNames()); }
@@ -143,7 +143,7 @@ namespace cbl {
       double m_ra = cbl::par::defaultDouble; 
 
       /// Declination 
-      double m_dec = cbl::par::defaultDouble; 
+      double m_dec = cbl::par::defaultDouble;  
 
       /// redshift
       double m_redshift = cbl::par::defaultDouble;
@@ -171,6 +171,15 @@ namespace cbl {
       
       /// displacement along the z-axis
       double m_z_displacement = cbl::par::defaultDouble;
+      
+      /// minimum redshift
+      double m_redshiftMin = cbl::par::defaultDouble;
+      
+      /// maximum redshift
+      double m_redshiftMax = cbl::par::defaultDouble;
+      
+      /// Signal-to-noise 
+      double m_sn = cbl::par::defaultDouble;
 
     
     public :
@@ -182,7 +191,7 @@ namespace cbl {
     
       /**
        *  @brief default constructor
-       *  @return object of class Object
+       *  
        */
       Object () = default;
       
@@ -206,10 +215,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of class Object
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *  
        */
-      Object (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_ra(par::defaultDouble), m_dec(par::defaultDouble), m_redshift(par::defaultDouble), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
+      Object (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_ra(par::defaultDouble), m_dec(par::defaultDouble), m_redshift(par::defaultDouble), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn) {}
     
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -239,10 +253,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of class Object
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *  
        */
-      Object (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement)
+      Object (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn)
 	{
 	  cbl::polar_coord(m_xx, m_yy, m_zz, m_ra, m_dec, m_dc);
 	  m_redshift = cosm.Redshift(m_dc, z1_guess, z2_guess);
@@ -268,10 +287,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of class Object
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *  
        */
-      Object (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
+      Object (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -296,10 +320,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of class Object
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *  
        */
-      Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) {}
+      Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -326,10 +355,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of class Object
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *  
        */
-      Object (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement)
+      Object (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn)
 	{ 
 	  m_dc = cosm.D_C(m_redshift); 
 	  cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
@@ -361,10 +395,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of class Object
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *  
        */
-      Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement)
+      Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn)
 	{ 
 	  m_dc = cosm.D_C(m_redshift);
 	  cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
@@ -386,15 +425,17 @@ namespace cbl {
        *  @param x_displacement the displacement along the x-axis
        *  @param y_displacement the displacement along the y-axis
        *  @param z_displacement the displacement along the z-axis
-       *  @return object of class Object
+       *  @param redshiftMin minimum redshift
+       *  @param redshiftMax maximum redshift
+       *  @param sn signal-to-noise
+       *  
        */
-      Object (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-      : m_xx(xx), m_yy(yy), m_zz(zz), m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(sqrt(xx*xx+yy*yy+zz*zz)), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement) 
+      Object (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+      : m_xx(xx), m_yy(yy), m_zz(zz), m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(sqrt(xx*xx+yy*yy+zz*zz)), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn)
       {}   
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       virtual ~Object () = default;
 
@@ -405,7 +446,7 @@ namespace cbl {
        *  @name Static factories
        */
       ///@{
-
+      
       /**
        *  @brief static factory used to construct objects of any type,
        *  providing in input comoving coordinates
@@ -440,10 +481,16 @@ namespace cbl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
+       *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
        * 
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
       
       /**
        *  @brief static factory used to construct objects of any type,
@@ -477,9 +524,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -505,9 +558,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -535,9 +594,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -567,9 +632,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -601,9 +672,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -639,10 +716,16 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @return object of a given type
        *
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
 
       ///@}
 
@@ -693,6 +776,13 @@ namespace cbl {
        */
       double dec () const
       { return (cbl::isSet(m_dec)) ? m_dec : ErrorCBL("the m_dec variable is not defined!", "dec", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_sn
+       *  @return the signal-to-noise of the object
+       */
+      double sn () const
+      { return (cbl::isSet(m_sn)) ? m_sn : ErrorCBL("the m_sn variable is not defined!", "sn", "Object.h"); }
     
       /**
        *  @brief get the member \e m_redshift
@@ -700,6 +790,20 @@ namespace cbl {
        */
       double redshift () const
       { return (cbl::isSet(m_redshift)) ? m_redshift : ErrorCBL("the m_redshift variable is not defined!", "redshift", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_redshiftMin
+       *  @return the minimum redshift of the object
+       */
+      double redshiftMin () const
+      { return (cbl::isSet(m_redshiftMin)) ? m_redshiftMin : ErrorCBL("the m_redshiftMin variable is not defined!", "redshiftMin", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_redshiftMax
+       *  @return the maximum redshift of the object
+       */
+      double redshiftMax () const
+      { return (cbl::isSet(m_redshiftMin)) ? m_redshiftMax : ErrorCBL("the m_redshiftMax variable is not defined!", "redshiftMax", "Object.h"); }
     
       /**
        *  @brief get the member \e m_weight
@@ -807,6 +911,73 @@ namespace cbl {
        */
       virtual double magnitude () const
       { return cbl::ErrorCBL("", "magnitude", "Object.h"); }  
+      
+      /**
+       *  @brief get the member \e m_magnitudeU
+       *  @return the u magnitude of the derived object, or an error
+       *  message if the derived object does not have this member
+       */
+      virtual double magnitudeU () const
+      { return cbl::ErrorCBL("", "magnitudeU", "Object.h"); }  
+      
+      /**
+       *  @brief get the member \e m_magnitudeG
+       *  @return the g magnitude of the derived object, or an error
+       *  message if the derived object does not have this member
+       */
+      virtual double magnitudeG () const
+      { return cbl::ErrorCBL("", "magnitudeG", "Object.h"); }  
+      
+      /**
+       *  @brief get the member \e m_magnitudeR
+       *  @return the r magnitude of the derived object, or an error
+       *  message if the derived object does not have this member
+       */
+      virtual double magnitudeR () const
+      { return cbl::ErrorCBL("", "magnitudeR", "Object.h"); }  
+      
+      /**
+       *  @brief get the member \e m_magnitudeI
+       *  @return the i magnitude of the derived object, or an error
+       *  message if the derived object does not have this member
+       */
+      virtual double magnitudeI () const
+      { return cbl::ErrorCBL("", "magnitudeI", "Object.h"); }  
+      
+      /**
+       *  @brief get the member \e m_odds
+       *  @return the odds of the object
+       */
+      virtual double odds () const
+      { return cbl::ErrorCBL("", "odds", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_shear1
+       *  @return the first shear component of the object
+       */
+      virtual double shear1 () const
+      { return cbl::ErrorCBL("", "shear1", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_shear1
+       *  @return the first shear component of the object
+       */
+      virtual double shear2 () const
+      { return cbl::ErrorCBL("", "shear2", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_lensingWeight
+       *  @return the lensing weight of the object
+       */
+      virtual double lensingWeight () const
+      { return cbl::ErrorCBL("", "lensingWeight", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_lensingCalib
+       *  @return the lensing calibration factor of the object
+       */
+      virtual double lensingCalib () const
+      { return cbl::ErrorCBL("", "lensingCalib", "Object.h"); }	
 
       /**
        *  @brief get the private member Galaxy::m_SFR
@@ -820,24 +991,23 @@ namespace cbl {
        *  @return the specific star formation rate of the galaxy
        */
       virtual double sSFR () const
-      { return cbl::ErrorCBL("", "sSFR", "Object.h"); }
+      { return cbl::ErrorCBL("", "sSFR", "Object.h"); } 
       
       /**
-       *  @brief get the member \e m_richness
-       *  @return the richness of the derived object, or an error
+       *  @brief get the member \e m_mass_proxy
+       *  @return the mass proxy of the derived object, or an error
        *  message if the derived object does not have this member
        */
-      virtual double richness () const
-      { return cbl::ErrorCBL("", "richness", "Object.h"); }  
-
+      virtual double mass_proxy () const
+      { return cbl::ErrorCBL("", "mass_proxy", "Object.h"); }
+      
       /**
-       *  @brief get the member \e m_richness_error
-       *  @return the richness_error of the derived object, or an
-       *  error message if the derived object does not have this
-       *  member
+       *  @brief get the member \e m_mass_proxy_error
+       *  @return the mass proxy erro of the derived object, or an error
+       *  message if the derived object does not have this member
        */
-      virtual double richness_error () const
-      { return cbl::ErrorCBL("", "richness_error", "Object.h"); }  
+      virtual double mass_proxy_error () const
+      { return cbl::ErrorCBL("", "mass_proxy_error", "Object.h"); }
       
       /**
        *  @brief get the member \e m_bias
@@ -1017,7 +1187,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_xx
        *  @param xx the coordinate x of the object
-       *  @return none
        */
       void set_xx (const double xx)
       { m_xx = xx; }
@@ -1025,7 +1194,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_yy
        *  @param yy the coordinate y of the object
-       *  @return none
        */
       void set_yy (const double yy)
       { m_yy = yy; }
@@ -1033,7 +1201,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_zz
        *  @param zz the coordinate z of the object
-       *  @return none
        */
       void set_zz (const double zz)
       { m_zz = zz; }
@@ -1043,7 +1210,6 @@ namespace cbl {
        *  comoving coordinates accordingly (if already set)
        *  @param ra the Right Ascension of the object
        *  @param inputUnits the units of the input coordinates
-       *  @return none
        */
       void set_ra (const double ra, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
       {
@@ -1056,13 +1222,19 @@ namespace cbl {
        *  comoving coordinates accordingly (if already set)
        *  @param dec the Declination of the object
        *  @param inputUnits the units of the input coordinates
-       *  @return none
        */
       void set_dec (const double dec, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
       {
 	m_dec = radians(dec, inputUnits);
 	if (m_dc>par::defaultDouble) cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
       }
+      
+      /**
+       *  @brief set the member \e m_sn
+       *  @param sn thesignal-to-noise of the object
+       */
+      void set_sn (const double sn)
+      { m_sn = sn; }
       
       /**
        *  @brief set the member \e m_redshift, updating
@@ -1073,20 +1245,82 @@ namespace cbl {
        *  @param cosmology object of class Cosmology, used to estimate
        *  the comoving distance from the given redshift
        *
-       *  @return none
+       *  @param update_coordinates if true the function
+       *  cbl::catalogue::Object::set_redshift update the coordinates
+       *  according to the redshift value
        */
-      void set_redshift (const double redshift, const cosmology::Cosmology cosmology)
+      void set_redshift (const double redshift, const cosmology::Cosmology cosmology, const bool update_coordinates=true)
       {
 	m_redshift = redshift;
-	m_dc = cosmology.D_C(m_redshift); 
-	cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
+	if (update_coordinates) {
+	  m_dc = cosmology.D_C(m_redshift); 
+	  cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
+	}
       }
+      
+      /**
+       *  @brief set the member \e m_redshiftMin
+       *  @param redshiftMin the minimum redshift of the object
+       */
+      void set_redshiftMin (const double redshiftMin)
+      { m_redshiftMin = redshiftMin; }
+      
+      /**
+       *  @brief set the member \e m_redshiftMax
+       *  @param redshiftMax the maximum redshift of the object
+       */
+      void set_redshiftMax (const double redshiftMax)
+      { m_redshiftMax = redshiftMax; }
+      
+      /**
+       *  @brief set the member \e m_odds
+       *  @param odds the odds
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_odds (const double odds)
+      { (void)odds; cbl::ErrorCBL("", "set_odds", "Object.h"); }  
+      
+      /**
+       *  @brief set the member \e m_shear1
+       *  @param shear1 the first shear component
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_shear1 (const double shear1)
+      { (void)shear1; cbl::ErrorCBL("", "set_shear1", "Object.h"); } 
+      
+      /**
+       *  @brief set the member \e m_shear2
+       *  @param shear2 the second shear component
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_shear2 (const double shear2)
+      { (void)shear2; cbl::ErrorCBL("", "set_shear2", "Object.h"); } 
+      
+      /**
+       *  @brief set the member \e m_lensingWeight
+       *  @param lensingWeight the lensing weight
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_lensingWeight (const double lensingWeight)
+      { (void)lensingWeight; cbl::ErrorCBL("", "set_lensingWeight", "Object.h"); } 
+      
+      /**
+       *  @brief set the member \e m_lensingCalib
+       *  @param lensingCalib the lensing calibration factor
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_lensingCalib (const double lensingCalib)
+      { (void)lensingCalib; cbl::ErrorCBL("", "set_lensingCalib", "Object.h"); } 
     
       /**
        *  @brief set the member \e m_dc, updating the
        *  comoving coordinates accordingly
        *  @param dc the comoving distance of the object
-       *  @return none
        */
       void set_dc (const double dc)
       {
@@ -1097,7 +1331,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_weight
        *  @param weight the weight of the object
-       *  @return none
        */
       void set_weight (const double weight)
       { m_weight = weight; }
@@ -1106,7 +1339,6 @@ namespace cbl {
        *  @brief set the member \e m_region
        *  @param region the index of the subRegion in which the object
        *  is located 
-       *  @return none
        */
       void set_region (const long region)
       { if (region<0) ErrorCBL("Error in Object.h: region must be >0 !", "", "Object.h"); m_region = region; }
@@ -1114,7 +1346,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_ID
        *  @param ID the ID
-       *  @return none
        */
       void set_ID (const int ID)
       { m_ID = ID; }
@@ -1122,7 +1353,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_field
        *  @param field the field were the object has been observed
-       *  @return none
        */
       void set_field (const std::string field)
       { m_field = field; }
@@ -1130,7 +1360,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_x_displacement
        *  @param x_displacement the displacement (in Mpc) of the x coordinate
-       *  @return none
        */
       void set_x_displacement (const double x_displacement)
       { m_x_displacement = x_displacement; }
@@ -1138,7 +1367,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_y_displacement
        *  @param y_displacement the displacement (in Mpc) of the y coordinate
-       *  @return none
        */
       void set_y_displacement (const double y_displacement)
       { m_y_displacement = y_displacement; }
@@ -1146,7 +1374,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_z_displacement
        *  @param z_displacement the displacement (in Mpc) of the x coordinate
-       *  @return none
        */
       void set_z_displacement (const double z_displacement)
       { m_z_displacement = z_displacement; }
@@ -1194,7 +1421,43 @@ namespace cbl {
        *  not have this member
        */
       virtual void set_magnitude (const double magnitude)
-      { (void)magnitude; cbl::ErrorCBL("", "set_magnitude", "Object.h"); }  
+      { (void)magnitude; cbl::ErrorCBL("", "set_magnitude", "Object.h"); } 
+      
+      /**
+       *  @brief set the member \e m_magnitudeU
+       *  @param magnitudeU the u magnitude
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_magnitudeU (const double magnitudeU)
+      { (void)magnitudeU; cbl::ErrorCBL("", "set_magnitudeU", "Object.h"); } 
+      
+      /**
+       *  @brief set the member \e m_magnitudeG
+       *  @param magnitudeG the g magnitude
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_magnitudeG (const double magnitudeG)
+      { (void)magnitudeG; cbl::ErrorCBL("", "set_magnitudeG", "Object.h"); } 
+      
+      /**
+       *  @brief set the member \e m_magnitudeR
+       *  @param magnitudeR the r magnitude
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_magnitudeR (const double magnitudeR)
+      { (void)magnitudeR; cbl::ErrorCBL("", "set_magnitudeR", "Object.h"); } 
+      
+      /**
+       *  @brief set the member \e m_magnitudeI
+       *  @param magnitudeI the i magnitude
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_magnitudeI (const double magnitudeI)
+      { (void)magnitudeI; cbl::ErrorCBL("", "set_magnitudeI", "Object.h"); }  
 
       /**
        *  @brief set the private member Galaxy::m_SFR
@@ -1215,26 +1478,29 @@ namespace cbl {
       { (void)sSFR; cbl::ErrorCBL("", "set_sSFR", "Object.h"); }  
       
       /**
-       *  @brief set the member \e m_richness
-       *  @param richness the richness 
+       *  @brief set the member \e m_mass_proxy
+       *  @param mass_proxy the mass proxy 
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_richness (const double richness)
-      { (void)richness; cbl::ErrorCBL("", "richness", "Object.h"); }
+      virtual void set_mass_proxy (const double mass_proxy)
+      { (void)mass_proxy; cbl::ErrorCBL("", "set_mass_proxy", "Object.h"); }
 
       /**
-       *  @brief set the member \e m_richness_error
-       *  @param richness_error the richness error 
+       *  @brief set the member \e m_mass_proxy_error
+       *  @param mass_proxy_error the mass proxy error 
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_richness_error (const double richness_error)
-      { (void)richness_error; cbl::ErrorCBL("", "set_richness_error", "Object.h"); }
+      virtual void set_mass_proxy_error (const double mass_proxy_error)
+      { (void)mass_proxy_error; cbl::ErrorCBL("", "set_mass_proxy_error", "Object.h"); }
       
       /**
        *  @brief set the member \e m_bias
-       *  @param bias the bias 
+       *
+       *  @param bias the bias, or an error message if the derived
+       *  object does not have this member
+       *
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
@@ -1243,7 +1509,10 @@ namespace cbl {
     
       /**
        *  @brief set the member \e m_generic
-       *  @param generic the generic variable
+       *
+       *  @param generic the generic variable, or an error message if
+       *  the derived object does not have this member
+       *
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
@@ -1273,6 +1542,7 @@ namespace cbl {
        *  @param centralDensity the central density
        *  @return none, or an error message if the derived object does
        *  not have this member
+
        */
       virtual void set_centralDensity (const double centralDensity)
       { (void)centralDensity; cbl::ErrorCBL("", "set_centralDensity", "Object.h"); }
@@ -1480,6 +1750,14 @@ namespace cbl {
       { return (cbl::isSet(m_dec)) ? true : false; }
       
       /**
+       *  @brief check if the member \e m_sn is set
+       *  
+       *  @return true if the signal-to-noise is set; false otherwise
+       */
+      bool isSet_sn ()
+      { return (cbl::isSet(m_sn)) ? true : false; }
+      
+      /**
        *  @brief check if the member \e m_redshift is
        *  set
        *  
@@ -1487,6 +1765,69 @@ namespace cbl {
        */
       bool isSet_redshift ()
       { return (cbl::isSet(m_redshift)) ? true : false;	}
+      
+      /**
+       *  @brief check if the member \e m_redshiftMin is
+       *  set
+       *  
+       *  @return true if the min redshift is set; false otherwise
+       */
+      bool isSet_redshiftMin ()
+      { return (cbl::isSet(m_redshiftMin)) ? true : false;	}
+      
+      /**
+       *  @brief check if the member \e m_redshiftMax is
+       *  set
+       *  
+       *  @return true if the max redshift is set; false otherwise
+       */
+      bool isSet_redshiftMax ()
+      { return (cbl::isSet(m_redshiftMax)) ? true : false;	}
+      
+      /**
+       *  @brief check if the member \e m_shear1 is
+       *  set
+       *  
+       *  @return true if the shear1 is set; false otherwise
+       */
+      virtual bool isSet_shear1 ()
+      { return cbl::ErrorCBL("", "isSet_shear1", "Object.h"); }  
+      
+      /**
+       *  @brief check if the member \e m_shear2 is
+       *  set
+       *  
+       *  @return true if the shear2 is set; false otherwise
+       */
+      virtual bool isSet_shear2 ()
+      { return cbl::ErrorCBL("", "isSet_shear2", "Object.h"); }  
+      
+      /**
+       *  @brief check if the member \e m_odds is set
+       *
+       *  @return true if the odds is set; false
+       *  otherwise
+       */
+      virtual bool isSet_odds ()
+      { return cbl::ErrorCBL("", "isSet_odds", "Object.h"); }  
+      
+      /**
+       *  @brief check if the member \e m_lensingWeight is set
+       *
+       *  @return true if the lensing weight is set; false
+       *  otherwise
+       */
+      virtual bool isSet_lensingWeight ()
+      { return cbl::ErrorCBL("", "isSet_lensingWeight", "Object.h"); }  
+      
+      /**
+       *  @brief check if the member \e m_lensingCalib is set
+       *
+       *  @return true if the lensing calibration factor is set; false
+       *  otherwise
+       */
+      virtual bool isSet_lensingCalib ()
+      { return cbl::ErrorCBL("", "isSet_lensingCalib", "Object.h"); }  
      
       /**
        *  @brief check if the member \e m_dc is set
@@ -1594,12 +1935,52 @@ namespace cbl {
       /**
        *  @brief check if the member \e m_magnitude is set
        *  
-       *  @return true if the magnitue is set; false otherwise, or an
+       *  @return true if the magnitude is set; false otherwise, or an
        *  error message if the derived object does not have this
        *  member
        */
       virtual bool isSet_magnitude ()
       { return cbl::ErrorCBL("", "isSet_magnitude", "Object.h"); }  
+      
+      /**
+       *  @brief check if the member \e m_magnitudeU is set
+       *  
+       *  @return true if the u magnitude is set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_magnitudeU ()
+      { return cbl::ErrorCBL("", "isSet_magnitudeU", "Object.h"); }  
+      
+      /**
+       *  @brief check if the member \e m_magnitudeG is set
+       *  
+       *  @return true if the g magnitude is set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_magnitudeG ()
+      { return cbl::ErrorCBL("", "isSet_magnitudeG", "Object.h"); }  
+      
+      /**
+       *  @brief check if the member \e m_magnitudeR is set
+       *  
+       *  @return true if the r magnitude is set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_magnitudeR ()
+      { return cbl::ErrorCBL("", "isSet_magnitudeR", "Object.h"); }  
+      
+      /**
+       *  @brief check if the member \e m_magnitudeI is set
+       *  
+       *  @return true if the i magnitude is set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_magnitudeI ()
+      { return cbl::ErrorCBL("", "isSet_magnitudeI", "Object.h"); }  
 
       /**
        *  @brief check if the member \em m_SFR is set
@@ -1621,24 +2002,24 @@ namespace cbl {
       { return cbl::ErrorCBL("", "isSet_sSFR", "Object.h"); }  
       
       /**
-       *  @brief check if the member \e m_richness is set
+       *  @brief check if the member \e m_mass_proxy is set
        *   
-       *  @return true if the richness is set; false otherwise, or an
+       *  @return true if the mass proxy is set; false otherwise, or an
        *  error message if the derived object does not have this
        *  member
        */
-      virtual bool isSet_richness ()
-      { return cbl::ErrorCBL("", "isSet_richness", "Object.h"); }
+      virtual bool isSet_mass_proxy ()
+      { return cbl::ErrorCBL("", "isSet_mass_proxy", "Object.h"); }
 
       /**
-       *  @brief check if the member \e m_richness_error is set
+       *  @brief check if the member \e m_mass_proxy_error is set
        *   
-       *  @return true if the error on the richness is set; false
+       *  @return true if the error on the mass proxy is set; false
        *  otherwise, or an error message if the derived object does
        *  not have this member
        */
-      virtual bool isSet_richness_error ()
-      { return cbl::ErrorCBL("", "isSet_richness_error", "Object.h"); }
+      virtual bool isSet_mass_proxy_error ()
+      { return cbl::ErrorCBL("", "isSet_mass_proxy_error", "Object.h"); }
       
       /**
        *  @brief check if the member \e m_bias is set

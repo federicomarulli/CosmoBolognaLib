@@ -74,7 +74,7 @@ namespace cbl {
        *  false &rarr; show the status of the GSL routine without exiting
        *  @param CBLfunction the name of the function using the GSL routine 
        *  @param GSLroutine the name of the gsl routine
-       *  @return none
+       *  
        */
       void check_GSL_fail (const int status, const bool exit, const std::string CBLfunction, const std::string GSLroutine);
     
@@ -553,7 +553,7 @@ namespace cbl {
        * @param coeff polynomial coefficients 
        * @param root polynomial roots
        *
-       * @return none
+       * 
        */
       void GSL_polynomial_root (const std::vector<double> coeff, std::vector<std::vector<double>> &root);
 

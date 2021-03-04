@@ -34,6 +34,7 @@
 #include "PosteriorParameters.h"
 #include "Sampler.h"
 #include "Posterior.h"
+#include "ChainMesh.h"
 
 using namespace std;
 
@@ -67,7 +68,7 @@ cbl::statistics::Posterior::Posterior (const std::vector<std::shared_ptr<PriorDi
 {
   m_model_parameters = make_shared<PosteriorParameters>(PosteriorParameters(m_model->parameters()->nparameters(), prior_distributions, m_model->parameters()->type(), m_model->parameters()->name()));
 
-  m_model->set_parameters(m_model_parameters);	
+  m_model->set_parameters(m_model_parameters);
 
   m_prior = m_model_parameters->prior();
 
@@ -80,12 +81,33 @@ cbl::statistics::Posterior::Posterior (const std::vector<std::shared_ptr<PriorDi
 // ============================================================================================
 
 
+cbl::statistics::Posterior::Posterior (const std::string file_name, const std::string path_file, const std::vector<int> usecols, const std::vector<std::string> parameter_names, const int skip_header)
+{
+  std::vector<std::vector<double>> chain = cbl::read_file(file_name, path_file, usecols, skip_header);
+
+  m_Nparameters = usecols.size()-1;
+  m_log_posterior = chain[m_Nparameters];
+  m_parameters.resize(m_Nparameters);
+
+  for (int N=0; N<m_Nparameters; N++)
+    m_parameters[N] = chain[N];
+
+  m_seed = -1;
+
+  m_model_parameters = make_shared<ModelParameters> (ModelParameters(m_Nparameters, parameter_names));
+}
+
+
+// ============================================================================================
+
+
+
 double cbl::statistics::Posterior::operator () (std::vector<double> &pp) const
 {
   pp = m_model_parameters->full_parameter(pp);
   double prior = m_prior->operator()(pp);
-  
-  if (prior>0) 
+
+  if (prior>0)
     return (m_use_grid) ? m_likelihood_function_grid(pp, m_likelihood_inputs)*prior : m_likelihood_function(pp, m_likelihood_inputs)*prior;
 
   return 0.;
@@ -100,9 +122,9 @@ vector<double> cbl::statistics::Posterior::weight (const int start, const int th
   vector<double> ww;
   const int chain_size = m_model_parameters->chain_size();
   const int n_walkers = m_model_parameters->chain_nwalkers();
-  
-  for (int j=start; j<chain_size; j+=thin) 
-    for (int i=0; i<n_walkers; i++) 
+
+  for (int j=start; j<chain_size; j+=thin)
+    for (int i=0; i<n_walkers; i++)
       ww.push_back(m_weight[j*n_walkers+i]);
 
   return ww;
@@ -116,14 +138,25 @@ double cbl::statistics::Posterior::log (std::vector<double> &pp) const
 {
   pp = m_model_parameters->full_parameter(pp);
   const double logprior = m_prior->log(pp);
-
+ 
   double val;
-  if (logprior>par::defaultDouble) 
+  if (logprior>par::defaultDouble)
     val = (m_use_grid) ? m_log_likelihood_function_grid(pp, m_likelihood_inputs)+logprior : m_log_likelihood_function(pp, m_likelihood_inputs)+logprior;
-  else 
+  else
     val = par::defaultDouble;
 
   return val;
+}
+
+
+// ============================================================================================
+
+
+double cbl::statistics::Posterior::chi2 (const std::vector<double> parameter) const
+{
+  vector<double> pp = (parameter.size()>0) ? parameter : m_model_parameters->bestfit_value();
+  
+  return (m_use_grid) ? -2.*m_log_likelihood_function_grid(pp, m_likelihood_inputs) : -2.*m_log_likelihood_function(pp, m_likelihood_inputs);
 }
 
 
@@ -144,9 +177,9 @@ void cbl::statistics::Posterior::set_model (const std::shared_ptr<Model> model, 
   }
 
   if (model_parameters!=NULL)
-    m_model->set_parameters(model_parameters);	
+    m_model->set_parameters(model_parameters);
   else
-    m_model->set_parameters(m_model_parameters);	
+    m_model->set_parameters(m_model_parameters);
 
 }
 
@@ -161,7 +194,7 @@ void cbl::statistics::Posterior::set (const std::vector<std::shared_ptr<PriorDis
 
   m_model_parameters = make_shared<PosteriorParameters>(PosteriorParameters(m_model->parameters()->nparameters(), prior_distributions, m_model->parameters()->type(), m_model->parameters()->name()));
 
-  m_model->set_parameters(m_model_parameters);	
+  m_model->set_parameters(m_model_parameters);
   m_model_parameters->set_prior_distribution(prior_distributions);
 
   m_prior = m_model_parameters->prior();
@@ -173,7 +206,6 @@ void cbl::statistics::Posterior::set (const std::vector<std::shared_ptr<PriorDis
 }
 
 
-
 // ============================================================================================
 
 
@@ -181,8 +213,8 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
 {
   vector<double> starting_par;
 
-  unsigned int npar_free = m_model->parameters()->nparameters_free();
-  unsigned int npar = m_model->parameters()->nparameters();
+  const unsigned int npar_free = m_model->parameters()->nparameters_free();
+  const unsigned int npar = m_model->parameters()->nparameters();
   
   if (start.size()==npar_free) 
     starting_par = start;
@@ -192,18 +224,18 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
   else
     ErrorCBL("check your inputs: start.size()="+conv(start.size(), par::fINT)+" must be equal to either npar_free="+conv(npar_free, par::fINT)+" or npar="+conv(npar, par::fINT)+"!", "maximize", "Posterior.cpp");
   
-  function<double(vector<double> &)> post = [this](vector<double> &pp) { return -this->log(pp); };
+  function<double(vector<double> &)> post = [this] (vector<double> &pp) { return -this->log(pp); };
 
 
   // extra check on epsilon
   
   function<bool(vector<double> &)> checkWrong = [&] (vector<double> &pp)
-    {
-      bool ch = true;
-      if (post(pp)<-par::defaultDouble)
-	ch = false;
-      return ch;
-    };
+						{
+						  bool ch = true;
+						  if (post(pp)<-par::defaultDouble)
+						    ch = false;
+						  return ch;
+						};
 
   vector<double> par = starting_par;
   if (checkWrong(par))
@@ -226,7 +258,7 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
     coutCBL << "Done!" << endl << endl;
     m_model_parameters->set_bestfit_values(result);
     m_model_parameters->write_bestfit_info();
-    coutCBL << "log(posterior) = " << post(result) << endl << endl;
+    coutCBL << "-log(posterior) = " << post(result) << endl << endl;
   }
   else
     ErrorCBL("the maximization ended with parameter values out of the priors: check your inputs or change the epsilon value!", "maximize", "Posterior.cpp");

@@ -117,23 +117,26 @@ namespace cbl {
        * @param twoPTypeName the twoPType name
        * @return object of class TwoPType
        */
-      inline TwoPType TwoPTypeCast (const std::string twoPTypeName) {return castFromName<TwoPType>(twoPTypeName, TwoPTypeNames());}
+      inline TwoPType TwoPTypeCast (const std::string twoPTypeName)
+      { return castFromName<TwoPType>(twoPTypeName, TwoPTypeNames()); }
 
       /**
        * @brief cast an enum of type TwoPType
        * from indeces
        * @param twoPTypeIndeces the twoPType indeces
-       * @return object of class TwoPType
+       * @return vector of objects of class TwoPType
        */
-      inline std::vector<TwoPType> TwoPTypeCast (const std::vector<int> twoPTypeIndeces) {return castFromValues<TwoPType>(twoPTypeIndeces);} 
+      inline std::vector<TwoPType> TwoPTypeCast (const std::vector<int> twoPTypeIndeces)
+      { return castFromValues<TwoPType>(twoPTypeIndeces); } 
 
       /**
        * @brief cast an enum of type TwoPType
        * from thier names
        * @param twoPTypeNames the twoPType names
-       * @return vector of TwoPType enums
+       * @return vector of objects of class TwoPType
        */
-      inline std::vector<TwoPType> TwoPTypeCast (const std::vector<std::string> twoPTypeNames) {return castFromNames<TwoPType>(twoPTypeNames, TwoPTypeNames());}
+      inline std::vector<TwoPType> TwoPTypeCast (const std::vector<std::string> twoPTypeNames)
+      { return castFromNames<TwoPType>(twoPTypeNames, TwoPTypeNames()); }
 
       /**
        * @enum Estimator
@@ -287,7 +290,8 @@ namespace cbl {
 	 *  @param PP pointer to an object of class Pair
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void write_pairs (const std::shared_ptr<pairs::Pair> PP, const std::string dir, const std::string file) const = 0;
  
@@ -296,7 +300,8 @@ namespace cbl {
 	 *  @param [out] PP pointer to an object of class Pair
 	 *  @param [in] dir input directory
 	 *  @param [in] file input file
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void read_pairs (std::shared_ptr<pairs::Pair> PP, const std::vector<std::string> dir, const std::string file) const = 0;
 
@@ -305,7 +310,8 @@ namespace cbl {
 	 *  @param PP pointer to a vector of objects of class Pair
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void write_pairs (const std::vector<std::shared_ptr<pairs::Pair> > PP, const std::string dir, const std::string file) const = 0;
  
@@ -314,7 +320,8 @@ namespace cbl {
 	 *  @param [out] PP pointer to a vector of objects of class Pair
 	 *  @param [in] dir input directory
 	 *  @param [in] file input file
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void read_pairs (std::vector<std::shared_ptr<pairs::Pair> > PP, const std::vector<std::string> dir, const std::string file) const = 0;
 
@@ -331,8 +338,6 @@ namespace cbl {
 	 * @details set the pair counts to zero,
 	 * by calling the cbl::Pairs::reset() method
 	 * for the internal variables m_dd, m_rr, m_dr
-	 *
-	 * @return none
 	 */
 	void resets ();
 	
@@ -362,8 +367,6 @@ namespace cbl {
 	 *
 	 *  @param tcount true &rarr; activate the time counter; false
 	 *  &rarr; no time counter
-	 * 
-	 *  @return none
 	 */
 	void count_pairs (const std::shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, std::shared_ptr<pairs::Pair> pp, const bool cross=true, const bool tcount=false);
 
@@ -389,8 +392,6 @@ namespace cbl {
 	 *
 	 *  @param tcount true &rarr; activate the time counter; false
 	 *  &rarr; no time counter
-	 * 
-	 *  @return none
 	 */
 	void count_pairs_region (const std::shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, std::shared_ptr<pairs::Pair> pp, std::vector< std::shared_ptr<pairs::Pair> > pp_regions, const bool cross=true, const bool tcount=false);
       
@@ -418,8 +419,6 @@ namespace cbl {
 	 *
 	 *  @param tcount true &rarr; activate the time counter; false
 	 *  &rarr; no time counter
-	 * 
-	 *  @return none
 	 */
 	void count_pairs_region_test (const std::shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, std::shared_ptr<pairs::Pair> pp, std::vector< std::shared_ptr<pairs::Pair> > pp_res, const std::vector<double> weight, const bool cross=true, const bool tcount=false);
       
@@ -447,8 +446,6 @@ namespace cbl {
 	 *
 	 *  @param tcount true &rarr; activate the time counter; false
 	 *  &rarr; no time counter
-	 * 
-	 *  @return none
 	 */
 	void count_pairs_region_test_1D (const std::shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, std::shared_ptr<pairs::Pair> pp, std::vector< std::shared_ptr<pairs::Pair> > pp_res, const std::vector<double> weight, const bool cross=true, const bool tcount=false);
       
@@ -476,8 +473,6 @@ namespace cbl {
 	 *
 	 *  @param tcount true &rarr; activate the time counter; false
 	 *  &rarr; no time counter
-	 * 
-	 *  @return none
 	 */
 	void count_pairs_region_test_2D (const std::shared_ptr<catalogue::Catalogue> cat1, const chainmesh::ChainMesh_Catalogue &ChM, std::shared_ptr<pairs::Pair> pp, std::vector< std::shared_ptr<pairs::Pair> > pp_res, const std::vector<double> weight, const bool cross=true, const bool tcount=false);
 
@@ -514,8 +509,6 @@ namespace cbl {
 	 *
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
-	 *
-	 *  @return none
 	 */
 	void count_allPairs (const TwoPType type, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_);
 
@@ -558,8 +551,6 @@ namespace cbl {
 	 *
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
-	 *
-	 *  @return none
 	 */
 	void count_allPairs_region (std::vector<std::shared_ptr<pairs::Pair> > &dd_regions, std::vector<std::shared_ptr<pairs::Pair> > &rr_regions, std::vector<std::shared_ptr<pairs::Pair> > &dr_regions, const TwoPType type, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_);
 
@@ -599,7 +590,6 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
-	 *  @return none
 	 */
 	void count_allPairs_region_test (const TwoPType type, const std::vector<double> weight, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_);
 
@@ -774,7 +764,8 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void measurePoisson (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_)
 	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; cbl::ErrorCBL("", "measurePoisson", "TwoPointCorrelation.h"); }
@@ -811,7 +802,8 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void measureJackknife (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_)
 	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)dir_output_resample; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; cbl::ErrorCBL("", "measureJackknife", "TwoPointCorrelation.h"); }
@@ -848,7 +840,8 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void measureJackknifeTest (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_)
 	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)dir_output_resample; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; cbl::ErrorCBL("", "measureJackknifeTest", "TwoPointCorrelation.h"); }
@@ -890,7 +883,8 @@ namespace cbl {
 	 *
 	 *  @param seed the seed for random number generation
 	 *
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void measureBootstrap (const int nMocks, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213)
 	{ (void)nMocks; (void)dir_output_pairs; (void)dir_input_pairs; (void)dir_output_resample; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; (void)seed; cbl::ErrorCBL("", "measureBootstrap", "TwoPointCorrelation.h"); }
@@ -903,7 +897,7 @@ namespace cbl {
 	 *
 	 *  @param rr vector of random-random pairs, divided per regions
 	 *
-	 *  @return none
+	 *  @return vector of pointers to objects of type Data 
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiJackknife (const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr)
 	{ (void)dd; (void)rr; cbl::ErrorCBL("", "XiJackknife", "TwoPointCorrelation.h"); std::vector<std::shared_ptr<data::Data> > data; return data; }
@@ -920,7 +914,7 @@ namespace cbl {
 	 *  @param dr vector of data-random pairs, divided per
 	 *  regions
 	 *
-	 *  @return none
+	 *  @return vector of pointers to objects of type Data 
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiJackknife (const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const std::vector<std::shared_ptr<pairs::Pair> > dr)
 	{ (void)dd; (void)rr; (void)dr; cbl::ErrorCBL("", "XiJackknife", "TwoPointCorrelation.h"); std::vector<std::shared_ptr<data::Data> > data; return data; }
@@ -933,7 +927,7 @@ namespace cbl {
 	 *
 	 *  @param rr vector of random-random pairs, divided per regions
 	 *
-	 *  @return none
+	 *  @return vector of pointers to objects of type Data 
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiJackknifeTest (const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr)
 	{ (void)dd; (void)rr; cbl::ErrorCBL("", "XiJackknifeTest", "TwoPointCorrelation.h"); std::vector<std::shared_ptr<data::Data> > data; return data; }
@@ -949,7 +943,7 @@ namespace cbl {
 	 *
 	 *  @param dr vector of data-random pairs, divided per regions
 	 *
-	 *  @return none
+	 *  @return vector of pointers to objects of type Data 
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiJackknifeTest (const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const std::vector<std::shared_ptr<pairs::Pair> > dr)
 	{ (void)dd; (void)rr; (void)dr; cbl::ErrorCBL("", "XiJackknifeTest", "TwoPointCorrelation.h"); std::vector<std::shared_ptr<data::Data> > data; return data; }
@@ -967,7 +961,8 @@ namespace cbl {
 	 *
 	 *  @param seed the seed for random number generation
 	 *
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const int seed=3213)
 	{ (void)nMocks; (void)dd; (void)rr; (void)seed; cbl::ErrorCBL("", "XiBootstrap", "TwoPointCorrelation.h"); std::vector<std::shared_ptr<data::Data> > data; return data; }
@@ -987,7 +982,8 @@ namespace cbl {
 	 *
 	 *  @param seed the seed for random number generation
 	 *
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual std::vector<std::shared_ptr<data::Data> > XiBootstrap (const int nMocks, const std::vector<std::shared_ptr<pairs::Pair> > dd, const std::vector<std::shared_ptr<pairs::Pair> > rr, const std::vector<std::shared_ptr<pairs::Pair> > dr, const int seed=3213)
 	{ (void)nMocks; (void)dd; (void)rr; (void)dr; (void)seed; cbl::ErrorCBL("", "XiBootstrap", "TwoPointCorrelation.h"); std::vector<std::shared_ptr<data::Data> > data; return data; }
@@ -1004,7 +1000,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of class TwoPointCorrelation
+	 *  
 	 */
 	TwoPointCorrelation () = default;
 
@@ -1025,14 +1021,14 @@ namespace cbl {
 	 *  of objects in the diluted and original random samples, used
 	 *  to improve performances in random-random pair counts
 	 *
-	 *  @return object of class TwoPointCorrelation
+	 *  
 	 */
 	TwoPointCorrelation (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool compute_extra_info=false, const double random_dilution_fraction=1.) 
 	  : m_data(std::make_shared<catalogue::Catalogue>(catalogue::Catalogue(std::move(data)))), m_random(std::make_shared<catalogue::Catalogue>(catalogue::Catalogue(std::move(random)))), m_compute_extra_info(compute_extra_info), m_random_dilution_fraction(random_dilution_fraction) {}
     
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~TwoPointCorrelation () = default;
 
@@ -1745,14 +1741,13 @@ namespace cbl {
 	/**
 	 *  @brief add a data catalogue
 	 *  @param data object of class Catalogue 
-	 *  @return none
 	 */
 	void set_data (const catalogue::Catalogue data) { m_data = std::make_shared<catalogue::Catalogue>(catalogue::Catalogue(std::move(data))); }
 
 	/**
 	 *  @brief add a random catalogue
 	 *  @param random object of class Catalogue 
-	 *  @return none
+	 *  
 	 */
 	void set_random (const catalogue::Catalogue random) { m_random = std::make_shared<catalogue::Catalogue>(catalogue::Catalogue(std::move(random))); }
 
@@ -1800,7 +1795,8 @@ namespace cbl {
 	 *
 	 *  @param seed the seed for random number generation
 	 *
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213) = 0;
 
@@ -1816,7 +1812,8 @@ namespace cbl {
 	 *  @brief read the measured two-point correlation
 	 *  @param dir input directory
 	 *  @param file input file
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void read (const std::string dir, const std::string file) = 0;
 
@@ -1825,7 +1822,8 @@ namespace cbl {
 	 *  @param dir output directory
 	 *  @param file output file
 	 *  @param rank cpu index (for MPI usage)
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void write (const std::string dir=par::defaultString, const std::string file=par::defaultString, const int rank=0) const = 0;
 
@@ -1837,7 +1835,8 @@ namespace cbl {
 	 *  duplicate the data in the other three quadrands (usefull
 	 *  e.g. when storing the 2D correlation function)
 	 *  @param rank cpu index (for MPI usage)
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void write (const std::string dir, const std::string file, const bool full, const int rank=0) const
 	{ (void)dir; (void)file; (void)full; (void)rank; cbl::ErrorCBL("", "write", "TwoPointCorrelation.h"); }
@@ -1854,7 +1853,8 @@ namespace cbl {
 	 *  @brief read the measured covariance matrix
 	 *  @param dir input directory
 	 *  @param file input file
-	 *  @return none
+	 *  @return none, or an error message if the derived object
+	 *  does not have this member
 	 */
 	virtual void read_covariance (const std::string dir, const std::string file) = 0;
 
@@ -1862,7 +1862,8 @@ namespace cbl {
 	 *  @brief write the measured two-point correlation
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  @return none, or an error message if the derived object
+	 *  does not have this member
 	 */
 	virtual void write_covariance (const std::string dir, const std::string file) const = 0;
 
@@ -1872,7 +1873,8 @@ namespace cbl {
 	 *  functions used to compute the covariance matrix
 	 *  @param JK true &rarr; compute the Jackknife covariance
 	 *  matrix; false compute the standard covariance matrix
-	 *  @return none
+	 *  @return none, or an error message if the derived object
+	 *  does not have this member
 	 */
 	virtual void compute_covariance (const std::vector<std::shared_ptr<data::Data>> xi, const bool JK) = 0;
 
@@ -1883,7 +1885,8 @@ namespace cbl {
 	 *  covariance matrix
 	 *  @param JK true &rarr; compute the Jackknife covariance
 	 *  matrix; false compute the standard covariance matrix
-	 *  @return none
+	 *  @return none, or an error message if the derived object
+	 *  does not have this member
 	 */
 	virtual void compute_covariance (const std::vector<std::string> file, const bool JK) = 0;
     

@@ -100,24 +100,27 @@ void cbl::wrapper::cuba::CUBAwrapper::set_integrand (FunctionDoubleVector func, 
 // ============================================================================
 
 
-double cbl::wrapper::cuba::CUBAwrapper::IntegrateVegas (vector<vector<double>> integration_limits)
+double cbl::wrapper::cuba::CUBAwrapper::IntegrateVegas (vector<vector<double>> integration_limits, const bool parallelize)
 {
   int comp, neval, fail;
-  vector<double> integral(m_inputs.NCOMP), error(m_inputs.NCOMP), prob(m_inputs.NCOMP);
+  cubareal integral[NCOMP], error[NCOMP], prob[NCOMP];
 
   cbl::wrapper::cuba::STR_CUBA_integrand *userdata = new cbl::wrapper::cuba::STR_CUBA_integrand;
   userdata->func = m_integrand;
   userdata->integration_limits = integration_limits;
 
-  Vegas(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
-    m_inputs.EPSREL, m_inputs.EPSABS, m_inputs.VERBOSE, m_inputs.SEED,
-    m_inputs.MINEVAL, m_inputs.MAXEVAL, m_inputs.NSTART, m_inputs.NINCREASE, m_inputs.NBATCH,
-    m_inputs.GRIDNO, m_inputs.STATEFILE, m_inputs.SPIN.get(),
-    &neval, &fail, integral.data(), error.data(), prob.data());
+  if (parallelize==false)
+    cubacores(0, 0);
 
-  if(m_inputs.VERBOSE>0){
+  Vegas(m_ndim, NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, NVEC,
+    EPSREL, EPSABS, VERBOSE, SEED,
+    MINEVAL, MAXEVAL, NSTART, NINCREASE, NBATCH,
+    GRIDNO, STATEFILE, SPIN,
+    &neval, &fail, integral, error, prob);
+
+  if(VERBOSE>0){
     printf("VEGAS RESULT:\tneval %d\tfail %d\n", neval, fail);
-    for( comp = 0; comp < m_inputs.NCOMP; ++comp )
+    for( comp = 0; comp < NCOMP; ++comp )
       printf("VEGAS RESULT:\t%.8f +- %.8f\tp = %.3f\n", (double)integral[comp], (double)error[comp], (double)prob[comp]);
   }
 
@@ -128,23 +131,27 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateVegas (vector<vector<double>> i
 // ============================================================================
 
 
-double cbl::wrapper::cuba::CUBAwrapper::IntegrateSuave (vector<vector<double>> integration_limits)
+double cbl::wrapper::cuba::CUBAwrapper::IntegrateSuave (vector<vector<double>> integration_limits, const bool parallelize)
 {
   int comp, neval, fail, nregions;
-  vector<double> integral(m_inputs.NCOMP), error(m_inputs.NCOMP), prob(m_inputs.NCOMP);
+  cubareal integral[NCOMP], error[NCOMP], prob[NCOMP];
 
   cbl::wrapper::cuba::STR_CUBA_integrand *userdata = new cbl::wrapper::cuba::STR_CUBA_integrand;
   userdata->func = m_integrand;
   userdata->integration_limits = integration_limits;
-  Suave(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
-    m_inputs.EPSREL, m_inputs.EPSABS, m_inputs.VERBOSE | m_inputs.LAST, m_inputs.SEED,
-    m_inputs.MINEVAL, m_inputs.MAXEVAL, m_inputs.NNEW, m_inputs.NMIN, m_inputs.FLATNESS,
-    m_inputs.STATEFILE, m_inputs.SPIN.get(),
-    &nregions, &neval, &fail, integral.data(), error.data(), prob.data());
 
-  if(m_inputs.VERBOSE>0){
+  if (parallelize==false)
+    cubacores(0, 0);
+  
+  Suave(m_ndim, NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, NVEC,
+    EPSREL, EPSABS, VERBOSE | LAST, SEED,
+    MINEVAL, MAXEVAL, NNEW, NMIN, FLATNESS,
+    STATEFILE, SPIN,
+    &nregions, &neval, &fail, integral, error, prob);
+
+  if(VERBOSE>0){
     printf("SUAVE RESULT:\tnregions %d\tneval %d\tfail %d\n", nregions, neval, fail);
-    for( comp = 0; comp < m_inputs.NCOMP; ++comp )
+    for( comp = 0; comp < NCOMP; ++comp )
       printf("SUAVE RESULT:\t%.8f +- %.8f\tp = %.3f\n", (double)integral[comp], (double)error[comp], (double)prob[comp]);
   }
 
@@ -155,26 +162,29 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateSuave (vector<vector<double>> i
 // ============================================================================
 
 
-double cbl::wrapper::cuba::CUBAwrapper::IntegrateDivonne (vector<vector<double>> integration_limits)
+double cbl::wrapper::cuba::CUBAwrapper::IntegrateDivonne (vector<vector<double>> integration_limits, const bool parallelize)
 {
   int comp, neval, fail, nregions;
-  vector<double> integral(m_inputs.NCOMP), error(m_inputs.NCOMP), prob(m_inputs.NCOMP);
+  cubareal integral[NCOMP], error[NCOMP], prob[NCOMP];
 
   cbl::wrapper::cuba::STR_CUBA_integrand *userdata = new cbl::wrapper::cuba::STR_CUBA_integrand;
   userdata->func = m_integrand;
   userdata->integration_limits = integration_limits;
 
-  Divonne(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
-    m_inputs.EPSREL, m_inputs.EPSABS, m_inputs.VERBOSE, m_inputs.SEED,
-    m_inputs.MINEVAL, m_inputs.MAXEVAL, m_inputs.KEY1, m_inputs.KEY2, m_inputs.KEY3, m_inputs.MAXPASS,
-    m_inputs.BORDER, m_inputs.MAXCHISQ, m_inputs.MINDEVIATION,
-    m_inputs.NGIVEN, m_inputs.LDXGIVEN, NULL, m_inputs.NEXTRA, NULL,
-    m_inputs.STATEFILE, m_inputs.SPIN.get(),
-    &nregions, &neval, &fail, integral.data(), error.data(), prob.data());
+  if (parallelize==false)
+    cubacores(0, 0);
 
-  if(m_inputs.VERBOSE>0){
+  Divonne(m_ndim, NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, NVEC,
+    EPSREL, EPSABS, VERBOSE, SEED,
+    MINEVAL, MAXEVAL, KEY1, KEY2, KEY3, MAXPASS,
+    BORDER, MAXCHISQ, MINDEVIATION,
+    NGIVEN, LDXGIVEN, NULL, NEXTRA, NULL,
+    STATEFILE, SPIN,
+    &nregions, &neval, &fail, integral, error, prob);
+
+  if(VERBOSE>0){
     printf("DIVONNE RESULT:\tnregions %d\tneval %d\tfail %d\n", nregions, neval, fail);
-    for( comp = 0; comp < m_inputs.NCOMP; ++comp ) 
+    for( comp = 0; comp < NCOMP; ++comp ) 
       printf("DIVONNE RESULT:\t%.8f +- %.8f\tp = %.3f\n", (double)integral[comp], (double)error[comp], (double)prob[comp]);
   }
 
@@ -185,24 +195,27 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateDivonne (vector<vector<double>>
 // ============================================================================
 
 
-double cbl::wrapper::cuba::CUBAwrapper::IntegrateCuhre (vector<vector<double>> integration_limits)
+double cbl::wrapper::cuba::CUBAwrapper::IntegrateCuhre (vector<vector<double>> integration_limits, const bool parallelize)
 {
   int comp, neval, fail, nregions;
-  vector<double> integral(m_inputs.NCOMP), error(m_inputs.NCOMP), prob(m_inputs.NCOMP);
+  cubareal integral[NCOMP], error[NCOMP], prob[NCOMP];
 
   cbl::wrapper::cuba::STR_CUBA_integrand *userdata = new cbl::wrapper::cuba::STR_CUBA_integrand;
   userdata->func = m_integrand;
   userdata->integration_limits = integration_limits;
 
-  Cuhre(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
-    m_inputs.EPSREL, m_inputs.EPSABS, m_inputs.VERBOSE | m_inputs.LAST,
-    m_inputs.MINEVAL, m_inputs.MAXEVAL, m_inputs.KEY,
-    m_inputs.STATEFILE, m_inputs.SPIN.get(),
-    &nregions, &neval, &fail, integral.data(), error.data(), prob.data());
+  if (parallelize==false)
+    cubacores(0, 0);
 
-  if(m_inputs.VERBOSE>0){
+  Cuhre(m_ndim, NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, NVEC,
+    EPSREL, EPSABS, VERBOSE | LAST,
+    MINEVAL, MAXEVAL, KEY,
+    STATEFILE, SPIN,
+    &nregions, &neval, &fail, integral, error, prob);
+
+  if(VERBOSE>0){
     printf("CUHRE RESULT:\tnregions %d\tneval %d\tfail %d\n", nregions, neval, fail);
-    for( comp = 0; comp < m_inputs.NCOMP; ++comp )
+    for( comp = 0; comp < NCOMP; ++comp )
       printf("CUHRE RESULT:\t%.8f +- %.8f\tp = %.3f\n", (double)integral[comp], (double)error[comp], (double)prob[comp]);
   }
 

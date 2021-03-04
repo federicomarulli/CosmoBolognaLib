@@ -184,13 +184,11 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return none
        */
       EisensteinHu () = default;
 
       /**
        *  @brief default destructor
-       *  @return none
        */
       ~EisensteinHu () = default;
 

@@ -80,7 +80,7 @@ namespace cbl {
       /**
        *  @brief default constructor
        *
-       *  @return object of class Data1D
+       *  1D
        */
       Data1D_collection () : Data() {set_dataType(DataType::_1D_collection_);}
 
@@ -91,7 +91,7 @@ namespace cbl {
        *
        *  @param skip_header number of lines to be skipped 
        *
-       *  @return object of class Data1D_collection
+       *  1D_collection
        */
       Data1D_collection (const std::string input_file, const int skip_header=0);
 
@@ -103,7 +103,7 @@ namespace cbl {
        *
        *  @param skip_header number of lines to be skipped 
        *
-       *  @return object of class Data1D_collection
+       *  1D_collection
        */
       Data1D_collection (const std::vector<std::string> input_files, const int skip_header=0);
 
@@ -115,7 +115,7 @@ namespace cbl {
        *
        *  @param data vector containing the data for each dataset
        *
-       *  @return object of class Data1D_collection
+       *  1D_collection
        */
       Data1D_collection (const std::vector<std::vector<double>> xx, const std::vector<std::vector<double>> data);
 
@@ -130,7 +130,7 @@ namespace cbl {
        *
        *  @param covariance vector containing the data covariance
        *
-       *  @return object of class Data1D_collection
+       *  1D_collection
        */
       Data1D_collection (const std::vector<std::vector<double>> xx, const std::vector<std::vector<double>> data, const std::vector<std::vector<double>> covariance);
 
@@ -145,7 +145,7 @@ namespace cbl {
        *
        *  @param error vector containing the data error
        *
-       *  @return object of class Data1D_collection
+       *  1D_collection
        */
       Data1D_collection (const std::vector<std::vector<double>> xx, const std::vector<double> data, const std::vector<double> error);
 
@@ -160,14 +160,12 @@ namespace cbl {
        *
        *  @param covariance vector containing the data covariance
        *
-       *  @return object of class Data1D_collection
+       *  1D_collection
        */
       Data1D_collection (const std::vector<std::vector<double>> xx, const std::vector<double> data, const std::vector<std::vector<double>> covariance);
 
       /**
        *  @brief default destructor
-       *
-       *  @return none
        */
       virtual ~Data1D_collection () = default;
 
@@ -205,8 +203,6 @@ namespace cbl {
        *  @brief get x values
        *
        *  @param x [out] the x values
-       *
-       *  @return the value of the m_x vector for the i-th dataset
        */
       void xx (std::vector<std::vector<double> > x) const { x = m_x; }
 
@@ -237,8 +233,6 @@ namespace cbl {
        *  @brief get data
        *
        *  @param [out] data vector containing the dataset
-       *
-       *  @return none
        */
       void data (std::vector<std::vector<double>> &data) const;
 
@@ -257,8 +251,6 @@ namespace cbl {
        *  @brief get standard deviation
        *
        *  @param [out] error vector containing the error
-       *
-       *  @return none
        */
       void error (std::vector<std::vector<double>> &error) const;
 
@@ -275,8 +267,6 @@ namespace cbl {
        *  @param i index to the i-th dataset
        *
        *  @param x vector containing x points
-       *
-       *  @return none
        */
       void set_xx (const int i, const std::vector<double> x) { m_x[i] = x; } 
 
@@ -299,9 +289,10 @@ namespace cbl {
        *  @param input_file input data file
        *
        *  @param skip_nlines the header lines to be skipped
-       *
-       *  @param column_x the column of x values in the input file; if
-       *  it is not provided, the first column will be used by default
+       *    
+       *  @param column vector containing the column of x values in
+       *  the input file; if it is not provided, the first column will
+       *  be used by default
        *
        *  @param column_data the column of data values in the input
        *  file; the size of column_data is the number of data to be
@@ -322,12 +313,16 @@ namespace cbl {
        *  that only 1 random vector has to be read; if the input file
        *  has only 2 columns, the errors will be set to 1
        *
-       *  @return none
+       *  @param column_edges vector containing the columns of x bin
+       *  edge values in the input file; if it is not provided, the
+       *  third and four columns after the column of x values will be
+       *  used; if these columns do no exist the edges are not read
        *
-       *  @warning column_x, column_data, column_errors are not used
-       *  in the current implementation: work in progress!
+       *  @warning column, column_data, column_errors, column_edges
+       *  are not used in the current implementation: work in
+       *  progress!
        */
-      void read (const std::string input_file, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={}) override;
+      void read (const std::string input_file, const int skip_nlines=0, const std::vector<int> column={1}, const std::vector<int> column_data={}, const std::vector<int> column_errors={}, const std::vector<int> column_edges={}) override;
       
       /**
        *  @brief read the data
@@ -336,8 +331,9 @@ namespace cbl {
        *
        *  @param skip_nlines the header lines to be skipped
        *
-       *  @param column_x the column of x values in the input file; if
-       *  it is not provided, the first column will be used by default
+       *  @param column vector containing the column of x values in
+       *  the input file; if it is not provided, the first column will
+       *  be used by default
        *
        *  @param column_data the column of data values in the input
        *  file; the size of column_data is the number of data to be
@@ -358,12 +354,16 @@ namespace cbl {
        *  that only 1 random vector has to be read; if the input file
        *  has only 2 columns, the errors will be set to 1
        *
-       *  @return none
+       *  @param column_edges vector containing the columns of x bin
+       *  edge values in the input file; if it is not provided, the
+       *  third and four columns after the column of x values will be
+       *  used; if these columns do no exist the edges are not read
        *
-       *  @warning column_x, column_data, column_errors are not used
-       *  in the current implementation: work in progress!
+       *  @warning column, column_data, column_errors, column_edges
+       *  are not used in the current implementation: work in
+       *  progress!
        */
-      void read (const std::vector<std::string> input_files, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={}) override;
+      void read (const std::vector<std::string> input_files, const int skip_nlines=0, const std::vector<int> column={1}, const std::vector<int> column_data={}, const std::vector<int> column_errors={}, const std::vector<int> column_edges={}) override;
 
       /**
        *  @brief print the data on screen
@@ -389,8 +389,6 @@ namespace cbl {
        *  @param ww number of characters to be used as field width 
        *
        *  @param rank cpu index (for MPI usage)
-       *
-       *  @return none
        */
       void write (const std::string dir, const std::string file, const std::string header, const int prec=4, const int ww=8, const int rank=0) const override;
       
@@ -409,8 +407,6 @@ namespace cbl {
        *  @param ww number of characters to be used as field width 
        *
        *  @param rank cpu index (for MPI usage)
-       *
-       *  @return none
        */
       void write (const std::string dir, const std::vector<std::string> files, const std::string header, const int precision=10, const int ww=8, const int rank=0) const override;
 
@@ -422,8 +418,6 @@ namespace cbl {
        *  @param file the output file
        *
        *  @param precision the float precision
-       *
-       *  @return none
        */
       void write_covariance (const std::string dir, const std::string file, const int precision=10) const override;
 

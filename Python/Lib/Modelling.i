@@ -4,10 +4,8 @@
 
 %{
 #include "Modelling.h"
-#include "Modelling1D.h"
-#include "Modelling2D.h"
+#include "CombinedModelling.h"
 %}
 
 %include "Modelling.h"
-%include "Modelling1D.h"
-%include "Modelling2D.h"
+%include "CombinedModelling.h"

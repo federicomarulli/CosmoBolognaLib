@@ -50,228 +50,214 @@ namespace cbl {
 
   namespace measure {
 
-    /**
-     *  @brief The namespace of the <B> three-point correlation function
-     *  </B>
-     *  
-     * The \e measure::threept namespace contains all the functions and
-     * classes to measure the three-point correlation function
-     */
     namespace threept {
 
       /**
-       *  @class ThreePointCorrelation ThreePointCorrelation_comoving_multipoles_all.h
-       * "Headers/ThreePointCorrelation_comoving_multipoles_all.h"
+       *  @class ThreePointCorrelation_comoving_multipoles_all
+       *  ThreePointCorrelation_comoving_multipoles_all.h
+       *  "Headers/ThreePointCorrelation_comoving_multipoles_all.h"
        *
-       *  @brief The class ThreePointCorrelation_comoving_multipoles_all
+       *  @brief The class
+       *  ThreePointCorrelation_comoving_multipoles_all
        *
        *  This is the class used to measure the three-point
-       *  correlation function multipoles for all triangle configurations
+       *  correlation function multipoles for all triangle
+       *  configurations
        */
       class ThreePointCorrelation_comoving_multipoles_all : public ThreePointCorrelation_comoving_multipoles {
 
-	protected :
+      protected :
 
-	  /**
-	   *  @name variables for triangles
-	   */
-	  ///@{
+	/**
+	 *  @name variables for triangles
+	 */
+	///@{
+	
+	/// minimum scale
+	double m_rMin;
 
+	/// minimum scale
+	double m_rMax;
 
-	  /// Minimum scale
-	  double m_rMin;
+	/// shell size
+	double m_binSize;
 
-	  /// Minimum scale
-	  double m_rMax;
+	/// number of bins
+	size_t m_nBins;
 
-	  /// shell size
-	  double m_binSize;
+	///@}
+	
+	/**
+	 * @param NNN the multipoles expansion of the triplets for the
+	 * separation bins
+	 *
+	 * @param RRR the multipoles expansion of the random triplets
+	 * for the separation bins
+	 *
+	 * @param rmin the minimum separation
+	 *
+	 * @param rmax the maximum separation
+	 * 
+	 * @param nbins the number of separation bins 
+	 * 
+	 * @param norders the number of multipoles, \f$ l_{max}+1 \f$
+	 * 
+	 * @param catalogue the catalogue
+	 */
+	void m_count_triplets (std::vector<double> &NNN, std::vector<double> &RRR, const double rmin, const double rmax, const int nbins, const int norders, const catalogue::Catalogue& catalogue) const;
 
-	  /// number of bins
-	  size_t m_nBins;
+	/**
+	 *  @name Internal input/output member functions (customized in all the derived classes)
+	 */
+	///@{
+	
+	/**
+	 *  @brief write the number of triplets
+	 *  @param TL pointer to an object of class Triplet
+	 *  @param dir output directory
+	 *  @param file output file
+	 */
+	void m_write_triplets (const std::vector<double> TL, const std::string dir, const std::string file) const;
 
-	  ///@}
+	/**
+	 *  @brief read the number of triplets
+	 *  @param [out] TL pointer to an object of class Triplet
+	 *  @param [in] dir input directory
+	 *  @param [in] file input file
+	 */
+	void m_read_triplets (std::vector<double> &TL, const std::vector<std::string> dir, const std::string file);
 
-	  /**
-	   * @param NNN the multipoles expansion of the triplets
-	   * for the separation bins
-	   *
-	   * @param RRR the multipoles expansion of the random triplets
-	   * for the separation bins
-	   *
-	   * @param rmin the minimum separation
-	   *
-	   * @param rmax the maximum separation
-	   * 
-	   * @param nbins the number of separation bins 
-	   * 
-	   * @param norders the number of multipoles, \f$ l_{max}+1 \f$
-	   * 
-	   * @param catalogue the catalogue
-	   *
-	   * @return none
-	   */
-	  void m_count_triplets (std::vector<double> &NNN, std::vector<double> &RRR, const double rmin, const double rmax, const int nbins, const int norders, const catalogue::Catalogue& catalogue) const;
+	///@}
 
-	  /**
-	   *  @name Internal input/output member functions (customized in all the derived classes)
-	   */
-	  ///@{
+      public:
 
-	  /**
-	   *  @brief write the number of triplets
-	   *  @param TL pointer to an object of class Triplet
-	   *  @param dir output directory
-	   *  @param file output file
-	   *  @return none
-	   */
-	  void m_write_triplets (const std::vector<double> TL, const std::string dir, const std::string file) const;
+	/**
+	 * @brief default constructor
+	 */
+	ThreePointCorrelation_comoving_multipoles_all () = default;
 
-	  /**
-	   *  @brief read the number of triplets
-	   *  @param [out] TL pointer to an object of class Triplet
-	   *  @param [in] dir input directory
-	   *  @param [in] file input file
-	   *  @return none
-	   */
-	  void m_read_triplets (std::vector<double> &TL, const std::vector<std::string> dir, const std::string file);
+	/**
+	 * @brief constructor
+	 *
+	 * @details constructor of
+	 * ThreePointCorrelation_comoving_multipoles to compute all
+	 * configurations three-point correlation function multipoles
+	 *
+	 * @param catalogue the data catalogue
+	 * @param random_catalogue the random catalogue
+	 * @param rMin the minimum triangle side
+	 * @param rMax the maximum triangle side
+	 * @param binSize the triangle side width
+	 * @param nOrders the number of Legendre multipoles
+	 * @param split factor to split the random sample. 
+	 * 	it must be a multiple m_data.nobjects()
+	 * @param seed seed to shuffle the random sample
+	 *
+	 * @warning this function will raise an error if
+	 * m_random.nObjects() < split*m_data.nObjects if
+	 * m_random.nObjects() > split*m_data.nObjects, only random
+	 * points up to split*m_data.nObjects Negative values of the
+	 * split factor allow to use the whole random sample.
+	 */
+	ThreePointCorrelation_comoving_multipoles_all (const cbl::catalogue::Catalogue catalogue, const cbl::catalogue::Catalogue random_catalogue, const double rMin, const double rMax, const double binSize, const size_t nOrders, const double split=-1, const size_t seed=234);
 
-	  ///@}
+	/**
+	 * @brief constructor
+	 *
+	 * @details constructor of
+	 * ThreePointCorrelation_comoving_multipoles_all to compute
+	 * all configurations three-point correlation function
+	 * multipoles, rebinning previously measured triplets
+	 *
+	 * @param threept object of type
+	 * ThreePointCorrelation_comoving_multipoles_all
+	 *
+	 * @param newBinSize the triangle side width
+	 *
+	 * @warning this function rebin Legendre triplet coefficients
+	 * previously computed. The new bin size could disagree with
+	 * the original triangle sides.  In that case the minimum
+	 * separation will be changed accordingly.
+	 */
+	ThreePointCorrelation_comoving_multipoles_all (const ThreePointCorrelation_comoving_multipoles_all &threept, const double newBinSize);
 
-	public:
+	/**
+	 * @brief default destructor
+	 */
+	~ThreePointCorrelation_comoving_multipoles_all () = default;
 
-	  /**
-	   * @brief default constructor
-	   *
-	   * @return object of type ThreePointCorrelation_comoving_multipoles
-	   */
-	  ThreePointCorrelation_comoving_multipoles_all () {}
+	/**
+	 * @brief set parameters for all configurations 
+	 * three-point correlation function multipoles
+	 *
+	 * @param rMin the minimum triangle side
+	 * @param rMax the maximum triangle side
+	 * @param binSize the triangle side width
+	 * @param nOrders the number of Legendre multipoles
+	 */
+	void set_parameters (const double rMin, const double rMax, const double binSize, const size_t nOrders);
 
-	  /**
-	   * @brief constructor of ThreePointCorrelation_comoving_multipoles
-	   *
-	   * @details constructor of ThreePointCorrelation_comoving_multipoles
-	   * to compute all configurations three-point correlation function multipoles
-	   *
-	   * @param catalogue the data catalogue
-	   * @param random_catalogue the random catalogue
-	   * @param rMin the minimum triangle side
-	   * @param rMax the maximum triangle side
-	   * @param binSize the triangle side width
-	   * @param nOrders the number of Legendre multipoles
-	   * @param split factor to split the random sample. 
-	   * 	it must be a multiple m_data.nobjects()
-	   * @param seed seed to shuffle the random sample*
-	   *
-	   * @return object of type ThreePointCorrelation_comoving_multipoles
-	   * @warning this function will raise an error if m_random.nObjects() < split*m_data.nObjects
-	   * if m_random.nObjects() > split*m_data.nObjects, only random points up to split*m_data.nObjects
-	   * Negative values of the split factor allow to use the whole random sample.
-	   */
-	  ThreePointCorrelation_comoving_multipoles_all (const cbl::catalogue::Catalogue catalogue, const cbl::catalogue::Catalogue random_catalogue, const double rMin, const double rMax, const double binSize, const size_t nOrders, const double split=-1, const size_t seed=234);
+	/**
+	 * @brief measure the three-point correlation function multipoles
+	 *
+	 * @param errorType type of error 
+	 *
+	 * @param dir_output_triplets name of the output directory used to
+	 * store the number of triplets
+	 * 
+	 * @param dir_input_triplets name of the input directories
+	 * containing the number of triplets
+	 *
+	 * @param nResamplings number of resamplings
+	 *
+	 * @param count_triplets 1 &rarr; count the triplets
+	 * triplets; 0 &rarr; read the triplets from a file
+	 *
+	 * @param tcount 1 &rarr; activate the CPU time counter; 0
+	 * &rarr; no time counter
+	 *
+	 * @param seed the seed for random number generation
+	 *
+	 * @warning no error have been implemented so far, any choice
+	 * will be ignored
+	 */
+	void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_triplets, const bool tcount, const int seed) override;
 
-	  /**
-	   * @brief constructor of ThreePointCorrelation_comoving_multipoles_all
-	   *
-	   * @details constructor of ThreePointCorrelation_comoving_multipoles_all
-	   * to compute all configurations three-point correlation function multipoles,
-	   * rebinning previously measured triplets
-	   *
-	   * @param threept object of type ThreePointCorrelation_comoving_multipoles_all
-	   * @param newBinSize the triangle side width
-	   *
-	   * @return object of type ThreePointCorrelation_comoving_multipoles
-	   *
-	   * @warning this function rebin Legendre triplet coefficients previously 
-	   * computed. The new bin size could disagree with the original triangle sides. 
-	   * In that case the minimum separation will be changed accordingly.
-	   */
-	  ThreePointCorrelation_comoving_multipoles_all (const ThreePointCorrelation_comoving_multipoles_all &threept, const double newBinSize);
+	/**
+	 *  @name Input/Output member functions (customized in all the derived classes)
+	 */
+	///@{
+	
+	/**
+	 *  @brief write the measured three-point correlation
+	 *  @param dir output directory
+	 *  @param file output file
+	 */
+	void write (const std::string dir, const std::string file) const;
 
-	  /**
-	   * @brief default destructor
-	   *
-	   * @return None
-	   */
-	  ~ThreePointCorrelation_comoving_multipoles_all () {}
+	///@}
+	
+	/**
+	 *  @name members function to resum the triplet counts
+	 */
+	///@{
+	
+	/**
+	 *  @brief resum the three-point correlation function, write
+	 *  output in file
+	 *
+	 *  @param dir output directory
+	 *  @param file output file
+	 *  @param tripletType the triplet type
+	 *  @param nBins the number of bins
+	 *
+	 *  @param bin true \f$\rightarrow\f$ average legendre
+	 *  polynomials, false \f$\rightarrow\f$ compute legendre
+	 *  polynomial at the bin center
+	 */
+	void resum (const std::string dir, const std::string file, const cbl::triplets::TripletType tripletType, const int nBins, const bool bin=true) const;
 
-	  /**
-	   * @brief set parameters for all configurations 
-	   * three-point correlation function multipoles
-	   *
-	   * @param rMin the minimum triangle side
-	   * @param rMax the maximum triangle side
-	   * @param binSize the triangle side width
-	   * @param nOrders the number of Legendre multipoles
-	   *
-	   * @return None
-	   */
-	  void set_parameters (const double rMin, const double rMax, const double binSize, const size_t nOrders);
-
-	  /**
-	   * @brief measure the three-point correlation function multipoles
-	   *
-	   * @param errorType type of error 
-	   *
-	   * @param dir_output_triplets name of the output directory used to
-	   * store the number of triplets
-	   * 
-	   * @param dir_input_triplets name of the input directories
-	   * containing the number of triplets
-	   *
-	   * @param nResamplings number of resamplings
-	   *
-	   * @param count_triplets 1 &rarr; count the triplets
-	   * triplets; 0 &rarr; read the triplets from a file
-	   *
-	   * @param tcount 1 &rarr; activate the CPU time counter; 0
-	   * &rarr; no time counter
-	   *
-	   * @param seed the seed for random number generation
-	   *
-	   * @return none
-	   *
-	   * @warning no error have been implemented so far, any choice will
-	   * be ignored.
-	   */
-	  void measure (const ErrorType errorType, const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const int nResamplings=100, const bool count_triplets=true, const bool tcount=false, const int seed=3213);
-
-	  /**
-	   *  @name Input/Output member functions (customized in all the derived classes)
-	   */
-	  ///@{
-
-	  /**
-	   *  @brief write the measured three-point correlation
-	   *  @param dir output directory
-	   *  @param file output file
-	   *  @return none
-	   */
-
-	  void write (const std::string dir, const std::string file) const;
-
-	  ///@}
-
-	  /**
-	   *  @name members function to resum the triplet counts
-	   */
-	  ///@{
-
-	  /**
-	   *  @brief resum the three-point correlation function, write 
-	   *  output in file
-	   *  @param dir output directory
-	   *  @param file output file
-	   *  @param tripletType the triplet type
-	   *  @param nBins the number of bins
-	   *  @param bin true \f$\rightarrow\f$ average legendre polynomials,
-	   *  	false \f$\rightarrow\f$ compute legendre polynomial at the bin center
-	   *  @return none
-	   */
-
-	  void resum (const std::string dir, const std::string file, const cbl::triplets::TripletType tripletType, const int nBins, const bool bin=true) const;
-
-	  ///@}
+	///@}
 
       };
     }

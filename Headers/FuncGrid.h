@@ -96,7 +96,6 @@ namespace cbl {
       
       /**
        *  @brief default constructor
-       *  @return object of class FuncGrid
        */
       FuncGrid () = default;
 
@@ -108,13 +107,12 @@ namespace cbl {
        *  @param interpType interpolation method
        *  @param bin_type the binning type
        *
-       *  @return object of class FuncGrid
        */
       FuncGrid (const std::vector<double> x, const std::vector<double> y, const std::string interpType, const BinType bin_type=BinType::_linear_);
 
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~FuncGrid () = default;
 
@@ -182,7 +180,7 @@ namespace cbl {
 
       /**
        *  @brief free the GSL objects
-       *  @return none
+       *  
        */   
       void free ();
 
@@ -344,7 +342,6 @@ namespace cbl {
       
       /**
        *  @brief default constructor
-       *  @return object of class FuncGrid2D
        */
       FuncGrid2D () = default;
 
@@ -356,13 +353,12 @@ namespace cbl {
        *  @param fxy matrix containing the func values
        *  @param interpType interpolation method
        *
-       *  @return object of class FuncGrid
        */
       FuncGrid2D (const std::vector<double> x, const std::vector<double> y, const std::vector<std::vector<double>> fxy, const std::string interpType);
 
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~FuncGrid2D () = default;
 
@@ -448,7 +444,7 @@ namespace cbl {
 
       /**
        *  @brief free the GSL objects
-       *  @return none
+       *  
        */   
       void free ();
 

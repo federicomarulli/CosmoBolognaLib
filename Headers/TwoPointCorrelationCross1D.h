@@ -116,7 +116,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of class TwoPointCorrelationCross1D
+	 *  Cross1D
 	 */
 	TwoPointCorrelationCross1D () { m_dataset = data::Data::Create(data::DataType::_1D_); }
 
@@ -137,7 +137,7 @@ namespace cbl {
 	 *  @param random_dilution_fraction fraction between the number
 	 *  of objects in the diluted and original random samples, used
 	 *  to improve performances in random-random pair counts
-	 *  @return object of class TwoPointCorrelationCross1D
+	 *  Cross1D
 	 */
 	TwoPointCorrelationCross1D (const catalogue::Catalogue data1, const catalogue::Catalogue data2, const catalogue::Catalogue random, const bool compute_extra_info=false, const double random_dilution_fraction=1.) 
 	  : TwoPointCorrelationCross(data1, data2, random, compute_extra_info, random_dilution_fraction)
@@ -145,7 +145,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	~TwoPointCorrelationCross1D () = default;
       
@@ -196,7 +196,8 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
-	 *  @return none
+	 *  @return none, or an error message if the derived object
+	 *  does not have this member
 	 */
 	virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_SzapudiSzalay_) = 0;
       

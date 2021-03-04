@@ -76,7 +76,7 @@ namespace cbl {
 	 * @brief private member to set the parameter
 	 * types
 	 *
-	 * @return none
+	 * 
 	 */
 	void m_set_parameter_type () override;
 
@@ -91,7 +91,7 @@ namespace cbl {
 	/**
 	 *  @brief default constructor
 	 *
-	 *  @return object of class LikelihoodParameters
+	 *  
 	 */
 	LikelihoodParameters () = default;
 
@@ -104,14 +104,14 @@ namespace cbl {
 	 *
 	 *  @param parameterNames the parameter names
 	 *
-	 *  @return object of class LikelihoodParameters
+	 *  
 	 */
 	LikelihoodParameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames);
 
 	/**
 	 *  @brief default destructor
 	 *
-	 *  @return none
+	 *  
 	 */
 	~LikelihoodParameters () = default;
 
@@ -120,7 +120,7 @@ namespace cbl {
 	/**
 	 * @brief reset the parameter vectors
 	 *
-	 * @return none
+	 * 
 	 */
 	void reset () override;
 
@@ -193,7 +193,7 @@ namespace cbl {
 	 *
 	 *  @param parameterNames the parameter names
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_parameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames) override;
 
@@ -209,7 +209,7 @@ namespace cbl {
 	 * 
 	 * @param p the p-th parameter
 	 *
-	 * @return none
+	 * 
 	 */
 	void free (const int p) override;
 
@@ -220,7 +220,7 @@ namespace cbl {
 	 *
 	 * @param value the input value
 	 *
-	 * @return none
+	 * 
 	 */
 	void fix (const int p, const double value) override;
 
@@ -230,7 +230,7 @@ namespace cbl {
 	 *
 	 * @param p the p-th parameter
 	 *
-	 * @return none
+	 * 
 	 */
 	void fix_at_bestfit (const int p) override;
 
@@ -260,14 +260,14 @@ namespace cbl {
 	 *
 	 *  @param bestfit_value parameter bestfit values
 	 *
-	 *  @return none
+	 *  
 	 */
 	void set_bestfit_values (const std::vector<double> bestfit_value) override;
 
 	/**
 	 *  @brief write the best fit info
 	 *
-	 *  @return none
+	 *  
 	 */
 	void write_bestfit_info() override;
 

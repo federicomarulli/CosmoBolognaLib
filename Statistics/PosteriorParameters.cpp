@@ -237,35 +237,18 @@ void cbl::statistics::PosteriorParameters::set_parameters (const size_t nparamet
   set_prior_distribution(priorDistribution);
 }
 
-// ============================================================================================
-
-
-size_t cbl::statistics::PosteriorParameters::nparameters_free () const
-{
-  return m_nparameters_free;
-}
-
-
-// ============================================================================================
-
-
-size_t cbl::statistics::PosteriorParameters::nparameters_fixed () const
-{
-  return m_nparameters_fixed;
-}
-
 
 // ============================================================================================
 
 
 void cbl::statistics::PosteriorParameters::set_parameter_covariance (const int start, const int thin)
 {
-  vector<vector<double>> values(m_nparameters, vector<double>(m_nparameters, 0));
-
+  vector<vector<double>> values;
+  
   for (size_t i=0; i<m_nparameters; i++)
     values.push_back(parameter_chain_values(i, start, thin));
 
-  covariance_matrix (values, m_parameter_covariance);
+  covariance_matrix (transpose(values), m_parameter_covariance);
 }
 
 
@@ -705,8 +688,8 @@ void cbl::statistics::PosteriorParameters::show_results (const int start, const 
 	Print(posterior->mean(), 5, 10, "Posterior mean = ", "\n", true, std::cout); 
 	Print(std, 5, 10, "Posterior standard deviation = ", "\n", true, std::cout); 
 	Print(posterior->median(), 5, 10, "Posterior median = ", "\n", true, std::cout); 
-	Print((posterior->median()-posterior->percentile(18))-std_diff, 5, 10, "Posterior 18th percentile = ", "\n", true, std::cout); 
-	Print((posterior->percentile(82)-posterior->median())+std_diff, 5, 10, "Posterior 82th percentile = ", "\n", true, std::cout); 
+	Print((posterior->median()-posterior->percentile(16))-std_diff, 5, 10, "Posterior 16th percentile = ", "\n", true, std::cout); 
+	Print((posterior->percentile(84)-posterior->median())+std_diff, 5, 10, "Posterior 84th percentile = ", "\n", true, std::cout); 
 	if (show_mode) Print(posterior->mode(), 5, 10, "Posterior mode = ", "\n", true, std::cout); 
 	cout << endl;
       }
@@ -721,8 +704,8 @@ void cbl::statistics::PosteriorParameters::show_results (const int start, const 
 	Print(posterior->mean(), 5, 10, "Posterior mean = ", "\n", true, std::cout); 
 	Print(std, 5, 10, "Posterior standard deviation = ", "\n", true, std::cout); 
 	Print(posterior->median(), 5, 10, "Posterior median = ", "\n", true, std::cout); 
-	Print((posterior->median()-posterior->percentile(18))-std_diff, 5, 10, "Posterior 18th percentile = ", "\n", true, std::cout); 
-	Print((posterior->percentile(82)-posterior->median())+std_diff, 5, 10, "Posterior 82th percentile = ", "\n", true, std::cout); 
+	Print((posterior->median()-posterior->percentile(16))-std_diff, 5, 10, "Posterior 16th percentile = ", "\n", true, std::cout); 
+	Print((posterior->percentile(84)-posterior->median())+std_diff, 5, 10, "Posterior 84th percentile = ", "\n", true, std::cout); 
 	if (show_mode) Print(posterior->mode(), 5, 10, "Posterior mode = ", "\n", true, std::cout); 
 	cout << endl;
 	break;
@@ -751,6 +734,7 @@ void cbl::statistics::PosteriorParameters::write_results (const string dir, cons
 
   
   // correction for covariance matrix uncertainties (Percival et al. 2014)
+
   double corr = 1.;
   if (ns>0 && nb>0) {
     const double AA = 2./double((ns-nb-1.)*(ns-nb-4.));
@@ -761,9 +745,9 @@ void cbl::statistics::PosteriorParameters::write_results (const string dir, cons
   ofstream fout(file_parameters.c_str());
 
   if (compute_mode)
-    fout << "### Parameter # status # Posterior mean # Posterior standard deviation # Posterior median # Posterior 18th percentile # Posterior 82th percentile # Posterior mode ###" << endl << endl;
+    fout << "### Parameter # status # Posterior mean # Posterior standard deviation # Posterior median # Posterior 16th percentile # Posterior 84th percentile # Posterior mode ###" << endl << endl;
   else
-    fout << "### Parameter # status # Posterior mean # Posterior standard deviation # Posterior median # Posterior 18th percentile # Posterior 82th percentile ###" << endl;
+    fout << "### Parameter # status # Posterior mean # Posterior standard deviation # Posterior median # Posterior 16th percentile # Posterior 84th percentile ###" << endl;
   
   for (size_t i=0; i<m_nparameters; i++) {
     auto posterior = m_posterior_distribution[i];
@@ -777,7 +761,7 @@ void cbl::statistics::PosteriorParameters::write_results (const string dir, cons
 
       const double std = posterior->std()*corr;
       const double std_diff = (posterior->std()*(corr-1.))*0.5;
-      fout << m_parameter_name[i] << " FREE " << posterior->mean() << " " << std << " " << posterior->median() << " " << (posterior->median()-posterior->percentile(18))-std_diff << " " << (posterior->percentile(82)-posterior->median())+std_diff;
+      fout << m_parameter_name[i] << " FREE " << posterior->mean() << " " << std << " " << posterior->median() << " " << (posterior->median()-posterior->percentile(16))-std_diff << " " << (posterior->percentile(84)-posterior->median())+std_diff;
       if (compute_mode)
 	fout << " " << posterior->mode() << endl;
     }

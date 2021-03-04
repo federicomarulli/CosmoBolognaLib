@@ -21,7 +21,7 @@
 /**
  *  @file Modelling/Global/Modelling1D.cpp
  *
- *  @brief Methods of the class Modelling1D, used for modelling any kind
+ *  @brief Methods of the class Modelling, used for modelling any kind
  *  of measurements
  *
  *  This file contains the implementation of the methods of the class
@@ -32,7 +32,7 @@
  *  @authors federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
  */
 
-#include "Modelling1D.h"
+#include "Modelling.h"
 
 using namespace std;
 
@@ -43,7 +43,7 @@ using namespace cbl;
 // ============================================================================================
 
 
-void cbl::modelling::Modelling1D::set_fit_range (const double xmin, const double xmax)
+void cbl::modelling::Modelling::set_fit_range (const double xmin, const double xmax)
 {
   m_data_fit = m_data->cut(xmin, xmax); 
   m_fit_range = true;
@@ -53,7 +53,7 @@ void cbl::modelling::Modelling1D::set_fit_range (const double xmin, const double
 // ============================================================================================
 
 
-void cbl::modelling::Modelling1D::write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters)
+void cbl::modelling::Modelling::write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters)
 {
   if (m_model==NULL)
     ErrorCBL("no model found!", "write_model", "Modelling1D.cpp");
@@ -65,7 +65,7 @@ void cbl::modelling::Modelling1D::write_model (const std::string output_dir, con
 // ============================================================================================
 
 
-void cbl::modelling::Modelling1D::write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx)
+void cbl::modelling::Modelling::write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx)
 {
   if (m_posterior==NULL)
     ErrorCBL("no posterior found: run maximize_posterior() first!", "write_model_at_bestfit", "Modelling1D.cpp");
@@ -77,7 +77,7 @@ void cbl::modelling::Modelling1D::write_model_at_bestfit (const std::string outp
 // ============================================================================================
 
 
-void cbl::modelling::Modelling1D::write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start, const int thin)
+void cbl::modelling::Modelling::write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start, const int thin)
 {
   if (m_posterior==NULL)
     ErrorCBL("no posterior found: run sample_posterior() first!", "write_model_from_chains", "Modelling1D.cpp");

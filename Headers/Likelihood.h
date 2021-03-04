@@ -106,7 +106,7 @@ namespace cbl {
        *
        * @param output_file the input file
        *
-       * @return none
+       * 
        */
       void m_set_grid_likelihood_1D (const int npoints, const std::vector<std::vector<double>> parameter_limits, const std::string output_file);
       
@@ -116,7 +116,7 @@ namespace cbl {
        *
        * @param input_file the input file
        *
-       * @return none
+       * 
        */
       void m_set_grid_likelihood_1D (const std::string input_file);
 
@@ -132,7 +132,7 @@ namespace cbl {
        *
        * @param output_file the input file
        *
-       * @return none
+       * 
        */
       void m_set_grid_likelihood_2D (const int npoints, const std::vector<std::vector<double>> parameter_limits, const std::string output_file);
 
@@ -142,7 +142,7 @@ namespace cbl {
        *
        * @param input_file the input file
        *
-       * @return none
+       * 
        */
       void m_set_grid_likelihood_2D (const std::string input_file);
 
@@ -155,7 +155,7 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Likelihood
+       *  
        */
       Likelihood () : m_likelihood_type(LikelihoodType::_NotSet_) {}
 
@@ -182,14 +182,14 @@ namespace cbl {
        *  \f$N_{res}=-1\f$ if the covariance matrix has not been
        *  estimated with resampling methods
        *
-       *  @return object of class Likelihood
+       *  
        */
       Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const LikelihoodType likelihood_type, const std::vector<size_t> x_index={0,2}, const int w_index=-1, const std::shared_ptr<ModelParameters> model_parameters=NULL, const double prec=1.e-10, const int Nres=-1);
 
       /**
        *  @brief default destructor
        *
-       *  @return none
+       *  
        */
       virtual ~Likelihood () = default;
 
@@ -226,7 +226,7 @@ namespace cbl {
        *
        *  @param data pointer to the dataset
        *
-       *  @return none
+       *  
        */
       void set_data (std::shared_ptr<data::Data> data);
 
@@ -237,7 +237,7 @@ namespace cbl {
        *
        *  @param model_parameters parameters of the likelihood
        *
-       *  @return none
+       *  
        */
       void set_model (std::shared_ptr<Model> model=NULL, const std::shared_ptr<ModelParameters> model_parameters=NULL);
 
@@ -245,9 +245,30 @@ namespace cbl {
        *  @brief set the likelihood function with internal values of
        *  LikelihoodType
        *
-       *  @return none
+       *  
        */
       void unset_grid ();
+
+      /**
+       * @brief get the values of the internal variable m_model
+       *
+       * @return pointer containing the model to test
+       */
+      std::shared_ptr<Model> get_m_model () { return m_model; }
+
+      /**
+       * @brief get the values of the internal variable m_model
+       *
+       * @return pointer containing the model parameters
+       */
+      std::shared_ptr<ModelParameters> get_model_parameters () { return m_model_parameters; }
+
+      /**
+       * @brief get the values of the internal variable m_data
+       *
+       * @return pointer containing the data containers
+       */
+      std::shared_ptr<data::Data> get_m_data () { return m_data; }
 
       /**
        *  @brief set the likelihood function as a grid, to speed up
@@ -262,7 +283,7 @@ namespace cbl {
        *
        *  @param read if true, read the likelihood grid from a list
        *
-       *  @return none
+       *  
        */
       void set_grid (const int npoints, const std::vector<std::vector<double>> parameter_limits, const std::string file, const bool read=false);
 
@@ -286,19 +307,22 @@ namespace cbl {
        *  resamplings used to estimate the covariance matrix;
        *  \f$N_{res}=-1\f$ if the covariance matrix has not been
        *  estimated with resampling methods
-       *
-       *  @return none
        */
       void set_function (const LikelihoodType likelihood_type, const std::vector<size_t> x_index={0,2}, const int w_index=-1, const double prec=1.e-10, const int Nres=-1);
 
       /**
        *  @brief set the likelihood function 
        *
-       *  @param loglikelihood_function the loglikelihood function
-       *
-       *  @return none
+       *  @param likelihood_function the likelihood function
        */
-      void set_function (const LogLikelihood_function loglikelihood_function);
+      void set_function (const LogLikelihood_function likelihood_function);
+      
+      /**
+       *  @brief set the natural logarithm of the likelihood function 
+       *
+       *  @param loglikelihood_function the loglikelihood function
+       */
+      void set_log_function (const LogLikelihood_function loglikelihood_function);
 
       /**
        *  @brief write best-fit results on a file
@@ -306,8 +330,6 @@ namespace cbl {
        *  @param dir_output output directory
        *
        *  @param file output file
-       *
-       *  @return none
        */
       void write_results (const std::string dir_output, const std::string file); 
 
@@ -341,8 +363,6 @@ namespace cbl {
        *  @param tol the tolerance in finding convergence 
        *
        *  @param epsilon the simplex side
-       *
-       *  @return none
        */
       void maximize (const std::vector<double> start, const std::vector<std::vector<double>> parameter_limits, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3); 
 
@@ -355,7 +375,7 @@ namespace cbl {
        *  @param xx vector of points at which the model is computed
        *  @param yy vector of points at which the model is computed
        *
-       *  @return none
+       *  
        */
       void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> parameters, const std::vector<double> xx={}, const std::vector<double> yy={});
 
@@ -367,7 +387,7 @@ namespace cbl {
        *  @param xx vector of points at which the model is computed
        *  @param yy vector of points at which the model is computed
        *
-       *  @return none
+       *  
        */
       void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx={}, const std::vector<double> yy={})
       { write_model(output_dir, output_file, m_model_parameters->bestfit_value(), xx, yy); }

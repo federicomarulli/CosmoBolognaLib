@@ -37,7 +37,7 @@
 
 namespace cbl {
 
- namespace glob {
+  namespace glob {
 
     /**
      *  @class LegendrePolynomials LegendrePolynomials.h "Headers/LegendrePolynomials.h"
@@ -51,150 +51,146 @@ namespace cbl {
      */
     class LegendrePolynomials {
 
-      protected:
+    protected:
 
-	/// Number of Legendre polynomial
-	size_t m_nOrders;
+      /// Number of Legendre polynomial
+      size_t m_nOrders;
 
-	/// Coefficients of the Legendre polynomials
-	Eigen::MatrixXd m_coefficients;
+      /// Coefficients of the Legendre polynomials
+      Eigen::MatrixXd m_coefficients;
 
-	/**
-	 * @brief set internal attribute m_coefficients
-	 *
-	 * Set the coefficients of the Legendre Polynomials according
-	 * to the following recursive relation:
-	 *
-	 * \f[ P_{n}(x)=2^{n} \sum_{k=0}^{n}
-	 *	x^{k}\left(\begin{array}{l} n \\ k
-	 *	\end{array}\right)\left(\begin{array}{c}
-	 *	\frac{n+k-1}{2} \\ n \end{array}\right) \f]
-	 *
-	 * @param lMax maximum order of Legendre polynomials
-	 *
-	 * @return None
-	 */
-	void m_set_coefficients (const int lMax);
+      /**
+       * @brief set internal attribute m_coefficients
+       *
+       * Set the coefficients of the Legendre Polynomials according
+       * to the following recursive relation:
+       *
+       * \f[ P_{n}(x)=2^{n} \sum_{k=0}^{n}
+       *	x^{k}\left(\begin{array}{l} n \\ k
+       *	\end{array}\right)\left(\begin{array}{c}
+       *	\frac{n+k-1}{2} \\ n \end{array}\right) \f]
+       *
+       * @param lMax maximum order of Legendre polynomials
+       *
+       * 
+       */
+      void m_set_coefficients (const int lMax);
 	
-      public:
+    public:
 
-	/**
-	 *  @name Constructors/destructors
-	 */
-	///@{
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{
 
-	/**
-	 * @brief Default constructor of LegendrePolynomials
-	 *
-	 * @return Object of type LegendrePolynomials
-	 */
-	LegendrePolynomials () { set(0); }
+      /**
+       * @brief Default constructor of LegendrePolynomials
+       */
+      LegendrePolynomials () { set(0); }
 
-	/**
-	 * @brief Constructor of LegendrePolynomials
-	 *
-	 * @param lMax maximum order of Legendre polynomials
-	 *
-	 * @param safe True \f$\rightarrow \f$ check input range is
-	 * among -1 a 1 False \f$ \rightarrow \f$ do not check input
-	 *
-	 * @return Object of type LegendrePolynomials
-	 */
-	LegendrePolynomials (const int lMax, const bool safe=false);
+      /**
+       * @brief Constructor of LegendrePolynomials
+       *
+       * @param lMax maximum order of Legendre polynomials
+       *
+       * @param safe True \f$\rightarrow \f$ check input range is
+       * among -1 a 1 False \f$ \rightarrow \f$ do not check input
+       */
+      LegendrePolynomials (const int lMax, const bool safe=false);
 
-	/**
-	 * @brief Default destructor
-	 *
-	 * @return None
-	 */
-	~LegendrePolynomials () {}
+      /**
+       * @brief Default destructor
+       *
+       * 
+       */
+      ~LegendrePolynomials () {}
 
-	///@}
+      ///@}
 	
-	/**
-	 * @brief set maximum order of expansion
-	 *
-	 * @param lMax maximum order of Legendre polynomials
-	 *
-	 * @return None
-	 */
-	void set (const int lMax);
+      /**
+       * @brief set maximum order of expansion
+       *
+       * @param lMax maximum order of Legendre polynomials
+       *
+       * 
+       */
+      void set (const int lMax);
 
-	/**
-	 * @brief evaluate the Legendre polynomial of order ell
-	 * at x
-	 *
-	 * @param x the point to evaluate Legendre polynomial
-	 * @param ell the order of the Legendre polynomial
-	 *
-	 * @return the Legendre polynomial of order ell
-	 * at x
-	 */
-	double operator () (const double x, const int ell);
+      /**
+       * @brief evaluate the Legendre polynomial of order ell
+       * at x
+       *
+       * @param x the point to evaluate Legendre polynomial
+       * @param ell the order of the Legendre polynomial
+       *
+       * @return the Legendre polynomial of order ell
+       * at x
+       */
+      double operator () (const double x, const int ell);
 
-	/**
-	 * @brief evaluate the Legendre polynomial up to lMax
-	 * at x
-	 *
-	 * @param x the point to evaluate Legendre polynomials
-	 *
-	 * @return vector containing the Legendre polynomials
-	 * at x
-	 */
-	std::vector<double> operator () (const double x);
+      /**
+       * @brief evaluate the Legendre polynomial up to lMax
+       * at x
+       *
+       * @param x the point to evaluate Legendre polynomials
+       *
+       * @return vector containing the Legendre polynomials
+       * at x
+       */
+      std::vector<double> operator () (const double x);
 
-	/**
-	 * @brief evaluate the bin-averaged Legendre polynomial of order ell
-	 *
-	 * @param x_min the lower bin edge
-	 * @param x_max the up bin edge
-	 * @param ell the order of the Legendre polynomial
-	 *
-	 * @return the bin-averaged Legendre polynomial of order ell
-	 */
-	double integral (const double x_min, const double x_max, const int ell);
+      /**
+       * @brief evaluate the bin-averaged Legendre polynomial of order ell
+       *
+       * @param x_min the lower bin edge
+       * @param x_max the up bin edge
+       * @param ell the order of the Legendre polynomial
+       *
+       * @return the bin-averaged Legendre polynomial of order ell
+       */
+      double integral (const double x_min, const double x_max, const int ell);
 
-	/**
-	 * @brief evaluate the bin-averaged Legendre polynomials
-	 *
-	 * @param x_min the lower bin edge
-	 * @param x_max the up bin edge
-	 *
-	 * @return the bin-averaged Legendre polynomials
-	 */
-	std::vector<double> integral (const double x_min, const double x_max);
+      /**
+       * @brief evaluate the bin-averaged Legendre polynomials
+       *
+       * @param x_min the lower bin edge
+       * @param x_max the up bin edge
+       *
+       * @return the bin-averaged Legendre polynomials
+       */
+      std::vector<double> integral (const double x_min, const double x_max);
 
-	/**
-	 * @brief evaluate the Legendre polynomials for
-	 * triangle angles.
-	 *
-	 * @param r12 first triangle side
-	 * @param r13 second triangle side
-	 * @param r23 third triangle side
-	 *
-	 * @return the Legendre polynomials averaged over a triangle
-	 */
-	std::vector<std::vector<double>> triangle (const double r12, const double r13, const double r23);
+      /**
+       * @brief evaluate the Legendre polynomials for
+       * triangle angles.
+       *
+       * @param r12 first triangle side
+       * @param r13 second triangle side
+       * @param r23 third triangle side
+       *
+       * @return the Legendre polynomials averaged over a triangle
+       */
+      std::vector<std::vector<double>> triangle (const double r12, const double r13, const double r23);
 
-	/**
-	 * @brief evaluate the bin-averaged Legendre polynomials
-	 * over a triangle. Triangle side can vary from a minimum to
-	 * a maximum value
-	 *
-	 * @param r12_min the first side lower edge
-	 * @param r12_max the first side upper edge
-	 * @param r13_min the second side lower edge
-	 * @param r13_max the second side upper edge
-	 * @param r23_min the third side lower edge
-	 * @param r23_max the third side upper edge
-	 * @param rel_err the relative integration error
-	 * @param nevals maximum number of function evaluation
-	 *
-	 * @return the Legendre polynomials averaged over a triangle
-	 */
-	std::vector<double> triangle_integral (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const double r23_min, const double r23_max, const double rel_err=1.e-4, const int nevals=10000);
+      /**
+       * @brief evaluate the bin-averaged Legendre polynomials
+       * over a triangle. Triangle side can vary from a minimum to
+       * a maximum value
+       *
+       * @param r12_min the first side lower edge
+       * @param r12_max the first side upper edge
+       * @param r13_min the second side lower edge
+       * @param r13_max the second side upper edge
+       * @param r23_min the third side lower edge
+       * @param r23_max the third side upper edge
+       * @param rel_err the relative integration error
+       * @param nevals maximum number of function evaluation
+       *
+       * @return the Legendre polynomials averaged over a triangle
+       */
+      std::vector<double> triangle_integral (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const double r23_min, const double r23_max, const double rel_err=1.e-4, const int nevals=10000);
     };
- }
+  }
 }
 
 #endif

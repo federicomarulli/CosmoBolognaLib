@@ -122,7 +122,7 @@ double cbl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const do
   // compute the mass variance
   //return 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4)+wrapper::gsl::GSL_integrate_qagiu(ff, 1., 1.e-5);
  
-  return 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(ff, 1.e-4, kmax, 1.e-1);
+  return 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(ff, 1.e-4, kmax, 1.e-3);
 }
 
 

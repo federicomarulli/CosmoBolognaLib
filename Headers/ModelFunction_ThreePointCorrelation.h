@@ -142,7 +142,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of type STR_data_model_threept
 	 */
 	STR_data_model_threept () = default;
       };

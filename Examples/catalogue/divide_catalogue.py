@@ -1,19 +1,23 @@
+# ======================================================
+# Example code: how to divide a catalogue in sub-regions
+# ======================================================
+
 import CosmoBolognaLib as cbl
 from CosmoBolognaLib import StringVector as sv
 import numpy as np
 
-#Read the catalogue  from file
+# read the catalogue from file
 file_cat = sv(["../clustering/input/cat.dat"])
 
 catalogue = cbl.Catalogue(cbl.ObjectType__Galaxy_, cbl.CoordinateType__observed_, file_cat)
 
-#Set the regions as angular cells of same are
+# set the regions as angular cells of same area
 nCells_Ra = 5
 nCells_Dec = 2
 cbl.set_ObjectRegion_RaDec(catalogue, nCells_Ra, nCells_Dec);
 
-#Plot the angular coordinates of the sample with different colors
-#for each region
+# plot the angular coordinates of the sample with different colors for
+# each region
 
 import matplotlib.pyplot as plt
 

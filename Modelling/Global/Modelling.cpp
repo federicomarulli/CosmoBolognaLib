@@ -122,7 +122,7 @@ shared_ptr<cbl::statistics::ModelParameters> cbl::modelling::Modelling::posterio
 void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type, const vector<size_t> x_index, const int w_index, const double prec, const int Nres)
 {
   if (m_model==NULL)
-    ErrorCBL("undefined  model!", "set_likelihood", "Modelling.cpp");
+    ErrorCBL("undefined model!", "set_likelihood", "Modelling.cpp");
 
   if (m_fit_range) {
     if (m_data_fit==NULL)
@@ -262,3 +262,13 @@ void cbl::modelling::Modelling::write_results (const string dir, const string fi
   m_posterior->write_results(dir, file, start, thin, nbins, fits, compute_mode, ns, m_data_fit->ndata());
 }
 
+
+// ============================================================================================
+
+
+double cbl::modelling::Modelling::reduced_chi2 (const std::vector<double> parameter)
+{
+  if (m_posterior==NULL) m_set_posterior(666);
+  
+  return m_posterior->chi2(parameter)/(m_data_fit->ndata()-m_posterior->parameters()->nparameters_free()); 
+}

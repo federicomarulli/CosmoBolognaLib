@@ -61,41 +61,45 @@ namespace cbl {
    /**
      * @brief return a vector containing the
      * SamplerType names
-     * @return a vector containing the
-     * SamplerType names
+     *
+     * @return a vector containing the SamplerType names
      */
     inline std::vector<std::string> SamplerTypeNames () { return {"MetropolisHastings", "StretchMove"}; }
 
     /**
      *
-     * @brief cast an enum of type SamplerType
-     * from its index
+     * @brief cast an enum of type SamplerType from its index
+     *
      * @param samplerTypeIndex the samplerType index
+     *
      * @return object of class SamplerType
      */
     inline SamplerType SamplerTypeCast (const int samplerTypeIndex) { return castFromValue<SamplerType>(samplerTypeIndex); }
 
     /**
-     * @brief cast an enum of type SamplerType
-     * from its name
+     * @brief cast an enum of type SamplerType from its name
+     *
      * @param samplerTypeName the samplerType name
+     *
      * @return object of class SamplerType
      */
     inline SamplerType SamplerTypeCast (const std::string samplerTypeName) { return castFromName<SamplerType>(samplerTypeName, SamplerTypeNames()); }
 
     /**
-     * @brief cast an enum of type SamplerType
-     * from indeces
+     * @brief cast an enum of type SamplerType from indeces
+     *
      * @param samplerTypeIndeces the samplerType indeces
-     * @return object of class SamplerType
+     *
+     * @return vector of objects of class SamplerType
      */
     inline std::vector<SamplerType> SamplerTypeCast (const std::vector<int> samplerTypeIndeces) { return castFromValues<SamplerType>(samplerTypeIndeces); } 
 
     /**
-     * @brief cast enums of type SamplerType
-     * from their names
+     * @brief cast enums of type SamplerType from their names
+     *
      * @param samplerTypeNames the samplerType names
-     * @return vector of SamplerType enums
+     *
+     * @return vector of objects of class SamplerType
      */
     inline std::vector<SamplerType> SamplerTypeCast (const std::vector<std::string> samplerTypeNames) { return castFromNames<SamplerType>(samplerTypeNames, SamplerTypeNames()); }
     
@@ -157,7 +161,7 @@ namespace cbl {
        * @param start vector containing the starting position
        * for the parameters
        * 
-       * @return none
+       * 
        */
       void m_initialize_chains (const std::vector<std::vector<double>> start);
 
@@ -172,7 +176,7 @@ namespace cbl {
        *  @param seed the seed for random number generator
        *  @param aa the stretch-move distribution parameter
        *
-       *  @return none
+       *  
        *
        *  @warning pointers cannot be used inside the input function
        */
@@ -190,7 +194,7 @@ namespace cbl {
        *  @param seed the seed for random number generator
        *  @param aa the stretch-move distribution parameter
        *
-       *  @return none
+       *  
        *
        *  @warning pointers cannot be used inside the input function
        */
@@ -205,15 +209,13 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  @return object of class Likelihood
        */
-      Sampler () {}
+      Sampler () = default;
 
       /**
        *  @brief constructor
        *  @param npar the number of parameters
        *  @param function the function to sample
-       *  @return object of class Sampler
        */
       Sampler (const int npar, const std::function<double(std::vector<double> &)> function) : m_npar(npar), m_npar_free(npar) {set_function(function);}
 
@@ -222,25 +224,23 @@ namespace cbl {
        *  @param npar the number of parameters
        *  @param npar_free the number of free parameters
        *  @param function the function to sample
-       *  @return object of class Sampler
        */
       Sampler (const int npar, const int npar_free, const std::function<double(std::vector<double> &)> function) : m_npar(npar), m_npar_free(npar_free) {set_function(function);}
 
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       ~Sampler () = default;
 
       ///@}
 
       /**
-       * @brief evaluate the function and 
-       * return its value and derived parameters
+       * @brief evaluate the function
        *
        * @param pp the function parameters
        *
-       * @return none
+       * @return the function value and derived parameters
        */
       double operator () (std::vector<double> &pp) 
       {	
@@ -248,7 +248,7 @@ namespace cbl {
       }
 
       /**
-       * @brief return the chain value
+       * @brief get the chain value
        *
        * @param par the parameter
        *
@@ -256,7 +256,7 @@ namespace cbl {
        *
        * @param step the step in the chain
        *
-       * @return none
+       * @return the chain value 
        */
       double get_chain (const int par, const int chain, const int step) {return m_chains[step][chain][par];}
 
@@ -268,13 +268,13 @@ namespace cbl {
       std::vector<std::vector<std::vector<double>>> get_chain () {return m_chains;}
 
       /**
-       * @brief return the function value
+       * @brief get the function value
        *
        * @param chain the chain number
        *
        * @param step the step in the chain
        *
-       * @return none
+       * @return the function value
        */
       double get_function (const int chain, const int step) {return m_function_chain[step][chain];}
 
@@ -285,9 +285,7 @@ namespace cbl {
        *  @param[out] function the function computed at each step of the chain 
        *  @param[out] acceptance the acceptance rate
        *  @param start the starting position for each chain
-       *  @param thin the position step
-       *
-       *  @return none
+       *  @param thin the position step  
        */
       void get_chain_function_acceptance(std::vector<std::vector<double>> &chains, std::vector<double> &function, std::vector<double> &acceptance, const int start=0, const int thin=1);
 
@@ -298,8 +296,6 @@ namespace cbl {
        * @param npar_free the number of free parameters
        * @param chain_size number of step in each chain 
        * @param nwalkers number of parallel walkers 
-       *
-       * @return none
        */
       void set_chain (const int npar, const int npar_free, const int chain_size, const int nwalkers);
 
@@ -307,8 +303,6 @@ namespace cbl {
        * @brief set the function 
        *
        * @param function the function to be sampled
-       *
-       * @return none
        */
       void set_function (const std::function<double(std::vector<double> &)> function);
 
@@ -324,7 +318,6 @@ namespace cbl {
        *  @param aa the stretch-move distribution parameter
        *  @param outputFile output file where the chains are 
        *  	 written while running
-       *  @return none
        */
       void sample_stretch_move (const int chain_size, const int nwalkers, const std::vector<std::vector<double>> start, const int seed=4241, const double aa=2, const std::string outputFile=cbl::par::defaultString);
 
@@ -342,8 +335,6 @@ namespace cbl {
        *  @param seed the seed for random number generator
        *  @param aa the stretch-move distribution parameter
        *
-       *  @return none
-       *
        *  @warning pointers cannot be used inside the input function
        */
       void sample_stretch_move_parallel (const int chain_size, const int nwalkers, const std::vector<std::vector<double>> start, const int seed=4241, const double aa=2);
@@ -355,10 +346,8 @@ namespace cbl {
        *  @param file the output file
        *  @param start the starting position for each chain
        *  @param thin the position step
-       *
-       *  @return none
        */
-      void write_chain(const std::string dir_output, const std::string file, const int start, const int thin);
+      void write_chain (const std::string dir_output, const std::string file, const int start, const int thin);
       
     };
   }

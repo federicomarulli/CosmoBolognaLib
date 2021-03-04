@@ -59,10 +59,10 @@ double cbl::cosmology::Cosmology::xi0_Kaiser (const double rad, const double f_s
 // =====================================================================================
 
  
-std::vector<double> cbl::cosmology::Cosmology::xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const double redshift, const std::string output_dir, const bool store_output, const std::string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par)
+std::vector<double> cbl::cosmology::Cosmology::xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const double redshift, const bool store_output, const std::string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par)
 {
   const vector<double> kk = logarithmic_bin_vector(100, k_min, k_max);
-  const vector<double> Pk = this->Pk_DM(kk, method_Pk, NL, redshift, output_dir, store_output, output_root, norm, k_min, k_max, prec, file_par);
+  const vector<double> Pk = this->Pk_DM(kk, method_Pk, NL, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par);
 
   vector<double> xi = wrapper::fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
 
@@ -78,9 +78,9 @@ std::vector<double> cbl::cosmology::Cosmology::xi0_Kaiser (const std::vector<dou
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::xi2D_DispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigma12, const std::string method_Pk, const double redshift, const int FV, const bool NL, std::vector<double> rr, std::vector<double> &Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output, const std::string output_root, const int index, const bool bias_nl, const double bA, const bool xiType, const double k_star, const bool xiNL, const double v_min, const double v_max, const int step_v, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const std::string file_par) 
+double cbl::cosmology::Cosmology::xi2D_dispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigmav, const std::string method_Pk, const double redshift, const int FV, const bool NL, std::vector<double> rr, std::vector<double> &Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output, const std::string output_root, const int index, const bool bias_nl, const double bA, const bool xiType, const double k_star, const bool xiNL, const double v_min, const double v_max, const int step_v, const int norm, const double r_min, const double r_max, const double k_min, const double k_max, const double aa, const bool GSL, const double prec, const std::string file_par) 
 {
-  if (m_sigma8<0) return ErrorCBL("sigma8<0!", "xi2D_DispersionModel", "PkXizSpace.cpp");
+  if (m_sigma8<0) return ErrorCBL("sigma8<0!", "xi2D_dispersionModel", "PkXizSpace.cpp");
   
   double bias = bias_sigma8/m_sigma8; 
   double beta = f_sigma8/bias_sigma8;
@@ -111,7 +111,7 @@ double cbl::cosmology::Cosmology::xi2D_DispersionModel (const double rp, const d
   
   else {
     double var = (1.+redshift)/HH(redshift);
-    return xi2D_model(rp, pi, beta, bias, sigma12, rr, Xi, Xi_, Xi__, var, FV, index, 0, 0, v_min, v_max, step_v);
+    return xi2D_model(rp, pi, beta, bias, sigmav, rr, Xi, Xi_, Xi__, var, FV, index, 0, 0, v_min, v_max, step_v);
   }
 }
 
@@ -146,7 +146,7 @@ double cbl::cosmology::Cosmology::xisnl_gnw (const double rp, const double pi, c
 {
   string method_Pk = "EisensteinHu";
   
-  return xi2D_DispersionModel(rp, pi, f_sigma8, bias_sigma8, -1, method_Pk, redshift, -1, 0, rr, Xi, Xi_, Xi__, store_output, output_root, 1, bA);
+  return xi2D_dispersionModel(rp, pi, f_sigma8, bias_sigma8, -1, method_Pk, redshift, -1, 0, rr, Xi, Xi_, Xi__, store_output, output_root, 1, bA);
 }
 
 
@@ -165,7 +165,7 @@ double cbl::cosmology::Cosmology::xis_gBAO (const double rp, const double pi, co
   vector<double> xx = linear_bin_vector(step_x, x_min, x_max);
   double delta_x = xx[1]-xx[0];
 
-  double xis = 0., sigma12 = -1;
+  double xis = 0., sigmav = -1;
 
   double f_g = f_sigma8/m_sigma8;
 
@@ -173,7 +173,7 @@ double cbl::cosmology::Cosmology::xis_gBAO (const double rp, const double pi, co
     
     double pi_new = pi-xx[k];	
 
-    xis += xi2D_DispersionModel(rp, pi_new, f_sigma8, bias_sigma8, sigma12, method_Pk, redshift, FV, NL, rr, Xi, Xi_, Xi__, store_output, output_root, 0, -1., 1, k_star)*f_star(xx[k], f_g, k_star)*delta_x;
+    xis += xi2D_dispersionModel(rp, pi_new, f_sigma8, bias_sigma8, sigmav, method_Pk, redshift, FV, NL, rr, Xi, Xi_, Xi__, store_output, output_root, 0, -1., 1, k_star)*f_star(xx[k], f_g, k_star)*delta_x;
 
   }
 

@@ -204,9 +204,9 @@ cbl::cosmology::Cosmology::Cosmology (const CosmologicalModel cosmoModel, const 
     // Hinshaw et al. 2013: Table 3, WMAP-only Nine-year
   case(CosmologicalModel::_WMAP9_):
     m_Omega_baryon = 0.0463;                          // Omega_b = 0.0463 ± 0.0024
-    m_Omega_radiation = OmegaR_zeq(3273.);            // Table 2
     m_Omega_DE = 0.721;                               // Omega_DE = 0.721 ± 0.025
-    m_Omega_matter = 1.-m_Omega_radiation-m_Omega_DE; // flat LCDM
+    m_Omega_matter = 0.233+m_Omega_baryon;            // Omega_CDM = 0.233 ± 0.023
+    m_Omega_radiation = OmegaR_zeq(3273.);            // Table 2
     m_hh = 0.70;                                      // h = 0.700 ± 0.022 Km/s/Mpc
     m_scalar_amp = 2.41e-9;                           // scalar amplitude = (2.41 ± 0.10)e-9 -> sigma8 = 0.821 ± 0.023
     m_scalar_pivot = 0.002;                           // baseline
@@ -681,18 +681,25 @@ double cbl::cosmology::Cosmology::DD (const double redshift) const
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::DD_norm (const double redshift, const double redshift_norm, const double kk, const bool compute_from_growth_rate, const double prec) const 
-{   
-  if (m_w0!=-1. or m_wa!=0 or compute_from_growth_rate) {
-    
+double cbl::cosmology::Cosmology::DD_norm (const double redshift, const double redshift_norm, const std::string computing_method, const std::string method_Pk, const bool NL, const double kk, const bool store_output, const std::string output_root, const double prec) const 
+{
+  if (m_w0==-1. and m_wa==0. and computing_method=="classic")
+    return DD(redshift)/DD(redshift_norm);
+  
+  else if (m_w0!=-1. or m_wa!=0. or computing_method=="growth_rate") {
     auto func = [kk, prec, this] (const double aa) {
-      return linear_growth_rate(1./aa-1., kk, prec)/aa;
+      return linear_growth_rate(1./aa-1., prec)/aa;
     };
     
     return exp(cbl::wrapper::gsl::GSL_integrate_qag(func, 1./(1.+redshift_norm), 1./(1.+redshift)));
   }
 
-  else return DD(redshift)/DD(redshift_norm);
+  else if (computing_method=="Pk_ratio" and kk>0.) {
+    cbl::cosmology::Cosmology cosm = *this;
+    return pow(cosm.Pk_DM(kk, method_Pk, NL, redshift, store_output, output_root, 0)/cosm.Pk_DM(kk, method_Pk, NL, redshift_norm, store_output, output_root, 0),0.5);
+  }
+  
+  else {ErrorCBL("Wrong computing_method!", "DD_norm", "Cosmology.cpp"); return 0;}
 }
 
 
@@ -980,6 +987,15 @@ double cbl::cosmology::Cosmology::z_eq () const
 {
   if (m_wa!=0) ErrorCBL("w_a!=0", "z_eq", "Cosmology.cpp", ExitCode::_workInProgress_);
   return pow(m_Omega_DE/m_Omega_matter,-1./(3.*m_w0))-1.;
+}
+
+
+// =====================================================================================
+
+
+double cbl::cosmology::Cosmology::z_eq_rad (const double T_CMB) const
+{
+  return 2.5e+4*m_Omega_matter*m_hh*m_hh*pow((T_CMB/2.7),-4.);
 }
 
 

@@ -71,8 +71,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  @return object of class
-	 *  Modelling_TwoPointCorrelation1D_angular
 	 */
 	Modelling_TwoPointCorrelation1D_angular () = default;
 
@@ -80,9 +78,6 @@ namespace cbl {
 	 *  @brief constructor
 	 *  
 	 *  @param twop the two-point correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation1D_angular
 	 */
 	Modelling_TwoPointCorrelation1D_angular (const std::shared_ptr<cbl::measure::twopt::TwoPointCorrelation> twop)
 	  : Modelling_TwoPointCorrelation1D(twop) {}
@@ -92,16 +87,13 @@ namespace cbl {
 	 *  
 	 *  @param twop_dataset the dataset containing the two-point
 	 *  correlation function to model
-	 *
-	 *  @return object of type
-	 *  Modelling_TwoPointCorrelation1D_angular
 	 */
 	Modelling_TwoPointCorrelation1D_angular (const std::shared_ptr<data::Data> twop_dataset)
 	  : Modelling_TwoPointCorrelation1D(twop_dataset, cbl::measure::twopt::TwoPType::_angular_) {}
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	virtual ~Modelling_TwoPointCorrelation1D_angular () = default;
 	

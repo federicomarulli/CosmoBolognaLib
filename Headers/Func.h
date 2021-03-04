@@ -26,7 +26,7 @@
  *  This file contains the prototypes of a large set of useful
  *  functions of wide used
  *
- *  @author Federico Marulli 
+ *  @author Federico Marulli
  *
  *  @author federico.marulli3@unibo.it
  */
@@ -42,12 +42,12 @@
 
 namespace cbl {
 
-  
+
   /**
-   *  @name Functions of generic use  
+   *  @name Functions of generic use
    */
   ///@{
-  
+
   /**
    *  @brief 1D interpolation
    *
@@ -71,7 +71,7 @@ namespace cbl {
    *  xx, the returned value is the extrapolation
    */
   double interpolated (const double _xx, const std::vector<double> xx, const std::vector<double> yy, const std::string type);
-  
+
   /**
    *  @brief 2D interpolation
    *
@@ -104,7 +104,7 @@ namespace cbl {
    *
    */
   double interpolated_2D (const double _x1, const double _x2, const std::vector<double> x1, const std::vector<double> x2, const std::vector<std::vector<double>> yy, const std::string type);
-  
+
   /**
    *  @brief filter W(r/r<SUB>c</SUB>), used e.g. for filtering the
    *  correlation function
@@ -115,7 +115,7 @@ namespace cbl {
   double Filter (const double r, const double rc);
 
   /**
-   *  @brief the order l Legendre polynomial 
+   *  @brief the order l Legendre polynomial
    *  @param mu the variable mu
    *  @param l the order l Legendre polynomial
    *  @return the order l Legendre polynomial
@@ -202,8 +202,8 @@ namespace cbl {
 
   /**
    *  @brief the order l, degree m spherical harmonics
-   * 
-   *  @param l the degree l 
+   *
+   *  @param l the degree l
    *
    *  @param m the order m
    *
@@ -219,7 +219,7 @@ namespace cbl {
 
   /**
    *  @brief the spherical harmonics up to \f$l_{max}\f$
-   * 
+   *
    *  @param lmax the maximum degree l
    *
    *  @param xx the variable x
@@ -234,8 +234,8 @@ namespace cbl {
 
   /**
    *  @brief the spherical harmonics up to \f$l_{max}\f$
-   * 
-   *  @param lmax the maximum degree l 
+   *
+   *  @param lmax the maximum degree l
    *
    *  @param xx the variable x
    *
@@ -248,28 +248,28 @@ namespace cbl {
   std::vector<std::complex<double>> spherical_harmonics_array (const int lmax, const double xx, const double yy, const double zz);
 
   /**
-   *  @brief the l=0 spherical Bessel function 
+   *  @brief the l=0 spherical Bessel function
    *  @param xx the variable x
    *  @return the l=0 spherical Bessel function
    */
   double j0 (const double xx);
 
   /**
-   *  @brief the l=2 spherical Bessel function 
+   *  @brief the l=2 spherical Bessel function
    *  @param xx the variable x
    *  @return the l=2 spherical Bessel function
    */
   double j2 (const double xx);
 
   /**
-   *  @brief the l=4 spherical Bessel function 
+   *  @brief the l=4 spherical Bessel function
    *  @param xx the variable x
    *  @return the l=4 spherical Bessel function
    */
   double j4 (const double xx);
 
   /**
-   *  @brief the order l spherical Bessel function 
+   *  @brief the order l spherical Bessel function
    *  @param xx the variable x
    *  @param order the order l of spherical Bessel function
    *  @return the order l spherical Bessel function
@@ -296,18 +296,18 @@ namespace cbl {
    *  @return the distance average l=2 spherical Bessel function
    */
   double j2_distance_average (const double kk, const double r_down, const double r_up);
-     
+
   /**
-   *  @brief the generic integrand to obtain the distance average 
+   *  @brief the generic integrand to obtain the distance average
    *   spherical Bessel function of order l
    *  @param rr the variable r
    *  @param params the parameters for the function
    *  @return the distance average l=2 spherical Bessel function
    */
   double jl_spherical_integrand (double rr, void *params);
-  
+
   /**
-   *  @brief the distance average for the order l-th spherical Bessel function 
+   *  @brief the distance average for the order l-th spherical Bessel function
    *  @param kk the variable k
    *  @param order the shperical Bessel function order
    *  @param r_down the lower limit of the twopcf bin
@@ -321,17 +321,17 @@ namespace cbl {
    *  data
    *
    *  @param xx the point in which function is defined
-   *  @param yy values of the function 
+   *  @param yy values of the function
    *  @return the definite integral of the function
    */
   double trapezoid_integration (const std::vector<double> xx, const std::vector<double> yy);
 
   /**
    *  @brief compute the Wigner 3-j symbol
-   *  
+   *
    * compute the Wigner 3-j symbol of type
    * \f[
-   *	\left(\begin{array}{ccc}{l}} & {l^'} & {l_2}} 
+   *	\left(\begin{array}{ccc}{l}} & {l^'} & {l_2}}
    *	\\ {m_{1}} & {m_{2}} & {m_{3}}\end{array}\right)
    * \f]
    *
@@ -348,7 +348,7 @@ namespace cbl {
 
 
   // ============================================================================================
-  
+
   /**
    *  @brief read a vector from file
    *
@@ -357,17 +357,15 @@ namespace cbl {
    *
    *  @param [out] xx the variable
    *
-   *  @param [out] vector the vector 
+   *  @param [out] vector the vector
    *
    *  @param [in] col the columns to be read
-   *
-   *  @return none
    *
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
    */
   void read_vector (const std::string file_vector, std::vector<double> &xx, std::vector<double> &vector, const std::vector<int> col={});
-  
+
   /**
    *  @brief read a matrix from file
    *
@@ -378,11 +376,9 @@ namespace cbl {
    *
    *  @param [out] yy the variable in column
    *
-   *  @param [out] matrix the matrix 
+   *  @param [out] matrix the matrix
    *
    *  @param [in] col the columns to be read
-   *
-   *  @return none
    *
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
@@ -390,31 +386,11 @@ namespace cbl {
   void read_matrix (const std::string file_matrix, std::vector<double> &xx, std::vector<double> &yy, std::vector<std::vector<double>> &matrix, const std::vector<int> col={});
 
   /**
-   *  @brief read a data from a file ASCII
-   *
-   *  @param file_name the name of the file to read
-   *
-   *  @param path_name the path where the file is stored
-   *
-   *  @param column_data vector containing the indices of the columns
-   *  to read, starting the counting from 1
-   *
-   *  @param skip_nlines the number of lines to skip 
-   *
-   *  @return a vector of vectors containing the columns (first index)
-   *  and the lines (second index) read from the file
-   *
-   *  @author Sofia Contarini
-   *  @author sofia.contarini3@unibo.it
-   */
-  std::vector<std::vector<double>> read_file (const std::string file_name, const std::string path_name, const std::vector<int> column_data, const int skip_nlines=0);
-
-  /**
    *  @brief compute the determinant of a matrix
    *  @param mat the matrix
    *  @return the determinant
    */
-  double determinant_matrix (const std::vector<std::vector<double>> mat); 
+  double determinant_matrix (const std::vector<std::vector<double>> mat);
 
   /**
    *  @brief function to invert a matrix
@@ -436,16 +412,15 @@ namespace cbl {
    *
    *  @param [out] mat_inv the inverted matrix
    *
-   *  @param [in] prec the precision required 
+   *  @param [in] prec the precision required
    *
    *  @param [in] Nres \f$N_{res}\f$, the number of catalogue
    *  resamplings used to estimate the covariance matrix;
    *  \f$N_{res}=-1\f$ if the covariance matrix has not been estimated
    *  with resampling methods
    *
-   *  @return none
    */
-  void invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const double prec=1.e-10, const int Nres=-1); 
+  void invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const double prec=1.e-10, const int Nres=-1);
 
   /**
    *  @brief function to invert a sub-matrix, extracted from a given
@@ -479,9 +454,8 @@ namespace cbl {
    *  \f$N_{res}=-1\f$ if the covariance matrix has not been estimated
    *  with resampling methods
    *
-   *  @return none
    */
-  void invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const int i1, const int i2, const double prec=1.e-10, const int Nres=-1); 
+  void invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const int i1, const int i2, const double prec=1.e-10, const int Nres=-1);
 
   /**
    *  @brief compute the covariance matrix from an input dataset
@@ -493,7 +467,6 @@ namespace cbl {
    *  @param [in] JK false &rarr; normalize to 1/(n-1); true &rarr;
    *  normalize to n-1/n (for Jackknife)
    *
-   *  @return none
    */
   void covariance_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &cov, const bool JK=false);
 
@@ -501,7 +474,7 @@ namespace cbl {
    *  @brief compute the covariance matrix, reading the dataset from files
    *
    *  @param [in] file the std::vector containing the input files
-   *   
+   *
    *  @param [out] rad the std::vector containing the binned radii
    *
    *  @param [out] mean the std::vector containing the mean values
@@ -511,7 +484,6 @@ namespace cbl {
    *  @param [in] JK false &rarr; normalize to 1/(n-1); true &rarr;
    *  normalize to n-1/n (for Jackknife)
    *
-   *  @return none
    */
   void covariance_matrix (const std::vector<std::string> file, std::vector<double> &rad, std::vector<double> &mean, std::vector<std::vector<double>> &cov, const bool JK=false);
 
@@ -527,7 +499,6 @@ namespace cbl {
    *  @param [in] JK false &rarr; normalize to 1/(n-1); true &rarr;
    *  normalize to n-1/n (for Jackknife)
    *
-   *  @return none
    */
   void covariance_matrix (const std::vector<std::string> file, const std::string covariance_matrix_file, const bool JK=0);
 
@@ -537,22 +508,21 @@ namespace cbl {
    *  @param [in] filecov input file where the covariance matrix is
    *  stored
    *
-   *  @param [out] cov the covariance matrix 
-   *  
+   *  @param [out] cov the covariance matrix
+   *
    *  @param [out] cov_inv the inverse of the covariance matrix
-   * 
+   *
    *  @param [in] i1 mininum index
    *
    *  @param [in] i2 maximum index
    *
-   *  @param [in] prec the precision required 
+   *  @param [in] prec the precision required
    *
    *  @param [in] Nres \f$N_{res}\f$, the number of catalogue
    *  resamplings used to estimate the covariance matrix;
    *  \f$N_{res}=-1\f$ if the covariance matrix has not been estimated
    *  with resampling methods
    *
-   *  @return none
    *
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
@@ -584,7 +554,7 @@ namespace cbl {
    *  @brief return a std::vector of numbers sampled from a given
    *  distribution
    *
-   *  @param nRan number of elements to be extracted 
+   *  @param nRan number of elements to be extracted
    *
    *  @param xx std::vector containing the x variables
    *
@@ -660,7 +630,7 @@ namespace cbl {
    * @brief get the Clebsh-Gordan coefficient in the notation
    * \f$ \sum_{l}\left\langle l_1 l_2 m_1 m_2  | l_3 m_3 \right\rangle \f$
    *
-   * @param j1 index 
+   * @param j1 index
    * @param j2 index
    * @param j3 index
    * @param m1 index
@@ -668,13 +638,13 @@ namespace cbl {
    * @param m3 index
    *
    * @return the Clebsh-Gordan coefficient
-   */ 
+   */
   double clebsh_gordan(const int j1, const int j2, const int m1, const int m2, const int j3, const int m3);
 
   /**
    * @brief Wigner \f$3-j\f$ symbol
    *
-   * @param j1 index 
+   * @param j1 index
    * @param j2 index
    * @param j3 index
    * @param m1 index
@@ -682,13 +652,13 @@ namespace cbl {
    * @param m3 index
    *
    * @return the Clebsh-Gordan coefficient
-   */ 
+   */
   double wigner_3j(const int j1, const int j2, const int j3, const int m1, const int m2, const int m3);
 
   /**
    * @brief Wigner \f$6-j\f$ symbol
    *
-   * @param j1 index 
+   * @param j1 index
    * @param j2 index
    * @param j3 index
    * @param j4 index
@@ -696,11 +666,11 @@ namespace cbl {
    * @param j6 index
    *
    * @return the Clebsh-Gordan coefficient
-   */ 
+   */
   double wigner_6j(const int j1, const int j2, const int j3, const int j4, const int j5, const int j6);
 
   /**
-   * @brief compute the integral of three spherical bessel function, 
+   * @brief compute the integral of three spherical Bessel function,
    * from Mehrem, 2011
    *
    * \f[ \int_{0}^{\infty} k^{2} j_{L_{1}}\left(k r_{1}\right)
@@ -724,11 +694,11 @@ namespace cbl {
    * @param r1
    * @param r2
    * @param r3
-   * @param L1 the order of the first spherical bessel function
-   * @param L2 the order of the second spherical bessel function
-   * @param L3 the order of the third spherical bessel function
+   * @param L1 the order of the first spherical Bessel function
+   * @param L2 the order of the second spherical Bessel function
+   * @param L3 the order of the third spherical Bessel function
    *
-   * @return the integral of three spherical bessel function
+   * @return the integral of three spherical Bessel function
    */
   double three_spherical_bessel_integral (const double r1, const double r2, const double r3, const int L1, const int L2, const int L3);
 
@@ -777,14 +747,13 @@ namespace cbl {
    *
    *  @param vec the vector container where data will be stored
    *
-   *  @param NN the number of elements to be read 
+   *  @param NN the number of elements to be read
    *
-   *  @return none
    *
    *  @author Tommaso Ronconi
    *  @author tronconi@sissa.it
    */
-  template <typename T> 
+  template <typename T>
     void vectorReadFromBinary (std::ifstream &fin, std::vector< T > &vec, size_t NN)
     {
       for (size_t ii = 0; ii<NN; ii++) {
@@ -804,7 +773,7 @@ namespace cbl {
    *  @name Functions for statistical analyses
    */
   ///@{
-  
+
   /**
    *  @brief the average of a std::vector
    *
@@ -815,8 +784,9 @@ namespace cbl {
    *  @param vect the input std::vector
    *  @return the average of vect
    */
+
   double Average (const std::vector<double> vect);
-  
+
   /**
    *  @brief the weighted average of a std::vector
    *
@@ -829,7 +799,7 @@ namespace cbl {
    *  @return the weighted average of vect
    */
   double Average (const std::vector<double> vect, const std::vector<double> weight);
-  
+
   /**
    *  @brief the standard deviation of a std::vector
    *
@@ -841,7 +811,7 @@ namespace cbl {
    *  @return &sigma;
    */
   double Sigma (const std::vector<double> vect);
-  
+
   /**
    *  @brief the weighted standard deviation of a std::vector
    *
@@ -854,13 +824,14 @@ namespace cbl {
    *  @return &sigma;
    */
   double Sigma (const std::vector<double> vect, const std::vector<double> weight);
-  
+
   /**
    *  @brief the first, second and third quartiles of a std::vector
    *  @param Vect the input std::vector
    *  @return a std::vector containing the first, second and third
    *  quartiles
    */
+
   std::vector<double> Quartile (const std::vector<double> Vect);
 
   /**
@@ -872,31 +843,31 @@ namespace cbl {
    *  @param [out] var the variance
    *  @param [out] skew the skewness
    *  @param [out] curt the kurtosis
-   *  @return none
    */
+
   void Moment (const std::vector<double> data, double &ave, double &adev, double &sdev, double &var, double &skew, double &curt);
 
   ///@}
 
 
   // ============================================================================================
-  
-  
+
+
   /**
    *  @name Special functions
    */
   ///@{
 
- 
+
   /**
-   *  @brief the quadratic function 
+   *  @brief the quadratic function
    *  @param xx the variable x
-   *  @param pp a void pointer 
+   *  @param pp a void pointer
    *  @param par a std::vector containing the coefficients
    *  @return the quadratic function: par[0]*x<SUP>2</SUP>+par[1]*x+par[2]
    *  @warning pp is not used, it is necessary only for GSL operations
    */
-  template <typename T> 
+  template <typename T>
     T Pol2 (T xx, std::shared_ptr<void> pp, std::vector<double> par)
     {
       (void)pp;
@@ -904,16 +875,16 @@ namespace cbl {
     }
 
   /**
-   *  @brief the cubic function 
+   *  @brief the cubic function
    *  @param xx the variable x
-   *  @param pp a void pointer 
+   *  @param pp a void pointer
    *  @param par a std::vector containing the coefficients
    *  @return the cubic function:
    *  par[0]*x<SUP>3</SUP>+par[1]*x<SUP>2</SUP>+par[2]*x+par[3]
    *  @warning pp is not used, it is necessary only for GSL operations
    */
-  template <typename T> 
-    T Pol3 (T xx, void *pp, std::vector<double> par) 
+  template <typename T>
+    T Pol3 (T xx, void *pp, std::vector<double> par)
     {
       return par[0]*pow(xx,3)+par[1]*pow(xx,2)+par[2]*xx+par[3];
     }
@@ -923,7 +894,7 @@ namespace cbl {
    *  @param xx the coordinate x
    *  @return a std::vector containing [1, x]
    */
-  inline std::vector<double> linearfit (const double xx) 
+  inline std::vector<double> linearfit (const double xx)
   {
     std::vector<double> vect(2);
     vect[0] = 1.;
@@ -936,7 +907,7 @@ namespace cbl {
    *  @param xx the coordinate x
    *  @return a std::vector containing [1, x, x<SUP>2</SUP>]
    */
-  inline std::vector<double> quadratic (const double xx) 
+  inline std::vector<double> quadratic (const double xx)
   {
     std::vector<double> vect(3);
     vect[0] = 1.;
@@ -950,7 +921,7 @@ namespace cbl {
    *  @return a std::vector of containing [1, x, x<SUP>2</SUP>,
    *  x<SUP>3</SUP>]
    */
-  inline std::vector<double> cubicfit (const double xx) 
+  inline std::vector<double> cubicfit (const double xx)
   {
     std::vector<double> vect(4);
     vect[0] = 1.;
@@ -959,16 +930,16 @@ namespace cbl {
   }
 
   /**
-   *  @brief the Identity function  
+   *  @brief the Identity function
    *  @param xx the variable x
-   *  @param pp a void pointer 
-   *  @param par a std::vector 
+   *  @param pp a void pointer
+   *  @param par a std::vector
    *  @return 1.
    *
    *  @warning pp and par are not used, but they are necessary in the
    *  function template
    */
-  template <typename T> 
+  template <typename T>
     T identity (T xx, std::shared_ptr<void> pp, std::vector<double> par)
     {
       (void)xx; (void)pp; (void)par;
@@ -976,9 +947,9 @@ namespace cbl {
     }
 
   /**
-   *  @brief the rectangular distribution 
+   *  @brief the rectangular distribution
    *  @param xx the variable x
-   *  @param pp a void pointer 
+   *  @param pp a void pointer
    *  @param par a std::vector containing the coefficients: par[0]=lower limix,
    *  par[1]=upper limit;
    *  @return the probability of x
@@ -986,7 +957,7 @@ namespace cbl {
    *  @warning pp is not used, but they are necessary in the
    *  function template
    */
-  template <typename T> 
+  template <typename T>
     T rectangular (T xx, std::shared_ptr<void> pp, std::vector<double> par)
     {
       if (xx>par[0] && par[1]>xx)
@@ -996,35 +967,35 @@ namespace cbl {
 
 
   /**
-   *  @brief probability of the closest element to x from a list with weights 
+   *  @brief probability of the closest element to x from a list with weights
    *  @param xx the variable x
-   *  @param pp a void pointer 
-   *  @param par a std::vector containing the coefficients: 
+   *  @param pp a void pointer
+   *  @param par a std::vector containing the coefficients:
    *  @return the weight of closest element from a discrete list to x
    *  @warning par is not used, it is necessary only for GSL operations
    */
   double closest_probability (double xx, std::shared_ptr<void> pp, std::vector<double> par);
 
   /**
-   *  @brief probability of an interpolated distribution 
+   *  @brief probability of an interpolated distribution
    *  @param xx the variable x
-   *  @param pp a void pointer 
-   *  @param par a std::vector containing the coefficients: 
+   *  @param pp a void pointer
+   *  @param par a std::vector containing the coefficients:
    *  @return the weight of closest element from a discrete list to x
    *  @warning par is not used, it is necessary only for GSL operations
    */
   double distribution_probability (double xx, std::shared_ptr<void> pp, std::vector<double> par);
 
   /**
-   *  @brief the Gaussian function 
+   *  @brief the Gaussian function
    *  @param xx the variable x
-   *  @param pp a void pointer 
+   *  @param pp a void pointer
    *  @param par a std::vector containing the coefficients: par[0]=mean,
    *  par[1]=&sigma;
    *  @return the Gaussian function
    *  @warning pp is not used, it is necessary only for GSL operations
    */
-  template <typename T> 
+  template <typename T>
     T gaussian (T xx, std::shared_ptr<void> pp, std::vector<double> par)
     {
       (void)pp;
@@ -1033,9 +1004,9 @@ namespace cbl {
     }
 
   /**
-   *  @brief the poisson distribution 
+   *  @brief the poisson distribution
    *  @param xx the variable x
-   *  @param pp a void pointer 
+   *  @param pp a void pointer
    *  @param par a std::vector containing the coefficients: par[0]=mean,
    *  @return the poisson distribution
    *  @warning pp is not used, it is necessary only for GSL operations
@@ -1050,12 +1021,12 @@ namespace cbl {
 
   /**
    *  @brief the Maxwellian distribution
-   *  @param vel velocity 
+   *  @param vel velocity
    *  @param sigma &sigma;
    *  @return the Maxwellian distribution, P(vel)
    */
-  template <typename T> 
-    T maxwellian_distr (const T vel, const T sigma) 
+  template <typename T>
+    T maxwellian_distr (const T vel, const T sigma)
     {
       return sqrt(54./par::pi)*pow(vel/sigma,2)*exp(-1.5*pow(vel/sigma,2))/sigma;
     }
@@ -1067,7 +1038,7 @@ namespace cbl {
    *  @param gamma the slope, &gamma;
    *  @return the power-law function: (x/x<SUB>0</SUB>)<SUP>&gamma;</SUP>
    */
-  template <typename T> 
+  template <typename T>
     T powerlaw (const T xx, const T x0, const T gamma)
     {
       return pow(xx/x0,-gamma);
@@ -1081,8 +1052,8 @@ namespace cbl {
    *  @param beta the slope, &beta;
    *  @return the double power-law function
    */
-  template <typename T> 
-    T double_powerlaw (const T xx, const T x0, const T alpha, const T beta) 
+  template <typename T>
+    T double_powerlaw (const T xx, const T x0, const T alpha, const T beta)
     {
       return pow(2.,beta-alpha)/(pow(xx/x0,alpha)*pow(1.+xx/x0,beta-alpha));
     }
@@ -1092,21 +1063,21 @@ namespace cbl {
    *  @param kR the variable k*R
    *  @return the top-hat window function
    */
-  template <typename T> 
-    T TopHat_WF (const T kR) 
+  template <typename T>
+    T TopHat_WF (const T kR)
     {
       return 3.*(sin(kR)-kR*cos(kR))/pow(kR,3);
     }
-  
+
   /**
-   *  @brief the derivative of the top-hat 
+   *  @brief the derivative of the top-hat
    *  window function
    *  @param kR the variable k*R
-   *  @return the derivative of the top-hat 
+   *  @return the derivative of the top-hat
    *  window function
    */
-  template <typename T> 
-    T TopHat_WF_D1 (const T kR) 
+  template <typename T>
+    T TopHat_WF_D1 (const T kR)
     {
       return (3.*(kR*kR-3.)*sin(kR)+9.*kR*cos(kR))*pow(kR, -4);
     }
@@ -1117,10 +1088,10 @@ namespace cbl {
    *  @param Rho the density
    *  @return the radius
    */
-  template <typename T> 
-    T Radius (const T Mass, const T Rho) 
+  template <typename T>
+    T Radius (const T Mass, const T Rho)
     {
-      return pow(3.*Mass/(4.*par::pi*Rho),1./3.); 
+      return pow(3.*Mass/(4.*par::pi*Rho),1./3.);
     }
 
   /**
@@ -1128,8 +1099,8 @@ namespace cbl {
    *  @param RR the radius
    *  @return the volume
    */
-  template <typename T> 
-    T volume_sphere (const T RR) 
+  template <typename T>
+    T volume_sphere (const T RR)
     {
       return 4./3.*par::pi*pow(RR, 3);
     }
@@ -1140,12 +1111,12 @@ namespace cbl {
    *  @param Rho the density
    *  @return the mass
    */
-  template <typename T> 
-    T Mass (const T RR, const T Rho) 
+  template <typename T>
+    T Mass (const T RR, const T Rho)
     {
       return 4./3.*par::pi*Rho*pow(RR,3);
     }
-  
+
   /**
    *  @brief the radial velocity
    *  @param vx the velocity along the x direction
@@ -1155,7 +1126,7 @@ namespace cbl {
    *  @param dec the Declination
    *  @return the radial velocity
    */
-  template <typename T> 
+  template <typename T>
     T radial_velocity (const T vx, const T vy, const T vz, const T ra, const T dec)
     {
       return vx*cos(dec)*sin(ra)+vy*cos(dec)*cos(ra)+vz*sin(dec);
@@ -1166,42 +1137,42 @@ namespace cbl {
    *  @param x the variable x
    *  @return P<SUB>2</SUB>
    */
-  template <typename T> 
-    T P_2 (const T x) 
+  template <typename T>
+    T P_2 (const T x)
     {
       return (3.*x*x-1.)*0.5;
     }
-      
+
   /**
    *  @brief the Legendre polynomial P<SUB>4</SUB>
    *  @param x the variable x
    *  @return P<SUB>4</SUB>
    */
-  template <typename T> 
-    T P_4 (const T x) 
+  template <typename T>
+    T P_4 (const T x)
     {
       return (35.*x*x*x*x-30.*x*x+3.)*0.125;
     }
-  
+
   /**
    *  @brief the Legendre polynomial P<SUB>6</SUB>
    *  @param x the variable x
    *  @return P<SUB>6</SUB>
    */
-  template <typename T> 
-    T P_6 (const T x) 
+  template <typename T>
+    T P_6 (const T x)
     {
       return (231.*x*x*x*x*x*x-315.*x*x*x*x+105.*x*x-5.)*0.0625;
     }
 
   ///@}
-  
+
 
   // ============================================================================================
 
 
   /**
-   *  @name Generic operations on functions 
+   *  @name Generic operations on functions
    */
   ///@{
 
@@ -1213,19 +1184,18 @@ namespace cbl {
    *  @param [in] V_min the minimum value of the range
    *  @param [in] V_max the maximum value of the range
    *  @param [in] Volume the volume
-   *  @param [out] Var std::vector containing the binned values of "var" 
+   *  @param [out] Var std::vector containing the binned values of "var"
    *  @param [out] Phi std::vector containing the binned values of the var
    *  function
    *  @param [out] err std::vector containing the Poisson errors
-   *  @return none
    */
   void measure_var_function (const std::vector<double> var, const int bin, const double V_min, const double V_max, const double Volume, std::vector<double> &Var, std::vector<double> &Phi, std::vector<double> &err);
 
   /**
    *  @brief derive and store the number distribution of a given
-   *  std::vector 
+   *  std::vector
    *  @param [out] xx std::vector containing the binned values of the
-   *  variable 
+   *  variable
    *  @param [out] fx std::vector containing the binned values of the
    *  distribution
    *  @param [out] err std::vector containing the binned Poisson errors
@@ -1243,8 +1213,9 @@ namespace cbl {
    *  @param [in] conv true &rarr; compute the Gaussian convolvolution of
    *  the distribution; false &rarr; do not convolve
    *  @param [in] sigma &sigma; of the Gaussian kernel
-   *  @return none
    */
+
+
   void distribution (std::vector<double> &xx, std::vector<double> &fx, std::vector<double> &err, const std::vector<double> FF, const std::vector<double> WW, const int nbin, const bool linear=true, const std::string file_out=par::defaultString, const double fact=1., const double V1=par::defaultDouble, const double V2=par::defaultDouble, const std::string bin_type="Linear", const bool conv=false, const double sigma=0.);
 
   /**
@@ -1255,7 +1226,7 @@ namespace cbl {
    *  @param seed the seed for random number generation
    *  @return \f$\int_{x1}^{x2} f(x)dx\f$
    */
-  double MC_Int (double func(const double), const double x1, const double x2, const int seed=3213); 
+  double MC_Int (double func(const double), const double x1, const double x2, const int seed=3213);
 
   /**
    *  @brief simple Monte Carlo integration of f(x,A)
@@ -1266,8 +1237,8 @@ namespace cbl {
    *  @param seed the seed for random number generation
    *  @return \f$\int_{x1}^{x2} f(x)dx\f$
    */
-  double MC_Int (double func(const double, const double AA), const double AA, const double x1, double x2, const int seed=3213); 
-  
+  double MC_Int (double func(const double, const double AA), const double AA, const double x1, double x2, const int seed=3213);
+
   /**
    *  @brief simple Monte Carlo integration of f(x,A,B,C,D,E)
    *  @param func the function f(x,A,B,C,D,E)
@@ -1281,12 +1252,12 @@ namespace cbl {
    *  @param seed the seed for random number generation
    *  @return \f$\int_{x1}^{x2} f(x,A,B,C,D,E)dx\f$
    */
-  double MC_Int (double func(const double, const double AA, const double BB, const double CC, const double DD, const double EE), const double AA, const double BB, const double CC, const double DD, const double EE, const double x1, const double x2, const int seed=3213); 
+  double MC_Int (double func(const double, const double AA, const double BB, const double CC, const double DD, const double EE), const double AA, const double BB, const double CC, const double DD, const double EE, const double x1, const double x2, const int seed=3213);
 
-  
+
   // ============================================================================================
 
-  
+
   /**
    *  @brief create a 1D grid given an input function
    *  @param file_grid the file with the input function
@@ -1300,7 +1271,6 @@ namespace cbl {
    *  @param [in,out] xx std::vector containing the grid points
    *  @param [in,out] yy std::vector containing the values of the function at the
    *  grid points
-   *  @return none
    */
   void bin_function (const std::string file_grid, double func(double, void*), void *par, const int bin, const double x_min, const double x_max, const std::string binning, std::vector<double> &xx, std::vector<double> &yy);
 
@@ -1320,7 +1290,6 @@ namespace cbl {
    *  @param [in,out] xx2 std::vector containing the grid points in one direction
    *  @param [in,out] yy std::vector containing the values of the function at the
    *  grid points
-   *  @return none
    */
   void bin_function_2D (const std::string file_grid, double func(double *, size_t, void *), void * par, const int bin, const double x1_min, const double x1_max, const double x2_min, const double x2_max, const std::string binning, std::vector<double> &xx1, std::vector<double> &xx2, std::vector<std::vector<double>> &yy);
 
@@ -1333,7 +1302,7 @@ namespace cbl {
   double func_grid_log_2D (double *, size_t, void *);
   /// @endcond
 
-  
+
   /**
    *  @brief convolution of two functions
    *
@@ -1348,33 +1317,32 @@ namespace cbl {
    *  @param [out] res convolution function
    *  @param [in] deltaX &Delta;x =
    *  (x<SUB>max</SUB>-x<SUB>min</SUB>)/n<SUB>x</SUB>
-   *  @return none
-   *  
+   *
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
    */
-  // 
+  //
   void convolution (const std::vector<double> f1, const std::vector<double> f2, std::vector<double> &res, const double deltaX);
 
   ///@}
-  
+
 
   // ============================================================================================
 
 
   /**
-   *  @name Functions to calculate distances 
+   *  @name Functions to calculate distances
    */
   ///@{
 
   /**
    *  @brief conversion to degrees
-   *  @param angle the input angle 
+   *  @param angle the input angle
    *  @param inputUnits the units of the input angle
-   *  @return the angle in degrees 
+   *  @return the angle in degrees
    */
   double degrees (const double angle, const CoordinateUnits inputUnits=CoordinateUnits::_radians_);
-  
+
   /**
    *  @brief conversion to radians
    *  @param angle the input angle
@@ -1382,15 +1350,15 @@ namespace cbl {
    *  @return the angle in radians
    */
   double radians (const double angle, const CoordinateUnits inputUnits=CoordinateUnits::_degrees_);
-  
+
   /**
    *  @brief conversion to arcseconds
-   *  @param angle the input angle 
+   *  @param angle the input angle
    *  @param inputUnits the units of the input angle
    *  @return the angle in arcseconds
    */
   double arcseconds (const double angle, const CoordinateUnits inputUnits=CoordinateUnits::_radians_);
-  
+
   /**
    *  @brief conversion to arcminutes
    *  @param angle the input angle
@@ -1407,7 +1375,7 @@ namespace cbl {
    *  @return the angle in the converted units
    */
   double converted_angle (const double angle, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const CoordinateUnits outputUnits=CoordinateUnits::_degrees_);
-    
+
   /**
    *  @brief conversion from Cartesian coordinates to polar
    *  coordinates
@@ -1418,9 +1386,8 @@ namespace cbl {
    *  @param [out] ra the Right Ascension [radians]
    *  @param [out] dec the Declination [radians]
    *  @param [out] dd the comoving distance
-   *  @return none
    */
-  void polar_coord (const double XX, const double YY, const double ZZ, double &ra, double &dec, double &dd); 
+  void polar_coord (const double XX, const double YY, const double ZZ, double &ra, double &dec, double &dd);
 
   /**
    *  @brief conversion from polar coordinates to Cartesian
@@ -1428,11 +1395,10 @@ namespace cbl {
    *
    *  @param [in] ra the Right Ascension [radians]
    *  @param [in] dec the Declination [radians]
-   *  @param [in] dd the comoving distance 
+   *  @param [in] dd the comoving distance
    *  @param [out] XX the Cartesian coordinate x
    *  @param [out] YY the Cartesian coordinate y
    *  @param [out] ZZ the Cartesian coordinate z
-   *  @return none
    */
   void cartesian_coord (const double ra, const double dec, const double dd, double &XX, double &YY, double &ZZ);
 
@@ -1446,9 +1412,8 @@ namespace cbl {
    *  @param [out] ra std::vector containing the Right Ascension values [radians]
    *  @param [out] dec std::vector containing the Declination values [radians]
    *  @param [out] dd std::vector containing the comoving distances
-   *  @return none
    */
-  void polar_coord (const std::vector<double> XX, const std::vector<double> YY, const std::vector<double> ZZ, std::vector<double> &ra, std::vector<double> &dec, std::vector<double> &dd); 
+  void polar_coord (const std::vector<double> XX, const std::vector<double> YY, const std::vector<double> ZZ, std::vector<double> &ra, std::vector<double> &dec, std::vector<double> &dd);
 
   /**
    *  @brief conversion from polar coordinates to Cartesian
@@ -1460,7 +1425,6 @@ namespace cbl {
    *  @param [out] XX std::vector containing the Cartesian coordinates x
    *  @param [out] YY std::vector containing the Cartesian coordinates y
    *  @param [out] ZZ std::vector containing the Cartesian coordinates z
-   *  @return none
    */
   void cartesian_coord (const std::vector<double> ra, const std::vector<double> dec, const std::vector<double> dd, std::vector<double> &XX, std::vector<double> &YY, std::vector<double> &ZZ);
 
@@ -1490,9 +1454,9 @@ namespace cbl {
    *  @return the perpendicular separation, r<SUB>p</SUB>
    */
   double perpendicular_distance (const double ra1, const double ra2, const double dec1, const double dec2, const double d1, const double d2);
-  
+
   /**
-   *  @brief the angular separation in 3D 
+   *  @brief the angular separation in 3D
    *  @author Alfonso Veropalumbo
    *  @author alfonso.veropalumbo@unibo.it
    *
@@ -1518,7 +1482,7 @@ namespace cbl {
    *  @return the haversine angular separation [radians]
    */
   double haversine_distance (const double ra1, const double ra2, const double dec1, const double dec2);
-  
+
 
   /* ======== Alfonso Veropalumbo ======== */
 
@@ -1532,7 +1496,6 @@ namespace cbl {
    *
    * @param maxval angle upper limit
    *
-   * @return none
    */
   void sdss_atbound (double &angle, const double minval, const double maxval);
 
@@ -1544,7 +1507,6 @@ namespace cbl {
    *
    * @param phi the second angular coordinate
    *
-   * @return none
    */
   void sdss_atbound2 (double &theta, double &phi);
 
@@ -1561,9 +1523,8 @@ namespace cbl {
    *
    * @param eta vector containing the \f$ \eta \f$ values
    *
-   * @return none
    */
-  void eq2sdss (const std::vector<double> ra, const std::vector<double> dec, std::vector<double> &lambda, std::vector<double> &eta); 
+  void eq2sdss (const std::vector<double> ra, const std::vector<double> dec, std::vector<double> &lambda, std::vector<double> &eta);
 
   /**
    * @brief convert sdss coordinates
@@ -1577,12 +1538,11 @@ namespace cbl {
    *
    * @param dec vector containing Dec. values
    *
-   * @return none
    */
   void sdss2eq (const std::vector<double> lambda, const std::vector<double> eta, std::vector<double> &ra, std::vector<double> &dec);
-  
+
   /**
-   * @brief compute the SDSS stripe given 
+   * @brief compute the SDSS stripe given
    * SDSS coordinates \f$ \lambda, \eta \f$
    *
    * @param eta vector containing the \f$ \eta \f$ values
@@ -1593,7 +1553,6 @@ namespace cbl {
    *
    * @param str_u vector containing the list of stripes
    *
-   * @return none
    */
   void sdss_stripe (const std::vector<double> eta, const std::vector<double> lambda, std::vector<int> &stripe, std::vector<int> &str_u);
 
@@ -1602,18 +1561,18 @@ namespace cbl {
 
 
   // ============================================================================================
-  
-  
+
+
   /**
    *  @name Functions to model the correlation function
    */
   ///@{
-  
- 
+
+
   /**
    *  @brief the two-point correlation function computed from the
    *  Fourier transform of the power spectrum
-   * 
+   *
    *  @param rr the comoving separation, r
    *
    *  @param lgkk std::vector containing the logarithm of the wave std::vectors,
@@ -1631,7 +1590,7 @@ namespace cbl {
    *  @param aa parameter used to smooth the integrand, given by the
    *  eq. 24 of Anderson et al. 2012
    *
-   *  @param prec accuracy of the GSL integration 
+   *  @param prec accuracy of the GSL integration
    *
    *  @return the two-point correlation function, &xi;(r)
    */
@@ -1640,7 +1599,7 @@ namespace cbl {
   /**
    *  @brief the two-point correlation function computed from the
    *  Fourier transform of the power spectrum read from a file
-   * 
+   *
    *  @param rr the comoving separation, r
    *
    *  @param file name of the file where the power spectrum is stored
@@ -1660,7 +1619,7 @@ namespace cbl {
    *  @param aa parameter used to smooth the integrand, given by the
    *  eq. 24 of Anderson et al. 2012
    *
-   *  @param prec accuracy of the GSL integration 
+   *  @param prec accuracy of the GSL integration
    *
    *  @return the two-point correlation function, &xi;(r)
    */
@@ -1669,7 +1628,7 @@ namespace cbl {
   /**
    *  @brief the power spectrum computed from the Fourier transform of
    *  the two-point correlation function
-   * 
+   *
    *  @param kk the wave std::vector, k
    *
    *  @param lgrr std::vector containing the logarithm of the comoving
@@ -1686,12 +1645,12 @@ namespace cbl {
    *
    *  @return the power spectrum, P(k)
    */
-  double Pk_from_xi (const double kk, const std::vector<double> lgrr, const std::vector<double> lgxi, const double r_min=0.03, const double r_max=100.); 
+  double Pk_from_xi (const double kk, const std::vector<double> lgrr, const std::vector<double> lgxi, const double r_min=0.03, const double r_max=100.);
 
   /**
    *  @brief the power spectrum computed from the Fourier transform of
    *  the two-point correlation function read from a file
-   * 
+   *
    *  @param kk the wave std::vector, k
    *
    *  @param file name of the file where the two-point correlation
@@ -1711,7 +1670,7 @@ namespace cbl {
    *
    *  @return the power spectrum, P(k)
    */
-  double Pk_from_xi (const double kk, const std::string file, const int c1=1, const int c2=2, const double r_min=0.03, const double r_max=100.); 
+  double Pk_from_xi (const double kk, const std::string file, const int c1=1, const int c2=2, const double r_min=0.03, const double r_max=100.);
 
   namespace glob {
     /// @cond glob
@@ -1722,7 +1681,7 @@ namespace cbl {
 
   /**
    *  @brief the projected two-point correlation function
-   * 
+   *
    *  this function estimates the projected correlation function by
    *  integrating a given two-point correlation function as follows:
    *
@@ -1740,15 +1699,15 @@ namespace cbl {
    *  two-point correlation function, &xi;(r)
    *
    *  @param r_max the maximum value of the comoving separation used
-   *  in the integral 
+   *  in the integral
    *
    *  @return the projected correlation function, w(r<SUB>p</SUB>)
    */
-  double wp (const double rp, const std::vector<double> rr, const std::vector<double> xi, const double r_max=100.); 
+  double wp (const double rp, const std::vector<double> rr, const std::vector<double> xi, const double r_max=100.);
 
   /**
    *  @brief the projected two-point correlation function
-   * 
+   *
    *  this function estimates the projected correlation function by
    *  integrating a given two-point correlation function as follows:
    *  \f[
@@ -1764,16 +1723,16 @@ namespace cbl {
    *  function is stored
    *
    *  @param r_max the maximum value of the comoving separation used
-   *  in the integral 
+   *  in the integral
    *
    *  @return the projected correlation function,
    *  w<SUB>p</SUB>(r<SUB>p</SUB>)
    */
-  double wp (const double rp, const std::string file, const double r_max=100.); 
+  double wp (const double rp, const std::string file, const double r_max=100.);
 
   /**
    *  @brief the rms mass fluctuation within a given radius
-   * 
+   *
    *  computed with the spherically averaged correlation function as
    *  follows:
    *
@@ -1796,7 +1755,7 @@ namespace cbl {
    *  \frac{1}{2\pi}\left(\frac{-x^4+11x^2-28}{\sqrt{x^2-4}}+x^3-9x+6\sin^{-1}(2/x)\right) & \mbox{for}\,x>2 \\
    *  \end{array}
    *  \right.
-   *  \f] 
+   *  \f]
    *  see e.g. Zehavi et al. 2005, ApJ, 621, 22
    *
    *  @param RR the radius R [Mpc/h]
@@ -1809,7 +1768,7 @@ namespace cbl {
    *
    *  @param corr std::vector containing the two-point correlation function
    *
-   *  @return &sigma;<SUB>R</SUB>: the rms mass fluctuation within a radius R [Mpc/h] 
+   *  @return &sigma;<SUB>R</SUB>: the rms mass fluctuation within a radius R [Mpc/h]
    */
   double sigmaR (const double RR, const int corrType, const std::vector<double> rr, const std::vector<double> corr);
 
@@ -1817,7 +1776,7 @@ namespace cbl {
    *  @brief the projected correlation function,
    *  w<SUB>p</SUB>(r<SUB>p</SUB>), computed by modelling the
    *  two-point correlation function, &xi;(r), as a power-law
-   * 
+   *
    *  @param rp r<SUB>p</SUB>: comoving separation perpendicular to
    *  the line-of-sight
    *
@@ -1828,7 +1787,7 @@ namespace cbl {
    *  @return the projected correlation function
    *  w<SUB>p</SUB>(r<SUB>p</SUB>)
    */
-  double xi_projected_powerlaw (const double rp, const double r0, const double gamma); 
+  double xi_projected_powerlaw (const double rp, const double r0, const double gamma);
 
   /**
    *  @brief the ratio between the redshift-space and real-space
@@ -1836,7 +1795,7 @@ namespace cbl {
    *
    *  as predicted by the large-scale limit of the Kaiser/Hamilton
    *  model:
-   * 
+   *
    *  \f[ \frac{\xi(s)}{\xi(r)} = 1 + \frac{2\beta}{3} +
    *  \frac{\beta^2}{5} \f]
    *
@@ -1845,7 +1804,7 @@ namespace cbl {
    *
    *  @return &xi;(s)/&xi;(r)
    */
-  double xi_ratio (const double beta);                         
+  double xi_ratio (const double beta);
 
   /**
    *  @brief the ratio between the redshift-space and real-space
@@ -1853,18 +1812,18 @@ namespace cbl {
    *
    *  as predicted by the large-scale limit of the Kaiser/Hamilton
    *  model:
-   * 
+   *
    *  \f[ \frac{\xi(s)}{\xi(r)} = 1 +
    *  \frac{2}{3}\frac{f\sigma_8}{b\sigma_8} +
    *  \frac{1}{5}\left(\frac{f\sigma_8}{b\sigma_8}\right)^2 \f]
    *
    *  @param f_sigma8 f*&sigma;<SUB>8</SUB>
-   *  
+   *
    *  @param bias_sigma8 b*&sigma;<SUB>8</SUB>
    *
    *  @return &xi;(s)/&xi;(r)
    */
-  double xi_ratio (const double f_sigma8, const double bias_sigma8);                
+  double xi_ratio (const double f_sigma8, const double bias_sigma8);
 
   /// @cond glob
   /**
@@ -1891,22 +1850,22 @@ namespace cbl {
    *
    *  as predicted by the large-scale limit of the Kaiser/Hamilton
    *  model:
-   * 
+   *
    *  \f[ \delta\left[\frac{\xi(s)}{\xi(r)}\right] = \left(\frac{2}{3}
    *  + \frac{2\beta}{5}\right)\cdot\delta(\beta) \f]
    *
    *  @param beta &beta;=f/b
-   *  
+   *
    *  @param error_beta error on &beta;
    *
    *  @return &delta;[&xi;(s)/&xi;(r)]
    */
-  double error_xi_ratio (const double beta, const double error_beta); 
+  double error_xi_ratio (const double beta, const double error_beta);
 
   /**
    *  @brief the barred correlation function
    *
-   *  computed with a simple rectangular integration 
+   *  computed with a simple rectangular integration
    *
    *  (see e.g. Hamilton 1992)
    *
@@ -1924,18 +1883,18 @@ namespace cbl {
    *  @param rAPP comoving scale below which a power-law model for the
    *  two-point correlation function is assumed in the integral
    *
-   *  @param r0 the power-law normalization, r<SUB>0</SUB>  
+   *  @param r0 the power-law normalization, r<SUB>0</SUB>
    *
    *  @param gamma the power-law slope, &gamma;
    *
    *  @return \f$ \overline{\xi}(r) \f$
    */
-  double barred_xi_direct (const double RR, const std::vector<double> rr, const std::vector<double> xi, const double rAPP=0., const double r0=-1., const double gamma=1.); 
+  double barred_xi_direct (const double RR, const std::vector<double> rr, const std::vector<double> xi, const double rAPP=0., const double r0=-1., const double gamma=1.);
 
   /**
    *  @brief the double barred correlation function
    *
-   *  computed with a simple rectangular integration 
+   *  computed with a simple rectangular integration
    *
    *  (see e.g. Hamilton 1992)
    *
@@ -1953,13 +1912,13 @@ namespace cbl {
    *  @param rAPP comoving scale below which a power-law model for the
    *  two-point correlation function is assumed in the integral
    *
-   *  @param r0 the power-law normalization, r<SUB>0</SUB>  
+   *  @param r0 the power-law normalization, r<SUB>0</SUB>
    *
    *  @param gamma the power-law slope, &gamma;
    *
    *  @return \f$ \overline{\overline{\xi}}(r) \f$
    */
-  double barred_xi__direct (const double RR, const std::vector<double> rr, const std::vector<double> xi, const double rAPP=0., const double r0=-1., const double gamma=1.); 
+  double barred_xi__direct (const double RR, const std::vector<double> rr, const std::vector<double> xi, const double rAPP=0., const double r0=-1., const double gamma=1.);
 
   /**
    *  @brief the barred correlation function
@@ -1980,13 +1939,13 @@ namespace cbl {
    *  @param rAPP comoving scale below which a power-law model for the
    *  two-point correlation function is assumed in the integral
    *
-   *  @param r0 the power-law normalization, r<SUB>0</SUB>  
+   *  @param r0 the power-law normalization, r<SUB>0</SUB>
    *
    *  @param gamma the power-law slope, &gamma;
    *
    *  @return \f$ \overline{\xi}(r) \f$
    */
-  double barred_xi_ (const double RR, const std::vector<double> rr, const std::vector<double> xi, const double rAPP=0., const double r0=-1., const double gamma=1.); 
+  double barred_xi_ (const double RR, const std::vector<double> rr, const std::vector<double> xi, const double rAPP=0., const double r0=-1., const double gamma=1.);
 
   /**
    *  @brief the double barred correlation function
@@ -2007,13 +1966,13 @@ namespace cbl {
    *  @param rAPP comoving scale below which a power-law model for the
    *  two-point correlation function is assumed in the integral
    *
-   *  @param r0 the power-law normalization, r<SUB>0</SUB>  
+   *  @param r0 the power-law normalization, r<SUB>0</SUB>
    *
    *  @param gamma the power-law slope, &gamma;
    *
    *  @return \f$ \overline{\overline{\xi}}(r) \f$
    */
-  double barred_xi__ (const double RR, const std::vector<double> rr, const std::vector<double> xi, const double rAPP=0., const double r0=-1., const double gamma=1.); 
+  double barred_xi__ (const double RR, const std::vector<double> rr, const std::vector<double> xi, const double rAPP=0., const double r0=-1., const double gamma=1.);
 
   /**
    *  @brief xi<SUB>0</SUB>(s) from &xi;(r,&mu;)
@@ -2031,7 +1990,7 @@ namespace cbl {
    *  @return xi<SUB>0</SUB>(s)
    */
   double multipole_xi0 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> xi);
-  
+
   /**
    *  @brief xi<SUB>2</SUB>(s) from &xi;(r,&mu;)
    *
@@ -2048,7 +2007,7 @@ namespace cbl {
    *  @return xi<SUB>2</SUB>(s)
    */
   double multipole_xi2 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> xi);
- 
+
   /**
    *  @brief xi<SUB>4</SUB>(s) from &xi;(r,&mu;)
    *
@@ -2065,7 +2024,7 @@ namespace cbl {
    *  @return xi<SUB>4</SUB>(s)
    */
   double multipole_xi4 (const int indexR, const std::vector<double> mu, const std::vector<std::vector<double>> xi);
-  
+
   /**
    *  @brief error on xi<SUB>0</SUB>(s) from &xi;(r,&mu;)
    *
@@ -2120,7 +2079,7 @@ namespace cbl {
    *  @param rp std::vector containing the values of r<SUB>p</SUB>
    *  @param pi std::vector containing the values of &pi;
    *  @param xi matrix containing the values of &xi;(r,&mu;)
-   *  @param delta_s bin size 
+   *  @param delta_s bin size
    *  @return xi<SUB>0</SUB>(s)
    */
   double multipole_xi0 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> xi, const double delta_s);
@@ -2134,7 +2093,7 @@ namespace cbl {
    *  @param rp std::vector containing the values of r<SUB>p</SUB>
    *  @param pi std::vector containing the values of &pi;
    *  @param xi matrix containing the values of &xi;(r,&mu;)
-   *  @param delta_s bin size 
+   *  @param delta_s bin size
    *  @return xi<SUB>2</SUB>(s)
    */
   double multipole_xi2 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> xi, const double delta_s);
@@ -2148,7 +2107,7 @@ namespace cbl {
    *  @param rp std::vector containing the values of r<SUB>p</SUB>
    *  @param pi std::vector containing the values of &pi;
    *  @param xi matrix containing the values of &xi;(r,&mu;)
-   *  @param delta_s bin size 
+   *  @param delta_s bin size
    *  @return xi<SUB>4</SUB>(s)
    */
   double multipole_xi4 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> xi, const double delta_s);
@@ -2160,7 +2119,7 @@ namespace cbl {
    *  @param rp std::vector containing the values of r<SUB>p</SUB>
    *  @param pi std::vector containing the values of &pi;
    *  @param error matrix containing the errors of &xi;(r,&mu;)
-   *  @param delta_s bin size 
+   *  @param delta_s bin size
    *  @return error on xi<SUB>0</SUB>(s)
    */
   double error_multipole_xi0 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> error, const double delta_s);
@@ -2172,7 +2131,7 @@ namespace cbl {
    *  @param rp std::vector containing the values of r<SUB>p</SUB>
    *  @param pi std::vector containing the values of &pi;
    *  @param error matrix containing the errors of &xi;(r,&mu;)
-   *  @param delta_s bin size 
+   *  @param delta_s bin size
    *  @return error on xi<SUB>2</SUB>(s)
    */
   double error_multipole_xi2 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> error, const double delta_s);
@@ -2184,7 +2143,7 @@ namespace cbl {
    *  @param rp std::vector containing the values of r<SUB>p</SUB>
    *  @param pi std::vector containing the values of &pi;
    *  @param error matrix containing the errors of &xi;(r,&mu;)
-   *  @param delta_s bin size 
+   *  @param delta_s bin size
    *  @return error on xi<SUB>4</SUB>(s)
    */
   double error_multipole_xi4 (const double ss, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double>> error, const double delta_s);
@@ -2195,7 +2154,7 @@ namespace cbl {
    *  two-point correlation function used in the &chi;<SUP>2</SUP>
    *
    *  @param rr the comoving separation
-   *  @param pp a void pointer 
+   *  @param pp a void pointer
    *  @param par a std::vector containing the coefficients
    *
    *  @return multipoles (&xi;<SUB>0</SUB> + &xi;<SUB>2</SUB>) of the
@@ -2209,7 +2168,7 @@ namespace cbl {
    *  correlation function
    *
    *  @param beta &beta;=f/b, where f is the linear growth rate and b
-   *  is the bias 
+   *  is the bias
    *
    *  @param xi_real the real-space two-point correlation function
    *
@@ -2222,11 +2181,11 @@ namespace cbl {
    *  correlation function
    *
    *  @param f_sigma8 f*&sigma;<SUB>8</SUB>
-   *  
+   *
    *  @param bias_sigma8 b*&sigma;<SUB>8</SUB>
    *
    *  @param sigma8z &sigma;<SUB>8</SUB>
-   *  
+   *
    *  @param xi_DM the real-space two-point correlation function of
    *  the dark matter
    *
@@ -2253,7 +2212,7 @@ namespace cbl {
    *  correlation function
    *
    *  @param beta &beta;=f/b, where f is the linear growth rate and b
-   *  is the bias 
+   *  is the bias
    *
    *  @param xi_real the real-space two-point correlation function
    *
@@ -2261,14 +2220,14 @@ namespace cbl {
    *
    *  @return the multipole &xi;<SUB>2</SUB>
    */
-  double multipole_xi2_model (const double beta, const double xi_real, const double xi_); 
+  double multipole_xi2_model (const double beta, const double xi_real, const double xi_);
 
   /**
    *  @brief the model multipole &xi;<SUB>4</SUB> of the two-point
    *  correlation function
    *
    *  @param beta &beta;=f/b, where f is the linear growth rate and b
-   *  is the bias 
+   *  is the bias
    *
    *  @param xi_real the real-space two-point correlation function
    *
@@ -2321,13 +2280,13 @@ namespace cbl {
    *  @param beta &beta;=f/b, where f is the linear growth rate and b
    *  is the bias
    *
-   *  @param bias the bias  
+   *  @param bias the bias
    *
    *  @param rad_real std::vector containing the binnend values of the
    *  comoving separations
    *
    *  @param xi_real std::vector containing the binnend values of the
-   *  real-space correlation function 
+   *  real-space correlation function
    *
    *  @param xi_ std::vector containing the binnend values of \f$
    *  \overline{\xi}(r) \f$
@@ -2337,7 +2296,7 @@ namespace cbl {
    *
    *  @param index index for internal use
    *
-   *  @param bias_nl 0 \f$ \rightarrow \f$ linear bias; \f$ \rightarrow \f$ 1 non-linear bias 
+   *  @param bias_nl 0 \f$ \rightarrow \f$ linear bias; \f$ \rightarrow \f$ 1 non-linear bias
    *
    *  @param bA the parameter b<SUB>A</SUB> used to model the bias
    *
@@ -2365,13 +2324,13 @@ namespace cbl {
    *
    *  @param bias the bias
    *
-   *  @param sigma12 &sigma;<SUB>12</SUB>
+   *  @param sigmav &sigma;<SUB>12</SUB>
    *
    *  @param rad_real std::vector containing the binnend values of the
    *  comoving separations
    *
    *  @param xi_real std::vector containing the binnend values of the
-   *  real-space correlation function 
+   *  real-space correlation function
    *
    *  @param xi_ std::vector containing the binnend values of \f$
    *  \overline{\xi}(r) \f$
@@ -2401,8 +2360,8 @@ namespace cbl {
    *
    *  @return &xi;(r<SUB>p</SUB>,&pi;)
    */
-  double xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const std::vector<double> rad_real, const std::vector<double> xi_real, const std::vector<double> xi_, const std::vector<double> xi__, const double var, const int FV, int index=-1, const bool bias_nl=0, const double bA=0., const double v_min=-3000., const double v_max=3000., const int step_v=500);
-  
+  double xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigmav, const std::vector<double> rad_real, const std::vector<double> xi_real, const std::vector<double> xi_, const std::vector<double> xi__, const double var, const int FV, int index=-1, const bool bias_nl=0, const double bA=0., const double v_min=-3000., const double v_max=3000., const int step_v=500);
+
   /**
    *  @brief the linear dispersion model for
    *  &xi;(r<SUB>p</SUB>,&pi;)
@@ -2416,7 +2375,7 @@ namespace cbl {
    *  @param beta &beta;=f/b, where f is the linear growth rate and b
    *  is the bias
    *
-   *  @param bias the bias  
+   *  @param bias the bias
    *
    *  @param funcXiR pointer to an object of type FuncGrid, to
    *  interpolate on \f$ \xi(r) \f$
@@ -2427,7 +2386,7 @@ namespace cbl {
    *  @param funcXiR__ pointer to an object of type FuncGrid, to
    *  interpolate on \f$ \overline{\overline{\xi}} (r) \f$
    *
-   *  @param bias_nl 0 \f$ \rightarrow \f$ linear bias; \f$ \rightarrow \f$ 1 non-linear bias 
+   *  @param bias_nl 0 \f$ \rightarrow \f$ linear bias; \f$ \rightarrow \f$ 1 non-linear bias
    *
    *  @param bA the parameter b<SUB>A</SUB> used to model the bias
    *
@@ -2450,7 +2409,7 @@ namespace cbl {
    *
    *  @param bias the bias
    *
-   *  @param sigma12 &sigma;<SUB>12</SUB>
+   *  @param sigmav &sigma;<SUB>12</SUB>
    *
    *  @param funcXiR pointer to an object of type FuncGrid, to
    *  interpolate on \f$ \xi(r) \f$
@@ -2463,9 +2422,9 @@ namespace cbl {
    *
    *  @param var 1/[H(z)a(z)]
    *
-   *  @param FV 0 \f$ \rightarrow \f$ exponential; \f$ \rightarrow \f$ 1 gaussian 
+   *  @param FV 0 \f$ \rightarrow \f$ exponential; \f$ \rightarrow \f$ 1 gaussian
    *
-   *  @param bias_nl 0 \f$ \rightarrow \f$ linear bias; \f$ \rightarrow \f$ 1 non-linear bias 
+   *  @param bias_nl 0 \f$ \rightarrow \f$ linear bias; \f$ \rightarrow \f$ 1 non-linear bias
    *
    *  @param bA the parameter b<SUB>A</SUB> used to model the bias
    *
@@ -2479,21 +2438,21 @@ namespace cbl {
    *
    *  @return &xi;(r<SUB>p</SUB>,&pi;)
    */
-  double xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const std::shared_ptr<void> funcXiR, const std::shared_ptr<void> funcXiR_, const std::shared_ptr<void> funcXiR__, const double var, const int FV, const bool bias_nl=0, const double bA=0., const double v_min=-3000., const double v_max=3000., const int step_v=500);
+  double xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigmav, const std::shared_ptr<void> funcXiR, const std::shared_ptr<void> funcXiR_, const std::shared_ptr<void> funcXiR__, const double var, const int FV, const bool bias_nl=0, const double bA=0., const double v_min=-3000., const double v_max=3000., const int step_v=500);
 
   /**
    *  @brief pairwise velocity distribution
    *
    *  @param vel comoving velocity
    *
-   *  @param sigma12 &sigma;<SUB>12</SUB>
+   *  @param sigmav &sigma;<SUB>12</SUB>
    *
    *  @param FV 0 \f$ \rightarrow \f$ exponential; \f$ \rightarrow \f$
    *  1 gaussian
    *
    *  @return f(v)
    */
-  double f_v (const double vel, const double sigma12, const int FV);
+  double f_v (const double vel, const double sigmav, const int FV);
 
   /**
    *  @brief pairwise velocity distribution
@@ -2520,7 +2479,7 @@ namespace cbl {
 
   /**
    *  @brief velocity distribution used to model BAO
-   *  
+   *
    *  (see Chuang&Wang 2012, 1209.0210)
    *
    *  @param xx s
@@ -2533,7 +2492,7 @@ namespace cbl {
 
   /**
    *  @brief a possible parameterization of the non-linear bias
-   *  
+   *
    *  the non-linear bias (see Chuang&Wang 2012 (1209.0210),
    *  eqs. 20-21): \f$ b(r) = r^{\frac{b_A}{1+(\frac{r}{b_B})^{b_C}}}
    *  \f$
@@ -2556,7 +2515,7 @@ namespace cbl {
    *  \f$
    *
    *  where \f$n_0=1.7\times10^{-4} h^3 Mpc^{-3}\f$ and
-   *  \f$C=4.9\times10^2 h^{-1.5} Mpc^{1.5}\f$ 
+   *  \f$C=4.9\times10^2 h^{-1.5} Mpc^{1.5}\f$
    *
    *  see Eq. 20 of Bianchi et al. 2012, http://arxiv.org/abs/1203.1545
    *
@@ -2565,7 +2524,7 @@ namespace cbl {
    *  @param density the galaxy density, n
    *  @return \f$\delta\beta/\beta\f$
    */
-  double relative_error_beta (const double bias, const double Volume, const double density); 
+  double relative_error_beta (const double bias, const double Volume, const double density);
 
   /**
    * @brief integrand of the 2d power spectrum to obtain power
@@ -2611,7 +2570,7 @@ namespace cbl {
   double XiMultipoles_from_Xi2D_integrand (const double mu, void *parameters);
 
   /**
-   * @brief function to obtain the Kaiser factor 
+   * @brief function to obtain the Kaiser factor
    * @param order the expansion order
    * @param bias the bias factor
    * @param f the linear growth factor
@@ -2631,7 +2590,7 @@ namespace cbl {
   std::vector<double> Pk0_Kaiser(const std::vector<double> kk, const std::vector<double> Pk, const double bias, const double f);
 
   /**
-   * @brief function to obtain the linear RSD 
+   * @brief function to obtain the linear RSD
    * power spectrum quadrupole
    * @param kk the scales k
    * @param Pk the power spectrum
@@ -2642,7 +2601,7 @@ namespace cbl {
   std::vector<double> Pk2_Kaiser(const std::vector<double> kk, const std::vector<double> Pk, const double bias, const double f);
 
   /**
-   * @brief function to obtain the linear RSD 
+   * @brief function to obtain the linear RSD
    * power spectrum hexadecapole
    * @param kk the scales k
    * @param Pk the power spectrum
@@ -2692,7 +2651,7 @@ namespace cbl {
   std::vector<double> Xi2 (const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk2, const double k_cut=0.58, const double cut_pow=4, const int IntegrationMethod = 1);
 
   /**
-   * @brief function to obtain the two point correlation 
+   * @brief function to obtain the two point correlation
    * function hexadecapole
    * @param rr the scales r
    * @param kk the scales k
@@ -2707,7 +2666,7 @@ namespace cbl {
 
   /**
    * @brief function to obtain the monopole and
-   * quadrupole of the two point correlation function 
+   * quadrupole of the two point correlation function
    *
    * @param alpha_perpendicular the shift along the line of sight
    * @param alpha_parallel the shift parallel to the line of sight
@@ -2716,15 +2675,15 @@ namespace cbl {
    * @param Xi0 the 2pfc monopole
    * @param Xi2 the 2pfc quadrupole
    *
-   * @return the monopole and quadrupole 
-   * of the two point correlation function 
+   * @return the monopole and quadrupole
+   * of the two point correlation function
    */
   std::vector<std::vector<double>> Xi02_AP (const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::vector<double> rl, const std::vector<double> Xi0, const std::vector<double> Xi2);
 
   /**
    * @brief function to obtain the monopole, quadrupole
-   * and hexadecapole of the two-point correlation function 
-   * 
+   * and hexadecapole of the two-point correlation function
+   *
    * @param alpha_perpendicular the shift along the line of sight
    * @param alpha_parallel the shift parallel to the line of sight
    * @param rr the scales r
@@ -2751,7 +2710,7 @@ namespace cbl {
    * @param Xi2 the 2pfc quadrupole
    * @param Xi4 the 2pfc hecadecapole
    *
-   * @return the 2pcf wedges 
+   * @return the 2pcf wedges
    */
   std::vector<std::vector<double>> XiWedges_AP (const std::vector<double> mu_min, const std::vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::vector<double> rl, const std::vector<double> Xi0, const std::vector<double> Xi2, const std::vector<double> Xi4);
 
@@ -2776,7 +2735,7 @@ namespace cbl {
    * @param nObjects number of objects in the sample
    * @param Volume the sample volume
    * @param kk the scales kk
-   * @param Pk_multipoles the power spectrum multipoles 
+   * @param Pk_multipoles the power spectrum multipoles
    * @param orders the power spectrum multipoles orders
    * @return the sigma2_k (see i.e. Grieb et al. 2016, eq. 15)
    */
@@ -2805,10 +2764,10 @@ namespace cbl {
    * @param nObjects number of objects in the sample
    * @param Volume the sample volume
    * @param kk the scales kk
-   * @param Pk_multipoles the power spectrum multipoles 
+   * @param Pk_multipoles the power spectrum multipoles
    * @param orders the power spectrum multipoles orders
    * @param bin_type the bin type
-   * @return none
+   *
    */
   void Covariance_XiMultipoles (std::vector<double> &rr, std::vector<std::vector<double>> &covariance, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double>> Pk_multipoles, const std::vector<int> orders, const cbl::BinType bin_type=cbl::BinType::_linear_);
 
@@ -2843,10 +2802,10 @@ namespace cbl {
    * @param nObjects number of objects in the sample
    * @param Volume the sample volume
    * @param kk the scales kk
-   * @param Pk_multipoles the power spectrum multipoles 
+   * @param Pk_multipoles the power spectrum multipoles
    * @param orders the power spectrum multipoles orders
    * @param bin_type the bin type
-   * @return none
+   *
    */
   void Covariance_XiWedges (std::vector<double> &rr, std::vector<std::vector<double>> &covariance, const std::vector<double> mu, const std::vector<double> delta_mu, const int nbins, const double rMin, const double rMax, const double nObjects, const double Volume, const std::vector<double> kk, const std::vector<std::vector<double>> Pk_multipoles, const std::vector<int> orders, const cbl::BinType bin_type=cbl::BinType::_linear_);
 
@@ -2859,7 +2818,7 @@ namespace cbl {
   /**
    *  @brief The namespace of the functions and classes of <B>
    *  internal auxiliary use </B>
-   *  
+   *
    *  The \e glob namespace contains all classes, structures and
    *  functions of internal auxiliary use
    */
@@ -2892,25 +2851,25 @@ namespace cbl {
       bool bias_nl;
     };
 
-    struct STR_xi 
+    struct STR_xi
     {
       double rr, aa;
       std::vector<double> lgkk, lgPk;
     };
 
-    struct STR_SSM 
+    struct STR_SSM
     {
       int unit;
       double hh, mass, rho, n_spec;
       std::vector<double> lgkk, lgPk;
     };
-  
+
     struct STR_jl_distance_average
     {
       int order;
       double k;
     };
-  
+
     struct STR_Pl_mu_integral
     {
       int order;
@@ -2961,16 +2920,16 @@ namespace cbl {
       FuncGrid *s2, *jl1r1, *jl2r2;
     };
   }
-  
+
 
   /**
    *  @name Functions to model the correlation function
    */
   ///@{
-  
+
   /**
    * @brief function to obtain the monopole and
-   * quadrupole of the two point correlation function 
+   * quadrupole of the two point correlation function
    *
    * @param alpha_perpendicular the shift along the line of sight
    * @param alpha_parallel the shift parallel to the line of sight
@@ -2978,15 +2937,15 @@ namespace cbl {
    * @param xi0_interp the xi0 interpolator
    * @param xi2_interp the xi2 interpolator
    *
-   * @return the monopole and quadrupole 
-   * of the two point correlation function 
+   * @return the monopole and quadrupole
+   * of the two point correlation function
    */
   std::vector<std::vector<double>> Xi02_AP (const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::shared_ptr<glob::FuncGrid> xi0_interp, const std::shared_ptr<glob::FuncGrid> xi2_interp);
 
   /**
    * @brief function to obtain the monopole, quadrupole
-   * and hexadecapole of the two-point correlation function 
-   * 
+   * and hexadecapole of the two-point correlation function
+   *
    * @param alpha_perpendicular the shift along the line of sight
    * @param alpha_parallel the shift parallel to the line of sight
    * @param rr the scales r
@@ -3011,7 +2970,7 @@ namespace cbl {
    * @param xi2_interp the xi2 interpolator
    * @param xi4_interp the xi4 interpolator
    *
-   * @return the 2pcf wedges 
+   * @return the 2pcf wedges
    */
   std::vector<std::vector<double>> XiWedges_AP (const std::vector<double> mu_min, const std::vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::shared_ptr<glob::FuncGrid> xi0_interp, const std::shared_ptr<glob::FuncGrid> xi2_interp, const std::shared_ptr<glob::FuncGrid> xi4_interp);
 

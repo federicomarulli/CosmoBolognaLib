@@ -238,10 +238,10 @@ void cbl::data::Data1D_collection::error (std::vector<std::vector<double>> &erro
 // ======================================================================================
 
 
-void cbl::data::Data1D_collection::read (const std::string input_file, const int skip_nlines, const int column_x, const std::vector<int> column_data, const std::vector<int> column_errors)
+void cbl::data::Data1D_collection::read (const std::string input_file, const int skip_nlines, const std::vector<int> column, const std::vector<int> column_data, const std::vector<int> column_errors, const std::vector<int> column_edges)
 {
-  (void)column_x; (void)column_data; (void)column_errors;
-  WarningMsgCBL("column_x, column_data, column_errors are not used in the current implementation", "read", "Data1D_collection.cpp");
+  (void)column; (void)column_data; (void)column_errors; (void)column_edges; 
+  WarningMsgCBL("column, column_data, column_errors, column_edges are not used in the current implementation", "read", "Data1D_collection.cpp");
   
   ifstream fin(input_file.c_str()); checkIO(fin, input_file);
   string line;
@@ -301,10 +301,10 @@ void cbl::data::Data1D_collection::read (const std::string input_file, const int
 // ======================================================================================
 
 
-void cbl::data::Data1D_collection::read (const std::vector<std::string> input_file, const int skip_nlines, const int column_x, const std::vector<int> column_data, const std::vector<int> column_errors)
+void cbl::data::Data1D_collection::read (const std::vector<std::string> input_file, const int skip_nlines, const std::vector<int> column, const std::vector<int> column_data, const std::vector<int> column_errors, const std::vector<int> column_edges)
 {
-  (void)column_x; (void)column_data; (void)column_errors;
-  WarningMsgCBL("column_x, column_data, column_errors are not used in the current implementation", "read", "Data1D_collection.cpp");
+  (void)column; (void)column_data; (void)column_errors; (void)column_edges;
+  WarningMsgCBL("column, column_data, column_errors, column_edges are not used in the current implementation", "read", "Data1D_collection.cpp");
   
   m_ndataset = input_file.size();
   m_xsize.resize(m_ndataset,0);

@@ -53,15 +53,18 @@ void cbl::data::Data1D::set_xx (const vector<double> x)
 // ======================================================================================
 
 
-void cbl::data::Data1D::read (const string input_file, const int skip_nlines, const int column_x, const vector<int> column_data, const vector<int> column_errors)
+void cbl::data::Data1D::read (const string input_file, const int skip_nlines, const vector<int> column, const vector<int> column_data, const vector<int> column_errors, const vector<int> column_edges)
 {
   if (column_data.size()!=column_errors.size()) ErrorCBL("the sizes of column_data and columt_errors must be equal!", "read", "Data1D.cpp");
   
   // default column of input data values
-  int column_data_default = column_x+1;
+  int column_data_default = column[0]+1;
   
   // default column of input error values
-  int column_error_default = column_x+2;
+  int column_error_default = column[0]+2;
+
+  // default first column of input edge values
+  int column_edges_default = column[0]+3;
   
   ifstream fin(input_file.c_str()); checkIO(fin, input_file);
   string line;
@@ -79,6 +82,7 @@ void cbl::data::Data1D::read (const string input_file, const int skip_nlines, co
 	getline(fin, line);
    
     // read the file lines
+    double last_bin_edge = par::defaultDouble;
     while (getline(fin, line)) {
       
       stringstream ss(line);
@@ -87,28 +91,40 @@ void cbl::data::Data1D::read (const string input_file, const int skip_nlines, co
 
       if (num.size()<2) ErrorCBL("there are less than 2 columns in the input file!", "read", "Data1D.cpp");
       
-      // if column_x is larger than 0, the column of x coordinates is
+      // if column[0] is larger than 0, the column of x coordinates is
       // the one specified in input
-      size_t ind_x = max(0, column_x-1);
+      size_t ind_x = max(0, column[0]-1);
       checkDim(num, ind_x+1, "num", false);
       m_x.emplace_back(num[ind_x]);
-
-      // if the size of the column_data vector is larger than 1, the
-      // columns of data values are the ones specified in input
-      const size_t ind_data = (column_data.size()<1) ? column_data_default-1 : column_data[cl]-1;
+      
+      // if the size of the column_data vector is 0, the columns of
+      // data values are the ones specified in input
+      const size_t ind_data = (column_data.size()==0) ? column_data_default-1 : column_data[cl]-1;
       checkDim(num, ind_data+1, "num", false);
       m_data.emplace_back(num[ind_data]);
 
-      // if the size of the column_errors vector is larger than 1, the
-      // columns of error values are the ones specified in input; if
-      // the error column is not present, the errors will be set to 1,
-      // by default
-      const size_t ind_error = (column_errors.size()<1) ? column_error_default-1 : column_errors[cl]-1;
+      // if the size of the column_errors vector is 0, the columns of
+      // error values are the ones specified in input; if the error
+      // column is not present, the errors will be set to 1, by
+      // default
+      const size_t ind_error = (column_errors.size()==0) ? column_error_default-1 : column_errors[cl]-1;
       if (num.size()<ind_error+1 && column_errors.size()>1)
 	WarningMsgCBL("the errors cannot be retrieved from the provided input file, and will be set to 1", "read", "Data1D.cpp");
       m_error.emplace_back((num.size()<ind_error+1) ? 1 : num[ind_error]);
+
+      // if the size of the column_edges vector is 0, the columns of
+      // bin edge values are the ones specified in input
+      const size_t ind_edges = (column_edges.size()==0) ? column_edges_default-1 : column_edges[cl]-1;
+      if (num.size()>ind_edges+1) {
+	m_edges_xx.emplace_back(num[ind_edges]);
+	last_bin_edge = num[ind_edges+1];
+      }
       
     }
+
+    // add the last bin edge to m_edges_xx
+    if (last_bin_edge>par::defaultDouble)
+      m_edges_xx.emplace_back(last_bin_edge);
 
     // go back at the beginning of the file
     fin.clear(); fin.seekg(ios::beg);
@@ -200,16 +216,24 @@ std::shared_ptr<Data> cbl::data::Data1D::cut (const std::vector<bool> mask) cons
 {
   checkDim(mask, m_ndata, "mask");
 
-  vector<double> xx;
-  for (size_t i=0; i<mask.size(); i++) 
-    if (mask[i])
+  vector<double> xx, edges_xx;
+  int last_index = 0;
+  for (size_t i=0; i<mask.size(); i++){
+    if (mask[i]){
       xx.push_back(m_x[i]);
+      if (m_edges_xx.size() > 0) 
+	edges_xx.push_back(m_edges_xx[i]);
+      last_index = i;
+    }
+  }
+  if (m_edges_xx.size() > 0) 
+    edges_xx.push_back(m_edges_xx[last_index+1]);
 
   vector<double> data, error;
   vector<vector<double>> covariance;
   Data::cut(mask, data, error, covariance);
 
-  shared_ptr<Data> dd = make_shared<Data1D>(Data1D(xx, data, covariance));
+  shared_ptr<Data> dd = make_shared<Data1D>(Data1D(xx, data, covariance, -1, edges_xx));
 
   return dd;
 }
@@ -222,22 +246,11 @@ std::shared_ptr<Data> cbl::data::Data1D::cut (const std::vector<bool> mask) cons
 shared_ptr<Data> cbl::data::Data1D::cut (const double xmin, const double xmax) const
 {
   vector<bool> mask(m_ndata, true);
-  vector<double> xx;
-  for (int i=0; i<m_ndata; i++) {
+  for (int i=0; i<m_ndata; i++)
     if ((m_x[i] < xmin) || (m_x[i]>xmax))
       mask[i] = false;
-    else
-      xx.push_back(m_x[i]);
-  }
 
-  vector<double> data, error;
-  vector<vector<double>> covariance;
-  Data::cut(mask, data, error, covariance);
-
-
-  shared_ptr<Data> dd = make_shared<Data1D>(Data1D(xx, data, covariance));
-
-  return dd;
+  return cut(mask);
 }
 
 

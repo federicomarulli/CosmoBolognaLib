@@ -536,7 +536,7 @@ double cbl::xi2D_model (double rp, double pi, shared_ptr<void> pp, vector<double
   int ind_min = index*vec->step_v;
   int ind_max = ind_min+vec->step_v;
 
-  double sigma12 = par[1];
+  double sigmav = par[1];
 
   vector<double> par2;
   par2.push_back(par[0]);
@@ -547,19 +547,19 @@ double cbl::xi2D_model (double rp, double pi, shared_ptr<void> pp, vector<double
   // convolution of the linear xi(rp,pi) with the velocity distribution function f(v)		
 
   double xi2D_nl = 0;
-  double norm = 0.; // to avoid numerical problems when sigma12 is too small
+  double norm = 0.; // to avoid numerical problems when sigmav is too small
 
   for (int i=ind_min; i<ind_max; i++) {
     par2[par2.size()-1] = i;
-    xi2D_nl += xi2D_lin_model(vec->rp[i], vec->pi[i], pp, par2)*f_v(vec->vel[i], sigma12, vec->FV)*vec->delta_v;
-    norm += f_v(vec->vel[i], sigma12, vec->FV)*vec->delta_v;
+    xi2D_nl += xi2D_lin_model(vec->rp[i], vec->pi[i], pp, par2)*f_v(vec->vel[i], sigmav, vec->FV)*vec->delta_v;
+    norm += f_v(vec->vel[i], sigmav, vec->FV)*vec->delta_v;
   }
   
   xi2D_nl /= norm;
 
 
   if (fabs(norm-1)>0.1) { 
-    WarningMsgCBL("sigma12 = "+conv(sigma12,par::fDP2)+" ---> norm = " + conv(norm,par::fDP3) + ", the number of bins used for the convolution with f(v) should be increased!", "xi2D_model", "FuncXi.cpp");
+    WarningMsgCBL("sigmav = "+conv(sigmav,par::fDP2)+" ---> norm = " + conv(norm,par::fDP3) + ", the number of bins used for the convolution with f(v) should be increased!", "xi2D_model", "FuncXi.cpp");
     Print(par);
   }
   
@@ -571,7 +571,7 @@ double cbl::xi2D_model (double rp, double pi, shared_ptr<void> pp, vector<double
 // ============================================================================
 
 
-double cbl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const std::vector<double> rad_real, const std::vector<double> xi_real, const std::vector<double> xi_, const std::vector<double> xi__, const double var, const int FV, int index, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
+double cbl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigmav, const std::vector<double> rad_real, const std::vector<double> xi_real, const std::vector<double> xi_, const std::vector<double> xi__, const double var, const int FV, int index, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
 {
   double delta_v = (v_max-v_min)/step_v;
 
@@ -600,7 +600,7 @@ double cbl::xi2D_model (const double rp, const double pi, const double beta, con
     double Bias = bias;
     if (bias_nl) Bias *= b_nl(rr, bA);
 
-    xi2D += xi2D_lin_model(beta, Bias, xiR, xiR_, xiR__, P_2(cos), P_4(cos))*f_v(vel, sigma12, FV)*delta_v;
+    xi2D += xi2D_lin_model(beta, Bias, xiR, xiR_, xiR__, P_2(cos), P_4(cos))*f_v(vel, sigmav, FV)*delta_v;
   
     vel += delta_v;
     if (index>-1) index ++;
@@ -613,11 +613,11 @@ double cbl::xi2D_model (const double rp, const double pi, const double beta, con
 // ============================================================================
 
 
-double cbl::f_v (const double vel, const double sigma12, const int FV) 
+double cbl::f_v (const double vel, const double sigmav, const int FV) 
 {
-  if (FV==0) return 1./(sigma12*sqrt(2.))*exp(-sqrt(2.)*fabs(vel)/sigma12); // exponential
+  if (FV==0) return 1./(sigmav*sqrt(2.))*exp(-sqrt(2.)*fabs(vel)/sigmav); // exponential
   
-  else return 1./(sigma12*sqrt(par::pi))*exp(-(vel*vel)/(sigma12*sigma12)); // gaussian     
+  else return 1./(sigmav*sqrt(par::pi))*exp(-(vel*vel)/(sigmav*sigmav)); // gaussian     
 }
 
 
@@ -693,7 +693,7 @@ double cbl::xi2D_lin_model (const double rp, const double pi, const double beta,
 // ============================================================================
 
 
-double cbl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigma12, const std::shared_ptr<void> funcXiR, const std::shared_ptr<void> funcXiR_, const std::shared_ptr<void> funcXiR__, const double var, const int FV, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
+double cbl::xi2D_model (const double rp, const double pi, const double beta, const double bias, const double sigmav, const std::shared_ptr<void> funcXiR, const std::shared_ptr<void> funcXiR_, const std::shared_ptr<void> funcXiR__, const double var, const int FV, const bool bias_nl, const double bA, const double v_min, const double v_max, const int step_v)
 {
   shared_ptr<glob::FuncGrid> pfuncXiR = static_pointer_cast<glob::FuncGrid>(funcXiR);
   shared_ptr<glob::FuncGrid> pfuncXiR_ = static_pointer_cast<glob::FuncGrid>(funcXiR_);
@@ -719,7 +719,7 @@ double cbl::xi2D_model (const double rp, const double pi, const double beta, con
     double Bias = bias;
     if (bias_nl) Bias *= b_nl(rr, bA);
 
-    xi2D += xi2D_lin_model(beta, Bias, xiR, xiR_, xiR__, P_2(cos), P_4(cos))*f_v(vel, sigma12, FV)*delta_v;
+    xi2D += xi2D_lin_model(beta, Bias, xiR, xiR_, xiR__, P_2(cos), P_4(cos))*f_v(vel, sigmav, FV)*delta_v;
   
     vel += delta_v;
   }

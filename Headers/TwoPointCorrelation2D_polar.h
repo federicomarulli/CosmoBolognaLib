@@ -93,7 +93,7 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measurePoisson (const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_) override;
 
@@ -130,7 +130,7 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample = "NULL", const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_) override;
 
@@ -172,7 +172,7 @@ namespace cbl {
 	 *
 	 *  @param seed the seed for random number generation
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample="NULL", const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213) override;
 
@@ -186,7 +186,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  @return object of class TwoPointCorrelation2D_polar
+	 *  2D_polar
 	 */
 	TwoPointCorrelation2D_polar () { m_twoPType = TwoPType::_2D_polar_; }
 
@@ -220,7 +220,7 @@ namespace cbl {
 	 *  @param random_dilution_fraction fraction between the number
 	 *  of objects in the diluted and original random samples, used
 	 *  to improve performances in random-random pair counts
-	 *  @return object of class TwoPointCorrelation2D_polar
+	 *  2D_polar
 	 */
 	TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const BinType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const BinType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation2D(data, random, compute_extra_info, random_dilution_fraction) { m_twoPType = TwoPType::_2D_polar_; set_parameters(binType_rad, rMin, rMax, nbins_rad, shift_rad, binType_mu, muMin, muMax, nbins_mu, shift_mu, angularUnits, angularWeight, compute_extra_info); }
@@ -255,14 +255,14 @@ namespace cbl {
 	 *  @param random_dilution_fraction fraction between the number
 	 *  of objects in the diluted and original random samples, used
 	 *  to improve performances in random-random pair counts
-	 *  @return object of class TwoPointCorrelation2D_polar
+	 *  2D_polar
 	 */
 	TwoPointCorrelation2D_polar (catalogue::Catalogue data, catalogue::Catalogue random, const BinType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const BinType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false, const double random_dilution_fraction=1.)
 	  : TwoPointCorrelation2D(data, random, compute_extra_info, random_dilution_fraction) { m_twoPType = TwoPType::_2D_polar_; set_parameters(binType_rad, rMin, rMax, binSize_rad, shift_rad, binType_mu, muMin, muMax, binSize_mu, shift_mu, angularUnits, angularWeight, compute_extra_info); }
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	~TwoPointCorrelation2D_polar () = default;
 
@@ -297,7 +297,7 @@ namespace cbl {
 	 *  @param compute_extra_info true &rarr; compute extra
 	 *  information related to the pairs, such as the mean pair
 	 *  separation and redshift
-	 *  @return none
+	 *  
 	 */
 	void set_parameters (const BinType binType_rad, const double rMin, const double rMax, const int nbins_rad, const double shift_rad, const BinType binType_mu, const double muMin, const double muMax, const int nbins_mu, const double shift_mu, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
 
@@ -324,7 +324,7 @@ namespace cbl {
 	 *  @param compute_extra_info true &rarr; compute extra
 	 *  information related to the pairs, such as the mean pair
 	 *  separation and redshift
-	 *  @return none
+	 *  
 	 */
 	void set_parameters (const BinType binType_rad, const double rMin, const double rMax, const double binSize_rad, const double shift_rad, const BinType binType_mu, const double muMin, const double muMax, const double binSize_mu, const double shift_mu, const CoordinateUnits angularUnits=CoordinateUnits::_radians_, std::function<double(double)> angularWeight=nullptr, const bool compute_extra_info=false);
 
@@ -372,7 +372,7 @@ namespace cbl {
 	 *
 	 *  @param seed the seed for random number generation
 	 *
-	 *  @return none
+	 *  
 	 */
 	void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213) override;
 
@@ -388,7 +388,7 @@ namespace cbl {
 	 *  @brief read the 2D two-point correlation function
 	 *  @param dir input directory
 	 *  @param file input file
-	 *  @return none
+	 *  
 	 */
 	void read (const std::string dir, const std::string file) override;     
 
@@ -400,7 +400,7 @@ namespace cbl {
 	 *  duplicate the data in the other three quadrands (usefull
 	 *  e.g. when storing the 2D correlation function)
 	 *  @param rank cpu index (for MPI usage)
-	 *  @return none
+	 *  
 	 */
 	void write (const std::string dir, const std::string file, const bool full, const int rank=0) const override;
 
@@ -409,7 +409,7 @@ namespace cbl {
 	 *  @param dir output directory
 	 *  @param file output file
 	 *  @param rank cpu index (for MPI usage)
-	 *  @return none
+	 *  
 	 */
 	void write (const std::string dir=par::defaultString, const std::string file=par::defaultString, const int rank=0) const override
 	{ write(dir, file, true, rank); }
@@ -426,7 +426,7 @@ namespace cbl {
 	 *  @brief read the measured covariance matrix
 	 *  @param dir input directory
 	 *  @param file input file
-	 *  @return none
+	 *  
 	 */
 	void read_covariance (const std::string dir, const std::string file) override
 	{ (void)dir; (void)file; ErrorCBL("", "read_covariance", "TwoPointCorrelation2D_polar.h", glob::ExitCode::_workInProgress_); }
@@ -435,7 +435,7 @@ namespace cbl {
 	 *  @brief write the measured two-point correlation
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  
 	 */
 	void write_covariance (const std::string dir, const std::string file) const override
 	{ (void)dir; (void)file; ErrorCBL("", "write_covariance", "TwoPointCorrelation2D_polar.h", glob::ExitCode::_workInProgress_); }
@@ -446,7 +446,7 @@ namespace cbl {
 	 *  functions used to compute the covariance matrix
 	 *  @param JK true &rarr; compute the jackknife covariance
 	 *  matrix; false compute the standard covariance matrix
-	 *  @return none
+	 *  
 	 */
 	void compute_covariance (const std::vector<std::shared_ptr<data::Data>> xi, const bool JK) override
 	{ (void)xi; (void)JK; ErrorCBL("", "compute_covariance", "TwoPointCorrelation2D_polar.h", glob::ExitCode::_workInProgress_); }
@@ -458,7 +458,7 @@ namespace cbl {
 	 *  covariance matrix
 	 *  @param JK true &rarr; compute the jackknife covariance
 	 *  matrix; false compute the standard covariance matrix
-	 *  @return none
+	 *  
 	 */
 	void compute_covariance (const std::vector<std::string> file, const bool JK) override
 	{ (void)file; (void)JK; ErrorCBL("", "compute_covariance", "TwoPointCorrelation2D_cartesian.h", glob::ExitCode::_workInProgress_); }

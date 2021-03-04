@@ -52,11 +52,11 @@ namespace cbl {
    */
   namespace measure {
 
-      /**
-       *  @enum ErrorType
-       *  @brief the two-point correlation function error type
-       */
-      enum class ErrorType { 
+    /**
+     *  @enum ErrorType
+     *  @brief the two-point correlation function error type
+     */
+    enum class ErrorType { 
 
 	/// Poissonian error
 	_Poisson_,
@@ -79,8 +79,8 @@ namespace cbl {
 	/// Bootstrap resampling, by objects
 	_BootstrapObjects_,
 
-      /// No error computed
-      _None_	
+	/// No error computed
+	_None_	
     };
 
     /**
@@ -115,7 +115,7 @@ namespace cbl {
      * @brief cast an enum of type ErrorType
      * from indeces
      * @param errorTypeIndeces the errorType indeces
-     * @return object of class ErrorType
+     * @return vector of objects of class ErrorType
      */
     inline std::vector<ErrorType> ErrorTypeCast (const std::vector<int> errorTypeIndeces)
     { return castFromValues<ErrorType>(errorTypeIndeces); }  
@@ -124,7 +124,7 @@ namespace cbl {
      * @brief cast an enum of type ErrorType
      * from thier names
      * @param errorTypeNames the errorType names
-     * @return vector of ErrorType enums
+     * @return vector of objects of class ErrorType
      */
     inline std::vector<ErrorType> ErrorTypeCast (const std::vector<std::string> errorTypeNames)
     { return castFromNames<ErrorType>(errorTypeNames, ErrorTypeNames()); }
@@ -152,16 +152,15 @@ namespace cbl {
        *  @name Constructors/destructors
        */
       ///@{
-
+      
       /**
-       *  @brief default constructor
-       *  @return object of class Measure
+       *  @brief default constructor 
        */
       Measure () = default;
 
       /**
        *  @brief default destructor
-       *  @return none
+       *  
        */
       virtual ~Measure () = default;
 

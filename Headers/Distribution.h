@@ -101,7 +101,7 @@ namespace cbl {
      * @brief cast an enum of type DistributionType
      * from indeces
      * @param distributionTypeIndeces the distributionType indeces
-     * @return object of class DistributionType
+     * @return vector of objects of class DistributionType
      */
     inline std::vector<DistributionType> DistributionTypeCast (const std::vector<int> distributionTypeIndeces) { return castFromValues<DistributionType>(distributionTypeIndeces); } 
 
@@ -109,7 +109,7 @@ namespace cbl {
      * @brief cast an enum of type DistributionType
      * from thier names
      * @param distributionTypeNames the distributionType names
-     * @return vector of DistributionType enums
+     * @return vector of objects of class DistributionType
      */
     inline std::vector<DistributionType> DistributionTypeCast (const std::vector<std::string> distributionTypeNames) { return castFromNames<DistributionType>(distributionTypeNames, DistributionTypeNames()); }
 
@@ -160,7 +160,6 @@ namespace cbl {
 
       /**
        * @brief set distribution normalization 
-       * @return none
        */
       void m_set_distribution_normalization ();
 
@@ -206,10 +205,8 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *
-       *  @return object of class Distribution
        */
-      Distribution () : Distribution(DistributionType::_Uniform_, 0., 0.) {}
+      Distribution () : Distribution (DistributionType::_Uniform_, 0., 0.) {}
 
       /**
        *  @brief constructor of a constant distribution
@@ -217,8 +214,6 @@ namespace cbl {
        *  @param distributionType the type of distribution to be created
        *
        *  @param value the value to be returned
-       *
-       *  @return object of class Distribution
        */
       Distribution (const DistributionType distributionType, const double value);
 
@@ -232,8 +227,6 @@ namespace cbl {
        *  @param xmax upper limit of the distribution
        *
        *  @param seed the distribution seed for random sampling
-       *
-       *  @return object of class Distribution
        */
       Distribution (const DistributionType distributionType, const double xmin, const double xmax, const int seed=3213);
 
@@ -250,8 +243,6 @@ namespace cbl {
        *  @param xmax upper limit of the distribution
        *
        *  @param seed the distribution seed for random sampling
-       *
-       *  @return object of class Distribution
        */
       Distribution (const DistributionType distributionType, const std::vector<double> distribution_params, const double xmin, const double xmax, const int seed=1);
 
@@ -271,8 +262,6 @@ namespace cbl {
        *  @param xmax upper limit of the distribution
        *
        *  @param seed the distribution seed for random sampling
-       *
-       *  @return object of class Distribution
        */
       Distribution (const DistributionType distributionType, const distribution_func func, const std::shared_ptr<void> distribution_fixed_pars, const std::vector<double> distribution_pars, const double xmin, const double xmax, const int seed=1);
 
@@ -286,8 +275,6 @@ namespace cbl {
        *  @param weights list of weights for discrete values
        *
        *  @param seed the distribution seed for random sampling
-       *
-       *  @return object of class Distribution
        */
       Distribution (const DistributionType distributionType, const std::vector<double> discrete_values, const std::vector<double> weights, const int seed=1);
 
@@ -305,15 +292,11 @@ namespace cbl {
        * @param interpolationType the kind of interpolation
        *
        * @param seed the distribution seed for random sampling
-       *
-       * @return none
        */
       Distribution (const DistributionType distributionType, const std::vector<double> var, const std::vector<double> dist, const int nbin, const std::string interpolationType, const int seed=1);
 
       /**
        *  @brief default destructor
-       *
-       *  @return none
        */
       ~Distribution () = default;
 
@@ -350,7 +333,6 @@ namespace cbl {
       /**
        * @brief set distribution seed
        * @param seed the distribution seed
-       * return none
        */
       void set_seed (const int seed) {m_distribution_random->set_seed(seed);}
 
@@ -360,8 +342,6 @@ namespace cbl {
        * @param xmin lower limit of the distribution
        *
        * @param xmax upper limit of the distribution
-       *
-       * @return none
        */
       void set_limits (const double xmin, const double xmax);
 
@@ -369,8 +349,6 @@ namespace cbl {
        * @brief set a constant distribution
        *
        * @param value the value to be returned
-       *
-       * @return none
        */
       void set_constant_distribution (const double value);
 
@@ -382,8 +360,6 @@ namespace cbl {
        * @param xmax upper limit of the distribution
        *
        * @param seed the distribution seed for random sampling
-       *
-       * @return none
        */
       void set_uniform_distribution (const double xmin, const double xmax, const int seed=1);
 
@@ -395,8 +371,6 @@ namespace cbl {
        * @param sigma the normal distribution standard deviation
        *
        * @param seed the distribution seed for random sampling
-       *
-       * @return none
        */
       void set_gaussian_distribution (const double mean, const double sigma, const int seed=1);
 
@@ -406,8 +380,6 @@ namespace cbl {
        * @param mean the poisson distribution mean
        *
        * @param seed the distribution seed for random sampling
-       *
-       * @return none
        */       
       void set_poisson_distribution (const double mean, const int seed=1);
 
@@ -421,8 +393,6 @@ namespace cbl {
        *  @param distribution_pars the distribution parameters
        *
        *  @param seed the distribution seed for random sampling
-       *
-       *  @return object of class Distribution
        */
       void set_custom_distribution (const distribution_func func, const std::shared_ptr<void> distribution_fixed_pars, const std::vector<double> distribution_pars, const int seed=1);
 
@@ -434,8 +404,6 @@ namespace cbl {
        * @param weights list of weights for discrete values
        *
        * @param seed the distribution seed for random sampling
-       *
-       * @return none
        */       
       void set_discrete_values (const std::vector<double> discrete_values, const std::vector<double> weights, const int seed=1);
 
@@ -449,8 +417,6 @@ namespace cbl {
        * @param interpolationType the kind of interpolation
        *
        * @param seed the distribution seed for random sampling
-       *
-       * @return none
        */    
       void set_binned_distribution (const std::vector<double> var, const std::vector<double> dist, const std::string interpolationType="Spline", const int seed=1);
 
@@ -603,7 +569,6 @@ namespace cbl {
        *  @param [in] conv true &rarr; compute the Gaussian convolvolution of
        *  the distribution; false &rarr; do not convolve
        *  @param [in] sigma &sigma; of the Gaussian kernel
-       *  @return none
        */
       void get_distribution (std::vector<double> &xx, std::vector<double> &fx, std::vector<double> &err, const std::vector<double> FF, const std::vector<double> WW, const int nbin, const bool linear=true, const std::string file_out=par::defaultString, const double fact=1., const double V1=par::defaultDouble, const double V2=par::defaultDouble, const bool bin_type=true, const bool conv=false, const double sigma=0.);
 

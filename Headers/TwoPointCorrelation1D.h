@@ -62,7 +62,7 @@ namespace cbl {
        *  average number density, and \f$dP_{12}\f$ is the probability
        *  of finding a pair with one object in the volume \f$dV_1\f$
        *  and the other one in the volume \f$dV_2\f$, separated by a
-       *  comoving distance r.
+       *  comoving distance r
        */
       class TwoPointCorrelation1D : public virtual TwoPointCorrelation {
 
@@ -78,7 +78,8 @@ namespace cbl {
 	 *  @param PP pointer to an object of class Pair
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void write_pairs (const std::shared_ptr<pairs::Pair> PP, const std::string dir, const std::string file) const override;
 
@@ -87,7 +88,8 @@ namespace cbl {
 	 *  @param [out] PP pointer to an object of class Pair
 	 *  @param [in] dir vector of input directories
 	 *  @param [in] file input file
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void read_pairs (std::shared_ptr<pairs::Pair> PP, const std::vector<std::string> dir, const std::string file) const override;
 
@@ -96,7 +98,8 @@ namespace cbl {
 	 *  @param PP pointer to a vector of objects of class Pair
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void write_pairs (const std::vector<std::shared_ptr<pairs::Pair>> PP, const std::string dir, const std::string file) const override;
 
@@ -105,7 +108,8 @@ namespace cbl {
 	 *  @param [out] PP pointer to a vector of objects of class Pair
 	 *  @param [in] dir vector of input directories
 	 *  @param [in] file input file
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void read_pairs (std::vector<std::shared_ptr<pairs::Pair>> PP, const std::vector<std::string> dir, const std::string file) const override;
       
@@ -282,10 +286,9 @@ namespace cbl {
 	 *  @name Constructors/destructors
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief default constructor
-	 *  @return object of class TwoPointCorrelation1D
 	 */
 	TwoPointCorrelation1D () { m_dataset = data::Data::Create(data::DataType::_1D_); }
 
@@ -301,7 +304,6 @@ namespace cbl {
 	 *  @param random_dilution_fraction fraction between the number
 	 *  of objects in the diluted and original random samples, used
 	 *  to improve performances in random-random pair counts
-	 *  @return object of class TwoPointCorrelation1D
 	 */
 	TwoPointCorrelation1D (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool compute_extra_info=false, const double random_dilution_fraction=1.) 
 	  : TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction)
@@ -309,7 +311,7 @@ namespace cbl {
 
 	/**
 	 *  @brief default destructor
-	 *  @return none
+	 *  
 	 */
 	~TwoPointCorrelation1D () = default;
       
@@ -344,12 +346,12 @@ namespace cbl {
 	  { std::vector<double> vv; m_dataset->get_error(vv); return vv; }
 
 	///@}
-
+	
 	/**
 	 *  @name Member functions to count measure the two-point correlation function
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief measure the two-point correlation function
 	 *
@@ -386,7 +388,8 @@ namespace cbl {
 	 *
 	 *  @param seed the seed for random number generation
 	 *
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213) = 0;
       
@@ -401,7 +404,8 @@ namespace cbl {
 	 *  @brief read the measured two-point correlation
 	 *  @param dir input directory
 	 *  @param file input file
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void read (const std::string dir, const std::string file)
 	{ (void)dir; (void)file; ErrorCBL("", "read", "TwoPointCorrelation1D.h"); }	
@@ -411,7 +415,8 @@ namespace cbl {
 	 *  @param dir output directory
 	 *  @param file output file
 	 *  @param rank cpu index (for MPI usage)
-	 *  @return none
+	 *  @return none, or an error message if the derived object does
+	 *  not have this member
 	 */
 	virtual void write (const std::string dir, const std::string file, const int rank=0) const
 	{ (void)dir; (void)file; (void)rank; ErrorCBL("", "read", "TwoPointCorrelation1D.h"); }	
@@ -422,13 +427,12 @@ namespace cbl {
 	/**
 	 *  @name Member functions to compute, read and write the covariance matrix (customised in all the derived classes)
 	 */
-	///@{ 
-
+	///@{
+	
 	/**
 	 *  @brief read the measured covariance matrix
 	 *  @param dir input directory
-	 *  @param file input file
-	 *  @return none
+	 *  @param file input file 
 	 */
 	void read_covariance (const std::string dir, const std::string file) override;
 
@@ -436,7 +440,7 @@ namespace cbl {
 	 *  @brief write the measured two-point correlation
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none
+	 *  
 	 */
 	void write_covariance (const std::string dir, const std::string file) const override;
       
@@ -446,7 +450,6 @@ namespace cbl {
 	 *  functions used to compute the covariance matrix
 	 *  @param JK true &rarr; compute the jackknife covariance
 	 *  matrix; false compute the standard covariance matrix
-	 *  @return none
 	 */
 	void compute_covariance (const std::vector<std::shared_ptr<data::Data>> xi, const bool JK) override;
  
@@ -457,7 +460,6 @@ namespace cbl {
 	 *  covariance matrix
 	 *  @param JK true &rarr; compute the jackknife covariance
 	 *  matrix; false compute the standard covariance matrix
-	 *  @return none
 	 */
 	void compute_covariance (const std::vector<std::string> file, const bool JK) override;
       
