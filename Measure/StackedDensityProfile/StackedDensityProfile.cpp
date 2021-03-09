@@ -94,7 +94,7 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_set_logicSelection (co
 
 // ============================================================================
 
-void cbl::measure::stackprofile::StackedDensityProfile::m_set_selections()
+void cbl::measure::stackprofile::StackedDensityProfile::m_set_selections ()
 {    
   if (m_colour_sel=="Oguri"){
     m_colourSel = &cbl::measure::stackprofile::StackedDensityProfile::m_colourSelection_Oguri;
@@ -113,7 +113,7 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_set_selections()
 
 // ============================================================================
 
-void cbl::measure::stackprofile::StackedDensityProfile::m_resize(const double rad_min, const double rad_max, const int nRad, const bool log_rad)
+void cbl::measure::stackprofile::StackedDensityProfile::m_resize (const double rad_min, const double rad_max, const int nRad, const bool log_rad)
 {
   if (m_z_binEdges.size()-1 != m_proxy_binEdges.size())
       cbl::ErrorCBL("The number of proxy binnings must be equal to the number of redshift bins!","StackedDensityProfile","StackedDensityProfile.cpp");
@@ -215,7 +215,7 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_resize(const double ra
 
 // ============================================================================
 
-void cbl::measure::stackprofile::StackedDensityProfile::m_linked_list()
+void cbl::measure::stackprofile::StackedDensityProfile::m_linked_list ()
 {
   std::vector<double> ra_limits = {1000,-1000}, dec_limits = {1000,-1000};
   for (size_t i=0; i<m_galData->nObjects(); i++){
@@ -258,7 +258,7 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_linked_list()
 
 // ============================================================================
 
-void cbl::measure::stackprofile::StackedDensityProfile::m_add_galaxy(const int i_gal, const int clu_index, const double coscludec, const double clu_dist)
+void cbl::measure::stackprofile::StackedDensityProfile::m_add_galaxy (const int i_gal, const int clu_index, const double coscludec, const double clu_dist)
 { 
   std::vector<double> ang_dist(2);
   ang_dist[0] = (m_cluData->ra(clu_index)-m_galData->ra(i_gal))*coscludec;
@@ -311,7 +311,7 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_add_galaxy(const int i
 
 // ============================================================================
 
-void cbl::measure::stackprofile::StackedDensityProfile::m_profile(const int clu_index)
+void cbl::measure::stackprofile::StackedDensityProfile::m_profile (const int clu_index)
 {
   for (size_t i=0; i<m_rad_arr.size()-1; i++){
     m_ngal_arr[i]=0; m_deltasigma_t[i]=0; m_deltasigma_x[i]=0; m_deltasigma_err[i]=0; m_wetasquareSum[i]=0; m_rad_eff_arr[i]=0; m_rad_sigma_arr[i]=0; m_wSum[i]=0; m_wetaSum[i]=0; m_deltasigmaSum[i]=0;
@@ -353,7 +353,7 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_profile(const int clu_
 
 // ============================================================================
 
-void cbl::measure::stackprofile::StackedDensityProfile::m_stacker()
+void cbl::measure::stackprofile::StackedDensityProfile::m_stacker ()
 {
   std::cout<<std::endl; coutCBL<<"Performing the stacking..."<<std::endl;
   cbl::WarningMsgCBL("If you do not set \'radians\' as the coordinate units in the galaxy and cluster catalogues, the code is much slower! Set \'radians\'.","m_stacker","StackedDensityProfile.cpp");
@@ -430,7 +430,7 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_stacker()
 
 // ============================================================================
 
-std::shared_ptr<data::Data> cbl::measure::stackprofile::StackedDensityProfile::m_make_bootstrap(const std::vector<int> z_proxy_bin)
+std::shared_ptr<data::Data> cbl::measure::stackprofile::StackedDensityProfile::m_make_bootstrap (const std::vector<int> z_proxy_bin)
 {
   m_stacker(); // Perform the stacking
   
@@ -491,7 +491,7 @@ std::shared_ptr<data::Data> cbl::measure::stackprofile::StackedDensityProfile::m
 
 // ============================================================================
 
-bool cbl::measure::stackprofile::StackedDensityProfile::m_check_file(const std::string checked_file, const std::vector<int> z_proxy_bin, const std::string fits_file, const std::string cluster_file)
+bool cbl::measure::stackprofile::StackedDensityProfile::m_check_file (const std::string checked_file, const std::vector<int> z_proxy_bin)
 {
   bool out = false;
   
@@ -508,9 +508,7 @@ bool cbl::measure::stackprofile::StackedDensityProfile::m_check_file(const std::
 
   m_inputs_to_str.emplace_back(cbl::conv(m_galData->nObjects(),cbl::par::fINT));
   m_inputs_to_str.emplace_back(cbl::conv(m_cluData->nObjects(),cbl::par::fINT));
-
-  m_inputs_to_str.emplace_back(fits_file);
-  m_inputs_to_str.emplace_back(cluster_file);
+  
   m_inputs_to_str.emplace_back(m_colour_sel);
   m_inputs_to_str.emplace_back(m_zphot_sel);
   for (size_t j=0; j<m_zphot_sel_pars.size(); j++){
@@ -632,9 +630,9 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_write(const std::strin
 
 // ============================================================================
 
-void cbl::measure::stackprofile::StackedDensityProfile::measure(const std::vector<int> z_proxy_bin, const std::string output_dir, const std::string output_file, const std::string fits_file, const std::string cluster_file, const ErrorType errorType)
+void cbl::measure::stackprofile::StackedDensityProfile::measure (const std::vector<int> z_proxy_bin, const std::string output_dir, const std::string output_file, const ErrorType errorType)
 {
-  bool file_exists = m_check_file(output_dir+"/"+output_file+".dat", z_proxy_bin, fits_file, cluster_file);
+  bool file_exists = m_check_file(output_dir+"/"+output_file+".dat", z_proxy_bin);
 
   if (file_exists){
     coutCBL << "I've just read the already existing stacking file!" << std::endl; 
@@ -652,7 +650,7 @@ void cbl::measure::stackprofile::StackedDensityProfile::measure(const std::vecto
 
 // ============================================================================
 
-void cbl::measure::stackprofile::StackedDensityProfile::write(const std::string dir, const std::string file)
+void cbl::measure::stackprofile::StackedDensityProfile::write (const std::string dir, const std::string file)
 {
   std::string mkdir = "mkdir -p "+dir;
   if (system(mkdir.c_str())) {}
@@ -663,7 +661,7 @@ void cbl::measure::stackprofile::StackedDensityProfile::write(const std::string 
 
 // ============================================================================
 
-cbl::measure::stackprofile::StackedDensityProfile::StackedDensityProfile(cosmology::Cosmology cosm, const catalogue::Catalogue gal_cat, const catalogue::Catalogue clu_cat, const std::string colour_sel, const std::string zphot_sel, std::vector<double> zphot_sel_pars, const std::string logic_sel, std::vector<double> z_binEdges, std::vector<std::vector<double>> proxy_binEdges, const double rad_min, const double rad_max, const int nRad, const bool log_rad, const double SN_min, const double pix_size, const int n_resampling, const double rad_alpha, const double obs_gamma)
+cbl::measure::stackprofile::StackedDensityProfile::StackedDensityProfile (cosmology::Cosmology cosm, const catalogue::Catalogue gal_cat, const catalogue::Catalogue clu_cat, const std::string colour_sel, const std::string zphot_sel, std::vector<double> zphot_sel_pars, const std::string logic_sel, std::vector<double> z_binEdges, std::vector<std::vector<double>> proxy_binEdges, const double rad_min, const double rad_max, const int nRad, const bool log_rad, const double SN_min, const double pix_size, const int n_resampling, const double rad_alpha, const double obs_gamma)
 {
   // WARNING: if you change the arguments of this constructor, you must edit m_check_file !!!
 

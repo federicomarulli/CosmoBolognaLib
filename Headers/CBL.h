@@ -11,6 +11,7 @@
 #include "NumberCounts2D.h"
 #include "StackedDensityProfile.h"
 #include "Modelling_DensityProfile.h"
+#include "Modelling_MassObservableRelation.h"
 #include "ChainMesh_Catalogue.h"
 #include "Triplet1D.h"
 #include "Modelling_TwoPointCorrelation1D_filtered.h"

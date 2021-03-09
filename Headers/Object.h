@@ -903,6 +903,62 @@ namespace cbl {
        */
       virtual double mass () const
       { return cbl::ErrorCBL("", "mass", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_logM
+       *  @return the log-mass of the derived object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double logM () const
+      { return cbl::ErrorCBL("", "logM", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_concentration
+       *  @return the concentration of the derived cluster object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double concentration () const
+      { return cbl::ErrorCBL("", "concentration", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_f_off
+       *  @return the fraction of miscentered clusters of the derived cluster object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double f_off () const
+      { return cbl::ErrorCBL("", "f_off", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_sigma_off
+       *  @return the rms of the miscentered population of the derived cluster object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double sigma_off () const
+      { return cbl::ErrorCBL("", "sigma_off", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_alpha_scaling_rel
+       *  @return the scaling relation normalization of the derived cluster object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double alpha_scaling_rel () const
+      { return cbl::ErrorCBL("", "alpha_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_beta_scaling_rel
+       *  @return the scaling relation slope of the derived cluster object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double beta_scaling_rel () const
+      { return cbl::ErrorCBL("", "beta_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_gamma_scaling_rel
+       *  @return the scaling relation z evolution factor of the derived cluster object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double gamma_scaling_rel () const
+      { return cbl::ErrorCBL("", "gamma_scaling_rel", "Object.h"); }
     
       /**
        *  @brief get the member \e m_magnitude
@@ -1413,6 +1469,69 @@ namespace cbl {
        */
       virtual void set_mass (const double mass)
       { (void)mass; cbl::ErrorCBL("", "set_mass", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_logM
+       *  @param logM the log-mass
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_logM (const double logM)
+      { (void)logM; cbl::ErrorCBL("", "set_logM", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_concentration
+       *  @param conc the cluster concentration
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_concentration (const double conc)
+      { (void)conc; cbl::ErrorCBL("", "set_concentration", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_f_off
+       *  @param f_off the f_off parameter
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_f_off (const double f_off)
+      { (void)f_off; cbl::ErrorCBL("", "set_f_off", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_sigma_off
+       *  @param sigma_off the sigma_off parameter
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_sigma_off (const double sigma_off)
+      { (void)sigma_off; cbl::ErrorCBL("", "set_sigma_off", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_alpha_scaling_rel
+       *  @param alpha_scaling_rel the alpha_scaling_rel parameter
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_alpha_scaling_rel (const double alpha_scaling_rel)
+      { (void)alpha_scaling_rel; cbl::ErrorCBL("", "set_alpha_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_beta_scaling_rel
+       *  @param beta_scaling_rel the beta_scaling_rel parameter
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_beta_scaling_rel (const double beta_scaling_rel)
+      { (void)beta_scaling_rel; cbl::ErrorCBL("", "set_beta_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_gamma_scaling_rel
+       *  @param gamma_scaling_rel the gamma_scaling_rel parameter
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_gamma_scaling_rel (const double gamma_scaling_rel)
+      { (void)gamma_scaling_rel; cbl::ErrorCBL("", "set_gamma_scaling_rel", "Object.h"); }
     
       /**
        *  @brief set the member \e m_magnitude
@@ -1931,6 +2050,76 @@ namespace cbl {
        */
       virtual bool isSet_mass ()
       { return cbl::ErrorCBL("", "isSet_mass", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_logM is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_logM ()
+      { return cbl::ErrorCBL("", "isSet_logM", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_concentration is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_concentration ()
+      { return cbl::ErrorCBL("", "isSet_concentration", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_f_off is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_f_off ()
+      { return cbl::ErrorCBL("", "isSet_f_off", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_sigma_off is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_sigma_off ()
+      { return cbl::ErrorCBL("", "isSet_sigma_off", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_alpha_scaling_rel is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_alpha_scaling_rel ()
+      { return cbl::ErrorCBL("", "isSet_alpha_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_beta_scaling_rel is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_beta_scaling_rel ()
+      { return cbl::ErrorCBL("", "isSet_beta_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_gamma_scaling_rel is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_gamma_scaling_rel ()
+      { return cbl::ErrorCBL("", "isSet_gamma_scaling_rel", "Object.h"); }
     
       /**
        *  @brief check if the member \e m_magnitude is set

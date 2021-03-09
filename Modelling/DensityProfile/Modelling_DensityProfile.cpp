@@ -43,42 +43,46 @@ using namespace cbl;
 
 // ===========================================================================================
 
-void cbl::modelling::densityprofile::Modelling_DensityProfile::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const double contrast, const double trunc_fact)
+void cbl::modelling::densityprofile::Modelling_DensityProfile::set_data_model (const cosmology::Cosmology cosmology, const catalogue::Cluster cluster, const double redshift, const double contrast, const double trunc_fact, const double logM_base)
 {
   m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model.cosmology->set_unit(true); // Force cosmological units
-  
-  m_data_model.profile = std::make_shared<cbl::modelling::densityprofile::Modelling_DensityProfile> (*this);
+
+  m_data_model.cluster = make_shared<catalogue::Cluster>(cluster);
   m_data_model.redshift = redshift;
   m_data_model.contrast = contrast;
   m_data_model.trunc_fact = trunc_fact;
+  m_data_model.logM_base = logM_base;
 }
 
 
 // ===========================================================================================
 
-void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_DensityProfile_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<ProfileParameter> profile_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const std::vector<statistics::PriorDistribution> profile_prior)
+void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_DensityProfile_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution concentration_prior, const statistics::PriorDistribution logM_prior, const statistics::PriorDistribution f_off_prior, const statistics::PriorDistribution sigma_off_prior)
 {
   m_data_model.Cpar = cosmo_param;
-  m_data_model.Ppar = profile_param;
 
-  const size_t nParams = cosmo_param.size()+profile_param.size();
+  const size_t nParams = cosmo_param.size()+4; // The total number of parameters is given by the cosmological ones + 4, since the density profile has 4 parameters (conc, logM, f_off, sigma_off)
 
   vector<statistics::ParameterType> Par_type (nParams, statistics::ParameterType::_Base_);
   vector<string> Par_string (nParams);
   std::vector<statistics::PriorDistribution> param_prior (nParams);
 
+  // Set the names and priors of the cosmological parameters
   for (size_t i=0; i<cosmo_param.size(); i++){
     Par_string[i] = CosmologicalParameter_name(cosmo_param[i]);
     param_prior[i] = cosmo_prior[i];
   }
 
-  m_data_model.Ppar_string.resize(profile_param.size());
-  for (size_t i=0; i<profile_param.size(); i++){
-    Par_string[cosmo_param.size()+i] = ProfileParameter_name(profile_param[i]);
-    m_data_model.Ppar_string[i] = ProfileParameter_name(profile_param[i]);
-    param_prior[cosmo_param.size()+i] = profile_prior[i];
-  }
+  // Set the names and priors for the density profile parameters
+  Par_string[cosmo_param.size()] = "concentration";
+  param_prior[cosmo_param.size()] = concentration_prior;
+  Par_string[cosmo_param.size()+1] = "logM";
+  param_prior[cosmo_param.size()+1] = logM_prior;
+  Par_string[cosmo_param.size()+2] = "f_off";
+  param_prior[cosmo_param.size()+2] = f_off_prior;
+  Par_string[cosmo_param.size()+3] = "sigma_off";
+  param_prior[cosmo_param.size()+3] = sigma_off_prior;
 
   // input data used to construct the model
   auto inputs = make_shared<STR_Profile_data_model>(m_data_model);
@@ -96,14 +100,14 @@ void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_Density
 
 // ===========================================================================================
 
-double cbl::modelling::densityprofile::nfw_1halo (cbl::cosmology::Cosmology cosm, const double radius, const double redshift, const double contrast, const double trunc_fact, const double concentration, const double mass, const double f_off, const double sigma_off)
+double cbl::modelling::densityprofile::nfw_1halo (cbl::cosmology::Cosmology cosm, cbl::catalogue::Cluster cluster, const double radius, const double redshift, const double contrast, const double trunc_fact)
 {
   // Calculate the radius enclosing a given mass, in the cosmology considered
   double H = cosm.HH(redshift)/cosm.HH(0.)*100./3.0857e+19; // in sec^-1
   double rho_crit = 3*H*H/8/cbl::par::pi/6.6732e-8/1.98892e+33*3.0857e+24*3.0857e+24*3.0857e+24; // in h^2*M_sun/Mpc^3
-  double r_encl = pow( 3*mass/(4*cbl::par::pi*contrast*rho_crit), 1./3. );
+  double r_encl = pow( 3*cluster.mass()/(4*cbl::par::pi*contrast*rho_crit), 1./3. );
 
-  double rscale = r_encl/concentration;
+  double rscale = r_encl/cluster.concentration();
   double trunc = trunc_fact*r_encl;
   double tau = trunc/rscale;
 
@@ -126,7 +130,7 @@ double cbl::modelling::densityprofile::nfw_1halo (cbl::cosmology::Cosmology cosm
 						   return 4.*cbl::par::pi*rad*rad*rho;
 						 };
   
-  double a_meantau = 0, b_meantau = 0, inv_mis_scale = 1./sigma_off/sigma_off; 
+  double a_meantau = 0, b_meantau = 0, inv_mis_scale = 1./cluster.sigma_off()/cluster.sigma_off(); 
   std::function<double(double)> tau_factor1 = [&a_meantau,&b_meantau,&inv_mis_scale] (double s){
 						return (exp(-0.5*(s*s+a_meantau)*inv_mis_scale))/sqrt(b_meantau-a_meantau-s*s);
 					      };
@@ -138,15 +142,15 @@ double cbl::modelling::densityprofile::nfw_1halo (cbl::cosmology::Cosmology cosm
   // Define the variable tau_for_misc
   double tau_for_misc = 0;
   
-  std::function<double(double)> meantau_factor = [&tau_for_misc,&sigma_off,&a_meantau,&b_meantau,&inv_mis_scale,&tau_factor1,&tau_factor2] (double rad){
+  std::function<double(double)> meantau_factor = [&tau_for_misc,&cluster,&a_meantau,&b_meantau,&inv_mis_scale,&tau_factor1,&tau_factor2] (double rad){
 						   a_meantau = (tau_for_misc-rad)*(tau_for_misc-rad);
 						   b_meantau = (tau_for_misc+rad)*(tau_for_misc+rad);
 						   double c_meantau = (a_meantau+b_meantau)*0.5;
-						   double upper_limit = std::min(sqrt(c_meantau-a_meantau),sqrt(25*sigma_off*sigma_off-a_meantau));
+						   double upper_limit = std::min(sqrt(c_meantau-a_meantau),sqrt(25*cluster.sigma_off()*cluster.sigma_off()-a_meantau));
 						   double meantau_factor = rad*2.*cbl::wrapper::gsl::GSL_integrate_cquad(tau_factor1, 0, upper_limit);
-						   if (c_meantau < 25*sigma_off*sigma_off)
+						   if (c_meantau < 25*cluster.sigma_off()*cluster.sigma_off())
 						     {
-						       double int_left = std::max(0.,sqrt(b_meantau-25*sigma_off*sigma_off));
+						       double int_left = std::max(0.,sqrt(b_meantau-25*cluster.sigma_off()*cluster.sigma_off()));
 						       double int_right = sqrt(b_meantau-c_meantau);						     
 						       meantau_factor += rad*2.*cbl::wrapper::gsl::GSL_integrate_cquad(tau_factor2, int_left, int_right);
 						     }
@@ -155,7 +159,7 @@ double cbl::modelling::densityprofile::nfw_1halo (cbl::cosmology::Cosmology cosm
   
   // Calculate rho_s given r_encl
   double mass_int = cbl::wrapper::gsl::GSL_integrate_cquad(integrate_mass,0.,r_encl);
-  rho_s = mass/mass_int; // scale density (=M0/(4 pi rs^3))
+  rho_s = cluster.mass()/mass_int; // scale density (=M0/(4 pi rs^3))
 
   std::function<double(double)> sigma_cen_fc = [&rscale,&tau,&rho_s,&F,&L] (double radius){
 						 double x = radius/rscale;
@@ -171,21 +175,21 @@ double cbl::modelling::densityprofile::nfw_1halo (cbl::cosmology::Cosmology cosm
   std::function<double(double)> sigma_cen_int = [&sigma_cen_fc] (double rad){
 						  return sigma_cen_fc(rad)*2.*rad;
 						};
-  std::function<double(double)> meansigma_off_int = [&tau_for_misc,&radius,&sigma_off,&sigma_cen_fc,&meantau_factor] (double tau){
+  std::function<double(double)> meansigma_off_int = [&tau_for_misc,&radius,&cluster,&sigma_cen_fc,&meantau_factor] (double tau){
 						      tau_for_misc = tau;
-						      double int_left = std::max(0.,tau-5*sigma_off);
-						      double int_right = std::min(radius,tau+5*sigma_off);
+						      double int_left = std::max(0.,tau-5*cluster.sigma_off());
+						      double int_right = std::min(radius,tau+5*cluster.sigma_off());
 						      return tau * sigma_cen_fc(tau) * cbl::wrapper::gsl::GSL_integrate_cquad(meantau_factor, int_left, int_right);
 						    };
-  std::function<double(double)> sigma_off_int = [&radius,&sigma_off,&a_meantau,&b_meantau,&inv_mis_scale,&tau_factor1,&tau_factor2,&sigma_cen_fc] (double tau){
+  std::function<double(double)> sigma_off_int = [&radius,&cluster,&a_meantau,&b_meantau,&inv_mis_scale,&tau_factor1,&tau_factor2,&sigma_cen_fc] (double tau){
 						  a_meantau = (tau-radius)*(tau-radius);
 						  b_meantau = (tau+radius)*(tau+radius);
 						  double c_meantau = (a_meantau+b_meantau)*0.5;
-						  double upper_limit = std::min(sqrt(c_meantau-a_meantau),sqrt(25*sigma_off*sigma_off-a_meantau));
+						  double upper_limit = std::min(sqrt(c_meantau-a_meantau),sqrt(25*cluster.sigma_off()*cluster.sigma_off()-a_meantau));
 						  double sigma_off_int = radius*2.*cbl::wrapper::gsl::GSL_integrate_cquad(tau_factor1, 0., upper_limit);
-						  if (c_meantau < 25*sigma_off*sigma_off)
+						  if (c_meantau < 25*cluster.sigma_off()*cluster.sigma_off())
 						    {
-						      double int_left = std::max(0.,sqrt(b_meantau-25*sigma_off*sigma_off));
+						      double int_left = std::max(0.,sqrt(b_meantau-25*cluster.sigma_off()*cluster.sigma_off()));
 						      double int_right = sqrt(b_meantau-c_meantau);						     
 						      sigma_off_int += radius*2.*cbl::wrapper::gsl::GSL_integrate_cquad(tau_factor2, int_left, int_right);
 						    }
@@ -198,13 +202,13 @@ double cbl::modelling::densityprofile::nfw_1halo (cbl::cosmology::Cosmology cosm
   double deltasigma_cen = meansigma_cen - sigma_cen;
   
   double deltasigma_1h = 0, meansigma_off = 0, integrated_sigma_off = 0, deltasigma_off = 0;
-  if (f_off <= 1.e-5 || sigma_off <= 1.e-5){
+  if (cluster.f_off() <= 1.e-5 || cluster.sigma_off() <= 1.e-5){
     deltasigma_1h = deltasigma_cen; 
   }else{
-    meansigma_off = cbl::wrapper::gsl::GSL_integrate_cquad(meansigma_off_int,0.,radius+5.*sigma_off) *2./cbl::par::pi/sigma_off/sigma_off/radius/radius;
-    integrated_sigma_off = cbl::wrapper::gsl::GSL_integrate_cquad(sigma_off_int,std::max(0., radius-5*sigma_off),radius+5.*sigma_off) /radius/cbl::par::pi/sigma_off/sigma_off;
+    meansigma_off = cbl::wrapper::gsl::GSL_integrate_cquad(meansigma_off_int,0.,radius+5.*cluster.sigma_off()) *2./cbl::par::pi/cluster.sigma_off()/cluster.sigma_off()/radius/radius;
+    integrated_sigma_off = cbl::wrapper::gsl::GSL_integrate_cquad(sigma_off_int,std::max(0., radius-5*cluster.sigma_off()),radius+5.*cluster.sigma_off()) /radius/cbl::par::pi/cluster.sigma_off()/cluster.sigma_off();
     deltasigma_off = meansigma_off - integrated_sigma_off;
-    deltasigma_1h = (1-f_off)*deltasigma_cen+f_off*deltasigma_off;
+    deltasigma_1h = (1-cluster.f_off())*deltasigma_cen+cluster.f_off()*deltasigma_off;
   }
     
   return deltasigma_1h;
@@ -220,144 +224,25 @@ std::vector<double> cbl::modelling::densityprofile::nfw_1halo_allBins (const std
   // redefine the cosmology
   cbl::cosmology::Cosmology cosmo = *pp->cosmology;
 
-  // set the parameters
+  // redefine the cluster object
+  cbl::catalogue::Cluster cluster = *pp->cluster;
+
+  // set the cosmological parameters
   for (size_t i=0; i<pp->Cpar.size(); ++i)
     cosmo.set_parameter(pp->Cpar[i], parameter[i]);
   
-  double k = 0;
-  for (size_t i=pp->Cpar.size(); i<pp->Ppar.size()+pp->Cpar.size(); ++i){
-    (*pp->profile).set_parameter_from_string(pp->Ppar_string[k], parameter[i]);
-    k ++;
-  }
+  // set the cluster parameters
+  cluster.set_concentration(parameter[pp->Cpar.size()]);
+  cluster.set_mass(pow(pp->logM_base, parameter[pp->Cpar.size()+1])*1.e14);
+  cluster.set_f_off(parameter[pp->Cpar.size()+2]);
+  cluster.set_sigma_off(parameter[pp->Cpar.size()+3]);
 
   std::vector<double> density_profile(radius.size());
   
   for (size_t j=0; j<radius.size(); j++)
-    density_profile[j] = nfw_1halo(cosmo,radius[j],pp->redshift,pp->contrast,pp->trunc_fact,(*pp->profile).get_parameter_from_string("concentration"),pow(10,(*pp->profile).get_parameter_from_string("LogM"))*1.e14,(*pp->profile).get_parameter_from_string("f_off"),(*pp->profile).get_parameter_from_string("sigma_off"));
+    density_profile[j] = nfw_1halo(cosmo, cluster, radius[j], pp->redshift, pp->contrast, pp->trunc_fact);
 
   return density_profile;
 }
 
 // ===========================================================================================
-
-std::string cbl::modelling::densityprofile::ProfileParameter_name (const ProfileParameter parameter)
-{
-  string name;
-  switch (parameter) {
-  
-  case (ProfileParameter::_concentration_):
-    name = "concentration";
-    break;
-  
-  case (ProfileParameter::_LogM_):
-    name = "LogM";
-    break;
-  
-  case (ProfileParameter::_f_off_):
-    name = "f_off";
-    break;
-
-  case (ProfileParameter::_sigma_off_):
-    name = "sigma_off";
-    break;
-  
-  default:
-    ErrorCBL("no such a variable in the list!", "ProfileParameter_name", "Modelling_DensityProfile.cpp");
-  }
-   
-  return name;
-}
-
-// ===========================================================================================
-
-double cbl::modelling::densityprofile::Modelling_DensityProfile::value (const ProfileParameter parameter) const
-{
-  double param_value;
-   
-  switch (parameter) {  
-  case (ProfileParameter::_concentration_):
-    param_value = m_concentration;
-    break;
-  
-  case (ProfileParameter::_LogM_):
-    param_value = m_LogM;
-    break;
-  
-  case (ProfileParameter::_f_off_):        
-    param_value = m_f_off;
-    break;
-
-  case (ProfileParameter::_sigma_off_):        
-    param_value = m_sigma_off;
-    break;
-     
-  default:
-    ErrorCBL("no such a variable in the list!", "value", "Modelling_DensityProfile.cpp");
-  }
-   
-  return param_value;
-}
-
-// ===========================================================================================
-
-void cbl::modelling::densityprofile::Modelling_DensityProfile::set_parameter(const ProfileParameter parameter, const double value)
-{
-  switch (parameter) {
-     
-  case (ProfileParameter::_concentration_):
-    set_concentration(value);
-    break;
-
-  case (ProfileParameter::_LogM_):
-    set_LogM(value);
-    break;
-
-  case (ProfileParameter::_f_off_):
-    set_f_off(value);
-    break;
-
-  case (ProfileParameter::_sigma_off_):
-    set_sigma_off(value);
-    break;
-
-  default:
-    ErrorCBL("no such a variable in the list!", "set_parameter", "Modelling_DensityProfile.cpp");
-  }
-}
-
-
-// ===========================================================================================
-
-void cbl::modelling::densityprofile::Modelling_DensityProfile::set_parameter_from_string(const std::string parameter, const double value)
-{
-  if (parameter=="concentration")
-    set_concentration(value);
-  else if (parameter=="LogM")
-    set_LogM(value);
-  else if (parameter=="f_off")
-    set_f_off(value);
-  else if (parameter=="sigma_off")
-    set_sigma_off(value);
-  else
-    ErrorCBL("no such a variable in the list!", "set_parameter_from_string", "Modelling_DensityProfile.cpp");
-}
-
-
-// ===========================================================================================
-
-double cbl::modelling::densityprofile::Modelling_DensityProfile::get_parameter_from_string(const std::string parameter) const
-{
-  double returned_value = 0;
-  if (parameter=="concentration")
-    returned_value = concentration();
-  else if (parameter=="LogM")
-    returned_value = LogM();
-  else if (parameter=="f_off")
-    returned_value = f_off();
-  else if (parameter=="sigma_off")
-    returned_value = sigma_off();
-  else
-    ErrorCBL("no such a variable in the list!", "get_parameter_from_string", "Modelling_DensityProfile.cpp");
-  
-  return returned_value;
-}

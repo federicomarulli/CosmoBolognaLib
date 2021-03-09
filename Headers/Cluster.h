@@ -56,6 +56,9 @@ namespace cbl {
 
       /// cluster mass
       double m_mass;
+      
+      /// cluster mass logarithm (undefined base here)
+      double m_logM; 
     
       /// cluster mass proxy
       double m_mass_proxy;
@@ -65,6 +68,26 @@ namespace cbl {
       
       /// cluster linear bias
       double m_bias;
+      
+      /// cluster concentration
+      double m_concentration;
+      
+      /// fraction of miscentered cluster population
+      double m_f_off;
+      
+      /// rms of the miscentered distribution
+      double m_sigma_off;
+      
+      /// normalization of the mass-observable scaling relation
+      double m_alpha_scaling_rel;
+      
+      /// slope of the mass-observable scaling relation
+      double m_beta_scaling_rel;
+      
+      /// z evolution factor of the mass-observable scaling relation
+      double m_gamma_scaling_rel;
+      
+      /// 
       
     public:
     
@@ -78,7 +101,7 @@ namespace cbl {
        *  
        */
       Cluster ()
-	: Object(), m_mass(par::defaultDouble), m_mass_proxy(par::defaultDouble), m_mass_proxy_error(par::defaultDouble), m_bias(par::defaultDouble) {}
+	: Object(), m_mass(par::defaultDouble), m_logM(par::defaultDouble), m_mass_proxy(par::defaultDouble), m_mass_proxy_error(par::defaultDouble), m_bias(par::defaultDouble), m_concentration(par::defaultDouble), m_f_off(par::defaultDouble), m_sigma_off(par::defaultDouble), m_alpha_scaling_rel(par::defaultDouble), m_beta_scaling_rel(par::defaultDouble), m_gamma_scaling_rel(par::defaultDouble) {}
 
       /**
        *  @brief constructor that uses comoving coordinates
@@ -112,12 +135,25 @@ namespace cbl {
        *
        *  @param mass_proxy_error the cluster mass proxy error
        *
-       *  @param bias the cluster linear bias
+       *  @param bias cluster linear bias
        *
+       *  @param logM the cluster mass logarithm
+       *
+       *  @param conc concentration
+       *
+       *  @param f_off fraction of miscentered cluster population
+       * 
+       *  @param sigma_off rms of the miscentered distribution
+       *
+       *  @param alpha_scaling_rel normalization of the mass-observable scaling relation
+       *
+       *  @param beta_scaling_rel slope of the mass-observable scaling relation
+       *
+       *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
        *  
        */
-      Cluster (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
+      Cluster (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
+	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
 
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -161,10 +197,24 @@ namespace cbl {
        *
        *  @param bias the cluster linear bias
        *
+       *  @param logM the cluster mass logarithm
+       *
+       *  @param conc concentration
+       *
+       *  @param f_off fraction of miscentered cluster population
+       * 
+       *  @param sigma_off rms of the miscentered distribution
+       *
+       *  @param alpha_scaling_rel normalization of the mass-observable scaling relation
+       *
+       *  @param beta_scaling_rel slope of the mass-observable scaling relation
+       *
+       *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
+       *
        *  
        */
-      Cluster (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
+      Cluster (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
+	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -200,10 +250,24 @@ namespace cbl {
        *
        *  @param bias the cluster linear bias
        *
+       *  @param logM the cluster mass logarithm
+       *
+       *  @param conc concentration
+       *
+       *  @param f_off fraction of miscentered cluster population
+       * 
+       *  @param sigma_off rms of the miscentered distribution
+       *
+       *  @param alpha_scaling_rel normalization of the mass-observable scaling relation
+       *
+       *  @param beta_scaling_rel slope of the mass-observable scaling relation
+       *
+       *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
+       *
        *  
        */
-      Cluster (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
+      Cluster (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
+	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -242,10 +306,24 @@ namespace cbl {
        *
        *  @param bias the cluster linear bias
        *
+       *  @param logM the cluster mass logarithm
+       *
+       *  @param conc concentration
+       *
+       *  @param f_off fraction of miscentered cluster population
+       * 
+       *  @param sigma_off rms of the miscentered distribution
+       *
+       *  @param alpha_scaling_rel normalization of the mass-observable scaling relation
+       *
+       *  @param beta_scaling_rel slope of the mass-observable scaling relation
+       *
+       *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
+       *
        *  
        */
-      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
+      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
+	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -286,10 +364,24 @@ namespace cbl {
        *
        *  @param bias the cluster linear bias
        *
+       *  @param logM the cluster mass logarithm
+       *
+       *  @param conc concentration
+       *
+       *  @param f_off fraction of miscentered cluster population
+       * 
+       *  @param sigma_off rms of the miscentered distribution
+       *
+       *  @param alpha_scaling_rel normalization of the mass-observable scaling relation
+       *
+       *  @param beta_scaling_rel slope of the mass-observable scaling relation
+       *
+       *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
+       *
        *  
        */
-      Cluster (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
+      Cluster (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
+	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -331,10 +423,24 @@ namespace cbl {
        *
        *  @param bias the cluster linear bias
        *
+       *  @param logM the cluster mass logarithm
+       *
+       *  @param conc concentration
+       *
+       *  @param f_off fraction of miscentered cluster population
+       * 
+       *  @param sigma_off rms of the miscentered distribution
+       *
+       *  @param alpha_scaling_rel normalization of the mass-observable scaling relation
+       *
+       *  @param beta_scaling_rel slope of the mass-observable scaling relation
+       *
+       *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
+       *
        *  
        */
-      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
+      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
+	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
 
       /**
        *  @brief constructor that uses both comoving and observed
@@ -380,10 +486,24 @@ namespace cbl {
        *
        *  @param bias the cluster bias
        *
+       *  @param logM the cluster mass logarithm
+       *
+       *  @param conc concentration
+       *
+       *  @param f_off fraction of miscentered cluster population
+       * 
+       *  @param sigma_off rms of the miscentered distribution
+       *
+       *  @param alpha_scaling_rel normalization of the mass-observable scaling relation
+       *
+       *  @param beta_scaling_rel slope of the mass-observable scaling relation
+       *
+       *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
+       *
        *  
        */
-      Cluster (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble) 
-	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias) {}
+      Cluster (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
+	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
       
       /**
        *  @brief default destructor
@@ -404,6 +524,13 @@ namespace cbl {
        */
       double mass () const override
       { return m_mass; }
+      
+      /**
+       *  @brief get the private member \e m_logM
+       *  @return the logarithm of the cluster mass
+       */
+      double logM () const override
+      { return m_logM; }
 
       /**
        *  @brief get the private member \e m_mass_proxy
@@ -425,6 +552,49 @@ namespace cbl {
        */
       double bias () const override
       { return m_bias; }
+      
+      /**
+       *  @brief get the private member \e m_concentration
+       *  @return the concentration of the cluster
+       */
+      double concentration () const override
+      { return m_concentration; }
+      
+      /**
+       *  @brief get the private member \e m_f_off
+       *  @return the miscentered cluster fraction
+       */
+      double f_off () const override
+      { return m_f_off; }
+      
+      /**
+       *  @brief get the private member \e m_sigma_off
+       *  @return the rms of the miscentered cluster population
+       */
+      double sigma_off () const override
+      { return m_sigma_off; }
+      
+      /**
+       *  @brief get the private member \e m_alpha_scaling_rel
+       *  @return normalization of the mass-observable scaling relation
+       */
+      double alpha_scaling_rel () const override
+      { return m_alpha_scaling_rel; }
+      
+      /**
+       *  @brief get the private member \e m_beta_scaling_rel
+       *  @return slope of the mass-observable scaling relation
+       */
+      double  beta_scaling_rel () const override
+      { return m_beta_scaling_rel; }
+      
+      /**
+       *  @brief get the private member \e m_gamma_scaling_rel
+       *  @return z evolution factor of the mass-observable scaling relation
+       */
+      double gamma_scaling_rel () const override
+      { return m_gamma_scaling_rel; }
+      
 
       ///@}
   
@@ -440,6 +610,13 @@ namespace cbl {
        */
       void set_mass (const double mass=par::defaultDouble) override
       { m_mass = mass; }
+      
+      /**
+       *  @brief set the private member \e m_logM
+       *  @param logM the log-mass of the cluster
+       */
+      void set_logM (const double logM=par::defaultDouble) override
+      { m_logM = logM; }
 
       /**
        *  @brief set the private member \e m_mass_proxy
@@ -461,6 +638,48 @@ namespace cbl {
        */
       void set_bias (const double bias=par::defaultDouble) override
       { m_bias = bias; }
+      
+      /**
+       *  @brief set the private member \e m_concentration
+       *  @param conc concentration
+       */
+      void set_concentration (const double conc=par::defaultDouble) override
+      { m_concentration = conc; }
+      
+      /**
+       *  @brief set the private member \e m_f_off
+       *  @param f_off f_off
+       */
+      void set_f_off (const double f_off=par::defaultDouble) override
+      { m_f_off = f_off; }
+      
+      /**
+       *  @brief set the private member \e m_sigma_off
+       *  @param sigma_off sigma_off
+       */
+      void set_sigma_off (const double sigma_off=par::defaultDouble) override
+      { m_sigma_off = sigma_off; }
+      
+      /**
+       *  @brief set the private member \e m_alpha_scaling_rel
+       *  @param alpha normalization of the cluster mass-observable scaling relation
+       */
+      void set_alpha_scaling_rel (const double alpha=par::defaultDouble) override
+      { m_alpha_scaling_rel = alpha; }
+      
+      /**
+       *  @brief set the private member \e m_beta_scaling_rel
+       *  @param beta slope of the cluster mass-observable scaling relation
+       */
+      void set_beta_scaling_rel (const double beta=par::defaultDouble) override
+      { m_beta_scaling_rel = beta; }
+      
+      /**
+       *  @brief set the private member \e m_gamma_scaling_rel
+       *  @param gamma z evolution factor of the cluster mass-observable scaling relation
+       */
+      void set_gamma_scaling_rel (const double gamma=par::defaultDouble) override
+      { m_gamma_scaling_rel = gamma; }
 
       ///@}
 
@@ -477,6 +696,14 @@ namespace cbl {
        */
       bool isSet_mass () override
       { return (cbl::isSet(m_mass)) ? true : false; }
+      
+      /**
+       *  @brief check if the private member \e m_logM is set
+       *
+       *  @return true if set; false otherwise
+       */
+      bool isSet_logM () override
+      { return (cbl::isSet(m_logM)) ? true : false; }
       
       /**
        *  @brief check if the private member \e m_mass_proxy is set
@@ -502,6 +729,54 @@ namespace cbl {
        */
       bool isSet_bias () override
       { return (cbl::isSet(m_bias)) ? true : false; }
+      
+      /**
+       *  @brief check if the private member \e m_concentration is set
+       *
+       *  @return true if set; false otherwise
+       */
+      bool isSet_concentration () override
+      { return (cbl::isSet(m_concentration)) ? true : false; }
+      
+      /**
+       *  @brief check if the private member \e m_f_off is set
+       *
+       *  @return true if set; false otherwise
+       */
+      bool isSet_f_off () override
+      { return (cbl::isSet(m_f_off)) ? true : false; }
+      
+      /**
+       *  @brief check if the private member \e m_sigma_off is set
+       *
+       *  @return true if set; false otherwise
+       */
+      bool isSet_sigma_off () override
+      { return (cbl::isSet(m_sigma_off)) ? true : false; }
+      
+      /**
+       *  @brief check if the private member \e m_alpha_scaling_rel is set
+       *
+       *  @return true if set; false otherwise
+       */
+      bool isSet_alpha_scaling_rel () override
+      { return (cbl::isSet(m_alpha_scaling_rel)) ? true : false; }
+      
+      /**
+       *  @brief check if the private member \e m_beta_scaling_rel is set
+       *
+       *  @return true if set; false otherwise
+       */
+      bool isSet_beta_scaling_rel () override
+      { return (cbl::isSet(m_beta_scaling_rel)) ? true : false; }
+      
+      /**
+       *  @brief check if the private member \e m_gamma_scaling_rel is set
+       *
+       *  @return true if set; false otherwise
+       */
+      bool isSet_gamma_scaling_rel () override
+      { return (cbl::isSet(m_gamma_scaling_rel)) ? true : false; }
 
       ///@}
       

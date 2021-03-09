@@ -27,6 +27,7 @@
 %include Lib/Modelling.i
 %include Lib/Modelling_Cosmology.i
 %include Lib/Modelling_DensityProfile.i
+%include Lib/Modelling_MassObservableRelation.i
 %include Lib/Modelling_NumberCounts.i
 %include Lib/Modelling_TwoPointCorrelation.i
 %include Lib/Modelling_ThreePointCorrelation.i

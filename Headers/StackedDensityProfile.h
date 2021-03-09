@@ -62,8 +62,9 @@ namespace cbl {
        *
        *  @brief The class StackedDensityProfile
        *
-       *  This is the base class used to measure the 
-       *  stacked density profile of galaxy clusters
+       *  Class used to measure the stacked surface density profiles of galaxy clusters,
+       *  i.e. \f$\Delta\Sigma(r)\f$ [\f$h\f$ M\f$_\odot\f$/pc\f$^2\f$].
+       *  Cosmological units are forced.
        *
        */
       class StackedDensityProfile : public Measure {
@@ -195,17 +196,13 @@ namespace cbl {
 	 *  @param z_proxy_bin vector containing the redshift
 	 *  and proxy bins to be stored, respectively
 	 *
-	 *  @param fits_file the fits file (including the path)
-	 *
-	 *  @param cluster_file the cluster file (including the path)
-	 *
 	 *  @return true if the stacking file already exists
 	 *
 	 */
-	bool m_check_file(const std::string checked_file, const std::vector<int> z_proxy_bin, const std::string fits_file, const std::string cluster_file);
+	bool m_check_file(const std::string checked_file, const std::vector<int> z_proxy_bin);
 	
 	/**
-	 *  @brief write the results obtained from the stacking
+	 *  @brief write the results obtained from the stacking on file
 	 *
 	 *  @param output_dir output directory
 	 *
@@ -422,28 +419,29 @@ namespace cbl {
 	   *  @brief constructor performing the stacking 
 	   *  by reading a .fits galaxy file and a cluster file
 	   *
-	   *  @param cosm the cosmological model
+	   *  @param cosm cosmological model
 	   *
-	   *  @param gal_cat the catalogue of galaxies
+	   *  @param gal_cat catalogue of galaxies
 	   *
-	   *  @param clu_cat the catalogue of galaxy clusters
+	   *  @param clu_cat catalogue of galaxy clusters
 	   *
-	   *  @param colour_sel the colour selection criterion. 
+	   *  @param colour_sel colour selection criterion. 
 	   *  The possible choices are : "Oguri" (Oguri et al. 2012).
 	   *
-	   *  @param zphot_sel the phot-z selection criterion. 
+	   *  @param zphot_sel photo-z selection criterion. 
 	   *  The possible choices are : "Odds", "NoOdds".
 	   *  If "NoOdds" is chosen, the selection is not based on the odds.
 	   *
 	   *  @param zphot_sel_pars array of 4 parameters for the 
-	   *  phot-z selection, following this order : 1) additive term to
-	   *  the cluster redshift, i.e. how much the minimum galaxy
-	   *  z (in the tail of the relative posterior) must be higher 
-	   *  than the cluster z, 2) minimum value for the galaxy mean z, 
-	   *  3) maximum value for the galaxy mean z, 4) minimum value
-	   *  for the ODDS parameter.
+	   *  phot-z selection, following this order : 1) additive term, \f$\Delta z\f$, to
+	   *  the cluster redshift, i.e. how much the minimum galaxy redshift,
+	   *  \f$z_g\f$, (in the tail of the relative posterior) must be higher 
+	   *  than the cluster redshift, \f$z_c\f$, that is \f$z_g > z_c+\Delta z\f$
+	   *  , 2) minimum value for the galaxy mean redshift, 
+	   *  3) maximum value for the galaxy mean redshift, 4) minimum value
+	   *  for the ODDS parameter (if the ODDS are considered).
 	   *
-	   *  @param logic_sel the logic operator between
+	   *  @param logic_sel logic operator between
 	   *  colour and phot-z selection criteria ("and" or "or")
 	   *
 	   *  @param z_binEdges redshift bin edges
@@ -458,15 +456,16 @@ namespace cbl {
 	   *
 	   *  @param nRad number of cluster radial bins
 	   *
-	   *  @param log_rad if true radial bins logarithmically
-	   *  spaced
+	   *  @param log_rad if true, the radial bins are logarithmically
+	   *  spaced. Otherwise, a linear binning is used
 	   *
-	   *  @param SN_min the minimum signal-to-noise considered 
+	   *  @param SN_min minimum signal-to-noise considered 
 	   *  for the clusters
 	   *
 	   *  @param pix_size pixel size in deg
 	   *
-	   *  @param n_resampling resampling regions for bootstrap
+	   *  @param n_resampling number of resampling regions for the bootstrap
+	   *  procedure used to evaluate the uncertainty on \f$\Delta\Sigma(r)\f$
 	   *
 	   *  @param rad_alpha slope for the observable weighted mean
 	   *
@@ -483,27 +482,35 @@ namespace cbl {
 	///@{
 	
 	/**
-	 *  @brief function for the measure of the stacked profile 
+	 *  @brief measure the stacked profiles in all the bins of redshift and 
+	 *  mass proxy, providing in output the stacked profile in the redshift 
+	 *  and proxy bins chosen through the parameter z_proxy_bin.
 	 *
-	 *  @param z_proxy_bin vector containing the redshift
+	 *  Note that with this function the stacking is performed in all the
+	 *  redshift and proxy bins, and the results are written on file. 
+	 *
+	 *  In the first line of the header of such file, all the 
+	 *  parameters used for the stacking (colour and redshift selections,
+	 *  binnings, ...) are written, as well as the cosmological parameters. 
+	 *
+	 *  If such a file has already been written, the code reads it instead
+	 *  of performing again the stacking procedure.
+	 *
+	 *  @param z_proxy_bin vector containing the indices of the redshift
 	 *  and proxy bins to be stored, respectively
 	 *
-	 *  @param output_dir output directory
-	 *
-	 *  @param fits_file the fits file
-	 *
-	 *  @param cluster_file the cluster file
-	 *
-	 *  @param errorType the type of error assigned to the 
-	 *  density profile (only the diagonal of the covariance
-	 *  matrix is considered)
+	 *  @param output_dir output directory for the output_file
 	 *
 	 *  @param output_file output file, containing the
 	 *  stacked profiles in all the redshift and mass 
 	 *  proxy bins
 	 *
+	 *  @param errorType the type of error assigned to the 
+	 *  density profile (only the diagonal of the covariance
+	 *  matrix is considered)
+	 *
 	 */
-	void measure(const std::vector<int> z_proxy_bin, const std::string output_dir, const std::string output_file, const std::string fits_file, const std::string cluster_file, const ErrorType errorType=ErrorType::_Bootstrap_);
+	void measure(const std::vector<int> z_proxy_bin, const std::string output_dir, const std::string output_file, const ErrorType errorType=ErrorType::_Bootstrap_);
 	
 	///@}
 	
@@ -513,7 +520,8 @@ namespace cbl {
 	///@{
 	
 	/**
-	 *  @brief write to file the measure output
+	 *  @brief write on file the measure in a given
+	 *  bin of redshift and mass proxy
 	 *
 	 *  @param dir output directory
 	 *

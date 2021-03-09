@@ -221,6 +221,7 @@ Dir_TWOP = Measure/TwoPointCorrelation/
 Dir_THREEP = Measure/ThreePointCorrelation/
 Dir_MODEL_GLOB = Modelling/Global/
 Dir_MODEL_COSM = Modelling/Cosmology/
+Dir_MODEL_MASSOBSERVABLEREL = Modelling/MassObservableRelation/
 Dir_MODEL_DENSITYPROFILE = Modelling/DensityProfile/
 Dir_MODEL_NC = Modelling/NumberCounts/
 Dir_MODEL_TWOP = Modelling/TwoPointCorrelation/
@@ -249,6 +250,7 @@ dir_TWOP = $(addprefix $(PWD)/,$(Dir_TWOP))
 dir_THREEP = $(addprefix $(PWD)/,$(Dir_THREEP))
 dir_MODEL_GLOB = $(addprefix $(PWD)/,$(Dir_MODEL_GLOB))
 dir_MODEL_COSM = $(addprefix $(PWD)/,$(Dir_MODEL_COSM))
+dir_MODEL_MASSOBSERVABLEREL = $(addprefix $(PWD)/,$(Dir_MODEL_MASSOBSERVABLEREL))
 dir_MODEL_DENSITYPROFILE = $(addprefix $(PWD)/,$(Dir_MODEL_DENSITYPROFILE))
 dir_MODEL_NC = $(addprefix $(PWD)/,$(Dir_MODEL_NC))
 dir_MODEL_TWOP = $(addprefix $(PWD)/,$(Dir_MODEL_TWOP))
@@ -316,6 +318,8 @@ OBJ_MODEL_GLOB = $(dir_MODEL_GLOB)Modelling.o  $(dir_MODEL_GLOB)Modelling1D.o $(
 
 OBJ_MODEL_COSM = $(dir_MODEL_COSM)ModelFunction_Cosmology.o $(dir_MODEL_COSM)Modelling_Cosmology.o
 
+OBJ_MODEL_MASSOBSERVABLEREL =  $(dir_MODEL_MASSOBSERVABLEREL)Modelling_MassObservableRelation.o
+
 OBJ_MODEL_DENSITYPROFILE =  $(dir_MODEL_DENSITYPROFILE)Modelling_DensityProfile.o
 
 OBJ_MODEL_NC =  $(dir_MODEL_NC)Modelling_NumberCounts.o $(dir_MODEL_NC)ModelFunction_NumberCounts.o $(dir_MODEL_NC)Modelling_NumberCounts1D.o $(dir_MODEL_NC)Modelling_NumberCounts2D.o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Redshift.o $(dir_MODEL_NC)Modelling_NumberCounts1D_Redshift.o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Mass.o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Size.o $(dir_MODEL_NC)Modelling_NumberCounts1D_Mass.o $(dir_MODEL_NC)ModelFunction_NumberCounts2D_RedshiftMass.o $(dir_MODEL_NC)Modelling_NumberCounts2D_RedshiftMass.o $(dir_MODEL_NC)Modelling_NumberCounts1D_Size.o
@@ -328,14 +332,14 @@ OBJ_GLOB = $(dir_GLOB)FuncCosmology.o $(dir_GLOB)Func.o $(dir_GLOB)SubSample.o $
 
 OBJ_PARF = $(dir_PARF)ReadParameters.o $(dir_PARF)ParameterFile.o
 
-OBJ_CBL = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_STACKPROFILE) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_DENSITYPROFILE) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_PARF)
+OBJ_CBL = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_STACKPROFILE) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_MASSOBSERVABLEREL) $(OBJ_MODEL_DENSITYPROFILE) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_PARF)
 
 OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/fortran/Release/*.o $(PWD)/External/CLASS/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o $(OBJ_CBL) $(PWD)/External/CPT_Library/*.o $(PWD)/External/CAMB_SPT_private/*.o
 
 
 # objects for python compilation -> if OBJ_PYTHON=OBJ_CBL then all the CBL will be converted in python modules
 
-OBJ_PYTHON = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_STACKPROFILE) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_DENSITYPROFILE) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_PARF)
+OBJ_PYTHON = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_STACKPROFILE) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_MASSOBSERVABLEREL) $(OBJ_MODEL_DENSITYPROFILE) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_PARF)
 
 
 ##### CBL source files #####
@@ -406,6 +410,8 @@ ALL:
 	make -j3 libMODEL_COSM
 	$(call colorecho, "\n"Compiling the library: libMODEL_DENSITYPROFILE... "\n")
 	make -j3 libMODEL_DENSITYPROFILE
+	$(call colorecho, "\n"Compiling the library: libMODEL_MASSOBSERVABLEREL... "\n")
+	make -j3 libMODEL_MASSOBSERVABLEREL
 	$(call colorecho, "\n"Compiling the library: libMODEL_NC... "\n")
 	make -j3 libMODEL_NC
 	$(call colorecho, "\n"Compiling the library: libMODEL_TWOP... "\n")
@@ -484,22 +490,25 @@ libMODEL_COSM: $(OBJ_MODEL_COSM) $(PWD)/Makefile
 	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_COSM.$(ES) $(OBJ_MODEL_COSM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB
 
 libMODEL_DENSITYPROFILE: $(OBJ_MODEL_DENSITYPROFILE) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_DENSITYPROFILE.$(ES) $(OBJ_MODEL_DENSITYPROFILE) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_DENSITYPROFILE.$(ES) $(OBJ_MODEL_DENSITYPROFILE) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM 
+
+libMODEL_MASSOBSERVABLEREL: $(OBJ_MODEL_MASSOBSERVABLEREL) $(PWD)/Makefile
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_MASSOBSERVABLEREL.$(ES) $(OBJ_MODEL_MASSOBSERVABLEREL) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE
 
 libMODEL_NC: $(OBJ_MODEL_NC) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_NC.$(ES) $(OBJ_MODEL_NC) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_NC.$(ES) $(OBJ_MODEL_NC) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_MASSOBSERVABLEREL -lMODEL_DENSITYPROFILE
 
 libMODEL_TWOP: $(OBJ_MODEL_TWOP) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_TWOP.$(ES) $(OBJ_MODEL_TWOP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_TWOP.$(ES) $(OBJ_MODEL_TWOP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_MASSOBSERVABLEREL -lMODEL_DENSITYPROFILE -lMODEL_NC
 
 libMODEL_THREEP: $(OBJ_MODEL_THREEP) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_THREEP.$(ES) $(OBJ_MODEL_THREEP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_THREEP.$(ES) $(OBJ_MODEL_THREEP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_MASSOBSERVABLEREL -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP
 
 libGLOB: $(OBJ_GLOB) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libGLOB.$(ES) $(OBJ_GLOB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libGLOB.$(ES) $(OBJ_GLOB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_MASSOBSERVABLEREL -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP
 
 libPARF: $(OBJ_PARF) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libPARF.$(ES) $(OBJ_PARF) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP -lGLOB
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libPARF.$(ES) $(OBJ_PARF) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_MASSOBSERVABLEREL -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP -lGLOB
 
 libCBL: $(OBJ_CBL) $(PWD)/Makefile
 	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCBL.$(ES) $(OBJ_CBL) $(CUBA_LIB) $(FLAGS_CCFITS) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
@@ -655,7 +664,7 @@ cleanpy:
 
 
 cleanTEMP:
-	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_KERNEL)*~ $(dir_WRAP)*~ $(dir_FUNCGRID)*~ $(dir_FFT)*~ $(dir_RAN)*~ $(dir_FUNC)*~ $(dir_DATA)*~ $(dir_FIELD)*~ $(dir_HIST)*~ $(dir_DISTR)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_NC)*~ $(dir_STACKPROFILE)*~ $(dir_TWOP)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_NC)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_PARF)*~ $(dir_H)*~ $(PWD)/\#* $(dir_KERNEL)\#* $(dir_WRAP)\#* $(dir_FUNCGRID)\#* $(dir_FFT)\#* $(dir_RAN)\#* $(dir_FUNC)\#* $(dir_DATA)\#* $(dir_FIELD)\#* $(dir_HIST)\#*  $(dir_DISTR)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_DENSITYPROFILE)\#* $(dir_MODEL_NC)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_PARF)\#* $(dir_H)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
+	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_KERNEL)*~ $(dir_WRAP)*~ $(dir_FUNCGRID)*~ $(dir_FFT)*~ $(dir_RAN)*~ $(dir_FUNC)*~ $(dir_DATA)*~ $(dir_FIELD)*~ $(dir_HIST)*~ $(dir_DISTR)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_NC)*~ $(dir_STACKPROFILE)*~ $(dir_TWOP)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_NC)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_PARF)*~ $(dir_H)*~ $(PWD)/\#* $(dir_KERNEL)\#* $(dir_WRAP)\#* $(dir_FUNCGRID)\#* $(dir_FFT)\#* $(dir_RAN)\#* $(dir_FUNC)\#* $(dir_DATA)\#* $(dir_FIELD)\#* $(dir_HIST)\#*  $(dir_DISTR)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_MASSOBSERVABLEREL)\#* $(dir_MODEL_DENSITYPROFILE)\#* $(dir_MODEL_NC)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_PARF)\#* $(dir_H)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
 
 clean:
 	make cleanExamples
@@ -1115,6 +1124,13 @@ $(dir_MODEL_COSM)Modelling_Cosmology.o: $(dir_MODEL_COSM)Modelling_Cosmology.cpp
 
 $(dir_MODEL_COSM)ModelFunction_Cosmology.o: $(dir_MODEL_COSM)ModelFunction_Cosmology.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_COSM)ModelFunction_Cosmology.cpp -o $(dir_MODEL_COSM)ModelFunction_Cosmology.o
+
+
+####################################################################
+
+
+$(dir_MODEL_MASSOBSERVABLEREL)Modelling_MassObservableRelation.o: $(dir_MODEL_MASSOBSERVABLEREL)Modelling_MassObservableRelation.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_MASSOBSERVABLEREL)Modelling_MassObservableRelation.cpp -o $(dir_MODEL_MASSOBSERVABLEREL)Modelling_MassObservableRelation.o
 
 
 ####################################################################
