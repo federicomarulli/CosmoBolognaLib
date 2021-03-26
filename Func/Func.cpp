@@ -2144,7 +2144,7 @@ double cbl::jl_distance_average (const double kk, const int order, const double 
     return rr * rr * gsl_sf_bessel_jl(order, kk*rr);
   };
 
-  double Int = cbl::wrapper::gsl::GSL_integrate_qag(integrand, r_down, r_up);
+  double Int = cbl::wrapper::gsl::GSL_integrate_cquad(integrand, r_down, r_up, 1.e-5, 1.e-3, 10000);
 
   /*
   cbl::glob::STR_jl_distance_average str;
@@ -2345,26 +2345,44 @@ double cbl::three_spherical_bessel_integral (const double r1, const double r2, c
 // ============================================================================
 
 
-double cbl::average_three_spherical_bessel_integral (const double r1_min, const double r1_max, const double r2_min, const double r2_max, const double r3, const int L1, const int L2, const int L3)
+double cbl::average_three_spherical_bessel_integral (const double r1_min, const double r1_max, const double r2_min, const double r2_max, const double r3, const int L1, const int L2, const int L3, const bool direct)
 {
-    // limits of the integral
-    int ndim = 2;
-    std::vector<std::vector<double>> integration_limits(ndim);
-    integration_limits[0] = {pow(r1_min, 3), pow(r1_max, 3)};
-    integration_limits[1] = {pow(r2_min, 3), pow(r2_max, 3)};
+    if (direct) {
+        // limits of the integral
+        double log_k_min = log(1.e-10);
+        double log_k_max = log(1.e10);
 
-    double V1 = pow(r1_max, 3)-pow(r1_min, 3);
-    double V2 = pow(r2_max, 3)-pow(r2_min, 3);
+        auto integrand = [&] (const double log_k) 
+        {
+            double kk = exp(log_k);
+            double j1 = jl_distance_average (kk, L1, r1_min, r1_max);
+            double j2 = jl_distance_average (kk, L2, r2_min, r2_max);
+            double j3 = jl(r3*kk, L3);
 
-    // wrapper to CUBA libraries
+            return pow(kk, 3)*j1*j2*j3;
+        };
 
-    auto integrand = [&] (const vector<double> xx) 
-    {
-        return three_spherical_bessel_integral(pow(xx[0], 1./3), pow(xx[1], 1./3), r3, L1, L2, L3);
-    };
-    cbl::wrapper::cuba::CUBAwrapper CW(integrand, ndim);
+        return wrapper::gsl::GSL_integrate_cquad(integrand, log_k_min, log_k_max, 1.e-10, 1.e-5, 1000000)/(2*pow(cbl::par::pi, 2));
+    } else {
+            // limits of the integral
+        int ndim = 2;
+        std::vector<std::vector<double>> integration_limits(ndim);
+        integration_limits[0] = {pow(r1_min, 3), pow(r1_max, 3)};
+        integration_limits[1] = {pow(r2_min, 3), pow(r2_max, 3)};
 
-    return CW.IntegrateCuhre(integration_limits)/(V1*V2);
+        double V1 = pow(r1_max, 3)-pow(r1_min, 3);
+        double V2 = pow(r2_max, 3)-pow(r2_min, 3);
+
+        // wrapper to CUBA libraries
+
+        auto integrand = [&] (const vector<double> xx) 
+        {
+            return three_spherical_bessel_integral(pow(xx[0], 1./3), pow(xx[1], 1./3), r3, L1, L2, L3) * pow(r3, L3);
+        };
+        cbl::wrapper::cuba::CUBAwrapper CW(integrand, ndim);
+
+        return CW.IntegrateCuhre(integration_limits)/(V1*V2 * pow(r3, L3));
+    }
 }
 
 

@@ -94,6 +94,7 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue &cat) :
 
 cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<double> coord1, const std::vector<double> coord2, const std::vector<double> coord3, const std::vector<double> weight, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits)
 { 
+  coutCBL << "I'm creating the catalogue" << endl;
   // check the vector dimensions
   if (!(coord1.size()==coord2.size() && coord2.size()==coord3.size()))
     ErrorCBL("coordinates with different dimensions!", "Catalogue", "Catalogue.cpp"); 
@@ -102,23 +103,34 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
   vector<double> _weight = weight;
   if (_weight.size()==0) _weight.resize(coord1.size(), 1);
   
-  
   // include the objects in the catalogue
-  
-  for (size_t i=0; i<coord1.size(); ++i) {
 
-    if (coordinateType==cbl::CoordinateType::_comoving_) { // comoving coordinates (x, y, z)
+  m_object.erase(m_object.begin(), m_object.end());
+  m_object.resize(coord1.size());
+
+  coutCBL << "Looping over particles" << endl;
+#pragma omp parallel num_threads(omp_get_max_threads())
+  {
+  if (coordinateType==cbl::CoordinateType::_comoving_) { // comoving coordinates (x, y, z)
+
+    // parallelized loop
+#pragma omp for schedule(static, 2)
+    for (size_t i=0; i<coord1.size(); ++i) {
       comovingCoordinates coord = {coord1[i], coord2[i], coord3[i]};
-      m_object.push_back(move(Object::Create(objectType, coord, _weight[i])));
+      m_object[i] = move(Object::Create(objectType, coord, _weight[i]));
     }
-    else if (coordinateType==cbl::CoordinateType::_observed_) { // observed coordinates (R.A., Dec, redshift)
-      observedCoordinates coord = {coord1[i], coord2[i], coord3[i]};
-      m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosm, _weight[i])));
-    }
-    else ErrorCBL("CoordinateType is not valid!", "Catalogue", "Catalogue.cpp");
 
+  } else if (coordinateType==cbl::CoordinateType::_observed_) { // observed coordinates (R.A., Dec, redshift)
+#pragma omp for schedule(static, 2)
+    for (size_t i=0; i<coord1.size(); ++i) {
+      observedCoordinates coord = {coord1[i], coord2[i], coord3[i]};
+      m_object[i] = move(Object::Create(objectType, coord, inputUnits, cosm, _weight[i]));
+    }
+  } 
+  else ErrorCBL("CoordinateType is not valid!", "Catalogue", "Catalogue.cpp");
   }
-  
+  coutCBL << "Done!" << endl;
+
 }
 
 

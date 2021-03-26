@@ -85,8 +85,9 @@ Eigen::MatrixXd cbl::wrapper::eigen::MatrixToEigen (const std::vector<std::vecto
 
   Eigen::MatrixXd matrix(rows, cols);
   
-  for (int i=0; i<matrix.rows(); i++)
-    matrix.row(i) =  Eigen::VectorXd::Map(mat[i].data(), mat.size());
+  for (int i=0; i<rows; i++)
+    for (int j=0; j<cols; j++)
+      matrix(i, j) = mat[i][j];
 
   return matrix;
 }

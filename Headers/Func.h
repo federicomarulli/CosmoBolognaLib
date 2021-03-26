@@ -744,10 +744,11 @@ namespace cbl {
    * @param L1 the order of the first spherical bessel function
    * @param L2 the order of the second spherical bessel function
    * @param L3 the order of the third spherical bessel function
+   * @param direct integrate the original formula
    *
    * @return the integral of three spherical bessel function, averaged
    */
-  double average_three_spherical_bessel_integral (const double r1_min, const double r1_max, const double r2_min, const double r2_max, const double r3, const int L1, const int L2, const int L3);
+  double average_three_spherical_bessel_integral (const double r1_min, const double r1_max, const double r2_min, const double r2_max, const double r3, const int L1, const int L2, const int L3, const bool direct=false);
 
   /**
    *  @brief generate a covariant sample of n points using a

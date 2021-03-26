@@ -308,7 +308,7 @@ OBJ_TWOP = $(dir_TWOP)Pair.o $(dir_TWOP)Pair1D.o $(dir_TWOP)Pair2D.o $(dir_TWOP)
 
 OBJ_THREEP = $(dir_THREEP)Triplet.o $(dir_THREEP)ThreePointCorrelation.o $(dir_THREEP)ThreePointCorrelation_angular_connected.o $(dir_THREEP)ThreePointCorrelation_angular_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_connected.o $(dir_THREEP)ThreePointCorrelation_comoving_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_multipoles.o $(dir_THREEP)ThreePointCorrelation_comoving_multipoles_single.o $(dir_THREEP)ThreePointCorrelation_comoving_multipoles_all.o
 
-OBJ_COV = $(dir_COV)CovarianceMatrix_TwoPointCorrelation1D_monopole.o
+OBJ_COV = $(dir_COV)CovarianceMatrix_TwoPointCorrelation1D_monopole.o $(dir_COV)CovarianceMatrix_TwoPointCorrelation_multipoles.o
 
 OBJ_MODEL_GLOB = $(dir_MODEL_GLOB)Modelling.o  $(dir_MODEL_GLOB)Modelling1D.o $(dir_MODEL_GLOB)Modelling2D.o
 
@@ -352,11 +352,11 @@ ALL:
 	make Eigen
 	make CUBA
 	make CCfits
-	make CAMB
-	make CLASS
-	make MPTbreeze
-	make mangle
-	make CPT_Library
+	#make CAMB
+	#make CLASS
+	#make MPTbreeze
+	#make mangle
+	#make CPT_Library
 	$(call colorecho, "\n"Compiling the library: libKERNEL... "\n")
 	make -j3 libKERNEL
 	$(call colorecho, "\n"Compiling the library: libWRAP... "\n")
@@ -1076,6 +1076,8 @@ $(dir_THREEP)ThreePointCorrelation_comoving_multipoles_all.o: $(dir_THREEP)Three
 $(dir_COV)CovarianceMatrix_TwoPointCorrelation1D_monopole.o: $(dir_COV)CovarianceMatrix_TwoPointCorrelation1D_monopole.cpp $(HH) $(PWD)/Makefile
 		$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COV)CovarianceMatrix_TwoPointCorrelation1D_monopole.cpp -o $(dir_COV)CovarianceMatrix_TwoPointCorrelation1D_monopole.o
 
+$(dir_COV)CovarianceMatrix_TwoPointCorrelation_multipoles.o: $(dir_COV)CovarianceMatrix_TwoPointCorrelation_multipoles.cpp $(HH) $(PWD)/Makefile
+		$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COV)CovarianceMatrix_TwoPointCorrelation_multipoles.cpp -o $(dir_COV)CovarianceMatrix_TwoPointCorrelation_multipoles.o
 
 ####################################################################
 

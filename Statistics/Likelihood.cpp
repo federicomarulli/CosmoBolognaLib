@@ -337,8 +337,8 @@ void cbl::statistics::Likelihood::set_function (const LikelihoodType likelihood_
 void cbl::statistics::Likelihood::set_function (const Likelihood_function likelihood_function)
 {
   m_likelihood_type = LikelihoodType::_UserDefined_;
-  m_likelihood_function = likelihood_function;
-  m_log_likelihood_function = [&] (vector<double> &par, const shared_ptr<void> input) { return std::log(m_likelihood_function(par, input)); };
+  m_log_likelihood_function = likelihood_function;
+  m_likelihood_function = [&] (vector<double> &par, const shared_ptr<void> input) { return std::exp(m_log_likelihood_function(par, input)); };
 }
 
 
