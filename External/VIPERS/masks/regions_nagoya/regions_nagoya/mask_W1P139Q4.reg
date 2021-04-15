@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: data/W1P139/W1P139Q4.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(32.502332,-5.377776,32.593844,-5.377854,32.603937,-5.374029,32.606625,-5.368484,32.606599,-5.246111,32.494117,-5.244517,32.489545,-5.246012,32.489547,-5.336724,32.489548,-5.368499,32.492371,-5.373074) # color=red dash=1

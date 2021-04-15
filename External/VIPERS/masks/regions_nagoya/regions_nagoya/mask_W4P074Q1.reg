@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: /tmp/filedURuh9.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(333.59708,1.939879,333.60467,1.939848,333.69822,1.939293,333.70472,1.943226,333.70473,2.061213,333.69949,2.066168,333.69578,2.067954,333.60467,2.067992,333.59521,2.0680647,333.59026,2.061213,333.58809,2.056663,333.58809,1.938752) # color=red dash=1

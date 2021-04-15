@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/fileCunhaS.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(331.7992,1.7666928,331.89143,1.767145,331.90249,1.774685,331.90419,1.779254,331.90422,1.893689,331.79532,1.895177,331.78758,1.892691,331.78741,1.7762457) # color=red dash=1

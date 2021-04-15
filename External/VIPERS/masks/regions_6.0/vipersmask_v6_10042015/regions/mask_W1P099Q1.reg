@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/fileedhmQj.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(30.890762,-4.902557,31.007449,-4.902747,31.007367,-4.779940,31.002680,-4.773986,30.998314,-4.772989,30.899463,-4.773356,30.890375,-4.780092) # color=red dash=1

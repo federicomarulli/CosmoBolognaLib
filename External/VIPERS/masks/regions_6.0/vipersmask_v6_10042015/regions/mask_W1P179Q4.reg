@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/fileJPPBTx.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(34.098958,-5.679625,34.172185,-5.679339,34.198876,-5.678198,34.204678,-5.674533,34.207833,-5.669957,34.207793,-5.552724,34.099846,-5.550732,34.090693,-5.551985,34.090714,-5.669958) # color=red dash=1

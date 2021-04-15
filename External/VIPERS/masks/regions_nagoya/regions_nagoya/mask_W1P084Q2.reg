@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: /tmp/fileo3YAr3.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(35.603717,-4.6018,35.708329,-4.602144,35.708226,-4.480318,35.707163,-4.47627,35.697113,-4.472086,35.600252,-4.473119,35.596713,-4.475808,35.596854,-4.5994072) # color=red dash=1

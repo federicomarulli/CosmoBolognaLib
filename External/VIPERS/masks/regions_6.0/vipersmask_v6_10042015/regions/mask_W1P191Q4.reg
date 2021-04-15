@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/fileHdRhQa.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(37.19073,-5.6790272,37.20364,-5.679178,37.298882,-5.679021,37.306359,-5.67436,37.307903,-5.669953,37.307876,-5.547483,37.195397,-5.545913,37.190763,-5.547482,37.190766,-5.64275) # color=red dash=1

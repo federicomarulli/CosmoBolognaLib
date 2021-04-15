@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/fileiUCSUw.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(33.892959,-5.804587,33.992544,-5.804509,34.001472,-5.803014,34.001451,-5.712246,33.998301,-5.707818,33.996978,-5.6896,33.998011,-5.685027,33.996293,-5.680074,33.992463,-5.678077,33.946736,-5.677726,33.938789,-5.677723,33.892965,-5.677847,33.883969,-5.684971,33.88403,-5.80303) # color=red dash=1

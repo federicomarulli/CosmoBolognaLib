@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: /tmp/fileTNuXMP.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(330.51481,1.034037,330.60115,1.0313294,330.61916,1.033648,330.61913,1.155595,330.61773,1.159202,330.61153,1.163859,330.51132,1.162703,330.5078,1.160091,330.5078,1.037605) # color=red dash=1

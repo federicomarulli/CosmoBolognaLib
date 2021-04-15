@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/fileEzcEs6.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(35.447159,-5.2051475,35.555234,-5.204999,35.555242,-5.08623,35.552112,-5.080475,35.547889,-5.077204,35.544059,-5.075837,35.448895,-5.075858,35.439821,-5.081717,35.440378,-5.2021663) # color=red dash=1
